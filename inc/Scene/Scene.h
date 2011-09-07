@@ -60,9 +60,10 @@ class API_SCENE Scene : public Group
 public:
 
 	Scene();
+	~Scene();
 
 	// Updates all the entities recursively.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 	// Checks for collision via ray-box tests.
 	bool doRayBoxQuery( const Ray& ray, RayQueryResult& res );

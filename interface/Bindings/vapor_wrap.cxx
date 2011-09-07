@@ -11441,7 +11441,7 @@ fail:
   lua_error(L);
   return SWIG_arg;
 }
-
+#if 0
 
 static int _wrap_Component_createDebugRenderable(lua_State* L) {
   int SWIG_arg = 0;
@@ -11495,6 +11495,8 @@ fail:
   lua_error(L);
   return SWIG_arg;
 }
+
+#endif
 
 
 static int _wrap_Component_getDebugInheritsTransform(lua_State* L) {
@@ -11766,8 +11768,10 @@ static swig_lua_method swig_vapor_Component_methods[] = {
     {"onPreRender", _wrap_Component_onPreRender}, 
     {"isDebugRenderableVisible", _wrap_Component_isDebugRenderableVisible}, 
     {"setDebugRenderableVisible", _wrap_Component_setDebugRenderableVisible}, 
-    {"createDebugRenderable", _wrap_Component_createDebugRenderable}, 
+#if 0    
+	{"createDebugRenderable", _wrap_Component_createDebugRenderable}, 
     {"getDebugRenderable", _wrap_Component_getDebugRenderable}, 
+#endif
     {"getDebugInheritsTransform", _wrap_Component_getDebugInheritsTransform}, 
     {"setDebugInheritsTransform", _wrap_Component_setDebugInheritsTransform}, 
     {0,0}

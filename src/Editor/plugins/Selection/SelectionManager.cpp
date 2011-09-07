@@ -10,7 +10,7 @@
 #include "SelectionManager.h"
 #include "Editor.h"
 #include "UndoManager.h"
-#include "Events.h"
+#include "EventManager.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -49,7 +49,7 @@ void SelectionManager::setSelectionMode(SelectionMode::Enum mode)
 
 SelectionOperation* SelectionManager::getSelection() const
 {
-	return selection;
+	return selection.get();
 }
 
 //-----------------------------------//
@@ -61,10 +61,11 @@ void SelectionManager::setSelection(SelectionOperation* selection)
 
 //-----------------------------------//
 
-SelectionOperation* SelectionManager::createOperation()
+SelectionOperation* SelectionManager::createOperation( SelectionMode::Enum mode )
 {
-	SelectionOperation* selection = new SelectionOperation();
+	SelectionOperation* selection = AllocateThis(SelectionOperation);
 	
+	selection->description = "Entity selection";
 	selection->mode = mode;
 	selection->selectionManager = this;
 
@@ -73,10 +74,12 @@ SelectionOperation* SelectionManager::createOperation()
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(SelectionOperation, UndoOperation)
+REFLECT_CLASS_END()
+
 SelectionOperation::~SelectionOperation()
 {
-	if( selectionManager->getSelection() == this )
-		selectionManager->setSelection(nullptr);
+	assert( selectionManager->getSelection() != this );
 }
 
 //-----------------------------------//
@@ -86,11 +89,11 @@ Unselect everything
 	Undo: Select previous selection
 	Redo: Unselect previous selection
 
-Select with no current selection
+Select with no previous selection
 	Undo: Unselect selection
 	Redo: Select selection
 	
-Select with another previous selection
+Select with previous selection
 	Undo: Unselect selection && Select previous selection
 	Redo: Select selection && Unselect previous selection */
 
@@ -147,7 +150,7 @@ void SelectionOperation::selectAll()
 
 		setBoundingBoxVisible(entity, true);
 
-		Events* events = GetEditor().getEventManager();
+		EventManager* events = GetEditor().getEventManager();
 		events->onEntitySelect(entity);
 	}
 }
@@ -163,7 +166,7 @@ void SelectionOperation::unselectAll()
 
 		setBoundingBoxVisible(entity, false);
 
-		Events* events = GetEditor().getEventManager();
+		EventManager* events = GetEditor().getEventManager();
 		events->onEntityUnselect(entity);
 	}
 }
@@ -179,7 +182,7 @@ void SelectionOperation::selectPrevious()
 
 		setBoundingBoxVisible(entity, true);
 
-		Events* events = GetEditor().getEventManager();
+		EventManager* events = GetEditor().getEventManager();
 		events->onEntitySelect(entity);
 	}
 }
@@ -195,7 +198,7 @@ void SelectionOperation::unselectPrevious()
 
 		setBoundingBoxVisible(entity, false);
 
-		Events* events = GetEditor().getEventManager();
+		EventManager* events = GetEditor().getEventManager();
 		events->onEntityUnselect(entity);
 	}
 }
@@ -208,6 +211,19 @@ void SelectionOperation::addEntity(const EntityPtr& entity)
 	data.entity = entity;
 
 	selections.push_back(data);
+}
+
+//-----------------------------------//
+
+void SelectionOperation::setPreviousSelections(SelectionOperation* selected)
+{
+	if( !selected ) return;
+	assert( previous.empty() );
+
+	if( !selected->lastUndone )
+		previous = selected->selections;
+	else
+		previous = selected->previous;
 }
 
 //-----------------------------------//

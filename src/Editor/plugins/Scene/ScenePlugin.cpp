@@ -20,7 +20,8 @@
 #include "Network/Dispatcher.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Events.h"
+#include "EditorTags.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -45,6 +46,7 @@ PluginMetadata ScenePlugin::getMetadata()
 	metadata.description = "Provides a page with the scene contents.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 500;
 
 	return metadata;
 }
@@ -65,16 +67,23 @@ void ScenePlugin::onPluginEnable()
 	editor->getAUI()->AddPane(scenePage, pane);
 	editor->getAUI()->Update();
 
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
+	toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &ScenePlugin::onPlayCommand, this, Toolbar_TooglePlay);
+
 	// Subscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
 
+#ifdef ENABLE_PLUGIN_PROPERTY
 	PropertyPlugin* pp = GetPlugin<PropertyPlugin>();
 	pp->propertyPage->onClassFieldChanged.Bind(this, &ScenePlugin::onSceneClassFieldUpdate);
+#endif
 
-	ReplicaMessagePlugin* rmp = GetMessagePlugin<ReplicaMessagePlugin>();
+#ifndef NO_NETWORK
+	ReplicaMessageHandler* rmp = GetMessageHandler<ReplicaMessageHandler>();
 	rmp->onReplicaContextCreate.Connect(this, &ScenePlugin::onReplicaContextCreate);
 	rmp->onReplicaObjectCreate.Connect(this, &ScenePlugin::onReplicaObjectCreate);
+#endif
 }
 
 //-----------------------------------//
@@ -85,12 +94,27 @@ void ScenePlugin::onPluginDisable()
 	editor->getAUI()->DetachPane(scenePage);
 	editor->getAUI()->Update();
 
-	delete scenePage;
-	scenePage = nullptr;
+	Deallocate(scenePage);
 
 	// Unsubscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->removeEventListener(this);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onPlayCommand(wxCommandEvent& event)
+{
+	bool switchToPlay = event.IsChecked();
+	//switchPlayMode(switchToPlay);
+
+#ifdef ENABLE_PHYSICS_BULLET
+	// Toogle the physics simulation state.
+	PhysicsManager* physics = GetEngine()->getPhysicsManager();
+	
+	if( physics )
+		physics->setSimulation( switchToPlay );
+#endif
 }
 
 //-----------------------------------//
@@ -100,7 +124,7 @@ void ScenePlugin::onEntitySelect( const EntityPtr& entity )
 	if( scenePage->sentLastSelectionEvent )
 		return;
 
-	wxTreeItemId entityId = scenePage->getTreeIdFromEntity(entity);
+	wxTreeItemId entityId = scenePage->getTreeIdFromObject( entity.get() );
 
 	if( !entityId.IsOk() )
 		return;
@@ -129,13 +153,14 @@ void ScenePlugin::onSceneLoad( const ScenePtr& scene )
 void ScenePlugin::onSceneUnload( const ScenePtr& scene )
 {
 	LogDebug("Scene unloaded, removing items from scene tree");
-	scenePage->getTreeCtrl()->DeleteAllItems();
+	scenePage->cleanScene();
 }
 
 //-----------------------------------//
 
 void ScenePlugin::onServerConnect(const SessionPtr&)
 {
+#ifdef ENABLE_PLUGIN_SERVER
 	localId = 0;
 
 	ReplicaContextCreateMessage cc;
@@ -145,6 +170,7 @@ void ScenePlugin::onServerConnect(const SessionPtr&)
 	MessagePtr msg = MessageCreate(ReplicaMessageIds::ReplicaContextCreate);
 	msg->write(&cc);
 	GetPlugin<ServerPlugin>()->getHost()->broadcastMessage(msg);
+#endif
 }
 
 //-----------------------------------//
@@ -174,8 +200,8 @@ void ScenePlugin::onReplicaObjectCreate(ReplicaContext* context, ReplicaInstance
 		entity->addComponent(component);
 		ScenePage* page = GetPlugin<ScenePlugin>()->scenePage;
 		
-		wxTreeItemId id = page->getTreeIdFromEntity(entity);
-		page->addComponent(id, component);
+		wxTreeItemId id = page->getTreeIdFromObject(entity);
+		page->addComponentToTree(id, component);
 	}
 	else if( ClassInherits(klass, EntityGetType()) )
 	{
@@ -197,9 +223,11 @@ void ScenePlugin::onReplicaAdded(const ReplicatedObject& obj)
 
 void ScenePlugin::onSceneClassFieldUpdate(const FieldWatchVector& watches)
 {
+#ifndef NO_NETWORK
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	MessagePtr msg = document->replicaContext->createObjectUpdateMessage(watches);
 	GetPlugin<ServerPlugin>()->host->broadcastMessage(msg);
+#endif
 }
 
 //-----------------------------------//

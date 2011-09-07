@@ -7,19 +7,16 @@
 ************************************************************************/
 
 #include "Server/API.h"
-#include "Server/ServerPlugin.h"
+#include "Server/Plugins/ScenePlugin.h"
 #include "Server/Server.h"
+#include "Server/Plugins/ReplicaPlugin.h"
 #include "Protocol/ReplicaMessages.h"
-#include "Protocol/ReplicaContext.h"
 
 #include "Engine/API.h"
 #include "Scene/Scene.h"
-#include "Scene/Entity.h"
-#include "Scene/Component.h"
-
 #include "Scene/Projector.h"
-#include "Scene/Model.h"
 #include "Scene/Grid.h"
+#include "Scene/Model.h"
 #include "Scene/Light.h"
 #include "Scene/Skydome.h"
 #include "Scene/Camera.h"
@@ -27,37 +24,14 @@
 #include "Scene/Particles.h"
 #include "Scene/Source.h"
 #include "Scene/Listener.h"
+#include "Render/Cube.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-class ScenePlugin : public ServerPlugin
-{
-public:
-
-	ScenePlugin();
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
-
-	// Plugin callbacks.
-	void onPluginEnable() OVERRIDE;
-	void onPluginDisable() OVERRIDE;
-
-	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
-	void onReplicaObjectCreate(ReplicaContext*, ReplicaInstanceId, Object*);
-	void onReplicaAdded(const ReplicatedObject&);
-
-	void referenceComponents();
-
-	Scene* scene;
-};
-
 REFLECT_CHILD_CLASS(ScenePlugin, ServerPlugin)
 REFLECT_CLASS_END()
-
-//-----------------------------------//
 
 void ScenePlugin::referenceComponents()
 {
@@ -71,6 +45,7 @@ void ScenePlugin::referenceComponents()
 	ParticlesGetType();
 	SourceGetType();
 	ListenerGetType();
+	CubeGetType();
 }
 
 ScenePlugin::ScenePlugin() : scene(nullptr)
@@ -92,7 +67,7 @@ PluginMetadata ScenePlugin::getMetadata()
 
 void ScenePlugin::onPluginEnable()
 {
-	ReplicaMessagePlugin* rmp = GetMessagePlugin<ReplicaMessagePlugin>();
+	ReplicaPlugin* rmp = GetPlugin<ReplicaPlugin>();
 	rmp->onReplicaContextCreate.Connect(this, &ScenePlugin::onReplicaContextCreate);
 	rmp->onReplicaObjectCreate.Connect(this, &ScenePlugin::onReplicaObjectCreate);
 }

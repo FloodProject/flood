@@ -97,7 +97,7 @@ int ConsoleTextCtrl::luaPrint(lua_State* L)
 	int numArgs = lua_gettop(L);
 	lua_getglobal(L, "tostring");
 	
-	std::string ret;
+	String ret;
 	ret.append("\n");
 	
 	for(int i = 1; i <= numArgs; i++)
@@ -212,7 +212,7 @@ void ConsoleTextCtrl::OnEnter(/*wxCommandEvent& event*/)
 
 	//wxString txt = GetRange( XYToPosition( 2, y ), GetLastPosition() );
 
-	std::string text( GetRange( XYToPosition( 2, y ), GetLastPosition() ).c_str() );
+	String text( GetRange( XYToPosition( 2, y ), GetLastPosition() ).c_str() );
 
 #ifdef ENABLE_SCRIPTING_LUA
 	if( !luaState->execute( text.c_str() ) )

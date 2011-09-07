@@ -17,7 +17,7 @@ NAMESPACE_EDITOR_BEGIN
 class Viewframe;
 class EditorFrame;
 
-typedef std::map<std::string, CameraPtr> CameraMap;
+typedef std::map<String, CameraPtr> CameraMap;
 
 /**
  * Widget providing advanced camera controls.

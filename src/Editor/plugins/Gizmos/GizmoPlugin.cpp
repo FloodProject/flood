@@ -14,14 +14,14 @@
 #include "GizmoScale.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
 #include "Core/PluginManager.h"
 
-#include "../Selection/SelectionPlugin.h"
-#include "../Selection/SelectionManager.h"
-#include "../Scene/SceneDocument.h"
+#include "Plugins/Selection/SelectionPlugin.h"
+#include "Plugins/Selection/SelectionManager.h"
+#include "Plugins/Scene/SceneDocument.h"
 
 #ifdef ENABLE_PLUGIN_GIZMO
 
@@ -35,8 +35,9 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 GizmoPlugin::GizmoPlugin()
-	: op(nullptr)
-{ }
+{
+
+}
 
 //-----------------------------------//
 
@@ -48,7 +49,7 @@ PluginMetadata GizmoPlugin::getMetadata()
 	metadata.description = "Provides translate, rotate and scale tools.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.priority = 20;
+	metadata.priority = 280;
 
 	return metadata;
 }
@@ -57,8 +58,7 @@ PluginMetadata GizmoPlugin::getMetadata()
 
 SelectionManager* GizmoPlugin::getSelections()
 {
-	PluginManager* plugins = editor->getPluginManager();
-	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin(PLUGIN_SELECTION);
+	SelectionPlugin* sp = GetPlugin<SelectionPlugin>();
 	return sp->getSelectionManager();
 }
 
@@ -68,7 +68,6 @@ void GizmoPlugin::onPluginEnable()
 {
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
-	//addTool( toolbarCtrl->AddSeparator() );
 	if(toolbarCtrl)
 	{
 		wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
@@ -92,13 +91,25 @@ void GizmoPlugin::onPluginEnable()
 		addTool(buttonScale, true);
 	}
 
-	isGizmoPicked = false;
+	reset();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onPluginDisable()
 {
+	reset();
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::reset()
+{
+	gizmo = nullptr;
+	gizmos.clear();
+
+	isGizmoPicked = false;
+	op = nullptr;
 }
 
 //-----------------------------------//
@@ -107,65 +118,86 @@ void GizmoPlugin::onToolSelect( int id )
 {
 	tool = (GizmoTool::Enum) id;
 
+	// Simulate an object selection event when this tool is selected.
 	SelectionOperation* selection = getSelections()->getSelection();
-
-	if( !selection )
-		return;
-
-	if( selection->mode == SelectionMode::None )
-		return;
-	
-	for( size_t i = 0; i < selection->selections.size(); i++ )
-	{	
-		onEntityUnselect( selection->selections[i].entity );
-		onEntitySelect( selection->selections[i].entity );
-	}
+	onSelection(selection);
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onToolUnselect( int id )
 {
-	if(id >= GizmoTool::Camera && id <= GizmoTool::Scale)
-		return;
+	SelectionOperation* selection = getSelections()->getSelection();
+	onDeselection(selection);
+}
 
-	SelectionOperation* sel = getSelections()->getSelection();
-	
-	if( !sel || sel->mode == SelectionMode::None )
-		return;
+//-----------------------------------//
 
-	for( size_t i = 0; i < sel->selections.size(); i++ )
+void GizmoPlugin::onSelection( SelectionOperation* selection )
+{
+	if( !selection ) return;
+	if( selection->mode == SelectionMode::None ) return;
+
+	const std::vector<SelectionData>& selections = selection->selections;
+	bool isGroup = selections.size() > 1;
+
+	for( size_t i = 0; i < selections.size(); i++ )
 	{
-		onEntityUnselect( sel->selections[i].entity );
+		const SelectionData& data = selections[i];
+
+		switch(selection->mode)
+		{
+		case SelectionMode::Entity:
+			onEntityUnselect( data.entity );
+			onEntitySelect( data.entity );
+			break;
+		}
 	}
+}
 
-#if 0
-	std::vector<EntityPtr> entities;
+//-----------------------------------//
 
-	GizmoMap::const_iterator it;
-	for( it = gizmos.begin(); it != gizmos.end(); it++ )
-		entities.push_back( it->first );	
-	
-	for( size_t i = 0; i < entities.size(); i++ )	
-		removeGizmo( entities[i] );
+void GizmoPlugin::onDeselection( SelectionOperation* selection )
+{
+	if( !selection ) return;
+	if( selection->mode == SelectionMode::None ) return;
 
-	assert( gizmos.empty() );
-#endif
+	const std::vector<SelectionData>& selections = selection->selections;
+	bool isGroup = selections.size() > 1;
+
+	for( size_t i = 0; i < selections.size(); i++ )
+	{
+		const SelectionData& data = selections[i];
+
+		switch(selection->mode)
+		{
+		case SelectionMode::Entity:
+			onEntityUnselect( data.entity );
+			break;
+		}
+	}
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::onSceneUnload(const ScenePtr&)
+{
+	reset();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onEntitySelect( const EntityPtr& entity )
 {
-	editor->redrawView();
-
 	if( isTool(GizmoTool::Camera) )
 		return;
 	
 	bool gizmoExists = gizmos.find(entity) != gizmos.end();
-	
-	if( !gizmoExists )
-			createGizmo( entity );
+	if( gizmoExists ) return;
+
+	createGizmo( entity );
+
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -260,8 +292,7 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 
 		gizmo->deselectAxis();
 		
-		delete op;
-		op = nullptr;
+		Deallocate(op);
 	}
 
 	editor->redrawView();
@@ -368,7 +399,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 
 	else assert( 0 && "Unknown gizmo tool" );
 
-	gizmo.reset(newGizmo);
+	gizmo = newGizmo;
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
@@ -392,9 +423,7 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 
 	// Find the existing gizmo associated with the entity.
 	GizmoMap::iterator it = gizmos.find(entity);
-
-	if( it == gizmos.end() )
-		return;
+	if( it == gizmos.end() ) return;
 
 	// Find the entity of the gizmo.
 	const EntityPtr& entityGizmo = gizmos[entity];
@@ -404,13 +433,12 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 	document->editorScene->remove(entityGizmo);
 	
 	gizmos.erase(it);
-	gizmo.reset();
+	gizmo = nullptr;
 }
 
 //-----------------------------------//
 
-bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
-								 GizmoAxis::Enum& axis )
+bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	RenderView* view = document->viewframe->getView();
@@ -460,7 +488,8 @@ void GizmoPlugin::createOperation()
 	EntityPtr entityObject = gizmo->getEntityAttachment();
 	TransformPtr transObject = entityObject->getTransform();
 
-	op = new GizmoOperation();
+	op = AllocateThis(GizmoOperation);
+	op->description = "Entity transform";
 
 	op->tool = tool;
 	op->axis = axis;

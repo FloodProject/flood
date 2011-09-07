@@ -10,6 +10,7 @@
 
 #include "Core/Object.h"
 #include "Core/References.h"
+#include "Render/DebugGeometry.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
 FWD_DECL_INTRUSIVE(Camera)
@@ -59,11 +60,8 @@ public:
 	// Sets the debug renderable as visible.
 	virtual void setDebugRenderableVisible( bool visible );
 
-	// Creates the debug renderable of this component.
-	virtual RenderablePtr createDebugRenderable() const;
-	
-	// Gets the debug renderable of this component.
-	virtual RenderablePtr getDebugRenderable() const;
+	// Called when it is time to draw debug data.
+	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum );
 
 	// Gets/sets if the debug renderable inherits the transform.
 	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)

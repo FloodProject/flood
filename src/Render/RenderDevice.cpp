@@ -112,7 +112,7 @@ void RenderDevice::render( RenderBlock& queue )
 
 void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
-#ifdef DEBUG_BUILD
+#ifdef BUILD_DEBUG
 	const RenderablePtr& renderable = state.renderable;
 	if( !renderable ) return;
 
@@ -167,9 +167,13 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const Matrix4x4& model = state.modelMatrix;
 	glMultMatrixf(&model.m11);
 
-	renderable->onPreRender(state);
+	if( !renderable->onPreRender.empty() )
+		renderable->onPreRender(state);
+
 	renderable->render(this);
-	renderable->onPostRender(state);
+	
+	if( !renderable->onPostRender.empty() )
+		renderable->onPostRender(state);
 
 	glPopMatrix();
 
@@ -229,8 +233,8 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	vb->bindGenericPointers();
 
 	Material* material = state.material;
-	
 	const String& name = material->getProgram();
+
 	const ProgramPtr& program = activeContext->programManager->getProgram(name);
 	if( !program ) return;
 
@@ -308,11 +312,21 @@ void RenderDevice::bindTextures(const RenderState& state, bool bindUniforms)
 	TextureUnitMap::const_iterator it;
 	for( it = units.begin(); it != units.end(); it++ )
 	{
-		int32 index = it->first;
-		const ImageHandle& image = it->second;
-
-		const TexturePtr& texture = activeContext->textureManager->getTexture(image.Resolve());
+		const TextureUnit& unit = it->second;
+		
+		int32 index = unit.unit;
+		const ImageHandle& handle = unit.image;
+		const TexturePtr& texture = activeContext->textureManager->getTexture(handle.Resolve());
+		
 		texture->bind(index);
+
+		GLint filter = Texture::convertFilterFormat(unit.filter);
+		glTexParameteri( texture->target, GL_TEXTURE_MIN_FILTER, filter );
+		glTexParameteri( texture->target, GL_TEXTURE_MAG_FILTER, filter );
+
+		GLint wrap = Texture::convertWrapFormat(unit.wrap);
+		glTexParameteri( texture->target, GL_TEXTURE_WRAP_S, wrap );
+		glTexParameteri( texture->target, GL_TEXTURE_WRAP_T, wrap );
 
 		if( !bindUniforms ) continue;
 
@@ -330,7 +344,8 @@ void RenderDevice::unbindTextures(Material* material)
 	TextureUnitMap::const_iterator it;
 	for( it = units.begin(); it != units.end(); it++ )
 	{
-		const ImageHandle& handle = it->second;
+		const TextureUnit& unit = it->second;
+		const ImageHandle& handle = unit.image;
 		const TexturePtr& tex = activeContext->textureManager->getTexture(handle.Resolve());
 		tex->unbind( it->first );
 	}
@@ -476,12 +491,15 @@ void RenderDevice::setupRenderStateMaterial( const RenderState& state, bool bind
 		glEnable( GL_LINE_SMOOTH );
 		glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 	}
-	
+
 	if( mat->lineWidth != Material::DefaultLineWidth )
 		glLineWidth( mat->getLineWidth() );
 
 	if( mat->depthCompare != DepthCompare::Less )
 		glDepthFunc( mat->depthCompare );
+
+	if( mat->depthRange != Vector2::UnitY )
+		glDepthRange( mat->depthRange.x, mat->depthRange.y );
 
 	if( !mat->cullBackfaces )
 		glDisable( GL_CULL_FACE );
@@ -506,9 +524,6 @@ void RenderDevice::setupRenderStateMaterial( const RenderState& state, bool bind
 
 void RenderDevice::undoRenderStateMaterial( Material* mat )
 {
-	if( mat->depthCompare != DepthCompare::Less )
-		glDepthFunc( DepthCompare::Less );
-
 	if( mat->isBlendingEnabled() ) 
 		glDisable( GL_BLEND );
 
@@ -517,6 +532,12 @@ void RenderDevice::undoRenderStateMaterial( Material* mat )
 
 	if( mat->alphaTest )
 		glDisable( GL_ALPHA_TEST );
+
+	if( mat->depthCompare != DepthCompare::Less )
+		glDepthFunc( DepthCompare::Less );
+
+	if( mat->depthRange != Vector2::UnitY )
+		glDepthRange(0, 1);
 
 	if( !mat->depthTest )
 		glEnable( GL_DEPTH_TEST );
@@ -570,19 +591,6 @@ void RenderDevice::setRenderTarget(RenderTarget* target)
 	activeTarget->makeCurrent();
 
 	activeContext = activeTarget->getContext();
-}
-
-//-----------------------------------//
-
-RenderBuffer* RenderDevice::createRenderBuffer( const Settings& settings )
-{
-#if 0
-	RenderBuffer* buffer( new FBO(settings) );
-	renderTargets.push_back( buffer );
-	
-	return buffer;
-#endif
-	return nullptr;
 }
 
 //-----------------------------------//

@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "Core/Plugin.h"
+#include "Core/Reflection.h"
+#include "Core/Object.h"
 #include "Network/Message.h"
 
 FWD_DECL_INTRUSIVE(Session)
@@ -20,28 +21,23 @@ NAMESPACE_CORE_BEGIN
 struct MessageMapping;
 typedef std::vector<MessageMapping> MessagesTable;
 
-REFLECT_DECLARE_CLASS(MessagePlugin)
+REFLECT_DECLARE_CLASS(MessageHandler)
 
-class API_CORE MessagePlugin : public Plugin
+class API_CORE MessageHandler
 {
-	REFLECT_DECLARE_OBJECT(MessagePlugin)
-
-	friend class PluginManager;
-
 public:
 
-	MessagePlugin();
-	virtual ~MessagePlugin();
-
-	// Plugin callbacks.
-	void onPluginEnable() OVERRIDE;
-	void onPluginDisable() OVERRIDE;
+	// Network callbacks.
+	virtual void onSessionAdded(const SessionPtr&) {}
+	virtual void onSessionRemoved(const SessionPtr&) {}
 
 	// Gets the messages that this plugin handles.
-	virtual const MessagesTable& getMessagesTable() = 0;
+	virtual const MessagesTable& getMessagesTable() { return NullMessageTable; }
 
 	// Gets the enum with the messages that this plugin handles.
-	virtual Enum* getMessagesEnum() = 0;
+	virtual Enum* getMessagesEnum() { return nullptr; }
+
+	static MessagesTable NullMessageTable;
 };
 
 REFLECT_DECLARE_CLASS(MessageDefinition)

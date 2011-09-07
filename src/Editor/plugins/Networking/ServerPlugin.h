@@ -10,6 +10,8 @@
 
 #include "EditorPlugin.h"
 
+#ifdef ENABLE_PLUGIN_SERVER
+
 FWD_DECL_INTRUSIVE(HostClient)
 FWD_DECL_INTRUSIVE(Peer)
 FWD_DECL_INTRUSIVE(Message)
@@ -85,13 +87,18 @@ public:
 	ServerPane* pane;
 };
 
-template<typename T> T* GetMessagePlugin()
+template<typename T> T* GetMessageHandler()
 {
+#if 0
 	Dispatcher* dispatcher = GetPlugin<ServerPlugin>()->getDispatcher();
 	Plugin* plugin = dispatcher->getPluginManager()->getPluginFromClass(T::getStaticType());
+#endif
+	T* plugin = 0;
 	return (T*) plugin;
 }
 
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

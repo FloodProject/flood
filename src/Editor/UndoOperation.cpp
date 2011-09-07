@@ -13,7 +13,13 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_ABSTRACT_CHILD_CLASS(UndoOperation, Object)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
 UndoOperation::UndoOperation()
+	: lastUndone(false)
 { }
 
 //-----------------------------------//

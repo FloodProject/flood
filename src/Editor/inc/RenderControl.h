@@ -39,7 +39,7 @@ public:
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
 					long style = wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE,
-					const wxString&	name = "vaporGLCanvas",
+					const wxString&	name = "RenderGLCanvas",
 					const wxPalette& palette = wxNullPalette );
 
 	~RenderControl();

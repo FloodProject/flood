@@ -8,9 +8,9 @@
 
 #pragma once
 
-#ifdef ENABLE_MESH_MILKSHAPE3D
+#ifdef ENABLE_IMPORTER_MILKSHAPE
 
-#include "Resources/ResourceLoader.h"
+#include "Pipeline/ResourceImporter.h"
 #include "Resources/Mesh.h"
 
 NAMESPACE_RESOURCES_BEGIN
@@ -21,15 +21,15 @@ NAMESPACE_RESOURCES_BEGIN
  * Loads a given Milkshape3D mesh format.
  */
 
-REFLECT_DECLARE_CLASS(MilkshapeLoader)
+REFLECT_DECLARE_CLASS(ImporterMilkshape)
 
-class MilkshapeLoader : public ResourceLoader
+class ImporterMilkshape : public ResourceImporter
 {
-	REFLECT_DECLARE_OBJECT(MilkshapeLoader)
+	REFLECT_DECLARE_OBJECT(ImporterMilkshape)
 
 public:
 
-	MilkshapeLoader();
+	ImporterMilkshape();
 
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Mesh)
@@ -38,7 +38,7 @@ public:
 	RESOURCE_LOADER_CLASS(Mesh)
 
 	// Decodes a Milkshape3D mesh.
-	virtual bool decode(const Stream& stream, Resource* res) OVERRIDE;
+	bool decode(const Stream& stream, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "MS3D")

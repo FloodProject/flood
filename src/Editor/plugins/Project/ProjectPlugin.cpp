@@ -9,11 +9,10 @@
 #include "Editor/API.h"
 #include "ProjectPlugin.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
-#include "../Scene/SceneDocument.h"
-#include "Core/Serialization.h"
+#include "Plugins/Scene/SceneDocument.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -24,12 +23,6 @@ REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(Project, Object)
 REFLECT_CLASS_END()
-
-//-----------------------------------//
-
-ProjectPlugin::ProjectPlugin()
-{
-}
 
 //-----------------------------------//
 
@@ -90,118 +83,94 @@ void ProjectPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
+bool ProjectPlugin::askSaveChanges( Document* document )
 {
-	Document* current = editor->getDocument();
-	
-#if 0
-	if(current)
-	{
-		wxMessageBox("Sorry, creating new documents is disabled",
-			wxMessageBoxCaptionStr, wxICON_ERROR | wxOK);
-		return;
-	}
-#endif
-
-	if( current && !askSaveChanges() )
-		return;
-
-	SceneDocument* document = new SceneDocument();
-	editor->addDocument(document);
-
-	switchScene(document);
-
-	Events* events = GetEditor().getEventManager();
-	events->onDocumentCreate(*document);
-}
-
-//-----------------------------------//
-
-static const std::string fileDialogDescription( "Scene files (*.scene)|*.scene" );
-
-void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
-{
-	if( !askSaveChanges() )
-		return;
-
-	// Ask for file name to open.
-	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, fileDialogDescription, wxFC_OPEN );
-	
-	if( fc.ShowModal() != wxID_OK )
-		return;
-
-	Path path = (String) fc.GetPath();
-
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
-	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, path);
-	Deallocate(serializer);
-
-	if( !object )
-	{
-		wxMessageDialog message(editor, "Could not load scene.", "Load", wxOK | wxICON_EXCLAMATION);
-		message.ShowModal();
-		return;
-	}
-
-	SceneDocument* document = (SceneDocument*) editor->getDocument();
-	document->scene = ScenePtr(object);
-
-	switchScene(document);
-}
-
-//-----------------------------------//
-
-bool ProjectPlugin::askSaveChanges()
-{
-	Document* document = editor->getDocument();
 	if( !document ) return false;
+	if( !document->getUnsavedChanges() ) return true;
 
-	if( !document->getUnsavedChanges() )
-		return true;
-
-	wxMessageDialog dialog(editor,  
-		"Scene contains unsaved changes. Do you want to save them?",
-		"Editor", wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
-
+	const char* msg = "Document contains unsaved changes. Do you want to save them?";
+	int flags = wxYES_NO | wxCANCEL | wxICON_EXCLAMATION;
+	
+	wxMessageDialog dialog(editor, msg, "Editor", flags);
 	//dialog.SetSetYesNoLabels(wxID_SAVE, "&Don't save");
 
     int answer = dialog.ShowModal();
-
-     if( answer == wxID_YES && !saveScene() )
-		return false;
+	if( answer == wxID_YES ) return false;
 
 	return (answer != wxID_CANCEL);
 }
 
 //-----------------------------------//
 
-bool ProjectPlugin::saveScene()
+Document* ProjectPlugin::createDocument()
 {
-	// Ask for file name to save as.
-	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, fileDialogDescription, wxFC_SAVE | wxFD_OVERWRITE_PROMPT );
-	
-	if( fc.ShowModal() != wxID_OK )
-		return false;
+	SceneDocument* document = AllocateThis(SceneDocument);
+	GetEditor().getDocumentManager()->addDocument(document);
+	return document;
+}
 
-	Path path = (String) fc.GetPath();
-	
-	SceneDocument* sceneDocument = (SceneDocument*) GetEditor().getDocument();	
-	ScenePtr scene = sceneDocument->scene;
+//-----------------------------------//
 
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
-	bool res = SerializerSaveObjectToFile(serializer, path, scene.get());
-	Deallocate(serializer);
+void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
+{
+	Document* document = editor->getDocument();
 
-	return res;
+	if( !document )
+	{
+		document = createDocument();
+		return;
+	}
+
+	if( !askSaveChanges(document) )
+		return;
+
+	if( !document->reset() )
+	{
+		const char* msg = "Sorry, creating new documents is disabled";
+		wxMessageBox(msg, wxMessageBoxCaptionStr, wxICON_ERROR | wxOK);
+		return;
+	}
+
+	// Simulate destroy and create events.
+	EventManager* events = GetEditor().getEventManager();
+	events->onDocumentUnselect(*document);
+	events->onDocumentDestroy(*document);
+	events->onDocumentCreate(*document);
+	events->onDocumentSelect(*document);
+}
+
+//-----------------------------------//
+
+
+void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
+{
+	Document* document = editor->getDocument();
+	if( !document ) return;
+
+	if( !askSaveChanges(document) )
+		return;
+
+	if( !document->open() )
+	{
+		const char* msg = "Could not load document.";
+		wxMessageDialog message(&GetEditor(), msg, "Load", wxOK | wxICON_EXCLAMATION);
+		message.ShowModal();
+	}
 }
 
 //-----------------------------------//
 
 void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 {
-	saveScene();
+	Document* document = editor->getDocument();
+	if( !document ) return;
+
+	if( !document->save() )
+	{
+		const char* msg = "Could not save document.";
+		wxMessageDialog message(&GetEditor(), msg, "Save", wxOK | wxICON_EXCLAMATION);
+		message.ShowModal();
+	}
 }
 
 //-----------------------------------//
@@ -217,31 +186,6 @@ void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
 	}
 
 	event.Enable( document->getUnsavedChanges() );
-}
-
-//-----------------------------------//
-
-void ProjectPlugin::switchScene(SceneDocument* document)
-{
-	if( !document ) return;
-	
-	UndoManager* undo = document->getUndoManager();
-	undo->clearOperations();
-	document->unsavedChanges = false;
-
-	const ScenePtr& scene = document->scene;
-
-#ifdef ENABLE_PHYSICS_BULLET
-	delete engine->getPhysicsManager();
-	PhysicsManager* physics = new PhysicsManager();
-	physics->createWorld();
-	engine->setPhysicsManager(physics);
-#endif
-
-	Events* events = editor->getEventManager();
-	events->onSceneLoad(scene);
-
-	editor->redrawView();
 }
 
 //-----------------------------------//

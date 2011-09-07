@@ -22,24 +22,33 @@ NAMESPACE_EDITOR_BEGIN
 
 enum 
 {
-	ID_MenuSceneEntityDelete = wxID_HIGHEST+472,
+	ID_MenuSceneEntityDelete = wxID_HIGHEST + 3654,
 	ID_MenuSceneEntityDuplicate,
 	ID_MenuSceneEntityVisible,
 	ID_MenuSceneEntityWireframe,
 	ID_MenuSceneEntityTerrain,
+	ID_MenuSceneComponentRemove,
 };
 
 //-----------------------------------//
+
+class SelectionOperation;
 
 class EntityOperation : public UndoOperation
 {
 public:
 
-	void undo();
-	void redo();
+	EntityOperation();
 
-	bool added;
-	EntityPtr entity;
+	enum OperationType { EntityAdded, EntityRemoved, ComponentAdded, ComponentRemoved };
+
+	void undo() OVERRIDE;
+	void redo() OVERRIDE;
+
+	EntityOperation::OperationType type;
+
+	EntityWeakPtr entity;
+	ComponentWeakPtr component;
 	SceneWeakPtr weakScene;
 };
 
@@ -60,9 +69,7 @@ public:
 class EditorFrame;
 class EntityOperation;
 
-typedef std::map<Entity*, wxTreeItemId> EntityIdsMap;
-
-//-----------------------------------//
+typedef std::map<Object*, wxTreeItemId> ObjectIdsMap;
 
 /**
  * This control is responsible for mantaining and updating a TreeCtrl
@@ -79,17 +86,20 @@ public:
 	ScenePage( wxWindow* parent, wxWindowID id = wxID_ANY );
 	virtual ~ScenePage();
 
-	// Gets the tree control.
-	GETTER(TreeCtrl, wxTreeCtrl*, treeCtrl)
+	// Cleans the current scene.
+	void cleanScene();
 
 	// Sets the current scene.
 	void setScene(const ScenePtr& scene);
 
+	// Gets the tree control.
+	GETTER(TreeCtrl, wxTreeCtrl*, treeCtrl)
+
+	// Gets the tree item from the component.
+	wxTreeItemId getTreeIdFromObject(Object*);
+
 	// Gets the entity associated with the tree item.
 	EntityPtr getEntityFromTreeId( wxTreeItemId id );
-
-	// Gets the tree item from the entity.
-	wxTreeItemId getTreeIdFromEntity(const EntityPtr& entity);
 
 	// Gets the component associated with the tree item.
 	ComponentPtr getComponentFromTreeId( wxTreeItemId id );
@@ -97,32 +107,23 @@ public:
 	// Did we send the last selection event.
 	bool sentLastSelectionEvent;
 
-	// Adds an entity to the scene.
-	void addEntity(const EntityPtr& entity);
-
 	// Adds a component to the tree item.
-	void addComponent( wxTreeItemId id, ComponentPtr component );
+	void addComponentToTree( wxTreeItemId id, ComponentPtr component );
 
 protected:
 
 	// Initializes the control.
 	void initTree();
 	void initButtons();
-
-	// Initializes the icons list.
 	void initIcons();
 
-	// Adds a group node to the tree.
+	// Tree management.
 	void addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup = true );
-
-	// Adds a node to the tree.
 	wxTreeItemId addEntity( wxTreeItemId id, const EntityPtr& node );
 
-	// Creates a new node operation.
-	EntityOperation* createEntityOperation(const EntityPtr& node, const std::string& desc);
-
-	// Cleans the current scene.
-	void cleanScene();
+	// Creates a new entity operation.
+	EntityOperation* createEntityOperation(const String& desc);
+	EntityOperation* createEntityAddOperation(const EntityPtr&);
 
 	// wxWidgets event callbacks.
 	void onItemChanged( wxTreeEvent& );
@@ -141,19 +142,27 @@ protected:
 	// Event helpers.
 	void populateEntityItemMenu(wxMenu& menu, const EntityPtr& node);
 	void populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component);
+	void onComponentMenuSelected(wxCommandEvent&);
 	void onAnimationMenuSelected(wxCommandEvent&);
 	void onAttachmentMenuSelected(wxCommandEvent&);
 	wxMenu* createMenuAnimation(const MeshPtr& node);
 	wxMenu* createMenuAttachment(const MeshPtr& node);
 	int firstAnimationId;
 	int firstAttachmentId;
+	
+	SceneWeakPtr weakScene;
+	EntityWeakPtr weakEntity;
+	ComponentWeakPtr weakComponent;
+
+	ModelPtr model;
 	MeshHandle meshHandle;
 	Mesh* mesh;
-	ModelPtr model;
 
 	// Scene-monitoring callbacks.
-	void onEntityAdded( const EntityPtr& node );
-	void onEntityRemoved( const EntityPtr& node );
+	void onEntityAdded( const EntityPtr& );
+	void onEntityRemoved( const EntityPtr& );
+	void onComponentAdded( const ComponentPtr& );
+	void onComponentRemoved( const ComponentPtr& );
 
 	// Scene tree.
 	wxBoxSizer* sizer;
@@ -161,7 +170,7 @@ protected:
 	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;
-	EntityIdsMap entityIds;
+	ObjectIdsMap objectIds;
 
 	// Tree icons.
 	wxImageList* imageList;
@@ -174,9 +183,6 @@ protected:
 
 	// Current menu.
 	wxMenu* currentMenu;
-
-	// Scene instance.
-	SceneWeakPtr weakScene;
 
 	// Entity counter.
 	int entityCounter;

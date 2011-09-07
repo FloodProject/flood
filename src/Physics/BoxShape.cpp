@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/BoxShape.h"
 #include "Physics/Convert.h"
@@ -27,34 +27,31 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-BoxShape::BoxShape()
-	: boxShape(nullptr)
-{ }
+BoxShape::BoxShape() : boxShape(nullptr)
+{
+}
 
 //-----------------------------------//
 
 BoxShape::~BoxShape()
 {
 	removeBody();
-	delete boxShape;
+	Deallocate(boxShape);
 }
 
 //-----------------------------------//
 
 void BoxShape::update( float delta )
 {
-	if( boxShape )
-		return;
+	if( boxShape ) return;
 
 	const TransformPtr& transform = getEntity()->getTransform();
-	
-	if( !transform )
-		return;
+	if( !transform ) return;
 	
 	const BoundingBox& box = transform->getBoundingVolume();
 	const Vector3& scale = transform->getScale();
 	
-	boxShape = new btBoxShape(Convert::toBullet(box));
+	boxShape = AllocateThis(btBoxShape, Convert::toBullet(box));
 	boxShape->setLocalScaling(Convert::toBullet(scale));
 }
 

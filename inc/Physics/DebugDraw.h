@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Core/References.h"
 #include "Resources/Material.h"
@@ -43,21 +43,21 @@ public:
 		const btVector3 &color);
 
 	// Draws a contact point.
-	virtual void drawContactPoint(const btVector3 &PointOnB,
+	void drawContactPoint(const btVector3 &PointOnB,
 		const btVector3 &normalOnB,	btScalar distance,
-		int lifeTime, const btVector3 &color);
+		int lifeTime, const btVector3 &color) OVERRIDE;
 
 	// Reports error messages.
-	virtual void reportErrorWarning (const char *warningString);
+	void reportErrorWarning (const char *warningString) OVERRIDE;
 	
 	// Draws 3D text.
-	virtual void draw3dText (const btVector3 &location, const char *textString);
+	void draw3dText (const btVector3 &location, const char *textString) OVERRIDE;
 	
 	// Gets the debug mode.
-	virtual int	getDebugMode() const;
+	int	getDebugMode() const OVERRIDE;
 
 	// Sets the debug mode.
-	virtual void setDebugMode(int debugMode);
+	void setDebugMode(int debugMode) OVERRIDE;
 
 protected:
 	

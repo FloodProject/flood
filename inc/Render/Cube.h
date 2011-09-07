@@ -15,7 +15,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 /**
- * Generates a cube.
+ * Generates a procedural cube mesh.
  */
 
 REFLECT_DECLARE_CLASS(Cube)

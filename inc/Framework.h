@@ -19,6 +19,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+class Window;
+
  /**
  * Simple framework to facilitate the use of the engine functionality in
  * applications. It asks for a rendering device to use, and has some 
@@ -32,7 +34,7 @@ class API_ENGINE Framework : public Engine
 public:
 
 	Framework(const String& app);
-	virtual ~Framework() { }
+	virtual ~Framework();
 
 	// Kickstart the framework in action.
 	void run();
@@ -62,7 +64,7 @@ protected:
 protected:
 
 	// Creates a new rendering window.
-	void createWindow();
+	Window* createWindow();
 
 	// Register input devices callbacks.
 	void registerCallbacks();
@@ -75,6 +77,12 @@ protected:
 
 	// Main rendering loop.
 	virtual void mainLoop();
+
+	// Main window;
+	Window* window;
+
+	// Main scene.
+	ScenePtr scene;
 
 	// Frame loop timer.
 	Timer frameTimer;

@@ -10,7 +10,7 @@
 #include "SelectionPlugin.h"
 #include "SelectionManager.h"
 
-#include "Events.h"
+#include "EventManager.h"
 #include "UndoManager.h"
 
 #include "Editor.h"
@@ -24,8 +24,6 @@ NAMESPACE_EDITOR_BEGIN
 
 REFLECT_CHILD_CLASS(SelectionPlugin, EditorPlugin)
 REFLECT_CLASS_END()
-
-//-----------------------------------//
 
 namespace SelectionTool
 {
@@ -42,7 +40,9 @@ SelectionPlugin::SelectionPlugin()
 	, buttonSelect(nullptr)
 	, dragRectangle(nullptr)
 	, additiveMode(false)
-{ }
+{
+
+}
 
 //-----------------------------------//
 
@@ -54,12 +54,31 @@ PluginMetadata SelectionPlugin::getMetadata()
 	metadata.description = "Provides selection services.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.priority = 15;
+	metadata.priority = 250;
 
 	return metadata;
 }
 
 //-----------------------------------//
+
+class ToolbarHack : public wxAuiToolBar
+{
+public:
+
+	void SelectItem(wxAuiToolBarItem* item)
+	{
+		Realize();
+
+		// Simulate click event so tool gets properly selected.
+		wxRect itemRect = item->GetSizerItem()->GetRect();
+		
+		wxMouseEvent e;
+		e.SetPosition(itemRect.GetPosition());
+
+		wxAuiToolBar::OnLeftDown(e);
+		wxAuiToolBar::OnLeftUp(e);
+	}
+};
 
 void SelectionPlugin::onPluginEnable()
 {
@@ -73,92 +92,102 @@ void SelectionPlugin::onPluginEnable()
 		buttonSelect = toolbar->AddTool( SelectionTool::Select, "Select",
 			iconSelect, "Selects the selection tool", wxITEM_RADIO );
 		addTool(buttonSelect, true);
+
+		((ToolbarHack*) toolbar)->SelectItem(buttonSelect);
 	}
 
-	Events* events = editor->getEventManager();
-	events->addEventListener(this);
-
-	selections = new SelectionManager();
-}
-
-//-----------------------------------//
-
-void SelectionPlugin::onDocumentCreate( Document& document )
-{
-	wxAuiToolBar* tb = document.createContextToolbar();
-	tb->SetMargins(0, 0, 0, 0);
-	//tb->SetSize(wxSize(-1, 20));
-	
-#if 0	
-	tb->AddLabel(wxID_ANY, "Selection");
-	tb->AddTool(wxID_ANY, wxMEMORY_BITMAP(page_code), wxMEMORY_BITMAP(page_code));
-#endif
-
-	wxButton* button = new wxButton(tb, wxID_ANY, "Group", wxDefaultPosition, wxSize(-1, 20), wxBU_EXACTFIT);
-	tb->AddControl(button);
-
-#if 0	
-	wxComboBox* comboBox = new wxComboBox(tb, wxID_ANY);
-	comboBox->SetSize(-1, 16);
-	comboBox->Append("Object");
-	comboBox->Append("Vertex");
-	comboBox->Append("Face");
-	tb->AddControl(comboBox, "Mode");
-#endif
-
-	PluginTool* selectTool = findTool(buttonSelect);
-	selectTool->setToolbar(tb);
-
-	Events* events = GetEditor().getEventManager();
-	events->setTool(this, selectTool);
+	EventManager* events = editor->getEventManager();
+	//events->addEventListener(this);
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onPluginDisable()
 {
-	delete selections;
-	selections = nullptr;
+	assert( !selections );
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onToolSelect( int id )
 {
-	SceneDocument* document = (SceneDocument*) editor->getDocument();
-	Viewframe* viewframe = document->getViewframe();
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onUndoOperation( const UndoOperationPtr& operation )
+{
+	assert( operation != nullptr );
+
+	Class* klass = operation->getType();
+	
+	if( !ClassInherits(klass, ReflectionGetType(SelectionOperation)) )
+		return;
+
+	SelectionOperation* selection = RefCast<SelectionOperation>(operation).get();
+	selection->redo();
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onSceneLoad( const ScenePtr& scene )
 {
-	SelectionOperation* selection = selections->getSelection();
-
-	if( selection )
-		selection->unselectAll();
+	assert( !selections );
 
 	scene->onEntityRemoved.Connect(this, &SelectionPlugin::onEntityRemoved);
+	selections = AllocateThis(SelectionManager);
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onSceneUnload( const ScenePtr& scene )
+{
+	assert( selections );
+
+	scene->onEntityRemoved.Disconnect(this, &SelectionPlugin::onEntityRemoved);
+
+	SelectionOperation* selection = selections->getSelection();
+
+	if(selection)
+	{
+		selection->unselectAll();
+		selections->setSelection(nullptr);
+	}
+
+	Deallocate(selections);
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onEntityRemoved(const EntityPtr& entity)
 {
-	SelectionOperation* op = selections->getSelection();
+	SelectionOperation* selection = selections->getSelection();
+	bool isSelected = selection && selection->isSelection(entity);
 
-	if(op && op->isSelection(entity))
+	if(isSelected)
 	{
-		Events* events = editor->getEventManager();
-		events->onEntityUnselect(entity);
+		selection->unselectAll();
+		selections->setSelection(nullptr);
 	}
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onEntityUnselect(const EntityPtr& entity)
+{
+#if 0
+	SelectionOperation* op = selections->getSelection();
+	bool isSelected = op && op->isSelection(entity);
+	
+	if(isSelected)
+#endif
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onKeyPress(const KeyEvent& event)
 {
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	
 	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
 	if( !isSelection ) return;
@@ -177,18 +206,14 @@ void SelectionPlugin::onKeyPress(const KeyEvent& event)
 
 void SelectionPlugin::onKeyRelease(const KeyEvent& event)
 {
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	RenderControl* control = sceneDocument->getRenderControl();
 
 	if( !event.ctrlPressed && additiveMode )
 	{
-		// http://trac.wxwidgets.org/ticket/12961
-		#pragma TODO("Change back to wxNullCursor once wxWidgets bug has been fixed")
-		
-		control->SetCursor( *wxSTANDARD_CURSOR );
-		control->Update();
+		control->SetCursor( wxNullCursor );
 		additiveMode = false;
 	}
 }
@@ -212,6 +237,13 @@ void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 
 //-----------------------------------//
 
+static bool isSameSelection(SelectionOperation* oldSelection, SelectionOperation* newSelection)
+{
+	bool isSameMode = (oldSelection->mode == newSelection->mode);
+	bool isSameObjects = (oldSelection->selections == newSelection->selections);
+	return isSameMode && (!oldSelection->lastUndone) && isSameObjects;
+}
+
 void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 {
 	if( event.button != MouseButton::Left )
@@ -234,27 +266,27 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	SelectionOperation* selected = selections->getSelection();
 
 	// Prevent duplication of selection events.
-	if( selected && (!selected->lastUndone)
-		&& (selected->selections == selection->selections))
+	if(selected && isSameSelection(selected, selection)) 
 	{
-		delete selection;
+		LogDebug("Ignoring duplicated selection");
+		Deallocate(selection);
 		return;
 	}
 
 	if( selected )
 		selected->unselectAll();
+		
+	selection->redo();
 
 	UndoManager* undoManager = sceneDocument->getUndoManager();
 	undoManager->registerOperation(selection);
-
-	selection->redo();
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 
 	if( events->getCurrentTool() != SelectionTool::Select )
 		return;
@@ -319,7 +351,7 @@ SelectionOperation* SelectionPlugin::createDeselection()
 	// If there is a current selection, and the user pressed the mouse,
 	// then we need to unselect everything that is currently selected.
 
-	SelectionOperation* selection = selections->createOperation();
+	SelectionOperation* selection = selections->createOperation( selections->getSelectionMode() );
 	selection->description = "Deselection";
 	selection->mode = SelectionMode::None;
 	
@@ -369,7 +401,7 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	// If there is no current selection, create a new one.
 	if( !selection )
 	{
-		selection = selections->createOperation();
+		selection = selections->createOperation( selections->getSelectionMode() );
 		selection->description = "Drag Selection";
 	}
 
@@ -389,7 +421,6 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& event)
 {
 	SelectionOperation* selection = nullptr;
-	SelectionOperation* selected = selections->getSelection();
 
 	EntityPtr entity;
 	
@@ -399,15 +430,12 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 		return selection;
 	}
 	
-	selection = selections->createOperation();
+	selection = selections->createOperation( selections->getSelectionMode() );
 	selection->description = "Selection";
-
-	if( selected && !selected->lastUndone )
-		selection->previous = selected->selections;
-	else if( selected )
-		selection->previous = selected->previous;
-
 	selection->addEntity(entity);
+
+	SelectionOperation* selected = selections->getSelection();
+	selection->setPreviousSelections(selected);
 
 	return selection;
 }
@@ -428,11 +456,10 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
-	const Ray& pickRay = camera->getRay( x, y, &outFar );
+	const Ray& pickRay = camera->getRay(x, y, &outFar);
 
 #if 0 // Enable this to draw debugging lines
-	const EntityPtr& line = buildRay( pickRay, outFar );
-	sceneDocument->editorScene->add( line );
+	camera->drawer.drawRay(pickRay, (outFar - pickRay.origin).length());
 #endif
 
 	// Perform ray casting to find the entities.

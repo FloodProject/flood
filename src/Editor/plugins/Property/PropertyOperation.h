@@ -17,8 +17,12 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(PropertyOperation)
+
 class PropertyOperation : public UndoOperation
 {
+	REFLECT_DECLARE_OBJECT(PropertyOperation)
+
 public:
 	
 	Class* type;

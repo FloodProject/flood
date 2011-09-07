@@ -27,13 +27,21 @@ public:
 	UndoPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin callbacks.
-	virtual void onPluginEnable();
-	virtual void onPluginDisable();
-	virtual void onDocumentSelect( Document& document );
-	virtual void onDocumentUnselect( Document& document );
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
+	
+	// Document callbacks.
+	void onDocumentCreate( Document& ) OVERRIDE;
+	void onDocumentDestroy( Document& ) OVERRIDE;
+	void onDocumentSelect( Document& ) OVERRIDE;
+	void onDocumentUnselect( Document& ) OVERRIDE;
+
+	// Undo management.
+	void connectUndo(Document&);
+	void disconnectUndo(Document&);
 
 protected:
 

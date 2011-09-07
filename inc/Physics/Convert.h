@@ -8,10 +8,12 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Math/Vector.h"
 #include "Math/BoundingBox.h"
+#include "Scene/Transform.h"
+#include "Physics/Body.h"
 
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btTransform.h>

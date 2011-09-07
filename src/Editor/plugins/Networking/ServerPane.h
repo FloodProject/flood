@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef ENABLE_PLUGIN_SERVER
+
 #include "gen\PreferencesGenerated.h"
 
 FWD_DECL_INTRUSIVE(Peer)
@@ -51,3 +53,5 @@ protected:
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

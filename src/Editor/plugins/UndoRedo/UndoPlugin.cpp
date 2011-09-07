@@ -11,7 +11,7 @@
 #include "UndoManager.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Events.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -36,7 +36,7 @@ PluginMetadata UndoPlugin::getMetadata()
 	metadata.description = "Provides undo and redo functionality.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.priority = 12;
+	metadata.priority = 200;
 
 	return metadata;
 }
@@ -71,7 +71,7 @@ void UndoPlugin::onPluginEnable()
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
 
 	// Subscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
 
 	updateButtons();
@@ -81,15 +81,43 @@ void UndoPlugin::onPluginEnable()
 
 void UndoPlugin::onPluginDisable()
 {
-	// Unsubscribe as an event listener.
-	Events* events = editor->getEventManager();
-	events->removeEventListener(this);
+
+}
+
+//-----------------------------------//
+
+void UndoPlugin::onDocumentCreate( Document& document )
+{
+}
+
+//-----------------------------------//
+
+void UndoPlugin::onDocumentDestroy( Document& document )
+{
+	if( !undoManager ) return;
+	disconnectUndo(document);
 }
 
 //-----------------------------------//
 
 void UndoPlugin::onDocumentSelect( Document& document )
 {
+	connectUndo(document);
+}
+
+//-----------------------------------//
+
+void UndoPlugin::onDocumentUnselect( Document& document )
+{
+	disconnectUndo(document);
+}
+
+//-----------------------------------//
+
+void UndoPlugin::connectUndo(Document& document)
+{
+	assert( !undoManager );
+
 	// Connect to undo/redo events.
 	undoManager = document.getUndoManager();
 	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
@@ -100,8 +128,10 @@ void UndoPlugin::onDocumentSelect( Document& document )
 
 //-----------------------------------//
 
-void UndoPlugin::onDocumentUnselect( Document& document )
+void UndoPlugin::disconnectUndo(Document& document)
 {
+	assert( undoManager != nullptr );
+
 	// Disconnect to undo/redo events.
 	undoManager->onUndoRedoEvent.Disconnect(this, &UndoPlugin::onUndoEvent);
 	undoManager = nullptr;

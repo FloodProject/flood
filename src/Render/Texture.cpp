@@ -55,9 +55,6 @@ void Texture::init()
 	target = GL_TEXTURE_2D;
 	uploaded = false;
 	image = nullptr;
-
-	minFilter = TextureFiltering::Linear;
-	maxFilter = TextureFiltering::Linear;
 	anisotropicFilter = 1.0f;
 
 	generate();
@@ -118,6 +115,9 @@ bool Texture::upload()
 	}
 
 	uploaded = true;
+
+	unbind();
+
 	return true;
 }
 
@@ -125,26 +125,22 @@ bool Texture::upload()
 
 void Texture::configure()
 {
+	bind();
+
 	if(GLEW_EXT_texture_filter_anisotropic)
 		glTexParameterf( target, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropicFilter );
 
+#if 0
 	glTexParameteri( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
 	glTexParameteri( target, GL_TEXTURE_MAG_FILTER, convertFilterFormat(maxFilter) );
 
 	glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	//glTexParameter(GL_TEXTURE_BORDER_COLOR);
-
-	// Three next lines are necessary if we want to use the convenient shadow2DProj function in the shader.
-	// Otherwise we have to rely on texture2DProj
-	 
-	// TODO: OpenGL 3 name: COMPARE_REF_TO_TEXTURE
-	//glTexParameteri(target, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-	//glTexParameteri(target, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	//glTexParameteri(target, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+#endif
 
 	#pragma TODO("Add support for mipmaps")
+
+	unbind();
 }
 
 //-----------------------------------//
@@ -201,7 +197,7 @@ ImagePtr Texture::readImage() const
 
 	unbind();
 
-	ImagePtr image( new Image() );
+	ImagePtr image = AllocateThis(Image);
 	image->setWidth( width );
 	image->setHeight( height );
 	image->setPixelFormat( format );
@@ -232,13 +228,13 @@ uint Texture::getExpectedSize() const
 
 //-----------------------------------//
 
-int Texture::convertFilterFormat( TextureFiltering::Enum format ) const
+int Texture::convertFilterFormat( TextureFilterMode::Enum format )
 {
 	switch( format )
 	{
-	case TextureFiltering::Nearest:
+	case TextureFilterMode::Nearest:
 		return GL_NEAREST;
-	case TextureFiltering::Linear:
+	case TextureFilterMode::Linear:
 		return GL_LINEAR;
 	}
 
@@ -248,7 +244,25 @@ int Texture::convertFilterFormat( TextureFiltering::Enum format ) const
 
 //-----------------------------------//
 
-GLint Texture::convertInternalFormat( PixelFormat::Enum format ) const
+int Texture::convertWrapFormat( TextureWrapMode::Enum format )
+{
+	switch( format )
+	{
+	case TextureWrapMode::Repeat:
+		return GL_REPEAT;
+	case TextureWrapMode::Clamp:
+		return GL_CLAMP;
+	case TextureWrapMode::ClampToBorder:
+		return GL_CLAMP_TO_BORDER;
+	}
+
+	assert( 0 && "This should not be reached" );
+	return 0;
+}
+
+//-----------------------------------//
+
+GLint Texture::convertInternalFormat( PixelFormat::Enum format )
 {
 	switch( format )
 	{
@@ -266,7 +280,7 @@ GLint Texture::convertInternalFormat( PixelFormat::Enum format ) const
 
 //-----------------------------------//
 
-GLint Texture::convertSourceFormat( PixelFormat::Enum format ) const
+GLint Texture::convertSourceFormat( PixelFormat::Enum format )
 {
 	switch( format )
 	{

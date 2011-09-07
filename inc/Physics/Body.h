@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Scene/Component.h"
 
@@ -53,6 +53,12 @@ public:
 
 	// Gets the internal Bullet rigid body.
 	GETTER(BulletBody, btRigidBody*, body)
+
+	// Gets/sets the mass of the physics body.
+	ACESSOR(Mass, float, mass)
+
+	// Gets/sets the mass of the physics body.
+	ACESSOR(Friction, float, friction)
 
 protected:
 

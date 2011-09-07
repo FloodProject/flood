@@ -50,7 +50,7 @@ public:
 	bool hasFocus() OVERRIDE;
 
 	// Sets the title of the window.
-	void setTitle(const std::string& title) OVERRIDE;
+	void setTitle(const String& title) OVERRIDE;
 
 	// Sets the cursor visibility.
 	void setCursorVisible(bool state) OVERRIDE;

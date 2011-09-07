@@ -7,38 +7,34 @@
 ************************************************************************/
 
 #include "Server/API.h"
-#include "Protocol/ReplicaMessages.h"
+#include "Server/Plugins/ReplicaPlugin.h"
 #include "Protocol/UserMessages.h"
 #include "Protocol/Users.h"
 #include "Server/Server.h"
-#include "Core/SerializationHelpers.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-class ReplicaMessagesServer : ReplicaMessagePlugin
-{
-public:
-
-	void handleReplicaContextCreate(const SessionPtr&, const ReplicaContextCreateMessage&) OVERRIDE;
-	void handleReplicaContextRequest(const SessionPtr&, const ReplicaContextRequestMessage&) OVERRIDE;
-
-	void handleReplicaObjectCreate(const SessionPtr&, const ReplicaObjectCreateMessage&) OVERRIDE;
-	void handleReplicaObjectUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
-};
-
-REFLECT_CHILD_CLASS(ReplicaMessagesServer, ReplicaMessagePlugin)
+REFLECT_CHILD_CLASS(ReplicaPlugin, ServerPlugin)
 REFLECT_CLASS_END()
+
+PROTOCOL_PLUGIN_BEGIN(ReplicaPlugin)
+	METADATA_NAME(Replica)
+	METADATA_DESC(Provides object replication functionality.)
+	METADATA_AUTHOR(triton)
+	METADATA_VERSION(1.0)
+	METADATA_PRIORITY(20)
+PROTOCOL_PLUGIN_END()
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaContextCreate(const SessionPtr& session, const ReplicaContextCreateMessage& msg)
+void ReplicaPlugin::handleReplicaContextCreate(const SessionPtr& session, const ReplicaContextCreateMessage& msg)
 {
 	LogDebug("ReplicaContextCreate: %s", "Creating a new context");
 
 	// Create a new replica context.
-	ReplicaContext* context = Allocate(ReplicaContext, AllocatorGetThis());
+	ReplicaContext* context = AllocateThis(ReplicaContext);
 	context->id = nextContextId++;
 	replicaContexts[context->id] = context;
 
@@ -57,7 +53,7 @@ void ReplicaMessagesServer::handleReplicaContextCreate(const SessionPtr& session
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaContextRequest(const SessionPtr& session, const ReplicaContextRequestMessage& ask)
+void ReplicaPlugin::handleReplicaContextRequest(const SessionPtr& session, const ReplicaContextRequestMessage& ask)
 {
 	ReplicaContext* context = findContext(ask.contextId);
 
@@ -72,7 +68,7 @@ void ReplicaMessagesServer::handleReplicaContextRequest(const SessionPtr& sessio
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaObjectCreate(const SessionPtr& session, const ReplicaObjectCreateMessage& msg)
+void ReplicaPlugin::handleReplicaObjectCreate(const SessionPtr& session, const ReplicaObjectCreateMessage& msg)
 {
 	ReplicaContext* context = findContext(msg.contextId);
 
@@ -123,9 +119,9 @@ void ReplicaMessagesServer::handleReplicaObjectCreate(const SessionPtr& session,
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
+void ReplicaPlugin::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
 {
-	ReplicaMessagePlugin::handleReplicaObjectUpdate(session, msg);
+	ReplicaMessageHandler::handleReplicaObjectUpdate(session, msg);
 
 	MessagePtr m_update = MessageCreate(ReplicaMessageIds::ReplicaObjectUpdate);
 	StreamWrite(m_update->ms, msg->ms->buffer, msg->ms->position);

@@ -24,14 +24,14 @@ RenderTarget::RenderTarget()
 
 RenderTarget::~RenderTarget()
 {
-	
+
 }
 
 //-----------------------------------//
 
 RenderView* RenderTarget::createView()
 {
-	RenderView* view = Allocate(RenderView, GetRenderAllocator());
+	RenderView* view = AllocateThis(RenderView);
 	view->setRenderTarget(this);
 	views.push_back( view );
 	return view;

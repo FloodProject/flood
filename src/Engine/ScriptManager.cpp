@@ -120,7 +120,7 @@ void ScriptManager::onReload( const ResourceEvent& event )
 
 //-----------------------------------//
 
-void ScriptManager::update(float delta)
+void ScriptManager::update()
 {
 
 }

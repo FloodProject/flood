@@ -257,6 +257,7 @@
     <ClInclude Include="..\..\inc\Core\Object.h" />
     <ClInclude Include="..\..\inc\Core\Platform.h" />
     <ClInclude Include="..\..\inc\Core\Plugin.h" />
+    <ClInclude Include="..\..\inc\Core\PluginExtension.h" />
     <ClInclude Include="..\..\inc\Core\PluginManager.h" />
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
     <ClInclude Include="..\..\inc\Core\Profiler.h" />

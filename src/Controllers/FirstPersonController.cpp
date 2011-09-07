@@ -42,10 +42,13 @@ FirstPersonController::~FirstPersonController()
 {
 	//window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 
-	Keyboard* keyboard = GetInputManager()->getKeyboard();
+	InputManager* input = GetInputManager();
+	if( !input ) return;
+
+	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Disconnect( this, &FirstPersonController::onKeyPressed );
 	
-	Mouse* mouse = GetInputManager()->getMouse();
+	Mouse* mouse = input->getMouse();
 	mouse->onMouseMove.Disconnect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Disconnect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Disconnect( this, &FirstPersonController::onMouseWheel );
@@ -76,7 +79,10 @@ void FirstPersonController::setEnabled(bool enabled)
 
 void FirstPersonController::_update( float delta )
 {
-	Window* window = GetInputManager()->getWindow();
+	InputManager* input = GetInputManager();
+	if( !input ) return;
+
+	Window* window = input->getWindow();
 	if( !window ) return;
 
 	if( window->hasFocus() )
@@ -172,10 +178,13 @@ void FirstPersonController::checkControls( float delta )
 
 void FirstPersonController::registerCallbacks()
 {
-	Keyboard* keyboard = GetInputManager()->getKeyboard();
+	InputManager* input = GetInputManager();
+	if( !input ) return;
+
+	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &FirstPersonController::onKeyPressed );
 
-	Mouse* mouse = GetInputManager()->getMouse();
+	Mouse* mouse = input->getMouse();
 	mouse->onMouseMove.Connect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Connect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Connect( this, &FirstPersonController::onMouseWheel );

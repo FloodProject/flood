@@ -13,7 +13,7 @@ NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-int Settings::NumTasksProcess = 1;
+int Settings::NumTasksProcess = 3;
 int Settings::NumThreadsWorkers = -1;
 int Settings::NumThreadsIO = 1;
 String Settings::HostLocation = "127.0.0.1";

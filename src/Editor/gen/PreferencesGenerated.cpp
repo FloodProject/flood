@@ -168,7 +168,7 @@ Plugins::Plugins( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxS
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	
-	// Connect Events
+	// Connect EventManager
 	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( Plugins::OnPluginInit ) );
 	m_listPlugins->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Plugins::OnPluginSelected ), NULL, this );
 	m_buttonPluginEnable->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Plugins::OnPluginEnable ), NULL, this );
@@ -178,7 +178,7 @@ Plugins::Plugins( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxS
 
 Plugins::~Plugins()
 {
-	// Disconnect Events
+	// Disconnect EventManager
 	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( Plugins::OnPluginInit ) );
 	m_listPlugins->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Plugins::OnPluginSelected ), NULL, this );
 	m_buttonPluginEnable->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Plugins::OnPluginEnable ), NULL, this );
@@ -300,6 +300,9 @@ ResourcesFrame::ResourcesFrame( wxWindow* parent, wxWindowID id, const wxString&
 	m_resourceList = new wxListCtrl( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON );
 	bSizer18->Add( m_resourceList, 1, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
+	m_gauge1 = new wxGauge( m_panel3, wxID_ANY, 100, wxDefaultPosition, wxSize( -1,8 ), wxGA_HORIZONTAL );
+	bSizer18->Add( m_gauge1, 0, wxEXPAND|wxBOTTOM|wxRIGHT, 5 );
+	
 	m_panel3->SetSizer( bSizer18 );
 	m_panel3->Layout();
 	bSizer18->Fit( m_panel3 );
@@ -311,7 +314,7 @@ ResourcesFrame::ResourcesFrame( wxWindow* parent, wxWindowID id, const wxString&
 	
 	this->Centre( wxBOTH );
 	
-	// Connect Events
+	// Connect EventManager
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesFrame::OnClose ) );
 	m_resourceGroups->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesFrame::onResourceGroupChanged ), NULL, this );
 	m_detailSlider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
@@ -330,7 +333,7 @@ ResourcesFrame::ResourcesFrame( wxWindow* parent, wxWindowID id, const wxString&
 
 ResourcesFrame::~ResourcesFrame()
 {
-	// Disconnect Events
+	// Disconnect EventManager
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesFrame::OnClose ) );
 	m_resourceGroups->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesFrame::onResourceGroupChanged ), NULL, this );
 	m_detailSlider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
@@ -467,7 +470,7 @@ ServerFrame::ServerFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	
 	this->Centre( wxBOTH );
 	
-	// Connect Events
+	// Connect EventManager
 	m_buttonConnect->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ServerFrame::onConnectButtonClick ), NULL, this );
 	m_textMessage->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ServerFrame::onChatSendButtonClick ), NULL, this );
 	m_button10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ServerFrame::onChatSendButtonClick ), NULL, this );
@@ -475,7 +478,7 @@ ServerFrame::ServerFrame( wxWindow* parent, wxWindowID id, const wxString& title
 
 ServerFrame::~ServerFrame()
 {
-	// Disconnect Events
+	// Disconnect EventManager
 	m_buttonConnect->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ServerFrame::onConnectButtonClick ), NULL, this );
 	m_textMessage->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ServerFrame::onChatSendButtonClick ), NULL, this );
 	m_button10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ServerFrame::onChatSendButtonClick ), NULL, this );

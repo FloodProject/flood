@@ -15,15 +15,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Pipeline\API.h" />
+    <ClInclude Include="..\..\inc\Pipeline\API.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ImporterFBX.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ImporterMilkshape.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ResourceImporter.h" />
     <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h" />
     <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h" />
+    <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h" />
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h" />
     <ClInclude Include="..\..\src\Pipeline\ResourceProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Pipeline\ImageProcessor.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\ImporterFBX.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\ImporterMilkshape.cpp" />
     <ClCompile Include="..\..\src\Pipeline\MeshProcessor.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\Milkshape3D.cpp" />
     <ClCompile Include="..\..\src\Pipeline\Pipeline.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\ResourceImporter.cpp" />
     <ClCompile Include="..\..\src\Pipeline\ResourceProcessor.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -78,7 +87,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\;$(SolutionDir)..\..\dep\nvtt\include</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
-      <DisableSpecificWarnings>4190</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4190;4530</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

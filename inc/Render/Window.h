@@ -104,6 +104,9 @@ protected:
 	// Handles the focus event.
 	void handleWindowFocus( bool focusLost );
 
+	// Rendering context.
+	RenderContext* context;
+
 	// Holds the window settings.
 	WindowSettings settings;
 };

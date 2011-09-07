@@ -92,10 +92,10 @@ public:
 	virtual ~ResourceManager();
  
 	// Gets an already loaded resource by its name.
-	ResourceHandle getResource(const String& name);
+	ResourceHandle getResource(const Path& name);
 
 	// Loads or returns an already loaded resource by its name.
-	ResourceHandle loadResource(const String& name);
+	ResourceHandle loadResource(const Path& name);
 
 	// Loads or returns an already loaded resource by its name.
 	ResourceHandle loadResource(ResourceLoadOptions options);
@@ -104,12 +104,12 @@ public:
 	void removeResource(Resource* resource);
 
 	// Removes a resource from the manager.
-	void removeResource(const String& path);
+	void removeResource(const String& name);
 
 	// Removes unused resources.
 	void removeUnusedResources();
 
-	// Finishes until all queued resources are loaded.
+	// Waits until all queued resources are loaded.
 	void loadQueuedResources();
 
 	// Registers a resource handler.
@@ -196,6 +196,9 @@ protected:
 
 	// Destroy the resource loaders.
 	void destroyLoaders();
+
+	// Destroy the resource handles.
+	void destroyHandles();
 
 	// Maps a name to a resource.
 	ResourceMap resources;

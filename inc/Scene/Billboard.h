@@ -18,14 +18,18 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 /**
- * Billboards come in different flavors. Screen aligned billboards are
- * the simplest, they are always aligned to the screen. Use these for
- * text and GUI stuff. World aligned billboards will rotate in an
- * arbitrary axis to face the camera, thus they are useful for clouds
- * and other distant objects. Axis aligned billboards can rotate only
- * with respect to a given axis. These are most useful to represent
- * cylindrical-symetric objects like trees since you don't want them to
- * to rotate to face the camera when you fly over them.
+ * Billboards come in different flavors:
+ *
+ * Screen aligned billboards are the simplest, they are always aligned
+ * to the screen. Use these for text and GUI stuff.
+ *
+ * World aligned billboards will rotate in an arbitrary axis to face
+ * the camera, thus they are useful for clouds and other distant objects.
+ *
+ * Axis aligned billboards can rotate only with respect to a given axis.
+ * These are useful to represent cylindrical-symetric objects like trees
+ * since you don't want them to rotate to face the camera when you fly
+ * over them.
  */
 
 struct API_SCENE BillboardType
@@ -64,7 +68,7 @@ public:
 	void onPreRender( const Camera& camera ) OVERRIDE;
 
 	// Creates the debug renderable of the component.
-	RenderablePtr createDebugRenderable() const OVERRIDE;
+	//RenderablePtr createDebugRenderable() const OVERRIDE;
   
 protected:
 

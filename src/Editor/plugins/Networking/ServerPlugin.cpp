@@ -7,18 +7,21 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef ENABLE_PLUGIN_SERVER
+
 #include "ServerPlugin.h"
 #include "Network/Host.h"
 #include "Network/Message.h"
 #include "Network/Dispatcher.h"
 #include "Network/SessionManager.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 #include "Protocol/UserMessages.h"
 #include "Editor.h"
 #include "Settings.h"
 #include "ServerPane.h"
 #include "Core/Utilities.h"
-#include "Events.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -54,6 +57,7 @@ PluginMetadata ServerPlugin::getMetadata()
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 900;
+	metadata.startEnabled = false;
 
 	return metadata;
 }
@@ -124,7 +128,6 @@ bool ServerPlugin::initClient(const HostConnectionDetails& details)
 	
 	dispatcher = Allocate(Dispatcher, AllocatorGetThis());
 	dispatcher->initClient(host);
-	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
 
 	SessionManager* sm = dispatcher->getSessionManager();
 	sm->onSessionAdded.Connect(this, &ServerPlugin::handleSessionAdded);
@@ -274,3 +277,5 @@ void ServerPlugin::handleSessionRemoved(const SessionPtr& session)
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

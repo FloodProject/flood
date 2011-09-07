@@ -12,6 +12,7 @@
 #include "Input/MouseEvents.h"
 #include "Input/KeyboardEvents.h"
 #include "Document.h"
+#include "UndoOperation.h"
 
 FWD_DECL_INTRUSIVE(Scene)
 FWD_DECL_INTRUSIVE(Entity)
@@ -67,18 +68,16 @@ public:
 	// Finds if there is a mode with given id.
 	PluginTool* findTool( wxAuiToolBarItem* tool );
 
-	// Plugin updates callback.
+	// Plugin update callback.
 	virtual void onPluginUpdate() {}
 
-	// Plugin tool selection callback.
+	// Plugin tool callback.
 	virtual void onToolSelect( int id ) {}
 	virtual void onToolUnselect( int id ) {}
 
-	// Document creation callback.
+	// Document callbacks.
 	virtual void onDocumentCreate( Document& document ) {}
 	virtual void onDocumentDestroy( Document& document ) {}
-
-	// Document selection callback.
 	virtual void onDocumentSelect( Document& ) {}
 	virtual void onDocumentUnselect( Document& ) {}
 
@@ -114,6 +113,10 @@ public:
 	// Server callbacks.
 	virtual void onServerConnect(const SessionPtr&) {}
 	virtual void onServerDisconnect(const SessionPtr&) {}
+
+	// Undo/redo operation events.
+	virtual void onUndoOperation(const UndoOperationPtr&) {}
+	virtual void onRedoOperation(const UndoOperationPtr&) {}
 
 protected:
 

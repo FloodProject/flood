@@ -31,7 +31,7 @@ TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	String brushesPath = MediaFolder + "Brushes/";
+	String brushesPath = PathCombine(MediaFolder, "Brushes");
 	
 	std::vector<String> files;
 	FileEnumerateFiles(brushesPath, files);
@@ -40,15 +40,22 @@ void TerrainPage::createBrushes()
 
 	for( size_t i = 0; i < files.size(); i++ )
 	{
-		const String& file = files[i];
+		const Path& path = files[i];
 		
-		ImageHandle image = rm->loadResource<Image>(file);
+		ImageHandle handle = rm->loadResource<Image>(path);
+
+		Image* image = handle.Resolve();
 		if( !image ) continue;
 
-		wxBitmap* bmp = ConvertImageToBitmap(image);
+		while( !image->isLoaded() )
+			SystemSleep(0.01f);
+
+		Path fullPath = PathCombine(brushesPath, path);
+
+		wxBitmap* bmp = ConvertImageToBitmap(image, fullPath);
 		if( !bmp ) continue;
 
-		m_choiceBrush->Append( PathGetFile(file), *bmp);
+		m_choiceBrush->Append(PathGetFile(path), *bmp);
 		delete bmp;
 	}
 
@@ -59,92 +66,73 @@ void TerrainPage::createBrushes()
 
 void TerrainPage::createUI()
 {
-	//scrolledWindow = new wxScrolledWindow(this);
-
-	m_cbTerrainTool = new wxChoicebook( this, wxID_ANY, 
-		wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
-
-	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
-	//bSizer1->Add( scrolledWindow, 1, wxEXPAND|wxALL, 5 );
-	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
-	
 	createBrush();
-	//createCell();
-
-	//scrolledWindow->SetSizer( bSizer1 );
-	SetSizerAndFit( bSizer1 );
 }
 
 //-----------------------------------//
 
 void TerrainPage::createBrush()
 {
-	m_panelBrush = new wxPanel( m_cbTerrainTool );
+	m_panelBrush = this;
 
-	//new wxStaticLine( m_panelBrush, wxID_ANY, 
-	//	wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	wxFlexGridSizer* fgSizer2 = new wxFlexGridSizer(2);
+	fgSizer2->AddGrowableCol(1);
 
-	wxFlexGridSizer* fgSizer2 = new wxFlexGridSizer( 2 );
-	//fgSizer2->SetFlexibleDirection( wxVERTICAL );
-	//fgSizer2->AddGrowableCol( 1 );
-	
+	wxSizerFlags flags = wxSizerFlags().Expand().Border();
+
 	wxStaticText* m_staticText2 = new wxStaticText( m_panelBrush, wxID_ANY, "Brush:" );
-	fgSizer2->Add( m_staticText2, 0, wxALL, 5 );
+	fgSizer2->Add( m_staticText2, flags );
 	
 	m_choiceBrush = new wxBitmapComboBox( m_panelBrush, wxID_ANY );
-	fgSizer2->Add( m_choiceBrush, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	fgSizer2->Add( m_choiceBrush, flags );
 	
 	m_choiceBrush->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
 
 	wxStaticText* m_staticText31 = new wxStaticText( m_panelBrush, wxID_ANY, "Size:" );
-	fgSizer2->Add( m_staticText31, 0, wxALL, 5 );
+	fgSizer2->Add( m_staticText31, flags );
 	
 	m_sliderSize = new wxSliderCtrl( m_panelBrush, wxID_ANY, BRUSH_INITIAL_SIZE, 0, 200 );
-	fgSizer2->Add( m_sliderSize, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	fgSizer2->Add( m_sliderSize, flags );
 	
-	wxStaticText* m_staticText3 = new wxStaticText( m_panelBrush, wxID_ANY,	"Strength:" );
-	fgSizer2->Add( m_staticText3, 0, wxALL, 5 );
+	wxStaticText* m_staticText3 = new wxStaticText( m_panelBrush, wxID_ANY, "Strength:" );
+	fgSizer2->Add( m_staticText3, flags );
 
 	m_sliderStrength = new wxSliderCtrl( m_panelBrush, wxID_ANY, 2, 0, 100 );
-	fgSizer2->Add( m_sliderStrength, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	fgSizer2->Add( m_sliderStrength, flags );
 
 	wxStaticText* m_staticText4 = new wxStaticText( m_panelBrush, wxID_ANY, "Texture:" );
-	fgSizer2->Add( m_staticText4, 0, wxALL, 5 );
+	fgSizer2->Add( m_staticText4, flags );
 
 	m_textureChoice = new wxComboBox( m_panelBrush, wxID_ANY );
-	fgSizer2->Add( m_textureChoice, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	fgSizer2->Add( m_textureChoice, flags );
 
 	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_DROPDOWN, &TerrainPage::onTextureDropdown, this );
 	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
 
 	wxStaticText* m_staticText5 = new wxStaticText( m_panelBrush, wxID_ANY, "Tile:" );
-	fgSizer2->Add( m_staticText5, 0, wxALL, 5 );
+	fgSizer2->Add( m_staticText5, flags );
 
 	wxBoxSizer* tileSizer = new wxBoxSizer( wxVERTICAL );
 	
 	m_tileLock = new wxCheckBox( m_panelBrush, wxID_ANY, "Lock" );
 	m_tileLock->SetValue(false);
-	tileSizer->Add( m_tileLock, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	tileSizer->Add( m_tileLock, flags );
 
 	m_tileOffsetX = new wxSliderCtrl( m_panelBrush, wxID_ANY, 0, 0, 100 );
-	tileSizer->Add( m_tileOffsetX, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	tileSizer->Add( m_tileOffsetX, flags );
 
 	m_tileOffsetY = new wxSliderCtrl( m_panelBrush, wxID_ANY, 0, 0, 100 );
-	tileSizer->Add( m_tileOffsetY, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	tileSizer->Add( m_tileOffsetY, flags );
 
-	fgSizer2->Add( tileSizer, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	fgSizer2->Add( tileSizer, flags );
 
-	m_cbTerrainTool->AddPage( m_panelBrush, "Brush Settings", true );
-	m_panelBrush->SetSizerAndFit( fgSizer2 );
-	//m_panelBrush->Layout();
+	SetSizerAndFit( fgSizer2 );
 }
 
 //-----------------------------------//
 
 void TerrainPage::createCell()
 {
-	m_panelCell = new wxPanel( m_cbTerrainTool, wxID_ANY );
-	m_cbTerrainTool->AddPage( m_panelCell, "Cell Settings", true );
 }
 
 //-----------------------------------//
@@ -211,7 +199,7 @@ int	TerrainPage::getBrushSize()
 
 ImageHandle TerrainPage::getBrushImage()
 {
-	std::string path = m_choiceBrush->GetValue();
+	Path path = m_choiceBrush->GetValue();
 
 	ResourceManager* rm = GetResourceManager();
 	return rm->loadResource<Image>(path);
@@ -221,7 +209,7 @@ ImageHandle TerrainPage::getBrushImage()
 
 ImagePtr TerrainPage::getPaintImage()
 {
-	std::string path = m_textureChoice->GetValue();
+	Path path = m_textureChoice->GetValue();
 
 	ResourceManager* rm = GetResourceManager();
 	return rm->loadResource<Image>(path).Resolve();

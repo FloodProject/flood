@@ -9,20 +9,18 @@
 #pragma once
 
 #include "Protocol/API.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 #include "Core/Event.h"
 
 NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(ResourcesContextCreateMessage)
-struct API_PROTOCOL ResourcesContextCreateMessage : MessageDefinition
+REFLECT_DECLARE_CLASS(ResourcesAddressMessage)
+struct API_PROTOCOL ResourcesAddressMessage : MessageDefinition
 {
-	REFLECT_DECLARE_OBJECT(ResourcesContextCreateMessage)
-	ResourcesContextCreateMessage() : localId(0) {}
-	ResourcesLocalId localId;
-	ClassId classId;
+	REFLECT_DECLARE_OBJECT(ResourcesAddressMessage)
+	String address;
 };
 
 //-----------------------------------//
@@ -35,29 +33,29 @@ struct API_PROTOCOL ResourcesMessageIds
 {
 	enum Enum : MessageId
 	{
-		ResourcesGetServer	= RESOURCES_INITIAL_ID + 0,
+		ResourcesAddress	= RESOURCES_INITIAL_ID + 0,
 	};
 };
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(ResourcesMessagePlugin)
-class API_PROTOCOL ResourcesMessagePlugin : public MessagePlugin
+REFLECT_DECLARE_CLASS(ResourcesMessageHandler)
+class API_PROTOCOL ResourcesMessageHandler : public MessageHandler
 {
-	REFLECT_DECLARE_OBJECT(ResourcesMessagePlugin)
+	REFLECT_DECLARE_STATIC_CLASS(ResourcesMessageHandler)
 
 public:
 
-	ResourcesMessagePlugin() {}
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
+	ResourcesMessageHandler() {}
 
 	// Gets the messages that this plugin handles.
 	const MessagesTable& getMessagesTable() OVERRIDE;
 
 	// Gets the enum with the messages that this plugin handles.
 	Enum* getMessagesEnum() OVERRIDE;
+
+	// Message callbacks.
+	virtual void handleResourcesAddress(const SessionPtr&, const ResourcesAddressMessage&);
 };
 
 //-----------------------------------//

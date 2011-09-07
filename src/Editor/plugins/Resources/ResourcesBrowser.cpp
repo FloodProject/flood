@@ -13,7 +13,7 @@
 #include "UndoManager.h"
 #include "Settings.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Core/Utilities.h"
 #include "../Scene/ScenePane.h"
 #include "../Scene/SceneDocument.h"
@@ -166,12 +166,6 @@ void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
 
 void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
 {
-	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
-	ResourceDatabase* db = rp->resourceDatabase;
-	ResourcesCacheMap& cache = db->resourcesCache;
-	
-	bool isGeneral = group == ResourceGroup::General;
-
 	int imageSize = m_detailSlider->GetValue();
 	bool showImages = imageSize > 0;
 
@@ -194,6 +188,23 @@ void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
 	col.SetWidth(300);
 		
 	m_resourceList->InsertColumn(0, col);
+
+	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
+	ResourceDatabase* db = rp->resourceDatabase;
+	if( !db ) return;
+
+	addDatabaseGroup(db, group);
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group)
+{
+	bool isGeneral = group == ResourceGroup::General;
+	int imageSize = m_detailSlider->GetValue();
+	bool showImages = imageSize > 0;
+
+	ResourcesCacheMap& cache = db->resourcesCache;
 
 	for(auto it = cache.begin(); it != cache.end(); it++)
 	{
@@ -225,7 +236,7 @@ int ResourcesBrowser::getImageIndex( const ResourceMetadata& metadata )
 {
 	int imageSize = m_detailSlider->GetValue();
 
-	String fullPath = CacheFolder + metadata.thumbnail;
+	String fullPath = CacheFolder + metadata.preview;
 
 	if(metadata.group == ResourceGroup::Images)
 		fullPath = MediaFolder + metadata.path;
@@ -257,7 +268,7 @@ void ResourcesBrowser::onResourceListSelection( wxListEvent& event )
 
 	if( !inSelectionMode )
 	{
-		Events* events = GetEditor().getEventManager();
+		EventManager* events = GetEditor().getEventManager();
 		events->onResourceSelect(res);
 	}
 }
@@ -324,26 +335,28 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 		dropPoint = ray.getPoint(distance);
 	}
 
-	std::string name = event.GetText();
+	String name = event.GetText();
 
 	ResourceManager* rm = GetResourceManager();
 	MeshHandle mesh = rm->loadResource<Mesh>(name);
 
 	if( !mesh ) return;
 
-	EntityPtr entity( new Entity( PathGetFile(name) ) );
+	EntityPtr entity = EntityCreate(AllocatorGetHeap());
+	entity->setName(PathGetFile(name));
 	entity->addTransform();
 	entity->getTransform()->setPosition(dropPoint);
-	entity->addComponent( ModelPtr( new Model(mesh) ) );
 
-	EntityOperation* entityOperation = new EntityOperation();
+	ModelPtr model = AllocateThis(Model, mesh);
+	entity->addComponent(model);
+
+	EntityOperation* entityOperation = AllocateThis(EntityOperation);
 	entityOperation->entity = entity;
 	entityOperation->weakScene = scene;
+	entityOperation->redo();
 
 	UndoManager* undoManager = document->getUndoManager();
 	undoManager->registerOperation(entityOperation);
-
-	entityOperation->redo();
 }
 
 //-----------------------------------//

@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/Physics.h"
 #include "Physics/Body.h"
@@ -18,7 +18,6 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
-//#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h> 
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -27,43 +26,39 @@ NAMESPACE_ENGINE_BEGIN
 PhysicsManager::PhysicsManager()
 	: enableSimulation(false)
 	, debugDrawer(nullptr)
-	, drawDebug(false)
+	, drawDebug(true)
 	, config(nullptr)
 	, broadphase(nullptr)
 	, dispatcher(nullptr)
 	, solver(nullptr)
 	, world(nullptr)
 {
-	config = new btDefaultCollisionConfiguration();
-    broadphase = new btDbvtBroadphase();
-	dispatcher = new btCollisionDispatcher(config);
-	solver = new btSequentialImpulseConstraintSolver;
-	//btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+	config = AllocateThis(btDefaultCollisionConfiguration);
+	broadphase = AllocateThis(btDbvtBroadphase);
+	dispatcher = AllocateThis(btCollisionDispatcher, config);
+	solver = AllocateThis(btSequentialImpulseConstraintSolver);
 }
 
 //-----------------------------------//
 
 PhysicsManager::~PhysicsManager()
 {
-	delete debugDrawer;
-    delete world;
-    delete solver;
-    delete dispatcher;
-    delete config;
-    delete broadphase;
+	Deallocate(debugDrawer);
+	Deallocate(world);
+	Deallocate(solver);
+	Deallocate(dispatcher);
+	Deallocate(config);
+	Deallocate(broadphase);
 }
 
 //-----------------------------------//
 
 void PhysicsManager::updateBody(const Body* body)
 {
-	if( !body )
-		return;
+	if( !body ) return;
 
 	btRigidBody* bulletBody = body->getBulletBody();
-
-	if( !bulletBody )
-		return;
+	if( !bulletBody ) return;
 
 	world->synchronizeSingleMotionState(bulletBody);
 }
@@ -72,11 +67,8 @@ void PhysicsManager::updateBody(const Body* body)
 
 void PhysicsManager::drawDebugWorld()
 {
-	if( !world )
-		return;
-
-	if( !drawDebug )
-		return;
+	if( !world ) return;
+	if( !drawDebug ) return;
 
 	debugDrawer->clearBuffer();
 	world->debugDrawWorld();
@@ -93,13 +85,18 @@ void PhysicsManager::createWorld()
 {
 	assert( !world );
 
-    world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, config);
+	world = AllocateThis(btDiscreteDynamicsWorld, dispatcher, broadphase, solver, config);
 
-	//btOverlappingPairCache* cache = world->getPairCache();
-	//cache->setInternalGhostPairCallback( new btGhostPairCallback() );
+#if 0
+	// Enable collision callbacks for ghost objects.
+	btOverlappingPairCache* cache = world->getPairCache();
+	cache->setInternalGhostPairCallback( new btGhostPairCallback() );
+#endif
 
-	debugDrawer = new BulletDebugDrawer();
+#ifdef ENABLE_PHYSICS_DEBUG
+	debugDrawer = AllocateThis(BulletDebugDrawer);
 	world->setDebugDrawer( debugDrawer );
+#endif
 
 	setWorldGravity( Vector3(0, -10, 0) );
 }
@@ -108,9 +105,7 @@ void PhysicsManager::createWorld()
 
 void PhysicsManager::setWorldGravity(const Vector3& gravity)
 {
-	if( !world )
-		return;
-
+	if( !world ) return;
 	world->setGravity(Convert::toBullet(gravity));
 }
 
@@ -118,13 +113,10 @@ void PhysicsManager::setWorldGravity(const Vector3& gravity)
 
 void PhysicsManager::update( float delta )
 {
-	if( !world )
-		return;
+	if( !world ) return;
+	if( !enableSimulation ) return;
 
-	if( !enableSimulation )
-		return;
-
-	world->stepSimulation( (btScalar) delta);
+	world->stepSimulation((btScalar) delta);
 }
 
 //-----------------------------------//
@@ -133,13 +125,10 @@ void PhysicsManager::addRigidBody( const Body* body )
 {
 	assert( world != nullptr );
 
-	if( !body )
-		return;
+	if( !body ) return;
 
 	btRigidBody* bulletBody = body->getBulletBody();
-
-	if( !bulletBody )
-		return;
+	if( !bulletBody ) return;
 
 	world->addRigidBody(bulletBody);
 }
@@ -150,13 +139,10 @@ void PhysicsManager::removeRigidBody( const Body* body )
 {
 	assert( world != nullptr );
 
-	if( !body )
-		return;
+	if( !body ) return;
 
 	btRigidBody* bulletBody = body->getBulletBody();
-
-	if( !bulletBody )
-		return;
+	if( !bulletBody ) return;
 
 	world->removeRigidBody(bulletBody);
 }

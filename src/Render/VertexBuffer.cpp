@@ -21,7 +21,9 @@ VertexBuffer::VertexBuffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 	: Buffer(usage, access)
 	, built(false)
 	, numVertices(0)
-{ }
+{
+
+}
 
 //-----------------------------------//
 

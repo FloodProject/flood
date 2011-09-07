@@ -11,7 +11,7 @@
 #include "CameraControls.h"
 #include "Editor.h"
 #include "Viewframe.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Scene/Scene.h"
 
 #ifdef ALL_PLUGINS
@@ -59,7 +59,7 @@ void CameraPlugin::onPluginEnable()
 	viewSizer->Layout();
 
 	// Subscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
 }
 
@@ -107,9 +107,8 @@ void CameraPlugin::onEntityChange()
 	cameraControls->updateCameraSelection();
 }
 
-#if 0
 //-----------------------------------//
-
+#if 0
 CameraPtr CameraPlugin::getPlayerCamera() const
 {
 	ScenePtr scene = engine->getSceneManager();
@@ -122,8 +121,7 @@ CameraPtr CameraPlugin::getPlayerCamera() const
 		const EntityPtr& node = entities[i];
 		camera = node->getComponent<Camera>();
 
-		if( camera )
-			break;
+		if( camera ) break;
 	}
 
 	return camera;
@@ -133,14 +131,6 @@ CameraPtr CameraPlugin::getPlayerCamera() const
 
 void CameraPlugin::switchPlayMode(bool switchToPlay)
 {
-#ifdef VAPOR_PHYSICS_BULLET
-	// Toogle the physics simulation state.
-	PhysicsManager* physics = engine->getPhysicsManager();
-	
-	if( physics )
-		physics->setSimulation( switchToPlay );
-#endif
-
 	CameraPtr camera = getPlayerCamera();
 	EntityPtr nodeCamera;
 	ControllerPtr controller;

@@ -110,10 +110,9 @@ public:
 
 		T* px = Resolve();
 		
-		if(px && px->releaseReference() && DFn)
+		if(px && px->releaseReference())
 		{
-			DFn(id);
-			Deallocate(px);
+			if(DFn) DFn(id);
 		}
 	}
 

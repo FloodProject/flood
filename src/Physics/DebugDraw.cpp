@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/DebugDraw.h"
 #include "Physics/Convert.h"
@@ -20,13 +20,14 @@ NAMESPACE_ENGINE_BEGIN
 
 BulletDebugDrawer::BulletDebugDrawer()
 {
-	vb = Allocate(VertexBuffer, AllocatorGetHeap(), BufferUsage::Dynamic, BufferAccess::Write);
+	vb = AllocateThis(VertexBuffer, BufferUsage::Dynamic, BufferAccess::Write);
 	clearBuffer();
 
-	material = MaterialCreate(AllocatorGetHeap(), "DebugDrawer");
+	material = MaterialCreate(AllocatorGetHeap(), "PhysicsDebug");
 	material.Resolve()->setDepthCompare(DepthCompare::LessOrEqual);
 
-	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	renderable = AllocateThis(Renderable);
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 }
@@ -44,8 +45,7 @@ void BulletDebugDrawer::clearBuffer()
 
 //-----------------------------------//
 
-void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to,
-	const btVector3 &color)
+void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
 {
 	std::vector<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
 	pos.push_back(Convert::fromBullet(from));

@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Event.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/CapsuleShape.h"
 #include "Physics/Convert.h"
@@ -25,8 +25,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(CapsuleShape, Shape)
-	FIELD_PRIMITIVE(float, height)
-	FIELD_PRIMITIVE(float, radius)
+	FIELD_PRIMITIVE(1, float, height)
+	FIELD_PRIMITIVE(2, float, radius)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -35,31 +35,29 @@ CapsuleShape::CapsuleShape()
 	: capsuleShape(nullptr)
 	, radius(1.0f)
 	, height(3.0f)
-{ }
+{
+}
 
 //-----------------------------------//
 
 CapsuleShape::~CapsuleShape()
 {
 	removeBody();
-	delete capsuleShape;
+	Deallocate(capsuleShape);
 }
 
 //-----------------------------------//
 
 void CapsuleShape::update( float delta )
 {
-	if( capsuleShape )
-		return;
+	if( capsuleShape ) return;
 
 	const TransformPtr& transform = getEntity()->getTransform();
-	
-	if( !transform )
-		return;
+	if( !transform ) return;
 	
 	const Vector3& scale = transform->getScale();
 
-	capsuleShape = new btCapsuleShape(radius, height);
+	capsuleShape = AllocateThis(btCapsuleShape, radius, height);
 	capsuleShape->setLocalScaling(Convert::toBullet(scale));
 }
 

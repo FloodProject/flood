@@ -84,10 +84,10 @@ class API_RESOURCE Resource : public Object
 
 public:
 
-	virtual ~Resource() {}
+	virtual ~Resource();
 
 	// Gets/sets the path that identifies this resource.
-	ACESSOR(Path, const String&, path)
+	ACESSOR(Path, const Path&, path)
 
 	// Gets/sets the resource loading status.
 	ACESSOR(Status, ResourceStatus::Enum, status)

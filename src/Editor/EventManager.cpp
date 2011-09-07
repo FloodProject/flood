@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Editor.h"
 #include "EditorPlugin.h"
 #include "Core/PluginManager.h"
@@ -17,13 +17,13 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-Events::Events()
+EventManager::EventManager()
 	: currentPlugin(nullptr)
 	, toolId(0)
 {
 	PluginManager* pm = GetEditor().getPluginManager();
-	pm->onPluginEnableEvent.Connect(this, &Events::onPluginEnableEvent);
-	pm->onPluginDisableEvent.Connect(this, &Events::onPluginDisableEvent);
+	pm->onPluginEnableEvent.Connect(this, &EventManager::onPluginEnableEvent);
+	pm->onPluginDisableEvent.Connect(this, &EventManager::onPluginDisableEvent);
 
 	// Register a custom event handler so we listen to events that get
 	// routed through the toolbar. This way we can intercept tool switches.
@@ -36,7 +36,7 @@ Events::Events()
 
 //-----------------------------------//
 
-Events::~Events()
+EventManager::~EventManager()
 {
 	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
 	if(toolbarCtrl) toolbarCtrl->PopEventHandler();
@@ -45,34 +45,33 @@ Events::~Events()
 
 	// Unsubscribe from all mouse events.
 	Mouse* const mouse = input->getMouse();
-	mouse->onMouseMove.Disconnect(this, &Events::onMouseMove);
-	mouse->onMouseDrag.Disconnect(this, &Events::onMouseDrag);
-	mouse->onMouseButtonPress.Disconnect(this, &Events::onMousePress);
-	mouse->onMouseButtonRelease.Disconnect(this, &Events::onMouseRelease);
-	mouse->onMouseEnter.Disconnect(this, &Events::onMouseEnter);
-	mouse->onMouseExit.Disconnect(this, &Events::onMouseLeave);
+	mouse->onMouseMove.Disconnect(this, &EventManager::onMouseMove);
+	mouse->onMouseDrag.Disconnect(this, &EventManager::onMouseDrag);
+	mouse->onMouseButtonPress.Disconnect(this, &EventManager::onMousePress);
+	mouse->onMouseButtonRelease.Disconnect(this, &EventManager::onMouseRelease);
+	mouse->onMouseEnter.Disconnect(this, &EventManager::onMouseEnter);
+	mouse->onMouseExit.Disconnect(this, &EventManager::onMouseLeave);
 
 	// Unsubscribe from all keyboard events.
 	Keyboard* const kbd = input->getKeyboard();
-	kbd->onKeyPress.Disconnect(this, &Events::onKeyPress);
-	kbd->onKeyRelease.Disconnect(this, &Events::onKeyRelease);
+	kbd->onKeyPress.Disconnect(this, &EventManager::onKeyPress);
+	kbd->onKeyRelease.Disconnect(this, &EventManager::onKeyRelease);
 }
 
 //-----------------------------------//
 
-void Events::disconnectPluginListeners()
+void EventManager::disconnectPluginListeners()
 {
 	PluginManager* pm = GetEditor().getPluginManager();
-	pm->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
-	pm->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
+	pm->onPluginEnableEvent.Disconnect(this, &EventManager::onPluginEnableEvent);
+	pm->onPluginDisableEvent.Disconnect(this, &EventManager::onPluginDisableEvent);
 }
 
 //-----------------------------------//
 
-void Events::addEventListener( EditorPlugin* plugin )
+void EventManager::addEventListener( EditorPlugin* plugin )
 {
-	EventListeners::iterator it =
-		std::find(eventListeners.begin(), eventListeners.end(), plugin);
+	auto it = std::find(eventListeners.begin(), eventListeners.end(), plugin);
 	
 	if( it != eventListeners.end() )
 		return;
@@ -82,16 +81,19 @@ void Events::addEventListener( EditorPlugin* plugin )
 
 //-----------------------------------//
 
-void Events::removeEventListener( EditorPlugin* plugin )
+void EventManager::removeEventListener( EditorPlugin* plugin )
 {
 	auto it = std::find(eventListeners.begin(), eventListeners.end(), plugin);
-	assert( it != eventListeners.end() );
+
+	if( it == eventListeners.end() )
+		return;
+
 	eventListeners.erase(it);
 }
 
 //-----------------------------------//
 
-bool Events::TryBefore(wxEvent& event)
+bool EventManager::TryBefore(wxEvent& event)
 {
 	// We are only interested in toolbar button click events.
 	if( event.GetEventType() != wxEVT_COMMAND_MENU_SELECTED )
@@ -125,7 +127,7 @@ bool Events::TryBefore(wxEvent& event)
 
 //-----------------------------------//
 
-void Events::setTool(EditorPlugin* plugin, PluginTool* tool)
+void EventManager::setTool(EditorPlugin* plugin, PluginTool* tool)
 {
 	int id = tool->item->GetId();
 
@@ -142,14 +144,14 @@ void Events::setTool(EditorPlugin* plugin, PluginTool* tool)
 	setCurrentTool(id);
 	
 	Document* document = GetEditor().getDocument();
-	document->onToolSelect(tool);
+	if( document ) document->onToolSelect(tool);
 	
 	currentPlugin->onToolSelect(id);
 }
 
 //-----------------------------------//
 
-void Events::onPluginEnableEvent(Plugin* plugin)
+void EventManager::onPluginEnableEvent(Plugin* plugin)
 {
 	//if(currentPlugin == nullptr)
 	//	currentPlugin = plugin;
@@ -157,7 +159,7 @@ void Events::onPluginEnableEvent(Plugin* plugin)
 
 //-----------------------------------//
 
-void Events::onPluginDisableEvent(Plugin* plugin)
+void EventManager::onPluginDisableEvent(Plugin* plugin)
 {
 	if(currentPlugin == plugin)
 		currentPlugin = nullptr;
@@ -182,182 +184,196 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 
 //-----------------------------------//
 
-void Events::onDocumentCreate( Document& document )
+void EventManager::onDocumentCreate( Document& document )
 {
 	CALL_PLUGIN(onDocumentCreate, document);
 }
 
 //-----------------------------------//
 
-void Events::onDocumentDestroy( Document& document )
+void EventManager::onDocumentDestroy( Document& document )
 {
 	CALL_PLUGIN(onDocumentDestroy, document);
 }
 
 //-----------------------------------//
 
-void Events::onDocumentSelect( Document& document )
+void EventManager::onDocumentSelect( Document& document )
 {
 	CALL_PLUGIN(onDocumentSelect, document);
 }
 
 //-----------------------------------//
 
-void Events::onDocumentUnselect( Document& document )
+void EventManager::onDocumentUnselect( Document& document )
 {
 	CALL_PLUGIN(onDocumentUnselect, document);
 }
 
 //-----------------------------------//
 
-void Events::onEntitySelect( const EntityPtr& entity )
+void EventManager::onEntitySelect( const EntityPtr& entity )
 {
 	CALL_PLUGIN_CHECK(onEntitySelect, entity);
 }
 
 //-----------------------------------//
 
-void Events::onEntityUnselect( const EntityPtr& entity )
+void EventManager::onEntityUnselect( const EntityPtr& entity )
 {
 	CALL_PLUGIN_CHECK(onEntityUnselect, entity);
 }
 
 //-----------------------------------//
 
-void Events::onComponentSelect( const ComponentPtr& component )
+void EventManager::onComponentSelect( const ComponentPtr& component )
 {
 	CALL_PLUGIN_CHECK(onComponentSelect, component);
 }
 
 //-----------------------------------//
 
-void Events::onComponentUnselect( const ComponentPtr& component )
+void EventManager::onComponentUnselect( const ComponentPtr& component )
 {
 	CALL_PLUGIN_CHECK(onComponentUnselect, component);
 }
 
 //-----------------------------------//
 
-void Events::onResourceSelect( const ResourcePtr& resource )
+void EventManager::onResourceSelect( const ResourcePtr& resource )
 {
 	CALL_PLUGIN_CHECK(onResourceSelect, resource);
 }
 
 //-----------------------------------//
 
-void Events::onResourceUnselect( const ResourcePtr& resource )
+void EventManager::onResourceUnselect( const ResourcePtr& resource )
 {
 	CALL_PLUGIN_CHECK(onResourceUnselect, resource);
 }
 
 //-----------------------------------//
 
-void Events::onMouseMove( const MouseMoveEvent& event )
+void EventManager::onMouseMove( const MouseMoveEvent& event )
 {
 	CALL_PLUGIN(onMouseMove, event);
 }
 
 //-----------------------------------//
 
-void Events::onMouseDrag( const MouseDragEvent& event )
+void EventManager::onMouseDrag( const MouseDragEvent& event )
 {
 	CALL_PLUGIN(onMouseDrag, event);
 }
 
 //-----------------------------------//
 
-void Events::onMousePress( const MouseButtonEvent& event )
+void EventManager::onMousePress( const MouseButtonEvent& event )
 {
 	CALL_PLUGIN(onMouseButtonPress, event);
 }
 
 //-----------------------------------//
 
-void Events::onMouseRelease( const MouseButtonEvent& event )
+void EventManager::onMouseRelease( const MouseButtonEvent& event )
 {
 	CALL_PLUGIN(onMouseButtonRelease, event);
 }
 
 //-----------------------------------//
 
-void Events::onMouseEnter()
+void EventManager::onMouseEnter()
 {
 	CALL_PLUGIN(onMouseEnter);
 }
 
 //-----------------------------------//
 
-void Events::onMouseLeave()
+void EventManager::onMouseLeave()
 {
 	CALL_PLUGIN(onMouseLeave);
 }
 
 //-----------------------------------//
 
-void Events::onKeyPress( const KeyEvent& event )
+void EventManager::onKeyPress( const KeyEvent& event )
 {
 	CALL_PLUGIN(onKeyPress, event);
 }
 
 //-----------------------------------//
 
-void Events::onKeyRelease( const KeyEvent& event )
+void EventManager::onKeyRelease( const KeyEvent& event )
 {
 	CALL_PLUGIN(onKeyRelease, event);
 }
 
 //-----------------------------------//
 
-void Events::onSceneLoad( const ScenePtr& scene )
+void EventManager::onSceneLoad( const ScenePtr& scene )
 {
 	CALL_PLUGIN_CHECK(onSceneLoad, scene);
 }
 
 //-----------------------------------//
 
-void Events::onSceneUnload( const ScenePtr& scene )
+void EventManager::onSceneUnload( const ScenePtr& scene )
 {
 	CALL_PLUGIN_CHECK(onSceneUnload, scene);
 }
 
 //-----------------------------------//
 
-void Events::onServerConnect( const SessionPtr& scene )
+void EventManager::onServerConnect( const SessionPtr& scene )
 {
 	CALL_PLUGIN_CHECK(onServerConnect, scene);
 }
 
 //-----------------------------------//
 
-void Events::onServerDisconnect( const SessionPtr& scene )
+void EventManager::onServerDisconnect( const SessionPtr& scene )
 {
 	CALL_PLUGIN_CHECK(onServerDisconnect, scene);
 }
 
 //-----------------------------------//
 
-void Events::onSceneUpdate()
+void EventManager::onUndoOperation(const UndoOperationPtr& op)
+{
+	CALL_PLUGIN_CHECK(onUndoOperation, op);
+}
+
+//-----------------------------------//
+
+void EventManager::onRedoOperation(const UndoOperationPtr& op)
+{
+	CALL_PLUGIN_CHECK(onRedoOperation, op);
+}
+
+//-----------------------------------//
+
+void EventManager::onSceneUpdate()
 {
 	CALL_PLUGIN(onSceneUpdate)
 }
 
 //-----------------------------------//
 
-void Events::registerInputCallbacks()
+void EventManager::registerInputCallbacks()
 {
 	InputManager* input = GetInputManager();
 
 	Mouse* const mouse = input->getMouse();
-	mouse->onMouseMove.Connect(this, &Events::onMouseMove);
-	mouse->onMouseDrag.Connect(this, &Events::onMouseDrag);
-	mouse->onMouseButtonPress.Connect(this, &Events::onMousePress);
-	mouse->onMouseButtonRelease.Connect(this, &Events::onMouseRelease);
-	mouse->onMouseEnter.Connect(this, &Events::onMouseEnter);
-	mouse->onMouseExit.Connect(this, &Events::onMouseLeave);
+	mouse->onMouseMove.Connect(this, &EventManager::onMouseMove);
+	mouse->onMouseDrag.Connect(this, &EventManager::onMouseDrag);
+	mouse->onMouseButtonPress.Connect(this, &EventManager::onMousePress);
+	mouse->onMouseButtonRelease.Connect(this, &EventManager::onMouseRelease);
+	mouse->onMouseEnter.Connect(this, &EventManager::onMouseEnter);
+	mouse->onMouseExit.Connect(this, &EventManager::onMouseLeave);
 
 	Keyboard* const kbd = input->getKeyboard();
-	kbd->onKeyPress.Connect(this, &Events::onKeyPress);
-	kbd->onKeyRelease.Connect(this, &Events::onKeyRelease);
+	kbd->onKeyPress.Connect(this, &EventManager::onKeyPress);
+	kbd->onKeyRelease.Connect(this, &EventManager::onKeyRelease);
 }
 
 //-----------------------------------//

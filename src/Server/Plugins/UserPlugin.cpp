@@ -7,31 +7,28 @@
 ************************************************************************/
 
 #include "Server/API.h"
-#include "Protocol/UserMessages.h"
+#include "Server/Plugins/UserPlugin.h"
 #include "Server/Server.h"
-#include "Network/Message.h"
-#include "Network/Dispatcher.h"
-#include "Network/Peer.h"
-#include "Network/SessionManager.h"
-#include "Network/Session.h"
-#include "Network/Host.h"
+#include "Protocol/UserMessages.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-class UserMessagesServer : UserMessagePlugin
-{
-	void handleUserAuth(const SessionPtr&, const UserAuthMessage&) OVERRIDE;
-	void handleUserChangeName(const SessionPtr&, const UserChangeNameMessage&) OVERRIDE;
-};
-
-REFLECT_CHILD_CLASS(UserMessagesServer, UserMessagePlugin)
+REFLECT_CHILD_CLASS(UserPlugin, ServerPlugin)
 REFLECT_CLASS_END()
+
+PROTOCOL_PLUGIN_BEGIN(UserPlugin)
+	METADATA_NAME(User)
+	METADATA_DESC(Provides user management functionality.)
+	METADATA_AUTHOR(triton)
+	METADATA_VERSION(1.0)
+	METADATA_PRIORITY(30)
+PROTOCOL_PLUGIN_END()
 
 //-----------------------------------//
 
-void UserMessagesServer::handleUserAuth(const SessionPtr& session, const UserAuthMessage& auth)
+void UserPlugin::handleUserAuth(const SessionPtr& session, const UserAuthMessage& auth)
 {
 	User user;
 	user.id = users.getNextId();
@@ -60,7 +57,7 @@ void UserMessagesServer::handleUserAuth(const SessionPtr& session, const UserAut
 
 //-----------------------------------//
 
-void UserMessagesServer::handleUserChangeName(const SessionPtr& session, const UserChangeNameMessage& message)
+void UserPlugin::handleUserChangeName(const SessionPtr& session, const UserChangeNameMessage& message)
 {
 
 }

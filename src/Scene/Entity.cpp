@@ -23,6 +23,7 @@ REFLECT_CHILD_CLASS(Entity, Object)
 	FIELD_PRIMITIVE(1, string, name)
 	FIELD_PRIMITIVE(2, bool, visible)
 	FIELD_VECTOR_PTR(3, Component, ComponentPtr, components, RefPointer)
+	FIELD_PRIMITIVE(4, int32, tags)
 	//FIELD_PRIMITIVE_CUSTOM(4, int32, tags, Bitfield)
 REFLECT_CLASS_END()
 
@@ -44,13 +45,37 @@ Entity::Entity()
 
 //-----------------------------------//
 
-
 Entity::Entity( const String& name )
 	: name(name)
 	, visible(true)
 	, tags(0)
 	, parent(nullptr)
 {
+}
+
+//-----------------------------------//
+
+Entity::~Entity()
+{
+	// Keep a reference so it is the last component destroyed.
+	TransformPtr transform = getTransform();
+	
+	components.clear();
+
+	ComponentMap::iterator it = componentsMap.begin();
+	
+	for(; it != componentsMap.end(); it++ )
+	{
+		ComponentPtr& component = it->second;
+		component.reset();
+	}
+}
+
+//-----------------------------------//
+
+static bool IsGroup(Entity* entity)
+{
+	return entity && ClassInherits(ClassGetType(entity), GroupGetType());
 }
 
 //-----------------------------------//
@@ -72,6 +97,12 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	onComponentAdded(component);
 	sendEvents();
+
+	if( IsGroup(parent) )
+	{
+		Group* group = (Group*) parent;
+		group->onEntityComponentAdded(component);
+	}
 
 	components.push_back(component);
 
@@ -95,6 +126,15 @@ bool Entity::removeComponent( const ComponentPtr& component )
 
 	onComponentRemoved(component);
 	sendEvents();
+
+	if( IsGroup(parent) )
+	{
+		Group* group = (Group*) parent;
+		group->onEntityComponentRemoved(component);
+	}
+
+	if( ClassInherits(type, ReflectionGetType(Geometry)) )
+		getTransform()->markBoundingVolumeDirty();
 
 	return true;
 }
@@ -179,7 +219,7 @@ void Entity::update( float delta )
 	const TransformPtr& transform = getTransform();
 	if( transform ) transform->update( delta );
 
-	// Update the other componentsMap.
+	// Update the other components.
 	ComponentMap::const_iterator it;
 	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
 	{
@@ -199,12 +239,15 @@ void Entity::fixUp()
 	for(size_t i = 0; i < components.size(); i++ )
 	{
 		const ComponentPtr& component = components[i];
-		
+		if( !component ) continue;
+
 		component->setEntity(this);
 		
 		Class* type = component->getType();
 		componentsMap[type] = component;
 	}
+
+	if( !getTransform() ) addTransform();
 }
 
 //-----------------------------------//

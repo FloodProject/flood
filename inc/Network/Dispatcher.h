@@ -26,8 +26,7 @@ class Host;
 class HostClient;
 class HostServer;
 
-class Plugin;
-class PluginManager;
+class MessageHandler;
 class MessageHandlers;
 class SessionManager;
 
@@ -51,18 +50,12 @@ public:
 	// Initializes for server mode.
 	void initServer(HostServer*);
 
-	// Initializes the plugins.
-	void initPlugins(Class*);
-
 	// Processes one message or returns false if there is none.
 	bool processMessage();
 
 	// Gets the host.
 	GETTER(Host, Host*, host)
 	
-	// Gets the plugin manager.
-	GETTER(PluginManager, PluginManager*, plugins)
-
 	// Gets the session manager.
 	GETTER(SessionManager, SessionManager*, sessions)
 
@@ -70,10 +63,6 @@ public:
 	GETTER(MessageHandlers, MessageHandlers*, handlers)
 
 protected:
-
-	// Handles plugins callbacks.
-	void handlePluginEnable(Plugin*);
-	void handlePluginDisable(Plugin*);
 
 	// Handles host callbacks.
 	void handleConnect(const PeerPtr&);
@@ -84,7 +73,6 @@ protected:
 	bool isServer;
 
 	Serializer* serializer;
-	PluginManager* plugins;
 	SessionManager* sessions;
 	MessageHandlers* handlers;
 

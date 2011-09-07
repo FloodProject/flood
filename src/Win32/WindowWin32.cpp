@@ -38,6 +38,11 @@ Win32Window::Win32Window(const WindowSettings& settings)
 
 Win32Window::~Win32Window()
 {
+	removeViews();
+
+	// Destroy context
+	Deallocate(context);
+
 	// Unregister class
 	if( !UnregisterClass(className, NULL) )
 	{
@@ -46,17 +51,13 @@ Win32Window::~Win32Window()
 	}
 
 	classRegistered = false;
-
-	// Destroy context
-	// Destroy window
 }
 
 //-----------------------------------//
 
 bool Win32Window::registerClass()
 {
-	if(classRegistered)
-		return true;
+	if(classRegistered) return true;
 
 	WNDCLASS wc;
 
@@ -177,12 +178,15 @@ bool Win32Window::createContext()
 		return false;
 	}
 
+	context = AllocateThis(RenderContext);
+	setContext(context);
+
 	return true;
 }
 
 //-----------------------------------//
 
-std::string Win32Window::getErrorMessage()
+String Win32Window::getErrorMessage()
 {
 	DWORD dw = GetLastError();
 
@@ -198,7 +202,7 @@ std::string Win32Window::getErrorMessage()
 		(LPTSTR) &lpMsgBuf,
 		0, NULL );
 
-	std::string msg( (LPCSTR) lpMsgBuf );
+	String msg( (LPCSTR) lpMsgBuf );
 	LocalFree(lpMsgBuf);
 
 	return msg;

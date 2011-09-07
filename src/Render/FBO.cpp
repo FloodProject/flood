@@ -44,7 +44,7 @@ FBO::~FBO()
 
 void FBO::bind()
 {
-	if(bound) return;
+	//if(bound) return;
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 	CheckLastErrorGL( "Could not bind framebuffer object" );
@@ -124,7 +124,7 @@ TexturePtr FBO::createRenderTexture( RenderBufferType::Enum type )
 		colorAttach = true;
 	}
 
-	TexturePtr tex( new Texture(settings, format) );
+	TexturePtr tex = AllocateThis(Texture, settings, format);
 	attachRenderTexture(tex);
 	
 	return tex;
@@ -157,8 +157,7 @@ void FBO::createRenderBuffer( int bufferComponents )
 	// offscreen rendering, often for sections of the framebuffer which 
 	// don’t have a texture format associated with them.
 
-	if( !checkSize() )
-		return;
+	if( !checkSize() ) return;
 
 	GLuint renderBuffer;
 	glGenRenderbuffersEXT(1, &renderBuffer);
@@ -185,6 +184,8 @@ void FBO::createRenderBuffer( int bufferComponents )
 	}
 
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+	unbind();
 }
 
 //-----------------------------------//
@@ -217,7 +218,9 @@ bool FBO::checkSize()
 //-----------------------------------//
 
 void FBO::update()
-{ }
+{
+
+}
 
 //-----------------------------------//
 

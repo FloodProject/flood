@@ -14,6 +14,11 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(GizmoOperation, UndoOperation)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
 GizmoOperation::GizmoOperation()
 	: tool(GizmoTool::Camera)
 	, scale(1.0f, 1.0f, 1.0f)

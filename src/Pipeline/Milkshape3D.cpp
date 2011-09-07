@@ -72,13 +72,13 @@ void Milkshape3D::buildSkeleton()
 	setupJointRotations();
 	setupJointMatrices();
 
-	mesh->skeleton = Allocate(Skeleton, AllocatorGetHeap());
+	mesh->skeleton = AllocateThis(Skeleton);
 	
 	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 		
-		BonePtr bone = Allocate(Bone, AllocatorGetHeap());
+		BonePtr bone = AllocateThis(Bone);
 
 		bone->name = joint.name;
 		bone->index = i;
@@ -87,6 +87,7 @@ void Milkshape3D::buildSkeleton()
 		bone->rotation = joint.rotation;
 		bone->relativeMatrix = joint.relativeMatrix;
 		bone->absoluteMatrix = joint.absoluteMatrix;
+		bone->absoluteInvMatrix = joint.absoluteMatrix.inverse();
 
 		mesh->skeleton->addBone(bone);
 	}
@@ -156,7 +157,7 @@ void Milkshape3D::setupJointRotations()
 			MathRadianToDegree(joint.rotation.y),
 			MathRadianToDegree(joint.rotation.z) );
 
-		for( uint j = 0; j < joint.rotationKeys.size(); j++ )
+		for( size_t j = 0; j < joint.rotationKeys.size(); j++ )
 		{
 			ms3d_keyframe_t& keyframe = joint.rotationKeys[j];
 
@@ -224,7 +225,7 @@ void Milkshape3D::buildAnimations()
 
 	buildAnimationMetadata();
 
-	for( uint i = 0; i < metadata.size(); i++ )
+	for( size_t i = 0; i < metadata.size(); i++ )
 	{
 		AnimationMetadata& data = metadata[i];
 		AnimationPtr animation = buildAnimation(data);
@@ -246,10 +247,10 @@ void Milkshape3D::buildAnimations()
 
 AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
 {
-	AnimationPtr animation = Allocate(Animation, AllocatorGetHeap());
+	AnimationPtr animation = AllocateThis(Animation);
 	animation->setName(data.name);
 
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 
@@ -274,7 +275,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 {
 	assert( joint.positionKeys.size() == joint.rotationKeys.size() );
 
-	for( uint i = 0; i < joint.positionKeys.size(); i++ )
+	for( size_t i = 0; i < joint.positionKeys.size(); i++ )
 	{
 		const ms3d_keyframe_t& frame = joint.positionKeys[i];
 
@@ -300,11 +301,11 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 {
 	float minTime = LimitsFloatMaximum;
 
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		const ms3d_joint_t& joint = joints[i];
 
-		for( uint j = 0; j < joint.positionKeys.size(); j++ )
+		for( size_t j = 0; j < joint.positionKeys.size(); j++ )
 		{
 			const ms3d_keyframe_t& frame = joint.positionKeys[j];
 
@@ -335,14 +336,14 @@ void Milkshape3D::buildGeometry()
 
 	mesh->groups.resize( groups.size() );
 
-	for( uint i = 0; i < groups.size(); i++ )
+	for( size_t i = 0; i < groups.size(); i++ )
 	{
 		const ms3d_group_t& group = groups[i];
 
 		if( group.flags & HIDDEN )
 			continue;
 
-		uint numIndices = group.triangleIndices.size();
+		size_t numIndices = group.triangleIndices.size();
 
 		// In case this group doesn't have geometry, skip processing.
 		if( numIndices == 0 )
@@ -353,12 +354,12 @@ void Milkshape3D::buildGeometry()
 		meshGroup.material = buildMaterial(group);
 
 		// Let's process all the triangles of this group.
-		for( uint j = 0; j < numIndices; j++ )
+		for( size_t j = 0; j < numIndices; j++ )
 		{
 			const uint16& triIndex = group.triangleIndices[j];
 			const ms3d_triangle_t& t = *triangles[triIndex];
 
-			for( uint e = 0; e < 3; e++ )
+			for( uint32 e = 0; e < 3; e++ )
 			{
 				const uint16& vertexIndex = t.vertexIndices[e];
 				const ms3d_vertex_t& vertex = *vertices[vertexIndex];
@@ -559,14 +560,14 @@ void Milkshape3D::readJoints()
 
 		// the frame time is in seconds, so multiply it by the animation fps,
 		// to get the frames rotation channel
-		for (uint j = 0; j < numKeyFramesRot; j++)
+		for (uint32 j = 0; j < numKeyFramesRot; j++)
 		{
 			joints[i].rotationKeys[j].time = FILEBUF_INDEX(float);
 			joints[i].rotationKeys[j].parameter = FILEBUF_INDEX(Vector3);
 		}
 
 		// translation channel
-		for (uint j = 0; j < numKeyFramesPos; j++)
+		for (uint32 j = 0; j < numKeyFramesPos; j++)
 		{
 			joints[i].positionKeys[j].time = FILEBUF_INDEX(float);
 			joints[i].positionKeys[j].parameter = FILEBUF_INDEX(Vector3);
@@ -589,13 +590,13 @@ void Milkshape3D::readComments()
 		return;
 	}
 
-	uint numComments = 0;
+	uint32 numComments = 0;
 	size_t commentSize = 0;
 
 	// group comments
 	numComments = FILEBUF_INDEX(int);
 	
-	for( uint i = 0; i < numComments; ++i )
+	for( uint32 i = 0; i < numComments; ++i )
 	{
 		int& groupIndex = FILEBUF_INDEX(int);
 		commentSize = FILEBUF_INDEX(size_t);
@@ -612,7 +613,7 @@ void Milkshape3D::readComments()
 	// material comments
 	numComments = FILEBUF_INDEX(int);
 
-	for( uint i = 0; i < numComments; ++i )
+	for( uint32 i = 0; i < numComments; ++i )
 	{
 		int& matIndex = FILEBUF_INDEX(int);
 		commentSize = FILEBUF_INDEX(size_t);
@@ -629,7 +630,7 @@ void Milkshape3D::readComments()
 	// joint comments
 	numComments = FILEBUF_INDEX(int);
 
-	for( uint i = 0; i < numComments; ++i )
+	for( uint32 i = 0; i < numComments; ++i )
 	{
 		int& jointIndex = FILEBUF_INDEX(int);
 		commentSize = FILEBUF_INDEX(size_t);

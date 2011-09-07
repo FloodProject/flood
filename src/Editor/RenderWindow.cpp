@@ -37,9 +37,9 @@ RenderWindow::~RenderWindow()
 	Deallocate(context);
 
 	LogDebug("Destroying OpenGL Context");
-	delete contextGL;
+	Deallocate(contextGL);
 
-	delete inputManager;
+	Deallocate(inputManager);
 }
 
 //-----------------------------------//
@@ -57,7 +57,7 @@ bool RenderWindow::createContext()
 		return false;
 	}
 
-	RenderContext* context = Allocate(RenderContext, GetRenderAllocator());
+	context = Allocate(RenderContext, GetRenderAllocator());
 	setContext(context);
 
 	return true;
@@ -180,7 +180,7 @@ bool RenderWindow::pumpEvents()
 
 //-----------------------------------//
 
-void RenderWindow::setTitle(const std::string& title)
+void RenderWindow::setTitle(const String& title)
 {
 	// Our canvas has no title to set, the best we can do is to
 	// set the title as the help text of the wxWidgets control.

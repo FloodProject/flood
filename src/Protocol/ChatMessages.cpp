@@ -36,22 +36,12 @@ PROTOCOL_MESSAGE_HANDLERS(Chat)
 	HANDLER_REF(Chat, ChatServer, ServerToClient)
 PROTOCOL_MESSAGE_HANDLERS_END()
 
-//-----------------------------------//
-
-REFLECT_ABSTRACT_CHILD_CLASS(ChatMessagePlugin, MessagePlugin)
+REFLECT_ABSTRACT_CHILD_CLASS(ChatMessageHandler, MessageHandler)
 REFLECT_CLASS_END()
 
-PROTOCOL_PLUGIN_BEGIN(ChatMessagePlugin)
-	METADATA_NAME(Chat)
-	METADATA_DESC(Provides chat functionality.)
-	METADATA_AUTHOR(triton)
-	METADATA_VERSION(1.0)
-	METADATA_PRIORITY(50)
-PROTOCOL_PLUGIN_END()
-
 //-----------------------------------//
 
-const MessagesTable& ChatMessagePlugin::getMessagesTable()
+const MessagesTable& ChatMessageHandler::getMessagesTable()
 {
 	static MessagesTable gs_ChatMessages(gs_ChatRawMessages, gs_ChatRawMessages + ARRAY_SIZE(gs_ChatRawMessages));
 	return gs_ChatMessages;
@@ -59,7 +49,7 @@ const MessagesTable& ChatMessagePlugin::getMessagesTable()
 
 //-----------------------------------//
 
-Enum* ChatMessagePlugin::getMessagesEnum()
+Enum* ChatMessageHandler::getMessagesEnum()
 {
 	return ReflectionGetType(ChatMessageIds);
 }

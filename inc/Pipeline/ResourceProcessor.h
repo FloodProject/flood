@@ -26,7 +26,7 @@ typedef std::map<Class*, ResourceProcessor*> ResourceProcessorMap;
 
 REFLECT_DECLARE_CLASS(ResourceProcessor)
 
-class PIPELINE_API NO_VTABLE ResourceProcessor : public Object
+class API_PIPELINE NO_VTABLE ResourceProcessor : public Object
 {
 	DECLARE_UNCOPYABLE(ResourceProcessor)
 
@@ -45,19 +45,16 @@ protected:
 	ResourceProcessor();
 };
 
-namespace Pipeline
-{
+NAMESPACE_PIPELINE_BEGIN
 
 // Initializes the default resource processors.
-void Init();
+void PipelineInit();
 
 // Cleans the resource processors.
-void Cleanup();
+void PipelineCleanup();
 
 // Finds a resource processor for a given resource type.
-ResourceProcessor* FindProcessor(Class* type);
-
-}
+ResourceProcessor* PipelineFindProcessor(Class* type);
 
 // Maps the resource processors to the resource types.
 extern std::vector<ResourceProcessor*> resourceProcessors;

@@ -42,57 +42,10 @@ ResourceProcessor::~ResourceProcessor()
 
 //-----------------------------------//
 
-void Pipeline::Init()
-{
-	Class* klass = ResourceProcessorGetType();
-	
-	for( size_t i = 0; i < klass->childs.size(); i++ )
-	{
-		Class* child = klass->childs[i];
-		
-		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
-		resourceProcessors.push_back(processor);
-
-		LogInfo("Registering asset handler: %s", child->name);
-	}
-}
-
-//-----------------------------------//
-
-void Pipeline::Cleanup()
-{
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
-	{
-		ResourceProcessor* processor = resourceProcessors[i];
-		Deallocate(processor);
-	}
-
-	resourceProcessors.clear();
-}
-
-//-----------------------------------//
-
-ResourceProcessor* Pipeline::FindProcessor(Class* type)
-{
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
-	{
-		ResourceProcessor* processor = resourceProcessors[i];
-		
-		bool isProcessor = ClassInherits(type, processor->GetResourceType());
-		if( isProcessor ) return processor;
-	}
-
-	return nullptr;
-}
-
-//-----------------------------------//
-
-#define REF(name) name##GetType();
-
 static void ReferenceProcessors()
 {
-	REF(MeshProcessor);
-	REF(ImageProcessor);
+	MeshProcessorGetType();
+	ImageProcessorGetType();
 }
 
 //-----------------------------------//

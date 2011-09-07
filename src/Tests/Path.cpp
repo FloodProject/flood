@@ -89,6 +89,8 @@ void TestPath(CuTest* tc)
 #else
 	CuAssertStrEquals(tc, "/", PathGetSeparator().c_str());
 #endif
+
+	// TODO: Add path combine tests.
 }
 
 CuSuite* GetSuitePath() {

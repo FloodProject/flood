@@ -7,14 +7,20 @@
     <Filter Include="Plugins">
       <UniqueIdentifier>{c4909c1a-3b0b-4b43-b320-5d75c7573c3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Protocol">
-      <UniqueIdentifier>{191e3c78-4b15-46b4-9bad-49ef15a54e17}</UniqueIdentifier>
+    <Filter Include="Plugins\Chat">
+      <UniqueIdentifier>{b00a80c8-f327-4406-9808-6d3d023a2713}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{185a9ee0-8afa-4eb8-b254-8da5ee4c2488}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources">
+    <Filter Include="Plugins\Resources">
       <UniqueIdentifier>{0fba0021-0dde-449d-87b6-71f0e8d22c44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene">
+      <UniqueIdentifier>{1d84ca9f-fc01-42c7-85d7-23769c17b1c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Replica">
+      <UniqueIdentifier>{1781b338-f984-4100-b0ca-13faaaa30a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\User">
+      <UniqueIdentifier>{73e73c80-1841-4668-be56-f98b05fabb8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,24 +28,24 @@
       <Filter>Settings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Main.cpp" />
-    <ClCompile Include="..\..\src\Server\Plugins\ChatMessagesServer.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
-    <ClCompile Include="..\..\src\Server\Plugins\UserMessagesServer.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Server\Plugins\ReplicaMessagesServer.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Server\ServerPlugin.cpp">
       <Filter>Plugins</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Server\Plugins\ScenePlugin.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Server\Plugins\ResourcesPlugin.cpp">
-      <Filter>Resources</Filter>
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Plugins\ScenePlugin.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Plugins\ChatPlugin.cpp">
+      <Filter>Plugins\Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Plugins\ReplicaPlugin.cpp">
+      <Filter>Plugins\Replica</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Plugins\UserPlugin.cpp">
+      <Filter>Plugins\User</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +58,19 @@
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Server\Plugins\ResourcesPlugin.h">
-      <Filter>Resources</Filter>
+      <Filter>Plugins\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Plugins\ChatPlugin.h">
+      <Filter>Plugins\Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Plugins\ReplicaPlugin.h">
+      <Filter>Plugins\Replica</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Plugins\UserPlugin.h">
+      <Filter>Plugins\User</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Plugins\ScenePlugin.h">
+      <Filter>Plugins\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

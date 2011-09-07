@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/Convert.h"
 #include "Physics/MeshShape.h"
@@ -70,25 +70,9 @@ btVector3 Convert::toBullet(const BoundingBox& box)
 
 //-----------------------------------//
 
-static Vector3 getOffset(Entity* entity)
-{
-	ShapePtr shape = entity->getComponentFromFamily<Shape>();
-
-	if( ReflectionIsEqual(shape->getType(), ReflectionGetType(MeshShape)) )
-		return Vector3::Zero;
-
-	const TransformPtr& transform = entity->getTransform();
-	const BoundingBox& box = transform->getWorldBoundingVolume();
-
-	return box.max - box.getCenter();
-}
-
-//-----------------------------------//
-
 void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transform )
 {
-	Vector3 offset = getOffset(transform->getEntity()) * Vector3::UnitY;
-	transform->setPosition( fromBullet(bullet.getOrigin()) - offset );
+	transform->setPosition( fromBullet(bullet.getOrigin()) );
 	transform->setRotation( fromBullet(bullet.getRotation()) );
 }
 
@@ -96,10 +80,8 @@ void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transfo
 
 btTransform Convert::toBullet(const TransformPtr& transform)
 {
-	Vector3 offset = getOffset(transform->getEntity()) * Vector3::UnitY;
-	
 	btTransform startTransform;
-	startTransform.setOrigin( toBullet(transform->getPosition() + offset) );
+	startTransform.setOrigin( toBullet(transform->getPosition()) );
 	startTransform.setRotation( toBullet(transform->getRotation()) );
 
 	return startTransform;

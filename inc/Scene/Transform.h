@@ -109,6 +109,9 @@ protected:
 	// Sets the notify state of the transform.
 	void setChanged(bool state = true);
 
+	// Called when it is time to draw debug data.
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
+
 	// Position.
 	Vector3 position;
 

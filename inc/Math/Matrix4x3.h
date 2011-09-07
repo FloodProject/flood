@@ -37,6 +37,9 @@ public:
 	// Compute the inverse of a matrix.
 	Matrix4x3 inverse() const;
 
+	// Compute the transpose of a matrix.
+	Matrix4x3 transpose() const;
+
 	// Transforms the point by the matrix.
 	Vector3 operator*(const Vector3& p) const;
 	

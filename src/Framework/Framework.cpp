@@ -34,6 +34,14 @@ Framework::Framework(const String& app)
 
 //-----------------------------------//
 
+Framework::~Framework()
+{
+	Deallocate(window);
+	scene.reset();
+}
+
+//-----------------------------------//
+
 void Framework::run()
 {
 	Framework::init();
@@ -48,7 +56,7 @@ void Framework::init()
 	Engine::init(true);
 
 	// Creates the window.
-	createWindow();
+	window = createWindow();
 
 	// Mount the default assets path.
 	ResourceManager* res = getResourceManager();
@@ -75,7 +83,7 @@ void Framework::init()
 
 //-----------------------------------//
 
-void Framework::createWindow()
+Window* Framework::createWindow()
 {
 	WindowSettings settings;
 
@@ -95,7 +103,10 @@ void Framework::createWindow()
 	device->setRenderTarget( window );
 
 	// Initializes the render device with new window context.
-	window->getContext()->init();
+	RenderContext* context = window->getContext();
+	context->init();
+
+	return window;
 }
 
 //-----------------------------------//
@@ -108,7 +119,6 @@ void Framework::createWindow()
 void Framework::mainLoop()
 {
 	RenderDevice* renderDevice = GetRenderDevice();
-	Window* window = nullptr;
 
 	const uint16 numUpdatesSecond = 25;
 	const float maxUpdateTime = 1.0f / numUpdatesSecond;
@@ -122,12 +132,11 @@ void Framework::mainLoop()
 	{
 		TimerReset(&frameTimer);
 		
-		if( !window->pumpEvents() )
-			break;
+		if( !window->pumpEvents() ) break;
 
 		while( TimerGetCurrentTimeMs() > nextTick )
 		{
-			update( maxUpdateTime );
+			update();
 
 			// User update callback.
 			onUpdate( maxUpdateTime );
@@ -140,6 +149,8 @@ void Framework::mainLoop()
 
 		// Update the active target (swaps buffers).
 		window->update();
+
+		stepFrame();
 
 		// Calculates the new frame times.
 		updateFrameTimes();
@@ -155,7 +166,7 @@ void Framework::updateFrameTimes()
 	frameStats.lastFrameTime = TimerGetElapsed(&frameTimer);
 
 	if(frameStats.lastFrameTime > 0.1)
-		LogDebug("HOTSPOT! %lf", frameStats.lastFrameTime);
+		LogDebug("Hotspot frame! %lf", frameStats.lastFrameTime);
 
 	frameStats.frameStep();
 }

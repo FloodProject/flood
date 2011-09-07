@@ -34,12 +34,13 @@ REFLECT_CLASS_END()
 
 Frustum::Frustum()
 	: projection(Projection::Perspective)
-	, fieldOfView(60)
-	, nearPlane(0.1)
-	, farPlane(100)
-	, aspectRatio(1)
-	, orthoSize(50, 50, 0)
-{ }
+	, fieldOfView(60.0f)
+	, nearPlane(0.1f)
+	, farPlane(100.0f)
+	, aspectRatio(1.0f)
+	, orthoSize(50.0f, 50.0f, 0)
+{
+}
 
 //-----------------------------------//
 
@@ -53,6 +54,9 @@ Frustum::Frustum( const Frustum& rhs )
 {
 	for(size_t i = 0; i < ARRAY_SIZE(rhs.planes); i++ )
 		planes[i] = rhs.planes[i];
+
+	for(size_t i = 0; i < ARRAY_SIZE(rhs.corners); i++ )
+		corners[i] = rhs.corners[i];
 }
 
 //-----------------------------------//
@@ -137,7 +141,7 @@ static const Vector3 cornerPoints[] =
 
 void Frustum::updateCorners( const Matrix4x3& matView )
 {
-	Matrix4x4 matClip = /*Matrix4x4(matView) **/ matProjection;
+	Matrix4x4 matClip = Matrix4x4(matView) * matProjection;
 	Matrix4x4 matInvClip = matClip.inverse();
 
 	// The following are the corner points of the frustum (which becomes

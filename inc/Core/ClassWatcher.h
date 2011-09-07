@@ -25,7 +25,7 @@ struct Field;
 struct FieldWatch
 {
 	void* userdata;
-	const Object* object;
+	const void* object;
 	const Field* field;
 	uint32 hash;
 };

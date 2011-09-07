@@ -10,6 +10,7 @@
 #include "UndoManager.h"
 #include "UndoOperation.h"
 #include "Editor.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -17,32 +18,37 @@ NAMESPACE_EDITOR_BEGIN
 
 UndoManager::~UndoManager()
 {
-	for( size_t i = 0; i < undoOperations.size(); i++ )
-		delete undoOperations[i];
-
-	for( size_t i = 0; i < redoOperations.size(); i++ )
-		delete redoOperations[i];
+	clearOperations();
 }
 
 //-----------------------------------//
 
 void UndoManager::registerOperation( UndoOperation* operation )
 {
+	if( !operation ) return;
+
+	if( operation->description.empty() )
+		LogAssert("Undo operation description should not be empty");
+
 	undoOperations.push_back( operation );
 
 	LogDebug("Registered undo/redo event: %s", operation->description.c_str() );
 
 	// Remove all the existing redo operations.
 	for( size_t i = 0; i < redoOperations.size(); i++ )
-		delete redoOperations[i];
+	{
+		const UndoOperationPtr& op = redoOperations[i];
+		//assert(op.get()->references == 1);
+	}
 
 	redoOperations.clear();
+
 	onUndoRedoEvent();
 }
 
 //-----------------------------------//
 
-void UndoManager::clearOperations( )
+void UndoManager::clearOperations()
 {
 	undoOperations.clear();
 	redoOperations.clear();
@@ -54,35 +60,42 @@ void UndoManager::clearOperations( )
 
 bool UndoManager::undoOperation()
 {
+	if( undoOperations.empty() ) return false;
+
+	EventManager* events = GetEditor().getEventManager();
+	events->onUndoOperation( undoOperations.front() );
+
 	handleOperation(undoOperations, redoOperations, true);
 	onUndoRedoEvent();
 
-	return undoOperations.empty();
+	return true;
 }
 
 //-----------------------------------//
 
 bool UndoManager::redoOperation()
 {
+	if( redoOperations.empty() ) return false;
+
+	EventManager* events = GetEditor().getEventManager();
+	events->onRedoOperation( redoOperations.front() );
+
 	handleOperation(redoOperations, undoOperations, false);
 	onUndoRedoEvent();
 
-	return redoOperations.empty();
+	return true;
 }
 
 //-----------------------------------//
 
-void UndoManager::handleOperation(Operations& firstOperations,
-								  Operations& secondOperations,
-								  bool undo)
+void UndoManager::handleOperation(UndoOperations& firstOperations,
+	UndoOperations& secondOperations, bool undo)
 {
 	if( firstOperations.empty() )
 		return;
 
-	UndoOperation* op = firstOperations.back();
-
-	if(!op)
-		return;
+	UndoOperationPtr op = firstOperations.back();
+	if(!op) return;
 
 	firstOperations.pop_back();
 	secondOperations.push_back(op);
@@ -91,8 +104,6 @@ void UndoManager::handleOperation(Operations& firstOperations,
 		op->undo();
 	else
 		op->redo();
-
-	GetEditor().redrawView();
 }
 
 //-----------------------------------//

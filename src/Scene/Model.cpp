@@ -16,10 +16,11 @@
 #include "Resources/Bone.h"
 #include "Resources/Attachment.h"
 #include "Render/Device.h"
+#include "Render/RenderContext.h"
+#include "Render/MeshManager.h"
 #include "Render/Program.h"
 #include "Render/ProgramManager.h"
 #include "Math/Helpers.h"
-#include "MeshBuilder.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -47,10 +48,16 @@ Model::Model()
 
 //-----------------------------------//
 
-Model::Model( const MeshHandle& pmesh )
-	: mesh(pmesh)
+Model::Model( const MeshHandle& meshHandle )
+	: mesh(meshHandle)
 {
 	init();
+}
+
+//-----------------------------------//
+
+Model::~Model()
+{
 }
 
 //-----------------------------------//
@@ -149,7 +156,7 @@ void Model::update( float delta )
 		updateAttachments();
 	}
 
-	updateDebugRenderable();
+	//updateDebugRenderable();
 	Geometry::update(delta);
 }
 
@@ -184,13 +191,12 @@ void Model::build()
 {
 	if( modelBuilt ) return;
 
-	const std::vector<RenderablePtr>& renderables = MeshBuilder::meshRenderables[pmesh];
+	MeshManager* meshes = GetRenderDevice()->getActiveContext()->meshManager;
+	
+	RenderablesVector renderables;
 
-	if( renderables.empty() )
-	{
-		MeshBuilder builder;
-		builder.build(mesh);
-	}
+	if( !meshes->getMeshRenderables(pmesh, renderables) )
+		return;
 
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
@@ -299,8 +305,15 @@ void Model::updateAnimationBones(AnimationState& state)
 
 void Model::updateFinalAnimationBones()
 {
-	if( animations.empty() )
+	if( pmesh->animations.empty() )
+	{
+		const BonesVector& skeletonBones = pmesh->skeleton->getBones();
+		
+		for( size_t i = 0; i < bones.size(); i++ )
+			bones[i] = skeletonBones[i]->absoluteMatrix;
+		
 		return;
+	}
 
 	for( size_t i = 0; i < bones.size(); i++ )
 	{
@@ -474,7 +487,7 @@ void Model::setupShaderSkinning()
 
 //-----------------------------------//
 
-void Model::setAttachment(const std::string& boneName, const EntityPtr& node)
+void Model::setAttachment(const String& boneName, const EntityPtr& node)
 {
 	if(!pmesh)
 		return;
@@ -496,7 +509,7 @@ void Model::setAttachment(const std::string& boneName, const EntityPtr& node)
 }
 
 //-----------------------------------//
-
+#if 0
 void Model::updateDebugRenderable() const
 {
 	if( !debugRenderable )
@@ -556,7 +569,7 @@ RenderablePtr Model::createDebugRenderable() const
 
 	return renderable;
 }
-
+#endif
 //-----------------------------------//
 
 NAMESPACE_ENGINE_END

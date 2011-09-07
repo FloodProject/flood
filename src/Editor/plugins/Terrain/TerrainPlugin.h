@@ -47,27 +47,27 @@ public:
 	TerrainPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
-	virtual void onPluginEnable();
-	virtual void onPluginDisable();
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 	
-	// Plugin tool selection callback.
-	virtual void onToolSelect( int id );
-
-	// Plugin tool unselection callback.
-	virtual void onToolUnselect( int id );
+	// Plugin tool callbacks.
+	void onToolSelect( int id ) OVERRIDE;
+	void onToolUnselect( int id ) OVERRIDE;
 
 	// Entity callbacks.
-	virtual void onEntitySelect( const EntityPtr& );
-	virtual void onEntityUnselect( const EntityPtr& );
+	void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+	void onSceneUnload( const ScenePtr& ) OVERRIDE;
 
 	// Mouse callbacks.
-	virtual void onMouseMove( const MouseMoveEvent& );
-	virtual void onMouseDrag( const MouseDragEvent& );
-	virtual void onMouseButtonPress( const MouseButtonEvent& );
-	virtual void onMouseButtonRelease( const MouseButtonEvent& );
-	virtual void onMouseLeave();
+	void onMouseMove( const MouseMoveEvent& ) OVERRIDE;
+	void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
+	void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseLeave();
 
 protected:
 
@@ -108,7 +108,7 @@ protected:
 	void registerUndoOperation();
 
 	// Terrain notebook page.
-	TerrainPtr terrain;
+	Terrain* terrain;
 
 	// Terrain notebook page.
 	TerrainPage* terrainPage;
@@ -123,7 +123,7 @@ protected:
 	wxTimer timer;
 
 	// Holds the current projector.
-	EntityPtr entityProjector;
+	Entity* entityProjector;
 
 	// Current tool.
 	TerrainTool::Enum tool;

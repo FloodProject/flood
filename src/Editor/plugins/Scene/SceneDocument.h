@@ -26,28 +26,32 @@ public:
 	SceneDocument();
 	virtual ~SceneDocument();
 
+	// Document management callbacks.
+	bool open() OVERRIDE;
+	bool save() OVERRIDE;
+	bool reset() OVERRIDE;
+
+	// Document callbacks.
+	void onDocumentSelect() OVERRIDE;
+	void onDocumentUnselect() OVERRIDE;
+	void onToolSelect(PluginTool* tool) OVERRIDE;
+
+	// Gets the document window.
+	wxWindow* getWindow() OVERRIDE;
+
 	// Resets the scene.
 	void resetScene();
 
-	// Gets the document window.
-	virtual wxWindow* getWindow();
-	
-	// Gets the view frame.
-	Viewframe* getViewframe() { return viewframe; }
+	// Sets the current scene.
+	void setScene( Scene* scene );
 
-	// Gets the render control.
+	// Gets the view controls.
+	Viewframe* getViewframe() { return viewframe; }
 	RenderControl* getRenderControl() { return viewframe->getControl(); }
-	
-	// Gets the render window.
 	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
 	
 	// Creates a context toolbar.
-	virtual wxAuiToolBar* createContextToolbar() OVERRIDE;
-
-	// Document callbacks.
-	virtual void onToolSelect(PluginTool* tool) OVERRIDE;
-	virtual void onDocumentSelect() OVERRIDE;
-	virtual void onDocumentUnselect() OVERRIDE;
+	wxAuiToolBar* createContextToolbar() OVERRIDE;
 
 	ReplicaContext* replicaContext;
 
@@ -64,13 +68,14 @@ protected:
 	void onUpdate( float delta );
 	void onRender();
 
+	void createView();
+	void setupRenderWindow();
+
 	void OnMouseRightUp(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
-
-	void setupRenderWindow();
-	void createView();
-	void createScene();
+	
+	void createEditorScene();
 	EntityPtr createCamera();
 };
 

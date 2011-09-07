@@ -16,6 +16,11 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(PropertyOperation, UndoOperation)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
 void PropertyOperation::undo()
 { 
 	setFieldValue(oldValue);
@@ -93,8 +98,8 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		//-----------------------------------//
 		case Primitive::String:
 		{
-			std::string val = value.As<std::string>();
-			FieldSet<std::string>(field, object, val);
+			String val = value.As<String>();
+			FieldSet<String>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
@@ -116,13 +121,6 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		{
 			Quaternion val = value.As<Quaternion>();
 			FieldSet<Quaternion>(field, object, val);
-			break;
-		}
-		//-----------------------------------//
-		case Primitive::Bitfield:
-		{
-			int32 val = value.As<int32>();
-			FieldSet<int32>(field, object, val);
 			break;
 		}
 		//-----------------------------------//

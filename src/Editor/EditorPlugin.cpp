@@ -9,6 +9,7 @@
 #include "Editor/API.h"
 #include "EditorPlugin.h"
 #include "Editor.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -36,6 +37,11 @@ EditorPlugin::~EditorPlugin()
 void EditorPlugin::doPluginDisable()
 {
 	Plugin::doPluginDisable();
+
+	// Unsubscribe as an event listener.
+	EventManager* events = editor->getEventManager();
+	events->removeEventListener(this);
+
 	removeTools();
 }
 
@@ -57,6 +63,7 @@ PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 void EditorPlugin::addTool( const PluginTool& pluginTool, bool addToMenu )
 {
 	//if( tool->IsSeparator() ) return;
+	pluginTool.item->SetUserData((long)this);
 
 	tools.push_back( pluginTool );
 

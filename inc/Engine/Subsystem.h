@@ -25,7 +25,7 @@ class API_CORE NO_VTABLE Subsystem
 public:
 
 	virtual ~Subsystem() { }
-	virtual void update( float delta ) { }
+	virtual void update() { }
 
 protected:
 

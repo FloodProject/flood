@@ -18,7 +18,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class ReplicaMessagesClient : ReplicaMessagePlugin
+class ReplicaMessagesClient : ReplicaMessageHandler
 {
 public:
 
@@ -33,7 +33,7 @@ public:
 	void handleReplicaObjectUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
 };
 
-REFLECT_CHILD_CLASS(ReplicaMessagesClient, ReplicaMessagePlugin)
+REFLECT_CHILD_CLASS(ReplicaMessagesClient, ReplicaMessageHandler)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -120,7 +120,7 @@ void ReplicaMessagesClient::handleReplicaObjectCreated(const SessionPtr& session
 
 void ReplicaMessagesClient::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
 {
-	ReplicaMessagePlugin::handleReplicaObjectUpdate(session, msg);
+	ReplicaMessageHandler::handleReplicaObjectUpdate(session, msg);
 }
 
 //-----------------------------------//

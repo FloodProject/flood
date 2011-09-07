@@ -30,6 +30,13 @@ Scene::Scene() : Group("Scene")
 
 //-----------------------------------//
 
+Scene::~Scene()
+{
+	LogDebug("Destroying Scene");
+}
+
+//-----------------------------------//
+
 struct Culler
 {
 	Culler()

@@ -45,7 +45,6 @@ Shading:
 
 Merge mouse events
 Physics rotation becomes wrong due to bounding box calculation.
-Fix default animation state on skinned meshes with no animation tracks.
 Meshes with alpha values need to get blending enabled.
 Add code to generate a default texture
 
@@ -59,8 +58,6 @@ Skydome component:
 
 Scene:
 
-	Frustum class (Camera and Light integration) (WIP)
-	Quadtree for fast terrain queries
 	Geometry component sharing (Instancing)
 	Ray query class
 
@@ -75,7 +72,6 @@ Textures:
 	Generate and support MIP-maps
 	Generate and support normal maps
 	Combine and support cubemaps / skybox textures
-	Check squish and NVIDIA Texture Tools libraries
 
 Audio:
 

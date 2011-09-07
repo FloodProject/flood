@@ -29,37 +29,25 @@ public:
 	PropertyPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
-	// Plugin enable callback.
-	virtual void onPluginEnable();
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
-	// Plugin disable callback.
-	virtual void onPluginDisable();
+	// Entity callbacks.
+	void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+	void onSceneUnload( const ScenePtr& ) OVERRIDE;
 
-	// Entity selection callback.
-	virtual void onEntitySelect( const EntityPtr& );
-	
-	// Entity unselection callback.
-	virtual void onEntityUnselect( const EntityPtr& );
-
-	// Component selection callback.
-	virtual void onComponentSelect( const ComponentPtr& );
-
-	// Component unselection callback.
-	virtual void onComponentUnselect( const ComponentPtr& );
-
-	// Resource selection event.
-	virtual void onResourceSelect( const ResourcePtr& );
-
-	// Resource unselection event.
-	virtual void onResourceUnselect( const ResourcePtr& );
-
-	// Scene load callback.
-	virtual void onSceneLoad( const ScenePtr& );
-
-	// Component change callback.
+	// Component callbacks.
+	void onComponentSelect( const ComponentPtr& ) OVERRIDE;
+	void onComponentUnselect( const ComponentPtr& ) OVERRIDE;
 	void onComponentChanged(const ComponentPtr& );
+	
+	// Resource callbacks.
+	void onResourceSelect( const ResourcePtr& ) OVERRIDE;
+	void onResourceUnselect( const ResourcePtr& ) OVERRIDE;
 
 	// Updates the properties.
 	void updateProperties(const EntityPtr& entity);

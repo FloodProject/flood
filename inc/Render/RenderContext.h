@@ -17,11 +17,15 @@ NAMESPACE_ENGINE_BEGIN
 class Adapter;
 class RenderDevice;
 class RenderTarget;
+
 class BufferManager;
 class ProgramManager;
 class TextureManager;
+class MeshManager;
 
 struct Color;
+class RenderBuffer;
+class Settings;
 
 /**
  * Represents a rendering context.
@@ -32,7 +36,7 @@ class API_RENDER RenderContext : public ReferenceCounted
 public:
 
 	RenderContext();
-    ~RenderContext();
+	~RenderContext();
 
 	// Makes the context current.
 	void makeCurrent();
@@ -59,6 +63,9 @@ public:
 	// Checks that all needed OpenGL extensions are available.
 	void checkExtensions();
 
+	// Creates a new render buffer (offscreen render target).
+	RenderBuffer* createRenderBuffer( const Settings& );
+
 	// Adapter information.
 	Adapter* adapter;
 
@@ -70,6 +77,9 @@ public:
 
 	// Manages all the shaders.
 	ProgramManager* programManager;
+
+	// Manages all the meshes.
+	MeshManager* meshManager;
 
 	// Keeps if the context initialization has already been done.
 	bool initDone;

@@ -102,8 +102,7 @@ void Geometry::notifiesTransform()
 
 void Geometry::update( float delta )
 {
-	if( !isDirty )
-		return;
+	if( !isDirty ) return;
 
 	updateBounds();
 	notifiesTransform();

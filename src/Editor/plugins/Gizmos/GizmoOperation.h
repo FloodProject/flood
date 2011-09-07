@@ -16,8 +16,12 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(GizmoOperation)
+
 class GizmoOperation : public UndoOperation
 {
+	REFLECT_DECLARE_OBJECT(GizmoOperation)
+
 public:
 
 	GizmoOperation();

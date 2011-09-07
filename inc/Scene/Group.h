@@ -50,11 +50,13 @@ public:
 	// Fix-up serialization.
 	virtual void fixUp() OVERRIDE;
 
-	// Event gets called when an entity is added.
+	// Event gets called when an entity is added/removed.
 	Event1<const EntityPtr&> onEntityAdded;
-
-	// Event gets called when an entity is removed.
 	Event1<const EntityPtr&> onEntityRemoved;
+
+	// Event gets called when an entity component is added/removed.
+	Event1<const ComponentPtr&> onEntityComponentAdded;
+	Event1<const ComponentPtr&> onEntityComponentRemoved;
 
 	// Event gets called when its contents change.
 	Event0<> onEntityChanged;

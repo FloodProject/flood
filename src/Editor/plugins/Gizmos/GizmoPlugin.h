@@ -16,13 +16,14 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 class SelectionManager;
+class SelectionOperation;
 class GizmoOperation;
 
 namespace GizmoTool
 {
 	enum Enum
 	{
-		Camera = wxID_HIGHEST + 83,
+		Camera = wxID_HIGHEST + 837541,
 		Translate,
 		Rotate,
 		Scale
@@ -45,29 +46,31 @@ public:
 	GizmoPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata() OVERRIDE;
+	PluginMetadata getMetadata() OVERRIDE;
 	
-	// Plugin enable callback.
-	virtual void onPluginEnable() OVERRIDE;
-
-	// Plugin disable callback.
-	virtual void onPluginDisable();
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
+	void reset();
 
 	// Mouse events.
-	virtual void onMouseMove( const MouseMoveEvent& ) OVERRIDE;
-	virtual void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
-	virtual void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
-	virtual void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseMove( const MouseMoveEvent& ) OVERRIDE;
+	void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
+	void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
 
-	// Entity selection events.
-	virtual void onEntitySelect( const EntityPtr& ) OVERRIDE;
-	virtual void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+	// Entity events.
+	void onSceneUnload( const ScenePtr& ) OVERRIDE;
+	void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
 
-	// Tool selection callback.
-	virtual void onToolSelect( int id ) OVERRIDE;
-
-	// Tool unselection callback.
+	// Tool events.
+	void onToolSelect( int id ) OVERRIDE;
 	void onToolUnselect( int id ) OVERRIDE;
+
+	// Selection events.
+	void onSelection( SelectionOperation* );
+	void onDeselection( SelectionOperation* );
 
 protected:
 
@@ -77,10 +80,8 @@ protected:
 	// Checks if the passed tool is the current one.
 	bool isTool(GizmoTool::Enum mode);
 
-	// Creates a new gizmo for the given node.
+	// Creates/removes a new gizmo for the given node.
 	void createGizmo( const EntityPtr& node );
-
-	// Removes the active gizmo for the given node.
 	void removeGizmo( const EntityPtr& node );
 
 	// Creates a new gizmo undo/redo operation.
@@ -102,7 +103,7 @@ protected:
 	GizmoTool::Enum tool;
 
 	// Current Gizmo geometry.
-	GizmoPtr gizmo;
+	Gizmo* gizmo;
 
 	// Current Gizmo axis selection.
 	GizmoAxis::Enum axis;

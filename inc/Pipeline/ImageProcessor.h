@@ -16,7 +16,7 @@ NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
-struct PIPELINE_API MipmapFilter
+struct API_PIPELINE MipmapFilter
 {
 	enum Enum
 	{
@@ -30,7 +30,7 @@ REFLECT_DECLARE_ENUM(MipmapFilter)
 
 //-----------------------------------//
 
-struct PIPELINE_API CompressionQuality
+struct API_PIPELINE CompressionQuality
 {
 	enum Enum
 	{
@@ -45,7 +45,7 @@ REFLECT_DECLARE_ENUM(CompressionQuality)
 
 //-----------------------------------//
 
-struct PIPELINE_API CompressionFormat
+struct API_PIPELINE CompressionFormat
 {
 	enum Enum
 	{
@@ -67,7 +67,7 @@ REFLECT_DECLARE_ENUM(CompressionFormat)
 
 REFLECT_DECLARE_CLASS(ImageProcessor)
 
-class PIPELINE_API ImageProcessor : public ResourceProcessor
+class API_PIPELINE ImageProcessor : public ResourceProcessor
 {
 	REFLECT_DECLARE_OBJECT(ImageProcessor)
 

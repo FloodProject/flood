@@ -8,25 +8,29 @@
 
 #pragma once
 
-#include "Render/Renderable.h"
+#include "Scene/Geometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 /**
- * Vertex buffer with a quad.
+ * Generates a procedural quad mesh.
  */
 
-class API_ENGINE Quad : public Renderable
+ REFLECT_DECLARE_CLASS(Quad)
+
+class API_SCENE Quad : public Geometry
 {
+	REFLECT_DECLARE_OBJECT(Quad)
+
 public:
 
 	Quad( float width = 1.0f, float height = 1.0f );
 
 private:
 
-	VertexBufferPtr getQuadBuffer( float width, float height );
+	VertexBufferPtr createQuad( float width, float height );
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );

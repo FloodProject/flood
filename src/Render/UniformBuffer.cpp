@@ -21,6 +21,9 @@ NAMESPACE_ENGINE_BEGIN
 
 static char* AllocateName(const String& name)
 {
+	static const char* s_EmptyString = "";
+	if( name.empty() ) return (char*) s_EmptyString;
+
 	size_t nameSize = sizeof(char)*name.size();
 	char* newName = (char*) AllocatorAllocate(GetFrameAllocator(), nameSize+1, 0);
 	memcpy(newName, name.c_str(), nameSize);
@@ -35,12 +38,17 @@ UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
 	//UniformBufferElements::iterator it = elements.find( name.c_str() );
 	//if( it != elements.end() ) return it->second;
 
-	UniformBufferElement* element = (UniformBufferElement*)
-		AllocatorAllocate(GetFrameAllocator(), sizeof(UniformBufferElement)+size, 0);
+	void* p = AllocatorAllocate(GetFrameAllocator(), sizeof(UniformBufferElement)+size, 0);
+	UniformBufferElement* element = (UniformBufferElement*) p;
+
+	if( name.empty() )
+	{
+		LogAssert("Uniform elements should be named");
+		return nullptr;
+	}
 
 	if( !element ) return nullptr;
 
-	element->name = nullptr;
 	element->type = (UniformDataType::Enum) 0;
 	element->count = 0;
 	element->name = AllocateName(name);

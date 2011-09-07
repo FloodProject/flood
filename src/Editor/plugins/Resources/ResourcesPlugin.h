@@ -17,9 +17,8 @@ NAMESPACE_EDITOR_BEGIN
 class ResourcesPage;
 class ResourcesBrowser;
 class ResourceDatabase;
+class ResourceIndexer;
 class ResourceThumbnailer;
-
-//-----------------------------------//
 
 REFLECT_DECLARE_CLASS(ResourcesPlugin)
 
@@ -35,22 +34,22 @@ public:
 	// Gets metadata about this plugin.
 	PluginMetadata getMetadata() OVERRIDE;
 
-	// Plugin enable callback.
+	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
-
-	// Plugin disable callback.
 	void onPluginDisable() OVERRIDE;
 
-	// Loads the thumbnails cache.
-	bool loadCache();
+	// Plugin update.
+	void onPluginUpdate() OVERRIDE;
 
-	// Saves the thumbnails cache.
+	// Loads/saves the thumbnails cache.
+	bool loadCache();
 	bool saveCache();
 
 	// Handles button click.
 	void onBrowserButtonClick(wxCommandEvent& event);
 
 	ResourceDatabase* resourceDatabase;
+	ResourceIndexer* resourceIndexer;
 	ResourceThumbnailer* resourceThumbnailer;
 
 	ResourcesPage* resourcesPage;

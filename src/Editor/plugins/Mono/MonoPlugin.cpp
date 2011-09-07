@@ -61,9 +61,7 @@ PluginMetadata MonoPlugin::getMetadata()
 
 void MonoPlugin::onPluginEnable()
 {
-	std::string dir = PathGetCurrentDir()
-		+ PathGetSeparator()
-		+ "Plugins";
+	Path dir = PathGetCurrentDir() + PathGetSeparator() + "Plugins";
 
 	mono_set_dirs(dir.c_str(), dir.c_str());
 

@@ -6,14 +6,62 @@
 *
 ************************************************************************/
 
+#include "Pipeline/API.h"
+#include "Pipeline/ResourceProcessor.h"
+#include "Resources/ResourceLoader.h"
+#include "Resources/ResourceManager.h"
+#include "Core/Log.h"
+
+//-----------------------------------//
+
+void PipelineInit()
+{
+	Class* klass = ResourceProcessorGetType();
+	
+	for( size_t i = 0; i < klass->childs.size(); i++ )
+	{
+		Class* child = klass->childs[i];
+		
+		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
+		resourceProcessors.push_back(processor);
+
+		LogInfo("Registering asset handler: %s", child->name);
+	}
+}
+
+//-----------------------------------//
+
+void PipelineCleanup()
+{
+	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	{
+		ResourceProcessor* processor = resourceProcessors[i];
+		Deallocate(processor);
+	}
+
+	resourceProcessors.clear();
+}
+
+//-----------------------------------//
+
+ResourceProcessor* PipelineFindProcessor(Class* type)
+{
+	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	{
+		ResourceProcessor* processor = resourceProcessors[i];
+		
+		bool isProcessor = ClassInherits(type, processor->GetResourceType());
+		if( isProcessor ) return processor;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
 #ifdef BUILDING_STANDALONE
 
 #define INSTANTIATE_TEMPLATES
-
-#include "Pipeline/API.h"
-#include "ResourceProcessor.h"
-#include "Resources/ResourceLoader.h"
-#include "Resources/ResourceManager.h"
 
 ResourceManager* resources;
 
@@ -25,7 +73,7 @@ void showResourceLoaders()
 
 	Class& type = ResourceLoader::getStaticType();
 	
-	for( uint i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < type.childs.size(); i++ )
 	{
 		Class& child = *type.childs[i];
 		printf("\t%s\n", child.name.c_str());

@@ -132,7 +132,7 @@ bool AudioDevice::createMainContext()
 
 //-----------------------------------//
 
-const std::string AudioDevice::getVersion() 
+const String AudioDevice::getVersion() 
 {
     ALCint major = 0;
 	ALCint minor = 0;

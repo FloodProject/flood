@@ -15,7 +15,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-wxBitmap* ConvertImageToBitmap( const ImageHandle& image );
+wxBitmap* ConvertImageToBitmap( Image* image, const Path& fullPath );
 
 /**
  * Implements a media browser. At the moment it only lets the user
@@ -31,13 +31,13 @@ public:
 	wxImageComboBox( wxWindow *parent, wxWindowID id );
 	
 	virtual void OnDrawBackground (wxDC &dc, const wxRect &rect, 
-		int item, int flags) const;
+		int item, int flags) const OVERRIDE;
 
 	virtual void OnDrawItem (wxDC &dc, const wxRect &rect, int item,
-		int flags) const;
+		int flags) const OVERRIDE;
 	
-	virtual wxCoord	OnMeasureItem (size_t item) const;
-	virtual wxCoord	OnMeasureItemWidth (size_t item) const;
+	virtual wxCoord	OnMeasureItem (size_t item) const OVERRIDE;
+	virtual wxCoord	OnMeasureItemWidth (size_t item) const OVERRIDE;
 
 	void addImage( const ImageHandle& image );
 

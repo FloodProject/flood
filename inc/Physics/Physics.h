@@ -8,9 +8,10 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
-#include "Subsystem.h"
+#include "Core/References.h"
+#include "Engine/Subsystem.h"
 #include "Math/Vector.h"
 
 class btCollisionConfiguration;

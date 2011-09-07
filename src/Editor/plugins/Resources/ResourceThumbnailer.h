@@ -8,31 +8,45 @@
 
 #pragma once
 
+class ResourceIndexer;
+struct ResourceMetadata;
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 class ResourceThumbnailer
 {
-	ResourceThumbnailer();
-
 public:
 
+	ResourceThumbnailer();
+
+	// Sets the resource indexer.
+	void setIndexer(ResourceIndexer*);
+
+	// Updates the thumbnailer.
+	void update();
+
 	// Generate thumbnail.
-	ImagePtr generateThumbnail(Mesh* mesh);
+	ImagePtr generateMesh(const MeshHandle& mesh);
+
+	Event1<const ResourceMetadata&> onResourceThumbnailed;
 
 protected:
 
+	void onResourceIndexed(const ResourceMetadata&);
+
 	// Sets up the render buffers.
-	void setupRender();
+	bool setupRender();
+
+	ResourceIndexer* indexer;
 
 	ScenePtr scene;
 	EntityPtr entityCamera;
 	CameraPtr camera;
 	RenderView* renderView;
 
-	TexturePtr depthTexture;
-	TexturePtr colorTexture;
+	//TexturePtr colorTexture;
 	RenderBuffer* renderBuffer;
 };
 

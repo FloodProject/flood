@@ -18,9 +18,9 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Transform, Component)
-	FIELD_PRIMITIVE(4, Vector3, position)
+	FIELD_PRIMITIVE(4, Vector3, position) FIELD_ALIAS(position, translation)
 	FIELD_PRIMITIVE(5, Quaternion, rotation)
-	FIELD_PRIMITIVE(6, Vector3, scale)
+	FIELD_PRIMITIVE(6, Vector3, scale) FIELD_ALIAS(scale, scaling)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -40,60 +40,6 @@ Transform::Transform()
 {
 }
 
-//-----------------------------------//
-#if 0
-void Transform::translate( const Vector3& offset )
-{
-	translate( offset.x, offset.y, offset.z );
-}
-
-//-----------------------------------//
-
-void Transform::translate( float x, float y, float z )
-{
-	setChanged();
-
-	position.x += x;
-	position.y += y;
-	position.z += z;
-}
-
-//-----------------------------------//
-
-void Transform::scale( const Vector3& value )
-{
-	scale( value.x, value.y, value.z );
-}
-
-//-----------------------------------//
-
-void Transform::scale( float x, float y, float z )
-{
-	setChanged();
-
-	scaling.x *= x;
-	scaling.y *= y;
-	scaling.z *= z;
-}
-
-//-----------------------------------//
-
-void Transform::rotate( const Vector3& rot )
-{
-	rotate( rot.x, rot.y, rot.z );
-}
-
-//-----------------------------------//
-
-void Transform::rotate( float xang, float yang, float zang )
-{
-	setChanged();
-
-	rotation.x += xang;
-	rotation.y += yang;
-	rotation.z += zang;
-}
-#endif
 //-----------------------------------//
 
 void Transform::setPosition( const Vector3& position )
@@ -233,9 +179,10 @@ void Transform::updateBoundingVolume()
 	if( bounds.isInfinite() )
 		bounds.setZero();
 
-	// Update debug renderable.
-	debugRenderable = buildBoundingRenderable( bounds );
 	needsBoundsUpdate = false;
+
+	// Update debug renderable.
+	debugRenderable = DebugBuildBoundingBox( bounds );
 }
 
 //-----------------------------------//
@@ -263,6 +210,13 @@ BoundingBox Transform::getWorldBoundingVolume() const
 {
 	const Matrix4x3& transform = getAbsoluteTransform();
 	return bounds.transform(transform);
+}
+
+//-----------------------------------//
+
+void Transform::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum )
+{
+	debug.drawBox( getWorldBoundingVolume() );
 }
 
 //-----------------------------------//

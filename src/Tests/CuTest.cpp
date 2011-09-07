@@ -271,7 +271,7 @@ void CuSuiteDelete(CuSuite *testSuite)
 		if(!testSuite->list[n]) continue;
 		CuTestDelete(testSuite->list[n]);
     }
-	Deallocate<CuSuite>(testSuite);
+	Deallocate(testSuite);
 }
 
 void CuSuiteAdd(CuSuite* testSuite, CuTest *testCase)

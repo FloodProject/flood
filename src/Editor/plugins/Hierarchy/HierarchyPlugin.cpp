@@ -11,7 +11,7 @@
 #include "HierarchyPane.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Events.h"
+#include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -58,7 +58,7 @@ void HierarchyPlugin::onPluginEnable()
 	editor->getAUI()->Update();
 
 	// Subscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
 }
 
@@ -73,7 +73,7 @@ void HierarchyPlugin::onPluginDisable()
 	hierarchyPane = nullptr;
 
 	// Unsubscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->removeEventListener(this);
 }
 

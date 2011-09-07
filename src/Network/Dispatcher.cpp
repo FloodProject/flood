@@ -32,7 +32,6 @@ Dispatcher::Dispatcher()
 	: isServer(false)
 	, sessions(nullptr)
 	, handlers(nullptr)
-	, plugins(nullptr)
 	, serializer(nullptr)
 {
 	sessions = Allocate(SessionManager, AllocatorGetThis());
@@ -64,70 +63,9 @@ void Dispatcher::initServer(HostServer* host)
 
 Dispatcher::~Dispatcher()
 {
-	Deallocate(plugins);
 	Deallocate(sessions);
 	Deallocate(handlers);
 	Deallocate(serializer);
-}
-
-//-----------------------------------//
-
-void Dispatcher::initPlugins(Class* klass)
-{
-	plugins = Allocate(PluginManager, AllocatorGetThis());
-	plugins->onPluginEnableEvent.Connect(this, &Dispatcher::handlePluginEnable);
-	plugins->onPluginDisableEvent.Connect(this, &Dispatcher::handlePluginDisable);
-
-	std::vector<Plugin*> found;
-	plugins->scanPlugins(klass, found);
-	plugins->sortPlugins(found);
-	plugins->registerPlugins(found);
-}
-
-//-----------------------------------//
-
-void Dispatcher::handlePluginEnable(Plugin* plugin)
-{
-	MessagePlugin* messagePlugin = (MessagePlugin*) plugin;
-
-	const MessagesTable& messagesTable = messagePlugin->getMessagesTable();
-	Enum* messagesEnum = messagePlugin->getMessagesEnum();
-
-	MessageDirection::Enum direction = isServer ?
-		MessageDirection::ClientToServer : MessageDirection::ServerToClient;
-
-	for(size_t i = 0; i < messagesTable.size(); i++ )
-	{
-		MessageMapping mapping = messagesTable[i];
-
-		bool isBoth = mapping.direction == MessageDirection::Both;
-		
-		if(!(isBoth || mapping.direction == direction))
-			continue;
-
-		mapping.plugin = messagePlugin;
-
-		handlers->addHandler(mapping);
-
-		const char* name = EnumGetValueName(messagesEnum, mapping.id);
-		LogDebug("Registering message type: %s", name);
-	}
-}
-
-//-----------------------------------//
-
-void Dispatcher::handlePluginDisable(Plugin* plugin)
-{
-	MessagePlugin* messagePlugin = (MessagePlugin*) plugin;
-
-	const MessagesTable& messagesTable = messagePlugin->getMessagesTable();
-	Enum* messagesEnum = messagePlugin->getMessagesEnum();
-
-	for(size_t i = 0; i < messagesTable.size(); i++ )
-	{
-		const MessageMapping& mapping = messagesTable[i];
-		handlers->removeHandler(mapping);
-	}
 }
 
 //-----------------------------------//
@@ -199,7 +137,7 @@ bool Dispatcher::processMessage()
 		Object* object = SerializerLoad(serializer);
 		if( !object ) return false;
 
-		mapping->ref(mapping->plugin, session, object);
+		mapping->ref(mapping->handler, session, object);
 		
 		Deallocate(object);
 	}
@@ -211,7 +149,7 @@ bool Dispatcher::processMessage()
 			return false;
 		}
 
-		CALL_MEMBER_FN(mapping->plugin, mapping->raw)(session, message);
+		CALL_MEMBER_FN(mapping->handler, mapping->raw)(session, message);
 	}
 
 	return true;

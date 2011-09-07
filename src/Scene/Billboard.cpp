@@ -27,15 +27,15 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Billboard::Billboard()
-	: billboardType(BillboardType::WorldAligned)
-{ }
+Billboard::Billboard() : billboardType(BillboardType::ScreenAligned)
+{
+}
 
 //-----------------------------------//
 
-Billboard::Billboard( BillboardType::Enum type )
-	: billboardType(type)
-{ }
+Billboard::Billboard( BillboardType::Enum type ) : billboardType(type)
+{
+}
 
 //-----------------------------------//
 
@@ -47,77 +47,26 @@ void Billboard::update( float )
 
 void Billboard::onPreRender( const Camera& camera )
 {
+	const TransformPtr& transform = getEntity()->getTransform();
+	
+	const TransformPtr& camTransform = camera.getEntity()->getTransform();
+	const Matrix4x3& camView = camera.getViewMatrix();
+
 #if 0
-	TransformPtr transform = getEntity()->getTransform();
-	const Matrix4x3& view = camera.getViewMatrix();
+	Vector3 look = camTransform->getPosition() - transform->getPosition();
+	look.normalize();
 
-	Vector3 right( view.m11, view.m12, view.m13 );
-	right.normalize();
-	
-	Vector3 up( view.m21, view.m22, view.m23 );
-	up.normalize();
+	Vector3 cameraUp( camView.m21, camView.m22, camView.m23 ); 
 
-	Vector3 forward( view.m31, view.m32, view.m33 );
-	forward.normalize();
-
-	Matrix4x3 lookAt = transform->lookAt( -forward, up );
-	
-	Vector3 position = transform->getPosition();
-	lookAt.tx = position.x;
-	lookAt.ty = position.y;
-	lookAt.tz = position.z;
-	
-	transform->setAbsoluteTransform( lookAt );
+	Matrix4x3 lookAt = transform->lookAt(look, cameraUp);
 #endif
 
-	const TransformPtr& transform = getEntity()->getTransform();
-	const TransformPtr& camTransform = camera.getEntity()->getTransform();
-	const Matrix4x3& camRot = camera.getViewMatrix();
+	Matrix4x3 lookAt = camView.transpose();
+	lookAt.tx = transform->getPosition().x;
+	lookAt.ty = transform->getPosition().y;
+	lookAt.tz = transform->getPosition().z;
 
-	Vector3 look = transform->getPosition() + camRot * Vector3(0, 0, -1);
-	Vector3 up = camRot * Vector3(0, 1, 0);
-	
-	Matrix4x3 lookAt = transform->lookAt(look, up);
 	transform->setAbsoluteTransform( lookAt );
-}
-
-//-----------------------------------//
-
-RenderablePtr Billboard::createDebugRenderable() const
-{
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
-	
-	std::vector<Vector3> pos;
-	std::vector<Vector3> colors;
-
-	//TransformPtr cameraTransform = camera.getEntity()->getTransform();
-	//Vector3 lookAt = transform->getPosition()-cameraTransform->getPosition();
-	//
-	//pos.push_back( transform->getPosition() );
-	//pos.push_back( cameraTransform->getPosition() );
-
-	colors.push_back( Vector3::Zero );
-	colors.push_back( Vector3::Zero );
-	
-	//Vector3 up = camera->getLookAtVector().cross( Vector3::UnitY );
-
-	//pos.push_back( up );
-	//pos.push_back( up*3 );
-
-	colors.push_back( Vector3::Zero );
-	colors.push_back( Vector3::Zero );
-
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
-	
-	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "BillboardDebug");
-
-	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
-	rend->setPrimitiveType(PolygonType::Lines);
-	rend->setVertexBuffer( vb );
-	rend->setMaterial( material );
-
-	return rend;
 }
 
 //-----------------------------------//

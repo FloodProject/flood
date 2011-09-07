@@ -32,6 +32,8 @@ ProgramManager::~ProgramManager()
 	for( it = programs.begin(); it != programs.end(); it++ )
 	{
 		const ProgramPtr& program = it->second;
+		if( !program ) continue;
+
 		assert( ReferenceGetCount( program.get() ) == 1 );
 	}
 

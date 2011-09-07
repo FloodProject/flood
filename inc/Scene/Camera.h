@@ -79,6 +79,8 @@ public:
 	// Updates the frustum.
 	void updateFrustum();
 
+	DebugDrawer drawer;
+
 protected:
 
 	// Updates the view transform.
@@ -87,11 +89,8 @@ protected:
 	// Handles the transform notification.
 	void onTransform();
 
-	// Updates the debug renderable of the camera.
-	void updateDebugRenderable() const;
-
-	// Creates the debug renderable of the camera.
-	RenderablePtr createDebugRenderable() const;
+	// Called when it is time to draw debug data.
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
 
 	// Camera frustum.
 	Frustum frustum;

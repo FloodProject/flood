@@ -15,16 +15,41 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(EntityOperation, UndoOperation)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+EntityOperation::EntityOperation()
+	: entity(nullptr)
+	, component(nullptr)
+	, weakScene(nullptr)
+{
+}
+
+//-----------------------------------//
+
 void EntityOperation::redo()
 {
 	ScenePtr scene = weakScene;
 	
 	if(!scene) return;
 	
-	if(added)
+	switch(type)
+	{
+	case EntityAdded:
 		scene->add(entity);
-	else
+		break;
+	case EntityRemoved:
 		scene->remove(entity);
+		break;
+	case ComponentAdded:
+		entity->addComponent(component);
+		break;
+	case ComponentRemoved:
+		entity->removeComponent(component);
+		break;
+	}
 }
 
 //-----------------------------------//
@@ -35,20 +60,28 @@ void EntityOperation::undo()
 	
 	if(!scene) return;
 	
-	if(added)
+	switch(type)
+	{
+	case EntityAdded:
 		scene->remove(entity);
-	else
+		break;
+	case EntityRemoved:
 		scene->add(entity);
+		break;
+	case ComponentAdded:
+		entity->removeComponent(component);
+		break;
+	case ComponentRemoved:
+		entity->addComponent(component);
+		break;
+	}
 }
 
 //-----------------------------------//
 
-EntityOperation* ScenePage::createEntityOperation(const EntityPtr& entity, const std::string& desc)
+EntityOperation* ScenePage::createEntityOperation(const String& desc)
 {
-	if( !entity ) return nullptr;
-
-	EntityOperation* entityOperation = new EntityOperation();
-	entityOperation->entity = entity;
+	EntityOperation* entityOperation = AllocateThis(EntityOperation);
 	entityOperation->weakScene = weakScene;
 	entityOperation->description = desc;
 

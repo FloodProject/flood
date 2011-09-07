@@ -49,6 +49,7 @@ class API_ENGINE Entity : public Object
 
 	Entity();
 	Entity( const String& name );
+	~Entity();
 
 public:
 	

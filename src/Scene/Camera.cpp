@@ -30,17 +30,15 @@ Camera::Camera()
 	: activeView(nullptr)
 	, frustumCulling(false)
 	, lookAtVector(Vector3::UnitZ)
-{ }
+{
+}
 
 //-----------------------------------//
 
 Camera::~Camera()
 {
-	if( transform )
-	{
-		transform->onTransform.Disconnect( this, &Camera::onTransform );
-		transform.reset();
-	}
+	if( !transform ) return;
+	transform->onTransform.Disconnect( this, &Camera::onTransform );
 }
 
 //-----------------------------------//
@@ -77,8 +75,6 @@ void Camera::updateFrustum()
 	frustum.orthoSize = Vector2(viewSize.x, viewSize.y);
 	frustum.updateProjection();
 	frustum.updatePlanes( viewMatrix );
-
-	updateDebugRenderable();
 }
 
 //-----------------------------------//
@@ -97,6 +93,8 @@ void Camera::setView( RenderView* view )
 
 void Camera::update( float )
 {
+	drawer.reset();
+
 	if( !activeView )
 	{
 		RenderView* view = GetRenderDevice()->getActiveView();
@@ -157,9 +155,7 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 {
-#if 1
-	if(  !entity ) return;
-#endif
+	if( !entity ) return;
 
 	// Try to see if this is a Group-derived node.
 	Class* klass = entity->getType();
@@ -173,7 +169,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 		// Cull the children entities recursively.
 		for( size_t i = 0; i < entities.size(); i++ )
 		{
-			const EntityPtr& child = entities[i];			
+			const EntityPtr& child = entities[i];
 			cull( block, child );
 		}
 
@@ -191,9 +187,9 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	const TransformPtr& transform = entity->getTransform();
 	const BoundingBox& box = transform->getWorldBoundingVolume();
 
-	bool performCull = !entity->getTag(Tags::NonCulled);
-
-	if( frustumCulling && performCull && !frustum.intersects(box) )
+	bool isCulled = !entity->getTag(Tags::NonCulled);
+	
+	if( frustumCulling && isCulled && !frustum.intersects(box) )
 		return;
 
 	#pragma TODO("Fix multiple geometry instancing")
@@ -219,30 +215,20 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	}
 #endif
 
-#ifdef DEBUG_BUILD
+#ifdef BUILD_DEBUG
 	const ComponentMap& components = entity->getComponents();
-
 	ComponentMap::const_iterator it;
+	
 	for( it = components.begin(); it != components.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
-
 		component->onPreRender(*this);
 
 		if( !component->isDebugRenderableVisible() )
 			continue;
 
-		const RenderablePtr& renderable = component->getDebugRenderable();
-		if( !renderable ) continue;
-
-		renderable->setRenderLayer(RenderLayer::PostTransparency);
-
-		RenderState renderState(renderable);
-
-		if( component->getDebugInheritsTransform() )
-			renderState.modelMatrix = transform->getAbsoluteTransform();
-
-		block.renderables.push_back( renderState );
+		DebugDrawFlags::Enum flags = (DebugDrawFlags::Enum) 0;
+		component->onDebugDraw(drawer, flags);
 #endif
 	}
 }
@@ -263,8 +249,7 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 	Vector3 rayDirection = rayTarget - rayOrigin;
 	rayDirection.normalize();
 
-	if( outFar != nullptr )
-		*outFar = rayTarget;
+	if( outFar != nullptr ) *outFar = rayTarget;
 
 	Ray pickRay(rayOrigin, rayDirection);
 	return pickRay;
@@ -327,22 +312,19 @@ Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop,
 
 //-----------------------------------//
 
-void Camera::updateDebugRenderable() const
+static Frustum CalculateWorldFrustum(const TransformPtr& transform, Frustum local)
 {
-	if( !debugRenderable )
-		return;
+	const Matrix4x3& absolute = transform->getAbsoluteTransform();
 
-	updateDebugFrustum( debugRenderable, frustum );
+	for(size_t i = 0; i < ARRAY_SIZE(local.corners); i++)
+		local.corners[i] = absolute * local.corners[i];
+
+	return local;
 }
 
-//-----------------------------------//
-
-RenderablePtr Camera::createDebugRenderable() const
+void Camera::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum )
 {
-	assert( !debugRenderable );
-
-	debugInheritsTransform = false;
-	return buildFrustum( frustum );
+	debug.drawFrustum( CalculateWorldFrustum(transform, frustum) );
 }
 
 //-----------------------------------//

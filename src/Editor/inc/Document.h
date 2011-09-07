@@ -24,11 +24,18 @@ public:
 	Document();
 	virtual ~Document();
 
-	// Opens the document.
-	virtual void Open() {}
+	// Document management callbacks.
+	virtual bool open() = 0;
+	virtual bool save() = 0;
+	virtual bool reset() = 0;
 
-	// Saves the document.
-	virtual void Save() {}
+	// Document selection callbacks.
+	virtual void onDocumentSelect() {}
+	virtual void onDocumentUnselect() {}
+
+	// Undo management.
+	void createUndo();
+	void resetUndo();
 
 	// Gets the name of the document.
 	GETTER(Name, const String&, name)
@@ -47,10 +54,6 @@ public:
 
 	// Tool selection callbacks.
 	virtual void onToolSelect(PluginTool* tool) {}
-
-	// Document selection callbacks.
-	virtual void onDocumentSelect() {}
-	virtual void onDocumentUnselect() {}
 
 	// Handles undo/redo events.
 	void onUndoRedoEvent();

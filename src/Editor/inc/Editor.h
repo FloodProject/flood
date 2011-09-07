@@ -12,8 +12,7 @@
 
 #include "Math/Vector.h"
 #include "Core/PluginManager.h"
-
-FWD_DECL(Engine)
+#include "DocumentManager.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -24,33 +23,28 @@ class EditorApp : public wxApp
 public:
 
 	bool OnInit() OVERRIDE;
+
+#ifndef BUILD_DEBUG
 	void OnFatalException() OVERRIDE;
+#endif
 };
 
 //-----------------------------------//
 
-class Events;
+class EventManager;
 class Document;
+class DocumentManager;
 class EditorInputManager;
+class PluginManager;
+class Engine;
 
 class API_EDITOR EditorFrame : public wxFrame
 {
-	//wxADD_KEYBINDER_SUPPORT();
-
 public:
 
 	EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 	
-	// Refreshes the main view.
-	void redrawView();
-
-	// Adds a new document to the notebook.
-	void addDocument(Document* document);
-
-	// Gets the current document.
-	GETTER(Document, Document*, currentDocument)
-
 	// Gets the notebook control.
 	GETTER(Notebook, wxAuiNotebook*, notebookCtrl)
 
@@ -64,10 +58,22 @@ public:
 	GETTER(PluginManager, PluginManager*, pluginManager)
 
 	// Gets the events manager instance.
-	GETTER(EventManager, Events*, eventManager)
+	GETTER(EventManager, EventManager*, eventManager)
+
+	// Gets the documents manager instance.
+	GETTER(DocumentManager, DocumentManager*, documentManager)
+
+	// Gets the current document.
+	GETTER(Document, Document*, documentManager->currentDocument)
 
 	// Gets/sets the drag and drop coords.
 	ACESSOR(DropCoords, Vector2, dropCoords)
+
+	// Gets a document from a page.
+	Document* getDocumentFromPage(int selection);
+
+	// Refreshes the main view.
+	void redrawView();
 
 protected:
 
@@ -96,20 +102,19 @@ protected:
 	void OnSettingsRender(wxCommandEvent& event);
 	void OnSettingsRenderUpdate(wxUpdateUIEvent& event);
 
+	// Document callbacks.
+	void onDocumentAdded(Document* document);
+	void onDocumentRemoved(Document* document);
+
 public:
 
 	Engine* engine;
 	PluginManager* pluginManager;
-	Events* eventManager;
+	DocumentManager* documentManager;
+	EventManager* eventManager;
 	
 	// Drag and drop coordinates.
 	Vector2 dropCoords;
-
-	Document* currentDocument;
-	std::vector<Document*> documents;
-
-	// Gets a document from a page.
-	Document* getDocumentFromPage(int selection);
 
 	// Docking widgets.
 	wxAuiManager* paneCtrl;

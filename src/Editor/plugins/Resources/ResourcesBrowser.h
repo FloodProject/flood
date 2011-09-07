@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef ENABLE_RESOURCE_BROWSER
+
 #include "gen\PreferencesGenerated.h"
 
 NAMESPACE_EDITOR_BEGIN
@@ -15,7 +17,9 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 class EditorFrame;
+
 struct ResourceMetadata;
+class ResourceDatabase;
 
 typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
 typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
@@ -51,10 +55,15 @@ protected:
 
 	// Sets up the resource groups.
 	void setupGroups();
+
+	// Sets up the resource gruops icons.
 	void setupGroupIcons();
 	
 	// Sets up the UI.
 	void setupUI();
+
+	// Adds a resource group from a database.
+	void addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group);
 
 	// Finds a resource group from a tree item id.
 	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group );
@@ -84,3 +93,5 @@ protected:
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

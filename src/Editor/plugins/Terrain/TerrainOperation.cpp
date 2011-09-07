@@ -16,6 +16,11 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(TerrainOperation, UndoOperation)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
 TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
 								    const RayTriangleQueryResult& res )
 	: brushSize(0)

@@ -66,6 +66,7 @@ void ResourceHandleDestroy(HandleId id)
 	Resource* resource = (Resource*) ResourceHandleFind(id);
 	gs_ResourcesManager->removeResource(resource);
 	HandleDestroy(gs_ResourceHandleManager, id);
+	Deallocate(resource);
 }
 
 static HandleId ResourceFind(const char* s)
@@ -113,12 +114,18 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-	loadQueuedResources();
-	//resourceTaskEvents.clear();
-	assert( resourceTaskEvents.empty() );
-
+	destroyHandles();
 	destroyLoaders();
 
+	ArchiveDestroy(archive);
+	ConditionDestroy(resourceFinishLoad);
+	MutexDestroy(resourceFinishLoadMutex);
+}
+
+//-----------------------------------//
+
+void ResourceManager::destroyHandles()
+{
 	ResourceMap::iterator it = resources.begin();
 	for( ; it != resources.end(); ++it )
 	{
@@ -132,10 +139,6 @@ ResourceManager::~ResourceManager()
 
 	HandleDestroyManager(handleManager);
 	handleManager = nullptr;
-
-	ArchiveDestroy(archive);
-	ConditionDestroy(resourceFinishLoad);
-	MutexDestroy(resourceFinishLoadMutex);
 }
 
 //-----------------------------------//
@@ -333,8 +336,7 @@ void ResourceManager::loadQueuedResources()
 
 	while( AtomicRead(&numResourcesQueuedLoad) > 0 )
 	{
-		#pragma TODO("Use timed_wait and notify the observers of progress")
-
+		#pragma TODO("Use a sleep and notify the observers of progress")
 		ConditionWait(resourceFinishLoad, resourceFinishLoadMutex);
 	}
 
@@ -367,6 +369,8 @@ void ResourceManager::sendPendingEvents()
 
 void ResourceManager::removeUnusedResources()
 {
+	return;
+
 	std::vector<String> resourcesToRemove;
 
 	// Search for unused resources.
@@ -406,8 +410,8 @@ void ResourceManager::removeResource(const String& path)
 		return;
 	
 	// Send callback notifications.
-	ResourceEvent event(it->second);
-	onResourceRemoved( event );
+	//ResourceEvent event(it->second);
+	//onResourceRemoved( event );
 
 	LogInfo("Unloaded resource: %s", path.c_str());
 	resources.erase(it);

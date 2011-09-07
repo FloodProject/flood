@@ -17,8 +17,6 @@ NAMESPACE_CORE_BEGIN
 
 const Matrix4x3 Matrix4x3::Identity;
 
-//-----------------------------------//
-
 Matrix4x3::Matrix4x3() 
 {
 	identity(); 
@@ -240,6 +238,29 @@ float Matrix4x3::determinant() const
 		  m11 * (m22*m33 - m23*m32)
 		+ m12 * (m23*m31 - m21*m33)
 		+ m13 * (m21*m32 - m22*m31);
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::transpose() const
+{
+	Matrix4x3 mat;
+	mat.m11 = m11;
+	mat.m12 = m21;
+	mat.m13 = m31;
+	mat.tx = 0;
+
+	mat.m21 = m12;
+	mat.m22 = m22;
+	mat.m23 = m32;
+	mat.ty = 0;
+
+	mat.m31 = m13;
+	mat.m32 = m23;
+	mat.m33 = m33;
+	mat.tz = 0;
+	
+	return mat;
 }
 
 //-----------------------------------//

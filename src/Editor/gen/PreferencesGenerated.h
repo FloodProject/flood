@@ -29,6 +29,7 @@
 #include <wx/choice.h>
 #include <wx/srchctrl.h>
 #include <wx/slider.h>
+#include <wx/gauge.h>
 #include <wx/splitter.h>
 #include <wx/dialog.h>
 #include <wx/valtext.h>
@@ -157,6 +158,7 @@ class ResourcesFrame : public wxDialog
 		wxSearchCtrl* m_searchCtrl;
 		wxSlider* m_detailSlider;
 		wxListCtrl* m_resourceList;
+		wxGauge* m_gauge1;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -169,7 +171,7 @@ class ResourcesFrame : public wxDialog
 	
 	public:
 		
-		ResourcesFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 580,370 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP ); 
+		ResourcesFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 580,370 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 		~ResourcesFrame();
 		
 		void m_splitter2OnIdle( wxIdleEvent& )

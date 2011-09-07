@@ -181,32 +181,8 @@
     <Filter Include="Graphics\Adapter">
       <UniqueIdentifier>{e96fc167-f76f-464a-b23b-d767cea4e5bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Buffers">
-      <UniqueIdentifier>{6d979caa-492d-4488-bbb8-a71ebbc6c1e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Buffers\Uniform">
-      <UniqueIdentifier>{20b72892-41b8-4aeb-86e5-584f22b653a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Buffers\Vertex">
-      <UniqueIdentifier>{90e260a7-1a2c-4ecb-bc2f-5bfa8ed8a2d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Buffers\Index">
-      <UniqueIdentifier>{1135735f-059e-46dc-a108-cf512a6e4d2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Buffers\Render">
-      <UniqueIdentifier>{9bee77d2-8058-46be-a539-6c6f61ccab27}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Target">
       <UniqueIdentifier>{4296de7c-264b-4eb2-89b3-9459d3be1866}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Shaders">
-      <UniqueIdentifier>{db00aaea-871c-41fa-ae25-2c08de4432a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Shaders\GLSL">
-      <UniqueIdentifier>{e6088325-bd14-41bf-ac99-74e1475590ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Texture">
-      <UniqueIdentifier>{44680aba-7b1f-4755-bced-0a0ba3db2262}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\View">
       <UniqueIdentifier>{ca8f0c7d-6067-4e25-a920-202bd10a22ff}</UniqueIdentifier>
@@ -222,6 +198,36 @@
     </Filter>
     <Filter Include="Scene\Synchronizer">
       <UniqueIdentifier>{8ef32f9c-d215-4658-9fd5-84cb2d747562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources">
+      <UniqueIdentifier>{edcbec61-bbbd-4e23-86d1-c4a3b96b4b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Buffers">
+      <UniqueIdentifier>{6d979caa-492d-4488-bbb8-a71ebbc6c1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Buffers\Uniform">
+      <UniqueIdentifier>{20b72892-41b8-4aeb-86e5-584f22b653a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Buffers\Vertex">
+      <UniqueIdentifier>{90e260a7-1a2c-4ecb-bc2f-5bfa8ed8a2d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Buffers\Index">
+      <UniqueIdentifier>{1135735f-059e-46dc-a108-cf512a6e4d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Buffers\Render">
+      <UniqueIdentifier>{9bee77d2-8058-46be-a539-6c6f61ccab27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Shaders">
+      <UniqueIdentifier>{db00aaea-871c-41fa-ae25-2c08de4432a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Shaders\GLSL">
+      <UniqueIdentifier>{e6088325-bd14-41bf-ac99-74e1475590ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Texture">
+      <UniqueIdentifier>{44680aba-7b1f-4755-bced-0a0ba3db2262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Resources\Meshes">
+      <UniqueIdentifier>{d8640b37-f5a7-4000-9895-2184ac56d474}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,25 +328,22 @@
       <Filter>Graphics\Adapter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\Buffer.cpp">
-      <Filter>Graphics\Buffers</Filter>
+      <Filter>Graphics\Resources\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\Program.cpp">
-      <Filter>Graphics\Shaders</Filter>
+      <Filter>Graphics\Resources\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\ProgramManager.cpp">
-      <Filter>Graphics\Shaders</Filter>
+      <Filter>Graphics\Resources\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\Target.cpp">
       <Filter>Graphics\Target</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Render\FBO.cpp">
-      <Filter>Graphics\Target</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Render\TextureManager.cpp">
-      <Filter>Graphics\Texture</Filter>
+      <Filter>Graphics\Resources\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\Texture.cpp">
-      <Filter>Graphics\Texture</Filter>
+      <Filter>Graphics\Resources\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\View.cpp">
       <Filter>Graphics\View</Filter>
@@ -390,9 +393,6 @@
     <ClCompile Include="..\..\src\Scene\Model.cpp">
       <Filter>Scene\Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Scene\MeshBuilder.cpp">
-      <Filter>Scene\Model</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Scene\Grid.cpp">
       <Filter>Scene\Grid</Filter>
     </ClCompile>
@@ -437,10 +437,10 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp">
-      <Filter>Graphics\Shaders\GLSL</Filter>
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
-      <Filter>Graphics\Shaders\GLSL</Filter>
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Controllers\CameraController.cpp">
       <Filter>Controllers\Camera</Filter>
@@ -464,30 +464,36 @@
       <Filter>Graphics\Queue</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\BufferManager.cpp">
-      <Filter>Graphics\Buffers</Filter>
+      <Filter>Graphics\Resources\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\IndexBuffer.cpp">
-      <Filter>Graphics\Buffers\Index</Filter>
+      <Filter>Graphics\Resources\Buffers\Index</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\VertexBuffer.cpp">
-      <Filter>Graphics\Buffers\Vertex</Filter>
+      <Filter>Graphics\Resources\Buffers\Vertex</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\RenderBuffer.cpp">
-      <Filter>Graphics\Buffers\Render</Filter>
+      <Filter>Graphics\Resources\Buffers\Render</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\UniformBuffer.cpp">
-      <Filter>Graphics\Buffers\Uniform</Filter>
+      <Filter>Graphics\Resources\Buffers\Uniform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\interface\Bindings\vapor_wrap.cxx">
       <Filter>Scripting\Bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\MeshManager.cpp">
+      <Filter>Graphics\Resources\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\MeshBuilder.cpp">
+      <Filter>Graphics\Resources\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\FBO.cpp">
+      <Filter>Graphics\Resources\Buffers\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Engine\physics\MotionState.h">
       <Filter>Physics\Dynamics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Scene\MeshBuilder.h">
-      <Filter>Scene\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Engine\API.h" />
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h">
@@ -495,7 +501,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Doxygen.h" />
     <ClInclude Include="..\..\inc\Engine\Engine.h" />
-    <ClInclude Include="..\..\inc\Framework.h" />
     <ClInclude Include="..\..\inc\Engine\Headers.h" />
     <ClInclude Include="..\..\inc\Render\Adapter.h">
       <Filter>Graphics\Adapter</Filter>
@@ -597,7 +602,7 @@
       <Filter>Physics\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\Buffer.h">
-      <Filter>Graphics\Buffers</Filter>
+      <Filter>Graphics\Resources\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Scene\Group.h">
       <Filter>Scene\Group</Filter>
@@ -641,26 +646,23 @@
     <ClInclude Include="..\..\inc\Input\Mouse.h">
       <Filter>Input\Devices\Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Render\FBO.h">
-      <Filter>Graphics\Target</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Render\Target.h">
       <Filter>Graphics\Target</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\ProgramManager.h">
-      <Filter>Graphics\Shaders</Filter>
+      <Filter>Graphics\Resources\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\GLSL_Program.h">
-      <Filter>Graphics\Shaders\GLSL</Filter>
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\GLSL_Shader.h">
-      <Filter>Graphics\Shaders\GLSL</Filter>
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\TextureManager.h">
-      <Filter>Graphics\Texture</Filter>
+      <Filter>Graphics\Resources\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\Texture.h">
-      <Filter>Graphics\Texture</Filter>
+      <Filter>Graphics\Resources\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\GUI\Label.h">
       <Filter>GUI\Label</Filter>
@@ -738,22 +740,22 @@
       <Filter>Graphics\Queue</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\BufferManager.h">
-      <Filter>Graphics\Buffers</Filter>
+      <Filter>Graphics\Resources\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\IndexBuffer.h">
-      <Filter>Graphics\Buffers\Index</Filter>
+      <Filter>Graphics\Resources\Buffers\Index</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\VertexBuffer.h">
-      <Filter>Graphics\Buffers\Vertex</Filter>
+      <Filter>Graphics\Resources\Buffers\Vertex</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\UniformBuffer.h">
-      <Filter>Graphics\Buffers\Uniform</Filter>
+      <Filter>Graphics\Resources\Buffers\Uniform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\RenderBuffer.h">
-      <Filter>Graphics\Buffers\Render</Filter>
+      <Filter>Graphics\Resources\Buffers\Render</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\Program.h">
-      <Filter>Graphics\Shaders</Filter>
+      <Filter>Graphics\Resources\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\Device.h">
       <Filter>Graphics</Filter>
@@ -766,6 +768,15 @@
     </ClInclude>
     <ClInclude Include="..\..\interface\Bindings\swigluarun.h">
       <Filter>Scripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\MeshManager.h">
+      <Filter>Graphics\Resources\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Framework.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\FBO.h">
+      <Filter>Graphics\Resources\Buffers\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

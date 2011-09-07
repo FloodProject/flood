@@ -58,8 +58,8 @@ Engine::~Engine()
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
-	Deallocate(resourceManager);
 	Deallocate(audioDevice);
+	Deallocate(resourceManager);
 
 	InputDeinitialize();
 	RenderDeinitialize();
@@ -90,7 +90,7 @@ void Engine::init( bool createWindow )
 	LogInfo( "Starting vapor3D" );
 
 	// Creates the task system.
-	taskPool = TaskPoolCreate( AllocatorGetHeap(), 2 );
+	taskPool = TaskPoolCreate( AllocatorGetThis(), 2 );
 
 	NetworkInitialize();
 	ResourcesInitialize();
@@ -98,7 +98,7 @@ void Engine::init( bool createWindow )
 	RenderInitialize();
 
 	// Creates the resource manager.
-	resourceManager = Allocate(ResourceManager, AllocatorGetThis());
+	resourceManager = AllocateThis(ResourceManager);
 	resourceManager->setTaskPool( taskPool );
 	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
 	
@@ -110,12 +110,7 @@ void Engine::init( bool createWindow )
 
 #ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
-	scriptManager = Allocate(ScriptManager, AllocatorGetThis());
-#endif
-
-#ifdef ENABLE_PHYSICS_BULLET
-	// Creates the physics manager.
-	physicsManager = Allocate(PhysicsManager, AllocatorGetThis());
+	scriptManager = AllocateThis(ScriptManager);
 #endif
 }
 
@@ -131,11 +126,11 @@ void Engine::setupLogger()
 
 void Engine::setupDevices( bool createWindow )
 {
-	renderDevice = new RenderDevice();
+	renderDevice = AllocateThis(RenderDevice);
 
 #ifdef ENABLE_AUDIO_OPENAL
 	// Creates the audio device.
-	audioDevice = new AudioDevice();
+	audioDevice = AllocateThis(AudioDevice);
 	audioDevice->createDevice("");
 	audioDevice->createMainContext();
 #endif
@@ -145,28 +140,24 @@ void Engine::setupDevices( bool createWindow )
 
 void Engine::setupInput()
 {
-	inputManager = new InputManager();
+	inputManager = AllocateThis(InputManager);
 	inputManager->createDefaultDevices(); 
 }
 
 //-----------------------------------//
 
-void Engine::update( float delta )
+void Engine::update()
 {
 	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
 		Subsystem* system = subsystems[i];
-		system->update( delta );
+		system->update();
 	}
 
-	resourceManager->update( delta );
+	resourceManager->update();
 
 #ifdef ENABLE_SCRIPTING_LUA
-	scriptManager->update( delta );
-#endif
-
-#ifdef VAPOR_PHYSICS_BULLET
-	physicsManager->update( delta );
+	scriptManager->update();
 #endif
 }
 
@@ -181,15 +172,6 @@ void Engine::stepFrame()
 
 InputManager* Engine::getInputManager() const
 {
-#if 0
-	Window* window = renderDevice->getWindow();
-
-	if( !window )
-		return nullptr;
-
-	return window->getInputManager();
-#endif
-
 	return inputManager;
 }
 

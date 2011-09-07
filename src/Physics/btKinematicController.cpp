@@ -23,7 +23,7 @@ misrepresented as being the original software.
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/btKinematicController.h"
 

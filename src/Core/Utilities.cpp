@@ -323,11 +323,19 @@ Path PathGetSeparator()
 
 Path PathCombine(Path base, Path extra)
 {
-	StringTrim(base, "\\");
-	StringTrim(base, "/");
+	base = StringTrim(base, "\\");
+	base = StringTrim(base, "/");
 
-	StringTrim(extra, "\\");
-	StringTrim(extra, "/");
+	extra = StringTrim(extra, "\\");
+	extra = StringTrim(extra, "/");
+
+	const Path& sep = PathGetSeparator();
+
+	StringReplace(base, "\\", sep);
+	StringReplace(base, "/", sep);
+
+	StringReplace(extra, "\\", sep);
+	StringReplace(extra, "/", sep);
 
 	return base + PathGetSeparator() + extra;
 }

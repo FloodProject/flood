@@ -7,7 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
+#include "Network/MessageHandlers.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -16,32 +17,10 @@ NAMESPACE_CORE_BEGIN
 REFLECT_CLASS(MessageDefinition)
 REFLECT_CLASS_END()
 
-REFLECT_ABSTRACT_CHILD_CLASS(MessagePlugin, Plugin)
+REFLECT_ABSTRACT_CLASS(MessageHandler)
 REFLECT_CLASS_END()
 
-//-----------------------------------//
-
-MessagePlugin::MessagePlugin()
-{
-}
-
-//-----------------------------------//
-
-MessagePlugin::~MessagePlugin()
-{
-}
-
-//-----------------------------------//
-
-void MessagePlugin::onPluginEnable()
-{
-}
-
-//-----------------------------------//
-
-void MessagePlugin::onPluginDisable()
-{
-}
+MessagesTable MessageHandler::NullMessageTable;
 
 //-----------------------------------//
 

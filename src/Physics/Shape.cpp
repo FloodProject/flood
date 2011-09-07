@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/Shape.h"
 #include "Physics/Body.h"
@@ -23,16 +23,16 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Shape::~Shape()
-{ }
+{
+}
 
 //-----------------------------------//
 
 void Shape::removeBody()
 {
-	const BodyPtr& body = weakBody.lock();
+	if( !body ) return;
 
-	if( body )
-		body->removeWorld();
+	body->removeWorld();
 }
 
 //-----------------------------------//

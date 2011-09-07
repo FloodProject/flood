@@ -10,7 +10,7 @@
 #include "PropertyPlugin.h"
 #include "PropertyPage.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "EditorIcons.h"
 #include "Core/Reflection.h"
 #include "Core/Utilities.h"
@@ -62,7 +62,7 @@ void PropertyPlugin::onPluginEnable()
 	editor->getAUI()->Update();
 
 	// Subscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
 }
 
@@ -77,8 +77,15 @@ void PropertyPlugin::onPluginDisable()
 	propertyPage = nullptr;
 
 	// Unsubscribe as an event listener.
-	Events* events = editor->getEventManager();
+	EventManager* events = editor->getEventManager();
 	events->removeEventListener(this);
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onSceneUnload( const ScenePtr& )
+{
+	propertyPage->reset();
 }
 
 //-----------------------------------//
@@ -137,7 +144,7 @@ void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
 
 	propertyPage->showProperties(loader, false);
 
-	ResourceProcessor* processor = Pipeline::FindProcessor( resource->getType() );
+	ResourceProcessor* processor = PipelineFindProcessor( resource->getType() );
 
 	if( !processor ) return;
 
@@ -169,13 +176,6 @@ void PropertyPlugin::updateProperties(const EntityPtr& entity)
 	propertyPage->showEntityProperties(entity);
 
 	editor->redrawView();
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onSceneLoad( const ScenePtr& scene )
-{
-	propertyPage->reset();
 }
 
 //-----------------------------------//

@@ -70,9 +70,6 @@
     <Filter Include="Plugins\Hierarchy">
       <UniqueIdentifier>{de58145e-9649-477a-bd7e-5e0eee8b0dbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Document">
-      <UniqueIdentifier>{d2b870a6-4ddf-4dd6-8200-2207914cd5fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins\Mono">
       <UniqueIdentifier>{6bdd6e58-2b51-41a6-a576-e6ae521dbc22}</UniqueIdentifier>
     </Filter>
@@ -96,6 +93,9 @@
     </Filter>
     <Filter Include="Plugins\Server\Protocol">
       <UniqueIdentifier>{a5a544f5-d39d-4b1d-88c3-3e91ee4aa618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{d2b870a6-4ddf-4dd6-8200-2207914cd5fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -189,9 +189,6 @@
     <ClCompile Include="..\..\src\Editor\EditorInputManager.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\Events.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\Settings.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
@@ -231,7 +228,7 @@
       <Filter>Plugins\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Document.cpp">
-      <Filter>Document</Filter>
+      <Filter>Documents</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp">
       <Filter>Plugins\Mono</Filter>
@@ -275,6 +272,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Client\UserMessagesClient.cpp">
       <Filter>Plugins\Server\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\DocumentManager.cpp">
+      <Filter>Documents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\EventManager.cpp">
+      <Filter>Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,9 +371,6 @@
     <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Events.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\Settings.h">
       <Filter>Settings</Filter>
     </ClInclude>
@@ -411,7 +411,7 @@
       <Filter>Plugins\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\Document.h">
-      <Filter>Document</Filter>
+      <Filter>Documents</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h">
       <Filter>Plugins\Mono</Filter>
@@ -449,6 +449,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h">
       <Filter>Plugins\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\DocumentManager.h">
+      <Filter>Documents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\EventManager.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

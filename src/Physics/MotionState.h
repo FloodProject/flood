@@ -9,22 +9,7 @@
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 #include "Physics/MeshShape.h"
 
-namespace vapor {
-
-//-----------------------------------//
-
-static Vector3 getOffset(Entity* entity)
-{
-	ShapePtr shape = entity->getComponentFromFamily<Shape>();
-
-	if( ReflectionIsEqual(shape->getType(), ReflectionGetType(MeshShape)) )
-		return Vector3::Zero;
-
-	const TransformPtr& transform = entity->getTransform();
-	const BoundingBox& box = transform->getWorldBoundingVolume();
-
-	return box.max - box.getCenter();
-}
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -40,26 +25,22 @@ public:
 		: transform(transform)
 		, ignoreTransform(false)
 	{
-		offset = getOffset(transform->getEntity()) * Vector3::UnitY;
-		//centerOffset.setOrigin( Convert::toBullet(offset) );
 	}
 
 	~BodyMotionState()
 	{ }
 
-    virtual void getWorldTransform(btTransform& worldTransform) const
+	virtual void getWorldTransform(btTransform& worldTransform) const
 	{
 		worldTransform = Convert::toBullet(transform);
 		//worldTransform.setOrigin( worldTransform.getOrigin() + Convert::toBullet(offset) );
-    }
+	}
 
-    virtual void setWorldTransform(const btTransform& worldTransform)
+	virtual void setWorldTransform(const btTransform& worldTransform)
 	{
 		Convert::fromBullet(worldTransform, transform);
 		ignoreTransform = true;
-    }
-
-	Vector3 offset;
+	}
 
 	// Object transform.
 	TransformPtr transform;
@@ -70,4 +51,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

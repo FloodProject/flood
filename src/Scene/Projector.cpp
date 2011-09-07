@@ -64,8 +64,8 @@ void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& trans
 {
 	if( !geometry ) return;
 
-	const Matrix4x3& absoluteTransform = geometry->getEntity()
-		->getTransform()->getAbsoluteTransform();
+	const TransformPtr& geotransform = geometry->getEntity()->getTransform();
+	const Matrix4x3& absoluteTransform = geotransform->getAbsoluteTransform();
 	
 	const RenderableVector& renderables = geometry->getRenderables();
 	for( size_t i = 0; i < renderables.size(); i++ )
@@ -100,10 +100,8 @@ void Projector::onRender( const RenderState& state )
 
 void Projector::updateDebugRenderable() const
 {
-	if( !debugRenderable )
-		return;
-
-	updateDebugFrustum( debugRenderable, frustum );
+	if( !debugRenderable ) return;
+	DebugUpdateFrustum( debugRenderable, frustum );
 }
 
 //-----------------------------------//
@@ -113,7 +111,7 @@ RenderablePtr Projector::createDebugRenderable() const
 	assert( !debugRenderable );
 
 	debugInheritsTransform = true;
-	return buildFrustum( frustum );
+	return DebugBuildFrustum( frustum );
 }
 
 //-----------------------------------//

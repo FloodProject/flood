@@ -10,6 +10,7 @@
 
 #include "Event.h"
 #include "Core/References.h"
+#include "UndoOperation.h"
 #include <deque>
 
 NAMESPACE_EDITOR_BEGIN
@@ -17,7 +18,7 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 class UndoOperation;
-typedef std::deque<UndoOperation*> Operations;
+typedef std::deque<UndoOperationPtr> UndoOperations;
 
 /**
  * Manages undo/redo operations.
@@ -42,10 +43,10 @@ public:
 	void clearOperations();
 
 	// Gets the undo operations.
-	GETTER(UndoOperations, const Operations&, undoOperations)
+	GETTER(UndoOperations, const UndoOperations&, undoOperations)
 
 	// Gets the redo operations.
-	GETTER(RedoOperations, const Operations&, redoOperations)
+	GETTER(RedoOperations, const UndoOperations&, redoOperations)
 
 	// Gets sent on an undo/redo event.
 	Event0<> onUndoRedoEvent;
@@ -56,13 +57,13 @@ protected:
 	void sendUndoRedoEvent();
 
 	// Handles undo/redo operations.
-	void handleOperation(Operations& first,	Operations& second, bool undo);
+	void handleOperation(UndoOperations& first,	UndoOperations& second, bool undo);
 
 	// Undo operations.
-	Operations undoOperations;
+	UndoOperations undoOperations;
 
 	// Redo operations.
-	Operations redoOperations;
+	UndoOperations redoOperations;
 };
 
 //-----------------------------------//

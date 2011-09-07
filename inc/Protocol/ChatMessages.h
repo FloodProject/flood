@@ -10,7 +10,7 @@
 
 #include "Protocol/API.h"
 #include "Protocol/UserMessages.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 
 NAMESPACE_PROTOCOL_BEGIN
 
@@ -44,18 +44,13 @@ struct API_PROTOCOL ChatMessageIds
 	};
 };
 
-REFLECT_DECLARE_CLASS(ChatMessagePlugin)
+REFLECT_DECLARE_CLASS(ChatMessageHandler)
 
 //-----------------------------------//
 
-class API_PROTOCOL ChatMessagePlugin : public MessagePlugin
+class API_PROTOCOL ChatMessageHandler : public MessageHandler
 {
-	REFLECT_DECLARE_OBJECT(ChatMessagePlugin)
-
 public:
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
 
 	// Gets the messages that this plugin handles.
 	const MessagesTable& getMessagesTable() OVERRIDE;

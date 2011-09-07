@@ -44,11 +44,17 @@ public:
 	// Runs the server.
 	void run();
 
+	// Updates the server.
+	void update();
+
 	// Gets the session manager.
 	SessionManager* getSessionManager();
 
 	// Gets the host.
 	GETTER(Host, HostServer*, host)
+
+	// Gets the plugin manager.
+	GETTER(PluginManager, PluginManager*, plugins)
 
 	// Handles client callbacks.
 	void handleClientConnect(const PeerPtr&);
@@ -67,13 +73,7 @@ API_SERVER Server* GetServer();
 
 template<typename T> T* GetPlugin()
 {
-	PluginManager* pm = GetServer()->plugins;
-	return (T*) pm->getPluginFromClass(T::getStaticType());
-}
-
-template<typename T> T* GetMessagePlugin()
-{
-	PluginManager* pm = GetServer()->dispatcher->getPluginManager();
+	PluginManager* pm = GetServer()->getPluginManager();
 	return (T*) pm->getPluginFromClass(T::getStaticType());
 }
 

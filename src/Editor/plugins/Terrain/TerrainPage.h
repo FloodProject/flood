@@ -61,11 +61,7 @@ protected:
 	void onTextureDropdown(wxCommandEvent& event);
 	void onTextureSelected(wxCommandEvent& event);
 
-	wxChoicebook* m_cbTerrainTool;
-	//wxScrolledWindow* scrolledWindow;
-	
 	wxPanel* m_panelBrush;
-	wxPanel* m_panelCell;
 	
 	wxBitmapComboBox* m_choiceBrush;
 	wxSliderCtrl* m_sliderSize;

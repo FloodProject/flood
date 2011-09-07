@@ -23,7 +23,7 @@ NAMESPACE_PIPELINE_BEGIN
 
 REFLECT_DECLARE_CLASS(MeshProcessor)
 
-class PIPELINE_API MeshProcessor : public ResourceProcessor
+class API_PIPELINE MeshProcessor : public ResourceProcessor
 {
 	REFLECT_DECLARE_OBJECT(MeshProcessor)
 

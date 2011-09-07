@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef ENABLE_PLUGIN_SERVER
+
 #include "Protocol/UserMessages.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Plugins/Networking/ServerPlugin.h"
@@ -18,14 +21,14 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class UserMessagesClient : UserMessagePlugin
+class UserMessagesClient : UserMessageHandler
 {
 	void handleUserAuthStatus(const SessionPtr&, const UserAuthStatusMessage&) OVERRIDE;
 	void handleUserJoin(const SessionPtr&, const UserJoinMessage&) OVERRIDE;
 	void handleUserLeave(const SessionPtr&, const UserLeaveMessage&) OVERRIDE;
 };
 
-REFLECT_CHILD_CLASS(UserMessagesClient, UserMessagePlugin)
+REFLECT_CHILD_CLASS(UserMessagesClient, UserMessageHandler)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -67,3 +70,5 @@ void UserMessagesClient::handleUserLeave(const SessionPtr&, const UserLeaveMessa
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

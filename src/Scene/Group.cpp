@@ -16,8 +16,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Group, Entity)
-	FIELD_VECTOR_PTR(4, Entity, EntityPtr, entities, RefPointer)
-	FIELD_ALIAS(entities, "nodes")
+	FIELD_VECTOR_PTR(6, Entity, EntityPtr, entities, RefPointer)
+	FIELD_ALIAS(entities, nodes)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -46,7 +46,7 @@ void Group::add( const EntityPtr& entity )
 
 //-----------------------------------//
 
-EntityPtr Group::findEntity( const std::string& name ) const
+EntityPtr Group::findEntity( const String& name ) const
 {
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
@@ -56,7 +56,7 @@ EntityPtr Group::findEntity( const std::string& name ) const
 			return entity;
 	}
 
-	return EntityPtr();
+	return nullptr;
 }
 
 //-----------------------------------//
@@ -98,15 +98,13 @@ void Group::fixUp()
 	{
 		const EntityPtr& entity = entities[i];
 		
-		if(!entity)
+		if( !entity )
 		{
 			invalid.push_back(entity);
 			continue;
 		}
 
-		// Check if all entities have a transform
-		bool hasTransform = entity->getComponent<Transform>();
-		if( !hasTransform ) entity->addTransform();
+		if( !entity->getParent() ) entity->setParent(this);
 	}
 
 	// Remove invalid entities

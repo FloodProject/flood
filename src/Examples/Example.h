@@ -11,8 +11,6 @@
 #include "Framework.h"
 #include "Engine/Headers.h"
 
-using namespace vapor;
-
 //-----------------------------------//
 
 class Example : public Framework
@@ -20,41 +18,29 @@ class Example : public Framework
 public:
 
 	Example(const char** argv = nullptr);
-
-	//void onPageLoading(const PageEvent& event);
+	~Example();
 
 protected:
 
 	// Initializes the app.
-	virtual void onInit();	
+	void onInit() OVERRIDE;	
 
 	// Sets up all the needed resources.
-	virtual void onSetupResources();
+	void onSetupResources() OVERRIDE;
 
 	// Called to set up the scene.
-	virtual void onSetupScene();
+	void onSetupScene() OVERRIDE;
 
 	// Called to update stuff.
-	virtual void onUpdate( float delta );
+	void onUpdate( float delta ) OVERRIDE;
 
 	// Renders the scene.
-	virtual void onRender();
+	void onRender() OVERRIDE;
 
 	// Callback functions.
-	virtual void onKeyPressed( const KeyEvent& );
-	virtual void onButtonPressed( const MouseButtonEvent& );
+	void onKeyPressed( const KeyEvent& ) OVERRIDE;
+	void onButtonPressed( const MouseButtonEvent& ) OVERRIDE;
 
-private:
-	
-	Window* window;
 	RenderView* view;
 	CameraPtr camera;
-
-	LabelPtr labelFPS;
-	TerrainPtr nodeTerrain;
-
-	EntityPtr nodeFBO;
-	RenderView* viewportFBO;
-	TexturePtr textureFBO;
-	RenderBuffer* bufferFBO;
 };

@@ -87,10 +87,10 @@
       <DisableSpecificWarnings>4503; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\libogg-1.1.3\lib;$(SolutionDir)..\..\dep\libvorbis-1.2.0\lib;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ForceSymbolReferences>
       </ForceSymbolReferences>
-      <AdditionalDependencies>OpenAL32d.lib;opengl32.lib;glewd.lib;luad.lib</AdditionalDependencies>
+      <AdditionalDependencies>OpenAL32d.lib;opengl32.lib;glewd.lib;luad.lib;bulletd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
@@ -235,6 +235,7 @@
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp" />
     <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp" />
     <ClCompile Include="..\..\src\Render\IndexBuffer.cpp" />
+    <ClCompile Include="..\..\src\Render\MeshManager.cpp" />
     <ClCompile Include="..\..\src\Render\Program.cpp" />
     <ClCompile Include="..\..\src\Render\ProgramManager.cpp" />
     <ClCompile Include="..\..\src\Render\Renderable.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="..\..\inc\Physics\btKinematicController.h" />
     <ClInclude Include="..\..\inc\Render\BufferManager.h" />
     <ClInclude Include="..\..\inc\Render\GL.h" />
+    <ClInclude Include="..\..\inc\Render\MeshManager.h" />
     <ClInclude Include="..\..\inc\Render\Program.h" />
     <ClInclude Include="..\..\inc\Render\Render.h" />
     <ClInclude Include="..\..\inc\Render\RenderContext.h" />
@@ -333,7 +335,6 @@
     <ClInclude Include="..\..\inc\Scene\Water.h" />
     <ClInclude Include="..\..\inc\Scene\Projector.h" />
     <ClInclude Include="..\..\interface\Bindings\swigluarun.h" />
-    <ClInclude Include="..\..\src\Scene\MeshBuilder.h" />
     <ClInclude Include="..\..\inc\Engine\Engine.h" />
     <ClInclude Include="..\..\inc\Framework.h" />
     <ClInclude Include="..\..\inc\GUI\Atlas.h" />

@@ -9,6 +9,13 @@
 #pragma once
 
 //---------------------------------------------------------------------//
+// Pipeline APIs
+//---------------------------------------------------------------------//
+
+#define ENABLE_IMPORTER_FBX
+#define ENABLE_IMPORTER_MILKSHAPE
+
+//---------------------------------------------------------------------//
 // Platform headers
 //---------------------------------------------------------------------//
 
@@ -26,8 +33,6 @@
 #else
 	#define API_PIPELINE
 #endif
-
-#define PIPELINE_API API_PIPELINE
 
 #define NAMESPACE_PIPELINE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_PIPELINE_END NAMESPACE_CORE_END

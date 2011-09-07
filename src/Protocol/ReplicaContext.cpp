@@ -181,7 +181,7 @@ MessagePtr ReplicaContext::createObjectUpdateMessage(const FieldWatchVector& wat
 		refContext.object = (Object*) fw->object;
 
 		ReplicaInstanceId instanceId = 0;
-		if( !findInstance(fw->object, instanceId) )
+		if( !findInstance((Object*) fw->object, instanceId) )
 		{
 			LogDebug("Replicated instance of object not found");
 			continue;

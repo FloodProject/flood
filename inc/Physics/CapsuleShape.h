@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/Shape.h"
 

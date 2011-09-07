@@ -20,8 +20,12 @@ NAMESPACE_EDITOR_BEGIN
  * that the engine provides should be provided using this type.
  */
 
-class UndoOperation : public ReferenceCounted
+REFLECT_DECLARE_CLASS(UndoOperation)
+
+class UndoOperation : public Object
 {
+	REFLECT_DECLARE_OBJECT(UndoOperation)
+
 public:
 
 	UndoOperation();
@@ -31,7 +35,7 @@ public:
 	virtual void redo() = 0;
 
 	bool lastUndone;
-	std::string description;
+	String description;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(UndoOperation);

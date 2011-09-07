@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Protocol/API.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 #include "Protocol/ReplicaContext.h"
 #include "Core/Event.h"
 
@@ -134,17 +134,14 @@ struct API_PROTOCOL ReplicaMessageIds
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(ReplicaMessagePlugin)
-class API_PROTOCOL ReplicaMessagePlugin : public MessagePlugin
+REFLECT_DECLARE_CLASS(ReplicaMessageHandler)
+class API_PROTOCOL ReplicaMessageHandler : public MessageHandler
 {
-	REFLECT_DECLARE_OBJECT(ReplicaMessagePlugin)
+	REFLECT_DECLARE_STATIC_CLASS(ReplicaMessageHandler)
 
 public:
 
-	ReplicaMessagePlugin() : nextContextId(0) {}
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
+	ReplicaMessageHandler() : nextContextId(0) {}
 
 	// Gets the messages that this plugin handles.
 	const MessagesTable& getMessagesTable() OVERRIDE;

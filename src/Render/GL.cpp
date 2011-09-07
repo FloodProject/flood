@@ -16,17 +16,16 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-bool CheckLastErrorGL( const String& msg )
+bool CheckLastErrorGL( const char* msg )
 {
-#ifdef DEBUG_BUILD
+#ifdef BUILD_DEBUG_
 	bool occured = false;
 	uint numMaxErrors = 5;
 
-	int error = 0;
-
+	GLenum error = 0;
 	while(((error = glGetError()) != GL_NO_ERROR) && (numMaxErrors-- > 0) )
 	{
-		LogWarn( ("OpenGL: " + msg).c_str() );
+		LogAssert("OpenGL: %s", msg);
 		occured = true;
 	}
 

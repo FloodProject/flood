@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Scene/Component.h"
 
@@ -20,8 +20,6 @@ NAMESPACE_ENGINE_BEGIN
 
 class Body;
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Body)
-
-//-----------------------------------//
 
 REFLECT_DECLARE_CLASS(Shape)
 
@@ -37,7 +35,7 @@ public:
 	virtual btCollisionShape* const getBulletShape() const = 0;
 
 	// Sets the associated body.
-	SETTER(Body, const BodyPtr&, weakBody)
+	SETTER(Body, const BodyPtr&, body)
 
 protected:
 
@@ -45,7 +43,7 @@ protected:
 	virtual void removeBody();
 
 	// Weak pointer to body.
-	BodyWeakPtr weakBody;
+	BodyPtr body;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shape );

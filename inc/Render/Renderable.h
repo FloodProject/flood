@@ -178,6 +178,7 @@ protected:
 API_ENGINE Renderable* RenderableCreate(Allocator*);
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
+typedef std::vector<RenderablePtr> RenderablesVector;
 
 //-----------------------------------//
 

@@ -13,12 +13,12 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class ChatMessagesClient : ChatMessagePlugin
+class ChatMessagesClient : ChatMessageHandler
 {
 	void handleChatServer(const SessionPtr&, const ChatServerMessage&) OVERRIDE;
 };
 
-REFLECT_CHILD_CLASS(ChatMessagesClient, ChatMessagePlugin)
+REFLECT_CHILD_CLASS(ChatMessagesClient, ChatMessageHandler)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

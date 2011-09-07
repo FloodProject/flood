@@ -33,12 +33,12 @@ class PluginTool;
 
 typedef std::vector<EditorPlugin*> EventListeners;
 
-class API_EDITOR Events : public wxEvtHandler
+class API_EDITOR EventManager : public wxEvtHandler
 {
 public:
 
-	Events();
-	virtual ~Events();
+	EventManager();
+	virtual ~EventManager();
 
 	void disconnectPluginListeners();
 
@@ -46,11 +46,9 @@ public:
 	void addEventListener( EditorPlugin* plugin );
 	void removeEventListener( EditorPlugin* plugin );
 
-	// Document creation event.
+	// Document events.
 	void onDocumentCreate( Document& document );
 	void onDocumentDestroy( Document& document );
-
-	// Document selection event.
 	void onDocumentSelect( Document& document );
 	void onDocumentUnselect( Document& document );
 
@@ -84,8 +82,12 @@ public:
 	void onSceneUpdate();
 
 	// Server callbacks.
-	virtual void onServerConnect(const SessionPtr&);
-	virtual void onServerDisconnect(const SessionPtr&);
+	void onServerConnect(const SessionPtr&);
+	void onServerDisconnect(const SessionPtr&);
+
+	// Undo/redo operation events.
+	void onUndoOperation(const UndoOperationPtr&);
+	void onRedoOperation(const UndoOperationPtr&);
 
 	// Gets the current tool.
 	ACESSOR(CurrentTool, int, toolId)

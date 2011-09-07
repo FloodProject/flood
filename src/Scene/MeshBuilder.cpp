@@ -7,43 +7,32 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "MeshBuilder.h"
+#include "Render/MeshManager.h"
 #include "Render/Renderable.h"
-#include "Math/Vector.h"
-#include "Math/Helpers.h"
-#include "Core/Utilities.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-MeshRenderablesMap MeshBuilder::meshRenderables;
-
-MeshBuilder::MeshBuilder()
-{ }
-
-//-----------------------------------//
-
-bool MeshBuilder::build(const MeshHandle& handle)
+bool MeshManager::build(Mesh* mesh)
 {
-	mesh = handle.Resolve();
-	
 	if( !mesh ) return false;
 
-	if( mesh->isBuilt() ) return true;
+	if( !mesh->isBuilt() )
+	{
+		mesh->buildBounds();
+		mesh->setupInitialVertices();
+		mesh->built = true;
+	}
 
-	mesh->buildBounds();
-	mesh->setupInitialVertices();	
-	buildGeometry();
-
-	mesh->built = true;
+	buildGeometry(mesh);
 
 	return true;
 }
 
 //-----------------------------------//
 
-void MeshBuilder::buildGeometry()
+void MeshManager::buildGeometry(Mesh* mesh)
 {
 	// Vertex buffer.
 	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
@@ -63,7 +52,7 @@ void MeshBuilder::buildGeometry()
 		const MeshGroup& group = groups[i];
 
 		// Gets a material for the group.
-		MaterialHandle material = buildMaterial(group);
+		MaterialHandle material = buildMaterial(mesh, group);
 
 		IndexBufferPtr ib = Allocate(IndexBuffer, AllocatorGetHeap());
 		SetIndexBufferData(ib, group.indices);
@@ -82,7 +71,7 @@ void MeshBuilder::buildGeometry()
 
 //-----------------------------------//
 	
-MaterialHandle MeshBuilder::buildMaterial(const MeshGroup& group)
+MaterialHandle MeshManager::buildMaterial(Mesh* mesh, const MeshGroup& group)
 {
 	const MeshMaterial& matMesh = group.material;
 

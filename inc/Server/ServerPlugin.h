@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Plugin.h"
+#include "Network/MessageHandler.h"
 
 NAMESPACE_SERVER_BEGIN
 
@@ -16,7 +17,7 @@ NAMESPACE_SERVER_BEGIN
 
 REFLECT_DECLARE_CLASS(ServerPlugin)
 
-class API_SERVER ServerPlugin : public Plugin
+class API_SERVER ServerPlugin : public Plugin, public MessageHandler
 {
 	REFLECT_DECLARE_OBJECT(ServerPlugin)
 
@@ -26,6 +27,9 @@ public:
 
 	ServerPlugin();
 	virtual ~ServerPlugin();
+
+	// Updates the plugin.
+	virtual void update() {}
 };
 
 //-----------------------------------//

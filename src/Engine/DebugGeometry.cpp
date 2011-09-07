@@ -17,13 +17,86 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+DebugDrawer::DebugDrawer()
+	: lines(nullptr)
+	, triangles(nullptr)
+{
+	Allocator* alloc = AllocatorGetThis();
+	
+	MaterialHandle debug = MaterialCreate(alloc, "Debug");
+	
+	Material* mat = debug.Resolve();
+	mat->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
+	mat->setDepthTest(false);
+	mat->setDepthWrite(false);
+
+	VertexBufferPtr linesVB = AllocateThis(VertexBuffer);
+	linesVB->setBufferAccess(BufferAccess::Write);
+	linesVB->setBufferUsage(BufferUsage::Dynamic);
+
+	lines = RenderableCreate(alloc);
+	lines->setVertexBuffer(linesVB);
+	lines->setMaterial(debug);
+	lines->setRenderLayer(RenderLayer::PostTransparency);
+
+	VertexBufferPtr trianglesVB = AllocateThis(VertexBuffer);
+	trianglesVB->setBufferAccess(BufferAccess::Write);
+	trianglesVB->setBufferUsage(BufferUsage::Dynamic);
+
+	triangles = RenderableCreate(alloc);
+	triangles->setVertexBuffer(trianglesVB);
+	triangles->setMaterial(debug);
+	triangles->setRenderLayer(RenderLayer::PostTransparency);
+}
+
+//-----------------------------------//
+
+void DebugDrawer::reset()
+{
+	lines->getVertexBuffer()->clear();
+	triangles->getVertexBuffer()->clear();
+	renderables.clear();
+}
+
+//-----------------------------------//
+
+void DebugDrawer::drawBox( const BoundingBox& box )
+{
+	RenderablePtr rend = DebugBuildBoundingBox(box);
+	renderables.push_back(rend);
+}
+
+//-----------------------------------//
+
+void DebugDrawer::drawRay( const Ray& ray, float length )
+{
+	RenderablePtr rend = DebugBuildRay(ray, length);
+	renderables.push_back(rend);
+}
+
+//-----------------------------------//
+
+void DebugDrawer::drawFrustum( const Frustum& frustum )
+{
+	RenderablePtr rend = DebugBuildFrustum(frustum);
+	renderables.push_back(rend);
+}
+
+//-----------------------------------//
+
+void DebugDrawer::drawIcon( const Vector3& pos )
+{
+}
+
+//-----------------------------------//
+
 #define ADD_BOX_FACE( a, b, c, d )		\
 	pos.push_back( box.getCorner(a) );	\
 	pos.push_back( box.getCorner(b) );	\
 	pos.push_back( box.getCorner(c) );	\
 	pos.push_back( box.getCorner(d) );
 
-RenderablePtr buildBoundingRenderable( const BoundingBox& box )
+RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 {
 	std::vector<Vector3> pos;
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
@@ -57,11 +130,11 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 
 //-----------------------------------//
 
-EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
+RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 {
 	std::vector<Vector3> vertex;
 	vertex.push_back( pickRay.origin );
-	vertex.push_back( outFar );
+	vertex.push_back( pickRay.getPoint(length) );
 
 	std::vector<Vector3> colors( 2, Color::Red );
 
@@ -76,26 +149,14 @@ EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 	
-	GeometryPtr geometry = Allocate(Geometry, AllocatorGetHeap(), renderable);
-	
-	EntityPtr line( EntityCreate(AllocatorGetHeap()) );
-	line->setName("Line");
-	line->setTag( Tags::NonPickable, true );
-	line->addTransform();
-	line->addComponent( geometry );
-	
-	return line;
+	return renderable;
 }
 
 //-----------------------------------//
 
-RenderablePtr buildFrustum( const Frustum& box )
+RenderablePtr DebugBuildFrustum( const Frustum& box )
 {
-	const int numColors = 6*4; // Faces*Vertices
-	std::vector<Vector3> colors( numColors, Color::White );
-
 	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
-	vb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
 	Material* material = materialHandle.Resolve();
@@ -107,7 +168,7 @@ RenderablePtr buildFrustum( const Frustum& box )
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
-	updateDebugFrustum(renderable, box);
+	DebugUpdateFrustum(renderable, box);
 	return renderable;
 }
 
@@ -119,7 +180,7 @@ RenderablePtr buildFrustum( const Frustum& box )
 	pos.push_back( box.corners[c] );	\
 	pos.push_back( box.corners[d] );
 
-void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
+void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 {
 	std::vector<Vector3> pos;
 	ADD_BOX_FRUSTUM( 0, 1, 3, 2 ) // Front
@@ -131,6 +192,9 @@ void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
 
 	VertexBufferPtr vb = rend->getVertexBuffer();
 	vb->set( VertexAttribute::Position, pos );
+
+	std::vector<Vector3> colors( pos.size(), Color::White );
+	vb->set( VertexAttribute::Color, colors );
 }
 
 //-----------------------------------//

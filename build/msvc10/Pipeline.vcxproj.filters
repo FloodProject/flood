@@ -10,9 +10,20 @@
     <Filter Include="Processors\Image">
       <UniqueIdentifier>{f912861f-2a9c-4d79-a212-3c8301b066c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Importers">
+      <UniqueIdentifier>{47136faf-d229-47f8-a34d-fc9e95372ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importers\FBX">
+      <UniqueIdentifier>{7a5fe353-fd61-4826-a869-53d538ce9215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importers\Milkshape">
+      <UniqueIdentifier>{6dd9b6c6-9bec-4bda-8351-5898842f06ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importers\Images">
+      <UniqueIdentifier>{0bbdec1b-88eb-43cc-b3d4-5beca032fdf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Pipeline\API.h" />
     <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h">
       <Filter>Processors\Mesh</Filter>
     </ClInclude>
@@ -21,6 +32,22 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h">
       <Filter>Processors\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h">
+      <Filter>Importers\Milkshape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h">
+      <Filter>Importers\Milkshape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Pipeline\ResourceImporter.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Pipeline\ImporterFBX.h">
+      <Filter>Importers\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Pipeline\API.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ImporterMilkshape.h">
+      <Filter>Importers\Milkshape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +60,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Pipeline\ImageProcessor.cpp">
       <Filter>Processors\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\Milkshape3D.cpp">
+      <Filter>Importers\Milkshape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\ImporterFBX.cpp">
+      <Filter>Importers\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\ResourceImporter.cpp">
+      <Filter>Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\ImporterMilkshape.cpp">
+      <Filter>Importers\Milkshape</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

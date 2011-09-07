@@ -93,9 +93,6 @@ public:
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
 
-	// Creates a new render buffer (offscreen render target).
-	RenderBuffer* createRenderBuffer( const Settings& );
-
 	// Gets/sets the current active render target.
 	GETTER(RenderTarget, RenderTarget*, activeTarget)
 	void setRenderTarget(RenderTarget* target);
@@ -105,6 +102,9 @@ public:
 
 	// Gets the texture manager.
 	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
+
+	// Gets the active context.
+	GETTER(ActiveContext, RenderContext*, activeContext)
 
 	// Gets the active view.
 	GETTER(ActiveView, RenderView*, activeView)

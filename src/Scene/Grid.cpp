@@ -16,11 +16,9 @@ NAMESPACE_ENGINE_BEGIN
 REFLECT_CHILD_CLASS(Grid, Geometry)
 REFLECT_CLASS_END()
 
-//-----------------------------------//
-
 static const Vector3 LineColor(0.4f);
 static const Vector3 MainLineColor(0.9f);
-static const short   MainLineStep = 8;
+static const short MainLineStep = 8;
 
 //-----------------------------------//
 
@@ -30,19 +28,18 @@ Grid::Grid()
   , divX(32)
   , divZ(32)
   , strongMainLines(true)
-{ }
+{
+}
 
 //-----------------------------------//
 
 VertexBufferPtr Grid::buildGeometry()
 {
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	VertexBufferPtr vb = AllocateThis(VertexBuffer);
 
-	// Vertex position data
+	// Vertex data
 	std::vector< Vector3 > vertex;
-
-	// Vertex color data
 	std::vector< Vector3 > colors;
 	
 	// Let's make the lines perpendicular to the X-axis.
@@ -109,9 +106,6 @@ void Grid::update( float update )
 	if( !renderables.empty() ) return;
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
-
-	Material* material = materialHandle.Resolve();
-	//material->setDepthTest(false);
 
 	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
 	rend->setPrimitiveType(PolygonType::Lines);

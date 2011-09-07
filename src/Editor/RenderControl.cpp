@@ -55,7 +55,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	WindowSettings settings(sz.GetX(), sz.GetY());
 	
 	// Note: This will be deleted by the engine.
-	window = Allocate(RenderWindow, AllocatorGetHeap(), settings, this);
+	window = AllocateThis(RenderWindow, settings, this);
 
 	// Setup input in the engine.
 	input = window->inputManager;
@@ -135,7 +135,9 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void RenderControl::OnSize(wxSizeEvent& event)
 {
-	onUpdate(0);
+	if( frameUpdateTimer.IsRunning() )
+		onUpdate(0);
+	
 	window->processResize( event.GetSize() );
 	flagRedraw();
 }

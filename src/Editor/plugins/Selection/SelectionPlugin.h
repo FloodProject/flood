@@ -31,39 +31,32 @@ public:
 	SelectionPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata() OVERRIDE;
+	PluginMetadata getMetadata() OVERRIDE;
+
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
 	// Plugin tool selection callback.
-	virtual void onToolSelect( int id ) OVERRIDE;
+	void onToolSelect( int id ) OVERRIDE;
+	void onUndoOperation( const UndoOperationPtr& ) OVERRIDE;
 
-	// Plugin enable callback.
-	virtual void onPluginEnable() OVERRIDE;
+	// Mouse callbacks.
+	void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
+	void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
 
-	// Plugin disable callback.
-	virtual void onPluginDisable() OVERRIDE;
+	// Key callbacks.
+	void onKeyPress(const KeyEvent&) OVERRIDE;
+	void onKeyRelease(const KeyEvent&) OVERRIDE;
 
-	// Document creation callback.
-	virtual void onDocumentCreate( Document& document ) OVERRIDE;
-	//virtual void onDocumentDestroy( Document& document ) {}
-
-	// Scene load callback.
+	// Scene callbacks.
 	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
+	void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
 
-	// Mouse button press callback.
-	virtual void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
-
-	// Mouse button release callback.
-	virtual void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
-
-	// Mouse drag callback.
-	virtual void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
-
-	// Key callback.
-	virtual void onKeyPress(const KeyEvent&) OVERRIDE;
-	virtual void onKeyRelease(const KeyEvent&) OVERRIDE;
-
-	// Scene entity removed callback.
-	void onEntityRemoved(const EntityPtr& entity);
+	// Entity callbacks.
+	void onEntityRemoved(const EntityPtr& );
+	void onEntityUnselect(const EntityPtr& ) OVERRIDE;
 
 	// Gets the entity picked by the ray.
 	bool getPickEntity(int x, int y, EntityPtr& entity);

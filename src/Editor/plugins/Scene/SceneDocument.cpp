@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "SceneDocument.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Settings.h"
 #include "RenderControl.h"
 #include "EditorIcons.h"
@@ -17,7 +17,8 @@
 #include "Core/Utilities.h"
 #include "EditorPlugin.h"
 #include "Core/PluginManager.h"
-#include "../Selection/SelectionPlugin.h"
+#include "Plugins/Selection/SelectionPlugin.h"
+#include "Physics/Physics.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -28,23 +29,10 @@ SceneDocument::SceneDocument()
 	, toolbar(nullptr)
 {
 	createView();
-	createScene();
-
-	RenderControl* control = viewframe->getControl();
-	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
-	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseRightDown, this);
-	control->Bind(wxEVT_LEFT_DOWN, &SceneDocument::OnMouseEvent, this);
-	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseEvent, this);
-	control->Bind(wxEVT_MOUSEWHEEL, &SceneDocument::OnMouseEvent, this);
+	reset();
 
 	ResourceManager* res = GetResourceManager();
 	res->loadQueuedResources();
-
-	// Update at least once before rendering.
-	onUpdate(0);
-
-	Events* events = GetEditor().getEventManager();
-	events->onSceneLoad(scene);
 }
 
 //-----------------------------------//
@@ -52,64 +40,117 @@ SceneDocument::SceneDocument()
 SceneDocument::~SceneDocument()
 {
 	LogDebug("Destroying SceneDocument");
+
+	viewframe->getControl()->stopFrameLoop();
+	viewframe->setMainCamera(nullptr);
+
+	resetUndo();
 	resetScene();
 
-	viewframe->setMainCamera(nullptr);
 	viewframe->destroyControl();
 	viewframe->Destroy();
 }
 
 //-----------------------------------//
 
+static const char* s_FileDialogDescription( "Scene files (*.scene)|*.scene" );
+
+bool SceneDocument::open()
+{
+	// Ask for file name to open.
+	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
+		wxEmptyString, s_FileDialogDescription, wxFC_OPEN );
+	
+	if( fc.ShowModal() != wxID_OK )
+		return true;
+
+	Path path = (String) fc.GetPath();
+
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, path);
+	Deallocate(serializer);
+
+	if( !object ) return false;
+
+	Scene* newScene = (Scene*) object;
+	setScene(newScene);
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool SceneDocument::save()
+{
+	// Ask for file name to save as.
+	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
+		wxEmptyString, s_FileDialogDescription, wxFC_SAVE | wxFD_OVERWRITE_PROMPT );
+	
+	if( fc.ShowModal() != wxID_OK )
+		return true;
+
+	Path path = (String) fc.GetPath();
+	
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	bool res = SerializerSaveObjectToFile(serializer, path, scene.get());
+	Deallocate(serializer);
+
+	return res;
+}
+
+//-----------------------------------//
+
+bool SceneDocument::reset()
+{
+	resetUndo();
+	createUndo();
+
+	setScene(nullptr);
+
+	return true;
+}
+
+//-----------------------------------//
+
+void SceneDocument::setScene( Scene* newScene )
+{
+	resetScene();
+
+	if( !newScene )
+		newScene = AllocateThis(Scene);
+
+	scene.reset(newScene);
+	createEditorScene();
+
+	EventManager* events = GetEditor().getEventManager();
+	events->onSceneLoad(scene);
+
+	// Update the scenes.
+	onUpdate(0);
+}
+
+//-----------------------------------//
+
 void SceneDocument::resetScene()
 {
-	Events* events = GetEditor().getEventManager();
-	events->onSceneUnload(scene);
+	if(scene)
+	{
+		EventManager* events = GetEditor().getEventManager();
+		events->onSceneUnload(scene);
+	}
 
-	assert( ReferenceGetCount(editorScene.get()) == 1 );
-	//assert( ReferenceGetCount(scene.get()) == 1 );
+	cameraController.reset();
+
+#if 0
+	if( editorScene )
+		assert( editorScene.get()->references == 1 );
+
+	if( scene )
+		assert( scene.get()->references == 1 );
+#endif
 
 	editorScene.reset();
 	scene.reset();
-	cameraController.reset();
-}
-
-//-----------------------------------//
-
-void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
-{
-	cameraController->setEnabled(false);
-	getRenderWindow()->setCursorVisiblePriority(true, 100);
-
-	event.Skip();
-}
-
-//-----------------------------------//
-
-void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
-{
-	cameraController->setEnabled(true);
-	getRenderWindow()->setCursorVisiblePriority(false, 100);
-
-	//event.Skip();
-}
-
-//-----------------------------------//
-
-wxWindow* SceneDocument::getWindow()
-{
-	return viewframe;
-}
-
-//-----------------------------------//
-
-void SceneDocument::setupRenderWindow()
-{
-	Window* window = getRenderWindow();
-
-	RenderDevice* device = GetRenderDevice();
-	device->setRenderTarget( window );
-	window->getContext()->init();
 }
 
 //-----------------------------------//
@@ -125,8 +166,6 @@ void SceneDocument::onDocumentSelect()
 	aui->GetPane("Hierarchy").Show();
 	aui->GetPane("Properties").Show();
 	aui->Update();
-
-	GetEditor().getEventManager()->onSceneLoad(scene);
 }
 
 //-----------------------------------//
@@ -154,6 +193,26 @@ void SceneDocument::OnMouseEvent(wxMouseEvent& event)
 
 //-----------------------------------//
 
+void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
+{
+	cameraController->setEnabled(false);
+	getRenderWindow()->setCursorVisiblePriority(true, 100);
+
+	event.Skip();
+}
+
+//-----------------------------------//
+
+void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
+{
+	cameraController->setEnabled(true);
+	getRenderWindow()->setCursorVisiblePriority(false, 100);
+
+	//event.Skip();
+}
+
+//-----------------------------------//
+
 void SceneDocument::createView()
 {
 	viewframe = new Viewframe( &GetEditor() );
@@ -164,6 +223,11 @@ void SceneDocument::createView()
 	RenderControl* control = viewframe->createControl();
 	control->onRender.Bind( this, &SceneDocument::onRender );
 	control->onUpdate.Bind( this, &SceneDocument::onUpdate );
+	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
+	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseRightDown, this);
+	control->Bind(wxEVT_LEFT_DOWN, &SceneDocument::OnMouseEvent, this);
+	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseEvent, this);
+	control->Bind(wxEVT_MOUSEWHEEL, &SceneDocument::OnMouseEvent, this);
 	control->SetDropTarget( new ResourceDropTarget( &GetEditor() ) );
 	control->SetFocus();
 	setupRenderWindow();
@@ -172,6 +236,24 @@ void SceneDocument::createView()
 	view->setClearColor(SceneEditClearColor);
 
 	viewframe->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
+}
+
+//-----------------------------------//
+
+wxWindow* SceneDocument::getWindow()
+{
+	return viewframe;
+}
+
+//-----------------------------------//
+
+void SceneDocument::setupRenderWindow()
+{
+	Window* window = getRenderWindow();
+
+	RenderDevice* device = GetRenderDevice();
+	device->setRenderTarget( window );
+	window->getContext()->init();
 }
 
 //-----------------------------------//
@@ -201,23 +283,33 @@ void SceneDocument::onToolSelect(PluginTool* mode)
 
 //-----------------------------------//
 
-void SceneDocument::createScene()
+void SceneDocument::createEditorScene()
 {
 	Allocator* alloc = AllocatorGetHeap();
 
-	scene = Allocate(Scene, alloc);
 	editorScene = Allocate(Scene, alloc);
 	
 	// Create a grid entity.
+	GridPtr grid = Allocate(Grid, alloc);
+	grid->update(0);
+	grid->updateBounds();
+
 	EntityPtr entityGrid = EntityCreate(alloc);
 	entityGrid->setName("Grid");
 	entityGrid->addTransform();
-
-	GridPtr grid = Allocate(Grid, alloc);
 	entityGrid->addComponent(grid);
 	entityGrid->setTag( Tags::NonPickable, true );
-	
 	editorScene->add( entityGrid );
+
+#ifdef ENABLE_PHYSICS_BULLET
+	BoxShapePtr shape = Allocate(BoxShape, alloc);
+	entityGrid->addComponent(shape);
+
+	BodyPtr body = Allocate(Body, alloc);
+	body->setMass(0);
+
+	entityGrid->addComponent(body);
+#endif
 
 	// Create the camera entity.
 	Vector3 initialPosition(0, 20, -65);
@@ -228,6 +320,13 @@ void SceneDocument::createScene()
 	CameraPtr camera = entityCamera->getComponent<Camera>();
 	viewframe->setMainCamera(camera);
 	viewframe->switchToDefaultCamera();
+
+#ifdef ENABLE_PHYSICS_BULLET
+	DeallocateObject(GetEngine()->getPhysicsManager());
+	PhysicsManager* physics = AllocateThis(PhysicsManager);
+	physics->createWorld();
+	GetEngine()->setPhysicsManager(physics);
+#endif
 }
 
 //-----------------------------------//
@@ -282,12 +381,16 @@ void SceneDocument::onRender()
 	RenderBlock block;
 	camera->cull( block, scene );
 	camera->cull( block, editorScene );
+
+	for( size_t i = 0; i < camera->drawer.renderables.size(); i++)
+		block.renderables.push_back( camera->drawer.renderables[i] );
+
 	camera->render(block);
 
 	GetEngine()->stepFrame();
 
-#ifdef ENABLE_PHYSICS_BULLET
-	PhysicsManager* physics = engine->getPhysicsManager();
+#ifdef ENABLE_PHYSICS_DEBUG
+	PhysicsManager* physics = GetEngine()->getPhysicsManager();
 	physics->drawDebugWorld();
 #endif
 }
@@ -296,12 +399,15 @@ void SceneDocument::onRender()
 
 void SceneDocument::onUpdate( float delta )
 {
-	#pragma TODO("Engine specific updates should not be done per scene")
+	if( !scene || !editorScene ) return;
 
-	GetEngine()->update( delta );
 	scene->update(delta);
 	editorScene->update( delta );
 	
+#ifdef ENABLE_PHYSICS_BULLET
+	//physicsManager->update( delta );
+#endif
+
 	//eventManager->onSceneUpdate();
 
 	if(getRenderWindow()->isCursorVisible() && cameraController->getEnabled())

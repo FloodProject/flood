@@ -10,7 +10,7 @@
 #include "ResourcesPane.h"
 #include "EditorIcons.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Core/Utilities.h"
 
 #ifdef PLATFORM_WINDOWS
@@ -180,7 +180,7 @@ void ResourcesPage::onItemChanged( wxTreeEvent& event )
 	const ResourceHandle& oldResource = getResourceFromTreeId( oldId );
 	const ResourceHandle& newResource = getResourceFromTreeId( newId );
 
-	Events* events = GetEditor().getEventManager();
+	EventManager* events = GetEditor().getEventManager();
 
 	if( oldResource )
 		events->onResourceUnselect(ResourcePtr(oldResource.Resolve()));

@@ -10,7 +10,9 @@
 #include "ResourcesPlugin.h"
 #include "ResourcesPane.h"
 #include "ResourcesBrowser.h"
+#include "Resources/ResourceIndexer.h"
 #include "Resources/ResourceDatabase.h"
+#include "ResourceThumbnailer.h"
 #include "Settings.h"
 
 #include "Editor.h"
@@ -30,8 +32,10 @@ ResourcesPlugin::ResourcesPlugin()
 	: resourcesPage(nullptr)
 	, resourcesBrowser(nullptr)
 	, resourceDatabase(nullptr)
+	, resourceIndexer(nullptr)
 	, resourceThumbnailer(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -49,6 +53,7 @@ PluginMetadata ResourcesPlugin::getMetadata()
 	metadata.description = "Provides resource handling features.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 400;
 
 	return metadata;
 }
@@ -57,22 +62,17 @@ PluginMetadata ResourcesPlugin::getMetadata()
 
 void ResourcesPlugin::onPluginEnable()
 {
-#if 0
-	resourcesPage = Allocate(ResourcesPage, AllocatorGetHeap(), editor);
-	resourcesPage->SetSize(300, 200);
-#endif
-
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
 
-#if 0
+#if ENABLE_RESOURCES_PANE
+	resourcesPage = AllocateThis(ResourcesPage, editor);
+	resourcesPage->SetSize(300, 200);
+	
 	wxAuiPaneInfo pane;
 	pane.Caption("Resources").Left().Dock().Icon(iconPackage).PaneBorder(true);
 	editor->getAUI()->AddPane(resourcesPage, pane);
 	editor->getAUI()->Update();
 #endif
-
-	if( !loadCache() )
-		resourceDatabase = new ResourceDatabase();
 
 #ifdef ENABLE_RESOURCE_BROWSER
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
@@ -88,7 +88,22 @@ void ResourcesPlugin::onPluginEnable()
 	resourcesBrowser = new ResourcesBrowser(editor);
 #endif
 
-	Pipeline::Init();
+	if( !loadCache() )
+	{
+		resourceIndexer = AllocateThis(ResourceIndexer);
+		
+		resourceDatabase = AllocateThis(ResourceDatabase);
+		resourceDatabase->setIndexer(resourceIndexer);
+
+		resourceThumbnailer = AllocateThis(ResourceThumbnailer);
+		resourceThumbnailer->setIndexer(resourceIndexer);
+
+		Archive* archive = ArchiveCreateFromDirectory(AllocatorGetThis(), MediaFolder);
+		resourceIndexer->addArchive(archive);
+		Deallocate(archive);
+	}
+
+	PipelineInit();
 }
 
 //-----------------------------------//
@@ -101,16 +116,21 @@ void ResourcesPlugin::onPluginDisable()
 		editor->getAUI()->Update();
 	}
 
-	Deallocate(resourcesBrowser);
-	resourcesBrowser = nullptr;
-
+	Deallocate(resourceIndexer);
 	Deallocate(resourceDatabase);
-	resourceDatabase = nullptr;
+	Deallocate(resourceDatabase);
+	if(resourcesPage) resourcesPage->Destroy();
+	//Deallocate(resourcesPage);
 
-	Deallocate(resourcesPage);
-	resourcesPage = nullptr;
+	PipelineCleanup();
+}
 
-	Pipeline::Cleanup();
+//-----------------------------------//
+
+void ResourcesPlugin::onPluginUpdate()
+{
+	resourceIndexer->update();
+	resourceThumbnailer->update();
 }
 
 //-----------------------------------//
@@ -168,8 +188,10 @@ bool ResourcesPlugin::saveCache()
 
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
+#ifdef ENABLE_RESOURCE_BROWSER
 	resourcesBrowser->Show( !resourcesBrowser->IsVisible() );
 	resourcesBrowser->setFocusToSearch();
+#endif
 }
 
 //-----------------------------------//

@@ -9,14 +9,14 @@
 #pragma once
 
 #include "Network/Message.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-typedef void (*MessageRefHandlerFn)(MessagePlugin*, const SessionPtr&, Object*);
-typedef void (MessagePlugin::*MessageRawHandlerMemFn)(const SessionPtr&, const MessagePtr&);
+typedef void (*MessageRefHandlerFn)(MessageHandler*, const SessionPtr&, Object*);
+typedef void (MessageHandler::*MessageRawHandlerMemFn)(const SessionPtr&, const MessagePtr&);
 
 struct MessageDirection
 {
@@ -35,7 +35,7 @@ struct MessageMapping
 	MessageDirection::Enum direction;
 	MessageRefHandlerFn ref;
 	MessageRawHandlerMemFn raw;
-	MessagePlugin* plugin;
+	MessageHandler* handler;
 };
 
 typedef std::map<MessageId, MessageMapping> MessageHandlersMap;
@@ -44,14 +44,17 @@ class MessageHandlers
 {
 public:
 
-	MessageHandlers();
-	~MessageHandlers();
-
 	// Adds a message handler.
-	void addHandler(const MessageMapping&);
+	void addHandlers(MessageHandler* handler, MessageDirection::Enum);
 
 	// Removes a message handler.
-	void removeHandler(const MessageMapping&);
+	void removeHandlers(MessageHandler* handler);
+
+	// Adds a message mapping.
+	void addMapping(const MessageMapping&);
+
+	// Removes a message mapping.
+	void removeMapping(const MessageMapping&);
 
 	// Finds a message handler.
 	MessageMapping* findHandler(MessageId id);
@@ -62,7 +65,6 @@ public:
 protected:
 	
 	MessageHandlersMap handlers;
-	PluginManager* plugins;
 };
 
 //-----------------------------------//

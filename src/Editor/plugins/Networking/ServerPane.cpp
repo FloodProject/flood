@@ -7,17 +7,18 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef ENABLE_PLUGIN_SERVER
+
 #include "ServerPane.h"
 #include "ServerPlugin.h"
-
-#ifdef ENABLE_RESOURCE_BROWSER
 
 #include "Viewframe.h"
 #include "EditorIcons.h"
 #include "UndoManager.h"
 #include "Settings.h"
 #include "Editor.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Core/Utilities.h"
 #include "Network/Host.h"
 #include "Network/Message.h"

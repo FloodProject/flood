@@ -8,19 +8,23 @@
 
 #include "Editor/API.h"
 #include "Editor.h"
-#include "Core/Utilities.h"
 #include "EditorIcons.h"
-#include "RenderControl.h"
-#include "Core/PluginManager.h"
-#include "UndoManager.h"
-#include "Viewframe.h"
-#include "EditorInputManager.h"
-#include "Events.h"
-#include "Settings.h"
 #include "EditorTags.h"
+#include "Settings.h"
+
+#include "Core/PluginManager.h"
+#include "Core/Utilities.h"
+
+#include "Viewframe.h"
+#include "RenderControl.h"
+#include "EditorInputManager.h"
+
+#include "EventManager.h"
+#include "UndoManager.h"
+#include "DocumentManager.h"
+
 #include <wx/debugrpt.h>
 
-#include "Plugins/Scene/SceneDocument.h"
 #include "Plugins/Project/ProjectPlugin.h"
 
 #define CREATE_PROJECT_ON_STARTUP
@@ -44,12 +48,12 @@ bool EditorApp::OnInit()
 
 	SetTopWindow(frame);
 	frame->Show(true);
-	
+
 	return true;
 }
 
 //-----------------------------------//
-
+#ifndef BUILD_DEBUG
 void EditorApp::OnFatalException()
 {
 	wxDebugReport report;
@@ -61,7 +65,7 @@ void EditorApp::OnFatalException()
 	if ( preview.Show(report) )
 		report.Process();
 }
-
+#endif
 //-----------------------------------//
 
 static EditorFrame* gs_EditorInstance = nullptr;;
@@ -77,7 +81,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	, notebookCtrl(nullptr)
 	, eventManager(nullptr)
 	, pluginManager(nullptr)
-	, currentDocument(nullptr)
+	, documentManager(nullptr)
 {
 	gs_EditorInstance = this;
 
@@ -100,7 +104,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 #ifdef CREATE_PROJECT_ON_STARTUP
 	wxCommandEvent event;
-	ProjectPlugin* project = (ProjectPlugin*) GetPlugin<ProjectPlugin>();
+	ProjectPlugin* project = GetPlugin<ProjectPlugin>();
 	project->onNewButtonClick(event);
 #endif
 
@@ -111,27 +115,12 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	for( size_t i = 0; i < documents.size(); i++ )
-	{
-		Document* document = documents[i];
-
-		wxWindow* window = document->getWindow();
-		size_t index = notebookCtrl->GetPageIndex(window);
-		notebookCtrl->RemovePage(index);
-
-		delete document;
-	}
-
-	documents.clear();
-	currentDocument = nullptr;
+	Deallocate(documentManager);
 
 	eventManager->disconnectPluginListeners();
-
-	delete pluginManager;
-	pluginManager = nullptr;
-
- 	delete eventManager;
-	eventManager = nullptr;
+	Deallocate(pluginManager);
+ 	
+	Deallocate(eventManager);
 
 	notebookCtrl->Destroy();
 	paneCtrl->DetachPane(notebookCtrl);
@@ -139,19 +128,40 @@ EditorFrame::~EditorFrame()
 	paneCtrl->UnInit();
 	delete paneCtrl;
 
-	delete engine;
+	Deallocate(engine);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnIdle(wxIdleEvent& event)
+{
+	GetEngine()->update();
+
+	const std::vector<Plugin*> plugins = pluginManager->getPlugins();
+	
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
+		plugin->onPluginUpdate();
+	}
 }
 
 //-----------------------------------//
 
 void EditorFrame::createPlugins()
 {
-	pluginManager = new PluginManager();
-	eventManager = new Events();
+	documentManager = AllocateThis(DocumentManager);
+	documentManager->onDocumentAdded.Connect(this, &EditorFrame::onDocumentAdded);
+	documentManager->onDocumentRemoved.Connect(this, &EditorFrame::onDocumentRemoved);
+
+	pluginManager = AllocateThis(PluginManager);
+	eventManager = AllocateThis(EventManager);
 
 	std::vector<Plugin*> plugins;
-	pluginManager->scanPlugins(ReflectionGetType(EditorPlugin), plugins);
-	pluginManager->sortPlugins(plugins);
+
+	// Find and instantiate plugins.
+	ClassCreateChilds(ReflectionGetType(EditorPlugin), AllocatorGetThis(), plugins);
+	Plugin::sortByPriority(plugins);
 	pluginManager->registerPlugins(plugins);
 }
 
@@ -159,7 +169,7 @@ void EditorFrame::createPlugins()
 
 void EditorFrame::createEngine()
 {
-	engine = new Engine();
+	engine = AllocateThis(Engine);
 	engine->init(false);
 	engine->setupInput();
 
@@ -239,12 +249,12 @@ Document* EditorFrame::getDocumentFromPage(int selection)
 
 	wxWindow* window = notebookCtrl->GetPage(selection);
 
+	const DocumentsVector& documents = documentManager->getDocuments();
+
 	for( size_t i = 0; i < documents.size(); i++ )
 	{
 		Document* document = documents[i];
-		
-		if( document->getWindow() == window )
-			return document;
+		if( document->getWindow() == window ) return document;
 	}
 
 	return nullptr;
@@ -261,12 +271,12 @@ void EditorFrame::onNotebookPageChanged(wxAuiNotebookEvent& event)
 	{
 		oldDocument->onDocumentUnselect();
 		eventManager->onDocumentUnselect(*oldDocument);
-		currentDocument = nullptr;
+		documentManager->currentDocument = nullptr;
 	}
 
 	if(newDocument)
 	{
-		currentDocument = newDocument;
+		documentManager->currentDocument = newDocument;
 		newDocument->onDocumentSelect();
 		eventManager->onDocumentSelect(*newDocument);
 	}
@@ -277,28 +287,15 @@ void EditorFrame::onNotebookPageChanged(wxAuiNotebookEvent& event)
 void EditorFrame::onNotebookPageClose(wxAuiNotebookEvent& event)
 {
 	Document* document = getDocumentFromPage( event.GetSelection() );
-	
-	auto it = std::find(documents.begin(), documents.end(), document);
-	
-	if( it != documents.end() )
-	{
-		document->onDocumentUnselect();
-		eventManager->onDocumentUnselect(*document);
-		documents.erase(it);
-	}
-
-	if( currentDocument == document )
-	{
-		currentDocument = nullptr;
-	}
+	document->onDocumentUnselect();
+	documentManager->removeDocument(document);
 }
 
 //-----------------------------------//
 
-void EditorFrame::addDocument(Document* document)
+void EditorFrame::onDocumentAdded(Document* document)
 {
-	if( !document ) return;
-	documents.push_back(document);
+	eventManager->onDocumentCreate(*document);
 
 	getNotebook()->AddPage(document->getWindow(), document->getName());
 	getAUI()->Update();
@@ -306,15 +303,13 @@ void EditorFrame::addDocument(Document* document)
 
 //-----------------------------------//
 
-void EditorFrame::OnIdle(wxIdleEvent& event)
+void EditorFrame::onDocumentRemoved(Document* document)
 {
-	const std::vector<Plugin*> plugins = pluginManager->getPlugins();
-	
-	for( size_t i = 0; i < plugins.size(); i++ )
-	{
-		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
-		plugin->onPluginUpdate();
-	}
+	eventManager->onDocumentDestroy(*document);
+
+	wxWindow* window = document->getWindow();
+	size_t index = notebookCtrl->GetPageIndex(window);
+	notebookCtrl->RemovePage(index);
 }
 
 //-----------------------------------//
@@ -325,41 +320,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 	switch(id) 
 	{
-	//-----------------------------------//
-	case Toolbar_ToogleGrid:
-	{
-		SceneDocument* scene = (SceneDocument*) getDocument();
-		
-		const EntityPtr& grid = scene->editorScene->findEntity("Grid");
-		
-		if( grid )
-			grid->setVisible( !grid->isVisible() );
-		
-		redrawView();
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_TooglePhysicsDebug:
-	{
-#ifdef ENABLE_PHYSICS_BULLET
-		PhysicsManager* physics = engine->getPhysicsManager();
-		
-		if( physics )
-			physics->setDebugWorld( !physics->getDebugWorld() );
-		
-		redrawView();
-#endif
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_TooglePlay:
-	{
-#if 0
-		bool switchToPlay = event.IsChecked();
-		switchPlayMode(switchToPlay);
-#endif
-		break;
-	}
 	//-----------------------------------//
 	case Toolbar_ToogleViewport:
 	{
@@ -384,9 +344,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		break;
 #endif
-	}
-	//-----------------------------------//
-	} // end switch
+	} }
 }
 
 //-----------------------------------//

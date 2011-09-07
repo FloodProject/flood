@@ -94,20 +94,12 @@ PROTOCOL_MESSAGE_HANDLERS_END()
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(ReplicaMessagePlugin, MessagePlugin)
+REFLECT_ABSTRACT_CHILD_CLASS(ReplicaMessageHandler, MessageHandler)
 REFLECT_CLASS_END()
-
-PROTOCOL_PLUGIN_BEGIN(ReplicaMessagePlugin)
-	METADATA_NAME(Replica)
-	METADATA_DESC(Provides object replication functionality.)
-	METADATA_AUTHOR(triton)
-	METADATA_VERSION(1.0)
-	METADATA_PRIORITY(20)
-PROTOCOL_PLUGIN_END()
 
 //-----------------------------------//
 
-const MessagesTable& ReplicaMessagePlugin::getMessagesTable()
+const MessagesTable& ReplicaMessageHandler::getMessagesTable()
 {
 	static MessagesTable gs_ReplicaMessages(gs_ReplicaRawMessages, gs_ReplicaRawMessages + ARRAY_SIZE(gs_ReplicaRawMessages));
 	return gs_ReplicaMessages;
@@ -115,14 +107,14 @@ const MessagesTable& ReplicaMessagePlugin::getMessagesTable()
 
 //-----------------------------------//
 
-Enum* ReplicaMessagePlugin::getMessagesEnum()
+Enum* ReplicaMessageHandler::getMessagesEnum()
 {
 	return ReflectionGetType(ReplicaMessageIds);
 }
 
 //-----------------------------------//
 
-ReplicaContext* ReplicaMessagePlugin::findContext(ReplicaContextId id)
+ReplicaContext* ReplicaMessageHandler::findContext(ReplicaContextId id)
 {
 	ReplicaContextMap::iterator it = replicaContexts.find(id);
 
@@ -134,7 +126,7 @@ ReplicaContext* ReplicaMessagePlugin::findContext(ReplicaContextId id)
 
 //-----------------------------------//
 
-void ReplicaMessagePlugin::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
+void ReplicaMessageHandler::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
 {
 	uint64 val;
 	if( !DecodeVariableInteger(msg->ms, val) )

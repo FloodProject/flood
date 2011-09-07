@@ -291,36 +291,36 @@ void GLSL_Program::setUniforms( const UniformBufferPtr& ub )
 	
 	for( it = ub->elements.begin(); it != ub->elements.end(); it++ )
 	{
-		UniformBufferElement& element = *it->second;
+		UniformBufferElement* element = it->second;
+		if( !element || !element->name ) continue;
 
-		GLint location = glGetUniformLocation( id, element.name );
-		GLint count = element.count;
+		GLint location = glGetUniformLocation( id, element->name );
+		if( location == -1 ) continue;
 
-		if( location == -1 )
-			continue;
+		GLint count = element->count;
 
-		switch(element.type)
+		switch(element->type)
 		{
 		case UniformDataType::Scalar_F:
-			glUniform1fv(location, count, (GLfloat*) &element.data);
+			glUniform1fv(location, count, (GLfloat*) &element->data);
 			break;
 		case UniformDataType::Scalar_I:
-			glUniform1iv(location, count, (GLint*) &element.data);
+			glUniform1iv(location, count, (GLint*) &element->data);
 			break;
 		case UniformDataType::Vector2_F:
-			glUniform2fv(location, count, (GLfloat*) &element.data);
+			glUniform2fv(location, count, (GLfloat*) &element->data);
 			break;
 		case UniformDataType::Vector3_F:
-			glUniform3fv(location, count, (GLfloat*) &element.data);
+			glUniform3fv(location, count, (GLfloat*) &element->data);
 			break;
 		case UniformDataType::Matrix3_F:
-			glUniformMatrix3fv(location, count, false, (GLfloat*) &element.data);
+			glUniformMatrix3fv(location, count, false, (GLfloat*) &element->data);
 			break;
 		case UniformDataType::Matrix4_F:
-			glUniformMatrix4fv(location, count, false, (GLfloat*) &element.data);
+			glUniformMatrix4fv(location, count, false, (GLfloat*) &element->data);
 			break;
 		case UniformDataType::Matrix4x3_F:
-			glUniformMatrix4x3fv(location, count, false, (GLfloat*) &element.data);
+			glUniformMatrix4x3fv(location, count, false, (GLfloat*) &element->data);
 			break;
 		default:
 			LogWarn("Uniform type is not supported");

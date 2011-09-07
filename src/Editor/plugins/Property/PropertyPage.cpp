@@ -51,41 +51,6 @@ static wxString GetReadableName(wxString str)
 
 //-----------------------------------//
 
-#if 0
-struct TagName
-{
-	int32 id;
-	const char* name;
-};
-
-TagName TagNames[] = 
-{
-	{ Tags::NonPickable,			"NonPickable" },
-	{ Tags::NonTransformable,		"NonTransformable" },
-	{ Tags::NonCollidable,			"NonCollidable" },
-	{ Tags::NonCulled,				"NonCulled" },
-	{ Tags::UpdateTransformsOnly,	"UpdateTransformsOnly" },
-	{ EditorTags::EditorOnly,		"EditorOnly" },
-};
-
-static wxPGChoices getTagChoices()
-{
-	wxPGChoices choices;
-
-	for( size_t i = 0; i < ARRAY_SIZE(TagNames); i++ )
-	{
-		const TagName& tag = TagNames[i];
-			
-		wxString name( String(tag.name) );
-		choices.Add( GetReadableName(name), tag.id );
-	}
-
-	return choices;
-}
-#endif
-
-//-----------------------------------//
-
 bool ReflectionIsResourceHandle(const Field* field)
 {
 	Type* type = field->type;
@@ -98,24 +63,7 @@ bool ReflectionIsResourceHandle(const Field* field)
 
 //-----------------------------------//
 
-#if RESOURCE_ASK_FILESYSTEM
-static ResourceHandle askResource()
-{
-	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
-			wxEmptyString, wxEmptyString, "Resource files | *.*",
-			wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
-
-	if( fd.ShowModal() != wxID_OK )
-		return ResourceHandle(HandleInvalid);
-
-	String path( fd.GetPath() );
-	path = PathNormalize(path);
-	
-	ResourceManager* res = GetResourceManager();
-	return res->loadResource( PathGetFile(path) );
-}
-#else
-static ResourceHandle askResource( ResourceGroup::Enum group )
+static ResourceHandle GetResourceUsingBrowser( ResourceGroup::Enum group )
 {
 	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
 	ResourcesBrowser* rb = rp->resourcesBrowser;
@@ -132,7 +80,24 @@ static ResourceHandle askResource( ResourceGroup::Enum group )
 
 	return GetResourceManager()->loadResource(path);
 }
-#endif
+
+//-----------------------------------//
+
+static ResourceHandle GetResourceUsingFile( ResourceGroup::Enum group )
+{
+	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
+			wxEmptyString, wxEmptyString, "Resource files | *.*",
+			wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
+
+	if( fd.ShowModal() != wxID_OK )
+		return ResourceHandle(HandleInvalid);
+
+	String path( fd.GetPath() );
+	path = PathNormalize(path);
+	
+	ResourceManager* res = GetResourceManager();
+	return res->loadResource( PathGetFile(path) );
+}
 
 //-----------------------------------//
 
@@ -152,10 +117,12 @@ public:
 		ResourceLoader* resourceLoader = GetResourceManager()->findLoaderByClass(resourceClass);
 		if( !resourceLoader ) return false;
 
-		ResourceHandle resource = askResource( resourceLoader->getResourceGroup() );
+		ResourceHandle resource = GetResourceUsingBrowser( resourceLoader->getResourceGroup() );
 		if( !resource ) return false;
 
-		SetValueInEvent( PathGetFile( resource.Resolve()->getPath() ) );
+		Resource* res = resource.Resolve();
+		SetValueInEvent( PathGetFile(res->getPath()) );
+
 		return true;
 	}
 };
@@ -166,7 +133,7 @@ PropertyPage::PropertyPage( wxWindow* parent )
 	: wxPropertyGrid(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
 	, currentObject(nullptr)
 {
-	// Events bindings.
+	// EventManager bindings.
 	Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
 	Bind(wxEVT_PG_CHANGING, &PropertyPage::onPropertyChanging, this);
 	Bind(wxEVT_IDLE, &PropertyPage::onIdle, this);
@@ -195,7 +162,7 @@ void PropertyPage::reset()
 
 void PropertyPage::resetObject(const Object* object)
 {
-	if( currentObject != object )
+	if( currentObject == object )
 		reset();
 }
 
@@ -247,11 +214,10 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 	propOperation->oldValue = propertyValue;
 	propOperation->newValue = getPropertyValue(prop);
 	propOperation->grid = this;
+	propOperation->redo();
 	
 	UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
 	undoManager->registerOperation(propOperation);
-
-	propOperation->redo();
 }
 
 //-----------------------------------//
@@ -272,7 +238,7 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 {
 	currentObject = entity.get();
 
-    // Entity properties.
+	// Entity properties.
 	appendObjectFields( entity->getType(), entity.get() );
 
 	// Transform properties.
@@ -280,8 +246,8 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 
 	if( transform )
 		appendObjectFields( ReflectionGetType(Transform), transform.get() );
-    
-    // Other components properties.
+
+	// Other components properties.
 	const ComponentMap& components = entity->getComponents();
 	
 	ComponentMap::const_iterator it;
@@ -337,7 +303,7 @@ void PropertyPage::appendObjectFields(Class* klass, void* object, bool newCatego
 		setPropertyValue(prop, value);
 
 		FieldWatch fw;
-		fw.object = (Object*) object;
+		fw.object = object;
 		fw.field = field;
 		fw.userdata = prop;
 
@@ -358,7 +324,11 @@ wxPGProperty* PropertyPage::createProperty(Class& type, const Field& field, void
 	else if( ReflectionIsEnum(field.type) )
 		prop = createEnumProperty(field, object);
 
-	assert( prop != nullptr );
+	if( !prop )
+	{
+		LogDebug("Could not create property for field: %s", field.name);
+		return nullptr;
+	}
 
 	PropertyData* data = new PropertyData();
 	data->type = &type;
@@ -469,13 +439,6 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Bitfield:
-	{
-		//wxPGChoices choices = getTagChoices();
-		//prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices );
-		break;
-	}
-	//-----------------------------------//
 	default:
 	{
 		LogDebug( "Unknown property type: '%s'", primitive->name );
@@ -565,9 +528,6 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 	case Primitive::Quaternion:
 		value = FieldGet<Quaternion>(field, object);
 		break;
-	case Primitive::Bitfield:
-		value = FieldGet<int32>(field, object);
-		break;
 	default:
 		assert(0);
 	}
@@ -590,6 +550,12 @@ void PropertyPage::setFieldValue(const Field* field, void* object, const wxAny& 
 
 void PropertyPage::setPropertyValue(wxPGProperty* prop, const wxAny& value)
 {
+	if( !prop )
+	{
+		LogDebug("Invalid property");
+		return;
+	}
+
 	if(	!prop->GetClientObject() ) prop = prop->GetParent();
 	
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
@@ -675,13 +641,6 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 		prop->GetPropertyByName("Z")->SetValue(vec.z);
 		break;
 	}
-	//-----------------------------------//
-	case Primitive::Bitfield:
-	{
-		int32 bits = value.As<int32>();
-		prop->SetValue(bits);
-		break;
-	}
 	default:
 		assert(0 && "Unknown primitive type");
 		return;
@@ -760,12 +719,6 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 	{
 		wxColour val = prop->GetValue().GetAny().As<wxColour>();
 		return convertColorFromWx(val);
-		break;
-	}
-	case Primitive::Bitfield:
-	{
-		int32 bits = prop->GetValue().GetAny().As<int32>();
-		return bits;
 		break;
 	}
 	case Primitive::Quaternion:

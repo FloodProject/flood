@@ -10,7 +10,7 @@
 #include "ScenePane.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Core/Utilities.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
@@ -23,6 +23,9 @@
 #include "Scene/Skydome.h"
 #include "Resources/Mesh.h"
 #include "Terrain/Terrain.h"
+
+#include "plugins/Selection/SelectionPlugin.h"
+#include "plugins/Selection/SelectionManager.h"
 
 #include "Plugins/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
@@ -54,23 +57,32 @@ ScenePage::ScenePage( wxWindow* parent, wxWindowID id )
 
 ScenePage::~ScenePage()
 {
-	treeCtrl->Destroy();
-	cleanScene();
 }
 
 //-----------------------------------//
 
 void ScenePage::cleanScene()
 {
-	ScenePtr scene = weakScene;
+	LogDebug("Cleaning scene in ScenePane");
 
-	if( !scene )
-		return;
+	treeCtrl->DeleteAllItems();
+	objectIds.clear();
+
+	model.reset();
+	meshHandle.reset();
+
+	ScenePtr scene = weakScene;
+	if( !scene ) return;
 	
 	scene->onEntityAdded.Disconnect( this, &ScenePage::onEntityAdded );
 	scene->onEntityRemoved.Disconnect( this, &ScenePage::onEntityRemoved );
 
-	weakScene = nullptr;
+	scene->onEntityComponentAdded.Disconnect( this, &ScenePage::onComponentAdded );
+	scene->onEntityComponentRemoved.Disconnect( this, &ScenePage::onComponentRemoved );
+
+	weakScene.reset();
+	weakEntity.reset();
+	weakComponent.reset();
 }
 
 //-----------------------------------//
@@ -131,12 +143,8 @@ void ScenePage::initButtons()
 
 void ScenePage::setScene(const ScenePtr& scene)
 {
-	cleanScene();
-
+	assert( weakScene.get() == 0 );
 	weakScene = scene;
-
-	// Add the root node.
-	treeCtrl->DeleteAllItems();
 
 	wxString sceneName( scene->getName() );
 	rootId = treeCtrl->AddRoot(sceneName.Capitalize(), 1);
@@ -161,6 +169,9 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 	group->onEntityAdded.Connect( this, &ScenePage::onEntityAdded );
 	group->onEntityRemoved.Connect( this, &ScenePage::onEntityRemoved );
 
+	group->onEntityComponentAdded.Connect( this, &ScenePage::onComponentAdded );
+	group->onEntityComponentRemoved.Connect( this, &ScenePage::onComponentRemoved );
+
 	wxTreeItemId groupId = id;
 		
 	if( createGroup )
@@ -169,7 +180,7 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 	EntityItemData* data = new EntityItemData();
 	data->entity = entity.get();
 
-	entityIds[entity.get()] = groupId;
+	objectIds[entity.get()] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
 	const std::vector<EntityPtr>& entities = group->getEntities();
@@ -185,27 +196,27 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 
 wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 {
-	wxTreeItemId nodeId = treeCtrl->AppendItem( id, entity->getName(), 0 );
+	wxTreeItemId entityId = treeCtrl->AppendItem( id, entity->getName(), 0 );
 
 	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
 	
 	for( it = components.begin(); it != components.end(); it++ )
-		addComponent(nodeId, it->second);
+		addComponentToTree(entityId, it->second);
 
 	EntityItemData* data = new EntityItemData();
 	data->entity = entity.get();
 
-	treeCtrl->SetItemData( nodeId, data );
-	entityIds[entity.get()] = nodeId;
+	treeCtrl->SetItemData( entityId, data );
+	objectIds[ entity.get() ] = entityId;
 
-	return nodeId;
+	return entityId;
 }
 
 //-----------------------------------//
 
-void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
+void ScenePage::addComponentToTree( wxTreeItemId id, ComponentPtr component )
 {
 	Class* klass = component->getType();
 	wxTreeItemId compId = treeCtrl->AppendItem( id, klass->name, icons[klass] );
@@ -214,6 +225,7 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 	data->component = component;
 
 	treeCtrl->SetItemData( compId, data );
+	objectIds[ component.get() ] = compId;
 }
 
 //-----------------------------------//
@@ -232,30 +244,44 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 	if( !id ) return nullptr;
 
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
-	Entity* entity = data->entity;
+	if( !data ) return nullptr;
 	
-	if( entity )
-		return entity;
-	else
-		return nullptr;
+	Entity* entity = data->entity;
+	return entity;
 }
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::getTreeIdFromEntity(const EntityPtr& entity)  
+wxTreeItemId ScenePage::getTreeIdFromObject(Object* object)
 {
-	Entity* raw = entity.get();
+	ObjectIdsMap::iterator it = objectIds.find(object);
+	if( it == objectIds.end() ) return nullptr;
 
-	EntityIdsMap::iterator it = entityIds.find(raw);
-	if( it == entityIds.end() ) return nullptr;
+	return objectIds[object];
+}
 
-	return entityIds[raw];
+//-----------------------------------//
+
+static SelectionOperation* CreateEntitySelectionOperation(const EntityPtr& entity)
+{
+	SelectionPlugin* sp = GetPlugin<SelectionPlugin>();
+	SelectionManager* selections = sp->getSelectionManager();
+
+	SelectionOperation* selection = selections->createOperation(SelectionMode::Entity);
+	selection->addEntity(entity);
+	selection->setPreviousSelections( selections->getSelection() );
+
+	return selection;
 }
 
 //-----------------------------------//
 
 void ScenePage::onItemChanged(wxTreeEvent& event)
 {
+	LogDebug("Item changed in ScenePage");
+
+	//getTreeCtrl()->EndEditLabel( getTreeCtrl()->GetSelection() );
+
 	wxTreeItemId oldId = event.GetOldItem();
 	wxTreeItemId newId = event.GetItem();
 
@@ -268,45 +294,54 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	sentLastSelectionEvent = true;
 
 	// Send events to plugins.
-	Events* events = GetEditor().getEventManager();
-
-	if( oldEntity )
-		events->onEntityUnselect(oldEntity);
+	EventManager* events = GetEditor().getEventManager();
 
 	if( oldComponent )
 		events->onComponentUnselect(oldComponent);
-
-	if( newEntity )
-		events->onEntitySelect(newEntity);
-
+	
 	if( newComponent )
 		events->onComponentSelect(newComponent);
+
+	SelectionPlugin* sp = GetPlugin<SelectionPlugin>();
+	SelectionManager* selections = sp->getSelectionManager();
+	SelectionOperation* selected = selections->getSelection();
+
+	bool isSameSelection = selected && selected->isSelection(newEntity);
+	
+	if( newEntity && !isSameSelection )
+	{
+		SelectionOperation* selection = CreateEntitySelectionOperation(newEntity);
+		selection->redo();
+
+		UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
+		undoManager->registerOperation(selection);
+	}
+
+#if 0
+	if( oldEntity )
+		events->onEntityUnselect(oldEntity);
+#endif
 
 	sentLastSelectionEvent = false;
 }
 
 //-----------------------------------//
 
-void ScenePage::addEntity(const EntityPtr& entity)
+EntityOperation* ScenePage::createEntityAddOperation(const EntityPtr& entity)
 {
 	Document* document = GetEditor().getDocument();
-	if( !document ) return;
+	if( !document ) return nullptr;
 
 	EntityOperation* entityOperation;
-	entityOperation = createEntityOperation(entity, "Entity added");
-	entityOperation->added = true;
-
-	if( !entityOperation ) return;
+	entityOperation = createEntityOperation("Entity added");
+	entityOperation->entity = entity;
+	entityOperation->type = EntityOperation::EntityAdded;
+	entityOperation->redo();
 
 	UndoManager* undoManager = document->getUndoManager();
 	undoManager->registerOperation(entityOperation);
 
-	entityOperation->redo();
-
-	wxTreeItemId id = getTreeIdFromEntity(entity);
-	treeCtrl->Expand(id);
-	treeCtrl->SelectItem(id);
-	treeCtrl->EditLabel(id);
+	return entityOperation;
 }
 
 //-----------------------------------//
@@ -334,7 +369,17 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	ServerPlugin* sp = GetPlugin<ServerPlugin>();
 	sp->host->getPeer()->queueMessage(msg, 0);
 #else
-	addEntity(entity);
+
+	createEntityAddOperation(entity);
+
+	// Simulate selection event but don't registe it in the undo stack.
+	SelectionOperation* selection = CreateEntitySelectionOperation(entity);
+	selection->redo();
+
+	wxTreeItemId id = getTreeIdFromObject(entity.get());
+	treeCtrl->Expand(id);
+	treeCtrl->SelectItem(id);
+	//treeCtrl->EditLabel(id);
 #endif
 }
 
@@ -343,22 +388,22 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = treeCtrl->GetSelection();
+	Document* document = GetEditor().getDocument();
+	
 	const EntityPtr& entity = getEntityFromTreeId(id);
-
-	if(!entity)
-		return;
+	if(!entity) return;
 
 	EntityOperation* entityOperation;
-	entityOperation = createEntityOperation(entity, "Entity removed");
-	entityOperation->added = false;
-
-	if( !entityOperation )
-		return;
-
-	Events* events = GetEditor().getEventManager();
-	events->onEntityUnselect(entity);
-
+	entityOperation = createEntityOperation("Entity removed");
+	entityOperation->entity = entity;
+	entityOperation->type = EntityOperation::EntityRemoved;
 	entityOperation->redo();
+	
+	UndoManager* undoManager = document->getUndoManager();
+	undoManager->registerOperation(entityOperation);
+
+	EventManager* events = GetEditor().getEventManager();
+	events->onEntityUnselect(entity);
 
 #ifndef NO_NETWORK
 	ReplicaObjectDeleteMessage del;
@@ -390,7 +435,10 @@ void ScenePage::onEntityAdded( const EntityPtr& entity )
 	if( entity->getTag(EditorTags::EditorOnly) )
 		return;
 	
-	wxTreeItemId id = getTreeIdFromEntity(entity->getParent());
+	EntityPtr parent = entity->getParent();
+	if( !parent ) return;
+
+	wxTreeItemId id = getTreeIdFromObject(parent.get());
 	addGroup( id, entity );
 }
 
@@ -398,11 +446,27 @@ void ScenePage::onEntityAdded( const EntityPtr& entity )
 
 void ScenePage::onEntityRemoved( const EntityPtr& entity )
 {
-	wxTreeItemId id = getTreeIdFromEntity(entity);
+	wxTreeItemId id = getTreeIdFromObject(entity.get());
 	treeCtrl->Delete(id);
 	
-	assert( entityIds[entity.get()] == id );
-	entityIds.erase(entity.get());
+	assert( objectIds[entity.get()] == id );
+	objectIds.erase(entity.get());
+}
+
+//-----------------------------------//
+
+void ScenePage::onComponentAdded( const ComponentPtr& component )
+{
+	wxTreeItemId itemId = getTreeIdFromObject( component->getEntity() );
+	addComponentToTree(itemId, component);
+}
+
+//-----------------------------------//
+
+void ScenePage::onComponentRemoved( const ComponentPtr& component )
+{
+	wxTreeItemId id = getTreeIdFromObject( component.get() );
+	treeCtrl->Delete(id);
 }
 
 //-----------------------------------//
@@ -421,6 +485,7 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 	for( size_t i = 0; i < anims.size(); i++ )
 	{
 		const AnimationPtr& animation = anims[i];
+		if( !animation ) continue;
 		
 		const String& name = animation->getName();
 		if( name.empty() ) continue;
@@ -428,18 +493,15 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 		int id = wxNewId();
 		item = menuAnimation->Append(id, name);
 
-		if( !itemFirst )
-			itemFirst = item;
+		if( !itemFirst ) itemFirst = item;
 	}
 
-	if( !itemFirst )
-		return menuAnimation;
+	if( !itemFirst ) return menuAnimation;
 	
 	firstAnimationId = itemFirst->GetId();
 
-	Bind( wxEVT_COMMAND_MENU_SELECTED,
-		&ScenePage::onAnimationMenuSelected, this,
-		itemFirst->GetId(), item->GetId() );
+	Bind( wxEVT_COMMAND_MENU_SELECTED, &ScenePage::onAnimationMenuSelected,
+		this, itemFirst->GetId(), item->GetId() );
 
 	return menuAnimation;
 }
@@ -458,16 +520,13 @@ wxMenu* ScenePage::createMenuAttachment(const MeshPtr& mesh)
 	{
 		const BonePtr& bone = bones[i];
 		item = menuAttachment->Append( wxNewId(), bone->name );
-
-		if( !itemFirst )
-			itemFirst = item;
+		if( !itemFirst ) itemFirst = item;
 	}
 
 	firstAttachmentId = itemFirst->GetId();
 
-	Bind( wxEVT_COMMAND_MENU_SELECTED,
-		&ScenePage::onAttachmentMenuSelected, this,
-		itemFirst->GetId(), item->GetId() );
+	Bind( wxEVT_COMMAND_MENU_SELECTED, &ScenePage::onAttachmentMenuSelected,
+		this, itemFirst->GetId(), item->GetId() );
 
 	return menuAttachment;
 }
@@ -476,22 +535,21 @@ wxMenu* ScenePage::createMenuAttachment(const MeshPtr& mesh)
 
 void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component)
 {
-	if( !component )
-		return;
-
+	if( !component ) return;
 	Class* klass = component->getType();
+	
 	menu.SetTitle( klass->name );
+	wxMenuItem* remove = menu.Append(ID_MenuSceneComponentRemove, "Remove");
+	if( component->is<Transform>() ) remove->Enable(false);
 
-	if(ReflectionIsEqual(klass, ReflectionGetType(Model)))
+	if( ReflectionIsEqual(klass, ReflectionGetType(Model)) )
 	{
 		model = RefCast<Model>(component);
 		meshHandle = model->getMesh();
 
 		mesh = meshHandle.Resolve();
 
-		if( !mesh ) return;
-
-		if( !mesh->isAnimated() )
+		if( !mesh || !mesh->isAnimated() )
 			return;
 
 		wxMenu* menuAnimation = createMenuAnimation(mesh);
@@ -500,10 +558,31 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 		wxMenu* menuAttachment = createMenuAttachment(mesh);
 		menu.AppendSubMenu(menuAttachment, "Attachment");
 	}
-	else if(ReflectionIsEqual(klass, ReflectionGetType(Transform)))
+}
+
+//-----------------------------------//
+
+void ScenePage::onComponentMenuSelected(wxCommandEvent& event)
+{
+	int id = event.GetId();
+
+	switch(id)
 	{
-		//wxMenuItem* item = new wxMenuItem("");
-	}
+	case ID_MenuSceneComponentRemove:
+	{
+		const ComponentPtr& component = weakComponent;
+		const EntityPtr& entity = component->getEntity();
+
+		EntityOperation* entityOperation;
+		entityOperation = createEntityOperation("Component removed");
+		entityOperation->type = EntityOperation::ComponentRemoved;
+		entityOperation->entity = entity;
+		entityOperation->component = component;
+		entityOperation->redo();
+
+		UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
+		undoManager->registerOperation(entityOperation);
+	} }
 }
 
 //-----------------------------------//
@@ -515,6 +594,8 @@ void ScenePage::onAnimationMenuSelected(wxCommandEvent& event)
 	
 	AnimationPtr animation = mesh->getAnimations()[ind];
 	model->setAnimation( animation );
+	
+	event.Skip();
 }
 
 //-----------------------------------//
@@ -540,6 +621,8 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	scene->add( entity );
 
 	model->setAttachment( bone->name, entity );
+
+	event.Skip();
 }
 
 //-----------------------------------//
@@ -547,21 +630,25 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 void ScenePage::onItemMenu(wxTreeEvent& event)
 {
 	menuItemId = event.GetItem();
+	treeCtrl->SelectItem(menuItemId);
 
-	const EntityPtr& node = getEntityFromTreeId( menuItemId );
+	const EntityPtr& entity = getEntityFromTreeId( menuItemId );
 	const ComponentPtr& component = getComponentFromTreeId( menuItemId );
 
 	wxMenu menu;
 	currentMenu = &menu;
 
-	if( node )
+	if( entity )
 	{
+		weakEntity = entity;
 		menu.SetTitle("Entity");
-		populateEntityItemMenu(menu, node);
+		populateEntityItemMenu(menu, entity);
 	}
 	else
 	{
+		weakComponent = component;
 		menu.SetTitle("Component");
+		menu.Bind(wxEVT_COMMAND_MENU_SELECTED, &ScenePage::onComponentMenuSelected, this);
 		populateComponentItemMenu(menu, component);
 	}
 
@@ -576,114 +663,70 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	int id = event.GetId();
 	if( id == wxID_NONE ) return;
 
-	ScenePtr scene = weakScene;
-	const EntityPtr& node = getEntityFromTreeId( menuItemId );
+	const ScenePtr& scene = weakScene;
+	const EntityPtr& node = weakEntity;
 
-	if( id == ID_MenuSceneEntityVisible )
+	switch(id)
+	{
+	case ID_MenuSceneEntityVisible:
 	{
 		if( !node ) return;
 		node->setVisible( !node->isVisible() );
+		break;
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneEntityDuplicate )
+	case ID_MenuSceneEntityDuplicate:
 	{
 		if( !node ) return;
-
 		#pragma TODO(Add object cloning)
-
-#if 0
-		Class& type = (Class&) node->getType();
-		EntityPtr newEntity( type.clone<Entity>(node.get()) );
-
-		const ComponentMap& components = node->getComponents();
-		
-		ComponentMap::const_iterator it;
-		for( it = components.begin(); it != components.end(); it++ )
-		{
-			ComponentPtr component = it->second;
-			Class& ctype = (Class&) component->getType();
-
-			ComponentPtr newComponent( ctype.clone<Component>(component.get()) );
-			newEntity->addComponent(newComponent);
-		}
-		
-		scene->add(newEntity);
-#endif
+		break;
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneEntityWireframe )
+	case ID_MenuSceneEntityWireframe:
 	{
 		if( !node ) return;
 
-		PolygonMode::Enum mode = event.IsChecked()
-			? PolygonMode::Wireframe : PolygonMode::Solid;
-
+		PolygonMode::Enum mode = event.IsChecked() ? PolygonMode::Wireframe : PolygonMode::Solid;
 		const std::vector<GeometryPtr>& geometries = node->getGeometry();
 
 		for( size_t i = 0; i < geometries.size(); i++ )
 		{
 			const GeometryPtr& geo = geometries[i];
-
 			const std::vector<RenderablePtr>& rends = geo->getRenderables();
 			
 			for( size_t j = 0; j < rends.size(); j++ )
 			{
-				const RenderablePtr& rend = rends[i];
-				rend->setPolygonMode( mode );
+				const RenderablePtr& renderable = rends[i];
+				renderable->setPolygonMode( mode );
 			}
 		}
+		break;
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneEntityDelete )
-	{
-		EntityOperation* entityOperation;
-		entityOperation = createEntityOperation(node, "Entity Delete");
-		entityOperation->undo();
-
-#if 0
-		String str = (String) treeCtrl->GetItemText(menuItemId);
-
-		TypeRegistry& typeRegistry = TypeRegistry::getInstance();
-		const Class* type = (Class*) typeRegistry.getType(str);
-		assert( type != nullptr );
-
-		if( !type->inherits<Component>() )
-			return;
-
-		const ComponentMap& components = node->getComponents();
-		ComponentMap::const_iterator it = components.find(type);
-
-		if( it == components.end() )
-			return;
-
-		ComponentPtr component = it->second;
-		node->removeComponent(component);
-#endif
-	}
-	//-----------------------------------//
-	else if( id == ID_MenuSceneEntityTerrain )
+	case ID_MenuSceneEntityTerrain:
 	{
 		String name("Terrain"+StringFromNumber(entityCounter++));
 		
-		TerrainPtr terrain( new Terrain(name) );
+		TerrainPtr terrain = AllocateThis(Terrain, name);
 		scene->add( terrain );
 
 		terrain->addCell(0, 0);
+		break;
 	}
-	//-----------------------------------//
-	else
+	default:
 	{
 		onComponentAdd( event );
-	}
+		break;
+	} }
 
-	GetEditor().redrawView();
+	event.Skip();
 }
 
 //-----------------------------------//
 
 void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
-	Entity* entity = getEntityFromTreeId( menuItemId ).get();
+	Entity* entity = weakEntity.get();
 	
 	int id = event.GetId();
 	if( id == wxID_NONE ) return;
@@ -723,13 +766,16 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	ServerPlugin* sp = GetPlugin<ServerPlugin>();
 	sp->host->getPeer()->queueMessage(m_create, 0);
 #else
-	if( !entity->addComponent(component) )
-	{
-		LogDebug("Could not add component to entity");
-		return;
-	}
-	
-	addComponent(menuItemId, component);
+
+	EntityOperation* entityOperation;
+	entityOperation = createEntityOperation("Component added");
+	entityOperation->type = EntityOperation::ComponentAdded;
+	entityOperation->entity = entity;
+	entityOperation->component = component;
+	entityOperation->redo();
+
+	UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
+	undoManager->registerOperation(entityOperation);
 #endif
 }
 
@@ -766,9 +812,7 @@ void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 	}
 
 	const EntityPtr& entity = getEntityFromTreeId( item );
-	assert( entity != nullptr );
-
-	entity->setName( std::string( label.c_str() ) );
+	entity->setName( String( label.c_str() ) );
 }
 
 //-----------------------------------//
@@ -793,6 +837,7 @@ void ScenePage::onDragEnd( wxTreeEvent& event )
 
 	// If the drop was not done in a valid tree location, 
 	// then we've got nothing to do here, move along...
+
 	if( !dragId.IsOk() )
 		return;
 

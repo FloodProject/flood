@@ -39,7 +39,7 @@ public:
 protected:
 
 	// Follow node name.
-	std::string followEntityName;
+	String followEntityName;
 
 	// Follow node.
 	EntityPtr followEntity;

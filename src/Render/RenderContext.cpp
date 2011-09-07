@@ -12,8 +12,10 @@
 #include "Render/BufferManager.h"
 #include "Render/TextureManager.h"
 #include "Render/ProgramManager.h"
+#include "Render/MeshManager.h"
 #include "Render/Adapter.h"
 #include "Render/GL.h"
+#include "Render/FBO.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -24,6 +26,7 @@ RenderContext::RenderContext()
 	, bufferManager(nullptr)
 	, textureManager(nullptr)
 	, programManager(nullptr)
+	, meshManager(nullptr)
 	, adapter(nullptr)
 	, initDone(false)
 {
@@ -33,9 +36,10 @@ RenderContext::RenderContext()
 
 RenderContext::~RenderContext()
 {
-	LogInfo("Destroying OpenGL rendering context");
+	LogInfo("Destroying rendering context");
 
 	Deallocate(adapter);
+	Deallocate(meshManager);
 	Deallocate(bufferManager);
 	Deallocate(textureManager);
 	Deallocate(programManager);
@@ -63,6 +67,7 @@ void RenderContext::init()
 	bufferManager  = Allocate(BufferManager, GetRenderAllocator());
 	textureManager = Allocate(TextureManager, GetRenderAllocator());
 	programManager = Allocate(ProgramManager, GetRenderAllocator());
+	meshManager = Allocate(MeshManager, GetRenderAllocator());
 
 	checkCapabilities(adapter);
 	showCapabilities(adapter);
@@ -196,6 +201,14 @@ Color RenderContext::getPixel(uint16 x, uint16 y) const
 void RenderContext::setClearColor(const Color& color)
 {
 	glClearColor( color.r, color.g, color.b, color.a );
+}
+
+//-----------------------------------//
+
+RenderBuffer* RenderContext::createRenderBuffer( const Settings& settings )
+{
+	RenderBuffer* buffer = AllocateThis(FrameBufferObject, settings);
+	return buffer;
 }
 
 //-----------------------------------//

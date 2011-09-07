@@ -19,6 +19,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Cell, Geometry)
+	FIELD_CLASS_PTR(5, Image, ImageHandle, image, Handle)
+	FIELD_CLASS_PTR(6, Material, MaterialHandle, material, Handle)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

@@ -8,6 +8,8 @@
 
 #include "Editor/API.h"
 #include "ResourceThumbnailer.h"
+#include "Render/GL.h"
+#include "Resources/ResourceIndexer.h"
 #include "Settings.h"
 #include "Core/Utilities.h"
 
@@ -16,105 +18,190 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 ResourceThumbnailer::ResourceThumbnailer()
+	: indexer(nullptr)
 {
 }
 
 //-----------------------------------//
 
-void ResourceThumbnailer::setupRender()
+void ResourceThumbnailer::setIndexer(ResourceIndexer* indexer)
+{
+	assert(indexer != nullptr);
+
+	this->indexer = indexer;
+	indexer->onResourceIndexed.Connect(this, &ResourceThumbnailer::onResourceIndexed);
+}
+
+//-----------------------------------//
+
+void ResourceThumbnailer::update()
+{
+}
+
+//-----------------------------------//
+
+void ResourceThumbnailer::onResourceIndexed(const ResourceMetadata& cres)
+{
+	ResourceMetadata& res = const_cast<ResourceMetadata&>(cres);
+
+	// For each resource indexed, we check if the thumbnail needs to be rebuilt.
+	// The thumbnails are named with the hash of the resource, so to check just
+	// search for a file with  the same name as the hash of the resource.
+	
+	if( !res.preview.empty() ) return;
+
+	String hashName = StringFromNumber(res.hash) + ".png";
+	Path hashPath = PathCombine(CacheFolder, hashName);
+
+	if( FileExists(hashPath) ) return;
+
+	res.preview = hashPath;
+
+	ResourceManager* rm = GetResourceManager();
+	rm->setAsynchronousLoading(false);
+
+	ResourceLoadOptions options;
+	options.name = PathGetFile(res.path);
+	options.asynchronousLoad = false;
+
+	ImagePtr thumbnail = nullptr;
+
+	switch(res.group)
+	{
+	case ResourceGroup::Meshes:
+	{
+		ResourceHandle resourceHandle = rm->loadResource(options);
+		MeshHandle mesh = HandleCast<Mesh>(resourceHandle);
+		thumbnail = generateMesh(mesh);
+		break;
+	}
+	default:
+		//LogDebug("No resource thumbnailer was found for '%s'", cres.path.c_str());
+		return;
+	}
+
+	if( !thumbnail ) return;
+
+	Stream* fileStream = StreamCreateFromFile(AllocatorGetHeap(), res.preview, StreamMode::Write);
+
+	ImageWriter writer;
+	writer.save( thumbnail.get(), fileStream );
+
+	StreamDestroy(fileStream);
+
+	LogInfo("Generated thumbnail for resource '%s'", res.path.c_str());
+}
+
+//-----------------------------------//
+
+bool ResourceThumbnailer::setupRender()
 {
 	RenderDevice* device = GetRenderDevice();
 
-	Settings settings(ThumbSize, ThumbSize);
-	renderBuffer = device->createRenderBuffer(settings);
-	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
-	colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
-	
-	if( !renderBuffer->check() )
-		return;
-	
-	camera.reset( new Camera() );
-	Frustum& frustum = camera->getFrustum();
-	frustum.nearPlane = 0.1f;
+	RenderContext* context = device->getActiveContext();
+	if( !context ) return false;
 
-	entityCamera.reset( new Entity() );
+	Settings settings(ThumbSize, ThumbSize);
+	renderBuffer = context->createRenderBuffer(settings);
+	if( !renderBuffer ) return false;
+
+	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
+	
+	//colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
+	//if( !colorTexture ) return false;
+
+	renderBuffer->createRenderBuffer(RenderBufferType::Color);
+
+	if( !renderBuffer->check() )
+		return false;
+	
+	camera.reset( AllocateThis(Camera) );
+	Frustum& frustum = camera->getFrustum();
+	frustum.nearPlane = 0.01f;
+	frustum.farPlane = 10000.0f;
+
+	entityCamera.reset( AllocateThis(Entity) );
 	entityCamera->addTransform();
 	entityCamera->addComponent( camera );
-	
-	scene.reset( new Scene() );
+
+#if 0
+	Quaternion quat;
+	quat.setToRotateAboutX( MathDegreeToRadian(180) );
+	entityCamera->getTransform()->setRotation(quat);
+#endif
+
+	scene.reset( AllocateThis(Scene) );
 	scene->add( entityCamera );
 
-	renderView = new RenderView(camera);
-	renderView->setClearColor(Color::White);
+	renderView = AllocateThis(RenderView, camera);
+	renderView->setClearColor(Color::Red);
 	renderView->setRenderTarget(renderBuffer);
+
+	return true;
 }
 
 //-----------------------------------//
-#if 0
 
-void ResourceDatabase::generateThumbnails(const std::vector<String>& files)
+ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 {
-	ResourceManager* res = GetResourceManager();
+	if( !meshHandle ) return nullptr;
+	Mesh* mesh = meshHandle.Resolve();
 
-	wxProgressDialog progressDialog( "Loading resources",
-		"Please wait while resources are loaded.", files.size(),
-		this, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT );
+	if( !scene && !setupRender() )
+		return nullptr;
+
+	EntityPtr entityResource = AllocateThis(Entity);
+	entityResource->addTransform();
+	entityResource->addComponent( AllocateThis(Model, meshHandle) );
+	scene->add( entityResource );
+
+	TransformPtr transResource = entityResource->getTransform();
+	const BoundingBox& box = mesh->getBoundingVolume();
+	const Vector3& center = box.getCenter();
+	transResource->setPosition( Vector3(-center.x, -center.y, 0) );
+
+	TransformPtr transCamera = entityCamera->getTransform();
+	const Frustum& frustum = camera->getFrustum();
 	
-	progressDialog.Show();
+	float angle = std::tan(MathDegreeToRadian(frustum.fieldOfView) / 2);
+	float distance = ((box.max.y - box.min.y) / 2) / angle;
+	float final = -distance - ((box.max.z - box.min.z) / 2);
+	
+	transCamera->setPosition( Vector3(0, 0, final) );
 
-	size_t progress = 0;
+	scene->update(0);
 
-	for( size_t i = 0; i < files.size(); i++ )
-	{
-		const String& path = files[i];
-		
-		// Force unused resources to be unloaded.
-		res->update(0);
+	ResourceManager* rm = GetResourceManager();
+	rm->loadQueuedResources();
+	rm->update();
 
-		progressDialog.Update(progress++, PathUtils::getFile(path));
+	scene->update(0);
 
-		if( progressDialog.WasCancelled() )
-			break;
+	renderBuffer->bind();
+	renderView->update(scene);
+	
+	Vector2i size = renderBuffer->getSettings().getSize();
 
-		File file(path);
-		
-		std::vector<byte> data;
-		file.read(data);
+	std::vector<byte> pixels;
+	pixels.resize( size.x*size.y*4 );
 
-		uint hash = Hash::Murmur2( data, 0xBEEF );
-		
-		if( resourcesCache.find(hash) != resourcesCache.end() )
-			continue;
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 
-		ResourceLoadOptions options;
-		options.name = path;
-		options.asynchronousLoading = false;
+	renderBuffer->unbind();
 
-		MeshPtr mesh = RefCast<Mesh>(res->loadResource(options));
+	ImagePtr image = AllocateThis(Image);
+	image->setWidth( size.x );
+	image->setHeight( size.y );
+	image->setPixelFormat( PixelFormat::R8G8B8A8 );
+	image->setBuffer( pixels );
 
-		if( !mesh || mesh->getResourceGroup() != ResourceGroup::Meshes )
-			continue;
+	//ImagePtr image = colorTexture->readImage();
 
-		const String& resPath = PathGetFile(mesh->getPath());
+	scene->remove( entityResource );
 
-		ResourceMetadata metadata;
-		metadata.hash = hash;
-		metadata.thumbnail = resPath + ".png";
-		metadata.path = resPath;
-		resourcesCache[hash] = metadata;
-
-		ImagePtr thumb = generateThumbnail(mesh);
-
-		if( !thumb )
-			continue;
-
-		ImageWriter writer;
-		writer.save( thumb, CacheFolder + metadata.thumbnail );
-
-		LogInfo("Generated thumbnail for resource '%s'", resPath.c_str());
-	}
+	return image;
 }
-#endif
 
 //-----------------------------------//
 

@@ -41,7 +41,7 @@ public:
 	GETTER(State, State*, state)
 
 	// Updates all the registered scripts.
-	void update( float deltaTime );
+	void update();
 
 protected:
 

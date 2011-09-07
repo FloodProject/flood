@@ -19,10 +19,15 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(TerrainOperation)
+
 class TerrainOperation : public UndoOperation
 {
+	REFLECT_DECLARE_OBJECT(TerrainOperation)
+
 public:
 
+	TerrainOperation() {}
 	TerrainOperation( TerrainTool::Enum, const RayTriangleQueryResult& );
 	
 	void undo();

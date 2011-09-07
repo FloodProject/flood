@@ -32,7 +32,7 @@
 #define		ENABLE_SHADER_GLSL
 
 #define		ENABLE_AUDIO_OPENAL
-//#define		VAPOR_PHYSICS_BULLET
+#define		ENABLE_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//
 // API Exports

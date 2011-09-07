@@ -38,7 +38,7 @@ wxSliderCtrl::wxSliderCtrl( wxWindow* parent, wxWindowID id,
 	wxString num = wxString::Format( "%d", initial );
 	m_textCtrl = new wxTextCtrl( this, wxID_ANY, num, 
 		wxDefaultPosition, wxSize( 30,-1 ), wxTE_PROCESS_ENTER );
-	bSizer81->Add( m_textCtrl, 0, wxEXPAND, 5 );
+	bSizer81->Add( m_textCtrl, 0, 0, 5 );
 	
 	SetSizerAndFit( bSizer81 );
 }

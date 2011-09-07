@@ -13,27 +13,39 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(Quad, Geometry)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
 Quad::Quad( float width, float height )
 {
-	setPrimitiveType(PolygonType::Quads);
+	RenderablePtr rend = RenderableCreate( AllocatorGetThis() );
+	rend->setPrimitiveType(PolygonType::TriangleStrip);
+	
+	const VertexBufferPtr& vb =  createQuad(width, height);
+	rend->setVertexBuffer(vb);
 
-	const VertexBufferPtr& vb =  getQuadBuffer(width, height);
-	setVertexBuffer(vb);
+	MaterialHandle mat = MaterialCreate(AllocatorGetThis(), "Quad");
+	mat.Resolve()->setBackfaceCulling(false);
+	rend->setMaterial(mat);
+
+	addRenderable(rend);
 }
 
 //-----------------------------------//
 
-VertexBufferPtr Quad::getQuadBuffer( float width, float height )
+VertexBufferPtr Quad::createQuad( float width, float height )
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( Allocate(VertexBuffer, AllocatorGetHeap()) );
 
 	// Vertex position data
 	std::vector< Vector3 > vertex;
-	vertex.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
-	vertex.push_back( Vector3( 0.0f, height, 0.0f ) );
-	vertex.push_back( Vector3( width, height, 0.0f ) );
-	vertex.push_back( Vector3( width, 0.0f, 0.0f ) );
+	vertex.push_back( Vector2(0.0f, 0.0f) );
+	vertex.push_back( Vector2(width, 0.0f) );
+	vertex.push_back( Vector2(0.0f, height) );
+	vertex.push_back( Vector2(width, height) );
 
 	// Vertex color data
 	std::vector< Vector3 > colors;
@@ -44,10 +56,10 @@ VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 
 	// Vertex tex coords data
 	std::vector< Vector3 > coords;
-	coords.push_back( Vector2(0.0f, 0.0f) );
 	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
 	coords.push_back( Vector2(1.0f, 0.0f) );
+	coords.push_back( Vector2(1.0f, 1.0f) );
+	coords.push_back( Vector2(0.0f, 1.0f) );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, vertex );

@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Core/Event.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/Body.h"
 #include "Physics/Shape.h"
@@ -19,7 +19,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
-#include "Engine.h"
+#include "Engine/Engine.h"
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include "MotionState.h"
@@ -29,9 +29,9 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Body, Component)
-	FIELD_PRIMITIVE(float, mass)
-	FIELD_PRIMITIVE(float, friction)
-	FIELD_PRIMITIVE(float, restitution)
+	FIELD_PRIMITIVE(1, float, mass)
+	FIELD_PRIMITIVE(2, float, friction)
+	FIELD_PRIMITIVE(3, float, restitution)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -42,27 +42,29 @@ Body::Body()
 	, mass(50)
 	, friction(0.5f)
 	, restitution(0.3f)
-{ }
+{
+}
 
 //-----------------------------------//
 
 Body::~Body()
 {
-	TransformPtr transform = motionState->transform;
-	transform->onTransform.Disconnect( this, &Body::onTransform );
+	TransformPtr transform = getEntity()->getTransform();
+	
+	if(transform)
+		transform->onTransform.Disconnect( this, &Body::onTransform );
 
 	removeWorld();
 
-	delete motionState;
-	delete body;
+	Deallocate(motionState);
+	Deallocate(body);
 }
 
 //-----------------------------------//
 
 void Body::update( float delta )
 {
-	if( body )
-		return;
+	if( body ) return;
 	
 	createBody();
 	
@@ -74,8 +76,7 @@ void Body::update( float delta )
 
 void Body::onTransform()
 {
-	if( !body )
-		return;
+	if( !body ) return;
 
 	if( motionState->ignoreTransform )
 	{
@@ -98,9 +99,7 @@ void Body::onTransform()
 btCollisionShape* Body::getBulletShape() const
 {
 	ShapePtr shape = entity->getComponentFromFamily<Shape>();
-
-	if( !shape )
-		return nullptr;
+	if( !shape ) return nullptr;
 
 	return shape->getBulletShape();
 }
@@ -109,13 +108,10 @@ btCollisionShape* Body::getBulletShape() const
 
 bool Body::createBody()
 {
-	if( body )
-		return true;
+	if( body ) return true;
 
 	btCollisionShape* bulletShape = getBulletShape();
-
-	if( !bulletShape )
-		return false;
+	if( !bulletShape ) return false;
 
 	motionState = new BodyMotionState( entity->getTransform() );
 
@@ -128,7 +124,7 @@ bool Body::createBody()
 	btRigidBody::btRigidBodyConstructionInfo info(
 		mass, motionState, bulletShape, localInertia);
 
-	body = new btRigidBody(info);
+	body = AllocateThis(btRigidBody, info);
 
 	updateProperties();
 
@@ -142,10 +138,9 @@ bool Body::createBody()
 void Body::addWorld()
 {
 	Engine* engine = GetEngine();
-	PhysicsManager* physics = engine->getPhysicsManager();
 	
-	if( !physics )
-		return;
+	PhysicsManager* physics = engine->getPhysicsManager();
+	if( !physics ) return;
 	
 	physics->addRigidBody(this);
 }
@@ -155,10 +150,9 @@ void Body::addWorld()
 void Body::removeWorld()
 {
 	Engine* engine = GetEngine();
+
 	PhysicsManager* physics = engine->getPhysicsManager();
-	
-	if( !physics )
-		return;
+	if( !physics ) return;
 	
 	physics->removeRigidBody(this);
 }
@@ -167,13 +161,10 @@ void Body::removeWorld()
 
 void Body::updateProperties()
 {
-	if( !body )
-		return;
+	if( !body ) return;
 
 	btCollisionShape* bulletShape = getBulletShape();
-
-	if( !bulletShape )
-		return;
+	if( !bulletShape ) return;
 
 	btVector3 localInertia;
 	localInertia.setZero();

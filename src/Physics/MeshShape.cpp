@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/MeshShape.h"
 #include "Physics/Convert.h"
@@ -44,46 +44,48 @@ MeshShape::~MeshShape()
 
 //-----------------------------------//
 
-//btTriangleIndexVertexArray* MeshShape::convertMesh()
-//{
-//	btTriangleIndexVertexArray* vertexArray;
-//	vertexArray = new btTriangleIndexVertexArray();
-//
-//	const EntityPtr& node = getEntity();
-//	
-//	foreach( const GeometryPtr& geometry, node->getGeometry() )
-//	{
-//		const RenderableVector& rends = geometry->getRenderables();
-//
-//		foreach( const RenderablePtr& rend, rends )
-//		{
-//			if( rend->getPrimitiveType() != PolygonType::Triangles )
-//				continue;
-//
-//			VertexBufferPtr vb = rend->getVertexBuffer();
-//			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
-//			
-//			IndexBufferPtr ib = rend->getIndexBuffer();
-//			const std::vector<ushort>& indices = ib->getIndices16();
-//
-// 		//	btIndexedMesh* indexMesh = ;
-//
-//			//foreach( const Vector3& vec, pos )
-//			//{
-//			//	//indexMesh.m_numTriangles
-//			//}
-//
-//			//vertexArray->addIndexedMesh(indexMesh);
-//		}
-//	}
-//
-//	return vertexArray;
-//}
+#if 0
+btTriangleIndexVertexArray* MeshShape::convertMesh()
+{
+	btTriangleIndexVertexArray* vertexArray;
+	vertexArray = new btTriangleIndexVertexArray();
+
+	const EntityPtr& node = getEntity();
+	
+	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	{
+		const RenderableVector& rends = geometry->getRenderables();
+
+		foreach( const RenderablePtr& rend, rends )
+		{
+			if( rend->getPrimitiveType() != PolygonType::Triangles )
+				continue;
+
+			VertexBufferPtr vb = rend->getVertexBuffer();
+			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
+			
+			IndexBufferPtr ib = rend->getIndexBuffer();
+			const std::vector<ushort>& indices = ib->getIndices16();
+
+ 		//	btIndexedMesh* indexMesh = ;
+
+			//foreach( const Vector3& vec, pos )
+			//{
+			//	//indexMesh.m_numTriangles
+			//}
+
+			//vertexArray->addIndexedMesh(indexMesh);
+		}
+	}
+
+	return vertexArray;
+}
+#endif
 
 btTriangleMesh* MeshShape::convertMesh()
 {
 #if 0
-	btTriangleMesh* mesh = Allocate(btTriangleMesh, AllocatorGetHeap(), false);
+	btTriangleMesh* mesh = AllocateThis(btTriangleMesh, false);
 
 	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
 
@@ -139,10 +141,11 @@ btTriangleMesh* MeshShape::convertMesh()
 
 void MeshShape::update( float delta )
 {
+	return;
+
 	if( meshShape ) return;	
 
-	meshShape = Allocate(btBvhTriangleMeshShape, AllocatorGetHeap(), convertMesh(), true);
-	//meshShape->updateBound();
+	meshShape = AllocateThis(btBvhTriangleMeshShape, convertMesh(), true);
 	
 	const TransformPtr& transform = getEntity()->getTransform();
 	const Vector3& scale = transform->getScale();

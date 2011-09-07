@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Protocol/API.h"
-#include "Network/MessagePlugin.h"
+#include "Network/MessageHandler.h"
 #include "Protocol/Users.h"
 
 NAMESPACE_PROTOCOL_BEGIN
@@ -95,16 +95,13 @@ struct API_PROTOCOL UserMessageIds
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(UserMessagePlugin)
+REFLECT_DECLARE_CLASS(UserMessageHandler)
 
-class API_PROTOCOL UserMessagePlugin : public MessagePlugin
+class API_PROTOCOL UserMessageHandler : public MessageHandler
 {
-	REFLECT_DECLARE_OBJECT(UserMessagePlugin)
+	REFLECT_DECLARE_STATIC_CLASS(UserMessageHandler)
 
 public:
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
 
 	// Gets the messages that this plugin handles.
 	const MessagesTable& getMessagesTable() OVERRIDE;

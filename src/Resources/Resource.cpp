@@ -8,8 +8,9 @@
 
 #include "Resources/API.h"
 #include "Resources/Resource.h"
+#include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -42,7 +43,15 @@ REFLECT_CLASS_END()
 
 Resource::Resource()
 	: status( ResourceStatus::Loaded )
-{ }
+{
+}
+
+//-----------------------------------//
+
+Resource::~Resource()
+{
+	LogDebug("Destroying resource '%s'", getType()->name);
+}
 
 //-----------------------------------//
 
@@ -53,4 +62,4 @@ bool Resource::isLoaded() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

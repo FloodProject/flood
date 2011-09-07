@@ -66,7 +66,7 @@
       <AdditionalOptions>-Zm140 /MP</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;WXUSINGDLL;WXMONOLITHIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,9 +85,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;Pipeline.lib;bulletd.lib;ws2_32.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;Pipeline.lib;wxmsw29ud.lib;wxmsw29ud_gl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\wx\lib\vc_dll;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -189,7 +189,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Document.cpp" />
+    <ClCompile Include="..\..\src\Editor\DocumentManager.cpp" />
     <ClCompile Include="..\..\src\Editor\EditorPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\EventManager.cpp" />
     <ClCompile Include="..\..\src\Editor\gen\PreferencesGenerated.cpp" />
     <ClCompile Include="..\..\src\Editor\Menus.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp" />
@@ -244,7 +246,6 @@
     <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp" />
     <ClCompile Include="..\..\src\Editor\EditorInputManager.cpp" />
-    <ClCompile Include="..\..\src\Editor\Events.cpp" />
     <ClCompile Include="..\..\src\Editor\Settings.cpp" />
     <ClCompile Include="..\..\src\Editor\Editor.cpp" />
   </ItemGroup>
@@ -252,7 +253,9 @@
     <ClInclude Include="..\..\src\Editor\API.h" />
     <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h" />
     <ClInclude Include="..\..\src\Editor\inc\Document.h" />
+    <ClInclude Include="..\..\src\Editor\inc\DocumentManager.h" />
     <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EventManager.h" />
     <ClInclude Include="..\..\src\Editor\inc\Preferences.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
@@ -303,7 +306,6 @@
     <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h" />
     <ClInclude Include="..\..\src\Editor\inc\wxSliderCtrl.h" />
     <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Events.h" />
     <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h" />
     <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h" />
     <ClInclude Include="..\..\src\Editor\inc\Settings.h" />

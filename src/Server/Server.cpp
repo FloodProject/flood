@@ -10,6 +10,7 @@
 #include "Server/Server.h"
 #include "Server/Settings.h"
 #include "Server/ServerPlugin.h"
+#include "Server/Plugins/UserPlugin.h"
 
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
@@ -21,9 +22,7 @@
 #include "Network/Peer.h"
 #include "Network/Dispatcher.h"
 #include "Network/SessionManager.h"
-
 #include "Protocol/UserMessages.h"
-
 #include "Engine/Engine.h"
 
 #include <iostream>
@@ -70,13 +69,14 @@ Server::Server()
 bool Server::init()
 {
 	Allocator* alloc = AllocatorGetServer();
-
 	taskPool = TaskPoolCreate(alloc, Settings::NumTasksProcess);
+	plugins = AllocateThis(PluginManager);
 
-	engine = Allocate(Engine, alloc);
+	engine = AllocateThis(Engine);
 	NetworkInitialize();
 	
-	host = Allocate(HostServer, alloc);
+	// Initialize host.
+	host = AllocateThis(HostServer);
 	
 	HostConnectionDetails details;
 	details.port = Settings::HostPort;
@@ -90,20 +90,19 @@ bool Server::init()
 	
 	host->onClientConnected.Connect(this, &Server::handleClientConnect);
 	host->onClientDisconnected.Connect(this, &Server::handleClientDisconnect);
+	
+	// Find and instantiate plugins.
+	std::vector<Plugin*> found;
+	ClassCreateChilds(ReflectionGetType(ServerPlugin), AllocatorGetThis(), found);
+	Plugin::sortByPriority(found);
+	plugins->registerPlugins(found);
 
-	dispatcher = Allocate(Dispatcher, alloc);
+	dispatcher = AllocateThis(Dispatcher);
 	dispatcher->initServer(host);
-	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
 
 #ifdef NETWORK_THREAD
 	networkThread = ThreadCreate(AllocatorGetServer());
 #endif
-
-	std::vector<Plugin*> found;
-	plugins = Allocate(PluginManager, alloc);
-	plugins->scanPlugins(ReflectionGetType(ServerPlugin), found);
-	plugins->sortPlugins(found);
-	plugins->registerPlugins(found);
 
 	return true;
 }
@@ -154,12 +153,8 @@ void Server::run()
 
 	while(true)
 	{
-		SystemSleep(0);
+		update();
 
-		host->processEvents(10);
-		
-		while( dispatcher->processMessage() )
-			continue;
 
 #if 0
 		String input;
@@ -169,6 +164,27 @@ void Server::run()
 			break;
 #endif
 	}
+}
+
+//-----------------------------------//
+
+void Server::update()
+{
+	// Update and process networking messages.
+	host->processEvents(1);
+		
+	while( dispatcher->processMessage() )
+		continue;
+
+	// Update plugins.
+	const std::vector<Plugin*>& plugs = plugins->getPlugins();
+	for(size_t i = 0; i < plugs.size(); i++)
+	{
+		ServerPlugin* plugin = (ServerPlugin*) plugs[i];
+		plugin->update();
+	}
+
+	SystemSleep(0);
 }
 
 //-----------------------------------//
@@ -190,7 +206,7 @@ void Server::handleClientDisconnect(const PeerPtr& peer)
 
 	const SessionPtr& session = dispatcher->getSessionManager()->getSession(peer);
 
-	UserMessagePlugin* up = GetMessagePlugin<UserMessagePlugin>();
+	UserPlugin* up = GetPlugin<UserPlugin>();
 	User* user = up->users.getUserFromSession(session);
 	
 	if( !user )

@@ -76,15 +76,15 @@ FWD_DECL_INTRUSIVE(Session)
 #define PROTOCOL_MESSAGE_HANDLERS_END() };
 
 #define IMPLEMENT_HANDLER_REF(name, msg) \
-	static void Handle##msg(MessagePlugin* mp, \
+	static void Handle##msg(MessageHandler* mp, \
 	const SessionPtr& session, Object* object) { \
-	name##MessagePlugin* smp = (name##MessagePlugin*) mp; \
+	name##MessageHandler* smp = (name##MessageHandler*) mp; \
 	msg##Message* message = (msg##Message*) object; \
 	smp->handle##msg(session, *message); }
 
 #define HANDLER_RAW(name, msg, dir) \
 	{ name##MessageIds::msg, MessageDirection::dir, 0, \
-	(MessageRawHandlerMemFn) &name##MessagePlugin::handle##msg },
+	(MessageRawHandlerMemFn) &name##MessageHandler::handle##msg },
 
 #define HANDLER_REF(name, msg, dir) \
 	{ name##MessageIds::msg, MessageDirection::dir, Handle##msg, 0 },

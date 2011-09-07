@@ -39,28 +39,21 @@ class ProjectPlugin : public EditorPlugin
 
 public:
 
-	ProjectPlugin();
-
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
-	// Plugin enable callback.
-	virtual void onPluginEnable();
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
-	// Plugin disable callback.
-	virtual void onPluginDisable();
-
-	// Handles new button click.
+	// Button callbacks.
 	void onNewButtonClick(wxCommandEvent& event);
-
-	// Handles open button click.
 	void onOpenButtonClick(wxCommandEvent& event);
-
-	// Handles save button click.
 	void onSaveButtonClick(wxCommandEvent& event);
-
-	// Updates the save button UI state.
 	void onSaveButtonUpdateUI(wxUpdateUIEvent& event);
+
+	// Creates a new document.
+	Document* createDocument();
 
 	// New toolbar button.
 	wxAuiToolBarItem* newButton;
@@ -76,14 +69,8 @@ public:
 
 protected:
 
-	// Switches the scene.
-	void switchScene(SceneDocument* document);
-
 	// Asks to save unsaved changes.
-	bool askSaveChanges();
-
-	// Saves the current scene.
-	bool saveScene();
+	bool askSaveChanges(Document* document);
 };
 
 //-----------------------------------//

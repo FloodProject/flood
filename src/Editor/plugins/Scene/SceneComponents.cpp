@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "ScenePane.h"
 #include "Core/Utilities.h"
-#include "Events.h"
+#include "EventManager.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Viewframe.h"
@@ -38,16 +38,15 @@ static ComponentEntry components[] =
 	{ nullptr, TYPE(Transform),			BMP(chart_line) },
 	{ nullptr, TYPE(Camera),			BMP(camera) },
 	{ nullptr, TYPE(Light),				BMP(lightbulb_off) },
-	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
 	{ nullptr, TYPE(Particles),			BMP(chart_pie) },
 	{ "Primitives", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Cube),				BMP(cube) },
+	{ nullptr, TYPE(Quad),				BMP(cube) },
 	{ "Nature", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Skydome),			BMP(weather_clouds) },
-	//{ nullptr, TYPE(Water),				BMP(weather_clouds) },
+	{ nullptr, TYPE(Water),				BMP(weather_clouds) },
 	{ "GUI", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Label),				BMP(text_align_left) },
-	//{ "Particles", nullptr, nullptr, 0 },
 #ifdef ENABLE_AUDIO_OPENAL	
 	{ "Audio", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Source),			BMP(sound) },
@@ -60,7 +59,7 @@ static ComponentEntry components[] =
 	{ "Scripting", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
 #endif
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 	{ "Physics", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(CharacterController),	BMP(link) },
 	{ nullptr, TYPE(BoxShape),				BMP(link) },
@@ -69,8 +68,9 @@ static ComponentEntry components[] =
 	{ nullptr, TYPE(Body),					BMP(link) },
 #endif
 	{ "Extra", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Grid),				BMP(grid_icon_white_bg) },
 	{ nullptr, TYPE(Projector),			BMP(lightbulb_off) },
+	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Grid),				BMP(grid_icon_white_bg) },
 };
 
 //-----------------------------------//

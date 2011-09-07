@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 // Handles OpenGL error states.
-bool CheckLastErrorGL( const String& msg );
+bool CheckLastErrorGL( const char* msg );
 
 // Gets a string given an OpenGL error code.
 // Adapted from the Mesa GLU implementation.

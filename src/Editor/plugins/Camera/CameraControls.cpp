@@ -104,7 +104,7 @@ void CameraControls::getCamerasInScene(const ScenePtr& scene)
 		
 		if(!camera) continue;
 		
-		const std::string& name = entity->getName();
+		const String& name = entity->getName();
 		cameras[name] = camera;
 	}
 }
@@ -139,7 +139,7 @@ void CameraControls::updateCameraSelection()
 	}
 
 	const CameraPtr& currentCamera = viewframe->getView()->getCamera();
-	const std::string& name = currentCamera->getEntity()->getName();
+	const String& name = currentCamera->getEntity()->getName();
 	choiceView->SetStringSelection(name);
 }
 
@@ -192,7 +192,7 @@ void CameraControls::onCameraTransform()
 	TransformPtr transCamera = getCameraTransform();
 	Vector3 position = transCamera->getPosition();
 	
-	std::string str;
+	String str;
 	
 	str = String::fromFloat( position.x );
 	textX->ChangeValue( str );
@@ -208,7 +208,7 @@ void CameraControls::onCameraTransform()
 
 void CameraControls::updateCameraPosition()
 {
-	std::string str( textX->GetValue() );
+	String str( textX->GetValue() );
 	float X = String::toNumber<float>( str );
 	
 	str.assign( textY->GetValue() );

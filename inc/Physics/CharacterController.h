@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "controllers/Controller.h"
+#include "Controllers/Controller.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 class btKinematicController;
 class btPairCachingGhostObject;

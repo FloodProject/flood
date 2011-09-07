@@ -36,12 +36,14 @@ public:
 	void onPluginDisable() OVERRIDE;
 	void onEntitySelect( const EntityPtr& ) OVERRIDE;
 	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
-	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
-	void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
-	//void onDocumentCreate(Document& document) OVERRIDE;
-
+	void onSceneLoad( const ScenePtr& ) OVERRIDE;
+	void onSceneUnload( const ScenePtr& ) OVERRIDE;
 	void onServerConnect(const SessionPtr&) OVERRIDE;
+	
+	// Widget handlers.
+	void onPlayCommand(wxCommandEvent&);
 	void onSceneClassFieldUpdate(const FieldWatchVector&);
+
 	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
 	void onReplicaObjectCreate(ReplicaContext*, ReplicaInstanceId, Object*);
 	void onReplicaAdded(const ReplicatedObject&);

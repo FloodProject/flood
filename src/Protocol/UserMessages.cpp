@@ -71,20 +71,12 @@ PROTOCOL_MESSAGE_HANDLERS_END()
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(UserMessagePlugin, MessagePlugin)
+REFLECT_ABSTRACT_CHILD_CLASS(UserMessageHandler, MessageHandler)
 REFLECT_CLASS_END()
-
-PROTOCOL_PLUGIN_BEGIN(UserMessagePlugin)
-	METADATA_NAME(User)
-	METADATA_DESC(Provides user management functionality.)
-	METADATA_AUTHOR(triton)
-	METADATA_VERSION(1.0)
-	METADATA_PRIORITY(30)
-PROTOCOL_PLUGIN_END()
 
 //-----------------------------------//
 
-const MessagesTable& UserMessagePlugin::getMessagesTable()
+const MessagesTable& UserMessageHandler::getMessagesTable()
 {
 	static MessagesTable gs_UserMessages(gs_UserRawMessages, gs_UserRawMessages + ARRAY_SIZE(gs_UserRawMessages));
 	return gs_UserMessages;
@@ -92,7 +84,7 @@ const MessagesTable& UserMessagePlugin::getMessagesTable()
 
 //-----------------------------------//
 
-Enum* UserMessagePlugin::getMessagesEnum()
+Enum* UserMessageHandler::getMessagesEnum()
 {
 	return ReflectionGetType(UserMessageIds);
 }

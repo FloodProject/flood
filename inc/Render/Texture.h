@@ -10,23 +10,9 @@
 
 #include "Render/Target.h"
 #include "Resources/Image.h"
+#include "Resources/Material.h"
 
 NAMESPACE_ENGINE_BEGIN
-
-//-----------------------------------//
-
-/**
- * Texture filtering modes.
- */
-
-namespace TextureFiltering
-{
-	enum Enum
-	{
-		Nearest,
-		Linear
-	};
-}
 
 //-----------------------------------//
 
@@ -67,7 +53,7 @@ public:
 	// Unbinds the texture object.
 	void unbind( int unit = 0 ) const;
 
-protected:
+public:
 
 	// Initializes the texture.
 	void init();
@@ -85,12 +71,13 @@ protected:
 	bool upload();
 
 	// Gets the expected size of the image.
-	uint getExpectedSize() const;
+	uint32 getExpectedSize() const;
 
 	// Internal conversion methods.
-	int convertSourceFormat( PixelFormat::Enum ) const;
-	int convertInternalFormat( PixelFormat::Enum ) const;
-	int convertFilterFormat( TextureFiltering::Enum ) const;
+	static int convertSourceFormat( PixelFormat::Enum );
+	static int convertInternalFormat( PixelFormat::Enum );
+	static int convertFilterFormat( TextureFilterMode::Enum );
+	static int convertWrapFormat( TextureWrapMode::Enum );
 
 	uint32 id;
 	uint32 target;
@@ -100,10 +87,7 @@ protected:
 	uint32 height;
 	PixelFormat::Enum format;
 
-	TextureFiltering::Enum minFilter;
-	TextureFiltering::Enum maxFilter;
 	float anisotropicFilter;
-	
 	Image* image;
 };
 

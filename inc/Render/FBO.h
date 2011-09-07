@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
  * FBOs are framebuffers object, an implementation of render buffers.
  */
 
-class API_ENGINE FBO : public RenderBuffer
+class API_RENDER FBO : public RenderBuffer
 {
 public:
 
@@ -61,6 +61,8 @@ protected:
 	bool valid;
 	bool colorAttach;
 };
+
+typedef FBO FrameBufferObject;
 
 //-----------------------------------//
 

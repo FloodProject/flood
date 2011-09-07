@@ -50,6 +50,9 @@ public:
 	// Initialize the engine subsystems.
 	void init( bool createWindow = true );
 
+	// Updates the main subsystems.
+	void update();
+
 	// Adds a subsystem to be managed by the engine.
 	void addSubsystem( Subsystem* const subsystem );
 
@@ -88,9 +91,6 @@ public:
 
 	// Gets the input manager.
 	InputManager* getInputManager() const;
-
-	// Updates the main subsystems.
-	void update( float delta );
 
 	void stepFrame();
 

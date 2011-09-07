@@ -56,6 +56,12 @@ void Component::onPreRender( const Camera& camera )
 
 //-----------------------------------//
 
+void Component::onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum )
+{
+}
+
+//-----------------------------------//
+
 void Component::setDebugRenderableVisible( bool visible )
 {
 	debugVisible = visible;
@@ -66,23 +72,6 @@ void Component::setDebugRenderableVisible( bool visible )
 bool Component::isDebugRenderableVisible() const
 {
 	return debugVisible;
-}
-
-//-----------------------------------//
-
-RenderablePtr Component::getDebugRenderable() const
-{
-	if( !debugRenderable )
-		debugRenderable = createDebugRenderable();
-
-	return debugRenderable;
-}
-
-//-----------------------------------//
-
-RenderablePtr Component::createDebugRenderable() const
-{
-	return nullptr;
 }
 
 //-----------------------------------//

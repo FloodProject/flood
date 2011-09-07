@@ -8,18 +8,20 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 
 #include "Physics/CharacterController.h"
 #include "Physics/Shape.h"
 #include "Physics/Convert.h"
 #include "Physics/Physics.h"
+#include "Physics/Body.h"
 #include "Physics/btKinematicController.h"
 
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
-#include "Engine.h"
+#include "Engine/Engine.h"
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
 
@@ -32,12 +34,12 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(CharacterController, Controller)
-	FIELD_PRIMITIVE(float, stepHeight)
-	FIELD_PRIMITIVE(float, walkVelocity)
-	FIELD_PRIMITIVE(float, fallSpeed)
-	FIELD_PRIMITIVE(float, jumpSpeed)
-	FIELD_PRIMITIVE(float, maxJumpHeight)
-	FIELD_PRIMITIVE(float, maxSlope)
+	FIELD_PRIMITIVE(6, float, stepHeight)
+	FIELD_PRIMITIVE(7, float, walkVelocity)
+	FIELD_PRIMITIVE(8, float, fallSpeed)
+	FIELD_PRIMITIVE(9, float, jumpSpeed)
+	FIELD_PRIMITIVE(10, float, maxJumpHeight)
+	FIELD_PRIMITIVE(11, float, maxSlope)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

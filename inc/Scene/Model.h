@@ -50,6 +50,7 @@ public:
 
 	Model();
 	Model( const MeshHandle& mesh );
+	~Model();
 
 	// Gets the mesh associated with the model.
 	GETTER(Mesh, const MeshHandle&, mesh)
@@ -113,11 +114,13 @@ protected:
 	// Updates the final animation matrix.
 	void updateFinalAnimationBones();
 
+#if 0
 	// Updates the debug renderable of the skeleton.
-	void updateDebugRenderable() const;
+	void updateDebugRenderable() const OVERRIDE;
 
 	// Creates a debug renderable of the skeleton.
-	virtual RenderablePtr createDebugRenderable() const;
+	RenderablePtr createDebugRenderable() const OVERRIDE;
+#endif
 
 	// Pre-render callback.
 	void onRender(const RenderState& state);

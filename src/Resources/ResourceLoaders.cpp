@@ -17,9 +17,8 @@
 #include "Resources/GLSL_Loader.h"
 #include "Resources/LuaLoader.h"
 #include "Resources/FontLoader.h"
-#include "Pipeline/MilkshapeLoader.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -60,12 +59,8 @@ void ResourceManager::referenceLoaders()
 #ifdef ENABLE_FONT_BITMAP
 	REF(FontLoader)
 #endif
-
-#ifdef ENABLE_MESH_MILKSHAPE3D
-	REF(MilkshapeLoader)
-#endif
 }
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

@@ -16,7 +16,7 @@ NAMESPACE_EDITOR_BEGIN
 
 class EditorFrame;
 class UndoManager;
-class Events;
+class EventManager;
 class SelectionManager;
 
 //-----------------------------------//
@@ -30,7 +30,6 @@ namespace SelectionMode
 		Edge,
 		Face,
 		Entity,
-		Group
 	};
 }
 
@@ -42,37 +41,37 @@ struct SelectionData
 	EntityPtr entity;
 };
 
+REFLECT_DECLARE_CLASS(SelectionOperation)
+
 class SelectionOperation : public UndoOperation
 {
+	REFLECT_DECLARE_OBJECT(SelectionOperation)
 	friend class SelectionManager;
 
 public:
 
 	~SelectionOperation();
 
-	// Undoes the operation.
-	virtual void undo();	
+	// Undoes/redoes the operation.
+	void undo() OVERRIDE;	
+	void redo() OVERRIDE;
 
-	// Redoes the operation.
-	virtual void redo();
+	// Selects/unselects all the objects.
+	void selectAll();
+	void unselectAll();
+
+	// Selects/unselects all the previous selected objects.
+	void selectPrevious();
+	void unselectPrevious();
 
 	// Adds an entity to the selection.
 	void addEntity(const EntityPtr& entity);
 
+	// Sets the previous selections.
+	void setPreviousSelections(SelectionOperation*);
+
 	// Checks if an entity is in the selection.
 	bool isSelection(const EntityPtr& entity);
-
-	// Selects all the objects.
-	void selectAll();
-
-	// Unselects all the objects.
-	void unselectAll();
-
-	// Selects all the previous selected objects.
-	void selectPrevious();
-
-	// Unselects all the previous selected objects.
-	void unselectPrevious();
 
 	// Selection mode.
 	SelectionMode::Enum mode;
@@ -88,6 +87,8 @@ protected:
 
 	SelectionManager* selectionManager;
 };
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(SelectionOperation)
 
 /**
  * Manages and keeps track of selections, which can be of different modes.
@@ -115,7 +116,7 @@ public:
 	void setSelection(SelectionOperation* selection);
 
 	// Creates a new selection operation.
-	SelectionOperation* createOperation();
+	SelectionOperation* createOperation( SelectionMode::Enum );
 
 protected:
 
@@ -123,7 +124,7 @@ protected:
 	SelectionMode::Enum mode;
 
 	// Selection operation.
-	SelectionOperation* selection;
+	SelectionOperationPtr selection;
 };
 
 //-----------------------------------//

@@ -56,9 +56,9 @@
       <DisableSpecificWarnings>4800; 4244;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Protocol.lib;Engine.lib;Resources.lib;libcurld.lib;ws2_32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Protocol.lib;Engine.lib;Resources.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\curl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TargetMachine>MachineX86</TargetMachine>
       <SubSystem>Console</SubSystem>
@@ -84,18 +84,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Server\Main.cpp" />
-    <ClCompile Include="..\..\src\Server\Plugins\ChatMessagesServer.cpp" />
-    <ClCompile Include="..\..\src\Server\Plugins\ReplicaMessagesServer.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\ChatPlugin.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\ReplicaPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\ResourcesPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\ScenePlugin.cpp" />
-    <ClCompile Include="..\..\src\Server\Plugins\UserMessagesServer.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\UserPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Server.cpp" />
     <ClCompile Include="..\..\src\Server\ServerPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\ChatPlugin.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\ReplicaPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Plugins\ResourcesPlugin.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\ScenePlugin.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\UserPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Server.h" />
     <ClInclude Include="..\..\inc\Server\ServerPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Settings.h" />

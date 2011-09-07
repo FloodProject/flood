@@ -21,8 +21,7 @@ class ResourceManager;
 struct ResourceEvent;
 
 /**
- * Manages a set of programs. The rest of the engine, when needing a 
- * program will request the program for a given shader.
+ * Manages a set of buffers.
  */
 
 class API_RENDER BufferManager
