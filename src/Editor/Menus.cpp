@@ -27,11 +27,11 @@ void EditorFrame::createMenus()
 
 	//-----------------------------------//
 
-    menuTools = new wxMenu;
+	menuTools = new wxMenu;
 
 	//-----------------------------------//
 
-    menuHelp = new wxMenu;
+	menuHelp = new wxMenu;
 	wxMenuItem* aboutItem = menuHelp->Append(wxID_ABOUT, "&About...\tF1");
 	wxMenuItem* aboutWxItem = menuHelp->Append(wxID_ANY, "&About wxWidgets...");
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, aboutItem->GetId());
@@ -56,16 +56,16 @@ void EditorFrame::createMenus()
 
 	//-----------------------------------//
 
-    wxMenuBar* menuBar = new wxMenuBar();
+	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, "&File");
 	menuBar->Append(menuEdit, "&Edit");
 	menuBar->Append(menuSettings, "&Settings");
 	menuBar->Append(menuTools, "&Tools");
 	menuBar->Append(menuPanels, "&Panels");
 	menuBar->Append(menuServer, "&Server");
-    menuBar->Append(menuHelp, "&Help");
+	menuBar->Append(menuHelp, "&Help");
 
-    SetMenuBar(menuBar);
+	SetMenuBar(menuBar);
 }
 
 //-----------------------------------//
@@ -166,8 +166,8 @@ void EditorFrame::OnSettingsRenderUpdate(wxUpdateUIEvent& event)
 
 void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-    // Forces the frame to close.
-    Close(true);
+	// Forces the frame to close.
+	Close(true);
 }
 
 //-----------------------------------//

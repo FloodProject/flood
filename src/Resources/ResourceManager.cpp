@@ -32,8 +32,12 @@ ResourceManager* GetResourceManager() { return gs_ResourcesManager; }
 static Allocator* gs_ResourcesAllocator = nullptr;
 Allocator* GetResourcesAllocator() { return gs_ResourcesAllocator; }
 
+extern void ReferenceLoaders();
+
 void ResourcesInitialize()
 {
+	ReferenceLoaders();
+
 	gs_ResourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
 	AllocatorSetGroup(gs_ResourcesAllocator, "Resources");
 }
@@ -64,7 +68,7 @@ ResourceHandle ResourceHandleCreate(Resource* p)
 void ResourceHandleDestroy(HandleId id)
 {
 	Resource* resource = (Resource*) ResourceHandleFind(id);
-	gs_ResourcesManager->removeResource(resource);
+	//gs_ResourcesManager->removeResource(resource);
 	HandleDestroy(gs_ResourceHandleManager, id);
 	Deallocate(resource);
 }
@@ -126,17 +130,32 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::destroyHandles()
 {
+#if 0
+	std::vector<ResourceHandle> handlesToRemove;
+
 	ResourceMap::iterator it = resources.begin();
 	for( ; it != resources.end(); ++it )
 	{
 		ResourceHandle& handle = it->second;
-		
+		handlesToRemove.push_back(handle);
+	}
+
+	for(size_t i = 0; i < handlesToRemove.size(); i++)
+	{
+		ResourceHandle& handle = handlesToRemove[i];
+
 		Resource* res = handle.Resolve();
 		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
 
 		handle.reset();
 	}
 
+	handlesToRemove.clear();
+	assert( resources.empty() );
+#endif
+
+	resources.clear();
+	
 	HandleDestroyManager(handleManager);
 	handleManager = nullptr;
 }
@@ -361,7 +380,8 @@ void ResourceManager::sendPendingEvents()
 
 	while( resourceTaskEvents.try_pop(event) )
 	{
-		onResourceLoaded( event );	
+		onResourceLoaded( event );
+
 	}
 }
 
@@ -410,8 +430,8 @@ void ResourceManager::removeResource(const String& path)
 		return;
 	
 	// Send callback notifications.
-	//ResourceEvent event(it->second);
-	//onResourceRemoved( event );
+	ResourceEvent event(it->second);
+	onResourceRemoved( event );
 
 	LogInfo("Unloaded resource: %s", path.c_str());
 	resources.erase(it);
@@ -459,7 +479,7 @@ ResourceLoader* ResourceManager::findLoader(const String& ext)
 
 ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 {
-	for( auto it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
+	for(auto it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
 		ResourceLoader* loader = it->second;
 		Class* resourceClass = loader->getResourceClass();
@@ -473,20 +493,20 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 
 //-----------------------------------//
 
-void ResourceManager::setupResourceLoaders()
+void ResourceManager::setupResourceLoaders(Class* klass)
 {
-	Class* klass = ResourceLoaderGetType();
-	
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
 		Class* child = klass->childs[i];
+
+		if( !child->childs.empty() )
+			setupResourceLoaders(child);
 	
+		if( ClassIsAbstract(child ) ) continue;
+
 		ResourceLoader* loader = (ResourceLoader*) ClassCreateInstance(child, GetResourcesAllocator());
 		registerLoader( loader );
 	}
-
-	// Dummy call so linker doesn't strip the loaders.
-	referenceLoaders();
 }
 
 //-----------------------------------//

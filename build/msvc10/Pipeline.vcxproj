@@ -19,11 +19,11 @@
     <ClInclude Include="..\..\inc\Pipeline\ImporterFBX.h" />
     <ClInclude Include="..\..\inc\Pipeline\ImporterMilkshape.h" />
     <ClInclude Include="..\..\inc\Pipeline\ResourceImporter.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ResourceProcessor.h" />
     <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h" />
     <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h" />
     <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h" />
     <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h" />
-    <ClInclude Include="..\..\src\Pipeline\ResourceProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Pipeline\ImageProcessor.cpp" />
@@ -85,7 +85,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\;$(SolutionDir)..\..\dep\nvtt\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\;$(SolutionDir)..\..\dep\nvtt\include;$(SolutionDir)..\..\dep\FbxSdk\2012.1\include</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <DisableSpecificWarnings>4190;4530</DisableSpecificWarnings>
     </ClCompile>
@@ -100,6 +100,8 @@
     </Link>
     <Lib>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>fbxsdk-2012.1d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\FbxSdk\2012.1\lib\vs2010\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">

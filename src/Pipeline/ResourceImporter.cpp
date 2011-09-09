@@ -12,9 +12,6 @@
 #include "Pipeline/ResourceImporter.h"
 #include "Core/Log.h"
 
-#include "Pipeline/ImporterMilkshape.h"
-#include "Pipeline/ImporterFBX.h"
-
 NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
@@ -24,24 +21,14 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-static void ReferenceImporters();
-
 ResourceImporter::ResourceImporter()
 {
-	ReferenceImporters();
 }
 
 //-----------------------------------//
 
 ResourceImporter::~ResourceImporter()
 {
-}
-
-//-----------------------------------//
-
-static void ReferenceImporters()
-{
-	ImporterMilkshapeGetType();
 }
 
 //-----------------------------------//

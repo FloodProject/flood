@@ -10,10 +10,6 @@
 
 #include "Pipeline/API.h"
 #include "Pipeline/ResourceProcessor.h"
-
-#include "Pipeline/ImageProcessor.h"
-#include "Pipeline/MeshProcessor.h"
-
 #include "Core/Log.h"
 
 NAMESPACE_PIPELINE_BEGIN
@@ -25,27 +21,16 @@ REFLECT_CLASS_END()
 
 std::vector<ResourceProcessor*> resourceProcessors;
 
-static void ReferenceProcessors();
-
 //-----------------------------------//
 
 ResourceProcessor::ResourceProcessor()
 {
-	ReferenceProcessors();
 }
 
 //-----------------------------------//
 
 ResourceProcessor::~ResourceProcessor()
 {
-}
-
-//-----------------------------------//
-
-static void ReferenceProcessors()
-{
-	MeshProcessorGetType();
-	ImageProcessorGetType();
 }
 
 //-----------------------------------//

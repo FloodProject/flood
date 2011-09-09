@@ -301,7 +301,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	wxTextDataObject data;
 	wxDropSource dragSource(this);
 	dragSource.SetData(data);
-    
+
 	wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
 
 	if( result == wxDragCancel || result == wxDragNone )
@@ -351,6 +351,8 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	entity->addComponent(model);
 
 	EntityOperation* entityOperation = AllocateThis(EntityOperation);
+	entityOperation->type = EntityOperation::EntityAdded;
+	entityOperation->description = "Entity dragged";
 	entityOperation->entity = entity;
 	entityOperation->weakScene = scene;
 	entityOperation->redo();

@@ -28,36 +28,34 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-#define REF(name) name##GetType();
-
-void ResourceManager::referenceLoaders()
+void ReferenceLoaders()
 {
 #ifdef ENABLE_IMAGE_PICOPNG
-	REF(PNG_Pico_Loader)
+	PNG_Pico_LoaderGetType();
 #endif
 
 #ifdef ENABLE_IMAGE_DEVIL
-	REF(IL_Image_Loader)
+	IL_Image_LoaderGetType();
 #endif
 
 #ifdef ENABLE_IMAGE_STB
-	REF(STB_Image_Loader)
+	STB_Image_LoaderGetType();
 #endif
 
 #ifdef ENABLE_AUDIO_OGG
-	REF(OGG_Loader)
+	OGG_LoaderGetType();
 #endif
 
 #ifdef ENABLE_SHADER_GLSL
-	REF(GLSL_Loader)
+	GLSL_LoaderGetType();
 #endif
 
 #ifdef ENABLE_SCRIPTING_LUA
-	REF(Lua_Loader)
+	Lua_LoaderGetType();
 #endif
 
 #ifdef ENABLE_FONT_BITMAP
-	REF(FontLoader)
+	FontLoaderGetType();
 #endif
 }
 

@@ -193,9 +193,12 @@ static bool doRayQueryIndexed( const Ray& ray, const IndexBufferPtr& ib,
 {				
 	size_t size = ib->getSize();
 	int32 indexSizeBytes = ib->indexSize / 8;
-	
+
 	for( size_t i = 0; i < size; i += 3 )
 	{
+		#pragma TODO("Validate the index is not out-of-bounds")
+		//uint16 index = index(i);
+
 		Vector3 tri[3];
 		tri[0] = vertices[index(i+0)];
 		tri[1] = vertices[index(i+1)];
@@ -206,9 +209,13 @@ static bool doRayQueryIndexed( const Ray& ray, const IndexBufferPtr& ib,
 			continue;
 
 		Vector3 tex[3];
-		tex[0] = texCoords[index(i+0)];
-		tex[1] = texCoords[index(i+1)];
-		tex[2] = texCoords[index(i+2)];
+
+		if( !texCoords.empty() )
+		{
+			tex[0] = texCoords[index(i+0)];
+			tex[1] = texCoords[index(i+1)];
+			tex[2] = texCoords[index(i+2)];
+		}
 
 		buildResult(res, ray, tri, tex, o, n, t);
 		return true;

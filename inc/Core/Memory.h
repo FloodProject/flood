@@ -68,7 +68,7 @@ EXTERN_END
 #endif
 
 // Calls the object contructor using placement new.
-#define Construct(Type, Object, ...) ::new (Object) Type(__VA_ARGS__)
+#define AllocateConstruct(Type, Object, ...) ::new (Object) Type(__VA_ARGS__)
 
 template<typename T> T* AllocateObject(Allocator* alloc)
 {
@@ -77,7 +77,7 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 }
 
 // Allocates memory for the object.
-#define Allocate(Type, Alloc, ...) Construct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
+#define Allocate(Type, Alloc, ...) AllocateConstruct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
 #define AllocateThis(Type, ...) Allocate(Type, AllocatorGetThis(), __VA_ARGS__)
 
 template<typename T> void DeallocateObject(const T* object)

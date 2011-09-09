@@ -98,8 +98,8 @@ public:
 	// Gets the resource group associated with this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
-	// Uniform Resource Identifier.
-	String path;
+	// Path to the resource.
+	Path path;
 
 	// Status of the resource.
 	ResourceStatus::Enum status;

@@ -11,6 +11,7 @@
 #include "Core/References.h"
 #include "Math/BoundingBox.h"
 #include "Math/Frustum.h"
+#include "Math/Color.h"
 
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
@@ -33,6 +34,9 @@ class API_ENGINE DebugDrawer
 public:
 
 	DebugDrawer();
+
+	// Sets the color for the debug draw.
+	void setColor( const Color& color );
 
 	// Draws a debug bounding box.
 	void drawBox( const BoundingBox& box );

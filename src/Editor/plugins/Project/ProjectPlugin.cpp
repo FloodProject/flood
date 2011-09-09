@@ -124,6 +124,11 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 	if( !askSaveChanges(document) )
 		return;
 
+	// Simulate destroy and create events.
+	EventManager* events = GetEditor().getEventManager();
+	events->onDocumentUnselect(*document);
+	events->onDocumentDestroy(*document);
+
 	if( !document->reset() )
 	{
 		const char* msg = "Sorry, creating new documents is disabled";
@@ -131,10 +136,6 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 		return;
 	}
 
-	// Simulate destroy and create events.
-	EventManager* events = GetEditor().getEventManager();
-	events->onDocumentUnselect(*document);
-	events->onDocumentDestroy(*document);
 	events->onDocumentCreate(*document);
 	events->onDocumentSelect(*document);
 }

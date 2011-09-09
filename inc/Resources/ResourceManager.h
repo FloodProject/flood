@@ -58,7 +58,6 @@ struct ResourceLoadOptions
 
 	bool sendLoadEvent;
 	bool asynchronousLoad;
-
 };
 
 //-----------------------------------//
@@ -112,17 +111,11 @@ public:
 	// Waits until all queued resources are loaded.
 	void loadQueuedResources();
 
-	// Registers a resource handler.
-	void registerLoader(ResourceLoader* const loader);
-
 	// Finds the loader for the given extension.
 	ResourceLoader* findLoader(const String& extension);
 
 	// Finds the loader for the given type.
 	ResourceLoader* findLoaderByClass(const Class* klass);
-
-	// Sets up the default resource loaders.
-	void setupResourceLoaders();
 
 	// Sends resource events to the subscribers.
 	void update();
@@ -171,10 +164,13 @@ public:
 		return HandleCast<T>(res);
 	}
 
-protected:
+	// Sets up the default resource loaders.
+	void setupResourceLoaders(Class* klass);
 
 	// Finds the true resource if needed.
 	void findResource( ResourceLoadOptions& options );
+
+protected:
 
 	// Returns a new resource ready to be processed by a loader.
 	ResourceHandle prepareResource( Stream* stream );
@@ -191,14 +187,14 @@ protected:
 	// Sends pending resource events.
 	void sendPendingEvents();
 
-	// References the resource loaders.
-	void referenceLoaders();
+	// Destroy the resource handles.
+	void destroyHandles();
 
 	// Destroy the resource loaders.
 	void destroyLoaders();
 
-	// Destroy the resource handles.
-	void destroyHandles();
+	// Registers a resource handler.
+	void registerLoader(ResourceLoader* const loader);
 
 	// Maps a name to a resource.
 	ResourceMap resources;

@@ -36,7 +36,6 @@ REFLECT_CLASS_END()
 
 GizmoPlugin::GizmoPlugin()
 {
-
 }
 
 //-----------------------------------//
@@ -276,11 +275,16 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 
 	if( pickBoundingTest(moveEvent) && pickImageTest(moveEvent, axis) )
 	{
-		wxCursor cursor(wxCURSOR_SIZING);
-		wxSetCursor(cursor);
+		if( !gizmo->isAnyAxisSelected() )
+		{
+			LogDebug("Setting size cursor");
+
+			wxCursor cursor(wxCURSOR_SIZING);
+			wxSetCursor(cursor);
+		}
 
 		gizmo->selectAxis(axis);
-		
+
 		if( !op )
 			createOperation();
 		else
@@ -288,10 +292,10 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 	}
 	else
 	{
+		//LogDebug("Setting null cursor");
 		wxSetCursor(wxNullCursor);
 
 		gizmo->deselectAxis();
-		
 		Deallocate(op);
 	}
 
@@ -355,6 +359,8 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 		getGizmoPickPoint(mbe.x, mbe.y, firstPickPoint);
 		return;
 	}
+
+	GetPlugin<SelectionPlugin>()->onMouseButtonPress(mbe);
 }
 
 //-----------------------------------//
@@ -363,15 +369,21 @@ void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 {
 	isGizmoPicked = false;
 
-	if( !op ) return;
+	if( !op ) goto select;
 
-	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	UndoManager* undoManager = document->getUndoManager();
-
+	UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
 	undoManager->registerOperation( op );
 	op = nullptr;
 	
-	if(gizmo) gizmo->deselectAxis();
+	if(gizmo)
+	{
+		gizmo->deselectAxis();
+		return;
+	}
+
+select:
+
+	GetPlugin<SelectionPlugin>()->onMouseButtonRelease(mbe);
 }
 
 //-----------------------------------//
@@ -403,7 +415,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
-	EntityPtr entityGizmo( EntityCreate(AllocatorGetHeap()) );
+	EntityPtr entityGizmo = EntityCreate( AllocatorGetHeap() );
 	entityGizmo->setName("Gizmo");
 	entityGizmo->addTransform();
 	entityGizmo->addComponent(gizmo);

@@ -118,7 +118,7 @@ void ResourcesPlugin::onPluginDisable()
 
 	Deallocate(resourceIndexer);
 	Deallocate(resourceDatabase);
-	Deallocate(resourceDatabase);
+	Deallocate(resourceThumbnailer);
 	if(resourcesPage) resourcesPage->Destroy();
 	//Deallocate(resourcesPage);
 

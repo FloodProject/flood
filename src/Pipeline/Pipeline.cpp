@@ -12,10 +12,35 @@
 #include "Resources/ResourceManager.h"
 #include "Core/Log.h"
 
+#include "Pipeline/ImageProcessor.h"
+#include "Pipeline/MeshProcessor.h"
+
+#include "Pipeline/ImporterMilkshape.h"
+#include "Pipeline/ImporterFBX.h"
+
+//-----------------------------------//
+
+static void ReferenceProcessors()
+{
+	MeshProcessorGetType();
+	ImageProcessorGetType();
+}
+
+//-----------------------------------//
+
+static void ReferenceImporters()
+{
+	ImporterMilkshapeGetType();
+	ImporterFBXGetType();
+}
+
 //-----------------------------------//
 
 void PipelineInit()
 {
+	ReferenceProcessors();
+	ReferenceImporters();
+
 	Class* klass = ResourceProcessorGetType();
 	
 	for( size_t i = 0; i < klass->childs.size(); i++ )

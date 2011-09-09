@@ -49,6 +49,8 @@ void EntityOperation::redo()
 	case ComponentRemoved:
 		entity->removeComponent(component);
 		break;
+	default:
+		LogAssert("Unknown entity operation type");
 	}
 }
 
@@ -74,6 +76,8 @@ void EntityOperation::undo()
 	case ComponentRemoved:
 		entity->addComponent(component);
 		break;
+	default:
+		LogAssert("Unknown entity operation type");
 	}
 }
 

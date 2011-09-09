@@ -115,7 +115,7 @@ void TestClassB(CuTest* tc)
 
 void TestObjects(CuTest* tc)
 {
-	ReflectionTypeMap& types = ReflectionGetTypeMap();
+	ReflectionDatabase& types = ReflectionGetDatabase();
 
 	for( auto it = types.begin(); it != types.end(); it++ )
 	{

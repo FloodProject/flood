@@ -57,7 +57,7 @@ API_CORE bool ReflectionIsEqual(const Type*, const Type*);
 
 //-----------------------------------//
 
-typedef API_CORE std::map<const char*, Type*, RawStringCompare> ReflectionTypeMap;
+typedef API_CORE std::map<const char*, Type*, RawStringCompare> ReflectionDatabase;
 
 // Gets the type for a given type.
 #define ReflectionGetType(T) T##GetType()
@@ -69,7 +69,7 @@ API_CORE Type* ReflectionFindType(const char*);
 API_CORE void ReflectionRegisterType(Type*);
 
 // Gets the type registry.
-API_CORE ReflectionTypeMap& ReflectionGetTypeMap();
+API_CORE ReflectionDatabase& ReflectionGetDatabase();
 
 //-----------------------------------//
 

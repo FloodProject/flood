@@ -103,7 +103,7 @@ void Engine::init( bool createWindow )
 	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
 	
 	// Registers default resource loaders.
-	resourceManager->setupResourceLoaders();
+	resourceManager->setupResourceLoaders( ResourceLoaderGetType() );
 
 	// Creates the rendering and audio devices.
 	setupDevices( createWindow );

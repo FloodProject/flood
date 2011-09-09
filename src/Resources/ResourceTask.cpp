@@ -39,7 +39,7 @@ void ResourceTaskRun(Task* task)
 	{
 		resource->setStatus( ResourceStatus::Error );
 		LogWarn("Error decoding resource '%s'", path.c_str());
-		return;
+		goto cleanup;
 	}
 
 	resource->setStatus( ResourceStatus::Loaded );
@@ -50,10 +50,12 @@ void ResourceTaskRun(Task* task)
 		res->resourceTaskEvents.push(event);
 	}
 
+	LogInfo("Loaded resource '%s'", path.c_str());
+
+cleanup:
+
 	AtomicDecrement(&res->numResourcesQueuedLoad);
 	ConditionWakeOne(res->resourceFinishLoad);
-
-	LogInfo("Loaded resource '%s'", path.c_str());
 
 	Deallocate(options);
 	StreamDestroy(stream);

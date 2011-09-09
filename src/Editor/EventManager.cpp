@@ -167,19 +167,26 @@ void EventManager::onPluginDisableEvent(Plugin* plugin)
 
 //-----------------------------------//
 
-#define CALL_PLUGIN(func, ...)							\
-	if( currentPlugin )									\
-		currentPlugin->func(__VA_ARGS__);				\
-														\
-	for( size_t i = 0; i < eventListeners.size(); i++ )	\
-	{													\
-		EditorPlugin* plugin = eventListeners[i];		\
-		if(plugin == currentPlugin) continue;			\
-		plugin->func(__VA_ARGS__);						\
+#define CALL_PLUGIN(func, ...) \
+	if( currentPlugin ) currentPlugin->func(__VA_ARGS__); \
+	for( size_t i = 0; i < eventListeners.size(); i++ ) { \
+		EditorPlugin* plugin = eventListeners[i]; \
+		if(plugin == currentPlugin) continue; \
+		plugin->func(__VA_ARGS__); \
 	}
 
-#define CALL_PLUGIN_CHECK(func, arg)					\
-	if(!arg) return;									\
+#define CALL_ALL_PLUGIN(func, ...) \
+	if( currentPlugin ) currentPlugin->func(__VA_ARGS__); \
+	PluginManager* pm = GetEditor().getPluginManager(); \
+	const std::vector<Plugin*>& plugins = pm->getPlugins(); \
+	for( size_t i = 0; i < plugins.size(); i++ ) { \
+		EditorPlugin* plugin = (EditorPlugin*) plugins[i]; \
+		if(plugin == currentPlugin) continue; \
+		plugin->func(__VA_ARGS__); \
+	}
+
+#define CALL_PLUGIN_CHECK(func, arg) \
+	if(!arg) return; \
 	CALL_PLUGIN(func, arg)
 
 //-----------------------------------//
@@ -312,14 +319,14 @@ void EventManager::onKeyRelease( const KeyEvent& event )
 
 void EventManager::onSceneLoad( const ScenePtr& scene )
 {
-	CALL_PLUGIN_CHECK(onSceneLoad, scene);
+	CALL_ALL_PLUGIN(onSceneLoad, scene);
 }
 
 //-----------------------------------//
 
 void EventManager::onSceneUnload( const ScenePtr& scene )
 {
-	CALL_PLUGIN_CHECK(onSceneUnload, scene);
+	CALL_ALL_PLUGIN(onSceneUnload, scene);
 }
 
 //-----------------------------------//

@@ -50,7 +50,7 @@ Resource::Resource()
 
 Resource::~Resource()
 {
-	LogDebug("Destroying resource '%s'", getType()->name);
+	//LogDebug("Destroying resource '%s'", getType()->name);
 }
 
 //-----------------------------------//

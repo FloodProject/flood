@@ -80,7 +80,10 @@ void Mesh::buildBounds()
 		// Update the bounding box to accomodate new geometry.
 		for( size_t j = 0; j < indices.size(); j++ )
 		{
-			const Vector3& v = position[indices[j]];
+			const uint16& index = indices[j];
+			if( index >= position.size() ) continue;
+
+			const Vector3& v = position[index];
 			boundingVolume.add(v);
 		}
 	}

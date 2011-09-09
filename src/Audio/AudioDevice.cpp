@@ -134,12 +134,12 @@ bool AudioDevice::createMainContext()
 
 const String AudioDevice::getVersion() 
 {
-    ALCint major = 0;
+	ALCint major = 0;
 	ALCint minor = 0;
-    
+
 	alcGetIntegerv(nullptr, ALC_MAJOR_VERSION, 1, &major);
-    alcGetIntegerv(nullptr, ALC_MINOR_VERSION, 1, &minor);
-    
+	alcGetIntegerv(nullptr, ALC_MINOR_VERSION, 1, &minor);
+
 	return StringFormat("%d.%d", major, minor);
 }
 

@@ -42,9 +42,9 @@ bool ReflectionIsEnum(const Type* type)
 
 //-----------------------------------//
 
-ReflectionTypeMap& ReflectionGetTypeMap()
+ReflectionDatabase& ReflectionGetDatabase()
 {
-	static ReflectionTypeMap s_ReflectionTypes;
+	static ReflectionDatabase s_ReflectionTypes;
 	return s_ReflectionTypes;
 }
 
@@ -79,7 +79,7 @@ void ReflectionRegisterType(Type* type)
 {
 	if( !type ) return;
 
-	ReflectionTypeMap& map = ReflectionGetTypeMap();
+	ReflectionDatabase& map = ReflectionGetDatabase();
 	const char* name = type->name;
 
 	if( map.find(name) != map.end() )
@@ -101,9 +101,9 @@ void ReflectionRegisterType(Type* type)
 
 Type* ReflectionFindType(const char* name)
 {
-	ReflectionTypeMap& types = ReflectionGetTypeMap();
+	ReflectionDatabase& types = ReflectionGetDatabase();
 	
-	ReflectionTypeMap::iterator it = types.find(name);
+	ReflectionDatabase::iterator it = types.find(name);
 	if( it == types.end() ) return nullptr;
 
 	return it->second;

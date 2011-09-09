@@ -46,8 +46,7 @@ void GizmoOperation::process( bool undo )
 
 	// This can happen if the node gets deleted between
 	// the operation registration and the undo/redo action.
-	if( !node )
-		return;
+	if( !node ) return;
 
 	TransformPtr transform = node->getTransform();
 	

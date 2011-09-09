@@ -11,9 +11,6 @@
 #include "Core/API.h"
 #include "Core/String.h"
 
-//API_CORE String StringFromWideString(const WideString& ws);
-//API_CORE WideString StringToWideString(const String& s);
-
 void TestString(CuTest* tc)
 {
 	int ret = StringCompareInsensitive("Test Compare CASES", "test compare cases"); 
@@ -93,9 +90,10 @@ void TestPath(CuTest* tc)
 	// TODO: Add path combine tests.
 }
 
-CuSuite* GetSuitePath() {
-    CuSuite* suite = CuSuiteNew();
-    SUITE_ADD_TEST(suite, TestString);
+CuSuite* GetSuitePath()
+{
+	CuSuite* suite = CuSuiteNew();
+	SUITE_ADD_TEST(suite, TestString);
 	SUITE_ADD_TEST(suite, TestPath);
-    return suite;
+	return suite;
 }

@@ -31,7 +31,7 @@ Gizmo::Gizmo( const EntityPtr& node, const CameraWeakPtr& camera )
 
 	// Disable the depth testing so the gizmo can be seen behind objects.
 	material = MaterialCreate(AllocatorGetHeap(), "GizmoMaterial");
-	material.Resolve()->setDepthRange(Vector2::Zero);
+	material.Resolve()->setDepthRange(Vector2(0.0f, 0.1f));
 }
 
 //-----------------------------------//

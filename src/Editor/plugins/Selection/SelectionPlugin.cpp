@@ -303,7 +303,7 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 
 void SelectionPlugin::createRectangle()
 {
-	OverlayPtr overlay( new Overlay() );
+	OverlayPtr overlay = AllocateThis(Overlay);
 	overlay->setPositionMode( PositionMode::Absolute );
 	overlay->setOpacity(0.5f);
 	overlay->setBorderWidth(1);
@@ -316,6 +316,7 @@ void SelectionPlugin::createRectangle()
 
 	Document* document = editor->getDocument();
 	if( !document ) return;
+	
 	SceneDocument* sceneDocument = (SceneDocument*) document;
 	sceneDocument->editorScene->add(dragRectangle);
 }
