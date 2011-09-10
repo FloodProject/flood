@@ -466,5 +466,6 @@
     <ClInclude Include="..\..\inc\vapor\StackWalker.h">
       <Filter>Debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\Build.h" />
   </ItemGroup>
 </Project>

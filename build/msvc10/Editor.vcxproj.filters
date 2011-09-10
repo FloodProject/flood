@@ -97,6 +97,9 @@
     <Filter Include="Documents">
       <UniqueIdentifier>{d2b870a6-4ddf-4dd6-8200-2207914cd5fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Resources\Browser">
+      <UniqueIdentifier>{54a56aa9-5a13-48eb-a321-d53efb0256c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
@@ -164,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp">
       <Filter>Plugins\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp">
-      <Filter>Plugins\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp">
       <Filter>Plugins\Resources</Filter>
@@ -279,6 +279,9 @@
     <ClCompile Include="..\..\src\Editor\EventManager.cpp">
       <Filter>Events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp">
+      <Filter>Plugins\Resources\Browser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -346,9 +349,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePlugin.h">
       <Filter>Plugins\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h">
-      <Filter>Plugins\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h">
       <Filter>Plugins\Resources</Filter>
@@ -455,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\EventManager.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h">
+      <Filter>Plugins\Resources\Browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

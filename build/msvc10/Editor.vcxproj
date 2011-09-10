@@ -95,7 +95,7 @@
       </GenerateMapFile>
       <MapFileName>
       </MapFileName>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <TargetMachine>MachineX86</TargetMachine>

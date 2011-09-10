@@ -16,12 +16,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Pipeline\API.h" />
+    <ClInclude Include="..\..\inc\Pipeline\ImageProcessor.h" />
     <ClInclude Include="..\..\inc\Pipeline\ImporterFBX.h" />
     <ClInclude Include="..\..\inc\Pipeline\ImporterMilkshape.h" />
+    <ClInclude Include="..\..\inc\Pipeline\MeshProcessor.h" />
     <ClInclude Include="..\..\inc\Pipeline\ResourceImporter.h" />
     <ClInclude Include="..\..\inc\Pipeline\ResourceProcessor.h" />
-    <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h" />
-    <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h" />
     <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h" />
     <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h" />
   </ItemGroup>

@@ -43,7 +43,6 @@
     <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceSound.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
-    <ClCompile Include="..\..\src\Resources\ResourceWebArchive.cpp" />
     <ClCompile Include="..\..\src\Resources\Script.cpp" />
     <ClCompile Include="..\..\src\Resources\Shader.cpp" />
     <ClCompile Include="..\..\src\Resources\Skeleton.cpp" />

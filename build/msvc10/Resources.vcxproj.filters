@@ -145,9 +145,6 @@
     <ClCompile Include="..\..\src\Resources\ResourceDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\ResourceWebArchive.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\ResourceIndexer.cpp">
       <Filter>Indexer</Filter>
     </ClCompile>

@@ -24,12 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h">
-      <Filter>Processors\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h">
-      <Filter>Processors\Image</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h">
       <Filter>Importers\Milkshape</Filter>
     </ClInclude>
@@ -48,6 +42,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Pipeline\ResourceProcessor.h">
       <Filter>Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Pipeline\MeshProcessor.h">
+      <Filter>Processors\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Pipeline\ImageProcessor.h">
+      <Filter>Processors\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
