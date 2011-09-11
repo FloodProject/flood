@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -11,6 +11,8 @@
 #include "Core/Object.h"
 #include "Core/Log.h"
 #include "Math/Hash.h"
+#include "Math/Vector.h"
+#include "Math/Color.h"
 
 NAMESPACE_CORE_BEGIN
 

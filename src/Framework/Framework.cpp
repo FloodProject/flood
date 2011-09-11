@@ -17,9 +17,9 @@
 #include "Input/InputManager.h"
 #include "Resources/ResourceManager.h"
 
-#if defined(VAPOR_WINDOWING_WIN32)
+#if defined(ENABLE_WINDOW_WIN32)
 	#include <Render/Win32_Window.h>
-#elif defined(VAPOR_WINDOWING_SFML)
+#elif defined(ENABLE_WINDOW_SFML)
 	#include <Render/SFML_Window.h>
 #endif
 
@@ -89,9 +89,9 @@ Window* Framework::createWindow()
 
 	Window* window = nullptr;
 
-	#if defined(VAPOR_WINDOWING_WIN32)
+	#if defined(ENABLE_WINDOW_WIN32)
 		window = new Win32Window(settings);
-	#elif defined(VAPOR_WINDOWING_SFML)
+	#elif defined(ENABLE_WINDOW_SFML)
 		window = new SFML_Window(settings);
 	#else
 		#error "Could not find a window implementation"

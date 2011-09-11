@@ -42,7 +42,7 @@
  *                       http://www.codeproject.com/KB/threads/StackWalker.aspx?msg=2822736#xx2822736xx
  *  2009-04-10   v9      License slihtly corrected (<ORGANIZATION> replaced)
  *  2010-04-15   v10     Added support for VS2010 RTM
- *  2010-05-2ß   v11     Now using secure MyStrcCpy. Thanks to luke.simon:
+ *  2010-05-2ÃŸ   v11     Now using secure MyStrcCpy. Thanks to luke.simon:
  *                       http://www.codeproject.com/KB/applications/leakfinder.aspx?msg=3477467#xx3477467xx
  *
  * LICENSE (http://www.opensource.org/licenses/bsd-license.php)
@@ -75,9 +75,11 @@
  **********************************************************************/
 
 #include "Core/API.h"
-#include "Core/StackWalker.h"
 
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
+
+#include "Core/StackWalker.h"
+#include <cstring>
 
 #ifdef ENABLE_STACK_WALKER
 
@@ -229,10 +231,10 @@ DWORD64
 
 // secure-CRT_functions are only available starting with VC8
 #if _MSC_VER < 1400
-#define strcpy_s strcpy
-#define strncpy_s strncpy
+//#define strcpy_s strcpy
+//#define strncpy_s strncpy
 #define strcat_s(dst, len, src) strcat(dst, src)
-#define _snprintf_s _snprintf
+//#define _snprintf_s _snprintf
 #define _tcscat_s _tcscat
 #endif
 
@@ -666,12 +668,12 @@ private:
     pGMI = (tGMI) GetProcAddress( hPsapi, "GetModuleInformation" );
     if ( (pEPM == NULL) || (pGMFNE == NULL) || (pGMBN == NULL) || (pGMI == NULL) )
     {
-      // we couldn´t find all functions
+      // we couldnÂ´t find all functions
       FreeLibrary(hPsapi);
       return FALSE;
     }
 
-    hMods = (HMODULE*) malloc(sizeof(HMODULE) * (TTBUFLEN / sizeof HMODULE));
+    hMods = (HMODULE*) malloc(sizeof(HMODULE) * (TTBUFLEN / sizeof(HMODULE)));
     tt = (char*) malloc(sizeof(char) * TTBUFLEN);
     tt2 = (char*) malloc(sizeof(char) * TTBUFLEN);
     if ( (hMods == NULL) || (tt == NULL) || (tt2 == NULL) )
@@ -1039,7 +1041,10 @@ BOOL StackWalker::ShowCallstack(HANDLE hThread, const CONTEXT *context, PReadPro
     // If no context is provided, capture the context
     if (hThread == GetCurrentThread())
     {
-      GET_CURRENT_CONTEXT(c, USED_CONTEXT_FLAGS);
+     // GET_CURRENT_CONTEXT(c, USED_CONTEXT_FLAGS);
+		memset(&c, 0, sizeof(CONTEXT));
+		c.ContextFlags = USED_CONTEXT_FLAGS;
+		RtlCaptureContext(&c);
     }
     else
     {

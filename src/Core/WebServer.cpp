@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -10,10 +10,11 @@
 
 #ifdef ENABLE_HTTP_SERVER
 
+#include <cstdio>
+
 #include "Core/String.h"
 #include "Core/WebServer.h"
 #include "Core/Memory.h"
-
 #include "mongoose.h"
 
 NAMESPACE_CORE_BEGIN
@@ -62,12 +63,16 @@ WebContext* WebServerCreate( Allocator* alloc )
 
 //-----------------------------------//
 
+#ifdef COMPILER_MSVC
+#define snprintf _snprintf
+#endif
+
 bool WebServerStart( WebContext* context, uint16 port )
 {
 	if( !context ) return false;
 
 	static char buf[64];
-	sprintf_s(buf, ARRAY_SIZE(buf), "%hu", port);
+	snprintf(buf, ARRAY_SIZE(buf), "%hu", port);
 
 	const char *options[] =
 	{

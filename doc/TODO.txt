@@ -15,10 +15,18 @@ Types of plugins:
 EDITOR:
 -------
 
+GUI:
+	Create widget to choose resource
+	Finish the side component widget
+
+Camera:
+	Add an adaptive grid in the editor
+	Add support for multiple "shared" context render windows
+
 Terrain:
+	Add widget to switch between terrain tools
 	Fix terrain painting
 	Add noise terrain generation
-	Use a separate VB attribute for the terrain heights
 	Control resolution of terrains
 	
 Gizmo:
@@ -27,73 +35,59 @@ Gizmo:
 	Get picking working properly with multiple gizmos
 	When the Camera moves, mouse should be tested
 	
-Console:
-
-	Clicks should not change the insertion point
-	readline type of library would be kind of nice
-	Write a line then go backwards and to the line again and color is white...
-	
-Add bounding box calculation for animated meshes
-Adaptive grid in the editor
-When deleting a single node from the scene tree, the Unselected event isn't sent.
-	
-ENGINE:
--------
-
-Shading:
-	http://www.talula.demon.co.uk/hlsl_fragments/hlsl_fragments.html
-
-Merge mouse events
-Physics rotation becomes wrong due to bounding box calculation.
-Meshes with alpha values need to get blending enabled.
-Add code to generate a default texture
-
-Skydome component:
-	
-	Separate Clouds component
-	Add billboards for Sun and Moon
-	Switch to triangle strips
-	Fix the gradient color generation
-	Add dynamic day-night system
-
-Scene:
-
-	Geometry component sharing (Instancing)
-	Ray query class
-
-Scripting:
-
-	Fix Lua state closing
-
-Textures:
-	Support DDS
+Pipeline:
+	Add animation to FBX importer
+	Add animated bounding box calculation in mesh processor
+	Add FreeImage based resource importer
+	Add DDS conversion to the image processor
 	Warn and downsample if texture size is not supported
 	Resize the sample to nearest-POT if rectangle textures not supported
 	Generate and support MIP-maps
 	Generate and support normal maps
+
+ENGINE:
+-------
+
+Resources:
+	Meshes with alpha values need to get blending enabled.
+	Texture manager should provide a default texture when missing
+
+Rendering:
+	Add a shader generation system (http://www.talula.demon.co.uk/hlsl_fragments/hlsl_fragments.html)
+	Add Blending defaults (Modulate, Replace, etc)
+	Check skinning limit in shader
+	Work in lighting and shadows
+	Add a proper draw call sorting system
+
+Physics:
+	Bullet bounding box conversion is wrong (extents)
+
+Scene:
+	Geometry component sharing (Instancing)
+	Create an explicit query class
+
+Scripting:
+	Fix Lua state closing
+
+Textures:
+	Support DDS texture loading
 	Combine and support cubemaps / skybox textures
 
 Audio:
-
 	Handle audio streaming for lightweight playback without consuming lots of memory
 
 Logger:
-
 	Fix format log time to handle minutes, hours and days
 	Use truncation and close file so each log entry gets commited in each write
-	The Log class should use the user writing directory for output
 
 GUI:
 	Font handling via FreeType 2
 	Signed distance fonts
-	Bitmap font file format (and converter for some freeware generator tool)
+	Bitmap font file format
 
-Rendering:
-
-	Add Blending defaults (Modulate, Replace, etc)
-	Check skinning limit in shader
-
-linear_depth = (2.0 * znear) / (zfar + znear - exp_depth * (zfar - znear));
-float kDepth = 1.0 - ( gl_FragCoord.z / gl_FragCoord.w ) / ( v_farPlane - v_nearPlane );
-
-Inspiration for design http://www.youtube.com/watch?v=W2rJ0zOWojM&feature=player_embedded#at=173
+Skydome:
+	Separate Clouds component
+	Add billboards for Sun and Moon
+	Switch geometry to triangle strips
+	Fix the gradient color generation
+	Add dynamic day-night system

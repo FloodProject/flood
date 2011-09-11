@@ -7,9 +7,6 @@
     <Filter Include="Libraries">
       <UniqueIdentifier>{be569ec3-8535-47ac-a4ef-ed9e7da88040}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Timer">
-      <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Streams">
       <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
     </Filter>
@@ -79,20 +76,11 @@
     <Filter Include="Serialization\JSON">
       <UniqueIdentifier>{4649363a-29cf-4c56-bbf2-d299e3e362b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Telemetry">
-      <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression">
       <UniqueIdentifier>{7e67042d-0a93-4715-8bb5-aef7e0e6651c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Profiler">
-      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Cryptography">
       <UniqueIdentifier>{0a6542e4-2935-4786-8460-f09cb52147c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Watcher">
-      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
@@ -102,9 +90,6 @@
     </Filter>
     <Filter Include="Streams\Memory">
       <UniqueIdentifier>{d4373a1d-2bea-4eea-a164-b6126762c43a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Patterns">
-      <UniqueIdentifier>{ab7994e7-348f-43c9-bc7f-9c87c3044d72}</UniqueIdentifier>
     </Filter>
     <Filter Include="Network">
       <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
@@ -130,6 +115,21 @@
     <Filter Include="Extensions">
       <UniqueIdentifier>{bde74505-c487-4684-b6b8-623fbe435ad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities\Profiler">
+      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\String">
+      <UniqueIdentifier>{cf01a96b-4901-4799-ac77-b954660de917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Timer">
+      <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Watcher">
+      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Telemetry">
+      <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -146,7 +146,7 @@
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Timer.cpp">
-      <Filter>Timer</Filter>
+      <Filter>Utilities\Timer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Memory.cpp">
       <Filter>Memory</Filter>
@@ -173,16 +173,16 @@
       <Filter>Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Profiler.cpp">
-      <Filter>Profiler</Filter>
+      <Filter>Utilities\Profiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Watcher</Filter>
+      <Filter>Streams\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>Watcher</Filter>
+      <Filter>Streams\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Telemetry.cpp">
-      <Filter>Telemetry</Filter>
+      <Filter>Utilities\Telemetry</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveDirectory.cpp">
       <Filter>Archive</Filter>
@@ -250,9 +250,6 @@
     <ClCompile Include="..\..\src\Math\Ray.cpp">
       <Filter>Math\Ray</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dep\FastLZ\fastlz.c">
-      <Filter>Compression</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\Plugin.cpp">
       <Filter>Extensions</Filter>
     </ClCompile>
@@ -289,11 +286,14 @@
     <ClCompile Include="..\..\src\Core\ClassWatcher.cpp">
       <Filter>Reflection</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Pattern.cpp">
-      <Filter>Patterns</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Network\MessageHandler.cpp">
       <Filter>Network\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Pattern.cpp">
+      <Filter>Utilities\String</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\FastLZ\fastlz.cpp">
+      <Filter>Compression</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,7 +301,6 @@
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\API.h" />
-    <ClInclude Include="..\..\inc\Core\String.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h">
       <Filter>Archive</Filter>
     </ClInclude>
@@ -322,7 +321,7 @@
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Timer.h">
-      <Filter>Timer</Filter>
+      <Filter>Utilities\Timer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Utilities.h">
       <Filter>Utilities</Filter>
@@ -343,10 +342,10 @@
       <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>Watcher</Filter>
+      <Filter>Streams\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
-      <Filter>Telemetry</Filter>
+      <Filter>Utilities\Telemetry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Handle.h">
       <Filter>Memory</Filter>
@@ -364,7 +363,7 @@
       <Filter>Network\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
-      <Filter>Watcher</Filter>
+      <Filter>Streams\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Quaternion.h">
       <Filter>Math\Quaternion</Filter>
@@ -442,7 +441,7 @@
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Profiler.h">
-      <Filter>Profiler</Filter>
+      <Filter>Utilities\Profiler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\WebStream.h">
       <Filter>Streams\Web</Filter>
@@ -467,5 +466,8 @@
       <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Build.h" />
+    <ClInclude Include="..\..\inc\Core\String.h">
+      <Filter>Utilities\String</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

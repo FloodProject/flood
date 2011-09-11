@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -14,25 +14,6 @@
 
 #include "Core/API.h"
 #include "Resources/API.h"
-
-//---------------------------------------------------------------------//
-// Engine APIs
-//---------------------------------------------------------------------//
-
-// Enables visual styled controls on Windows
-//#define	VAPOR_USE_COMMON_CONTROLS
-#define		VAPOR_THREADING
-
-//#define	VAPOR_WINDOWING_SFML
-#define	VAPOR_WINDOWING_WIN32
-//#define	VAPOR_INPUT_SFML
-
-#define		VAPOR_RENDERER_OPENGL
-//#define	VAPOR_RENDERER_DIRECTX
-#define		ENABLE_SHADER_GLSL
-
-#define		ENABLE_AUDIO_OPENAL
-#define		ENABLE_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//
 // API Exports
@@ -57,25 +38,6 @@
 
 #define NAMESPACE_ENGINE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_ENGINE_END NAMESPACE_CORE_END
-
-//---------------------------------------------------------------------//
-// Pointer wrappers
-//---------------------------------------------------------------------//
-
-#if defined(ENABLE_MEMORY_TR1_VENDOR)
-	#if defined(COMPILER_MSVC)
-		#include <memory>
-		#include <functional>
-	#elif defined(COMPILER_GCC)
-		#include <tr1/memory>
-	#endif
-#elif defined(VAPOR_MEMORY_TR1_BOOST)
-	#include <boost/tr1/memory.hpp>
-#endif	
-
-#if COMPILER_MSVC != COMPILER_MSVC_2010 
-	namespace std { using namespace std::tr1; }
-#endif
 
 //---------------------------------------------------------------------//
 // Logging. Use and abuse it.

@@ -1,20 +1,21 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 ************************************************************************/
 
 #pragma once
 
+#include <cfloat>
 #include "Math/Vector.h"
 
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-const float LimitsFloatMinimum = -std::numeric_limits<float>::max();
-const float LimitsFloatMaximum =  std::numeric_limits<float>::max();
-const float LimitsFloatEpsilon =  std::numeric_limits<float>::epsilon();
+const float LimitsFloatMinimum = -FLT_MAX;
+const float LimitsFloatMaximum =  FLT_MAX;
+const float LimitsFloatEpsilon =  FLT_EPSILON;
 const float PI = 3.141592654f;
 
 API_CORE bool  MathFloatCompare(float a, float b);

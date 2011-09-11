@@ -11,13 +11,6 @@
 #include "Core/API.h"
 #include "Core/Event.h"
 #include "Core/Pointers.h"
-#include "Core/ConcurrentQueue.h"
-
-#ifdef PLATFORM_WINDOWS
-	#define WIN32_LEAN_AND_MEAN
-	#define NOMINMAX
-	#include <Windows.h>
-#endif
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -66,13 +59,7 @@ typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
  * computer code called critical sections.
  */
 
-struct Mutex
-{
-#ifdef PLATFORM_WINDOWS
-	CRITICAL_SECTION Handle;
-#else
-#endif
-};
+struct Mutex;
 
 API_CORE Mutex* MutexCreate(Allocator*);
 API_CORE void   MutexDestroy(Mutex*);
@@ -85,13 +72,7 @@ typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
 
 //-----------------------------------//
 
-struct Condition
-{
-#ifdef PLATFORM_WINDOWS
-	CONDITION_VARIABLE Handle;
-#else
-#endif
-};
+struct Condition;
 
 API_CORE Condition* ConditionCreate(Allocator*);
 API_CORE void       ConditionDestroy(Condition*);
@@ -150,6 +131,18 @@ struct TaskEvent
 	Task* task;
 	TaskState state;
 };
+
+//-----------------------------------//
+
+NAMESPACE_EXTERN_END
+
+// Workaround for template cyclic dependency.
+#include "Core/ConcurrentQueue.h"
+
+NAMESPACE_EXTERN_BEGIN
+
+//-----------------------------------//
+
 
 struct TaskPool
 {

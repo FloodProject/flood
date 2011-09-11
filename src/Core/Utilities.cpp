@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -12,23 +12,21 @@
 #include <sstream>
 #include <algorithm>
 #include <cassert>
+#include <cstdio>
 
 #ifdef PLATFORM_WINDOWS
-
 	#define WIN32_LEAN_AND_MEAN
+	#undef  NOMINMAX
 	#define NOMINMAX
 	#include <Windows.h>
 
     #include <direct.h>
     #define my_getcwd _getcwd
 	#define my_stricmp _stricmp
-
 #else
-
 	#include <unistd.h>
     #define my_getcwd getcwd
 	#define my_stricmp stricmp
-
 #endif
 
 NAMESPACE_CORE_BEGIN

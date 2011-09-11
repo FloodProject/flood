@@ -21,7 +21,7 @@ NAMESPACE_EXTERN_BEGIN
 
 struct API_CORE Type
 {
-	enum_class MetaType : uint8
+	enum MetaType : uint8
 	{
 		Primitive,
 		Composite,
@@ -213,7 +213,7 @@ API_CORE bool FieldHasQualifier(const Field*, FieldQualifier::Enum);
 API_CORE void FieldSetQualifier(Field*, FieldQualifier::Enum);
 
 // Sets the given setter in the field.
-API_CORE void FieldSetSetter(Field*, FieldSetterFunction = nullptr);
+API_CORE void FieldSetSetter(Field*, FieldSetterFunction);
 
 #define FieldIsArray(f)         FieldHasQualifier(f, FieldQualifier::Array)
 #define FieldIsHandle(f)        FieldHasQualifier(f, FieldQualifier::Handle)
@@ -228,7 +228,7 @@ API_CORE void FieldSetSetter(Field*, FieldSetterFunction = nullptr);
 
 struct API_CORE Primitive : public Type
 {
-	enum_class PrimitiveType
+	enum PrimitiveType
 	{
 		Bool,
 		Int8,

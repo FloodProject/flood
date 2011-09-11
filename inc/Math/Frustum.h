@@ -23,10 +23,13 @@ NAMESPACE_EXTERN_BEGIN
  * Projection types.
  */
 
-enum_class Projection
+struct Projection
 {
-	Orthographic,
-	Perspective  
+	enum Enum
+	{
+		Orthographic,
+		Perspective
+	};
 };
 
 API_CORE REFLECT_DECLARE_ENUM(Projection);
@@ -61,7 +64,7 @@ struct API_CORE Frustum : public Object
 public:
 
 	// Projection type.
-	Projection projection;
+	Projection::Enum projection;
 	
 	// Projection matrix.
 	Matrix4x4 matProjection;

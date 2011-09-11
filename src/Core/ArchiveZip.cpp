@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
+* vapor3D Server Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -12,6 +12,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
+#include <cstdio>
 #include <zzip/zzip.h>
 
 #ifdef ENABLE_ARCHIVE_ZIP
@@ -226,7 +227,8 @@ static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool
 	while( zzip_dir_read(zip, &entry) != 0 )
 	{
 		Path name = entry.d_name;
-		bool isDir = name.back() == '/';
+		
+		bool isDir = !name.empty() && name[name.size()-1] == '/';
 
 		if( (dir && isDir) || (!dir && !isDir) )
 			paths.push_back(name);
@@ -268,7 +270,7 @@ static bool ZipArchiveExistsDir(Archive* archive, const Path& path)
 
 	for(size_t i = 0; i < dirs.size(); i++)
 	{
-		Path& dir = StringTrim(dirs[i], "/");
+		const Path& dir = StringTrim(dirs[i], "/");
 		if(dir == path) return true;
 	}
 

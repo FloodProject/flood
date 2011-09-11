@@ -1,21 +1,26 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
 #include "Core/API.h"
+#include "Core/Concurrency.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
-#include "Core/Concurrency.h"
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 
+#include <cstdio>
+
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
+	
+	#undef NOMINMAX
 	#define NOMINMAX
+	
 	#include <Windows.h>	
 #endif
 
@@ -84,9 +89,9 @@ void LogRemoveHandler(Log* log, LogFunction fn)
 
 void LogWrite(Log* log, LogEntry* entry)
 {
-	MutexLock(log->mutex);
+	//MutexLock(log->mutex);
 	log->handlers(entry);
-	MutexUnlock(log->mutex);
+	//MutexUnlock(log->mutex);
 }
 
 //-----------------------------------//

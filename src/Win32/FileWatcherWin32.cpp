@@ -26,11 +26,14 @@
 #include "Core/Utilities.h"
 #include "Core/Log.h"
 
+#include <algorithm>
+
 #ifdef PLATFORM_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
-#include <Windows.h>	
+
+#include <Windows.h>
 
 NAMESPACE_CORE_BEGIN
 

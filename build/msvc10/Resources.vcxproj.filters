@@ -19,9 +19,6 @@
     <Filter Include="Images\STB">
       <UniqueIdentifier>{a74d0456-6624-4e4e-9867-7e05e07e2e48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Images\DevIL">
-      <UniqueIdentifier>{15020e6b-7bcd-41d4-ada7-e95bba031f88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Meshes">
       <UniqueIdentifier>{d1a92ffc-5354-4a56-bc75-c38418a93c87}</UniqueIdentifier>
     </Filter>
@@ -85,9 +82,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\TTF.cpp">
       <Filter>Fonts\TrueType</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Resources\IL_Image_Loader.cpp">
-      <Filter>Images\DevIL</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\PNG_Loader.cpp">
       <Filter>Images\PNG</Filter>
@@ -198,9 +192,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Resources\GLSL_Loader.h">
       <Filter>Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Resources\IL_Image_Loader.h">
-      <Filter>Images\DevIL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Resources\STB_Image_Loader.h">
       <Filter>Images\STB</Filter>

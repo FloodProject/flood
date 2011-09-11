@@ -119,7 +119,7 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 	destroyHandles();
-	destroyLoaders();
+	resourceLoaders.clear();
 
 	ArchiveDestroy(archive);
 	ConditionDestroy(resourceFinishLoad);
@@ -130,7 +130,7 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::destroyHandles()
 {
-#if 0
+#if 1
 	std::vector<ResourceHandle> handlesToRemove;
 
 	ResourceMap::iterator it = resources.begin();
@@ -147,37 +147,16 @@ void ResourceManager::destroyHandles()
 		Resource* res = handle.Resolve();
 		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
 
-		handle.reset();
+		//handle.reset();
 	}
 
 	handlesToRemove.clear();
-	assert( resources.empty() );
 #endif
 
 	resources.clear();
 	
 	HandleDestroyManager(handleManager);
 	handleManager = nullptr;
-}
-
-//-----------------------------------//
-
-void ResourceManager::destroyLoaders()
-{
-	ResourceLoaderMap::const_iterator it;
-	
-	for( it = resourceLoaders.begin(); it != resourceLoaders.end(); it++ )
-	{
-		ResourceLoader* loader = it->second;
-		if( !loader ) continue;
-
-		std::vector<String>& extensions = loader->extensions;
-
-		if( extensions.size() == 1 )
-			Deallocate(loader);
-		else
-			extensions.erase( std::find(extensions.begin(), extensions.end(), it->first) );
-	}
 }
 
 //-----------------------------------//
@@ -255,7 +234,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
 		const String& ext = it->first;
-		ResourceLoader* loader = it->second;
+		const ResourceLoaderPtr& loader = it->second;
 
 		if( loader->getResourceGroup() != options.group )
 			continue;
@@ -439,9 +418,11 @@ void ResourceManager::removeResource(const String& path)
 
 //-----------------------------------//
 
-void ResourceManager::registerLoader(ResourceLoader* const loader)
+void ResourceManager::registerLoader(const ResourceLoaderPtr& loader)
 {
-	Class* klass = ClassGetType(loader);
+	if( !loader ) return;
+
+	Class* klass = loader->getType();
 	LogInfo( "Registering resource loader '%s'", klass->name );
 
 	const std::vector<String>& extensions = loader->getExtensions();
@@ -460,7 +441,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 	}
 
 	// Send callback notifications.
-	onResourceLoaderRegistered( *loader );
+	onResourceLoaderRegistered( *loader.get() );
 }
 
 //-----------------------------------//
@@ -471,8 +452,8 @@ ResourceLoader* ResourceManager::findLoader(const String& ext)
 	if( resourceLoaders.find(ext) == resourceLoaders.end() )
 		return nullptr;
 
-	ResourceLoader* loader = resourceLoaders[ext];
-	return loader;
+	const ResourceLoaderPtr& loader = resourceLoaders[ext];
+	return loader.get();
 }
 
 //-----------------------------------//
@@ -481,11 +462,11 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 {
 	for(auto it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
-		ResourceLoader* loader = it->second;
+		const ResourceLoaderPtr& loader = it->second;
 		Class* resourceClass = loader->getResourceClass();
 		
 		if(ClassInherits(resourceClass, klass))
-			return loader;
+			return loader.get();
 	}
 
 	return nullptr;

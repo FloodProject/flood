@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -10,7 +10,6 @@
 
 #include <deque>
 #include <algorithm>
-
 #include "Core/Memory.h"
 
 NAMESPACE_CORE_BEGIN

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef ENABLE_SHADER_GLSL
+#ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Resources/ResourceLoader.h"
 #include "Resources/Shader.h"

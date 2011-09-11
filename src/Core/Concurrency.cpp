@@ -40,33 +40,6 @@ void ThreadDestroy(Thread* thread)
 
 //-----------------------------------//
 
-Mutex* MutexCreate(Allocator* alloc)
-{
-	Mutex* mutex = Allocate(Mutex, alloc);
-	MutexInit(mutex);
-
-	return mutex;
-}
-
-//-----------------------------------//
-
-Condition* ConditionCreate(Allocator* alloc)
-{
-	Condition* cond = Allocate(Condition, alloc);
-	ConditionInit(cond);
-
-	return cond;
-}
-
-//-----------------------------------//
-
-void ConditionDestroy(Condition* cond)
-{
-	Deallocate( cond);
-}
-
-//-----------------------------------//
-
 Task* TaskCreate(Allocator* alloc)
 {
 	Task* task = Allocate(Task, alloc);

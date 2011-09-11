@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -130,6 +130,7 @@ typedef uint32 uint;
 	typedef unsigned __int64 uint64;
 #elif defined(COMPILER_GCC)
 	typedef long long int64;
+	typedef signed long long sint64;
 	typedef unsigned long long uint64;
 #endif
 
@@ -219,4 +220,4 @@ static_assert(sizeof(int64) == 8, "");
 	private:									\
 		Type( const Type& );					\
 		const Type& operator=( const Type& );	\
-	public:
+public:

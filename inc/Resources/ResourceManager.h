@@ -23,8 +23,9 @@ class FileWatcher;
 class FileWatchEvent;
 
 class ResourceTask;
-class ResourceLoader;
 class ResourceManager;
+
+FWD_DECL_INTRUSIVE(ResourceLoader)
 
 //-----------------------------------//
 
@@ -66,7 +67,7 @@ API_RESOURCE void ResourcesInitialize();
 API_RESOURCE void ResourcesDeinitialize();
 
 typedef std::map< String, ResourceHandle > ResourceMap;
-typedef std::map< String, ResourceLoader* > ResourceLoaderMap;
+typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;
 
 /**
  * Responsible for managing a set of resources that are added by the app.
@@ -190,11 +191,8 @@ protected:
 	// Destroy the resource handles.
 	void destroyHandles();
 
-	// Destroy the resource loaders.
-	void destroyLoaders();
-
 	// Registers a resource handler.
-	void registerLoader(ResourceLoader* const loader);
+	void registerLoader(const ResourceLoaderPtr&);
 
 	// Maps a name to a resource.
 	ResourceMap resources;

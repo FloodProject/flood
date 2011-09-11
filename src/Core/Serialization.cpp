@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -177,6 +177,9 @@ static void ReflectionWalkEnum(ReflectionContext* context)
 
 //-----------------------------------//
 
+ReferenceCounted* NullResolve(HandleId) { return 0; }
+void NullDestroy(HandleId) {}
+
 static void ReflectionWalkType(ReflectionContext* context, Type* type);
 
 static bool ReflectionWalkPointer(ReflectionContext* context)
@@ -184,12 +187,15 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	void* address = context->elementAddress;
 	const Field* field = context->field;
 
+#ifdef ENABLE_MEMORY_SHARED_PTR
 	if(FieldIsSharedPointer(field))
 	{
 		std::shared_ptr<Object>* shared = (std::shared_ptr<Object>*) address;
 		address = shared->get();
 	}
-	else if(FieldIsRefPointer(field))
+	else
+#endif
+	if(FieldIsRefPointer(field))
 	{
 		RefPtr<Object>* ref = (RefPtr<Object>*) address;
 		address = ref->get();
@@ -201,7 +207,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	}
 	else if(FieldIsHandle(field))
 	{
-		typedef Handle<Object, 0, 0> ObjectHandle;
+		typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
 		ObjectHandle* handle = (ObjectHandle*) address;
 		HandleId id = handle->getId();
 		

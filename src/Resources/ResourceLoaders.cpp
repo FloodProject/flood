@@ -12,7 +12,6 @@
 
 #include "Resources/PNG_Loader.h"
 #include "Resources/STB_Image_Loader.h"
-#include "Resources/IL_Image_Loader.h"
 #include "Resources/OGG_Loader.h"
 #include "Resources/GLSL_Loader.h"
 #include "Resources/LuaLoader.h"
@@ -46,7 +45,7 @@ void ReferenceLoaders()
 	OGG_LoaderGetType();
 #endif
 
-#ifdef ENABLE_SHADER_GLSL
+#ifdef ENABLE_RENDERER_OPENGL_GLSL
 	GLSL_LoaderGetType();
 #endif
 

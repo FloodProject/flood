@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -17,12 +17,17 @@
 
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
+	
+	#undef NOMINMAX
 	#define NOMINMAX
+	
 	#include <Windows.h>
 
 	#if defined(ENABLE_MEMORY_LEAK_DETECTOR) && defined(DEBUG_BUILD)
 		#include <vld.h>
 	#endif
+	
+	#include <malloc.h>
 #endif
 
 NAMESPACE_CORE_BEGIN

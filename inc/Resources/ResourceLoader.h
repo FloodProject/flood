@@ -37,8 +37,8 @@ class API_RESOURCE ResourceLoader : public Plugin
 
 public:
 
-	ResourceLoader() {}
-	virtual ~ResourceLoader() {}
+	ResourceLoader();
+	virtual ~ResourceLoader();
 
 	// Gets metadata about this plugin.
 	PluginMetadata getMetadata() OVERRIDE { return PluginMetadata(); }
@@ -67,6 +67,8 @@ public:
 
 	std::vector<String> extensions;
 };
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(ResourceLoader)
 
 //-----------------------------------//
 

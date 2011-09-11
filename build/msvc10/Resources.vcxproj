@@ -29,7 +29,6 @@
     <ClCompile Include="..\..\src\Resources\FontLoader.cpp" />
     <ClCompile Include="..\..\src\Resources\GLSL_Loader.cpp" />
     <ClCompile Include="..\..\src\Resources\GLSL_Text.cpp" />
-    <ClCompile Include="..\..\src\Resources\IL_Image_Loader.cpp" />
     <ClCompile Include="..\..\src\Resources\Image.cpp" />
     <ClCompile Include="..\..\src\Resources\LuaLoader.cpp" />
     <ClCompile Include="..\..\src\Resources\Material.cpp" />
@@ -60,7 +59,6 @@
     <ClInclude Include="..\..\inc\Resources\FontLoader.h" />
     <ClInclude Include="..\..\inc\Resources\GLSL_Loader.h" />
     <ClInclude Include="..\..\inc\Resources\GLSL_Text.h" />
-    <ClInclude Include="..\..\inc\Resources\IL_Image_Loader.h" />
     <ClInclude Include="..\..\inc\Resources\Image.h" />
     <ClInclude Include="..\..\inc\Resources\LuaLoader.h" />
     <ClInclude Include="..\..\inc\Resources\Material.h" />

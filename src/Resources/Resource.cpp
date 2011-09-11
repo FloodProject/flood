@@ -8,6 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/Resource.h"
+#include "Resources/ResourceLoader.h"
 #include "Core/Log.h"
 
 NAMESPACE_RESOURCES_BEGIN
@@ -58,6 +59,20 @@ Resource::~Resource()
 bool Resource::isLoaded() const
 {
 	return status == ResourceStatus::Loaded;
+}
+
+//-----------------------------------//
+
+ResourceLoader::ResourceLoader()
+{
+	onPluginEnable();
+}
+
+//-----------------------------------//
+
+ResourceLoader::~ResourceLoader()
+{
+	onPluginDisable();
 }
 
 //-----------------------------------//

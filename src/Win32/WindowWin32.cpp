@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/Win32_Window.h"
 
-#ifdef VAPOR_WINDOWING_WIN32
+#ifdef ENABLE_WINDOW_WIN32
 
 NAMESPACE_ENGINE_BEGIN
 

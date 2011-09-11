@@ -31,23 +31,6 @@
 #define NAMESPACE_RESOURCES_END NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
-// Resource APIs
-//---------------------------------------------------------------------//
-
-#define     ENABLE_AUDIO_OGG
-//#define   ENABLE_IMAGE_DEVIL
-//#define   ENABLE_IMAGE_PICOPNG
-#define     ENABLE_IMAGE_STB
-#define     ENABLE_SHADER_GLSL
-//#define   ENABLE_FONT_FREETYPE2
-#define     ENABLE_FONT_BITMAP
-#define     ENABLE_SCRIPTING_LUA
-#define     ENABLE_SCRIPTING_MONO
-#define     ENABLE_THREADED_LOADING
-
-#define     ENABLE_RESOURCE_INDEXER
-
-//---------------------------------------------------------------------//
 // Custom Allocators
 //---------------------------------------------------------------------//
 

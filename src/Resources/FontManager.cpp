@@ -6,10 +6,11 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/resources/FontManager.h"
+#include "Resources/API.h"
 
-#ifdef VAPOR_FONT_FREETYPE2
+#ifdef ENABLE_FONT_FREETYPE2
+
+#include "Resources/FontManager.h"
 
 namespace vapor {
 

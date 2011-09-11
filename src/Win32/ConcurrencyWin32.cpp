@@ -14,6 +14,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
+
 #include <Windows.h>
 #include <process.h>
 
@@ -149,8 +150,25 @@ void ThreadSetName( Thread* thread, const String& name )
 
 //-----------------------------------//
 
+struct Mutex
+{
+	CRITICAL_SECTION Handle;
+};
+
 #define CS_CREATE_IMMEDIATELY_ON_WIN2000 0x080000000
 #define CS_SPIN_COUNT 1500
+
+//-----------------------------------//
+
+Mutex* MutexCreate(Allocator* alloc)
+{
+	Mutex* mutex = Allocate(Mutex, alloc);
+	MutexInit(mutex);
+
+	return mutex;
+}
+
+//-----------------------------------//
 
 API_CORE void MutexInit(Mutex* mutex)
 {
@@ -210,6 +228,29 @@ static bool IntializeConditionVars()
 
 static bool initCondVars = IntializeConditionVars();
 
+struct Condition
+{
+	CONDITION_VARIABLE Handle;
+};
+
+//-----------------------------------//
+
+Condition* ConditionCreate(Allocator* alloc)
+{
+	Condition* cond = Allocate(Condition, alloc);
+	ConditionInit(cond);
+
+	return cond;
+}
+
+//-----------------------------------//
+
+void ConditionDestroy(Condition* cond)
+{
+	Deallocate(cond);
+}
+
+//-----------------------------------//
 
 void ConditionInit(Condition* cond)
 {

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -13,6 +13,7 @@
 
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
+	#undef  NOMINMAX
 	#define NOMINMAX
 	#include <Windows.h>	
 #elif PLATFORM_MACOSX

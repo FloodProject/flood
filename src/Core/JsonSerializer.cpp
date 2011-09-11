@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -428,6 +428,9 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
+ReferenceCounted* NullResolve(HandleId) { return 0; }
+void NullDestroy(HandleId) {}
+
 static void DeserializeField( ReflectionContext* context, json_t* value )
 {
 	const Field* field = context->field;
@@ -466,7 +469,7 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 
 			void* address = ClassGetFieldAddress(context->object, field);
 			
-			typedef Handle<Object, 0, 0> ObjectHandle;
+			typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
 			ObjectHandle* handleObject = (ObjectHandle*) address;
 			handleObject->setId(id);
 			
