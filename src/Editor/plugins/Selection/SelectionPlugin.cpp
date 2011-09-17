@@ -9,14 +9,13 @@
 #include "Editor/API.h"
 #include "SelectionPlugin.h"
 #include "SelectionManager.h"
-
 #include "EventManager.h"
 #include "UndoManager.h"
-
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "Plugins/Scene/SceneDocument.h"
 
-#include "../Scene/SceneDocument.h"
+#include <algorithm>
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -192,12 +191,11 @@ void SelectionPlugin::onKeyPress(const KeyEvent& event)
 	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
 	if( !isSelection ) return;
 
-	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
-	RenderControl* control = sceneDocument->getRenderControl();
-
 	if( event.ctrlPressed )
 	{
-		control->SetCursor( wxCursor("cursorArrowPlus") );
+		SceneDocument* document = (SceneDocument*) editor->getDocument();
+		document->getWindow()->SetCursor( wxCursor("cursorArrowPlus") );
+		
 		additiveMode = true;
 	}
 }
@@ -208,12 +206,11 @@ void SelectionPlugin::onKeyRelease(const KeyEvent& event)
 {
 	EventManager* events = editor->getEventManager();
 	
-	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
-	RenderControl* control = sceneDocument->getRenderControl();
-
 	if( !event.ctrlPressed && additiveMode )
 	{
-		control->SetCursor( wxNullCursor );
+		SceneDocument* document = (SceneDocument*) editor->getDocument();
+		document->getWindow()->SetCursor( wxNullCursor );
+
 		additiveMode = false;
 	}
 }

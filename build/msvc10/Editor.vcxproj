@@ -65,7 +65,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 /MP</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\Editor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;WXUSINGDLL;WXMONOLITHIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -208,7 +208,10 @@
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp">
+      <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ShowIncludes>
+    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\Preferences.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp" />

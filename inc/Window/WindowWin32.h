@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,12 +8,13 @@
 
 #pragma once
 
-#ifdef VAPOR_WINDOWING_WIN32
+#ifdef ENABLE_WINDOW_WIN32
 
-#include "Render/Window.h"
+#include "Window/Window.h"
 
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
+	#undef  NOMINMAX
 	#define NOMINMAX
 	#include <Windows.h>	
 #endif

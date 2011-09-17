@@ -8,9 +8,11 @@
 
 #pragma once
 
-#include <wx/glcanvas.h> 
 #include "EditorInputManager.h"
-#include "Render/Window.h"
+#include "Window/Window.h"
+
+class wxGLCanvas;
+class wxGLContext;
 
 NAMESPACE_EDITOR_BEGIN
 

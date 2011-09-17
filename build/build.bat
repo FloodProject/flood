@@ -2,7 +2,7 @@
 goto menu
 
 :menu
-echo vapor Project Generator:
+echo Build Project Generator:
 echo.
 echo [0] Clean
 echo [1] Visual C++ 2010
@@ -20,26 +20,25 @@ if "%C%"=="1" goto vs2010
 if "%C%"=="0" goto clean
 
 :clean
-"../tools/premake4.exe" --file=premake4.lua clean
+"../tools/premake4" --file=premake4.lua clean
 goto quit
 
 :vs2010
-"../tools/premake4.exe" --file=premake4.lua vs2010
+"../tools/premake4" --file=premake4.lua vs2010
 goto quit
 
 :vs2008
-"../tools/premake4.exe" --file=premake4.lua vs2008
+"../tools/premake4" --file=premake4.lua vs2008
 goto quit
 
 :codelite
-"../tools/premake4.exe" --file=premake4.lua codelite
+"../tools/premake4" --file=premake4.lua codelite
 goto quit
 
 :codelite
-"../tools/premake4.exe" --file=premake4.lua gmake
+"../tools/premake4" --file=premake4.lua gmake
 goto quit
 
 :quit
 pause
-exit
 :end

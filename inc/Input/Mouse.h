@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "input/Device.h"
-#include "input/MouseEvents.h"
-#include "Event.h"
+#include "Input/Device.h"
+#include "Input/MouseEvents.h"
+#include "Core/Event.h"
 
 NAMESPACE_ENGINE_BEGIN
 

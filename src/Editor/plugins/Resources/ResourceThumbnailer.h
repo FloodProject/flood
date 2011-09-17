@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include "Resources/ResourceDatabase.h"
+
 class ResourceIndexer;
-struct ResourceMetadata;
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -27,8 +28,11 @@ public:
 	// Updates the thumbnailer.
 	void update();
 
-	// Generate thumbnail.
+	// Generate thumbnail of mesh.
 	ImagePtr generateMesh(const MeshHandle& mesh);
+
+	// Generates the thumbnail.
+	void generateThumbnail();
 
 	Event1<const ResourceMetadata&> onResourceThumbnailed;
 
@@ -48,6 +52,8 @@ protected:
 
 	//TexturePtr colorTexture;
 	RenderBuffer* renderBuffer;
+
+	ConcurrentQueue<ResourceMetadata> resourcesIndexed;
 };
 
 //-----------------------------------//

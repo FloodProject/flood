@@ -91,6 +91,18 @@ bool FBO::check()
 
 //-----------------------------------//
 
+void FBO::read(int8 attachment, std::vector<uint8>& data)
+{
+	const Vector2i& size = settings.getSize();
+
+	data.resize( size.x*size.y*4 );
+
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+}
+
+//-----------------------------------//
+
 void FBO::setBufferState()
 {
 	if( colorAttach )

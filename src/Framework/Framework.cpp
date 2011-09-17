@@ -18,9 +18,9 @@
 #include "Resources/ResourceManager.h"
 
 #if defined(ENABLE_WINDOW_WIN32)
-	#include <Render/Win32_Window.h>
+	#include <Window/WindowWin32.h>
 #elif defined(ENABLE_WINDOW_SFML)
-	#include <Render/SFML_Window.h>
+	#include <Window/SFML_Window.h>
 #endif
 
 NAMESPACE_ENGINE_BEGIN

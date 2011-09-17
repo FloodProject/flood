@@ -190,7 +190,6 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
-    <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Engine\Cube.cpp" />
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
@@ -206,11 +205,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Framework\Framework.cpp" />
-    <ClCompile Include="..\..\src\Engine\Atlas.cpp" />
-    <ClCompile Include="..\..\src\Engine\Label.cpp" />
-    <ClCompile Include="..\..\src\Engine\Console.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
+    <ClCompile Include="..\..\src\GUI\Atlas.cpp" />
+    <ClCompile Include="..\..\src\GUI\Console.cpp" />
+    <ClCompile Include="..\..\src\GUI\Label.cpp" />
     <ClCompile Include="..\..\src\Input\InputDevice.cpp" />
     <ClCompile Include="..\..\src\Input\InputManager.cpp" />
     <ClCompile Include="..\..\src\Input\InputMap.cpp" />
@@ -341,7 +340,6 @@
     <ClInclude Include="..\..\inc\GUI\Label.h" />
     <ClInclude Include="..\..\inc\GUI\Overlay.h" />
     <ClInclude Include="..\..\inc\GUI\Console.h" />
-    <ClInclude Include="..\..\inc\GUI\Window.h" />
     <ClInclude Include="..\..\inc\Input\InputManager.h" />
     <ClInclude Include="..\..\inc\Input\Device.h" />
     <ClInclude Include="..\..\inc\Input\Joystick.h" />
@@ -352,7 +350,6 @@
     <ClInclude Include="..\..\inc\Input\InputMap.h" />
     <ClInclude Include="..\..\inc\Script\ScriptManager.h" />
     <ClInclude Include="..\..\inc\Script\State.h" />
-    <ClInclude Include="..\..\inc\Engine\Subsystem.h" />
     <ClInclude Include="..\..\inc\Terrain\Brush.h" />
     <ClInclude Include="..\..\inc\Terrain\Cell.h" />
     <ClInclude Include="..\..\inc\Terrain\Terrain.h" />

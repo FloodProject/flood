@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Win32_Window.h"
+#include "Window/WindowWin32.h"
 
 #ifdef ENABLE_WINDOW_WIN32
 

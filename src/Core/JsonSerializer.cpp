@@ -428,8 +428,8 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-ReferenceCounted* NullResolve(HandleId) { return 0; }
-void NullDestroy(HandleId) {}
+extern ReferenceCounted* NullResolve(HandleId);
+extern void NullDestroy(HandleId);
 
 static void DeserializeField( ReflectionContext* context, json_t* value )
 {

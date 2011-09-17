@@ -38,10 +38,7 @@ class ImporterFBX : public ResourceImporter
 public:
 
 	ImporterFBX();
-
-	// Plugin callback.
-	void onPluginEnable() OVERRIDE;
-	void onPluginDisable() OVERRIDE;
+	~ImporterFBX();
 
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Mesh)

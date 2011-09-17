@@ -11,8 +11,8 @@
 #include "Document.h"
 #include "Viewframe.h"
 #include "RenderWindow.h"
-#include "RenderControl.h"
 
+class RenderControl;
 class ReplicaContext;
 
 NAMESPACE_EDITOR_BEGIN
@@ -46,9 +46,9 @@ public:
 	void setScene( Scene* scene );
 
 	// Gets the view controls.
-	Viewframe* getViewframe() { return viewframe; }
-	RenderControl* getRenderControl() { return viewframe->getControl(); }
-	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
+	Viewframe* getViewframe();
+	RenderControl* getRenderControl();
+	RenderWindow* getRenderWindow();
 	
 	// Creates a context toolbar.
 	wxAuiToolBar* createContextToolbar() OVERRIDE;

@@ -16,7 +16,7 @@
 #include "Network/Network.h"
 
 #include <enet/enet.h>
-#include <FastLZ/fastlz.h>
+#include <fastlz.h>
 
 NAMESPACE_CORE_BEGIN
 

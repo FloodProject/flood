@@ -175,6 +175,8 @@ void ScenePlugin::onServerConnect(const SessionPtr&)
 
 //-----------------------------------//
 
+#ifndef NO_NETWORK
+
 void ScenePlugin::onReplicaContextCreate(ReplicaContext* context, ClassId, ReplicaLocalId id)
 {
 	if( id != localId ) return;
@@ -212,12 +214,13 @@ void ScenePlugin::onReplicaObjectCreate(ReplicaContext* context, ReplicaInstance
 	}
 }
 
-
 //-----------------------------------//
 
 void ScenePlugin::onReplicaAdded(const ReplicatedObject& obj)
 {
 }
+
+#endif
 
 //-----------------------------------//
 

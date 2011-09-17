@@ -29,7 +29,8 @@
 
 #define CREATE_PROJECT_ON_STARTUP
 
-wxIMPLEMENT_WXWIN_MAIN_CONSOLE
+//wxIMPLEMENT_WXWIN_MAIN_CONSOLE
+wxIMPLEMENT_WXWIN_MAIN
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -235,6 +236,7 @@ void EditorFrame::createToolbar()
 
 void EditorFrame::redrawView()
 {
+	// Do this on the document instead.
 #if 0
 	if( !viewframe ) return;
 	viewframe->flagRedraw();

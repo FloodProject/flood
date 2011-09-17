@@ -16,9 +16,6 @@
     <Filter Include="GUI\Console">
       <UniqueIdentifier>{f554ff97-6be9-452c-965f-4392dd67931c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUI\Window">
-      <UniqueIdentifier>{23cd83b4-c39a-4483-b6e2-979ce23ef761}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{e9485066-866d-46c2-857e-071f2ebe5fb2}</UniqueIdentifier>
     </Filter>
@@ -66,9 +63,6 @@
     </Filter>
     <Filter Include="Window\Win32">
       <UniqueIdentifier>{66e151a3-bb6f-4c2c-8ee8-d86397ae8ce1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Subsystem">
-      <UniqueIdentifier>{e55c350d-3789-4808-996c-837604d5ab65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{61cee6f9-a647-4fcf-947d-1ce2c2a33cc6}</UniqueIdentifier>
@@ -249,15 +243,6 @@
     <ClCompile Include="..\..\src\Framework\Framework.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Atlas.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Label.cpp">
-      <Filter>GUI\Label</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Console.cpp">
-      <Filter>GUI\Console</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -414,9 +399,6 @@
     <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Subsystem.cpp">
-      <Filter>Subsystem</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Win32\WindowWin32.cpp">
       <Filter>Window\Win32</Filter>
     </ClCompile>
@@ -489,6 +471,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Render\FBO.cpp">
       <Filter>Graphics\Resources\Buffers\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GUI\Atlas.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GUI\Console.cpp">
+      <Filter>GUI\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GUI\Label.cpp">
+      <Filter>GUI\Label</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -673,9 +664,6 @@
     <ClInclude Include="..\..\inc\GUI\Overlay.h">
       <Filter>GUI\Overlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\GUI\Window.h">
-      <Filter>GUI\Window</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Render\Cube.h">
       <Filter>Geometry\Cube</Filter>
     </ClInclude>
@@ -696,9 +684,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\Renderable.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Engine\Subsystem.h">
-      <Filter>Subsystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Physics\DebugDraw.h">
       <Filter>Physics\Debug</Filter>

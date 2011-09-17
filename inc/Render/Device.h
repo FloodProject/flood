@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_RENDERER_OPENGL
+#ifdef ENABLE_RENDERER_OPENGL
 
 #include "Core/Reflection.h"
 #include "Math/Color.h"
@@ -16,7 +16,6 @@
 #include "Math/Matrix4x3.h"
 
 #include "Render/Render.h"
-#include "Render/Window.h"
 #include "Render/Target.h"
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"

@@ -45,13 +45,8 @@ ImporterFBX::ImporterFBX()
 	extensions.push_back("dxf");
 	extensions.push_back("dae");
 	extensions.push_back("obj");
-}
 
-//-----------------------------------//
-
-void ImporterFBX::onPluginEnable()
-{
-	LogInfo("Using FBX SDK version: %s", FBXSDK_VERSION_STRING);
+	LogInfo("Initializing FBX SDK version %s", FBXSDK_VERSION_STRING);
 
 	#pragma TODO("Initialize our own FBX memory allocator")
 
@@ -70,10 +65,10 @@ void ImporterFBX::onPluginEnable()
 
 //-----------------------------------//
 
-void ImporterFBX::onPluginDisable()
+ImporterFBX::~ImporterFBX()
 {
-	KFBX_SAFE_DESTROY_OBJECT(fbxSDK);
 	KFBX_SAFE_DESTROY_OBJECT(fbxIO);
+	KFBX_SAFE_DESTROY_OBJECT(fbxSDK);
 }
 
 //-----------------------------------//
@@ -84,8 +79,6 @@ bool ImporterFBX::decode(const Stream& stream, Resource* res)
 
 	if( !StreamClose((Stream*) &stream) )
 		return false;
-
-	if( !fbxSDK ) onPluginEnable();
 
 	KFbxImporter* importer = KFbxImporter::Create(fbxSDK, "");
 
@@ -193,7 +186,6 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 	}
 
 	int numPolygons = fbxMesh->GetPolygonCount();
-	//int* indicesValues = fbxMesh->GetPolygonVertices();
 
 	for( int subGroup = 0; subGroup < fbxMesh->GetLayerCount(); ++subGroup )
 	{
@@ -203,7 +195,6 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 
 		for( int iPolygon = 0; iPolygon < numPolygons; ++iPolygon )
 		{
-			//int& index = indicesValues[iPolygon];
 			assert( fbxMesh->GetPolygonSize(iPolygon) == 3 );
 
 			for( int iVertex = 0; iVertex < 3; ++iVertex )

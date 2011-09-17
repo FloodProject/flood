@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ConcurrentQueue.h"
+#include "Core/Concurrency.h"
 #include "Resources/Resource.h"
 
 NAMESPACE_RESOURCES_BEGIN

@@ -44,10 +44,12 @@ public:
 	void onPlayCommand(wxCommandEvent&);
 	void onSceneClassFieldUpdate(const FieldWatchVector&);
 
+#ifndef NO_NETWORK
 	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
 	void onReplicaObjectCreate(ReplicaContext*, ReplicaInstanceId, Object*);
 	void onReplicaAdded(const ReplicatedObject&);
 	ReplicaLocalId localId;
+#endif
 
 	ScenePage* scenePage;
 	int iconScene;

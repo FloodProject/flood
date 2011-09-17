@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_RENDERER_OPENGL
+#ifdef ENABLE_RENDERER_OPENGL
 
 #include "Core/Utilities.h"
 #include "Render/Device.h"

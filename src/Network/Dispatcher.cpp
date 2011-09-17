@@ -22,7 +22,7 @@
 #include "Network/Session.h"
 #include "Network/SessionManager.h"
 
-#include <FastLZ\fastlz.h>
+#include <fastlz.h>
 
 NAMESPACE_CORE_BEGIN
 

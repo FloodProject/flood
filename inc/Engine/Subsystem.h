@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -34,4 +34,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_CORE_END

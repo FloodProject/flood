@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_WINDOWING_SFML
+#ifdef ENABLE_WINDOW_SFML
 
 #include "Render/Window.h"
 #include "input/SFML_InputManager.h"

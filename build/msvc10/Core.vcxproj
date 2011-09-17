@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\FastLZ;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -197,6 +197,7 @@
     <ClCompile Include="..\..\src\Core\Serialization.cpp" />
     <ClCompile Include="..\..\src\Core\StackWalker.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Core\Telemetry.cpp" />
     <ClCompile Include="..\..\src\Core\Timer.cpp" />
     <ClCompile Include="..\..\src\Core\Utilities.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="..\..\inc\Core\Utilities.h" />
     <ClInclude Include="..\..\inc\Core\WebServer.h" />
     <ClInclude Include="..\..\inc\Core\WebStream.h" />
+    <ClInclude Include="..\..\inc\Engine\Subsystem.h" />
     <ClInclude Include="..\..\inc\Math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\Math\BoundingSphere.h" />
     <ClInclude Include="..\..\inc\Math\Color.h" />

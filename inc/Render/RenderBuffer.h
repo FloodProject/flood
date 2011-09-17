@@ -60,8 +60,11 @@ public:
 	// Checks if the render buffer is complete.
 	virtual bool check() = 0;
 
-	// Updates the render target.
+	// Updates the render buffer.
 	virtual void update() = 0;
+
+	// Reads the contents of the render buffer.
+	virtual void read(int8 attachment, std::vector<uint8>& data) = 0;
 
 	// Creates a new render buffer with the given components.
 	virtual void createRenderBuffer( int bufferComponents ) = 0;
@@ -70,7 +73,7 @@ public:
 	virtual TexturePtr createRenderTexture( RenderBufferType::Enum ) = 0;
 
 	// Attaches a render texture.
-	void attachRenderTexture(const TexturePtr& tex);
+	virtual void attachRenderTexture(const TexturePtr& tex) = 0;
 
 	// Gets the settings of this render target.
 	GETTER(Settings, const Settings&, settings)

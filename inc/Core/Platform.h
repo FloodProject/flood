@@ -39,6 +39,9 @@
 	#endif
 #elif defined(__GNUG__)
 	#define COMPILER_GCC
+	#if (__GNUG__ >= 4) && (__GNUC_MINOR__ > 5)
+		#define COMPILER_SUPPORTS_CPP0X
+	#endif
 #elif defined(__clang__)
 	#define COMPILER_CLANG
 #else
@@ -78,6 +81,7 @@
 		__pragma(warning(pop))
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	#define alignof __alignof__ 
+	#define offsetof(type, member)  __builtin_offsetof (type, member)
 	#define ALIGN_BEGIN(size)
 	#define ALIGN_END(size) __attribute__((aligned(size)))
 	#define INLINE __attribute__((always_inline))
@@ -85,8 +89,6 @@
 	#define OVERRIDE //__attribute__((override))
 	#define MULTI_LINE_MACRO_END } while(0)
 #endif
-
-
 
 #if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
 	#define API_EXPORT __declspec(dllexport)
@@ -101,8 +103,6 @@
 	#define API_IMPORT __attribute__ ((visibility("default")))
 	#define API_HIDDEN __attribute__ ((visibility("hidden")))
 #endif
-
-
 
 //---------------------------------------------------------------------//
 // Basic types

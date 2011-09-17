@@ -23,7 +23,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 LogPlugin::LogPlugin()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -35,6 +36,7 @@ PluginMetadata LogPlugin::getMetadata()
 	metadata.description = "Provides a view of the logs.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 3;
 
 	return metadata;
 }
@@ -80,9 +82,7 @@ void LogPlugin::onPluginDisable()
 void LogPlugin::onLogButtonClick(wxCommandEvent& event)
 {
 	wxAuiPaneInfo& pane = editor->getAUI()->GetPane(log);
-
-	if( !pane.IsOk() )
-		return;
+	if( !pane.IsOk() ) return;
 
 	pane.Show( !pane.IsShown() );
 

@@ -37,7 +37,8 @@ public:
 	// Gets the processed resource type.
 	Class* GetResourceType() { return MeshGetType(); }
 
-private:
+	bool calculateBounds;
+	bool calculateTangents;
 };
 
 //-----------------------------------//

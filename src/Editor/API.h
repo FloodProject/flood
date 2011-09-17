@@ -8,22 +8,14 @@
 
 #pragma once
 
+#define NOMINMAX
+
 #include "Core/API.h"
 #include "Engine/API.h"
 #include "Pipeline/API.h"
 #include "Engine/Headers.h"
 
 #define VAPOR_EDITOR_NAME "vapor3D"
-
-#define ENABLE_PLUGIN_GIZMO
-#define ENABLE_PLUGIN_TERRAIN
-#define ENABLE_PLUGIN_PROPERTY
-#define ENABLE_RESOURCE_BROWSER
-
-//#define ENABLE_PLUGIN_MONO
-//#define ENABLE_PLUGIN_SERVER
-
-#define NO_NETWORK
 
 #define wxUSE_BINDERAPP
 
@@ -81,7 +73,7 @@
 // Image Conversion Utilities
 //---------------------------------------------------------------------//
 
-#include "ImageUtils.h"
+#include "Editor/ImageUtils.h"
 
 NAMESPACE_BEGIN
 typedef CameraPtr CameraWeakPtr;

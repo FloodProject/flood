@@ -65,6 +65,8 @@ WebContext* WebServerCreate( Allocator* alloc )
 
 #ifdef COMPILER_MSVC
 #define snprintf _snprintf
+//This function or variable may be unsafe. Consider using _snprintf_s instead.
+#pragma warning(disable:4996)
 #endif
 
 bool WebServerStart( WebContext* context, uint16 port )

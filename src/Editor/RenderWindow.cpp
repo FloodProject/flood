@@ -10,6 +10,7 @@
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
 #include "Render/RenderContext.h"
+#include <wx/glcanvas.h>
 
 NAMESPACE_EDITOR_BEGIN
 

@@ -10,7 +10,11 @@
 #include "ConsoleTextCtrl.h"
 #include "Editor.h"
 
+#undef ENABLE_SCRIPTING_LUA
+
+#ifdef ENABLE_SCRIPTING_LUA
 #include "lua.hpp"
+#endif
 
 NAMESPACE_EDITOR_BEGIN
 

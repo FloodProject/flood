@@ -49,8 +49,10 @@ RenderControl* Viewframe::createControl()
 		WX_GL_RGBA,
 		WX_GL_DOUBLEBUFFER,
 		WX_GL_DEPTH_SIZE, 16,
-		//WX_GL_SAMPLE_BUFFERS, 1,
-		//WX_GL_SAMPLES, 4,
+#ifdef ENABLE_VIEWFRAME_ANTIALIAS
+		WX_GL_SAMPLE_BUFFERS, 1,
+		WX_GL_SAMPLES, 4,
+#endif
 		0
 	};
 

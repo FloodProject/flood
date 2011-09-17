@@ -27,6 +27,7 @@
 #include "Scene/Projector.h"
 #include "Engine/Engine.h"
 #include "EventManager.h"
+#include "RenderControl.h"
 
 #include "../Scene/SceneDocument.h"
 

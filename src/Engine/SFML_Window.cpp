@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/SFML_Window.h"
+#include "Window/SFML_Window.h"
 
-#ifdef VAPOR_WINDOWING_SFML
+#ifdef ENABLE_WINDOWING_SFML
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -226,6 +226,6 @@ void SFML_Window::processResize(sf::Event event)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

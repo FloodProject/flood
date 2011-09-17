@@ -130,6 +130,9 @@
     <Filter Include="Utilities\Telemetry">
       <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Subsystem">
+      <UniqueIdentifier>{66e41c86-6a06-42ad-95d3-c7b3bb5caf26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -294,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="..\..\dep\FastLZ\fastlz.cpp">
       <Filter>Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp">
+      <Filter>Subsystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +474,9 @@
     <ClInclude Include="..\Build.h" />
     <ClInclude Include="..\..\inc\Core\String.h">
       <Filter>Utilities\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Engine\Subsystem.h">
+      <Filter>Subsystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,13 +1,13 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Engine Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Event.h"
+#include "Core/Event.h"
 
 #ifdef ENABLE_PHYSICS_BULLET
 

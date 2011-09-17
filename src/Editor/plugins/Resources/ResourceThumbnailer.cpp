@@ -8,10 +8,9 @@
 
 #include "Editor/API.h"
 #include "ResourceThumbnailer.h"
-#include "Render/GL.h"
 #include "Resources/ResourceIndexer.h"
-#include "Settings.h"
 #include "Core/Utilities.h"
+#include "Settings.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -36,13 +35,24 @@ void ResourceThumbnailer::setIndexer(ResourceIndexer* indexer)
 
 void ResourceThumbnailer::update()
 {
+	generateThumbnail();
 }
 
 //-----------------------------------//
 
-void ResourceThumbnailer::onResourceIndexed(const ResourceMetadata& cres)
+void ResourceThumbnailer::onResourceIndexed(const ResourceMetadata& res)
 {
-	ResourceMetadata& res = const_cast<ResourceMetadata&>(cres);
+	resourcesIndexed.push(res);
+}
+
+//-----------------------------------//
+
+void ResourceThumbnailer::generateThumbnail()
+{
+	ResourceMetadata res;
+	
+	if( !resourcesIndexed.try_pop(res) )
+		return;
 
 	// For each resource indexed, we check if the thumbnail needs to be rebuilt.
 	// The thumbnails are named with the hash of the resource, so to check just
@@ -62,7 +72,7 @@ void ResourceThumbnailer::onResourceIndexed(const ResourceMetadata& cres)
 
 	ResourceLoadOptions options;
 	options.name = PathGetFile(res.path);
-	options.asynchronousLoad = false;
+	//options.asynchronousLoad = false;
 
 	ImagePtr thumbnail = nullptr;
 
@@ -134,7 +144,6 @@ bool ResourceThumbnailer::setupRender()
 	scene->add( entityCamera );
 
 	renderView = AllocateThis(RenderView, camera);
-	renderView->setClearColor(Color::Red);
 	renderView->setRenderTarget(renderBuffer);
 
 	return true;
@@ -183,10 +192,7 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 	Vector2i size = renderBuffer->getSettings().getSize();
 
 	std::vector<byte> pixels;
-	pixels.resize( size.x*size.y*4 );
-
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+	renderBuffer->read(0, pixels);
 
 	renderBuffer->unbind();
 

@@ -12,7 +12,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Input/Joystick.h"
-#include "Render/Window.h"
+#include "Window/Window.h"
 
 NAMESPACE_ENGINE_BEGIN
 

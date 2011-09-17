@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Resources © (2008-2010)
+* vapor3D Resources Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_RESOURCE_INDEXER
 
-#include "Core/ConcurrentQueue.h"
+#include "Core/Concurrency.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceDatabase.h"
 

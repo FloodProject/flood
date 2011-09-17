@@ -247,6 +247,27 @@ wxWindow* SceneDocument::getWindow()
 
 //-----------------------------------//
 
+Viewframe* SceneDocument::getViewframe()
+{
+	return viewframe;
+}
+
+//-----------------------------------//
+
+RenderControl* SceneDocument::getRenderControl()
+{
+	return viewframe->getControl();
+}
+
+//-----------------------------------//
+
+RenderWindow* SceneDocument::getRenderWindow()
+{
+	return getRenderControl()->getRenderWindow();
+}
+
+//-----------------------------------//
+
 void SceneDocument::setupRenderWindow()
 {
 	Window* window = getRenderWindow();

@@ -26,23 +26,26 @@ public:
 	virtual ~FBO();
 
 	// Binds/unbinds the FBO.
-	void bind();
-	void unbind();
+	void bind() OVERRIDE;
+	void unbind() OVERRIDE;
 
 	// Checks if the FBO is complete.
-	bool check();
+	bool check() OVERRIDE;
+
+	// Reads the contents of the render buffer.
+	void read(int8 attachment, std::vector<uint8>& data) OVERRIDE;
 
 	// Updates the render target (usually swaps buffers).
-	virtual void update();
+	void update() OVERRIDE;
 
 	// Creates a new render buffer with the given components.
-	void createRenderBuffer( int bufferComponents = RenderBufferType::Color | RenderBufferType::Depth );
+	void createRenderBuffer( int bufferComponents = RenderBufferType::Color | RenderBufferType::Depth ) OVERRIDE;
 
 	// Creates a render texture to this FBO.
-	TexturePtr createRenderTexture( RenderBufferType::Enum = RenderBufferType::Color );
+	TexturePtr createRenderTexture( RenderBufferType::Enum = RenderBufferType::Color ) OVERRIDE;
 
 	// Attaches a render texture to this FBO.
-	void attachRenderTexture(const TexturePtr& tex);
+	void attachRenderTexture(const TexturePtr& tex) OVERRIDE;
 
 	// Gets the settings of this render target.
 	GETTER(Settings, const Settings&, settings)

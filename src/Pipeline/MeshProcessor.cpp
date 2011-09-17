@@ -16,12 +16,17 @@ NAMESPACE_PIPELINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(MeshProcessor, ResourceProcessor)
+	FIELD_PRIMITIVE(2, bool, calculateBounds)
+	FIELD_PRIMITIVE(3, bool, calculateTangents)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 MeshProcessor::MeshProcessor()
-{ }
+{
+	calculateBounds = true;
+	calculateTangents = false;
+}
 
 //-----------------------------------//
 

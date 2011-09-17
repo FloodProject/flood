@@ -17,6 +17,7 @@
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "Window/Window.h"
 
 NAMESPACE_ENGINE_BEGIN
 

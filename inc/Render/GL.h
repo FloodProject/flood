@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_RENDERER_OPENGL
+#ifdef ENABLE_RENDERER_OPENGL
 
 #define GLEW_STATIC
 #include <GL/glew.h>

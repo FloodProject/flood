@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef ENABLE_SHADER_GLSL
+#ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Render/GLSL_Shader.h"
 #include "Render/GL.h"
