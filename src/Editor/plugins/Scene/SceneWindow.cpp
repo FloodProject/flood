@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Viewframe.h"
+#include "Plugins/Scene/SceneWindow.h"
 #include "RenderWindow.h"
 #include "RenderControl.h"
 
@@ -15,24 +15,20 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-Viewframe::Viewframe( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) 
-	: wxPanel(parent, id, pos, size, style | wxBORDER_NONE | wxFULL_REPAINT_ON_RESIZE)
+SceneWindow::SceneWindow( wxWindow* parent ) : DocumentWindow(parent)
 {
-	mainSizer = new wxBoxSizer( wxVERTICAL );
-	SetSizer( mainSizer );
 }
 
 //-----------------------------------//
 
-Viewframe::~Viewframe()
+SceneWindow::~SceneWindow()
 {
-	LogDebug("Destroying Viewframe");
-	//destroyControl();
+	LogDebug("Destroying SceneWindow");
 }
 
 //-----------------------------------//
 
-void Viewframe::destroyControl()
+void SceneWindow::destroyControl()
 {
 	control->stopFrameLoop();
 	control->onRender.clear();
@@ -42,7 +38,7 @@ void Viewframe::destroyControl()
 
 //-----------------------------------//
 
-RenderControl* Viewframe::createControl()
+RenderControl* SceneWindow::createControl()
 {
 	int attribList[] =
 	{
@@ -64,7 +60,7 @@ RenderControl* Viewframe::createControl()
 
 //-----------------------------------//
 
-void Viewframe::switchToDefaultCamera()
+void SceneWindow::switchToDefaultCamera()
 {
 	const CameraPtr& camera = mainCamera;
 	if( !camera ) return;
@@ -80,34 +76,33 @@ void Viewframe::switchToDefaultCamera()
 
 //-----------------------------------//
 
-RenderView* Viewframe::createView()
+RenderView* SceneWindow::createView()
 {
 	Window* window = control->getRenderWindow();
 
 	view = window->createView();
-	view->onCameraChanged.Connect(this, &Viewframe::onCameraChanged);
+	view->onCameraChanged.Connect(this, &SceneWindow::onCameraChanged);
 	
 	return view;
 }
 
 //-----------------------------------//
 
-void Viewframe::onCameraChanged(const CameraPtr& camera)
+void SceneWindow::onCameraChanged(const CameraPtr& camera)
 {
 	flagRedraw();
 
 	// Subscribe to the camera transform events.
 	TransformPtr transform = camera->getEntity()->getTransform();
-	transform->onTransform.Connect( this, &Viewframe::flagRedraw );
+	transform->onTransform.Connect( this, &SceneWindow::flagRedraw );
 }
 
 //-----------------------------------//
 
-void Viewframe::flagRedraw()
+void SceneWindow::flagRedraw()
 {
 	if( !control ) return;
 	control->flagRedraw();
-	//LogDebug("Force redraw of view");
 }
 
 //-----------------------------------//

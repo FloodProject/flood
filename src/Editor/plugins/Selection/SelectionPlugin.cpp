@@ -110,6 +110,7 @@ void SelectionPlugin::onPluginDisable()
 
 void SelectionPlugin::onToolSelect( int id )
 {
+	//GetEditor().getDocument()->
 }
 
 //-----------------------------------//
@@ -249,7 +250,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	sceneDocument->getRenderWindow()->setCursorCapture(false);
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 
 	SelectionOperation* selection = nullptr;
 
@@ -336,7 +337,7 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 	overlay->setPosition(dragMin);
 	overlay->setSize( dragMax - dragMin );
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -444,8 +445,8 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 {
 	Document* document = editor->getDocument();
 	if( !document ) return false;
+
 	SceneDocument* sceneDocument = (SceneDocument*) document;
-	
 	sceneDocument->editorScene->remove(dragRectangle);
 
 	RenderView* view = sceneDocument->viewframe->getView();

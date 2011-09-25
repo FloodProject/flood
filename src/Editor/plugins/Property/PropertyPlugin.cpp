@@ -14,6 +14,7 @@
 #include "EditorIcons.h"
 #include "Core/Reflection.h"
 #include "Core/Utilities.h"
+#include "DocumentWindow.h"
 #include "Pipeline/ResourceProcessor.h"
 
 #ifdef ENABLE_PLUGIN_PROPERTY
@@ -175,7 +176,7 @@ void PropertyPlugin::updateProperties(const EntityPtr& entity)
 	propertyPage->reset();
 	propertyPage->showEntityProperties(entity);
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//

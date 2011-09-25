@@ -10,7 +10,7 @@
 #include "CameraPlugin.h"
 #include "CameraControls.h"
 #include "Editor.h"
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "EventManager.h"
 #include "Scene/Scene.h"
 

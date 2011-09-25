@@ -8,11 +8,12 @@
 
 #pragma once
 
-class wxWindow;
-
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
+
+class DocumentWindow;
+typedef wxAuiToolBar DocumentBar;
 
 class UndoManager;
 class PluginTool;
@@ -24,6 +25,9 @@ public:
 	Document();
 	virtual ~Document();
 
+	// Creates and initializes the document.
+	void create();
+
 	// Document management callbacks.
 	virtual bool open() = 0;
 	virtual bool save() = 0;
@@ -33,12 +37,15 @@ public:
 	virtual void onDocumentSelect() {}
 	virtual void onDocumentUnselect() {}
 
-	// Undo management.
+	// Undo state management.
 	void createUndo();
 	void resetUndo();
 
-	// Gets the name of the document.
-	GETTER(Name, const String&, name)
+	// Gets the path to the document.
+	GETTER(Path, const Path&, path)
+
+	// Sets the path to the document.
+	void setPath(const Path&);
 
 	// Gets the undo manager of the document.
 	GETTER(UndoManager, UndoManager*, undoManager)
@@ -47,10 +54,13 @@ public:
 	GETTER(UnsavedChanges, bool, unsavedChanges)
 
 	// Gets the document notebook window.
-	virtual wxWindow* getWindow() = 0;
+	GETTER(Window, DocumentWindow*, documentWindow)
+
+	// Creates the document window.
+	virtual DocumentWindow* createDocumentWindow() = 0;
 
 	// Creates a context toolbar.
-	virtual wxAuiToolBar* createContextToolbar() = 0;
+	virtual DocumentBar* createDocumentBar();
 
 	// Tool selection callbacks.
 	virtual void onToolSelect(PluginTool* tool) {}
@@ -58,8 +68,17 @@ public:
 	// Handles undo/redo events.
 	void onUndoRedoEvent();
 
-	String name;
+protected:
+
+	// Path to the document. 
+	Path path;
+
+	// Keeps if the document contains unsaved changes.
 	bool unsavedChanges;
+
+	// Window representing the document.
+	DocumentWindow* documentWindow;
+
 	UndoManager* undoManager;
 };
 

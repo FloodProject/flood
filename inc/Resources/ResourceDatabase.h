@@ -64,7 +64,10 @@ public:
 	void onResourceIndexed(const ResourceMetadata&);
 
 	// Serialization fix-up.
-	virtual void fixUp() OVERRIDE;
+	void fixUp() OVERRIDE;
+
+	// Event when a resource is added to the database.
+	Event1<const ResourceMetadata&> onResourceAdded;
 
 	// Caches all the resources metadata.
 	ResourcesCache resources;

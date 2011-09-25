@@ -51,6 +51,9 @@ public:
 	// Gets the toolbar control.
 	GETTER(Toolbar, wxAuiToolBar*, toolbarCtrl)
 
+	// Gets the status bar control.
+	GETTER(Statusbar, wxStatusBar*, statusCtrl)
+
 	// Gets the AUI interface manager.
 	GETTER(AUI, wxAuiManager*, paneCtrl)
 
@@ -71,9 +74,6 @@ public:
 
 	// Gets a document from a page.
 	Document* getDocumentFromPage(int selection);
-
-	// Refreshes the main view.
-	void redrawView();
 
 protected:
 
@@ -105,6 +105,7 @@ protected:
 	// Document callbacks.
 	void onDocumentAdded(Document* document);
 	void onDocumentRemoved(Document* document);
+	void onDocumentRenamed(Document* document);
 
 public:
 
@@ -120,6 +121,7 @@ public:
 	wxAuiManager* paneCtrl;
 	wxAuiToolBar* toolbarCtrl;
 	wxAuiNotebook* notebookCtrl;
+	wxStatusBar* statusCtrl;
 
 	// Menu widgets.
 	wxMenu* menuFile;

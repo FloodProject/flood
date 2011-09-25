@@ -15,28 +15,20 @@
 #include "Core/PluginManager.h"
 #include "Core/Utilities.h"
 
-#include "Viewframe.h"
-#include "RenderControl.h"
-#include "EditorInputManager.h"
-
-#include "EventManager.h"
-#include "UndoManager.h"
 #include "DocumentManager.h"
-
-#include <wx/debugrpt.h>
+#include "EventManager.h"
 
 #include "Plugins/Project/ProjectPlugin.h"
-
 #define CREATE_PROJECT_ON_STARTUP
 
 //wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 wxIMPLEMENT_WXWIN_MAIN
 
+wxIMPLEMENT_APP_NO_MAIN(EditorApp);
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
-
-wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
@@ -76,13 +68,14 @@ EditorFrame& GetEditor() { return *gs_EditorInstance; }
 
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
-	, engine(nullptr)
 	, paneCtrl(nullptr)
 	, toolbarCtrl(nullptr)
+	, statusCtrl(nullptr)
 	, notebookCtrl(nullptr)
 	, eventManager(nullptr)
 	, pluginManager(nullptr)
 	, documentManager(nullptr)
+	, engine(nullptr)
 {
 	gs_EditorInstance = this;
 
@@ -154,6 +147,7 @@ void EditorFrame::createPlugins()
 	documentManager = AllocateThis(DocumentManager);
 	documentManager->onDocumentAdded.Connect(this, &EditorFrame::onDocumentAdded);
 	documentManager->onDocumentRemoved.Connect(this, &EditorFrame::onDocumentRemoved);
+	documentManager->onDocumentRenamed.Connect(this, &EditorFrame::onDocumentRenamed);
 
 	pluginManager = AllocateThis(PluginManager);
 	eventManager = AllocateThis(EventManager);
@@ -206,8 +200,13 @@ void EditorFrame::createUI()
 	int style = wxAUI_TB_DEFAULT_STYLE /*| wxAUI_TB_OVERFLOW*/;
 	toolbarCtrl = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	toolbarCtrl->SetGripperVisible(false);
-	toolbarCtrl->GetArtProvider()->SetElementSize(wxAUI_TBART_GRIPPER_SIZE, 0);
+	//toolbarCtrl->GetArtProvider()->SetElementSize(wxAUI_TBART_GRIPPER_SIZE, 0);
 	toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
+
+#if 0
+	// Create status-bar.
+	statusCtrl = CreateStatusBar();
+#endif
 }
 
 //-----------------------------------//
@@ -234,17 +233,6 @@ void EditorFrame::createToolbar()
 
 //-----------------------------------//
 
-void EditorFrame::redrawView()
-{
-	// Do this on the document instead.
-#if 0
-	if( !viewframe ) return;
-	viewframe->flagRedraw();
-#endif
-}
-
-//-----------------------------------//
-
 Document* EditorFrame::getDocumentFromPage(int selection)
 {
 	if( selection < 0 ) return nullptr;
@@ -256,7 +244,9 @@ Document* EditorFrame::getDocumentFromPage(int selection)
 	for( size_t i = 0; i < documents.size(); i++ )
 	{
 		Document* document = documents[i];
-		if( document->getWindow() == window ) return document;
+		wxWindow* documentWindow = (wxWindow*) document->getWindow();
+
+		if( documentWindow == window ) return document;
 	}
 
 	return nullptr;
@@ -297,9 +287,22 @@ void EditorFrame::onNotebookPageClose(wxAuiNotebookEvent& event)
 
 void EditorFrame::onDocumentAdded(Document* document)
 {
+	if( !document ) return;
+
 	eventManager->onDocumentCreate(*document);
 
-	getNotebook()->AddPage(document->getWindow(), document->getName());
+	wxWindow* window = (wxWindow*) document->getWindow();
+
+	if( !window )
+	{
+		LogDebug("Invalid window in document");
+		return;
+	}
+
+	String name = PathGetFile( document->getPath() );
+	if( name.empty() ) name = "untitled";
+	
+	getNotebook()->AddPage(window, name);
 	getAUI()->Update();
 }
 
@@ -307,11 +310,28 @@ void EditorFrame::onDocumentAdded(Document* document)
 
 void EditorFrame::onDocumentRemoved(Document* document)
 {
-	eventManager->onDocumentDestroy(*document);
+	if( !document ) return;
 
-	wxWindow* window = document->getWindow();
+	eventManager->onDocumentDestroy(*document);
+	
+	wxWindow* window = (wxWindow*) document->getWindow();
 	size_t index = notebookCtrl->GetPageIndex(window);
 	notebookCtrl->RemovePage(index);
+}
+
+//-----------------------------------//
+
+void EditorFrame::onDocumentRenamed(Document* document)
+{
+	if( !document ) return;
+
+	String name = PathGetFile( document->getPath() );
+	if( name.empty() ) name = "untitled";
+
+	wxWindow* window = (wxWindow*) document->getWindow();
+	size_t index = notebookCtrl->GetPageIndex(window);
+
+	notebookCtrl->SetPageText(index, name);
 }
 
 //-----------------------------------//

@@ -37,6 +37,7 @@ public:
 	// Document events.
 	Event1<Document*> onDocumentAdded;
 	Event1<Document*> onDocumentRemoved;
+	Event1<Document*> onDocumentRenamed;
 
 	DocumentsVector documents;
 	Document* currentDocument;

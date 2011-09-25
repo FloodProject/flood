@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "CameraControls.h"
 #include "Core/Utilities.h"
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "EditorIcons.h"
 #include "Editor.h"
 #include "Render/View.h"

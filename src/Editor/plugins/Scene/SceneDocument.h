@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Document.h"
-#include "Viewframe.h"
+#include "SceneWindow.h"
 #include "RenderWindow.h"
 
 class RenderControl;
@@ -26,6 +26,9 @@ public:
 	SceneDocument();
 	virtual ~SceneDocument();
 
+	// Creates the document.
+	DocumentWindow* createDocumentWindow() OVERRIDE;
+
 	// Document management callbacks.
 	bool open() OVERRIDE;
 	bool save() OVERRIDE;
@@ -36,30 +39,22 @@ public:
 	void onDocumentUnselect() OVERRIDE;
 	void onToolSelect(PluginTool* tool) OVERRIDE;
 
-	// Gets the document window.
-	wxWindow* getWindow() OVERRIDE;
-
-	// Resets the scene.
+	// Scene management.
 	void resetScene();
-
-	// Sets the current scene.
 	void setScene( Scene* scene );
 
-	// Gets the view controls.
-	Viewframe* getViewframe();
+	GETTER(Viewframe, SceneWindow*, viewframe)
+	
 	RenderControl* getRenderControl();
 	RenderWindow* getRenderWindow();
 	
-	// Creates a context toolbar.
-	wxAuiToolBar* createContextToolbar() OVERRIDE;
-
 	ReplicaContext* replicaContext;
 
 	ScenePtr scene;
 	ScenePtr editorScene;
 	FirstPersonControllerPtr cameraController;
 	
-	Viewframe* viewframe;
+	SceneWindow* viewframe;
 	wxAuiToolBar* toolbar;
 
 protected:
@@ -68,7 +63,6 @@ protected:
 	void onUpdate( float delta );
 	void onRender();
 
-	void createView();
 	void setupRenderWindow();
 
 	void OnMouseRightUp(wxMouseEvent& event);

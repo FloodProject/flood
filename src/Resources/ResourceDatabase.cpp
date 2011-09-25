@@ -57,6 +57,8 @@ void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 
 	resources.push_back(metadata);
 	resourcesCache[metadata.hash] = metadata;
+
+	onResourceAdded(metadata);
 }
 
 //-----------------------------------//

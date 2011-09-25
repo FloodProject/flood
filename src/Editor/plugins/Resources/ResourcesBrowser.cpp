@@ -8,20 +8,26 @@
 
 #include "Editor/API.h"
 #include "ResourcesBrowser.h"
-#include "Viewframe.h"
-#include "EditorIcons.h"
-#include "UndoManager.h"
-#include "Settings.h"
+#include "DocumentWindow.h"
+
 #include "Editor.h"
-#include "EventManager.h"
+#include "EditorIcons.h"
+#include "Settings.h"
+
 #include "Core/Utilities.h"
-#include "../Scene/ScenePane.h"
-#include "../Scene/SceneDocument.h"
 #include "Core/PluginManager.h"
+
+#include "EventManager.h"
+#include "UndoManager.h"
+
 #include "ResourcesPlugin.h"
 #include "Resources/ResourceDatabase.h"
-#include "../Property/PropertyPlugin.h"
-#include "../Property/PropertyPage.h"
+
+#include "Plugins/Scene/ScenePane.h"
+#include "Plugins/Scene/SceneDocument.h"
+
+#include "Plugins/Property/PropertyPlugin.h"
+#include "Plugins/Property/PropertyPage.h"
 
 #ifdef ENABLE_RESOURCE_BROWSER
 
@@ -34,13 +40,43 @@ ResourcesBrowser::ResourcesBrowser( wxWindow* parent )
 	, m_resourceImages(nullptr)
 	, m_resourceGroupsImages(nullptr)
 	, inSelectionMode(false)
+	, database(nullptr)
 {
 	setupUI();
 	setupGroupIcons();
 	setupGroups();
+}
 
-	// Select the general tree item.
-	selectGroup(ResourceGroup::General);
+//-----------------------------------//
+
+ResourcesBrowser::~ResourcesBrowser()
+{
+
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::setDatabase( ResourceDatabase* db )
+{
+	if( !db && database )
+	{
+		database->onResourceAdded.Disconnect(this, &ResourcesBrowser::onResourceDatabaseAdded);
+		database = nullptr;
+		return;
+	}
+
+	database = db;
+	database->onResourceAdded.Connect(this, &ResourcesBrowser::onResourceDatabaseAdded);
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onResourceDatabaseAdded(const ResourceMetadata& md)
+{
+	// If a resource is added to the database, check if we need to add it to the list.
+	if(selectedGroup != ResourceGroup::General && md.group != selectedGroup) return;
+
+	addResource(md);
 }
 
 //-----------------------------------//
@@ -143,6 +179,8 @@ bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGro
 
 void ResourcesBrowser::selectGroup(ResourceGroup::Enum group)
 {
+	selectedGroup = group;
+
 	wxTreeItemId id = m_resourceGroupIds[group];
 	m_resourceGroups->SelectItem(id);
 }
@@ -190,8 +228,14 @@ void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
 	m_resourceList->InsertColumn(0, col);
 
 	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
+	
 	ResourceDatabase* db = rp->resourceDatabase;
-	if( !db ) return;
+	
+	if( !db )
+	{
+		LogAssert("No resource database found");
+		return;
+	}
 
 	addDatabaseGroup(db, group);
 }
@@ -201,32 +245,40 @@ void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
 void ResourcesBrowser::addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group)
 {
 	bool isGeneral = group == ResourceGroup::General;
-	int imageSize = m_detailSlider->GetValue();
-	bool showImages = imageSize > 0;
 
 	ResourcesCacheMap& cache = db->resourcesCache;
 
 	for(auto it = cache.begin(); it != cache.end(); it++)
 	{
 		ResourceMetadata& metadata = it->second;
-		
+
 		if(!isGeneral && (metadata.group != group))
 			continue;
 
-		String name = PathGetFile(metadata.path);
+		addResource(metadata);
+	}
+}
 
-		if(!showImages)
-		{
-			m_resourceList->InsertItem(listIndex++, name);
-		}
-		else
-		{
-			int index = getImageIndex(metadata);
-			if( index < 0 ) return;
+//-----------------------------------//
+
+void ResourcesBrowser::addResource(const ResourceMetadata& metadata)
+{
+	int imageSize = m_detailSlider->GetValue();
+	bool showImages = imageSize > 0;
+
+	String name = PathGetFile(metadata.path);
+
+	if(!showImages)
+	{
+		m_resourceList->InsertItem(listIndex++, name);
+	}
+	else
+	{
+		int index = getImageIndex(metadata);
+		if( index < 0 ) return;
 			
-			long id = m_resourceList->InsertItem(listIndex++, name);
-			m_resourceList->SetItemImage(id, index);
-		}
+		long id = m_resourceList->InsertItem(listIndex++, name);
+		m_resourceList->SetItemImage(id, index);
 	}
 }
 

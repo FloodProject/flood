@@ -136,6 +136,8 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 		return;
 	}
 
+	document->setPath("");
+
 	events->onDocumentCreate(*document);
 	events->onDocumentSelect(*document);
 }

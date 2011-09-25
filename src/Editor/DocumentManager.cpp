@@ -37,6 +37,7 @@ void DocumentManager::addDocument(Document* document)
 	if( !document ) return;
 	documents.push_back(document);
 
+	document->create();
 	onDocumentAdded(document);
 }
 

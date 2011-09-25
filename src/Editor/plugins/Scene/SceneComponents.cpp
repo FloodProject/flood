@@ -12,7 +12,7 @@
 #include "EventManager.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "UndoManager.h"
 #include "Scene/Projector.h"
 #include "Render/Cube.h"

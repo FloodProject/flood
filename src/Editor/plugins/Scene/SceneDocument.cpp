@@ -28,11 +28,6 @@ SceneDocument::SceneDocument()
 	: viewframe(nullptr)
 	, toolbar(nullptr)
 {
-	createView();
-	reset();
-
-	ResourceManager* res = GetResourceManager();
-	res->loadQueuedResources();
 }
 
 //-----------------------------------//
@@ -41,14 +36,20 @@ SceneDocument::~SceneDocument()
 {
 	LogDebug("Destroying SceneDocument");
 
-	viewframe->getControl()->stopFrameLoop();
-	viewframe->setMainCamera(nullptr);
+	if( viewframe )
+	{
+		viewframe->getControl()->stopFrameLoop();
+		viewframe->setMainCamera(nullptr);
+	}
 
 	resetUndo();
 	resetScene();
 
-	viewframe->destroyControl();
-	viewframe->Destroy();
+	if( viewframe )
+	{
+		viewframe->destroyControl();
+		viewframe->Destroy();
+	}
 }
 
 //-----------------------------------//
@@ -64,16 +65,17 @@ bool SceneDocument::open()
 	if( fc.ShowModal() != wxID_OK )
 		return true;
 
-	Path path = (String) fc.GetPath();
+	Path filePath = (String) fc.GetPath();
 
 	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
-	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, path);
+	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, filePath);
 	Deallocate(serializer);
 
 	if( !object ) return false;
 
 	Scene* newScene = (Scene*) object;
 	setScene(newScene);
+	setPath(filePath);
 
 	return true;
 }
@@ -195,7 +197,7 @@ void SceneDocument::OnMouseEvent(wxMouseEvent& event)
 
 void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
 {
-	cameraController->setEnabled(false);
+	if(cameraController) cameraController->setEnabled(false);
 	getRenderWindow()->setCursorVisiblePriority(true, 100);
 
 	event.Skip();
@@ -205,7 +207,7 @@ void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
 
 void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
 {
-	cameraController->setEnabled(true);
+	if(cameraController) cameraController->setEnabled(true);
 	getRenderWindow()->setCursorVisiblePriority(false, 100);
 
 	//event.Skip();
@@ -213,12 +215,9 @@ void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
 
 //-----------------------------------//
 
-void SceneDocument::createView()
+DocumentWindow* SceneDocument::createDocumentWindow()
 {
-	viewframe = new Viewframe( &GetEditor() );
-
-	toolbar = createContextToolbar();
-	toolbar->Realize();
+	viewframe = new SceneWindow( &GetEditor() );
 
 	RenderControl* control = viewframe->createControl();
 	control->onRender.Bind( this, &SceneDocument::onRender );
@@ -235,20 +234,6 @@ void SceneDocument::createView()
 	RenderView* view = viewframe->createView();
 	view->setClearColor(SceneEditClearColor);
 
-	viewframe->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
-}
-
-//-----------------------------------//
-
-wxWindow* SceneDocument::getWindow()
-{
-	return viewframe;
-}
-
-//-----------------------------------//
-
-Viewframe* SceneDocument::getViewframe()
-{
 	return viewframe;
 }
 
@@ -274,32 +259,15 @@ void SceneDocument::setupRenderWindow()
 
 	RenderDevice* device = GetRenderDevice();
 	device->setRenderTarget( window );
+
 	window->getContext()->init();
-}
-
-//-----------------------------------//
-
-wxAuiToolBar* SceneDocument::createContextToolbar()
-{
-	wxAuiToolBar* tb = new wxAuiToolBar(viewframe);
-	return tb;
 }
 
 //-----------------------------------//
 
 void SceneDocument::onToolSelect(PluginTool* mode)
 {
-	wxSizer* sizer = viewframe->mainSizer;
-	wxSizerItem* item = sizer->GetChildren().GetLast()->GetData();
-	
-	wxWindow* currentWindow = item->GetWindow();
-	currentWindow->Hide();
 
-	wxAuiToolBar* newToolbar = (mode->toolbar) ? mode->toolbar : toolbar;
-	newToolbar->Show();
-	
-	item->AssignWindow(newToolbar);
-	sizer->Layout();
 }
 
 //-----------------------------------//

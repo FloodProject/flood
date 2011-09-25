@@ -17,7 +17,7 @@
 #include "Core/Profiler.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "UndoManager.h"
 #include "Render/View.h"
 #include "Scene/Camera.h"
@@ -190,7 +190,7 @@ void TerrainPlugin::onTimer( wxTimerEvent& )
 		assert( terrainOperation != nullptr );
 
 		terrainOperation->applyTool();
-		editor->redrawView();
+		editor->getDocument()->getWindow()->flagRedraw();
 	}
 }
 
@@ -386,7 +386,7 @@ void TerrainPlugin::onCreateCell( wxCommandEvent& event )
 {
 	terrain->addCell(coords.x, coords.y);
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -398,7 +398,7 @@ void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
 
 	cell->rebuildNormals();
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -464,7 +464,7 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 		terrainOperation->rayQuery = res;
 
 	terrainOperation->applyTool();
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 
 	timer.Start( TERRAIN_TIMER_MS );
 }

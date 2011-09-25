@@ -13,7 +13,7 @@
 #include "ServerPane.h"
 #include "ServerPlugin.h"
 
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "EditorIcons.h"
 #include "UndoManager.h"
 #include "Settings.h"

@@ -8,10 +8,10 @@
 
 #include "Editor/API.h"
 #include "ResourcesPane.h"
-#include "EditorIcons.h"
 #include "Editor.h"
+#include "EditorIcons.h"
 #include "EventManager.h"
-#include "Core/Utilities.h"
+#include "DocumentWindow.h"
 
 #ifdef PLATFORM_WINDOWS
 #define STRICT_TYPED_ITEMIDS
@@ -158,7 +158,7 @@ void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 void ResourcesPage::onResourceReloaded( const ResourceEvent& event )
 {
 	// Update the view when resources get reloaded.
-	GetEditor().redrawView();
+	GetEditor().getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -404,8 +404,7 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 		wxString command = getTortoiseBaseCommand(res, "log");
 		executeCommand(command);
 		break;
-	}
-	}
+	} }
 }
 
 //-----------------------------------//

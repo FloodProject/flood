@@ -190,6 +190,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Document.cpp" />
     <ClCompile Include="..\..\src\Editor\DocumentManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\DocumentWindow.cpp" />
     <ClCompile Include="..\..\src\Editor\EditorPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\EventManager.cpp" />
     <ClCompile Include="..\..\src\Editor\gen\PreferencesGenerated.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneWindow.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -216,7 +218,6 @@
     <ClCompile Include="..\..\src\Editor\Preferences.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderWindow.cpp" />
-    <ClCompile Include="..\..\src\Editor\Viewframe.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp" />
@@ -253,17 +254,19 @@
     <ClCompile Include="..\..\src\Editor\Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\Editor\DocumentWindow.h" />
+    <ClInclude Include="..\..\inc\Editor\Editor.h" />
+    <ClInclude Include="..\..\inc\Scene\SceneWindow.h" />
     <ClInclude Include="..\..\src\Editor\API.h" />
     <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Document.h" />
-    <ClInclude Include="..\..\src\Editor\inc\DocumentManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EventManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Preferences.h" />
-    <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
-    <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
-    <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Viewframe.h" />
+    <ClInclude Include="..\..\inc\Editor\Document.h" />
+    <ClInclude Include="..\..\inc\Editor\DocumentManager.h" />
+    <ClInclude Include="..\..\inc\Editor\EditorPlugin.h" />
+    <ClInclude Include="..\..\inc\Editor\EventManager.h" />
+    <ClInclude Include="..\..\inc\Editor\Preferences.h" />
+    <ClInclude Include="..\..\inc\Editor\RenderControl.h" />
+    <ClInclude Include="..\..\inc\Editor\RenderWindow.h" />
+    <ClInclude Include="..\..\inc\Editor\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinder.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinderdef.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\menuutils.h" />
@@ -289,8 +292,8 @@
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPage.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\inc\UndoManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\UndoOperation.h" />
+    <ClInclude Include="..\..\inc\Editor\UndoManager.h" />
+    <ClInclude Include="..\..\inc\Editor\UndoOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Console\ConsolePlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.h" />
@@ -305,15 +308,14 @@
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPage.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h" />
-    <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h" />
-    <ClInclude Include="..\..\src\Editor\inc\wxSliderCtrl.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h" />
-    <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Settings.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Editor.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EditorTags.h" />
+    <ClInclude Include="..\..\inc\Editor\wxFourWaySplitter.h" />
+    <ClInclude Include="..\..\inc\Editor\wxImageComboBox.h" />
+    <ClInclude Include="..\..\inc\Editor\wxSliderCtrl.h" />
+    <ClInclude Include="..\..\inc\Editor\EditorInputManager.h" />
+    <ClInclude Include="..\..\inc\Editor\EditorIcons.h" />
+    <ClInclude Include="..\..\inc\Editor\ImageUtils.h" />
+    <ClInclude Include="..\..\inc\Editor\Settings.h" />
+    <ClInclude Include="..\..\inc\Editor\EditorTags.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc" />

@@ -4,9 +4,6 @@
     <Filter Include="Window">
       <UniqueIdentifier>{c07c46bb-4b66-4945-88e1-57c20f965aa0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="View">
-      <UniqueIdentifier>{b10d95ea-b7da-427a-a845-146ea3f41837}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins">
       <UniqueIdentifier>{1583b4a4-33f5-445a-916d-c38bf28900da}</UniqueIdentifier>
     </Filter>
@@ -107,9 +104,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\RenderWindow.cpp">
       <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\Viewframe.cpp">
-      <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp">
       <Filter>Plugins\Gizmos</Filter>
@@ -282,16 +276,19 @@
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp">
       <Filter>Plugins\Resources\Browser</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\DocumentWindow.cpp">
+      <Filter>Documents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneWindow.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
+    <ClInclude Include="..\..\inc\Editor\RenderControl.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h">
+    <ClInclude Include="..\..\inc\Editor\RenderWindow.h">
       <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Viewframe.h">
-      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h">
       <Filter>Plugins\Gizmos</Filter>
@@ -317,10 +314,10 @@
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.h">
       <Filter>Plugins\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\UndoManager.h">
+    <ClInclude Include="..\..\inc\Editor\UndoManager.h">
       <Filter>Plugins\Undo/Redo</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\UndoOperation.h">
+    <ClInclude Include="..\..\inc\Editor\UndoOperation.h">
       <Filter>Plugins\Undo/Redo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h">
@@ -362,20 +359,19 @@
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPlugin.h">
       <Filter>Plugins\Property</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h">
+    <ClInclude Include="..\..\inc\Editor\wxImageComboBox.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\wxSliderCtrl.h">
+    <ClInclude Include="..\..\inc\Editor\wxSliderCtrl.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h">
+    <ClInclude Include="..\..\inc\Editor\EditorInputManager.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Settings.h">
+    <ClInclude Include="..\..\inc\Editor\Settings.h">
       <Filter>Settings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Editor.h" />
-    <ClInclude Include="..\..\src\Editor\inc\EditorTags.h" />
+    <ClInclude Include="..\..\inc\Editor\EditorTags.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Log\LogPlugin.h">
       <Filter>Plugins\Log</Filter>
     </ClInclude>
@@ -388,13 +384,13 @@
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.h">
       <Filter>Plugins\Selection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h">
+    <ClInclude Include="..\..\inc\Editor\ImageUtils.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h">
+    <ClInclude Include="..\..\inc\Editor\EditorIcons.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
+    <ClInclude Include="..\..\inc\Editor\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h">
       <Filter>Plugins\Terrain</Filter>
     </ClInclude>
@@ -410,14 +406,14 @@
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h">
       <Filter>Plugins\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Document.h">
+    <ClInclude Include="..\..\inc\Editor\Document.h">
       <Filter>Documents</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h">
       <Filter>Plugins\Mono</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\API.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Preferences.h">
+    <ClInclude Include="..\..\inc\Editor\Preferences.h">
       <Filter>Preferences</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h">
@@ -432,7 +428,7 @@
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinder.h">
       <Filter>Widgets\Keybinder</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h">
+    <ClInclude Include="..\..\inc\Editor\wxFourWaySplitter.h">
       <Filter>Widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h">
@@ -441,7 +437,7 @@
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
       <Filter>Plugins\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h">
+    <ClInclude Include="..\..\inc\Editor\EditorPlugin.h">
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPane.h">
@@ -450,14 +446,21 @@
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h">
       <Filter>Plugins\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\DocumentManager.h">
+    <ClInclude Include="..\..\inc\Editor\DocumentManager.h">
       <Filter>Documents</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\EventManager.h">
+    <ClInclude Include="..\..\inc\Editor\EventManager.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h">
       <Filter>Plugins\Resources\Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Editor\Editor.h" />
+    <ClInclude Include="..\..\inc\Editor\DocumentWindow.h">
+      <Filter>Documents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\SceneWindow.h">
+      <Filter>Plugins\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

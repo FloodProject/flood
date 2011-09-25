@@ -34,6 +34,10 @@ class ResourcesBrowser : public ResourcesFrame
 public:
 
 	ResourcesBrowser( wxWindow* parent );
+	~ResourcesBrowser();
+
+	// Sets the resource database.
+	void setDatabase( ResourceDatabase* database );
 
 	// Shows the resources from the given category.
 	void showGroup(ResourceGroup::Enum group);
@@ -62,8 +66,14 @@ protected:
 	// Sets up the UI.
 	void setupUI();
 
+	// Gets called when a resource is added to the dabase.
+	void onResourceDatabaseAdded(const ResourceMetadata&);
+
 	// Adds a resource group from a database.
 	void addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group);
+
+	// Adds a resource to the browser.
+	void addResource(const ResourceMetadata& metadata);
 
 	// Finds a resource group from a tree item id.
 	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group );
@@ -82,7 +92,8 @@ protected:
 	wxImageList* m_resourceGroupsImages;
 	ResourceGroupIdsMap m_resourceGroupIds;
 	ResourceGroupIconsMap m_resourceGroupImagesMap;
-
+	ResourceGroup::Enum selectedGroup;
+	ResourceDatabase* database;
 	wxImageList* m_resourceImages;
 	wxTreeItemId m_rootId;
 	int listIndex;

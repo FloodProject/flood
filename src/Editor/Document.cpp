@@ -7,9 +7,12 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Document.h"
-#include "UndoManager.h"
 #include "Editor.h"
+
+#include "Document.h"
+#include "DocumentWindow.h"
+
+#include "UndoManager.h"
 #include "EventManager.h"
 
 NAMESPACE_EDITOR_BEGIN
@@ -19,9 +22,8 @@ NAMESPACE_EDITOR_BEGIN
 Document::Document()
 	: unsavedChanges(false)
 	, undoManager(nullptr)
-	, name("(untitled)")
+	, documentWindow(nullptr)
 {
-	createUndo();
 }
 
 //-----------------------------------//
@@ -36,10 +38,41 @@ Document::~Document()
 
 //-----------------------------------//
 
-void Document::createUndo()
+void Document::setPath(const Path& newPath)
+{
+	path = newPath;
+	GetEditor().getDocumentManager()->onDocumentRenamed(this);
+}
+
+//-----------------------------------//
+
+void Document::create()
 {
 	assert( !undoManager );
+	createUndo();
 
+	assert( !documentWindow );
+	documentWindow = createDocumentWindow();
+
+	reset();
+}
+
+//-----------------------------------//
+
+DocumentBar* Document::createDocumentBar()
+{
+	DocumentBar* bar = new wxAuiToolBar( (wxWindow*) getWindow() );
+	bar->Realize();
+
+	getWindow()->mainSizer->Add(bar, wxSizerFlags().Expand().Top());
+
+	return bar;
+}
+
+//-----------------------------------//
+
+void Document::createUndo()
+{
 	undoManager = AllocateThis(UndoManager);
 	undoManager->onUndoRedoEvent.Connect(this, &Document::onUndoRedoEvent);
 }

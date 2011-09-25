@@ -114,10 +114,11 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	vb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
-	Material* mat = materialHandle.Resolve();
 	
+	Material* mat = materialHandle.Resolve();
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
 	mat->setBackfaceCulling( false );
+	//mat->setDepthRange( Vector2(0.1f, 0.9f) );
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Quads);

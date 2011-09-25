@@ -16,7 +16,7 @@
 #include "EditorIcons.h"
 #include "EventManager.h"
 #include "UndoManager.h"
-#include "Viewframe.h"
+#include "DocumentWindow.h"
 #include "Core/PluginManager.h"
 
 #include "Plugins/Selection/SelectionPlugin.h"
@@ -196,7 +196,7 @@ void GizmoPlugin::onEntitySelect( const EntityPtr& entity )
 
 	createGizmo( entity );
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -204,7 +204,7 @@ void GizmoPlugin::onEntitySelect( const EntityPtr& entity )
 void GizmoPlugin::onEntityUnselect( const EntityPtr& entity )
 {
 	removeGizmo( entity );
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -299,7 +299,7 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 		Deallocate(op);
 	}
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -340,7 +340,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	op->rotation = transObject->getRotation();
 	op->translation = transObject->getPosition();
 
-	editor->redrawView();
+	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//

@@ -103,6 +103,12 @@ void ResourcesPlugin::onPluginEnable()
 		Deallocate(archive);
 	}
 
+#ifdef ENABLE_RESOURCE_BROWSER
+	// Select the general tree item.
+	resourcesBrowser->selectGroup(ResourceGroup::General);
+	resourcesBrowser->setDatabase(resourceDatabase);
+#endif
+
 	PipelineInit();
 }
 
@@ -115,6 +121,11 @@ void ResourcesPlugin::onPluginDisable()
 		editor->getAUI()->DetachPane(resourcesPage);
 		editor->getAUI()->Update();
 	}
+
+#ifdef ENABLE_RESOURCE_BROWSER
+	// Forces callback disconnects.
+	resourcesBrowser->setDatabase(nullptr);
+#endif
 
 	Deallocate(resourceIndexer);
 	Deallocate(resourceDatabase);
