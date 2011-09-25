@@ -34,16 +34,6 @@ public:
 	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
-
-	// Entity callbacks.
-	void onEntitySelect( const EntityPtr& ) OVERRIDE;
-	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
-	void onSceneUnload( const ScenePtr& ) OVERRIDE;
-
-	// Component callbacks.
-	void onComponentSelect( const ComponentPtr& ) OVERRIDE;
-	void onComponentUnselect( const ComponentPtr& ) OVERRIDE;
-	void onComponentChanged(const ComponentPtr& );
 	
 	// Resource callbacks.
 	void onResourceSelect( const ResourcePtr& ) OVERRIDE;

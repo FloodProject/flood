@@ -84,53 +84,6 @@ void PropertyPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void PropertyPlugin::onSceneUnload( const ScenePtr& )
-{
-	propertyPage->reset();
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
-{
-	if( ClassInherits(entity->getType(), ReflectionGetType(Group)) )
-		return;
-
-	propertyPage->reset();
-	propertyPage->showEntityProperties(entity);
-
-	entity->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
-	entity->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
-{
-	propertyPage->resetObject( entity.get() );
-
-	entity->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
-	entity->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
-{
-	const EntityPtr& entity = component->getEntity();
-	onEntitySelect(entity);
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
-{
-	const EntityPtr& entity = component->getEntity();
-	onEntityUnselect(entity);
-}
-
-//-----------------------------------//
-
 void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
 {
 	propertyPage->showProperties( resource.get() );
@@ -157,26 +110,6 @@ void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
 void PropertyPlugin::onResourceUnselect( const ResourcePtr& resource )
 {
 	propertyPage->resetObject( resource.get() );
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
-{
-	const EntityPtr& entity = component->getEntity();
-	updateProperties(entity);
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::updateProperties(const EntityPtr& entity)
-{
-	if( !entity ) return;
-
-	propertyPage->reset();
-	propertyPage->showEntityProperties(entity);
-
-	editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//

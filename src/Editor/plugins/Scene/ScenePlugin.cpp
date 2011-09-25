@@ -121,24 +121,62 @@ void ScenePlugin::onPlayCommand(wxCommandEvent& event)
 
 void ScenePlugin::onEntitySelect( const EntityPtr& entity )
 {
-	if( scenePage->sentLastSelectionEvent )
-		return;
+	// if( scenePage->sentLastSelectionEvent ) return;
 
 	wxTreeItemId entityId = scenePage->getTreeIdFromObject( entity.get() );
+	if( !entityId.IsOk() ) return;
 
-	if( !entityId.IsOk() )
+	if( ClassInherits(entity->getType(), ReflectionGetType(Group)) )
 		return;
+
+	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
+
+	page->reset();
+	showEntityProperties( entity.get() );
+
+	entity->onComponentAdded.Connect(this, &ScenePlugin::onComponentChanged);
+	entity->onComponentRemoved.Connect(this, &ScenePlugin::onComponentChanged);
 }
 
 //-----------------------------------//
 
 void ScenePlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	if( scenePage->sentLastSelectionEvent )
-		return;
+	// if( scenePage->sentLastSelectionEvent ) return;
 
 	wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
 	treeCtrl->Unselect();
+
+	PropertyPage* propertyPage = GetPlugin<PropertyPlugin>()->propertyPage;
+	propertyPage->resetObject( entity.get() );
+
+	entity->onComponentAdded.Disconnect(this, &ScenePlugin::onComponentChanged);
+	entity->onComponentRemoved.Disconnect(this, &ScenePlugin::onComponentChanged);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onComponentSelect( const ComponentPtr& component )
+{
+	const EntityPtr& entity = component->getEntity();
+	onEntitySelect(entity);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onComponentUnselect( const ComponentPtr& component )
+{
+	const EntityPtr& entity = component->getEntity();
+	onEntityUnselect(entity);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onComponentChanged(const ComponentPtr& component)
+{
+	const EntityPtr& entity = component->getEntity();
+	showEntityProperties( entity.get() );
+	//editor->getDocument()->getWindow()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -154,6 +192,47 @@ void ScenePlugin::onSceneUnload( const ScenePtr& scene )
 {
 	LogDebug("Scene unloaded, removing items from scene tree");
 	scenePage->cleanScene();
+
+	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
+	page->reset();
+}
+
+//-----------------------------------//
+
+void ScenePlugin::showEntityProperties( Entity* entity )
+{
+	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
+	
+	page->reset();
+	page->setObject(entity);
+
+	// Entity properties.
+	page->appendObjectFields( entity->getType(), entity );
+
+	// Transform properties.
+	TransformPtr transform = entity->getTransform();
+
+	if( transform )
+	{
+		page->appendHeader( transform->getType()->name );
+		page->appendObjectFields( ReflectionGetType(Transform), transform.get() );
+	}
+
+	// Other components properties.
+	const ComponentMap& components = entity->getComponents();
+	
+	ComponentMap::const_iterator it;
+	for( it = components.begin(); it != components.end(); it++ )
+	{
+		Class* type = it->first;
+		const ComponentPtr& component = it->second;
+
+		if( ReflectionIsEqual(type, ReflectionGetType(Transform)) )
+			continue;
+
+		page->appendHeader( component->getType()->name );
+		page->appendObjectFields( type, component.get() );
+	}
 }
 
 //-----------------------------------//

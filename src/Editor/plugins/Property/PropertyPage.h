@@ -42,14 +42,17 @@ public:
 
 	PropertyPage( wxWindow* parent );
 
+	// Sets the current object.
+	SETTER(Object, Object*, currentObject)
+
 	// Populates properties on the grid.
 	void showProperties( Object* object, bool reset = true );
 
-	// Populates properties on the grid.
-	void showEntityProperties( const EntityPtr& entity );
+	// Appends a separator header to the property grid.
+	void appendHeader( const String& name );
 
 	// Appends the type fields to the property grid.
-	void appendObjectFields(Class*, void* object, bool newCategory = true);
+	void appendObjectFields(Class*, void* object);
 
 	// Gets the value of a field.
 	wxAny getFieldValue(const Field* field, void* object);

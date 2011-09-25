@@ -16,8 +16,8 @@
 #include "Core/PluginManager.h"
 #include "Core/Utilities.h"
 #include "Document.h"
-#include "../Resources/ResourcesPlugin.h"
-#include "../Resources/ResourcesBrowser.h"
+#include "Plugins/Resources/ResourcesPlugin.h"
+#include "Plugins/Resources/ResourcesBrowser.h"
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
@@ -229,55 +229,28 @@ void PropertyPage::showProperties( Object* object, bool resetObject )
 	currentObject = object;
 	
 	Class* klass = ClassGetType(object);
+	
+	appendHeader(klass->name);
 	appendObjectFields(klass, object);
 }
 
 //-----------------------------------//
 
-void PropertyPage::showEntityProperties( const EntityPtr& entity )
+void PropertyPage::appendHeader( const String& name )
 {
-	currentObject = entity.get();
-
-	// Entity properties.
-	appendObjectFields( entity->getType(), entity.get() );
-
-	// Transform properties.
-	TransformPtr transform = entity->getTransform();
-
-	if( transform )
-		appendObjectFields( ReflectionGetType(Transform), transform.get() );
-
-	// Other components properties.
-	const ComponentMap& components = entity->getComponents();
-	
-	ComponentMap::const_iterator it;
-	for( it = components.begin(); it != components.end(); it++ )
-	{
-		Class* type = it->first;
-		const ComponentPtr& component = it->second;
-
-		if( ReflectionIsEqual(type, ReflectionGetType(Transform)) )
-			continue;
-
-		appendObjectFields( type, component.get() );
-	}
+	const wxString& typeName = GetReadableName(name);
+	wxPropertyCategory* category = new wxPropertyCategory(typeName);
+	Append(category);
 }
 
 //-----------------------------------//
 
-void PropertyPage::appendObjectFields(Class* klass, void* object, bool newCategory)
+void PropertyPage::appendObjectFields(Class* klass, void* object)
 {
-	if( newCategory )
-	{
-		const wxString& typeName = GetReadableName(klass->name);
-		wxPropertyCategory* category = new wxPropertyCategory(typeName);
-		Append(category);
-	}
-
 	if( klass->parent )
 	{
 		Class* parent = klass->parent;
-		appendObjectFields(parent, object, false);
+		appendObjectFields(parent, object);
 	}
 	
 	const std::vector<Field*>& fields = klass->fields;
@@ -289,7 +262,8 @@ void PropertyPage::appendObjectFields(Class* klass, void* object, bool newCatego
 		if( ReflectionIsComposite(field->type) && !ReflectionIsResourceHandle(field) )
 		{
 			void* addr = ClassGetFieldAddress(object, field);
-			appendObjectFields((Class*) field->type, addr, false);
+			Class* klass = (Class*) field->type;
+			appendObjectFields(klass, addr);
 			continue;
 		}
 

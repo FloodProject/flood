@@ -34,15 +34,26 @@ public:
 	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
-	void onEntitySelect( const EntityPtr& ) OVERRIDE;
-	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+
+	// Scene callbacks.
 	void onSceneLoad( const ScenePtr& ) OVERRIDE;
 	void onSceneUnload( const ScenePtr& ) OVERRIDE;
 	void onServerConnect(const SessionPtr&) OVERRIDE;
+
+	// Entity callbacks.
+	void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+
+	// Component callbacks.
+	void onComponentSelect( const ComponentPtr& ) OVERRIDE;
+	void onComponentUnselect( const ComponentPtr& ) OVERRIDE;
+	void onComponentChanged(const ComponentPtr& );
 	
 	// Widget handlers.
 	void onPlayCommand(wxCommandEvent&);
 	void onSceneClassFieldUpdate(const FieldWatchVector&);
+
+	void showEntityProperties( Entity* entity );
 
 #ifndef NO_NETWORK
 	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
