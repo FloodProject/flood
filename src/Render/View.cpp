@@ -17,6 +17,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 RenderView::RenderView()
+	: depthPriority(0)
+	, target(nullptr)
 {
 	setClearColor( Color::White );
 }
@@ -24,6 +26,8 @@ RenderView::RenderView()
 //-----------------------------------//
 
 RenderView::RenderView( const CameraPtr& camera )
+	: depthPriority(0)
+	, target(nullptr)
 {
 	setClearColor( Color::White );
 	setCamera(camera);

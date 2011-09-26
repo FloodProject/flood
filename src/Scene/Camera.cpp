@@ -81,7 +81,7 @@ void Camera::updateFrustum()
 
 void Camera::setView( RenderView* view )
 {
-	if( !view || (activeView == view) )
+	if( !view || activeView == view )
 		return;
 
 	activeView = view;
@@ -95,17 +95,22 @@ void Camera::update( float )
 {
 	drawer.reset();
 
+	bool frustumUpdated = false;
+
 	if( !activeView )
 	{
 		RenderView* view = GetRenderDevice()->getActiveView();
 		setView(view);
+		frustumUpdated = true;
 	}
 
-	updateFrustum();
+	if( !activeView || activeView->getSize() == Vector2i(0,0) )
+		return;
+
+	if( !frustumUpdated) updateFrustum();
 
 	// Only run the following code once.
-	if( transform )
-		return;
+	if( transform ) return;
 		
 	transform = getEntity()->getTransform();
 	transform->onTransform.Connect( this, &Camera::onTransform );

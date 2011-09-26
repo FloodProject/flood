@@ -144,6 +144,8 @@ void Frustum::updateCorners( const Matrix4x3& matView )
 	Matrix4x4 matClip = Matrix4x4(matView) * matProjection;
 	Matrix4x4 matInvClip = matClip.inverse();
 
+	#pragma TODO("Check for inverse matrix singularity")
+
 	// The following are the corner points of the frustum (which becomes
 	// a unit cube) in clip space. Check the diagram for more information:
 	// http://www.songho.ca/opengl/files/gl_projectionmatrix01.png

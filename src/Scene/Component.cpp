@@ -15,7 +15,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_ABSTRACT_CHILD_CLASS(Component, Object)
-	FIELD_PRIMITIVE(0, bool, debugVisible)
+	//FIELD_PRIMITIVE(0, bool, debugVisible)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
