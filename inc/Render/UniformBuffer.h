@@ -68,6 +68,9 @@ public:
 	// Gets the uniform if exists or creates a new one.
 	UniformBufferElement* getElement(const String& name, size_t size);
 
+	// Removes the named uniform.
+	void removeUniform( const String& slot );
+
 	// Adds a uniform to the shader.
 	void setUniform( const String& slot, int32 data );
 

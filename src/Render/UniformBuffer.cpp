@@ -59,6 +59,16 @@ UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
 
 //-----------------------------------//
 
+void UniformBuffer::removeUniform( const String& slot )
+{
+	UniformBufferElements::iterator it = elements.find(slot);
+	if( it == elements.end() ) return;
+
+	elements.erase(it);
+}
+
+//-----------------------------------//
+
 void UniformBuffer::setUniform( const String& name, int32 data )
 {
 	size_t size = sizeof(int32);

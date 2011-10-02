@@ -320,13 +320,16 @@ void RenderDevice::bindTextures(const RenderState& state, bool bindUniforms)
 		
 		texture->bind(index);
 
-		GLint filter = Texture::convertFilterFormat(unit.filter);
-		glTexParameteri( texture->target, GL_TEXTURE_MIN_FILTER, filter );
-		glTexParameteri( texture->target, GL_TEXTURE_MAG_FILTER, filter );
+		if(unit.overrideModes)
+		{
+			GLint filter = Texture::convertFilterFormat(unit.getFilterMode());
+			glTexParameteri( texture->target, GL_TEXTURE_MIN_FILTER, filter );
+			glTexParameteri( texture->target, GL_TEXTURE_MAG_FILTER, filter );
 
-		GLint wrap = Texture::convertWrapFormat(unit.wrap);
-		glTexParameteri( texture->target, GL_TEXTURE_WRAP_S, wrap );
-		glTexParameteri( texture->target, GL_TEXTURE_WRAP_T, wrap );
+			GLint wrap = Texture::convertWrapFormat(unit.getWrapMode());
+			glTexParameteri( texture->target, GL_TEXTURE_WRAP_S, wrap );
+			glTexParameteri( texture->target, GL_TEXTURE_WRAP_T, wrap );
+		}
 
 		if( !bindUniforms ) continue;
 

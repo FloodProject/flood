@@ -27,7 +27,9 @@ void HandleDestroyManager( HandleManager* man )
 {
 	if( !man ) return;
 
-	if( man->handles.size() > 0 )
+	const HandleMap& handles = man->handles;
+
+	if( handles.size() > 0 )
 	{
 		LogAssert("Handle manager should not have any handles");
 		return;

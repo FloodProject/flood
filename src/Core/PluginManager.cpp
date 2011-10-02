@@ -28,10 +28,28 @@ PluginManager::~PluginManager()
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
-		disablePlugin(plugin);
+
+		if( plugin->isEnabled() )
+			LogAssert("Plugin should be disabled");
+
 		Deallocate(plugin);
 	}
 }
+
+//-----------------------------------//
+
+void PluginManager::disablePlugins()
+{
+	// We disable plugins in an explicit step so allow plugins
+	// being disabled to obtain other plugins and operate on them.
+
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		Plugin* plugin = plugins[i];
+		disablePlugin(plugin);
+	}
+}
+
 
 //-----------------------------------//
 

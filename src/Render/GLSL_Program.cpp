@@ -88,11 +88,11 @@ void GLSL_Program::createShaders()
 	if( !text )
 		return;
 
-	vertex = Allocate(GLSL_Shader, AllocatorGetHeap());
+	vertex = AllocateThis(GLSL_Shader);
 	vertex->setShaderType( ShaderType::Vertex );
 	vertex->create();
 	
-	fragment = Allocate(GLSL_Shader, AllocatorGetHeap());
+	fragment = AllocateThis(GLSL_Shader);
 	fragment->setShaderType( ShaderType::Fragment );
 	fragment->create();
 

@@ -95,6 +95,15 @@ struct TextureFilterMode
 	};
 };
 
+struct TextureMipMode
+{
+	enum Enum
+	{
+		Nearest,
+		Linear,
+	};
+};
+
 struct TextureWrapMode
 {
 	enum Enum
@@ -109,9 +118,37 @@ struct TextureUnit
 {
 	TextureUnit();
 
+	// Texture unit id.
 	uint8 unit;
+
+	// Image used on this texture unit.
 	ImageHandle image;
+
+	// Keeps track if texture modes are overriden.
+	bool overrideModes;
+
+	// Gets the texture filtering mode.
+	GETTER(FilterMode, TextureFilterMode::Enum, filter)
+
+	// Gets the texture mip filtering mode.
+	GETTER(MipMode, TextureMipMode::Enum, mip)
+
+	// Gets the texture wrap mode.
+	GETTER(WrapMode, TextureWrapMode::Enum, wrap)
+
+	// Sets the texture filtering mode.
+	void setFilterMode(TextureFilterMode::Enum);
+
+	// Sets the texture mip filtering mode.
+	void setMipMode(TextureMipMode::Enum);
+
+	// Sets the texture wrap mode.
+	void setWrapMode(TextureWrapMode::Enum);
+
+protected:
+
 	TextureFilterMode::Enum filter;
+	TextureMipMode::Enum mip;
 	TextureWrapMode::Enum wrap;
 };
 

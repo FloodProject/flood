@@ -24,8 +24,9 @@ NAMESPACE_ENGINE_BEGIN
 struct TerrainSettings
 {
 	TerrainSettings()
-		: CellSize(512)
-		, NumberTiles(32)
+		: CellSize(4096)
+		, MaxHeight(0)
+		, NumberTiles(128)
 		, TextureSize(512)
 	{ }
 
@@ -106,11 +107,8 @@ public:
 	// Valides the heightmap (checks if it has valid dimensions).
 	bool validateHeightmap( const ImagePtr& heightmap );
 
-	// Applies a brush operation in a specified region.
-	//void applyBrush( const Brush& brush, const Region& region );
-
 	// Updates the terrain geometry if needed.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 protected:
 

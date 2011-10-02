@@ -43,6 +43,10 @@ Projector::~Projector()
 	{
 		const RenderablePtr& renderable = renderables[i];
 		renderable->onPreRender.clear();
+
+		const UniformBufferPtr& ub = renderable->getUniformBuffer();
+		ub->removeUniform("vp_TextureProjection");
+		ub->removeUniform("vp_TextureView");
 	}
 }
 

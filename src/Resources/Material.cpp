@@ -119,8 +119,34 @@ void Material::setBlending( BlendSource::Enum source, BlendDestination::Enum des
 TextureUnit::TextureUnit()
 	: unit(0)
 	, filter(TextureFilterMode::Linear)
+	, mip(TextureMipMode::Nearest)
 	, wrap(TextureWrapMode::Repeat)
+	, overrideModes(false)
 {
+}
+
+//-----------------------------------//
+
+void TextureUnit::setFilterMode(TextureFilterMode::Enum newFilter)
+{
+	filter = newFilter;
+	overrideModes = true;
+}
+
+//-----------------------------------//
+
+void TextureUnit::setMipMode(TextureMipMode::Enum newMip)
+{
+	mip = newMip;
+	overrideModes = true;
+}
+
+//-----------------------------------//
+
+void TextureUnit::setWrapMode(TextureWrapMode::Enum newWrap)
+{
+	wrap = newWrap;
+	overrideModes = true;
 }
 
 //-----------------------------------//

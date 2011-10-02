@@ -45,6 +45,9 @@ public:
 	// Disables the plugin.
 	void disablePlugin( Plugin* plugin );
 
+	// Disables all plugins.
+	void disablePlugins();
+
 	// Returns if plugin is enabled.
 	bool isPluginEnabled( Plugin* plugin ) const;
 

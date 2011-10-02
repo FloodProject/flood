@@ -92,17 +92,14 @@ bool Texture::check()
 
 bool Texture::upload()
 {
-	if( !check() )
-		return false;
+	if( !check() ) return false;
 
 	bind();
 
 	bool haveImage = image && !image->getBuffer().empty();
 
-	glTexImage2D( target, 0, 
-		convertInternalFormat(format),
-		width, height, 0,
-		convertSourceFormat(format),
+	glTexImage2D( target, 0, convertInternalFormat(format),
+		width, height, 0, convertSourceFormat(format),
 		/*(format == PixelFormat::Depth) ? GL_FLOAT : */GL_UNSIGNED_BYTE,
 		(haveImage) ? &image->getBuffer()[0] : nullptr );
 
@@ -127,8 +124,10 @@ void Texture::configure()
 {
 	bind();
 
+#if 0
 	if(GLEW_EXT_texture_filter_anisotropic)
 		glTexParameterf( target, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropicFilter );
+#endif
 
 #if 0
 	glTexParameteri( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
@@ -139,6 +138,11 @@ void Texture::configure()
 #endif
 
 	#pragma TODO("Add support for mipmaps")
+
+	if( glGenerateMipmap ) glGenerateMipmap(target);
+
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); 
 
 	unbind();
 }
