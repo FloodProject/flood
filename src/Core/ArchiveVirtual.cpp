@@ -39,12 +39,6 @@ static ArchiveFuncs gs_VirtualArchiveFuncs =
 	VirtualArchiveMonitor,
 };
 
-struct ArchiveMount
-{
-	Archive* archive;
-	String mount;
-};
-
 struct ArchiveVirtual : public Archive
 {
 	std::vector<Archive*> mounts;
@@ -65,12 +59,18 @@ Archive* ArchiveCreateVirtual(Allocator* alloc)
 
 //-----------------------------------//
 
+static void HandleWatch(Archive*, const FileWatchEvent& event);
+
 bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
 {
 	if( !archive || !mount ) return false;
 
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 	varchive->mounts.push_back(mount);
+
+	// Setup archive watch callbacks.
+	mount->userdata = varchive;
+	mount->watch.Connect(HandleWatch);
 
 	return true;
 }
@@ -208,9 +208,24 @@ static bool VirtualArchiveExistsDir(Archive* archive, const Path& path)
 
 //-----------------------------------//
 
-static bool VirtualArchiveMonitor(Archive*)
+static void HandleWatch(Archive* archive, const FileWatchEvent& event)
 {
-	return false;
+	Archive* varchive = (ArchiveVirtual*) archive->userdata;
+	varchive->watch(archive, event);
+}
+
+static bool VirtualArchiveMonitor(Archive* archive)
+{
+	if( !archive ) return false;
+	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
+	
+	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	{
+		Archive* marchive = varchive->mounts[i];
+		marchive->fn->watch(marchive);
+	}
+
+	return true;
 }
 
 //-----------------------------------//

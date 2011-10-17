@@ -232,7 +232,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Float:
 	{
-		float& f = *vc.f;
+		float& f = *vc.f32;
 		value = json_real(f);
 		break;
 	}

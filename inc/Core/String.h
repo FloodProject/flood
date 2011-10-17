@@ -13,9 +13,11 @@
 #include <cstdarg>
 #include <cstring>
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
+
+EXTERN_BEGIN
 
 typedef std::string String;
 typedef std::wstring WideString;
@@ -81,9 +83,9 @@ API_CORE Path PathGetSeparator();
 // Combines two path elements.
 API_CORE Path PathCombine(Path base, Path extra);
 
-//-----------------------------------//
-
 EXTERN_END
+
+//-----------------------------------//
 	
 // Converts a number to a string.
 template< typename T >

@@ -6,7 +6,7 @@
 	@date 4/15/2009
 
 	Copyright (c) 2009 James Wynn (james@jameswynn.com)
-	Copyright (c) 2010 vapor3D
+	Copyright (c) 2010 João Matos (triton@vapor3d.org)
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -37,10 +37,10 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct WatchStruct;
+struct FileWatchStruct;
 
-/// type for a map from WatchID to WatchStruct pointer
-typedef std::map<WatchID, WatchStruct*> WatchMap;
+/// type for a map from FileWatchId to FileWatchStruct pointer
+typedef std::map<FileWatchId, FileWatchStruct*> FileWatchMap;
 
 //-----------------------------------//
 
@@ -54,28 +54,25 @@ public:
 	virtual ~FileWatcherWin32();
 
 	/// Add a directory watch
-	/// @exception FileNotFoundException Thrown when the requested directory does not exist
-	WatchID addWatch(const String& directory);
+	FileWatchId addWatch(const String& directory, void* userdata) OVERRIDE;
 
 	/// Remove a directory watch. This is a brute force lazy search O(nlogn).
-	void removeWatch(const String& directory);
+	void removeWatch(const String& directory) OVERRIDE;
 
 	/// Remove a directory watch. This is a map lookup O(logn).
-	void removeWatch(WatchID watchid);
+	void removeWatch(FileWatchId FileWatchId) OVERRIDE;
 
 	/// Updates the watcher. Must be called often.
-	void update();
+	void update() OVERRIDE;
 
 	/// Handles the action
-	void handleAction(WatchStruct* watch, const std::wstring& filename, uint32 action);
+	void handleAction(FileWatchStruct* watch, const WideString& filename, uint32 action);
 
-private:
-
-	/// Map of WatchID to WatchStruct pointers
-	WatchMap mWatches;
+	/// Map of FileWatchId to FileWatchStruct pointers
+	FileWatchMap mWatches;
 	
-	/// The last watchid
-	WatchID mLastWatchID;
+	/// The last FileWatchId
+	FileWatchId mLastWatchID;
 };
 
 //-----------------------------------//

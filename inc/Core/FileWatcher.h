@@ -6,7 +6,7 @@
 	@date 4/15/2009
 
 	Copyright (c) 2009 James Wynn (james@jameswynn.com)
-	Copyright (c) 2010 vapor3D
+	Copyright (c) 2010 João Matos (triton@vapor3d.org)
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -35,62 +35,35 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-// Type for a watch id
-typedef uint32 WatchID;
-
-/** 
- * Actions to listen for. Rename will send two events, one for
- * the deletion of the old file, and one for the creation of the
- * new file.
- */
-
-namespace Actions
-{
-	enum Enum
-	{
-		// Sent when a file is created
-		Added,
-		
-		// Sent when a file is deleted
-		Deleted,
-		
-		// Sent when a file is modified
-		Modified,
-		
-		// Sent when a file is renamed
-		Renamed,
-	};
-
-	const String getString( Actions::Enum a );
-}
-
-//-----------------------------------//
-
 /**
  * This data will be sent when a file notification is sent from the
  * OS back to the engine. You can hook the delegate in the FileWatcher
- * class to get these events. These can be used to implement assets
- * live updating, so when an asset changes it will be reloaded.
+ * class to get these events.
  */
 
-class API_CORE FileWatchEvent
+typedef uint32 FileWatchId;
+
+struct API_CORE FileWatchEvent
 {
 	DECLARE_UNCOPYABLE(FileWatchEvent)
 
-public:
+	enum Enum
+	{
+		Added,
+		Deleted,
+		Modified,
+		Renamed,
+	};
 
-	FileWatchEvent( Actions::Enum action, WatchID id,
-		const String& dir, const String& file )
-		: action(action)
-		, watchid(id)
-		, dir(dir)
-		, filename(file)
-	{ }
+	FileWatchEvent( FileWatchEvent::Enum, FileWatchId,
+		const String& dir, const String& file );
 
-	Actions::Enum action;
-	WatchID watchid;
-	const String& dir;
-	const String& filename;
+	FileWatchEvent::Enum action;
+	FileWatchId watchId;
+
+	String dir;
+	String filename;
+	void* userdata;
 };
 
 //-----------------------------------//
@@ -110,13 +83,13 @@ public:
 	virtual ~FileWatcher() {}
 
 	// Add a directory watch
-	virtual WatchID addWatch(const String& directory) = 0;
+	virtual FileWatchId addWatch(const String& directory, void* userdata = 0) = 0;
 
 	// Remove a directory watch. This is a brute force search O(nlogn).
 	virtual void removeWatch(const String& directory) = 0;
 
 	// Remove a directory watch. This is a map lookup O(logn).
-	virtual void removeWatch(WatchID watchid) = 0;
+	virtual void removeWatch(FileWatchId FileWatchId) = 0;
 
 	// Updates the watcher. Must be called often.
 	virtual void update() = 0;

@@ -1,6 +1,6 @@
 /**
 	Copyright (c) 2009 James Wynn (james@jameswynn.com)
-	Copyright (c) 2010 vapor3D
+	Copyright (c) 2010 João Matos (triton@vapor3d.org)
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -28,22 +28,14 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-const String Actions::getString( Actions::Enum action )
-{
-	switch(action)
-	{
-	case Actions::Added:
-		return "Added";
-	case Actions::Deleted:
-		return "Deleted";
-	case Actions::Modified:
-		return "Modified";
-	case Actions::Renamed:
-		return "Renamed";
-	default:
-		return "(unknown)";
-	}
-}
+FileWatchEvent::FileWatchEvent( FileWatchEvent::Enum action, FileWatchId id,
+	const String& dir, const String& file )
+	: action(action)
+	, watchId(id)
+	, dir(dir)
+	, filename(file)
+	, userdata(nullptr)
+{ }
 
 //-----------------------------------//
 

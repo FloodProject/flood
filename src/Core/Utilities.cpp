@@ -289,10 +289,14 @@ Path PathNormalize(const Path& path)
 
 	StringReplace(norm, "\\", "/");
 	StringReplace(norm, "//", "/");
-	StringReplace(norm, "../", "");
-	StringReplace(norm, "./", "");
 	StringReplace(norm, "/\\", "/");
 	StringReplace(norm, "\\/", "/");
+
+	// These transformations are unsafe.
+#if 0
+	StringReplace(norm, "../", "");
+	StringReplace(norm, "./", "");
+#endif
 
 	return norm;
 }
@@ -326,6 +330,8 @@ Path PathCombine(Path base, Path extra)
 
 	extra = StringTrim(extra, "\\");
 	extra = StringTrim(extra, "/");
+
+	if( base.empty() ) return extra;
 
 	const Path& sep = PathGetSeparator();
 

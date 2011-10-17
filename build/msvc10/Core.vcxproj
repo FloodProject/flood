@@ -249,13 +249,13 @@
     <ClInclude Include="..\..\inc\Core\DynamicLibrary.h" />
     <ClInclude Include="..\..\inc\Core\Event.h" />
     <ClInclude Include="..\..\inc\Core\FileWatcher.h" />
+    <ClInclude Include="..\..\inc\Core\FileWatcherWin32.h" />
     <ClInclude Include="..\..\inc\Core\Handle.h" />
     <ClInclude Include="..\..\inc\Core\Log.h" />
     <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\Core\Object.h" />
     <ClInclude Include="..\..\inc\Core\Platform.h" />
     <ClInclude Include="..\..\inc\Core\Plugin.h" />
-    <ClInclude Include="..\..\inc\Core\PluginExtension.h" />
     <ClInclude Include="..\..\inc\Core\PluginManager.h" />
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
     <ClInclude Include="..\..\inc\Core\Profiler.h" />
@@ -297,7 +297,6 @@
     <ClInclude Include="..\..\inc\Network\SessionManager.h" />
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
-    <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
     <ClInclude Include="..\Build.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,7 +20,12 @@ NAMESPACE_CORE_BEGIN
 // an explicit reset(). scoped_ptr is based on Boost's scoped_ptr but extends
 // it with custom deallocators.
 
-template<typename T, void (*Destroy)(T*)>
+template<typename T> void DeallocatePointer(T* obj)
+{
+	DeallocateObject((const T*) obj);
+}
+
+template<typename T, void (*Destroy)(T*) = DeallocatePointer>
 class scoped_ptr // noncopyable
 {
     typedef scoped_ptr<T, Destroy> this_type;
@@ -28,6 +33,9 @@ class scoped_ptr // noncopyable
 public:
 
     typedef T element_type;
+
+    explicit scoped_ptr() : px(nullptr)
+    { }
 
     explicit scoped_ptr( T* p ) : px(p)
     { }

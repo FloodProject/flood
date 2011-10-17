@@ -10,6 +10,7 @@
 
 #include "Core/API.h"
 #include "Core/Pointers.h"
+#include "Core/FileWatcher.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -18,21 +19,6 @@ NAMESPACE_EXTERN_BEGIN
 struct Stream;
 struct Archive;
 struct ArchiveFuncs;
-
-// Creates a new virtual archive.
-API_CORE Archive* ArchiveCreateVirtual(Allocator*);
-
-// Mounts an archive in the virtual archive.
-API_CORE bool ArchiveMount(Archive*, Archive*, const String& mountPath);
-
-// Mounts a directory and its direct hierarchy.
-API_CORE void ArchiveMountDirectories(Archive*, const String& dirPath, Allocator*);
-
-// Creates a new archive from a ZIP.
-API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
-
-// Creates a new archive from a directory.
-API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
 // Destroys the archive and deallocates its memory.
 API_CORE void ArchiveDestroy(Archive*);
@@ -51,7 +37,23 @@ API_CORE bool ArchiveExistsDirectory(Archive*, const Path&);
 API_CORE void ArchiveEnumerateFiles(Archive*, std::vector<Path>&);
 API_CORE void ArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
 
+// Combines the path of a file to get the full path to an archive file.
 API_CORE Path ArchiveCombinePath(Archive*, const Path& filePath);
+
+// Creates a new virtual archive.
+API_CORE Archive* ArchiveCreateVirtual(Allocator*);
+
+// Mounts an archive in the virtual archive.
+API_CORE bool ArchiveMount(Archive*, Archive*, const String& mountPath);
+
+// Mounts a directory and its direct hierarchy.
+API_CORE void ArchiveMountDirectories(Archive*, const String& dirPath, Allocator*);
+
+// Creates a new archive from a ZIP.
+API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
+
+// Creates a new archive from a directory.
+API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
 // Filesystem helpers.
 API_CORE bool FileExists(const Path&);
@@ -59,10 +61,16 @@ API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);
 API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
 
 // Pointer helpers.
-typedef scoped_ptr<Archive, ArchiveDestroy> ArchivePtr;
-#define pArchiveCreateFromZip(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
-#define pArchiveCreateFromDirectory(alloc, ...) CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
-#define pArchiveCreateVirtual(alloc, ...) CreateScopedPtr(ArchiveCreateVirtual, alloc, __VA_ARGS__)
+typedef scoped_ptr<Archive, ArchiveDestroy> ArchiveScopedPtr;
+#define ArchiveCreateFromZipScoped(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
+#define ArchiveCreateFromDirectoryScoped(alloc, ...) CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
+#define ArchiveCreateVirtualScoped(alloc, ...) CreateScopedPtr(ArchiveCreateVirtual, alloc, __VA_ARGS__)
+
+typedef uint32 ArchiveWatchId;
+typedef Event2<Archive*, const FileWatchEvent&> ArchiveWatchEvent;
+
+// Sets up and updates the watching functionality for the archive.
+API_CORE bool ArchiveWatchUpdate(Archive*);
 
 /**
  * Archives are a structured collection of files. The most common archive
@@ -71,12 +79,18 @@ typedef scoped_ptr<Archive, ArchiveDestroy> ArchivePtr;
 
 struct Archive
 {
-	virtual ~Archive() {}
+	Archive();
+	virtual ~Archive();
 
-	String path;
+	Path   path;
 	String scheme;
+
 	void*  handle;
-	
+	void*  userdata;
+
+	ArchiveWatchEvent watch;
+	ArchiveWatchId watchId;
+
 	ArchiveFuncs* fn;
 };
 
@@ -87,7 +101,7 @@ typedef bool (*ArchiveExistsFileFunction)(Archive*, const Path&);
 typedef bool (*ArchiveExistsDirFunction)(Archive*, const Path&);
 typedef void (*ArchiveEnumerateFilesFunction)(Archive*, std::vector<Path>&);
 typedef void (*ArchiveEnumerateDirsFunction)(Archive*, std::vector<Path>&);
-typedef bool (*ArchiveMonitorFunction)(Archive*);
+typedef bool (*ArchiveWatchFunction)(Archive*);
 
 struct ArchiveFuncs
 {
@@ -98,7 +112,7 @@ struct ArchiveFuncs
 	ArchiveExistsDirFunction       exists_dir;
 	ArchiveEnumerateFilesFunction  enumerate_files;
 	ArchiveEnumerateDirsFunction   enumerate_dirs;
-	ArchiveMonitorFunction         monitor;
+	ArchiveWatchFunction           watch;
 };
 
 //-----------------------------------//

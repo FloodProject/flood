@@ -81,6 +81,9 @@ void TestPath(CuTest* tc)
 	path = PathNormalize("/Weird\\Path/To\\File"); 
 	CuAssertCppStrEquals(tc, path, Path("/Weird/Path/To/File"));
 
+	path = PathNormalize("/Path/To/../File");
+	CuAssertCppStrEquals(tc, path, Path("/Path/To/../File"));
+
 #ifdef PLATFORM_WINDOWS
 	CuAssertStrEquals(tc, "\\", PathGetSeparator().c_str());
 #else

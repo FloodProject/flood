@@ -124,14 +124,14 @@
     <Filter Include="Utilities\Timer">
       <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Streams\Watcher">
-      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Telemetry">
       <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Subsystem">
       <UniqueIdentifier>{66e41c86-6a06-42ad-95d3-c7b3bb5caf26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,10 +179,10 @@
       <Filter>Utilities\Profiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Streams\Watcher</Filter>
+      <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>Streams\Watcher</Filter>
+      <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Telemetry.cpp">
       <Filter>Utilities\Telemetry</Filter>
@@ -347,9 +347,6 @@
     <ClInclude Include="..\..\inc\Core\Reflection.h">
       <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>Streams\Watcher</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
       <Filter>Utilities\Telemetry</Filter>
     </ClInclude>
@@ -369,7 +366,7 @@
       <Filter>Network\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
-      <Filter>Streams\Watcher</Filter>
+      <Filter>Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Quaternion.h">
       <Filter>Math\Quaternion</Filter>
@@ -465,9 +462,6 @@
     <ClInclude Include="..\..\inc\Network\MessageHandler.h">
       <Filter>Network\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Core\PluginExtension.h">
-      <Filter>Extensions</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\StackWalker.h">
       <Filter>Debug</Filter>
     </ClInclude>
@@ -477,6 +471,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Engine\Subsystem.h">
       <Filter>Subsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\FileWatcherWin32.h">
+      <Filter>Filesystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

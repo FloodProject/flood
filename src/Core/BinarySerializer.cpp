@@ -152,7 +152,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Float:
 	{
-		float& f = *vc.f;
+		float& f = *vc.f32;
 		EncodeFloat(bin->ms, f);
 		break;
 	}

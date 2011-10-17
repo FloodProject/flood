@@ -156,7 +156,7 @@ Archive* ArchiveCreateFromZip(Allocator* alloc, const Path& path)
 	archive->handle = nullptr;
 	archive->scheme = "zip";
 	archive->fn = &gs_ZipArchiveFuncs;
-
+	
 	if( !ArchiveOpen(archive, path) )
 	{
 		//LogWarn("Error opening archive: %s", path.c_str());

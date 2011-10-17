@@ -15,6 +15,7 @@
 #ifdef PLATFORM_WINDOWS
 	#include <io.h>
 	#define F_OK 0
+	#include "Core/FileWatcherWin32.h"
 #else
 	#include <unistd.h>
 #endif
@@ -27,6 +28,8 @@ NAMESPACE_CORE_BEGIN
 
 #ifdef ENABLE_ARCHIVE_DIR
 
+scoped_ptr<FileWatcherWin32> watcher;
+
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
 static Stream* DirArchiveOpenFile(Archive*, const Path&, Allocator*);
@@ -34,7 +37,7 @@ static void    DirArchiveEnumerateFiles(Archive*, std::vector<Path>&);
 static void    DirArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
 static bool    DirArchiveExistsFile(Archive*, const Path&);
 static bool    DirArchiveExistsDir(Archive*, const Path&);
-static bool    DirArchiveMonitor(Archive*); 
+static bool    DirArchiveMonitor(Archive*);
 
 static ArchiveFuncs gs_DirArchiveFuncs =
 {
@@ -82,6 +85,19 @@ static bool DirArchiveOpen(Archive* archive, const String& path)
 static bool DirArchiveClose(Archive* archive)
 {
 	if( !archive ) return false;
+
+	if(archive->watchId != 0)
+	{
+		// Remove the archive from the watch list.
+		watcher->removeWatch(archive->watchId);
+
+		if( watcher->mWatches.empty() )
+		{
+			// Remove the watcher when there are no more watches.
+			watcher.reset();
+		}
+	}
+
 	return true;
 }
 
@@ -104,6 +120,7 @@ static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
 static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
+	
 	DirArchiveEnumerate(paths, archive->path, "", false);
 }
 
@@ -112,6 +129,7 @@ static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
+	
 	DirArchiveEnumerate(paths, archive->path, "", true);
 }
 
@@ -120,8 +138,9 @@ static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& 
 static bool DirArchiveExistsFile(Archive* archive, const Path& file)
 {
 	if( !archive ) return false;
-	const Path& filePath = archive->path + PathGetSeparator() + file;
-	return FileExists(filePath);
+	
+	const Path& fullPath = ArchiveCombinePath(archive, file);
+	return FileExists(fullPath);
 }
 
 //-----------------------------------//
@@ -143,9 +162,36 @@ static bool DirArchiveExistsDir(Archive* archive, const Path& path)
 
 //-----------------------------------//
 
-static bool DirArchiveMonitor(Archive*)
+static void HandleFileWatch(const FileWatchEvent& event)
 {
-	return false;
+	Archive* archive = (Archive*) event.userdata;
+	assert( archive != nullptr );
+
+	archive->watch(archive, event);
+}
+
+//-----------------------------------//
+
+static bool DirArchiveMonitor(Archive* archive)
+{
+	if( !archive ) return false;
+
+	// Setup the watcher if it has not been created.
+	if( !watcher )
+	{
+		watcher.reset( AllocateHeap(FileWatcherWin32) );
+		watcher->onFileWatchEvent.Connect(&HandleFileWatch);
+	}
+
+	if(archive->watchId == 0)
+	{
+		// Add the archive to the watch list.
+		archive->watchId = watcher->addWatch(archive->path, archive);
+	}
+
+	watcher->update();
+
+	return true;
 }
 
 #endif
@@ -165,7 +211,8 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 	{
 		const Path& name = entry->d_name;
 		
-		switch(entry->d_type) {
+		switch(entry->d_type)
+		{
 		case DT_REG:
 		{
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
@@ -177,9 +224,8 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 		{
 			if(!name.empty() && name[0] == '.') continue;
 		
-			Path sep = filePath.empty() ? "" : PathGetSeparator();
-			Path _dirPath = StringFormat("%s%s%s", dirPath.c_str(), PathGetSeparator().c_str(), name.c_str());
-			Path _filePath = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(), name.c_str());
+			Path _dirPath = PathCombine(dirPath, name);
+			Path _filePath = PathCombine(filePath, name);
 
 			if(dirs) paths.push_back(_filePath);
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);

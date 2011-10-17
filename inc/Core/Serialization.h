@@ -29,8 +29,7 @@ union API_CORE ValueContext
 	uint32* u32;
 	sint64* i64;
 	uint64* u64;
-	float* f;
-	int32* bf;
+	float* f32;
 	String* s;
 	Vector3* v;
 	Color* c;

@@ -1,6 +1,6 @@
 /**
 	Copyright (c) 2009 James Wynn (james@jameswynn.com)
-	Copyright (c) 2010 vapor3D
+	Copyright (c) 2010 João Matos (triton@vapor3d.org)
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 */
 
 #include "Core/API.h"
-#include "FileWatcherWin32.h"
+#include "Core/FileWatcherWin32.h"
 #include "Core/Utilities.h"
 #include "Core/Log.h"
 
@@ -42,7 +42,7 @@ NAMESPACE_CORE_BEGIN
 class FileWatcherWin32;
 
 /// Internal watch data
-struct WatchStruct
+struct FileWatchStruct
 {
 	OVERLAPPED mOverlapped;
 	HANDLE mDirHandle;
@@ -51,8 +51,9 @@ struct WatchStruct
 	DWORD mNotifyFilter;
 	bool mStopNow;
 	char* mDirName;
-	WatchID mWatchid;
+	FileWatchId mWatchid;
 	FileWatcherWin32* mWatcher;
+	void* mCustomData;
 };
 
 //-----------------------------------//
@@ -60,7 +61,7 @@ struct WatchStruct
 #pragma region Internal Functions
 
 // forward decl
-bool RefreshWatch(WatchStruct* pWatch, bool _clear = false);
+bool RefreshWatch(FileWatchStruct* pWatch, bool _clear = false);
 
 //-----------------------------------//
 
@@ -69,7 +70,7 @@ void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, 
 {
 	TCHAR szFile[MAX_PATH];
 	PFILE_NOTIFY_INFORMATION pNotify;
-	WatchStruct* pWatch = (WatchStruct*) lpOverlapped;
+	FileWatchStruct* pWatch = (FileWatchStruct*) lpOverlapped;
 	size_t offset = 0;
 
 	if(dwNumberOfBytesTransfered == 0)
@@ -111,7 +112,7 @@ void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, 
 //-----------------------------------//
 
 /// Refreshes the directory monitoring.
-bool RefreshWatch(WatchStruct* pWatch, bool _clear)
+bool RefreshWatch(FileWatchStruct* pWatch, bool _clear)
 {
 	return ReadDirectoryChangesW(
 		pWatch->mDirHandle, pWatch->mBuffer, sizeof(pWatch->mBuffer), FALSE,
@@ -121,7 +122,7 @@ bool RefreshWatch(WatchStruct* pWatch, bool _clear)
 //-----------------------------------//
 
 /// Stops monitoring a directory.
-void DestroyWatch(WatchStruct* pWatch)
+void DestroyWatch(FileWatchStruct* pWatch)
 {
 	if(!pWatch) return;
 
@@ -145,11 +146,11 @@ void DestroyWatch(WatchStruct* pWatch)
 //-----------------------------------//
 
 /// Starts monitoring a directory.
-WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
+FileWatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 {
-	WatchStruct* pWatch;
+	FileWatchStruct* pWatch;
 	size_t ptrsize = sizeof(*pWatch);
-	pWatch = static_cast<WatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
+	pWatch = static_cast<FileWatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
 
 	pWatch->mDirHandle = CreateFile(szDirectory, FILE_LIST_DIRECTORY,
 		FILE_SHARE_READ, nullptr, OPEN_EXISTING,
@@ -187,8 +188,8 @@ FileWatcherWin32::FileWatcherWin32()
 
 FileWatcherWin32::~FileWatcherWin32()
 {
-	WatchMap::iterator iter = mWatches.begin();
-	WatchMap::iterator end = mWatches.end();
+	FileWatchMap::iterator iter = mWatches.begin();
+	FileWatchMap::iterator end = mWatches.end();
 	
 	for(; iter != end; ++iter)
 		DestroyWatch(iter->second);
@@ -198,17 +199,17 @@ FileWatcherWin32::~FileWatcherWin32()
 
 //-----------------------------------//
 
-WatchID FileWatcherWin32::addWatch(const String& directory)
+FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 {
-	WatchID watchid = ++mLastWatchID;
+	FileWatchId watchid = ++mLastWatchID;
 
 	std::wstring wdir( directory.begin(), directory.end() );
-	WatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
+	FileWatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
 		| FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
 	
 	if(!watch)
 	{
-		//LogWarn( "Could not watch directory %s", directory.c_str() );
+		LogWarn( "Could not watch directory %s", directory.c_str() );
 		return 0;
 	}
 
@@ -217,6 +218,7 @@ WatchID FileWatcherWin32::addWatch(const String& directory)
 	watch->mWatcher = this;
 	watch->mDirName = new char[len];
 	strcpy_s(watch->mDirName, len, directory.c_str());
+	watch->mCustomData = userdata;
 
 	mWatches.insert(std::make_pair(watchid, watch));
 
@@ -227,8 +229,8 @@ WatchID FileWatcherWin32::addWatch(const String& directory)
 
 void FileWatcherWin32::removeWatch(const String& directory)
 {
-	WatchMap::iterator iter = mWatches.begin();
-	WatchMap::iterator end = mWatches.end();
+	FileWatchMap::iterator iter = mWatches.begin();
+	FileWatchMap::iterator end = mWatches.end();
 	for(; iter != end; ++iter)
 	{
 		if(directory == iter->second->mDirName)
@@ -241,14 +243,14 @@ void FileWatcherWin32::removeWatch(const String& directory)
 
 //-----------------------------------//
 
-void FileWatcherWin32::removeWatch(WatchID watchid)
+void FileWatcherWin32::removeWatch(FileWatchId watchid)
 {
-	WatchMap::iterator iter = mWatches.find(watchid);
+	FileWatchMap::iterator iter = mWatches.find(watchid);
 
 	if(iter == mWatches.end())
 		return;
 
-	WatchStruct* watch = iter->second;
+	FileWatchStruct* watch = iter->second;
 	mWatches.erase(iter);
 
 	DestroyWatch(watch);
@@ -263,36 +265,38 @@ void FileWatcherWin32::update()
 
 //-----------------------------------//
 
-void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, uint32 action)
+void FileWatcherWin32::handleAction(FileWatchStruct* watch, const std::wstring& filename, uint32 action)
 {
-	Actions::Enum fwAction;
+	FileWatchEvent::Enum fwAction;
 
 	switch(action)
 	{
 	case FILE_ACTION_ADDED:
-		fwAction = Actions::Added;
+		fwAction = FileWatchEvent::Added;
 		break;
 	case FILE_ACTION_REMOVED:
-		fwAction = Actions::Deleted;
+		fwAction = FileWatchEvent::Deleted;
 		break;
 	case FILE_ACTION_MODIFIED:
-		fwAction = Actions::Modified;
+		fwAction = FileWatchEvent::Modified;
 		break;
 	case FILE_ACTION_RENAMED_NEW_NAME:
 	case FILE_ACTION_RENAMED_OLD_NAME:
-		fwAction = Actions::Renamed;
+		fwAction = FileWatchEvent::Renamed;
 		break;
 	default:
 		assert( 0 && "This should not be reached" );
-		fwAction = Actions::Added;
+		fwAction = FileWatchEvent::Added;
 	};
 
 	// Convert wide string to regular string.
 	// TODO: handle Unicode properly.
 	const String& file = StringFromWideString(filename);
 
-	FileWatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
-	onFileWatchEvent( we );
+	FileWatchEvent event( fwAction, watch->mWatchid, watch->mDirName, file);
+	event.userdata = watch->mCustomData;
+
+	onFileWatchEvent( event );
 }
 
 //-----------------------------------//

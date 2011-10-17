@@ -16,7 +16,7 @@
 
 void TestArchiveDir(CuTest* tc)
 {
-	ArchivePtr archive( pArchiveCreateFromDirectory(AllocatorGetHeap(), "teste") );
+	ArchiveScopedPtr archive( ArchiveCreateFromDirectoryScoped(AllocatorGetHeap(), "teste") );
 	CuAssertPtrNotNull(tc, archive);
 
 	std::vector<Path> files;
@@ -49,7 +49,7 @@ void TestArchiveDir(CuTest* tc)
 
 void TestArchiveZip(CuTest* tc)
 {
-	ArchivePtr archive( pArchiveCreateFromZip(AllocatorGetHeap(), "teste.zip") );
+	ArchiveScopedPtr archive( ArchiveCreateFromZipScoped(AllocatorGetHeap(), "teste.zip") );
 	CuAssertPtrNotNull(tc, archive);
 
 	std::vector<Path> files;
@@ -89,7 +89,7 @@ void TestArchiveVirtual(CuTest* tc)
 	Archive* archive_dir = ArchiveCreateFromDirectory(AllocatorGetHeap(), "teste");
 	CuAssertPtrNotNull(tc, archive_dir);
 
-	ArchivePtr archive( pArchiveCreateVirtual(AllocatorGetHeap()) );
+	ArchiveScopedPtr archive( ArchiveCreateVirtual(AllocatorGetHeap()) );
 	CuAssertPtrNotNull(tc, archive);
 
 	ArchiveMount(archive, archive_zip, "");

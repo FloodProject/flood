@@ -156,8 +156,6 @@ public:
 		addReference();
 	}
 
-protected:
-
 	HandleId id;
 };
 
@@ -171,8 +169,8 @@ Handle<T, RFn, DFn> HandleCast(const Handle<U, RFn, DFn>& hn)
 
 NAMESPACE_CORE_END
 
-#define FWD_DECL_HANDLE(T)							\
-	NAMESPACE_CORE_BEGIN							\
-		class T;									\
-		typedef Handle<T> T##Handle;				\
+#define FWD_DECL_HANDLE(T) \
+	NAMESPACE_CORE_BEGIN \
+		class T; \
+		typedef Handle<T> T##Handle; \
 	NAMESPACE_CORE_END

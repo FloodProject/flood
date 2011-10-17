@@ -142,7 +142,7 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 		vc.u64 = (uint64*) address;
 		break;
 	case Primitive::Float:
-		vc.f = (float*) address;
+		vc.f32 = (float*) address;
 		break;
 	case Primitive::String:
 		vc.s = (String*) address;

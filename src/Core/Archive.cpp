@@ -13,6 +13,22 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+Archive::Archive()
+	: handle(nullptr)
+	, userdata(nullptr)
+	, watchId(0)
+	, fn(nullptr)
+{
+}
+
+//-----------------------------------//
+
+Archive::~Archive()
+{
+}
+
+//-----------------------------------//
+
 bool ArchiveOpen(Archive* archive, const String& path)
 {
 	if( !archive ) return false;
@@ -72,6 +88,14 @@ void ArchiveEnumerateDirectories(Archive* archive, std::vector<String>& dirs)
 
 //-----------------------------------//
 
+bool ArchiveWatchUpdate(Archive* archive)
+{
+	if( !archive ) return false;
+	return archive->fn->watch(archive);
+}
+
+//-----------------------------------//
+
 Path ArchiveCombinePath(Archive* archive, const Path& filePath)
 {
 	if( !archive ) return "";
@@ -81,7 +105,6 @@ Path ArchiveCombinePath(Archive* archive, const Path& filePath)
 
 	return PathNormalize(fullPath);
 }
-
 
 //-----------------------------------//
 
