@@ -24,10 +24,8 @@ void ResourceTaskRun(Task* task)
 {
 	ResourceLoadOptions* options = (ResourceLoadOptions*) task->userdata;
 
-	const ResourceHandle& handle = options->handle;
 	Stream* stream = options->stream;
-
-	Resource* resource = handle.Resolve();
+	Resource* resource = options->resource;
 	const Path& path = resource->getPath();
 	
 	ResourceManager* res = GetResourceManager();
@@ -44,13 +42,14 @@ void ResourceTaskRun(Task* task)
 
 	resource->setStatus( ResourceStatus::Loaded );
 
+	LogInfo("Loaded resource '%s'", path.c_str());
+
 	if( options->sendLoadEvent )
 	{
-		ResourceEvent event(handle);
+		ResourceEvent event;
+		event.resource = resource;
 		res->resourceTaskEvents.push(event);
 	}
-
-	LogInfo("Loaded resource '%s'", path.c_str());
 
 cleanup:
 

@@ -59,6 +59,9 @@ ProgramPtr ProgramManager::getProgram( const String& name, bool precompile )
 	if( !res->loadResource(options) )
 		return nullptr;
 
+	if( programs.find(name) == programs.end() )
+		return nullptr;
+
 	const ProgramPtr& program = programs[name];
 	
 	if( precompile && program )
@@ -88,7 +91,7 @@ bool ProgramManager::registerProgram( const String& name, const ProgramPtr& prog
 ProgramPtr ProgramManager::createProgram(Text* text)
 {
 	GLSL_Text* gtext = (GLSL_Text*) text;
-	GLSL_ProgramPtr program = Allocate(GLSL_Program, AllocatorGetHeap(), gtext);
+	GLSL_ProgramPtr program = AllocateHeap(GLSL_Program, gtext);
 	
 	return program;
 }

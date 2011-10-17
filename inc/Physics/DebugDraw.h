@@ -13,7 +13,7 @@
 #include "Core/References.h"
 #include "Resources/Material.h"
 
-FWD_DECL_INTRUSIVE(VertexBuffer)
+FWD_DECL_INTRUSIVE(GeometryBuffer)
 FWD_DECL_INTRUSIVE(Material)
 FWD_DECL_INTRUSIVE(Renderable)
 
@@ -32,8 +32,8 @@ public:
 	// Gets the renderable.
 	GETTER(Renderable, RenderablePtr, renderable)
 
-	// Gets the dynamic vertex buffer.
-	GETTER(VertexBuffer, VertexBufferPtr, vb)
+	// Gets the dynamic geometry buffer.
+	GETTER(GeometryBuffer, GeometryBufferPtr, gb)
 
 	// Clears the dynamic vertex buffer.
 	void clearBuffer();
@@ -61,9 +61,9 @@ public:
 
 protected:
 	
-	VertexBufferPtr vb;
-	MaterialHandle material;
 	RenderablePtr renderable;
+	GeometryBufferPtr gb;
+	MaterialHandle material;
 };
 
 //-----------------------------------//

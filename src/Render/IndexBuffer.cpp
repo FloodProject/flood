@@ -12,23 +12,15 @@
 
 #include "Render/IndexBuffer.h"
 #include "Render/GL.h"
+#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-IndexBuffer::IndexBuffer( int indexSize )
+IndexBuffer::IndexBuffer()
 	: isBuilt(false)
-	, indexSize(indexSize)
 { }
-
-//-----------------------------------//
-
-void IndexBuffer::setData( const std::vector<byte>& data )
-{
-	this->data = data;
-	isBuilt = false;
-}
 
 //-----------------------------------//
 
@@ -56,27 +48,27 @@ bool IndexBuffer::unbind()
 
 //-----------------------------------//
 
-bool IndexBuffer::build()
+bool IndexBuffer::build(const GeometryBufferPtr& gb)
 {
-	if( data.empty() ) return false;
+	if( !gb ) return false;
+	assert( gb->isIndexed() );
+
+	GLsizeiptr indexSize = gb->indexData.size();
+	if( indexSize == 0 ) return false;
 
 	bind();
 
+	const GLvoid* data = &gb->indexData.front();
+
 	// Reserve space for all the buffer elements.
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, data.size(), &data[0], getGLBufferType() );
+	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSize, data, usage );
 
 	if( CheckLastErrorGL("Could not buffer data in index buffer") )
 		return false;
 
 	isBuilt = true;
 	return true;
-}
-
-//-----------------------------------//
-
-int IndexBuffer::getSize() const
-{
-	return data.size() / (indexSize / 8);
 }
 
 //-----------------------------------//

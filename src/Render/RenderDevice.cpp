@@ -16,6 +16,7 @@
 #include "Render/RenderContext.h"
 #include "Render/GL.h"
 #include "Render/View.h"
+#include "Render/BufferManager.h"
 #include "Render/ProgramManager.h"
 #include "Render/TextureManager.h"
 
@@ -139,9 +140,12 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& lights)
 {
 	const RenderablePtr& renderable = state.renderable;
-	renderable->bind();
+	bindBuffers(renderable.get());
 
-	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	BufferManager* buffers = activeContext->bufferManager;
+	
+	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
 	vb->bindPointers();
 	
 	Material* material = state.material;
@@ -170,7 +174,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	if( !renderable->onPreRender.empty() )
 		renderable->onPreRender(state);
 
-	renderable->render(this);
+	render(renderable.get());
 	
 	if( !renderable->onPostRender.empty() )
 		renderable->onPostRender(state);
@@ -180,7 +184,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	undoRenderStateMaterial(material);
 
 	vb->unbindPointers();
-	renderable->unbind();
+	unbindBuffers(renderable.get());
 }
 
 //-----------------------------------//
@@ -227,9 +231,14 @@ bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue& lights)
 {
 	const RenderablePtr& renderable = state.renderable;
-	renderable->bind();
+	bindBuffers(renderable.get());
 
-	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	BufferManager* buffers = activeContext->bufferManager;
+	
+	BufferEntry* bufs = buffers->getBuffer(gb);
+
+	VertexBufferPtr vb = bufs->vb;
 	vb->bindGenericPointers();
 
 	Material* material = state.material;
@@ -269,16 +278,86 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	const UniformBufferPtr& ub = renderable->getUniformBuffer();
 	program->setUniforms(ub);
 
-	renderable->render(this);
+	render(renderable.get());
 	
 	if( !renderable->onPostRender.empty() )
 		renderable->onPostRender(state);
 	
 	undoRenderStateMaterial(material);
 	
-	renderable->unbind();
 	program->unbind();
+
 	vb->unbindGenericPointers();
+	unbindBuffers(renderable.get());
+}
+
+//-----------------------------------//
+
+static GLenum ConvertPrimitiveGL(PolygonType::Enum type)
+{
+	switch(type)
+	{
+	case PolygonType::LineLoop:
+		return GL_LINE_LOOP;
+	case PolygonType::Lines:
+		return GL_LINES;
+	case PolygonType::LineStrip:
+		return GL_LINE_STRIP;
+	case PolygonType::Points:
+		return GL_POINTS;
+	case PolygonType::Polygon:
+		return GL_POLYGON;
+	case PolygonType::Quads:
+		return GL_QUADS;
+	case PolygonType::QuadStrip:
+		return GL_QUAD_STRIP;
+	case PolygonType::TriangleFan:
+		return GL_TRIANGLE_FAN;
+	case PolygonType::Triangles:
+		return GL_TRIANGLES;
+	case PolygonType::TriangleStrip:
+		return GL_TRIANGLE_STRIP;
+	}
+
+	return GL_TRIANGLES;
+}
+
+//-----------------------------------//
+
+void RenderDevice::render(Renderable* renderable)
+{	
+	PolygonMode::Enum mode = renderable->getPolygonMode();
+	
+	if( mode == PolygonMode::Wireframe )
+	{
+		// Switch the OpenGL polygon mode to the one requested.
+		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
+	}
+
+	GLenum type = ConvertPrimitiveGL(renderable->getPrimitiveType());
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+
+	if( !gb->isIndexed() )
+    {
+		uint32 numVertices = gb->getSizeVertices();
+
+		glDrawArrays( type, 0, numVertices );
+ 		CheckLastErrorGL("Error drawing vertex buffer");
+    }
+    else
+    {
+        GLenum size = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+		int numIndices = gb->indexData.size() / (gb->indexSize / 8);
+
+		glDrawElements( type, numIndices, size, 0 );
+		CheckLastErrorGL("Error drawing index buffer");
+    }
+
+	if( mode == PolygonMode::Wireframe )
+	{
+		// Restore the polygon rendering mode.
+		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Solid );
+	}
 }
 
 //-----------------------------------//
@@ -315,9 +394,13 @@ void RenderDevice::bindTextures(const RenderState& state, bool bindUniforms)
 		const TextureUnit& unit = it->second;
 		
 		int32 index = unit.unit;
-		const ImageHandle& handle = unit.image;
-		const TexturePtr& texture = activeContext->textureManager->getTexture(handle.Resolve());
 		
+		const ImageHandle& handle = unit.image;
+		Image* image = handle.Resolve();
+
+		const TexturePtr& texture = activeContext->textureManager->getTexture(image);
+		if( !texture ) continue;
+
 		texture->bind(index);
 
 		if(unit.overrideModes)
@@ -352,6 +435,61 @@ void RenderDevice::unbindTextures(Material* material)
 		const TexturePtr& tex = activeContext->textureManager->getTexture(handle.Resolve());
 		tex->unbind( it->first );
 	}
+}
+
+//-----------------------------------//
+
+bool RenderDevice::bindBuffers(Renderable* renderable)
+{
+	BufferManager* buffers = activeContext->bufferManager;
+
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
+	IndexBufferPtr ib = buffers->getIndexBuffer(gb);
+	
+	if( !vb ) return false;
+
+	if( !vb->isBuilt() || gb->needsRebuild )
+	{
+		// If the vertex buffer is not build yet, then we build it.
+		vb->build(gb);
+	}
+
+	vb->bind();
+
+	// If there is no index buffer associated with the geometry, we are done.
+	if( !ib ) goto done;
+
+	ib->bind();
+	
+	if( !ib->isBuilt || gb->needsRebuild )
+	{
+		// If the index buffer is not built, we also need to build it.
+		ib->build(gb);
+	}
+
+done:
+
+	gb->needsRebuild = false;
+	return true;
+}
+
+//-----------------------------------//
+
+bool RenderDevice::unbindBuffers(Renderable* renderable)
+{
+	BufferManager* buffers = activeContext->bufferManager;
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	
+	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
+	if( !vb ) return false;
+	
+	vb->unbind();
+
+	IndexBufferPtr ib = buffers->getIndexBuffer(gb);
+	if( ib ) ib->unbind();
+
+	return true;
 }
 
 //-----------------------------------//

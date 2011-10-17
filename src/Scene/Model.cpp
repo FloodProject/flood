@@ -177,12 +177,12 @@ void Model::rebuildPositions()
 	if( renderables.empty() ) return;
 
 	const RenderablePtr& rend = renderables[0];
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 
 	const std::vector<Vector3>& meshPositions = pmesh->position;
-	vb->set( VertexAttribute::Position, meshPositions );
+	gb->set( VertexAttribute::Position, meshPositions );
 	
-	vb->forceRebuild();
+	gb->forceRebuild();
 }
 
 //-----------------------------------//
@@ -358,11 +358,9 @@ void Model::setAnimation(const AnimationPtr& animation)
 {
 	assert( pmesh != nullptr );
 
-	if( !pmesh->isAnimated() )
-		return;
+	if( !pmesh->isAnimated() ) return;
 
-	if( !animation )
-		return;
+	if( !animation ) return;
 
 	AnimationState state;
 	state.animation = animation;
@@ -432,12 +430,9 @@ void Model::onRender(const RenderState&)
 		if( renderables.empty() ) return;
 
 		const RenderablePtr& rend = renderables[0];
-		const VertexBufferPtr& vb = rend->getVertexBuffer();
-
-		std::vector<Vector3>& skinnedPositions = vb->getVertices();
-		doSkinning(skinnedPositions);
 		
-		vb->forceRebuild();
+		const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+		doSkinning(gb);	
 	}
 	else
 	{
@@ -447,16 +442,49 @@ void Model::onRender(const RenderState&)
 
 //-----------------------------------//
 
-void Model::doSkinning(std::vector<Vector3>& skinnedPositions)
+void Model::doSkinningRaw(Vector3* positions)
 {
 	const std::vector<Vector3>& meshPositions = pmesh->position;
-	skinnedPositions.resize( meshPositions.size() );
 
-	for(size_t j = 0; j < meshPositions.size(); j++)
+	for(size_t i = 0; i < meshPositions.size(); i++)
 	{
-		int32 boneIndex = (int32) pmesh->boneIndices[j];
-		skinnedPositions[j] = bones[boneIndex]*meshPositions[j];
+		int32 boneIndex = (int32) pmesh->boneIndices[i];
+
+		Vector3* pos = positions + i;
+		*pos = bones[boneIndex] * meshPositions[i];
 	}
+}
+
+//-----------------------------------//
+
+void Model::doSkinning(const GeometryBufferPtr& gb)
+{
+	VertexElement* elemPosition = gb->declarations.find(VertexAttribute::Position);
+	if( !elemPosition ) return;
+
+	// Can only handle buffers with 3 components and float.
+	if(elemPosition->components != 3 || elemPosition->type != VertexType::Float)
+		return;
+
+	uint32 numVertices = gb->getSizeVertices();
+
+	if( pmesh->position.size() != numVertices )
+	{
+		LogDebug("Skinned mesh and its buffer have different vertices");
+		return;
+	}
+
+	const std::vector<Vector3>& meshPositions = pmesh->position;
+
+	for(size_t i = 0; i < meshPositions.size(); i++)
+	{
+		int32 boneIndex = (int32) pmesh->boneIndices[i];
+
+		Vector3* pos = (Vector3*) gb->getAttribute(VertexAttribute::Position, i);
+		*pos = bones[boneIndex] * meshPositions[i];
+	}
+
+	gb->forceRebuild();
 }
 
 //-----------------------------------//
@@ -518,7 +546,7 @@ void Model::updateDebugRenderable() const
 	if( !pmesh->isAnimated() )
 		return;
 
-	VertexBufferPtr vb = debugRenderable->getVertexBuffer();
+	GeometryBuffer gb = debugRenderable->getVertexBuffer();
 
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
@@ -545,8 +573,8 @@ void Model::updateDebugRenderable() const
 		colors.push_back( Color::Blue );
 	}
 
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
 }
 
 //-----------------------------------//
@@ -560,11 +588,11 @@ RenderablePtr Model::createDebugRenderable() const
 	Material* material = handleMaterial.Resolve();
 	material->setDepthTest(false);
 
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBuffer gb = Allocate(VertexBuffer, AllocatorGetHeap());
 	
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Lines);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(handleMaterial);
 
 	return renderable;

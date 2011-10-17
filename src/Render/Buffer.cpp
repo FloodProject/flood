@@ -48,7 +48,7 @@ Buffer::~Buffer()
 
 //-----------------------------------//
 
-int Buffer::getGLBufferType()
+int ConvertBufferGL(BufferUsage::Enum usage, BufferAccess::Enum access)
 {
 	if( usage == BufferUsage::Stream && access == BufferAccess::Read )
 		return GL_STREAM_READ;

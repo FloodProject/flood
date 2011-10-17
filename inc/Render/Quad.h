@@ -30,7 +30,7 @@ public:
 
 private:
 
-	VertexBufferPtr createQuad( float width, float height );
+	GeometryBufferPtr createQuad( float width, float height );
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );

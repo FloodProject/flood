@@ -43,21 +43,6 @@ TextureManager::~TextureManager()
 
 //-----------------------------------//
 
-void TextureManager::update( float delta )
-{
-	//std::vector<TexturePtr> texturesToRemove;
-
-	//foreach( const TextureMapPair& p, textures )
-	//{
-	//	if( p.second->getReferenceCount() == 2 )
-	//	{
-	//		texturesToRemove.push_back(p.second);
-	//	}
-	//}
-}
-
-//-----------------------------------//
-
 void TextureManager::removeTexture(Image* image)
 {
 	TextureMap::iterator it = textures.find(image);
@@ -83,12 +68,10 @@ TexturePtr TextureManager::getTexture( const String& name )
 
 TexturePtr TextureManager::getTexture( Image* image )
 {
-	// Image not found.
-	if( !image ) 
+	if( !image )
 	{
-		//LogWarn( "Reverting to fallback texture" );
-		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), Settings(TEX_SIZE, TEX_SIZE));
-		return texture;
+		// Image not valid.
+		return nullptr;
 	}
 
 	// Image already has texture.
@@ -100,7 +83,7 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Image not loaded yet.
 	else if( !image->isLoaded() ) 
 	{
-		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), Settings(TEX_SIZE, TEX_SIZE));
+		TexturePtr texture = AllocateHeap(Texture, Settings(TEX_SIZE, TEX_SIZE));
 		textures[image] = texture;
 		return texture;
 	}
@@ -108,7 +91,7 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Create a new texture from image.
 	else
 	{
-		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), image);
+		TexturePtr texture = AllocateHeap(Texture, image);
 		textures[image] = texture;
 		return texture;
 	}
@@ -154,20 +137,25 @@ void TextureManager::onUnloaded( const ResourceEvent& event )
 void TextureManager::onReloaded( const ResourceEvent& event )
 {
 	ImageHandle handleImage = HandleCast<Image>(event.handle);	
-	Image* image = handleImage.Resolve();
+	Image* newImage = handleImage.Resolve();
 
-	if( image->getResourceGroup() != ResourceGroup::Images )
+	if( newImage->getResourceGroup() != ResourceGroup::Images )
+		return;
+	
+	Image* oldImage = (Image*) event.oldResource;
+
+	if( textures.find(oldImage) == textures.end() )
 		return;
 
-	if( textures.find(image) == textures.end() )
-		return;
+	LogDebug( "Reloading texture '%s'", newImage->getPath().c_str() );
 
-	LogDebug( "Reloading texture '%s'", image->getPath().c_str() );
+	TexturePtr texture = textures[oldImage];
+	texture->setImage(newImage);
 
-	TexturePtr tex = textures[image];
-	tex->setImage(image);
+	textures.erase(oldImage);
+	textures[newImage] = texture;
 
-	//switchImage( currImage, newImage );
+	//switchImage( oldImage, newImage );
 }
 
 //-----------------------------------//

@@ -160,6 +160,7 @@ void Texture::setImage( Image* newImage )
 	format = image->getPixelFormat();
 
 	upload();
+	configure();
 }
 
 //-----------------------------------//

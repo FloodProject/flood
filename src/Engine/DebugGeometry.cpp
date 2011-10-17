@@ -30,21 +30,21 @@ DebugDrawer::DebugDrawer()
 	mat->setDepthTest(false);
 	mat->setDepthWrite(false);
 
-	VertexBufferPtr linesVB = AllocateThis(VertexBuffer);
+	GeometryBufferPtr linesVB = AllocateThis(GeometryBuffer);
 	linesVB->setBufferAccess(BufferAccess::Write);
 	linesVB->setBufferUsage(BufferUsage::Dynamic);
 
 	lines = RenderableCreate(alloc);
-	lines->setVertexBuffer(linesVB);
+	lines->setGeometryBuffer(linesVB);
 	lines->setMaterial(debug);
 	lines->setRenderLayer(RenderLayer::PostTransparency);
 
-	VertexBufferPtr trianglesVB = AllocateThis(VertexBuffer);
+	GeometryBufferPtr trianglesVB = AllocateThis(GeometryBuffer);
 	trianglesVB->setBufferAccess(BufferAccess::Write);
 	trianglesVB->setBufferUsage(BufferUsage::Dynamic);
 
 	triangles = RenderableCreate(alloc);
-	triangles->setVertexBuffer(trianglesVB);
+	triangles->setGeometryBuffer(trianglesVB);
 	triangles->setMaterial(debug);
 	triangles->setRenderLayer(RenderLayer::PostTransparency);
 }
@@ -53,8 +53,8 @@ DebugDrawer::DebugDrawer()
 
 void DebugDrawer::reset()
 {
-	lines->getVertexBuffer()->clear();
-	triangles->getVertexBuffer()->clear();
+	lines->getGeometryBuffer()->clear();
+	triangles->getGeometryBuffer()->clear();
 	renderables.clear();
 }
 
@@ -109,9 +109,9 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	const int numColors = 6*4; // Faces*Vertices
 	std::vector<Vector3> colors( numColors, Color::White );
 
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
 	
@@ -122,7 +122,7 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Quads);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
@@ -139,15 +139,15 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 	std::vector<Vector3> colors( 2, Color::Red );
 
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::Color, colors );
+	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	gb->set( VertexAttribute::Position, vertex );
+	gb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Lines);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 	
 	return renderable;
@@ -157,7 +157,7 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 RenderablePtr DebugBuildFrustum( const Frustum& box )
 {
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
 	Material* material = materialHandle.Resolve();
@@ -165,7 +165,7 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Quads);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
@@ -191,11 +191,11 @@ void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 	ADD_BOX_FRUSTUM( 0, 2, 6, 4 ) // Left
 	ADD_BOX_FRUSTUM( 5, 1, 3, 7 ) // Right
 
-	VertexBufferPtr vb = rend->getVertexBuffer();
-	vb->set( VertexAttribute::Position, pos );
+	GeometryBufferPtr gb = rend->getGeometryBuffer();
+	gb->set( VertexAttribute::Position, pos );
 
 	std::vector<Vector3> colors( pos.size(), Color::White );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Color, colors );
 }
 
 //-----------------------------------//

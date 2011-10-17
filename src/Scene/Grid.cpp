@@ -33,10 +33,10 @@ Grid::Grid()
 
 //-----------------------------------//
 
-VertexBufferPtr Grid::buildGeometry()
+GeometryBufferPtr Grid::buildGeometry()
 {
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb = AllocateThis(VertexBuffer);
+	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 
 	// Vertex data
 	std::vector< Vector3 > vertex;
@@ -93,10 +93,10 @@ VertexBufferPtr Grid::buildGeometry()
 	}
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, vertex );
+	gb->set( VertexAttribute::Color, colors );
 
-	return vb;
+	return gb;
 }
 
 //-----------------------------------//
@@ -109,7 +109,7 @@ void Grid::update( float update )
 
 	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
 	rend->setPrimitiveType(PolygonType::Lines);
-	rend->setVertexBuffer( buildGeometry() );
+	rend->setGeometryBuffer( buildGeometry() );
 	rend->setMaterial( materialHandle );
 
 	addRenderable( rend );

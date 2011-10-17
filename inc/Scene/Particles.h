@@ -124,7 +124,7 @@ protected:
 	Vector3 attenuation;
 
 	// Vertex buffer.
-	VertexBufferPtr vb;
+	GeometryBufferPtr gb;
 
 	// Material.
 	MaterialHandle material;

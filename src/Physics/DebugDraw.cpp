@@ -20,7 +20,7 @@ NAMESPACE_ENGINE_BEGIN
 
 BulletDebugDrawer::BulletDebugDrawer()
 {
-	vb = AllocateThis(VertexBuffer, BufferUsage::Dynamic, BufferAccess::Write);
+	gb = AllocateThis(GeometryBuffer, BufferUsage::Dynamic, BufferAccess::Write);
 	clearBuffer();
 
 	material = MaterialCreate(AllocatorGetHeap(), "PhysicsDebug");
@@ -28,7 +28,7 @@ BulletDebugDrawer::BulletDebugDrawer()
 
 	renderable = AllocateThis(Renderable);
 	renderable->setPrimitiveType(PolygonType::Lines);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 }
 
@@ -37,16 +37,17 @@ BulletDebugDrawer::BulletDebugDrawer()
 void BulletDebugDrawer::clearBuffer()
 {
 	std::vector<Vector3> pos;
-	vb->set(VertexAttribute::Position, pos);
+	gb->set(VertexAttribute::Position, pos);
 	
 	std::vector<Vector3> colors;
-	vb->set( VertexAttribute::Color, colors);
+	gb->set( VertexAttribute::Color, colors);
 }
 
 //-----------------------------------//
 
 void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
 {
+#ifdef GEOMETRY_BUFFER
 	std::vector<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
 	pos.push_back(Convert::fromBullet(from));
 	pos.push_back(Convert::fromBullet(to));
@@ -54,6 +55,7 @@ void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to, con
 	std::vector<Vector3>& colors = vb->getAttribute(VertexAttribute::Color);
 	colors.push_back(Convert::fromBullet(color));
 	colors.push_back(Convert::fromBullet(color));
+#endif
 }
 
 //-----------------------------------//

@@ -39,7 +39,7 @@ Terrain::Terrain()
 
 //-----------------------------------//
 
-Terrain::Terrain(const std::string& name)
+Terrain::Terrain(const String& name)
 	: Group(name)
 	, settings( TerrainSettings() )
 {
@@ -48,21 +48,27 @@ Terrain::Terrain(const std::string& name)
 
 //-----------------------------------//
 
-Terrain::Terrain( const std::string& name, const TerrainSettings& settings )
+Terrain::Terrain( const String& name, const TerrainSettings& settings )
 	: Group(name)
 	, settings( settings )
 { }
 
 //-----------------------------------//
 
+Terrain::~Terrain()
+{
+
+}
+
+//-----------------------------------//
+
 void Terrain::init()
 {
 	MaterialHandle handle = MaterialCreate(AllocatorGetHeap(), "Terrain");
+	settings.Material = handle;
 
 	Material* material = handle.Resolve();
 	material->setProgram("VertexLit");
-
-	settings.Material = material;
 }
 
 //-----------------------------------//

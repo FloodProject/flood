@@ -19,8 +19,7 @@ struct Stream;
 struct Archive;
 struct TaskPool;
 
-class FileWatcher;
-class FileWatchEvent;
+struct FileWatchEvent;
 
 class ResourceTask;
 class ResourceManager;
@@ -40,11 +39,14 @@ ResourceManager* GetResourceManager();
 
 struct ResourceEvent
 {
-	ResourceEvent() {}
-	ResourceEvent(const ResourceHandle& handle) : handle(handle) {}
+	ResourceEvent() 
+		: resource(nullptr)
+		, oldResource(nullptr)
+	{}
 
+	Resource* resource;
+	Resource* oldResource;
 	ResourceHandle handle;
-	ResourceLoader* loader;
 };
 
 struct ResourceLoadOptions
@@ -54,7 +56,7 @@ struct ResourceLoadOptions
 	String name;
 	Stream* stream;
 
-	ResourceHandle handle;
+	Resource* resource;
 	ResourceGroup::Enum group;
 
 	bool sendLoadEvent;
@@ -137,10 +139,7 @@ public:
 	ACESSOR(TaskPool, TaskPool*, taskPool)
 
 	// Sets the archive.
-	SETTER(Archive, Archive*, archive)
-
-	// Sets the file watcher.
-	void setFileWatcher(FileWatcher* watcher);
+	void setArchive(Archive* archive);
 
 	// These events are sent when their correspending actions happen.
 	Event1< const ResourceEvent& > onResourcePrepared;
@@ -173,17 +172,17 @@ public:
 
 protected:
 
+	// Validates if the resource exists and if there is a loader for it.
+	bool validateResource( const Path& path );
+
 	// Returns a new resource ready to be processed by a loader.
-	ResourceHandle prepareResource( Stream* stream );
+	Resource* prepareResource( ResourceLoadOptions& options );
 
 	// Processes the resource with the right resource loader.
 	void decodeResource( ResourceLoadOptions& options );
 
-	// Validates if the resource exists and if there is a loader for it.
-	bool validateResource( const String& path );
-
 	// Watches a resource for changes and auto-reloads it.
-	void handleWatchResource(const FileWatchEvent& event);
+	void handleWatchResource(Archive*, const FileWatchEvent& event);
 
 	// Sends pending resource events.
 	void sendPendingEvents();

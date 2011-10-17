@@ -20,14 +20,14 @@ REFLECT_CLASS_END()
 
 Quad::Quad( float width, float height )
 {
-	RenderablePtr rend = RenderableCreate( AllocatorGetThis() );
-	rend->setPrimitiveType(PolygonType::TriangleStrip);
-	
-	const VertexBufferPtr& vb =  createQuad(width, height);
-	rend->setVertexBuffer(vb);
+	const GeometryBufferPtr& gb = createQuad(width, height);
 
 	MaterialHandle mat = MaterialCreate(AllocatorGetThis(), "Quad");
 	mat.Resolve()->setBackfaceCulling(false);
+
+	RenderablePtr rend = RenderableCreate( AllocatorGetThis() );
+	rend->setPrimitiveType(PolygonType::TriangleStrip);
+	rend->setGeometryBuffer(gb);
 	rend->setMaterial(mat);
 
 	addRenderable(rend);
@@ -35,10 +35,10 @@ Quad::Quad( float width, float height )
 
 //-----------------------------------//
 
-VertexBufferPtr Quad::createQuad( float width, float height )
+GeometryBufferPtr Quad::createQuad( float width, float height )
 {
-	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	// Create a new buffer and store triangle data.
+	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 
 	// Vertex position data
 	std::vector< Vector3 > vertex;
@@ -62,11 +62,11 @@ VertexBufferPtr Quad::createQuad( float width, float height )
 	coords.push_back( Vector2(0.0f, 1.0f) );
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::Color, colors );
-	vb->set( VertexAttribute::TexCoord0, coords );
+	gb->set( VertexAttribute::Position, vertex );
+	gb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::TexCoord0, coords );
 
-	return vb;
+	return gb;
 }
 
 //-----------------------------------//

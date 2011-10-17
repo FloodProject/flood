@@ -50,6 +50,7 @@ public:
 
 	Model();
 	Model( const MeshHandle& mesh );
+
 	~Model();
 
 	// Gets the mesh associated with the model.
@@ -80,13 +81,16 @@ public:
 	bool isHardwareSkinned();
 
 	// Performs CPU skinning of the mesh.
-	void doSkinning(std::vector<Vector3>& newPositions);
+	void doSkinning(const GeometryBufferPtr& gb);
+
+	// Performs CPU skinning of the mesh.
+	void doSkinningRaw(Vector3* positions);
 
 	// Updates the skinning details of the model.
 	void updateSkinning();
 	
 	// Updates the model.
-	void update( float delta );
+	void update( float delta ) OVERRIDE;
   
 	// Builds the mesh when it is fully loaded.
 	void build();

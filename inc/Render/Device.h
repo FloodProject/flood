@@ -135,6 +135,16 @@ protected:
 	void unbindTextures(Material* material);
 	void bindTextures(const RenderState& state, bool bindUniforms);
 
+	// Binds the buffers needed to draw the renderable.
+	bool bindBuffers(Renderable*);
+	bool unbindBuffers(Renderable*);
+
+	// Renders the geometry of the renderable.
+	void render(Renderable*);
+
+    // Render this renderable.
+	void render(RenderDevice* device);
+
 	// Rendering pipeline.
 	RenderPipeline::Enum pipeline;
 

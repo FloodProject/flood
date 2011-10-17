@@ -37,9 +37,9 @@ void Overlay::createGeometry()
 {
 	material = MaterialCreate( AllocatorGetHeap(), "OverlayMaterial");
 
-	renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable = AllocateThis(Renderable);
 	renderable->setPrimitiveType(PolygonType::Quads);
-	renderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	renderable->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Overlays);
 
@@ -50,9 +50,9 @@ void Overlay::createGeometry()
 	Material* borderMaterial = borderHandle.Resolve();
 	borderMaterial->setDepthTest(false);
 
-	borderRenderable = Allocate(Renderable, AllocatorGetHeap());
+	borderRenderable = AllocateThis(Renderable);
 	borderRenderable->setPrimitiveType(PolygonType::LineLoop);
-	borderRenderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	borderRenderable->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	borderRenderable->setMaterial( borderHandle );
 	borderRenderable->setRenderLayer(RenderLayer::Overlays);
 	borderRenderable->setRenderPriority(10);
@@ -64,8 +64,6 @@ void Overlay::createGeometry()
 
 void Overlay::rebuildGeometry()
 {
-	const VertexBufferPtr& vb = renderable->getVertexBuffer();
-
 	// Position.
 	std::vector<Vector3> pos;
 
@@ -83,8 +81,15 @@ void Overlay::rebuildGeometry()
 	colors.push_back(color);
 	colors.push_back(color);
 
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	
+	gb->clear();
+	gb->declarations.reset();
+
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
+
+	gb->forceRebuild();
 
 	rebuildBorderGeometry();
 }
@@ -93,11 +98,13 @@ void Overlay::rebuildGeometry()
 
 void Overlay::rebuildBorderGeometry()
 {
-	const VertexBufferPtr& vb = borderRenderable->getVertexBuffer();
+	const GeometryBufferPtr& gb = borderRenderable->getGeometryBuffer();
+	
+	gb->clear();
+	gb->declarations.reset();
 
 	if( borderWidth <= 0 )
 	{
-		vb->clear();
 		return;
 	}
 
@@ -116,8 +123,10 @@ void Overlay::rebuildBorderGeometry()
 	colors.push_back(color);
 	colors.push_back(color);
 
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
+
+	gb->forceRebuild();
 }
 
 //-----------------------------------//

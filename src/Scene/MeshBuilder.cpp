@@ -34,15 +34,14 @@ bool MeshManager::build(Mesh* mesh)
 
 void MeshManager::buildGeometry(Mesh* mesh)
 {
-	// Vertex buffer.
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 
-	vb->set( VertexAttribute::Position, mesh->position );
-	vb->set( VertexAttribute::Normal, mesh->normals );
-	vb->set( VertexAttribute::TexCoord0, mesh->texCoords );
+	gb->set( VertexAttribute::Position, mesh->position );
+	gb->set( VertexAttribute::Normal, mesh->normals );
+	gb->set( VertexAttribute::TexCoord0, mesh->texCoords );
 
 	if( mesh->isAnimated() )
-		vb->set( VertexAttribute::BoneIndex, mesh->boneIndices );
+		gb->set( VertexAttribute::BoneIndex, mesh->boneIndices );
 
 	// Construct the mesh groups.
 	const std::vector<MeshGroup>& groups = mesh->groups;
@@ -54,13 +53,11 @@ void MeshManager::buildGeometry(Mesh* mesh)
 		// Gets a material for the group.
 		MaterialHandle material = buildMaterial(mesh, group);
 
-		IndexBufferPtr ib = Allocate(IndexBuffer, AllocatorGetHeap());
-		SetIndexBufferData(ib, group.indices);
+		gb->setIndex((uint8*)&group.indices.front(), group.indices.size()*sizeof(uint16));
 
 		RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 		renderable->setPrimitiveType( PolygonType::Triangles );
-		renderable->setVertexBuffer(vb);
-		renderable->setIndexBuffer(ib);
+		renderable->setGeometryBuffer(gb);
 		renderable->setMaterial(material);
 
 		meshRenderables[mesh].push_back(renderable);

@@ -45,7 +45,7 @@ void Cell::setSettings( const TerrainSettings& settings )
 	image.Resolve()->setColor( Color::LightGrey );
 
 	// Make a copy of the default cell material.
-	Material* mat = Allocate(Material, AllocatorGetHeap(), *settings.Material);
+	Material* mat = Allocate(Material, AllocatorGetHeap(), *settings.Material.Resolve());
 	mat->setTexture(0, image);
 
 	material = HandleCast<Material>( ResourceHandleCreate(mat) );
@@ -57,10 +57,9 @@ void Cell::setHeights( const std::vector<float>& heights )
 {
 	this->heights = heights;
 
-	rend = Allocate(Renderable, AllocatorGetHeap());
+	rend = AllocateThis(Renderable);
 	rend->setPrimitiveType(PolygonType::Triangles);
-	rend->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
-	rend->setIndexBuffer( Allocate(IndexBuffer, AllocatorGetHeap()) );
+	rend->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	rend->setMaterial(material);
 
 	addRenderable(rend);
@@ -118,9 +117,9 @@ void Cell::rebuildVertices()
 	assert( texCoords.size() == numExpectedVertices );
 
 	// Vertex buffer setup.
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::TexCoord0, texCoords );
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+	gb->set( VertexAttribute::Position, vertex );
+	gb->set( VertexAttribute::TexCoord0, texCoords );
 }
 
 //-----------------------------------//
@@ -150,9 +149,9 @@ void Cell::rebuildIndices()
 		}
 	}
 
-	// Index buffer setup.
-	const IndexBufferPtr& ib = rend->getIndexBuffer();
-	SetIndexBufferData(ib, indices);
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+	gb->setIndex((uint8*) &indices.front(), indices.size() * sizeof(uint16));
+
 }
 
 //-----------------------------------//
@@ -174,30 +173,32 @@ static Vector3 CalculateTriangleNormal( const Vector3& v1, const Vector3& v2, co
 	return normal.normalize();
 }
 
-#define index(i) (*(uint16*) &ib->data[indexSizeBytes * (i)])
+#define index(i) (indexData[i])
 
 void Cell::rebuildFaceNormals()
 {
 	if( heights.empty() ) return;
 
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	const IndexBufferPtr& ib = rend->getIndexBuffer();
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 
-	const std::vector<Vector3>& vs = vb->getVertices();
-	assert( !vs.empty() );
-
-	size_t indexSize = ib->getSize();
-	int32 indexSizeBytes = ib->indexSize / 8;
-	
 	faceNormals.clear();
 
 	LogInfo( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
-	for( size_t i = 0; i < indexSize; i += 3 )
+	uint32 numIndices = gb->getSizeIndices();
+
+	Vector3* vertexData = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
+	int8 vertexStride = gb->getAttributeStride(VertexAttribute::Position);
+	
+	uint16* indexData = (uint16*) gb->indexData.data();
+
+	for( size_t i = 0; i < numIndices; i += 3 )
 	{
-		Vector3 v1 = vs[index(i+0)];
-		Vector3 v2 = vs[index(i+1)];
-		Vector3 v3 = vs[index(i+2)];
+		uint8 offset = i * vertexStride;
+
+		const Vector3& v1 = vertexData[index(i+0) + offset];
+		const Vector3& v2 = vertexData[index(i+1) + offset];
+		const Vector3& v3 = vertexData[index(i+2) + offset];
 
 		Vector3 normal = CalculateTriangleNormal(v1, v2, v3);
 		faceNormals.push_back( normal );
@@ -251,14 +252,12 @@ byte Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 
 void Cell::rebuildAveragedNormals()
 {
-	if( faceNormals.empty() )
-		return;
+	if( faceNormals.empty() ) return;
 
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	//const IndexBufferPtr& ib = rend->getIndexBuffer();
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 
-	const std::vector<Vector3>& vs = vb->getVertices();
-	assert( !vs.empty() );
+	Vector3* vs = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
+	assert( vs != nullptr );
 
 	// Averaged per-vertex normals.
 	std::vector<Vector3> normals;
@@ -268,13 +267,16 @@ void Cell::rebuildAveragedNormals()
 	std::vector<uint> ns;
 	ns.resize(6);
 
-	for(size_t i = 0; i < vs.size(); i++)
+	uint32 numVertices = gb->getSizeVertices();
+
+	for(size_t i = 0; i < numVertices; i++)
 	{
-		byte n = getNeighborFaces(i, ns);
+		uint8 n = getNeighborFaces(i, ns);
 
 		Vector3 average;
-		for( uint e = 0; e < n; e++ )
-			average += faceNormals[ns[e]];
+		
+		for( uint8 j = 0; j < n; j++ )
+			average += faceNormals[ ns[j] ];
 
 		average /= n;
 		average.normalize();
@@ -282,8 +284,10 @@ void Cell::rebuildAveragedNormals()
 		normals.push_back( average );
 	}
 
-	assert( normals.size() == vs.size() );
-	vb->set( VertexAttribute::Normal, normals );
+	assert( normals.size() ==  gb->getSizeVertices() );
+	gb->set( VertexAttribute::Normal, normals );
+
+	gb->forceRebuild();
 }
 
 //-----------------------------------//

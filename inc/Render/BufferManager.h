@@ -9,16 +9,24 @@
 #pragma once
 
 #include "Render/Buffer.h"
+#include "Render/VertexBuffer.h"
+#include "Render/IndexBuffer.h"
+#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map<uint32, BufferPtr> BuffersMap;
-typedef std::pair<const String&, BufferPtr> BuffersPair;
+struct BufferEntry
+{
+	BufferEntry();
 
-class ResourceManager;
-struct ResourceEvent;
+	VertexBufferPtr vb;
+	IndexBufferPtr ib;
+};
+
+typedef std::map<GeometryBufferPtr, BufferEntry> BuffersMap;
+typedef std::pair<const String&, BufferPtr> BuffersPair;
 
 /**
  * Manages a set of buffers.
@@ -33,16 +41,18 @@ public:
 	BufferManager();
 	~BufferManager();
 
+	// Creates and gets a buffer.
+	BufferEntry* getBuffer(const GeometryBufferPtr&);
+
+	// Gets a vertex buffer with the the geometry given.
+	VertexBufferPtr getVertexBuffer(const GeometryBufferPtr&);
+
+	// Gets an index buffer with the geometry given.
+	IndexBufferPtr getIndexBuffer(const GeometryBufferPtr&);
+
 protected:
 
-	// Populates a shader when the text file is loaded.
-	void onLoad( const ResourceEvent& evt );
-
-	// Reloads a shader when the text file changes.
-	void onReload( const ResourceEvent& evt );
-
-	// Maps the identifiers to the programs.
-	BuffersMap programs;
+	BuffersMap buffers;
 };
 
 //-----------------------------------//

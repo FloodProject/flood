@@ -52,8 +52,8 @@ public:
 	// Intersection with a ray.
 	bool intersects( const Ray& ray, float& distance ) const;
 	
-	// Transforms the BoundingBox by a matrix.
-	BoundingBox transform( const Matrix4x3& mat ) const;
+	// Transforms the bounding box by a matrix.
+	BoundingBox transform( const Matrix4x3& ) const;
 
 public:
 

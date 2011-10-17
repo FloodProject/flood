@@ -73,16 +73,16 @@ void Geometry::updateBounds()
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
-		const VertexBufferPtr& vb = rend->getVertexBuffer();
-			
-		if( !vb ) continue;
-
-		const std::vector<Vector3>& verts = vb->getVertices();
 		
-		for( size_t j = 0; j < verts.size(); j++ )
+		const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+		if( !gb ) continue;
+
+		uint32 numVertices = gb->getSizeVertices();
+		
+		for( size_t j = 0; j < numVertices; j++ )
 		{
-			const Vector3& vertex = verts[j];
-			bounds.add(vertex);
+			Vector3* vertex = (Vector3*) gb->getAttribute(VertexAttribute::Position, j);
+			bounds.add(*vertex);
 		}
 	}
 

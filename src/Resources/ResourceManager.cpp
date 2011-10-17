@@ -85,8 +85,8 @@ ResourceLoadOptions::ResourceLoadOptions()
 	: group(ResourceGroup::General)
 	, asynchronousLoad(true)
 	, sendLoadEvent(true)
-	, handle(HandleInvalid)
 	, stream(nullptr)
+	, resource(nullptr)
 {
 }
 
@@ -130,28 +130,14 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::destroyHandles()
 {
-#if 1
-	std::vector<ResourceHandle> handlesToRemove;
-
 	ResourceMap::iterator it = resources.begin();
 	for( ; it != resources.end(); ++it )
 	{
 		ResourceHandle& handle = it->second;
-		handlesToRemove.push_back(handle);
-	}
-
-	for(size_t i = 0; i < handlesToRemove.size(); i++)
-	{
-		ResourceHandle& handle = handlesToRemove[i];
-
 		Resource* res = handle.Resolve();
+		
 		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
-
-		//handle.reset();
 	}
-
-	handlesToRemove.clear();
-#endif
 
 	resources.clear();
 	
@@ -173,8 +159,10 @@ ResourceHandle ResourceManager::getResource(const String& path)
 
 //-----------------------------------//
 
-ResourceHandle ResourceManager::loadResource(const String& name)
+ResourceHandle ResourceManager::loadResource(const String& path)
 {
+	Path name = PathGetFile(path);
+
 	ResourceLoadOptions options;
 	options.name = name;
 	options.asynchronousLoad = asynchronousLoading;
@@ -197,26 +185,21 @@ ResourceHandle ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return ResourceHandle(HandleInvalid);
 
-	Stream* stream = ArchiveOpenFile(archive, options.name, GetResourcesAllocator());
+	Resource* resource = prepareResource(options);
 	
-	if( !stream )
-	{
-		LogWarn("Resource was not found: '%s'", options.name.c_str());
+	if( !resource )
+		return ResourceHandle(HandleInvalid); 
+
+	handle = ResourceHandleCreate(resource);
+	
+	if(handle == HandleInvalid)
 		return ResourceHandle(HandleInvalid);
-	}
-
-	handle = prepareResource(stream);
-	if( !handle ) return ResourceHandle(HandleInvalid);
-
-	options.stream = stream;
-	options.handle = handle;
-
-	decodeResource(options);
 
 	// Register the decoded resource in the map.
-
 	Path base = PathGetFile(options.name);
 	resources[base] = handle;
+
+	decodeResource(options);
 
 	return handle;
 }
@@ -251,7 +234,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-bool ResourceManager::validateResource( const String& path )
+bool ResourceManager::validateResource( const Path& path )
 {
 	if( path.empty() ) return false;
 	
@@ -274,30 +257,37 @@ bool ResourceManager::validateResource( const String& path )
 
 //-----------------------------------//
 
-ResourceHandle ResourceManager::prepareResource(Stream* stream)
+Resource* ResourceManager::prepareResource( ResourceLoadOptions& options )
 {
-	const Path& path = PathGetFile(stream->path);
+	const Path& path = options.name;
+
+	Stream* stream = ArchiveOpenFile(archive, path, GetResourcesAllocator());
+	
+	if( !stream )
+	{
+		LogWarn("Resource was not found: '%s'", path.c_str());
+		return nullptr;
+	}
+
+	const Path& file = PathGetFile(path);
 
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* loader = findLoader( PathGetFileExtension(path) );
+	ResourceLoader* loader = findLoader( PathGetFileExtension(file) );
 
 	if( !loader )
 	{
-		LogWarn("No resource loader found for resource '%s'", path.c_str());
-		return ResourceHandle(HandleInvalid);
+		LogWarn("No resource loader found for resource '%s'", file.c_str());
+		return nullptr;
 	}
 
 	Resource* resource = loader->prepare(*stream);
 	resource->setStatus( ResourceStatus::Loading );
-	resource->setPath( path );
+	resource->setPath( file );
 
-	ResourceHandle handle = HandleCreate(handleManager, resource);
+	options.stream = stream;
+	options.resource = resource;
 
-	// Send callback notifications.
-	ResourceEvent event(handle);
-	onResourcePrepared(event);
-
-	return handle;
+	return resource;
 }
 
 //-----------------------------------//
@@ -350,6 +340,10 @@ void ResourceManager::loadQueuedResources()
 void ResourceManager::update()
 {
 	sendPendingEvents();
+
+	// Update the archive watches.
+	ArchiveWatchUpdate(archive);
+
 	removeUnusedResources();
 }
 
@@ -361,8 +355,15 @@ void ResourceManager::sendPendingEvents()
 
 	while( resourceTaskEvents.try_pop(event) )
 	{
-		onResourceLoaded( event );
+		Resource* resource = event.resource;
+		Path base = PathGetFile(resource->path);
 
+		// Find the handle to the resource.
+		ResourceHandle handle = resources[base];
+		assert( handle != HandleInvalid );
+
+		event.handle = handle;
+		onResourceLoaded( event );
 	}
 }
 
@@ -411,7 +412,9 @@ void ResourceManager::removeResource(const String& path)
 		return;
 	
 	// Send callback notifications.
-	ResourceEvent event(it->second);
+	ResourceEvent event;
+	event.handle = it->second;
+
 	onResourceRemoved( event );
 
 	LogInfo("Unloaded resource: %s", path.c_str());
@@ -494,19 +497,30 @@ void ResourceManager::setupResourceLoaders(Class* klass)
 
 //-----------------------------------//
 
-void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
+void ResourceManager::setArchive(Archive* newArchive)
 {
-#if 0
+	if(archive)
+	{
+		// Disconnect from the watch events.
+		archive->watch.Disconnect(this, &ResourceManager::handleWatchResource);
+	}
+
+	archive = newArchive;
+	archive->watch.Connect(this, &ResourceManager::handleWatchResource);
+}
+
+//-----------------------------------//
+
+void ResourceManager::handleWatchResource(Archive*, const FileWatchEvent& evt)
+{
 	// Check if the filename maps to a known resource.
-	const String& file = evt.filename;
+	const Path& file = PathGetFile(evt.filename);
 
 	if( resources.find(file) == resources.end() )
 		return; // Resource is not known.
 
-	const ResourcePtr& res = resources[file];
-
 	// Reload the resource if it was modified.
-	if( evt.action != Actions::Modified )
+	if( evt.action != FileWatchEvent::Modified )
 	{
 		#pragma TODO("Add rename support in live updating")
 
@@ -519,14 +533,28 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 
 	ResourceLoadOptions options;
 	options.sendLoadEvent = false;
+	options.name = evt.filename;
+	
+	Resource* resource = prepareResource(options);
+	decodeResource(options);
 
-	decodeResource( res, options );
+	const ResourceHandle& handle = resources[file];
+	Resource* oldResource = handle.Resolve();
+
+	HandleId handleId = handle.getId();
 
 	ResourceEvent event;
-	event.resource = res;
-	
+	event.resource = resource;
+	event.oldResource = oldResource;
+	event.handle = handle;
+
+	// Switch the resource but mantain the same handle.
+	resource->addReference();
+	handleManager->handles[handleId] = resource;
+
 	onResourceReloaded(event);
-#endif
+
+	event.handle.id = HandleInvalid;
 }
 
 //-----------------------------------//

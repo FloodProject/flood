@@ -61,7 +61,7 @@ btTriangleIndexVertexArray* MeshShape::convertMesh()
 			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;
 
-			VertexBufferPtr vb = rend->getVertexBuffer();
+			GeometryBuffer gb = rend->getVertexBuffer();
 			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
 			
 			IndexBufferPtr ib = rend->getIndexBuffer();
@@ -101,7 +101,7 @@ btTriangleMesh* MeshShape::convertMesh()
 			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;
 
-			VertexBufferPtr vb = rend->getVertexBuffer();
+			GeometryBuffer gb = rend->getVertexBuffer();
 			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
 			
 			IndexBufferPtr ib = rend->getIndexBuffer();

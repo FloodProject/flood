@@ -113,10 +113,10 @@ void Label::update( float delta )
 
 void Label::rebuildGeometry()
 {
-	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
 
 	// Invalidate the existing vertex buffer contents
-	vb->clear();
+	gb->clear();
 
 	// Calculate the quad vertices
 	std::vector<Vector3> vertex;
@@ -169,8 +169,8 @@ void Label::rebuildGeometry()
 		x_pos += glyph.width + 1;
 	}
 
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::TexCoord0, texcoords );
+	gb->set( VertexAttribute::Position, vertex );
+	gb->set( VertexAttribute::TexCoord0, texcoords );
 
 	// No need to update geometry again until the text changes
 	isDirty = false;

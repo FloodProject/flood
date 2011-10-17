@@ -28,12 +28,12 @@ public:
 
 	Grid();
 
-	virtual void update( float update );
+	void update( float update ) OVERRIDE;
 
 protected:
 
 	// Returns a vertex buffer with the grid geometry.
-	VertexBufferPtr buildGeometry();
+	GeometryBufferPtr buildGeometry();
 
 	// Grid size in the X and Z axis.
 	float sizeX, sizeZ;

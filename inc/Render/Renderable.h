@@ -10,33 +10,18 @@
 
 #include "Core/Delegate.h"
 #include "Resources/Material.h"
+#include "Geometry/GeometryBuffer.h"
+
 #include "Render/VertexBuffer.h"
 #include "Render/IndexBuffer.h"
 #include "Render/UniformBuffer.h"
 
 FWD_DECL_INTRUSIVE(Material)
 
-#define GL_POINTS 0x0000
-#define GL_LINES 0x0001
-#define GL_LINE_LOOP 0x0002
-#define GL_LINE_STRIP 0x0003
-#define GL_TRIANGLES 0x0004
-#define GL_TRIANGLE_STRIP 0x0005
-#define GL_TRIANGLE_FAN 0x0006
-#define GL_QUADS 0x0007
-#define GL_QUAD_STRIP 0x0008
-#define GL_POLYGON 0x0009
-
-#define GL_POINT 0x1B00
-#define GL_LINE 0x1B01
-#define GL_FILL 0x1B02
-
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct RenderState;
-	
 /**
  * Type of primitive of the renderable.
  */
@@ -45,16 +30,16 @@ namespace PolygonType
 {
     enum Enum
     {
-        Points			= GL_POINTS,
-        Lines			= GL_LINES,
-        LineLoop		= GL_LINE_LOOP,
-        LineStrip		= GL_LINE_STRIP,
-        Triangles		= GL_TRIANGLES,
-        TriangleStrip	= GL_TRIANGLE_STRIP,
-        TriangleFan		= GL_TRIANGLE_FAN,
-        Quads			= GL_QUADS,
-        QuadStrip		= GL_QUAD_STRIP,
-        Polygon			= GL_POLYGON
+        Points,
+        Lines,
+        LineLoop,
+        LineStrip,
+        Triangles,
+        TriangleStrip,
+        TriangleFan,
+        Quads,
+        QuadStrip,
+        Polygon
     };
 }
 
@@ -63,6 +48,10 @@ namespace PolygonType
 /**
  * Type of rendering mode of the renderable.
  */
+
+#define GL_POINT 0x1B00
+#define GL_LINE 0x1B01
+#define GL_FILL 0x1B02
 
 namespace PolygonMode
 {
@@ -95,46 +84,34 @@ namespace RenderLayer
 
 //-----------------------------------//
 
-class RenderDevice;
-
 /**
  * Represents a renderable object, that contains the details the
  * rendering device needs to render the object. At the least, it
  * should have a material and a vertex buffer.
  */
 
+struct RenderState;
+
 class API_RENDER Renderable : public ReferenceCounted
 {
 public:
 
 	Renderable();
-    
-	// Binds the state needed to draw the renderable.
-	bool bind();
-
-	// Unbinds the state needed to draw the renderable.
-	bool unbind();
-
-    // Render this renderable.
-	void render(RenderDevice* device);
 
     // Gets/sets the render stage.
 	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
    
     // Gets/sets the render priority.
 	ACESSOR(RenderPriority, int32, priority)
-    
-    // Gets/sets the vertex buffer.
-	ACESSOR(VertexBuffer, VertexBufferPtr, vb)
-   
-    // Gets/sets the index buffer.
-	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
+    // Gets/sets the geometry buffer.
+	ACESSOR(GeometryBuffer, const GeometryBufferPtr&, gb)
+    
     // Gets/sets the index buffer.
-	ACESSOR(UniformBuffer, UniformBufferPtr, ub)
+	ACESSOR(UniformBuffer, const UniformBufferPtr&, ub)
 
     // Gets/sets the material.
-    ACESSOR(Material, MaterialHandle, material)
+    ACESSOR(Material, const MaterialHandle&, material)
 
     // Gets/sets the render mode.
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
@@ -162,11 +139,8 @@ protected:
 	// Polygon mode.
 	PolygonMode::Enum mode;
 
-	// Vertex buffer with the vertex data.
-    VertexBufferPtr vb;
-
-	// Index buffer with the index data.
-    IndexBufferPtr ib;
+	// Geometry buffer with the geometry data.
+	GeometryBufferPtr gb;
 
 	// Uniform buffer with shader constants.
 	UniformBufferPtr ub;

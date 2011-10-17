@@ -81,9 +81,6 @@ public:
 
 protected:
 
-	// Converts the buffer enums to the equivalent GL ones.
-	int getGLBufferType();
-
 	uint32 id;
 	
 	BufferUsage::Enum usage;
@@ -91,6 +88,9 @@ protected:
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Buffer );
+
+// Converts the buffer enums to the equivalent GL ones.
+int ConvertBufferGL(BufferUsage::Enum, BufferAccess::Enum);
 
 //-----------------------------------//
 

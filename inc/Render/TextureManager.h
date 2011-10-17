@@ -47,9 +47,6 @@ public:
 	// Gets the memory usage of the textures loaded (in kbytes).
 	uint32 getMemoryUsage();
 
-	// Updates the texture manager.
-	virtual void update( float delta );
-
 protected:
 
 	// Populates a texture when the image is loaded.

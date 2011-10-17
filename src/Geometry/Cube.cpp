@@ -37,17 +37,17 @@ Cube::Cube( float width, float height )
 
 void Cube::create()
 {
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 	
 	MaterialHandle mat = MaterialCreate(AllocatorGetHeap(), "Cube");
 	mat.Resolve()->setProgram("VertexColor");
 
 	RenderablePtr rend = RenderableCreate( AllocatorGetHeap() );
 	rend->setPrimitiveType(PolygonType::Quads);
-	rend->setVertexBuffer(vb);
+	rend->setGeometryBuffer(gb);
 	rend->setMaterial(mat);
 
-	BuildCube(vb.get(), width, height);
+	BuildCube(gb.get(), width, height);
 
 	addRenderable(rend);
 }
@@ -62,7 +62,7 @@ void Cube::create()
 
 #define v(a,b,c) Vector3(a,b,c)
 
-void BuildCube( VertexBuffer* vb, float width, float height )
+void BuildCube( GeometryBuffer* gb, float width, float height )
 {
 	// Vertex position data
 	std::vector<Vector3> pos;
@@ -81,7 +81,6 @@ void BuildCube( VertexBuffer* vb, float width, float height )
 	// Vertex tex coords data
 	std::vector< Vector3 > coords( pos.size(), Vector3::Zero );
 	
-#if 0
 	// Top
 	coords.push_back( Vector2(0.0f, 1.0f) );
 	coords.push_back( Vector2(0.0f, 0.0f) );
@@ -112,12 +111,11 @@ void BuildCube( VertexBuffer* vb, float width, float height )
 	coords.push_back( Vector2(1.0f, 0.0f) );
 	coords.push_back( Vector2(1.0f, 1.0f) );
 	coords.push_back( Vector2(0.0f, 1.0f) );
-#endif
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
-	vb->set( VertexAttribute::TexCoord0, coords );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::TexCoord0, coords );
 }
 
 //-----------------------------------//

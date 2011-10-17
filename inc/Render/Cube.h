@@ -38,7 +38,7 @@ private:
 	float height;
 };
 
-void BuildCube( VertexBuffer* vb, float width, float height );
+void BuildCube( GeometryBuffer* vb, float width, float height );
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cube );
 

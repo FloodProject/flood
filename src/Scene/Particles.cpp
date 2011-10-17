@@ -103,7 +103,7 @@ void Particles::spawnParticles(int numSpawn)
 
 void Particles::createGeometry()
 {
-	vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	gb = AllocateThis(GeometryBuffer);
 	
 	material = MaterialCreate(AllocatorGetHeap(), "ParticlesMaterial");
 
@@ -114,7 +114,7 @@ void Particles::createGeometry()
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Points);
-	renderable->setVertexBuffer(vb);
+	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Transparency);
 
@@ -166,8 +166,10 @@ void Particles::update(float delta)
 		colors.push_back( particle.color );
 	}
 
-	vb->set(VertexAttribute::Position, positions);
-	vb->set(VertexAttribute::Color, colors);
+	gb->declarations.reset();
+	gb->set(VertexAttribute::Position, positions);
+	gb->set(VertexAttribute::Color, colors);
+	gb->forceRebuild();
 
 	//updateDebugRenderable();
 }

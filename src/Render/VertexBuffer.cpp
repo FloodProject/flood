@@ -17,19 +17,14 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-VertexBuffer::VertexBuffer(BufferUsage::Enum usage, BufferAccess::Enum access)
-	: Buffer(usage, access)
-	, built(false)
-	, numVertices(0)
+VertexBuffer::VertexBuffer() : built(false), gb(nullptr)
 {
-
 }
 
 //-----------------------------------//
 
 VertexBuffer::~VertexBuffer()
 {
-	clear();
 }
 
 //-----------------------------------//
@@ -50,98 +45,116 @@ bool VertexBuffer::unbind()
 
 //-----------------------------------//
 
-#define IfAttributeExists(attr)										\
-	it = attributes.find(VertexAttribute::attr);					\
-	if(it != attributes.end())
+static GLenum ConvertBufferTypeGL(VertexType::Enum type)
+{
+	switch(type)
+	{
+	case VertexType::Float: return GL_FLOAT;
+	case VertexType::Integer: return GL_INT;
+	}
 
-#define IfAttributeIs(attr)											\
-	if(index == VertexAttribute::attr)
+	return GL_FLOAT;
+}
 
-#define EnableArrayPointer(arr, func)								\
-	{ glEnableClientState(arr);										\
-	func(attr.type, 0, (void*) offset); }
-
-#define EnableArrayPointerComponents(arr, func)						\
-	{ glEnableClientState(arr);										\
-	func(attr.components, attr.type, 0, (void*) offset); }
-
-#define EnableTexArrayPointer(i)									\
-	{ glClientActiveTexture(GL_TEXTURE0+i);							\
-	EnableArrayPointerComponents(GL_TEXTURE_COORD_ARRAY, glTexCoordPointer) }
+//-----------------------------------//
 
 void VertexBuffer::bindPointers()
 {
-	if( !built ) return;
+	if( !built || !gb ) return;
 
+	const std::vector<VertexElement>& decls = gb->declarations.decls;
 	int offset = 0;
 
-	AttributeMap::const_iterator it;
-	for( it = attributes.begin(); it != attributes.end(); it++ )
+	for( size_t i = 0; i < decls.size(); i++ )
 	{
-		int index = it->first;
-		const Attribute& attr = it->second;
-		
-		IfAttributeIs(Position) EnableArrayPointerComponents(GL_VERTEX_ARRAY, glVertexPointer)
-		IfAttributeIs(Normal) EnableArrayPointer(GL_NORMAL_ARRAY, glNormalPointer);
-		IfAttributeIs(Color) EnableArrayPointerComponents(GL_COLOR_ARRAY, glColorPointer)
-		IfAttributeIs(TexCoord0) EnableTexArrayPointer(0)
-		IfAttributeIs(TexCoord1) EnableTexArrayPointer(1)
-		IfAttributeIs(TexCoord2) EnableTexArrayPointer(2)
-		IfAttributeIs(TexCoord3) EnableTexArrayPointer(3)
+		const VertexElement& decl = decls[i];
+		GLenum type = ConvertBufferTypeGL(decl.type);
 
-		offset += attr.data.size();
+		switch(decl.attribute)
+		{
+		case VertexAttribute::Position:
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glVertexPointer(decl.components, type, decl.stride, (void*) offset);
+			break;
+		case VertexAttribute::Normal:
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glNormalPointer(type, decl.stride, (void*) offset);
+			break;
+		case VertexAttribute::Color:
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(decl.components, type, decl.stride, (void*) offset);
+			break;
+		case VertexAttribute::TexCoord0:
+		case VertexAttribute::TexCoord1:
+		case VertexAttribute::TexCoord2:
+		case VertexAttribute::TexCoord3:
+			int texIndex = (int) decl.attribute - (int) VertexAttribute::TexCoord0;
+			glClientActiveTexture(GL_TEXTURE0 + texIndex);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glTexCoordPointer(decl.components, type, 0, (void*) offset);
+			break;
+		}
 	}
 }
 
 //-----------------------------------//
 
-#define DisableTexCoordArray(i)										\
-	{ glClientActiveTexture(GL_TEXTURE0+1);							\
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY); }
-
 void VertexBuffer::unbindPointers()	
 {
 	if( !built ) return;
 
-	AttributeMap::const_iterator it;
+	const std::vector<VertexElement>& decls = gb->declarations.decls;
 
-	IfAttributeExists(Position) glDisableClientState(GL_VERTEX_ARRAY);
-	IfAttributeExists(Normal) glDisableClientState(GL_NORMAL_ARRAY);
-	IfAttributeExists(Color) glDisableClientState(GL_COLOR_ARRAY);
-	//IfAttributeExists(SecondaryColor) glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
-	IfAttributeExists(FogCoord) glDisableClientState(GL_FOG_COORD_ARRAY);
-	IfAttributeExists(TexCoord0) DisableTexCoordArray(0)
-	IfAttributeExists(TexCoord1) DisableTexCoordArray(1)
-	IfAttributeExists(TexCoord2) DisableTexCoordArray(2)
-	IfAttributeExists(TexCoord3) DisableTexCoordArray(3)
+	for( size_t i = 0; i < decls.size(); i++ )
+	{
+		const VertexElement& decl = decls[i];
+		
+		switch(decl.attribute)
+		{
+		case VertexAttribute::Position:
+			glDisableClientState(GL_VERTEX_ARRAY);
+			break;
+		case VertexAttribute::Normal:
+			glDisableClientState(GL_NORMAL_ARRAY);
+			break;
+		case VertexAttribute::Color:
+			glDisableClientState(GL_COLOR_ARRAY);
+			break;
+		case VertexAttribute::TexCoord0:
+		case VertexAttribute::TexCoord1:
+		case VertexAttribute::TexCoord2:
+		case VertexAttribute::TexCoord3:
+			int texIndex = (int) decl.attribute - (int) VertexAttribute::TexCoord0;
+			glClientActiveTexture(GL_TEXTURE0 + texIndex);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		}
+	}
 }
 
 //-----------------------------------//
 
 void VertexBuffer::bindGenericPointers()
 {
-	if( !built ) return;
+	if( !built || !gb ) return;
 
-	int offset = 0;
+	const std::vector<VertexElement>& decls = gb->declarations.decls;
 
-	AttributeMap::const_iterator it;
-	for( it = attributes.begin(); it != attributes.end(); it++ )
+	for( size_t i = 0; i < decls.size(); i++ )
 	{
-		VertexAttribute::Enum index = it->first;
-		const Attribute& attr = it->second;
+		const VertexElement& decl = decls[i];
+		int index = (int) decl.attribute;
 
 		glEnableVertexAttribArray(index);
 
 		if( CheckLastErrorGL("Error enabling vertex attribute array") )
 			return;
 
-		glVertexAttribPointer(index,
-			attr.components, attr.type, GL_FALSE, 0, (void*) offset );
+		GLenum type = ConvertBufferTypeGL(decl.type);
+		
+		glVertexAttribPointer(index, decl.components, type, GL_FALSE,
+			decl.stride, (void*) decl.offset );
 
-		if( CheckLastErrorGL("Error binding pointers to buffer") )
-			return;
-
-		offset += attr.data.size();
+		CheckLastErrorGL("Error binding pointers to buffer");
 	}
 }
 
@@ -149,14 +162,18 @@ void VertexBuffer::bindGenericPointers()
 
 void VertexBuffer::unbindGenericPointers()
 {
-	if( !built ) return;
+	if( !built || !gb ) return;
 
-	AttributeMap::const_iterator it;
+	const std::vector<VertexElement>& decls = gb->declarations.decls;
 
-	for( it = attributes.begin(); it != attributes.end(); it++ )
+	for( size_t i = 0; i < decls.size(); i++ )
 	{
-		VertexAttribute::Enum index = it->first;
+		const VertexElement& decl = decls[i];
+
+		int index = (int) decl.attribute;
 		glDisableVertexAttribArray(index);
+
+		CheckLastErrorGL("Error disabling vertex attribute array");
 	}
 }
 
@@ -176,116 +193,22 @@ bool VertexBuffer::isValid() const
 
 //-----------------------------------//
 
-bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<Vector3>& data )
+bool VertexBuffer::build(const GeometryBufferPtr&)
 {
-	built = false;
+	if( !gb ) return false;
 
-	Attribute attribute;
-	attribute.components = 3;
-	attribute.size = sizeof(float);
-	attribute.type = GL_FLOAT;
-	attribute.data.resize( data.size() * sizeof(Vector3) );
+	const std::vector<uint8>& data = gb->data;
+	if( data.empty() ) return false;
 	
-	if( data.size() != 0)
-		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
-	
-	attributes[index] = attribute;
-	return true;
-}
-
-//-----------------------------------//
-
-bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<float>& data )
-{
-	built = false;
-
-	Attribute attribute;
-	attribute.components = 1;
-	attribute.size = sizeof(float);
-	attribute.type = GL_FLOAT;
-	attribute.data.resize( data.size() * sizeof(float) );
-	
-	if( data.size() != 0)
-		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
-	
-	attributes[index] = attribute;
-	return true;
-}
-
-//-----------------------------------//
-
-bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<int>& data )
-{
-	built = false;
-
-	Attribute attribute;
-	attribute.components = 1;
-	attribute.size = sizeof(int);
-	attribute.type = GL_INT;
-	attribute.data.resize( data.size() * sizeof(int) );
-	
-	if( data.size() != 0)
-		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
-	
-	attributes[index] = attribute;
-	return true;
-}
-
-//-----------------------------------//
-
-bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<Color>& data )
-{
-	built = false;
-
-	Attribute attribute;
-	attribute.components = 4;
-	attribute.size = sizeof(float);
-	attribute.type = GL_FLOAT;
-	attribute.data.resize( data.size() * sizeof(Color) );
-	
-	if( data.size() != 0)
-		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
-	
-	attributes[index] = attribute;
-	return true;
-}
-
-//-----------------------------------//
-
-bool VertexBuffer::build()
-{
 	bind();
 
-	// Check that all vertex attributes elements are the same size.
-	//if( !checkSize() )
-	//{
-	//	LogWarn( "Vertex buffers elements have different sizes" );
-	//	return false;
-	//}
+	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
 
-	// Reserve space for all the vertex elements.
-	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType() );
+	// Upload all the vertex elements.
+	glBufferData( GL_ARRAY_BUFFER, data.size(), &data.front(), usage );
 
 	if( CheckLastErrorGL("Could not allocate storage for buffer") )
 		return false;
-
-	int offset = 0;
-	
-	AttributeMap::const_iterator it;
-	for( it = attributes.begin(); it != attributes.end(); it++ )
-	{
-		const std::vector<byte>& vec = it->second.data;
-
-		if( vec.empty() )
-			continue;
-
-		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
-
-		if( CheckLastErrorGL("Could not buffer the data") )
-			return false;
-
-		offset += vec.size();
-	}
 
 	built = true;
 	return true;
@@ -293,104 +216,9 @@ bool VertexBuffer::build()
 
 //-----------------------------------//
 
-bool VertexBuffer::checkSize() const
-{
-	if( attributes.empty() )
-		return false;
-
-	int initialSize = 0;
-
-	AttributeMap::const_iterator it;
-	for( it = attributes.begin(); it != attributes.end(); it++ )
-	{
-		const Attribute& attr = it->second;
-		int size = attr.data.size();
-
-		if( size == 0 )
-			return false;
-
-		if( !initialSize )
-		{
-			initialSize = size;
-			numVertices = size / (attr.components * attr.size);
-		}
-
-		if(size != initialSize)
-			return false;
-	}
-
-	return true;
-}
-
-//-----------------------------------//
-
-uint VertexBuffer::getSize() const
-{
-	uint totalBytes = 0;
-
-	AttributeMap::const_iterator it;
-	for( it = attributes.begin(); it != attributes.end(); it++ )
-	{
-		totalBytes += it->second.data.size();
-	}
-
-	return totalBytes;
-}
-
-//-----------------------------------//
-
-std::vector<Vector3>& VertexBuffer::getVertices() const
-{
-	return getAttribute( VertexAttribute::Position );
-}
-
-//-----------------------------------//
-
-std::vector<Vector3>&
-VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
-{
-	AttributeMap::iterator it;
-	it = attributes.find(attr);
-
-	if( it == attributes.end() )
-	{
-		static std::vector<Vector3> nul;
-		return nul;
-	}
-	
-	Attribute& p = (*it).second;
-	std::vector<byte>& arr = p.data;
-
-	return (std::vector<Vector3>&)(arr);
-}
-
-//-----------------------------------//
-
 void VertexBuffer::forceRebuild()
 {
 	built = false;
-}
-
-//-----------------------------------//
-
-uint VertexBuffer::getNumAttributes() const
-{
-	return attributes.size();
-}
-
-//-----------------------------------//
-
-uint VertexBuffer::getNumVertices() const
-{
-	checkSize();
-	return numVertices;
-}
-
-//-----------------------------------//
-
-void VertexBuffer::clear()
-{
-	attributes.clear();
 }
 
 //-----------------------------------//

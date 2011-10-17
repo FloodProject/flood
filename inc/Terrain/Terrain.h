@@ -31,7 +31,7 @@ struct TerrainSettings
 	{ }
 
 	// Material for each cell.
-	MaterialPtr Material;
+	MaterialHandle Material;
 
 	// Cell size in world units.
 	int CellSize;
@@ -80,8 +80,10 @@ class API_ENGINE Terrain : public Group
 public:
 
 	Terrain();
-	Terrain( const std::string& name );
-	Terrain( const std::string& name, const TerrainSettings& settings );
+	Terrain( const String& name );
+	Terrain( const String& name, const TerrainSettings& settings );
+
+	~Terrain();
 
 	// Initializes the terrain settings.
 	void init();
