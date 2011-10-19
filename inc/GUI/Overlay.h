@@ -116,7 +116,7 @@ public:
 	void setOpacity( float opacity );
 
 	// Updates the overlay if needed.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 protected:
 
@@ -125,9 +125,6 @@ protected:
 
 	// Rebuilds the overlay geometry.
 	virtual void rebuildGeometry();
-
-	// Rebuilds the overlay geometry.
-	void rebuildBorderGeometry();
 
 	// PositionMode mode used.
 	PositionMode::Enum positioning;
@@ -155,9 +152,6 @@ protected:
 
 	// Overlay geometry.
 	RenderablePtr renderable;
-
-	// Border geometry.
-	RenderablePtr borderRenderable;
 
 	// Overlay material.
 	MaterialHandle material;

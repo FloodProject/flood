@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Resources/API.h"
 #include "Resources/Resource.h"
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"

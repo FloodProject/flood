@@ -45,7 +45,7 @@ void Cell::setSettings( const TerrainSettings& settings )
 	image.Resolve()->setColor( Color::LightGrey );
 
 	// Make a copy of the default cell material.
-	Material* mat = Allocate(Material, AllocatorGetHeap(), *settings.Material.Resolve());
+	Material* mat = AllocateHeap(Material, *settings.Material.Resolve());
 	mat->setTexture(0, image);
 
 	material = HandleCast<Material>( ResourceHandleCreate(mat) );
@@ -78,7 +78,7 @@ void Cell::rebuildGeometry()
 	rebuildIndices();
 
 	// Force bounding-box update.
-	markDirty();
+	rebuildBoundingBox();
 }
 
 //-----------------------------------//

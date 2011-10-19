@@ -55,14 +55,20 @@ Particles::Particles()
 	, maxVelocity(0, 1, 0)
 	, attenuation(1, 0, 0)
 	, numParticles(0)
-{ }
+{
+	createGeometry();
+}
 
 //-----------------------------------//
 
-void Particles::setImage(const ImageHandle& image)
+void Particles::setImage(const ImageHandle& newImage)
 {
+	image = newImage;
+
 	Material* pMaterial = material.Resolve();
-	pMaterial->setTexture(0, image);
+	
+	if( pMaterial )
+		pMaterial->setTexture(0, image);
 }
 
 //-----------------------------------//
@@ -104,6 +110,8 @@ void Particles::spawnParticles(int numSpawn)
 void Particles::createGeometry()
 {
 	gb = AllocateThis(GeometryBuffer);
+	gb->setBufferAccess(BufferAccess::Write);
+	gb->setBufferUsage(BufferUsage::Dynamic);
 	
 	material = MaterialCreate(AllocatorGetHeap(), "ParticlesMaterial");
 
@@ -130,9 +138,6 @@ void Particles::createGeometry()
 
 void Particles::update(float delta)
 {
-	if( renderables.empty() )
-		createGeometry();
-
 	numParticles = particles.size();
 
 	int numSpawn = ceil(spawnRate * delta);
@@ -167,6 +172,8 @@ void Particles::update(float delta)
 	}
 
 	gb->declarations.reset();
+	gb->clear();
+
 	gb->set(VertexAttribute::Position, positions);
 	gb->set(VertexAttribute::Color, colors);
 	gb->forceRebuild();

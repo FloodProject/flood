@@ -499,14 +499,20 @@ void ResourceManager::setupResourceLoaders(Class* klass)
 
 void ResourceManager::setArchive(Archive* newArchive)
 {
+	if(archive == newArchive) return;
+
 	if(archive)
 	{
 		// Disconnect from the watch events.
 		archive->watch.Disconnect(this, &ResourceManager::handleWatchResource);
+		archive = nullptr;
 	}
 
-	archive = newArchive;
-	archive->watch.Connect(this, &ResourceManager::handleWatchResource);
+	if(newArchive)
+	{
+		archive = newArchive;
+		archive->watch.Connect(this, &ResourceManager::handleWatchResource);
+	}
 }
 
 //-----------------------------------//

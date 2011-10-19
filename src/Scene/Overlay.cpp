@@ -35,7 +35,7 @@ Overlay::Overlay()
 
 void Overlay::createGeometry()
 {
-	material = MaterialCreate( AllocatorGetHeap(), "OverlayMaterial");
+	material = MaterialCreate(AllocatorGetThis(), "OverlayMaterial");
 
 	renderable = AllocateThis(Renderable);
 	renderable->setPrimitiveType(PolygonType::Quads);
@@ -44,42 +44,43 @@ void Overlay::createGeometry()
 	renderable->setRenderLayer(RenderLayer::Overlays);
 
 	addRenderable( renderable );
-
-	MaterialHandle borderHandle = MaterialCreate( AllocatorGetHeap(), "OverlayBorderMaterial");
-	
-	Material* borderMaterial = borderHandle.Resolve();
-	borderMaterial->setDepthTest(false);
-
-	borderRenderable = AllocateThis(Renderable);
-	borderRenderable->setPrimitiveType(PolygonType::LineLoop);
-	borderRenderable->setGeometryBuffer( AllocateThis(GeometryBuffer) );
-	borderRenderable->setMaterial( borderHandle );
-	borderRenderable->setRenderLayer(RenderLayer::Overlays);
-	borderRenderable->setRenderPriority(10);
-
-	addRenderable( borderRenderable );
 }
 
 //-----------------------------------//
 
 void Overlay::rebuildGeometry()
 {
-	// Position.
 	std::vector<Vector3> pos;
+	std::vector< Color > colors;
 
-	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector2(0, size.y) );
-	pos.push_back( size );
-	pos.push_back( Vector2(size.x, 0) );
+	pos.push_back( Vector3(borderWidth, borderWidth, -1) );
+	pos.push_back( Vector3(borderWidth, size.y-borderWidth, -1) );
+	pos.push_back( Vector3(size.x-borderWidth, size.y-borderWidth, -1) );
+	pos.push_back( Vector3(size.x-borderWidth, borderWidth, -1) );
 
 	Color color = backgroundColor;
 	color.a = opacity;
+	
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
 
-	std::vector< Color > colors;
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
+	if( borderWidth > 0 )
+	{
+		pos.push_back( Vector3(0, 0, -2) );
+		pos.push_back( Vector3(0, size.y, -2) );
+		pos.push_back( Vector3(size.x, size.y, -2) );
+		pos.push_back( Vector3(size.x, 0, -2) );
+	
+		color = borderColor;
+		//color.a = opacity;
+
+		colors.push_back(color);
+		colors.push_back(color);
+		colors.push_back(color);
+		colors.push_back(color);
+	}
 
 	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
 	
@@ -88,45 +89,6 @@ void Overlay::rebuildGeometry()
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
-
-	gb->forceRebuild();
-
-	rebuildBorderGeometry();
-}
-
-//-----------------------------------//
-
-void Overlay::rebuildBorderGeometry()
-{
-	const GeometryBufferPtr& gb = borderRenderable->getGeometryBuffer();
-	
-	gb->clear();
-	gb->declarations.reset();
-
-	if( borderWidth <= 0 )
-	{
-		return;
-	}
-
-	std::vector<Vector3> pos;
-
-	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector2(0, size.y) );
-	pos.push_back( size );
-	pos.push_back( Vector2(size.x, 0) );
-
-	const Color& color = borderColor;
-
-	std::vector< Color > colors;
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
-
-	gb->set( VertexAttribute::Position, pos );
-	gb->set( VertexAttribute::Color, colors );
-
-	gb->forceRebuild();
 }
 
 //-----------------------------------//
@@ -173,8 +135,6 @@ void Overlay::setOpacity( float opacity )
 	if( !material ) return;
 
 	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
-
-	rebuildGeometry();
 }
 
 //-----------------------------------//

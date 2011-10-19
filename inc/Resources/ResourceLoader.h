@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 //-----------------------------------//
 
 #define RESOURCE_LOADER_PREPARE(T) \
-	Resource* prepare(const Stream&) OVERRIDE { return Allocate(T, AllocatorGetThis()); }
+	Resource* prepare(const Stream&) OVERRIDE { return AllocateThis(T); }
 
 #define RESOURCE_LOADER_CLASS(T) \
 	Class* getResourceClass() const OVERRIDE { return ReflectionGetType(T); }

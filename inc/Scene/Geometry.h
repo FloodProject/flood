@@ -35,7 +35,6 @@ class API_ENGINE Geometry : public Component
 public:
 
 	Geometry();
-	Geometry( const RenderablePtr& renderable );
 
 	// Adds a new renderable to this geometry.
 	void addRenderable( const RenderablePtr& renderable );
@@ -59,11 +58,11 @@ public:
 	BoundingBox getWorldBoundingVolume() const;
 
 	// Marks the geometry as dirty (forces bounding volume update).
-	void markDirty();
+	void rebuildBoundingBox();
 
 protected:
 
-	// Notifies the Transform that bounding volumes are dirty.
+	// Notifies the transform of rebuilt bounding volumes.
 	void notifiesTransform();
 
 	// Renderables of the geometry.
@@ -72,8 +71,8 @@ protected:
 	// Bounding volume of the geometry.
 	BoundingBox bounds;
 
-	// Keeps track if geometry has changed.
-	bool isDirty;
+	// Keeps track if bounds needs to be rebuilt.
+	bool needsBoundsRebuild;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Geometry );

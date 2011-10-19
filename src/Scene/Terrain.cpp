@@ -131,7 +131,7 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 
 CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 {
-	CellPtr cell( new Cell(x, y) );
+	CellPtr cell = AllocateHeap(Cell, x, y);
 	cell->setSettings(settings);
 	cell->setHeights(heights);
 
@@ -156,13 +156,13 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
-		return CellPtr();
+		return nullptr;
 
 	if( !heightmap->isLoaded() )
-		return CellPtr();
+		return nullptr;
 
 	if( !validateHeightmap(heightmap) )
-		return CellPtr();
+		return nullptr;
 
 	settings.NumberTiles = heightmap->getWidth() - 1;
 
@@ -199,8 +199,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& h
 
 bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 {
-	if( !heightmap )
-		return false;
+	if( !heightmap ) return false;
 	
 	assert( heightmap->isLoaded() );
 

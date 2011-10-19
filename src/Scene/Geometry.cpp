@@ -20,16 +20,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Geometry::Geometry()
-	: isDirty(true)
+	: needsBoundsRebuild(true)
 { }
-
-//-----------------------------------//
-
-Geometry::Geometry( const RenderablePtr& rend )
-	: isDirty(true)
-{
-	addRenderable( rend );
-}
 
 //-----------------------------------//
 
@@ -102,11 +94,11 @@ void Geometry::notifiesTransform()
 
 void Geometry::update( float delta )
 {
-	if( !isDirty ) return;
+	if( !needsBoundsRebuild ) return;
 
 	updateBounds();
 	notifiesTransform();
-	isDirty = false;
+	needsBoundsRebuild = false;
 }
 
 //-----------------------------------//
@@ -120,9 +112,9 @@ BoundingBox Geometry::getWorldBoundingVolume() const
 
 //-----------------------------------//
 
-void Geometry::markDirty()
+void Geometry::rebuildBoundingBox()
 {
-	isDirty = true;
+	needsBoundsRebuild = true;
 }
 
 //-----------------------------------//
