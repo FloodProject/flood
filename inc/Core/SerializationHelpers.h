@@ -6,9 +6,12 @@
 *
 ************************************************************************/
 
+#pragma once
+
 #include "Core/API.h"
-#include "Core/Log.h"
+
 #include "Core/Serialization.h"
+#include "Core/Reflection.h"
 #include "Core/Stream.h"
 
 #ifdef ENABLE_SERIALIZATION
@@ -18,16 +21,29 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 struct Field;
+struct json_t;
 
 struct API_CORE SerializerBinary : public Serializer
 {
 	MemoryStream* ms;
 };
 
-// Deserializes a field from a stream.
-API_CORE void DeserializeFields( ReflectionContext* context );
+//-----------------------------------//
+
+struct API_CORE SerializerJSON : public Serializer
+{
+	// Root JSON value.
+	json_t* rootValue;
+	
+	// Stack of JSON values.
+	std::vector<json_t*> values;
+	std::vector<json_t*> arrays;
+};
 
 //-----------------------------------//
+
+// Deserializes a field from a stream.
+API_CORE void DeserializeFields( ReflectionContext* context );
 
 template<typename T>
 static void PointerSetObject( const Field* field, void* address, T* object )
@@ -83,6 +99,10 @@ void EncodeFloat(MemoryStream* ms, float val);
 float DecodeFloat(MemoryStream* ms);
 void EncodeString(MemoryStream* ms, const String& s);
 bool DecodeString(MemoryStream* ms, String& s);
+
+// Array helpers.
+void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );
+uint16 ReflectionArrayGetElementSize(const Field* field);
 
 //-----------------------------------//
 

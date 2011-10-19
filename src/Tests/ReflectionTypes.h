@@ -91,11 +91,11 @@ struct C : public Object
 
 	void allocate()
 	{
-		anA = Allocate(A, AllocatorGetThis());
+		anA = AllocateThis(A);
 		
 		for(size_t i = 0; i < NUM_AS; i++)
 		{
-			A* a = Allocate(A, AllocatorGetThis());
+			A* a = AllocateThis(A);
 			arrayA.push_back(a);
 		}
 	}
@@ -129,8 +129,8 @@ struct D : public Object
 
 	void allocate()
 	{
-		object = Allocate(A, AllocatorGetThis());
-		refA = Allocate(A, AllocatorGetThis());
+		object = AllocateThis(A);
+		refA = AllocateThis(A);
 		vecA.push_back(refA);
 	}
 
@@ -165,12 +165,52 @@ struct F : public Object
 		a.foo = 0;
 	}
 
-	~F()
-	{
-	}
-
 	std::vector<A> vecA;
 	A a;
 };
+
+//-----------------------------------//
+
+REFLECT_DECLARE_CLASS(H)
+
+struct H : public Object
+{
+	REFLECT_DECLARE_OBJECT(H)
+
+	H()
+	{
+		hook = 0;
+	}
+
+	void setup()
+	{
+		hook = 0xd00c;
+	}
+
+	uint32 hook;
+};
+
+//-----------------------------------//
+
+REFLECT_DECLARE_CLASS(I)
+
+struct I : public Object
+{
+	REFLECT_DECLARE_OBJECT(I)
+
+	I()
+	{
+	}
+
+	void setup()
+	{
+		h.setup();
+		hook = 20;
+	}
+
+	H h;
+	uint32 hook;
+};
+
 
 //-----------------------------------//

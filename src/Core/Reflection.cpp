@@ -299,6 +299,23 @@ bool ClassIsAbstract(const Class* klass)
 
 //-----------------------------------//
 
+Field::Field()
+	: type(nullptr)
+	, id(FieldInvalid)
+	, name(nullptr)
+	, size(0)
+	, offset(0)
+	, pointer_size(0)
+	, qualifiers(0)
+	, setter(nullptr)
+	, resize(nullptr)
+	, serialize(nullptr)
+{
+
+}
+
+//-----------------------------------//
+
 bool FieldHasQualifier(const Field* field, FieldQualifier::Enum qual)
 {
 	if( !field ) return false;

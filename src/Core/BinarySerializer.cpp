@@ -11,12 +11,14 @@
 #ifdef ENABLE_SERIALIZATION_BINARY
 
 #include "Core/Serialization.h"
+#include "Core/SerializationHelpers.h"
+
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
-#include "Core/SerializationHelpers.h"
+#include "Core/Log.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -47,11 +49,11 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
-	Class* klass = ctx->klass;
+	Class* objectClass = ctx->objectClass;
 
 	if(wt == ReflectionWalkType::Begin)
 	{
-		EncodeVariableInteger(bin->ms, klass->id);
+		EncodeVariableInteger(bin->ms, objectClass->id);
 		return;
 	}
 	else if(wt == ReflectionWalkType::End)
@@ -82,14 +84,14 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 	
 	ValueContext& vc = ctx->valueContext;
-	int32& val = *vc.i32;
+	int32& val = vc.i32;
 	
 	EncodeVariableInteger(bin->ms, EncodeZigZag32(val));
 }
 
 //-----------------------------------//
 
-static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::Enum wt )
+static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ValueContext& vc = context->valueContext;
@@ -98,61 +100,61 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	{
 	case Primitive::Bool:
 	{
-		bool& b = *vc.b;
+		bool& b = vc.b;
 		EncodeVariableInteger(bin->ms, b);
 		break;
 	}
 	case Primitive::Int8:
 	{
-		sint8& i = *vc.i8;
+		sint8& i = vc.i8;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
 	case Primitive::Uint8:
 	{
-		uint8& i = *vc.u8;
+		uint8& i = vc.u8;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Int16:
 	{
-		sint16& i = *vc.i16;
+		sint16& i = vc.i16;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
 	case Primitive::Uint16:
 	{
-		uint16& i = *vc.u16;
+		uint16& i = vc.u16;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Int32:
 	{
-		sint32& i = *vc.i32;
+		sint32& i = vc.i32;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
 	case Primitive::Uint32:
 	{
-		uint32& i = *vc.u32;
+		uint32& i = vc.u32;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Int64:
 	{
-		sint64& i = *vc.i64;
+		sint64& i = vc.i64;
 		EncodeVariableInteger(bin->ms, EncodeZigZag64(i));
 		break;
 	}
 	case Primitive::Uint64:
 	{
-		uint64& i = *vc.u64;
+		uint64& i = vc.u64;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Float:
 	{
-		float& f = *vc.f32;
+		float& f = vc.f32;
 		EncodeFloat(bin->ms, f);
 		break;
 	}
@@ -164,7 +166,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Color:
 	{
-		Color& c = *vc.c;
+		ColorP& c = vc.c;
 		EncodeFloat(bin->ms, c.r);
 		EncodeFloat(bin->ms, c.g);
 		EncodeFloat(bin->ms, c.b);
@@ -173,7 +175,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Vector3:
 	{
-		Vector3& v = *vc.v;
+		Vector3P& v = vc.v;
 		EncodeFloat(bin->ms, v.x);
 		EncodeFloat(bin->ms, v.y);
 		EncodeFloat(bin->ms, v.z);
@@ -181,7 +183,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Quaternion:
 	{
-		Quaternion& q = *vc.q;
+		QuaternionP& q = vc.q;
 		EncodeFloat(bin->ms, q.x);
 		EncodeFloat(bin->ms, q.y);
 		EncodeFloat(bin->ms, q.z);
@@ -195,7 +197,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 
 //-----------------------------------//
 
-static void DeserializeEnum( ReflectionContext* context )
+static void DeserializeEnum( ReflectionContext* context, ReflectionWalkType::Enum = ReflectionWalkType::End )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	Enum* enume = (Enum*) context->enume;
@@ -210,94 +212,94 @@ static void DeserializeEnum( ReflectionContext* context )
 
 //-----------------------------------//
 
-#define SetFieldValue(T, val) FieldSet<T>(context->field, context->object, val);
+#define SetFieldValue(T, val) \
+	MULTI_LINE_MACRO_BEGIN \
+	if(context->field) \
+		FieldSet<T>(context->field, context->object, val); \
+	MULTI_LINE_MACRO_END
 
-static void DeserializePrimitive( ReflectionContext* context )
+static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType::Enum = ReflectionWalkType::End )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	MemoryStream* ms = bin->ms;
 	uint64 i;
+
+	ValueContext& vc = context->valueContext;
 
 	switch(context->primitive->type)
 	{
 	case Primitive::Bool:
 	{
 		DecodeVariableInteger(ms, i);
-		bool val = i != 0;
-		SetFieldValue(bool, val);
+		vc.b = i != 0;
+		SetFieldValue(bool, vc.b);
 		break;
 	}
 	case Primitive::Int8:
 	{
 		DecodeVariableInteger(ms, i);
-		sint8 val = (sint8) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint8, val);
+		vc.i8 = (sint8) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint8, vc.i8);
 		break;
 	}
 	case Primitive::Uint8:
 	{
 		DecodeVariableInteger(ms, i);
-		uint8 val = (uint8) i;
-		SetFieldValue(uint8, val);
+		vc.u8 = (uint8) i;
+		SetFieldValue(uint8, vc.u8);
 		break;
 	}
 	case Primitive::Int16:
 	{
 		DecodeVariableInteger(ms, i);
-		sint16 val = (sint16) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint16, val);
+		vc.i16 = (sint16) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint16, vc.i16);
 		break;
 	}
 	case Primitive::Uint16:
 	{
 		DecodeVariableInteger(ms, i);
-		uint16 val = (uint16) i;
-		SetFieldValue(uint16, val);
+		vc.u16 = (uint16) i;
+		SetFieldValue(uint16, vc.u16);
 		break;
 	}
 	case Primitive::Int32:
 	{
 		DecodeVariableInteger(ms, i);
-		sint32 val = (sint32) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint32, val);
+		vc.i32 = (sint32) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint32, vc.i32);
 		break;
 	}
 	case Primitive::Uint32:
 	{
 		DecodeVariableInteger(ms, i);
-		uint32 val = (uint32) i;
-		SetFieldValue(uint32, val);
+		vc.u32 = (uint32) i;
+		SetFieldValue(uint32, vc.u32);
 		break;
 	}
 	case Primitive::Int64:
 	{
 		DecodeVariableInteger(ms, i);
-		sint64 val = (sint64) DecodeZigZag64(i);
-		SetFieldValue(sint64, val);
+		vc.i64 = (sint64) DecodeZigZag64(i);
+		SetFieldValue(sint64, vc.i64);
 		break;
 	}
 	case Primitive::Uint64:
 	{
 		DecodeVariableInteger(ms, i);
-		SetFieldValue(uint64, i);
+		vc.u64 = i;
+		SetFieldValue(uint64, vc.u64);
 		break;
 	}
 	case Primitive::Float:
 	{
-		float val = DecodeFloat(ms);
-		SetFieldValue(float, val);
-		break;
-	}
-	case Primitive::String:
-	{
-		String val;
-		DecodeString(ms, val);
-		SetFieldValue(String, val);
+		vc.f32 = DecodeFloat(ms);
+		SetFieldValue(float, vc.f32);
 		break;
 	}
 	case Primitive::Color:
 	{
-		ColorP val;
+		ColorP& val = vc.c;
 		val.r = DecodeFloat(ms);
 		val.g = DecodeFloat(ms);
 		val.b = DecodeFloat(ms);
@@ -307,7 +309,7 @@ static void DeserializePrimitive( ReflectionContext* context )
 	}
 	case Primitive::Vector3:
 	{
-		Vector3P val;
+		Vector3P& val = vc.v;
 		val.x = DecodeFloat(ms);
 		val.y = DecodeFloat(ms);
 		val.z = DecodeFloat(ms);
@@ -316,12 +318,19 @@ static void DeserializePrimitive( ReflectionContext* context )
 	}
 	case Primitive::Quaternion:
 	{
-		QuaternionP val;
+		QuaternionP& val = vc.q;
 		val.x = DecodeFloat(ms);
 		val.y = DecodeFloat(ms);
 		val.z = DecodeFloat(ms);
 		val.w = DecodeFloat(ms);
 		SetFieldValue(QuaternionP, val);
+		break;
+	}
+	case Primitive::String:
+	{
+		String val;
+		DecodeString(ms, val);
+		SetFieldValue(String, val);
 		break;
 	}
 	default:
@@ -408,7 +417,12 @@ static void DeserializeField( ReflectionContext* context )
 {
 	const Field* field = context->field;
 
-	if( FieldIsArray(field) )
+	if( field->serialize )
+	{
+		field->serialize(context, ReflectionWalkType::Element);
+		return;
+	}
+	else if( FieldIsArray(field) )
 	{
 		DeserializeArray(context);
 		return;
@@ -467,8 +481,6 @@ void DeserializeFields( ReflectionContext* context )
 		if(id == FieldInvalid) break;
 
 		Class* composite = context->composite;
-		const Field* field = context->field;
-
 		Field* newField = ClassGetFieldById(composite, id);
 		
 		if( !newField )
@@ -477,7 +489,9 @@ void DeserializeFields( ReflectionContext* context )
 			continue;
 		}
 		
+		const Field* field = context->field;
 		context->field = newField;
+
 		DeserializeField(context);
 
 		context->field = field;
@@ -513,30 +527,47 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	
 	if( !newClass )
 	{
-		LogDebug("Deserialize: Could not create class instance");
+		LogDebug("Deserialize: Invalid class id");
 		return nullptr;
 	}
-	
-	// Instantiate a new class.
+
+#if 0
+	Class* fieldClass = (Class*) context->field;
+
+	if( fieldClass && !ClassInherits(fieldClass, newClass) )
+		return 0;
+#endif
+
+	// Instantiate an instance of the class.
 	if( !newObject )
 		newObject = (Object*) ClassCreateInstance(newClass, bin->alloc);
 
-	Class* klass = context->klass;
+	if( !newObject ) return 0;
+
+	Class* objectClass = context->objectClass;
 	Class* composite = context->composite;
 	Object* object = context->object;
 
-	context->klass = newClass;
+	context->objectClass = newClass;
 	context->composite = newClass;
 	context->object = newObject;
 
-	DeserializeFields(context);
+	if( newClass->serialize )
+	{
+		newClass->serialize(context, ReflectionWalkType::Begin);
+
+		// This reads the end marker of the class.
+		DeserializeFields(context);
+	}
+	else
+		DeserializeFields(context);
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();
 
 	context->object = object;
 	context->composite = composite;
-	context->klass = klass;
+	context->objectClass = objectClass;
 
 	return newObject;
 }
@@ -549,6 +580,8 @@ static Object* SerializeLoad( Serializer* serializer )
 	if( !bin->stream ) return nullptr;
 
 	int64 size = StreamGetSize(bin->stream);
+	if( size == 0 ) return nullptr;
+
 	bin->ms = (MemoryStream*) StreamCreateFromMemory(bin->alloc, size);
 	StreamReadBuffer(bin->stream, &bin->ms->data[0], size);
 
@@ -597,6 +630,8 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
 	dCtx.userData = serializer;
+	dCtx.walkPrimitive = DeserializePrimitive;
+	dCtx.walkEnum = DeserializeEnum;
 
 	return serializer;
 }

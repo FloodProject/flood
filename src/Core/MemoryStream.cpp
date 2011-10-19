@@ -64,6 +64,7 @@ void StreamMemoryInit(MemoryStream* ms)
 	
 	ms->fn = &gs_MemoryFuncs;
 	ms->position = 0;
+	ms->buffer = nullptr;
 	ms->useRawBuffer = false;
 }
 

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/API.h"
+#include "Core/Serialization.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -31,7 +32,7 @@ struct API_CORE Type
 	Type() {}
 
 	Type(MetaType type, const char* name, uint16 size)
-		: type(type), name(name), size(size) {}
+		: type(type), name(name), size(size), serialize(nullptr) {}
 
 	// Meta type of the type.
 	MetaType type;
@@ -41,6 +42,9 @@ struct API_CORE Type
 
 	// Size of the type.
 	uint16 size;
+
+	// Custom walk function.
+	ReflectionWalkFunction serialize;
 };
 
 // Gets if this type represents a primitive type.
@@ -192,16 +196,19 @@ struct FieldQualifier
 
 struct API_CORE Field
 {
+	Field();
+
 	Type* type;
-	const char* name;
 	FieldId id;
-	uint16 qualifiers;
-	uint16 offset;
-	uint16 size;
-	uint16 pointer_size;
-	FieldSetterFunction setter;
-	FieldResizeFunction resize;
+	const char* name;
 	std::vector<const char*> aliases;
+	uint16 size;
+	uint16 offset;
+	uint16 pointer_size;
+	uint16 qualifiers;
+	FieldSetterFunction setter;
+	FieldResizeFunction resize;	
+	ReflectionWalkFunction serialize;
 };
 
 static FieldId FieldInvalid = 127;

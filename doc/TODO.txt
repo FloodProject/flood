@@ -15,9 +15,12 @@ Types of plugins:
 EDITOR:
 -------
 
+Bugs:
+	Fix the property grid child properties layout
+	Terrains are not added properly as operations
+
 GUI:
 	Create widget to choose resource
-	Finish the side component widget
 
 Camera:
 	Add an adaptive grid in the editor
@@ -91,3 +94,8 @@ Skydome:
 	Switch geometry to triangle strips
 	Fix the gradient color generation
 	Add dynamic day-night system
+
+CORE
+----
+
+Serialization of custom types

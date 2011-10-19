@@ -11,13 +11,14 @@
 #ifdef ENABLE_SERIALIZATION_JSON
 
 #include "Core/Serialization.h"
+#include "Core/SerializationHelpers.h"
+
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
-#include "Core/SerializationHelpers.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -103,30 +104,6 @@ static Quaternion ConvertValueToQuaternion( json_t* value )
 
 //-----------------------------------//
 
-struct API_CORE SerializerJSON : public Serializer
-{
-	// Root JSON value.
-	json_t* rootValue;
-	
-	// Stack of JSON values.
-	std::vector<json_t*> values;
-	std::vector<json_t*> arrays;
-};
-
-static void* JsonAllocate(size_t size)
-{
-	Allocator* alloc = AllocatorGetHeap();
-	return alloc->allocate(alloc, 0, 0);
-}
-
-static void JsonDeallocate(void* p)
-{
-	Allocator* alloc = AllocatorGetHeap();
-	return alloc->deallocate(alloc, p);
-}
-
-//-----------------------------------//
-
 static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
@@ -162,7 +139,7 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 	else if(wt == ReflectionWalkType::End)
 	{
 		json_t* klass = json_object();
-		json_object_set_new(klass, ctx->klass->name, json->values.back());
+		json_object_set_new(klass, ctx->objectClass->name, json->values.back());
 		
 		json->values.pop_back();
 		json->values.push_back(klass);
@@ -192,9 +169,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 	
 	ValueContext& vc = ctx->valueContext;
-	int32 value = *vc.i32;
-	
-	const char* name = EnumGetValueName(ctx->enume, value);
+	const char* name = EnumGetValueName(ctx->enume, vc.i32);
 	assert( name != nullptr );
 
 	json_t* str = json_string(name);
@@ -214,25 +189,25 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	{
 	case Primitive::Bool:
 	{
-		bool& b = *vc.b;
+		bool& b = vc.b;
 		value = b ? json_true() : json_false();
 		break;
 	}
 	case Primitive::Int32:
 	{
-		int32& i = *vc.i32;
+		int32& i = vc.i32;
 		value = json_integer(i);
 		break;
 	}
 	case Primitive::Uint32:
 	{
-		uint32& i = *vc.u32;
+		uint32& i = vc.u32;
 		value = json_integer(i);
 		break;
 	}
 	case Primitive::Float:
 	{
-		float& f = *vc.f32;
+		float& f = vc.f32;
 		value = json_real(f);
 		break;
 	}
@@ -244,19 +219,19 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	}
 	case Primitive::Color:
 	{
-		Color& c = *vc.c;
+		ColorP& c = vc.c;
 		value = json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
 		break;
 	}
 	case Primitive::Vector3:
 	{
-		Vector3& v = *vc.v;
+		Vector3P& v = vc.v;
 		value = json_pack("[f,f,f]", v.x, v.y, v.z);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
-		Quaternion& q = *vc.q;
+		QuaternionP& q = vc.q;
 		value = json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
 		break;
 	}
@@ -340,7 +315,7 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
+static Object* DeserializeComposite( ReflectionContext* context, json_t* value, Object* newObject );
 
 static void DeserializeArrayElement( ReflectionContext* context, json_t* value, void* address )
 {
@@ -361,8 +336,17 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 	case Type::Composite:
 	{
 		context->composite = (Class*) field->type;
-		Object* object = DeserializeComposite(context, value);
-		PointerSetObject(field, address, object);
+
+		if( !FieldIsPointer(field) )
+		{
+			Object* object = DeserializeComposite(context, value, (Object*) address);
+		}
+		else
+		{
+			Object* object = DeserializeComposite(context, value, 0);
+			PointerSetObject(field, address, object);
+		}
+		
 		break;
 	} }
 }
@@ -374,8 +358,6 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 	// Some old serialized files don't properly encode the components of an entity
 	// as an array, so don't force the JSON value to be an array.
 	
-	/*assert( json_is_array(value) );*/
-
 	const Field* field = context->field;
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
 
@@ -457,30 +439,45 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 			}
 
 			void* iter = json_object_iter(value);
-			void* iter2 = json_object_iter( json_object_iter_value(iter) );
-			json_t* val = json_object_iter_value(iter2);
-			const char* name = json_string_value(val);
 
-			ReflectionHandleContext handleContext;
-			ReflectionFindHandleContext((Class*) field->type, handleContext);
-			
-			HandleId id = handleContext.deserialize(name);
-			if(id == HandleInvalid) return;
+			json_t* obj = json_object_iter_value(iter);
+			void* iter2 = json_object_iter( obj );
 
-			void* address = ClassGetFieldAddress(context->object, field);
+			do
+			{
+				json_t* val = json_object_iter_value(iter2);
+				if( !json_is_string(val) ) continue;
+
+				const char* name = json_string_value(val);
+				if( !name ) continue;
+
+				ReflectionHandleContext handleContext;
+				ReflectionFindHandleContext((Class*) field->type, handleContext);
 			
-			typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
-			ObjectHandle* handleObject = (ObjectHandle*) address;
-			handleObject->setId(id);
-			
-			ReferenceAdd( HandleFind(handleContext.handles, id) );
+				HandleId id = handleContext.deserialize(name);
+				if(id == HandleInvalid) continue;
+
+				typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
+				ObjectHandle handleObject;
+				handleObject.setId(id);
+				
+				FieldSet(field, context->object, handleObject);
+
+				break;
+			}
+			while( iter2 = json_object_iter_next(obj, iter2) );
 		}
 		else if( FieldIsPointer(field) )
 		{
-			Object* object = DeserializeComposite(context, value);
+			Object* object = DeserializeComposite(context, value, 0);
+			
 			void* address = ClassGetFieldAddress(context->object, field);
-
 			PointerSetObject(field, address, object);
+		}
+		else
+		{
+			void* address = ClassGetFieldAddress(context->object, field);
+			Object* object = DeserializeComposite(context, value, (Object*) address);
 		}
 
 		context->composite = composite;
@@ -534,7 +531,7 @@ static void DeserializeFields( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
+static Object* DeserializeComposite( ReflectionContext* context, json_t* value, Object* newObject )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 
@@ -546,7 +543,7 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 
 	Class* newClass = (Class*) context->composite;
 
-	#pragma TODO("Remove this compatibility check")
+	#pragma TODO("Remove JSON class compatibility check")
 
 	// Use explicit class if object has one to handle polymorphism.
 	Class* explicitClass = (Class*) ReflectionFindType(key);
@@ -567,14 +564,16 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 	if( !newClass || ClassIsAbstract(newClass) )
 		return 0;
 
-	Object* newObject = (Object*) ClassCreateInstance(newClass, json->alloc);
+	if( !newObject )
+		newObject = (Object*) ClassCreateInstance(newClass, json->alloc);
+
 	if( !newObject ) return 0;
 
-	Class* klass = context->klass;
+	Class* objectClass = context->objectClass;
 	Class* composite = context->composite;
 	Object* object = context->object;
 
-	context->klass = newClass;
+	context->objectClass = newClass;
 	context->composite = newClass;
 	context->object = newObject;
 
@@ -585,7 +584,7 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 
 	context->object = object;
 	context->composite = composite;
-	context->klass = klass;
+	context->objectClass = objectClass;
 
 	return newObject;
 }
@@ -619,7 +618,7 @@ static Object* SerializeLoad( Serializer* serializer )
 	json->rootValue = rootValue;
 	
 	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = DeserializeComposite(context, rootValue);
+	Object* object = DeserializeComposite(context, rootValue, 0);
 	json_decref(rootValue);
 
 	return object;
@@ -662,8 +661,23 @@ static bool SerializeSave( Serializer* serializer, Object* object )
 
 //-----------------------------------//
 
+#if 0
+static void* JsonAllocate(size_t size)
+{
+	Allocator* alloc = AllocatorGetHeap();
+	return alloc->allocate(alloc, 0, 0);
+}
+
+static void JsonDeallocate(void* p)
+{
+	Allocator* alloc = AllocatorGetHeap();
+	return alloc->deallocate(alloc, p);
+}
+#endif
+
 Serializer* SerializerCreateJSON(Allocator* alloc)
 {
+	#pragma TODO("Hook memory allocators to JSON library")
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
 	SerializerJSON* serializer = Allocate(SerializerJSON, alloc);

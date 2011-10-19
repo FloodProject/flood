@@ -10,30 +10,31 @@
 
 #include "Core/Handle.h"
 
+#include "Math/Vector.h"
+#include "Math/Color.h"
+#include "Math/Quaternion.h"
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct Color;
-struct Vector3;
-struct Quaternion;
-
 union API_CORE ValueContext
 {
-	bool* b;
-	sint8*  i8;
-	uint8*  u8;
-	sint16* i16;
-	uint16* u16;
-	sint32* i32;
-	uint32* u32;
-	sint64* i64;
-	uint64* u64;
-	float* f32;
+	bool b;
+	sint8  i8;
+	uint8  u8;
+	sint16 i16;
+	uint16 u16;
+	sint32 i32;
+	uint32 u32;
+	sint64 i64;
+	uint64 u64;
+	float f32;
+	Vector3P v;
+	ColorP c;
+	QuaternionP q;
+	
 	String* s;
-	Vector3* v;
-	Color* c;
-	Quaternion* q;
 	const char* cs;
 };
 
@@ -88,21 +89,22 @@ struct Field;
 struct Primitive;
 
 // Walking functions
-typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
-typedef void (*ReflectionWalkCompositeFunc)(ReflectionContext*, ReflectionWalkType::Enum);
+typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType::Enum);
 
 struct API_CORE ReflectionContext
 {
 	ReflectionContext();
 
+	bool loading;
 	void* userData;
+	
 	Object* object;
-	Class* klass;
+	Class* objectClass;
 
 	Type* type;
-	Enum*  enume;
-	Class* composite;
 	Primitive* primitive;	
+	Class* composite;
+	Enum*  enume;
 	
 	ValueContext valueContext;
 
@@ -111,11 +113,11 @@ struct API_CORE ReflectionContext
 	void* elementAddress;
 	uint32 arraySize;
 
-	ReflectionWalkCompositeFunc walkComposite;
-	ReflectionWalkFunc walkCompositeField;
-	ReflectionWalkFunc walkPrimitive;
-	ReflectionWalkFunc walkEnum;
-	ReflectionWalkFunc walkArray;
+	ReflectionWalkFunction walkComposite;
+	ReflectionWalkFunction walkCompositeField;
+	ReflectionWalkFunction walkPrimitive;
+	ReflectionWalkFunction walkEnum;
+	ReflectionWalkFunction walkArray;
 };
 
 //-----------------------------------//
@@ -161,11 +163,6 @@ API_CORE bool SerializerSave(Serializer*, Object* object);
 API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
 API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path& file, Object* object);
 
-// Array helpers.
-void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );
-uint16 ReflectionArrayGetElementSize(const Field* field);
-
 //-----------------------------------//
 
 NAMESPACE_CORE_END
-

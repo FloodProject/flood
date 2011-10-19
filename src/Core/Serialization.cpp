@@ -11,6 +11,7 @@
 #ifdef ENABLE_SERIALIZATION
 
 #include "Core/Serialization.h"
+#include "Core/SerializationHelpers.h"
 #include "Core/References.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
@@ -31,9 +32,10 @@ static void WalkNull(ReflectionContext*, ReflectionWalkType::Enum)
 }
 
 ReflectionContext::ReflectionContext()
-	: userData(nullptr)
+	: loading(false)
+	, userData(nullptr)
 	, object(nullptr)
-	, klass(nullptr)
+	, objectClass(nullptr)
 	, type(nullptr)
 	, enume(nullptr)
 	, composite(nullptr)
@@ -87,6 +89,8 @@ Serializer::Serializer()
 	, load(nullptr)
 	, save(nullptr)
 {
+	serializeContext.loading = false;
+	deserializeContext.loading = true;
 }
 
 //-----------------------------------//
@@ -115,46 +119,46 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 	switch(type->type)
 	{
 	case Primitive::Bool:
-		vc.b = (bool*) address;
+		vc.b = *(bool*) address;
 		break;
 	case Primitive::Int8:
-		vc.i8 = (sint8*) address;
+		vc.i8 = *(sint8*) address;
 		break;
 	case Primitive::Uint8:
-		vc.u8 = (uint8*) address;
+		vc.u8 = *(uint8*) address;
 		break;
 	case Primitive::Int16:
-		vc.i16 = (int16*) address;
+		vc.i16 = *(int16*) address;
 		break;
 	case Primitive::Uint16:
-		vc.u16= (uint16*) address;
+		vc.u16= *(uint16*) address;
 		break;
 	case Primitive::Int32:
-		vc.i32 = (int32*) address;
+		vc.i32 = *(int32*) address;
 		break;
 	case Primitive::Uint32:
-		vc.u32 = (uint32*) address;
+		vc.u32 = *(uint32*) address;
 		break;
 	case Primitive::Int64:
-		vc.i64 = (int64*) address;
+		vc.i64 = *(int64*) address;
 		break;
 	case Primitive::Uint64:
-		vc.u64 = (uint64*) address;
+		vc.u64 = *(uint64*) address;
 		break;
 	case Primitive::Float:
-		vc.f32 = (float*) address;
+		vc.f32 = *(float*) address;
+		break;
+	case Primitive::Color:
+		vc.c = *(Color*) address;
+		break;
+	case Primitive::Vector3:
+		vc.v = *(Vector3*) address;
+		break;
+	case Primitive::Quaternion:
+		vc.q = *(Quaternion*) address;
 		break;
 	case Primitive::String:
 		vc.s = (String*) address;
-		break;
-	case Primitive::Color:
-		vc.c = (Color*) address;
-		break;
-	case Primitive::Vector3:
-		vc.v = (Vector3*) address;
-		break;
-	case Primitive::Quaternion:
-		vc.q = (Quaternion*) address;
 		break;
 	default:
 		assert( false );
@@ -170,7 +174,7 @@ static void ReflectionWalkEnum(ReflectionContext* context)
 	if( !context->walkEnum ) return;
 
 	ValueContext& vc = context->valueContext;
-	vc.i32 = (int32*) ClassGetFieldAddress(context->object, context->field);
+	vc.i32 = *(int32*) ClassGetFieldAddress(context->object, context->field);
 
 	context->walkEnum(context, ReflectionWalkType::Element);
 }
@@ -307,7 +311,12 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
-	if( FieldIsArray(field) )
+	// Check for custom field serialize functions.
+	if( field->serialize )
+	{
+		field->serialize(context, ReflectionWalkType::Element);
+	}
+	else if( FieldIsArray(field) )
 	{
 		ReflectionWalkArray(context);
 	}
@@ -341,7 +350,7 @@ exit:
 
 static void ReflectionWalkComposite(ReflectionContext* context)
 {
-	bool isTopComposite = context->composite == context->klass;
+	bool isTopComposite = context->composite == context->objectClass;
 
 	if( isTopComposite )
 		context->walkComposite(context, ReflectionWalkType::Begin);
@@ -376,19 +385,25 @@ static void ReflectionWalkComposite(ReflectionContext* context)
 
 static void ReflectionWalkType(ReflectionContext* context, Type* type)
 {
+	bool hasCustomSerialize = type->serialize != 0;
+
 	switch(type->type)
 	{
 	case Type::Composite:
 	{
-		Class* klass = context->klass;
+		Class* objectClass = context->objectClass;
 		Class* composite = context->composite;
 
-		context->klass = (Class*) type;
-		context->composite = context->klass;
+		context->objectClass = (Class*) type;
+		context->composite = context->objectClass;
 
-		ReflectionWalkComposite(context);
+		// If the type has a custom serializer, call it.
+		if( hasCustomSerialize )
+			type->serialize(context, ReflectionWalkType::Element);
+		else
+			ReflectionWalkComposite(context);
 
-		context->klass = klass;
+		context->objectClass = objectClass;
 		context->composite = composite;
 		break;
 	}
@@ -409,14 +424,14 @@ void ReflectionWalk(Object* object, ReflectionContext* context)
 {
 	if( !context ) return;
 
-	Class* klass = ClassGetType(object);
-	if( !klass ) return;
+	Class* objectClass = ClassGetType(object);
+	if( !objectClass ) return;
 
 	context->object = object;
-	context->klass = klass;
-	context->composite = klass;
+	context->objectClass = objectClass;
+	context->composite = objectClass;
 	
-	ReflectionWalkType(context, klass);
+	ReflectionWalkType(context, objectClass);
 }
 
 //-----------------------------------//

@@ -50,9 +50,14 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 	if( !stream ) return 0;
 	
 	int64 length = StreamGetSize(stream);
+
+	if( length < 0 ) return 0;
+
 	data.resize( (size_t) length );
 
-	return StreamReadBuffer(stream, &data[0], data.size());
+	if( data.empty() ) return 0;
+
+	return StreamReadBuffer(stream, &data.front(), data.size());
 }
 
 //-----------------------------------//

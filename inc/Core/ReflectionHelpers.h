@@ -67,6 +67,9 @@ NAMESPACE_CORE_BEGIN
 		klass.size = sizeof(className); \
 		klass.type = Type::Composite;
 
+#define REFLECT_CLASS_SET_SERIALIZER(fn) \
+	klass.serialize = fn;
+
 #define REFLECT_ABSTRACT_CLASS(name) \
 	CREATE_CLASS_BUILD(name) \
 
@@ -89,7 +92,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-#define NFS(fieldName) \
+#define FIELD_SETTER_NAME(fieldName) \
 	&fieldName##Set::Set##fieldName
 
 #define FIELD_SETTER(fieldType, fieldName, setterName) \
@@ -106,7 +109,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-#define NFR(fieldName) \
+#define FIELD_RESIZER_NAME(fieldName) \
 	&fieldName##Resize::Resize##fieldName
 
 #define FIELD_RESIZER(fieldType, fieldName) \
@@ -130,6 +133,9 @@ NAMESPACE_CORE_BEGIN
 	fieldName.id = fieldId; \
 	ClassAddField(&klass, &fieldName);
 
+#define FIELD_SET_SERIALIZER(fieldName, fn) \
+	fieldName.serialize = fn;
+
 #define FIELD_CLASS(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
 	fieldName.type = fieldType##GetType(); \
@@ -145,7 +151,7 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_CLASS_PTR_SETTER(fieldId, fieldType, pointerType, fieldName, pointerQual, setterName) \
 	FIELD_SETTER_CLASS(pointerType, fieldName, setterName) \
 	FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual) \
-	FieldSetSetter(&fieldName, NFS(fieldName));
+	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_ENUM(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
@@ -155,14 +161,14 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_ENUM_SETTER(fieldId, fieldType, fieldName, setterName) \
 	FIELD_SETTER_CLASS(fieldType::Enum, fieldName, setterName) \
 	FIELD_ENUM(fieldId, fieldType, fieldName) \
-	FieldSetSetter(&fieldName, NFS(fieldName));
+	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_VECTOR(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
 	FieldSetQualifier(&fieldName, FieldQualifier::Array); \
 	fieldName.type = ReflectionGetType(fieldType); \
 	FIELD_RESIZER_CLASS(fieldType, fieldName) \
-	fieldName.resize = NFR(fieldName); \
+	fieldName.resize = FIELD_RESIZER_NAME(fieldName); \
 	FIELD_COMMON(fieldId, fieldType, fieldName)
 
 #define FIELD_VECTOR_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual ) \
@@ -181,7 +187,7 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_PRIMITIVE_SETTER(fieldId, fieldType, fieldName, setterName) \
 	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_PRIMITIVE(fieldId, fieldType, fieldName) \
-	FieldSetSetter(&fieldName, NFS(fieldName));
+	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType) \
 	static Field fieldName; \
@@ -191,7 +197,7 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_PRIMITIVE_SETTER_CUSTOM(fieldId, fieldType, fieldName, primType, setterName) \
 	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType) \
-	FieldSetSetter(&fieldName, NFS(fieldName));
+	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_READONLY(fieldName) \
 	FieldSetQualifier(&fieldName, FieldQualifier::ReadOnly);
@@ -202,7 +208,6 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_ALIAS(fieldName, aliasName) \
 	fieldName.aliases.push_back(#aliasName);
 
-
-//-----------------------------------//
+	//-----------------------------------//
 
 NAMESPACE_CORE_END
