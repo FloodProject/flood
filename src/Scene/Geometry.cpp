@@ -79,7 +79,11 @@ void Geometry::updateBounds()
 	}
 
 	if( bounds.isInfinite() )
+	{
 		bounds.setZero();
+	}
+
+	needsBoundsRebuild = false;
 }
 
 //-----------------------------------//
@@ -98,7 +102,6 @@ void Geometry::update( float delta )
 
 	updateBounds();
 	notifiesTransform();
-	needsBoundsRebuild = false;
 }
 
 //-----------------------------------//

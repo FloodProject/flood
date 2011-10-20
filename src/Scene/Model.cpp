@@ -420,7 +420,7 @@ bool Model::isHardwareSkinned()
 
 //-----------------------------------//
 
-void Model::onRender(const RenderState&)
+void Model::onRender(RenderView* view, const RenderState&)
 {
 	if( !pmesh || !pmesh->isLoaded() || !pmesh->isAnimated() )
 		return;

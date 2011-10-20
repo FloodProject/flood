@@ -182,7 +182,10 @@ void Transform::updateBoundingVolume()
 	needsBoundsUpdate = false;
 
 	// Update debug renderable.
-	debugRenderable = DebugBuildBoundingBox( bounds );
+	if( !debugRenderable) 
+		debugRenderable = DebugBuildBoundingBox( bounds );
+	else
+		DebugUpdateBoudingBox(debugRenderable, bounds);
 }
 
 //-----------------------------------//

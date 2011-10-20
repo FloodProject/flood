@@ -45,10 +45,10 @@ public:
 	GETTER(Entities, const std::vector<EntityPtr>&, entities)
 
 	// Updates the group.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 	// Fix-up serialization.
-	virtual void fixUp() OVERRIDE;
+	void fixUp() OVERRIDE;
 
 	// Event gets called when an entity is added/removed.
 	Event1<const EntityPtr&> onEntityAdded;

@@ -25,14 +25,16 @@ NAMESPACE_ENGINE_BEGIN
  * and set a 5-pixel x-offset from it, then it will always stay there.
  */ 
 
-namespace PositionMode
+REFLECT_DECLARE_ENUM(PositionMode)
+
+struct PositionMode
 {
 	enum Enum
 	{
 		Relative,
 		Absolute
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -50,9 +52,11 @@ namespace PositionMode
  *		| BL      BC      BR |
  *		|____________________|
  *	
- */ 
+ */
 
-namespace Anchor
+REFLECT_DECLARE_ENUM(AnchorMode)
+
+struct AnchorMode
 {
 	enum Enum
 	{
@@ -66,7 +70,7 @@ namespace Anchor
 		Left,
 		Center,
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -92,13 +96,13 @@ public:
 	ACESSOR(PositionMode, PositionMode::Enum, positioning) 
 
 	// Gets/sets the current anchor settings.
-	ACESSOR(Anchor, Anchor::Enum, anchor)
+	ACESSOR(AnchorMode, AnchorMode::Enum, anchor)
 
-	// Gets/sets the position.
-	ACESSOR(Position, const Vector2&, position)
+	// Gets/sets the offset.
+	ACESSOR(Offset, const Vector3&, offset)
 
 	// Gets/sets the size.
-	ACESSOR(Size, const Vector2&, size)
+	ACESSOR(Size, const Vector3&, size)
 
 	// Gets/sets the background color.
 	ACESSOR(BackgroundColor, Color, backgroundColor)
@@ -109,14 +113,17 @@ public:
 	// Gets/sets the border color.
 	ACESSOR(BorderColor, Color, borderColor)
 
-	// Sets the position of the overlay.
-	void setPosition( int x, int y );
+	// Sets the offset of the overlay.
+	void setOffset( int x, int y );
 
 	// Sets the opacity of the overlay.
 	void setOpacity( float opacity );
 
 	// Updates the overlay if needed.
 	void update( float delta ) OVERRIDE;
+
+	// Layouts the overlay.
+	void layout(const Vector2i& targetSize);
 
 protected:
 
@@ -126,17 +133,23 @@ protected:
 	// Rebuilds the overlay geometry.
 	virtual void rebuildGeometry();
 
-	// PositionMode mode used.
+	// Gets called before rendering.
+	void onPreRender(RenderView* view, const RenderState&);
+
+	// Positioning mode used.
 	PositionMode::Enum positioning;
 
 	// Anchoring mode used.
-	Anchor::Enum anchor;
+	AnchorMode::Enum anchor;
 
-	// Overlay position.
-	Vector2 position;
+	// Overlay offset.
+	Vector3 offset;
 
 	// Overlay size.
-	Vector2 size;
+	Vector3 size;
+
+	// Overlay layout position.
+	Vector2i position;
 
 	// Background color.
 	Color backgroundColor;

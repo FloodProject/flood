@@ -62,6 +62,12 @@ void DebugDrawer::reset()
 
 void DebugDrawer::drawBox( const BoundingBox& box )
 {
+	if( box.min == Vector3::Zero && box.max == Vector3::Zero )
+		return;
+
+	if( box.isInfinite() )
+		return;
+
 	RenderablePtr rend = DebugBuildBoundingBox(box);
 	renderables.push_back(rend);
 }
@@ -98,20 +104,7 @@ void DebugDrawer::drawIcon( const Vector3& pos )
 
 RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 {
-	std::vector<Vector3> pos;
-	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
-	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
-	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
-	ADD_BOX_FACE( 2, 6, 7, 3 ) // Top
-	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
-	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
-
-	const int numColors = 6*4; // Faces*Vertices
-	std::vector<Vector3> colors( numColors, Color::White );
-
 	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
-	gb->set( VertexAttribute::Position, pos );
-	gb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
 	
@@ -126,7 +119,30 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
+	DebugUpdateBoudingBox(renderable, box);
+
 	return renderable;
+}
+
+void DebugUpdateBoudingBox( const RenderablePtr& rend, const BoundingBox& box )
+{
+	std::vector<Vector3> pos;
+	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
+	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
+	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
+	ADD_BOX_FACE( 2, 6, 7, 3 ) // Top
+	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
+	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
+
+	const int numColors = 6*4; // Faces*Vertices
+	std::vector<Vector3> colors( numColors, Color::White );
+
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
+
+	gb->forceRebuild();
 }
 
 //-----------------------------------//
@@ -196,6 +212,8 @@ void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 
 	std::vector<Vector3> colors( pos.size(), Color::White );
 	gb->set( VertexAttribute::Color, colors );
+
+	gb->forceRebuild();
 }
 
 //-----------------------------------//

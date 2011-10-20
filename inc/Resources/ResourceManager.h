@@ -138,6 +138,9 @@ public:
 	// Accesses the task manager.
 	ACESSOR(TaskPool, TaskPool*, taskPool)
 
+	// Gets the archive.
+	GETTER(Archive, Archive*, archive)
+
 	// Sets the archive.
 	void setArchive(Archive* archive);
 

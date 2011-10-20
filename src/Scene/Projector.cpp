@@ -77,7 +77,7 @@ void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& trans
 		const RenderablePtr& renderable = renderables[i];
 		if( !renderable ) continue;
 
-		renderable->onPreRender.Bind(this, &Projector::onRender);
+		renderable->onPreRender.Bind(this, &Projector::onPreRender);
 
 		RenderState state( renderable );
 		state.material = material.Resolve();
@@ -90,7 +90,7 @@ void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& trans
 
 //-----------------------------------//
 
-void Projector::onRender( const RenderState& state )
+void Projector::onPreRender( RenderView*, const RenderState& state )
 {
 	const TransformPtr& transform = getEntity()->getTransform();
 	const Matrix4x4& absoluteTransform = transform->getAbsoluteTransform();

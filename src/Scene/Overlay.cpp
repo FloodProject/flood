@@ -10,19 +10,41 @@
 #include "GUI/Overlay.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "Render/View.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+REFLECT_ENUM(PositionMode)
+	ENUM(Relative)
+	ENUM(Absolute)
+REFLECT_ENUM_END()
+
+REFLECT_ENUM(AnchorMode)
+	ENUM(TopLeft)
+	ENUM(TopCenter)
+	ENUM(TopRight)
+	ENUM(Right)
+	ENUM(BottomRight)
+	ENUM(BottomCenter)
+	ENUM(BottomLeft)
+	ENUM(Left)
+	ENUM(Center)
+REFLECT_ENUM_END()
+
 REFLECT_CHILD_CLASS(Overlay, Geometry)
+	FIELD_ENUM(0, PositionMode, positioning)
+	FIELD_ENUM(1, AnchorMode, anchor)
+	FIELD_PRIMITIVE(2, Vector3, offset)
+	FIELD_PRIMITIVE(3, Vector3, size)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Overlay::Overlay() 
 	: positioning( PositionMode::Relative )
-	, anchor( Anchor::TopLeft )
+	, anchor( AnchorMode::TopLeft )
 	, opacity(1.0f)
 	, borderWidth(0)
 	, borderColor(Color::Black)
@@ -42,6 +64,7 @@ void Overlay::createGeometry()
 	renderable->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Overlays);
+	renderable->onPreRender.Bind(this, &Overlay::onPreRender);
 
 	addRenderable( renderable );
 }
@@ -53,10 +76,10 @@ void Overlay::rebuildGeometry()
 	std::vector<Vector3> pos;
 	std::vector< Color > colors;
 
-	pos.push_back( Vector3(borderWidth, borderWidth, -1) );
-	pos.push_back( Vector3(borderWidth, size.y-borderWidth, -1) );
-	pos.push_back( Vector3(size.x-borderWidth, size.y-borderWidth, -1) );
-	pos.push_back( Vector3(size.x-borderWidth, borderWidth, -1) );
+	pos.push_back( Vector3(borderWidth, borderWidth, -0.1f) );
+	pos.push_back( Vector3(borderWidth, size.y-borderWidth, -0.1f) );
+	pos.push_back( Vector3(size.x-borderWidth, size.y-borderWidth, -0.1f) );
+	pos.push_back( Vector3(size.x-borderWidth, borderWidth, -0.1f) );
 
 	Color color = backgroundColor;
 	color.a = opacity;
@@ -68,13 +91,12 @@ void Overlay::rebuildGeometry()
 
 	if( borderWidth > 0 )
 	{
-		pos.push_back( Vector3(0, 0, -2) );
-		pos.push_back( Vector3(0, size.y, -2) );
-		pos.push_back( Vector3(size.x, size.y, -2) );
-		pos.push_back( Vector3(size.x, 0, -2) );
+		pos.push_back( Vector3(0, 0, -0.2f) );
+		pos.push_back( Vector3(0, size.y, -0.2f) );
+		pos.push_back( Vector3(size.x, size.y, -0.2f) );
+		pos.push_back( Vector3(size.x, 0, -0.2f) );
 	
 		color = borderColor;
-		//color.a = opacity;
 
 		colors.push_back(color);
 		colors.push_back(color);
@@ -89,36 +111,95 @@ void Overlay::rebuildGeometry()
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
+
+	updateBounds();
 }
 
 //-----------------------------------//
 
 void Overlay::update( float )
 {
-	const TransformPtr& transform = entity->getTransform();
-	
-	//transform->reset();
-
-	//Vector3 move;
-
-	//switch(anchor)
-	//{
-	//case Anchor::TopLeft:
-	//	#pragma TODO("Implement overlay positioning")
-	//	break;
-	//}
-
-	transform->setPosition(position);
-
 	rebuildGeometry();
 }
 
 //-----------------------------------//
 
-void Overlay::setPosition( int x, int y )
+void Overlay::layout(const Vector2i& screen)
 {
-	position.x = x;
-	position.y = y;
+	if(positioning == PositionMode::Absolute)
+	{
+		position.x = offset.x;
+		position.y = offset.y;
+		return;
+	}
+
+	// Use the world bounding volume to take scale into account.
+	const BoundingBox& box = getWorldBoundingVolume();
+	Vector3 bounds = box.max - box.min;
+
+	switch(anchor)
+	{
+	case AnchorMode::TopLeft:
+		position.x = 0;
+		position.y = 0;
+		break;
+	case AnchorMode::TopCenter:
+		position.x = screen.x / 2.0f;
+		position.y = 0;
+		break;
+	case AnchorMode::TopRight:
+		position.x = screen.x - bounds.x;
+		position.y = 0;
+		break;
+	case AnchorMode::Right:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	case AnchorMode::BottomRight:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	case AnchorMode::BottomCenter:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	case AnchorMode::BottomLeft:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	case AnchorMode::Left:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	case AnchorMode::Center:
+		position.x = 0;
+		position.y = screen.y;
+		break;
+	}
+
+	position.x += offset.x;
+	position.y += offset.y;
+}
+
+//-----------------------------------//
+
+void Overlay::onPreRender(RenderView* view, const RenderState& state)
+{
+	// Recalculate the layout for this view.
+	layout( view->getSize() );
+
+	// Update the position on the render state.
+	RenderState& mstate = const_cast<RenderState&>(state);
+	mstate.modelMatrix.tx = position.x;
+	mstate.modelMatrix.ty = position.y;
+}
+
+//-----------------------------------//
+
+void Overlay::setOffset( int x, int y )
+{
+	offset.x = x;
+	offset.y = y;
 }
 
 //-----------------------------------//

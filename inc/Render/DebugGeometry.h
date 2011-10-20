@@ -70,6 +70,9 @@ namespace DebugDrawFlags
 // Builds debug geometry of a bounding box.
 API_ENGINE RenderablePtr DebugBuildBoundingBox( const BoundingBox& box );
 
+// Updates the debug geometry of a bounding box.
+API_ENGINE void DebugUpdateBoudingBox( const RenderablePtr&, const BoundingBox& box );
+
 // Builds debug geometry of a ray.
 API_ENGINE RenderablePtr DebugBuildRay( const Ray& pickRay, float length );
 
@@ -77,7 +80,7 @@ API_ENGINE RenderablePtr DebugBuildRay( const Ray& pickRay, float length );
 API_ENGINE RenderablePtr DebugBuildFrustum( const Frustum& box );
 
 // Updates the debug geometry of a frustum.
-API_ENGINE void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box );
+API_ENGINE void DebugUpdateFrustum( const RenderablePtr&, const Frustum& box );
 
 //-----------------------------------//
 

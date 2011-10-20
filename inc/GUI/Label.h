@@ -36,8 +36,6 @@ class API_ENGINE Label : public Overlay
 public:
 
 	Label();
-	Label( const String& text, const FontHandle&, const MaterialHandle& );
-	Label( const String& text, const String& font );
 
 	// Gets the current text of this label.
 	GETTER(Text, const String&, text)
@@ -45,8 +43,11 @@ public:
 	// Sets the current text of this label.
 	void setText( const String& text );
 
+	// Sets the font of this label.
+	void setFont( const FontHandle& font );
+
 	// Updates the geometry to match the new text if needed.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 protected:
 
@@ -54,7 +55,7 @@ protected:
 	void init();
 
 	// Rebuilds the overlay geometry.
-	virtual void rebuildGeometry();
+	void rebuildGeometry() OVERRIDE;
 
 	// Initializes the label once the font is loaded.
 	void setupState();

@@ -50,12 +50,15 @@ void MeshManager::buildGeometry(Mesh* mesh)
 	{
 		const MeshGroup& group = groups[i];
 
+		uint32 numIndices = group.indices.size();
+		if( numIndices == 0 ) continue;
+
 		// Gets a material for the group.
 		MaterialHandle material = buildMaterial(mesh, group);
 
-		gb->setIndex((uint8*)&group.indices.front(), group.indices.size()*sizeof(uint16));
+		gb->addIndex((uint8*)&group.indices.front(), numIndices*sizeof(uint16));
 
-		RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+		RenderablePtr renderable = AllocateHeap(Renderable);
 		renderable->setPrimitiveType( PolygonType::Triangles );
 		renderable->setGeometryBuffer(gb);
 		renderable->setMaterial(material);

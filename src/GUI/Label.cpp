@@ -17,38 +17,15 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Label, Overlay)
-	FIELD_PRIMITIVE(4, string, text)
-	FIELD_PRIMITIVE(5, bool, isDirty)
-	FIELD_CLASS_PTR(6, Font, FontHandle, font, Handle) 
+	FIELD_PRIMITIVE_SETTER(4, string, text, Text)
+	FIELD_PRIMITIVE(5, bool, isDirty) FIELD_READONLY(isDirty) FIELD_NO_SERIALIZE(isDirty)
+	FIELD_CLASS_PTR_SETTER(6, Font, FontHandle, font, Handle, Font) 
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Label::Label()
-{ }
-
-//-----------------------------------//
-
-Label::Label( const String& text, const FontHandle& font, const MaterialHandle& material )
-	: text(text)
-	, font(font)
 {
-	init();
-	renderable->setMaterial(material);
-}
-
-//-----------------------------------//
-
-Label::Label( const String& text, const String& path )
-	: text(text)
-{
-	static int i = 0;
-
-	// material = new Material("FontMaterial" + StringFromNumber(i++), "Tex");
-	
-	ResourceManager* res = GetResourceManager();
-	font = res->loadResource<Font>(path);
-
 	init();
 }
 
@@ -56,6 +33,15 @@ Label::Label( const String& text, const String& path )
 
 void Label::init()
 {
+	String name = StringFormat("FontMaterial");
+	
+	// Setup the material.
+	Material* pMaterial = material.Resolve();
+	pMaterial->setDepthTest(false);
+	pMaterial->setBackfaceCulling(false);
+	pMaterial->setBlending( BlendSource::SourceAlpha, BlendDestination::One );
+	pMaterial->setProgram( "Tex" );
+
 	isDirty = true;
 	setupDone = false;
 }
@@ -70,43 +56,29 @@ void Label::setText( const String& newText )
 
 //-----------------------------------//
 
-void Label::setupState()
+void Label::setFont( const FontHandle& newFont )
 {
-	if( setupDone )
-		return;
+	font = newFont;
 
 	Font* pFont = font.Resolve();
 
-	assert( pFont->isLoaded() );
-	assert( pFont->getImage() );
+	if( pFont )
+	{
+		MaterialPtr pMaterial = material.Resolve();
+		pMaterial->setTexture( 0, pFont->getImage() );
+	}
 
-	MaterialHandle handleMaterial = renderable->getMaterial();
-	Material* material = handleMaterial.Resolve();
-
-	// Setup the material to have the texture font and enable blending
-	material->setTexture( 0, pFont->getImage() );
-	material->setBlending( BlendSource::SourceAlpha, BlendDestination::One );
-	material->setProgram( "Tex" );
-
-	setupDone = true;
+	isDirty = true;
 }
 
 //-----------------------------------//
 
 void Label::update( float delta )
 {
-	Font* pFont = font.Resolve();
-
-	if( !pFont ) return;
-	if( !pFont->isLoaded() ) return;
-
-	setupState();
-
 	// No need to update geometry if the label did not change.
-	if( isDirty )
-		rebuildGeometry();
+	//if( !isDirty ) return;
 
-	//Overlay::update( delta );
+	Overlay::update( delta );
 }
 
 //-----------------------------------//
@@ -114,8 +86,9 @@ void Label::update( float delta )
 void Label::rebuildGeometry()
 {
 	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
-
+	
 	// Invalidate the existing vertex buffer contents
+	gb->declarations.reset();
 	gb->clear();
 
 	// Calculate the quad vertices
@@ -133,6 +106,7 @@ void Label::rebuildGeometry()
 	const std::vector<Glyph>& glyphs = pFont->getGlyphs();
 
 	Image* image = pFont->getImage().Resolve();
+	if( !image ) return;
 
 	const float width = image->getWidth();
 	const float height = image->getHeight();
@@ -150,12 +124,14 @@ void Label::rebuildGeometry()
 			y_pos -= pFont->getGlyphSize().y;
 		}
 
+		if( c >= glyphs.size() ) continue;
+
 		// We need each glyph information to calculate positions and size.
 		const Glyph& glyph = glyphs[c];
 
 		vertex.push_back( Vector2( x_pos, y_pos ) );
-		vertex.push_back( Vector2( x_pos, y_pos - glyph.height ) );
-		vertex.push_back( Vector2( x_pos + glyph.width, y_pos - glyph.height ) );
+		vertex.push_back( Vector2( x_pos, y_pos + glyph.height ) );
+		vertex.push_back( Vector2( x_pos + glyph.width, y_pos + glyph.height ) );
 		vertex.push_back( Vector2( x_pos + glyph.width, y_pos ) );
 	
 		float glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
@@ -174,6 +150,8 @@ void Label::rebuildGeometry()
 
 	// No need to update geometry again until the text changes
 	isDirty = false;
+
+	updateBounds();
 }
 
 //-----------------------------------//

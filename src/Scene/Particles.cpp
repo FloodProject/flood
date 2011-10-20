@@ -183,7 +183,7 @@ void Particles::update(float delta)
 
 //-----------------------------------//
 
-void Particles::onPreRender(const RenderState&)
+void Particles::onPreRender(RenderView*, const RenderState&)
 {
 	glEnable(GL_POINT_SPRITE);
 	
@@ -197,7 +197,7 @@ void Particles::onPreRender(const RenderState&)
 
 //-----------------------------------//
 
-void Particles::onPostRender(const RenderState&)
+void Particles::onPostRender(RenderView*, const RenderState&)
 {
 	glDisable(GL_POINT_SPRITE);
 }

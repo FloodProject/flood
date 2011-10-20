@@ -127,7 +127,7 @@ protected:
 #endif
 
 	// Pre-render callback.
-	void onRender(const RenderState& state);
+	void onRender(RenderView* view, const RenderState& state);
 
 	// Prepares a mesh for skinning.
 	void prepareSkinning();

@@ -90,6 +90,7 @@ namespace RenderLayer
  * should have a material and a vertex buffer.
  */
 
+class RenderView;
 struct RenderState;
 
 class API_RENDER Renderable : public ReferenceCounted
@@ -120,10 +121,10 @@ public:
 	ACESSOR(PrimitiveType, PolygonType::Enum, type)
 
 	// Pre-render callback.
-	Delegate1<const RenderState&> onPreRender;
+	Delegate2<RenderView*, const RenderState&> onPreRender;
 
 	// Post-render callback.
-	Delegate1<const RenderState&> onPostRender;
+	Delegate2<RenderView*, const RenderState&> onPostRender;
 
 protected:
 

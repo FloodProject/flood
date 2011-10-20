@@ -17,6 +17,8 @@ NAMESPACE_ENGINE_BEGIN
 
 REFLECT_DECLARE_CLASS(Projector)
 
+class RenderView;
+
 class API_ENGINE Projector : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Projector)
@@ -36,7 +38,7 @@ public:
 	void appendRenderables( RenderQueue& queue, const TransformPtr& transform ) OVERRIDE;
 
 	// Pre-render callback.
-	void onRender(const RenderState& state);
+	void onPreRender(RenderView*, const RenderState& state);
 
 	// Updates the debug renderable of the camera.
 	void updateDebugRenderable() const;

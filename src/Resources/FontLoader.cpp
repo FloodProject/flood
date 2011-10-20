@@ -52,13 +52,13 @@ bool FontLoader::decode(const Stream& stream, Resource* resource)
 	options.asynchronousLoad = false;
 
 	image = HandleCast<Image>(res->loadResource(options));
+	if( !image ) return false;
 
-	if( !image )
-		return false;
+	Archive* archive = res->getArchive();
 
-	Stream* streamGlyphs = StreamCreateFromFile(
-		AllocatorGetHeap(), glyphsFilename, StreamMode::Read);
-	
+	Stream* streamGlyphs = ArchiveOpenFile(archive, glyphsFilename, AllocatorGetThis());
+	if( !streamGlyphs ) return false;
+
 	StreamRead(streamGlyphs, data);
 	StreamDestroy(streamGlyphs);
 
@@ -137,19 +137,23 @@ bool FontLoader::validateFont()
 
 	imageFilename = lines[1];
 
+#if 0
 	if( !FileExists(imageFilename) )
 	{
 		LogWarn( "Could not find the font image '%s'", imageFilename.c_str() );
 		return false;
 	}
+#endif
 
 	glyphsFilename = lines[2];
 
+#if 0
 	if( !FileExists(glyphsFilename) )
 	{
 		LogWarn( "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
 		return false;
 	}
+#endif
 
 	StringSplit(lines[3], ' ', glyphSizeInfo);
 
