@@ -68,7 +68,7 @@ void Terrain::init()
 	settings.Material = handle;
 
 	Material* material = handle.Resolve();
-	material->setProgram("VertexLit");
+	material->setShader("VertexLit");
 }
 
 //-----------------------------------//

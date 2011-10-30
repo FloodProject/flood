@@ -8,8 +8,10 @@
 
 #include "Engine/API.h"
 #include "Render/ProgramManager.h"
+#include "Render/Program.h"
 #include "Render/GLSL_Program.h"
-#include "Resources/GLSL_Text.h"
+#include "Resources/Shader.h"
+#include "Resources/GLSL_Shader.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 
@@ -27,11 +29,11 @@ ProgramManager::ProgramManager()
 
 ProgramManager::~ProgramManager()
 {
-	ProgramsMap::iterator it;
+	ShaderProgramsMap::iterator it;
 
 	for( it = programs.begin(); it != programs.end(); it++ )
 	{
-		const ProgramPtr& program = it->second;
+		const GLSL_ProgramPtr& program = it->second;
 		if( !program ) continue;
 
 		assert( ReferenceGetCount( program.get() ) == 1 );
@@ -43,29 +45,36 @@ ProgramManager::~ProgramManager()
 
 //-----------------------------------//
 
-ProgramPtr ProgramManager::getProgram( const String& name, bool precompile )
+ProgramPtr ProgramManager::getProgram( const Shader* shader, bool precompile )
 {
-	if( programs.find(name) != programs.end() )
-		return programs[name];
+	if( !shader ) return nullptr;
 
-	ResourceManager* res = GetResourceManager();
+	ShaderProgramsMap::iterator it = programs.find(shader);
 
-	// Tries to load the shader. The program is created in onLoad.
-	ResourceLoadOptions options;
-	options.name = name;
-	options.group = ResourceGroup::Shaders;
-	options.asynchronousLoad = false;
+	if( it != programs.end() )
+	{
+		const GLSL_ProgramPtr& program = it->second;
+		return program;
+	}
 
-	if( !res->loadResource(options) )
-		return nullptr;
+	GLSL_ProgramPtr program = createProgram(shader);
+	registerProgram(shader, program);
 
-	if( programs.find(name) == programs.end() )
-		return nullptr;
+	return program;
+}
 
-	const ProgramPtr& program = programs[name];
+//-----------------------------------//
+
+GLSL_ProgramPtr ProgramManager::createProgram( const Shader* shader )
+{
+	// If the program was not yet found, then we need to create it.
+	GLSL_ProgramPtr program = AllocateThis(GLSL_Program);
 	
-	if( precompile && program )
-		program->link();
+	program->getVertexShader()->setText( shader->getVertexSource() );
+	program->getFragmentShader()->setText( shader->getFragmentSource() );
+
+	// Force the recompilation of all shader programs.
+	program->forceRecompile();
 
 	return program;
 }
@@ -74,64 +83,62 @@ ProgramPtr ProgramManager::getProgram( const String& name, bool precompile )
 
 //-----------------------------------//
 
-bool ProgramManager::registerProgram( const String& name, const ProgramPtr& program )
+bool ProgramManager::registerProgram( const Shader* shader, const GLSL_ProgramPtr& program )
 {
-	if( programs.find(name) != programs.end() )
+	if( programs.find(shader) != programs.end() )
 	{
-		LogWarn( "Shader '%s' already registered", name.c_str() );
+		LogWarn( "Shader '%s' already registered", shader->getPath().c_str() );
 		return false;
 	}
 
-	programs[name] = program;
+	programs[shader] = program;
 	return true;
-}
-
-//-----------------------------------//
-
-ProgramPtr ProgramManager::createProgram(Text* text)
-{
-	GLSL_Text* gtext = (GLSL_Text*) text;
-	GLSL_ProgramPtr program = AllocateHeap(GLSL_Program, gtext);
-	
-	return program;
 }
 
 //-----------------------------------//
 
 void ProgramManager::onLoad( const ResourceEvent& event )
 {
-	const TextHandle& handleText = HandleCast<Text>( event.handle );
-	Text* text = handleText.Resolve();
+	Resource* resource = event.handle.Resolve();
 
-	if( text->getResourceGroup() != ResourceGroup::Shaders )
+	if( resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 
-	const ProgramPtr& program = createProgram(text);
+	Shader* shader = (Shader*) resource;
+	getProgram(shader);
 
-	Path base = PathGetFileBase( text->getPath() );
-	registerProgram( base, program );
+	LogInfo("Loaded shader '%s'", shader->getPath().c_str() );
 }
 
 //-----------------------------------//
 
 void ProgramManager::onReload( const ResourceEvent& event )
 {
-	const TextHandle& handleText = HandleCast<Text>( event.handle );
-	
-	Text* text = handleText.Resolve();
-	if( !text ) return;
+	Resource* resource = event.handle.Resolve();
 
-	if( text->getResourceGroup() != ResourceGroup::Shaders )
+	if( resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 
-	Path base = PathGetFileBase( text->getPath() );
-	ProgramPtr program = programs[base];
+	Shader* oldShader = (Shader*) event.oldResource;
 
-	if(program)
-	{
-		LogDebug( "Reloading shader '%s'", text->getPath().c_str() );
-		program->updateShadersText();
-	}
+	#pragma TODO("Handle reloading of unregistered resources")
+	
+	ShaderProgramsMap::iterator it = programs.find(oldShader);
+	assert( it != programs.end() );
+	
+	GLSL_ProgramPtr program = it->second;
+	programs.erase(it);
+
+	Shader* shader = (Shader*) event.resource;
+	programs[shader] = program;
+
+	LogDebug( "Reloading shader '%s'", shader->getPath().c_str() );
+
+	program->getVertexShader()->setText( shader->getVertexSource() );
+	program->getFragmentShader()->setText( shader->getFragmentSource() );
+
+	// Force the recompilation of all shader programs.
+	program->forceRecompile();
 }
 
 //-----------------------------------//

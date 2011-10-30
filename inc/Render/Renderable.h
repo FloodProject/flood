@@ -98,6 +98,7 @@ class API_RENDER Renderable : public ReferenceCounted
 public:
 
 	Renderable();
+	~Renderable();
 
     // Gets/sets the render stage.
 	ACESSOR(RenderLayer, RenderLayer::Enum, stage)

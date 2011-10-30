@@ -117,7 +117,7 @@ void Model::updateSkinning()
 		const RenderablePtr& rend = renderables[i];
 	
 		Material* material = rend->getMaterial().Resolve();
-		material->setProgram(shader);
+		material->setShader(shader);
 	}
 
 	if( !isCPU ) rebuildPositions();

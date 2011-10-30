@@ -11,7 +11,7 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Render/GLSL_Program.h"
-#include "Resources/GLSL_Text.h"
+#include "Render/GLSL_ShaderProgram.h"
 #include "Render/GL.h"
 #include "Render/UniformBuffer.h"
 #include "Core/Utilities.h"
@@ -21,30 +21,21 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
-	: text(text)
-	, linkError(false)
+GLSL_Program::GLSL_Program()
+	: hadLinkError(false)
 {
 	create();
 	createShaders();
-	updateShadersText();
 }
 
 //-----------------------------------//
 
 GLSL_Program::~GLSL_Program()
 {
-	// Detach shaders.
-	for( size_t i = 0; i < shaders.size(); i++ )
-	{
-		const GLSL_ShaderPtr& shader = shaders[i];
-	
-		if( attached[shader] )
-			glDetachShader( id, shader->id );
+	detachShaderPrograms();
 
-		if( CheckLastErrorGL("Could not detach shader object") )
-			continue;
-	}
+	Deallocate(vertex);
+	Deallocate(fragment);
 
 	glDeleteProgram( id );
 
@@ -66,18 +57,36 @@ bool GLSL_Program::create()
 
 //-----------------------------------//
 
-void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
+void GLSL_Program::addShaderProgram( GLSL_ShaderProgram* shaderProgram )
 {
-	shaders.push_back( shader );
-
-	if( !attached[shader] )
+	shaders.push_back( shaderProgram );
+	
+	bool isAttached = attached[shaderProgram];
+	
+	if( !isAttached )
 	{
-		glAttachShader( id, shader->id );
+		glAttachShader( id, shaderProgram->id );
 
-		if( CheckLastErrorGL("Could not attach shader") )
+		if( CheckLastErrorGL("Could not attach shader object") )
 			return;
 
-		attached[shader] = true;
+		attached[shaderProgram] = true;
+	}
+}
+
+//-----------------------------------//
+
+void GLSL_Program::detachShaderPrograms()
+{
+	for( size_t i = 0; i < shaders.size(); i++ )
+	{
+		GLSL_ShaderProgram* shaderProgram = shaders[i];
+		bool isAttached = attached[shaderProgram];
+		
+		if( !isAttached ) continue;
+
+		glDetachShader( id, shaderProgram->id );
+		CheckLastErrorGL("Could not detach shader object");
 	}
 }
 
@@ -85,68 +94,39 @@ void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
 
 void GLSL_Program::createShaders()
 {
-	if( !text )
-		return;
-
-	vertex = AllocateThis(GLSL_Shader);
+	vertex = AllocateThis(GLSL_ShaderProgram);
 	vertex->setShaderType( ShaderType::Vertex );
 	vertex->create();
 	
-	fragment = AllocateThis(GLSL_Shader);
+	fragment = AllocateThis(GLSL_ShaderProgram);
 	fragment->setShaderType( ShaderType::Fragment );
 	fragment->create();
 
-	addShader( (GLSL_ShaderPtr&) vertex );
-	addShader( (GLSL_ShaderPtr&) fragment );
+	addShaderProgram( (GLSL_ShaderProgram*) vertex );
+	addShaderProgram( (GLSL_ShaderProgram*) fragment );
 }
 
 //-----------------------------------//
 
-void GLSL_Program::updateShadersText()
+bool GLSL_Program::compileShaderPrograms()
 {
-	assert( text != nullptr );
-	
-	assert( vertex != nullptr );
-	vertex->setText( text->getVertexSource() );
-	
-	assert( fragment != nullptr );
-	fragment->setText( text->getFragmentSource() );
-
 	for( size_t i = 0; i < shaders.size(); i++ )
 	{
-		const ShaderPtr& shader = shaders[i];
-		shader->forceRecompile();
-	}
+		ShaderProgram* shaderProgram = shaders[i];
 
-	linkError = false;
-	linked = false;
-}
-
-//-----------------------------------//
-
-bool GLSL_Program::attachShaders()
-{
-	// Make sure all shaders are compiled.
-	for( size_t i = 0; i < shaders.size(); i++ )
-	{
-		const GLSL_ShaderPtr& shader = shaders[i];
-
-		if( shader->isCompiled() ) continue;
+		if( shaderProgram->isCompiled() ) continue;
 		
-		Path base = PathGetFile(text->getPath());
-
-		if( !shader->compile() )
+		if( !shaderProgram->compile() )
 		{
-			LogError( "Error compiling shader '%s': %s",
-				base.c_str(), shader->getLog().c_str() );
+			LogError( "Error compiling shader program: %s", shaderProgram->getLog().c_str() );
 
-			linkError = true;
+			hadLinkError = true;
 			linked = false;
 
 			return false;
 		}
 		
-		LogInfo( "Compiled shader '%s' with no errors", base.c_str() );
+		LogInfo( "Compiled shader program with no errors");
 	}
 
 	return true;
@@ -154,19 +134,31 @@ bool GLSL_Program::attachShaders()
 
 //-----------------------------------//
 
+void GLSL_Program::forceRecompile()
+{
+	for( size_t i = 0; i < shaders.size(); i++ )
+	{
+		ShaderProgram* shader = shaders[i];
+		shader->forceRecompile();
+	}
+
+	linked = false;
+}
+
+//-----------------------------------//
+
 bool GLSL_Program::link()
 {
-	// If the program is already linked, return.
 	if( isLinked() ) return true;
 
-	// If we already tried to link and were not succesful, 
-	// don't try to link again until the program is updated.
-	if( linkError ) return false;
+	// If we already tried to link and were not succesful return.
+	if( hadLinkError ) return false;
 
-	// No shaders, don't try to link.
+	// If there are no shader programs, no point in trying to link.
 	if( shaders.empty() ) return false;
 
-	if( !attachShaders() ) return false;
+	// If we could not compile the shaders, no point in trying to link.
+	if( !compileShaderPrograms() ) return false;
 
 	bindDefaultAttributes();
 
@@ -176,25 +168,25 @@ bool GLSL_Program::link()
 	if( CheckLastErrorGL("Could not link program object") )
 	{
 		linked = false;
-		linkError = true;
+		hadLinkError = true;
 		return false;
 	}
 
 	getLogText();
 
-	int status;
+	GLint status;
 	glGetProgramiv( id, GL_LINK_STATUS, &status );
 
 	if( status != GL_TRUE )
 	{
 		LogWarn( "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
-		linkError = true;
+		hadLinkError = true;
 		return false;
 	}
 
 	linked = true;
-	linkError = false;
+	hadLinkError = false;
 
 	return true;
 }

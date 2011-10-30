@@ -59,6 +59,7 @@ struct ResourceLoadOptions
 	Resource* resource;
 	ResourceGroup::Enum group;
 
+	bool isHighPriority;
 	bool sendLoadEvent;
 	bool asynchronousLoad;
 };

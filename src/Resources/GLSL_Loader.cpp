@@ -11,7 +11,7 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Resources/GLSL_Loader.h"
-#include "Resources/GLSL_Text.h"
+#include "Resources/GLSL_Shader.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -31,7 +31,7 @@ GLSL_Loader::GLSL_Loader()
 
 Resource* GLSL_Loader::prepare(const Stream& stream)
 {
-	GLSL_Text* shader = Allocate(GLSL_Text, GetResourcesAllocator());
+	GLSL_Shader* shader = Allocate(GLSL_Shader, GetResourcesAllocator());
 	return shader;
 }
 
@@ -42,7 +42,7 @@ bool GLSL_Loader::decode(const Stream& stream, Resource* res)
 	String text;
 	StreamReadString((Stream*) &stream, text);
 
-	GLSL_Text* shader = static_cast<GLSL_Text*>(res);
+	GLSL_Shader* shader = static_cast<GLSL_Shader*>(res);
 	shader->setText( text );
 	shader->parse();
 

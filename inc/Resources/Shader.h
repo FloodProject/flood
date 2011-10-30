@@ -15,27 +15,6 @@ NAMESPACE_RESOURCES_BEGIN
 //-----------------------------------//
 
 /**
- * Shaders can be of different types, depending on what they deal with.
- *  - Vertex shaders manipulate vertex properties such as position.
- *  - Pixel shaders calculate the color of individual pixels (fragments).
- *  - Geometry shaders can be used to generate geometry procedurally.
- */
-
-struct ShaderType
-{
-	enum Enum 
-	{
-		Vertex,
-		Fragment,
-		Geometry
-	};
-};
-
-REFLECT_DECLARE_ENUM(ShaderType)
-
-//-----------------------------------//
-
-/**
  * Shaders are used to program the GPU programmable rendering pipeline.
  * It is a set of software instructions that instruct how to calculate
  * each vertex and each pixel processed by the graphics card. We only
@@ -51,45 +30,13 @@ class API_RESOURCE Shader : public Resource
 
 public:
 
-	// Gets the shader type.
-	ACESSOR(ShaderType, ShaderType::Enum, type)
+	// Returns the vertex shader source code.
+	virtual const String& getVertexSource() const = 0;
 
-	// Gets the shader text.
-	ACESSOR(Text, const String&, text)
+	// Returns the fragment shader source code.
+	virtual const String& getFragmentSource() const = 0;
 
-	// Gets the compilation log.
-	GETTER(Log, const String&, log)
-
-	// Creates and loads the shader.
-	virtual bool create() = 0;
-
-	// Compiles the shader.
-	virtual bool compile() = 0;
-
-	// Forces the shader to be recompiled.
-	virtual void forceRecompile();
-	
-	// Is this shader already compiled?
-	bool isCompiled() const;
-
-	// Did this shader throw compile errors?
-	bool gotCompileErrors() const;
-
-	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
-
-	// Shader type.
-	ShaderType::Enum type;
-
-	// Holds the shader text.
-	String text;
-
-	// Holds the compilation log.
-	String log;
-	
-	// Is this shader already compiled?	
-	bool compiled;
-	bool compileErrors;
 
 protected:
 

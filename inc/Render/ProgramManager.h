@@ -8,16 +8,17 @@
 
 #pragma once
 
-#include "Render/Program.h"
-
-FWD_DECL_INTRUSIVE(Text)
+FWD_DECL_INTRUSIVE(Program)
+FWD_DECL_INTRUSIVE(GLSL_Program)
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map<String, ProgramPtr> ProgramsMap;
-typedef std::pair<const String&, ProgramPtr> ProgramsPair;
+class Shader;
+
+typedef std::map<const Shader*, GLSL_ProgramPtr> ShaderProgramsMap;
+typedef std::pair<const Shader*, GLSL_ProgramPtr> ShaderProgramsMapPair;
 
 class ResourceManager;
 struct ResourceEvent;
@@ -36,14 +37,14 @@ public:
 	ProgramManager();
 	~ProgramManager();
 
-	// Gets a program given a name identifier.
-	ProgramPtr getProgram( const String& program, bool precompile = false );
+	// Gets a program given a shader identifier.
+	ProgramPtr getProgram( const Shader*, bool precompile = false );
+
+	// Creates a program given a shader.
+	GLSL_ProgramPtr createProgram( const Shader* shader );
 
 	// Registers a new program in the manager.
-	bool registerProgram( const String& name, const ProgramPtr& program );
-
-	// Creates a program given their shader text.
-	ProgramPtr createProgram( Text* );
+	bool registerProgram( const Shader*, const GLSL_ProgramPtr& program );
 
 protected:
 
@@ -54,7 +55,7 @@ protected:
 	void onReload( const ResourceEvent& evt );
 
 	// Maps the identifiers to the programs.
-	ProgramsMap programs;
+	ShaderProgramsMap programs;
 };
 
 //-----------------------------------//

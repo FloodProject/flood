@@ -219,8 +219,11 @@ struct Vector2i
 	Vector2i() : x(0), y(0) { }
 	Vector2i(int32 x, int32 y) : x(x), y(y) { }
 	Vector2i (const Vector2i& v) : x(v.x), y(v.y) { }
+	
+	// Conversions.
+	operator Vector3() { return Vector3(float(x), float(y), 0); }
 
-	// Assignment
+	// Assignment.
 	Vector2i& operator = (const Vector2i& v) { x = v.x; y = v.y; return *this; }
 
 	// Relational.

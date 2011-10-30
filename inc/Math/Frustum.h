@@ -42,9 +42,9 @@ API_CORE REFLECT_DECLARE_ENUM(Projection);
 
 REFLECT_DECLARE_CLASS(Frustum)
 
-struct API_CORE Frustum : public Object
+struct API_CORE Frustum
 {
-	REFLECT_DECLARE_OBJECT(Frustum)
+	//REFLECT_DECLARE_OBJECT(Frustum)
 
 	Frustum();
 	Frustum( const Frustum& rhs );

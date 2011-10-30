@@ -80,7 +80,7 @@ MaterialHandle MeshManager::buildMaterial(Mesh* mesh, const MeshGroup& group)
 
 	if( !matMesh.texture.empty() )
 	{
-		material->setProgram("VertexLit");
+		material->setShader("VertexLit");
 
 		String path = PathNormalize(matMesh.texture);
 		material->setTexture( 0, path );
@@ -94,7 +94,7 @@ MaterialHandle MeshManager::buildMaterial(Mesh* mesh, const MeshGroup& group)
 	}
 
 	if( mesh->isAnimated() )
-		material->setProgram("VertexLitSkinned");
+		material->setShader("VertexLitSkinned");
 
 	return handle;
 }

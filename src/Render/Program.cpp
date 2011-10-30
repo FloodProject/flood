@@ -15,20 +15,25 @@ NAMESPACE_ENGINE_BEGIN
 
 Program::Program()
 	: linked( false )
+	, vertex( nullptr )
+	, fragment( nullptr )
 { }
+
+//-----------------------------------//
+
+Program::~Program()
+{
+	LogDebug("Destroying program");
+}
 
 //-----------------------------------//
 
 bool Program::validateShaders() const
 {
-	const ShaderPtr& vs = getVertexShader();
-	
-	if( vs->getShaderType() != ShaderType::Vertex )
+	if( vertex->getShaderType() != ShaderType::Vertex )
 		return false;
 
-	const ShaderPtr& fs = getFragmentShader();
-	
-	if( fs->getShaderType() != ShaderType::Fragment )
+	if( fragment->getShaderType() != ShaderType::Fragment )
 		return false;
 
 	return true;

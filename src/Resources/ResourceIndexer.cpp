@@ -40,7 +40,7 @@ void ResourceIndexer::update()
 {
 	// Send pending events.
 	ResourceMetadata metadata;
-	while( resourcesIndexed.try_pop(metadata) )
+	while( resourcesIndexed.try_pop_front(metadata) )
 	{
 		onResourceIndexed(metadata);
 	}
@@ -58,7 +58,7 @@ static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 	task->userdata = path;
 
 	TaskPool* taskPool = GetResourceManager()->getTaskPool();
-	TaskPoolAdd(taskPool, task);
+	TaskPoolAdd(taskPool, task, 0);
 
 	return task;
 }
@@ -84,6 +84,7 @@ static bool GetResourceGroupFromPath(const Path& path, ResourceGroup::Enum& grou
 	String ext = PathGetFileExtension(path);
 	
 	ResourceManager* res = GetResourceManager();
+	
 	ResourceLoader* loader = res->findLoader(ext);
 	if( !loader ) return false;
 
@@ -100,27 +101,35 @@ void ResourceIndexer::indexResources(Task* task)
 	Path path = tempPath;
 	DeallocateObject(&tempPath);
 
+	Path basePath = PathGetFile(path);
+
 	ResourceGroup::Enum group;
 		
 	if( !GetResourceGroupFromPath(path, group) )
 	{
-		//LogWarn("Resource loader for '%s' was not found", path.c_str());
+		LogDebug("Error indexing resource '%s': no loader was found", basePath.c_str());
 		return;
 	}
 
-	//LogDebug("Indexing file '%s'", path.c_str());
+	//LogDebug("Indexing file '%s'", basePath.c_str());
 
 	Stream* stream = StreamCreateFromFile(AllocatorGetThis(), path, StreamMode::Read);
 		
 	if( !stream )
 	{
-		LogWarn("Could not read file '%s'", path.c_str());
+		LogWarn("Error indexing resource '%s': cannot open stream", basePath.c_str());
 		return;
 	}
 
 	std::vector<byte> data;
 	StreamRead(stream, data);
 	StreamDestroy(stream);
+
+	if( data.empty() )
+	{
+		LogWarn("Error indexing resource '%s': empty stream", basePath.c_str());
+		return;
+	}
 
 	uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
 		
@@ -129,7 +138,7 @@ void ResourceIndexer::indexResources(Task* task)
 	metadata.path = path;
 	metadata.group = group;
 
-	resourcesIndexed.push(metadata);
+	resourcesIndexed.push_back(metadata);
 }
 
 //-----------------------------------//

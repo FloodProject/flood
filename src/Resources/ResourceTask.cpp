@@ -48,7 +48,7 @@ void ResourceTaskRun(Task* task)
 	{
 		ResourceEvent event;
 		event.resource = resource;
-		res->resourceTaskEvents.push(event);
+		res->resourceTaskEvents.push_back(event);
 	}
 
 cleanup:

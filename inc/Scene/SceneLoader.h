@@ -15,11 +15,6 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class SceneResource : public Resource
-{
-	virtual ResourceGroup::Enum getResourceGroup() const OVERRIDE { return ResourceGroup::Scenes; }
-};
-
 /**
  * Loads scene files.
  */
@@ -35,16 +30,19 @@ public:
 	SceneLoader();
 
 	// Creates the resource with no data.
-	RESOURCE_LOADER_PREPARE(SceneResource)
+	RESOURCE_LOADER_PREPARE(Scene)
+
+	// Gets the class of the resource.
+	RESOURCE_LOADER_CLASS(Scene)
 
 	// Parses a Lua text script to a buffer.
-	virtual bool decode(const Stream& file, Resource* res);
+	bool decode(const Stream& file, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "Scene")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scenes)
 };
 
 //-----------------------------------//

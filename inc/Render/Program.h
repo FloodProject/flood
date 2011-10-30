@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Resources/Shader.h"
+#include "Resources/ShaderProgram.h"
 #include "Render/VertexBuffer.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
@@ -32,16 +32,13 @@ class API_RENDER Program : public ReferenceCounted
 {
 public:
 
-	virtual ~Program() {}
+	virtual ~Program();
 
 	// Creates the program.
 	virtual bool create() = 0;
 
 	// Creates the shaders and adds them to the program.
 	virtual void createShaders() = 0;
-
-	// Updates the shaders text with the program text.
-	virtual void updateShadersText() = 0;
 
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;
@@ -62,10 +59,13 @@ public:
 	bool validateShaders() const;
 
 	// Gets the vertex shader in the program.
-	GETTER(VertexShader, const RefPtr<Shader>&, vertex)
+	GETTER(VertexShader, ShaderProgram*, vertex)
 
 	// Gets the fragment shader in the program.
-	GETTER(FragmentShader, const RefPtr<Shader>&, fragment)
+	GETTER(FragmentShader, ShaderProgram*, fragment)
+
+	// Forces the recompilation of all shader programs.
+	virtual void forceRecompile() = 0;
 
 	// Sets the attribute in the program.
 	virtual void setAttribute( const String& slot, VertexAttribute::Enum attribute ) = 0;
@@ -77,8 +77,8 @@ protected:
 
 	Program();
 
-	RefPtr<Shader> vertex;
-	RefPtr<Shader> fragment;
+	ShaderProgram* vertex;
+	ShaderProgram* fragment;
 
 	String log;
 	bool linked;

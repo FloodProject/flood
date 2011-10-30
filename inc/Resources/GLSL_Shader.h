@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Resources/Text.h"
+#include "Resources/Shader.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -20,13 +20,16 @@ NAMESPACE_RESOURCES_BEGIN
  * vertex and pixel shaders.
  */
 
-REFLECT_DECLARE_CLASS(GLSL_Text)
+REFLECT_DECLARE_CLASS(GLSL_Shader)
 
-class API_RESOURCE GLSL_Text : public Text
+class API_RESOURCE GLSL_Shader : public Shader
 {
-	REFLECT_DECLARE_OBJECT(GLSL_Text)
+	REFLECT_DECLARE_OBJECT(GLSL_Shader)
 
 public:
+
+	// Gets the text.
+	ACESSOR(Text, const String&, text)
 
 	// Returns the vertex shader source code.
 	GETTER(VertexSource, const String&, vertex)
@@ -42,11 +45,14 @@ public:
 
 protected:
 
+	// Text content.
+	String text;
+
 	String vertex;
 	String pixel;
 };
 
-TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( GLSL_Text );
+TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( GLSL_Shader );
 
 //-----------------------------------//
 

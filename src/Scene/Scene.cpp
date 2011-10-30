@@ -12,20 +12,59 @@
 #include "Scene/Tags.h"
 #include "Scene/Geometry.h"
 #include "Scene/Model.h"
+#include "Scene/SceneLoader.h"
 #include "Render/Device.h"
 #include "Core/Profiler.h"
+
+#include "Core/Serialization.h"
+#include "Core/SerializationHelpers.h"
+#include <jansson.h>
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(Scene, Group)
+void SerializeScene(ReflectionContext* context, ReflectionWalkType::Enum wt)
+{
+	if( !context->loading )
+	{
+		ReflectionWalkComposite(context);
+		return;
+	}
+	
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* top = json->values.back();
+
+	json_t* val = json_object_get(top, "entities");
+
+	if( val )
+	{
+		context->walkCompositeFields(context, wt);
+	}
+	else
+	{
+		const Field* field = context->field;
+		context->field = ClassGetField(context->composite, "entities");
+
+		json->values.push_back(top);
+		context->walkCompositeField(context, wt);
+		json->values.pop_back();
+
+		context->field = field;
+	}
+}
+
+REFLECT_CHILD_CLASS(Scene, Resource)
+	REFLECT_CLASS_SET_SERIALIZER(SerializeScene)
+	FIELD_CLASS(10, Group, entities)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Scene::Scene() : Group("Scene")
+Scene::Scene()
 {
+	SceneLoaderGetType();
+	entities.addReference();
 }
 
 //-----------------------------------//
@@ -127,7 +166,7 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayQueryList& list, bool all )
 	Culler culler;
 	culler.ray = &ray;
 
-	return doRayGroupQuery(this, culler, list, all);
+	return doRayGroupQuery(&entities, culler, list, all);
 }
 
 //-----------------------------------//
@@ -137,7 +176,7 @@ bool Scene::doRayVolumeQuery( const Frustum& volume, RayQueryList& list, bool al
 	Culler culler;
 	culler.frustum = &volume;
 
-	return doRayGroupQuery(this, culler, list, all);
+	return doRayGroupQuery(&entities, culler, list, all);
 }
 
 //-----------------------------------//
@@ -383,9 +422,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 
 void Scene::update( float delta )
 {
-	//PROFILE_STR("Scene");
-
-	Group::update( delta );
+	entities.update( delta );
 }
 
 //-----------------------------------//

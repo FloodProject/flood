@@ -93,9 +93,8 @@ void ScriptController::createState()
 
 //-----------------------------------//
 
-#define BIND_COMPONENT(var, type)						\
-	bindType( module, var,								\
-		"vapor::"TOSTRING(type)" *",					\
+#define BIND_COMPONENT(var, type) \
+	bindType( module, var, TOSTRING(type)" *", \
 		entity->getComponent<type>().get() );
 
 void ScriptController::bindEntity(Entity* entity)
@@ -106,7 +105,7 @@ void ScriptController::bindEntity(Entity* entity)
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	bindType(module, "entity", "vapor::Entity *", entity);
+	bindType(module, "entity", "Entity *", entity);
 	
 	BIND_COMPONENT("transform", Transform)
 	BIND_COMPONENT("geometry", Geometry)
@@ -140,11 +139,7 @@ void ScriptController::bindType(swig_module_info* module,
 
 void ScriptController::onKeyPress( const KeyEvent& event )
 {
-	if( !enabled )
-		return;
-
-	if( !state )
-		return;
+	if( !enabled || !state ) return;
 
 	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
@@ -152,7 +147,7 @@ void ScriptController::onKeyPress( const KeyEvent& event )
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	swig_type_info* type = SWIG_TypeQueryModule(module, module, "vapor::KeyEvent *");
+	swig_type_info* type = SWIG_TypeQueryModule(module, module, "KeyEvent *");
 	assert( type != nullptr );
 
 	lua_State* L = state->getLuaState();
@@ -177,7 +172,7 @@ void ScriptController::onKeyRelease( const KeyEvent& event )
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	swig_type_info* type = SWIG_TypeQueryModule(module, module, "vapor::KeyEvent *");
+	swig_type_info* type = SWIG_TypeQueryModule(module, module, "KeyEvent *");
 	assert( type != nullptr );
 
 	lua_State* L = state->getLuaState();

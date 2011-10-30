@@ -10,6 +10,7 @@
 
 #include "Resources/Resource.h"
 #include "Resources/Image.h"
+#include "Resources/Shader.h"
 
 #define GL_ZERO                0
 #define GL_ONE                 1
@@ -165,7 +166,7 @@ class API_RESOURCE Material : public Resource
 public:
 
 	Material();
-	Material( const String& name, const String& program = "VertexColor" );
+	Material( const String& name );
 	Material( const Material& rhs );
 	~Material();
 
@@ -175,9 +176,12 @@ public:
 	// Gets the textual name of the material.
 	ACESSOR(Name, const String&, name);
 
-	// Gets/sets the associated program.
-	ACESSOR(Program, const String&, program)
-	
+	// Gets/sets the shader of the material.
+	ACESSOR(Shader, const ShaderHandle&, shader)
+
+	// Sets the shader of the material.
+	void setShader(const String& name);
+
 	// Gets/sets the depth writing of the material.
 	ACESSOR(DepthWrite, bool, depthWrite)
 
@@ -238,7 +242,7 @@ public:
 	String name;
 
 	// Program of the material.
-	String program;
+	ShaderHandle shader;
 
 	// Backface culling.
 	bool cullBackfaces;

@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "Resources/API.h"
-#include "Resources/GLSL_Text.h"
+#include "Resources/GLSL_Shader.h"
 #include "Core/Log.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(GLSL_Text, Text)
+REFLECT_CHILD_CLASS(GLSL_Shader, Text)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -22,7 +22,7 @@ REFLECT_CLASS_END()
 static const String VertexBlock("[vertex]");
 static const String FragmentBlock("[fragment]");
 
-void GLSL_Text::parse()
+void GLSL_Shader::parse()
 {
 	// Get the vertex and pixel shader block indicies.
 	size_t v = text.find(VertexBlock);

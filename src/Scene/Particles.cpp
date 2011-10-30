@@ -118,7 +118,7 @@ void Particles::createGeometry()
 	Material* pMaterial = material.Resolve();
 	pMaterial->setDepthWrite(false);
 	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
-	pMaterial->setProgram("Tex");
+	pMaterial->setShader("Tex");
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Points);

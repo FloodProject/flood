@@ -34,6 +34,7 @@ class API_ENGINE DebugDrawer
 public:
 
 	DebugDrawer();
+	~DebugDrawer();
 
 	// Sets the color for the debug draw.
 	void setColor( const Color& color );
@@ -55,6 +56,7 @@ public:
 
 	RenderablePtr lines;
 	RenderablePtr triangles;
+	RenderablePtr quads;
 
 	std::vector<RenderablePtr> renderables;
 };
@@ -67,11 +69,13 @@ namespace DebugDrawFlags
 	};
 };
 
+class GeometryBuffer;
+
 // Builds debug geometry of a bounding box.
 API_ENGINE RenderablePtr DebugBuildBoundingBox( const BoundingBox& box );
 
 // Updates the debug geometry of a bounding box.
-API_ENGINE void DebugUpdateBoudingBox( const RenderablePtr&, const BoundingBox& box );
+API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox& box );
 
 // Builds debug geometry of a ray.
 API_ENGINE RenderablePtr DebugBuildRay( const Ray& pickRay, float length );

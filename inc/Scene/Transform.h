@@ -44,6 +44,8 @@ class API_ENGINE Transform : public Component
 
 public:
 
+	~Transform();
+
 	// Resets all the transformations.
 	void reset();
 

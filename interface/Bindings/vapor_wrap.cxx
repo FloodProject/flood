@@ -12458,7 +12458,7 @@ static int _wrap_new_Geometry__SWIG_1(lua_State* L) {
     SWIG_fail_ptr("new_Geometry",1,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
   
-  result = (Geometry *)new Geometry((RenderablePtr const &)*arg1);
+  //result = (Geometry *)new Geometry((RenderablePtr const &)*arg1);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Geometry,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -12708,7 +12708,7 @@ static int _wrap_Geometry_markDirty(lua_State* L) {
     SWIG_fail_ptr("Geometry_markDirty",1,SWIGTYPE_p_vapor__Geometry);
   }
   
-  (arg1)->markDirty();
+  (arg1)->rebuildBoundingBox();
   
   return SWIG_arg;
   
@@ -13286,7 +13286,7 @@ static int _wrap_Model_doSkinning(lua_State* L) {
     SWIG_fail_ptr("Model_doSkinning",2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t);
   }
   
-  (arg1)->doSkinning(*arg2);
+//  (arg1)->doSkinning(*arg2);
   
   return SWIG_arg;
   

@@ -69,10 +69,7 @@ void Camera::updateFrustum()
 
 	// Update frustum matrices.
 	frustum.aspectRatio = activeView->getAspectRatio();
-
-	Vector2i viewSize = activeView->getSize();
-
-	frustum.orthoSize = Vector2(viewSize.x, viewSize.y);
+	frustum.orthoSize = activeView->getSize();
 	frustum.updateProjection();
 	frustum.updatePlanes( viewMatrix );
 }
@@ -134,7 +131,7 @@ void Camera::render( const ScenePtr& scene )
 	RenderBlock renderBlock;
 
 	// Perform frustum culling.
-	cull( renderBlock, scene );
+	cull( renderBlock, &scene->entities );
 
 	// Submits the geometry to the renderer.
 	render( renderBlock );

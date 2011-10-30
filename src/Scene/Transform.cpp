@@ -42,6 +42,13 @@ Transform::Transform()
 
 //-----------------------------------//
 
+Transform::~Transform()
+{
+
+}
+
+//-----------------------------------//
+
 void Transform::setPosition( const Vector3& position )
 {
 	setChanged();
@@ -185,7 +192,7 @@ void Transform::updateBoundingVolume()
 	if( !debugRenderable) 
 		debugRenderable = DebugBuildBoundingBox( bounds );
 	else
-		DebugUpdateBoudingBox(debugRenderable, bounds);
+		DebugUpdateBoudingBox(debugRenderable->getGeometryBuffer().get(), bounds);
 }
 
 //-----------------------------------//

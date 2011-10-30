@@ -31,6 +31,7 @@ public:
 
 	Group();
 	Group( const String& name );
+	~Group();
 
 	// Adds an entity to the group.
 	void add( const EntityPtr& entity );

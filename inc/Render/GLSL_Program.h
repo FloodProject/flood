@@ -10,10 +10,10 @@
 
 #include "Render/Program.h"
 #include "Render/VertexBuffer.h"
-#include "Render/GLSL_Shader.h"
+#include "Render/GLSL_ShaderProgram.h"
 #include "Render/GL.h"
 
-FWD_DECL_INTRUSIVE(GLSL_Text)
+FWD_DECL_INTRUSIVE(GLSL_Shader)
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -23,44 +23,53 @@ NAMESPACE_ENGINE_BEGIN
  * GLSL Program.
  */
 
+typedef std::vector< GLSL_ShaderProgram* > ShaderProgramVector;
+typedef std::map< GLSL_ShaderProgram*, bool > ShaderProgramAttachMap;
+
 class API_RENDER GLSL_Program : public Program
 {
 public:
 
-	GLSL_Program( const GLSL_TextPtr& );
+	GLSL_Program();
 	virtual ~GLSL_Program();
 
 	// Creates the program.
-	virtual bool create() OVERRIDE;
+	bool create() OVERRIDE;
 
 	// Links the program.
-	virtual bool link() OVERRIDE;
+	bool link() OVERRIDE;
 
 	// Binds the program.
-	virtual void bind() OVERRIDE;
+	void bind() OVERRIDE;
 
 	// Unbinds the program.
-	virtual void unbind() OVERRIDE;
+	void unbind() OVERRIDE;
 
 	// Creates the shaders and adds them to the program.
-	virtual void createShaders() OVERRIDE;
-
-	// Updates the shader's text with the program text.
-	virtual void updateShadersText() OVERRIDE;
-
-	// Gets/sets the resource text that backs this shader.
-	ACESSOR(Text, const GLSL_TextPtr&, text)
+	void createShaders() OVERRIDE;
 
 	// Adds a parameter to the shader.
-	virtual void setAttribute( const String& slot, VertexAttribute::Enum attr ) OVERRIDE;
+	void setAttribute( const String&, VertexAttribute::Enum ) OVERRIDE;
 
 	// Sets the uniforms in the program.
-	virtual void setUniforms( const UniformBufferPtr& ub ) OVERRIDE;
+	void setUniforms( const UniformBufferPtr& ) OVERRIDE;
+
+	// Gets the shader programs.
+	GETTER(ShaderPrograms, const ShaderProgramVector&, shaders)
+
+	// Forces the recompilation of all shader programs.
+	void forceRecompile();
 
 protected:
 
-	// Adds a shader to the program.
-	void addShader( const GLSL_ShaderPtr& );
+	// Adds a shader program to the program.
+	void addShaderProgram( GLSL_ShaderProgram* );
+
+	// Attaches all shaders to the program.
+	bool compileShaderPrograms();
+
+	// Detaches all attached shader programs.
+	void detachShaderPrograms();
 
 	// Binds the default engine attributes to the program.
 	void bindDefaultAttributes();
@@ -68,21 +77,14 @@ protected:
 	// Validates that the program is well-formed.
 	bool validate();
 
-	// Compiles (if needed) and attaches all shaders to the program.
-	bool attachShaders();
-
 	// Gets the linking log of the program.
 	void getLogText();
 
 	GLuint id;
-	bool linkError;
-	GLSL_TextPtr text;
+	bool hadLinkError;
 
-	typedef std::vector< GLSL_ShaderPtr > ShaderVector;
-	ShaderVector shaders;
-
-	typedef std::map< GLSL_ShaderPtr, bool > ShaderAttachMap;
-	ShaderAttachMap attached;
+	ShaderProgramVector shaders;
+	ShaderProgramAttachMap attached;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Program );

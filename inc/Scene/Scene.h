@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Resources/Resource.h"
 #include "Scene/Group.h"
 #include "Render/Renderable.h"
 #include "Math/Matrix4x3.h"
@@ -18,6 +19,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+FWD_DECL_INTRUSIVE(Entity)
+
 struct RayQueryResult
 {
 	EntityPtr entity;
@@ -27,6 +30,8 @@ struct RayQueryResult
 typedef std::vector<RayQueryResult> RayQueryList;
 
 //-----------------------------------//
+
+FWD_DECL_INTRUSIVE(Geometry)
 
 struct RayTriangleQueryResult : public RayQueryResult
 {
@@ -53,17 +58,20 @@ struct RayTriangleQueryResult : public RayQueryResult
 
 REFLECT_DECLARE_CLASS(Scene)
 
-class API_SCENE Scene : public Group
+class API_SCENE Scene : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Scene);
 
 public:
 
 	Scene();
-	~Scene();
+	virtual ~Scene();
 
-	// Updates all the entities recursively.
-	void update( float delta ) OVERRIDE;
+	// Return the proper resource group for this resource.
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scenes)
+
+	// Updates all the scene groups recursively.
+	void update( float delta );
 
 	// Checks for collision via ray-box tests.
 	bool doRayBoxQuery( const Ray& ray, RayQueryResult& res );
@@ -75,6 +83,9 @@ public:
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& );
+
+	// Entities of the scene.
+	Group entities;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Scene );

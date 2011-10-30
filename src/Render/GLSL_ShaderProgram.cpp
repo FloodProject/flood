@@ -10,26 +10,26 @@
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Render/GLSL_Shader.h"
+#include "Render/GLSL_ShaderProgram.h"
 #include "Render/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(GLSL_Shader, Shader)
+REFLECT_CHILD_CLASS(GLSL_ShaderProgram, Shader)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-GLSL_Shader::GLSL_Shader() 
+GLSL_ShaderProgram::GLSL_ShaderProgram() 
 	: id(0)
 	, created(false)
 { }
 
 //-----------------------------------//
 
-GLSL_Shader::~GLSL_Shader()
+GLSL_ShaderProgram::~GLSL_ShaderProgram()
 {
 	glDeleteShader(id);
 
@@ -39,7 +39,7 @@ GLSL_Shader::~GLSL_Shader()
 
 //-----------------------------------//
 
-bool GLSL_Shader::create()
+bool GLSL_ShaderProgram::create()
 {
 	if( created ) return true;
 
@@ -57,7 +57,7 @@ bool GLSL_Shader::create()
 
 //-----------------------------------//
 
-bool GLSL_Shader::compile()
+bool GLSL_ShaderProgram::compile()
 {
 	if( !create() ) return false;
 
@@ -92,10 +92,9 @@ bool GLSL_Shader::compile()
 
 //-----------------------------------//
 
-bool GLSL_Shader::upload()
+bool GLSL_ShaderProgram::upload()
 {
-	if( text.empty() ) 
-		return false;
+	if( text.empty() )  return false;
 
 	const char* str = text.c_str();
 	glShaderSource(id, 1, &str, nullptr);
@@ -108,22 +107,19 @@ bool GLSL_Shader::upload()
 
 //-----------------------------------//
 
-void GLSL_Shader::getCompileLog()
+void GLSL_ShaderProgram::getCompileLog()
 {
-	// get compilation log size
+	// Get compilation log size.
+
 	GLint size;
 	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &size);
 
-	// TODO: move directly to string...
-
-	GLchar* info = new char[size];
 	GLsizei length;
 
-	glGetShaderInfoLog(id, size, &length, info);
+	// Store the info into the log.
 
-	log.assign( info );
-
-	delete[] info;
+	log.resize(size);
+	glGetShaderInfoLog(id, log.size(), &length, (GLchar*) log.data());
 
 	if( log.empty() )
 	{
@@ -133,7 +129,7 @@ void GLSL_Shader::getCompileLog()
 
 //-----------------------------------//
 
-uint32 GLSL_Shader::getGLShaderType( ShaderType::Enum type )
+uint32 GLSL_ShaderProgram::getGLShaderType( ShaderType::Enum type )
 {
 	switch( type )
 	{

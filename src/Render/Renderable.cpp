@@ -34,4 +34,11 @@ Renderable::Renderable()
 
 //-----------------------------------//
 
+Renderable::~Renderable()
+{
+
+}
+
+//-----------------------------------//
+
 NAMESPACE_ENGINE_END

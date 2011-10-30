@@ -33,6 +33,19 @@ Group::Group( const String& name )
 
 //-----------------------------------//
 
+Group::~Group()
+{
+	for( size_t i = 0; i < entities.size(); i++ )
+	{
+		const EntityPtr& entity = entities[i];
+		
+		if( entity->references != 1 )
+			LogDebug("Entity '%s' should not have any references", entity->name.c_str());
+	}
+}
+
+//-----------------------------------//
+
 void Group::add( const EntityPtr& entity )
 {
 	if( !entity ) return;

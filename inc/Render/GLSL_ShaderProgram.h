@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Resources/Shader.h"
+#include "Resources/ShaderProgram.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -18,16 +19,16 @@ NAMESPACE_ENGINE_BEGIN
  * GLSL Shader.
  */
 
-REFLECT_DECLARE_CLASS(GLSL_Shader)
+REFLECT_DECLARE_CLASS(GLSL_ShaderProgram)
 
-class API_ENGINE GLSL_Shader : public Shader
+class API_ENGINE GLSL_ShaderProgram : public ShaderProgram
 {
-	REFLECT_DECLARE_OBJECT(GLSL_Shader)
+	REFLECT_DECLARE_OBJECT(GLSL_ShaderProgram)
 
 public:
 
-	GLSL_Shader();
-	virtual ~GLSL_Shader();
+	GLSL_ShaderProgram();
+	virtual ~GLSL_ShaderProgram();
 
 	// Creates the shader.
 	virtual bool create();
@@ -51,7 +52,7 @@ public:
 	bool created;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Shader );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_ShaderProgram );
 
 //-----------------------------------//
 

@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 REFLECT_CHILD_CLASS(Material, Resource)
 	FIELD_PRIMITIVE(4, string, name)
-	FIELD_PRIMITIVE(5, string, program)
+	FIELD_CLASS_PTR_SETTER(5, Shader, ShaderHandle, shader, Handle, Shader)
 	FIELD_PRIMITIVE(6, bool, cullBackfaces)
 	FIELD_PRIMITIVE(7, bool, alphaTest)
 	FIELD_PRIMITIVE(8, bool, lineSmooth)
@@ -42,23 +42,23 @@ float Material::DefaultLineWidth = 1.0f;
 Material::Material()
 {
 	init();
-	program = "VertexColor";
+	setShader("VertexColor");
 }
 
 //-----------------------------------//
 
-Material::Material( const String& name, const String& program )
+Material::Material( const String& name )
 	: name(name)
-	, program(program)
 {
 	init();
+	setShader("VertexColor");
 }
 
 //-----------------------------------//
 
 Material::Material( const Material& rhs )
 	: name(rhs.name)
-	, program(rhs.program)
+	, shader(rhs.shader)
 	, cullBackfaces(rhs.cullBackfaces)
 	, depthCompare(rhs.depthCompare)
 	, depthTest(rhs.depthTest)
@@ -77,7 +77,7 @@ Material::Material( const Material& rhs )
 
 Material::~Material()
 {
-	//LogDebug("Removing material '%s'", name.c_str());
+	LogDebug("Removing material '%s'", name.c_str());
 }
 
 //-----------------------------------//
@@ -184,6 +184,21 @@ ImageHandle Material::getTexture( uint8 unit )
 TextureUnit& Material::getTextureUnit( uint8 unit )
 {
 	return textureUnits[unit];
+}
+
+//-----------------------------------//
+
+void Material::setShader(const String& name)
+{
+	ResourceLoadOptions options;
+	
+	options.name = name;
+	options.group = ResourceGroup::Shaders;
+
+	// Use high priority so the shader is loaded right away.
+	options.isHighPriority = true;
+	
+	shader = HandleCast<Shader>( GetResourceManager()->loadResource(options) );
 }
 
 //-----------------------------------//

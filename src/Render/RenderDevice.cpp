@@ -16,6 +16,8 @@
 #include "Render/RenderContext.h"
 #include "Render/GL.h"
 #include "Render/View.h"
+#include "Render/Program.h"
+
 #include "Render/BufferManager.h"
 #include "Render/ProgramManager.h"
 #include "Render/TextureManager.h"
@@ -172,12 +174,18 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	glMultMatrixf(&model.m11);
 
 	if( !renderable->onPreRender.empty() )
-		renderable->onPreRender(state);
+	{
+		// Call the user pre render hook.
+		renderable->onPreRender(activeView, state);
+	}
 
 	render(renderable.get());
 	
 	if( !renderable->onPostRender.empty() )
-		renderable->onPostRender(state);
+	{
+		// Call the user post render hook.
+		renderable->onPostRender(activeView, state);
+	}
 
 	glPopMatrix();
 
@@ -242,13 +250,16 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	vb->bindGenericPointers();
 
 	Material* material = state.material;
-	const String& name = material->getProgram();
+	const ShaderHandle& shader = material->getShader();
 
-	const ProgramPtr& program = activeContext->programManager->getProgram(name);
+	ProgramManager* programs = activeContext->programManager;
+
+	const ProgramPtr& program = programs->getProgram(shader.Resolve());
 	if( !program ) return;
 
 	if( !program->isLinked() )
 	{
+		// Link the program if it is not yet linked.
 		program->link();
 	}
 
@@ -257,6 +268,12 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	setupRenderStateMaterial(state, true);
 
 	RenderLayer::Enum stage = renderable->getRenderLayer();
+
+	if( !renderable->onPreRender.empty() )
+	{
+		// Call the user pre render hook.
+		renderable->onPreRender(activeView, state);
+	}
 
 	if( stage != RenderLayer::Overlays )
 	{
@@ -272,16 +289,16 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 			return;
 	}
 
-	if( !renderable->onPreRender.empty() )
-		renderable->onPreRender(state);
-	
 	const UniformBufferPtr& ub = renderable->getUniformBuffer();
 	program->setUniforms(ub);
 
 	render(renderable.get());
 	
 	if( !renderable->onPostRender.empty() )
-		renderable->onPostRender(state);
+	{
+		// Call the user post render hook.
+		renderable->onPostRender(activeView, state);
+	}
 	
 	undoRenderStateMaterial(material);
 	
@@ -609,7 +626,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
 	Vector2i size = activeTarget->getSettings().getSize();
-	Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x, size.y, 0, 0, 100);
+	Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x, size.y, 0, -100, 100);
 
 	const UniformBufferPtr& ub = state.renderable->getUniformBuffer();
 	ub->setUniform( "vp_ProjectionMatrix", projection );

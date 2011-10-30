@@ -10,6 +10,7 @@
 #include "GUI/Overlay.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "Scene/Tags.h"
 #include "Render/View.h"
 
 NAMESPACE_ENGINE_BEGIN

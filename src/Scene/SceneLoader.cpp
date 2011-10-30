@@ -9,3 +9,55 @@
 #include "Engine/API.h"
 #include "Scene/SceneLoader.h"
 
+NAMESPACE_ENGINE_BEGIN
+
+//-----------------------------------//
+
+REFLECT_CHILD_CLASS(SceneLoader, ResourceLoader)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+SceneLoader::SceneLoader()
+{
+	extensions.push_back("scene");
+}
+
+//-----------------------------------//
+
+static Serializer* GetSerializerForStream(const Stream& stream)
+{
+	const String& ext = PathGetFileExtension(stream.path);
+
+	if(ext == "json")
+		return SerializerCreateJSON(AllocatorGetHeap());
+	else if(ext == "bin")
+		return SerializerCreateBinary(AllocatorGetHeap());
+
+	return SerializerCreateJSON(AllocatorGetHeap());
+}
+
+//-----------------------------------//
+
+bool SceneLoader::decode(const Stream& stream, Resource* res)
+{
+	Serializer* serializer = GetSerializerForStream(stream);
+	if( !serializer ) return false;
+
+	Scene* scene = (Scene*) res;
+
+	serializer->stream = (Stream*) &stream;
+	serializer->object = scene;
+
+	Object* object = SerializerLoad(serializer);
+	if( !object ) return false;
+
+	assert( object == scene );
+
+	return true;
+}
+
+//-----------------------------------//
+
+NAMESPACE_ENGINE_END
+

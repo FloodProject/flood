@@ -62,21 +62,39 @@ ReferenceCounted* ResourceHandleFind(HandleId id)
 ResourceHandle ResourceHandleCreate(Resource* p)
 {
 	if( !gs_ResourceHandleManager ) return HandleInvalid;
-	return HandleCreate(gs_ResourceHandleManager, p);
+	
+	HandleId handle = HandleCreate(gs_ResourceHandleManager, p);
+	LogDebug("ResourceHandleCreate: %lu %s", handle, p->getPath().c_str());
+	
+	return handle;
 }
 
 void ResourceHandleDestroy(HandleId id)
 {
 	Resource* resource = (Resource*) ResourceHandleFind(id);
 	//gs_ResourcesManager->removeResource(resource);
+	
+	LogDebug("ResourceHandleDestroy: %lu", id);
 	HandleDestroy(gs_ResourceHandleManager, id);
+
 	Deallocate(resource);
 }
 
-static HandleId ResourceFind(const char* s)
+static HandleId ResourceHandleFind(const char* s)
 {
 	if( !gs_ResourcesManager ) return HandleInvalid;
 	return gs_ResourcesManager->loadResource(s).getId();
+}
+
+static void ResourceHandleSerialize( ReflectionContext* context, ReflectionWalkType::Enum wt )
+{
+	Serializer* serializer = (Serializer*) context->userData;
+
+	Resource* resource = (Resource*) context->object;
+	
+	context->valueContext.s = &resource->path;
+	context->primitive = &Primitive::s_string;
+	context->walkPrimitive(context, wt);
 }
 
 //-----------------------------------//
@@ -85,6 +103,7 @@ ResourceLoadOptions::ResourceLoadOptions()
 	: group(ResourceGroup::General)
 	, asynchronousLoad(true)
 	, sendLoadEvent(true)
+	, isHighPriority(false)
 	, stream(nullptr)
 	, resource(nullptr)
 {
@@ -107,7 +126,9 @@ ResourceManager::ResourceManager()
 	ReflectionHandleContext context;
 	context.type = ReflectionGetType(Resource);
 	context.handles = gs_ResourceHandleManager;
-	context.deserialize = ResourceFind;
+	context.serialize = ResourceHandleSerialize;
+	context.deserialize = ResourceHandleFind;
+	
 	ReflectionSetHandleContext(context);
 
 	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
@@ -309,7 +330,7 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 #ifdef ENABLE_THREADED_LOADING
 	if( taskPool && asynchronousLoading && options.asynchronousLoad )
 	{
-		TaskPoolAdd(taskPool, task);
+		TaskPoolAdd(taskPool, task, options.isHighPriority);
 		return;
 	}
 #endif
@@ -353,13 +374,16 @@ void ResourceManager::sendPendingEvents()
 {
 	ResourceEvent event;
 
-	while( resourceTaskEvents.try_pop(event) )
+	while( resourceTaskEvents.try_pop_front(event) )
 	{
 		Resource* resource = event.resource;
 		Path base = PathGetFile(resource->path);
 
 		// Find the handle to the resource.
-		ResourceHandle handle = resources[base];
+		ResourceMap::iterator it = resources.find(base);
+		if( it == resources.end() ) continue;
+
+		ResourceHandle handle = it->second;
 		assert( handle != HandleInvalid );
 
 		event.handle = handle;
