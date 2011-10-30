@@ -101,9 +101,6 @@
     <ClCompile Include="..\..\src\Resources\GLSL_Loader.cpp">
       <Filter>Shaders\GLSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\GLSL_Text.cpp">
-      <Filter>Shaders\GLSL</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\OGG_Loader.cpp">
       <Filter>Sounds\OGG</Filter>
     </ClCompile>
@@ -122,9 +119,6 @@
     <ClCompile Include="..\..\src\Resources\Animation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\Shader.cpp">
-      <Filter>Shaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\ResourceLoaders.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
     <ClCompile Include="..\..\src\Resources\Material.cpp">
@@ -141,6 +135,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\ResourceIndexer.cpp">
       <Filter>Indexer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ShaderProgram.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Shader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\GLSL_Shader.cpp">
+      <Filter>Shaders\GLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,14 +184,8 @@
     <ClInclude Include="..\..\inc\Resources\OGG_Loader.h">
       <Filter>Sounds\OGG</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Resources\Shader.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Resources\Text.h">
       <Filter>Text</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Resources\GLSL_Text.h">
-      <Filter>Shaders\GLSL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Resources\GLSL_Loader.h">
       <Filter>Shaders\GLSL</Filter>
@@ -216,6 +213,15 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Resources\ResourceIndexer.h">
       <Filter>Indexer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\ShaderProgram.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\GLSL_Shader.h">
+      <Filter>Shaders\GLSL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

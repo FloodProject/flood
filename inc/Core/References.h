@@ -9,6 +9,9 @@
 #pragma once
 
 #include "Core/Concurrency.h"
+#include <type_traits>
+
+#define ENABLE_REFERENCES_DEBUG
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -36,6 +39,37 @@ struct API_CORE NO_VTABLE ReferenceCounted
 
 EXTERN_END
 
+#ifdef ENABLE_REFERENCES_DEBUG
+
+struct Class;
+struct Object;
+
+typedef Delegate2<Class*, Object*> DebugReferenceDelegate;
+DebugReferenceDelegate& GetDebugReferences();
+
+template<typename T>
+void DebugReferencesObject(T* px, typename std::enable_if< std::is_base_of<Object, T>::value>::type* = 0)
+{
+	DebugReferenceDelegate& callback = GetDebugReferences();
+	if( callback.empty() ) return;
+	
+	callback(px->getType(), px);
+}
+
+template<typename T>
+void DebugReferencesObject(T* px, typename std::enable_if< !std::is_base_of<Object, T>::value>::type* = 0)
+{
+}
+
+#define CALL_DEBUG_REFERENCE_DELEGATE() \
+	DebugReferencesObject(px);
+
+#else
+
+#define CALL_DEBUG_REFERENCE_DELEGATE()
+
+#endif
+
 template<typename T> class RefPtr
 {
 public:
@@ -44,24 +78,39 @@ public:
 
     RefPtr(T* p, bool add_ref = true) : px(p)
     {
-        if( px != nullptr && add_ref ) px->addReference();
+        if( px != nullptr && add_ref )
+		{
+			px->addReference();
+			CALL_DEBUG_REFERENCE_DELEGATE();
+		}
     }
 
 	template<typename U>
     RefPtr( RefPtr<U> const & rhs ) : px( rhs.get() )
     {
-        if( px != nullptr ) px->addReference();
+        if( px != nullptr )
+		{
+			px->addReference();
+			CALL_DEBUG_REFERENCE_DELEGATE();
+		}
     }
 
     RefPtr(RefPtr const & rhs): px(rhs.px)
     {
-        if( px != nullptr ) px->addReference();
+        if( px != nullptr )
+		{
+			px->addReference();
+			CALL_DEBUG_REFERENCE_DELEGATE();
+		}
     }
 
     ~RefPtr()
     {
         if( px != nullptr && px->releaseReference() )
+		{
+			CALL_DEBUG_REFERENCE_DELEGATE();
             Deallocate(px);
+		}
     }
 
     template<typename U>
@@ -132,9 +181,7 @@ public:
 
     void swap(RefPtr& rhs)
     {
-        T* tmp = px;
-        px = rhs.px;
-        rhs.px = tmp;
+		std::swap(px, rhs.px);
     }
 
 public:

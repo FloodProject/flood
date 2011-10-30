@@ -586,7 +586,9 @@ static Object* SerializeLoad( Serializer* serializer )
 	StreamReadBuffer(bin->stream, &bin->ms->data[0], size);
 
 	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = DeserializeComposite(context, 0);
+
+	Object* object = serializer->object;
+	object = DeserializeComposite(context, object);
 	
 	Deallocate(bin->ms);
 	return object;

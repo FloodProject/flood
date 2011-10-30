@@ -9,8 +9,11 @@ project "Core"
 	
 	flags { common_flags }
 
-	pchheader "Core/API.h"
-	pchsource "../src/Core/Core.cpp"
+	configuration "vs*"
+		pchheader "Core/API.h"
+		pchsource "../src/Core/Core.cpp"
+		
+	configuration "*"
 	
 	files {
 		"Core.lua",

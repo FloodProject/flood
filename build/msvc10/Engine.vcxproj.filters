@@ -223,14 +223,11 @@
     <Filter Include="Graphics\Resources\Meshes">
       <UniqueIdentifier>{d8640b37-f5a7-4000-9895-2184ac56d474}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry\Picking">
+      <UniqueIdentifier>{da25e737-2357-4f66-9c7d-7f0bf22a1528}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Engine\Sphere.cpp">
-      <Filter>Geometry\Sphere</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Quad.cpp">
-      <Filter>Geometry\Quad</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp">
       <Filter>Geometry\Debug</Filter>
     </ClCompile>
@@ -412,14 +409,8 @@
     <ClCompile Include="..\..\src\Engine\PageManager.cpp">
       <Filter>Paging</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Cube.cpp">
-      <Filter>Geometry\Cube</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Scene\SceneLoader.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp">
-      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
@@ -480,6 +471,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\GUI\Label.cpp">
       <Filter>GUI\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\GeometryBuffer.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\Cube.cpp">
+      <Filter>Geometry\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\Sphere.cpp">
+      <Filter>Geometry\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\Quad.cpp">
+      <Filter>Geometry\Quad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\BoundingBoxTree.cpp">
+      <Filter>Geometry\Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GLSL_ShaderProgram.cpp">
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -646,9 +655,6 @@
     <ClInclude Include="..\..\inc\Render\GLSL_Program.h">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Render\GLSL_Shader.h">
-      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Render\TextureManager.h">
       <Filter>Graphics\Resources\Texture</Filter>
     </ClInclude>
@@ -762,6 +768,15 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\FBO.h">
       <Filter>Graphics\Resources\Buffers\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Geometry\GeometryBuffer.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Geometry\BoundingBoxTree.h">
+      <Filter>Geometry\Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\GLSL_ShaderProgram.h">
+      <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

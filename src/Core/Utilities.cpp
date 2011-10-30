@@ -277,7 +277,7 @@ Path PathGetFile(const Path& path)
 	if( ch == String::npos )
 		return path;
 
-	// Return the file extension.
+	// Return the file part.
 	return path.substr( ++ch );
 }
 

@@ -132,7 +132,7 @@ static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskState state)
 #endif
 //-----------------------------------//
 
-void TaskPoolAdd(TaskPool* pool, Task* task)
+void TaskPoolAdd(TaskPool* pool, Task* task, uint8 priority)
 {
 	if( !task ) return;
 
@@ -142,7 +142,10 @@ void TaskPoolAdd(TaskPool* pool, Task* task)
 		return;
 	}
 
-	pool->Tasks.push(task);
+	if(priority > 0)
+		pool->Tasks.push_front(task);
+	else
+		pool->Tasks.push_back(task);
 
 #ifdef ENABLE_TASK_EVENTS
 	TaskEvent event;
@@ -159,7 +162,7 @@ void TaskPoolUpdate(TaskPool* pool)
 {
 	TaskEvent event;
 	
-	while( pool->Events.try_pop(event) )
+	while( pool->Events.try_pop_front(event) )
 		pool->OnTaskEvent(event);
 }
 
@@ -172,7 +175,7 @@ static void TaskPoolRun(Thread* thread, void* userdata)
 	while( !pool->IsStopping )
 	{
 		Task* task;
-		pool->Tasks.wait_and_pop(task);
+		pool->Tasks.wait_and_pop_front(task);
 
 		if( !task ) continue;
 

@@ -28,7 +28,7 @@
     <ClCompile Include="..\..\src\Resources\Font.cpp" />
     <ClCompile Include="..\..\src\Resources\FontLoader.cpp" />
     <ClCompile Include="..\..\src\Resources\GLSL_Loader.cpp" />
-    <ClCompile Include="..\..\src\Resources\GLSL_Text.cpp" />
+    <ClCompile Include="..\..\src\Resources\GLSL_Shader.cpp" />
     <ClCompile Include="..\..\src\Resources\Image.cpp" />
     <ClCompile Include="..\..\src\Resources\LuaLoader.cpp" />
     <ClCompile Include="..\..\src\Resources\Material.cpp" />
@@ -44,6 +44,7 @@
     <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
     <ClCompile Include="..\..\src\Resources\Script.cpp" />
     <ClCompile Include="..\..\src\Resources\Shader.cpp" />
+    <ClCompile Include="..\..\src\Resources\ShaderProgram.cpp" />
     <ClCompile Include="..\..\src\Resources\Skeleton.cpp" />
     <ClCompile Include="..\..\src\Resources\STB_Image_Loader.cpp" />
     <ClCompile Include="..\..\src\Resources\Text.cpp" />
@@ -58,7 +59,7 @@
     <ClInclude Include="..\..\inc\Resources\Font.h" />
     <ClInclude Include="..\..\inc\Resources\FontLoader.h" />
     <ClInclude Include="..\..\inc\Resources\GLSL_Loader.h" />
-    <ClInclude Include="..\..\inc\Resources\GLSL_Text.h" />
+    <ClInclude Include="..\..\inc\Resources\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\Resources\Image.h" />
     <ClInclude Include="..\..\inc\Resources\LuaLoader.h" />
     <ClInclude Include="..\..\inc\Resources\Material.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="..\..\inc\Resources\ResourceLoader.h" />
     <ClInclude Include="..\..\inc\Resources\ResourceManager.h" />
     <ClInclude Include="..\..\inc\Resources\Shader.h" />
+    <ClInclude Include="..\..\inc\Resources\ShaderProgram.h" />
     <ClInclude Include="..\..\inc\Resources\Skeleton.h" />
     <ClInclude Include="..\..\inc\Resources\Sound.h" />
     <ClInclude Include="..\..\inc\Resources\STB_Image_Loader.h" />

@@ -57,28 +57,11 @@ struct ReflectionContext;
 // Walks the object calling the given reflection context.
 API_CORE void ReflectionWalk(Object*, ReflectionContext*);
 
-// Walks on an composite object composite field.
+// Walks the composite object.
+API_CORE void ReflectionWalkComposite(ReflectionContext*);
+
+// Walks the composite object field.
 API_CORE void ReflectionWalkCompositeField(ReflectionContext*);
-
-//-----------------------------------//
-
-/**
- * Handles need to be resolved when they are walked via reflection.
- * The client code is responsible for setting up the mapping functions
- * that allow the reflection walking code to obtain handle details.
- */
-
-typedef HandleId (*ReflectionDeserializeHandleFn)(const char*); 
-
-struct API_CORE ReflectionHandleContext
-{
-	Class* type;
-	HandleManager* handles;
-	ReflectionDeserializeHandleFn deserialize;
-};
-
-API_CORE void ReflectionSetHandleContext(ReflectionHandleContext context);
-API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx);
 
 //-----------------------------------//
 
@@ -115,10 +98,32 @@ struct API_CORE ReflectionContext
 
 	ReflectionWalkFunction walkComposite;
 	ReflectionWalkFunction walkCompositeField;
+	ReflectionWalkFunction walkCompositeFields;
 	ReflectionWalkFunction walkPrimitive;
 	ReflectionWalkFunction walkEnum;
 	ReflectionWalkFunction walkArray;
 };
+
+//-----------------------------------//
+
+/**
+ * Handles need to be resolved when they are walked via reflection.
+ * The client code is responsible for setting up the mapping functions
+ * that allow the reflection walking code to obtain handle details.
+ */
+
+typedef HandleId (*ReflectionDeserializeHandleFn)(const char*); 
+
+struct API_CORE ReflectionHandleContext
+{
+	Class* type;
+	HandleManager* handles;
+	ReflectionWalkFunction serialize;
+	ReflectionDeserializeHandleFn deserialize;
+};
+
+API_CORE void ReflectionSetHandleContext(ReflectionHandleContext context);
+API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx);
 
 //-----------------------------------//
 

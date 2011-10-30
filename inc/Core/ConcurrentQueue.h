@@ -47,7 +47,18 @@ public:
 
 	//-----------------------------------//
 
-	void push(const T& value)
+	void push_front(const T& value)
+	{
+		MutexLock(mutex);
+		queue.push_front(value);
+		MutexUnlock(mutex);
+		
+		ConditionWakeOne(cond);
+	}
+
+	//-----------------------------------//
+
+	void push_back(const T& value)
 	{
 		MutexLock(mutex);
 		queue.push_back(value);
@@ -69,7 +80,7 @@ public:
 
 	//-----------------------------------//
 
-	bool try_pop(T& popped_value)
+	bool try_pop_front(T& popped_value)
 	{
 		MutexLock(mutex);
 	    
@@ -89,7 +100,7 @@ public:
 
 	//-----------------------------------//
 
-	void wait_and_pop(T& popped_value)
+	void wait_and_pop_front(T& popped_value)
 	{
 		MutexLock(mutex);
 	

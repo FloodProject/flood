@@ -244,8 +244,11 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 
 //-----------------------------------//
 
-static void DeserializeEnum( ReflectionContext* context, json_t* value )
+static void DeserializeEnum( ReflectionContext* context )
 {
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
+
 	const char* name = json_string_value(value);
 	int32 enumValue = EnumGetValue(context->enume, name);
 	FieldSet<int32>(context->field, context->object, enumValue);
@@ -255,8 +258,11 @@ static void DeserializeEnum( ReflectionContext* context, json_t* value )
 
 #define SetFieldValue(T, val) FieldSet<T>(context->field, context->object, val);
 
-static void DeserializePrimitive( ReflectionContext* context, json_t* value )
+static void DeserializePrimitive( ReflectionContext* context )
 {
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
+
 	switch(context->primitive->type)
 	{
 	case Primitive::Bool:
@@ -315,9 +321,9 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value, Object* newObject );
+static Object* DeserializeComposite( ReflectionContext* context, Object* newObject );
 
-static void DeserializeArrayElement( ReflectionContext* context, json_t* value, void* address )
+static void DeserializeArrayElement( ReflectionContext* context, void* address )
 {
 	const Field* field = context->field;
 
@@ -339,25 +345,31 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 
 		if( !FieldIsPointer(field) )
 		{
-			Object* object = DeserializeComposite(context, value, (Object*) address);
+			Object* object = DeserializeComposite(context, (Object*) address);
 		}
 		else
 		{
-			Object* object = DeserializeComposite(context, value, 0);
+			Object* object = DeserializeComposite(context, 0);
 			PointerSetObject(field, address, object);
 		}
 		
 		break;
 	} }
+
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json->values.pop_back();
 }
 
 //-----------------------------------//
 
-static void DeserializeArray( ReflectionContext* context, json_t* value )
+static void DeserializeArray( ReflectionContext* context )
 {
 	// Some old serialized files don't properly encode the components of an entity
 	// as an array, so don't force the JSON value to be an array.
-	
+
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
+
 	const Field* field = context->field;
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
 
@@ -380,10 +392,11 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 		for( size_t i = 0; i < size; i++ )
 		{
 			json_t* arrayValue = json_array_get(value, i);
-		
+			json->values.push_back(arrayValue);
+
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i;
-			DeserializeArrayElement(context, arrayValue, element);
+			DeserializeArrayElement(context, element);
 		}
 	}
 	else
@@ -399,9 +412,11 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 			json_t* arrayValue = json_object();
 			json_object_set(arrayValue, key, val);
 
+			json->values.push_back(arrayValue);
+
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i++;
-			DeserializeArrayElement(context, arrayValue, element);
+			DeserializeArrayElement(context, element);
 
 			json_decref(arrayValue);
 		}
@@ -413,16 +428,81 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 extern ReferenceCounted* NullResolve(HandleId);
 extern void NullDestroy(HandleId);
 
-static void DeserializeField( ReflectionContext* context, json_t* value )
+static bool DeserializeHandleName( ReflectionContext* context, const char* name )
 {
 	const Field* field = context->field;
 
-	if( FieldIsArray(field) )
+	ReflectionHandleContext handleContext;
+	ReflectionFindHandleContext((Class*) field->type, handleContext);
+			
+	HandleId id = handleContext.deserialize(name);
+	if(id == HandleInvalid) return false;
+
+	typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
+	ObjectHandle handleObject;
+	handleObject.setId(id);
+				
+	FieldSet(field, context->object, handleObject);
+
+	return true;
+}
+
+//-----------------------------------//
+
+static void DeserializeHandle( ReflectionContext* context, json_t* value )
+{
+	const Field* field = context->field;
+
+	if( json_is_string(value) )
 	{
-		DeserializeArray(context, value);
+		const char* name = json_string_value(value);
+		DeserializeHandleName(context, name);
+	}
+
+	if( !json_is_object(value) )
+	{
+		LogDebug("Can't deserialize handle '%s'", field->name);
 		return;
 	}
-	
+
+	void* iter = json_object_iter(value);
+
+	json_t* obj = json_object_iter_value(iter);
+	void* iter2 = json_object_iter( obj );
+
+	do
+	{
+		json_t* val = json_object_iter_value(iter2);
+		if( !json_is_string(val) ) continue;
+
+		const char* name = json_string_value(val);
+			
+		if( DeserializeHandleName(context, name) )
+			break;
+	}
+	while( iter2 = json_object_iter_next(obj, iter2) );
+}
+
+//-----------------------------------//
+
+static void DeserializeField( ReflectionContext* context, ReflectionWalkType::Enum wt )
+{
+	const Field* field = context->field;
+
+	if( field->serialize )
+	{
+		field->serialize(context, wt);
+		return;
+	}
+	else if( FieldIsArray(field) )
+	{
+		DeserializeArray(context);
+		return;
+	}
+
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
+
 	switch(field->type->type)
 	{
 	case Type::Composite:
@@ -432,44 +512,11 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		
 		if( FieldIsHandle(field) )
 		{
-			if( !json_is_object(value) )
-			{
-				LogDebug("Can't deserialize handle '%s'", field->name);
-				return;
-			}
-
-			void* iter = json_object_iter(value);
-
-			json_t* obj = json_object_iter_value(iter);
-			void* iter2 = json_object_iter( obj );
-
-			do
-			{
-				json_t* val = json_object_iter_value(iter2);
-				if( !json_is_string(val) ) continue;
-
-				const char* name = json_string_value(val);
-				if( !name ) continue;
-
-				ReflectionHandleContext handleContext;
-				ReflectionFindHandleContext((Class*) field->type, handleContext);
-			
-				HandleId id = handleContext.deserialize(name);
-				if(id == HandleInvalid) continue;
-
-				typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
-				ObjectHandle handleObject;
-				handleObject.setId(id);
-				
-				FieldSet(field, context->object, handleObject);
-
-				break;
-			}
-			while( iter2 = json_object_iter_next(obj, iter2) );
+			DeserializeHandle(context, value);
 		}
 		else if( FieldIsPointer(field) )
 		{
-			Object* object = DeserializeComposite(context, value, 0);
+			Object* object = DeserializeComposite(context, 0);
 			
 			void* address = ClassGetFieldAddress(context->object, field);
 			PointerSetObject(field, address, object);
@@ -477,7 +524,7 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		else
 		{
 			void* address = ClassGetFieldAddress(context->object, field);
-			Object* object = DeserializeComposite(context, value, (Object*) address);
+			Object* object = DeserializeComposite(context, (Object*) address);
 		}
 
 		context->composite = composite;
@@ -486,26 +533,29 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 	case Type::Primitive:
 	{
 		context->primitive = (Primitive*) context->field->type;
-		DeserializePrimitive(context, value);
+		DeserializePrimitive(context);
 		break;
 	}
 	case Type::Enumeration:
 	{
 		context->enume = (Enum*) context->field->type;
-		DeserializeEnum(context, value);
+		DeserializeEnum(context);
 		break;
 	} }
 }
 
 //-----------------------------------//
 
-static void DeserializeFields( ReflectionContext* context, json_t* value )
+static void DeserializeFields( ReflectionContext* context, ReflectionWalkType::Enum )
 {
+	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
+
 	void* iter = json_object_iter(value);
 	for(; iter; iter = json_object_iter_next(value, iter))
 	{
 		const char* key = json_object_iter_key(iter);
-		json_t* val = json_object_iter_value(iter);
+		json_t* fieldValue = json_object_iter_value(iter);
 
 		Class* composite = context->composite;
 		const Field* field = context->field;
@@ -518,11 +568,13 @@ static void DeserializeFields( ReflectionContext* context, json_t* value )
 			continue;
 		}
 		
-		if( json_is_null(val) ) continue;
+		if( json_is_null(fieldValue) ) continue;
 
 		context->field = newField;
-	
-		DeserializeField(context, val);
+
+		json->values.push_back(fieldValue);
+		DeserializeField(context, ReflectionWalkType::Element);
+		json->values.pop_back();
 
 		context->field = field;
 		context->composite = composite;
@@ -531,9 +583,10 @@ static void DeserializeFields( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value, Object* newObject )
+static Object* DeserializeComposite( ReflectionContext* context, Object* newObject )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
+	json_t* value = json->values.back();
 
 	if( !json_is_object(value) ) return 0;
 
@@ -577,7 +630,14 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value, 
 	context->composite = newClass;
 	context->object = newObject;
 
-	DeserializeFields(context, value);
+	json->values.push_back(value);
+
+	if( newClass->serialize )
+		newClass->serialize(context, ReflectionWalkType::Begin);
+	else
+		DeserializeFields(context, ReflectionWalkType::Begin);
+
+	json->values.pop_back();
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();
@@ -618,7 +678,15 @@ static Object* SerializeLoad( Serializer* serializer )
 	json->rootValue = rootValue;
 	
 	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = DeserializeComposite(context, rootValue, 0);
+	Object* object = serializer->object;
+
+	json->values.push_back(rootValue);
+
+	object = DeserializeComposite(context, object);
+
+	json->values.pop_back();
+	assert( json->values.empty() );
+
 	json_decref(rootValue);
 
 	return object;
@@ -695,6 +763,8 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
 	dCtx.userData = serializer;
+	dCtx.walkCompositeFields = DeserializeFields;
+	dCtx.walkCompositeField = DeserializeField;
 
 	return serializer;
 }

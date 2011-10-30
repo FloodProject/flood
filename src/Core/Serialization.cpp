@@ -45,6 +45,7 @@ ReflectionContext::ReflectionContext()
 	, elementAddress(nullptr)
 	, walkComposite(WalkNull)
 	, walkCompositeField(WalkNull)
+	, walkCompositeFields(WalkNull)
 	, walkPrimitive(WalkNull)
 	, walkEnum(WalkNull)
 	, walkArray(WalkNull)
@@ -53,7 +54,8 @@ ReflectionContext::ReflectionContext()
 
 //-----------------------------------//
 
-static std::map<Class*, ReflectionHandleContext> gs_ReflectionHandleMap;
+typedef std::map<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
+static ReflectionHandleContextMap gs_ReflectionHandleMap;
 
 void ReflectionSetHandleContext(ReflectionHandleContext context)
 {
@@ -199,6 +201,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	}
 	else
 #endif
+
 	if(FieldIsRefPointer(field))
 	{
 		RefPtr<Object>* ref = (RefPtr<Object>*) address;
@@ -284,6 +287,24 @@ static void ReflectionWalkArray(ReflectionContext* context)
 
 //-----------------------------------//
 
+static ReflectionWalkFunction HandleFindSerializeFunction(Class* klass)
+{
+	if( !klass ) return nullptr;
+
+	ReflectionHandleContextMap::iterator it = gs_ReflectionHandleMap.find(klass);
+
+	if( it != gs_ReflectionHandleMap.end() )
+	{
+		ReflectionHandleContext* context = &it->second;
+		if( context->serialize ) return context->serialize;
+	}
+	
+	Class* parent = klass->parent;
+	return HandleFindSerializeFunction(parent);
+}
+
+//-----------------------------------//
+
 void ReflectionWalkCompositeField(ReflectionContext* context)
 {
 	const Field* field = context->field;
@@ -311,8 +332,14 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
-	// Check for custom field serialize functions.
-	if( field->serialize )
+	ReflectionWalkFunction handleSerialize = HandleFindSerializeFunction((Class*) field->type);
+
+	// Check for custom handle serialize functions.
+	if( FieldIsHandle(field) && handleSerialize )
+	{
+		handleSerialize(context, ReflectionWalkType::Element);
+	}
+	else if( field->serialize )
 	{
 		field->serialize(context, ReflectionWalkType::Element);
 	}
@@ -348,7 +375,7 @@ exit:
 
 //-----------------------------------//
 
-static void ReflectionWalkComposite(ReflectionContext* context)
+void ReflectionWalkComposite(ReflectionContext* context)
 {
 	bool isTopComposite = context->composite == context->objectClass;
 
@@ -358,8 +385,8 @@ static void ReflectionWalkComposite(ReflectionContext* context)
 	if( ClassHasParent(context->composite) )
 	{
 		Class* current = context->composite;
-		context->composite = ClassGetParent(current);
 		
+		context->composite = ClassGetParent(current);
 		ReflectionWalkComposite(context);
 		
 		context->composite = current;
@@ -456,6 +483,8 @@ bool SerializerSave(Serializer* serializer, Object* object)
 	
 	serializer->save(serializer, object);
 	StreamClose(serializer->stream);
+
+	serializer->object = nullptr;
 
 	return true;
 }

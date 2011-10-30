@@ -69,7 +69,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\jansson\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -190,11 +190,8 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
-    <ClCompile Include="..\..\src\Engine\Cube.cpp" />
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\Sphere.cpp" />
-    <ClCompile Include="..\..\src\Engine\Quad.cpp" />
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp" />
     <ClCompile Include="..\..\src\Engine\Window.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
@@ -207,6 +204,11 @@
     <ClCompile Include="..\..\src\Framework\Framework.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
+    <ClCompile Include="..\..\src\Geometry\BoundingBoxTree.cpp" />
+    <ClCompile Include="..\..\src\Geometry\Cube.cpp" />
+    <ClCompile Include="..\..\src\Geometry\GeometryBuffer.cpp" />
+    <ClCompile Include="..\..\src\Geometry\Quad.cpp" />
+    <ClCompile Include="..\..\src\Geometry\Sphere.cpp" />
     <ClCompile Include="..\..\src\GUI\Atlas.cpp" />
     <ClCompile Include="..\..\src\GUI\Console.cpp" />
     <ClCompile Include="..\..\src\GUI\Label.cpp" />
@@ -232,7 +234,7 @@
     <ClCompile Include="..\..\src\Render\FBO.cpp" />
     <ClCompile Include="..\..\src\Render\GL.cpp" />
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp" />
-    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp" />
+    <ClCompile Include="..\..\src\Render\GLSL_ShaderProgram.cpp" />
     <ClCompile Include="..\..\src\Render\IndexBuffer.cpp" />
     <ClCompile Include="..\..\src\Render\MeshManager.cpp" />
     <ClCompile Include="..\..\src\Render\Program.cpp" />
@@ -279,9 +281,12 @@
     <ClInclude Include="..\..\inc\Audio\Device.h" />
     <ClInclude Include="..\..\inc\Audio\Source.h" />
     <ClInclude Include="..\..\inc\Engine\API.h" />
+    <ClInclude Include="..\..\inc\Geometry\BoundingBoxTree.h" />
+    <ClInclude Include="..\..\inc\Geometry\GeometryBuffer.h" />
     <ClInclude Include="..\..\inc\Physics\btKinematicController.h" />
     <ClInclude Include="..\..\inc\Render\BufferManager.h" />
     <ClInclude Include="..\..\inc\Render\GL.h" />
+    <ClInclude Include="..\..\inc\Render\GLSL_ShaderProgram.h" />
     <ClInclude Include="..\..\inc\Render\MeshManager.h" />
     <ClInclude Include="..\..\inc\Render\Program.h" />
     <ClInclude Include="..\..\inc\Render\Render.h" />
@@ -293,7 +298,6 @@
     <ClInclude Include="..\..\inc\Paging\PageManager.h" />
     <ClInclude Include="..\..\inc\Render\Device.h" />
     <ClInclude Include="..\..\inc\Render\GLSL_Program.h" />
-    <ClInclude Include="..\..\inc\Render\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\Render\RenderQueue.h" />
     <ClInclude Include="..\..\inc\Render\Adapter.h" />
     <ClInclude Include="..\..\inc\Render\Buffer.h" />

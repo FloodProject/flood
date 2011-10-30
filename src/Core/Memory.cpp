@@ -34,6 +34,13 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+#ifdef ENABLE_REFERENCES_DEBUG
+
+static DebugReferenceDelegate gs_debugReferences;
+DebugReferenceDelegate& GetDebugReferences() { return gs_debugReferences; }
+
+#endif
+
 // Since all memory allocations must go through an allocator,
 // there needs to be a default allocator to allocate memory.
 

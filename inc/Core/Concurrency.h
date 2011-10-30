@@ -155,7 +155,7 @@ struct TaskPool
 
 API_CORE TaskPool*  TaskPoolCreate(Allocator*, int8 Size);
 API_CORE void       TaskPoolDestroy(TaskPool*);
-API_CORE void       TaskPoolAdd(TaskPool*, Task*);
+API_CORE void       TaskPoolAdd(TaskPool*, Task*, uint8 Priority);
 API_CORE void       TaskPoolUpdate(TaskPool*);
 
 typedef scoped_ptr<TaskPool, TaskPoolDestroy> TaskPoolPtr;

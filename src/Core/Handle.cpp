@@ -31,7 +31,7 @@ void HandleDestroyManager( HandleManager* man )
 
 	if( handles.size() > 0 )
 	{
-		LogAssert("Handle manager should not have any handles");
+		//LogAssert("Handle manager should not have any handles");
 		return;
 	}
 
