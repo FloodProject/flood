@@ -95,7 +95,7 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 	req.message = message;
 	req.session = session;
 	
-	messages.push(req);
+	messages.push_back(req);
 }
 
 //-----------------------------------//
@@ -106,7 +106,7 @@ bool Dispatcher::processMessage()
 {
 	MessageRequest req;
 	
-	if( !messages.try_pop(req) )
+	if( !messages.try_pop_front(req) )
 		return false;
 
 	const MessagePtr& message = req.message;
