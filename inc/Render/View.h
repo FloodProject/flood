@@ -34,6 +34,8 @@ public:
 
 	RenderView();
 	RenderView( const CameraPtr& );
+	
+	~RenderView();
 
 	// Gets the camera of the view.
 	GETTER(Camera, CameraPtr, weakCamera)
@@ -77,7 +79,7 @@ public:
 protected:
 
 	// Camera that will render into this view.
-	CameraPtr weakCamera;
+	Camera* weakCamera;
 
 	// Render target.
 	RenderTarget* target;

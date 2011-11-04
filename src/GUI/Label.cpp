@@ -40,7 +40,7 @@ void Label::init()
 	pMaterial->setDepthTest(false);
 	pMaterial->setBackfaceCulling(false);
 	pMaterial->setBlending( BlendSource::SourceAlpha, BlendDestination::One );
-	pMaterial->setProgram( "Tex" );
+	pMaterial->setShader( "Tex" );
 
 	isDirty = true;
 	setupDone = false;

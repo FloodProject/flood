@@ -10,8 +10,14 @@
 
 #ifdef ENABLE_IMPORTER_FBX
 
+// Workaround for macro conflict.
+#undef Allocate
+
 #define FBXSDK_SHARED
 #include <fbxsdk.h>
+
+#define Allocate(Type, Alloc, ...) \
+	AllocateConstruct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
 
 #if 0
 #include <kfbxsdkmanager.h>
@@ -117,7 +123,7 @@ bool ImporterFBX::decode(const Stream& stream, Resource* res)
 	Mesh* mesh = static_cast<Mesh*>(res);
 
 	// Loop through all the FBX meshes and convert them to our own format.
-	for (int i = 0; i < scene->GetSrcObjectCount(KFbxMesh::ClassId); i++) 
+	for(int i = 0; i < scene->GetSrcObjectCount(KFbxMesh::ClassId); i++) 
 	{ 
 		KFbxMesh* fbxMesh = (KFbxMesh*) scene->GetSrcObject(KFbxMesh::ClassId, i);
 		convertMesh(fbxMesh, mesh);
@@ -158,7 +164,7 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 	if( !fbxMesh->IsTriangleMesh() )
 	{
 		KFbxGeometryConverter converter(fbxSDK);
-		bool res = converter.TriangulateInPlace( fbxMesh->GetNode() );
+		bool res = converter.TriangulateInPlace(node);
 
 		if( !res )
 		{
@@ -169,10 +175,12 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 		fbxMesh = node->GetMesh();
 	}
 	
+	// Get the mesh position vertices.
 	int numControlPoints = fbxMesh->GetControlPointsCount();
 	if( numControlPoints == 0 ) return false;
 
 	KFbxVector4* positionValues = fbxMesh->GetControlPoints();
+	assert( positionValues != nullptr );
 
 	for( int i = 0; i < numControlPoints; i++ )
 	{
@@ -185,6 +193,20 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 		mesh->position.push_back(Vector3(x, y, z));
 	}
 
+	// Get the mesh texture coordinates.
+	KFbxLayerElementArrayTemplate<KFbxVector2>* uvValues = nullptr;
+	fbxMesh->GetTextureUV(&uvValues, KFbxLayerElement::eDIFFUSE_TEXTURES);
+	KFbxLayerElement::EMappingMode uvMapping =  KFbxLayerElement::eBY_POLYGON_VERTEX;
+
+	if(uvValues && uvValues->GetCount() > 0)
+	{
+
+	}
+
+	KFbxGeometryElement::EMappingMode lMaterialMappingMode = KFbxGeometryElement::eNONE;
+	bool hasMaterial = fbxMesh->GetElementMaterial();
+
+	// Get the mesh indices.
 	int numPolygons = fbxMesh->GetPolygonCount();
 
 	for( int subGroup = 0; subGroup < fbxMesh->GetLayerCount(); ++subGroup )
@@ -195,9 +217,10 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 
 		for( int iPolygon = 0; iPolygon < numPolygons; ++iPolygon )
 		{
-			assert( fbxMesh->GetPolygonSize(iPolygon) == 3 );
+			int iPolygonSize = fbxMesh->GetPolygonSize(iPolygon);
+			assert( iPolygonSize == 3 );
 
-			for( int iVertex = 0; iVertex < 3; ++iVertex )
+			for( int iVertex = 0; iVertex < iPolygonSize; ++iVertex )
 			{
 				int iControlPoint = fbxMesh->GetPolygonVertex(iPolygon, iVertex);
 				meshGroup.indices.push_back(iControlPoint);
@@ -206,6 +229,49 @@ bool ImporterFBX::convertMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 
 		mesh->groups.push_back(meshGroup);
 	}
+
+	// Mesh materials
+#if 0
+
+	if ()
+	{
+		lMaterialIndice = &pMesh->GetElementMaterial()->GetIndexArray();
+		lMaterialMappingMode = pMesh->GetElementMaterial()->GetMappingMode();
+		if (lMaterialIndice && lMaterialMappingMode == KFbxGeometryElement::eBY_POLYGON)
+		{
+			K_ASSERT(lMaterialIndice->GetCount() == lPolygonCount);
+			if (lMaterialIndice->GetCount() == lPolygonCount)
+			{
+				// Count the faces of each material
+				for (int lPolygonIndex = 0; lPolygonIndex < lPolygonCount; ++lPolygonIndex)
+				{
+					const int lMaterialIndex = lMaterialIndice->GetAt(lPolygonIndex);
+					if (mSubMeshes.GetCount() < lMaterialIndex + 1)
+					{
+						mSubMeshes.Resize(lMaterialIndex + 1);
+					}
+					if (mSubMeshes[lMaterialIndex] == NULL)
+					{
+						mSubMeshes[lMaterialIndex] = new SubMesh;
+					}
+					mSubMeshes[lMaterialIndex]->TriangleCount += 1;
+				}
+
+				// Record the offset (how many vertex)
+				const int lMaterialCount = mSubMeshes.GetCount();
+				int lOffset = 0;
+				for (int lIndex = 0; lIndex < lMaterialCount; ++lIndex)
+				{
+					mSubMeshes[lIndex]->IndexOffset = lOffset;
+					lOffset += mSubMeshes[lIndex]->TriangleCount * 3;
+					// This will be used as counter in the following procedures, reset to zero
+					mSubMeshes[lIndex]->TriangleCount = 0;
+				}
+				K_ASSERT(lOffset == lPolygonCount * 3);
+			}
+		}
+	}
+#endif
 
 	return true;
 }

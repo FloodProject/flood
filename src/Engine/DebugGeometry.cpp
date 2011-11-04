@@ -17,6 +17,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+static void SetupDebugVertexFormat(GeometryBuffer* gb);
+
 DebugDrawer::DebugDrawer()
 	: lines(nullptr)
 	, triangles(nullptr)
@@ -26,36 +28,109 @@ DebugDrawer::DebugDrawer()
 	MaterialHandle debug = MaterialCreate(alloc, "Debug");
 	
 	Material* mat = debug.Resolve();
+	mat->setBackfaceCulling(false);
 	mat->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
-	mat->setDepthTest(false);
-	mat->setDepthWrite(false);
+	mat->setDepthCompare( DepthCompare::LessOrEqual );
+	mat->setDepthOffset(Vector2(-1.0f, 1.0f));
 
+	//mat->setDepthRange( Vector2(0.1f, 0.9f) );
+	//mat->setDepthWrite(false);
+
+	// Lines
 	GeometryBufferPtr linesVB = AllocateThis(GeometryBuffer);
 	linesVB->setBufferAccess(BufferAccess::Write);
 	linesVB->setBufferUsage(BufferUsage::Dynamic);
+	SetupDebugVertexFormat(linesVB.get());
 
 	lines = RenderableCreate(alloc);
 	lines->setGeometryBuffer(linesVB);
+	lines->setPrimitiveType(PolygonType::Lines);
 	lines->setMaterial(debug);
 	lines->setRenderLayer(RenderLayer::PostTransparency);
+	renderables.push_back(lines.get());
 
+	// Triangles
 	GeometryBufferPtr trianglesVB = AllocateThis(GeometryBuffer);
 	trianglesVB->setBufferAccess(BufferAccess::Write);
 	trianglesVB->setBufferUsage(BufferUsage::Dynamic);
+	SetupDebugVertexFormat(trianglesVB.get());
 
 	triangles = RenderableCreate(alloc);
 	triangles->setGeometryBuffer(trianglesVB);
+	triangles->setPrimitiveType(PolygonType::Triangles);
 	triangles->setMaterial(debug);
 	triangles->setRenderLayer(RenderLayer::PostTransparency);
+	renderables.push_back(triangles.get());
+
+	// Quads
+	GeometryBufferPtr quadsVB = AllocateThis(GeometryBuffer);
+	quadsVB->setBufferAccess(BufferAccess::Write);
+	quadsVB->setBufferUsage(BufferUsage::Dynamic);
+	SetupDebugVertexFormat(quadsVB.get());
+
+	quads = RenderableCreate(alloc);
+	quads->setGeometryBuffer(quadsVB);
+	quads->setPrimitiveType(PolygonType::Quads);
+	quads->setMaterial(debug);
+	quads->setRenderLayer(RenderLayer::PostTransparency);
+	renderables.push_back(quads.get());
+
+	reset();
+}
+
+//-----------------------------------//
+
+DebugDrawer::~DebugDrawer()
+{
+
+}
+
+//-----------------------------------//
+
+static void SetupDebugVertexFormat(GeometryBuffer* gb)
+{
+	// Setup the vertex format.
+	gb->declarations.reset();
+
+	VertexElement elemPosition;
+	elemPosition.attribute = VertexAttribute::Position;
+	elemPosition.type = VertexType::Float;
+	elemPosition.components = 3;
+	gb->declarations.add(elemPosition);
+
+	VertexElement elemColor;
+	elemColor.attribute = VertexAttribute::Color;
+	elemColor.type = VertexType::Float;
+	elemColor.components = 4;
+	gb->declarations.add(elemColor);
+
+	gb->declarations.calculateStrides();
 }
 
 //-----------------------------------//
 
 void DebugDrawer::reset()
 {
-	lines->getGeometryBuffer()->clear();
-	triangles->getGeometryBuffer()->clear();
-	renderables.clear();
+	GeometryBuffer* linesGB = lines->getGeometryBuffer().get();
+	linesGB->clear();
+
+	GeometryBuffer* trianglesGB = triangles->getGeometryBuffer().get();
+	trianglesGB->clear();
+
+	GeometryBuffer* quadsGB = quads->getGeometryBuffer().get();
+	quadsGB->clear();
+
+	//renderables.clear();
+
+	currentColor = Color::White;
+	currentColor.a = 0.4f;
+}
+
+//-----------------------------------//
+
+void DebugDrawer::setColor( const Color& newColor )
+{
+	currentColor = newColor;
 }
 
 //-----------------------------------//
@@ -68,8 +143,7 @@ void DebugDrawer::drawBox( const BoundingBox& box )
 	if( box.isInfinite() )
 		return;
 
-	RenderablePtr rend = DebugBuildBoundingBox(box);
-	renderables.push_back(rend);
+	DebugUpdateBoudingBox(quads->getGeometryBuffer().get(), box, currentColor);
 }
 
 //-----------------------------------//
@@ -77,7 +151,7 @@ void DebugDrawer::drawBox( const BoundingBox& box )
 void DebugDrawer::drawRay( const Ray& ray, float length )
 {
 	RenderablePtr rend = DebugBuildRay(ray, length);
-	renderables.push_back(rend);
+	//renderables.push_back(rend);
 }
 
 //-----------------------------------//
@@ -85,7 +159,7 @@ void DebugDrawer::drawRay( const Ray& ray, float length )
 void DebugDrawer::drawFrustum( const Frustum& frustum )
 {
 	RenderablePtr rend = DebugBuildFrustum(frustum);
-	renderables.push_back(rend);
+	//renderables.push_back(rend);
 }
 
 //-----------------------------------//
@@ -96,15 +170,9 @@ void DebugDrawer::drawIcon( const Vector3& pos )
 
 //-----------------------------------//
 
-#define ADD_BOX_FACE( a, b, c, d )		\
-	pos.push_back( box.getCorner(a) );	\
-	pos.push_back( box.getCorner(b) );	\
-	pos.push_back( box.getCorner(c) );	\
-	pos.push_back( box.getCorner(d) );
-
 RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 {
-	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
 	
@@ -113,20 +181,35 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	mat->setBackfaceCulling( false );
 	//mat->setDepthRange( Vector2(0.1f, 0.9f) );
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	RenderablePtr renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
-	DebugUpdateBoudingBox(renderable, box);
+	DebugUpdateBoudingBox(gb.get(), box, Color::White);
 
 	return renderable;
 }
 
-void DebugUpdateBoudingBox( const RenderablePtr& rend, const BoundingBox& box )
+#define ADD_BOX_FACE( a, b, c, d ) \
+	vs[i++].pos = ( box.getCorner(a) ); \
+	vs[i++].pos = ( box.getCorner(b) ); \
+	vs[i++].pos = ( box.getCorner(c) ); \
+	vs[i++].pos = ( box.getCorner(d) );
+
+void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color color )
 {
-	std::vector<Vector3> pos;
+	struct Vertex
+	{
+		Vector3 pos;
+		Color color;
+	};
+
+	std::vector<Vertex> vs;
+	vs.resize(24);
+
+	size_t i = 0;
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
 	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
 	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
@@ -134,13 +217,12 @@ void DebugUpdateBoudingBox( const RenderablePtr& rend, const BoundingBox& box )
 	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
 	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
 
-	const int numColors = 6*4; // Faces*Vertices
-	std::vector<Vector3> colors( numColors, Color::White );
+	for(i = 0; i < vs.size(); i++)
+	{
+		vs[i].color = color;
+	}
 
-	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
-
-	gb->set( VertexAttribute::Position, pos );
-	gb->set( VertexAttribute::Color, colors );
+	gb->add((uint8*)vs.data(), vs.size()*sizeof(Vertex));
 
 	gb->forceRebuild();
 }
@@ -155,13 +237,13 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 	std::vector<Vector3> colors( 2, Color::Red );
 
-	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
 	gb->set( VertexAttribute::Position, vertex );
 	gb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	RenderablePtr renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
@@ -179,7 +261,7 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 	Material* material = materialHandle.Resolve();
 	material->setBackfaceCulling( false );
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	RenderablePtr renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
@@ -191,10 +273,10 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 
 //-----------------------------------//
 
-#define ADD_BOX_FRUSTUM( a, b, c, d )	\
-	pos.push_back( box.corners[a] );	\
-	pos.push_back( box.corners[b] );	\
-	pos.push_back( box.corners[c] );	\
+#define ADD_BOX_FRUSTUM( a, b, c, d ) \
+	pos.push_back( box.corners[a] ); \
+	pos.push_back( box.corners[b] ); \
+	pos.push_back( box.corners[c] ); \
 	pos.push_back( box.corners[d] );
 
 void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )

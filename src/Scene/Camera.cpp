@@ -29,6 +29,7 @@ REFLECT_CLASS_END()
 Camera::Camera()
 	: activeView(nullptr)
 	, frustumCulling(false)
+	, transform(nullptr)
 	, lookAtVector(Vector3::UnitZ)
 {
 }
@@ -43,16 +44,23 @@ Camera::~Camera()
 
 //-----------------------------------//
 
-void Camera::updateViewTransform()
+static Vector3 CalculateLookAtVector(Transform* transform)
 {
-	assert( transform != nullptr );
-
 	const Vector3& position = transform->getPosition();
 	const Quaternion& rotation = transform->getRotation();
 	
-	// Update the look-at vector.
+	// Calculate the transform forward vector.
 	Vector3 forward = Matrix4x3::createFromQuaternion(rotation) * Vector3::UnitZ;
-	lookAtVector = position + forward;
+	
+	return position + forward;
+}
+
+//-----------------------------------//
+
+void Camera::updateViewTransform()
+{
+	assert( transform != nullptr );
+	lookAtVector = CalculateLookAtVector(transform);
 	
 	// Update the view matrix.
 	viewMatrix = transform->lookAt( lookAtVector, Vector3::UnitY );
@@ -94,12 +102,15 @@ void Camera::update( float )
 
 	bool frustumUpdated = false;
 
+#if 0
 	if( !activeView )
 	{
 		RenderView* view = GetRenderDevice()->getActiveView();
 		setView(view);
+
 		frustumUpdated = true;
 	}
+#endif
 
 	if( !activeView || activeView->getSize() == Vector2i(0,0) )
 		return;
@@ -109,7 +120,7 @@ void Camera::update( float )
 	// Only run the following code once.
 	if( transform ) return;
 		
-	transform = getEntity()->getTransform();
+	transform = getEntity()->getTransform().get();
 	transform->onTransform.Connect( this, &Camera::onTransform );
 
 	// Update the view transform the first update.
@@ -145,17 +156,22 @@ void Camera::render( RenderBlock& block, bool clearView )
 	
 	RenderDevice* renderDevice = GetRenderDevice();
 
-	renderDevice->setView( activeView );
+	renderDevice->setActiveView( activeView );
 
 	if( clearView )
 		renderDevice->clearView();
+
+	block.renderables.insert(
+		block.renderables.begin(),
+		drawer.renderables.begin(),
+		drawer.renderables.end() );
 
 	renderDevice->render( block );
 }
 
 //-----------------------------------//
 
-void Camera::cull( RenderBlock& block, const EntityPtr& entity )
+void Camera::cull( RenderBlock& block, const Entity* entity )
 {
 	if( !entity ) return;
 
@@ -164,14 +180,14 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	
 	if( ClassInherits(klass, ReflectionGetType(Group)) )
 	{
-		const GroupPtr& group = RefCast<Group>(entity);
+		const Group* group = (Group*) entity;
 
 		const std::vector<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.
 		for( size_t i = 0; i < entities.size(); i++ )
 		{
-			const EntityPtr& child = entities[i];
+			const Entity* child = entities[i].get();
 			cull( block, child );
 		}
 
@@ -186,7 +202,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	if( !entity->isVisible() )
 		return;
 
-	const TransformPtr& transform = entity->getTransform();
+	const Transform* transform = entity->getTransform().get();
 	const BoundingBox& box = transform->getWorldBoundingVolume();
 
 	bool isCulled = !entity->getTag(Tags::NonCulled);
@@ -240,6 +256,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
 	assert( activeView != nullptr );
+	
 	Vector2i size = activeView->getSize();
 
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
@@ -261,7 +278,7 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 
 Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop, float screenBottom )
 {
-	const TransformPtr& transform = getEntity()->getTransform();
+	const Transform* transform = getEntity()->getTransform().get();
 	const Vector3& pos = transform->getPosition();
 
 	Frustum volume;

@@ -40,7 +40,7 @@ void Cube::create()
 	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 	
 	MaterialHandle mat = MaterialCreate(AllocatorGetHeap(), "Cube");
-	mat.Resolve()->setProgram("VertexColor");
+	mat.Resolve()->setShader("VertexColor");
 
 	RenderablePtr rend = RenderableCreate( AllocatorGetHeap() );
 	rend->setPrimitiveType(PolygonType::Quads);

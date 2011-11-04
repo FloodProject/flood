@@ -24,7 +24,15 @@ RenderTarget::RenderTarget()
 
 RenderTarget::~RenderTarget()
 {
+	if( !context ) return;
 
+	RenderDevice* renderDevice = GetRenderDevice();
+	
+	if( renderDevice->getActiveContext() == context )
+	{
+		// Remove the context from the render device.
+		renderDevice->setActiveContext(nullptr);
+	}
 }
 
 //-----------------------------------//
@@ -33,6 +41,7 @@ RenderView* RenderTarget::createView()
 {
 	RenderView* view = AllocateThis(RenderView);
 	view->setRenderTarget(this);
+	
 	views.push_back( view );
 	return view;
 }
@@ -41,9 +50,18 @@ RenderView* RenderTarget::createView()
 
 void RenderTarget::removeViews()
 {
+	RenderDevice* renderDevice = GetRenderDevice();
+
 	for( size_t i = 0; i < views.size(); i++ )
 	{
 		RenderView* view = views[i];
+
+		if( renderDevice->getActiveView() == view )
+		{
+			// Remove the active view from the render device.
+			renderDevice->setActiveView(nullptr);
+		}
+
 		Deallocate(view);
 	}
 
@@ -52,10 +70,10 @@ void RenderTarget::removeViews()
 
 //-----------------------------------//
 
-void RenderTarget::setContext(RenderContext* context)
+void RenderTarget::setContext(RenderContext* newContext)
 {
-	this->context = context;
-	this->context->mainTarget = this;
+	context = newContext;
+	context->mainTarget = this;
 }
 
 //-----------------------------------//

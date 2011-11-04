@@ -64,7 +64,7 @@ void Projector::update(float)
 
 //-----------------------------------//
  
-void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& transform )
+void Projector::appendRenderables( RenderQueue& queue, const Transform* transform )
 {
 	if( !geometry ) return;
 

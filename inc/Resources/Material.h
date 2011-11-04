@@ -194,6 +194,9 @@ public:
 	// Gets/sets the depth range of the material.
 	ACESSOR(DepthRange, Vector2, depthRange)
 
+	// Gets/sets the depth offset of the material.
+	ACESSOR(DepthOffset, Vector2, depthOffset)
+
 	// Gets/sets the alpha testing of the material.
 	ACESSOR(AlphaTest, bool, alphaTest)
 
@@ -252,6 +255,7 @@ public:
 	bool depthTest;
 	bool depthWrite;
 	Vector2 depthRange;
+	Vector2 depthOffset;
 
 	// Alpha settings.
 	bool alphaTest;

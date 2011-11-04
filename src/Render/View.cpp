@@ -19,6 +19,7 @@ NAMESPACE_ENGINE_BEGIN
 RenderView::RenderView()
 	: depthPriority(0)
 	, target(nullptr)
+	, weakCamera(nullptr)
 {
 	setClearColor( Color::White );
 }
@@ -35,15 +36,21 @@ RenderView::RenderView( const CameraPtr& camera )
 
 //-----------------------------------//
 
+RenderView::~RenderView()
+{
+	if( !weakCamera ) return;
+	weakCamera->setView(nullptr);
+}
+
+//-----------------------------------//
+
 void RenderView::handleRenderTargetResize()
 {
 	//size = target->getSettings().getSize();
 	#pragma TODO("Views need to be updated when render targets change")
 	
 	const CameraPtr& camera = weakCamera;
-
-	if( !camera )
-		return;
+	if( !camera ) return;
 
 	camera->updateFrustum();
 }
@@ -88,7 +95,9 @@ float RenderView::getAspectRatio() const
 
 void RenderView::setCamera( const CameraPtr& camera )
 {
-	weakCamera = camera;
+	weakCamera = camera.get();
+	if( !weakCamera ) return;
+
 	onCameraChanged(camera);
 }
 

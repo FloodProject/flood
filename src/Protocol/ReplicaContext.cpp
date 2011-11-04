@@ -9,6 +9,7 @@
 #include "Protocol/API.h"
 #include "Protocol/ReplicaContext.h"
 #include "Protocol/ReplicaMessages.h"
+#include "Core/Log.h"
 #include "Core/SerializationHelpers.h"
 #include "Network/Session.h"
 #include "Network/Host.h"

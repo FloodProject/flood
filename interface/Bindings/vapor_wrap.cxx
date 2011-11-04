@@ -12585,7 +12585,7 @@ static int _wrap_Geometry_appendRenderables(lua_State* L) {
     SWIG_fail_ptr("Geometry_appendRenderables",3,SWIGTYPE_p_vapor__RefPtrT_vapor__Transform_t);
   }
   
-  (arg1)->appendRenderables(*arg2,(TransformPtr const &)*arg3);
+  (arg1)->appendRenderables(*arg2,(Transform* const &)*arg3);
   
   return SWIG_arg;
   
@@ -13601,7 +13601,7 @@ static int _wrap_Camera_cull(lua_State* L) {
     SWIG_fail_ptr("Camera_cull",3,SWIGTYPE_p_vapor__RefPtrT_vapor__Entity_t);
   }
   
-  (arg1)->cull(*arg2,(EntityPtr const &)*arg3);
+  (arg1)->cull(*arg2,(Entity* const &)*arg3);
   
   return SWIG_arg;
   

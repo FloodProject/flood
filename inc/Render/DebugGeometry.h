@@ -54,11 +54,13 @@ public:
 	// Cleans up all the stored geometry.
 	void reset();
 
+	Color currentColor;
+
 	RenderablePtr lines;
 	RenderablePtr triangles;
 	RenderablePtr quads;
 
-	std::vector<RenderablePtr> renderables;
+	std::vector<Renderable*> renderables;
 };
 
 namespace DebugDrawFlags
@@ -75,7 +77,7 @@ class GeometryBuffer;
 API_ENGINE RenderablePtr DebugBuildBoundingBox( const BoundingBox& box );
 
 // Updates the debug geometry of a bounding box.
-API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox& box );
+API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox&, Color );
 
 // Builds debug geometry of a ray.
 API_ENGINE RenderablePtr DebugBuildRay( const Ray& pickRay, float length );

@@ -205,19 +205,16 @@ static void BuildQueryResult( RayTriangleQueryResult& res, const Ray& ray,
 {
 	res.trianglePosition[0] = pos[0];
 	res.trianglePosition[1] = pos[1];
-	res.trianglePosition[1] = pos[2];
+	res.trianglePosition[2] = pos[2];
 
 	res.triangleUV[0] = tex[0];
 	res.triangleUV[1] = tex[1];
 	res.triangleUV[2] = tex[2];
 
 	res.intersectionLocal = ray.getPoint(t);
-	res.intersectionWorld = 
 
 	res.intersectionUV.x = u;
 	res.intersectionUV.y = v;
-
-	res.distance = t;
 }
 
 //-----------------------------------//
@@ -409,6 +406,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 				res.entity = entity;
 				res.geometry = geo;
 				res.renderable = rend;
+				res.distance = (ray.origin - res.intersectionWorld).lengthSquared();
 
 				return true;
 			}

@@ -43,7 +43,7 @@ public:
 	RenderableVector getRenderables();
 
 	// Appends all the renderables of this geometry to the queue.
-	virtual void appendRenderables( RenderQueue& queue, const TransformPtr& transform );
+	virtual void appendRenderables( RenderQueue& queue, const Transform* transform );
 
 	// Updates the geometry bounds if needed.
 	virtual void updateBounds();

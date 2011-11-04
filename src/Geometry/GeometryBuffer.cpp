@@ -95,12 +95,7 @@ uint8 VertexDeclaration::getVertexSize() const
 	for(size_t i = 0; i < decls.size(); i++)
 	{
 		const VertexElement& elem = decls[i];
-
-		// If there is no stride, the elements are tightly packed.
-		if(elem.stride == 0) continue;
-
-		int size = GetVertexTypeSize(elem.type);
-		totalSize += size * elem.components;
+		totalSize += elem.getSize();
 	}
 
 	return totalSize;
@@ -116,16 +111,29 @@ uint8 VertexDeclaration::getOffset(VertexAttribute::Enum attribute) const
 	{
 		const VertexElement& elem = decls[i];
 
+		if(elem.attribute == attribute) return totalOffset;
+
 		// If there is no stride, the elements are tightly packed.
 		if(elem.stride == 0) continue;
 
-		int size = GetVertexTypeSize(elem.type);
-		totalOffset += size * elem.components;
-
-		if(elem.attribute == attribute) return totalOffset;
+		totalOffset += elem.getSize();
 	}
 
 	return totalOffset;
+}
+
+//-----------------------------------//
+
+void VertexDeclaration::calculateStrides()
+{
+	uint8 vertexSize = getVertexSize();
+
+	for(size_t i = 0; i < decls.size(); ++i)
+	{
+		VertexElement& elem = decls[i];
+		elem.stride = vertexSize;
+		elem.offset = getOffset(elem.attribute);
+	}
 }
 
 //-----------------------------------//

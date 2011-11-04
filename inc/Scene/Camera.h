@@ -49,7 +49,7 @@ public:
 	void render( RenderBlock& block, bool clearView = true );
 
 	// Performs hierarchical frustum culling on the nodes in the scene.
-	void cull( RenderBlock& queue, const EntityPtr& node );
+	void cull( RenderBlock& queue, const Entity* entity );
 
 	// Gets the look-at vector of the camera.
 	GETTER(LookAtVector, const Vector3&, lookAtVector)
@@ -105,7 +105,7 @@ protected:
 	Matrix4x3 viewMatrix;
 
 	// Pointer to the camera node transform.
-	TransformPtr transform;
+	Transform* transform;
 
 	// Last view active the camera.
 	RenderView* activeView;

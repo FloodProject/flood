@@ -83,11 +83,11 @@ public:
 	// Renders a list of renderables.
 	void render( RenderBlock& queue );
 
-	// Sets the active view.
-	void setView( RenderView* view );
+	// Gets the current rendering pipeline.
+	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
 
-	// Clears the active render target.
-	void clearView();
+	// Gets the texture manager.
+	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
@@ -96,17 +96,17 @@ public:
 	GETTER(RenderTarget, RenderTarget*, activeTarget)
 	void setRenderTarget(RenderTarget* target);
 
-	// Gets the current rendering pipeline.
-	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
-
-	// Gets the texture manager.
-	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
-
-	// Gets the active context.
-	GETTER(ActiveContext, RenderContext*, activeContext)
+	// Gets/sets the active context.
+	ACESSOR(ActiveContext, RenderContext*, activeContext)
 
 	// Gets the active view.
 	GETTER(ActiveView, RenderView*, activeView)
+	
+	// Sets the active view.
+	void setActiveView( RenderView* view );
+
+	// Clears the active render view.
+	void clearView();
 
 	// Returns true if device is using fixed pipeline.
 	bool isFixedPipeline() const;

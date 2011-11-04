@@ -65,7 +65,6 @@ void RenderDeinitialize()
 	AllocatorDestroy(gs_RenderAllocator);
 };
 
-
 //-----------------------------------//
 
 RenderDevice::RenderDevice()
@@ -357,9 +356,12 @@ void RenderDevice::render(Renderable* renderable)
 	if( !gb->isIndexed() )
     {
 		uint32 numVertices = gb->getSizeVertices();
-
-		glDrawArrays( type, 0, numVertices );
- 		CheckLastErrorGL("Error drawing vertex buffer");
+		
+		if( numVertices )
+		{
+			glDrawArrays( type, 0, numVertices );
+ 			CheckLastErrorGL("Error drawing vertex buffer");
+		}
     }
     else
     {
@@ -659,6 +661,12 @@ void RenderDevice::setupRenderStateMaterial( const RenderState& state, bool bind
 	if( mat->depthRange != Vector2::UnitY )
 		glDepthRange( mat->depthRange.x, mat->depthRange.y );
 
+	if( mat->depthOffset != Vector2::Zero )
+	{
+		glPolygonOffset( mat->depthOffset.x, mat->depthOffset.y );
+		glEnable(GL_POLYGON_OFFSET_FILL);
+	}
+
 	if( !mat->cullBackfaces )
 		glDisable( GL_CULL_FACE );
 
@@ -697,6 +705,12 @@ void RenderDevice::undoRenderStateMaterial( Material* mat )
 	if( mat->depthRange != Vector2::UnitY )
 		glDepthRange(0, 1);
 
+	if( mat->depthOffset != Vector2::Zero )
+	{
+		glPolygonOffset( 0, 0 );
+		glDisable(GL_POLYGON_OFFSET_FILL);
+	}
+
 	if( !mat->depthTest )
 		glEnable( GL_DEPTH_TEST );
 
@@ -714,11 +728,11 @@ void RenderDevice::undoRenderStateMaterial( Material* mat )
 
 //-----------------------------------//
 
-void RenderDevice::setView( RenderView* view )
+void RenderDevice::setActiveView( RenderView* view )
 {
-	if( !view ) return;
-
 	activeView = view;
+
+	if( !activeView ) return;
 
 	activeContext->setClearColor( view->getClearColor() );
 
@@ -742,12 +756,11 @@ void RenderDevice::clearView()
 
 void RenderDevice::setRenderTarget(RenderTarget* target)
 {
-	if( !target || target == activeTarget )
-		return;
-
 	activeTarget = target;
-	activeTarget->makeCurrent();
 
+	if( !activeTarget ) return;
+
+	activeTarget->makeCurrent();
 	activeContext = activeTarget->getContext();
 }
 

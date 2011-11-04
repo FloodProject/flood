@@ -72,7 +72,7 @@ public:
 	SETTER(Parent, Entity*, parent)
 
 	// Gets the tag of the entity.
-	bool getTag( int32 index );
+	bool getTag( int32 index ) const;
 
 	// Sets the tag of the entity.
 	void setTag( int32 index, bool state );

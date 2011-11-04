@@ -304,7 +304,7 @@ bool Entity::isVisible() const
 
 //-----------------------------------//
 
-bool Entity::getTag(int32 index)
+bool Entity::getTag(int32 index) const
 {
 	return GetBitFlag(tags, (1 << index));
 }

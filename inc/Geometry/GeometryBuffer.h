@@ -107,6 +107,9 @@ struct API_RENDER VertexDeclaration
 	// Returns the size of a vertex.
 	uint8 getVertexSize() const;
 
+	// Calculates the strides of the elements.
+	void calculateStrides();
+
 	std::vector<VertexElement> decls;
 };
 

@@ -63,6 +63,8 @@ Material::Material( const Material& rhs )
 	, depthCompare(rhs.depthCompare)
 	, depthTest(rhs.depthTest)
 	, depthWrite(rhs.depthWrite)
+	, depthRange(rhs.depthRange)
+	, depthOffset(rhs.depthOffset)
 	, lineSmooth(rhs.lineSmooth)
 	, lineWidth(rhs.lineWidth)
 	, source(rhs.source)
@@ -89,6 +91,7 @@ void Material::init()
 	depthRange = Vector2::UnitY;
 	depthTest = true;
 	depthWrite = true;
+	depthOffset = Vector2::Zero;
 	lineSmooth = false;
 	cullBackfaces = true;
 	lineWidth = DefaultLineWidth;

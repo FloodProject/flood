@@ -39,7 +39,7 @@ RenderableVector Geometry::getRenderables()
 
 //-----------------------------------//
  
-void Geometry::appendRenderables( RenderQueue& queue, const TransformPtr& transform )
+void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform )
 {
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 

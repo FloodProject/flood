@@ -187,12 +187,6 @@ void Transform::updateBoundingVolume()
 		bounds.setZero();
 
 	needsBoundsUpdate = false;
-
-	// Update debug renderable.
-	if( !debugRenderable) 
-		debugRenderable = DebugBuildBoundingBox( bounds );
-	else
-		DebugUpdateBoudingBox(debugRenderable->getGeometryBuffer().get(), bounds);
 }
 
 //-----------------------------------//

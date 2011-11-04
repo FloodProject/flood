@@ -10,6 +10,7 @@
 #include "Protocol/ReplicaMessages.h"
 #include "Network/MessageHandlers.h"
 #include "Core/Object.h"
+#include "Core/Log.h"
 #include "Core/SerializationHelpers.h"
 
 NAMESPACE_PROTOCOL_BEGIN
