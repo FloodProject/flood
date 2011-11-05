@@ -21,18 +21,18 @@ public:
 	GizmoTranslate( const EntityPtr&, const CameraWeakPtr& );
 
 	// Builds the gizmo geometry.
-	virtual void buildGeometry();
+	void buildGeometry() OVERRIDE;
 
 	// Converts a color to a specific gizmo axis.
-	virtual GizmoAxis::Enum getAxis(Color&);
+	GizmoAxis::Enum getAxis(Color&) OVERRIDE;
 
 protected:
 
 	// Highlights an axis to provide visual feedback of handle selection.
-	virtual void highlightAxis( GizmoAxis::Enum, bool highlight );
+	void highlightAxis( GizmoAxis::Enum, bool highlight ) OVERRIDE;
 
 	// Generates the cone geometry.
-	VertexBufferPtr generateCones();
+	GeometryBufferPtr generateCones();
 
 	// Generates solid cone geometry for the gizmo arrows.
 	void generateSolidCone( float base, float height, uint slices,
@@ -42,10 +42,10 @@ protected:
 	void generateColors( std::vector<Vector3>& colors, const Color& c );
 
 	// Lines geometry.
-	VertexBufferPtr lines;
+	GeometryBufferPtr lines;
 
 	// Cones geometry.
-	VertexBufferPtr cones;
+	GeometryBufferPtr cones;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoTranslate );

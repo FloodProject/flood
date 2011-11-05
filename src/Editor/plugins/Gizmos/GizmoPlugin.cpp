@@ -109,70 +109,82 @@ void GizmoPlugin::reset()
 
 	isGizmoPicked = false;
 	op = nullptr;
+
+	axis = GizmoAxis::None;
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onToolSelect( int id )
 {
-	tool = (GizmoTool::Enum) id;
+	SelectionManager* selectionManager = getSelections();
+	if( !selectionManager ) return;
 
 	// Simulate an object selection event when this tool is selected.
-	SelectionOperation* selection = getSelections()->getSelection();
-	onSelection(selection);
+	const SelectionCollection& selections = selectionManager->getSelections();
+	onSelection(selections);
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onToolUnselect( int id )
 {
-	SelectionOperation* selection = getSelections()->getSelection();
-	onDeselection(selection);
+	SelectionManager* selectionManager = getSelections();
+	if( !selectionManager ) return;
+
+	const SelectionCollection& selections = selectionManager->getSelections();
+	onDeselection(selections);
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onSelection( SelectionOperation* selection )
+void GizmoPlugin::onSelection( const SelectionCollection& collection )
 {
-	if( !selection ) return;
-	if( selection->mode == SelectionMode::None ) return;
+	if( collection.isEmpty() ) return;
 
-	const std::vector<SelectionData>& selections = selection->selections;
-	bool isGroup = selections.size() > 1;
+	const SelectionsVector& selections = collection.selections;
 
 	for( size_t i = 0; i < selections.size(); i++ )
 	{
 		const SelectionData& data = selections[i];
 
-		switch(selection->mode)
+		switch(data.mode)
 		{
 		case SelectionMode::Entity:
+		{
 			onEntityUnselect( data.entity );
 			onEntitySelect( data.entity );
 			break;
+		}
+		default:
+			LogDebug("Unsupported selection mode");
+			continue;
 		}
 	}
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onDeselection( SelectionOperation* selection )
+void GizmoPlugin::onDeselection( const SelectionCollection& collection )
 {
-	if( !selection ) return;
-	if( selection->mode == SelectionMode::None ) return;
+	if( collection.isEmpty() ) return;
 
-	const std::vector<SelectionData>& selections = selection->selections;
-	bool isGroup = selections.size() > 1;
+	const SelectionsVector& selections = collection.selections;
 
 	for( size_t i = 0; i < selections.size(); i++ )
 	{
 		const SelectionData& data = selections[i];
 
-		switch(selection->mode)
+		switch(data.mode)
 		{
 		case SelectionMode::Entity:
+		{
 			onEntityUnselect( data.entity );
 			break;
+		}
+		default:
+			LogDebug("Unsupported selection mode");
+			continue;
 		}
 	}
 }
@@ -188,7 +200,7 @@ void GizmoPlugin::onSceneUnload(const ScenePtr&)
 
 void GizmoPlugin::onEntitySelect( const EntityPtr& entity )
 {
-	if( isTool(GizmoTool::Camera) )
+	if( IsToolSelected(GizmoTool::Camera) )
 		return;
 	
 	bool gizmoExists = gizmos.find(entity) != gizmos.end();
@@ -209,25 +221,18 @@ void GizmoPlugin::onEntityUnselect( const EntityPtr& entity )
 
 //-----------------------------------//
 
-Plane GizmoPlugin::getGizmoPickPlane()
+Plane GizmoPlugin::getGizmoPickPlane(const Ray& ray)
 {
-	const EntityPtr entityObject( op->weakEntity );
-	const TransformPtr& transObject = entityObject->getTransform();
-
+	const EntityPtr entity = op->weakEntity;
+	const TransformPtr& transform = entity->getTransform();
+	
+	Vector3 gizmoPosition = transform->getPosition();
 	Vector3 gizmoAxis = gizmo->getAxisVector(op->axis);
-	Vector3 gizmoPosition = transObject->getPosition();
 	
-	Plane planeX( Vector3::UnitX, gizmoPosition.x );
-	Plane planeY( Vector3::UnitY, gizmoPosition.y );
-	Plane planeZ( Vector3::UnitZ, gizmoPosition.z );
+	Plane planeX( Vector3::UnitX, gizmoPosition );
+	Plane planeY( Vector3::UnitY, gizmoPosition );
+	Plane planeZ( Vector3::UnitZ, gizmoPosition );
 
-	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* renderView = document->viewframe->getView();
-	const CameraPtr& camera = renderView->getCamera(); 
-	
-	Vector2i viewCenter = renderView->getSize() / 2.0f;
-	Ray ray = camera->getRay(viewCenter.x, viewCenter.y);
-	
 	float lengthX = planeX.project(ray.direction).lengthSquared();
 	float lengthY = planeY.project(ray.direction).lengthSquared();
 	float lengthZ = planeZ.project(ray.direction).lengthSquared();
@@ -245,11 +250,9 @@ Plane GizmoPlugin::getGizmoPickPlane()
 bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 	
-
-	Plane pickPlane = getGizmoPickPlane();	
+	const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
 	Ray ray = camera->getRay(x, y);
-	
+
 	float distance;
 	
 	if( !pickPlane.intersects(ray, distance) )
@@ -266,7 +269,7 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 {
 	if( !gizmo ) return;
 
-	if( isTool(GizmoTool::Camera) )
+	if( IsToolSelected(GizmoTool::Camera) )
 		return;
 
 	// To check if the user picked a gizmo we use two hit test techniques.
@@ -319,22 +322,21 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	if( !getGizmoPickPoint(dragEvent.x, dragEvent.y, pickPoint) )
 		return;
 
+	Vector3 pickDelta = pickPoint - firstPickPoint;
+
 	Vector3 pickAxis = gizmo->getAxisVector(op->axis);
-	Vector3 pickOffset = pickAxis.project(pickPoint - firstPickPoint);
+	Vector3 pickOffset = pickAxis.project(pickDelta);
 
 	const EntityPtr entityObject( op->weakEntity );
 	const TransformPtr& transObject = entityObject->getTransform();
 	
-	if( isTool(GizmoTool::Translate) )
+	if( IsToolSelected(GizmoTool::Translate) )
 	{
 		const Vector3& position = transObject->getPosition();
-		transObject->setPosition( position + (pickPoint - firstPickPoint)*pickAxis );
+		transObject->setPosition( position + pickOffset*pickAxis );
 	}
 
 	firstPickPoint = pickPoint;
-
-	//else if( isTool(GizmoTool::Scale) )
-		//transObject->scale( Vector3(1, 1, 1)+unit*0.05f );
 
 	op->scale = transObject->getScale();
 	op->rotation = transObject->getRotation();
@@ -347,8 +349,10 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 
 void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
-	if( isTool(GizmoTool::Camera) )
-		return;
+	if( IsToolSelected(GizmoTool::Camera) ) return;
+
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
+	sceneDocument->getRenderWindow()->setCursorCapture(true);
 
 	if( mbe.button != MouseButton::Left )
 		return;
@@ -356,6 +360,13 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	if( gizmo && gizmo->isAnyAxisSelected() )
 	{
 		isGizmoPicked = true;
+
+		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+		const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
+		
+		Ray ray = camera->getRay(mbe.x, mbe.y);
+		pickPlane = getGizmoPickPlane(ray);
+
 		getGizmoPickPoint(mbe.x, mbe.y, firstPickPoint);
 		return;
 	}
@@ -367,6 +378,11 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 {
+	if( IsToolSelected(GizmoTool::Camera) ) return;
+
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
+	sceneDocument->getRenderWindow()->setCursorCapture(false);
+
 	isGizmoPicked = false;
 
 	if( !op ) goto select;
@@ -394,19 +410,19 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	assert( gizmos.find(entity) == gizmos.end() );
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* view = document->viewframe->getView();
+	RenderView* view = document->sceneWindow->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
 
 	// Create new Gizmo for the entity.
-	if( isTool(GizmoTool::Translate) )
+	if( IsToolSelected(GizmoTool::Translate) )
 		newGizmo = new GizmoTranslate(entity, camera);
 
-	else if( isTool(GizmoTool::Rotate) )
+	else if( IsToolSelected(GizmoTool::Rotate) )
 		newGizmo = new GizmoRotate(entity, camera);
 
-	else if( isTool(GizmoTool::Scale) )
+	else if( IsToolSelected(GizmoTool::Scale) )
 		newGizmo = new GizmoScale(entity, camera);
 
 	else assert( 0 && "Unknown gizmo tool" );
@@ -419,7 +435,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	entityGizmo->setName("Gizmo");
 	entityGizmo->addTransform();
 	entityGizmo->addComponent(gizmo);
-	document->editorScene->add(entityGizmo);
+	document->editorScene->entities.add(entityGizmo);
 
 	gizmo->updatePositionScale();
 	
@@ -442,7 +458,7 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 	
 	// Remove the gizmo.
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	document->editorScene->remove(entityGizmo);
+	document->editorScene->entities.remove(entityGizmo);
 	
 	gizmos.erase(it);
 	gizmo = nullptr;
@@ -453,7 +469,7 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* view = document->viewframe->getView();
+	RenderView* view = document->sceneWindow->getView();
 	Vector2i size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
@@ -473,7 +489,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enu
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewframe->getView()->getCamera();
+	const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -503,7 +519,7 @@ void GizmoPlugin::createOperation()
 	op = AllocateThis(GizmoOperation);
 	op->description = "Entity transform";
 
-	op->tool = tool;
+	op->tool = (GizmoTool::Enum) GetEditor().getEventManager()->getCurrentToolId();
 	op->axis = axis;
 	op->gizmo = gizmo;
 	op->weakEntity = entityObject;
@@ -511,13 +527,6 @@ void GizmoPlugin::createOperation()
 	op->prevTranslation = transObject->getPosition();
 	op->prevScale = transObject->getScale();
 	op->prevRotation = transObject->getRotation();
-}
-
-//-----------------------------------//
-
-bool GizmoPlugin::isTool(GizmoTool::Enum mode)
-{
-	return mode == tool;
 }
 
 //-----------------------------------//

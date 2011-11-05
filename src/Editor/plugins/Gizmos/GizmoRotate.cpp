@@ -28,7 +28,7 @@ void GizmoRotate::buildGeometry()
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Lines);
-	renderable->setVertexBuffer(lines);
+	renderable->setGeometryBuffer(lines);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
 	renderable->setRenderPriority(100);
@@ -50,7 +50,7 @@ static void TransformVertices(std::vector<Vector3>& pos,
 
 static const byte SLICES = 32;
 
-VertexBufferPtr GizmoRotate::generateCircles()
+GeometryBufferPtr GizmoRotate::generateCircles()
 {
 	// Vertex data
 	std::vector< Vector3 > pos;
@@ -93,28 +93,26 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	}
 
 	// Vertex buffer setup
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
 
 	assert( pos.size() == colors.size() );
 
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
 	
-	return vb;
+	return gb;
 }
 
 //-----------------------------------//
 
 void GizmoRotate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 {
-	std::vector<Vector3>& colors =
-		lines->getAttribute( VertexAttribute::Color );
-
 	Color c = (highlight) ? Color::White : getAxisColor(axis);
 
-	for( int i = SLICES*2*axis; i < SLICES*2*(axis+1);  i++ )
+	for( int i = SLICES*2*axis; i < SLICES*2*(axis+1); i++ )
 	{
-		colors[i] = c;
+		Vector3* color = (Vector3*) lines->getAttribute( VertexAttribute::Color, i );
+		*color = c;
 	}
 
 	lines->forceRebuild();

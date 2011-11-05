@@ -30,7 +30,7 @@ void GizmoTranslate::buildGeometry()
 	
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Lines);
-	renderable->setVertexBuffer(lines);
+	renderable->setGeometryBuffer(lines);
 	renderable->setMaterial(material);
 
 	addRenderable(renderable);
@@ -39,7 +39,7 @@ void GizmoTranslate::buildGeometry()
 	
 	renderable = Allocate(Renderable, AllocatorGetHeap());
 	renderable->setPrimitiveType(PolygonType::Triangles);
-	renderable->setVertexBuffer(cones);
+	renderable->setGeometryBuffer(cones);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
 	renderable->setRenderPriority(100);
@@ -67,26 +67,27 @@ GizmoAxis::Enum GizmoTranslate::getAxis(Color& pickColor)
 
 void GizmoTranslate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 {
-	std::vector<Vector3>& colors =
-		lines->getAttribute( VertexAttribute::Color );
-	assert( colors.size() == 6 ); // 2 vertices * 3 lines
+	uint32 sizeColors = lines->getSizeVertices();
+	assert( sizeColors == 6 ); // 2 vertices * 3 lines
 	
 	Color c = (highlight) ? Color::White : getAxisColor(axis);
 
-	uint i = axis*2;
+	uint start = axis*2;
 
-	colors[i] = c;
-	colors[i+1] = c;
+	for( size_t i = start; i < start+2; i++ )
+	{
+		Vector3* color = (Vector3*) lines->getAttribute( VertexAttribute::Color, i );
+		*color = c;
+	}
 
 	lines->forceRebuild();
 }
 
 //-----------------------------------//
 
-static void TransformVertices(std::vector<Vector3>& pos,
-					   std::vector<Vector3>& vs, Matrix4x3& transform)
+static void TransformVertices(std::vector<Vector3>& pos, std::vector<Vector3>& vs, Matrix4x3& transform)
 {
-	for( uint i = 0; i < vs.size(); i++ )
+	for( size_t i = 0; i < vs.size(); i++ )
 	{
 		const Vector3& v = vs[i];
 		pos.push_back( transform*v );
@@ -95,10 +96,9 @@ static void TransformVertices(std::vector<Vector3>& pos,
 
 static const byte SLICES = 10;
 
-VertexBufferPtr GizmoTranslate::generateCones()
+GeometryBufferPtr GizmoTranslate::generateCones()
 {
-
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
 
 	// Unit cone vertex data
 	std::vector< Vector3 > cone;
@@ -130,10 +130,10 @@ VertexBufferPtr GizmoTranslate::generateCones()
 	generateColors( colors, Z );
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
 
-	return vb;
+	return gb;
 }
 
 //-----------------------------------//

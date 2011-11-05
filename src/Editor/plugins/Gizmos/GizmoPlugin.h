@@ -35,6 +35,8 @@ namespace GizmoTool
 typedef std::map<EntityPtr, EntityPtr> GizmoMap;
 typedef std::pair<const EntityPtr, EntityPtr> GizmoMapPair;
 
+struct SelectionCollection;
+
 REFLECT_DECLARE_CLASS(GizmoPlugin)
 
 class GizmoPlugin : public EditorPlugin
@@ -69,16 +71,13 @@ public:
 	void onToolUnselect( int id ) OVERRIDE;
 
 	// Selection events.
-	void onSelection( SelectionOperation* );
-	void onDeselection( SelectionOperation* );
+	void onSelection( const SelectionCollection& );
+	void onDeselection( const SelectionCollection& );
 
 protected:
 
 	// Gets the selections manager.
 	SelectionManager* getSelections();
-
-	// Checks if the passed tool is the current one.
-	bool isTool(GizmoTool::Enum mode);
 
 	// Creates/removes a new gizmo for the given node.
 	void createGizmo( const EntityPtr& node );
@@ -94,19 +93,19 @@ protected:
 	bool pickImageTest( const MouseMoveEvent& event, GizmoAxis::Enum& axis );
 
 	// Gets the best plane for pick intersection.
-	Plane getGizmoPickPlane();
+	Plane getGizmoPickPlane(const Ray&);
 
 	// Gets the point picked on the intersection plane.
 	bool getGizmoPickPoint(int x, int y, Vector3& pickPoint);
-
-	// Current Gizmo tool.
-	GizmoTool::Enum tool;
 
 	// Current Gizmo geometry.
 	Gizmo* gizmo;
 
 	// Current Gizmo axis selection.
 	GizmoAxis::Enum axis;
+
+	// Gizmo picking plane.
+	Plane pickPlane;
 
 	// Associates the object nodes to the gizmos nodes.
 	GizmoMap gizmos;

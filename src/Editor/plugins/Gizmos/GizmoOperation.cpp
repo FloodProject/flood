@@ -42,13 +42,13 @@ void GizmoOperation::redo()
 
 void GizmoOperation::process( bool undo )
 {
-	EntityPtr node( weakEntity );
+	EntityPtr entity( weakEntity );
 
 	// This can happen if the node gets deleted between
 	// the operation registration and the undo/redo action.
-	if( !node ) return;
+	if( !entity ) return;
 
-	TransformPtr transform = node->getTransform();
+	Transform* transform = entity->getTransform().get();
 	
 	transform->setPosition( undo ? prevTranslation : translation );
 	transform->setRotation( undo ? prevRotation : rotation );

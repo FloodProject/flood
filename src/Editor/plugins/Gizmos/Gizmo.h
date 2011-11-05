@@ -88,7 +88,7 @@ protected:
 	virtual void highlightAxis( GizmoAxis::Enum, bool highlight ) = 0;
 
 	// Generates the lines geometry.
-	VertexBufferPtr generateLines();
+	GeometryBufferPtr generateLines();
 	void generateLinesColors(std::vector<Vector3>& colors);
 
 	EntityPtr nodeObject;

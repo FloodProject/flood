@@ -21,24 +21,24 @@ public:
 	GizmoScale( const EntityPtr&, const CameraWeakPtr& );
 
 	// Builds the gizmo geometry.
-	virtual void buildGeometry();
+	void buildGeometry() OVERRIDE;
 
 protected:
 
 	// Highlights an axis to provide visual feedback of handle selection.
-	virtual void highlightAxis( GizmoAxis::Enum, bool highlight );
+	void highlightAxis( GizmoAxis::Enum, bool highlight ) OVERRIDE;
 
 	// Generates the cubes geometry.
-	VertexBufferPtr generateCubes();
+	GeometryBufferPtr generateCubes();
 
 	// Generate nice colors for the gizmo.
 	void generateColors( std::vector<Vector3>& colors, const Color& c );
 
 	// Lines geometry.
-	VertexBufferPtr lines;
+	GeometryBufferPtr lines;
 
 	// Cubes geometry.
-	VertexBufferPtr cubes;
+	GeometryBufferPtr cubes;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoScale );

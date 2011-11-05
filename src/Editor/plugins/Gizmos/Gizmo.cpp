@@ -162,12 +162,12 @@ bool Gizmo::isAnyAxisSelected() const
 
 //-----------------------------------//
 
-VertexBufferPtr Gizmo::generateLines()
+GeometryBufferPtr Gizmo::generateLines()
 {
 	static const float OriginOffset = 0.01f;
 
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 
 	// Vertex position data
 	std::vector< Vector3 > pos;
@@ -189,10 +189,10 @@ VertexBufferPtr Gizmo::generateLines()
 	generateLinesColors(colors);
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
+	gb->set( VertexAttribute::Position, pos );
+	gb->set( VertexAttribute::Color, colors );
 
-	return vb;
+	return gb;
 }
 
 //-----------------------------------//
