@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "Example.h"
+#include "Pipeline/API.h"
 
 int main()
 {
@@ -26,6 +27,7 @@ Example::Example(const char** argv) : Framework("Example")
 
 Example::~Example()
 {
+	PipelineCleanup();
 	camera.reset();
 	view = nullptr;
 }
@@ -34,7 +36,7 @@ Example::~Example()
 
 void Example::onInit()
 {
-
+	PipelineInit();
 }
 
 //-----------------------------------//
@@ -48,20 +50,19 @@ void Example::onSetupResources()
 
 void Example::onSetupScene() 
 {
-	camera.reset( AllocateThis(Camera) );
+	camera = AllocateThis(Camera);
 	camera->getFrustum().farPlane = 10000.0f;
 
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
-	scene = (Scene*) SerializerLoadObjectFromFile(serializer, "Assets/Scenes/2guys1box.scene");
-	Deallocate(serializer);
+	sceneHandle = GetResourceManager()->loadResource<Scene>("2box.scene");
+	Scene* scene = sceneHandle.Resolve();
 
 	// Create a new Camera.
-	EntityPtr nodeCamera( AllocateThis(Entity, "MainCamera") );
+	EntityPtr nodeCamera = AllocateThis(Entity, "MainCamera");
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
 	nodeCamera->addComponent( AllocateThis(FirstPersonController) );
 	nodeCamera->getTransform()->setPosition( Vector3(0, 20, -65) );
-	scene->add( nodeCamera );
+	scene->entities.add( nodeCamera );
 
 #ifdef ENABLE_FSP
 	labelFPS.reset( new Label( "", "Verdana.font") );
@@ -135,6 +136,7 @@ void Example::onUpdate( float delta )
 	labelFPS->setText(newFPS);
 #endif
 
+	Scene* scene = sceneHandle.Resolve();
 	scene->update(delta);
 }
 
@@ -143,6 +145,7 @@ void Example::onUpdate( float delta )
 void Example::onRender()
 {
 	// Render the scene.
+	Scene* scene = sceneHandle.Resolve();
 	view->update(scene);
 }
 

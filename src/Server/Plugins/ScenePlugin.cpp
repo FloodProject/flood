@@ -110,7 +110,7 @@ void ScenePlugin::onReplicaObjectCreate(ReplicaContext* context, ReplicaInstance
 	else if( ClassInherits(SceneGetType(), klass) )
 	{
 		Entity* entity = (Entity*) object;
-		scene->add(entity);
+		scene->entities.add(entity);
 	}
 }
 

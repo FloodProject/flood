@@ -37,7 +37,6 @@ Framework::Framework(const String& app)
 Framework::~Framework()
 {
 	Deallocate(window);
-	scene.reset();
 }
 
 //-----------------------------------//

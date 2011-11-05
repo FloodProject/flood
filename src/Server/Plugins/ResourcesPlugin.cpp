@@ -19,6 +19,7 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceDatabase.h"
 #include "Resources/ResourceIndexer.h"
+#include "Resources/ResourceLoader.h"
 #include "Engine/API.h"
 
 #include "mongoose.h"
@@ -57,6 +58,10 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 ResourcesPlugin::ResourcesPlugin()
+	: archive(nullptr)
+	, resources(nullptr)
+	, database(nullptr)
+	, indexer(nullptr)
 {
 }
 
@@ -83,7 +88,7 @@ void ResourcesPlugin::onPluginEnable()
 	resources->setTaskPool(taskPool);
 	resources->setArchive(archive);
 	resources->setAsynchronousLoading(true);
-	resources->setupResourceLoaders();
+	resources->setupResourceLoaders(ResourceLoaderGetType());
 
 	indexer = Allocate(ResourceIndexer, alloc);
 

@@ -36,3 +36,6 @@
 
 #define NAMESPACE_PIPELINE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_PIPELINE_END NAMESPACE_CORE_END
+
+void PipelineInit();
+void PipelineCleanup();

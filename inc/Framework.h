@@ -14,6 +14,8 @@
 #include "Render/FrameStatistics.h"
 #include "Core/Timer.h"
 #include "Engine/Engine.h"
+#include "Window/Window.h"
+#include "Scene/Scene.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -82,7 +84,7 @@ protected:
 	Window* window;
 
 	// Main scene.
-	ScenePtr scene;
+	SceneHandle sceneHandle;
 
 	// Frame loop timer.
 	Timer frameTimer;

@@ -50,9 +50,15 @@ bool SceneLoader::decode(const Stream& stream, Resource* res)
 	serializer->object = scene;
 
 	Object* object = SerializerLoad(serializer);
-	if( !object ) return false;
+	
+	if( !object )
+	{
+		Deallocate(serializer);
+		return false;
+	}
 
 	assert( object == scene );
+	Deallocate(serializer);
 
 	return true;
 }
