@@ -89,6 +89,7 @@ public:
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Scene );
+TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Scene );
 
 //-----------------------------------//
 
