@@ -38,10 +38,10 @@ void EntityOperation::redo()
 	switch(type)
 	{
 	case EntityAdded:
-		scene->add(entity);
+		scene->entities.add(entity);
 		break;
 	case EntityRemoved:
-		scene->remove(entity);
+		scene->entities.remove(entity);
 		break;
 	case ComponentAdded:
 		entity->addComponent(component);
@@ -65,10 +65,10 @@ void EntityOperation::undo()
 	switch(type)
 	{
 	case EntityAdded:
-		scene->remove(entity);
+		scene->entities.remove(entity);
 		break;
 	case EntityRemoved:
-		scene->add(entity);
+		scene->entities.add(entity);
 		break;
 	case ComponentAdded:
 		entity->removeComponent(component);

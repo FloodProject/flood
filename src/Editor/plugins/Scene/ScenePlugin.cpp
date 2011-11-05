@@ -7,11 +7,12 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Plugins/Scene/ScenePlugin.h"
-#include "Plugins/Scene/ScenePane.h"
-#include "Plugins/Scene/SceneDocument.h"
+#include "ScenePlugin.h"
+#include "ScenePane.h"
+#include "SceneDocument.h"
 #include "Plugins/Property/PropertyPlugin.h"
 #include "Plugins/Property/PropertyPage.h"
+#include "Plugins/Property/PropertyGrid.h"
 #include "Plugins/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Protocol/ReplicaContext.h"
@@ -56,13 +57,14 @@ PluginMetadata ScenePlugin::getMetadata()
 void ScenePlugin::onPluginEnable()
 {
 	scenePage = new ScenePage(editor);
-	scenePage->SetSize(180, -1);
+	scenePage->SetMinSize( wxSize(200, 200) );
 
 	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
 	wxAuiPaneInfo pane;
 	pane.Caption("Hierarchy").Name("Hierarchy").Right().Hide().Dock().Icon(icon);
-	pane.MinSize( scenePage->GetSize() );
+	pane.MinSize( scenePage->GetMinSize() );
+	pane.dock_proportion = 1;
 
 	editor->getAUI()->AddPane(scenePage, pane);
 	editor->getAUI()->Update();
@@ -92,7 +94,7 @@ void ScenePlugin::onPluginDisable()
 {
 	//removePage( scenePage );
 	editor->getAUI()->DetachPane(scenePage);
-	editor->getAUI()->Update();
+	//editor->getAUI()->Update();
 
 	Deallocate(scenePage);
 
@@ -121,37 +123,48 @@ void ScenePlugin::onPlayCommand(wxCommandEvent& event)
 
 void ScenePlugin::onEntitySelect( const EntityPtr& entity )
 {
-	// if( scenePage->sentLastSelectionEvent ) return;
+	entity->onComponentAdded.Connect(this, &ScenePlugin::onComponentChanged);
+	entity->onComponentRemoved.Connect(this, &ScenePlugin::onComponentChanged);
 
-	wxTreeItemId entityId = scenePage->getTreeIdFromObject( entity.get() );
-	if( !entityId.IsOk() ) return;
+	setBoundingBoxVisible(entity, true);
 
 	if( ClassInherits(entity->getType(), ReflectionGetType(Group)) )
 		return;
 
-	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
-
-	page->reset();
 	showEntityProperties( entity.get() );
-
-	entity->onComponentAdded.Connect(this, &ScenePlugin::onComponentChanged);
-	entity->onComponentRemoved.Connect(this, &ScenePlugin::onComponentChanged);
 }
 
 //-----------------------------------//
 
 void ScenePlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	// if( scenePage->sentLastSelectionEvent ) return;
-
-	wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
-	treeCtrl->Unselect();
+	//wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
+	//treeCtrl->Unselect();
 
 	PropertyPage* propertyPage = GetPlugin<PropertyPlugin>()->propertyPage;
-	propertyPage->resetObject( entity.get() );
+
+	if( propertyPage->getObject() == entity.get() )
+	{
+		propertyPage->resetObject( entity.get() );
+		propertyPage->update();
+	}
 
 	entity->onComponentAdded.Disconnect(this, &ScenePlugin::onComponentChanged);
 	entity->onComponentRemoved.Disconnect(this, &ScenePlugin::onComponentChanged);
+
+	setBoundingBoxVisible(entity, false);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::setBoundingBoxVisible(const EntityPtr& entity, bool state)
+{
+	if( !entity ) return;
+
+	const TransformPtr& transform = entity->getTransform();
+	if( !transform ) return;
+
+	transform->setDebugRenderableVisible( state );
 }
 
 //-----------------------------------//
@@ -199,23 +212,68 @@ void ScenePlugin::onSceneUnload( const ScenePtr& scene )
 
 //-----------------------------------//
 
+void ScenePlugin::setPropertyHandler(Class* klass, const PropertyEvent& event)
+{
+	propertyHandlers[klass] = event;
+}
+
+//-----------------------------------//
+
+void ScenePlugin::removePropertyHandler(Class* klass)
+{
+	auto it = propertyHandlers.find(klass);
+
+	if( it == propertyHandlers.end() )
+		return;
+
+	propertyHandlers.erase(it);
+}
+
+//-----------------------------------//
+
+static wxFoldPanel CreateComponentPanel( PropertyPage* page, Component* component )
+{
+	if( !component ) return wxFoldPanel();
+
+	wxFoldPanel foldPanel = page->AddFoldPanel( component->getType()->name );
+
+	wxImage image = GetIconFromComponent(component->getType());
+	foldPanel.SetIcon(&image);
+
+	PropertyGrid* grid = page->createPropertyGrid( foldPanel.GetParent() );
+	page->AddFoldPanelWindow(foldPanel, grid, wxSizerFlags().Expand());
+
+	page->appendObjectFields( grid, component->getType(), component );
+
+	return foldPanel;
+}
+
+//-----------------------------------//
+
 void ScenePlugin::showEntityProperties( Entity* entity )
 {
 	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
-	
+
 	page->reset();
 	page->setObject(entity);
 
+	{
+	wxFoldPanel foldPanel = page->AddFoldPanel("Entity");
+	foldPanel.GetItem()->GetCaptionBar()->Hide();
+
+	PropertyGrid* grid = page->createPropertyGrid( foldPanel.GetParent() );
+	page->AddFoldPanelWindow(foldPanel, grid, wxSizerFlags().Expand());
+
 	// Entity properties.
-	page->appendObjectFields( entity->getType(), entity );
+	page->appendObjectFields( grid, entity->getType(), entity );
+	}
 
 	// Transform properties.
 	TransformPtr transform = entity->getTransform();
 
 	if( transform )
 	{
-		page->appendHeader( transform->getType()->name );
-		page->appendObjectFields( ReflectionGetType(Transform), transform.get() );
+		wxFoldPanel panel = CreateComponentPanel(page, transform.get());
 	}
 
 	// Other components properties.
@@ -230,9 +288,22 @@ void ScenePlugin::showEntityProperties( Entity* entity )
 		if( ReflectionIsEqual(type, ReflectionGetType(Transform)) )
 			continue;
 
-		page->appendHeader( component->getType()->name );
-		page->appendObjectFields( type, component.get() );
+		wxFoldPanel panel = CreateComponentPanel(page, component.get());
+
+		// Check if there are property handlers for this component.
+		auto it = propertyHandlers.find(type);
+		if( it == propertyHandlers.end() ) continue;
+
+		PropertyEvent& event = it->second;
+		event(page, panel);
 	}
+
+#if 0
+	wxStaticLine* staticLine = new wxStaticLine(page);
+	page->GetSizer()->Add(staticLine, wxSizerFlags().Expand());
+#endif
+
+	page->update();
 }
 
 //-----------------------------------//

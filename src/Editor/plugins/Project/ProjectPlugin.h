@@ -46,11 +46,11 @@ public:
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
 
-	// Button callbacks.
-	void onNewButtonClick(wxCommandEvent& event);
-	void onOpenButtonClick(wxCommandEvent& event);
-	void onSaveButtonClick(wxCommandEvent& event);
-	void onSaveButtonUpdateUI(wxUpdateUIEvent& event);
+	// Command callbacks.
+	void onNewDocument(wxCommandEvent& event);
+	void onOpenDocument(wxCommandEvent& event);
+	void onSaveDocument(wxCommandEvent& event);
+	void onSaveAsDocument(wxCommandEvent& event);
 
 	// Creates a new document.
 	Document* createDocument();
@@ -66,6 +66,7 @@ public:
 	// Save toolbar button.
 	wxAuiToolBarItem* saveButton;
 	wxMenuItem* saveItem;
+	wxMenuItem* saveAsItem;
 
 protected:
 

@@ -6,29 +6,19 @@
 *
 ************************************************************************/
 
-#pragma once
-
-NAMESPACE_EDITOR_BEGIN
+#include "Editor/API.h"
+#include "SceneCamera.h"
 
 //-----------------------------------//
 
-/**
- * Shows the log stream in the editor.
- */
+REFLECT_CHILD_CLASS(SceneCamera, FirstPersonController)
+REFLECT_CLASS_END()
 
-class LogFrame : public wxListCtrl
+//-----------------------------------//
+
+SceneCamera::SceneCamera() : FirstPersonController()
 {
-public:
-
-	LogFrame( wxWindow* parent );
-	~LogFrame();
-
-	// Event callbacks.
-	void Process(LogEntry* entry);
-	void OnIdle(wxIdleEvent& event);
-
-	ConcurrentQueue<LogEntry> entries;
-};
+}
 
 //-----------------------------------//
 

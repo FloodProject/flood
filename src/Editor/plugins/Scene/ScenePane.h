@@ -107,6 +107,9 @@ public:
 	// Did we send the last selection event.
 	bool sentLastSelectionEvent;
 
+	// Did we send the tree changing event.
+	bool sentTreeChangingEvent;
+
 	// Adds a component to the tree item.
 	void addComponentToTree( wxTreeItemId id, ComponentPtr component );
 
@@ -126,6 +129,7 @@ protected:
 	EntityOperation* createEntityAddOperation(const EntityPtr&);
 
 	// wxWidgets event callbacks.
+	void onFocus(wxFocusEvent&);
 	void onItemChanged( wxTreeEvent& );
 	void onItemMenu( wxTreeEvent& );
 	void onLabelEditBegin( wxTreeEvent& );
@@ -187,6 +191,8 @@ protected:
 	// Entity counter.
 	int entityCounter;
 };
+
+wxImage GetIconFromComponent(Class* klass);
 
 //-----------------------------------//
 

@@ -28,6 +28,8 @@ LogFrame::LogFrame( wxWindow* parent )
 
 	Log* log = LogGetDefault();
 	log->handlers.Connect( this, &LogFrame::Process );
+
+	Bind(wxEVT_IDLE, &LogFrame::OnIdle, this);
 }
 
 //-----------------------------------//
@@ -41,11 +43,23 @@ LogFrame::~LogFrame()
 
 void LogFrame::Process(LogEntry* entry)
 {
-	int id = InsertItem(GetItemCount(), wxEmptyString);
-	//String level = LogLevel::toString( entry.level );
+	// We cannot insert the entries right away, since it might not be thread-safe.
+	entries.push_back(*entry);
+}
 
-	SetItem(id, 0, wxEmptyString);
-	SetItem(id, 1, entry->message);
+//-----------------------------------//
+
+void LogFrame::OnIdle(wxIdleEvent& event)
+{
+	LogEntry entry;
+
+	while( entries.try_pop_front(entry) )
+	{
+		int id = InsertItem(GetItemCount(), wxEmptyString);
+
+		SetItem(id, 0, wxEmptyString);
+		SetItem(id, 1, entry.message);
+	}
 }
 
 //-----------------------------------//

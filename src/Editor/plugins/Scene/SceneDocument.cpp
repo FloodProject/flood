@@ -8,6 +8,7 @@
 
 #include "Editor/API.h"
 #include "SceneDocument.h"
+#include "SceneCamera.h"
 #include "Editor.h"
 #include "EventManager.h"
 #include "Settings.h"
@@ -16,8 +17,8 @@
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
 #include "EditorPlugin.h"
-#include "Core/PluginManager.h"
 #include "Plugins/Selection/SelectionPlugin.h"
+#include "Plugins/Gizmos/GizmoPlugin.h"
 #include "Physics/Physics.h"
 
 NAMESPACE_EDITOR_BEGIN
@@ -25,7 +26,7 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 SceneDocument::SceneDocument()
-	: viewframe(nullptr)
+	: sceneWindow(nullptr)
 	, toolbar(nullptr)
 {
 }
@@ -34,36 +35,42 @@ SceneDocument::SceneDocument()
 
 SceneDocument::~SceneDocument()
 {
+
+}
+
+//-----------------------------------//
+
+void SceneDocument::onDocumentDestroy()
+{
 	LogDebug("Destroying SceneDocument");
 
-	if( viewframe )
+	if( sceneWindow )
 	{
-		viewframe->getControl()->stopFrameLoop();
-		viewframe->setMainCamera(nullptr);
+		sceneWindow->getControl()->stopFrameLoop();
+		sceneWindow->setMainCamera(nullptr);
 	}
 
 	resetUndo();
 	resetScene();
 
-	if( viewframe )
+	if( sceneWindow )
 	{
-		viewframe->destroyControl();
-		viewframe->Destroy();
+		sceneWindow->destroyControl();
 	}
 }
 
 //-----------------------------------//
 
-static const char* s_FileDialogDescription( "Scene files (*.scene)|*.scene" );
-
-bool SceneDocument::open()
+bool SceneDocument::onDocumentOpen()
 {
 	// Ask for file name to open.
 	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, s_FileDialogDescription, wxFC_OPEN );
+		wxEmptyString, getFileDialogDescription(), wxFC_OPEN );
 	
 	if( fc.ShowModal() != wxID_OK )
 		return true;
+
+	reset();
 
 	Path filePath = (String) fc.GetPath();
 
@@ -82,17 +89,8 @@ bool SceneDocument::open()
 
 //-----------------------------------//
 
-bool SceneDocument::save()
+bool SceneDocument::onDocumentSave()
 {
-	// Ask for file name to save as.
-	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, s_FileDialogDescription, wxFC_SAVE | wxFD_OVERWRITE_PROMPT );
-	
-	if( fc.ShowModal() != wxID_OK )
-		return true;
-
-	Path path = (String) fc.GetPath();
-	
 	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
 	bool res = SerializerSaveObjectToFile(serializer, path, scene.get());
 	Deallocate(serializer);
@@ -102,14 +100,19 @@ bool SceneDocument::save()
 
 //-----------------------------------//
 
-bool SceneDocument::reset()
+bool SceneDocument::onDocumentReset()
 {
-	resetUndo();
-	createUndo();
-
 	setScene(nullptr);
 
 	return true;
+}
+
+//-----------------------------------//
+
+const char* SceneDocument::getFileDialogDescription()
+{
+	static const char* s_FileDialogDescription( "Scene files (*.scene)|*.scene" );
+	return s_FileDialogDescription;
 }
 
 //-----------------------------------//
@@ -135,6 +138,8 @@ void SceneDocument::setScene( Scene* newScene )
 
 void SceneDocument::resetScene()
 {
+	getRenderControl()->stopFrameLoop();
+
 	if(scene)
 	{
 		EventManager* events = GetEditor().getEventManager();
@@ -143,16 +148,28 @@ void SceneDocument::resetScene()
 
 	cameraController.reset();
 
-#if 0
-	if( editorScene )
-		assert( editorScene.get()->references == 1 );
+#ifdef BUILD_DEBUG
+	if( editorScene && editorScene.get()->references != 1 )
+		LogAssert("Scene should not have any references");
 
-	if( scene )
-		assert( scene.get()->references == 1 );
+	if( scene && scene.get()->references != 1 )
+		LogAssert("Scene should not have any references");
 #endif
 
 	editorScene.reset();
 	scene.reset();
+
+#if 0
+	const RenderViewsVector& views = getRenderWindow()->getViews();
+
+	for(size_t i = 0; i < views.size(); ++i)
+	{
+		RenderView* view = views[i];
+		view->setCamera(nullptr);
+	}
+#endif
+
+	getRenderControl()->startFrameLoop();
 }
 
 //-----------------------------------//
@@ -161,7 +178,9 @@ void SceneDocument::onDocumentSelect()
 {
 	setupRenderWindow();
 
-	RenderControl* control = viewframe->getControl();
+
+
+	RenderControl* control = sceneWindow->getControl();
 	control->startFrameLoop();
 
 	wxAuiManager* aui = GetEditor().getAUI();
@@ -174,15 +193,17 @@ void SceneDocument::onDocumentSelect()
 
 void SceneDocument::onDocumentUnselect()
 {
-	RenderControl* control = viewframe->getControl();
+	RenderControl* control = sceneWindow->getControl();
 	control->stopFrameLoop();
 
+#if 0
 	#pragma TODO("Don't use hardcoded pane names")
 
 	wxAuiManager* aui = GetEditor().getAUI();
 	aui->GetPane("Hierarchy").Hide();
 	aui->GetPane("Properties").Hide();
 	aui->Update();
+#endif
 }
 
 //-----------------------------------//
@@ -195,31 +216,42 @@ void SceneDocument::OnMouseEvent(wxMouseEvent& event)
 
 //-----------------------------------//
 
-void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
-{
-	if(cameraController) cameraController->setEnabled(false);
-	getRenderWindow()->setCursorVisiblePriority(true, 100);
-
-	event.Skip();
-}
-
-//-----------------------------------//
-
 void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
 {
 	if(cameraController) cameraController->setEnabled(true);
 	getRenderWindow()->setCursorVisiblePriority(false, 100);
+
+	// Toogle the camera tool.
+	GizmoPlugin* gizmoPlugin = GetPlugin<GizmoPlugin>();
+	
+	PluginTool* cameraTool = gizmoPlugin->findToolById(GizmoTool::Camera);
+	if( !cameraTool ) return;
+
+	GetEditor().getEventManager()->toggleTool(cameraTool);
 
 	//event.Skip();
 }
 
 //-----------------------------------//
 
+void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
+{
+	if(cameraController) cameraController->setEnabled(false);
+	getRenderWindow()->setCursorVisiblePriority(true, 100);
+
+	// Restore the original tool.
+	GetEditor().getEventManager()->toggleTool(nullptr);
+
+	event.Skip();
+}
+
+//-----------------------------------//
+
 DocumentWindow* SceneDocument::createDocumentWindow()
 {
-	viewframe = new SceneWindow( &GetEditor() );
+	sceneWindow = new SceneWindow( &GetEditor() );
 
-	RenderControl* control = viewframe->createControl();
+	RenderControl* control = sceneWindow->createControl();
 	control->onRender.Bind( this, &SceneDocument::onRender );
 	control->onUpdate.Bind( this, &SceneDocument::onUpdate );
 	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
@@ -229,19 +261,18 @@ DocumentWindow* SceneDocument::createDocumentWindow()
 	control->Bind(wxEVT_MOUSEWHEEL, &SceneDocument::OnMouseEvent, this);
 	control->SetDropTarget( new ResourceDropTarget( &GetEditor() ) );
 	control->SetFocus();
-	setupRenderWindow();
 
-	RenderView* view = viewframe->createView();
+	RenderView* view = sceneWindow->createView();
 	view->setClearColor(SceneEditClearColor);
 
-	return viewframe;
+	return sceneWindow;
 }
 
 //-----------------------------------//
 
 RenderControl* SceneDocument::getRenderControl()
 {
-	return viewframe->getControl();
+	return sceneWindow->getControl();
 }
 
 //-----------------------------------//
@@ -288,7 +319,7 @@ void SceneDocument::createEditorScene()
 	entityGrid->addTransform();
 	entityGrid->addComponent(grid);
 	entityGrid->setTag( Tags::NonPickable, true );
-	editorScene->add( entityGrid );
+	editorScene->entities.add( entityGrid );
 
 #ifdef ENABLE_PHYSICS_BULLET
 	BoxShapePtr shape = Allocate(BoxShape, alloc);
@@ -304,11 +335,11 @@ void SceneDocument::createEditorScene()
 	Vector3 initialPosition(0, 20, -65);
 	EntityPtr entityCamera = createCamera();
 	entityCamera->getTransform()->setPosition(initialPosition);
-	editorScene->add( entityCamera );
+	editorScene->entities.add( entityCamera );
 
 	CameraPtr camera = entityCamera->getComponent<Camera>();
-	viewframe->setMainCamera(camera);
-	viewframe->switchToDefaultCamera();
+	sceneWindow->setMainCamera(camera);
+	sceneWindow->switchToDefaultCamera();
 
 #ifdef ENABLE_PHYSICS_BULLET
 	DeallocateObject(GetEngine()->getPhysicsManager());
@@ -322,31 +353,29 @@ void SceneDocument::createEditorScene()
 
 EntityPtr SceneDocument::createCamera()
 {
-	Allocator* alloc = AllocatorGetHeap();
-
 	// So each camera will have unique names.
 	static uint8 i = 0;
 
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera = Allocate(Camera, alloc);
-	cameraController = Allocate(FirstPersonController, alloc);
+	CameraPtr camera = AllocateHeap(Camera);
+	cameraController = AllocateHeap(FirstPersonController);
 	cameraController->setEnabled(false);
 
 	Frustum& frustum = camera->getFrustum();
 	frustum.farPlane = 10000;
 
 	// Generate a new unique name.
-	String name( "EditorCamera"+StringFromNumber(i++) );
+	String name = StringFormat("EditorCamera%d", i++);
 
-	EntityPtr entityCamera = EntityCreate(alloc);
+	EntityPtr entityCamera = EntityCreate( AllocatorGetHeap() );
 	entityCamera->setName(name);
 	entityCamera->addTransform();
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
 #ifdef ENABLE_AUDIO_OPENAL
-	ComponentPtr listener = Allocate(Listener, alloc);
+	ComponentPtr listener = AllocateHeap(Listener);
 	entityCamera->addComponent( listener );
 #endif
 
@@ -357,10 +386,10 @@ EntityPtr SceneDocument::createCamera()
 
 void SceneDocument::onRender()
 {
-	RenderView* view = viewframe->getView();
+	RenderView* view = sceneWindow->getView();
 
 	if( !view->getCamera() )
-		viewframe->switchToDefaultCamera();
+		sceneWindow->switchToDefaultCamera();
 
 	const CameraPtr& camera = view->getCamera();
 	if( !camera ) return;
@@ -368,11 +397,13 @@ void SceneDocument::onRender()
 	camera->setView( view );
 
 	RenderBlock block;
-	camera->cull( block, scene );
-	camera->cull( block, editorScene );
+	camera->cull( block, &scene->entities );
+	camera->cull( block, &editorScene->entities );
 
+#if 0
 	for( size_t i = 0; i < camera->drawer.renderables.size(); i++)
 		block.renderables.push_back( camera->drawer.renderables[i] );
+#endif
 
 	camera->render(block);
 

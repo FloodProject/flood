@@ -24,16 +24,21 @@ SceneWindow::SceneWindow( wxWindow* parent ) : DocumentWindow(parent)
 SceneWindow::~SceneWindow()
 {
 	LogDebug("Destroying SceneWindow");
+	destroyControl();
 }
 
 //-----------------------------------//
 
 void SceneWindow::destroyControl()
 {
+	if( !control ) return;
+
 	control->stopFrameLoop();
 	control->onRender.clear();
 	control->onUpdate.clear();
 	control->Destroy();
+
+	control = nullptr;
 }
 
 //-----------------------------------//

@@ -8,26 +8,21 @@
 
 #pragma once
 
+#include "Controllers/FirstPersonController.h"
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-/**
- * Shows the log stream in the editor.
- */
+REFLECT_DECLARE_CLASS(SceneCamera)
 
-class LogFrame : public wxListCtrl
+class SceneCamera : public FirstPersonController
 {
+	REFLECT_DECLARE_OBJECT(SceneCamera)
+
 public:
-
-	LogFrame( wxWindow* parent );
-	~LogFrame();
-
-	// Event callbacks.
-	void Process(LogEntry* entry);
-	void OnIdle(wxIdleEvent& event);
-
-	ConcurrentQueue<LogEntry> entries;
+ 
+	SceneCamera();
 };
 
 //-----------------------------------//

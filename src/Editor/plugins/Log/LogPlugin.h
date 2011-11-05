@@ -27,13 +27,13 @@ public:
 	LogPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable();
+	void onPluginEnable() OVERRIDE;
 
 	// Plugin disable callback.
-	virtual void onPluginDisable();
+	void onPluginDisable() OVERRIDE;
 
 	// Handles new button click.
 	void onLogButtonClick(wxCommandEvent& event);

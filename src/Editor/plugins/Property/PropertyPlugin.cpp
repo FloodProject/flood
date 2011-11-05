@@ -52,12 +52,13 @@ PluginMetadata PropertyPlugin::getMetadata()
 void PropertyPlugin::onPluginEnable()
 {
 	propertyPage = new PropertyPage(editor);
-	propertyPage->SetSize(180, -1);
 
 	wxBitmap icon = wxMEMORY_BITMAP(application_view_list);
 	
 	wxAuiPaneInfo pane;
 	pane.Caption("Properties").Name("Properties").Right().Hide().Dock().Icon(icon);
+	//pane.MinSize( wxSize(200, 200) );
+	pane.dock_proportion = 0;
 
 	editor->getAUI()->AddPane(propertyPage, pane);
 	editor->getAUI()->Update();
@@ -72,7 +73,7 @@ void PropertyPlugin::onPluginEnable()
 void PropertyPlugin::onPluginDisable()
 {
 	editor->getAUI()->DetachPane(propertyPage);
-	editor->getAUI()->Update();
+	//editor->getAUI()->Update();
 
 	propertyPage->Destroy();
 	propertyPage = nullptr;

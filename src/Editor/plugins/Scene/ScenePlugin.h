@@ -12,11 +12,17 @@
 #include "Protocol/ReplicaContext.h"
 #include "Core/ClassWatcher.h"
 
+class wxFoldPanel;
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 class ScenePage;
+class PropertyPage;
+
+typedef Event2<PropertyPage*, wxFoldPanel&> PropertyEvent;
+typedef std::map<Class*, PropertyEvent> PropertyHandlerMap;
 
 REFLECT_DECLARE_CLASS(ScenePlugin)
 
@@ -34,6 +40,12 @@ public:
 	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
+
+	// Sets the property handler for a class.
+	void setPropertyHandler(Class*, const PropertyEvent&);
+
+	// Removes the property handler for a class.
+	void removePropertyHandler(Class*);
 
 	// Scene callbacks.
 	void onSceneLoad( const ScenePtr& ) OVERRIDE;
@@ -53,7 +65,11 @@ public:
 	void onPlayCommand(wxCommandEvent&);
 	void onSceneClassFieldUpdate(const FieldWatchVector&);
 
+	// Shows the properties of the given entity.
 	void showEntityProperties( Entity* entity );
+
+	// Sets the bounding box visibility of the given entity.
+	void setBoundingBoxVisible( const EntityPtr& entity, bool state );
 
 #ifndef NO_NETWORK
 	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
@@ -64,6 +80,8 @@ public:
 
 	ScenePage* scenePage;
 	int iconScene;
+
+	PropertyHandlerMap propertyHandlers;
 };
 
 //-----------------------------------//

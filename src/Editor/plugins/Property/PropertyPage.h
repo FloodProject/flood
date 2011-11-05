@@ -10,7 +10,11 @@
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
+#include <wx/foldbar/foldpanelbar.h>
+
 #include "Core/ClassWatcher.h"
+
+class wxPropertyGrid;
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -25,9 +29,6 @@ public:
 	const void* object;
 };
 
-struct ClassWatch;
-struct Class;
-
 //-----------------------------------//
 
 /**
@@ -36,35 +37,46 @@ struct Class;
  * types and allow easy editing of the fields.
  */
 
-class PropertyPage : public wxPropertyGrid
+class PropertyGrid;
+struct ClassWatch;
+struct Class;
+
+class PropertyPage : public wxFoldPanelBar
 {
 public:
 
 	PropertyPage( wxWindow* parent );
+	~PropertyPage();
 
-	// Sets the current object.
-	SETTER(Object, Object*, currentObject)
-
-	// Populates properties on the grid.
-	void showProperties( Object* object, bool reset = true );
-
-	// Appends a separator header to the property grid.
-	void appendHeader( const String& name );
-
-	// Appends the type fields to the property grid.
-	void appendObjectFields(Class*, void* object);
-
-	// Gets the value of a field.
-	wxAny getFieldValue(const Field* field, void* object);
-
-	// Sets the value of a field.
-	void setFieldValue(const Field* field, void* object, const wxAny& value);
+	// Forces an update of the control (re-layout and refresh).
+	void update();
 
 	// Resets the properties page.
 	void reset();
 
 	// Resets the properties page if the object is current.
 	void resetObject(const Object* object);
+
+	// Gets/sets the current object.
+	ACESSOR(Object, Object*, currentObject)
+
+	// Creates a new property grid.
+	PropertyGrid* createPropertyGrid(wxWindow* parent);
+
+	// Appends a separator header to the property grid.
+	void appendHeader( PropertyGrid*, const String& name );
+
+	// Appends the type fields to the property grid.
+	void appendObjectFields( PropertyGrid*, Class*, void* object );
+
+	// Populates properties on the grid.
+	void showProperties( Object* object, bool reset = true );
+
+	// Gets the value of a field.
+	wxAny getFieldValue(const Field* field, void* object);
+
+	// Sets the value of a field.
+	void setFieldValue(const Field* field, void* object, const wxAny& value);
 
 	Delegate1<const FieldWatchVector&> onClassFieldChanged;
 
@@ -109,7 +121,7 @@ protected:
 	// Callback when property value changes.
 	void onPropertyChanged(wxPropertyGridEvent& event);
 
-	// Callback when idle.
+	// Callbacks
 	void onIdle(wxIdleEvent& event);
 
 	// Current property value.

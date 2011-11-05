@@ -59,20 +59,21 @@ void ProjectPlugin::onPluginEnable()
 		saveButton = toolbarCtrl->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
 		addTool( saveButton );
 		
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
-		toolbarCtrl->Bind( wxEVT_UPDATE_UI, &ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewDocument, this, newButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
 	}
 
 	wxMenu* menu = editor->menuFile;
-	newItem = menu->Append(newButton->GetId(), newButton->GetLabel());
-	openItem = menu->Append(openButton->GetId(), openButton->GetLabel());
-	saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel());
+	newItem = menu->Append(newButton->GetId(), newButton->GetLabel() + "\tCtrl-N");
+	openItem = menu->Append(openButton->GetId(), openButton->GetLabel() + "\tCtrl-O");
+	saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel() + "\tCtrl-S");
+	saveAsItem = menu->Append(wxID_ANY, "Save As...");
 
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewDocument, this, newButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveAsDocument, this, saveAsItem->GetId() );
 }
 
 //-----------------------------------//
@@ -92,7 +93,6 @@ bool ProjectPlugin::askSaveChanges( Document* document )
 	int flags = wxYES_NO | wxCANCEL | wxICON_EXCLAMATION;
 	
 	wxMessageDialog dialog(editor, msg, "Editor", flags);
-	//dialog.SetSetYesNoLabels(wxID_SAVE, "&Don't save");
 
     int answer = dialog.ShowModal();
 	if( answer == wxID_YES ) return false;
@@ -105,27 +105,31 @@ bool ProjectPlugin::askSaveChanges( Document* document )
 Document* ProjectPlugin::createDocument()
 {
 	SceneDocument* document = AllocateThis(SceneDocument);
+	document->create();
+
 	GetEditor().getDocumentManager()->addDocument(document);
 	return document;
 }
 
 //-----------------------------------//
 
-void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
+void ProjectPlugin::onNewDocument(wxCommandEvent& event)
 {
-	Document* document = editor->getDocument();
+	//Document* document = editor->getDocument();
+
+	EventManager* events = GetEditor().getEventManager();
+	Document* document = nullptr;
 
 	if( !document )
 	{
 		document = createDocument();
-		return;
+		goto created;
 	}
 
 	if( !askSaveChanges(document) )
 		return;
 
 	// Simulate destroy and create events.
-	EventManager* events = GetEditor().getEventManager();
 	events->onDocumentUnselect(*document);
 	events->onDocumentDestroy(*document);
 
@@ -136,6 +140,8 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 		return;
 	}
 
+created:
+
 	document->setPath("");
 
 	events->onDocumentCreate(*document);
@@ -144,8 +150,7 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-
-void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
+void ProjectPlugin::onOpenDocument(wxCommandEvent& event)
 {
 	Document* document = editor->getDocument();
 	if( !document ) return;
@@ -153,7 +158,7 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	if( !askSaveChanges(document) )
 		return;
 
-	if( !document->open() )
+	if( !document->onDocumentOpen() )
 	{
 		const char* msg = "Could not load document.";
 		wxMessageDialog message(&GetEditor(), msg, "Load", wxOK | wxICON_EXCLAMATION);
@@ -163,32 +168,48 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
+void ProjectPlugin::onSaveDocument(wxCommandEvent& event)
 {
 	Document* document = editor->getDocument();
 	if( !document ) return;
 
-	if( !document->save() )
+	// If the document doesn't have a path, ask for it.
+	if( document->getPath().empty() )
+	{
+		onSaveAsDocument(event);
+		return;
+	}
+
+	if( !document->onDocumentSave() )
 	{
 		const char* msg = "Could not save document.";
 		wxMessageDialog message(&GetEditor(), msg, "Save", wxOK | wxICON_EXCLAMATION);
 		message.ShowModal();
 	}
+
+	document->setUnsavedChanges(false);
+	GetEditor().getDocumentManager()->onDocumentRenamed(document);
 }
 
 //-----------------------------------//
 
-void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
+void ProjectPlugin::onSaveAsDocument(wxCommandEvent& event)
 {
 	Document* document = editor->getDocument();
-	
-	if( !document )
-	{
-		event.Enable(false);
-		return;
-	}
+	if( !document ) return;
 
-	event.Enable( document->getUnsavedChanges() );
+	int flags = wxFC_SAVE | wxFD_OVERWRITE_PROMPT;
+	
+	wxFileDialog fileDialog( editor, wxFileSelectorPromptStr, wxEmptyString,
+		wxEmptyString, document->getFileDialogDescription(), flags );
+
+	if( fileDialog.ShowModal() != wxID_OK )
+		return;
+
+	wxString newPath = fileDialog.GetPath();
+	document->setPath((String) newPath);
+
+	onSaveDocument(event);
 }
 
 //-----------------------------------//

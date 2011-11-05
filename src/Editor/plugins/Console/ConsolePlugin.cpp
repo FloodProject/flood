@@ -73,9 +73,9 @@ void ConsolePlugin::onPluginEnable()
 void ConsolePlugin::onPluginDisable()
 {
 	editor->getAUI()->DetachPane(console);
-	editor->getAUI()->Update();
+	//editor->getAUI()->Update();
 
-	delete console;
+	console->Destroy();
 	console = nullptr;
 }
 

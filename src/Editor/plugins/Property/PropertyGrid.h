@@ -8,28 +8,28 @@
 
 #pragma once
 
+#include "wx/propgrid/propgrid.h"
+
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-/**
- * Shows the log stream in the editor.
- */
-
-class LogFrame : public wxListCtrl
+class PropertyGrid : public wxPropertyGrid
 {
 public:
 
-	LogFrame( wxWindow* parent );
-	~LogFrame();
+	PropertyGrid(wxWindow* parent);
 
-	// Event callbacks.
-	void Process(LogEntry* entry);
-	void OnIdle(wxIdleEvent& event);
+	wxSize DoGetBestSize() const OVERRIDE;
+	void OnIdle(wxIdleEvent&);
 
-	ConcurrentQueue<LogEntry> entries;
+	mutable wxCoord virtualHeight;
 };
 
 //-----------------------------------//
 
 NAMESPACE_EDITOR_END
+
+#endif

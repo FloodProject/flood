@@ -75,6 +75,22 @@ static ComponentEntry components[] =
 
 //-----------------------------------//
 
+wxImage GetIconFromComponent(Class* klass)
+{
+	for(size_t i = 0; i < ARRAY_SIZE(components); i++)
+	{
+		const ComponentEntry& entry = components[i];
+		if( entry.type != klass ) continue;
+
+		wxImage image = _wxConvertMemoryToImage(entry.icon, entry.icon_length);
+		return image;
+	}
+
+	return wxMEMORY_IMAGE(cog);
+}
+
+//-----------------------------------//
+
 void ScenePage::initIcons()
 {
 	// Create a new list with all the icons.

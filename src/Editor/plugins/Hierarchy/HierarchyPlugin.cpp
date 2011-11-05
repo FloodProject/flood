@@ -46,13 +46,12 @@ PluginMetadata HierarchyPlugin::getMetadata()
 void HierarchyPlugin::onPluginEnable()
 {
 	hierarchyPane = new HierarchyPane(editor);
-	hierarchyPane->SetSize(200, -1);
 
 	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
 	wxAuiPaneInfo pane;
 	pane.Caption("Hierarchy").Right().Dock().Icon(icon);
-	pane.MinSize( hierarchyPane->GetSize() );
+	pane.BestSize( wxSize(200, -1) );
 
 	editor->getAUI()->AddPane(hierarchyPane, pane);
 	editor->getAUI()->Update();

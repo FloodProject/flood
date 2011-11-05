@@ -31,6 +31,8 @@
 
 #ifdef ENABLE_RESOURCE_BROWSER
 
+#define BROWSER_DEFAULT_STYLE (wxDEFAULT_DIALOG_STYLE & wxRESIZE_BORDER)
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -348,28 +350,17 @@ void ResourcesBrowser::onResourceSliderScroll( wxScrollEvent& event )
 
 //-----------------------------------//
 
-void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
+static Vector3 CalculatePlacementCoords(const Vector2& coords)
 {
-	wxTextDataObject data;
-	wxDropSource dragSource(this);
-	dragSource.SetData(data);
-
-	wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
-
-	if( result == wxDragCancel || result == wxDragNone )
-		return;
-
-	Vector3 dropPoint;
-
-	Vector2 coords = GetEditor().getDropCoords();
-
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	
+	ScenePtr scene = document->scene;
 	RenderView* view = document->getViewframe()->view;
 
 	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
-
-	ScenePtr scene = document->scene;
 	RayTriangleQueryResult res;
+
+	Vector3 dropPoint;
 
 	if( scene->doRayTriangleQuery(ray, res) )
 	{
@@ -382,25 +373,57 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 		float distance;
 		
 		if( !ground.intersects(ray, distance) )
-			return;
+			return Vector3::Zero;
 			
 		dropPoint = ray.getPoint(distance);
 	}
 
+	return dropPoint;
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
+{
+	wxTextDataObject data;
+	wxDropSource dragSource(this);
+	dragSource.SetData(data);
+
+	wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
+
+	if( result == wxDragCancel || result == wxDragNone )
+		return;
+
 	String name = event.GetText();
 
 	ResourceManager* rm = GetResourceManager();
-	MeshHandle mesh = rm->loadResource<Mesh>(name);
+	
+	ResourceHandle handle = rm->loadResource(name);
+	Resource* resource = handle.Resolve();
 
+	if( !resource || resource->getResourceGroup() != ResourceGroup::Meshes )
+	{
+		// Resource is not a mesh.
+		return;
+	}
+
+	MeshHandle mesh = HandleCast<Mesh>(handle);
 	if( !mesh ) return;
 
-	EntityPtr entity = EntityCreate(AllocatorGetHeap());
+	EntityPtr entity = EntityCreate( AllocatorGetHeap() );
 	entity->setName(PathGetFile(name));
 	entity->addTransform();
+
+	Vector2 coords = GetEditor().getDropCoords();
+	Vector3 dropPoint = CalculatePlacementCoords(coords);
+
 	entity->getTransform()->setPosition(dropPoint);
 
 	ModelPtr model = AllocateThis(Model, mesh);
 	entity->addComponent(model);
+
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	ScenePtr scene = document->scene;
 
 	EntityOperation* entityOperation = AllocateThis(EntityOperation);
 	entityOperation->type = EntityOperation::EntityAdded;
@@ -427,6 +450,15 @@ void ResourcesBrowser::OnClose(wxCloseEvent& event)
 	if ( !event.CanVeto() ) return;
 
 	Hide();
+
+	if( inSelectionMode )
+	{
+		// When in selection mode, if the user closes the window,
+		// then explicitly set the return code of ShowModal()
+
+		SetReturnCode(-1);
+	}
+
 	event.Veto();
 }
 

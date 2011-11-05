@@ -75,7 +75,17 @@ void LogPlugin::onPluginEnable()
 //-----------------------------------//
 
 void LogPlugin::onPluginDisable()
-{ }
+{
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	
+	if(toolbarCtrl)
+	{
+		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED,
+			&LogPlugin::onLogButtonClick, this, logButton->GetId() );
+	}
+
+	editor->getAUI()->DetachPane(log);
+}
 
 //-----------------------------------//
 

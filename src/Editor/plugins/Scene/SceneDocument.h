@@ -29,10 +29,13 @@ public:
 	// Creates the document.
 	DocumentWindow* createDocumentWindow() OVERRIDE;
 
+	// Document lifetime callbacks.
+	void onDocumentDestroy() OVERRIDE;
+
 	// Document management callbacks.
-	bool open() OVERRIDE;
-	bool save() OVERRIDE;
-	bool reset() OVERRIDE;
+	bool onDocumentOpen() OVERRIDE;
+	bool onDocumentSave() OVERRIDE;
+	bool onDocumentReset() OVERRIDE;
 
 	// Document callbacks.
 	void onDocumentSelect() OVERRIDE;
@@ -43,7 +46,9 @@ public:
 	void resetScene();
 	void setScene( Scene* scene );
 
-	GETTER(Viewframe, SceneWindow*, viewframe)
+	const char* getFileDialogDescription() OVERRIDE;
+
+	GETTER(Viewframe, SceneWindow*, sceneWindow)
 	
 	RenderControl* getRenderControl();
 	RenderWindow* getRenderWindow();
@@ -54,7 +59,7 @@ public:
 	ScenePtr editorScene;
 	FirstPersonControllerPtr cameraController;
 	
-	SceneWindow* viewframe;
+	SceneWindow* sceneWindow;
 	wxAuiToolBar* toolbar;
 
 protected:

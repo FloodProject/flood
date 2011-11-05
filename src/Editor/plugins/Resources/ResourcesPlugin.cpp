@@ -53,7 +53,7 @@ PluginMetadata ResourcesPlugin::getMetadata()
 	metadata.description = "Provides resource handling features.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.priority = 400;
+	metadata.priority = 1000;
 
 	return metadata;
 }
@@ -88,28 +88,28 @@ void ResourcesPlugin::onPluginEnable()
 	resourcesBrowser = new ResourcesBrowser(editor);
 #endif
 
+	PipelineInit();
+
 	if( !loadCache() )
 	{
-		resourceIndexer = AllocateThis(ResourceIndexer);
-		
 		resourceDatabase = AllocateThis(ResourceDatabase);
-		resourceDatabase->setIndexer(resourceIndexer);
-
-		resourceThumbnailer = AllocateThis(ResourceThumbnailer);
-		resourceThumbnailer->setIndexer(resourceIndexer);
-
-		Archive* archive = ArchiveCreateFromDirectory(AllocatorGetThis(), MediaFolder);
-		resourceIndexer->addArchive(archive);
-		Deallocate(archive);
 	}
+
+	resourceIndexer = AllocateThis(ResourceIndexer);
+	resourceDatabase->setIndexer(resourceIndexer);
+
+	resourceThumbnailer = AllocateThis(ResourceThumbnailer);
+	resourceThumbnailer->setIndexer(resourceIndexer);
+
+	Archive* archive = ArchiveCreateFromDirectory(AllocatorGetThis(), MediaFolder);
+	resourceIndexer->addArchive(archive);
+	Deallocate(archive);
 
 #ifdef ENABLE_RESOURCE_BROWSER
 	// Select the general tree item.
 	resourcesBrowser->selectGroup(ResourceGroup::General);
 	resourcesBrowser->setDatabase(resourceDatabase);
 #endif
-
-	PipelineInit();
 }
 
 //-----------------------------------//
@@ -169,8 +169,6 @@ bool ResourcesPlugin::loadCache()
 
 	if(resourceDatabase)
 		LogInfo("Loaded thumbnails cache from '%s'", path.c_str());
-	else
-		resourceDatabase = Allocate(ResourceDatabase, AllocatorGetThis());
 
 	return true;
 }

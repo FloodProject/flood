@@ -8,16 +8,15 @@
 
 #include "Editor/API.h"
 #include "PropertyPage.h"
+#include "PropertyHelpers.h"
 #include "PropertyOperation.h"
-#include "Editor.h"
+#include "PropertyGrid.h"
 #include "EditorIcons.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
 #include "Core/PluginManager.h"
 #include "Core/Utilities.h"
 #include "Document.h"
-#include "Plugins/Resources/ResourcesPlugin.h"
-#include "Plugins/Resources/ResourcesBrowser.h"
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
@@ -25,128 +24,42 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-static wxString GetReadableName(wxString str)
-{
-	if( str.IsEmpty() ) return wxEmptyString;
-
-	str.Replace("_", " ");
-
-	wxString format;
-	format.Append(wxUniChar(toupper(str[0])));
-
-	// Add spaces between words.
-	for( size_t i = 1; i < str.Len(); i++ )
-	{
-		format.Append(str[i]);
-
-		if( i < str.Len()-1 )
-		{
-			if( !isspace(str[i]) && islower(str[i]) && isupper(str[i+1]) )
-				format.Append(" ");
-		}
-	}
-
-	return format;
-}
-
-//-----------------------------------//
-
-bool ReflectionIsResourceHandle(const Field* field)
-{
-	Type* type = field->type;
-
-	bool isClass = ReflectionIsComposite(type);
-	bool isResource = isClass && ClassInherits((Class*) type, ReflectionGetType(Resource));
-	
-	return isResource && FieldIsHandle(field);
-}
-
-//-----------------------------------//
-
-static ResourceHandle GetResourceUsingBrowser( ResourceGroup::Enum group )
-{
-	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
-	ResourcesBrowser* rb = rp->resourcesBrowser;
-	
-	rb->Close();
-	rb->enableSelection();
-
-	rb->selectGroup(group);
-	int index = rb->ShowModal();
-	rb->disableSelection();
-	
-	wxString selection = rb->getListCtrl()->GetItemText(index);
-	String path = (String) selection.c_str();
-
-	return GetResourceManager()->loadResource(path);
-}
-
-//-----------------------------------//
-
-static ResourceHandle GetResourceUsingFile( ResourceGroup::Enum group )
-{
-	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
-			wxEmptyString, wxEmptyString, "Resource files | *.*",
-			wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
-
-	if( fd.ShowModal() != wxID_OK )
-		return ResourceHandle(HandleInvalid);
-
-	String path( fd.GetPath() );
-	path = PathNormalize(path);
-	
-	ResourceManager* res = GetResourceManager();
-	return res->loadResource( PathGetFile(path) );
-}
-
-//-----------------------------------//
-
-class ResourceProperty : public wxLongStringProperty
-{
-public:
-
-	ResourceProperty(const String& name)
-		: wxLongStringProperty(name, wxPG_LABEL)
-	{}
-
-	virtual bool OnButtonClick( wxPropertyGrid* propGrid, wxString& value ) OVERRIDE
-	{
-		PropertyData* data = (PropertyData*) GetClientObject();
-		Class* resourceClass = (Class*) data->field->type;
-		
-		ResourceLoader* resourceLoader = GetResourceManager()->findLoaderByClass(resourceClass);
-		if( !resourceLoader ) return false;
-
-		ResourceHandle resource = GetResourceUsingBrowser( resourceLoader->getResourceGroup() );
-		if( !resource ) return false;
-
-		Resource* res = resource.Resolve();
-		SetValueInEvent( PathGetFile(res->getPath()) );
-
-		return true;
-	}
-};
-
-//-----------------------------------//
-
 PropertyPage::PropertyPage( wxWindow* parent )
-	: wxPropertyGrid(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
+	: wxFoldPanelBar(parent, wxID_ANY)
 	, currentObject(nullptr)
 {
-	// EventManager bindings.
-	Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
-	Bind(wxEVT_PG_CHANGING, &PropertyPage::onPropertyChanging, this);
-	Bind(wxEVT_IDLE, &PropertyPage::onIdle, this);
+	wxColour color = wxLIGHT_GREY->ChangeLightness(180);
+	SetBackgroundColour(color);
+}
 
-	// Make the default font a little smaller.
-	SetFont( GetEditor().GetFont().Scaled(0.9f) );
+//-----------------------------------//
 
-	// Switch to slighty lighter colors.
-	wxColour color = wxLIGHT_GREY->ChangeLightness(120);
-	SetMarginColour( color );
-	SetLineColour( color );
-	SetCaptionBackgroundColour( color );
-	SetCaptionTextColour( *wxBLACK );
+PropertyPage::~PropertyPage()
+{
+}
+
+//-----------------------------------//
+
+void PropertyPage::update()
+{
+	FitInside();
+	Refresh();
+}
+
+//-----------------------------------//
+
+PropertyGrid* PropertyPage::createPropertyGrid( wxWindow* parent )
+{
+	// Create a property grid.
+	PropertyGrid* prop = new PropertyGrid(parent);
+	prop->SetWindowStyle(wxBORDER_NONE);
+
+	// Event bindings.
+	prop->Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
+	prop->Bind(wxEVT_PG_CHANGING, &PropertyPage::onPropertyChanging, this);
+	prop->Bind(wxEVT_IDLE, &PropertyPage::onIdle, this);
+
+	return prop;
 }
 
 //-----------------------------------//
@@ -155,7 +68,7 @@ void PropertyPage::reset()
 {
 	currentObject = nullptr;
 	ClassWatchReset(&watch);
-	Clear();
+	RemoveFoldPanels();
 }
 
 //-----------------------------------//
@@ -228,29 +141,22 @@ void PropertyPage::showProperties( Object* object, bool resetObject )
 	
 	currentObject = object;
 	
+#if 0
 	Class* klass = ClassGetType(object);
 	
 	appendHeader(klass->name);
 	appendObjectFields(klass, object);
+#endif
 }
 
 //-----------------------------------//
 
-void PropertyPage::appendHeader( const String& name )
-{
-	const wxString& typeName = GetReadableName(name);
-	wxPropertyCategory* category = new wxPropertyCategory(typeName);
-	Append(category);
-}
-
-//-----------------------------------//
-
-void PropertyPage::appendObjectFields(Class* klass, void* object)
+void PropertyPage::appendObjectFields(PropertyGrid* grid, Class* klass, void* object)
 {
 	if( klass->parent )
 	{
 		Class* parent = klass->parent;
-		appendObjectFields(parent, object);
+		appendObjectFields(grid, parent, object);
 	}
 	
 	const std::vector<Field*>& fields = klass->fields;
@@ -263,15 +169,15 @@ void PropertyPage::appendObjectFields(Class* klass, void* object)
 		{
 			void* addr = ClassGetFieldAddress(object, field);
 			Class* klass = (Class*) field->type;
-			appendObjectFields(klass, addr);
+			appendObjectFields(grid, klass, addr);
 			continue;
 		}
 
 		wxPGProperty* prop = createProperty(*klass, *field, object);
 		if(!prop) continue;
 
-		Append(prop);
-		Collapse(prop);
+		grid->Append(prop);
+		grid->Collapse(prop);
 
 		wxAny value = getFieldValue(field, object);
 		setPropertyValue(prop, value);

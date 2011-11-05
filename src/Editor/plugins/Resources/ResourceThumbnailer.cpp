@@ -42,7 +42,7 @@ void ResourceThumbnailer::update()
 
 void ResourceThumbnailer::onResourceIndexed(const ResourceMetadata& res)
 {
-	resourcesIndexed.push(res);
+	resourcesIndexed.push_back(res);
 }
 
 //-----------------------------------//
@@ -51,7 +51,7 @@ void ResourceThumbnailer::generateThumbnail()
 {
 	ResourceMetadata res;
 	
-	if( !resourcesIndexed.try_pop(res) )
+	if( !resourcesIndexed.try_pop_front(res) )
 		return;
 
 	// For each resource indexed, we check if the thumbnail needs to be rebuilt.
@@ -141,7 +141,7 @@ bool ResourceThumbnailer::setupRender()
 #endif
 
 	scene.reset( AllocateThis(Scene) );
-	scene->add( entityCamera );
+	scene->entities.add( entityCamera );
 
 	renderView = AllocateThis(RenderView, camera);
 	renderView->setRenderTarget(renderBuffer);
@@ -162,7 +162,7 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 	EntityPtr entityResource = AllocateThis(Entity);
 	entityResource->addTransform();
 	entityResource->addComponent( AllocateThis(Model, meshHandle) );
-	scene->add( entityResource );
+	scene->entities.add( entityResource );
 
 	TransformPtr transResource = entityResource->getTransform();
 	const BoundingBox& box = mesh->getBoundingVolume();
@@ -204,7 +204,7 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 
 	//ImagePtr image = colorTexture->readImage();
 
-	scene->remove( entityResource );
+	scene->entities.remove( entityResource );
 
 	return image;
 }
