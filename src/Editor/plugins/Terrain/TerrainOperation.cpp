@@ -111,29 +111,31 @@ void TerrainOperation::updateNormals()
 
 void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 {	
-	RenderablePtr rend = rayQuery.renderable;
-	VertexBufferPtr vb = rend->getVertexBuffer();
+	const RenderablePtr& rend = rayQuery.renderable;
 	
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+	uint32 numVertices = gb->getSizeVertices();
+
 	if( save )
 	{
 		// We only need the height of the vertex. This way we can save some memory.
 		#pragma TODO("There is no need to save the unmodified heights of the terrain")
-		const std::vector<Vector3>& vertices = vb->getVertices();
 
-		for( size_t i = 0; i < vertices.size(); i++ )
+		for( size_t i = 0; i < numVertices; i++ )
 		{
-			const Vector3& v = vertices[i];
-			heights.push_back( v.y );
+			Vector3* v = (Vector3*) gb->getAttribute(VertexAttribute::Position, i);
+			heights.push_back( v->y );
 		}
 	}
 	else
 	{
-		std::vector<Vector3>& vertices = vb->getVertices();
+		for( size_t i = 0; i < numVertices; i++ )
+		{
+			Vector3* v = (Vector3*) gb->getAttribute(VertexAttribute::Position, i);
+			v->y = heights[i];
+		}
 
-		for( size_t i = 0; i < vertices.size(); i++ )
-			vertices[i].y = heights[i];
-
-		vb->forceRebuild();
+		gb->forceRebuild();
 	}
 }
 
@@ -186,15 +188,17 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 
 		const CellPtr& cell = entity->getComponent<Cell>();
 		cells.push_back(cell);
-		
-		//GeometryPtr geometry = node->getComponent<Geometry>();
-		//assert( geometry != nullptr );
 
-		//const RenderableVector& renderables = geometry->getRenderables();
-		//assert( !renderables.empty() );
+#if 0
+		GeometryPtr geometry = node->getComponent<Geometry>();
+		assert( geometry != nullptr );
 
-		//const CellPtr& cell = RefCast<Cell>(renderables[0]);
-		//cells.push_back(cell);
+		const RenderableVector& renderables = geometry->getRenderables();
+		assert( !renderables.empty() );
+
+		const CellPtr& cell = RefCast<Cell>(renderables[0]);
+		cells.push_back(cell);
+#endif
 	}
 }
 
@@ -203,7 +207,9 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 void TerrainOperation::applyRaiseTool()
 {
 	RenderablePtr rend = rayQuery.renderable;
-	const Vector3& pick = rayQuery.intersectionWorld;
+
+	// Each cell geometry is in local space, so transform the pick point.
+	const Vector3& pick = rayQuery.intersectionLocal;
 
 	BoundingSphere bs( pick, brushSize );
 	
@@ -214,7 +220,7 @@ void TerrainOperation::applyRaiseTool()
 	{
 		const CellPtr& cell = cells[i];
 		applyRaiseCell(bs, cell);
-		cell->markDirty();
+		cell->rebuildBoundingBox();
 	}
 }
 
@@ -225,27 +231,31 @@ void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& c
 	bool updateVB = false;
 	
 	RenderablePtr rend = cell->getRenderables()[0];
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	std::vector<Vector3>& vertices = vb->getVertices();
-	
-	for( size_t i = 0; i < vertices.size(); i++ )
+
+	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+	uint32 numVertices = gb->getSizeVertices();
+
+	for( size_t i = 0; i < numVertices; i++ )
 	{
-		Vector3& v = vertices[i];
+		Vector3* v = (Vector3*) gb->getAttribute(VertexAttribute::Position, i);
 		
-		if( !bs.intersects(v) )
+		if( !bs.intersects(*v) )
 			continue;
 
 		if( tool == TerrainTool::Raise )
-			v.y += brushStrength;
+			v->y += brushStrength;
 		
 		if( tool == TerrainTool::Lower )
-			v.y -= brushStrength;
+			v->y -= brushStrength;
 
 		updateVB = true;
 	}
 
-	if( updateVB ) 
-		vb->forceRebuild();
+	if( updateVB )
+	{
+		// If something changed, we need to update the vertex buffer.
+		gb->forceRebuild();
+	}
 }
 
 //-----------------------------------//

@@ -9,6 +9,7 @@
 #include "Editor/API.h"
 #include "SelectionPlugin.h"
 #include "SelectionManager.h"
+#include "SelectionOperation.h"
 #include "EventManager.h"
 #include "UndoManager.h"
 #include "Editor.h"
@@ -35,10 +36,6 @@ namespace SelectionTool
 //-----------------------------------//
 
 SelectionPlugin::SelectionPlugin()
-	: selections(nullptr)
-	, buttonSelect(nullptr)
-	, dragRectangle(nullptr)
-	, additiveMode(false)
 {
 
 }
@@ -92,25 +89,37 @@ void SelectionPlugin::onPluginEnable()
 			iconSelect, "Selects the selection tool", wxITEM_RADIO );
 		addTool(buttonSelect, true);
 
+		#pragma TODO(Remove the hack to select the select tool automatically)
 		((ToolbarHack*) toolbar)->SelectItem(buttonSelect);
 	}
 
-	EventManager* events = editor->getEventManager();
-	//events->addEventListener(this);
+	selections = nullptr;
+	buttonSelect = nullptr;
+	additiveMode = false;
+	handlingEvents = false;
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onPluginDisable()
 {
-	assert( !selections );
+	#pragma TODO("Check there are no active selections")
+	//assert( !selections );
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onToolSelect( int id )
 {
-	//GetEditor().getDocument()->
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onToolNone()
+{
+	// When there is no tool selected, select the 'Select' tool.
+	PluginTool* selectTool = findToolById(SelectionTool::Select);
+	GetEditor().getEventManager()->setCurrentTool(selectTool);
 }
 
 //-----------------------------------//
@@ -130,57 +139,79 @@ void SelectionPlugin::onUndoOperation( const UndoOperationPtr& operation )
 
 //-----------------------------------//
 
+void SelectionPlugin::onDocumentSelect( Document& document )
+{
+	DocumentContextMap& documentContext = document.documentContext;
+
+	if( documentContext.find(this) == documentContext.end() )
+	{
+		documentContext[this] = AllocateHeap(SelectionManager);
+	}
+
+	selections = (SelectionManager*) documentContext[this].get();
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onDocumentUnselect( Document& document )
+{
+	DocumentContextMap& documentContext = document.documentContext;
+
+	auto it = documentContext.find(this);
+
+	if( it == documentContext.end() )
+		return;
+
+	if( it->second.get() == selections )
+	{
+		// Clean up the current selection manager.
+		selections = nullptr;
+	}
+}
+
+//-----------------------------------//
+
 void SelectionPlugin::onSceneLoad( const ScenePtr& scene )
 {
-	assert( !selections );
-
-	scene->onEntityRemoved.Connect(this, &SelectionPlugin::onEntityRemoved);
-	selections = AllocateThis(SelectionManager);
+	scene->entities.onEntityRemoved.Connect(this, &SelectionPlugin::onEntityRemoved);
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onSceneUnload( const ScenePtr& scene )
 {
+	if( handlingEvents ) return;
+	handlingEvents = true;
+
+	scene->entities.onEntityRemoved.Disconnect(this, &SelectionPlugin::onEntityRemoved);
+
 	assert( selections );
+	selections->removeCurrent();
 
-	scene->onEntityRemoved.Disconnect(this, &SelectionPlugin::onEntityRemoved);
-
-	SelectionOperation* selection = selections->getSelection();
-
-	if(selection)
-	{
-		selection->unselectAll();
-		selections->setSelection(nullptr);
-	}
-
-	Deallocate(selections);
+	handlingEvents = false;
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onEntityRemoved(const EntityPtr& entity)
 {
-	SelectionOperation* selection = selections->getSelection();
-	bool isSelected = selection && selection->isSelection(entity);
-
-	if(isSelected)
-	{
-		selection->unselectAll();
-		selections->setSelection(nullptr);
-	}
+	onEntityUnselect(entity);
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onEntityUnselect(const EntityPtr& entity)
 {
-#if 0
-	SelectionOperation* op = selections->getSelection();
-	bool isSelected = op && op->isSelection(entity);
-	
-	if(isSelected)
-#endif
+	if( handlingEvents ) return;
+	handlingEvents = true;
+
+	SelectionData data;
+	data.mode = SelectionMode::Entity;
+	data.entity = entity;
+
+	selections->removeSelection(data);
+
+	handlingEvents = false;
 }
 
 //-----------------------------------//
@@ -189,7 +220,7 @@ void SelectionPlugin::onKeyPress(const KeyEvent& event)
 {
 	EventManager* events = editor->getEventManager();
 	
-	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
+	bool isSelection = events->getCurrentToolId() == (int) SelectionTool::Select;
 	if( !isSelection ) return;
 
 	if( event.ctrlPressed )
@@ -227,20 +258,13 @@ void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 
 	Document* document = editor->getDocument();
 	if( !document ) return;
-	SceneDocument* sceneDocument = (SceneDocument*) document;
 	
+	SceneDocument* sceneDocument = (SceneDocument*) document;
 	RenderWindow* window = sceneDocument->getRenderWindow();
 	window->setCursorCapture(true);
 }
 
 //-----------------------------------//
-
-static bool isSameSelection(SelectionOperation* oldSelection, SelectionOperation* newSelection)
-{
-	bool isSameMode = (oldSelection->mode == newSelection->mode);
-	bool isSameObjects = (oldSelection->selections == newSelection->selections);
-	return isSameMode && (!oldSelection->lastUndone) && isSameObjects;
-}
 
 void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 {
@@ -254,26 +278,23 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 
 	SelectionOperation* selection = nullptr;
 
-	if(dragRectangle)
+	if(selections->dragRectangle)
 		selection = processDragSelection(event);
 	else
 		selection = processSelection(event);
 
 	if( !selection ) return;
 
-	SelectionOperation* selected = selections->getSelection();
+	const SelectionCollection& selected = selections->getSelections();
 
 	// Prevent duplication of selection events.
-	if(selected && isSameSelection(selected, selection)) 
+	if( selected.isSame(selection->selections) ) 
 	{
 		LogDebug("Ignoring duplicated selection");
 		Deallocate(selection);
 		return;
 	}
 
-	if( selected )
-		selected->unselectAll();
-		
 	selection->redo();
 
 	UndoManager* undoManager = sceneDocument->getUndoManager();
@@ -286,42 +307,47 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
 	EventManager* events = editor->getEventManager();
 
-	if( events->getCurrentTool() != SelectionTool::Select )
+	if( events->getCurrentToolId() != SelectionTool::Select )
 		return;
 
 	if( !event.info->leftButton )
 		return;
 
-	if( !dragRectangle ) createRectangle();
+	if( !selections->dragRectangle )
+	{
+		selections->dragRectangle = createRectangle();
+
+		Document* document = editor->getDocument();
+		if( !document ) return;
 	
-	updateRectangle( event );
+		SceneDocument* sceneDocument = (SceneDocument*) document;
+		sceneDocument->editorScene->entities.add(selections->dragRectangle);
+	}
+	
+	updateRectangle( event, selections->dragRectangle.get() );
 }
 
 //-----------------------------------//
 
-void SelectionPlugin::createRectangle()
+EntityPtr SelectionPlugin::createRectangle()
 {
 	OverlayPtr overlay = AllocateThis(Overlay);
 	overlay->setPositionMode( PositionMode::Absolute );
-	overlay->setOpacity(0.5f);
+	overlay->setOpacity(0.3f);
 	overlay->setBorderWidth(1);
 	overlay->setBorderColor( Color::White );
 	overlay->setBackgroundColor( Color::White );
 
-	dragRectangle.reset( EntityCreate( AllocatorGetHeap() ) );
+	EntityPtr dragRectangle = EntityCreate( AllocatorGetHeap() );
 	dragRectangle->addTransform();
 	dragRectangle->addComponent(overlay);
 
-	Document* document = editor->getDocument();
-	if( !document ) return;
-	
-	SceneDocument* sceneDocument = (SceneDocument*) document;
-	sceneDocument->editorScene->add(dragRectangle);
+	return dragRectangle;
 }
 
 //-----------------------------------//
 
-void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
+void SelectionPlugin::updateRectangle( const MouseDragEvent& event, Entity* dragRectangle )
 {
 	Vector2 dragPoint = Vector2(event.x, event.y);
 	
@@ -334,7 +360,8 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
-	overlay->setPosition(dragMin);
+	overlay->setPositionMode(PositionMode::Absolute);
+	overlay->setOffset(dragMin);
 	overlay->setSize( dragMax - dragMin );
 
 	editor->getDocument()->getWindow()->flagRedraw();
@@ -344,21 +371,11 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 
 SelectionOperation* SelectionPlugin::createDeselection()
 {
-	SelectionOperation* selected = selections->getSelection();
-	if( !selected ) return nullptr;
-
 	// If there is a current selection, and the user pressed the mouse,
 	// then we need to unselect everything that is currently selected.
 
-	SelectionOperation* selection = selections->createOperation( selections->getSelectionMode() );
-	selection->description = "Deselection";
-	selection->mode = SelectionMode::None;
-	
-	// In the case of an undone deselection, the selection is in the previous selections.
-	if( selected->selections.empty() )
-		selection->previous = selected->previous;
-	else
-		selection->previous = selected->selections;
+	SelectionOperation* selection = CreateSelectionOperation("Deselection");
+	selection->setPreviousSelections( selections->getSelections() );
 
 	return selection;
 }
@@ -369,48 +386,50 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 {
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	const ScenePtr& scene = sceneDocument->scene;
-	RenderView* view = sceneDocument->viewframe->getView();
+	
+	RenderView* view = sceneDocument->sceneWindow->getView();
 	const CameraPtr& camera = view->getCamera();
 
-	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
-	const Vector2& pos = overlay->getPosition();
-	const Vector2& size = overlay->getSize();
+	OverlayPtr overlay = selections->dragRectangle->getComponent<Overlay>();
+	const Vector3& pos = overlay->getOffset();
+	const Vector3& size = overlay->getSize();
 
 	Frustum pickVolume = camera->getVolume(pos.x, pos.x+size.x, pos.y, pos.y+size.y);
 
 	RayQueryList list;
 	scene->doRayVolumeQuery(pickVolume, list);
 
-	SelectionOperation* selection = nullptr;
-	SelectionOperation* selected = selections->getSelection();
-
-	sceneDocument->editorScene->remove(dragRectangle);
-	dragRectangle.reset();
+	sceneDocument->editorScene->entities.remove(selections->dragRectangle);
+	selections->dragRectangle.reset();
 
 	if( list.empty() )
 	{
-		selection = createDeselection();
+		SelectionOperation* selection = createDeselection();
 		return selection;
 	}
 
+#if 0
 	// If we are in additive mode, don't create a new selection.
 	if( selected && additiveMode )
 		selection = selected;
+#endif
 
 	// If there is no current selection, create a new one.
-	if( !selection )
-	{
-		selection = selections->createOperation( selections->getSelectionMode() );
-		selection->description = "Drag Selection";
-	}
+	SelectionOperation* selection = CreateSelectionOperation("Drag Selection");
+	selection->setPreviousSelections( selections->getSelections() );
 
-	if( selected && !additiveMode )
-		selection->previous = selected->selections;
+	SelectionCollection& selections = selection->selections;
 
 	for( size_t i = 0; i < list.size(); i++ )
 	{
-		selection->addEntity( list[i].entity );
+		// Add the picked selection to the selection collection.
+		selections.addEntity( list[i].entity );
 	}
+
+#if 0
+	if( selected && !additiveMode )
+		selection->previous = selected->selections;
+#endif
 
 	return selection;
 }
@@ -429,12 +448,9 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 		return selection;
 	}
 	
-	selection = selections->createOperation( selections->getSelectionMode() );
-	selection->description = "Selection";
-	selection->addEntity(entity);
-
-	SelectionOperation* selected = selections->getSelection();
-	selection->setPreviousSelections(selected);
+	selection = CreateSelectionOperation("Selection");
+	selection->selections.addEntity(entity);
+	selection->setPreviousSelections( selections->getSelections() );
 
 	return selection;
 }
@@ -447,9 +463,9 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	if( !document ) return false;
 
 	SceneDocument* sceneDocument = (SceneDocument*) document;
-	sceneDocument->editorScene->remove(dragRectangle);
+	sceneDocument->editorScene->entities.remove(selections->dragRectangle);
 
-	RenderView* view = sceneDocument->viewframe->getView();
+	RenderView* view = sceneDocument->sceneWindow->getView();
 	const CameraPtr& camera = view->getCamera();
 	const ScenePtr& scene = sceneDocument->scene;
 
@@ -477,9 +493,10 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 		const RayQueryResult& query = list[i];
 		
 		RayTriangleQueryResult res;
+		
 		if( !scene->doRayTriangleQuery(pickRay, res, query.entity) )
 			continue;
-			
+
 		if( res.distance < minDistance )
 		{
 			found = true;

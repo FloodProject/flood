@@ -8,6 +8,8 @@
 
 #include "Editor/API.h"
 #include "SelectionManager.h"
+#include "SelectionOperation.h"
+
 #include "Editor.h"
 #include "UndoManager.h"
 #include "EventManager.h"
@@ -19,16 +21,105 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+SelectionData::SelectionData()
+	: mode(SelectionMode::None)
+{
+}
+
+//-----------------------------------//
+
+void SelectionCollection::addEntity(const EntityPtr& entity)
+{
+	SelectionData data;
+	
+	data.mode = SelectionMode::Entity;
+	data.entity = entity;
+
+	selections.push_back(data);
+}
+
+//-----------------------------------//
+
+bool SelectionCollection::hasEntity(const EntityPtr& entity) const
+{
+	for(size_t i = 0; i < selections.size(); i++)
+	{
+		const SelectionData& data = selections[i];
+		if(data.entity == entity) return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
+bool SelectionCollection::isEmpty() const
+{
+	return selections.empty();
+}
+
+//-----------------------------------//
+
+bool SelectionCollection::isSame(const SelectionCollection& selection) const
+{
+	const SelectionsVector& sels = selection.selections;
+	bool sameSize = sels.size() == selections.size();
+
+	return contains(selection) && sameSize;
+}
+
+//-----------------------------------//
+
+bool SelectionCollection::contains(const SelectionData& selection) const
+{
+	auto it = std::find(selections.begin(), selections.end(), selection);
+	return it != selections.end();
+}
+
+//-----------------------------------//
+
+bool SelectionCollection::contains(const SelectionCollection& selection) const
+{
+	const SelectionsVector& sels = selection.selections;
+
+	bool isEmpty = sels.empty() || selections.empty();
+	
+	if( isEmpty )
+		return sels.empty() && selections.empty();
+	
+	if( selection.isEmpty() ) return false;
+
+	
+	for(size_t i = 0; i < sels.size(); i++)
+	{
+		const SelectionData& data = sels[i];
+		if( !contains(data) ) return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
 SelectionManager::SelectionManager()
 	: mode(SelectionMode::Entity)
-	, selection(nullptr)
-{ }
+{
+	dragRectangle = nullptr;
+}
 
 //-----------------------------------//
 
 bool SelectionData::operator == (const SelectionData& rhs) const
 {
-	return entity == rhs.entity;
+	switch(mode)
+	{
+	case SelectionMode::Entity:
+		return entity == rhs.entity;
+	default:
+		LogAssert("Unsupported selection mode");
+	}
+
+	return false;
 }
 
 //-----------------------------------//
@@ -47,210 +138,98 @@ void SelectionManager::setSelectionMode(SelectionMode::Enum mode)
 
 //-----------------------------------//
 
-SelectionOperation* SelectionManager::getSelection() const
+void SelectionManager::addSelection(const SelectionData& selection)
 {
-	return selection.get();
-}
+	// Add the selection to the current selections.
+	selections.selections.push_back(selection);
 
-//-----------------------------------//
+	EventManager* events = GetEditor().getEventManager();
 
-void SelectionManager::setSelection(SelectionOperation* selection)
-{
-	this->selection = selection;
-}
-
-//-----------------------------------//
-
-SelectionOperation* SelectionManager::createOperation( SelectionMode::Enum mode )
-{
-	SelectionOperation* selection = AllocateThis(SelectionOperation);
-	
-	selection->description = "Entity selection";
-	selection->mode = mode;
-	selection->selectionManager = this;
-
-	return selection;
-}
-
-//-----------------------------------//
-
-REFLECT_CHILD_CLASS(SelectionOperation, UndoOperation)
-REFLECT_CLASS_END()
-
-SelectionOperation::~SelectionOperation()
-{
-	assert( selectionManager->getSelection() != this );
-}
-
-//-----------------------------------//
-
-/** 
-Unselect everything
-	Undo: Select previous selection
-	Redo: Unselect previous selection
-
-Select with no previous selection
-	Undo: Unselect selection
-	Redo: Select selection
-	
-Select with previous selection
-	Undo: Unselect selection && Select previous selection
-	Redo: Select selection && Unselect previous selection */
-
-void SelectionOperation::undo()
-{
-	if( mode == SelectionMode::None )
+	switch(selection.mode)
 	{
-		selectPrevious();
-	}
-	else if( previous.empty() )
+	case SelectionMode::Entity:
 	{
-		unselectAll();
-	}
-	else
-	{
-		unselectAll();
-		selectPrevious();
-	}
-
-	lastUndone = true;
-	selectionManager->setSelection(this);
-}
-
-//-----------------------------------//
-
-void SelectionOperation::redo()
-{
-	if( mode == SelectionMode::None )
-	{
-		unselectPrevious();
-	}
-	else if( previous.empty() )
-	{
-		selectAll();
-	}
-	else
-	{
-		unselectPrevious();
-		selectAll();
-	}
-
-	lastUndone = false;
-	selectionManager->setSelection(this);
-}
-
-//-----------------------------------//
-
-void SelectionOperation::selectAll()
-{
-	for(size_t i = 0; i < selections.size(); i++ )
-	{
-		const SelectionData& data = selections[i];
-		const EntityPtr& entity = data.entity;
-
-		setBoundingBoxVisible(entity, true);
-
-		EventManager* events = GetEditor().getEventManager();
+		const EntityPtr& entity = selection.entity;
 		events->onEntitySelect(entity);
+		break;
+	}
+	default:
+		LogAssert("Unsupported selection mode");
+		return;
 	}
 }
 
 //-----------------------------------//
 
-void SelectionOperation::unselectAll()
+void SelectionManager::removeSelection(const SelectionData& selection)
 {
-	for(size_t i = 0; i < selections.size(); i++ )
+	// Search the current selections for the selection.
+	SelectionsVector& sels = selections.selections;
+
+	if( std::find(sels.begin(), sels.end(), selection) == sels.end() )
 	{
-		const SelectionData& data = selections[i];
-		const EntityPtr& entity = data.entity;
+		// Selection was not found in the current selections.
+		return;
+	}
 
-		setBoundingBoxVisible(entity, false);
+	// Remove the selection from the current selections.
+	auto it = std::remove(sels.begin(), sels.end(), selection);
+	sels.erase(it, sels.end());
 
-		EventManager* events = GetEditor().getEventManager();
+	EventManager* events = GetEditor().getEventManager();
+
+	switch(selection.mode)
+	{
+	case SelectionMode::Entity:
+	{
+		const EntityPtr& entity = selection.entity;
 		events->onEntityUnselect(entity);
+		break;
+	}
+	default:
+		LogAssert("Unsupported selection mode");
+		return;
 	}
 }
 
 //-----------------------------------//
 
-void SelectionOperation::selectPrevious()
+void SelectionManager::addSelections(const SelectionCollection& selections)
 {
-	for(size_t i = 0; i < previous.size(); i++ )
+	const SelectionsVector& sels = selections.selections;
+	
+	for(size_t i = 0; i < sels.size(); i++)
 	{
-		const SelectionData& data = previous[i];
-		const EntityPtr& entity = data.entity;
-
-		setBoundingBoxVisible(entity, true);
-
-		EventManager* events = GetEditor().getEventManager();
-		events->onEntitySelect(entity);
+		const SelectionData& sel = sels[i];
+		addSelection(sel);
 	}
 }
 
 //-----------------------------------//
 
-void SelectionOperation::unselectPrevious()
+void SelectionManager::removeSelections(const SelectionCollection& selections)
 {
-	for(size_t i = 0; i < previous.size(); i++ )
+	const SelectionsVector& sels = selections.selections;
+	
+	for(size_t i = 0; i < sels.size(); i++)
 	{
-		const SelectionData& data = previous[i];
-		const EntityPtr& entity = data.entity;
-
-		setBoundingBoxVisible(entity, false);
-
-		EventManager* events = GetEditor().getEventManager();
-		events->onEntityUnselect(entity);
+		const SelectionData& sel = sels[i];
+		removeSelection(sel);
 	}
 }
 
 //-----------------------------------//
 
-void SelectionOperation::addEntity(const EntityPtr& entity)
+void SelectionManager::removeCurrent()
 {
-	SelectionData data;
-	data.entity = entity;
-
-	selections.push_back(data);
+	removeSelections(selections);
 }
 
 //-----------------------------------//
 
-void SelectionOperation::setPreviousSelections(SelectionOperation* selected)
+const SelectionCollection& SelectionManager::getSelections() const
 {
-	if( !selected ) return;
-	assert( previous.empty() );
-
-	if( !selected->lastUndone )
-		previous = selected->selections;
-	else
-		previous = selected->previous;
-}
-
-//-----------------------------------//
-
-bool SelectionOperation::isSelection(const EntityPtr& entity)
-{
-	for(size_t i = 0; i < selections.size(); i++)
-	{
-		SelectionData& data = selections[i];
-		
-		if(data.entity == entity)
-			return true;
-	}
-
-	return false;
-}
-
-//-----------------------------------//
-
-void SelectionOperation::setBoundingBoxVisible(const EntityPtr& entity, bool state)
-{
-	if( !entity ) return;
-
-	const TransformPtr& transform = entity->getTransform();
-	if( !transform ) return;
-
-	transform->setDebugRenderableVisible( state );
+	return selections;
 }
 
 //-----------------------------------//

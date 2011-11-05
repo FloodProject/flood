@@ -14,6 +14,7 @@
 #include "Core/Utilities.h"
 #include "Resources/ResourceManager.h"
 #include "Settings.h"
+#include "wx/sequentialsizer.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -21,10 +22,25 @@ NAMESPACE_EDITOR_BEGIN
 
 TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 						 const wxPoint& pos, const wxSize& size, long style ) 
-	: wxScrolledWindow( parent, id, pos, size, style )
+	: wxPanel( parent, id, pos, size, style )
+	, m_sizer(nullptr)
+	, m_choiceBrush(nullptr)
+	, m_sliderSize(nullptr)
+	, m_sliderStrength(nullptr)
+	, m_textureChoice(nullptr)
+	, m_tileLock(nullptr)
+	, m_tileOffsetX(nullptr)
+	, m_tileOffsetY(nullptr)
 {	
 	createUI();
 	createBrushes();
+}
+
+//-----------------------------------//
+
+TerrainPage::~TerrainPage()
+{
+
 }
 
 //-----------------------------------//
@@ -66,73 +82,60 @@ void TerrainPage::createBrushes()
 
 void TerrainPage::createUI()
 {
-	createBrush();
-}
-
-//-----------------------------------//
-
-void TerrainPage::createBrush()
-{
-	m_panelBrush = this;
-
 	wxFlexGridSizer* fgSizer2 = new wxFlexGridSizer(2);
 	fgSizer2->AddGrowableCol(1);
 
 	wxSizerFlags flags = wxSizerFlags().Expand().Border();
 
-	wxStaticText* m_staticText2 = new wxStaticText( m_panelBrush, wxID_ANY, "Brush:" );
+	wxStaticText* m_staticText2 = new wxStaticText( this, wxID_ANY, "Brush:" );
 	fgSizer2->Add( m_staticText2, flags );
 	
-	m_choiceBrush = new wxBitmapComboBox( m_panelBrush, wxID_ANY );
+	m_choiceBrush = new wxBitmapComboBox( this, wxID_ANY );
 	fgSizer2->Add( m_choiceBrush, flags );
 	
 	m_choiceBrush->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
 
-	wxStaticText* m_staticText31 = new wxStaticText( m_panelBrush, wxID_ANY, "Size:" );
+	wxStaticText* m_staticText31 = new wxStaticText( this, wxID_ANY, "Size:" );
 	fgSizer2->Add( m_staticText31, flags );
 	
-	m_sliderSize = new wxSliderCtrl( m_panelBrush, wxID_ANY, BRUSH_INITIAL_SIZE, 0, 200 );
+	m_sliderSize = new wxSliderCtrl( this, wxID_ANY, BRUSH_INITIAL_SIZE, 0, 200 );
 	fgSizer2->Add( m_sliderSize, flags );
 	
-	wxStaticText* m_staticText3 = new wxStaticText( m_panelBrush, wxID_ANY, "Strength:" );
+	wxStaticText* m_staticText3 = new wxStaticText( this, wxID_ANY, "Strength:" );
 	fgSizer2->Add( m_staticText3, flags );
 
-	m_sliderStrength = new wxSliderCtrl( m_panelBrush, wxID_ANY, 2, 0, 100 );
+	m_sliderStrength = new wxSliderCtrl( this, wxID_ANY, 2, 0, 100 );
 	fgSizer2->Add( m_sliderStrength, flags );
 
-	wxStaticText* m_staticText4 = new wxStaticText( m_panelBrush, wxID_ANY, "Texture:" );
+	wxStaticText* m_staticText4 = new wxStaticText( this, wxID_ANY, "Texture:" );
 	fgSizer2->Add( m_staticText4, flags );
 
-	m_textureChoice = new wxComboBox( m_panelBrush, wxID_ANY );
+	m_textureChoice = new wxComboBox( this, wxID_ANY );
 	fgSizer2->Add( m_textureChoice, flags );
 
 	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_DROPDOWN, &TerrainPage::onTextureDropdown, this );
 	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
 
-	wxStaticText* m_staticText5 = new wxStaticText( m_panelBrush, wxID_ANY, "Tile:" );
+	wxStaticText* m_staticText5 = new wxStaticText( this, wxID_ANY, "Tile:" );
 	fgSizer2->Add( m_staticText5, flags );
 
-	wxBoxSizer* tileSizer = new wxBoxSizer( wxVERTICAL );
+	wxSizer* tileSizer = new wxBoxSizer( wxVERTICAL );
 	
-	m_tileLock = new wxCheckBox( m_panelBrush, wxID_ANY, "Lock" );
+	m_tileLock = new wxCheckBox( this, wxID_ANY, "Lock" );
 	m_tileLock->SetValue(false);
 	tileSizer->Add( m_tileLock, flags );
 
-	m_tileOffsetX = new wxSliderCtrl( m_panelBrush, wxID_ANY, 0, 0, 100 );
+	m_tileOffsetX = new wxSliderCtrl( this, wxID_ANY, 0, 0, 100 );
 	tileSizer->Add( m_tileOffsetX, flags );
 
-	m_tileOffsetY = new wxSliderCtrl( m_panelBrush, wxID_ANY, 0, 0, 100 );
+	m_tileOffsetY = new wxSliderCtrl( this, wxID_ANY, 0, 0, 100 );
 	tileSizer->Add( m_tileOffsetY, flags );
 
 	fgSizer2->Add( tileSizer, flags );
 
+	//m_sizer = new wxSequentialSizer(wxVERTICAL);
+
 	SetSizerAndFit( fgSizer2 );
-}
-
-//-----------------------------------//
-
-void TerrainPage::createCell()
-{
 }
 
 //-----------------------------------//

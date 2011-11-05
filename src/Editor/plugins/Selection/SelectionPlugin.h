@@ -39,7 +39,7 @@ public:
 
 	// Plugin tool selection callback.
 	void onToolSelect( int id ) OVERRIDE;
-	void onUndoOperation( const UndoOperationPtr& ) OVERRIDE;
+	void onToolNone() OVERRIDE;
 
 	// Mouse callbacks.
 	void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
@@ -50,6 +50,10 @@ public:
 	void onKeyPress(const KeyEvent&) OVERRIDE;
 	void onKeyRelease(const KeyEvent&) OVERRIDE;
 
+	// Document callbacks.
+	void onDocumentSelect( Document& ) OVERRIDE;
+	void onDocumentUnselect( Document& ) OVERRIDE;
+
 	// Scene callbacks.
 	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
 	void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
@@ -57,6 +61,9 @@ public:
 	// Entity callbacks.
 	void onEntityRemoved(const EntityPtr& );
 	void onEntityUnselect(const EntityPtr& ) OVERRIDE;
+
+	// Undo callbacks.
+	void onUndoOperation( const UndoOperationPtr& ) OVERRIDE;
 
 	// Gets the entity picked by the ray.
 	bool getPickEntity(int x, int y, EntityPtr& entity);
@@ -67,10 +74,10 @@ public:
 public:
 
 	// Creates the drag selection rectangle.
-	void createRectangle();
+	EntityPtr createRectangle();
 
 	// Updates the drag selection rectangle.
-	void updateRectangle( const MouseDragEvent& );
+	void updateRectangle( const MouseDragEvent&, Entity* dragRectangle );
 
 	// Creates a deselection operation.
 	SelectionOperation* createDeselection();
@@ -81,14 +88,15 @@ public:
 	// Processes a drag selection.
 	SelectionOperation* processDragSelection(const MouseButtonEvent& event);
 
-	SelectionManager* selections;
 	wxAuiToolBarItem* buttonSelect;
 
 	Vector2 dragOrigin;
-	EntityPtr dragRectangle;
+	SelectionManager* selections;
 
 	// Holds if we are in additive mode.
 	bool additiveMode;
+
+	bool handlingEvents;
 };
 
 //-----------------------------------//

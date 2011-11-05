@@ -20,7 +20,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class TerrainPage : public wxScrolledWindow
+class TerrainPage : public wxPanel
 {
 public:
 
@@ -28,6 +28,9 @@ public:
 		const wxPoint& pos = wxDefaultPosition, 
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL );
+
+
+	~TerrainPage();
 
 	// Gets the strength of the brush.
 	int	getBrushStrength();
@@ -51,8 +54,6 @@ public:
 protected:
 
 	void createUI();
-	void createBrush();
-	void createCell();
 	void createBrushes();
 
 	void onBrushDropdown(wxCommandEvent& event);
@@ -61,8 +62,8 @@ protected:
 	void onTextureDropdown(wxCommandEvent& event);
 	void onTextureSelected(wxCommandEvent& event);
 
-	wxPanel* m_panelBrush;
-	
+	wxSizer* m_sizer;
+
 	wxBitmapComboBox* m_choiceBrush;
 	wxSliderCtrl* m_sliderSize;
 	wxSliderCtrl* m_sliderStrength;

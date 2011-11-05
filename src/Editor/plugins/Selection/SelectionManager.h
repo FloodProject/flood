@@ -8,16 +8,12 @@
 
 #pragma once
 
+#include "Document.h"
 #include "UndoOperation.h"
 
+FWD_DECL_INTRUSIVE(SelectionOperation)
+
 NAMESPACE_EDITOR_BEGIN
-
-//-----------------------------------//
-
-class EditorFrame;
-class UndoManager;
-class EventManager;
-class SelectionManager;
 
 //-----------------------------------//
 
@@ -26,10 +22,10 @@ namespace SelectionMode
 	enum Enum
 	{
 		None,
-		Vertex,
-		Edge,
-		Face,
 		Entity,
+		Face,
+		Edge,
+		Vertex,
 	};
 }
 
@@ -37,67 +33,48 @@ namespace SelectionMode
 
 struct SelectionData
 {
+	SelectionData();
+
 	bool operator == (const SelectionData& rhs) const;
+	
+	SelectionMode::Enum mode;
 	EntityPtr entity;
 };
 
-REFLECT_DECLARE_CLASS(SelectionOperation)
+typedef std::vector<SelectionData> SelectionsVector;
 
-class SelectionOperation : public UndoOperation
+struct SelectionCollection
 {
-	REFLECT_DECLARE_OBJECT(SelectionOperation)
-	friend class SelectionManager;
-
-public:
-
-	~SelectionOperation();
-
-	// Undoes/redoes the operation.
-	void undo() OVERRIDE;	
-	void redo() OVERRIDE;
-
-	// Selects/unselects all the objects.
-	void selectAll();
-	void unselectAll();
-
-	// Selects/unselects all the previous selected objects.
-	void selectPrevious();
-	void unselectPrevious();
+	// Returns if there are no selections.
+	bool isEmpty() const;
 
 	// Adds an entity to the selection.
 	void addEntity(const EntityPtr& entity);
 
-	// Sets the previous selections.
-	void setPreviousSelections(SelectionOperation*);
-
 	// Checks if an entity is in the selection.
-	bool isSelection(const EntityPtr& entity);
+	bool hasEntity(const EntityPtr& entity) const;
 
-	// Selection mode.
-	SelectionMode::Enum mode;
+	// Returns true if the collection contain exactly the same objects.
+	bool isSame(const SelectionCollection&) const;
 
-	// Selections.
-	std::vector<SelectionData> selections;
-	std::vector<SelectionData> previous;
+	// Returns true if selection is contained.
+	bool contains(const SelectionData&) const;
 
-protected:
+	// Returns true if selection is contained.
+	bool contains(const SelectionCollection&) const;
 
-	// Sets the bounding box visibility of the given node.
-	void setBoundingBoxVisible( const EntityPtr& node, bool state );
-
-	SelectionManager* selectionManager;
+	SelectionsVector selections;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(SelectionOperation)
+//-----------------------------------//
 
 /**
  * Manages and keeps track of selections, which can be of different modes.
- * You can also make group selections by using a drag select operation.
  * This also makes sure that selections are treated as first-class operations
  * in the editor undo/redo system.
  */
 
-class SelectionManager
+class SelectionManager : public DocumentContext
 {
 public:
 
@@ -109,22 +86,33 @@ public:
 	// Sets the current selection mode.
 	void setSelectionMode(SelectionMode::Enum mode);
 
-	// Gets the current selection.
-	SelectionOperation* getSelection() const;
+	// Gets the current selections.
+	const SelectionCollection& getSelections() const;
 
-	// Sets the current selection.
-	void setSelection(SelectionOperation* selection);
+	// Adds the selection to the current selections.
+	void addSelection(const SelectionData&);
 
-	// Creates a new selection operation.
-	SelectionOperation* createOperation( SelectionMode::Enum );
+	// Removes the selection from the current selections.
+	void removeSelection(const SelectionData&);
+
+	// Adds the selections to the current selections.
+	void addSelections(const SelectionCollection&);
+
+	// Removes the selections to the current selections.
+	void removeSelections(const SelectionCollection&);
+
+	// Removes all the current selections.
+	void removeCurrent();
+
+	EntityPtr dragRectangle;
 
 protected:
 
 	// Selection mode.
 	SelectionMode::Enum mode;
 
-	// Selection operation.
-	SelectionOperationPtr selection;
+	// Current selections.
+	SelectionCollection selections;
 };
 
 //-----------------------------------//

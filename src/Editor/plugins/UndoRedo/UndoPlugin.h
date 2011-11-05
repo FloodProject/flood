@@ -34,7 +34,6 @@ public:
 	void onPluginDisable() OVERRIDE;
 	
 	// Document callbacks.
-	void onDocumentCreate( Document& ) OVERRIDE;
 	void onDocumentDestroy( Document& ) OVERRIDE;
 	void onDocumentSelect( Document& ) OVERRIDE;
 	void onDocumentUnselect( Document& ) OVERRIDE;
@@ -52,8 +51,8 @@ protected:
 	void onUndoEvent();
 
 	// Handles button clicks.
-	void onUndoButtonClick(wxCommandEvent& event);
-	void onRedoButtonClick(wxCommandEvent& event);
+	void onUndoButton(wxCommandEvent& event);
+	void onRedoButton(wxCommandEvent& event);
 
 	wxAuiToolBarItem* undoButton;
 	wxAuiToolBarItem* redoButton;
@@ -61,7 +60,7 @@ protected:
 	wxMenuItem* undoItem;
 	wxMenuItem* redoItem;
 
-	UndoManager* undoManager;
+	Document* undoDocument;
 };
 
 //-----------------------------------//

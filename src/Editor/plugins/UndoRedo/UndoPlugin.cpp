@@ -23,8 +23,9 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 UndoPlugin::UndoPlugin()
-	: undoManager(nullptr)
-{ }
+{
+
+}
 
 //-----------------------------------//
 
@@ -59,20 +60,22 @@ void UndoPlugin::onPluginEnable()
 		redoButton = toolbarCtrl->AddTool( wxID_REDO, "Redo", iconRedo, "Redo" );
 		addTool(redoButton);
 
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
 	}
 
 	wxMenu* menu = editor->menuEdit;
 	undoItem = menu->Append(undoButton->GetId(), undoButton->GetLabel() + "\tCtrl-Z");
 	redoItem = menu->Append(redoButton->GetId(), redoButton->GetLabel() + "\tCtrl-Y");
 
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
 
 	// Subscribe as an event listener.
 	EventManager* events = editor->getEventManager();
 	events->addEventListener(this);
+
+	undoDocument = nullptr;
 
 	updateButtons();
 }
@@ -81,20 +84,31 @@ void UndoPlugin::onPluginEnable()
 
 void UndoPlugin::onPluginDisable()
 {
+	if( undoDocument )
+		disconnectUndo(*undoDocument);
 
-}
+	// Remove entries from the menu.
+	wxMenu* menu = editor->menuEdit;
+	menu->Delete( undoItem->GetId() );
+	menu->Delete( redoItem->GetId() );
 
-//-----------------------------------//
+	// Disconnect from all the events.
+	editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
+	editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
 
-void UndoPlugin::onDocumentCreate( Document& document )
-{
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	
+	if(toolbarCtrl)
+	{
+		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
+		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
+	}
 }
 
 //-----------------------------------//
 
 void UndoPlugin::onDocumentDestroy( Document& document )
 {
-	if( !undoManager ) return;
 	disconnectUndo(document);
 }
 
@@ -116,10 +130,10 @@ void UndoPlugin::onDocumentUnselect( Document& document )
 
 void UndoPlugin::connectUndo(Document& document)
 {
-	assert( !undoManager );
+	undoDocument = &document;
+	UndoManager* undoManager = document.getUndoManager();
 
 	// Connect to undo/redo events.
-	undoManager = document.getUndoManager();
 	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
 
 	// Updates the state of the buttons.
@@ -130,11 +144,17 @@ void UndoPlugin::connectUndo(Document& document)
 
 void UndoPlugin::disconnectUndo(Document& document)
 {
-	assert( undoManager != nullptr );
+	if( undoDocument != &document ) return;
 
-	// Disconnect to undo/redo events.
-	undoManager->onUndoRedoEvent.Disconnect(this, &UndoPlugin::onUndoEvent);
-	undoManager = nullptr;
+	undoDocument = nullptr;
+
+	UndoManager* undoManager = document.getUndoManager();
+	
+	if( undoManager )
+	{
+		// Disconnect to undo/redo events.
+		undoManager->onUndoRedoEvent.Disconnect(this, &UndoPlugin::onUndoEvent);
+	}
 
 	// Updates the state of the buttons.
 	updateButtons();
@@ -154,10 +174,12 @@ void UndoPlugin::updateButtons()
 	bool undoEmpty = true;
 	bool redoEmpty = true;
 
-	if(undoManager)
+	if(undoDocument && undoDocument->getUndoManager())
 	{
+		UndoManager* undoManager = undoDocument->getUndoManager();
+	
 		undoEmpty = undoManager->getUndoOperations().empty();
-		redoEmpty = undoManager->getRedoOperations().empty();		
+		redoEmpty = undoManager->getRedoOperations().empty();
 	}
 
 	undoItem->Enable( !undoEmpty );
@@ -175,15 +197,17 @@ void UndoPlugin::updateButtons()
 
 //-----------------------------------//
 
-void UndoPlugin::onUndoButtonClick(wxCommandEvent& event)
+void UndoPlugin::onUndoButton(wxCommandEvent& event)
 {
+	UndoManager* undoManager = undoDocument->getUndoManager();
 	undoManager->undoOperation();
 }
 
 //-----------------------------------//
 
-void UndoPlugin::onRedoButtonClick(wxCommandEvent& event)
+void UndoPlugin::onRedoButton(wxCommandEvent& event)
 {
+	UndoManager* undoManager = undoDocument->getUndoManager();
 	undoManager->redoOperation();
 }
 

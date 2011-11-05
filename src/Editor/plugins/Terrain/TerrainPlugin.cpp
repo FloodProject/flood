@@ -28,8 +28,10 @@
 #include "Engine/Engine.h"
 #include "EventManager.h"
 #include "RenderControl.h"
-
-#include "../Scene/SceneDocument.h"
+#include "Plugins/Scene/ScenePlugin.h"
+#include "Plugins/Scene/SceneDocument.h"
+#include "Plugins/Property/PropertyPlugin.h"
+#include "Plugins/Property/PropertyPage.h"
 
 #define TERRAIN_PANE_NAME "Terrains"
 
@@ -61,12 +63,14 @@ PluginMetadata TerrainPlugin::getMetadata()
 	metadata.description = "Provides terrain editing tools.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.priority = 330;
+	metadata.priority = 550;
 
 	return metadata;
 }
 
 //-----------------------------------//
+
+#define ENABLE_TERRAIN_TOOLS_ON_TOOLBAR
 
 void TerrainPlugin::onPluginEnable()
 {
@@ -79,25 +83,34 @@ void TerrainPlugin::onPluginEnable()
 			wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 			wxITEM_RADIO );
 		addTool(buttonRaise, true);
+		toolbarCtrl->EnableTool(buttonRaise->GetId(), false);
 
 		buttonPaint = toolbarCtrl->AddTool( TerrainTool::Paint, "Terrain Paint",
 			wxMEMORY_BITMAP(terrain_paint), "Paints the terrain", wxITEM_RADIO );
 		addTool(buttonPaint, true);
+		toolbarCtrl->EnableTool(buttonPaint->GetId(), false);
 	}
 #endif
 
-	terrainPage = new TerrainPage(editor);
+	PropertyEvent event;
+	event.Connect(this, &TerrainPlugin::handleCell);
 
-	wxBitmap icon = wxMEMORY_BITMAP(world);
-	
-	wxAuiPaneInfo pane;
-	pane.Name(TERRAIN_PANE_NAME).Caption(TERRAIN_PANE_NAME).Hide().Left().Icon(icon);
-	pane.BestSize(200, -1);
-
-	editor->getAUI()->AddPane(terrainPage, pane);
-	editor->getAUI()->Update();
+	GetPlugin<ScenePlugin>()->setPropertyHandler(CellGetType(), event);
 
 	editor->getEventManager()->addEventListener(this);
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onPluginDisable()
+{
+	terrain = nullptr;
+	terrainPage = nullptr;
+
+	ScenePlugin* sp = GetPlugin<ScenePlugin>();
+	if( !sp ) return;
+	
+	sp->removePropertyHandler(CellGetType());
 }
 
 //-----------------------------------//
@@ -106,6 +119,8 @@ void TerrainPlugin::onToolSelect( int id )
 {
 	Deallocate(terrainOperation);
 	tool = (TerrainTool::Enum) id;
+
+	#pragma TODO("Preload the projective texturing shader")
 
 #if PROGRAM_BUFFER
 	ProgramManager* programs = GetRenderDevice()->getProgramManager();
@@ -117,14 +132,7 @@ void TerrainPlugin::onToolSelect( int id )
 
 void TerrainPlugin::onToolUnselect( int id )
 {
-	if( hasTool(id) ) return;
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::onPluginDisable()
-{
-	//removePage( terrainPage );
+	disableBrushProjection();
 }
 
 //-----------------------------------//
@@ -139,19 +147,17 @@ void TerrainPlugin::onEntitySelect( const EntityPtr& entity )
 	if( !ReflectionIsEqual(terrain->getType(), TerrainGetType()) )
 		return;
 
-	wxAuiPaneInfo& pane = editor->getAUI()->GetPane(TERRAIN_PANE_NAME);
-	
-	if( !pane.IsShown() )
-	{
-		pane.Show();
-		editor->getAUI()->Update();
-	}
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	toolbarCtrl->EnableTool(buttonRaise->GetId(), true);
+	toolbarCtrl->EnableTool(buttonPaint->GetId(), true);
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onEntityUnselect( const EntityPtr& entity )
 {
+	disableTerrainMode();
+
 	const CellPtr& cell = entity->getComponentFromFamily<Cell>();
 	if( !cell ) return;
 	
@@ -162,17 +168,37 @@ void TerrainPlugin::onEntityUnselect( const EntityPtr& entity )
 
 	if( newTerrain != terrain )
 		return;
+}
 
-	terrain = nullptr;
+//-----------------------------------//
 
-	editor->getAUI()->GetPane("Terrains").Hide();
-	editor->getAUI()->Update();
+void TerrainPlugin::handleCell(PropertyPage* page, wxFoldPanel& panel)
+{
+	wxFoldPanel foldPanel = page->AddFoldPanel(TERRAIN_PANE_NAME);
+	wxImage imageWorld = wxMEMORY_IMAGE(world);
+	foldPanel.SetIcon(&imageWorld);
+
+	terrainPage = new TerrainPage( foldPanel.GetParent() );
+	page->AddFoldPanelWindow(foldPanel, terrainPage, wxSizerFlags().Expand());
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onSceneUnload( const ScenePtr& scene )
 {
+	disableTerrainMode();
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::disableTerrainMode()
+{
+	disableBrushProjection();
+
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	toolbarCtrl->EnableTool(buttonRaise->GetId(), false);
+	toolbarCtrl->EnableTool(buttonPaint->GetId(), false);
+
 	terrain = nullptr;
 	terrainOperation = nullptr;
 	entityProjector = nullptr;
@@ -198,6 +224,8 @@ void TerrainPlugin::onTimer( wxTimerEvent& )
 
 void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
+	if( !isToolSelected() ) return;
+
 	if( !terrain ) return;
 
 	if( mbe.isLeftButton() )
@@ -214,6 +242,8 @@ void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 void TerrainPlugin::onMouseButtonRelease( const MouseButtonEvent& )
 {
+	if( !isToolSelected() ) return;
+
 	if( !terrain ) return;
 	registerUndoOperation();
 }
@@ -222,6 +252,8 @@ void TerrainPlugin::onMouseButtonRelease( const MouseButtonEvent& )
 
 void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 {
+	if( !isToolSelected() ) return;
+
 	if( !terrain ) return;
 
 	MouseButtonEvent mbe( MouseEventType::MousePress );
@@ -236,13 +268,14 @@ void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 	if( mde.info->leftButton ) setupOperation(mbe);
 
 	updateBrushProjection(mbe.x, mbe.y);
-
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onMouseLeave()
 {
+	if( !isToolSelected() ) return;
+
 	if( !terrain ) return;
 
 	// We use this event to check if the user leaves the window while
@@ -258,7 +291,9 @@ void TerrainPlugin::onMouseLeave()
 
 void TerrainPlugin::onMouseMove( const MouseMoveEvent& mb )
 {
-	if( !terrain ) return;
+	if( !isToolSelected() ) return;
+
+	if( !terrain || !terrainPage ) return;
 
 	updateBrushProjection(mb.x, mb.y);
 }
@@ -267,8 +302,8 @@ void TerrainPlugin::onMouseMove( const MouseMoveEvent& mb )
 
 void TerrainPlugin::updateBrushProjection( int x, int y )
 {
-	Viewframe* viewframe = (Viewframe*) GetEditor().getDocument()->getWindow();
-	RenderWindow* window = viewframe->getControl()->getRenderWindow();
+	SceneWindow* sceneWindow = (SceneWindow*) GetEditor().getDocument()->getWindow();
+	RenderWindow* window = sceneWindow->getControl()->getRenderWindow();
 
 	RayTriangleQueryResult res;
 	bool picked = pickTerrain(x, y, res);
@@ -278,9 +313,7 @@ void TerrainPlugin::updateBrushProjection( int x, int y )
 
 	if( !picked )
 	{
-		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-		document->editorScene->remove(entityProjector);
-		entityProjector = nullptr;
+		disableBrushProjection();
 	}
 	else
 	{
@@ -291,8 +324,20 @@ void TerrainPlugin::updateBrushProjection( int x, int y )
 
 //-----------------------------------//
 
+void TerrainPlugin::disableBrushProjection()
+{
+	if( !entityProjector ) return;
+
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	document->editorScene->entities.remove(entityProjector);
+	entityProjector = nullptr;
+}
+
+//-----------------------------------//
+
 void TerrainPlugin::projectBrush(const Vector3& pos, const TerrainCellPtr& cell)
 {
+	if( !terrainPage ) return;
 	ImageHandle brushHandle = terrainPage->getBrushImage();
 	
 	Image* brushImage = brushHandle.Resolve();
@@ -304,7 +349,7 @@ void TerrainPlugin::projectBrush(const Vector3& pos, const TerrainCellPtr& cell)
 		entityProjector = projector.get();
 		
 		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-		document->editorScene->add(projector);
+		document->editorScene->entities.add(projector);
 	}
 
 	const ProjectorPtr& projector = entityProjector->getComponent<Projector>();
@@ -323,17 +368,17 @@ void TerrainPlugin::projectBrush(const Vector3& pos, const TerrainCellPtr& cell)
 
 	Material* material = projector->material.Resolve();
 	material->setTexture(0, brushHandle);
-	material->getTextureUnit(0).wrap = TextureWrapMode::ClampToBorder;
+	material->getTextureUnit(0).setWrapMode(TextureWrapMode::ClampToBorder);
 }
 
 //-----------------------------------//
 
 EntityPtr TerrainPlugin::createProjector(const GeometryPtr& cell)
 {
-	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "ProjectMaterial");
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetThis(), "ProjectMaterial");
 		
 	Material* material = materialHandle.Resolve();
-	material->setProgram("ProjectiveTexturing");
+	material->setShader("ProjectiveTexturing");
 	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
 	material->setDepthCompare(DepthCompare::LessOrEqual);
 
@@ -363,7 +408,7 @@ bool TerrainPlugin::pickCell( int x, int y )
 	if( !terrain ) return false;
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 
+	const CameraPtr& camera = document->sceneWindow->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);
@@ -475,7 +520,7 @@ bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	const ScenePtr& scene = document->scene;
-	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 
+	const CameraPtr& camera = document->sceneWindow->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);

@@ -15,6 +15,8 @@
 #include "Scene/Scene.h"
 #include "Terrain/Terrain.h"
 
+class wxFoldPanel;
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -35,6 +37,7 @@ namespace TerrainTool
 
 class TerrainPage;
 class TerrainOperation;
+class PropertyPage;
 
 REFLECT_DECLARE_CLASS(TerrainPlugin)
 
@@ -69,6 +72,9 @@ public:
 	void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
 	void onMouseLeave();
 
+	// Property callbacks.
+	void handleCell(PropertyPage*, wxFoldPanel&);
+
 protected:
 
 	// Callback used when editing the terrain by holding the mouse button.
@@ -89,11 +95,17 @@ protected:
 	// Projects a brush unto the terrain.
 	void projectBrush(const Vector3& pos, const TerrainCellPtr& cell );
 
+	// Disables the terrain editing mode.
+	void disableTerrainMode();
+
 	// Updates the brush projection unto the terrain.
 	void updateBrushProjection( int x, int y );
 
 	// Creates a new projector to project the brush.
 	EntityPtr createProjector(const GeometryPtr& cell);
+
+	// Disables the projector brush.
+	void disableBrushProjection();
 
 	// Handles the right-click context menu creation.
 	void createContextMenu( const MouseButtonEvent& mbe );
