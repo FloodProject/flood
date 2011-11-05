@@ -153,7 +153,7 @@ void ScenePage::setScene(const ScenePtr& scene)
 	weakScene = scene;
 
 	wxString sceneName = PathGetFileBase( scene->getPath() );
-	//rootId = treeCtrl->AddRoot(sceneName.Capitalize(), 1);
+	rootId = treeCtrl->AddRoot(sceneName.Capitalize(), 1);
 
 	addGroup( rootId, &scene->entities, false );
 }
