@@ -9,9 +9,12 @@
 #pragma once
 
 #include "Core/Concurrency.h"
-#include <type_traits>
 
-#define ENABLE_REFERENCES_DEBUG
+//#define ENABLE_REFERENCES_DEBUG
+
+#ifdef ENABLE_REFERENCES_DEBUG
+#include <type_traits>
+#endif
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -61,12 +64,12 @@ void DebugReferencesObject(T* px, typename std::enable_if< !std::is_base_of<Obje
 {
 }
 
-#define CALL_DEBUG_REFERENCE_DELEGATE() \
+#define REFERENCES_DEBUG_CALLBACK() \
 	DebugReferencesObject(px);
 
 #else
 
-#define CALL_DEBUG_REFERENCE_DELEGATE()
+#define REFERENCES_DEBUG_CALLBACK()
 
 #endif
 
@@ -81,7 +84,7 @@ public:
         if( px != nullptr && add_ref )
 		{
 			px->addReference();
-			CALL_DEBUG_REFERENCE_DELEGATE();
+			REFERENCES_DEBUG_CALLBACK();
 		}
     }
 
@@ -91,7 +94,7 @@ public:
         if( px != nullptr )
 		{
 			px->addReference();
-			CALL_DEBUG_REFERENCE_DELEGATE();
+			REFERENCES_DEBUG_CALLBACK();
 		}
     }
 
@@ -100,7 +103,7 @@ public:
         if( px != nullptr )
 		{
 			px->addReference();
-			CALL_DEBUG_REFERENCE_DELEGATE();
+			REFERENCES_DEBUG_CALLBACK();
 		}
     }
 
@@ -108,7 +111,7 @@ public:
     {
         if( px != nullptr && px->releaseReference() )
 		{
-			CALL_DEBUG_REFERENCE_DELEGATE();
+			REFERENCES_DEBUG_CALLBACK();
             Deallocate(px);
 		}
     }

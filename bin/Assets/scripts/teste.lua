@@ -1,7 +1,5 @@
 -- yooo lua comment
 
-local vp = require('dsa')
-
 function onUpdate()
 	local pos = transform:getPosition()
 	

@@ -72,10 +72,8 @@ void EditorFrame::createMenus()
 
 void EditorFrame::createLastUI()
 {
-	wxMenuItem* quitItem = menuFile->Append(wxID_ANY, "E&xit\tAlt-X", "Quit this program");
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, quitItem->GetId());
-
-	getAUI()->Update();
+	wxMenuItem* quitItem = menuFile->Append(wxID_EXIT, "E&xit\tCtrl-F4", "Quit this program");
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnMenuExitEvent, this, quitItem->GetId());
 }
 
 //-----------------------------------//
@@ -164,10 +162,9 @@ void EditorFrame::OnSettingsRenderUpdate(wxUpdateUIEvent& event)
 
 //-----------------------------------//
 
-void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+void EditorFrame::OnMenuExitEvent(wxCommandEvent& WXUNUSED(event))
 {
-	// Forces the frame to close.
-	Close(true);
+	Close();
 }
 
 //-----------------------------------//

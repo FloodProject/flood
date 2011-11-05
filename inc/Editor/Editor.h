@@ -18,6 +18,8 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+class EditorFrame;
+
 class EditorApp : public wxApp
 {
 public:
@@ -27,6 +29,8 @@ public:
 #ifndef BUILD_DEBUG
 	void OnFatalException() OVERRIDE;
 #endif
+
+	EditorFrame* mainFrame;
 };
 
 //-----------------------------------//
@@ -67,7 +71,7 @@ public:
 	GETTER(DocumentManager, DocumentManager*, documentManager)
 
 	// Gets the current document.
-	GETTER(Document, Document*, documentManager->currentDocument)
+	Document* getDocument() const;
 
 	// Gets/sets the drag and drop coords.
 	ACESSOR(DropCoords, Vector2, dropCoords)
@@ -79,7 +83,7 @@ protected:
 
 	// Creates the main UI layout.
 	void createUI();
-	void createToolbar();	
+	void createToolbar();
 	void createMenus();
 	void createLastUI();
 	void createEngine();
@@ -87,7 +91,7 @@ protected:
 
     // wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
-    void OnQuit(wxCommandEvent& event);
+	void OnClose(wxCloseEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnAboutWx(wxCommandEvent& event);
 	void OnPreferences(wxCommandEvent& event);
@@ -97,6 +101,7 @@ protected:
 
 	// wxWidgets menu events.
 	void OnMenuOpenEvent(wxMenuEvent& event);
+    void OnMenuExitEvent(wxCommandEvent& event);
 	void OnPanelsMenuEvent(wxCommandEvent& event);
 	void OnPanelsMenuUpdate(wxUpdateUIEvent& event);
 	void OnSettingsRender(wxCommandEvent& event);

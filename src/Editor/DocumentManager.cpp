@@ -37,7 +37,6 @@ void DocumentManager::addDocument(Document* document)
 	if( !document ) return;
 	documents.push_back(document);
 
-	document->create();
 	onDocumentAdded(document);
 }
 
@@ -48,12 +47,22 @@ void DocumentManager::removeDocument(Document* document)
 	DocumentsVector::iterator it = std::find(documents.begin(), documents.end(), document);
 	if(it == documents.end()) return;
 
+	LogInfo("Removing document: %s", document->getPath().c_str());
+
+	document->onDocumentUnselect();
+	document->onDocumentDestroy();
+
 	onDocumentRemoved(document);
 
 	documents.erase(it);
-	Deallocate(document);
 
-	if(currentDocument == document) currentDocument = nullptr;
+	if(currentDocument == document)
+	{
+		// The current document changed.
+		currentDocument = nullptr;
+	}
+
+	Deallocate(document);
 }
 
 //-----------------------------------//

@@ -38,7 +38,9 @@ void UndoManager::registerOperation( UndoOperation* operation )
 	for( size_t i = 0; i < redoOperations.size(); i++ )
 	{
 		const UndoOperationPtr& op = redoOperations[i];
-		//assert(op.get()->references == 1);
+		
+		if( op.get()->references != 1)
+			LogAssert("Undo operation '%s' should not have any references", op->getType()->name);
 	}
 
 	redoOperations.clear();
@@ -53,7 +55,7 @@ void UndoManager::clearOperations()
 	undoOperations.clear();
 	redoOperations.clear();
 
-	onUndoRedoEvent();
+	//onUndoRedoEvent();
 }
 
 //-----------------------------------//

@@ -90,13 +90,22 @@ public:
 	void onRedoOperation(const UndoOperationPtr&);
 
 	// Gets the current tool.
-	ACESSOR(CurrentTool, int, toolId)
+	ACESSOR(CurrentTool, PluginTool*, currentTool)
 
 	// Gets/sets the current plugin.
 	ACESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
 
+	// Gets the current tool id.
+	int getCurrentToolId();
+
 	// Switches the current plugin.
-	void setTool(EditorPlugin* plugin, PluginTool* tool);
+	void setTool(PluginTool* tool);
+
+	// Unsets the current tool.
+	void unsetCurrentTool();
+
+	// Toggles the current tool. Pass null to restore original tool.
+	void toggleTool(PluginTool* tool);
 
 protected:
 
@@ -111,13 +120,16 @@ protected:
 	void registerInputCallbacks();
 
 	// Pre-handling of events from the toolbar.
-	virtual bool TryBefore( wxEvent& event ) OVERRIDE;
+	bool TryBefore( wxEvent& event ) OVERRIDE;
 
 	// Current tool id.
-	int toolId;
+	PluginTool* currentTool;
 
-	// Current active plugin.
+	// Current plugin.
 	EditorPlugin* currentPlugin;
+
+	// Keeps the original tool while current is toggled.
+	PluginTool* originalTool;
 
 	// Global event listener plugins.
 	EventListeners eventListeners;

@@ -60,13 +60,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\obj\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)-$(Configuration)</TargetName>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Triton\Development\wxWidgets\lib\vc_dll;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>-Zm140 /MP</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\Editor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;WXUSINGDLL;WXMONOLITHIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,7 +86,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;Pipeline.lib;wxmsw29ud.lib;wxmsw29ud_gl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_gl.lib;wxmsw29ud_adv.lib;wxmsw29ud_aui.lib;wxmsw29ud_propgrid.lib;wxmsw29ud_webview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\wx\lib\vc_dll;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -95,7 +96,7 @@
       </GenerateMapFile>
       <MapFileName>
       </MapFileName>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <TargetMachine>MachineX86</TargetMachine>
@@ -202,14 +203,17 @@
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyGrid.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneCamera.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneWindow.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ShowIncludes>
@@ -242,10 +246,14 @@
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPage.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\captionbar.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\foldpanelbar.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\foldpanelitem.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\keybinder.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\widgets\menuutils.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\sequentialsizer.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp" />
@@ -256,7 +264,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\inc\Editor\DocumentWindow.h" />
     <ClInclude Include="..\..\inc\Editor\Editor.h" />
-    <ClInclude Include="..\..\inc\Scene\SceneWindow.h" />
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\captionbar.h" />
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\foldpanelbar.h" />
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\foldpanelitem.h" />
+    <ClInclude Include="..\..\inc\Editor\wx\sequentialsizer.h" />
     <ClInclude Include="..\..\src\Editor\API.h" />
     <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h" />
     <ClInclude Include="..\..\inc\Editor\Document.h" />
@@ -283,11 +294,16 @@
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyGrid.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyHelpers.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneCamera.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneWindow.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionManager.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPage.h" />

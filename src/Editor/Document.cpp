@@ -7,15 +7,24 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
 #include "Editor.h"
+#include "EditorIcons.h"
+#include "ImageUtils.h"
 
 #include "Document.h"
 #include "DocumentWindow.h"
 
 #include "UndoManager.h"
 #include "EventManager.h"
+#include "Plugins/UndoRedo/UndoPlugin.h"
 
 NAMESPACE_EDITOR_BEGIN
+
+//-----------------------------------//
+
+REFLECT_ABSTRACT_CLASS(Document)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -46,6 +55,13 @@ void Document::setPath(const Path& newPath)
 
 //-----------------------------------//
 
+wxBitmap Document::getBitmap()
+{
+	return wxMEMORY_BITMAP(package);
+}
+
+//-----------------------------------//
+
 void Document::create()
 {
 	assert( !undoManager );
@@ -59,9 +75,19 @@ void Document::create()
 
 //-----------------------------------//
 
+bool Document::reset()
+{
+	undoManager->clearOperations();
+	unsavedChanges = false;
+
+	return onDocumentReset();
+}
+
+//-----------------------------------//
+
 DocumentBar* Document::createDocumentBar()
 {
-	DocumentBar* bar = new wxAuiToolBar( (wxWindow*) getWindow() );
+	DocumentBar* bar = new wxAuiToolBar( getWindow() );
 	bar->Realize();
 
 	getWindow()->mainSizer->Add(bar, wxSizerFlags().Expand().Top());
@@ -86,14 +112,23 @@ void Document::resetUndo()
 	undoManager->onUndoRedoEvent.Disconnect(this, &Document::onUndoRedoEvent);
 	Deallocate(undoManager);
 
-	unsavedChanges = false;
+	setUnsavedChanges(false);
+}
+
+//-----------------------------------//
+
+void Document::setUnsavedChanges(bool newUnsavedChanges)
+{
+	unsavedChanges = newUnsavedChanges;
+	GetEditor().getDocumentManager()->onDocumentRenamed(this);
 }
 
 //-----------------------------------//
 
 void Document::onUndoRedoEvent()
 {
-	unsavedChanges = true;
+	bool unsavedChanges = !getUndoManager()->getUndoOperations().empty();
+	setUnsavedChanges(unsavedChanges);
 }
 
 //-----------------------------------//

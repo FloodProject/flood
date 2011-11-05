@@ -74,6 +74,11 @@ bool Preferences::createPages()
 	resources->InitDialog();
 	nb->SetPageImage(n++, 2);
 
+	renderers = new Renderers(nb);
+	nb->AddPage(renderers, "Renderers");
+	renderers->InitDialog();
+	nb->SetPageImage(n++, 3); 
+
     LayoutDialog();
     return true;
 }
@@ -201,6 +206,29 @@ void Plugins::OnPluginCheckUpdates( wxCommandEvent& event )
 void Plugins::OnPluginInstall( wxCommandEvent& event )
 {
 	wxMessageBox("Not implemented yet");
+}
+
+//-----------------------------------//
+
+void Resources::OnResourcesInit( wxInitDialogEvent& event )
+{
+	m_listResourcePaths->InsertColumn(0, "Path", wxLIST_FORMAT_LEFT, 400);
+}
+
+//-----------------------------------//
+
+void Resources::OnResourcesPathAdd( wxCommandEvent& event )
+{
+	wxDirDialog dirPicker(nullptr, "Choose directory", wxEmptyString,
+                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+	int res = dirPicker.ShowModal();
+	if(res != wxID_OK) return;
+
+	wxString path = dirPicker.GetPath();
+
+	int itemCount = m_listResourcePaths->GetItemCount();
+	m_listResourcePaths->InsertItem(itemCount, path);
 }
 
 //-----------------------------------//

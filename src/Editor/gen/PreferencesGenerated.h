@@ -24,6 +24,7 @@
 #include <wx/panel.h>
 #include <wx/listctrl.h>
 #include <wx/statline.h>
+#include <wx/checkbox.h>
 #include <wx/filepicker.h>
 #include <wx/statbox.h>
 #include <wx/choice.h>
@@ -111,8 +112,19 @@ class Resources : public wxPanel
 	private:
 	
 	protected:
+		wxStaticText* m_staticText21;
+		wxListCtrl* m_listResourcePaths;
+		wxButton* m_button10;
+		wxButton* m_button11;
+		wxCheckBox* m_checkBox1;
 		wxStaticText* m_staticText8;
 		wxDirPickerCtrl* m_dirPicker1;
+		wxButton* m_button14;
+		
+		// Virtual event handlers, overide them in your derived class
+		void OnResourcesInit( wxInitDialogEvent& event );
+		void OnResourcesPathAdd( wxCommandEvent& event );
+		
 	
 	public:
 		
@@ -156,6 +168,7 @@ class ResourcesFrame : public wxDialog
 		wxTreeCtrl* m_resourceGroups;
 		wxPanel* m_panel3;
 		wxSearchCtrl* m_searchCtrl;
+		wxStaticText* m_staticText17;
 		wxSlider* m_detailSlider;
 		wxListCtrl* m_resourceList;
 		wxGauge* m_gauge1;

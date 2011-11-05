@@ -24,12 +24,17 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 class EditorFrame;
+class EditorPlugin;
 
 class API_EDITOR PluginTool
 {
 public:
 
-	PluginTool() : toolbar(nullptr), item(nullptr) {}
+	PluginTool()
+		: toolbar(nullptr)
+		, item(nullptr)
+		, plugin(nullptr)
+	{}
 
 	// Sets the toolbar.
 	void setToolbar(wxAuiToolBar*);
@@ -39,6 +44,9 @@ public:
 	
 	// Item that triggers the toolbar.
 	wxAuiToolBarItem* item;
+
+	// Plugin that owns the tool.
+	EditorPlugin* plugin;
 };
 
 typedef std::vector<PluginTool> PluginTools;
@@ -65,8 +73,11 @@ public:
 	EditorPlugin();
 	virtual ~EditorPlugin();
 
-	// Finds if there is a mode with given id.
+	// Finds if there is a tool with given id.
 	PluginTool* findTool( wxAuiToolBarItem* tool );
+
+	// Finds if there is a tool with given id.
+	PluginTool* findToolById( int toolId );
 
 	// Plugin update callback.
 	virtual void onPluginUpdate() {}
@@ -74,6 +85,7 @@ public:
 	// Plugin tool callback.
 	virtual void onToolSelect( int id ) {}
 	virtual void onToolUnselect( int id ) {}
+	virtual void onToolNone() {}
 
 	// Document callbacks.
 	virtual void onDocumentCreate( Document& document ) {}
@@ -118,20 +130,23 @@ public:
 	virtual void onUndoOperation(const UndoOperationPtr&) {}
 	virtual void onRedoOperation(const UndoOperationPtr&) {}
 
+	// Returns if the tool is from the plugin.
+	bool hasTool(int id) const;
+
+	// Returns if the current tool selected is from the plugin.
+	bool isToolSelected() const;
+
 protected:
 
 	// Disables plugins.
 	virtual void doPluginDisable() OVERRIDE;
 	
 	// Registers a new tool in the plugin.
-	void addTool( const PluginTool& tool, bool addToMenu = false );
+	void addTool( PluginTool& tool, bool addToMenu = false );
 	void addTool( wxAuiToolBarItem* tool, bool addToMenu = false );
 
 	// Removes all the registered tools.
 	void removeTools();
-
-	// Returns if the tool is from the plugin.
-	bool hasTool(int id) const;
 
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );
@@ -142,6 +157,15 @@ protected:
 	// Editor frame.
 	EditorFrame* editor;
 };
+
+// Returns if the current tool selected is the given one.
+template<typename T> bool IsToolSelected(T tool)
+{
+	int id = (int) tool;
+	int current = GetEditor().getEventManager()->getCurrentToolId();
+
+	return id == current;
+}
 
 //-----------------------------------//
 

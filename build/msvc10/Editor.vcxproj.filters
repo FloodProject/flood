@@ -97,6 +97,33 @@
     <Filter Include="Plugins\Resources\Browser">
       <UniqueIdentifier>{54a56aa9-5a13-48eb-a321-d53efb0256c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\FoldBar">
+      <UniqueIdentifier>{0f00f066-141c-48c5-a923-fbb340c76fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\FoldBar\inc">
+      <UniqueIdentifier>{f5f052e1-ea6a-4bfe-9e5c-a86da93fb5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Sizer">
+      <UniqueIdentifier>{1ec60890-6c73-4fa7-a63e-cdd4e75627a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Property\Grid">
+      <UniqueIdentifier>{c57c9899-0ec7-4328-9d58-e871e764ad86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Slider">
+      <UniqueIdentifier>{137c2168-5f13-4ae7-9620-803d707ecda6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene\Camera">
+      <UniqueIdentifier>{8fe24bc3-454c-4ebe-bfbb-f83f6cadec71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene\Operations">
+      <UniqueIdentifier>{0f9ee6d8-8e4c-44fd-997f-193521a921ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene\Panes">
+      <UniqueIdentifier>{229853fe-e445-462e-9b5d-3836ad73b1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene\Window">
+      <UniqueIdentifier>{39202b4a-45b8-4fde-a160-bc05159f1e5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
@@ -177,9 +204,6 @@
     <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp">
-      <Filter>Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\EditorInputManager.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -204,12 +228,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Menus.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp">
-      <Filter>Plugins\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp">
-      <Filter>Plugins\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp">
@@ -279,8 +297,38 @@
     <ClCompile Include="..\..\src\Editor\DocumentWindow.cpp">
       <Filter>Documents</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\captionbar.cpp">
+      <Filter>Widgets\FoldBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\foldpanelitem.cpp">
+      <Filter>Widgets\FoldBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\FoldBar\foldpanelbar.cpp">
+      <Filter>Widgets\FoldBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\sequentialsizer.cpp">
+      <Filter>Widgets\Sizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyGrid.cpp">
+      <Filter>Plugins\Property\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp">
+      <Filter>Widgets\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneCamera.cpp">
+      <Filter>Plugins\Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp">
+      <Filter>Plugins\Scene\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp">
+      <Filter>Plugins\Scene\Panes</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneWindow.cpp">
-      <Filter>Plugins\Scene</Filter>
+      <Filter>Plugins\Scene\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionOperation.cpp">
+      <Filter>Plugins\Selection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -362,9 +410,6 @@
     <ClInclude Include="..\..\inc\Editor\wxImageComboBox.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Editor\wxSliderCtrl.h">
-      <Filter>Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Editor\EditorInputManager.h">
       <Filter>Input</Filter>
     </ClInclude>
@@ -393,9 +438,6 @@
     <ClInclude Include="..\..\inc\Editor\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h">
       <Filter>Plugins\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h">
-      <Filter>Plugins\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.h">
       <Filter>Plugins\Hierarchy</Filter>
@@ -459,8 +501,38 @@
     <ClInclude Include="..\..\inc\Editor\DocumentWindow.h">
       <Filter>Documents</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Scene\SceneWindow.h">
-      <Filter>Plugins\Scene</Filter>
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\captionbar.h">
+      <Filter>Widgets\FoldBar\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\foldpanelbar.h">
+      <Filter>Widgets\FoldBar\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Editor\wx\foldbar\foldpanelitem.h">
+      <Filter>Widgets\FoldBar\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Editor\wx\sequentialsizer.h">
+      <Filter>Widgets\Sizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyGrid.h">
+      <Filter>Plugins\Property\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Editor\wxSliderCtrl.h">
+      <Filter>Widgets\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyHelpers.h">
+      <Filter>Plugins\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneCamera.h">
+      <Filter>Plugins\Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h">
+      <Filter>Plugins\Scene\Panes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneWindow.h">
+      <Filter>Plugins\Scene\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionOperation.h">
+      <Filter>Plugins\Selection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

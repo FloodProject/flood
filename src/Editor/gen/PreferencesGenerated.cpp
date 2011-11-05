@@ -192,29 +192,72 @@ Resources::Resources( wxWindow* parent, wxWindowID id, const wxPoint& pos, const
 	wxBoxSizer* bSizer22;
 	bSizer22 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Lookup Paths"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	bSizer30->Add( m_staticText21, 0, wxALL, 5 );
+	
+	m_listResourcePaths = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
+	bSizer30->Add( m_listResourcePaths, 1, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer28->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_button10 = new wxButton( this, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer28->Add( m_button10, 0, wxALL, 5 );
+	
+	m_button11 = new wxButton( this, wxID_ANY, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button11->Enable( false );
+	
+	bSizer28->Add( m_button11, 0, wxALL, 5 );
+	
+	bSizer30->Add( bSizer28, 0, wxEXPAND, 5 );
+	
+	bSizer22->Add( bSizer30, 1, wxEXPAND, 5 );
+	
 	wxStaticBoxSizer* sbSizer1;
-	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Thumbnails") ), wxVERTICAL );
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Indexing") ), wxVERTICAL );
+	
+	m_checkBox1 = new wxCheckBox( this, wxID_ANY, wxT("Generate thumbnails"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBox1->SetValue(true); 
+	sbSizer1->Add( m_checkBox1, 0, wxALL, 5 );
 	
 	wxBoxSizer* bSizer23;
 	bSizer23 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Cache Folder"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Thumbnails Cache"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText8->Wrap( -1 );
 	bSizer23->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_dirPicker1 = new wxDirPickerCtrl( this, wxID_ANY, wxT("C:\\Users\\triton\\.netbeans-registration"), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+	m_dirPicker1 = new wxDirPickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE|wxDIRP_DIR_MUST_EXIST );
 	bSizer23->Add( m_dirPicker1, 1, wxALL, 5 );
 	
-	sbSizer1->Add( bSizer23, 0, wxEXPAND|wxALL, 5 );
+	sbSizer1->Add( bSizer23, 0, wxEXPAND, 5 );
 	
-	bSizer22->Add( sbSizer1, 1, wxEXPAND, 5 );
+	m_button14 = new wxButton( this, wxID_ANY, wxT("Cleanup cache"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer1->Add( m_button14, 0, wxALL, 5 );
+	
+	bSizer22->Add( sbSizer1, 0, wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer22 );
 	this->Layout();
+	
+	// Connect Events
+	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( Resources::OnResourcesInit ) );
+	m_button10->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnResourcesPathAdd ), NULL, this );
 }
 
 Resources::~Resources()
 {
+	// Disconnect Events
+	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( Resources::OnResourcesInit ) );
+	m_button10->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnResourcesPathAdd ), NULL, this );
+	
 }
 
 Renderers::Renderers( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
@@ -231,22 +274,22 @@ Renderers::Renderers( wxWindow* parent, wxWindowID id, const wxPoint& pos, const
 	
 	wxArrayString m_choice1Choices;
 	m_choice1 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice1Choices, 0 );
-	m_choice1->SetSelection( 0 );
+	m_choice1->SetSelection( -1 );
 	bSizer20->Add( m_choice1, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText10 = new wxStaticText( this, wxID_ANY, wxT("Renderers:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText10->Wrap( -1 );
 	bSizer20->Add( m_staticText10, 0, wxALL, 5 );
 	
-	m_listCtrl2 = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON );
-	bSizer20->Add( m_listCtrl2, 1, wxALL|wxEXPAND, 5 );
+	m_listCtrl2 = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT|wxLC_SINGLE_SEL );
+	bSizer20->Add( m_listCtrl2, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Extensions:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText9->Wrap( -1 );
 	bSizer20->Add( m_staticText9, 0, wxALL, 5 );
 	
 	m_listBox3 = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxSize( -1,120 ), 0, NULL, 0 ); 
-	bSizer20->Add( m_listBox3, 0, wxALL|wxEXPAND, 5 );
+	bSizer20->Add( m_listBox3, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer19->Add( bSizer20, 1, wxEXPAND, 5 );
 	
@@ -290,7 +333,11 @@ ResourcesFrame::ResourcesFrame( wxWindow* parent, wxWindowID id, const wxString&
 	m_searchCtrl->ShowSearchButton( true );
 	#endif
 	m_searchCtrl->ShowCancelButton( false );
-	bSizer21->Add( m_searchCtrl, 1, wxBOTTOM|wxRIGHT|wxEXPAND, 5 );
+	bSizer21->Add( m_searchCtrl, 1, wxEXPAND|wxRIGHT, 5 );
+	
+	m_staticText17 = new wxStaticText( m_panel3, wxID_ANY, wxT("Detail"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText17->Wrap( -1 );
+	bSizer21->Add( m_staticText17, 0, wxALL, 5 );
 	
 	m_detailSlider = new wxSlider( m_panel3, wxID_ANY, 0, 0, 256, wxDefaultPosition, wxSize( 60,-1 ), wxSL_HORIZONTAL );
 	bSizer21->Add( m_detailSlider, 0, 0, 5 );
@@ -317,15 +364,7 @@ ResourcesFrame::ResourcesFrame( wxWindow* parent, wxWindowID id, const wxString&
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesFrame::OnClose ) );
 	m_resourceGroups->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesFrame::onResourceGroupChanged ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
 	m_detailSlider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
 	m_resourceList->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( ResourcesFrame::OnListBeginDrag ), NULL, this );
 	m_resourceList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( ResourcesFrame::onResourceListActivated ), NULL, this );
 	m_resourceList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ResourcesFrame::onResourceListSelection ), NULL, this );
@@ -336,15 +375,7 @@ ResourcesFrame::~ResourcesFrame()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesFrame::OnClose ) );
 	m_resourceGroups->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesFrame::onResourceGroupChanged ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
 	m_detailSlider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
-	m_detailSlider->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ResourcesFrame::onResourceSliderScroll ), NULL, this );
 	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( ResourcesFrame::OnListBeginDrag ), NULL, this );
 	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( ResourcesFrame::onResourceListActivated ), NULL, this );
 	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ResourcesFrame::onResourceListSelection ), NULL, this );

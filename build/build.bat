@@ -13,7 +13,7 @@ echo.
 
 :choice
 set /P C="Choice: "
-if "%C%"=="4" goto GNU Make
+if "%C%"=="4" goto gmake
 if "%C%"=="3" goto codelite
 if "%C%"=="2" goto vs2008
 if "%C%"=="1" goto vs2010
@@ -35,7 +35,7 @@ goto quit
 "../tools/premake4" --file=premake4.lua codelite
 goto quit
 
-:codelite
+:gmake
 "../tools/premake4" --file=premake4.lua gmake
 goto quit
 

@@ -15,16 +15,18 @@ Types of plugins:
 EDITOR:
 -------
 
+	Add support for multiple "shared" context render windows
+
+
 Bugs:
-	Fix the property grid child properties layout
 	Terrains are not added properly as operations
+	Fix mesh groups index buffers
 
 GUI:
 	Create widget to choose resource
 
 Camera:
 	Add an adaptive grid in the editor
-	Add support for multiple "shared" context render windows
 
 Terrain:
 	Add widget to switch between terrain tools
@@ -50,6 +52,8 @@ Pipeline:
 
 ENGINE:
 -------
+
+Check out boost checked_delete for safer delete of incomplete types
 
 Resources:
 	Meshes with alpha values need to get blending enabled.

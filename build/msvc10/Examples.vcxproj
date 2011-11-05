@@ -76,7 +76,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -98,7 +98,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Pipeline.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\sfml\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

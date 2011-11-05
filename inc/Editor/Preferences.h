@@ -22,20 +22,14 @@ class Preferences : public wxPropertySheetDialog
 public:
 
 	Preferences( wxWindow* parent );
-	
 	bool createPages();
-	void setupPlugins();
-	
-	void OnPluginSelected( wxListEvent& event );
-	void OnPluginEnable( wxCommandEvent& event );
-	void OnPluginCheckUpdates( wxCommandEvent& event );
-	void OnPluginInstall( wxCommandEvent& event );
 
 protected:
 
 	Bindings* bindings;
 	Plugins* plugins;
 	Resources* resources;
+	Renderers* renderers;
 
 	wxListCtrl* m_listPlugins;
 };

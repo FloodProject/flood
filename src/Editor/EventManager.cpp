@@ -19,7 +19,8 @@ NAMESPACE_EDITOR_BEGIN
 
 EventManager::EventManager()
 	: currentPlugin(nullptr)
-	, toolId(0)
+	, currentTool(nullptr)
+	, originalTool(nullptr)
 {
 	PluginManager* pm = GetEditor().getPluginManager();
 	pm->onPluginEnableEvent.Connect(this, &EventManager::onPluginEnableEvent);
@@ -102,14 +103,14 @@ bool EventManager::TryBefore(wxEvent& event)
 	int id = event.GetId();
 
 	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
-	wxAuiToolBarItem* tool = toolbarCtrl->FindTool(id);
+	
+	wxAuiToolBarItem* item = toolbarCtrl->FindTool(id);
+	if( !item ) return false;
 
-	if( !tool ) return false;
-
-	if( tool->GetKind() != wxITEM_RADIO )
+	if( item->GetKind() != wxITEM_RADIO )
 		return false;
 
-	EditorPlugin* plugin = (EditorPlugin*) tool->GetUserData();
+	EditorPlugin* plugin = (EditorPlugin*) item->GetUserData();
 	
 	if( !plugin )
 	{
@@ -117,52 +118,100 @@ bool EventManager::TryBefore(wxEvent& event)
 		return false;
 	}
 
-	PluginTool* mode = plugin->findTool(tool);
-	if( !mode ) return false;
+	PluginTool* tool = plugin->findTool(item);
+	if( !tool ) return false;
 
-	setTool(plugin, mode);
+	setTool(tool);
 	
 	return false;
 }
 
 //-----------------------------------//
 
-void EventManager::setTool(EditorPlugin* plugin, PluginTool* tool)
+void EventManager::setTool(PluginTool* tool)
 {
-	int id = tool->item->GetId();
+	if( !tool ) return;
 
-	if(currentPlugin)
-	{
-		currentPlugin->onToolUnselect(id);
-		currentPlugin = nullptr;
-	}
+	int newToolId = tool->item->GetId();
 
 	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
-	toolbarCtrl->ToggleTool(id, true);
+	
+	if( !toolbarCtrl->GetToolEnabled(newToolId) )
+		return;
 
-	setCurrentPlugin(plugin);
-	setCurrentTool(id);
+	unsetCurrentTool();
+
+	toolbarCtrl->ToggleTool(newToolId, true);
+
+	setCurrentTool(tool);
+	setCurrentPlugin(tool->plugin);
 	
 	Document* document = GetEditor().getDocument();
 	if( document ) document->onToolSelect(tool);
 	
-	currentPlugin->onToolSelect(id);
+	currentPlugin->onToolSelect(newToolId);
+
+	toolbarCtrl->Refresh();
+}
+
+//-----------------------------------//
+
+void EventManager::unsetCurrentTool()
+{
+	if(currentPlugin)
+	{
+		currentPlugin->onToolUnselect(-1);
+		currentPlugin = nullptr;
+	}
+
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
+	toolbarCtrl->Refresh();
+}
+
+//-----------------------------------//
+
+void EventManager::toggleTool(PluginTool* tool)
+{
+	if( !tool && !originalTool ) return;
+
+	// Tool is null, restore the original tool.
+	if( !tool )
+	{
+		setTool(originalTool);
+		return;
+	}
+
+	originalTool = currentTool;
+	setTool(tool);
+}
+
+//-----------------------------------//
+
+int EventManager::getCurrentToolId()
+{
+	PluginTool* tool = getCurrentTool();
+	if( !tool ) return wxID_INVALID;
+
+	wxAuiToolBarItem* item = tool->item;
+	if( !item ) return wxID_INVALID;
+
+	return item->GetId();
 }
 
 //-----------------------------------//
 
 void EventManager::onPluginEnableEvent(Plugin* plugin)
 {
-	//if(currentPlugin == nullptr)
-	//	currentPlugin = plugin;
 }
 
 //-----------------------------------//
 
 void EventManager::onPluginDisableEvent(Plugin* plugin)
 {
-	if(currentPlugin == plugin)
-		currentPlugin = nullptr;
+	if( !plugin ) return;
+	if(currentPlugin != plugin) return;
+
+	unsetCurrentTool();
 }
 
 //-----------------------------------//

@@ -49,10 +49,24 @@ void EditorPlugin::doPluginDisable()
 
 PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 {
+	if( !tool ) return nullptr;
+	
+	int toolId = tool->GetId();
+	return findToolById(toolId);
+}
+
+//-----------------------------------//
+
+PluginTool* EditorPlugin::findToolById( int toolId )
+{
 	for( size_t i = 0; i < tools.size(); i++ )
 	{
-		PluginTool& p = tools[i];
-		if(p.item == tool) return &p;
+		PluginTool& tool = tools[i];
+		
+		wxAuiToolBarItem* item = tool.item;
+		if( !item ) continue;
+
+		if(item->GetId() == toolId) return &tool;
 	}
 
 	return nullptr;
@@ -60,41 +74,43 @@ PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 
 //-----------------------------------//
 
-void EditorPlugin::addTool( const PluginTool& pluginTool, bool addToMenu )
+void EditorPlugin::addTool( PluginTool& tool, bool addToMenu )
 {
-	//if( tool->IsSeparator() ) return;
-	pluginTool.item->SetUserData((long)this);
+	tool.item->SetUserData((long)this);
+	tool.plugin = this;
 
-	tools.push_back( pluginTool );
+	tools.push_back( tool );
 
-	wxAuiToolBar* toolbar = pluginTool.toolbar;
+	wxAuiToolBar* toolbar = tool.toolbar;
 	
 	if( toolbar )
 	{
 		toolbar->Hide();
 		toolbar->Realize();
 	}
+	
+	addToMenu = true;
 
-	if( addToMenu )
+	if( addToMenu && tool.item->GetKind() == wxITEM_NORMAL )
 	{
-		wxAuiToolBarItem* tool = pluginTool.item;
-		editor->menuTools->Append(tool->GetId(), tool->GetLabel());
+		wxAuiToolBarItem* item = tool.item;
+		editor->menuTools->Append(item->GetId(), item->GetLabel());
 
 		wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 		toolbarCtrl->Realize();
 
-		editor->getAUI()->Update();
+		//editor->getAUI()->Update();
 	}
 }
 
 //-----------------------------------//
 
-void EditorPlugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
+void EditorPlugin::addTool( wxAuiToolBarItem* item, bool addToMenu )
 {
-	PluginTool pt;
-	pt.item = tool;
+	PluginTool tool;
+	tool.item = item;
 
-	addTool(pt);
+	addTool(tool);
 }
 
 //-----------------------------------//
@@ -120,6 +136,7 @@ void EditorPlugin::removeTools()
 	}
 
 	toolbarCtrl->Realize();
+	//editor->getAUI()->Update();
 
 	tools.clear();
 }
@@ -135,6 +152,18 @@ bool EditorPlugin::hasTool(int toolId) const
 	}
 
 	return false;
+}
+
+//-----------------------------------//
+
+bool EditorPlugin::isToolSelected() const
+{
+	EventManager* events = GetEditor().getEventManager();
+	
+	int id = events->getCurrentToolId();
+	if( id == wxID_INVALID ) return false;
+
+	return hasTool(id);
 }
 
 //-----------------------------------//

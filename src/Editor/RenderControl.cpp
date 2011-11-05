@@ -113,22 +113,25 @@ void RenderControl::flagRedraw()
 
 void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 {   
-	// TODO/HACK: wxWidgets won't invalidate the entire window region
+#if 0
+	// TODO: Seems wxWidgets won't invalidate the entire window region
 	// on things like window overlap or tooltip hovering, so we need 
-	// to force a complete redraw. This is ugly because I suspect it
-	// draws twice so really try to find a better solution later.
-
+	// to force a complete redraw.
 	Refresh();
+#endif
 
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
 	wxPaintDC dc(this);
 
-	onRender();
+	if( frameRenderTimer.IsRunning() )
+	{
+		onRender();
 	
-	// Swaps the front and back buffers.
-	window->update();
+		// Swaps the front and back buffers.
+		window->update();
+	}
 }
 
 //-----------------------------------//
