@@ -111,7 +111,7 @@ void ResourceIndexer::indexResources(Task* task)
 		return;
 	}
 
-	//LogDebug("Indexing file '%s'", basePath.c_str());
+	LogDebug("Indexing file '%s'", basePath.c_str());
 
 	Stream* stream = StreamCreateFromFile(AllocatorGetThis(), path, StreamMode::Read);
 		

@@ -477,11 +477,13 @@ void ResourceManager::registerLoader(const ResourceLoaderPtr& loader)
 
 ResourceLoader* ResourceManager::findLoader(const String& ext)
 {
+	String extension = StringToLowerCase(ext);
+
 	// Check if we have a resource loader for this extension.
-	if( resourceLoaders.find(ext) == resourceLoaders.end() )
+	if( resourceLoaders.find(extension) == resourceLoaders.end() )
 		return nullptr;
 
-	const ResourceLoaderPtr& loader = resourceLoaders[ext];
+	const ResourceLoaderPtr& loader = resourceLoaders[extension];
 	return loader.get();
 }
 
