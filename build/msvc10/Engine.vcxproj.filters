@@ -478,7 +478,7 @@
     <ClCompile Include="..\..\src\Render\GLSL_ShaderProgram.cpp">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Beartooth\Dependencies\vapor\src\Window\Window.cpp">
+    <ClCompile Include="..\..\src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
   </ItemGroup>
@@ -760,7 +760,7 @@
     <ClInclude Include="..\..\inc\Render\GLSL_ShaderProgram.h">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Beartooth\Dependencies\vapor\inc\Window\Window.h">
+    <ClInclude Include="..\..\inc\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>

@@ -171,7 +171,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Beartooth\Dependencies\vapor\src\Window\Window.cpp" />
     <ClCompile Include="..\..\interface\Bindings\vapor_wrap.cxx">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4503;4996;4127; 4510;4610; 4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4503;4996;4127; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -272,9 +271,9 @@
     <ClCompile Include="..\..\src\Scene\Terrain.cpp" />
     <ClCompile Include="..\..\src\Scene\Transform.cpp" />
     <ClCompile Include="..\..\src\Scene\Water.cpp" />
+    <ClCompile Include="..\..\src\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Beartooth\Dependencies\vapor\inc\Window\Window.h" />
     <ClInclude Include="..\..\inc\Audio\AL.h" />
     <ClInclude Include="..\..\inc\Audio\Buffer.h" />
     <ClInclude Include="..\..\inc\Audio\Context.h" />
@@ -334,6 +333,7 @@
     <ClInclude Include="..\..\inc\Scene\Model.h" />
     <ClInclude Include="..\..\inc\Scene\Water.h" />
     <ClInclude Include="..\..\inc\Scene\Projector.h" />
+    <ClInclude Include="..\..\inc\Window\Window.h" />
     <ClInclude Include="..\..\interface\Bindings\swigluarun.h" />
     <ClInclude Include="..\..\inc\Engine\Engine.h" />
     <ClInclude Include="..\..\inc\Framework.h" />
