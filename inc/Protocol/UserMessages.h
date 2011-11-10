@@ -41,7 +41,6 @@ struct API_PROTOCOL UserAuthStatusMessage : MessageDefinition
 	REFLECT_DECLARE_OBJECT(UserAuthStatusMessage)
 };
 
-
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(UserJoinMessage)

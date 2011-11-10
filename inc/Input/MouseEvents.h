@@ -78,8 +78,6 @@ struct API_ENGINE MouseEvent : public InputEvent
 	
 	MouseEvent( MouseEventType::Enum eventType );
 
-protected:
-
 	MouseEventType::Enum eventType;
 };
 

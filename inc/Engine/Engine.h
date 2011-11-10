@@ -21,7 +21,6 @@ struct Stream;
 struct TaskPool;
 
 class Subsystem;
-class FileSystem;
 class ResourceManager;
 class RenderDevice;
 class AudioDevice;
@@ -59,12 +58,6 @@ public:
 	// Sets up the global engine logger.
 	void setupLogger();
 
-	// Sets up the rendering device.
-	void setupDevices( bool createWindow = true );
-
-	// Sets up the input devices.
-	void setupInput();
-
 	// Gets the device.
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
 
@@ -83,14 +76,11 @@ public:
 	// Gets/sets the physics manager.
 	ACESSOR(PhysicsManager, PhysicsManager*, physicsManager)
 
+	// Gets/sets the input manager.
+	ACESSOR(InputManager, InputManager*, inputManager)
+
 	// Gets the main engine logger.
 	GETTER(Logger, Log*, log)
-
-	// Gets the virtual filesystem.
-	GETTER(FileSystem, FileSystem*, fileSystem)
-
-	// Gets the input manager.
-	InputManager* getInputManager() const;
 
 	void stepFrame();
 
@@ -122,9 +112,6 @@ protected:
 
 	// Physics manager.
 	PhysicsManager* physicsManager;
-
-	// Virtual filesystem.
-	FileSystem* fileSystem;
 
 	// Scripting state.
 	ScriptManager* scriptManager;

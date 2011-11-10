@@ -271,8 +271,8 @@ void Host::handleReceiveEvent(ENetEvent* event)
 //-----------------------------------//
 
 HostClient::HostClient()
+	: state(HostState::Disconnected)
 {
-	state = HostState::Disconnected;
 }
 
 //-----------------------------------//

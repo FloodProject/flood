@@ -113,6 +113,7 @@ public:
 		if(px && px->releaseReference())
 		{
 			if(DFn) DFn(id);
+			Deallocate(px);
 		}
 	}
 
@@ -151,9 +152,15 @@ public:
 
 	void setId(const HandleId& newId)
 	{
-		removeReference();
+		T* old = Resolve();
+
 		id = newId;
 		addReference();
+
+		if(old && old->releaseReference())
+		{
+			Deallocate(old);
+		}
 	}
 
 	HandleId id;

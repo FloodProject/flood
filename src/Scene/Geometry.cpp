@@ -48,7 +48,7 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 		const RenderablePtr& renderable = renderables[i];
 		if( !renderable ) continue;
 
-		RenderState state( renderable );
+		RenderState state( renderable.get() );
 		state.modelMatrix = absoluteTransform;
 
 		queue.push_back(state);

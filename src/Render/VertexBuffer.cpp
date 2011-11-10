@@ -51,7 +51,10 @@ static GLenum ConvertBufferTypeGL(VertexType::Enum type)
 	{
 	case VertexType::Float: return GL_FLOAT;
 	case VertexType::Integer: return GL_INT;
+	case VertexType::Byte: return GL_UNSIGNED_BYTE;
 	}
+
+	LogAssert( "Unknown vertex buffer data type" );
 
 	return GL_FLOAT;
 }
@@ -193,7 +196,7 @@ bool VertexBuffer::isValid() const
 
 //-----------------------------------//
 
-bool VertexBuffer::build(const GeometryBufferPtr&)
+bool VertexBuffer::build(const GeometryBuffer* gb)
 {
 	if( !gb ) return false;
 

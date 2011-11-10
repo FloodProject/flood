@@ -115,7 +115,7 @@ void RenderDevice::render( RenderBlock& queue )
 void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
 #ifdef BUILD_DEBUG
-	const RenderablePtr& renderable = state.renderable;
+	const Renderable* renderable = state.renderable;
 	if( !renderable ) return;
 
 	const Material* material = state.material;
@@ -143,7 +143,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const RenderablePtr& renderable = state.renderable;
 	bindBuffers(renderable.get());
 
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	BufferManager* buffers = activeContext->bufferManager;
 	
 	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
@@ -237,12 +237,13 @@ bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 
 void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue& lights)
 {
-	const RenderablePtr& renderable = state.renderable;
-	bindBuffers(renderable.get());
+	Renderable* renderable = state.renderable;
+	bindBuffers(renderable);
 
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
+	if( gb->data.empty() ) return;
+
 	BufferManager* buffers = activeContext->bufferManager;
-	
 	BufferEntry* bufs = buffers->getBuffer(gb);
 
 	VertexBufferPtr vb = bufs->vb;
@@ -256,11 +257,8 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	const ProgramPtr& program = programs->getProgram(shader.Resolve());
 	if( !program ) return;
 
-	if( !program->isLinked() )
-	{
-		// Link the program if it is not yet linked.
-		program->link();
-	}
+	if( !program->isLinked() && !program->link() )
+		return;
 
 	program->bind();
 
@@ -291,7 +289,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	const UniformBufferPtr& ub = renderable->getUniformBuffer();
 	program->setUniforms(ub);
 
-	render(renderable.get());
+	render(renderable);
 	
 	if( !renderable->onPostRender.empty() )
 	{
@@ -304,7 +302,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	program->unbind();
 
 	vb->unbindGenericPointers();
-	unbindBuffers(renderable.get());
+	unbindBuffers(renderable);
 }
 
 //-----------------------------------//
@@ -350,27 +348,27 @@ void RenderDevice::render(Renderable* renderable)
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
 	}
 
-	GLenum type = ConvertPrimitiveGL(renderable->getPrimitiveType());
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	GLenum primitiveType = ConvertPrimitiveGL(renderable->getPrimitiveType());
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 
 	if( !gb->isIndexed() )
-    {
+	{
 		uint32 numVertices = gb->getSizeVertices();
 		
 		if( numVertices )
 		{
-			glDrawArrays( type, 0, numVertices );
+			glDrawArrays( primitiveType, 0, numVertices );
  			CheckLastErrorGL("Error drawing vertex buffer");
 		}
-    }
-    else
-    {
-        GLenum size = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	}
+	else
+	{
+		GLenum indexType = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
 		int numIndices = gb->indexData.size() / (gb->indexSize / 8);
 
-		glDrawElements( type, numIndices, size, 0 );
+		glDrawElements( primitiveType, numIndices, indexType, 0 );
 		CheckLastErrorGL("Error drawing index buffer");
-    }
+	}
 
 	if( mode == PolygonMode::Wireframe )
 	{
@@ -445,13 +443,17 @@ void RenderDevice::bindTextures(const RenderState& state, bool bindUniforms)
 void RenderDevice::unbindTextures(Material* material)
 {
 	TextureUnitMap& units = material->textureUnits;
+	TextureManager* textureManager = activeContext->textureManager;
 
 	TextureUnitMap::const_iterator it;
 	for( it = units.begin(); it != units.end(); it++ )
 	{
 		const TextureUnit& unit = it->second;
 		const ImageHandle& handle = unit.image;
-		const TexturePtr& tex = activeContext->textureManager->getTexture(handle.Resolve());
+
+		const TexturePtr& tex = textureManager->getTexture(handle.Resolve());
+		if( !tex ) continue;
+
 		tex->unbind( it->first );
 	}
 }
@@ -462,7 +464,7 @@ bool RenderDevice::bindBuffers(Renderable* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
 
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
 	IndexBufferPtr ib = buffers->getIndexBuffer(gb);
 	
@@ -498,7 +500,7 @@ done:
 bool RenderDevice::unbindBuffers(Renderable* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	
 	VertexBufferPtr vb = buffers->getVertexBuffer(gb);
 	if( !vb ) return false;

@@ -301,6 +301,9 @@
     <ClCompile Include="..\..\src\Core\Subsystem.cpp">
       <Filter>Subsystem</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\Unicode.cpp">
+      <Filter>Utilities\String</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Core\Memory.h">
@@ -474,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcherWin32.h">
       <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Unicode.h">
+      <Filter>Utilities\String</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

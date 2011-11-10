@@ -32,7 +32,8 @@ class Light;
 
 struct RenderState
 {
-	RenderState( const RenderablePtr& rend );
+	RenderState() {}
+	RenderState( Renderable* renderable );
 	
 	RenderState( const RenderState& rhs )
 		: renderable( rhs.renderable )

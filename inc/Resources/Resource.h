@@ -112,8 +112,11 @@ protected:
 ReferenceCounted* ResourceHandleFind(HandleId id);
 void  ResourceHandleDestroy(HandleId id);
 
+#define RESOURCE_HANDLE_TYPE(T) \
+	Handle<T, ResourceHandleFind, ResourceHandleDestroy>
+
 #define TYPEDEF_RESOURCE_HANDLE_FROM_TYPE(T) \
-	typedef Handle<T, ResourceHandleFind, ResourceHandleDestroy> T##Handle;
+	typedef RESOURCE_HANDLE_TYPE(T) T##Handle;
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE(Resource);
 

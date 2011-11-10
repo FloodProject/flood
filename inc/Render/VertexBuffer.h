@@ -33,7 +33,7 @@ public:
 	~VertexBuffer();
 
 	// Gets/sets the geometry buffer.
-	ACESSOR(GeometryBuffer, GeometryBuffer*, gb)
+	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
 
 	// Binds the vertex buffer.
 	bool bind();
@@ -60,7 +60,7 @@ public:
 	bool isBuilt() const;
 
 	// Updates the internal buffer with current attributes.
-	bool build(const GeometryBufferPtr&);
+	bool build(const GeometryBuffer*);
 
 	// Forces a rebuild of the vertex buffer the next update.
 	void forceRebuild();
@@ -69,7 +69,7 @@ public:
 	bool built;
 
 	// Keeps the geometry buffer associated with this buffer.
-	GeometryBuffer* gb;
+	const GeometryBuffer* gb;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );

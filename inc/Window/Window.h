@@ -51,10 +51,10 @@ public:
 	Window (const WindowSettings& settings);
 
 	// Updates the window content.
-	virtual void update() OVERRIDE {}
+	void update() OVERRIDE {}
 
 	// Sets this rendering target as the current.
-	virtual void makeCurrent() OVERRIDE {}
+	void makeCurrent() OVERRIDE {}
 
 	// Shows/hides the window.
 	virtual void show( bool hide = false ) {}
@@ -75,7 +75,7 @@ public:
 	virtual void setCursorCapture( bool state ) {}
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const { return Vector2i(0,0);/*::Zero;*/ }
+	virtual Vector2i getCursorPosition() const { return Vector2i(0,0); }
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) {}
@@ -83,6 +83,9 @@ public:
 
 	// Gets if the window has focus.
 	virtual bool hasFocus() { return false; }
+
+	// Gets the input manager.
+	virtual InputManager* getInput() { return nullptr; }
 
 	// Gets the window settings.
 	GETTER(Settings, const Settings&, settings)
@@ -103,9 +106,6 @@ protected:
 
 	// Handles the focus event.
 	void handleWindowFocus( bool focusLost );
-
-	// Rendering context.
-	RenderContext* context;
 
 	// Holds the window settings.
 	WindowSettings settings;

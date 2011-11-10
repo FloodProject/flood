@@ -136,7 +136,7 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-void Camera::render( const ScenePtr& scene )
+void Camera::render( const Scene* scene )
 {
 	// This will contain all nodes used for rendering.
 	RenderBlock renderBlock;

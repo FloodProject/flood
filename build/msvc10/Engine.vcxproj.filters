@@ -58,12 +58,6 @@
     <Filter Include="Audio\Device">
       <UniqueIdentifier>{c4ca7ec6-67be-45f8-adfd-cb6632da4474}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{b87fb3c1-b1e5-498e-a05f-0d80923ca8e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window\Win32">
-      <UniqueIdentifier>{66e151a3-bb6f-4c2c-8ee8-d86397ae8ce1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{61cee6f9-a647-4fcf-947d-1ce2c2a33cc6}</UniqueIdentifier>
     </Filter>
@@ -166,9 +160,6 @@
     <Filter Include="Scene\Animation">
       <UniqueIdentifier>{06d212d9-7f06-4d29-877b-f0411630af15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window\SFML">
-      <UniqueIdentifier>{aff24fa7-7736-48ed-97c3-682b2f3ae50a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{e77f2066-f8ca-4489-a72d-c21a42699900}</UniqueIdentifier>
     </Filter>
@@ -226,13 +217,13 @@
     <Filter Include="Geometry\Picking">
       <UniqueIdentifier>{da25e737-2357-4f66-9c7d-7f0bf22a1528}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{42de4f85-4d11-4146-93b8-5dad60f345a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp">
       <Filter>Geometry\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Window.cpp">
-      <Filter>Window</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp">
       <Filter>Graphics\Target</Filter>
@@ -396,9 +387,6 @@
     <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Win32\WindowWin32.cpp">
-      <Filter>Window\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Engine.cpp" />
     <ClCompile Include="..\..\src\Render\Renderable.cpp">
       <Filter>Graphics</Filter>
@@ -489,6 +477,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Render\GLSL_ShaderProgram.cpp">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Beartooth\Dependencies\vapor\src\Window\Window.cpp">
+      <Filter>Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -712,15 +703,6 @@
     <ClInclude Include="..\..\inc\Render\View.h">
       <Filter>Graphics\View</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Render\Window.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Render\Win32_Window.h">
-      <Filter>Window\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Render\SFML_Window.h">
-      <Filter>Window\SFML</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Render\RenderContext.h">
       <Filter>Graphics\Context</Filter>
     </ClInclude>
@@ -777,6 +759,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Render\GLSL_ShaderProgram.h">
       <Filter>Graphics\Resources\Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Beartooth\Dependencies\vapor\inc\Window\Window.h">
+      <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

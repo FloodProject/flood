@@ -124,7 +124,7 @@ void ServerPlugin::onPluginUpdate()
 
 bool ServerPlugin::initClient(const HostConnectionDetails& details)
 {
-	host = Allocate(HostClient, AllocatorGetThis());
+	host = AllocateThis(HostClient);
 	
 	dispatcher = Allocate(Dispatcher, AllocatorGetThis());
 	dispatcher->initClient(host);

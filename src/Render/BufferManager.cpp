@@ -33,7 +33,7 @@ BufferManager::~BufferManager()
 
 //-----------------------------------//
 
-BufferEntry* BufferManager::getBuffer(const GeometryBufferPtr& gb)
+BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 {
 	if( !gb ) return nullptr;
 
@@ -49,7 +49,7 @@ BufferEntry* BufferManager::getBuffer(const GeometryBufferPtr& gb)
 	entry.vb = AllocateThis(VertexBuffer);
 	entry.vb->setBufferAccess( gb->getBufferAccess() );
 	entry.vb->setBufferUsage( gb->getBufferUsage() );
-	entry.vb->setGeometryBuffer( gb.get() );
+	entry.vb->setGeometryBuffer( gb );
 
 	if( gb->isIndexed() )
 	{
@@ -63,7 +63,7 @@ BufferEntry* BufferManager::getBuffer(const GeometryBufferPtr& gb)
 
 //-----------------------------------//
 
-VertexBufferPtr BufferManager::getVertexBuffer(const GeometryBufferPtr& gb)
+VertexBufferPtr BufferManager::getVertexBuffer(const GeometryBuffer* gb)
 {
 	BufferEntry* bufs = getBuffer(gb);
 	if (!bufs ) return nullptr;
@@ -74,7 +74,7 @@ VertexBufferPtr BufferManager::getVertexBuffer(const GeometryBufferPtr& gb)
 //-----------------------------------//
 
 
-IndexBufferPtr BufferManager::getIndexBuffer(const GeometryBufferPtr& gb)
+IndexBufferPtr BufferManager::getIndexBuffer(const GeometryBuffer* gb)
 {
 	BufferEntry* bufs = getBuffer(gb);
 	if (!bufs ) return nullptr;

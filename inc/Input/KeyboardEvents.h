@@ -17,8 +17,7 @@ NAMESPACE_ENGINE_BEGIN
 /**
  * Represents all the available keyboard keys with a unique key code.
  * When interacting with the Keyboard class you should always use
- * these values (this enumeration was taken from the SFML interface).
- * TODO: How about Japanese keyboard? And Unicode?
+ * these values.
  */
 
 struct Keys
@@ -70,24 +69,24 @@ struct Keys
 		LControl,
 		LShift,
 		LAlt,
-		LSuper,      
+		LSuper,
 		RControl,
 		RShift,
 		RAlt,
-		RSuper,      
+		RSuper,
 		
 		Menu,
-		LBracket,     
-		RBracket,     
-		SemiColon,    
-		Comma,        
-		Period,       
-		Quote,        
-		Slash,        
+		LBracket,
+		RBracket,
+		SemiColon,
+		Comma,
+		Period,
+		Quote,
+		Slash,
 		BackSlash,
-		Tilde,        
-		Equal,        
-		Dash,         
+		Tilde,
+		Equal,
+		Dash,
 		Space,
 		Return,
 		Back,
@@ -101,16 +100,16 @@ struct Keys
 		Delete,
 		
 		// Numeric operations
-		Add,          
-		Subtract,     
-		Multiply,     
-		Divide,       
+		Add,
+		Subtract,
+		Multiply,
+		Divide,
 		
 		// Arrows
-		Left,         
-		Right,        
-		Up,           
-		Down,         
+		Left,
+		Right,
+		Up,
+		Down,
 		
 		// Numpad numbers
 		Numpad0,
@@ -142,6 +141,7 @@ struct Keys
 		F15,
 		
 		Pause,
+		MAX
 	};
 };
 
@@ -157,8 +157,12 @@ struct KeyboardEventType
 	{
 		// Occurs when a keyboard key is pressed
 		KeyPressed,
+		
 		// Occurs when a keyboard key is released
-		KeyReleased
+		KeyReleased,
+		
+		// Occurs when text is input from the keyboard.
+		KeyText
 	};
 };
 
@@ -174,16 +178,13 @@ struct API_ENGINE KeyEvent : public InputEvent
 {
 	friend class Keyboard;
 	
-	KeyEvent(Keys::Enum keyCode, 
-		bool alt = false, bool shift = false, bool ctrl = false, 
-		KeyboardEventType::Enum eventType = KeyboardEventType::KeyPressed);
+	KeyEvent(KeyboardEventType::Enum eventType);
 	
+	KeyboardEventType::Enum eventType;
+
 	Keys::Enum keyCode;
 	bool altPressed, shiftPressed, ctrlPressed;
-
-private:
-
-	KeyboardEventType::Enum eventType;
+	uint32 unicode;
 };
 
 //-----------------------------------//

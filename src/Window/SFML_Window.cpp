@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Window/SFML_Window.h"
+#include "SFML_Window.h"
 
-#ifdef ENABLE_WINDOWING_SFML
+#ifdef ENABLE_WINDOW_SFML
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -20,10 +20,7 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 	, cursorState(true)
 	, flags(0)
 {
-	if( !open() )
-	{
-		LogError( "Could not create SFML render window" );
-	}
+
 }
 
 //-----------------------------------//
@@ -37,13 +34,14 @@ SFML_Window::~SFML_Window()
 
 bool SFML_Window::open()
 {
-	windowSettings.DepthBits = settings.depthBits; 
-	windowSettings.StencilBits = settings.stencilBits;
-	windowSettings.AntialiasingLevel = settings.antialiasLevel;
+	contextSettings.DepthBits = settings.depthBits; 
+	contextSettings.StencilBits = settings.stencilBits;
+	contextSettings.AntialiasingLevel = settings.antialiasLevel;
 	
+	videoMode = sf::VideoMode::GetDesktopMode();
+
 	if( settings.fullScreen )
 	{
-		videoMode = sf::VideoMode::GetMode(0);
 		flags |= sf::Style::Fullscreen;
 	}
 	else
@@ -58,23 +56,23 @@ bool SFML_Window::open()
 			return false;
 		}
 		
-		flags |= sf::Style::Resize | sf::Style::Close;
+		flags = sf::Style::Close;
 	}
 	
 	createWindow();
 
-	windowSettings = window.GetSettings();
+	contextSettings = window.GetSettings();
 	
-	assert( windowSettings.DepthBits >= 0 && windowSettings.DepthBits <= 32 );
-	settings.depthBits = windowSettings.DepthBits;
+	assert( contextSettings.DepthBits >= 0 && contextSettings.DepthBits <= 32 );
+	settings.depthBits = contextSettings.DepthBits;
 	
-	assert( windowSettings.StencilBits >= 0 && windowSettings.StencilBits <= 32 );
-	settings.stencilBits = windowSettings.StencilBits;
+	assert( contextSettings.StencilBits >= 0 && contextSettings.StencilBits <= 32 );
+	settings.stencilBits = contextSettings.StencilBits;
 	
-	assert( windowSettings.AntialiasingLevel >= 0 && windowSettings.AntialiasingLevel <= 32 );
-	settings.antialiasLevel = windowSettings.AntialiasingLevel;
+	assert( contextSettings.AntialiasingLevel >= 0 && contextSettings.AntialiasingLevel <= 32 );
+	settings.antialiasLevel = contextSettings.AntialiasingLevel;
 	
-	window.EnableKeyRepeat( false );
+	//window.EnableKeyRepeat( false );
 	
 	return true;
 }
@@ -85,13 +83,16 @@ void SFML_Window::createWindow()
 {
 	if(settings.handle)
 	{
-		sf::WindowHandle handle( settings.handle );
-		window.Create( handle, windowSettings );
+		sf::WindowHandle handle = (sf::WindowHandle) settings.handle;
+		window.Create( handle, contextSettings );
 	}
 	else
-	{		
-		window.Create( videoMode, settings.title, flags, windowSettings );
+	{
+		window.Create( videoMode, settings.title, flags, contextSettings );
 	}
+
+	context = AllocateThis(RenderContext);
+	context->mainTarget = this;
 }
 
 //-----------------------------------//
@@ -121,60 +122,37 @@ bool SFML_Window::pumpEvents()
 {
 	sf::Event event;
 
-	while( window.GetEvent( event ) )
+	while( window.PollEvent(event) )
 	{
-		switch( event.Type )
-		{
-		case sf::Event::Closed:
-			handleWindowClose();
-			return false;
+	switch( event.Type )
+	{
+	case sf::Event::Closed:
+		handleWindowClose();
+		return false;
 			
-		case sf::Event::Resized:
-			processResize( event );
-			break;
+	case sf::Event::Resized:
+		processResize( event );
+		break;
 			
-		case sf::Event::LostFocus:
-			handleWindowFocus( true );
-			break;	
+	case sf::Event::LostFocus:
+		handleWindowFocus( true );
+		break;	
 			
-		case sf::Event::GainedFocus:
-			handleWindowFocus( false );
-			break;	
-			
-		case sf::Event::TextEntered:
-			
-		case sf::Event::KeyPressed:
-		case sf::Event::KeyReleased:
-			
-		case sf::Event::MouseButtonPressed:
-		case sf::Event::MouseButtonReleased:
-
-		case sf::Event::MouseEntered:
-		case sf::Event::MouseLeft:
-		case sf::Event::MouseWheelMoved:
-			
-		case sf::Event::JoyButtonPressed:
-		case sf::Event::JoyButtonReleased:
-		case sf::Event::JoyMoved:
-		{
-			inputManager.processSFMLEvent( event );
-			break;
-		}
-
-		case sf::Event::MouseMoved:
-		{
-			inputManager.processSFMLEvent( event );
-			break;
-		}
-		}
-	}
+	case sf::Event::GainedFocus:
+		handleWindowFocus( false );
+		break;	
+		
+	default:
+		input.processSFMLEvent( event );
+		break;
+	} }
 
 	return true;
 }
 
 //-----------------------------------//
 
-void SFML_Window::setTitle(const std::string& title) 
+void SFML_Window::setTitle(const String& title) 
 {
 	settings.title = title;
 	createWindow();
@@ -201,17 +179,15 @@ bool SFML_Window::isCursorVisible() const
 
 void SFML_Window::setCursorPosition( int x, int y )
 {
-	window.SetCursorPosition( x, y );
+	sf::Mouse::SetPosition( sf::Vector2i(x, y), window );
 }
 
 //-----------------------------------//
 
-Vector2 SFML_Window::getCursorPosition() const
+Vector2i SFML_Window::getCursorPosition() const
 {
-	int x = window.GetInput().GetMouseX();
-	int y = window.GetInput().GetMouseY();
-
-	return Vector2(x, y);
+	sf::Vector2i pos = sf::Mouse::GetPosition();
+	return Vector2i(pos.x, pos.y);
 }
 
 //-----------------------------------//

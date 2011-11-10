@@ -181,7 +181,7 @@ FileWatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 //-----------------------------------//
 
 FileWatcherWin32::FileWatcherWin32()
-	: mLastWatchID(1)
+	: mLastWatchID(0)
 { }
 
 //-----------------------------------//
@@ -201,8 +201,6 @@ FileWatcherWin32::~FileWatcherWin32()
 
 FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 {
-	FileWatchId watchid = ++mLastWatchID;
-
 	std::wstring wdir( directory.begin(), directory.end() );
 	FileWatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
 		| FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
@@ -212,6 +210,8 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 		LogWarn( "Could not watch directory %s", directory.c_str() );
 		return 0;
 	}
+
+	FileWatchId watchid = ++mLastWatchID;
 
 	size_t len = directory.length()+1;
 	watch->mWatchid = watchid;

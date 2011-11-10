@@ -130,6 +130,8 @@ void SceneDocument::setScene( Scene* newScene )
 	EventManager* events = GetEditor().getEventManager();
 	events->onSceneLoad(scene);
 
+	sceneWindow->setMainCamera(nullptr);
+
 	// Update the scenes.
 	onUpdate(0);
 }

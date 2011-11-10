@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "input/Device.h"
-#include "input/KeyboardEvents.h"
+#include "Input/Device.h"
+#include "Input/KeyboardEvents.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -39,6 +39,9 @@ public:
 
 	// Event is sent when a key is released.
 	Event1<const KeyEvent&> onKeyRelease;
+
+	// Event is sent when text is input.
+	Event1<const KeyEvent&> onKeyText;
 
 private:
 	

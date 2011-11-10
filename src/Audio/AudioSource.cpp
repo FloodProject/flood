@@ -45,8 +45,8 @@ AudioSource::AudioSource(AudioContext* context, const SoundHandle& handle)
 	}
 
 	Sound* sound = handle.Resolve();
-	buffer = device->prepareBuffer(sound);
 	
+	buffer = device->prepareBuffer(sound);
 	setPosition( Vector3::Zero );
 }
 
@@ -86,6 +86,13 @@ void AudioSource::play( const int count )
 	//		Playing (in which case we do nothing)
 	//		Paused (in which case we play from where it was paused)
 
+	if( !buffer->getUploaded() )
+	{
+		buffer->onBufferUploaded.Connect(this, &AudioSource::onBufferUploaded);
+		isPendingPlay = true; 
+		return;
+	}
+
 	context->makeCurrent();
 
 	if( isPlaying() )
@@ -113,6 +120,22 @@ void AudioSource::play( const int count )
 
 //-----------------------------------//
 
+void AudioSource::onBufferUploaded(AudioBuffer* newBuffer)
+{
+	assert( newBuffer == buffer.get() );
+	
+	// This gets called if the source was asked to play but if the buffer
+	// was not uploaded yet. This can happen due to asynchronous nature
+	// of the loading of the resources.
+
+	if( !isPendingPlay ) return;
+
+	play();
+	isPendingPlay = false;
+}
+
+//-----------------------------------//
+
 void AudioSource::stop()
 {
 	context->makeCurrent();
@@ -123,6 +146,9 @@ void AudioSource::stop()
 	{
 		LogWarn("Could not stop audio source: %s", device->getError());
 	}
+
+	if( isPendingPlay )
+		isPendingPlay = false;
 }
 
 //-----------------------------------//
@@ -137,6 +163,9 @@ void AudioSource::pause()
 	{
 		LogWarn( "Could not pause audio source: %s", device->getError());
 	}
+
+	if( isPendingPlay )
+		isPendingPlay = false;
 }
 
 //-----------------------------------//
@@ -188,14 +217,16 @@ void AudioSource::clear()
 {
 	context->makeCurrent();
 	
-	//// dequeue all buffers in the audio source
-	//alSourceUnqueueBuffers(id, 1, &bufferId);
+#if 0
+	// Dequeue all buffers in the audio source
+	alSourceUnqueueBuffers(id, 1, &bufferId);
 
-	//if(device->checkError())
-	//{
-	//	LogWarn( "Could not queue buffer in audio source: %s",
-	//		device->getError());
-	//}
+	if(device->checkError())
+	{
+		LogWarn( "Could not queue buffer in audio source: %s",
+			device->getError());
+	}
+#endif
 }
 
 //-----------------------------------//

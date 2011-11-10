@@ -35,7 +35,11 @@ static int GetVertexTypeSize(VertexType::Enum type)
 		return sizeof(float);
 	case VertexType::Integer:
 		return sizeof(int);
+	case VertexType::Byte:
+		return sizeof(uint8);
 	}
+
+	LogAssert("Unknown vertex type");
 
 	return sizeof(float);
 }

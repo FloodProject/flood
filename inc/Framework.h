@@ -22,6 +22,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 class Window;
+struct Archive;
 
  /**
  * Simple framework to facilitate the use of the engine functionality in
@@ -38,13 +39,25 @@ public:
 	Framework(const String& app);
 	virtual ~Framework();
 
+	// Initializes the engine.
+	void init();
+
 	// Kickstart the framework in action.
 	void run();
+
+	// Sets up the render window.
+	void setupWindow(Window* window);
+
+	// Sets up the resource paths.
+	void setupResourcePaths();
 
 protected:
 
 	// Called once when the app starts.
 	virtual void onInit() = 0;
+
+	// Called once when the app exits.
+	virtual void onCleanup() = 0;
 
 	// Sets up all the needed resources.
 	virtual void onSetupResources() = 0;
@@ -60,13 +73,9 @@ protected:
 
 	// Input callback functions.
 	virtual void onKeyPressed( const KeyEvent& ) {}
+	virtual void onKeyReleased( const KeyEvent& ) {}
 	virtual void onButtonPressed( const MouseButtonEvent& ) {}
 	virtual void onButtonReleased( const MouseButtonEvent& ) {}
-
-protected:
-
-	// Creates a new rendering window.
-	Window* createWindow();
 
 	// Register input devices callbacks.
 	void registerCallbacks();
@@ -74,11 +83,13 @@ protected:
 	// Calculates some statistics about frame times.
 	void updateFrameTimes();
 
-	// Initializes the engine.
-	virtual void init();
-
 	// Main rendering loop.
 	virtual void mainLoop();
+
+public:
+
+	// Resources archive.
+	Archive* archive;
 
 	// Main window;
 	Window* window;

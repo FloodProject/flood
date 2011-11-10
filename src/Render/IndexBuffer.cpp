@@ -48,7 +48,7 @@ bool IndexBuffer::unbind()
 
 //-----------------------------------//
 
-bool IndexBuffer::build(const GeometryBufferPtr& gb)
+bool IndexBuffer::build(const GeometryBuffer* gb)
 {
 	if( !gb ) return false;
 	assert( gb->isIndexed() );

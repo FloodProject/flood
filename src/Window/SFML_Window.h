@@ -8,10 +8,12 @@
 
 #pragma once
 
+#define ENABLE_WINDOW_SFML
+
 #ifdef ENABLE_WINDOW_SFML
 
-#include "Render/Window.h"
-#include "input/SFML_InputManager.h"
+#include "Window/Window.h"
+#include "SFML_Input.h"
 #include <SFML/Window.hpp>
 
 NAMESPACE_ENGINE_BEGIN
@@ -29,40 +31,40 @@ public:
 	SFML_Window(const WindowSettings& settings);
 	virtual ~SFML_Window();
 
-	// Swaps the buffers (updates the display).
-	void update();
-
-	// Shows/hides the window.
-	virtual void show( bool hide = false );
-
-	// Handle the window message events.
-	bool pumpEvents();
-
-	// Sets the title of the window.
-	void setTitle(const std::string& title);
-
-	// Sets the visibility of the mouse cursor.
-	void setCursorVisible(bool state);
-
-	// Gets the visibility of the mouse cursor.
-	virtual bool isCursorVisible() const;
-
-	// Gets the cursor position on screen.
-	virtual Vector2 getCursorPosition() const;
-
-	// Sets the cursor position on screen.
-	virtual void setCursorPosition( int x, int y );
-
-	// Marks this as the current context.
-	virtual void makeCurrent();
-
-	// Gets the input manager.
-	InputManager* getInputManager() { return &inputManager; }
-
-private:
-
 	// Opens a new window.
 	bool open();
+
+	// Swaps the buffers (updates the display).
+	void update() OVERRIDE;
+
+	// Shows/hides the window.
+	void show( bool hide = false ) OVERRIDE;
+
+	// Handle the window message events.
+	bool pumpEvents() OVERRIDE;
+
+	// Sets the title of the window.
+	void setTitle(const String& title) OVERRIDE;
+
+	// Sets the visibility of the mouse cursor.
+	void setCursorVisible(bool state) OVERRIDE;
+
+	// Gets the visibility of the mouse cursor.
+	bool isCursorVisible() const OVERRIDE;
+
+	// Gets the cursor position on screen.
+	Vector2i getCursorPosition() const OVERRIDE;
+
+	// Sets the cursor position on screen.
+	void setCursorPosition( int x, int y ) OVERRIDE;
+
+	// Marks this as the current context.
+	void makeCurrent() OVERRIDE;
+
+	// Gets the input manager.
+	InputManager* getInput() OVERRIDE { return &input; }
+
+private:
 
 	// Processes the different kinds of events.
 	void processResize(sf::Event event);
@@ -72,11 +74,11 @@ private:
 	void createWindow();
 
 	// Holds the SFML input manager.
-	SFML_InputManager inputManager;
+	SFML_Input input;
 
 	// SFML structures
 	sf::Window window;
-	sf::WindowSettings windowSettings;
+	sf::ContextSettings contextSettings;
 	sf::VideoMode videoMode;
 	uint32 flags;
 	

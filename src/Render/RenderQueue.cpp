@@ -13,8 +13,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-RenderState::RenderState( const RenderablePtr& rend )
-	: renderable( rend.get() )
+RenderState::RenderState( Renderable* rend )
+	: renderable( rend )
 	, material( rend->getMaterial().Resolve() )
 	, priority( rend->getRenderPriority() )
 { }

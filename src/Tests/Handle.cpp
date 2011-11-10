@@ -71,7 +71,7 @@ void TestHandle(CuTest* tc)
 	CuAssertPtrEquals(tc, nullptr, handle2.Resolve());
 
 	// Test explicit set of handle ids.
-	A* a3 = Allocate(A,  AllocatorGetHeap());
+	A* a3 = AllocateHeap(A);
 	
 	HandleA handle3 = HandleCreate(HandleManagerA, a3);
 	HandleA handle4 = handle3;

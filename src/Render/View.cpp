@@ -110,8 +110,10 @@ bool RenderView::operator < (RenderView& v)
 
 //-----------------------------------//
 
-void RenderView::update(const ScenePtr& scene)
+void RenderView::update(const Scene* scene)
 {
+	if( !scene ) return;
+
 	const CameraPtr& camera = weakCamera;
 	if( !camera ) return;
 

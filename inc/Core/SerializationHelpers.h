@@ -16,12 +16,13 @@
 
 #ifdef ENABLE_SERIALIZATION
 
+typedef struct json_t json_t;
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
 struct Field;
-struct json_t;
 
 struct API_CORE SerializerBinary : public Serializer
 {

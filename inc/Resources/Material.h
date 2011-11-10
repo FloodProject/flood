@@ -111,7 +111,8 @@ struct TextureWrapMode
 	{
 		Repeat,
 		Clamp,
-		ClampToBorder
+		ClampToBorder,
+		ClampToEdge
 	};
 };
 

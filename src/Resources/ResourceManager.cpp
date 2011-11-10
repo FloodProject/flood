@@ -69,15 +69,17 @@ ResourceHandle ResourceHandleCreate(Resource* p)
 	return handle;
 }
 
+static bool gs_RemoveResource = true;
+
 void ResourceHandleDestroy(HandleId id)
 {
 	Resource* resource = (Resource*) ResourceHandleFind(id);
-	//gs_ResourcesManager->removeResource(resource);
+
+	if( gs_RemoveResource )
+		gs_ResourcesManager->removeResource(resource);
 	
 	LogDebug("ResourceHandleDestroy: %lu", id);
 	HandleDestroy(gs_ResourceHandleManager, id);
-
-	Deallocate(resource);
 }
 
 static HandleId ResourceHandleFind(const char* s)
@@ -142,7 +144,6 @@ ResourceManager::~ResourceManager()
 	destroyHandles();
 	resourceLoaders.clear();
 
-	ArchiveDestroy(archive);
 	ConditionDestroy(resourceFinishLoad);
 	MutexDestroy(resourceFinishLoadMutex);
 }
@@ -160,6 +161,7 @@ void ResourceManager::destroyHandles()
 		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
 	}
 
+	gs_RemoveResource = false;
 	resources.clear();
 	
 	HandleDestroyManager(handleManager);

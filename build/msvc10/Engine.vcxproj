@@ -171,6 +171,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Beartooth\Dependencies\vapor\src\Window\Window.cpp" />
     <ClCompile Include="..\..\interface\Bindings\vapor_wrap.cxx">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4503;4996;4127; 4510;4610; 4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4503;4996;4127; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -193,7 +194,6 @@
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp" />
-    <ClCompile Include="..\..\src\Engine\Window.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -272,9 +272,9 @@
     <ClCompile Include="..\..\src\Scene\Terrain.cpp" />
     <ClCompile Include="..\..\src\Scene\Transform.cpp" />
     <ClCompile Include="..\..\src\Scene\Water.cpp" />
-    <ClCompile Include="..\..\src\Win32\WindowWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Beartooth\Dependencies\vapor\inc\Window\Window.h" />
     <ClInclude Include="..\..\inc\Audio\AL.h" />
     <ClInclude Include="..\..\inc\Audio\Buffer.h" />
     <ClInclude Include="..\..\inc\Audio\Context.h" />
@@ -291,7 +291,6 @@
     <ClInclude Include="..\..\inc\Render\Program.h" />
     <ClInclude Include="..\..\inc\Render\Render.h" />
     <ClInclude Include="..\..\inc\Render\RenderContext.h" />
-    <ClInclude Include="..\..\inc\Render\SFML_Window.h" />
     <ClInclude Include="..\..\inc\Render\UniformBuffer.h" />
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h" />
     <ClInclude Include="..\..\inc\Paging\Page.h" />
@@ -309,8 +308,6 @@
     <ClInclude Include="..\..\inc\Render\Sphere.h" />
     <ClInclude Include="..\..\inc\Render\Quad.h" />
     <ClInclude Include="..\..\inc\Render\DebugGeometry.h" />
-    <ClInclude Include="..\..\inc\Render\Window.h" />
-    <ClInclude Include="..\..\inc\Render\Win32_Window.h" />
     <ClInclude Include="..\..\inc\Render\FBO.h" />
     <ClInclude Include="..\..\inc\Render\FrameStatistics.h" />
     <ClInclude Include="..\..\inc\Render\Target.h" />

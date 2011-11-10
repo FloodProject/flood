@@ -154,7 +154,7 @@ public:
 
 	// Gets an already loaded resource by its name.
 	template <typename T>
-	Handle<T, ResourceHandleFind, ResourceHandleDestroy> getResource(const String& name)
+	RESOURCE_HANDLE_TYPE(T) getResource(const String& name)
 	{
 		ResourceHandle res = getResource(name);
 		return HandleCast<T>(res);
@@ -162,10 +162,18 @@ public:
 
 	// Creates a new resource and returns the specific resource type.
 	template <typename T>
-	Handle<T, ResourceHandleFind, ResourceHandleDestroy> loadResource(const String& name)
+	RESOURCE_HANDLE_TYPE(T) loadResource(const String& name)
 	{
 		ResourceHandle res = loadResource(name);
 		return HandleCast<T>(res);
+	}
+
+	template <typename T>
+	RESOURCE_HANDLE_TYPE(T) createResource()
+	{
+		ResourceHandle res = ResourceHandleCreate(AllocateHeap(T));
+		return HandleCast<T>(res);
+		
 	}
 
 	// Sets up the default resource loaders.

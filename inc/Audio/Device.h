@@ -24,6 +24,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+struct ResourceEvent;
+
 /**
  * Audio device to play sound data using OpenAL as backend.
  */
@@ -62,6 +64,9 @@ public:
 	GETTER(MainContext, AudioContext*, mainContext)
 
 protected:
+
+	// Callback when a resource is loaded.
+	void onResourceLoaded(const ResourceEvent&);
 
 	// Gets the AL format matching the sound.
 	int getFormat(Sound* sound);

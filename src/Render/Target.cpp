@@ -33,6 +33,14 @@ RenderTarget::~RenderTarget()
 		// Remove the context from the render device.
 		renderDevice->setActiveContext(nullptr);
 	}
+
+	for(size_t i = 0; i < views.size(); i++)
+	{
+		RenderView* view = views[i];
+		Deallocate(view);
+	}
+
+	Deallocate(context);
 }
 
 //-----------------------------------//

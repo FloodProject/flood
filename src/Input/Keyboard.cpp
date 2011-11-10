@@ -7,16 +7,14 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "input/Keyboard.h"
-
-#pragma TODO("Fix the size of the key states")
+#include "Input/Keyboard.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState(1024, false)
+	: keyState(Keys::MAX, false)
 { }
 
 //-----------------------------------//
@@ -55,6 +53,12 @@ void Keyboard::processEvent( const InputEvent& event )
 			keyReleased(keyEvent);
 			break;
 		}
+
+		case KeyboardEventType::KeyText:
+		{
+			onKeyText(keyEvent);
+			break;
+		}
 	}
 }
 
@@ -83,14 +87,8 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(Keys::Enum keyCode, 
-					bool alt, bool shift, bool ctrl,
-					KeyboardEventType::Enum eventType)
+KeyEvent::KeyEvent(KeyboardEventType::Enum eventType)
 	: InputEvent(InputDeviceType::Keyboard)
-	, keyCode(keyCode)
-	, altPressed(alt)
-	, shiftPressed(shift)
-	, ctrlPressed(ctrl)
 	, eventType(eventType)
 { }
 

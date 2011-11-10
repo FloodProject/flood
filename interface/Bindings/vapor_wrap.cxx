@@ -9978,7 +9978,6 @@ static int _wrap_new_KeyEvent__SWIG_0(lua_State* L) {
   arg3 = (lua_toboolean(L, 3)!=0);
   arg4 = (lua_toboolean(L, 4)!=0);
   arg5 = (KeyboardEventType::Enum)(int)lua_tonumber(L, 5);
-  result = (KeyEvent *)new KeyEvent(arg1,arg2,arg3,arg4,arg5);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__KeyEvent,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -10007,7 +10006,6 @@ static int _wrap_new_KeyEvent__SWIG_1(lua_State* L) {
   arg2 = (lua_toboolean(L, 2)!=0);
   arg3 = (lua_toboolean(L, 3)!=0);
   arg4 = (lua_toboolean(L, 4)!=0);
-  result = (KeyEvent *)new KeyEvent(arg1,arg2,arg3,arg4);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__KeyEvent,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -10033,7 +10031,6 @@ static int _wrap_new_KeyEvent__SWIG_2(lua_State* L) {
   arg1 = (Keys::Enum)(int)lua_tonumber(L, 1);
   arg2 = (lua_toboolean(L, 2)!=0);
   arg3 = (lua_toboolean(L, 3)!=0);
-  result = (KeyEvent *)new KeyEvent(arg1,arg2,arg3);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__KeyEvent,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -10056,7 +10053,6 @@ static int _wrap_new_KeyEvent__SWIG_3(lua_State* L) {
   if(!lua_isboolean(L,2)) SWIG_fail_arg("KeyEvent",2,"bool");
   arg1 = (Keys::Enum)(int)lua_tonumber(L, 1);
   arg2 = (lua_toboolean(L, 2)!=0);
-  result = (KeyEvent *)new KeyEvent(arg1,arg2);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__KeyEvent,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -10076,7 +10072,6 @@ static int _wrap_new_KeyEvent__SWIG_4(lua_State* L) {
   SWIG_check_num_args("KeyEvent",1,1)
   if(!lua_isnumber(L,1)) SWIG_fail_arg("KeyEvent",1,"Keys::Enum");
   arg1 = (Keys::Enum)(int)lua_tonumber(L, 1);
-  result = (KeyEvent *)new KeyEvent(arg1);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__KeyEvent,1); SWIG_arg++; 
   return SWIG_arg;
   
@@ -13407,7 +13402,7 @@ static int _wrap_Camera_render__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("Camera_render",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Scene_t);
   }
   
-  (arg1)->render((ScenePtr const &)*arg2);
+  (arg1)->render(((ScenePtr const &)*arg2).get());
   
   return SWIG_arg;
   

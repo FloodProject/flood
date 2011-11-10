@@ -8,6 +8,7 @@
 
 #include "Example.h"
 #include "Pipeline/API.h"
+#include "Core/Utilities.h"
 
 int main()
 {
@@ -50,13 +51,19 @@ void Example::onSetupResources()
 
 void Example::onSetupScene() 
 {
-	camera = AllocateThis(Camera);
-	camera->getFrustum().farPlane = 10000.0f;
-
 	sceneHandle = GetResourceManager()->loadResource<Scene>("2box.scene");
 	Scene* scene = sceneHandle.Resolve();
 
+	if( !scene )
+	{
+		LogError("Scene could not be loaded");
+		exit(EXIT_FAILURE);
+	}
+
 	// Create a new Camera.
+	camera = AllocateThis(Camera);
+	camera->getFrustum().farPlane = 10000.0f;
+
 	EntityPtr nodeCamera = AllocateThis(Entity, "MainCamera");
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );

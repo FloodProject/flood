@@ -75,7 +75,7 @@ void PhysicsManager::drawDebugWorld()
 
 	RenderDevice* renderDevice = GetRenderDevice();
 
-	RenderState state( debugDrawer->getRenderable() );
+	RenderState state( debugDrawer->getRenderable().get() );
 	renderDevice->render( state, LightQueue() );
 }
 

@@ -21,6 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 AudioBuffer::AudioBuffer( AudioDevice* device, Sound* sound )
 	: device(device)
 	, sound(sound)
+	, uploaded(false)
 	, id(0)
 {
 	alGenBuffers(1, &id);
@@ -32,7 +33,8 @@ AudioBuffer::AudioBuffer( AudioDevice* device, Sound* sound )
 		return;
 	}
 
-	upload();
+	if( sound->isLoaded() )
+		upload();
 }
 
 //-----------------------------------//
@@ -53,6 +55,8 @@ AudioBuffer::~AudioBuffer()
 
 void AudioBuffer::upload()
 {
+	uploaded = false;
+
 	const std::vector<byte>& buffer = sound->getBuffer();
 	ALsizei size = (ALsizei) buffer.size();
 	
@@ -62,13 +66,16 @@ void AudioBuffer::upload()
 	if( buffer.empty() ) return;
 
 	// Uploads sound data to the buffer.
-	alBufferData( id, format, &buffer[0], size, frequency );
+	alBufferData( id, format, buffer.data(), size, frequency );
 	
 	if(device->checkError())
 	{
 		LogWarn("Error uploading sound to buffer: %s", device->getError());
 		return;
 	}
+
+	uploaded = true;
+	onBufferUploaded(this);
 }
 
 //-----------------------------------//

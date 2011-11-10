@@ -23,7 +23,7 @@ public:
 	IndexBuffer();
 
 	// Updates the internal IBO with current values for indices.
-	bool build(const GeometryBufferPtr&);
+	bool build(const GeometryBuffer*);
 
 	// Binds/unbinds the index buffer from the OpenGL state.
 	bool bind();

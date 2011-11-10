@@ -200,6 +200,7 @@
     <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Core\Telemetry.cpp" />
     <ClCompile Include="..\..\src\Core\Timer.cpp" />
+    <ClCompile Include="..\..\src\Core\Unicode.cpp" />
     <ClCompile Include="..\..\src\Core\Utilities.cpp" />
     <ClCompile Include="..\..\src\Core\WebServer.cpp" />
     <ClCompile Include="..\..\src\Core\WebStream.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="..\..\inc\Core\String.h" />
     <ClInclude Include="..\..\inc\Core\Telemetry.h" />
     <ClInclude Include="..\..\inc\Core\Timer.h" />
+    <ClInclude Include="..\..\inc\Core\Unicode.h" />
     <ClInclude Include="..\..\inc\Core\Utilities.h" />
     <ClInclude Include="..\..\inc\Core\WebServer.h" />
     <ClInclude Include="..\..\inc\Core\WebStream.h" />

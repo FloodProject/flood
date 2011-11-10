@@ -32,7 +32,6 @@ Engine* GetEngine() { return gs_engineInstance; }
 Engine::Engine()
 	: log(nullptr)
 	, stream(nullptr)
-	, fileSystem(nullptr)
 	, taskPool(nullptr)
 	, resourceManager(nullptr)
 	, renderDevice(nullptr)
@@ -54,7 +53,7 @@ Engine::~Engine()
 		Deallocate(system);
 	}
 	
-	Deallocate(inputManager);
+	//Deallocate(inputManager);
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
@@ -100,13 +99,19 @@ void Engine::init( bool createWindow )
 	// Creates the resource manager.
 	resourceManager = AllocateThis(ResourceManager);
 	resourceManager->setTaskPool( taskPool );
-	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
 	
 	// Registers default resource loaders.
 	resourceManager->setupResourceLoaders( ResourceLoaderGetType() );
 
-	// Creates the rendering and audio devices.
-	setupDevices( createWindow );
+	// Creates the rendering device.
+	renderDevice = AllocateThis(RenderDevice);
+
+#ifdef ENABLE_AUDIO_OPENAL
+	// Creates the audio device.
+	audioDevice = AllocateThis(AudioDevice);
+	audioDevice->createDevice("");
+	audioDevice->createMainContext();
+#endif
 
 #ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
@@ -120,28 +125,6 @@ void Engine::setupLogger()
 {
 	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
 	log = LogCreate( AllocatorGetHeap() );
-}
-
-//-----------------------------------//
-
-void Engine::setupDevices( bool createWindow )
-{
-	renderDevice = AllocateThis(RenderDevice);
-
-#ifdef ENABLE_AUDIO_OPENAL
-	// Creates the audio device.
-	audioDevice = AllocateThis(AudioDevice);
-	audioDevice->createDevice("");
-	audioDevice->createMainContext();
-#endif
-}
-
-//-----------------------------------//
-
-void Engine::setupInput()
-{
-	inputManager = AllocateThis(InputManager);
-	inputManager->createDefaultDevices(); 
 }
 
 //-----------------------------------//
@@ -166,13 +149,6 @@ void Engine::update()
 void Engine::stepFrame()
 {
 	AllocatorReset( GetFrameAllocator() );
-}
-
-//-----------------------------------//
-
-InputManager* Engine::getInputManager() const
-{
-	return inputManager;
 }
 
 //-----------------------------------//

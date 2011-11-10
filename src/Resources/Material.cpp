@@ -200,6 +200,7 @@ void Material::setShader(const String& name)
 
 	// Use high priority so the shader is loaded right away.
 	options.isHighPriority = true;
+	options.asynchronousLoad = false;
 	
 	shader = HandleCast<Shader>( GetResourceManager()->loadResource(options) );
 }

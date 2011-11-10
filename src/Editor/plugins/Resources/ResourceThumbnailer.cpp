@@ -187,7 +187,7 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 	scene->update(0);
 
 	renderBuffer->bind();
-	renderView->update(scene);
+	renderView->update(scene.get());
 	
 	Vector2i size = renderBuffer->getSettings().getSize();
 

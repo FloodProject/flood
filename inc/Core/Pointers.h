@@ -22,7 +22,7 @@ NAMESPACE_CORE_BEGIN
 
 template<typename T> void DeallocatePointer(T* obj)
 {
-	DeallocateObject((const T*) obj);
+    DeallocateObject((const T*) obj);
 }
 
 template<typename T, void (*Destroy)(T*) = DeallocatePointer>
@@ -42,7 +42,7 @@ public:
 
     ~scoped_ptr() // never throws
     {
-		Destroy(px);
+        Destroy(px);
     }
 
     void reset(T * p = 0) // never throws

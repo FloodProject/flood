@@ -28,7 +28,7 @@ NAMESPACE_CORE_BEGIN
 
 #ifdef ENABLE_ARCHIVE_DIR
 
-scoped_ptr<FileWatcherWin32> watcher;
+static scoped_ptr<FileWatcherWin32> gs_watcher;
 
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
@@ -89,12 +89,12 @@ static bool DirArchiveClose(Archive* archive)
 	if(archive->watchId != 0)
 	{
 		// Remove the archive from the watch list.
-		watcher->removeWatch(archive->watchId);
+		gs_watcher->removeWatch(archive->watchId);
 
-		if( watcher->mWatches.empty() )
+		if( gs_watcher->mWatches.empty() )
 		{
 			// Remove the watcher when there are no more watches.
-			watcher.reset();
+			gs_watcher.reset();
 		}
 	}
 
@@ -176,20 +176,29 @@ static bool DirArchiveMonitor(Archive* archive)
 {
 	if( !archive ) return false;
 
+	bool created = false;
+
 	// Setup the watcher if it has not been created.
-	if( !watcher )
+	if( !gs_watcher )
 	{
-		watcher.reset( AllocateHeap(FileWatcherWin32) );
-		watcher->onFileWatchEvent.Connect(&HandleFileWatch);
+		LogInfo("Creating the file watcher");
+
+		gs_watcher.reset( AllocateHeap(FileWatcherWin32) );
+		gs_watcher->onFileWatchEvent.Connect(&HandleFileWatch);
+
+		created = true;
 	}
 
 	if(archive->watchId == 0)
 	{
 		// Add the archive to the watch list.
-		archive->watchId = watcher->addWatch(archive->path, archive);
+		archive->watchId = gs_watcher->addWatch(archive->path, archive);
 	}
 
-	watcher->update();
+	if(archive->watchId == 0 && created )
+		gs_watcher.reset();
+	else
+		gs_watcher->update();
 
 	return true;
 }
@@ -202,7 +211,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 {
 	// Open directory stream.
 	DIR* dir = opendir( dirPath.c_str() );
-   	if( !dir ) return;
+	if( !dir ) return;
 
 	dirent* entry = nullptr;
 	

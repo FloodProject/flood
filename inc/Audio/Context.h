@@ -58,7 +58,7 @@ protected:
 	ALCcontext* createContext();
 
 	// Checks if the last operation was successful
-	bool checkError();	
+	bool checkError();
 
 	// Returns a string representation of an OpenAL context error
 	const char* getError();

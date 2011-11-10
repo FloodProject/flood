@@ -28,19 +28,19 @@ NAMESPACE_ENGINE_BEGIN
 
 namespace PolygonType
 {
-    enum Enum
-    {
-        Points,
-        Lines,
-        LineLoop,
-        LineStrip,
-        Triangles,
-        TriangleStrip,
-        TriangleFan,
-        Quads,
-        QuadStrip,
-        Polygon
-    };
+	enum Enum
+	{
+		Points,
+		Lines,
+		LineLoop,
+		LineStrip,
+		Triangles,
+		TriangleStrip,
+		TriangleFan,
+		Quads,
+		QuadStrip,
+		Polygon
+	};
 }
 
 //-----------------------------------//
@@ -55,12 +55,12 @@ namespace PolygonType
 
 namespace PolygonMode
 {
-    enum Enum
-    {
-		Solid		= GL_FILL,
-		Wireframe	= GL_LINE,
-		Point		= GL_POINT
-    };
+	enum Enum
+	{
+		Solid       = GL_FILL,
+		Wireframe   = GL_LINE,
+		Point       = GL_POINT
+	};
 }
 
 //-----------------------------------//
@@ -100,22 +100,22 @@ public:
 	Renderable();
 	~Renderable();
 
-    // Gets/sets the render stage.
+	// Gets/sets the render stage.
 	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
-   
-    // Gets/sets the render priority.
+
+	// Gets/sets the render priority.
 	ACESSOR(RenderPriority, int32, priority)
 
-    // Gets/sets the geometry buffer.
+	// Gets/sets the geometry buffer.
 	ACESSOR(GeometryBuffer, const GeometryBufferPtr&, gb)
-    
-    // Gets/sets the index buffer.
+
+	// Gets/sets the index buffer.
 	ACESSOR(UniformBuffer, const UniformBufferPtr&, ub)
 
-    // Gets/sets the material.
-    ACESSOR(Material, const MaterialHandle&, material)
+	// Gets/sets the material.
+	ACESSOR(Material, const MaterialHandle&, material)
 
-    // Gets/sets the render mode.
+	// Gets/sets the render mode.
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
 	// Gets/sets the primitive type.
@@ -135,8 +135,8 @@ protected:
 	// Rendering priority.
 	int32 priority;
 
-    // Primitive type.
-    PolygonType::Enum type;
+	// Primitive type.
+	PolygonType::Enum type;
 
 	// Polygon mode.
 	PolygonMode::Enum mode;
@@ -146,7 +146,7 @@ protected:
 
 	// Uniform buffer with shader constants.
 	UniformBufferPtr ub;
-    
+
 	// Material of this renderable.
 	MaterialHandle material;
 };

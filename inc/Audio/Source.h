@@ -104,6 +104,12 @@ protected:
 	// Clears the buffer queue.
 	void clear();
 
+	// Callback when buffer is uploaded.
+	void onBufferUploaded(AudioBuffer*);
+
+	// Holds if the source is pending play.
+	bool isPendingPlay;
+
 	// Holds a pointer to the audio device.
 	AudioDevice* device;
 

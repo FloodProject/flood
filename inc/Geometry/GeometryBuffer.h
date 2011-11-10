@@ -46,6 +46,7 @@ struct API_RENDER VertexType
 {
 	enum Enum
 	{
+		Byte,
 		Float,
 		Integer
 	};
@@ -212,7 +213,7 @@ public:
 	// Holds the index data.
 	std::vector<uint8> indexData;
 
-	// Holds the index size.
+	// Holds the index size in bits.
 	uint8 indexSize;
 
 	// Holds if the buffer needs to be rebuilt.

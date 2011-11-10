@@ -17,17 +17,12 @@
 #include "Input/InputManager.h"
 #include "Resources/ResourceManager.h"
 
-#if defined(ENABLE_WINDOW_WIN32)
-	#include <Window/WindowWin32.h>
-#elif defined(ENABLE_WINDOW_SFML)
-	#include <Window/SFML_Window.h>
-#endif
-
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 Framework::Framework(const String& app)
+	: window(nullptr)
 {
 	LogInfo( "Engine framework getting into action" );
 }
@@ -36,15 +31,8 @@ Framework::Framework(const String& app)
 
 Framework::~Framework()
 {
+	ArchiveDestroy(archive);
 	Deallocate(window);
-}
-
-//-----------------------------------//
-
-void Framework::run()
-{
-	Framework::init();
-	mainLoop();
 }
 
 //-----------------------------------//
@@ -53,19 +41,50 @@ void Framework::init()
 {
 	// Init the engine.
 	Engine::init(true);
+}
 
-	// Creates the window.
-	window = createWindow();
+//-----------------------------------//
 
-	// Mount the default assets path.
-	ResourceManager* res = getResourceManager();
-	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
-	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
-	res->setArchive(archive);
+void Framework::setupWindow(Window* newWindow)
+{
+	// Initialize the window.
+	window = newWindow;
+
+	// Input setup.
+	window->getInput()->createDefaultDevices();
+	setInputManager( window->getInput() );
+
+	// Setup the window as a target.
+	RenderDevice* device = getRenderDevice();
+	device->setRenderTarget( window );
+
+	// Initializes the render device with new window context.
+	RenderContext* context = window->getContext();
+	assert( context != nullptr );
+
+	context->init();
 
 	// Register input callbacks.
 	registerCallbacks();
+}
 
+//-----------------------------------//
+
+void Framework::setupResourcePaths()
+{
+	// Create the archive and mount the paths.
+	archive = ArchiveCreateVirtual( AllocatorGetHeap() );
+	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
+
+	// Set as the resource archive.
+	ResourceManager* res = getResourceManager();
+	res->setArchive(archive);
+}
+
+//-----------------------------------//
+
+void Framework::run()
+{
 	// User init callback.
 	onInit();
 
@@ -76,36 +95,12 @@ void Framework::init()
 	onSetupScene();
 
 	// Wait until all resources are loaded.
-	ResourceManager* rm = getResourceManager();
-	rm->loadQueuedResources();
-}
+	ResourceManager* res = getResourceManager();
+	//res->loadQueuedResources();
 
-//-----------------------------------//
+	mainLoop();
 
-Window* Framework::createWindow()
-{
-	WindowSettings settings;
-
-	Window* window = nullptr;
-
-	#if defined(ENABLE_WINDOW_WIN32)
-		window = new Win32Window(settings);
-	#elif defined(ENABLE_WINDOW_SFML)
-		window = new SFML_Window(settings);
-	#else
-		#error "Could not find a window implementation"
-	#endif
-
-	assert( window != nullptr );
-
-	RenderDevice* device = getRenderDevice();
-	device->setRenderTarget( window );
-
-	// Initializes the render device with new window context.
-	RenderContext* context = window->getContext();
-	context->init();
-
-	return window;
+	onCleanup();
 }
 
 //-----------------------------------//
@@ -117,8 +112,6 @@ Window* Framework::createWindow()
 
 void Framework::mainLoop()
 {
-	RenderDevice* renderDevice = GetRenderDevice();
-
 	const uint16 numUpdatesSecond = 25;
 	const float maxUpdateTime = 1.0f / numUpdatesSecond;
 
@@ -153,9 +146,9 @@ void Framework::mainLoop()
 
 		// Calculates the new frame times.
 		updateFrameTimes();
-	}
 
-	SystemSleep(0);
+		SystemSleep(0);
+	}
 }
 
 //-----------------------------------//
@@ -180,6 +173,7 @@ void Framework::registerCallbacks()
 
 	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &Framework::onKeyPressed );
+	keyboard->onKeyRelease.Connect( this, &Framework::onKeyReleased );
 	
 	Mouse* mouse = input->getMouse();
 	mouse->onMouseButtonPress.Connect( this, &Framework::onButtonPressed );

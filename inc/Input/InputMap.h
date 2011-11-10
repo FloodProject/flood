@@ -35,6 +35,8 @@ public:
 	String name;
 };
 
+//-----------------------------------//
+
 /**
  * Input schemas provide grouping for input actions. This can be useful
  * when you have distinct modes in your application, for example a 'Menu'
@@ -51,6 +53,8 @@ public:
 	// Name of the schema.
 	String name;
 };
+
+//-----------------------------------//
 
 /**
  * Manages all the input schemas, bindings and keeps track of

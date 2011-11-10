@@ -165,7 +165,7 @@ void EditorFrame::OnIdle(wxIdleEvent& event)
 
 void EditorFrame::OnClose(wxCloseEvent& event)
 {
-	#pragma TODO("Check for unsaved documents when closing");
+	#pragma TODO("Check for unsaved documents when closing")
 
 	// Hide the window in advance so the ugly destroy is not seen.
 	Hide();
@@ -200,7 +200,11 @@ void EditorFrame::createEngine()
 {
 	engine = AllocateThis(Engine);
 	engine->init(false);
-	engine->setupInput();
+
+	InputManager* input = AllocateThis(InputManager);
+	input->createDefaultDevices();
+
+	engine->setInputManager(input);
 
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();

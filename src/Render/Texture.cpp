@@ -259,6 +259,8 @@ int Texture::convertWrapFormat( TextureWrapMode::Enum format )
 		return GL_CLAMP;
 	case TextureWrapMode::ClampToBorder:
 		return GL_CLAMP_TO_BORDER;
+	case TextureWrapMode::ClampToEdge:
+		return GL_CLAMP_TO_EDGE;
 	}
 
 	assert( 0 && "This should not be reached" );

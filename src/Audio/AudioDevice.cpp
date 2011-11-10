@@ -15,6 +15,7 @@
 #include "Audio/Context.h"
 #include "Audio/AL.h"
 #include <alext.h>
+#include "Resources/ResourceManager.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -33,6 +34,8 @@ AudioDevice::AudioDevice()
 	, mainContext(nullptr)
 {
 	if(!gs_audioDevice) gs_audioDevice = this;
+
+	GetResourceManager()->onResourceLoaded.Connect(this, &AudioDevice::onResourceLoaded);
 }
 
 //-----------------------------------//
@@ -42,7 +45,7 @@ AudioDevice::~AudioDevice()
 	if(!device) return;
 
 	#pragma TODO("Check that all contexts/buffers are closed on exit")
-	delete mainContext;
+	Deallocate(mainContext);
 
 	if(!alcCloseDevice(device)) 
 	{
@@ -109,7 +112,7 @@ bool AudioDevice::createMainContext()
 	LogInfo("Creating OpenAL main context");
 
 	// Create a main context.
-	mainContext = new AudioContext(this);
+	mainContext = AllocateThis(AudioContext, this);
 
 	const ALchar* version = alGetString(AL_VERSION);
 	
@@ -181,10 +184,35 @@ AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
-	AudioBufferPtr buffer = Allocate(AudioBuffer, AllocatorGetHeap(), this, sound);
+	AudioBufferPtr buffer = AllocateThis(AudioBuffer, this, sound);
 	soundBuffers[sound] = buffer;
 
 	return buffer;
+}
+
+//-----------------------------------//
+
+void AudioDevice::onResourceLoaded(const ResourceEvent& event)
+{
+	Resource* resource = event.resource;
+	assert( resource != nullptr );
+
+	if( resource->getResourceGroup() != ResourceGroup::Audio )
+		return;
+
+	if( !resource->inherits<Sound>() )
+		return;
+
+	Sound* sound = (Sound*) resource;
+	assert( sound->isLoaded() );
+
+	auto it = soundBuffers.find(sound);
+	
+	if( it == soundBuffers.end() )
+		return;
+
+	AudioBufferPtr soundBuffer = it->second;
+	soundBuffer->upload();
 }
 
 //-----------------------------------//

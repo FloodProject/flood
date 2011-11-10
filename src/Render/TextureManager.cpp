@@ -93,6 +93,10 @@ TexturePtr TextureManager::getTexture( Image* image )
 	{
 		TexturePtr texture = AllocateHeap(Texture, image);
 		textures[image] = texture;
+
+		//if( image->isLoaded() )
+		//	texture->setImage(image);
+
 		return texture;
 	}
 }

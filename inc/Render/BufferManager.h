@@ -25,7 +25,7 @@ struct BufferEntry
 	IndexBufferPtr ib;
 };
 
-typedef std::map<GeometryBufferPtr, BufferEntry> BuffersMap;
+typedef std::map<const GeometryBuffer*, BufferEntry> BuffersMap;
 typedef std::pair<const String&, BufferPtr> BuffersPair;
 
 /**
@@ -42,13 +42,13 @@ public:
 	~BufferManager();
 
 	// Creates and gets a buffer.
-	BufferEntry* getBuffer(const GeometryBufferPtr&);
+	BufferEntry* getBuffer(const GeometryBuffer*);
 
 	// Gets a vertex buffer with the the geometry given.
-	VertexBufferPtr getVertexBuffer(const GeometryBufferPtr&);
+	VertexBufferPtr getVertexBuffer(const GeometryBuffer*);
 
 	// Gets an index buffer with the geometry given.
-	IndexBufferPtr getIndexBuffer(const GeometryBufferPtr&);
+	IndexBufferPtr getIndexBuffer(const GeometryBuffer*);
 
 protected:
 

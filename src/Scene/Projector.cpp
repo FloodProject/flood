@@ -79,7 +79,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 
 		renderable->onPreRender.Bind(this, &Projector::onPreRender);
 
-		RenderState state( renderable );
+		RenderState state( renderable.get() );
 		state.material = material.Resolve();
 		state.modelMatrix = absoluteTransform;
 		state.priority = renderable->getRenderPriority()+1;

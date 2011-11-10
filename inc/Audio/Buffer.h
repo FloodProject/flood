@@ -22,7 +22,7 @@ class AudioDevice;
 class AudioContext;
 
 /**
- * Wraps an OpenAL buffer in a class. A buffer in OpenAL is the object 
+ * Wraps an OpenAL buffer in a class. A buffer in OpenAL is the object
  * that contains the audio data. This will hold the id to the data and
  * delete it when no other source needs it.
  *
@@ -36,14 +36,15 @@ class API_AUDIO AudioBuffer : public ReferenceCounted
 	friend class AudioSource;
 
 public:
-	
+
 	AudioBuffer( AudioDevice* device, Sound* sound );
 	~AudioBuffer();
-  
-protected:
 
 	// Gets the id of this buffer.
 	GETTER(Id, ALuint, id)
+
+	// Gets if the buffer is uploaded.
+	GETTER(Uploaded, bool, uploaded)
 
 	// Queues the buffer data in the source.
 	void upload();
@@ -54,8 +55,14 @@ protected:
 	// Holds a pointer to the audio data buffer.
 	Sound* sound;
 
+	// Holds if the buffer has been uploaded.
+	bool uploaded;
+
 	// Holds the source id from OpenAL.
 	ALuint id;
+
+	// Event is sent when buffer is uploaded.
+	Event1<AudioBuffer*> onBufferUploaded;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioBuffer );
