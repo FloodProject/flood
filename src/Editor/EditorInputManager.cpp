@@ -28,16 +28,18 @@ void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown 
 
 void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 {
-	doMouseEvent(event);	
+	doMouseEvent(event);
 }
 
 //-----------------------------------//
 
 void EditorInputManager::doKeyEvent( const wxKeyEvent& event, bool isKeyDown )
 {
-	KeyEvent ke( convertKeyEnum( event.GetKeyCode() ), 
-		event.AltDown(), event.ShiftDown(), event.ControlDown(),
-		(isKeyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased  );
+	KeyEvent ke( (isKeyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased );
+	ke.keyCode = convertKeyEnum( event.GetKeyCode() );
+	ke.altPressed = event.AltDown();
+	ke.shiftPressed = event.ShiftDown();
+	ke.ctrlPressed = event.ControlDown();
 
 	input->processEvent( ke );
 }
