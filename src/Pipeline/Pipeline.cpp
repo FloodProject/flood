@@ -30,8 +30,13 @@ static void ReferenceProcessors()
 
 static void ReferenceImporters()
 {
+#ifdef ENABLE_IMPORTER_MILKSHAPE
 	ImporterMilkshapeGetType();
+#endif
+
+#ifdef ENABLE_IMPORTER_FBX
 	ImporterFBXGetType();
+#endif
 }
 
 //-----------------------------------//
