@@ -3,19 +3,13 @@ Core = {}
 project "Core"
 
 	kind "StaticLib"
-	location (action)
-	objdir (action .. "/obj")
-	targetdir (action .. "/lib")
-	
 	flags { common_flags }
 
-	configuration "vs*"
-		pchheader "Core/API.h"
-		pchsource "../src/Core/Core.cpp"
-		
-	configuration "*"
-	
-	files {
+	pchheader "Core/API.h"
+	pchsource "../src/Core/Core.cpp"
+
+	files 
+	{
 		"Core.lua",
 		"../inc/Core/**.h",
 		"../src/Core/**.cpp",
@@ -25,38 +19,40 @@ project "Core"
 		"../src/Network/**.cpp",
 		"../dep/FastLZ/*"
 	}
-	
-	vpaths {
-		[""] = { "**src/Core*", "**inc/Core*" },
-		["Archive"] = "**/Archive*",
-		["Compression"] = "**/fastlz*",
-		["Concurrency"] = "**/Concurren*",
-		["Cryptography"] = "**/Cipher*",
-		["Debug"] = "**/StackWalker*",
-		["Events"] = { "**/Delegate*", "**/Event*" },
-		["Extensions"] = "**/Plugin*",
-		["Libraries"] = "**/DynamicLibrary*",
-		["Logs"] = "**/Log*",
-		["Math"] = "**/Math/**",
-		["Memory"] = { "**/Handle*", "**/Memory*", "**/Pointers*", "**/References*" },
-		["Network"] = { "**/Network*" },
-		["Reflection"] = { "**/ClassWatcher*", "**/Object*", "**/Reflection*" },
-		["Serialization"] = "**/Serialization*",
-		["Serialization/Binary"] = "**/BinarySerializer*",
-		["Serialization/JSON"] = "**/JsonSerializer*",
-		["Streams"] = "**/Stream*",
-		["Streams/File"] = "**/FileStream*",
-		["Streams/Memory"] = "**/MemoryStream*",
-		["Streams/Web"] = "**/WebStream*",
-		["Streams/Watcher"] = "**/FileWatcher*",
-		["Utilities"] = "**/Utilities*",
-		["Utilities/String"] = { "**/String*", "**/Pattern*" },
-		["Utilities/Profiler"] = "**/Profiler*",
-		["Utilities/Timer"] = "**/Timer*",
-		["Utilities/Telemetry"] = "**/Telemetry*",
+
+	vpaths
+	{
+		[""] = { "../../src/", "../../inc/", "../../src/Core/", "../../inc/Core/" },
+		["Archive"] = "Archive*",
+		["Compression"] = "fastlz*",
+		["Concurrency"] = "Concurren*",
+		["Cryptography"] = "Cipher*",
+		["Debug"] = "StackWalker*",
+		["Events"] = { "Delegate*", "Event*" },
+		["Extensions"] = { "Plugin*", "Extension*" },
+		["Libraries"] = "DynamicLibrary*",
+		["Logs"] = "Log*",
+		["Math"] = "Math*",
+		["Memory"] = { "Handle*", "Memory*", "Pointers*", "References*" },
+		["Network"] = { "Network*" },
+		["Reflection"] = { "ClassWatcher*", "Object*", "Reflection*" },
+		["Serialization"] = "Serialization*",
+		["Serialization/Binary"] = "BinarySerializer*",
+		["Serialization/JSON"] = "JsonSerializer*",
+		["Streams"] = "Stream*",
+		["Streams/File"] = "FileStream*",
+		["Streams/Memory"] = "MemoryStream*",
+		["Streams/Web"] = "WebStream*",
+		["Streams/Watcher"] = "FileWatcher*",
+		["Utilities"] = "Utilities*",
+		["Utilities/String"] = { "String*", "Pattern*" },
+		["Utilities/Profiler"] = "Profiler*",
+		["Utilities/Timer"] = "Timer*",
+		["Utilities/Telemetry"] = "Telemetry*",
 	}
 	
-	includedirs {
+	includedirs
+	{
 		"../inc/",
 		"../dep/vld/include",
 		"../dep/jansson/include",
@@ -68,7 +64,8 @@ project "Core"
 		"../dep/misc/include",
 	}
 
-	Core.libdirs = {
+	Core.libdirs =
+	{
 		"../dep/vld/lib/Win32",
 		"../dep/curl/lib",
 		"../dep/jansson/lib",
@@ -77,7 +74,8 @@ project "Core"
 		"../dep/enet/lib",
 	}
 	
-	links {
+	links
+	{
 		"jansson_d",
 		"zziplib_d",
 		"zlibd",
@@ -88,4 +86,5 @@ project "Core"
 
 	configuration "windows"
 		links { "ws2_32" }
-		files { "../src/Win32/Concurrency*.cpp" }
+		files { "../src/Platforms/Win32/Concurrency*.cpp" }
+		files { "../src/Platforms/Win32/File*.cpp" }

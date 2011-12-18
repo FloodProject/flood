@@ -3,25 +3,22 @@ Engine = {}
 project "Engine"
 
 	kind "StaticLib"
-	location (action)
-	objdir (action .. "/obj")
-	targetdir (action .. "/lib")
-
-	builddeps { "Core", "Resources" }
-	
 	flags { common_flags }
+	
+	builddeps { "Core", "Resources" }
 
 	pchheader "Engine/API.h"
 	pchsource "../src/Engine/Engine.cpp"
 
-	files {
+	files
+	{
 		"Engine.lua",
 		"../inc/Audio/**.h",
 		"../src/Audio/**.cpp",
 		"../inc/Engine/**.h",
 		"../src/Engine/**.cpp",
-		"../inc/Render/**.h",
-		"../src/Render/**.cpp",
+		"../inc/Geometry/**.h",
+		"../src/Geometry/**.cpp",
 		"../inc/Scene/**.h",
 		"../src/Scene/**.cpp",
 		"../inc/Physics/**.h",
@@ -42,25 +39,25 @@ project "Engine"
 		"../src/Window/**.cpp",
 		"../inc/Framework/**.h",
 		"../src/Framework/**.cpp",
-		"../src/Win32/WindowWin32.*",
 	}
 	
-	vpaths {
-		[""] = { "**src/Engine*", "**inc/Engine*" },
-		["Audio"] = { "**/Audio*" },
-		["Controllers"] = "**/Controllers/*",
-		["Controllers/Camera"] = { "**/CameraController*", "**/FirstPersonController*", "**/ThirdPersonController*", },
-		["Framework"] = { "**/Framework" },
-		["Geometry"] = { "**/Cube*", "**/DebugGeometry*", "**/Quad*", "**/Sphere*" },
-		["Graphics"] = { "**/Render/*" },
-		["GUI"] = { "**/GUI/*" },
-		["Input"] = "**/Input*",
-		["Paging"] = "**/Paging*",
-		["Physics"] = "**/Physics*",
-		["Scene"] = "**/Scene*",
-		["Scripts"] = { "**/Script*" },
-		["Terrain"] = { "**/Terrain*" },
-		["Window"] = { "**/Window*" },
+	vpaths
+	{
+		[""] = { "../../src/", "../../inc/", "../../src/Engine/", "../../inc/Engine/" },
+		["Audio"] = { "Audio*" },
+		["Controllers"] = "Controllers/*",
+		["Controllers/Camera"] = { "CameraController*", "FirstPersonController*", "ThirdPersonController*", },
+		["Framework"] = { "Framework" },
+		["Geometry"] = { "*Geometry*" },
+		["Graphics"] = { "Graphics/*" },
+		["GUI"] = { "GUI/*" },
+		["Input"] = "Input*",
+		["Paging"] = "Paging*",
+		["Physics"] = "Physics*",
+		["Scene"] = "Scene*",
+		["Scripts"] = { "Script*" },
+		["Terrain"] = { "Terrain*" },
+		["Window"] = { "Window*" },
 	}
 
 	configuration "not windows"
@@ -71,9 +68,11 @@ project "Engine"
 
 	configuration {}
 
-	includedirs {
+	includedirs
+	{
 		"../inc/",
 		"../interface/Bindings",
+		"../dep/jansson/include",
 		"../dep/freetype/include",
 		"../dep/glew/include",
 		"../dep/lua/include",
@@ -83,16 +82,18 @@ project "Engine"
 		"../dep/sfml/",
 	}
 
-	Engine.libdirs = {
-		"../dep/openal/lib/Win32",
+	Engine.libdirs =
+	{
+		"../dep/openal/lib/vs2010",
 		"../dep/bullet/lib/vc10",
 		"../dep/glew/lib/vc10",
 		"../dep/lua/lib/vc10",
 		"../dep/freetype/objs",
 	}
 
-	links {
-		"OpenAL32d",
+	links
+	{
+		"openal_d",
 		"opengl32",
 		"glewd",
 		"luad",

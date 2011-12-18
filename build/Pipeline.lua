@@ -3,24 +3,22 @@ Pipeline = {}
 project "Pipeline"
 
 	kind "StaticLib"
-	location (action)
-	objdir (action .. "/obj")
-	targetdir (action .. "/lib")
+	flags { common_flags }
 
 	builddeps { "Core", "Resources" }
 	
-	flags { common_flags }
-
 	pchheader "Pipeline/API.h"
 	pchsource "../src/Pipeline/Pipeline.cpp"
 	
-	files {
+	files
+	{
 		"Pipeline.lua",
 		"../inc/Pipeline/**.h",
 		"../src/Pipeline/**.cpp",
 	}
 	
-	vpaths {
+	vpaths
+	{
 		[""] = { "**src/Pipeline*", "**inc/Pipeline*" },
 		["Importers"] = { "**/*Importer*" },
 		["Importers/Milkshape"] = { "**/*Milkshape*" },
@@ -30,17 +28,20 @@ project "Pipeline"
 		["Processors/Mesh"] = "**/*MeshProcessor*",
 	}
 
-	includedirs {
+	includedirs
+	{
 		"../src/",
 		"../inc/",
 		"../dep/nvtt/include",
 		"../dep/FbxSdk/2012.1/include",
 	}
 
-	Pipeline.libdirs = {
+	Pipeline.libdirs =
+	{
 		"../dep/FbxSdk/2012.1/lib/vs2010/x86",
 	}
 	
-	links {
+	links
+	{
 		"fbxsdk-2012.1d",
 	}
