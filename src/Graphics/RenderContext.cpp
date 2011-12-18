@@ -6,18 +6,16 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/RenderContext.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
+#include "Graphics/RenderBackend.h"
 #include "Graphics/BufferManager.h"
 #include "Graphics/TextureManager.h"
 #include "Graphics/ProgramManager.h"
-#include "Graphics/MeshManager.h"
-#include "Graphics/Adapter.h"
-#include "Graphics/GL.h"
-#include "Graphics/FBO.h"
+#include "Graphics/RenderCapabilities.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -26,9 +24,9 @@ RenderContext::RenderContext()
 	, bufferManager(nullptr)
 	, textureManager(nullptr)
 	, programManager(nullptr)
-	, meshManager(nullptr)
-	, adapter(nullptr)
+	, caps(nullptr)
 	, initDone(false)
+	, backend(nullptr)
 {
 }
 
@@ -38,8 +36,7 @@ RenderContext::~RenderContext()
 {
 	LogInfo("Destroying rendering context");
 
-	Deallocate(adapter);
-	Deallocate(meshManager);
+	Deallocate(caps);
 	Deallocate(bufferManager);
 	Deallocate(textureManager);
 	Deallocate(programManager);
@@ -63,14 +60,13 @@ void RenderContext::init()
 
 	checkExtensions();
 
-	adapter = Allocate(Adapter, GetRenderAllocator());
-	bufferManager  = Allocate(BufferManager, GetRenderAllocator());
-	textureManager = Allocate(TextureManager, GetRenderAllocator());
-	programManager = Allocate(ProgramManager, GetRenderAllocator());
-	meshManager = Allocate(MeshManager, GetRenderAllocator());
+	caps = Allocate(GetRenderAllocator(), RenderCapabilities);
+	bufferManager  = Allocate(GetRenderAllocator(), BufferManager);
+	textureManager = Allocate(GetRenderAllocator(), TextureManager);
+	programManager = Allocate(GetRenderAllocator(), ProgramManager);
 
-	checkCapabilities(adapter);
-	showCapabilities(adapter);
+	checkCapabilities(caps);
+	showCapabilities(caps);
 
 	resetState();
 
@@ -79,42 +75,11 @@ void RenderContext::init()
 
 //-----------------------------------//
 
-void RenderContext::checkCapabilities(Adapter* adapter)
-{
-	adapter->supportsShaders = !! GLEW_ARB_shading_language_100;
-	adapter->supportsVertexBuffers = !! GLEW_ARB_vertex_buffer_object;
-	adapter->supportsAnisotropic = !! GLEW_EXT_texture_filter_anisotropic;
-	
-	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &adapter->maxTextureSize );
-	glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*) &adapter->maxTextureUnits );
-	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, (GLint*) &adapter->maxAttribs );
-
-	// Gets the name of the card.
-	adapter->name = (const char*) glGetString(GL_RENDERER);
-	adapter->vendor = (const char*) glGetString(GL_VENDOR);
-	adapter->driverVersion = (const char*) glGetString(GL_VERSION);
-
-	if(adapter->supportsShaders)
-		adapter->shadingLanguageVersion = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-	adapter->supportsFixedPipeline = true;
-
-#if 0
-	if( adapter->supportsShaders )
-	{
-		LogInfo( "Shaders support detected. Switching to forward shaders pipeline" );
-		pipeline = RenderPipeline::ShaderForward;
-	}
-#endif
-}
-
-//-----------------------------------//
-
-void RenderContext::showCapabilities(Adapter* card) 
+void RenderContext::showCapabilities(RenderCapabilities* card) 
 {
 	if( card->name.empty() ) return;
 
-	LogInfo( "Graphics adapter: %s", card->name.c_str() );
+	LogInfo( "Graphics RenderCapabilities: %s", card->name.c_str() );
 	LogInfo( "OpenGL version: %s", card->driverVersion.c_str() );
 	LogInfo( "OpenGL shading language: %s", card->shadingLanguageVersion.c_str() );
 	
@@ -126,81 +91,17 @@ void RenderContext::showCapabilities(Adapter* card)
 
 //-----------------------------------//
 
-void RenderContext::checkExtensions()
-{
-	// Initialize GLEW (OpenGL Extension Wrangler).
-	GLenum status = glewInit();
-	
-	if( status != GLEW_OK )
-	{
-		const GLubyte* str = glewGetErrorString(status);
-		LogError( "Failed to initialize GLEW: %s", str );
-		return;
-	}
-
-	LogInfo( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
-}
-
-//-----------------------------------//
-
 void RenderContext::resetState()
 {
-	setClearColor( Color::White );
-
-	glCullFace( GL_BACK );
-	glEnable( GL_CULL_FACE );
-	glEnable( GL_DEPTH_TEST );
-	glDisable( GL_BLEND );
-
-	if(adapter->supportsFixedPipeline)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-	}
-
-	// Buffers
-	if(adapter->supportsVertexBuffers)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	// Textures
-	for(int32 i = 0; i < adapter->maxTextureUnits; i++)
-	{
-		glActiveTexture( GL_TEXTURE0+i );
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	// Shaders
-	if(adapter->supportsShaders)
-	{
-		glUseProgram(0);
-	}
+	backend->setClearColor( Color::White );
+	backend->init();
 }
 
 //-----------------------------------//
 
 Color RenderContext::getPixel(uint16 x, uint16 y) const
 {
-	Color pick;
-	
-	glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, &pick);
-
-	if( CheckLastErrorGL("Error reading pixels from framebuffer") )
-		return Color::White;
-	
-	return pick;
-}
-
-//-----------------------------------//
-
-void RenderContext::setClearColor(const Color& color)
-{
-	glClearColor( color.r, color.g, color.b, color.a );
+	backend->getPixel(x, y);
 }
 
 //-----------------------------------//
@@ -213,4 +114,4 @@ RenderBuffer* RenderContext::createRenderBuffer( const Settings& settings )
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

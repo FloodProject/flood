@@ -33,7 +33,6 @@ union API_CORE ValueContext
 	Vector3P v;
 	ColorP c;
 	QuaternionP q;
-	
 	String* s;
 	const char* cs;
 };
@@ -55,7 +54,7 @@ struct Object;
 struct ReflectionContext;
 
 // Walks the object calling the given reflection context.
-API_CORE void ReflectionWalk(Object*, ReflectionContext*);
+API_CORE void ReflectionWalk(const Object*, ReflectionContext*);
 
 // Walks the composite object.
 API_CORE void ReflectionWalkComposite(ReflectionContext*);
@@ -85,7 +84,7 @@ struct API_CORE ReflectionContext
 	Class* objectClass;
 
 	Type* type;
-	Primitive* primitive;	
+	Primitive* primitive;
 	Class* composite;
 	Enum*  enume;
 	
@@ -131,7 +130,7 @@ struct Stream;
 struct Serializer;
 
 typedef Object* (*SerializerLoadFunction)(Serializer*);
-typedef bool    (*SerializerSaveFunction)(Serializer*, Object*);
+typedef bool    (*SerializerSaveFunction)(Serializer*, const Object*);
 
 struct API_CORE Serializer
 {
@@ -162,7 +161,7 @@ API_CORE void SerializerDestroy(Serializer*);
 
 // Loads an object from a stream.
 API_CORE Object* SerializerLoad(Serializer*);
-API_CORE bool SerializerSave(Serializer*, Object* object);
+API_CORE bool SerializerSave(Serializer*, const Object* object);
 
 // Wrappers for file-based loading and saving.
 API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);

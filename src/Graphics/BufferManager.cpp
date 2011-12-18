@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/BufferManager.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -84,4 +84,4 @@ IndexBufferPtr BufferManager::getIndexBuffer(const GeometryBuffer* gb)
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

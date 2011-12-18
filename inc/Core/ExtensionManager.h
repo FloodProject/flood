@@ -15,40 +15,28 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct API_CORE PluginMetadata
+struct API_CORE ExtensionMetadata
 {
-	PluginMetadata();
+	ExtensionMetadata();
 
-	// Name of this plugin.
+	// Name of this extension.
 	String name;
 
 	// Description of this plugin.
 	String description;
-
-	// Author of this plugin.
-	String author;
-
-	// Version of this plugin.
-	String version;
-
-	// Enabled by default.
-	bool startEnabled;
-
-	// Startup priority.
-	int priority;
 };
 
 //-----------------------------------//
 
-class PluginManager;
-
 /**
- * Plugins provide units of extensibility to applications.
+ * Extensions are clearly defined units of extensibility to applications.
+ * Typically an application will create the extension points and provide
+ * some kind of runtime support for loading the extensions from a plugin.
  */
 
 REFLECT_DECLARE_CLASS(Plugin)
 
-class API_CORE Plugin : public Object
+class API_CORE Extension : public Object
 {
 	REFLECT_DECLARE_OBJECT(Plugin)
 
@@ -69,6 +57,9 @@ public:
 	virtual void onPluginEnable() {}
 	virtual void onPluginDisable() {}
 
+	// Sorts plugins by priority.
+	static void sortByPriority(std::vector<Plugin*>& plugins);
+
 protected:
 
 	// Helper method to disable plugins.
@@ -77,9 +68,6 @@ protected:
 	// Keeps track if plugin is enabled.
 	bool enabled;
 };
-
-// Sorts plugins by priority.
-void PluginsSortByPriority(std::vector<Plugin*>& plugins);
 
 //-----------------------------------//
 

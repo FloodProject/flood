@@ -33,7 +33,7 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 //-----------------------------------//
 
-bool PNG_Pico_Loader::decode(const Stream& stream, Resource* res)
+bool PNG_Pico_Loader::decode(ResourceLoadOptions& options)
 {
 	std::vector<byte> data;
 	StreamRead((Stream*) &stream, data);

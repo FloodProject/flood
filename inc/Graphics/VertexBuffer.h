@@ -13,7 +13,7 @@
 #include "Graphics/Buffer.h"
 #include "Geometry/GeometryBuffer.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -25,6 +25,8 @@ FWD_DECL_INTRUSIVE(GeometryBuffer)
  * vertex you will have to duplicate that normal for each vertex for now.
  */
 
+typedef BufferId VertexBufferId;
+
 class API_RENDER VertexBuffer : public Buffer
 {
 public:
@@ -34,33 +36,9 @@ public:
 
 	// Gets/sets the geometry buffer.
 	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
-
-	// Binds the vertex buffer.
-	bool bind();
 	
-	// Unbinds the vertex buffer.
-	bool unbind();
-
-	// Binds the attributes pointers.
-	void bindPointers();
-
-	// Unbinds the attribute pointers.
-	void unbindPointers();
-
-	// Binds the attribute pointers.
-	void bindGenericPointers();
-
-	// Unbinds the attribute pointers.
-	void unbindGenericPointers();
-	
-	// Returns if the this buffer is valid.
-	bool isValid() const;
-
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
-
-	// Updates the internal buffer with current attributes.
-	bool build(const GeometryBuffer*);
 
 	// Forces a rebuild of the vertex buffer the next update.
 	void forceRebuild();
@@ -76,4 +54,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

@@ -42,7 +42,7 @@ REFLECT_CLASS_END()
 
 ImageHandle ImageCreate(Allocator* alloc, uint32 width, uint32 height, PixelFormat::Enum format)
 {
-	Image* image = Allocate(Image, alloc);
+	Image* image = Allocate(alloc, Image);
 	image->create(width, height, format);
 
 	return HandleCast<Image>( ResourceHandleCreate(image) );

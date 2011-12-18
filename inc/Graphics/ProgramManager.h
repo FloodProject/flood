@@ -9,16 +9,15 @@
 #pragma once
 
 FWD_DECL_INTRUSIVE(Program)
-FWD_DECL_INTRUSIVE(GLSL_Program)
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 class Shader;
 
-typedef std::map<const Shader*, GLSL_ProgramPtr> ShaderProgramsMap;
-typedef std::pair<const Shader*, GLSL_ProgramPtr> ShaderProgramsMapPair;
+typedef std::map<const Shader*, ProgramPtr> ShaderProgramsMap;
+typedef std::pair<const Shader*, ProgramPtr> ShaderProgramsMapPair;
 
 class ResourceManager;
 struct ResourceEvent;
@@ -28,7 +27,7 @@ struct ResourceEvent;
  * program will request the program for a given shader.
  */
 
-class API_ENGINE ProgramManager
+class API_GRAPHICS ProgramManager
 {
 	DECLARE_UNCOPYABLE(ProgramManager)
 
@@ -38,21 +37,21 @@ public:
 	~ProgramManager();
 
 	// Gets a program given a shader identifier.
-	ProgramPtr getProgram( const Shader*, bool precompile = false );
+	Program* getProgram( const Shader*, bool precompile = false );
 
 	// Creates a program given a shader.
-	GLSL_ProgramPtr createProgram( const Shader* shader );
+	Program* createProgram( const Shader* shader );
 
 	// Registers a new program in the manager.
-	bool registerProgram( const Shader*, const GLSL_ProgramPtr& program );
+	bool registerProgram( const Shader*, Program* program );
 
 protected:
 
 	// Populates a shader when the text file is loaded.
-	void onLoad( const ResourceEvent& evt );
+	void onLoad( const ResourceEvent& event );
 
 	// Reloads a shader when the text file changes.
-	void onReload( const ResourceEvent& evt );
+	void onReload( const ResourceEvent& event );
 
 	// Maps the identifiers to the programs.
 	ShaderProgramsMap programs;
@@ -60,4 +59,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

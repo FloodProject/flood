@@ -334,7 +334,7 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 		break;
 	}
 	default:
-		assert(0 && "Unknown primitive type");
+		LogAssert("Unknown primitive type");
 	}
 }
 
@@ -596,7 +596,7 @@ static Object* SerializeLoad( Serializer* serializer )
 
 //-----------------------------------//
 
-static bool SerializeSave( Serializer* serializer, Object* object )
+static bool SerializeSave( Serializer* serializer, const Object* object )
 {
 	SerializerBinary* bin = (SerializerBinary*) serializer;
 	if( !bin->stream ) return false;
@@ -617,7 +617,7 @@ static bool SerializeSave( Serializer* serializer, Object* object )
 
 Serializer* SerializerCreateBinary(Allocator* alloc)
 {
-	SerializerBinary* serializer = Allocate(SerializerBinary, alloc);
+	SerializerBinary* serializer = Allocate(alloc, SerializerBinary);
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
 	serializer->alloc = alloc;

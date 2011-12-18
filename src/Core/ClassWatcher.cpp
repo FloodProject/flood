@@ -19,7 +19,7 @@ NAMESPACE_CORE_BEGIN
 
 ClassWatch* ClassWatchCreate(Allocator* alloc)
 {
-	ClassWatch* watch = Allocate(ClassWatch, alloc);
+	ClassWatch* watch = Allocate(alloc, ClassWatch);
 	return watch;
 }
 

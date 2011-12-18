@@ -8,6 +8,8 @@
 
 #include "Core/API.h"
 #include "Core/Utilities.h"
+#include "Core/String.h"
+#include "Math/Hash.h"
 
 #include <sstream>
 #include <algorithm>
@@ -20,12 +22,12 @@
 	#define NOMINMAX
 	#include <Windows.h>
 
-    #include <direct.h>
-    #define my_getcwd _getcwd
+	#include <direct.h>
+	#define my_getcwd _getcwd
 	#define my_stricmp _stricmp
 #else
 	#include <unistd.h>
-    #define my_getcwd getcwd
+	#define my_getcwd getcwd
 	#define my_stricmp stricmp
 #endif
 
@@ -342,6 +344,27 @@ Path PathCombine(Path base, Path extra)
 	StringReplace(extra, "/", sep);
 
 	return base + PathGetSeparator() + extra;
+}
+
+//-----------------------------------//
+
+StringHash::StringHash()
+{
+
+}
+
+//-----------------------------------//
+
+StringHash::StringHash(const char* str, size_t size)
+	: hash( HashMurmur2(0xF00D, (uint8*)str, size) )
+{
+}
+
+//-----------------------------------//
+
+StringHash HashString(const String& s)
+{
+	return StringHash(s.data(), s.size());
 }
 
 //-----------------------------------//

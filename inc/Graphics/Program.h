@@ -17,7 +17,7 @@
 
 FWD_DECL_INTRUSIVE( UniformBuffer )
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -88,4 +88,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Program );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

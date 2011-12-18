@@ -10,6 +10,7 @@
 
 #include "Core/Concurrency.h"
 #include "Resources/Resource.h"
+#include "Resources/ResourceLoader.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -18,7 +19,6 @@ NAMESPACE_RESOURCES_BEGIN
 struct Stream;
 struct Archive;
 struct TaskPool;
-
 struct FileWatchEvent;
 
 class ResourceTask;
@@ -28,9 +28,6 @@ FWD_DECL_INTRUSIVE(ResourceLoader)
 
 //-----------------------------------//
 
-// Gets the resource manager instance.
-ResourceManager* GetResourceManager();
-
 /**
  * Event fired whenever an operation on the resource happens.
  * This can be useful to know when monitoring for changes,
@@ -39,35 +36,20 @@ ResourceManager* GetResourceManager();
 
 struct ResourceEvent
 {
-	ResourceEvent() 
-		: resource(nullptr)
-		, oldResource(nullptr)
-	{}
+	ResourceEvent();
 
 	Resource* resource;
 	Resource* oldResource;
 	ResourceHandle handle;
 };
 
-struct ResourceLoadOptions
-{
-	ResourceLoadOptions();
-
-	String name;
-	Stream* stream;
-
-	Resource* resource;
-	ResourceGroup::Enum group;
-
-	bool isHighPriority;
-	bool sendLoadEvent;
-	bool asynchronousLoad;
-};
-
 //-----------------------------------//
 
 API_RESOURCE void ResourcesInitialize();
 API_RESOURCE void ResourcesDeinitialize();
+
+// Gets the resource manager instance.
+ResourceManager* GetResourceManager();
 
 typedef std::map< String, ResourceHandle > ResourceMap;
 typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;
@@ -101,7 +83,7 @@ public:
 	ResourceHandle loadResource(const Path& name);
 
 	// Loads or returns an already loaded resource by its name.
-	ResourceHandle loadResource(ResourceLoadOptions options);
+	ResourceHandle loadResource(ResourceLoadOptions& options);
 
 	// Removes a resource from the manager.
 	void removeResource(Resource* resource);

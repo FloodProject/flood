@@ -162,7 +162,7 @@ struct Mutex
 
 Mutex* MutexCreate(Allocator* alloc)
 {
-	Mutex* mutex = Allocate(Mutex, alloc);
+	Mutex* mutex = Allocate(alloc, Mutex);
 	MutexInit(mutex);
 
 	return mutex;
@@ -226,7 +226,7 @@ static bool IntializeConditionVars()
 	return true;
 }
 
-static bool initCondVars = IntializeConditionVars();
+static bool g_InitCondVars = false;
 
 struct Condition
 {
@@ -237,7 +237,7 @@ struct Condition
 
 Condition* ConditionCreate(Allocator* alloc)
 {
-	Condition* cond = Allocate(Condition, alloc);
+	Condition* cond = Allocate(alloc, Condition);
 	ConditionInit(cond);
 
 	return cond;
@@ -255,6 +255,11 @@ void ConditionDestroy(Condition* cond)
 void ConditionInit(Condition* cond)
 {
 	if( !cond ) return;
+
+	// Lazy initialization of the condition variable functions.
+	if( !g_InitCondVars )
+		g_InitCondVars = IntializeConditionVars();
+
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
 	if(pInitializeConditionVariable) pInitializeConditionVariable(cvar);
 }

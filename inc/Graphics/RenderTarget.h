@@ -12,7 +12,7 @@
 #include "Math/Vector.h"
 #include "Graphics/RenderContext.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -95,4 +95,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

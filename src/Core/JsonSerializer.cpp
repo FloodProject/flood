@@ -98,8 +98,84 @@ static Quaternion ConvertValueToQuaternion( json_t* value )
 
 	LogDebug("Invalid JSON value size for quaternion");
 
-	Quaternion null;
+	static Quaternion null;
 	return null;
+}
+
+//-----------------------------------//
+
+ValueContext ConvertValueToPrimitive( Primitive::PrimitiveType type, json_t* value )
+{
+	ValueContext vc;
+
+	switch(type)
+	{
+	case Primitive::Bool:
+	{
+		assert( json_is_boolean(value) );
+		vc.b = json_typeof(value) == JSON_TRUE;
+		break;
+	}
+	case Primitive::Int16:
+	{
+		vc.i16 = (int16) json_integer_value(value);
+		break;
+	}
+	case Primitive::Uint16:
+	{
+		vc.u16 = (uint16) json_integer_value(value);
+		break;
+	}
+	case Primitive::Int32:
+	{
+		vc.i32 = (int32) json_integer_value(value);
+		break;
+	}
+	case Primitive::Uint32:
+	{
+		vc.u32 = (uint32) json_integer_value(value);
+		break;
+	}
+	case Primitive::Int64:
+	{
+		vc.i64 = (int64) json_integer_value(value);
+		break;
+	}
+	case Primitive::Uint64:
+	{
+		vc.u64 = (uint64) json_integer_value(value);
+		break;
+	}
+	case Primitive::Float:
+	{
+		vc.f32 = (float) json_real_value(value);
+		break;
+	}
+	case Primitive::String:
+	{
+		vc.cs = json_string_value(value);
+		break;
+	}
+	case Primitive::Color:
+	{
+		vc.c = ConvertValueToColor(value);
+		break;
+	}
+	case Primitive::Vector3:
+	{
+		vc.v = ConvertValueToVector3(value);
+		break;
+	}
+	case Primitive::Quaternion:
+	{
+		vc.q = ConvertValueToQuaternion(value);
+		break;
+	}
+	default:
+		assert(0 && "Unknown primitive type");
+	}
+
+	return vc;
 }
 
 //-----------------------------------//
@@ -263,59 +339,19 @@ static void DeserializePrimitive( ReflectionContext* context )
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();
 
+	ValueContext vc = ConvertValueToPrimitive(context->primitive->type, value);
+
 	switch(context->primitive->type)
 	{
-	case Primitive::Bool:
-	{
-		assert( json_is_boolean(value) );
-		bool val = json_typeof(value) == JSON_TRUE;
-		SetFieldValue(bool, val);
-		break;
-	}
-	case Primitive::Int32:
-	{
-		int32 val = (int32) json_integer_value(value);
-		SetFieldValue(int32, val);
-		break;
-	}
-	case Primitive::Uint32:
-	{
-		uint32 val = (uint32) json_integer_value(value);
-		SetFieldValue(uint32, val);
-		break;
-	}
-	case Primitive::Float:
-	{
-		float val = (float) json_real_value(value);
-		SetFieldValue(float, val);
-		break;
-	}
-	case Primitive::String:
-	{
-		String val = json_string_value(value);
-		SetFieldValue(String, val);
-		break;
-	}
-	case Primitive::Color:
-	{
-		Color val = ConvertValueToColor(value);
-		SetFieldValue(Color, val);
-		break;
-	}
-	case Primitive::Vector3:
-	{
-		Vector3 val = ConvertValueToVector3(value);
-		SetFieldValue(Vector3, val);
-		break;
-	}
-	case Primitive::Quaternion:
-	{
-		Quaternion val = ConvertValueToQuaternion(value);
-		SetFieldValue(Quaternion, val);
-		break;
-	}
-	default:
-		assert(0 && "Unknown primitive type");
+	case Primitive::Bool: { SetFieldValue(bool, vc.b); break; }
+	case Primitive::Int32: { SetFieldValue(int32, vc.i32); break; }
+	case Primitive::Uint32: { SetFieldValue(uint32, vc.u32); break; }
+	case Primitive::Float: { SetFieldValue(float, vc.f32); break; }
+	case Primitive::String: { SetFieldValue(String, vc.cs); break; }
+	case Primitive::Color: { SetFieldValue(ColorP, vc.c); break; }
+	case Primitive::Vector3: { SetFieldValue(Vector3P, vc.v); break; }
+	case Primitive::Quaternion: { SetFieldValue(QuaternionP, vc.q); break; }
+	default: assert(0 && "Unknown primitive type");
 	}
 }
 
@@ -666,7 +702,6 @@ static Object* SerializeLoad( Serializer* serializer )
 	json_t* rootValue;
 
 	LocaleSwitch locale;
-	
 	rootValue = json_loads(text.c_str(), 0, nullptr);
 	
 	if( !rootValue )
@@ -694,7 +729,7 @@ static Object* SerializeLoad( Serializer* serializer )
 
 //-----------------------------------//
 
-static bool SerializeSave( Serializer* serializer, Object* object )
+static bool SerializeSave( Serializer* serializer, const Object* object )
 {
 	SerializerJSON* json = (SerializerJSON*) serializer;
 
@@ -748,7 +783,7 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 	#pragma TODO("Hook memory allocators to JSON library")
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
-	SerializerJSON* serializer = Allocate(SerializerJSON, alloc);
+	SerializerJSON* serializer = Allocate(alloc, SerializerJSON);
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
 	serializer->alloc = alloc;

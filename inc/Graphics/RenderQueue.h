@@ -10,30 +10,32 @@
 
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 class Material;
-class Renderable;
+class RenderBatch;
 class Texture;
 class Transform;
 class Light;
 
 /**
  * This contains all the rendering state information that is needed by
- * the rendering device to properly render the associated renderable.
+ * the rendering device to properly render the associated.renderable.
  * This should be set by the camera and then appended to a render queue
  * where it will be sorted to minimize the state changes and finally
  * rendered to the render target that is currently active on the device.
  */
 
-struct RenderState
+class RenderState
 {
+public:
+
 	RenderState() {}
-	RenderState( Renderable* renderable );
+	RenderState( RenderBatch* renderable );
 	
 	RenderState( const RenderState& rhs )
 		: renderable( rhs.renderable )
@@ -42,7 +44,7 @@ struct RenderState
 		, priority( rhs.priority )
 	{ }
 
-	Renderable* renderable;
+	RenderBatch* renderable;
 	Material* material;
 	Matrix4x3 modelMatrix;
 	int32 priority;
@@ -66,7 +68,7 @@ struct LightState
 
 /**
  * This is a queue of objects that are usually returned by performing
- * a culling operation on the camera. Each renderable can be assigned
+ * a culling operation on the camera. Each.renderable can be assigned
  * a different priority to be rendered on different times. For example
  * you might want to render the GUI after everything else is rendered.
  */
@@ -82,4 +84,4 @@ struct RenderBlock
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

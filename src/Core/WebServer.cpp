@@ -55,7 +55,7 @@ static void* MongooseCallback(mg_event event, mg_connection* conn, const mg_requ
 
 WebContext* WebServerCreate( Allocator* alloc )
 {
-	WebContext* context = Allocate(WebContext, alloc);
+	WebContext* context = Allocate(alloc, WebContext);
 	context->mongoose = nullptr;
 
 	return context;

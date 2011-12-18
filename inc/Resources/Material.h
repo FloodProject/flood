@@ -12,27 +12,6 @@
 #include "Resources/Image.h"
 #include "Resources/Shader.h"
 
-#define GL_ZERO                0
-#define GL_ONE                 1
-#define GL_SRC_COLOR           0x0300
-#define GL_ONE_MINUS_SRC_COLOR 0x0301
-#define GL_SRC_ALPHA           0x0302
-#define GL_ONE_MINUS_SRC_ALPHA 0x0303
-#define GL_DST_ALPHA           0x0304
-#define GL_ONE_MINUS_DST_ALPHA 0x0305
-#define GL_DST_COLOR           0x0306
-#define GL_ONE_MINUS_DST_COLOR 0x0307
-#define GL_SRC_ALPHA_SATURATE  0x0308
-
-#define GL_NEVER    0x0200
-#define GL_LESS     0x0201
-#define GL_EQUAL    0x0202
-#define GL_LEQUAL   0x0203
-#define GL_GREATER  0x0204
-#define GL_NOTEQUAL 0x0205
-#define GL_GEQUAL   0x0206
-#define GL_ALWAYS   0x0207
-
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
@@ -41,15 +20,15 @@ struct BlendSource
 {
 	enum Enum
 	{
-		Zero                    = GL_ZERO,
-		One                     = GL_ONE,
-		DestinationColor        = GL_DST_COLOR,
-		InverseDestinationColor = GL_ONE_MINUS_DST_COLOR,
-		SourceAlpha             = GL_SRC_ALPHA,
-		InverseSourceAlpha      = GL_ONE_MINUS_SRC_ALPHA,
-		DestinationAlpha        = GL_DST_ALPHA,
-		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
-		SourceAlphaSaturate     = GL_SRC_ALPHA_SATURATE
+		Zero,
+		One,
+		DestinationColor,
+		InverseDestinationColor,
+		SourceAlpha,
+		InverseSourceAlpha,
+		DestinationAlpha,
+		InverseDestinationAlpha,
+		SourceAlphaSaturate
 	};
 };
 
@@ -57,14 +36,14 @@ struct BlendDestination
 {
 	enum Enum
 	{
-		Zero                    = GL_ZERO,
-		One                     = GL_ONE,
-		SourceColor             = GL_SRC_COLOR,
-		InverseSourceColor      = GL_ONE_MINUS_SRC_COLOR,
-		SourceAlpha             = GL_SRC_ALPHA,
-		InverseSourceAlpha      = GL_ONE_MINUS_SRC_ALPHA,
-		DestinationAlpha        = GL_DST_ALPHA,
-		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA
+		Zero,
+		One,
+		SourceColor,
+		InverseSourceColor,
+		SourceAlpha,
+		InverseSourceAlpha,
+		DestinationAlpha,
+		InverseDestinationAlpha
 	};
 };
 
@@ -74,14 +53,14 @@ struct DepthCompare
 {
 	enum Enum
 	{
-		Never          = GL_NEVER,
-		Less           = GL_LESS,
-		Equal          = GL_EQUAL,
-		LessOrEqual    = GL_LEQUAL,
-		Greater        = GL_GREATER,
-		NotEqual       = GL_NOTEQUAL,
-		GreaterOrEqual = GL_GEQUAL,
-		Always         = GL_ALWAYS,
+		Never,
+		Less,
+		Equal,
+		LessOrEqual,
+		Greater,
+		NotEqual,
+		GreaterOrEqual,
+		Always
 	};
 };
 

@@ -38,13 +38,13 @@ public:
 	OGG_Loader();
 
 	// Creates the resource with no data.
-	RESOURCE_LOADER_PREPARE(Sound)
+	Resource* prepare(ResourceLoadOptions&) OVERRIDE;
 
 	// Gets the class of the resource.
 	RESOURCE_LOADER_CLASS(Sound)
 
 	// Decode an OGG file to a buffer.
-	bool decode(const Stream& file, Resource* res) OVERRIDE;
+	bool decode(ResourceLoadOptions&) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "OGG")
@@ -54,6 +54,10 @@ public:
 
 protected:
 
+	// Initializes the sound with the Ogg info.
+	bool initOgg( OggVorbis_File*&, ResourceLoadOptions& );
+
+	// Decodes the audio from the Ogg stream.
 	void decodeOgg( OggVorbis_File* vf, std::vector<byte>& buffer );
 
 	// Used for providing libvorbisfile with I/O callbacks.

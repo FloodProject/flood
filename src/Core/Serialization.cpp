@@ -447,14 +447,14 @@ static void ReflectionWalkType(ReflectionContext* context, Type* type)
 
 //-----------------------------------//
 
-void ReflectionWalk(Object* object, ReflectionContext* context)
+void ReflectionWalk(const Object* object, ReflectionContext* context)
 {
 	if( !context ) return;
 
 	Class* objectClass = ClassGetType(object);
 	if( !objectClass ) return;
 
-	context->object = object;
+	context->object = (Object*) object;
 	context->objectClass = objectClass;
 	context->composite = objectClass;
 	
@@ -476,7 +476,7 @@ Object* SerializerLoad(Serializer* serializer)
 
 //-----------------------------------//
 
-bool SerializerSave(Serializer* serializer, Object* object)
+bool SerializerSave(Serializer* serializer, const Object* object)
 {
 	if( !serializer->save ) return false;
 	if( !serializer->stream ) return false;

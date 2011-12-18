@@ -72,7 +72,7 @@ static size_t HandleProgress(void *clientp, double, double, double, double);
 
 Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamMode::Enum mode)
 {
-	WebStream* ws = Allocate(WebStream, alloc);
+	WebStream* ws = Allocate(alloc, WebStream);
 	if( !ws ) return nullptr;
 	
 	ws->handle = nullptr;

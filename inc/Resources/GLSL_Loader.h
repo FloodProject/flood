@@ -35,10 +35,10 @@ public:
 	RESOURCE_LOADER_CLASS(Shader)
 
 	// Creates the resource with no data.
-	virtual Resource* prepare(const Stream& stream) OVERRIDE;
+	virtual Resource* prepare(ResourceLoadOptions&) OVERRIDE;
 
 	// Parses a GLSL text shader to a buffer.
-	virtual bool decode(const Stream& file, Resource* res) OVERRIDE;
+	virtual bool decode(ResourceLoadOptions&) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "GLSL")

@@ -6,39 +6,38 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Graphics/Renderable.h"
-#include "Graphics/Device.h"
-#include "Graphics/GL.h"
+#include "Graphics/API.h"
+#include "Graphics/RenderBatch.h"
+#include "Graphics/RenderDevice.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-Renderable* RenderableCreate( Allocator* alloc )
+RenderBatch* RenderableCreate( Allocator* alloc )
 {
-	Renderable* rend = Allocate(Renderable, alloc);
+	RenderBatch* rend = Allocate(alloc, Renderable);
 	return rend;
 }
 
 //-----------------------------------//
 
-Renderable::Renderable()
-	: type( PolygonType::Triangles )
-	, mode( PolygonMode::Solid )
+RenderBatch::RenderBatch()
+	: type( PrimitiveType::Triangles )
+	, mode( PrimitiveRasterMode::Solid )
 	, stage( RenderLayer::Normal )
 	, priority(0)
 {
-	ub = Allocate(UniformBuffer, GetRenderAllocator());
+	ub = AllocateRender(UniformBuffer);
 }
 
 //-----------------------------------//
 
-Renderable::~Renderable()
+RenderBatch::~RenderBatch()
 {
 
 }
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

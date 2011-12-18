@@ -31,7 +31,7 @@ static bool  ZipStreamOpen(Stream*);
 static bool  ZipStreamClose(Stream*);
 static int64 ZipStreamRead(Stream*, void*, int64);
 static int64 ZipStreamTell(Stream*);
-static bool  ZipStreamSeek(Stream*, int64, int8);
+static int64 ZipStreamSeek(Stream*, int64, int8);
 static int64 ZipStreamGetSize(Stream*);
 
 static StreamFuncs gs_ZipStreamFuncs = 
@@ -91,7 +91,7 @@ static int64 ZipStreamTell(Stream* stream)
 
 //-----------------------------------//
 
-static bool ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
+static int64 ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
 {
 	if( !stream ) return false;
 
@@ -101,9 +101,15 @@ static bool ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
 
 	switch(mode)
 	{
-	case StreamSeekMode::Absolute: origin = SEEK_SET; break;
-	case StreamSeekMode::Relative: origin = SEEK_CUR; break;
-	case StreamSeekMode::RelativeEnd: origin = SEEK_END; break;
+	case StreamSeekMode::Absolute:
+		origin = SEEK_SET;
+		break;
+	case StreamSeekMode::Relative:
+		origin = SEEK_CUR;
+		break;
+	case StreamSeekMode::RelativeEnd:
+		origin = SEEK_END;
+		break;
 	}
 
 	return zzip_seek(zip->handle, (zzip_off_t) offset, origin) > 0;
@@ -151,7 +157,7 @@ static ArchiveFuncs gs_ZipArchiveFuncs =
 
 Archive* ArchiveCreateFromZip(Allocator* alloc, const Path& path)
 {
-	Archive* archive = Allocate(Archive, alloc);
+	Archive* archive = Allocate(alloc, Archive);
 	
 	archive->handle = nullptr;
 	archive->scheme = "zip";
@@ -196,7 +202,7 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 {
 	if( !archive ) return nullptr;
 
-	ZipStream* stream = Allocate(ZipStream, alloc);
+	ZipStream* stream = Allocate(alloc, ZipStream);
 	stream->dir = (ZZIP_DIR*) archive->handle;
 	stream->handle = nullptr;
 	stream->path = path;

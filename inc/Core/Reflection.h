@@ -260,21 +260,21 @@ struct API_CORE Primitive : public Type
 
 	PrimitiveType type;
 
-    static Primitive s_bool;
-    static Primitive s_int8;
-    static Primitive s_uint8;
-    static Primitive s_int16;
-    static Primitive s_uint16;
-    static Primitive s_int32;
-    static Primitive s_uint32;
-    static Primitive s_int64;
-    static Primitive s_uint64;
-    static Primitive s_float;
-    static Primitive s_string;
-    static Primitive s_Vector3;
-    static Primitive s_Color;
-    static Primitive s_Quaternion;
-    static Primitive s_Bitfield;
+	static Primitive s_bool;
+	static Primitive s_int8;
+	static Primitive s_uint8;
+	static Primitive s_int16;
+	static Primitive s_uint16;
+	static Primitive s_int32;
+	static Primitive s_uint32;
+	static Primitive s_int64;
+	static Primitive s_uint64;
+	static Primitive s_float;
+	static Primitive s_string;
+	static Primitive s_Vector3;
+	static Primitive s_Color;
+	static Primitive s_Quaternion;
+	static Primitive s_Bitfield;
 };
 
 //-----------------------------------//

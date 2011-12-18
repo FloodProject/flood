@@ -112,7 +112,14 @@ void Peer::queueMessage(const MessagePtr& message, uint8 channel)
 {
 	if( !message ) return;
 	message->prepare();
-	enet_peer_send(peer, channel, message->getPacket());
+	
+	int status = enet_peer_send(peer, channel, message->getPacket());
+
+	if(status  != 0)
+	{
+		LogWarn("Error sending packet to peer '%s'", getHostName().c_str());
+		return;
+	}
 }
 
 //-----------------------------------//
@@ -232,7 +239,7 @@ void Host::handleConnectEvent(ENetEvent* event)
 {
 	ENetPeer* peer = event->peer;
 
-	PeerPtr networkPeer = Allocate(Peer, AllocatorGetThis());
+	PeerPtr networkPeer = AllocateThis(Peer);
 	networkPeer->peer = peer;
 
 	// Store the network peer as user data.
@@ -300,7 +307,7 @@ bool HostClient::connect( const HostConnectionDetails& details )
 
 	ENetPeer* newPeer = enet_host_connect(host, &addr, channelCount, data);
 
-	peer = Allocate(Peer, gs_NetworkAllocator);
+	peer = Allocate(gs_NetworkAllocator, Peer);
 	peer->peer = newPeer;
 
 	return true;

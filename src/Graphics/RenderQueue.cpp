@@ -6,19 +6,19 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/RenderQueue.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-RenderState::RenderState( Renderable* rend )
-	: renderable( rend )
-	, material( rend->getMaterial().Resolve() )
-	, priority( rend->getRenderPriority() )
+RenderState::RenderState(RenderBatch* batch)
+	: renderable( batch )
+	, material( batch->getMaterial().Resolve() )
+	, priority( batch->getRenderPriority() )
 { }
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

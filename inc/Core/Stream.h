@@ -32,6 +32,8 @@ namespace StreamSeekMode
 	enum Enum { Absolute, Relative, RelativeEnd };
 }
 
+const int StreamEOF = 0;
+
 //-----------------------------------//
 
 /**
@@ -46,7 +48,7 @@ typedef bool  (*StreamCloseFunction)(Stream*);
 typedef int64 (*StreamReadFunction)(Stream*, void*, int64);
 typedef int64 (*StreamWriteFunction)(Stream*, void*, int64);
 typedef int64 (*StreamTellFunction)(Stream*);
-typedef bool  (*StreamSeekFunction)(Stream*, int64, int8);
+typedef int64 (*StreamSeekFunction)(Stream*, int64, int8);
 typedef int64 (*StreamSizeFunction)(Stream*);
 typedef void  (*StreamResizeFunction)(Stream*, int64 size);
 

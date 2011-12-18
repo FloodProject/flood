@@ -41,10 +41,10 @@ project "Editor"
 
 	includedirs
 	{
-		"../src/",
-		"../src/Editor",
 		"../inc/",
+		"../src/",
 		"../inc/Editor",
+		"../src/Editor",
 		"../dep/wx/include",
 		"../dep/vld/include",
 	}

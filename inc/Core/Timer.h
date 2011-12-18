@@ -21,7 +21,11 @@ NAMESPACE_EXTERN_BEGIN
 
 API_CORE float TimerGetCurrentTimeMs();
 
-struct Timer { int64 time; };
+struct Timer
+{
+	Timer();
+	int64 time;
+};
 
 API_CORE Timer* TimerCreate(Allocator*);
 API_CORE void   TimerDestroy(Timer*);

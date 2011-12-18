@@ -6,77 +6,43 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Graphics/View.h"
-#include "Graphics/Target.h"
-#include "Scene/Scene.h"
-#include "Scene/Camera.h"
+#include "Graphics/API.h"
+#include "Graphics/RenderView.h"
+#include "Graphics/RenderTarget.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 RenderView::RenderView()
-	: depthPriority(0)
-	, target(nullptr)
-	, weakCamera(nullptr)
-{
-	setClearColor( Color::White );
-}
-
-//-----------------------------------//
-
-RenderView::RenderView( const CameraPtr& camera )
-	: depthPriority(0)
+	: origin(0, 0)
+	, size(0, 0)
+	, depthPriority(0)
 	, target(nullptr)
 {
 	setClearColor( Color::White );
-	setCamera(camera);
 }
 
 //-----------------------------------//
 
 RenderView::~RenderView()
 {
-	if( !weakCamera ) return;
-	weakCamera->setView(nullptr);
 }
 
 //-----------------------------------//
 
 void RenderView::handleRenderTargetResize()
 {
-	//size = target->getSettings().getSize();
 	#pragma TODO("Views need to be updated when render targets change")
 	
+#if 0
+	//size = target->getSettings().getSize();
+
 	const CameraPtr& camera = weakCamera;
 	if( !camera ) return;
 
 	camera->updateFrustum();
-}
-
-//-----------------------------------//
-
-Vector3 RenderView::unprojectPoint( const Vector3& screen, const Camera* camera ) const
-{
-	Matrix4x4 view4( camera->getViewMatrix() );
-	const Matrix4x4& proj = camera->getFrustum().matProjection;
-	Matrix4x4 inverseVP = (view4 * proj).inverse();
-
-	Vector2 size( getSize().x, getSize().y );
-
-    // Map x and y from window coordinates, map to range -1 to 1.
-
-    Vector4 pos;
-    pos.x = (screen.x /*- offset.x*/) / float(size.x) * 2.0f - 1.0f;
-    pos.y = (screen.y /*- offset.y*/) / float(size.y) * 2.0f - 1.0f;
-    pos.z = screen.z * 2.0f - 1.0f;
-    pos.w = 1.0f;
- 
-	Vector4 pos2 = inverseVP * pos;
-	Vector3 pos_out( pos2.x, pos2.y, pos2.z );
- 
-    return pos_out / pos2.w;
+#endif
 }
 
 //-----------------------------------//
@@ -93,6 +59,7 @@ float RenderView::getAspectRatio() const
 
 //-----------------------------------//
 
+#if 0
 void RenderView::setCamera( const CameraPtr& camera )
 {
 	weakCamera = camera.get();
@@ -100,6 +67,7 @@ void RenderView::setCamera( const CameraPtr& camera )
 
 	onCameraChanged(camera);
 }
+#endif
 
 //-----------------------------------//
 
@@ -109,7 +77,7 @@ bool RenderView::operator < (RenderView& v)
 }
 
 //-----------------------------------//
-
+#if 0
 void RenderView::update(const Scene* scene)
 {
 	if( !scene ) return;
@@ -120,7 +88,7 @@ void RenderView::update(const Scene* scene)
 	camera->setView(this);
 	camera->render(scene);
 }
-
+#endif
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

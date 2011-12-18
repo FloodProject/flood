@@ -13,6 +13,7 @@
 #include "Core/Log.h"
 #include "Core/Utilities.h"
 #include "Math/Vector.h"
+#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_BEGIN
 
@@ -27,6 +28,7 @@ Mesh::Mesh()
 	: animated(false)
 	, bindPose(nullptr)
 	, built(false)
+	, geometryBuffer(nullptr)
 {
 }
 
@@ -35,6 +37,7 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
 	LogDebug("Destroying mesh: %s", path.c_str());
+	//Deallocate(geometryBuffer);
 }
 
 //-----------------------------------//
@@ -53,11 +56,11 @@ bool Mesh::isAnimated() const
 
 //-----------------------------------//
 
-AnimationPtr Mesh::findAnimation( const String& name )
+Animation* Mesh::findAnimation( const String& name )
 {
 	for( size_t i = 0; i < animations.size(); i++ )
 	{
-		 const AnimationPtr& animation = animations[i];
+		 Animation* animation = animations[i].get();
 
 		if( StringCompareInsensitive(animation->getName(), name) == 0 )
 			return animation;
@@ -72,6 +75,10 @@ void Mesh::buildBounds()
 {
 	boundingVolume.reset();
 
+	if( !geometryBuffer ) return;
+
+	size_t numVertices = geometryBuffer->getSizeVertices();
+
 	for( size_t i = 0; i < groups.size(); i++ )
 	{
 		MeshGroup& group = groups[i];
@@ -81,10 +88,12 @@ void Mesh::buildBounds()
 		for( size_t j = 0; j < indices.size(); j++ )
 		{
 			const uint16& index = indices[j];
-			if( index >= position.size() ) continue;
+			if( index > numVertices ) continue;
 
-			const Vector3& v = position[index];
-			boundingVolume.add(v);
+			float* v = geometryBuffer->getAttribute(VertexAttribute::Position, index);
+			Vector3& vec = *(Vector3*) v;
+
+			boundingVolume.add(vec);
 		}
 	}
 
@@ -96,18 +105,19 @@ void Mesh::buildBounds()
 
 void Mesh::setupInitialVertices()
 {
-	if( !isAnimated() || !skeleton )
-		return;
+	if( !isAnimated() ) return;
 
 	const BonesVector& bones = skeleton->getBones();
+	size_t numVertices = geometryBuffer->getSizeVertices();
 
 	// Calculate the new vertices.
-	for( size_t i = 0; i < position.size(); i++ )
+	for( size_t i = 0; i < numVertices; i++ )
 	{
-		int32 boneIndex = (int32) boneIndices[i];
+		int32 boneIndex = (int32) *geometryBuffer->getAttribute(VertexAttribute::BoneIndex, i);
 		if( boneIndex == -1 ) continue;
 
-		position[i] = bones[boneIndex]->absoluteInvMatrix * position[i];
+		Vector3* pos = (Vector3*) geometryBuffer->getAttribute(VertexAttribute::Position, i);
+		*pos = bones[boneIndex]->absoluteInvMatrix * (*pos);
 	}
 }
 

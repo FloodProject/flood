@@ -29,7 +29,7 @@ REFLECT_CLASS_END()
 
 MaterialHandle MaterialCreate( Allocator* alloc, const String& name )
 {
-	Material* material = Allocate(Material, alloc);
+	Material* material = Allocate(alloc, Material);
 	material->setName(name);
 
 	return HandleCast<Material>( ResourceHandleCreate(material) );

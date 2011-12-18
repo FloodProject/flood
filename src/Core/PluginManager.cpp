@@ -50,7 +50,6 @@ void PluginManager::disablePlugins()
 	}
 }
 
-
 //-----------------------------------//
 
 Plugin* PluginManager::getPlugin(const String& name)

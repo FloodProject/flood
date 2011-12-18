@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Core/Memory.h"
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -54,7 +56,7 @@ NAMESPACE_CORE_BEGIN
 
 #define CREATE_CLASS_FACTORY(className) \
 	void* className##CreateFactory( Allocator* alloc ) { \
-		return Allocate(className, alloc); }
+		return Allocate(alloc, className); }
 
 #define CREATE_CLASS_BUILD(className) \
 	Class* className##BuildType(); \
@@ -208,6 +210,35 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_ALIAS(fieldName, aliasName) \
 	fieldName.aliases.push_back(#aliasName);
 
-	//-----------------------------------//
+//-----------------------------------//
+
+// In the general case we don't know the type.
+template<typename T>
+Primitive* GetPrimitiveFromType() { return nullptr; };
+
+// Specializations for all known primitive types.
+template<> Primitive* GetPrimitiveFromType<bool>();
+template<> Primitive* GetPrimitiveFromType<int8>();
+template<> Primitive* GetPrimitiveFromType<uint8>();
+template<> Primitive* GetPrimitiveFromType<int16>();
+template<> Primitive* GetPrimitiveFromType<uint16>();
+template<> Primitive* GetPrimitiveFromType<int32>();
+template<> Primitive* GetPrimitiveFromType<uint32>();
+template<> Primitive* GetPrimitiveFromType<int64>();
+template<> Primitive* GetPrimitiveFromType<uint64>();
+template<> Primitive* GetPrimitiveFromType<float>();
+template<> Primitive* GetPrimitiveFromType<const char*>();
+template<> Primitive* GetPrimitiveFromType<String>();
+template<> Primitive* GetPrimitiveFromType<Vector3>();
+template<> Primitive* GetPrimitiveFromType<Color>();
+template<> Primitive* GetPrimitiveFromType<Quaternion>();
+
+template<typename T>
+Primitive* GetPrimitiveFromType(const T& type)
+{
+	return GetPrimitiveFromType<T>();
+};
+
+//-----------------------------------//
 
 NAMESPACE_CORE_END

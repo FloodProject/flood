@@ -35,10 +35,10 @@ STB_Image_Loader::STB_Image_Loader()
 
 //-----------------------------------//
 
-bool STB_Image_Loader::decode(const Stream& stream, Resource* res)
+bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 {
 	std::vector<uint8> data;
-	StreamRead((Stream*) &stream, data);
+	StreamRead(options.stream, data);
 
 	if( data.empty() ) return false;
 
@@ -48,7 +48,12 @@ bool STB_Image_Loader::decode(const Stream& stream, Resource* res)
 		&data[0], data.size(), &width, &height,
 		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
-	if( !pixelData ) return false;
+	if( !pixelData )
+	{
+		const char* error = stbi_failure_reason();
+		LogError("STB image error: %s", error);
+		return false;
+	}
 
 	// Build our image with the pixel data returned by stb_image.
 	PixelFormat::Enum pf = PixelFormat::Unknown;
@@ -74,7 +79,7 @@ bool STB_Image_Loader::decode(const Stream& stream, Resource* res)
 	memcpy(&buffer[0], pixelData, size);
 	free(pixelData);
 
-	Image* image = static_cast<Image*>( res );
+	Image* image = static_cast<Image*>( options.resource );
 	image->setWidth( width );
 	image->setHeight( height );
 	image->setPixelFormat( pf );

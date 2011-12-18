@@ -29,20 +29,20 @@ GLSL_Loader::GLSL_Loader()
 
 //-----------------------------------//
 
-Resource* GLSL_Loader::prepare(const Stream& stream)
+Resource* GLSL_Loader::prepare(ResourceLoadOptions&)
 {
-	GLSL_Shader* shader = Allocate(GLSL_Shader, GetResourcesAllocator());
+	GLSL_Shader* shader = Allocate(GetResourcesAllocator(), GLSL_Shader);
 	return shader;
 }
 
 //-----------------------------------//
 
-bool GLSL_Loader::decode(const Stream& stream, Resource* res)
+bool GLSL_Loader::decode(ResourceLoadOptions& options)
 {
 	String text;
-	StreamReadString((Stream*) &stream, text);
+	StreamReadString(options.stream, text);
 
-	GLSL_Shader* shader = static_cast<GLSL_Shader*>(res);
+	GLSL_Shader* shader = static_cast<GLSL_Shader*>(options.resource);
 	shader->setText( text );
 	shader->parse();
 

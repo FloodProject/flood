@@ -41,9 +41,7 @@ DynamicLibrary::DynamicLibrary(const String& name)
 DynamicLibrary::~DynamicLibrary()
 {
 	if(_handle)
-	{
 		DYNLIB_UNLOAD(_handle);
-	}
 }
 
 //-----------------------------------//
@@ -51,12 +49,7 @@ DynamicLibrary::~DynamicLibrary()
 bool DynamicLibrary::load()
 {
 	_handle = (DynLibHandle) DYNLIB_LOAD(_name.c_str());
-
-	if(!_handle) {
-		return false;
-	}
-
-	return true;
+	return _handle != 0;
 }
 
 //-----------------------------------//

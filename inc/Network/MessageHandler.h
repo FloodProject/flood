@@ -10,7 +10,9 @@
 
 #include "Core/Reflection.h"
 #include "Core/Object.h"
+#include "Core/Extension.h"
 #include "Network/Message.h"
+
 
 FWD_DECL_INTRUSIVE(Session)
 
@@ -23,9 +25,12 @@ typedef std::vector<MessageMapping> MessagesTable;
 
 REFLECT_DECLARE_CLASS(MessageHandler)
 
-class API_CORE MessageHandler
+class API_CORE MessageHandler :  public Extension
 {
 public:
+
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
 
 	// Network callbacks.
 	virtual void onSessionAdded(const SessionPtr&) {}

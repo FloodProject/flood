@@ -16,11 +16,11 @@
 #include "Math/Matrix4x3.h"
 
 #include "Graphics/Render.h"
-#include "Graphics/Target.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderTarget.h"
+#include "Graphics/RenderBatch.h"
 #include "Graphics/RenderQueue.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -49,8 +49,7 @@ struct RenderPipeline
 
 class RenderBuffer;
 class RenderContext;
-
-typedef std::map<Light*, Texture*> ShadowTextureMap;
+class RenderBackend;
 
 /**
  * Represents the rendering device we are using. At startup the application
@@ -60,13 +59,15 @@ typedef std::map<Light*, Texture*> ShadowTextureMap;
  * details how all the rendering operations are implemented.
  *
  * This class only knows about rendering primitives (Vertex/Index buffers) and
- * Renderables. It does not know anything about high-level objects, like meshes.
+ *.renderables. It does not know anything about high-level objects, like meshes.
  *
- * Each render device will also manage a list of render targets (Windows, FBOs).
+ * Each render device will also manage a list of render targets (windows, FBOs).
  * Window implementations depend on the rendering system used, for example, an
  * OpenGL window will be different from an DirectX window, so this is also
  * responsible for creating a new window if no window handle is passed to it.
  */
+
+typedef std::map<Light*, Texture*> ShadowTextureMap;
 
 class API_RENDER RenderDevice
 {
@@ -77,10 +78,10 @@ public:
 	RenderDevice();
 	~RenderDevice();
 
-	// Renders a renderable.
+	// Renders a.renderable.
 	void render( const RenderState& state, const LightQueue& lights );
 
-	// Renders a list of renderables.
+	// Renders a list of.renderables.
 	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.
@@ -113,14 +114,6 @@ public:
 
 protected:
 
-	// Fixed render state management.
-	void setupRenderFixed( const RenderState&, const LightQueue& );
-	bool setupRenderFixedMatrix( const RenderState& state );
-	bool setupRenderFixedOverlay( const RenderState& state );
-	//bool setupRenderFixedShadow( LightQueue& lights );
-	//bool setupRenderFixedLight( const RenderState&, const LightQueue& );
-	//bool setupRenderFixedOverlay( const RenderState& );
-
 	// Forward render state management.
 	void setupRenderForward( const RenderState&, const LightQueue& );
 	bool setupRenderStateMatrix( const RenderState& state );
@@ -135,14 +128,14 @@ protected:
 	void unbindTextures(Material* material);
 	void bindTextures(const RenderState& state, bool bindUniforms);
 
-	// Binds the buffers needed to draw the renderable.
-	bool bindBuffers(Renderable*);
-	bool unbindBuffers(Renderable*);
+	// Binds the buffers needed to draw the.renderable.
+	bool bindBuffers(RenderBatch*);
+	bool unbindBuffers(RenderBatch*);
 
-	// Renders the geometry of the renderable.
-	void render(Renderable*);
+	// Renders the geometry of the.renderable.
+	void render(RenderBatch*);
 
-    // Render this renderable.
+	// Render this.renderable.
 	void render(RenderDevice* device);
 
 	// Rendering pipeline.
@@ -153,6 +146,9 @@ protected:
 
 	// Active render context.
 	RenderContext* activeContext;
+
+	// Active render backend.
+	RenderBackend* renderBackend;
 
 	// Active view.
 	RenderView* activeView;
@@ -166,6 +162,6 @@ API_RENDER RenderDevice* GetRenderDevice();
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 
 #endif

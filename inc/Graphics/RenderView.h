@@ -12,10 +12,9 @@
 #include "Math/Vector.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
-#include "Graphics/Target.h"
-#include "Scene/Camera.h"
+#include "Graphics/RenderTarget.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -23,34 +22,26 @@ class RenderTarget;
 
 /**
  * A view is a region in a render target that can be rendered into.
- * It has an associated camera that will render into the view.
+ * It has an associated renderer that will render into the view.
  */
 
-class API_ENGINE RenderView
+class API_GRAPHICS RenderView
 {
 	DECLARE_UNCOPYABLE(RenderView)
 
 public:
 
 	RenderView();
-	RenderView( const CameraPtr& );
-	
 	~RenderView();
-
-	// Gets the camera of the view.
-	GETTER(Camera, CameraPtr, weakCamera)
-
-	// Sets the camera of the view.
-	void setCamera( const CameraPtr& camera );
 
 	// Gets/sets the render target of the view.
 	ACESSOR(RenderTarget, RenderTarget*, target)
 
-	// Gets the origin of the view.
-	GETTER(Origin, Vector2i, Vector2i(0,0)/*::Zero*/)
+	// Gets/sets the origin of the view.
+	ACESSOR(Origin, Vector2i, origin)
 
-	// Gets the size of the view.
-	GETTER(Size, Vector2i, target->getSettings().getSize())
+	// Gets/sets the size of the view.
+	ACESSOR(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the view.
 	ACESSOR(ClearColor, const Color&, clearColor)
@@ -61,25 +52,19 @@ public:
 	// Gets the aspect ratio of the view.
 	float getAspectRatio() const;
 
-	// Updates the view.
-	void update(const Scene* scene);
-
-	// Unprojects the point.
-	Vector3 unprojectPoint( const Vector3& pt, const Camera* camera ) const;
-
 	// Returns if a view has more priority than another.
 	bool operator < (RenderView& view);
 
 	// Handles render target resize.
 	void handleRenderTargetResize();
 
-	// Event is sent when camera changes.
-	Event1<const CameraPtr&> onCameraChanged; 
+public:
 
-protected:
+	// Origin of the view.
+	Vector2i origin;
 
-	// Camera that will render into this view.
-	Camera* weakCamera;
+	// Size of the view.
+	Vector2i size;
 
 	// Render target.
 	RenderTarget* target;
@@ -89,8 +74,14 @@ protected:
 
 	// Depth priority.
 	int depthPriority;
+
+	// Projection matrix.
+	Matrix4x4 projectionMatrix;
+
+	// View matrix.
+	Matrix4x3 viewMatrix;
 };
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

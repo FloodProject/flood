@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
+#include "Network/MessageDispatcher.h"
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
@@ -14,7 +15,6 @@
 #include "Core/Serialization.h"
 #include "Core/Stream.h"
 
-#include "Network/Dispatcher.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"
 #include "Network/Message.h"
@@ -28,40 +28,40 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Dispatcher::Dispatcher()
+MessageDispatcher::MessageDispatcher()
 	: isServer(false)
 	, sessions(nullptr)
 	, handlers(nullptr)
 	, serializer(nullptr)
 {
-	sessions = Allocate(SessionManager, AllocatorGetThis());
-	handlers = Allocate(MessageHandlers, AllocatorGetThis());
+	sessions = AllocateThis(SessionManager);
+	handlers = AllocateThis(MessageHandlers);
 	serializer = SerializerCreateBinary(AllocatorGetThis());
 }
 
 //-----------------------------------//
 
-void Dispatcher::initClient(HostClient* host)
+void MessageDispatcher::initClient(HostClient* host)
 {
 	isServer = false;
-	host->onClientConnected.Connect(this, &Dispatcher::handleConnect);
-	host->onClientDisconnected.Connect(this, &Dispatcher::handleDisconnect);
-	host->onServerMessage.Connect(this, &Dispatcher::handleMessage);
+	host->onClientConnected.Connect(this, &MessageDispatcher::handleConnect);
+	host->onClientDisconnected.Connect(this, &MessageDispatcher::handleDisconnect);
+	host->onServerMessage.Connect(this, &MessageDispatcher::handleMessage);
 }
 
 //-----------------------------------//
 
-void Dispatcher::initServer(HostServer* host)
+void MessageDispatcher::initServer(HostServer* host)
 {
 	isServer = true;
-	host->onClientConnected.Connect(this, &Dispatcher::handleConnect);
-	host->onClientDisconnected.Connect(this, &Dispatcher::handleDisconnect);
-	host->onClientMessage.Connect(this, &Dispatcher::handleMessage);
+	host->onClientConnected.Connect(this, &MessageDispatcher::handleConnect);
+	host->onClientDisconnected.Connect(this, &MessageDispatcher::handleDisconnect);
+	host->onClientMessage.Connect(this, &MessageDispatcher::handleMessage);
 }
 
 //-----------------------------------//
 
-Dispatcher::~Dispatcher()
+MessageDispatcher::~MessageDispatcher()
 {
 	Deallocate(sessions);
 	Deallocate(handlers);
@@ -70,24 +70,27 @@ Dispatcher::~Dispatcher()
 
 //-----------------------------------//
 
-void Dispatcher::handleConnect(const PeerPtr& peer)
+void MessageDispatcher::handleConnect(const PeerPtr& peer)
 {
-	SessionPtr session = Allocate(Session, AllocatorGetThis());
+	SessionPtr session = AllocateThis(Session);
 	session->setPeer(peer);
+
 	sessions->addSession(session);
 }
 
 //-----------------------------------//
 
-void Dispatcher::handleDisconnect(const PeerPtr& peer)
+void MessageDispatcher::handleDisconnect(const PeerPtr& peer)
 {
 	const SessionPtr& session = sessions->getSession(peer);
+	assert( session != nullptr );
+
 	sessions->removeSession(session);
 }
 
 //-----------------------------------//
 
-void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
+void MessageDispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	const SessionPtr& session = sessions->getSession(peer);
 
@@ -102,7 +105,7 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 
 #define CALL_MEMBER_FN(object, ptrToMember)  ((object)->*(ptrToMember)) 
 
-bool Dispatcher::processMessage()
+bool MessageDispatcher::processMessage()
 {
 	MessageRequest req;
 	

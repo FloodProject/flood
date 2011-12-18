@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -16,7 +16,7 @@ NAMESPACE_ENGINE_BEGIN
  * Holds the timing statistics accumulated from rendering.
  */
 
-class API_ENGINE FrameStatistics
+class API_GRAPHICS FrameStatistics
 {
 public:
 
@@ -40,4 +40,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

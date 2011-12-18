@@ -101,13 +101,9 @@ static void ResourceHandleSerialize( ReflectionContext* context, ReflectionWalkT
 
 //-----------------------------------//
 
-ResourceLoadOptions::ResourceLoadOptions()
-	: group(ResourceGroup::General)
-	, asynchronousLoad(true)
-	, sendLoadEvent(true)
-	, isHighPriority(false)
-	, stream(nullptr)
-	, resource(nullptr)
+ResourceEvent::ResourceEvent()
+	: resource(nullptr)
+	, oldResource(nullptr)
 {
 }
 
@@ -195,7 +191,7 @@ ResourceHandle ResourceManager::loadResource(const String& path)
 
 //-----------------------------------//
 
-ResourceHandle ResourceManager::loadResource(ResourceLoadOptions options)
+ResourceHandle ResourceManager::loadResource(ResourceLoadOptions& options)
 {
 	if( !archive ) return ResourceHandle(HandleInvalid);
 
@@ -303,11 +299,19 @@ Resource* ResourceManager::prepareResource( ResourceLoadOptions& options )
 		return nullptr;
 	}
 
-	Resource* resource = loader->prepare(*stream);
+	options.stream = stream;
+
+	Resource* resource = loader->prepare(options);
+	
+	if( !resource )
+	{
+		LogError("Error preparing resource: '%s'", path.c_str());
+		return nullptr;
+	}
+
 	resource->setStatus( ResourceStatus::Loading );
 	resource->setPath( file );
 
-	options.stream = stream;
 	options.resource = resource;
 
 	return resource;
@@ -321,7 +325,7 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 {
 	Task* task = TaskCreate( GetResourcesAllocator() );
 	
-	ResourceLoadOptions* taskOptions = Allocate(ResourceLoadOptions,  GetResourcesAllocator());
+	ResourceLoadOptions* taskOptions = Allocate(GetResourcesAllocator(), ResourceLoadOptions);
 	*taskOptions = options;
 
 	task->callback.Bind(ResourceTaskRun);
@@ -397,6 +401,8 @@ void ResourceManager::sendPendingEvents()
 
 void ResourceManager::removeUnusedResources()
 {
+	#pragma TODO("Finish the unused resource collecetor")
+
 	return;
 
 	std::vector<String> resourcesToRemove;

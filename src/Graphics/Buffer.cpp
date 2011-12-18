@@ -6,11 +6,10 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/Buffer.h"
-#include "Graphics/GL.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 		
 //-----------------------------------//		
 
@@ -18,10 +17,6 @@ Buffer::Buffer()
 	: usage(BufferUsage::Static)
 	, access(BufferAccess::Read)
 {
-	glGenBuffers( 1, (GLuint*) &id );
-
-	if( CheckLastErrorGL("Error generating a new buffer") )
-		return;
 }
 
 //-----------------------------------//		
@@ -30,56 +25,15 @@ Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 	: usage(usage)
 	, access(access)
 {
-	glGenBuffers( 1, (GLuint*) &id );
-
-	if( CheckLastErrorGL("Error generating a new buffer") )
-		return;
 }
 
 //-----------------------------------//
 
 Buffer::~Buffer()
 {
-	glDeleteBuffers( 1, (GLuint*) &id );
 
-	if( CheckLastErrorGL("Error deleting buffer") )
-		return;
 }
 
 //-----------------------------------//
 
-int ConvertBufferGL(BufferUsage::Enum usage, BufferAccess::Enum access)
-{
-	if( usage == BufferUsage::Stream && access == BufferAccess::Read )
-		return GL_STREAM_READ;
-	
-	if( usage == BufferUsage::Stream && access == BufferAccess::Write )
-		return GL_STREAM_DRAW;
-	
-	if( usage == BufferUsage::Stream && access == BufferAccess::ReadWrite )
-		return GL_STREAM_COPY;
-
-	if( usage == BufferUsage::Static && access == BufferAccess::Read )
-		return GL_STATIC_READ;
-	
-	if( usage == BufferUsage::Static && access == BufferAccess::Write )
-		return GL_STATIC_DRAW;
-	
-	if( usage == BufferUsage::Static && access == BufferAccess::ReadWrite )
-		return GL_STATIC_COPY;
-
-	if( usage == BufferUsage::Dynamic && access == BufferAccess::Read )
-		return GL_DYNAMIC_READ;
-	
-	if( usage == BufferUsage::Dynamic && access == BufferAccess::Write )
-		return GL_DYNAMIC_DRAW;
-	
-	if( usage == BufferUsage::Dynamic && access == BufferAccess::ReadWrite )
-		return GL_DYNAMIC_COPY;
-
-	return GL_STREAM_READ;
-}
-
-//-----------------------------------//
-
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

@@ -62,7 +62,7 @@ public:
 	RESOURCE_LOADER_CLASS(Font)
 
 	// Decode a font definition.
-	virtual bool decode(const Stream& file, Resource* res) OVERRIDE;
+	virtual bool decode(ResourceLoadOptions&) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "FONTS")

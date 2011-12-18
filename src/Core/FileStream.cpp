@@ -29,7 +29,7 @@ static bool  FileClose(Stream*);
 static int64 FileRead(Stream*, void*, int64);
 static int64 FileWrite(Stream*, void*, int64);
 static int64 FileTell(Stream*);
-static bool  FileSeek(Stream*, int64, int8);
+static int64 FileSeek(Stream*, int64, int8);
 static int64 FileGetSize(Stream*);
 
 static StreamFuncs gs_FileFuncs = 
@@ -48,7 +48,7 @@ static StreamFuncs gs_FileFuncs =
 
 Stream* StreamCreateFromFile(Allocator* alloc, const Path& path, StreamMode::Enum mode)
 {
-	FileStream* fs = Allocate(FileStream, alloc);
+	FileStream* fs = Allocate(alloc, FileStream);
 	if( !fs ) return nullptr;
 	
 	fs->fp = nullptr;
@@ -109,6 +109,10 @@ static bool FileClose(Stream* stream)
 static int64 FileRead(Stream* stream, void* buffer, int64 size)
 {
 	FileStream* fs = (FileStream*) stream;
+
+	if( feof(fs->fp) )
+		return StreamEOF;
+
 	return fread(buffer, 1, size_t(size), fs->fp);
 }
 
@@ -139,7 +143,7 @@ static int64 FileTell(Stream* stream)
 
 //-----------------------------------//
 
-static bool FileSeek(Stream* stream, int64 offset, int8 mode)
+static int64 FileSeek(Stream* stream, int64 offset, int8 mode)
 {
 	FileStream* fs = (FileStream*) stream;
 
@@ -147,15 +151,21 @@ static bool FileSeek(Stream* stream, int64 offset, int8 mode)
 
 	switch(mode)
 	{
-	case StreamSeekMode::Absolute: origin = SEEK_SET; break;
-	case StreamSeekMode::Relative: origin = SEEK_CUR; break;
-	case StreamSeekMode::RelativeEnd: origin = SEEK_END; break;
+	case StreamSeekMode::Absolute:
+		origin = SEEK_SET;
+		break;
+	case StreamSeekMode::Relative:
+		origin = SEEK_CUR;
+		break;
+	case StreamSeekMode::RelativeEnd:
+		origin = SEEK_END;
+		break;
 	}
 
 #ifdef COMPILER_MSVC
-	return _fseeki64(fs->fp, offset, origin) == 0;
+	return _fseeki64(fs->fp, offset, origin);
 #else
-	return fseek(fs->fp, (long) offset, origin) == 0;
+	return fseek(fs->fp, (long) offset, origin);
 #endif
 }
 

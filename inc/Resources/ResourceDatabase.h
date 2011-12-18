@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Resources/API.h"
 #include "Resources/Resource.h"
 
 NAMESPACE_RESOURCES_BEGIN
@@ -45,7 +46,7 @@ class ResourceIndexer;
 
 REFLECT_DECLARE_CLASS(ResourceDatabase)
 
-class ResourceDatabase : public Object
+class API_RESOURCE ResourceDatabase : public Object
 {
 	REFLECT_DECLARE_OBJECT(ResourceDatabase)
 

@@ -84,7 +84,7 @@ project "Engine"
 
 	Engine.libdirs =
 	{
-		"../dep/openal/lib/vs2010",
+		"../dep/openal-soft/lib/vs2010",
 		"../dep/bullet/lib/vc10",
 		"../dep/glew/lib/vc10",
 		"../dep/lua/lib/vc10",

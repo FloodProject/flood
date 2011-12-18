@@ -63,7 +63,7 @@ public:
 
 protected:
 	
-	// Keeps the known tools.
+	// Keeps the known plugins.
 	std::vector<Plugin*> plugins;
 };
 

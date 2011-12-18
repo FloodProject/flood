@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include "Graphics/Target.h"
+#include "Graphics/RenderTarget.h"
 #include "Graphics/Texture.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 /**
- * Render buffers need to have renderable attachments. These attachments
+ * Render buffers need to have.renderable attachments. These attachments
  * can be of different types depending on your needs. This enum works
  * like a bitmask, so you can combine more than one type when attaching.
  */
@@ -88,4 +88,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

@@ -150,7 +150,7 @@ void Message::setPacket(ENetPacket* packet)
 
 //-----------------------------------//
 
-void Message::write(Object* object)
+void Message::write(const Object* object)
 {
 	SetBitFlag(flags, MessageFlags::Binary, true);
 
@@ -166,7 +166,7 @@ void Message::write(Object* object)
 
 MessagePtr MessageCreate(MessageId id)
 {
-	MessagePtr message = Allocate(Message, AllocatorGetNetwork(), id);
+	MessagePtr message = Allocate(AllocatorGetNetwork(), Message, id);
 	return message;
 }
 

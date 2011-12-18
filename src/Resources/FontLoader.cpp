@@ -37,9 +37,9 @@ FontLoader::FontLoader()
 
 //-----------------------------------//
 
-bool FontLoader::decode(const Stream& stream, Resource* resource)
+bool FontLoader::decode(ResourceLoadOptions& options)
 {
-	StreamReadLines((Stream*) &stream, lines);
+	StreamReadLines(options.stream, lines);
 
 	if( !validateFont() )
 		return false;
@@ -47,11 +47,11 @@ bool FontLoader::decode(const Stream& stream, Resource* resource)
 	// TODO: ugly.
 	ResourceManager* res = GetResourceManager();
 	
-	ResourceLoadOptions options;
-	options.name = imageFilename;
-	options.asynchronousLoad = false;
+	ResourceLoadOptions loadOptions;
+	loadOptions.name = imageFilename;
+	loadOptions.asynchronousLoad = false;
 
-	image = HandleCast<Image>(res->loadResource(options));
+	image = HandleCast<Image>(res->loadResource(loadOptions));
 	if( !image ) return false;
 
 	Archive* archive = res->getArchive();
@@ -64,7 +64,7 @@ bool FontLoader::decode(const Stream& stream, Resource* resource)
 
 	parseGlyphs();
 
-	font = static_cast<BitmapFont*>( resource );
+	font = static_cast<BitmapFont*>( options.resource );
 	font->setName( fontNameSizeInfo[0] );
 	font->setSize( StringToNumber<int>(fontNameSizeInfo[1]) );
 	font->setImage( image );

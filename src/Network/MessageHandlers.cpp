@@ -42,7 +42,7 @@ void MessageHandlers::removeHandlers(MessageHandler* handler)
 	const MessagesTable& messagesTable = handler->getMessagesTable();
 	Enum* messagesEnum = handler->getMessagesEnum();
 
-	for(size_t i = 0; i < messagesTable.size(); i++ )
+	for(size_t i = 0; i < messagesTable.size(); i++)
 	{
 		const MessageMapping& mapping = messagesTable[i];
 		removeMapping(mapping);

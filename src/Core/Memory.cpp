@@ -203,7 +203,7 @@ static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 	int32 total_size = size + sizeof(AllocationMetadata);
 	void* instance = nullptr;
 	
-#if ALIGNED_MALLOC
+#ifdef ALIGNED_MALLOC
 	if(align == 0)
 		instance = malloc(total_size);
 	else
@@ -243,7 +243,7 @@ static void HeapDellocate(Allocator* alloc, const void* p)
 
 Allocator* AllocatorCreateHeap( Allocator* alloc )
 {
-	Allocator* heap = Allocate(Allocator, alloc);
+	Allocator* heap = Allocate(alloc, Allocator);
 
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
@@ -328,7 +328,7 @@ Allocator* AllocatorCreatePool( Allocator* alloc, int32 size )
 	PoolAllocator* pool = (PoolAllocator*) alloc->allocate(alloc,
 		sizeof(PoolAllocator) + size, alignof(PoolAllocator));
 
-	pool->current = (uint8*) pool + sizeof(PoolAllocator);  
+	pool->current = (uint8*) pool + sizeof(PoolAllocator);
 	pool->allocate = PoolAllocate;
 	pool->deallocate = PoolDeallocate;
 	pool->reset = nullptr;

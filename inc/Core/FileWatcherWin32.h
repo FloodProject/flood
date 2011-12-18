@@ -66,7 +66,7 @@ public:
 	void update() OVERRIDE;
 
 	/// Handles the action
-	void handleAction(FileWatchStruct* watch, const WideString& filename, uint32 action);
+	void handleAction(FileWatchStruct* watch, const StringWide& filename, uint32 action);
 
 	/// Map of FileWatchId to FileWatchStruct pointers
 	FileWatchMap mWatches;

@@ -1,5 +1,9 @@
 Pipeline = {}
 
+function FindFBX()
+	
+end
+
 project "Pipeline"
 
 	kind "StaticLib"

@@ -18,17 +18,17 @@
 
 FWD_DECL_INTRUSIVE(Material)
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 /**
- * Type of primitive of the renderable.
+ * Type of primitive of the RenderBatch.
  */
 
-namespace PolygonType
+namespace PrimitiveType
 {
-	enum Enum
+	enum Enum : uint8
 	{
 		Points,
 		Lines,
@@ -46,20 +46,16 @@ namespace PolygonType
 //-----------------------------------//
 
 /**
- * Type of rendering mode of the renderable.
+ * Type of rendering mode of the RenderBatch.
  */
 
-#define GL_POINT 0x1B00
-#define GL_LINE 0x1B01
-#define GL_FILL 0x1B02
-
-namespace PolygonMode
+namespace PrimitiveRasterMode
 {
-	enum Enum
+	enum Enum : uint8
 	{
-		Solid       = GL_FILL,
-		Wireframe   = GL_LINE,
-		Point       = GL_POINT
+		Solid,
+		Wireframe,
+		Point
 	};
 }
 
@@ -67,13 +63,13 @@ namespace PolygonMode
 
 /**
  * Use these different kinds of render groups to signal to the renderer
- * how you want your renderables to be sorted by the render device.
+ * how you want your RenderBatchs to be sorted by the render device.
  * Lower numbers render before higher numbers.
  */
 
 namespace RenderLayer
 {
-	enum Enum
+	enum Enum : uint8
 	{
 		Normal = 0,
 		Transparency = 5,
@@ -84,21 +80,28 @@ namespace RenderLayer
 
 //-----------------------------------//
 
+/** The range of indices in the render batch */
+
+struct API_RENDER RenderBatchRange
+{
+	RenderIndexOffset start;
+	RenderIndexOffset end;
+};
+
 /**
- * Represents a renderable object, that contains the details the
- * rendering device needs to render the object. At the least, it
- * should have a material and a vertex buffer.
+ * Represents a batch operation in the render proccess and contains the
+ * data the render device needs to issue the draw calls for the object.
  */
 
 class RenderView;
-struct RenderState;
+class RenderState;
 
-class API_RENDER Renderable : public ReferenceCounted
+class API_RENDER RenderBatch : public ReferenceCounted
 {
 public:
 
-	Renderable();
-	~Renderable();
+	RenderBatch();
+	~RenderBatch();
 
 	// Gets/sets the render stage.
 	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
@@ -116,10 +119,10 @@ public:
 	ACESSOR(Material, const MaterialHandle&, material)
 
 	// Gets/sets the render mode.
-	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
+	ACESSOR(PrimitiveRasterMode, PrimitiveRasterMode::Enum, mode)
 
 	// Gets/sets the primitive type.
-	ACESSOR(PrimitiveType, PolygonType::Enum, type)
+	ACESSOR(PrimitiveType, PrimitiveType::Enum, type)
 
 	// Pre-render callback.
 	Delegate2<RenderView*, const RenderState&> onPreRender;
@@ -129,6 +132,9 @@ public:
 
 protected:
 
+	// Index range.
+	RenderBatchRange range;
+
 	// Rendering stage.
 	RenderLayer::Enum stage;
 
@@ -136,10 +142,10 @@ protected:
 	int32 priority;
 
 	// Primitive type.
-	PolygonType::Enum type;
+	PrimitiveType::Enum type;
 
 	// Polygon mode.
-	PolygonMode::Enum mode;
+	PrimitiveRasterMode::Enum mode;
 
 	// Geometry buffer with the geometry data.
 	GeometryBufferPtr gb;
@@ -147,15 +153,20 @@ protected:
 	// Uniform buffer with shader constants.
 	UniformBufferPtr ub;
 
-	// Material of this renderable.
+	// Material of this RenderBatch.
 	MaterialHandle material;
 };
 
-API_ENGINE Renderable* RenderableCreate(Allocator*);
+typedef RenderBatch Renderable;
+
+API_GRAPHICS RenderBatch* RenderBatchCreate(Allocator*);
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( RenderBatch );
+typedef std::vector<RenderBatchPtr> RenderBatchsVector;
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
-typedef std::vector<RenderablePtr> RenderablesVector;
+typedef std::vector<Renderable> RenderablesVector;
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

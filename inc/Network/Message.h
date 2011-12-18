@@ -43,10 +43,7 @@ public:
 	~Message();
 
 	// Writes an object to the message.
-	void write(Object* object);
-
-	// Creates a network packet.
-	void createPacket();
+	void write(const Object* object);
 
 	// Accesses the message flags.
 	ACESSOR(Flags, uint8, flags)
@@ -57,26 +54,14 @@ public:
 	// Gets the internal packet.
 	GETTER(Packet, ENetPacket*, packet)
 
+	// Creates a network packet.
+	void createPacket();
+
 	// Sets the internal packet.
 	void setPacket(ENetPacket* packet);
 
 	// Prepares the message for sending.
 	void prepare();
-
-	// Message id.
-	MessageId id;
-
-	// Message flags.
-	uint8 flags;
-
-	// Message data.
-	MemoryStream* ms;
-
-	// Network packet;
-	ENetPacket* packet;
-
-	// Keeps if packet needs to be freed.
-	bool freePacket;
 
 	// Writes a POD type to the message.
 	template<typename T> void writeRaw(const T& pod)
@@ -93,6 +78,21 @@ public:
 		ms->position += sizeof(T);
 		return pod;
 	}
+
+	// Message id.
+	MessageId id;
+
+	// Message flags.
+	uint8 flags;
+
+	// Message data.
+	MemoryStream* ms;
+
+	// Network packet;
+	ENetPacket* packet;
+
+	// Keeps if packet needs to be freed.
+	bool freePacket;
 };
 
 // Creates a new message using the network allocator.

@@ -13,7 +13,7 @@
 #include "Math/Color.h"
 #include "Math/Matrix4x4.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -65,38 +65,38 @@ public:
 
 	UniformBufferElements elements;
 
-	// Gets the uniform if exists or creates a new one.
-	UniformBufferElement* getElement(const String& name, size_t size);
+	// Gets the uniform if it exists or creates a new one.
+	UniformBufferElement* getElement(const char* name, size_t size);
 
 	// Removes the named uniform.
-	void removeUniform( const String& slot );
+	void removeUniform( const char* slot );
 
 	// Adds a uniform to the shader.
-	void setUniform( const String& slot, int32 data );
+	void setUniform( const char* slot, int32 data );
 
 	// Adds a named float uniform to the program.
-	void setUniform( const String& slot, float value );
+	void setUniform( const char* slot, float value );
 
 	// Adds a named float array uniform to the program.
-	void setUniform( const String& slot, const std::vector<float> vec );
+	void setUniform( const char* slot, const std::vector<float> vec );
 
 	// Adds a named Vector3 array uniform to the program.
-	void setUniform( const String& slot, const std::vector<Vector3>& vec );
+	void setUniform( const char* slot, const std::vector<Vector3>& vec );
 
 	// Adds a named color array uniform to the program.
-	void setUniform( const String& slot, const std::vector<Color>& vec );
+	void setUniform( const char* slot, const std::vector<Color>& vec );
 
 	// Adds a named vector uniform to the program.
-	void setUniform( const String& slot, const Vector3& vec );
+	void setUniform( const char* slot, const Vector3& vec );
 
 	// Adds a named matrix uniform to the program.
-	void setUniform( const String& slot, const Matrix4x3& );
+	void setUniform( const char* slot, const Matrix4x3& );
 
 	// Adds a named 4x4 matrix uniform to the program.
-	void setUniform( const String& slot, const Matrix4x4& );
+	void setUniform( const char* slot, const Matrix4x4& );
 
 	// Adds a named 4x4 matrix vector uniform to the program.
-	void setUniform( const String& slot, const std::vector<Matrix4x4>& vec );
+	void setUniform( const char* slot, const std::vector<Matrix4x4>& vec );
 };
 
 //API_RENDER UniformBuffer* UniformBufferCreate( Allocator* );
@@ -105,4 +105,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( UniformBuffer );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

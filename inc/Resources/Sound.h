@@ -9,8 +9,17 @@
 #pragma once
 
 #include "Resources/Resource.h"
+#include "Resources/ResourceLoader.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
+
+//-----------------------------------//
+
+const int SOUND_LOAD_STREAM = 1;
+
+struct SoundStream : public ResourceStream
+{
+};
 
 //-----------------------------------//
 
@@ -37,6 +46,9 @@ public:
 	// Gets/sets the audio sample size.
 	ACESSOR(Size, int32, size)
 
+	// Gets/sets the audio streaming flag.
+	ACESSOR(Streamed, bool, streamed)
+
 	// Gets/sets the buffer containing the data.
 	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
@@ -52,6 +64,9 @@ public:
 	// Sound sample size.
 	int32 size;
 
+	// Use sound streaming.
+	bool streamed;
+
 	// Holds the sound data.
 	std::vector<byte> dataBuffer;
 };
@@ -60,4 +75,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Sound );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

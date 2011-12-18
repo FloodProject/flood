@@ -129,19 +129,19 @@ bool SFML_Window::pumpEvents()
 	case sf::Event::Closed:
 		handleWindowClose();
 		return false;
-			
+
 	case sf::Event::Resized:
 		processResize( event );
 		break;
-			
+
 	case sf::Event::LostFocus:
 		handleWindowFocus( true );
-		break;	
-			
+		break;
+
 	case sf::Event::GainedFocus:
 		handleWindowFocus( false );
-		break;	
-		
+		break;
+
 	default:
 		input.processSFMLEvent( event );
 		break;

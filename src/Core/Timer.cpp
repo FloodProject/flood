@@ -32,12 +32,12 @@ NAMESPACE_CORE_BEGIN
 
 static bool CheckHighResolution();
 
-static int64 ticksPerSecond;
-static bool highResolutionSupport = CheckHighResolution();
+static int64 g_TicksPerSecond;
+static int g_HighResolutionSupport = CheckHighResolution();
 
 static bool CheckHighResolution()
 {
-	LARGE_INTEGER* frequency = (LARGE_INTEGER*) &ticksPerSecond;
+	LARGE_INTEGER* frequency = (LARGE_INTEGER*) &g_TicksPerSecond;
 	return QueryPerformanceFrequency(frequency) != 0;
 }
 
@@ -65,7 +65,7 @@ float TimerGetCurrentTimeMs()
 {
 #ifdef PLATFORM_WINDOWS
 	int64 time = GetTime();
-	return float(time) / float(ticksPerSecond);
+	return float(time) / float(g_TicksPerSecond);
 #else
 	timeval time = GetTime();
 	return tv_time_ms(time);
@@ -74,9 +74,16 @@ float TimerGetCurrentTimeMs()
 
 //-----------------------------------//
 
+Timer::Timer()
+{
+	TimerReset(this);
+}
+
+//-----------------------------------//
+
 Timer* TimerCreate(Allocator* alloc)
 {
-	Timer* timer = Allocate(Timer, alloc);
+	Timer* timer = Allocate(alloc, Timer);
 	TimerReset(timer);
 
 	return timer;
@@ -103,7 +110,7 @@ float TimerGetElapsed(Timer* timer)
 	int64 diff = GetTime() - timer->time;
 
 #ifdef PLATFORM_WINDOWS
-	return float(diff) / float(ticksPerSecond);
+	return float(diff) / float(g_TicksPerSecond);
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
 #endif

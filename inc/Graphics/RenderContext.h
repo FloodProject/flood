@@ -10,18 +10,18 @@
 
 #include "Core/References.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-class Adapter;
+class RenderCapabilities;
 class RenderDevice;
 class RenderTarget;
+class RenderBackend;
 
 class BufferManager;
 class ProgramManager;
 class TextureManager;
-class MeshManager;
 
 struct Color;
 class RenderBuffer;
@@ -47,18 +47,15 @@ public:
 	// Resets the device to the initial state.
 	void resetState();
 
-	// Sets the current clear color.
-	void setClearColor(const Color& color);
-
 	// Gets the framebuffer color in the given pixel location.
 	// Note that point (0,0) is located in the top left corner.
 	Color getPixel(uint16 x, uint16 y) const;
 
 	// Logs the GPU capabilities.
-	void showCapabilities(Adapter*);
+	void showCapabilities(RenderCapabilities*);
 
 	// Gets and parses the OpenGL information.
-	void checkCapabilities(Adapter*);
+	void checkCapabilities(RenderCapabilities*);
 
 	// Checks that all needed OpenGL extensions are available.
 	void checkExtensions();
@@ -66,8 +63,8 @@ public:
 	// Creates a new render buffer (offscreen render target).
 	RenderBuffer* createRenderBuffer( const Settings& );
 
-	// Adapter information.
-	Adapter* adapter;
+	// Render capabilities information.
+	RenderCapabilities* caps;
 
 	// Manages all the buffers.
 	BufferManager* bufferManager;
@@ -78,18 +75,18 @@ public:
 	// Manages all the shaders.
 	ProgramManager* programManager;
 
-	// Manages all the meshes.
-	MeshManager* meshManager;
-
 	// Keeps if the context initialization has already been done.
 	bool initDone;
 
 	// Context main target.
 	RenderTarget* mainTarget;
+
+	// Render backend.
+	RenderBackend* backend;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( RenderContext );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

@@ -6,16 +6,14 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/ProgramManager.h"
 #include "Graphics/Program.h"
-#include "Graphics/GLSL_Program.h"
 #include "Resources/Shader.h"
-#include "Resources/GLSL_Shader.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -33,10 +31,10 @@ ProgramManager::~ProgramManager()
 
 	for( it = programs.begin(); it != programs.end(); it++ )
 	{
-		const GLSL_ProgramPtr& program = it->second;
+		Program* program = it->second.get();
 		if( !program ) continue;
 
-		assert( ReferenceGetCount( program.get() ) == 1 );
+		assert( ReferenceGetCount(program) == 1 );
 	}
 
 	GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
@@ -45,7 +43,7 @@ ProgramManager::~ProgramManager()
 
 //-----------------------------------//
 
-ProgramPtr ProgramManager::getProgram( const Shader* shader, bool precompile )
+Program* ProgramManager::getProgram( const Shader* shader, bool precompile )
 {
 	if( !shader ) return nullptr;
 
@@ -53,11 +51,11 @@ ProgramPtr ProgramManager::getProgram( const Shader* shader, bool precompile )
 
 	if( it != programs.end() )
 	{
-		const GLSL_ProgramPtr& program = it->second;
+		Program* program = it->second.get();
 		return program;
 	}
 
-	GLSL_ProgramPtr program = createProgram(shader);
+	Program* program = createProgram(shader);
 	registerProgram(shader, program);
 
 	return program;
@@ -65,25 +63,7 @@ ProgramPtr ProgramManager::getProgram( const Shader* shader, bool precompile )
 
 //-----------------------------------//
 
-GLSL_ProgramPtr ProgramManager::createProgram( const Shader* shader )
-{
-	// If the program was not yet found, then we need to create it.
-	GLSL_ProgramPtr program = AllocateThis(GLSL_Program);
-	
-	program->getVertexShader()->setText( shader->getVertexSource() );
-	program->getFragmentShader()->setText( shader->getFragmentSource() );
-
-	// Force the recompilation of all shader programs.
-	program->forceRecompile();
-
-	return program;
-}
-
-#pragma TODO("Get GLSL fallback programs working")
-
-//-----------------------------------//
-
-bool ProgramManager::registerProgram( const Shader* shader, const GLSL_ProgramPtr& program )
+bool ProgramManager::registerProgram( const Shader* shader, Program* program )
 {
 	if( programs.find(shader) != programs.end() )
 	{
@@ -126,7 +106,7 @@ void ProgramManager::onReload( const ResourceEvent& event )
 	ShaderProgramsMap::iterator it = programs.find(oldShader);
 	assert( it != programs.end() );
 	
-	GLSL_ProgramPtr program = it->second;
+	Program* program = it->second.get();
 	programs.erase(it);
 
 	Shader* shader = (Shader*) event.resource;
@@ -143,4 +123,4 @@ void ProgramManager::onReload( const ResourceEvent& event )
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

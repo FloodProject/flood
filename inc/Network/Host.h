@@ -74,8 +74,6 @@ namespace HostState
 		Disconnected,
 		Connecting,
 		Connected,
-		Authenticating,
-		Authenticated,
 		Disconnecting,
 	};
 }
@@ -127,6 +125,9 @@ public:
 
 	// Creates a new socket.
 	bool createSocket( const HostConnectionDetails& );
+
+	// Gets the network peers.
+	GETTER(Peers, const NetworkPeers&, peers)
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 

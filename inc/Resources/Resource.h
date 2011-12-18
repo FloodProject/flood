@@ -77,6 +77,8 @@ REFLECT_DECLARE_ENUM(ResourceGroup)
 
 REFLECT_DECLARE_CLASS(Resource)
 
+struct ResourceStream;
+
 class API_RESOURCE Resource : public Object
 {
 	DECLARE_UNCOPYABLE(Resource)
@@ -103,6 +105,9 @@ public:
 
 	// Status of the resource.
 	ResourceStatus::Enum status;
+
+	// Resource stream.
+	ResourceStream* stream;
 
 protected:
 

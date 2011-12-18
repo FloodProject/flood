@@ -18,6 +18,8 @@
 	#define PLATFORM_MACOSX
 #elif defined(__LINUX) || defined(__LINUX__) || defined(LINUX)
 	#define PLATFORM_LINUX
+#elif defined(__native_client__)
+	#define PLATFORM_NATIVE_CLIENT
 #else
 	#warn Unknown platform
 #endif
@@ -79,8 +81,9 @@
 		__pragma(warning(disable:4127)) \
 		} while(0) \
 		__pragma(warning(pop))
+	#define thread_local __declspec(thread)
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
-	#define alignof __alignof__ 
+	#define alignof __alignof__
 	#define offsetof(type, member)  __builtin_offsetof (type, member)
 	#define ALIGN_BEGIN(size)
 	#define ALIGN_END(size) __attribute__((aligned(size)))
@@ -88,6 +91,7 @@
 	#define NO_VTABLE
 	#define OVERRIDE //__attribute__((override))
 	#define MULTI_LINE_MACRO_END } while(0)
+	#define thread_local __thread
 #endif
 
 #if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
@@ -108,17 +112,17 @@
 // Basic types
 //---------------------------------------------------------------------//
 
-typedef char			int8;
-typedef signed char		sint8;
-typedef unsigned char	uint8;
+typedef char            int8;
+typedef signed char     sint8;
+typedef unsigned char   uint8;
 
-typedef short			int16;
-typedef signed short	sint16;
-typedef unsigned short	uint16;
+typedef short           int16;
+typedef signed short    sint16;
+typedef unsigned short  uint16;
 
-typedef long			int32;
-typedef signed long		sint32;
-typedef unsigned long	uint32;
+typedef long            int32;
+typedef signed long     sint32;
+typedef unsigned long   uint32;
 
 // Transition types.
 typedef uint8 byte;
@@ -126,7 +130,7 @@ typedef uint32 uint;
 
 #if defined(COMPILER_MSVC)
 	typedef __int64 int64;
-	typedef signed   __int64 sint64;
+	typedef signed __int64 sint64;
 	typedef unsigned __int64 uint64;
 #elif defined(COMPILER_GCC)
 	typedef long long int64;
@@ -178,46 +182,24 @@ static_assert(sizeof(int64) == 8, "");
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define FWD_DECL(T) NAMESPACE_CORE_BEGIN class T; NAMESPACE_CORE_END		\
-
-#ifdef ENABLE_MEMORY_SHARED_PTR
-
-#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class )				\
-	typedef std::shared_ptr< class > class##Ptr;
-
-#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class )			\
-		typedef std::weak_ptr< class > class##WeakPtr;
-
-#define FWD_DECL_SHARED(T)										\
-	NAMESPACE_CORE_BEGIN												\
-		class T;												\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );					\
-	NAMESPACE_CORE_END
-
-#define FWD_DECL_SHARED_WEAK(T)									\
-	NAMESPACE_CORE_BEGIN												\
-		class T;												\
-		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );				\
-	NAMESPACE_CORE_END
-
-#endif
+#define FWD_DECL(T) NAMESPACE_CORE_BEGIN class T; NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
 // Acessors
 //---------------------------------------------------------------------//
 
-#define GETTER(name, type, var)					\
+#define GETTER(name, type, var) \
 	type get##name() const { return var; }
 
-#define SETTER(name, type, var)					\
+#define SETTER(name, type, var) \
 	void set##name(type v) { var = v; }
 
-#define ACESSOR(name, type, var)				\
-	GETTER(name, type, var)						\
+#define ACESSOR(name, type, var) \
+	GETTER(name, type, var) \
 	SETTER(name, type, var)
 
-#define DECLARE_UNCOPYABLE(Type)				\
-	private:									\
-		Type( const Type& );					\
-		const Type& operator=( const Type& );	\
-public:
+#define DECLARE_UNCOPYABLE(Type) \
+	private: \
+		Type( const Type& ); \
+		const Type& operator=( const Type& ); \
+	public:

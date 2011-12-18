@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Core/Concurrency.h"
 #include "Core/Event.h"
 
 NAMESPACE_EXTERN_BEGIN
@@ -35,6 +34,9 @@ typedef void (*LogFunction)(LogEntry*);
 
 struct Log
 {
+	Log();
+	~Log();
+
 	Timer* timer;
 	Mutex* mutex;
 	Event1<LogEntry*> handlers;

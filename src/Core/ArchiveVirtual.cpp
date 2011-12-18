@@ -48,7 +48,7 @@ struct ArchiveVirtual : public Archive
 
 Archive* ArchiveCreateVirtual(Allocator* alloc)
 {
-	Archive* archive = Allocate(ArchiveVirtual, alloc);
+	Archive* archive = Allocate(alloc, ArchiveVirtual);
 	
 	archive->handle = nullptr;
 	archive->scheme = "vfs";

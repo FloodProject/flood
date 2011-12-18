@@ -77,164 +77,164 @@ template<typename T> class RefPtr
 {
 public:
 
-    RefPtr(): px(nullptr) { }
+	RefPtr(): px(nullptr) { }
 
-    RefPtr(T* p, bool add_ref = true) : px(p)
-    {
-        if( px != nullptr && add_ref )
+	RefPtr(T* p, bool add_ref = true) : px(p)
+	{
+		if( px != nullptr && add_ref )
 		{
 			px->addReference();
 			REFERENCES_DEBUG_CALLBACK();
 		}
-    }
+	}
 
 	template<typename U>
-    RefPtr( RefPtr<U> const & rhs ) : px( rhs.get() )
-    {
-        if( px != nullptr )
+	RefPtr( RefPtr<U> const & rhs ) : px( rhs.get() )
+	{
+		if( px != nullptr )
 		{
 			px->addReference();
 			REFERENCES_DEBUG_CALLBACK();
 		}
-    }
+	}
 
-    RefPtr(RefPtr const & rhs): px(rhs.px)
-    {
-        if( px != nullptr )
+	RefPtr(RefPtr const & rhs): px(rhs.px)
+	{
+		if( px != nullptr )
 		{
 			px->addReference();
 			REFERENCES_DEBUG_CALLBACK();
 		}
-    }
+	}
 
-    ~RefPtr()
-    {
-        if( px != nullptr && px->releaseReference() )
+	~RefPtr()
+	{
+		if( px != nullptr && px->releaseReference() )
 		{
 			REFERENCES_DEBUG_CALLBACK();
-            Deallocate(px);
+		Deallocate(px);
 		}
-    }
+	}
 
-    template<typename U>
+	template<typename U>
 	RefPtr& operator=(const RefPtr<U>& rhs)
-    {
-        RefPtr(rhs).swap(*this);
-        return *this;
-    }
+	{
+		RefPtr(rhs).swap(*this);
+		return *this;
+	}
 
 #ifdef COMPILER_MSVC_2010
-    RefPtr(RefPtr&& rhs): px(rhs.px)
-    {
-        rhs.px = nullptr;
-    }
+	RefPtr(RefPtr&& rhs): px(rhs.px)
+	{
+	rhs.px = nullptr;
+	}
 
-    RefPtr& operator=(RefPtr&& rhs)
-    {
-        RefPtr(static_cast<RefPtr&&>(rhs)).swap(*this);
-        return *this;
-    }
+	RefPtr& operator=(RefPtr&& rhs)
+	{
+		RefPtr(static_cast<RefPtr&&>(rhs)).swap(*this);
+		return *this;
+	}
 #endif
 
-    RefPtr& operator=(const RefPtr& rhs)
-    {
-        RefPtr(rhs).swap(*this);
-        return *this;
-    }
+	RefPtr& operator=(const RefPtr& rhs)
+	{
+		RefPtr(rhs).swap(*this);
+		return *this;
+	}
 
-    RefPtr& operator=(T* rhs)
-    {
-        RefPtr(rhs).swap(*this);
-        return *this;
-    }
+	RefPtr& operator=(T* rhs)
+	{
+		RefPtr(rhs).swap(*this);
+		return *this;
+	}
 
-    void reset()
-    {
-        RefPtr().swap(*this);
-    }
+	void reset()
+	{
+		RefPtr().swap(*this);
+	}
 
-    void reset( T* rhs )
-    {
-        RefPtr(rhs).swap(*this);
-    }
+	void reset( T* rhs )
+	{
+		RefPtr(rhs).swap(*this);
+	}
 
-    T* get() const
-    {
-        return px;
-    }
+	T* get() const
+	{
+		return px;
+	}
 
-    T& operator*() const
-    {
-        assert( px != nullptr );
-        return *px;
-    }
+	T& operator*() const
+	{
+		assert( px != nullptr );
+		return *px;
+	}
 
-    T* operator->() const
-    {
-        assert( px != nullptr );
-        return px;
-    }
+	T* operator->() const
+	{
+		assert( px != nullptr );
+		return px;
+	}
 
-    typedef T* RefPtr::*unspecified_bool_type;
+	typedef T* RefPtr::*unspecified_bool_type;
 
-    operator unspecified_bool_type() const // never throws
-    {
-        return px == nullptr ? false : &RefPtr::px;
-    }
+	operator unspecified_bool_type() const // never throws
+	{
+		return px == nullptr ? false : &RefPtr::px;
+	}
 
-    void swap(RefPtr& rhs)
-    {
+	void swap(RefPtr& rhs)
+	{
 		std::swap(px, rhs.px);
-    }
+	}
 
 public:
 
-    T* px;
+	T* px;
 };
 
 template<class T, class U> inline bool operator==(const RefPtr<T>& a, const RefPtr<U>& b)
 {
-    return a.get() == b.get();
+	return a.get() == b.get();
 }
 
 template<class T, class U> inline bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b)
 {
-    return a.get() != b.get();
+	return a.get() != b.get();
 }
 
 template<class T, class U> inline bool operator==(const RefPtr<T>& a, U* b)
 {
-    return a.get() == b;
+	return a.get() == b;
 }
 
 template<class T, class U> inline bool operator!=(const RefPtr<T>& a, U* b)
 {
-    return a.get() != b;
+	return a.get() != b;
 }
 
 template<class T, class U> inline bool operator==(T* a, const RefPtr<U>& b)
 {
-    return a == b.get();
+	return a == b.get();
 }
 
 template<class T, class U> inline bool operator!=(T* a, const RefPtr<U>& b)
 {
-    return a != b.get();
+	return a != b.get();
 }
 
 template<class T> inline bool operator<(const RefPtr<T>& a, const RefPtr<T>& b)
 {
-    return std::less<T *>()(a.get(), b.get());
+	return std::less<T *>()(a.get(), b.get());
 }
 
 template<class T> void swap(const RefPtr<T>& lhs, const RefPtr<T>& rhs)
 {
-    lhs.swap(rhs);
+	lhs.swap(rhs);
 }
 
 template<class T, class U> RefPtr<T> RefCast(const RefPtr<U>& p)
 {
-    return static_cast<T*>(p.get());
+	return static_cast<T*>(p.get());
 }
 
 //-----------------------------------//

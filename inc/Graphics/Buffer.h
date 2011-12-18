@@ -9,48 +9,9 @@
 #pragma once
 
 #include "Core/References.h"
+#include "Resources/Buffer.h"
 
-NAMESPACE_ENGINE_BEGIN
-
-//-----------------------------------//
-
-/**
- * "Static" means the data in VBO will not be changed (specified once and used
- * many times), "dynamic" means the data will be changed frequently (specified
- * and used repeatedly), and "stream" means the data will be changed every 
- * frame (specified once and used once). "Draw" means the data will be sent to
- * GPU in order to draw (application to GL), "read" means the data will be read
- * by the client's application (GL to application), and "copy" means the data
- * will be used both drawing and reading (GL to GL).
- */
-
-struct BufferUsage
-{
-	enum Enum
-	{
-		Static,		// Content rarely changes
-		Stream,		// Content sometimes changes
-		Dynamic		// Content always changes
-	};
-};
-
-//-----------------------------------//
-
-/**
- * Use these enums to represent the lifetime and usage patterns of a 
- * buffer. These help the engine make better decisions about where to
- * store the buffers, which leads to better rendering performance.
- */
-
-struct BufferAccess
-{
-	enum Enum
-	{
-		Read,		// Read content only
-		Write,		// Write content only
-		ReadWrite	// Read and write content
-	};
-};
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -60,6 +21,8 @@ struct BufferAccess
  * in different kinds of memory, like system RAM or video RAM,
  * depending on the usage and type flags that they are  created with. 
  */
+
+typedef uint32 BufferId;
 
 class API_RENDER Buffer : public ReferenceCounted
 {
@@ -79,19 +42,13 @@ public:
 	// Gets/sets the buffer access type.
 	ACESSOR(BufferAccess, BufferAccess::Enum, access)
 
-protected:
-
-	uint32 id;
-	
+	BufferId id;
 	BufferUsage::Enum usage;
 	BufferAccess::Enum access;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Buffer );
 
-// Converts the buffer enums to the equivalent GL ones.
-int ConvertBufferGL(BufferUsage::Enum, BufferAccess::Enum);
-
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

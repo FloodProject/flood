@@ -17,7 +17,7 @@ NAMESPACE_CORE_BEGIN
 
 Thread* ThreadCreate(Allocator* alloc)
 {
-	Thread* thread = Allocate(Thread, alloc);
+	Thread* thread = Allocate(alloc, Thread);
 
 	if( !thread ) return nullptr;
 
@@ -42,7 +42,7 @@ void ThreadDestroy(Thread* thread)
 
 Task* TaskCreate(Allocator* alloc)
 {
-	Task* task = Allocate(Task, alloc);
+	Task* task = Allocate(alloc, Task);
 	
 	task->group = 0;
 	task->priority = 0;
@@ -74,7 +74,7 @@ typedef std::vector<Thread*> ThreadQueue;
 
 TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 {
-	TaskPool* pool = Allocate(TaskPool, alloc);
+	TaskPool* pool = Allocate(alloc, TaskPool);
 	
 	pool->IsStopping = false;
 

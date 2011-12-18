@@ -31,8 +31,8 @@ void ResourceTaskRun(Task* task)
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
 
-	bool decoded = loader->decode(*stream, resource);
-		
+	bool decoded = loader->decode(*options);
+
 	if( !decoded )
 	{
 		resource->setStatus( ResourceStatus::Error );
@@ -56,8 +56,10 @@ cleanup:
 	AtomicDecrement(&res->numResourcesQueuedLoad);
 	ConditionWakeOne(res->resourceFinishLoad);
 
+	if( !options->keepStreamOpen )
+		StreamDestroy(stream);
+
 	Deallocate(options);
-	StreamDestroy(stream);
 }
 
 //-----------------------------------//

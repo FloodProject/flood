@@ -6,15 +6,14 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 
 #ifdef ENABLE_RENDERER_OPENGL
 
 #include "Graphics/IndexBuffer.h"
-#include "Graphics/GL.h"
 #include "Geometry/GeometryBuffer.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -24,55 +23,6 @@ IndexBuffer::IndexBuffer()
 
 //-----------------------------------//
 
-bool IndexBuffer::bind()
-{
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id );
-
-	if( CheckLastErrorGL( "Error binding index buffer" ) )
-		return false;
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool IndexBuffer::unbind()
-{
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-
-	if( CheckLastErrorGL( "Error unbinding index buffer" ) )
-		return false;
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool IndexBuffer::build(const GeometryBuffer* gb)
-{
-	if( !gb ) return false;
-	assert( gb->isIndexed() );
-
-	GLsizeiptr indexSize = gb->indexData.size();
-	if( indexSize == 0 ) return false;
-
-	bind();
-
-	const GLvoid* data = &gb->indexData.front();
-
-	// Reserve space for all the buffer elements.
-	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSize, data, usage );
-
-	if( CheckLastErrorGL("Could not buffer data in index buffer") )
-		return false;
-
-	isBuilt = true;
-	return true;
-}
-
-//-----------------------------------//
-
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 
 #endif

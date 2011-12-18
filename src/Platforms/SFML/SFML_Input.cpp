@@ -304,8 +304,7 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 		processEvent( me );
 
 		break;
-	}
-	}
+	} }
 }
 
 //-----------------------------------//

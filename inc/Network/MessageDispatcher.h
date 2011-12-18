@@ -37,12 +37,12 @@ struct MessageRequest
 };
 
 // Dispatches messages to the their handlers.
-class Dispatcher
+class MessageDispatcher
 {
 public:
 
-	Dispatcher();
-	~Dispatcher();
+	MessageDispatcher();
+	~MessageDispatcher();
 
 	// Initializes for client mode.
 	void initClient(HostClient*);

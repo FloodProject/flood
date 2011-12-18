@@ -8,6 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/Sound.h"
+#include "Core/Stream.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -24,7 +25,10 @@ Sound::Sound()
 	: frequency(-1)
 	, channels(0)
 	, size(0)
-{ }
+	, streamed(false)
+{
+
+}
 
 //-----------------------------------//
 

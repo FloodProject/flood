@@ -15,10 +15,10 @@ NAMESPACE_ENGINE_BEGIN
 
 InputMap::InputMap(const InputManager& input)
 {
-	Keyboard* kbd = input.getKeyboard();
-	kbd->onKeyPress.Connect( this, &InputMap::onKeyPress );
+	Keyboard* keyboard = input.getKeyboard();
+	keyboard->onKeyPress.Connect( this, &InputMap::onKeyPress );
 	
-	Mouse* mouse = input.getMouse();	
+	Mouse* mouse = input.getMouse();
 	mouse->onMouseButtonPress.Connect( this, &InputMap::onMousePress );
 }
 
@@ -26,10 +26,10 @@ InputMap::InputMap(const InputManager& input)
 
 InputMap::~InputMap()
 {
-	Keyboard* kbd = GetInputManager()->getKeyboard();
-	kbd->onKeyPress.Disconnect( this, &InputMap::onKeyPress );
+	Keyboard* keyboard = GetInputManager()->getKeyboard();
+	keyboard->onKeyPress.Disconnect( this, &InputMap::onKeyPress );
 	
-	Mouse* mouse = GetInputManager()->getMouse();	
+	Mouse* mouse = GetInputManager()->getMouse();
 	mouse->onMouseButtonPress.Disconnect( this, &InputMap::onMousePress );
 }
 

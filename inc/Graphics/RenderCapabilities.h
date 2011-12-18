@@ -10,19 +10,17 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
-//-----------------------------------//	
+//-----------------------------------//
 
 /**
- * The adapter class just represents a graphics adapter (video card), 
+ * This class represents the graphics capabilities of the video card,
  * and holds data related to it that is interesting for the other classes,
- * like driver information and capabilities. Obviously this depends on the
- * rendering API the app is using at runtime, but I still have to check if
- * we need different classes for different render devices. Hopefully not. :)
+ * like driver information.
  */
 
-class API_ENGINE Adapter
+class API_GRAPHICS RenderCapabilities
 {
 public:
 
@@ -44,6 +42,6 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 
 #endif

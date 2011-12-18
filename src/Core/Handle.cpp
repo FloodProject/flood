@@ -16,7 +16,7 @@ NAMESPACE_EXTERN_BEGIN
 
 HandleManager* HandleCreateManager( Allocator* alloc )
 {
-	HandleManager* man = Allocate(HandleManager, alloc);
+	HandleManager* man = Allocate(alloc, HandleManager);
 	man->nextHandle = 0;
 	return man;
 }

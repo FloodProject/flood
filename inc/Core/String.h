@@ -17,10 +17,21 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+typedef std::string String;
+typedef std::wstring StringWide;
+
+struct StringHash
+{
+	StringHash();
+	StringHash(const char* str, size_t size);
+
+	uint32 hash;
+};
+
 EXTERN_BEGIN
 
-typedef std::string String;
-typedef std::wstring WideString;
+// Hashes the string and returns its hash.
+API_CORE StringHash HashString(const String&);
 
 // Compares a string in a case insensitive way.
 API_CORE int StringCompareInsensitive(const String& s1, const String& s2);
@@ -33,10 +44,10 @@ API_CORE String StringFormatArgs(const char* s, va_list args);
 API_CORE void StringSplit(const String& s, char delim, std::vector<String>& elems);
 
 // Converts a wide string in UTF-16 to a UTF-8 string.
-API_CORE String StringFromWideString(const WideString& ws);
+API_CORE String StringFromWideString(const StringWide& ws);
 
 // Converts an UTF-8 encoded string to a UTF-16 wide string.
-API_CORE WideString StringToWideString(const String& s);
+API_CORE StringWide StringToWideString(const String& s);
 
 // Converts between caseness of the string.
 API_CORE String StringToLowerCase(const String& s);

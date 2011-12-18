@@ -55,7 +55,7 @@ static ArchiveFuncs gs_DirArchiveFuncs =
 
 Archive* ArchiveCreateFromDirectory(Allocator* alloc, const Path& path)
 {
-	Archive* archive = Allocate(Archive, alloc);
+	Archive* archive = Allocate(alloc, Archive);
 	
 	archive->path = path;
 	archive->handle = nullptr;

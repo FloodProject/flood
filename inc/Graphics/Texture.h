@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "Graphics/Target.h"
+#include "Graphics/RenderTarget.h"
 #include "Resources/Image.h"
 #include "Resources/Material.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -23,14 +23,15 @@ NAMESPACE_ENGINE_BEGIN
  * You can also create textures that are not backed by an image.
  */
 
-class API_ENGINE Texture : public ReferenceCounted
+class API_GRAPHICS Texture : public ReferenceCounted
 {
 public:
 	
-	Texture( const ImagePtr& );
-	Texture( const Settings&, PixelFormat::Enum = PixelFormat::R8G8B8A8 );
-	
+	Texture();
 	~Texture();
+
+	// Allocates texture space for the given size and format.
+	void allocate(const Vector2i& size, PixelFormat::Enum);
 
 	// Gets the associated identifier.
 	GETTER(Id, uint32, id)
@@ -45,49 +46,20 @@ public:
 	void setImage( Image* image );
 
 	// Reads the texture as an image.
-	ImagePtr readImage() const;
-
-	// Binds the texture object.
-	void bind( int unit = 0 ) const;
-
-	// Unbinds the texture object.
-	void unbind( int unit = 0 ) const;
-
-public:
-
-	// Initializes the texture.
-	void init();
-
-	// Generates a new texture id.
-	bool generate();
-
-	// Checks if the texture size is supported.
-	bool check();
-
-	// Configures the texture settings.
-	void configure();
-
-	// Uploads the image data to the graphics card.
-	bool upload();
+	Image* readImage() const;
 
 	// Gets the expected size of the image.
 	uint32 getExpectedSize() const;
-
-	// Internal conversion methods.
-	static int convertSourceFormat( PixelFormat::Enum );
-	static int convertInternalFormat( PixelFormat::Enum );
-	static int convertFilterFormat( TextureFilterMode::Enum );
-	static int convertWrapFormat( TextureWrapMode::Enum );
 
 	uint32 id;
 	uint32 target;
 	bool uploaded;
 	
-	uint32 width;
-	uint32 height;
+	uint16 width;
+	uint16 height;
 	PixelFormat::Enum format;
-
 	float anisotropicFilter;
+	
 	Image* image;
 };
 
@@ -95,4 +67,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

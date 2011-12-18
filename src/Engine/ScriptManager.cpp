@@ -39,7 +39,7 @@ ScriptManager::ScriptManager()
 
 	// Initialize the standard libraries (we want to disallow I/O though).
 	luaL_openlibs( state->getLuaState() );
-	luaopen_vapor( state->getLuaState() );
+	//luaopen_vapor( state->getLuaState() );
 
 	LogInfo( "Initialized %s", LUA_RELEASE );
 }
@@ -77,12 +77,12 @@ State* ScriptManager::createScriptInstance(Script* script)
 	lua_setfenv(L, -2);                 // thread 
 
 	// Keeps a reference to the thread in the registry.
-    //int top = lua_gettop(L);
-    //lua_getfield(L, LUA_REGISTRYINDEX, "Scripts"); // top + 1
-    //lua_pushlightuserdata(L, newState); // key, the pointer to my own Script class
-    //lua_pushvalue(L, top+2);          // value, the new lua thread.
-    //lua_rawset(L, top+1); // Scripts table
-    //lua_settop(L, top); // Cleans the stack.
+	//int top = lua_gettop(L);
+	//lua_getfield(L, LUA_REGISTRYINDEX, "Scripts"); // top + 1
+	//lua_pushlightuserdata(L, newState); // key, the pointer to my own Script class
+	//lua_pushvalue(L, top+2);          // value, the new lua thread.
+	//lua_rawset(L, top+1); // Scripts table
+	//lua_settop(L, top); // Cleans the stack.
 
 	// Register the new state.
 	scripts[newState] = script;

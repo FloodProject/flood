@@ -11,7 +11,7 @@
 #include "Graphics/Texture.h"
 #include "Resources/Image.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -28,7 +28,7 @@ struct ResourceEvent;
  * for default textures.
  */
 
-class API_ENGINE TextureManager
+class API_GRAPHICS TextureManager
 {
 public:
 
@@ -69,4 +69,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

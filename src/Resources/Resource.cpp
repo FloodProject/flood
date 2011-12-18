@@ -44,6 +44,7 @@ REFLECT_CLASS_END()
 
 Resource::Resource()
 	: status( ResourceStatus::Loaded )
+	, stream(nullptr)
 {
 }
 
@@ -51,6 +52,7 @@ Resource::Resource()
 
 Resource::~Resource()
 {
+	Deallocate(stream);
 	//LogDebug("Destroying resource '%s'", getType()->name);
 }
 
@@ -65,14 +67,12 @@ bool Resource::isLoaded() const
 
 ResourceLoader::ResourceLoader()
 {
-	onPluginEnable();
 }
 
 //-----------------------------------//
 
 ResourceLoader::~ResourceLoader()
 {
-	onPluginDisable();
 }
 
 //-----------------------------------//

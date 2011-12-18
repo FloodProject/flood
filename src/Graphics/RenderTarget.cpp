@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Graphics/Device.h"
-#include "Graphics/Target.h"
-#include "Graphics/View.h"
+#include "Graphics/API.h"
+#include "Graphics/RenderDevice.h"
+#include "Graphics/RenderTarget.h"
+#include "Graphics/RenderView.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -34,7 +34,7 @@ RenderTarget::~RenderTarget()
 		renderDevice->setActiveContext(nullptr);
 	}
 
-	for(size_t i = 0; i < views.size(); i++)
+	for(size_t i = 0; i < views.size(); ++i)
 	{
 		RenderView* view = views[i];
 		Deallocate(view);
@@ -47,11 +47,12 @@ RenderTarget::~RenderTarget()
 
 RenderView* RenderTarget::createView()
 {
-	RenderView* view = AllocateThis(RenderView);
-	view->setRenderTarget(this);
+	RenderView* renderView = AllocateThis(RenderView);
+	renderView->setRenderTarget(this);
+	renderView->setSize(getSettings().getSize());
+	views.push_back(renderView);
 	
-	views.push_back( view );
-	return view;
+	return renderView;
 }
 
 //-----------------------------------//
@@ -93,4 +94,4 @@ Vector2i Settings::getSize() const
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

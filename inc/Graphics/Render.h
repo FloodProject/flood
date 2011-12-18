@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -20,4 +20,4 @@ API_RENDER void RenderDeinitialize();
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

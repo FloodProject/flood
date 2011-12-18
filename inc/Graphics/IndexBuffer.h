@@ -12,28 +12,24 @@
 
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-class API_ENGINE IndexBuffer : public Buffer
+typedef BufferId IndexBufferId;
+
+class API_GRAPHICS IndexBuffer : public Buffer
 {
 public:
 
 	IndexBuffer();
-
-	// Updates the internal IBO with current values for indices.
-	bool build(const GeometryBuffer*);
-
-	// Binds/unbinds the index buffer from the OpenGL state.
-	bool bind();
-	bool unbind();
-
 	bool isBuilt;
 };
+
+typedef uint16 RenderIndexOffset;
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( IndexBuffer );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

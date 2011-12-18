@@ -10,12 +10,13 @@
 
 #include "Resources/API.h"
 #include "Resources/Resource.h"
-#include "Resources/Animation.h"
-#include "Resources/Skeleton.h"
 #include "Math/BoundingBox.h"
 #include "Math/Vector.h"
+#include "Geometry/GeometryBuffer.h"
 
 FWD_DECL_INTRUSIVE(Animation)
+FWD_DECL_INTRUSIVE(Skeleton)
+FWD_DECL_INTRUSIVE(GeometryBuffer)
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -33,6 +34,8 @@ struct MeshGroup
 	std::vector<uint16> indices;
 	MeshMaterial material;
 };
+
+//-----------------------------------//
 
 /**
  * Mesh resources contain 3D geometry data.
@@ -62,10 +65,13 @@ public:
 	GETTER(BindPose, AnimationPtr, bindPose)
 
 	// Finds an animation from the mesh.
-	AnimationPtr findAnimation( const String& name );
+	Animation* findAnimation( const String& name );
 
 	// Gets the bounding box of the mesh.
 	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
+
+	// Gets/sets the mesh geometry buffer.
+	ACESSOR(GeometryBuffer, GeometryBufferPtr, geometryBuffer)
 
 	// Gets the animations of the mesh.
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
@@ -99,11 +105,8 @@ public:
 	// Bounding volume of the mesh.
 	BoundingBox boundingVolume;
 
-	// Vertex data (used for CPU skinning).
-	std::vector<Vector3> position;
-	std::vector<Vector3> normals;
-	std::vector<Vector3> texCoords;
-	std::vector<float> boneIndices;
+	// Geometry of the mesh.
+	GeometryBufferPtr geometryBuffer;
 
 	// Keeps track if the mesh has been built.
 	bool built;

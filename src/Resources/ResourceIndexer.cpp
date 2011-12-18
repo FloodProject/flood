@@ -50,7 +50,7 @@ void ResourceIndexer::update()
 
 static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 {
-	Path* path = Allocate(Path, AllocatorGetObject(index));
+	Path* path = Allocate(AllocatorGetObject(index), Path);
 	path->assign(resPath);
 
 	Task* task = TaskCreate( AllocatorGetObject(index) );

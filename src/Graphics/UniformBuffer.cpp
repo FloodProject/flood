@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 
 #ifdef ENABLE_RENDERER_OPENGL
 
@@ -15,25 +15,24 @@
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-static char* AllocateName(const String& name)
+static char* AllocateName(const char* name)
 {
-	static const char* s_EmptyString = "";
-	if( name.empty() ) return (char*) s_EmptyString;
+	if( !name ) return nullptr;
 
-	size_t nameSize = sizeof(char)*name.size();
+	size_t nameSize = sizeof(char) * strlen(name);
 	char* newName = (char*) AllocatorAllocate(GetFrameAllocator(), nameSize+1, 0);
-	memcpy(newName, name.c_str(), nameSize);
+	memcpy(newName, name, nameSize);
 	newName[nameSize] = '\0';
 	return newName;
 }
 
 //-----------------------------------//
 
-UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
+UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 {
 	//UniformBufferElements::iterator it = elements.find( name.c_str() );
 	//if( it != elements.end() ) return it->second;
@@ -41,11 +40,15 @@ UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
 	void* p = AllocatorAllocate(GetFrameAllocator(), sizeof(UniformBufferElement)+size, 0);
 	UniformBufferElement* element = (UniformBufferElement*) p;
 
-	if( name.empty() )
+	if( !name ) return nullptr;
+
+#ifdef BUILD_DEBUG
+	if( strlen(name) == 0 )
 	{
 		LogAssert("Uniform elements should be named");
 		return nullptr;
 	}
+#endif
 
 	if( !element ) return nullptr;
 
@@ -59,7 +62,7 @@ UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
 
 //-----------------------------------//
 
-void UniformBuffer::removeUniform( const String& slot )
+void UniformBuffer::removeUniform( const char* slot )
 {
 	UniformBufferElements::iterator it = elements.find(slot);
 	if( it == elements.end() ) return;
@@ -69,7 +72,7 @@ void UniformBuffer::removeUniform( const String& slot )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, int32 data )
+void UniformBuffer::setUniform( const char* name, int32 data )
 {
 	size_t size = sizeof(int32);
 	UniformBufferElement* element = getElement(name, size);
@@ -81,7 +84,7 @@ void UniformBuffer::setUniform( const String& name, int32 data )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, float data )
+void UniformBuffer::setUniform( const char* name, float data )
 {
 	size_t size = sizeof(float);
 	UniformBufferElement* element = getElement(name, size);
@@ -93,7 +96,7 @@ void UniformBuffer::setUniform( const String& name, float data )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const std::vector<Vector3>& vec )
+void UniformBuffer::setUniform( const char* name, const std::vector<Vector3>& vec )
 {
 	size_t size = sizeof(Vector3)*vec.size();
 	UniformBufferElement* element = getElement(name, size);
@@ -105,7 +108,7 @@ void UniformBuffer::setUniform( const String& name, const std::vector<Vector3>& 
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const std::vector<Color>& vec )
+void UniformBuffer::setUniform( const char* name, const std::vector<Color>& vec )
 {
 	assert(0 && "Not implemented yet");
 
@@ -121,7 +124,7 @@ void UniformBuffer::setUniform( const String& name, const std::vector<Color>& ve
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const Vector3& vec )
+void UniformBuffer::setUniform( const char* name, const Vector3& vec )
 {
 	size_t size = sizeof(Vector3);
 	UniformBufferElement* element = getElement(name, size);
@@ -133,7 +136,7 @@ void UniformBuffer::setUniform( const String& name, const Vector3& vec )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const Matrix4x3& matrix )
+void UniformBuffer::setUniform( const char* name, const Matrix4x3& matrix )
 {
 	Matrix4x4 m(matrix);
 	size_t size = sizeof(Matrix4x4);
@@ -146,7 +149,7 @@ void UniformBuffer::setUniform( const String& name, const Matrix4x3& matrix )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const Matrix4x4& matrix )
+void UniformBuffer::setUniform( const char* name, const Matrix4x4& matrix )
 {
 	size_t size = sizeof(Matrix4x4);
 	UniformBufferElement* element = getElement(name, size);
@@ -158,7 +161,7 @@ void UniformBuffer::setUniform( const String& name, const Matrix4x4& matrix )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& name, const std::vector<Matrix4x4>& vec )
+void UniformBuffer::setUniform( const char* name, const std::vector<Matrix4x4>& vec )
 {
 	size_t size = sizeof(Matrix4x4)*vec.size();
 	UniformBufferElement* element = getElement(name, size);
@@ -170,6 +173,6 @@ void UniformBuffer::setUniform( const String& name, const std::vector<Matrix4x4>
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 
 #endif

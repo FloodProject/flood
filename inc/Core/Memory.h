@@ -77,11 +77,11 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 }
 
 // Allocates memory for the object.
-#define Allocate(Type, Alloc, ...) AllocateConstruct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
+#define Allocate(Alloc, Type, ...) AllocateConstruct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
 
 // Allocation helpers.
-#define AllocateThis(Type, ...) Allocate(Type, AllocatorGetThis(), __VA_ARGS__)
-#define AllocateHeap(Type, ...) Allocate(Type, AllocatorGetHeap(), __VA_ARGS__)
+#define AllocateThis(Type, ...) Allocate(AllocatorGetThis(), Type, __VA_ARGS__)
+#define AllocateHeap(Type, ...) Allocate(AllocatorGetHeap(), Type, __VA_ARGS__)
 
 template<typename T> void DeallocateObject(const T* object)
 {

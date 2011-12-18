@@ -6,12 +6,11 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 #include "Graphics/TextureManager.h"
 #include "Resources/ResourceManager.h"
-#include "Graphics/GL.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -36,7 +35,7 @@ TextureManager::~TextureManager()
 	TextureMap::const_iterator it;
 	for( it = textures.begin(); it != textures.end(); it++ )
 	{
-		const TexturePtr& texture = it->second;
+		const Texture* texture = it->second.get();
 		//assert( texture->getReferenceCount() == 2 );
 	}
 }
@@ -83,7 +82,9 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Image not loaded yet.
 	else if( !image->isLoaded() ) 
 	{
-		TexturePtr texture = AllocateHeap(Texture, Settings(TEX_SIZE, TEX_SIZE));
+		Texture* texture = AllocateHeap(Texture);
+		texture->allocate(Vector2i(TEX_SIZE, TEX_SIZE), PixelFormat::R8G8B8A8);
+
 		textures[image] = texture;
 		return texture;
 	}
@@ -91,7 +92,9 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Create a new texture from image.
 	else
 	{
-		TexturePtr texture = AllocateHeap(Texture, image);
+		Texture* texture = AllocateHeap(Texture);
+		texture->setImage(image);
+
 		textures[image] = texture;
 
 		//if( image->isLoaded() )
@@ -188,4 +191,4 @@ uint TextureManager::getMemoryUsage()
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

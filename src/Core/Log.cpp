@@ -17,18 +17,21 @@
 
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
-	
-	#undef NOMINMAX
+	#ifndef NOMINMAX
 	#define NOMINMAX
-	
+	#endif
 	#include <Windows.h>	
+#endif
+
+#ifdef COMPILER_MSVC
+	#define PrintDebug OutputDebugStringA
+#else
+	#define PrintDebug printf
 #endif
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
-
-static const int BUF_MAX_SIZE = 256;
 
 static Log* gs_Log;
 
@@ -44,17 +47,35 @@ static void LogConsoleHandler(LogEntry* entry)
 
 //-----------------------------------//
 
+Log::Log()
+	: timer(nullptr)
+	, mutex(nullptr)
+{
+	Allocator* alloc = AllocatorGetThis();
+
+	timer = TimerCreate(alloc);
+	mutex = MutexCreate(alloc);
+
+	LogAddHandler(this, LogConsoleHandler);
+
+	if( !gs_Log ) LogSetDefault(this);
+}
+
+//-----------------------------------//
+
+Log::~Log()
+{
+	if( gs_Log == this ) LogSetDefault(nullptr);
+
+	TimerDestroy(timer);
+	MutexDestroy(mutex);
+}
+
+//-----------------------------------//
+
 Log* LogCreate(Allocator* alloc)
 {
-	Log* log = Allocate(Log, alloc);
-	
-	log->timer = TimerCreate(alloc);
-	log->mutex = MutexCreate(alloc);
-
-	LogAddHandler(log, LogConsoleHandler);
-	
-	if( !gs_Log ) LogSetDefault(log);
-
+	Log* log = Allocate(alloc, Log);
 	return log;
 }
 
@@ -63,11 +84,6 @@ Log* LogCreate(Allocator* alloc)
 void LogDestroy(Log* log)
 {
 	if( !log ) return;
-	if( gs_Log == log ) LogSetDefault(nullptr);
-	
-	TimerDestroy(log->timer);
-	MutexDestroy(log->mutex);
-
 	Deallocate(log);
 }
 
@@ -96,59 +112,42 @@ void LogWrite(Log* log, LogEntry* entry)
 
 //-----------------------------------//
 
-static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char* msg, va_list args)
+static const int BUF_MAX_SIZE = 1024;
+static thread_local char g_LogBuffer[BUF_MAX_SIZE];
+
+static void LogProcess(Log* log, const char* msg, va_list args, LogLevel level)
 {
-	String format = StringFormatArgs(msg, args);
-	
-	//entry->time = TimerGetElapsed(log->timer);
-	entry->message = format;
-	entry->level = level;
+	LogEntry entry;
+	entry.message = StringFormatArgs(msg, args);
+	entry.level = level;
+
+	if(log)
+		LogWrite(log, &entry);
+	else
+		puts(entry.message.c_str());
+
+	switch(level)
+	{
+	case LogLevel::Debug:
+	{
+		sprintf_s(g_LogBuffer, "%s\n", entry.message.c_str());
+		PrintDebug( g_LogBuffer );
+		break;
+	}
+	case LogLevel::Assert:
+		assert(false);
+		break;
+	};
 }
 
-//-----------------------------------//
-
-#ifdef COMPILER_MSVC
-	#define PrintDebug OutputDebugStringA
-#else
-	#define PrintDebug printf
-#endif
-
-#ifdef BUILD_DEBUG
-
-#define ASSERT_ON_LOG                                       \
-		if(entry.level == LogLevel::Assert)                 \
-		{                                                   \
-			assert(false);                                  \
-		}                                                   \
-
-#else
-
-#define ASSERT_ON_LOG
-
-#endif
-
-#define DEFINE_LOG_HELPER(Level)                            \
-	void Log##Level(const char* msg, ...)                   \
-	{                                                       \
-		va_list args;                                       \
-		va_start(args, msg);                                \
-	                                                        \
-		LogEntry entry;                                     \
-		LogFormat(&entry, LogLevel::Level, msg, args);      \
-		                                                    \
-		Log* log = LogGetDefault();                         \
-		if(log) LogWrite(log, &entry);                      \
-		else puts(entry.message.c_str());                   \
-                                                            \
-		va_end(args);                                       \
-                                                            \
-		if(entry.level == LogLevel::Debug)                  \
-		{                                                   \
-			String debug = entry.message + "\n";            \
-			PrintDebug( debug.c_str() );                    \
-		}                                                   \
-		ASSERT_ON_LOG                                       \
-}                                                           \
+#define DEFINE_LOG_HELPER(Level) \
+	void Log##Level(const char* msg, ...) \
+	{ \
+		va_list args; \
+		va_start(args, msg); \
+		LogProcess(LogGetDefault(), msg, args, LogLevel::Level); \
+		va_end(args); \
+	}
 
 DEFINE_LOG_HELPER(Info)
 DEFINE_LOG_HELPER(Warn)

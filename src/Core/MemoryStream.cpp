@@ -9,7 +9,6 @@
 #include "Core/API.h"
 #include "Core/Stream.h"
 #include "Core/Memory.h"
-#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -20,7 +19,7 @@ static bool  MemoryClose(Stream*);
 static int64 MemoryRead(Stream*, void*, int64);
 static int64 MemoryWrite(Stream*, void*, int64);
 static int64 MemoryTell(Stream*);
-static bool  MemorySeek(Stream*, int64, int8);
+static int64 MemorySeek(Stream*, int64, int8);
 static int64 MemoryGetSize(Stream*);
 static void  MemoryResize(Stream*, int64 size);
 
@@ -40,7 +39,7 @@ static StreamFuncs gs_MemoryFuncs =
 
 MemoryStream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
 {
-	MemoryStream* ms = Allocate(MemoryStream, alloc);
+	MemoryStream* ms = Allocate(alloc, MemoryStream);
 	if( !ms ) return nullptr;
 	
 	StreamMemoryInit(ms);
@@ -167,7 +166,7 @@ static int64 MemoryTell(Stream* stream)
 
 //-----------------------------------//
 
-static bool MemorySeek(Stream* stream, int64 offset, int8 mode)
+static int64 MemorySeek(Stream* stream, int64 offset, int8 mode)
 {
 	MemoryStream* ms = (MemoryStream*) stream;
 
