@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Render/Target.h"
+#include "Graphics/Target.h"
 #include "Resources/Image.h"
 #include "Resources/Material.h"
 

@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "Render/Program.h"
-#include "Render/VertexBuffer.h"
-#include "Render/GLSL_ShaderProgram.h"
-#include "Render/GL.h"
+#include "Graphics/Program.h"
+#include "Graphics/VertexBuffer.h"
+#include "Graphics/GLSL_ShaderProgram.h"
+#include "Graphics/GL.h"
 
 FWD_DECL_INTRUSIVE(GLSL_Shader)
 

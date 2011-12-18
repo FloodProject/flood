@@ -11,7 +11,7 @@
 #include "Engine/API.h"
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"
-#include "Render/FrameStatistics.h"
+#include "Graphics/FrameStatistics.h"
 #include "Core/Timer.h"
 #include "Engine/Engine.h"
 #include "Window/Window.h"

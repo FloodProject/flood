@@ -10,7 +10,7 @@
 
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

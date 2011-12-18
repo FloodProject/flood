@@ -11,7 +11,7 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 #include "Scene/Camera.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

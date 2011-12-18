@@ -10,8 +10,8 @@
 
 #include "Scene/Transform.h"
 #include "Math/BoundingBox.h"
-#include "Render/Renderable.h"
-#include "Render/RenderQueue.h"
+#include "Graphics/Renderable.h"
+#include "Graphics/RenderQueue.h"
 
 NAMESPACE_ENGINE_BEGIN
 

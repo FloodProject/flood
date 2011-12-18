@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Render/Buffer.h"
-#include "Render/VertexBuffer.h"
-#include "Render/IndexBuffer.h"
+#include "Graphics/Buffer.h"
+#include "Graphics/VertexBuffer.h"
+#include "Graphics/IndexBuffer.h"
 #include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN

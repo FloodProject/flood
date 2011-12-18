@@ -15,10 +15,10 @@
 #include "Math/Vector.h"
 #include "Math/Matrix4x3.h"
 
-#include "Render/Render.h"
-#include "Render/Target.h"
-#include "Render/Renderable.h"
-#include "Render/RenderQueue.h"
+#include "Graphics/Render.h"
+#include "Graphics/Target.h"
+#include "Graphics/Renderable.h"
+#include "Graphics/RenderQueue.h"
 
 NAMESPACE_ENGINE_BEGIN
 

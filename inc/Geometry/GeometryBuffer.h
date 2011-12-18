@@ -12,7 +12,7 @@
 #include "Core/Event.h"
 
 #include "Math/Vector.h"
-#include "Render/Buffer.h"
+#include "Graphics/Buffer.h"
 
 NAMESPACE_ENGINE_BEGIN
 

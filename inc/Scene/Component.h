@@ -10,7 +10,7 @@
 
 #include "Core/Object.h"
 #include "Core/References.h"
-#include "Render/DebugGeometry.h"
+#include "Graphics/DebugGeometry.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
 FWD_DECL_INTRUSIVE(Camera)

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Render/Buffer.h"
+#include "Graphics/Buffer.h"
 
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 

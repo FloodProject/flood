@@ -10,7 +10,7 @@
 
 #include "Math/Vector.h"
 #include "Math/Color.h"
-#include "Render/Buffer.h"
+#include "Graphics/Buffer.h"
 #include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Render/Texture.h"
+#include "Graphics/Texture.h"
 #include "Resources/Image.h"
 
 NAMESPACE_ENGINE_BEGIN

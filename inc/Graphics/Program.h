@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Resources/ShaderProgram.h"
-#include "Render/VertexBuffer.h"
+#include "Graphics/VertexBuffer.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 #include "Math/EulerAngles.h"

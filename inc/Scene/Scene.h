@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 #include "Scene/Group.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Ray.h"
 #include "Math/Frustum.h"

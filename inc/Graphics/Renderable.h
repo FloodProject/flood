@@ -12,9 +12,9 @@
 #include "Resources/Material.h"
 #include "Geometry/GeometryBuffer.h"
 
-#include "Render/VertexBuffer.h"
-#include "Render/IndexBuffer.h"
-#include "Render/UniformBuffer.h"
+#include "Graphics/VertexBuffer.h"
+#include "Graphics/IndexBuffer.h"
+#include "Graphics/UniformBuffer.h"
 
 FWD_DECL_INTRUSIVE(Material)
 

@@ -9,7 +9,7 @@
 //#pragma once
 //
 //#include "vapor/Platform.h"
-//#include "vapor/render/Buffer.h"
+//#include "vapor/Graphics/Buffer.h"
 //
 //namespace vapor {
 //	namespace render {

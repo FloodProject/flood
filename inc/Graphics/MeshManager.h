@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core/Stream.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 #include "Resources/Mesh.h"
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
