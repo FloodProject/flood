@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-#include "Render/UniformBuffer.h"
-#include "Render/Render.h"
+#include "Graphics/UniformBuffer.h"
+#include "Graphics/Render.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 

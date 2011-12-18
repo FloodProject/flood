@@ -15,7 +15,7 @@
 #include "DocumentWindow.h"
 #include "UndoManager.h"
 #include "Scene/Projector.h"
-#include "Render/Cube.h"
+#include "Graphics/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 

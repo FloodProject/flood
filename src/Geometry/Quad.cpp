@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Quad.h"
+#include "Graphics/Quad.h"
 
 NAMESPACE_ENGINE_BEGIN
 

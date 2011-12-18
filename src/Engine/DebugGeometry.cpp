@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/DebugGeometry.h"
-#include "Render/Renderable.h"
+#include "Graphics/DebugGeometry.h"
+#include "Graphics/Renderable.h"
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
 #include "Scene/Tags.h"

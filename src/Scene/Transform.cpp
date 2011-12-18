@@ -10,7 +10,7 @@
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
-#include "Render/DebugGeometry.h"
+#include "Graphics/DebugGeometry.h"
 #include "Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN

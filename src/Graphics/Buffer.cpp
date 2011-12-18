@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Buffer.h"
-#include "Render/GL.h"
+#include "Graphics/Buffer.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 		

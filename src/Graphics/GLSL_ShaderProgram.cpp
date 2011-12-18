@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Render/GLSL_ShaderProgram.h"
-#include "Render/GL.h"
+#include "Graphics/GLSL_ShaderProgram.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

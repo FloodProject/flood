@@ -11,9 +11,9 @@
 #include "Scene/Scene.h"
 #include "Scene/Geometry.h"
 #include "Scene/Tags.h"
-#include "Render/Device.h"
-#include "Render/View.h"
-#include "Render/DebugGeometry.h"
+#include "Graphics/Device.h"
+#include "Graphics/View.h"
+#include "Graphics/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 

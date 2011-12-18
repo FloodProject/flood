@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/View.h"
-#include "Render/Target.h"
+#include "Graphics/View.h"
+#include "Graphics/Target.h"
 #include "Scene/Scene.h"
 #include "Scene/Camera.h"
 

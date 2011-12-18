@@ -11,16 +11,16 @@
 #ifdef ENABLE_RENDERER_OPENGL
 
 #include "Core/Utilities.h"
-#include "Render/Device.h"
-#include "Render/Render.h"
-#include "Render/RenderContext.h"
-#include "Render/GL.h"
-#include "Render/View.h"
-#include "Render/Program.h"
+#include "Graphics/Device.h"
+#include "Graphics/Render.h"
+#include "Graphics/RenderContext.h"
+#include "Graphics/GL.h"
+#include "Graphics/View.h"
+#include "Graphics/Program.h"
 
-#include "Render/BufferManager.h"
-#include "Render/ProgramManager.h"
-#include "Render/TextureManager.h"
+#include "Graphics/BufferManager.h"
+#include "Graphics/ProgramManager.h"
+#include "Graphics/TextureManager.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"

@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Device.h"
-#include "Render/Target.h"
-#include "Render/View.h"
+#include "Graphics/Device.h"
+#include "Graphics/Target.h"
+#include "Graphics/View.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-#include "Render/IndexBuffer.h"
-#include "Render/GL.h"
+#include "Graphics/IndexBuffer.h"
+#include "Graphics/GL.h"
 #include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN

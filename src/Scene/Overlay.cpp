@@ -11,7 +11,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Tags.h"
-#include "Render/View.h"
+#include "Graphics/View.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "GizmoScale.h"
-#include "Render/Cube.h"
+#include "Graphics/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 

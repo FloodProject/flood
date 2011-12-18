@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Texture.h"
-#include "Render/Adapter.h"
-#include "Render/Device.h"
-#include "Render/GL.h"
+#include "Graphics/Texture.h"
+#include "Graphics/Adapter.h"
+#include "Graphics/Device.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

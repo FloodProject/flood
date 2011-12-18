@@ -15,11 +15,11 @@
 #include "Resources/Skeleton.h"
 #include "Resources/Bone.h"
 #include "Resources/Attachment.h"
-#include "Render/Device.h"
-#include "Render/RenderContext.h"
-#include "Render/MeshManager.h"
-#include "Render/Program.h"
-#include "Render/ProgramManager.h"
+#include "Graphics/Device.h"
+#include "Graphics/RenderContext.h"
+#include "Graphics/MeshManager.h"
+#include "Graphics/Program.h"
+#include "Graphics/ProgramManager.h"
 #include "Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN

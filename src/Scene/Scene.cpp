@@ -13,7 +13,7 @@
 #include "Scene/Geometry.h"
 #include "Scene/Model.h"
 #include "Scene/SceneLoader.h"
-#include "Render/Device.h"
+#include "Graphics/Device.h"
 #include "Core/Profiler.h"
 
 #include "Core/Serialization.h"

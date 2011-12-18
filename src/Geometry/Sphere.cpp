@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Sphere.h"
+#include "Graphics/Sphere.h"
 #include "Math/EulerAngles.h"
 #include "Math/Helpers.h"
 #include "Math/BoundingBox.h"

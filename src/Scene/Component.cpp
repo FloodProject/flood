@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Scene/Component.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

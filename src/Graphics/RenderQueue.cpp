@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/RenderQueue.h"
+#include "Graphics/RenderQueue.h"
 
 NAMESPACE_ENGINE_BEGIN
 

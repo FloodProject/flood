@@ -19,7 +19,7 @@
 #include "EditorIcons.h"
 #include "DocumentWindow.h"
 #include "UndoManager.h"
-#include "Render/View.h"
+#include "Graphics/View.h"
 #include "Scene/Camera.h"
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"

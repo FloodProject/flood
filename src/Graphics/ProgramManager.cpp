@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/ProgramManager.h"
-#include "Render/Program.h"
-#include "Render/GLSL_Program.h"
+#include "Graphics/ProgramManager.h"
+#include "Graphics/Program.h"
+#include "Graphics/GLSL_Program.h"
 #include "Resources/Shader.h"
 #include "Resources/GLSL_Shader.h"
 #include "Resources/ResourceManager.h"

@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Cube.h"
-#include "Render/Renderable.h"
+#include "Graphics/Cube.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

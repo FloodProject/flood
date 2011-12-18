@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/MeshManager.h"
-#include "Render/Renderable.h"
+#include "Graphics/MeshManager.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

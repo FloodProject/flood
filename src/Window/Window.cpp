@@ -8,8 +8,8 @@
 
 #include "Engine/API.h"
 #include "Window/Window.h"
-#include "Render/Device.h"
-#include "Render/RenderContext.h"
+#include "Graphics/Device.h"
+#include "Graphics/RenderContext.h"
 #include "Input/Keyboard.h"
 
 NAMESPACE_ENGINE_BEGIN

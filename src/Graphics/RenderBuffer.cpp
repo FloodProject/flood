@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/RenderBuffer.h"
+#include "Graphics/RenderBuffer.h"
 
 NAMESPACE_ENGINE_BEGIN
 

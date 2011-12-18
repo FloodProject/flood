@@ -10,8 +10,8 @@
 #include "Scene/Particles.h"
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
-#include "Render/DebugGeometry.h"
-#include "Render/GL.h"
+#include "Graphics/DebugGeometry.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

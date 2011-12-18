@@ -10,6 +10,6 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-#include "Render/Adapter.h"
+#include "Graphics/Adapter.h"
 
 #endif

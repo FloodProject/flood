@@ -10,10 +10,10 @@
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Render/GLSL_Program.h"
-#include "Render/GLSL_ShaderProgram.h"
-#include "Render/GL.h"
-#include "Render/UniformBuffer.h"
+#include "Graphics/GLSL_Program.h"
+#include "Graphics/GLSL_ShaderProgram.h"
+#include "Graphics/GL.h"
+#include "Graphics/UniformBuffer.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 

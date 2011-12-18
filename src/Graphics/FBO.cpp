@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/FBO.h"
-#include "Render/GL.h"
+#include "Graphics/FBO.h"
+#include "Graphics/GL.h"
 #include "Resources/Image.h"
 
 NAMESPACE_ENGINE_BEGIN

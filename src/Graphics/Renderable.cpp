@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/Renderable.h"
-#include "Render/Device.h"
-#include "Render/GL.h"
+#include "Graphics/Renderable.h"
+#include "Graphics/Device.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

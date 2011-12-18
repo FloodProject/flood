@@ -29,7 +29,7 @@ wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 
 wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
-#include "Render/Program.h"
+#include "Graphics/Program.h"
 
 NAMESPACE_EDITOR_BEGIN
 

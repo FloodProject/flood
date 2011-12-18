@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Scene/Light.h"
-#include "Render/Sphere.h"
+#include "Graphics/Sphere.h"
 
 NAMESPACE_ENGINE_BEGIN
 

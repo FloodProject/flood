@@ -7,15 +7,15 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/RenderContext.h"
-#include "Render/Device.h"
-#include "Render/BufferManager.h"
-#include "Render/TextureManager.h"
-#include "Render/ProgramManager.h"
-#include "Render/MeshManager.h"
-#include "Render/Adapter.h"
-#include "Render/GL.h"
-#include "Render/FBO.h"
+#include "Graphics/RenderContext.h"
+#include "Graphics/Device.h"
+#include "Graphics/BufferManager.h"
+#include "Graphics/TextureManager.h"
+#include "Graphics/ProgramManager.h"
+#include "Graphics/MeshManager.h"
+#include "Graphics/Adapter.h"
+#include "Graphics/GL.h"
+#include "Graphics/FBO.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -12,7 +12,7 @@
 
 #include "Physics/DebugDraw.h"
 #include "Physics/Convert.h"
-#include "Render/Renderable.h"
+#include "Graphics/Renderable.h"
 
 NAMESPACE_ENGINE_BEGIN
 

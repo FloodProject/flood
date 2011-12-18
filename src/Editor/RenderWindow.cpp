@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
-#include "Render/RenderContext.h"
+#include "Graphics/RenderContext.h"
 #include <wx/glcanvas.h>
 
 NAMESPACE_EDITOR_BEGIN

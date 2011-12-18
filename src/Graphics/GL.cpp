@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-#include "Render/GL.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

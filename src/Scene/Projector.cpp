@@ -10,10 +10,10 @@
 #include "Scene/Projector.h"
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
-#include "Render/DebugGeometry.h"
-#include "Render/Device.h"
-#include "Render/Program.h"
-#include "Render/ProgramManager.h"
+#include "Graphics/DebugGeometry.h"
+#include "Graphics/Device.h"
+#include "Graphics/Program.h"
+#include "Graphics/ProgramManager.h"
 
 NAMESPACE_ENGINE_BEGIN
 

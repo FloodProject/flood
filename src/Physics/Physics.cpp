@@ -14,7 +14,7 @@
 #include "Physics/Body.h"
 #include "Physics/Convert.h"
 #include "Physics/DebugDraw.h"
-#include "Render/Device.h"
+#include "Graphics/Device.h"
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 

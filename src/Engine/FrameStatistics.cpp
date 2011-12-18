@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/FrameStatistics.h"
+#include "Graphics/FrameStatistics.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Render/TextureManager.h"
+#include "Graphics/TextureManager.h"
 #include "Resources/ResourceManager.h"
-#include "Render/GL.h"
+#include "Graphics/GL.h"
 
 NAMESPACE_ENGINE_BEGIN
 
