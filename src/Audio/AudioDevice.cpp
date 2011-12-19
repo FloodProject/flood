@@ -26,16 +26,14 @@ AudioDevice* GetAudioDevice() { return gs_audioDevice; }
 
 //-----------------------------------//
 
-AudioDevice::AudioDevice()
-	: device(nullptr)
-	, context(nullptr)
-	, init(false)
-	, error(AL_NO_ERROR)
+AudioDevice::AudioDevice(ALCdevice* device)
+	: device(device)
 	, mainContext(nullptr)
 {
 	if(!gs_audioDevice) gs_audioDevice = this;
 
-	GetResourceManager()->onResourceLoaded.Connect(this, &AudioDevice::onResourceLoaded);
+	ResourceManager* res = GetResourceManager();
+	res->onResourceLoaded.Connect(this, &AudioDevice::onResourceLoaded);
 }
 
 //-----------------------------------//
@@ -49,7 +47,7 @@ AudioDevice::~AudioDevice()
 
 	if(!alcCloseDevice(device)) 
 	{
-		LogWarn("Error closing OpenAL device: %s", getError());
+		LogWarn("Error closing OpenAL device: %s", AudioGetError());
 		return;
 	}
 }
@@ -70,49 +68,14 @@ bool AudioDevice::getExtensions(std::vector<String>& extensions)
 
 //-----------------------------------//
 
-bool AudioDevice::getDevices(std::vector<String>& devices)
-{
-	if (!alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
-		return false;
-
-	const ALCchar* allDevices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
-	StringSplit(allDevices, ' ', devices);
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool AudioDevice::createDevice(const String& deviceName)
-{
-	if( device != nullptr )
-		return false;
-
-	const char* name = deviceName.empty() ? nullptr : deviceName.c_str();
-
-	// Select the "preferred device".
-	device = alcOpenDevice(name);
-
-	if( !device )
-	{
-		LogWarn("Could not create OpenAL device");
-		return false;
-	}
-
-	return true;
-}
-
-//-----------------------------------//
-
 bool AudioDevice::createMainContext()
 {
-	if( device == nullptr )
-		return false;
-
 	LogInfo("Creating OpenAL main context");
 
 	// Create a main context.
-	mainContext = AllocateThis(AudioContext, this);
+	mainContext = createContext();
+
+	mainContext->makeCurrent();
 
 	const ALchar* version = alGetString(AL_VERSION);
 	
@@ -124,9 +87,9 @@ bool AudioDevice::createMainContext()
 	
 	LogInfo("Using OpenAL version %s", version);
 
-	if( checkError() )
+	if( AudioCheckError() )
 	{
-		LogWarn("Error initializing OpenAL: %s", getError());
+		LogWarn("Error initializing OpenAL: %s", AudioGetError());
 		return false;
 	}
 
@@ -135,7 +98,24 @@ bool AudioDevice::createMainContext()
 
 //-----------------------------------//
 
-const String AudioDevice::getVersion() 
+AudioContext* AudioDevice::createContext()
+{
+	ALCcontext* context = alcCreateContext(device, nullptr);
+
+	if( !context || alcGetError(device) )
+	{
+		LogWarn("Error creating OpenAL context");
+		return nullptr;
+	}
+
+	AudioContext* audioContext = AllocateThis(AudioContext, context);
+
+	return audioContext;
+}
+
+//-----------------------------------//
+
+const String AudioGetVersion() 
 {
 	ALCint major = 0;
 	ALCint minor = 0;
@@ -152,28 +132,18 @@ void AudioDevice::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
 
-	if(checkError()) 
+	if(AudioCheckError()) 
 	{
-		LogWarn("Error changing listener volume: %s", getError());
+		LogWarn("Error changing listener volume: %s", AudioGetError());
 		return;
 	}
 }
 
 //-----------------------------------//
 
-ALint AudioDevice::getFormat(Sound* sound)
+AudioBufferPtr AudioDevice::createBuffer()
 {
-	if( !sound ) return AL_INVALID;
-
-	int32 channels = sound->getChannels();
-	int32 size = sound->getSize();
-
-	if(channels == 1 && size == 8) return AL_FORMAT_MONO8;
-	else if(channels == 1 && size == 16) return AL_FORMAT_MONO16;
-	else if(channels == 2 && size ==  8) return AL_FORMAT_STEREO8;
-	else if(channels == 2 && size == 16) return AL_FORMAT_STEREO16;
-
-	return AL_INVALID;
+	return AllocateThis(AudioBuffer, this);
 }
 
 //-----------------------------------//
@@ -184,7 +154,7 @@ AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
-	AudioBufferPtr buffer = AllocateThis(AudioBuffer, this, sound);
+	AudioBufferPtr buffer = AllocateThis(AudioBuffer, this);
 	soundBuffers[sound] = buffer;
 
 	return buffer;
@@ -211,17 +181,72 @@ void AudioDevice::onResourceLoaded(const ResourceEvent& event)
 	if( it == soundBuffers.end() )
 		return;
 
-	AudioBufferPtr soundBuffer = it->second;
-	soundBuffer->upload();
+	AudioBuffer* soundBuffer = it->second.get();
+	AudioBufferSound(soundBuffer, sound);
 }
 
 //-----------------------------------//
 
-bool AudioDevice::checkError()
+bool AudioGetDevices(std::vector<String>& devices)
+{
+	if (!alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
+		return false;
+
+	const ALCchar* allDevices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+	StringSplit(allDevices, ' ', devices);
+
+	return true;
+}
+
+//-----------------------------------//
+
+ALint AudioGetFormat(Sound* sound)
+{
+	if( !sound ) return AL_INVALID;
+
+	int32 channels = sound->getChannels();
+	int32 size = sound->getSize();
+
+	if(channels == 1 && size == 8) return AL_FORMAT_MONO8;
+	else if(channels == 1 && size == 16) return AL_FORMAT_MONO16;
+	else if(channels == 2 && size ==  8) return AL_FORMAT_STEREO8;
+	else if(channels == 2 && size == 16) return AL_FORMAT_STEREO16;
+
+	return AL_INVALID;
+}
+
+//-----------------------------------//
+
+AudioDevice* AudioCreateDevice(const String& deviceName)
+{
+	const char* name =
+		deviceName.empty() ? nullptr : deviceName.c_str();
+
+	// Select the "preferred device".
+	ALCdevice* device = alcOpenDevice(name);
+
+	if( !device )
+	{
+		LogWarn("Could not create OpenAL device");
+		return nullptr;
+	}
+
+	AudioDevice* audioDevice = AllocateHeap(AudioDevice, device);
+	
+	return audioDevice;
+}
+
+//-----------------------------------//
+
+#ifdef BUILD_DEBUG
+thread_local ALenum  gs_AudioError = AL_NO_ERROR;
+#endif
+
+bool AudioCheckError()
 {
 #ifdef BUILD_DEBUG
-	error = alGetError();
-	return (error != AL_NO_ERROR);
+	gs_AudioError = alGetError();
+	return (gs_AudioError != AL_NO_ERROR);
 #else
 	return false;
 #endif
@@ -230,9 +255,9 @@ bool AudioDevice::checkError()
 //-----------------------------------//
 
 #ifdef BUILD_DEBUG
-const ALchar* AudioDevice::getError()
+const ALchar* AudioGetError()
 {
-	switch(error)
+	switch(gs_AudioError)
 	{
 	case AL_NO_ERROR:
 		return "No error";

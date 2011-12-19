@@ -80,7 +80,7 @@ void TestClassA(CuTest* tc)
 	CuAssertTrue(tc, ReflectionIsComposite(klassA));
 
 	A bar;
-	A* foo = Allocate(A, AllocatorGetHeap());
+	A* foo = AllocateHeap(A);
 
 	CuAssertIntEquals(tc, 20, bar.foo);
 	CuAssertIntEquals(tc, 20, foo->foo);

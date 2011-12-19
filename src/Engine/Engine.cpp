@@ -13,7 +13,7 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 #include "Graphics/Texture.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/Render.h"
 #include "Input/InputManager.h"
 #include "Audio/Device.h"
@@ -108,8 +108,7 @@ void Engine::init( bool createWindow )
 
 #ifdef ENABLE_AUDIO_OPENAL
 	// Creates the audio device.
-	audioDevice = AllocateThis(AudioDevice);
-	audioDevice->createDevice("");
+	audioDevice = AudioCreateDevice("");
 	audioDevice->createMainContext();
 #endif
 

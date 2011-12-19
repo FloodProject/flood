@@ -53,8 +53,10 @@ public:
 	// Sets this rendering target as the current.
 	void makeCurrent();
 
-	// Binds/unbinds the render buffer.
+	// Binds the render buffer.
 	virtual void bind() = 0;
+	
+	// Unbinds the render buffer.
 	virtual void unbind() = 0;
 
 	// Checks if the render buffer is complete.

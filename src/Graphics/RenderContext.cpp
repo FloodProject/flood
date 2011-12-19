@@ -14,6 +14,7 @@
 #include "Graphics/TextureManager.h"
 #include "Graphics/ProgramManager.h"
 #include "Graphics/RenderCapabilities.h"
+#include "Backends/GL.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -28,6 +29,7 @@ RenderContext::RenderContext()
 	, initDone(false)
 	, backend(nullptr)
 {
+	backend = RenderCreateBackendGLES2();
 }
 
 //-----------------------------------//
@@ -36,6 +38,7 @@ RenderContext::~RenderContext()
 {
 	LogInfo("Destroying rendering context");
 
+	Deallocate(backend);
 	Deallocate(caps);
 	Deallocate(bufferManager);
 	Deallocate(textureManager);
@@ -58,14 +61,13 @@ void RenderContext::init()
 
 	LogInfo( "Initializing OpenGL rendering context" );
 
-	checkExtensions();
-
 	caps = Allocate(GetRenderAllocator(), RenderCapabilities);
+	backend->checkCapabilities(caps);
+
 	bufferManager  = Allocate(GetRenderAllocator(), BufferManager);
 	textureManager = Allocate(GetRenderAllocator(), TextureManager);
 	programManager = Allocate(GetRenderAllocator(), ProgramManager);
 
-	checkCapabilities(caps);
 	showCapabilities(caps);
 
 	resetState();
@@ -101,15 +103,14 @@ void RenderContext::resetState()
 
 Color RenderContext::getPixel(uint16 x, uint16 y) const
 {
-	backend->getPixel(x, y);
+	return backend->getPixel(x, y);
 }
 
 //-----------------------------------//
 
 RenderBuffer* RenderContext::createRenderBuffer( const Settings& settings )
 {
-	RenderBuffer* buffer = AllocateThis(FrameBufferObject, settings);
-	return buffer;
+	return backend->createRenderBuffer(settings);
 }
 
 //-----------------------------------//

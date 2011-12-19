@@ -25,14 +25,14 @@ Geometry::Geometry()
 
 //-----------------------------------//
 
-void Geometry::addRenderable(const RenderablePtr& rend)
+void Geometry::addRenderable(const RenderBatchPtr& rend)
 {
 	renderables.push_back( rend );
 }
 
 //-----------------------------------//
 
-RenderableVector Geometry::getRenderables()
+RenderablesVector Geometry::getRenderables() const
 {
 	return renderables;
 }
@@ -45,10 +45,10 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
-		const RenderablePtr& renderable = renderables[i];
-		if( !renderable ) continue;
+		RenderBatch* renderable = renderables[i].get();
+		if( renderable ) continue;
 
-		RenderState state( renderable.get() );
+		RenderState state( renderable );
 		state.modelMatrix = absoluteTransform;
 
 		queue.push_back(state);
@@ -64,9 +64,9 @@ void Geometry::updateBounds()
 	// Update the bounding box to accomodate new geometry.
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
-		const RenderablePtr& rend = renderables[i];
+		Renderable* rend = renderables[i].get();
 		
-		const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+		GeometryBuffer* gb = rend->getGeometryBuffer().get();
 		if( !gb ) continue;
 
 		uint32 numVertices = gb->getSizeVertices();

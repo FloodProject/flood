@@ -14,7 +14,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-RenderBatch* RenderableCreate( Allocator* alloc )
+RenderBatch* RenderBatchCreate( Allocator* alloc )
 {
 	RenderBatch* rend = Allocate(alloc, Renderable);
 	return rend;

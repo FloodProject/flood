@@ -31,6 +31,7 @@ struct API_PROTOCOL UserAuthMessage : MessageDefinition
 {
 	REFLECT_DECLARE_OBJECT(UserAuthMessage)
 	String name;
+	StringHash pass;
 	UserAuthType type;
 };
 

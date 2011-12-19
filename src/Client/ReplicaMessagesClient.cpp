@@ -49,7 +49,7 @@ void ReplicaMessagesClient::handleReplicaContextCreated(const SessionPtr&, const
 {
 	LogDebug("ReplicaContextCreated: Received new replica context");
 
-	ReplicaContext* context = Allocate(ReplicaContext, AllocatorGetThis());
+	ReplicaContext* context = AllocateThis(ReplicaContext);
 	context->id = msg.contextId;
 
 	replicaContexts[context->id] = context;

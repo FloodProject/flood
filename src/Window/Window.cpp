@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Window/Window.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Input/Keyboard.h"
 

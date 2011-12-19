@@ -11,7 +11,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Tags.h"
-#include "Graphics/View.h"
+#include "Graphics/RenderView.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -35,10 +35,10 @@ REFLECT_ENUM(AnchorMode)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Overlay, Geometry)
-	FIELD_ENUM(0, PositionMode, positioning)
-	FIELD_ENUM(1, AnchorMode, anchor)
-	FIELD_PRIMITIVE(2, Vector3, offset)
-	FIELD_PRIMITIVE(3, Vector3, size)
+	FIELD_ENUM(1, PositionMode, positioning)
+	FIELD_ENUM(2, AnchorMode, anchor)
+	FIELD_PRIMITIVE(3, Vector3, offset)
+	FIELD_PRIMITIVE(4, Vector3, size)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -61,7 +61,7 @@ void Overlay::createGeometry()
 	material = MaterialCreate(AllocatorGetThis(), "OverlayMaterial");
 
 	renderable = AllocateThis(Renderable);
-	renderable->setPrimitiveType(PolygonType::Quads);
+	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Overlays);
@@ -105,7 +105,7 @@ void Overlay::rebuildGeometry()
 		colors.push_back(color);
 	}
 
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	const GeometryBufferPtr& gb =renderable->getGeometryBuffer();
 	
 	gb->clear();
 	gb->declarations.reset();

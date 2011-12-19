@@ -19,7 +19,7 @@
 #include "EditorIcons.h"
 #include "DocumentWindow.h"
 #include "UndoManager.h"
-#include "Graphics/View.h"
+#include "Graphics/RenderView.h"
 #include "Scene/Camera.h"
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
@@ -317,7 +317,7 @@ void TerrainPlugin::updateBrushProjection( int x, int y )
 	}
 	else
 	{
-		const TerrainCellPtr& cell = RefCast<TerrainCell>(res.geometry);
+		const TerrainCellPtr& cell = (TerrainCell*) res.geometry;
 		projectBrush(res.intersectionWorld, cell);
 	}
 }
@@ -376,26 +376,26 @@ void TerrainPlugin::projectBrush(const Vector3& pos, const TerrainCellPtr& cell)
 EntityPtr TerrainPlugin::createProjector(const GeometryPtr& cell)
 {
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetThis(), "ProjectMaterial");
-		
+
 	Material* material = materialHandle.Resolve();
 	material->setShader("ProjectiveTexturing");
 	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
 	material->setDepthCompare(DepthCompare::LessOrEqual);
 
-	EntityPtr entity = EntityCreate( AllocatorGetThis() );
+	Entity* entity = EntityCreate( AllocatorGetThis() );
 	entity->setName("Projector");
 	entity->addTransform();
-	
-	ProjectorPtr projector = AllocateThis(Projector);
+
+	Projector* projector = AllocateThis(Projector);
 	projector->material = materialHandle;
 	projector->geometry = cell;
-	projector->frustum.projection = Projection::Orthographic;	
+	projector->frustum.projection = Projection::Orthographic;
 	entity->addComponent(projector);
 
 	Quaternion quat;
 	quat.setToRotateAboutX(MathDegreeToRadian(90.0f));
-		
-	const TransformPtr& transform = entity->getTransform();		
+
+	Transform* transform = entity->getTransform().get();
 	transform->setRotation(quat);
 
 	return entity;
@@ -408,7 +408,7 @@ bool TerrainPlugin::pickCell( int x, int y )
 	if( !terrain ) return false;
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->sceneWindow->getView()->getCamera(); 
+	Camera* camera = document->sceneWindow->getCamera().get();
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);
@@ -418,10 +418,10 @@ bool TerrainPlugin::pickCell( int x, int y )
 	float distance;
 	if( !ground.intersects(pickRay, distance) )
 		return false;
-		
+
 	Vector3 pt = pickRay.getPoint(distance);
 	coords = terrain->getCoords(pt);
-		
+
 	return true;
 }
 
@@ -456,7 +456,7 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 
 	// If the left Shift is held down, then lower.
 	Keyboard* keyboard = input->getKeyboard();
-	bool raise = !keyboard->isKeyPressed( Keys::LShift );	
+	bool raise = !keyboard->isKeyPressed( Keys::LShift );
 
 	terrainOperation = AllocateThis(TerrainOperation, tool, res);
 	terrainOperation->description = "Terrain editing";
@@ -519,8 +519,8 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const ScenePtr& scene = document->scene;
-	const CameraPtr& camera = document->sceneWindow->getView()->getCamera(); 
+	Scene* scene = document->scene.get();
+	Camera* camera = document->sceneWindow->getCamera().get();
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);
@@ -530,10 +530,8 @@ bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 	if( !scene->doRayBoxQuery(pickRay, query) )
 		return false;
 
-	const EntityPtr& entity = query.entity;
-	
-	if( !entity ) 
-		return false;
+	Entity* entity = query.entity;
+	if( !entity )  return false;
 
 	if( !entity->getComponentFromFamily<Cell>() )
 		return false;

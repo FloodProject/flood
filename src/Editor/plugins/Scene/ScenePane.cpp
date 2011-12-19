@@ -160,7 +160,7 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 //-----------------------------------//
 
-void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createGroup )
+void ScenePage::addGroup( wxTreeItemId id, Entity* entity, bool createGroup )
 {
 	if( !entity || !id.IsOk() ) return;
 
@@ -170,7 +170,7 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 		return;
 	}
 	
-	GroupPtr group = RefCast<Group>(entity);
+	Group* group = (Group*) entity;
 
 	group->onEntityAdded.Connect( this, &ScenePage::onEntityAdded );
 	group->onEntityRemoved.Connect( this, &ScenePage::onEntityRemoved );
@@ -184,23 +184,23 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 		groupId = treeCtrl->AppendItem( id, group->getName(), 0 );
 
 	EntityItemData* data = new EntityItemData();
-	data->entity = entity.get();
+	data->entity = entity;
 
-	objectIds[entity.get()] = groupId;
+	objectIds[entity] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
 	const std::vector<EntityPtr>& entities = group->getEntities();
 
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& child = entities[i];
+		Entity* child = entities[i].get();
 		addGroup(groupId, child);
 	}
 }
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
+wxTreeItemId ScenePage::addEntity( wxTreeItemId id, Entity* entity )
 {
 	wxTreeItemId entityId = treeCtrl->AppendItem( id, entity->getName(), 0 );
 
@@ -212,10 +212,10 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 		addComponentToTree(entityId, it->second);
 
 	EntityItemData* data = new EntityItemData();
-	data->entity = entity.get();
+	data->entity = entity;
 
 	treeCtrl->SetItemData( entityId, data );
-	objectIds[ entity.get() ] = entityId;
+	objectIds[entity] = entityId;
 
 	return entityId;
 }
@@ -353,7 +353,7 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 
 //-----------------------------------//
 
-EntityOperation* ScenePage::createEntityAddOperation(const EntityPtr& entity)
+EntityOperation* ScenePage::createEntityAddOperation(Entity* entity)
 {
 	Document* document = GetEditor().getDocument();
 	if( !document ) return nullptr;
@@ -396,7 +396,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	sp->host->getPeer()->queueMessage(msg, 0);
 #else
 
-	createEntityAddOperation(entity);
+	createEntityAddOperation(entity.get());
 
 	// Simulate selection event but don't register it in the undo stack.
 	SelectionOperation* selection = CreateEntitySelectionOperation(entity);
@@ -475,7 +475,7 @@ void ScenePage::onEntityAdded( const EntityPtr& entity )
 	if( !parent ) return;
 
 	wxTreeItemId id = getTreeIdFromObject(parent.get());
-	addGroup( id, entity );
+	addGroup( id, entity.get() );
 }
 
 //-----------------------------------//
@@ -642,7 +642,7 @@ void ScenePage::onAnimationMenuSelected(wxCommandEvent& event)
 		return;
 	}
 	
-	AnimationPtr animation = anims[ind];
+	Animation* animation = anims[ind].get();
 	model->setAnimation( animation );
 	
 	event.Skip();
@@ -663,11 +663,13 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 
 	String name = "Attachment" + StringFromNumber(entityCounter++);
 	
-	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
+	Entity* entity( EntityCreate( AllocatorGetHeap() ) );
 	entity->setName(name);
 	entity->addTransform();
 
-	ModelPtr model = AllocateHeap(Model, meshHandle);
+	Model* model = AllocateHeap(Model);
+	model->setMesh(meshHandle);
+
 	entity->addComponent(model);
 	
 	ScenePtr scene = weakScene;
@@ -695,7 +697,7 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 	{
 		weakEntity = entity;
 		menu.SetTitle("Entity");
-		populateEntityItemMenu(menu, entity);
+		populateEntityItemMenu(menu, entity.get());
 	}
 	else
 	{
@@ -741,18 +743,18 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	{
 		if( !node ) return;
 
-		PolygonMode::Enum mode = event.IsChecked() ? PolygonMode::Wireframe : PolygonMode::Solid;
+		PrimitiveRasterMode::Enum mode = event.IsChecked() ? PrimitiveRasterMode::Wireframe : PrimitiveRasterMode::Solid;
 		const std::vector<GeometryPtr>& geometries = node->getGeometry();
 
 		for( size_t i = 0; i < geometries.size(); i++ )
 		{
-			const GeometryPtr& geo = geometries[i];
-			const std::vector<RenderablePtr>& rends = geo->getRenderables();
+			Geometry* geo = geometries[i].get();
+			const RenderablesVector& rends = geo->getRenderables();
 			
 			for( size_t j = 0; j < rends.size(); j++ )
 			{
-				const RenderablePtr& renderable = rends[i];
-				renderable->setPolygonMode( mode );
+				Renderable* renderable = rends[i].get();
+				renderable->setPrimitiveRasterMode( mode );
 			}
 		}
 		break;

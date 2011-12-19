@@ -79,21 +79,18 @@
 // Render-related Includes
 //---------------------------------------------------------------------//
 
-#include <Graphics/Device.h>
-#include <Graphics/View.h>
-#include <Graphics/Target.h>
+#include <Graphics/RenderDevice.h>
+#include <Graphics/RenderView.h>
+#include <Graphics/RenderTarget.h>
 #include "Graphics/RenderContext.h"
 #include <Graphics/Buffer.h>
 #include <Graphics/Texture.h>
 #include <Graphics/Program.h>
 #include <Graphics/VertexBuffer.h>
-#include <Graphics/Renderable.h>
+#include <Graphics/RenderBatch.h>
 #include <Graphics/TextureManager.h>
 #include <Graphics/ProgramManager.h>
-#include <Graphics/FBO.h>
 #include <Graphics/FrameStatistics.h>
-#include <Graphics/DebugGeometry.h>
-#include <Graphics/Quad.h>
 
 //---------------------------------------------------------------------//
 // Animation-related Includes

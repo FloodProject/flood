@@ -12,7 +12,7 @@
 
 #include "Physics/DebugDraw.h"
 #include "Physics/Convert.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -27,7 +27,7 @@ BulletDebugDrawer::BulletDebugDrawer()
 	material.Resolve()->setDepthCompare(DepthCompare::LessOrEqual);
 
 	renderable = AllocateThis(Renderable);
-	renderable->setPrimitiveType(PolygonType::Lines);
+	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 }

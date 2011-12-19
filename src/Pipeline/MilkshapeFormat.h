@@ -54,23 +54,23 @@ struct ALIGN_BEGIN(1) ms3d_header_t
 
 struct ALIGN_BEGIN(1) ms3d_vertex_t
 {
-	uint8	flags;
-	Vector3	position;
-	char	boneIndex;
-	uint8	referenceCount;
+	uint8   flags;
+	Vector3 position;
+	char    boneIndex;
+	uint8   referenceCount;
 } ALIGN_END(1);
 
 //-----------------------------------//
 
 struct ALIGN_BEGIN(1) ms3d_triangle_t
 {
-	uint16	flags;
-	uint16	vertexIndices[3];
-	Vector3	vertexNormals[3];
-	float	s[3];
-	float	t[3];
-	uint8	smoothingGroup;
-	uint8	groupIndex;
+	uint16  flags;
+	uint16  vertexIndices[3];
+	Vector3 vertexNormals[3];
+	float   s[3];
+	float   t[3];
+	uint8   smoothingGroup;
+	uint8   groupIndex;
 } ALIGN_END(1);
 
 //-----------------------------------//
@@ -89,23 +89,23 @@ struct ALIGN_BEGIN(1) ms3d_group_t
 
 struct ALIGN_BEGIN(1) ms3d_material_t
 {
-	char			name[32];
-	Color			ambient;
-	Color			diffuse;
-	Color			specular;
-	Color			emissive;
-	float			shininess;
-    float			transparency;
-	uint8			mode;
-	char			texture[MAX_TEXTURE_FILENAME_SIZE];
-    char			alphamap[MAX_TEXTURE_FILENAME_SIZE];
+	char    name[32];
+	Color   ambient;
+	Color   diffuse;
+	Color   specular;
+	Color   emissive;
+	float   shininess;
+    float   transparency;
+	uint8   mode;
+	char    texture[MAX_TEXTURE_FILENAME_SIZE];
+    char    alphamap[MAX_TEXTURE_FILENAME_SIZE];
 } ALIGN_END(1);
 
 //-----------------------------------//
 
 struct ALIGN_BEGIN(1) ms3d_keyframe_t
 {
-	float time;
+	float   time;
 	Vector3 parameter;
 } ALIGN_END(1);
 

@@ -14,7 +14,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Camera.h"
 #include "Scene/Scene.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"

@@ -104,7 +104,7 @@ protected:
 	// View matrix.
 	Matrix4x3 viewMatrix;
 
-	// Pointer to the camera node transform.
+	// Pointer to the camera transform.
 	Transform* transform;
 
 	// Last view active the camera.

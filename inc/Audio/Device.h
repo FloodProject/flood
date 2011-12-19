@@ -24,13 +24,35 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct ResourceEvent;
+class AudioDevice;
+
+// Gets the main audio device.
+API_AUDIO AudioDevice* GetAudioDevice();
+
+// Gets a list of available audio devices.
+API_AUDIO bool AudioGetDevices(std::vector<String>& devices);
+
+// Creates an internal AL device.
+API_AUDIO AudioDevice* AudioCreateDevice(const String& device);
+
+// Gets a string with the version of OpenAL.
+API_AUDIO const String AudioGetVersion();
+
+// Gets the AL format matching the sound.
+API_AUDIO int AudioGetFormat(Sound* sound);
+
+// Return the last error as a char array.
+API_AUDIO const char* AudioGetError();
+
+// Checks if the last operation was successful.
+API_AUDIO bool AudioCheckError();
 
 /**
  * Audio device to play sound data using OpenAL as backend.
  */
 
 typedef std::map<Sound*, AudioBufferPtr> SoundBufferMap;
+struct ResourceEvent;
 
 class API_AUDIO AudioDevice
 {
@@ -42,23 +64,26 @@ class API_AUDIO AudioDevice
 
 public:
 
-	AudioDevice();
+	AudioDevice(ALCdevice* device);
 	~AudioDevice();
-
-	// Gets a list of available devices.
-	bool getDevices(std::vector<String>& devices);
 
 	// Gets a list of available extensions.
 	bool getExtensions(std::vector<String>& extensions);
 
-	// Creates the internal AL device.
-	bool createDevice(const String& device);
-
 	// Creates the main context.
 	bool createMainContext();
+
+	// Creates a new context.
+	AudioContext* createContext();
 	
 	// Sets the global audio volume
 	void setVolume(float volume);
+
+	// Creates a new audio buffer.
+	AudioBufferPtr createBuffer();
+
+	// Prepares a buffer for AL usage.
+	AudioBufferPtr prepareBuffer(Sound* sound);
 
 	// Gets the main audio context.
 	GETTER(MainContext, AudioContext*, mainContext)
@@ -68,32 +93,8 @@ protected:
 	// Callback when a resource is loaded.
 	void onResourceLoaded(const ResourceEvent&);
 
-	// Gets the AL format matching the sound.
-	int getFormat(Sound* sound);
-	
-	// Prepares a buffer for AL usage.
-	AudioBufferPtr prepareBuffer(Sound* sound);
-	
-	// Return the last error as a char array.
-	const char* getError();
-
-	// Checks if the last operation was successful.
-	bool checkError();
-	
-	// Gets a string with the version of OpenAL.
-	const String getVersion();
-
 	// Audio device.
 	ALCdevice* device;
-
-	// Current audio context.
-	ALCcontext* context;
-
-	// Holds the last error
-	ALenum error;
-
-	// Initialization state.
-	bool init;
 
 	// Maps each sound to a OpenAL sound buffer.
 	SoundBufferMap soundBuffers;
@@ -101,9 +102,6 @@ protected:
 	// Main audio context.
 	AudioContext* mainContext;
 };
-
-// Gets the main audio device.
-API_AUDIO AudioDevice* GetAudioDevice();
 
 //-----------------------------------//
 

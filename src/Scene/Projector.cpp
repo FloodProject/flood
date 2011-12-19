@@ -10,8 +10,8 @@
 #include "Scene/Projector.h"
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
-#include "Graphics/DebugGeometry.h"
-#include "Graphics/Device.h"
+#include "Geometry/DebugGeometry.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/Program.h"
 #include "Graphics/ProgramManager.h"
 
@@ -37,11 +37,11 @@ Projector::~Projector()
 {
 	if( !geometry ) return;
 
-	const RenderableVector& renderables = geometry->getRenderables();
+	const RenderablesVector& renderables = geometry->getRenderables();
 	
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
-		const RenderablePtr& renderable = renderables[i];
+		RenderBatch* renderable = renderables[i].get();
 		renderable->onPreRender.clear();
 
 		const UniformBufferPtr& ub = renderable->getUniformBuffer();
@@ -54,7 +54,7 @@ Projector::~Projector()
 
 void Projector::update(float)
 {
-	const TransformPtr& transform = getEntity()->getTransform();
+	const Transform* transform = getEntity()->getTransform().get();
 
 	frustum.updateProjection();
 	frustum.updateCorners(transform->getAbsoluteTransform());
@@ -68,21 +68,23 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 {
 	if( !geometry ) return;
 
-	const TransformPtr& geotransform = geometry->getEntity()->getTransform();
+	const Transform* geotransform = geometry->getEntity()->getTransform().get();
 	const Matrix4x3& absoluteTransform = geotransform->getAbsoluteTransform();
 	
-	const RenderableVector& renderables = geometry->getRenderables();
+	const RenderablesVector& renderables = geometry->getRenderables();
+	
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
-		const RenderablePtr& renderable = renderables[i];
-		if( !renderable ) continue;
+		RenderBatch* renderable = renderables[i].get();
+		if( renderable ) continue;
 
 		renderable->onPreRender.Bind(this, &Projector::onPreRender);
 
-		RenderState state( renderable.get() );
+		RenderState state;
+		state.renderable = renderable;
 		state.material = material.Resolve();
 		state.modelMatrix = absoluteTransform;
-		state.priority = renderable->getRenderPriority()+1;
+		state.priority = renderable->getRenderPriority() + 1;
 
 		queue.push_back(state);
 	}
@@ -110,7 +112,7 @@ void Projector::updateDebugRenderable() const
 
 //-----------------------------------//
 
-RenderablePtr Projector::createDebugRenderable() const
+RenderBatchPtr Projector::createDebuRenderable() const
 {
 	assert( !debugRenderable );
 

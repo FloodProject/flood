@@ -48,6 +48,8 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	, frameRenderTimer(this, RENDER_TIMER)
 	, input(nullptr)
 {
+	SetBackgroundStyle(wxBG_STYLE_PAINT);
+
 	LogInfo("Creating a new wxWidgets render control");
 
 	// Create a new engine window.

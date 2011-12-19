@@ -32,7 +32,7 @@ struct Projection
 	};
 };
 
-API_CORE REFLECT_DECLARE_ENUM(Projection);
+REFLECT_DECLARE_ENUM(Projection);
 
 //-----------------------------------//
 
@@ -65,7 +65,7 @@ public:
 
 	// Projection type.
 	Projection::Enum projection;
-	
+
 	// Projection matrix.
 	Matrix4x4 matProjection;
 
@@ -74,7 +74,7 @@ public:
 
 	// Near clipping plane.
 	float nearPlane;
-	
+
 	// Far clipping plane.
 	float farPlane;
 

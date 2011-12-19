@@ -10,18 +10,16 @@
 
 #include "Scene/Transform.h"
 #include "Math/BoundingBox.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 #include "Graphics/RenderQueue.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-typedef std::vector<RenderablePtr> RenderableVector;
-
 /**
  * This component holds geometry data for rendering. It can hold multiple
- * Renderable objects, each with different materials. When the camera node
+ *.renderable objects, each with different materials. When the camera node
  * traverses the scene graph, Geometry nodes are picked and passed to the
  * rendering device for rendering.
  */
@@ -36,13 +34,13 @@ public:
 
 	Geometry();
 
-	// Adds a new renderable to this geometry.
-	void addRenderable( const RenderablePtr& renderable );
+	// Adds a new.renderable to this geometry.
+	void addRenderable( const RenderBatchPtr& renderable );
 
-	// Gets all the renderables in this geometry.
-	RenderableVector getRenderables();
+	// Gets all the.renderables in this geometry.
+	RenderablesVector getRenderables() const;
 
-	// Appends all the renderables of this geometry to the queue.
+	// Appends all the.renderables of this geometry to the queue.
 	virtual void appendRenderables( RenderQueue& queue, const Transform* transform );
 
 	// Updates the geometry bounds if needed.
@@ -65,8 +63,8 @@ protected:
 	// Notifies the transform of rebuilt bounding volumes.
 	void notifiesTransform();
 
-	// Renderables of the geometry.
-	RenderableVector renderables;
+	//.renderables of the geometry.
+	RenderablesVector renderables;
 
 	// Bounding volume of the geometry.
 	BoundingBox bounds;

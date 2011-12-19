@@ -36,7 +36,7 @@ PropertyPlugin::PropertyPlugin()
 
 PluginMetadata PropertyPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Property";
 	metadata.description = "Provides a page with object properties.";
@@ -85,25 +85,42 @@ void PropertyPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
+static ResourceLoader* GetResourceLoader(Resource* resource)
 {
-	propertyPage->showProperties( resource.get() );
+	if( !resource ) return nullptr;
 
-	ResourceManager* rm = GetResourceManager();
+	ResourceManager* res = GetResourceManager();
 
-	const String& path = resource->getPath();
+	const Path& path = resource->getPath();
 	const String& ext = PathGetFileExtension(path);
 
-	ResourceLoader* loader = rm->findLoader(ext);
+	ResourceLoader* loader = res->findLoader(ext);
+	return loader;
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
+{
+	return;
+
+	PropertyPage* page = propertyPage;
+
+	wxFoldPanel foldPanel = page->AddFoldPanel("Resource");
+	foldPanel.GetItem()->GetCaptionBar()->Hide();
+
+	PropertyGrid* grid = page->createPropertyGrid( foldPanel.GetParent() );
+	//propertyPage->showProperties( grid, resource.get() );
+
+	ResourceLoader* loader = GetResourceLoader(resource.get());
 	if( !loader ) return;
 
-	propertyPage->showProperties(loader, false);
+	propertyPage->showProperties(grid, loader, false);
 
 	ResourceProcessor* processor = PipelineFindProcessor( resource->getType() );
-
 	if( !processor ) return;
 
-	propertyPage->showProperties(processor, false);
+	propertyPage->showProperties(grid, processor, false);
 }
 
 //-----------------------------------//

@@ -67,11 +67,11 @@ public:
 	// Sets the image of the particles.
 	void setImage(const ImageHandle& image);
 
-	// Updates the debug renderable.
+	// Updates the debug.renderable.
 	void updateDebugRenderable() const;
 
-	// Creates the debug renderable.
-	RenderablePtr createDebugRenderable() const;
+	// Creates the debug.renderable.
+RenderBatchPtr createDebuRenderable() const;
 
 protected:
 

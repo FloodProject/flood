@@ -103,12 +103,12 @@ GeometryBufferPtr Grid::buildGeometry()
 
 void Grid::update( float update )
 {
-	if( !renderables.empty() ) return;
+	if( renderables.empty() ) return;
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
 
-	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
-	rend->setPrimitiveType(PolygonType::Lines);
+	RenderBatch* rend = AllocateHeap(Renderable);
+	rend->setPrimitiveType(PrimitiveType::Lines);
 	rend->setGeometryBuffer( buildGeometry() );
 	rend->setMaterial( materialHandle );
 

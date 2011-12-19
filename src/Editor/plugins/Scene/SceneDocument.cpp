@@ -21,6 +21,10 @@
 #include "Plugins/Gizmos/GizmoPlugin.h"
 #include "Physics/Physics.h"
 
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+#include <vld.h>
+#endif
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -47,6 +51,7 @@ void SceneDocument::onDocumentDestroy()
 	if( sceneWindow )
 	{
 		sceneWindow->getControl()->stopFrameLoop();
+		sceneWindow->setCamera(nullptr);
 		sceneWindow->setMainCamera(nullptr);
 	}
 
@@ -63,12 +68,21 @@ void SceneDocument::onDocumentDestroy()
 
 bool SceneDocument::onDocumentOpen()
 {
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+	// Workaround VLD bug with file dialogs
+	VLDDisable();
+#endif
+
 	// Ask for file name to open.
 	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
 		wxEmptyString, getFileDialogDescription(), wxFC_OPEN );
 	
 	if( fc.ShowModal() != wxID_OK )
 		return true;
+
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+	VLDRestore();
+#endif
 
 	reset();
 
@@ -180,8 +194,6 @@ void SceneDocument::onDocumentSelect()
 {
 	setupRenderWindow();
 
-
-
 	RenderControl* control = sceneWindow->getControl();
 	control->startFrameLoop();
 
@@ -226,7 +238,7 @@ void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
 	// Toogle the camera tool.
 	GizmoPlugin* gizmoPlugin = GetPlugin<GizmoPlugin>();
 	
-	PluginTool* cameraTool = gizmoPlugin->findToolById(GizmoTool::Camera);
+	ToolExtension* cameraTool = gizmoPlugin->findToolById(GizmoTool::Camera);
 	if( !cameraTool ) return;
 
 	GetEditor().getEventManager()->toggleTool(cameraTool);
@@ -298,7 +310,7 @@ void SceneDocument::setupRenderWindow()
 
 //-----------------------------------//
 
-void SceneDocument::onToolSelect(PluginTool* mode)
+void SceneDocument::onToolSelect(ToolExtension* mode)
 {
 
 }
@@ -309,10 +321,10 @@ void SceneDocument::createEditorScene()
 {
 	Allocator* alloc = AllocatorGetHeap();
 
-	editorScene = Allocate(Scene, alloc);
+	editorScene = Allocate(alloc, Scene);
 	
 	// Create a grid entity.
-	GridPtr grid = Allocate(Grid, alloc);
+	GridPtr grid = Allocate(alloc, Grid);
 	grid->update(0);
 	grid->updateBounds();
 
@@ -324,10 +336,10 @@ void SceneDocument::createEditorScene()
 	editorScene->entities.add( entityGrid );
 
 #ifdef ENABLE_PHYSICS_BULLET
-	BoxShapePtr shape = Allocate(BoxShape, alloc);
+	BoxShapePtr shape = Allocate(alloc, BoxShape);
 	entityGrid->addComponent(shape);
 
-	BodyPtr body = Allocate(Body, alloc);
+	BodyPtr body = Allocate(alloc, Body);
 	body->setMass(0);
 
 	entityGrid->addComponent(body);
@@ -360,7 +372,7 @@ EntityPtr SceneDocument::createCamera()
 
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera = AllocateHeap(Camera);
+	Camera* camera = AllocateHeap(Camera);
 	cameraController = AllocateHeap(FirstPersonController);
 	cameraController->setEnabled(false);
 
@@ -370,14 +382,14 @@ EntityPtr SceneDocument::createCamera()
 	// Generate a new unique name.
 	String name = StringFormat("EditorCamera%d", i++);
 
-	EntityPtr entityCamera = EntityCreate( AllocatorGetHeap() );
+	Entity* entityCamera = EntityCreate( AllocatorGetHeap() );
 	entityCamera->setName(name);
 	entityCamera->addTransform();
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
 #ifdef ENABLE_AUDIO_OPENAL
-	ComponentPtr listener = AllocateHeap(Listener);
+	Component* listener = AllocateHeap(Listener);
 	entityCamera->addComponent( listener );
 #endif
 
@@ -389,13 +401,8 @@ EntityPtr SceneDocument::createCamera()
 void SceneDocument::onRender()
 {
 	RenderView* view = sceneWindow->getView();
-
-	if( !view->getCamera() )
-		sceneWindow->switchToDefaultCamera();
-
-	const CameraPtr& camera = view->getCamera();
-	if( !camera ) return;
 	
+	Camera* camera = sceneWindow->getCamera().get();
 	camera->setView( view );
 
 	RenderBlock block;

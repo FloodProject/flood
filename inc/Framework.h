@@ -28,8 +28,7 @@ struct Archive;
  * Simple framework to facilitate the use of the engine functionality in
  * applications. It asks for a rendering device to use, and has some 
  * virtual methods used to setup all the needed resources. Applications 
- * can just derive from this class and setup the needed stuff, call the 
- * run() method and everything should automagically work.
+ * can just derive from this class and setup the needed stuff.
  */
 
 class API_ENGINE Framework : public Engine
@@ -39,17 +38,23 @@ public:
 	Framework(const String& app);
 	virtual ~Framework();
 
-	// Initializes the engine.
+	// Initializes the framework.
 	void init();
+
+	// Cleans up the framework.
+	void cleanup();
 
 	// Kickstart the framework in action.
 	void run();
 
-	// Sets up the render window.
-	void setupWindow(Window* window);
+	// Executes an iteration of the main loop.
+	virtual void mainLoop();
 
 	// Sets up the resource paths.
 	void setupResourcePaths();
+
+	// Gets/sets the window.
+	ACESSOR(Window, Window*, window)
 
 protected:
 
@@ -77,16 +82,21 @@ protected:
 	virtual void onButtonPressed( const MouseButtonEvent& ) {}
 	virtual void onButtonReleased( const MouseButtonEvent& ) {}
 
+private:
+
+	// Sets up the window.
+	void setupWindow();
+
 	// Register input devices callbacks.
 	void registerCallbacks();
 
 	// Calculates some statistics about frame times.
 	void updateFrameTimes();
 
-	// Main rendering loop.
-	virtual void mainLoop();
-
 public:
+
+	// Holds the update rate.
+	uint16 numUpdatesSecond;
 
 	// Resources archive.
 	Archive* archive;

@@ -118,7 +118,7 @@ bool EventManager::TryBefore(wxEvent& event)
 		return false;
 	}
 
-	PluginTool* tool = plugin->findTool(item);
+	ToolExtension* tool = plugin->findTool(item);
 	if( !tool ) return false;
 
 	setTool(tool);
@@ -128,7 +128,7 @@ bool EventManager::TryBefore(wxEvent& event)
 
 //-----------------------------------//
 
-void EventManager::setTool(PluginTool* tool)
+void EventManager::setTool(ToolExtension* tool)
 {
 	if( !tool ) return;
 
@@ -170,7 +170,7 @@ void EventManager::unsetCurrentTool()
 
 //-----------------------------------//
 
-void EventManager::toggleTool(PluginTool* tool)
+void EventManager::toggleTool(ToolExtension* tool)
 {
 	if( !tool && !originalTool ) return;
 
@@ -189,7 +189,7 @@ void EventManager::toggleTool(PluginTool* tool)
 
 int EventManager::getCurrentToolId()
 {
-	PluginTool* tool = getCurrentTool();
+	ToolExtension* tool = getCurrentTool();
 	if( !tool ) return wxID_INVALID;
 
 	wxAuiToolBarItem* item = tool->item;

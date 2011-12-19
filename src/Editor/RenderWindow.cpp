@@ -58,7 +58,7 @@ bool RenderWindow::createContext()
 		return false;
 	}
 
-	context = Allocate(RenderContext, GetRenderAllocator());
+	context = Allocate(GetRenderAllocator(), RenderContext);
 	setContext(context);
 
 	return true;

@@ -40,7 +40,7 @@ public:
 	// Document callbacks.
 	void onDocumentSelect() OVERRIDE;
 	void onDocumentUnselect() OVERRIDE;
-	void onToolSelect(PluginTool* tool) OVERRIDE;
+	void onToolSelect(ToolExtension* tool) OVERRIDE;
 
 	// Scene management.
 	void resetScene();

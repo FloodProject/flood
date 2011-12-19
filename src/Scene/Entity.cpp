@@ -31,7 +31,7 @@ REFLECT_CLASS_END()
 
 Entity* EntityCreate(Allocator* alloc)
 {
-	return Allocate(Entity, alloc);
+	return Allocate(alloc, Entity);
 }
 
 //-----------------------------------//

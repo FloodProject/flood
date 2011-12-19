@@ -7,71 +7,16 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Graphics/MeshManager.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
+#include "Resources/Mesh.h"
+#include "Resources/Animation.h"
+#include "Resources/Skeleton.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
-
-bool MeshManager::build(Mesh* mesh)
-{
-	if( !mesh ) return false;
-
-	if( !mesh->isBuilt() )
-	{
-		mesh->buildBounds();
-		mesh->setupInitialVertices();
-		mesh->built = true;
-	}
-
-	buildGeometry(mesh);
-
-	return true;
-}
-
-//-----------------------------------//
-
-void MeshManager::buildGeometry(Mesh* mesh)
-{
-	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
-
-	gb->set( VertexAttribute::Position, mesh->position );
-	gb->set( VertexAttribute::Normal, mesh->normals );
-	gb->set( VertexAttribute::TexCoord0, mesh->texCoords );
-
-	if( mesh->isAnimated() )
-		gb->set( VertexAttribute::BoneIndex, mesh->boneIndices );
-
-	// Construct the mesh groups.
-	const std::vector<MeshGroup>& groups = mesh->groups;
-
-	for( size_t i = 0; i < groups.size(); i++ )
-	{
-		const MeshGroup& group = groups[i];
-
-		uint32 numIndices = group.indices.size();
-		if( numIndices == 0 ) continue;
-
-		// Gets a material for the group.
-		MaterialHandle material = buildMaterial(mesh, group);
-
-		gb->addIndex((uint8*)&group.indices.front(), numIndices*sizeof(uint16));
-
-		RenderablePtr renderable = AllocateHeap(Renderable);
-		renderable->setPrimitiveType( PolygonType::Triangles );
-		renderable->setGeometryBuffer(gb);
-		renderable->setMaterial(material);
-
-		meshRenderables[mesh].push_back(renderable);
-
-		#pragma TODO("Use index buffers when building mesh geometry")
-	}
-}
-
-//-----------------------------------//
 	
-MaterialHandle MeshManager::buildMaterial(Mesh* mesh, const MeshGroup& group)
+static MaterialHandle MeshBuildMaterial(Mesh* mesh, const MeshGroup& group)
 {
 	const MeshMaterial& matMesh = group.material;
 
@@ -97,6 +42,59 @@ MaterialHandle MeshManager::buildMaterial(Mesh* mesh, const MeshGroup& group)
 		material->setShader("VertexLitSkinned");
 
 	return handle;
+}
+
+//-----------------------------------//
+
+static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
+{
+	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
+	
+	// Construct the.renderables for each mesh group.
+	const std::vector<MeshGroup>& groups = mesh->groups;
+
+	for( size_t i = 0; i < groups.size(); i++ )
+	{
+		const MeshGroup& group = groups[i];
+
+		uint32 numIndices = group.indices.size();
+		if( numIndices == 0 ) continue;
+
+		// Gets a material for the group.
+		MaterialHandle material = MeshBuildMaterial(mesh, group);
+
+		gb->addIndex((uint8*)&group.indices.front(), numIndices*sizeof(uint16));
+
+		RenderBatch* renderable = AllocateHeap(RenderBatch);
+		renderable->setPrimitiveType( PrimitiveType::Triangles );
+		renderable->setGeometryBuffer(gb);
+		renderable->setMaterial(material);
+
+		Material* mat = material.Resolve();
+		
+		if( mat->isBlendingEnabled() )
+		renderable->setRenderLayer(RenderLayer::Transparency);
+
+		rends.push_back(renderable);
+	}
+}
+
+//-----------------------------------//
+
+bool MeshBuild(Mesh* mesh, RenderablesVector& rends)
+{
+	if( !mesh ) return false;
+
+	if( !mesh->isBuilt() )
+	{
+		mesh->buildBounds();
+		mesh->setupInitialVertices();
+		mesh->built = true;
+	}
+
+	MeshBuildGeometry(mesh, rends);
+
+	return true;
 }
 
 //-----------------------------------//

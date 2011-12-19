@@ -11,7 +11,7 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 #include "Scene/Camera.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -67,9 +67,9 @@ public:
 	// Called just before the camera renders this component.
 	void onPreRender( const Camera& camera ) OVERRIDE;
 
-	// Creates the debug renderable of the component.
-	//RenderablePtr createDebugRenderable() const OVERRIDE;
-  
+	// Creates the debug.renderable of the component.
+	//RenderBatchPtr createDebugRenderable() const OVERRIDE;
+
 protected:
 
 	// Billboard type

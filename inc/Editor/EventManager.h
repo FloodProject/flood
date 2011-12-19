@@ -23,7 +23,7 @@ NAMESPACE_EDITOR_BEGIN
 class EditorFrame;
 class Document;
 
-class PluginTool;
+class ToolExtension;
 
 /**
  * Plugins can subscribe to these events and get notified when things
@@ -90,7 +90,7 @@ public:
 	void onRedoOperation(const UndoOperationPtr&);
 
 	// Gets the current tool.
-	ACESSOR(CurrentTool, PluginTool*, currentTool)
+	ACESSOR(CurrentTool, ToolExtension*, currentTool)
 
 	// Gets/sets the current plugin.
 	ACESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
@@ -99,13 +99,13 @@ public:
 	int getCurrentToolId();
 
 	// Switches the current plugin.
-	void setTool(PluginTool* tool);
+	void setTool(ToolExtension* tool);
 
 	// Unsets the current tool.
 	void unsetCurrentTool();
 
 	// Toggles the current tool. Pass null to restore original tool.
-	void toggleTool(PluginTool* tool);
+	void toggleTool(ToolExtension* tool);
 
 protected:
 
@@ -123,13 +123,13 @@ protected:
 	bool TryBefore( wxEvent& event ) OVERRIDE;
 
 	// Current tool id.
-	PluginTool* currentTool;
+	ToolExtension* currentTool;
 
 	// Current plugin.
 	EditorPlugin* currentPlugin;
 
 	// Keeps the original tool while current is toggled.
-	PluginTool* originalTool;
+	ToolExtension* originalTool;
 
 	// Global event listener plugins.
 	EventListeners eventListeners;

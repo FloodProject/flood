@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -21,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
  * See http://en.wikipedia.org/wiki/Geodesic_dome for more details.
  */
 
-class Sphere : public Renderable
+class Sphere : public RenderBatch
 {
 public:
 
@@ -44,4 +44,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sphere );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

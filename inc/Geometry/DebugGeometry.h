@@ -14,10 +14,10 @@
 #include "Math/Color.h"
 
 FWD_DECL_INTRUSIVE(Entity)
-FWD_DECL_INTRUSIVE(Renderable)
+FWD_DECL_INTRUSIVE(RenderBatch)
 FWD_DECL_INTRUSIVE(VertexBuffer)
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -56,11 +56,11 @@ public:
 
 	Color currentColor;
 
-	RenderablePtr lines;
-	RenderablePtr triangles;
-	RenderablePtr quads;
+	RenderBatchPtr lines;
+	RenderBatchPtr triangles;
+	RenderBatchPtr quads;
 
-	std::vector<Renderable*> renderables;
+	std::vector<RenderBatch*> renderables;
 };
 
 namespace DebugDrawFlags
@@ -74,20 +74,20 @@ namespace DebugDrawFlags
 class GeometryBuffer;
 
 // Builds debug geometry of a bounding box.
-API_ENGINE RenderablePtr DebugBuildBoundingBox( const BoundingBox& box );
+API_ENGINE RenderBatchPtr DebugBuildBoundingBox( const BoundingBox& box );
 
 // Updates the debug geometry of a bounding box.
 API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox&, Color );
 
 // Builds debug geometry of a ray.
-API_ENGINE RenderablePtr DebugBuildRay( const Ray& pickRay, float length );
+API_ENGINE RenderBatchPtr DebugBuildRay( const Ray& pickRay, float length );
 
 // Builds debug geometry of a frustum.
-API_ENGINE RenderablePtr DebugBuildFrustum( const Frustum& box );
+API_ENGINE RenderBatchPtr DebugBuildFrustum( const Frustum& box );
 
 // Updates the debug geometry of a frustum.
-API_ENGINE void DebugUpdateFrustum( const RenderablePtr&, const Frustum& box );
+API_ENGINE void DebugUpdateFrustum( const RenderBatchPtr&, const Frustum& box );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END

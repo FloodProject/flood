@@ -46,7 +46,7 @@ MonoPlugin::MonoPlugin()
 
 PluginMetadata MonoPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Mono";
 	metadata.description = "Provides .NET scripting via Mono";

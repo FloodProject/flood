@@ -250,7 +250,8 @@ Plane GizmoPlugin::getGizmoPickPlane(const Ray& ray)
 bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
+	Camera* camera = document->sceneWindow->getCamera().get();
+
 	Ray ray = camera->getRay(x, y);
 
 	float distance;
@@ -362,7 +363,7 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 		isGizmoPicked = true;
 
 		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-		const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
+		Camera* camera = document->sceneWindow->getCamera().get();
 		
 		Ray ray = camera->getRay(mbe.x, mbe.y);
 		pickPlane = getGizmoPickPlane(ray);
@@ -410,8 +411,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	assert( gizmos.find(entity) == gizmos.end() );
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* view = document->sceneWindow->getView();
-	const CameraPtr& camera = view->getCamera();
+	Camera* camera = document->sceneWindow->getCamera().get();
 
 	Gizmo* newGizmo = nullptr;
 
@@ -431,7 +431,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
-	EntityPtr entityGizmo = EntityCreate( AllocatorGetHeap() );
+	Entity* entityGizmo = EntityCreate( AllocatorGetHeap() );
 	entityGizmo->setName("Gizmo");
 	entityGizmo->addTransform();
 	entityGizmo->addComponent(gizmo);
@@ -489,7 +489,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enu
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->sceneWindow->getView()->getCamera();
+	Camera* camera = document->getViewframe()->getCamera().get();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;

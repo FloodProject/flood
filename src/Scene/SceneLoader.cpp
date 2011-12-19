@@ -39,14 +39,14 @@ static Serializer* GetSerializerForStream(const Stream& stream)
 
 //-----------------------------------//
 
-bool SceneLoader::decode(const Stream& stream, Resource* res)
+bool SceneLoader::decode(ResourceLoadOptions& options)
 {
-	Serializer* serializer = GetSerializerForStream(stream);
+	Serializer* serializer = GetSerializerForStream(*options.stream);
 	if( !serializer ) return false;
 
-	Scene* scene = (Scene*) res;
+	Scene* scene = (Scene*) options.resource;
 
-	serializer->stream = (Stream*) &stream;
+	serializer->stream = options.stream;
 	serializer->object = scene;
 
 	Object* object = SerializerLoad(serializer);

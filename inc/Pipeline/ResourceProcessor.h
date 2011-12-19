@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "Core/References.h"
-#include "Core/Object.h"
+#include "Core/Extension.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 
@@ -26,7 +25,7 @@ typedef std::map<Class*, ResourceProcessor*> ResourceProcessorMap;
 
 REFLECT_DECLARE_CLASS(ResourceProcessor)
 
-class API_PIPELINE NO_VTABLE ResourceProcessor : public Object
+class API_PIPELINE NO_VTABLE ResourceProcessor : public Extension
 {
 	DECLARE_UNCOPYABLE(ResourceProcessor)
 

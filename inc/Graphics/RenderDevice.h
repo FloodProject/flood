@@ -78,7 +78,7 @@ public:
 	RenderDevice();
 	~RenderDevice();
 
-	// Renders a.renderable.
+	// Renders a renderable.
 	void render( const RenderState& state, const LightQueue& lights );
 
 	// Renders a list of.renderables.
@@ -88,7 +88,7 @@ public:
 	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
 
 	// Gets the texture manager.
-	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
+	//GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
@@ -115,28 +115,14 @@ public:
 protected:
 
 	// Forward render state management.
-	void setupRenderForward( const RenderState&, const LightQueue& );
 	bool setupRenderStateMatrix( const RenderState& state );
 	bool setupRenderStateShadow( LightQueue& lights );
-	bool setupRenderStateLight( const RenderState&, const LightQueue& );
+	//bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
 
-	// Common render state management.
-	void setupRenderStateMaterial(const RenderState& state, bool bindUniforms );
-	void undoRenderStateMaterial( Material* );
-
-	void unbindTextures(Material* material);
-	void bindTextures(const RenderState& state, bool bindUniforms);
-
-	// Binds the buffers needed to draw the.renderable.
+	// Binds the buffers needed to draw the batch.
 	bool bindBuffers(RenderBatch*);
 	bool unbindBuffers(RenderBatch*);
-
-	// Renders the geometry of the.renderable.
-	void render(RenderBatch*);
-
-	// Render this.renderable.
-	void render(RenderDevice* device);
 
 	// Rendering pipeline.
 	RenderPipeline::Enum pipeline;
@@ -153,9 +139,11 @@ protected:
 	// Active view.
 	RenderView* activeView;
 
+#if 0
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;
 	void updateLightDepth( LightState& state );
+#endif
 };
 
 API_RENDER RenderDevice* GetRenderDevice();

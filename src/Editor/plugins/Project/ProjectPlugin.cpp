@@ -14,6 +14,10 @@
 #include "EditorIcons.h"
 #include "Plugins/Scene/SceneDocument.h"
 
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+#include <vld.h>
+#endif
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -28,7 +32,7 @@ REFLECT_CLASS_END()
 
 PluginMetadata ProjectPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Project";
 	metadata.description = "Provides project management functionality.";
@@ -92,9 +96,18 @@ bool ProjectPlugin::askSaveChanges( Document* document )
 	const char* msg = "Document contains unsaved changes. Do you want to save them?";
 	int flags = wxYES_NO | wxCANCEL | wxICON_EXCLAMATION;
 	
-	wxMessageDialog dialog(editor, msg, "Editor", flags);
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+	// Workaround VLD bug with file dialogs
+	VLDDisable();
+#endif
 
-    int answer = dialog.ShowModal();
+	wxMessageDialog dialog(editor, msg, "Editor", flags);
+	int answer = dialog.ShowModal();
+
+#if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
+	VLDRestore();
+#endif
+
 	if( answer == wxID_YES ) return false;
 
 	return (answer != wxID_CANCEL);

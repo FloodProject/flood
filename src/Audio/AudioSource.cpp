@@ -16,6 +16,8 @@
 #include "Audio/Device.h"
 #include "Audio/AL.h"
 
+#define LogAudio(s) (LogWarn(s ": %s", AudioGetError()))
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -28,25 +30,22 @@ REFLECT_ENUM_END()
 
 //-----------------------------------//
 
-AudioSource::AudioSource(AudioContext* context, const SoundHandle& handle)
+AudioSource::AudioSource(AudioContext* context)
 	: context(context)
-	, device(context->device)
 	, id(0)
-{	
-	context->makeCurrent();
+{
+	for( size_t i = 0; i < AudioSourceNumBuffers; ++i )
+		buffers[i] = nullptr;
 
 	// Generates a new OpenAL source.
 	alGenSources(1, &id);
 
-	if(device->checkError())
+	if(AudioCheckError())
 	{
-		LogWarn("Could not generate a new audio source: %s", device->getError());
+		LogAudio("Could not generate a new audio source");
 		return;
 	}
 
-	Sound* sound = handle.Resolve();
-	
-	buffer = device->prepareBuffer(sound);
 	setPosition( Vector3::Zero );
 }
 
@@ -57,98 +56,230 @@ AudioSource::~AudioSource()
 	context->makeCurrent();
 
 	stop();
+	empty();
 
 	alSourcei(id, AL_BUFFER, AL_NONE);
-
-	if( device->checkError() )
+	
+	if( AudioCheckError() )
 	{
-		LogWarn("Could not unset buffer from audio source: %s", device->getError());
+		LogAudio("Could not unset buffer from audio source");
 		return;
 	}
 
-	// delete this source in OpenAL
+	// Delete the source from OpenAL.
 	alDeleteSources(1, &id);
 
-	if( device->checkError() )
+	if( AudioCheckError() )
 	{
-		LogWarn("Could not delete audio source: %s", device->getError());
+		LogAudio("Could not delete audio source");
 		return;
 	}
+}
+
+//-----------------------------------//
+
+void AudioSource::empty()
+{
+	int queued;
+	alGetSourcei(id, AL_BUFFERS_QUEUED, &queued);
+
+	while(queued--)
+	{
+		ALuint buffer;
+
+		alSourceUnqueueBuffers(id, 1, &buffer);
+		
+		if(AudioCheckError())
+			LogAudio("Could not unqueue buffer from audio source");
+	}
+}
+
+//-----------------------------------//
+
+void AudioSource::queue()
+{
+	for(size_t i = 0; i < AudioSourceNumBuffers; ++i)
+	{
+		AudioBuffer* buffer = buffers[i].get();
+		if( !buffer ) break;
+
+		ALuint bufferId = buffer->getId();
+
+		// Enqueue the buffer in the audio source.
+		alSourceQueueBuffers(id, 1, &bufferId);
+
+		if(AudioCheckError())
+			LogAudio( "Could not queue buffer in audio source");
+	}
+}
+
+//-----------------------------------//
+
+static const size_t BUFFER_SIZE = 8192 * 4;
+
+static bool AudioStreamQueueBuffer(ALuint source, ALuint buffer,
+	AudioBufferDetails& details, ResourceStream& stream, bool loop)
+{
+	uint8 data[BUFFER_SIZE];
+
+	bool hasMoreData = true;
+
+	int size = stream.decode(data, ARRAY_SIZE(data));
+	
+	if( size < BUFFER_SIZE )
+		hasMoreData = false;
+
+	details.data = data;
+	details.size = size;
+
+	AudioBufferData(buffer, details);
+	
+	alSourceQueueBuffers(source, 1, &buffer);
+
+	if(AudioCheckError())
+		LogAudio("Could not queue buffer in audio source");
+
+	// Reset the stream so it loops properly.
+	if( !hasMoreData && loop )
+	{
+		stream.reset();
+		hasMoreData = true;
+	}
+
+	return hasMoreData;
+}
+
+//-----------------------------------//
+
+void AudioSource::setSound(const SoundHandle& handle)
+{
+	soundHandle = handle;
+	sound = handle.Resolve();
+
+	// Empty the source if the sound is not valid.
+	if( !sound )
+	{
+		empty();
+		return;
+	}
+
+	AudioDevice* device = GetAudioDevice();
+
+	if( !sound->getStreamed() )
+	{
+		buffers[0] = device->prepareBuffer(sound);
+		
+		if( sound->isLoaded() )
+			AudioBufferSound(buffers[0].get(), sound);
+	}
+	else
+	{
+		ResourceStream& resourceStream = *sound->stream;
+
+		AudioBufferDetails details;
+		AudioGetBufferDataDetails(details, sound);
+
+		for( size_t i = 0; i < AudioSourceNumBuffers; ++i )
+		{
+			buffers[i] = device->createBuffer();
+			AudioBuffer* buffer = buffers[i].get();
+
+			AudioStreamQueueBuffer(id, buffer->id, details, resourceStream, loop);
+		}
+	}
+
+	update();
+}
+
+//-----------------------------------//
+
+bool AudioSource::update()
+{
+	if( !sound ) return false;
+	
+	bool isStreamed = sound->getStreamed();
+	
+	if( !isStreamed ) goto out;
+ 
+	int processed;
+	alGetSourcei(id, AL_BUFFERS_PROCESSED, &processed);
+	
+	if( processed == 0 ) return true;
+
+	AudioBufferDetails details;
+	AudioGetBufferDataDetails(details, sound);
+
+	ResourceStream& stream = *sound->stream;
+
+	while(processed--)
+	{
+		ALuint buffer;
+		alSourceUnqueueBuffers(id, 1, &buffer);
+		
+		if(AudioCheckError())
+			LogAudio("Could not unqueue buffer from audio source");
+ 
+		if( !AudioStreamQueueBuffer(id, buffer, details, stream, loop) )
+			break;
+	}
+
+out:
+
+	return true;
 }
 
 //-----------------------------------//
 
 void AudioSource::play( const int count )
 {
-	// The source could be in three different states:
-	//
-	//		Stopped (in which case we play it from the beginning)
-	//		Playing (in which case we do nothing)
-	//		Paused (in which case we play from where it was paused)
+	if( !sound ) return;
 
-	if( !buffer->getUploaded() )
+	if( !sound->getStreamed() && !buffers[0]->getUploaded() )
 	{
-		buffer->onBufferUploaded.Connect(this, &AudioSource::onBufferUploaded);
-		isPendingPlay = true; 
+		buffers[0]->onBufferUploaded.Connect(this, &AudioSource::onBufferUploaded);
+		state = AudioSource::PENDING_PLAY;
+
+		if(state != SourceState::PAUSED && state != SourceState::PLAYING)
+			alSourcei(id, AL_BUFFER, buffers[0]->getId());
+
 		return;
 	}
 
-	context->makeCurrent();
-
-	if( isPlaying() )
-	{
-		// Source is already playing, do nothing.
-		return;
-	}
-	else if( !isPaused() )
-	{
-		// Source is stopped so enqueue the buffer 'count' times
-		//for(int i = 0; i < count; i++)
-			//queue();
-
-		alSourcei(id, AL_BUFFER, buffer->getId());
-	}
-
-	// Also handles the paused state implicitly.
 	alSourcePlay(id);
 
-	if(device->checkError())
-	{
-		LogWarn("Could not play audio source: %s", device->getError());
-	}
+	state = SourceState::PLAYING;
+
+	if(AudioCheckError())
+		LogAudio("Could not play audio source");
 }
 
 //-----------------------------------//
 
 void AudioSource::onBufferUploaded(AudioBuffer* newBuffer)
 {
-	assert( newBuffer == buffer.get() );
+	assert( newBuffer == buffers[0].get() );
 	
 	// This gets called if the source was asked to play but if the buffer
 	// was not uploaded yet. This can happen due to asynchronous nature
 	// of the loading of the resources.
 
-	if( !isPendingPlay ) return;
-
+	if( state != AudioSource::PENDING_PLAY ) return;
 	play();
-	isPendingPlay = false;
 }
 
 //-----------------------------------//
 
 void AudioSource::stop()
 {
-	context->makeCurrent();
-
 	alSourceStop(id);
 
-	if(device->checkError())
-	{
-		LogWarn("Could not stop audio source: %s", device->getError());
-	}
+	if(AudioCheckError())
+		LogAudio("Could not stop audio source");
 
-	if( isPendingPlay )
-		isPendingPlay = false;
+	state = AudioSource::STOPPED;
+
+	if( sound && sound->stream )
+		sound->stream->reset();
 }
 
 //-----------------------------------//
@@ -159,23 +290,17 @@ void AudioSource::pause()
 
 	alSourcePause(id);
 
-	if(device->checkError())
-	{
-		LogWarn( "Could not pause audio source: %s", device->getError());
-	}
-
-	if( isPendingPlay )
-		isPendingPlay = false;
+	if(AudioCheckError())
+		LogAudio( "Could not pause audio source");
+	
+	state = AudioSource::PAUSED;
 }
 
 //-----------------------------------//
 
 bool AudioSource::isPlaying()
 {
-	context->makeCurrent();
-
 	ALenum state;
-
 	alGetSourcei(id, AL_SOURCE_STATE, &state);
 
 	return (state == AL_PLAYING);
@@ -185,48 +310,10 @@ bool AudioSource::isPlaying()
 
 bool AudioSource::isPaused()
 {
-	context->makeCurrent();
-
 	ALenum state;
-
 	alGetSourcei(id, AL_SOURCE_STATE, &state);
 
 	return (state == AL_PAUSED);
-}
-
-//-----------------------------------//
-
-void AudioSource::queue()
-{
-	context->makeCurrent();
-	
-	ALuint bufferId = buffer->getId();
-
-	// Enqueue the buffer in the audio source.
-	alSourceQueueBuffers(id, 1, &bufferId);
-
-	if(device->checkError())
-	{
-		LogWarn( "Could not queue buffer in audio source: %s", device->getError());
-	}
-}
-
-//-----------------------------------//
-
-void AudioSource::clear()
-{
-	context->makeCurrent();
-	
-#if 0
-	// Dequeue all buffers in the audio source
-	alSourceUnqueueBuffers(id, 1, &bufferId);
-
-	if(device->checkError())
-	{
-		LogWarn( "Could not queue buffer in audio source: %s",
-			device->getError());
-	}
-#endif
 }
 
 //-----------------------------------//
@@ -275,22 +362,17 @@ void AudioSource::setMaxDistance( float distance )
 
 void AudioSource::setLoop(bool state)
 {
-	alSourcei(id, AL_LOOPING, state);
+	loop = state;
 }
 
 //-----------------------------------//
 
 void AudioSource::setPosition( const Vector3& pos )
 {
-	context->makeCurrent();
-
 	alSource3f(id, AL_POSITION, pos.x, pos.y, pos.z);
 
-	if(device->checkError())
-	{
-		LogWarn( "Could not set position in audio source: %s", device->getError());
-		return;
-	}
+	if(AudioCheckError())
+		LogAudio( "Could not set position in audio source");
 }
 
 //-----------------------------------//

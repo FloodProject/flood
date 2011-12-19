@@ -15,6 +15,8 @@
 typedef struct ALCdevice_struct ALCdevice;
 typedef struct ALCcontext_struct ALCcontext;
 
+FWD_DECL_INTRUSIVE(AudioSource)
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -33,18 +35,22 @@ class API_AUDIO AudioContext
 {
 	DECLARE_UNCOPYABLE(AudioContext)
 
-	friend class AudioSource;
-
 public:
 
-	AudioContext(AudioDevice* device);
-	virtual ~AudioContext();
+	AudioContext(ALCcontext* context);
+	~AudioContext();
+
+	// Creates a new audio source.
+	AudioSourcePtr createSource();
 
 	// Set the global volume of this context.
 	void setVolume( float volume );
 
 	// Make this the current context in the audio device.
 	void makeCurrent();
+
+	// Processes the context.
+	void process();
 
 	// Sets the listener position.
 	void setPosition(const Vector3& position);
@@ -53,18 +59,6 @@ public:
 	void setOrientation(const Vector3& rotation);
 
 protected:
-
-	// Creates a new OpenAL context
-	ALCcontext* createContext();
-
-	// Checks if the last operation was successful
-	bool checkError();
-
-	// Returns a string representation of an OpenAL context error
-	const char* getError();
-
-	// Audio device
-	AudioDevice* device;
 
 	// Holds an OpenAL context
 	ALCcontext* context;

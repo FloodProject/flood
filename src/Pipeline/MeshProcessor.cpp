@@ -30,6 +30,19 @@ MeshProcessor::MeshProcessor()
 
 //-----------------------------------//
 
+ExtensionMetadata* MeshProcessor::getMetadata()
+{
+	static ExtensionMetadata s_MeshExtension =
+	{
+		"Mesh",
+		"Processes a mesh resource."
+	};
+
+	return &s_MeshExtension;
+}
+
+//-----------------------------------//
+
 bool MeshProcessor::Process(const ResourcePtr& resource)
 {
 	return true;

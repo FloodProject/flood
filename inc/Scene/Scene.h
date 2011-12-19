@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 #include "Scene/Group.h"
-#include "Graphics/Renderable.h"
+#include "Graphics/RenderBatch.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Ray.h"
 #include "Math/Frustum.h"
@@ -23,7 +23,7 @@ FWD_DECL_INTRUSIVE(Entity)
 
 struct RayQueryResult
 {
-	EntityPtr entity;
+	Entity* entity;
 	float distance;
 };
 
@@ -35,8 +35,8 @@ FWD_DECL_INTRUSIVE(Geometry)
 
 struct RayTriangleQueryResult : public RayQueryResult
 {
-	GeometryPtr geometry;
-	RenderablePtr renderable;
+	Geometry* geometry;
+ RenderBatch* renderable;
 
 	Vector3 intersectionLocal;
 	Vector3 intersectionWorld;

@@ -76,6 +76,9 @@ public:
 	ImageProcessor();
 	~ImageProcessor();
 
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
+
 	// Processes the given resource.
 	bool Process(const ResourcePtr& resource);
 

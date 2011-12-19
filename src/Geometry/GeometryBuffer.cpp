@@ -7,48 +7,45 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-
 #include "Geometry/GeometryBuffer.h"
+#include "Core/Log.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-VertexElement::VertexElement()
-	: attribute(VertexAttribute::Position)
-	, type(VertexType::Float)
-	, components(3)
-	, stride(-1)
+VertexElement::VertexElement(VertexAttribute::Enum attribute,
+	VertexDataType::Enum type, uint8 components)
+	: stride(-1)
 	, offset(0)
 	, size(0)
 {
-
+	this->attribute = attribute;
+	this->type = type;
+	this->components = components;
 }
 
 //-----------------------------------//
 
-static int GetVertexTypeSize(VertexType::Enum type)
+static int GetVertexDataTypeSize(VertexDataType::Enum type)
 {
 	switch(type)
 	{
-	case VertexType::Float:
-		return sizeof(float);
-	case VertexType::Integer:
-		return sizeof(int);
-	case VertexType::Byte:
-		return sizeof(uint8);
+	case VertexDataType::Float:   return sizeof(float);
+	case VertexDataType::Integer: return sizeof(int);
+	case VertexDataType::Byte:    return sizeof(uint8);
 	}
 
 	LogAssert("Unknown vertex type");
 
-	return sizeof(float);
+	return 0;
 }
 
 //-----------------------------------//
 
 uint8 VertexElement::getSize() const
 {
-	return components * GetVertexTypeSize(type);
+	return components * GetVertexDataTypeSize(type);
 }
 
 //-----------------------------------//
@@ -60,11 +57,17 @@ void VertexDeclaration::add(const VertexElement& elem)
 
 //-----------------------------------//
 
+void VertexDeclaration::add(const VertexElementP& pod)
+{
+	VertexElement elem(pod.attribute, pod.type, pod.components);
+	decls.push_back(elem);
+}
+
+//-----------------------------------//
+
 void VertexDeclaration::add(VertexAttribute::Enum attribute, int numComponents)
 {
-	VertexElement elem;
-	elem.attribute = attribute;
-	elem.components = numComponents;
+	VertexElement elem(attribute, VertexDataType::Float, numComponents);
 	decls.push_back(elem);
 }
 
@@ -310,4 +313,4 @@ void GeometryBuffer::forceRebuild()
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_RESOURCES_END

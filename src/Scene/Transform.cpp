@@ -10,7 +10,7 @@
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
-#include "Graphics/DebugGeometry.h"
+#include "Geometry/DebugGeometry.h"
 #include "Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -27,7 +27,7 @@ REFLECT_CLASS_END()
 
 Transform* TransformCreate(Allocator* alloc)
 {
-	return Allocate(Transform, alloc);
+	return Allocate(alloc, Transform);
 }
 
 //-----------------------------------//

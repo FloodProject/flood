@@ -13,6 +13,8 @@
 #include "Pipeline/ResourceImporter.h"
 #include "Resources/Mesh.h"
 
+#define FBXSDK_SHARED
+
 #include <fbxfilesdk/fbxfilesdk_nsbegin.h>
 
 class KFbxSdkManager;
@@ -31,7 +33,7 @@ NAMESPACE_PIPELINE_BEGIN
 
 REFLECT_DECLARE_CLASS(ImporterFBX)
 
-class ImporterFBX : public ResourceImporter
+class API_PIPELINE ImporterFBX : public ResourceImporter
 {
 	REFLECT_DECLARE_OBJECT(ImporterFBX)
 
@@ -40,6 +42,9 @@ public:
 	ImporterFBX();
 	~ImporterFBX();
 
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
+
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Mesh)
 
@@ -47,10 +52,10 @@ public:
 	RESOURCE_LOADER_CLASS(Mesh)
 
 	// Decodes a FBX scene.
-	bool decode(const Stream& stream, Resource* res) OVERRIDE;
+	bool decode(ResourceLoadOptions& options) OVERRIDE;
 
 	// Converts an FBX mesh.
-	bool convertMesh(FBXFILESDK_NAMESPACE::KFbxMesh*, Mesh* mesh);
+	bool buildMesh(FBXFILESDK_NAMESPACE::KFbxMesh*, Mesh* mesh);
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "FBX")
@@ -60,7 +65,7 @@ public:
 
 	float scaleFactor;
 
-	FBXFILESDK_NAMESPACE::KFbxSdkManager* fbxSDK;
+	//FBXFILESDK_NAMESPACE::KFbxSdkManager* fbxSDK;
 	FBXFILESDK_NAMESPACE::KFbxIOSettings* fbxIO;
 };
 

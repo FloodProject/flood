@@ -12,7 +12,7 @@
 #include "DocumentWindow.h"
 #include "EditorIcons.h"
 #include "Editor.h"
-#include "Graphics/View.h"
+#include "Graphics/RenderView.h"
 
 #ifdef ALL_PLUGINS
 

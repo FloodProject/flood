@@ -24,11 +24,11 @@ NAMESPACE_ENGINE_BEGIN
 ScriptManager::ScriptManager()
 	: state(nullptr)
 {
-	ResourceManager* rm = GetResourceManager();
-	rm->onResourceReloaded.Connect( this, &ScriptManager::onReload );
+	ResourceManager* res = GetResourceManager();
+	res->onResourceReloaded.Connect( this, &ScriptManager::onReload );
 
 	// Create a new Lua VM instance.
-	state = Allocate(State, AllocatorGetHeap(), luaL_newstate());
+	state = AllocateHeap(State, luaL_newstate());
 
 	// Check for proper initialization of the Lua state.
 	if( !state->getLuaState() )
@@ -48,8 +48,8 @@ ScriptManager::ScriptManager()
 
 ScriptManager::~ScriptManager()
 {
-	ResourceManager* rm = GetResourceManager();
-	rm->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
+	ResourceManager* res = GetResourceManager();
+	res->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
 
 	LogInfo("Cleaning up the Lua state");
 	Deallocate(state);
@@ -63,7 +63,7 @@ State* ScriptManager::createScriptInstance(Script* script)
 
 	// Create a new thread state sharing the main state.
 	lua_State* thread = lua_newthread( state->getLuaState() );
-	State* newState = Allocate(State, AllocatorGetHeap(), thread);
+	State* newState = AllocateHeap(State, thread);
 
 	lua_State* L = thread;
 
@@ -77,12 +77,12 @@ State* ScriptManager::createScriptInstance(Script* script)
 	lua_setfenv(L, -2);                 // thread 
 
 	// Keeps a reference to the thread in the registry.
-	//int top = lua_gettop(L);
-	//lua_getfield(L, LUA_REGISTRYINDEX, "Scripts"); // top + 1
-	//lua_pushlightuserdata(L, newState); // key, the pointer to my own Script class
-	//lua_pushvalue(L, top+2);          // value, the new lua thread.
-	//lua_rawset(L, top+1); // Scripts table
-	//lua_settop(L, top); // Cleans the stack.
+    //int top = lua_gettop(L);
+    //lua_getfield(L, LUA_REGISTRYINDEX, "Scripts"); // top + 1
+    //lua_pushlightuserdata(L, newState); // key, the pointer to my own Script class
+    //lua_pushvalue(L, top+2);          // value, the new lua thread.
+    //lua_rawset(L, top+1); // Scripts table
+    //lua_settop(L, top); // Cleans the stack.
 
 	// Register the new state.
 	scripts[newState] = script;

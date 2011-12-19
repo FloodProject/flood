@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "gui/Console.h"
-#include "Graphics/Quad.h"
+#include "GUI/Console.h"
+#include "Geometry/Quad.h"
 
 NAMESPACE_ENGINE_BEGIN
 

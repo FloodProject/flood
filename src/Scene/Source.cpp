@@ -150,14 +150,24 @@ void Source::setMode( SourceMode::Enum mode )
 
 //-----------------------------------//
 
-void Source::setSound( const SoundHandle& sound )
+void Source::setSound( const SoundHandle& soundHandle )
 {
-	this->sound = sound;
+	sound = soundHandle;
 
-	AudioDevice* device = GetAudioDevice();
-	AudioContext* context = device->getMainContext();
+	Sound* sound = soundHandle.Resolve();
+	if( !sound ) return;
 
-	audioSource = new AudioSource(context, sound);
+	if( sound->getStreamed() )
+		mode = SourceMode::Streaming;
+
+	if( !audioSource )
+	{
+		AudioDevice* device = GetAudioDevice();
+		AudioContext* context = device->getMainContext();
+		audioSource = AllocateThis(AudioSource, context);
+	}
+
+	audioSource->setSound(soundHandle);
 
 	setVolume(volume);
 	setPitch(pitch);
@@ -172,12 +182,12 @@ void Source::update( float delta )
 {
 	if( !audioSource ) return;
 
+	audioSource->update();
+
 	if( audioSource->isPlaying() )
 		state = SourceState::Play;
-	
 	else if( audioSource->isPaused() )
 		state = SourceState::Pause;
-	
 	else
 		state = SourceState::Stop;
 }

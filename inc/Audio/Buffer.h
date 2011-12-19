@@ -21,13 +21,32 @@ NAMESPACE_ENGINE_BEGIN
 class AudioDevice;
 class AudioContext;
 
+// Buffers data into an audio buffer.
+struct AudioBufferDetails;
+API_AUDIO void AudioBufferData(ALuint buffer, const AudioBufferDetails& details);
+
+// Uploads the sound into the buffer.
+API_AUDIO void AudioBufferSound(AudioBuffer* buffer, Sound* sound);
+
+//-----------------------------------//
+
+struct AudioBufferDetails
+{
+	uint8* data;
+	size_t size;
+	int frequency;
+	int format;
+};
+
+// Gets the buffer data details for a sound.
+API_AUDIO void AudioGetBufferDataDetails(AudioBufferDetails& details, Sound* sound);
+
+//-----------------------------------//
+
 /**
- * Wraps an OpenAL buffer in a class. A buffer in OpenAL is the object
- * that contains the audio data. This will hold the id to the data and
- * delete it when no other source needs it.
- *
- * TODO: Add streaming audio and have some caching strategy so it does
- * not delete the audio data if it's potentially needed in the future.
+ * Wraps an OpenAL buffer, the object that contains the audio data.
+ * This will hold the id to the data and delete it when no other
+ * source needs it.
  */
 
 class API_AUDIO AudioBuffer : public ReferenceCounted
@@ -37,7 +56,7 @@ class API_AUDIO AudioBuffer : public ReferenceCounted
 
 public:
 
-	AudioBuffer( AudioDevice* device, Sound* sound );
+	AudioBuffer( AudioDevice* device );
 	~AudioBuffer();
 
 	// Gets the id of this buffer.
@@ -46,19 +65,16 @@ public:
 	// Gets if the buffer is uploaded.
 	GETTER(Uploaded, bool, uploaded)
 
-	// Queues the buffer data in the source.
-	void upload();
+	// Uploads the the buffer data in the source.
+	void upload(const AudioBufferDetails& details);
 
 	// Holds a pointer to the audio device.
 	AudioDevice* device;
 	
-	// Holds a pointer to the audio data buffer.
-	Sound* sound;
-
 	// Holds if the buffer has been uploaded.
 	bool uploaded;
 
-	// Holds the source id from OpenAL.
+	// Holds the buffer id from OpenAL.
 	ALuint id;
 
 	// Event is sent when buffer is uploaded.

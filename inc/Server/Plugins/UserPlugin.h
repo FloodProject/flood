@@ -18,14 +18,11 @@ NAMESPACE_SERVER_BEGIN
 
 REFLECT_DECLARE_CLASS(UserPlugin)
 
-class UserPlugin : public ServerPlugin, public UserMessageHandler
+class UserPlugin : public UserMessageHandler
 {
 	REFLECT_DECLARE_OBJECT(UserPlugin)
 
 public:
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
 
 	void handleUserAuth(const SessionPtr&, const UserAuthMessage&) OVERRIDE;
 	void handleUserChangeName(const SessionPtr&, const UserChangeNameMessage&) OVERRIDE;

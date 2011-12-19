@@ -15,6 +15,7 @@
 #include "Math/Helpers.h"
 #include "Core/Utilities.h"
 #include "Core/Log.h"
+#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -57,8 +58,7 @@ void Milkshape3D::preprocess()
 
 	buildGeometry();
 
-	if( !mesh->isAnimated() )
-		return;
+	if( !mesh->isAnimated() ) return;
 		
 	buildSkeleton();
 	buildAnimations();
@@ -78,7 +78,7 @@ void Milkshape3D::buildSkeleton()
 	{
 		ms3d_joint_t& joint = joints[i];
 		
-		BonePtr bone = AllocateThis(Bone);
+		Bone* bone = AllocateThis(Bone);
 
 		bone->name = joint.name;
 		bone->index = i;
@@ -195,7 +195,7 @@ void Milkshape3D::buildAnimationMetadata()
 
 	std::vector<String> lines;
 	StringSplit(mainComment, '\n', lines);
-    
+
 	for( size_t i = 0; i < lines.size(); i++ )
 	{
 		const String& line = lines[i];
@@ -228,7 +228,8 @@ void Milkshape3D::buildAnimations()
 	for( size_t i = 0; i < metadata.size(); i++ )
 	{
 		AnimationMetadata& data = metadata[i];
-		AnimationPtr animation = buildAnimation(data);
+		
+		Animation* animation = buildAnimation(data);
 		mesh->animations.push_back(animation);
 	}
 
@@ -245,9 +246,9 @@ void Milkshape3D::buildAnimations()
 
 //-----------------------------------//
 
-AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
+Animation* Milkshape3D::buildAnimation(AnimationMetadata& data)
 {
-	AnimationPtr animation = AllocateThis(Animation);
+	Animation* animation = AllocateThis(Animation);
 	animation->setName(data.name);
 
 	for( size_t i = 0; i < joints.size(); i++ )
@@ -257,7 +258,7 @@ AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
 		if( joint.positionKeys.empty() )
 			continue;
 
-		const BonePtr& bone = mesh->skeleton->findBone(joint.name);
+		Bone* bone = mesh->skeleton->findBone(joint.name).get();
 
 		KeyFramesVector frames;
 		buildKeyFrames( joint, data, frames );
@@ -324,16 +325,42 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 
 //-----------------------------------//
 
+struct MilkshapeMeshVertex
+{
+	Vector3P position;
+	Vector3P normal;
+	Vector2 texCoord;
+	float boneIndex;
+};
+
+static VertexElementP s_MilkshapeMeshElements[] =
+{
+	{ VertexAttribute::Position, VertexDataType::Float, 3 },
+	{ VertexAttribute::Normal, VertexDataType::Float, 3 },
+	{ VertexAttribute::TexCoord0, VertexDataType::Float, 2 },
+	{ VertexAttribute::BoneIndex, VertexDataType::Float, 1 }
+};
+
 void Milkshape3D::buildGeometry()
 {
-	int size = vertices.size();
+	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
 
-	// Reserve space for data.
-	mesh->position.reserve(size);
-	mesh->normals.reserve(size);
-	mesh->texCoords.reserve(size);
-	mesh->boneIndices.reserve(size);
+	if( !gb )
+	{
+		gb = AllocateThis(GeometryBuffer);
+		mesh->setGeometryBuffer(gb);
+	}
 
+	// Setup the vertex format for the mesh.
+	static size_t numVertexElements = ARRAY_SIZE(s_MilkshapeMeshElements);
+	gb->declarations.decls.reserve(numVertexElements);
+
+	for(size_t i = 0; i < numVertexElements; ++i )
+		gb->declarations.add(s_MilkshapeMeshElements[i]);
+	
+	gb->declarations.calculateStrides();
+
+	// Setup the mesh groups.
 	mesh->groups.resize( groups.size() );
 
 	for( size_t i = 0; i < groups.size(); i++ )
@@ -346,12 +373,15 @@ void Milkshape3D::buildGeometry()
 		size_t numIndices = group.triangleIndices.size();
 
 		// In case this group doesn't have geometry, skip processing.
-		if( numIndices == 0 )
-			continue;
+		if( numIndices == 0 ) continue;
 
 		MeshGroup& meshGroup = mesh->groups[i];
 		meshGroup.indices.reserve( numIndices*3 );
 		meshGroup.material = buildMaterial(group);
+
+		gb->data.reserve(numIndices * 3);
+
+		int numVertex = 0;
 
 		// Let's process all the triangles of this group.
 		for( size_t j = 0; j < numIndices; j++ )
@@ -359,22 +389,20 @@ void Milkshape3D::buildGeometry()
 			const uint16& triIndex = group.triangleIndices[j];
 			const ms3d_triangle_t& t = *triangles[triIndex];
 
-			for( uint32 e = 0; e < 3; e++ )
+			for( uint8 e = 0; e < 3; e++ )
 			{
 				const uint16& vertexIndex = t.vertexIndices[e];
 				const ms3d_vertex_t& vertex = *vertices[vertexIndex];
-		
-				Vector3 normal( t.vertexNormals[e] );
-				Vector2 texCoord( t.s[e], t.t[e] );
 
-				mesh->position.push_back( vertex.position );
-				mesh->normals.push_back( normal );
-				mesh->texCoords.push_back( texCoord );
+				MilkshapeMeshVertex meshVertex = {
+					vertex.position,
+					t.vertexNormals[e],
+					Vector2(t.s[e], t.t[e]),
+					vertex.boneIndex
+				};
 
-				float boneIndex = vertex.boneIndex;
-				mesh->boneIndices.push_back(boneIndex);
-
-				meshGroup.indices.push_back( mesh->position.size()-1 );
+				gb->add((uint8*)&meshVertex, sizeof(meshVertex));
+				meshGroup.indices.push_back( numVertex++ );
 			}
 		}
 	}

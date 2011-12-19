@@ -43,7 +43,7 @@ void TestHandle(CuTest* tc)
 
 	CuAssertIntEquals(tc, 0, AtomicRead(&HandleManagerA->nextHandle));
 
-	A* instance = Allocate(A,  AllocatorGetHeap());
+	A* instance = AllocateHeap(A);
 	
 	HandleA handle  = HandleCreate(HandleManagerA, instance);
 	HandleA handle2 = handle;
@@ -92,7 +92,7 @@ class R : public ReferenceCounted
 
 void TestRefCount(CuTest* tc)
 {
-	R* rp = Allocate(R,  AllocatorGetHeap());
+	R* rp = AllocateHeap(R);
 	
 	RefPtr<R> rpx = rp;
 	CuAssertIntEquals(tc, 1, ReferenceGetCount(rp));
@@ -102,7 +102,7 @@ void TestRefCount(CuTest* tc)
 	CuAssertIntEquals(tc, 2, ReferenceGetCount(rp));
 
 	// Copy constructor.
-	R* rp2 = Allocate(R,  AllocatorGetHeap(), *rp);
+	R* rp2 = AllocateHeap(R, *rp);
 	CuAssertIntEquals(tc, 0, ReferenceGetCount(rp2));
 
 	rpx2 = rp2;

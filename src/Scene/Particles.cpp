@@ -10,8 +10,7 @@
 #include "Scene/Particles.h"
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
-#include "Graphics/DebugGeometry.h"
-#include "Graphics/GL.h"
+#include "Geometry/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -120,8 +119,8 @@ void Particles::createGeometry()
 	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
 	pMaterial->setShader("Tex");
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
-	renderable->setPrimitiveType(PolygonType::Points);
+	RenderBatchPtr renderable = AllocateHeap(RenderBatch);
+	renderable->setPrimitiveType(PrimitiveType::Points);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Transparency);
@@ -185,6 +184,7 @@ void Particles::update(float delta)
 
 void Particles::onPreRender(RenderView*, const RenderState&)
 {
+#if 0
 	glEnable(GL_POINT_SPRITE);
 	
 	glPointSize(size);
@@ -193,13 +193,16 @@ void Particles::onPreRender(RenderView*, const RenderState&)
 	glPointParameterf( GL_POINT_SIZE_MAX, maxScale );
 	glPointParameterf( GL_POINT_FADE_THRESHOLD_SIZE, fadeRate );
 	//glTexEnvi( GL_POINT_SPRITE, GL_COORD_REPLACE, true );
+#endif
+
+	#pragma TODO("Enable point sprite extensions for the render")
 }
 
 //-----------------------------------//
 
 void Particles::onPostRender(RenderView*, const RenderState&)
 {
-	glDisable(GL_POINT_SPRITE);
+	//glDisable(GL_POINT_SPRITE);
 }
 
 //-----------------------------------//
@@ -212,7 +215,7 @@ void Particles::updateDebugRenderable() const
 
 //-----------------------------------//
 
-RenderablePtr Particles::createDebugRenderable() const
+RenderBatchPtr Particles::createDebuRenderable() const
 {
 	assert( !debugRenderable );
 	return nullptr;

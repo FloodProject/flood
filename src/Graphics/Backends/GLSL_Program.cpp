@@ -6,18 +6,18 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Graphics/GLSL_Program.h"
-#include "Graphics/GLSL_ShaderProgram.h"
-#include "Graphics/GL.h"
+#include "GLSL_Program.h"
+#include "GLSL_ShaderProgram.h"
+#include "GL.h"
 #include "Graphics/UniformBuffer.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -323,5 +323,5 @@ void GLSL_Program::setUniforms( const UniformBufferPtr& ub )
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 #endif

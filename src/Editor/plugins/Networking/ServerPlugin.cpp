@@ -50,7 +50,7 @@ ServerPlugin::ServerPlugin()
 
 PluginMetadata ServerPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Server";
 	metadata.description = "Handles connecting to remote hosts.";
@@ -87,7 +87,7 @@ void ServerPlugin::onPluginEnable()
 
 void ServerPlugin::onPluginDisable()
 {
-	PluginMetadata metadata = getMetadata();
+	static PluginMetadata metadata = getMetadata();
 
 	disconnect();
 	deinitClient();
@@ -126,7 +126,7 @@ bool ServerPlugin::initClient(const HostConnectionDetails& details)
 {
 	host = AllocateThis(HostClient);
 	
-	dispatcher = Allocate(Dispatcher, AllocatorGetThis());
+	dispatcher = AllocateThis(Dispatcher);
 	dispatcher->initClient(host);
 
 	SessionManager* sm = dispatcher->getSessionManager();

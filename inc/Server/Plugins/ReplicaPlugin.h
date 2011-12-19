@@ -18,14 +18,11 @@ NAMESPACE_SERVER_BEGIN
 
 REFLECT_DECLARE_CLASS(ReplicaPlugin)
 
-class ReplicaPlugin : public ServerPlugin, public ReplicaMessageHandler
+class ReplicaPlugin : public ReplicaMessageHandler
 {
 	REFLECT_DECLARE_OBJECT(ReplicaPlugin)
 
 public:
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
 
 	void handleReplicaContextCreate(const SessionPtr&, const ReplicaContextCreateMessage&) OVERRIDE;
 	void handleReplicaContextRequest(const SessionPtr&, const ReplicaContextRequestMessage&) OVERRIDE;

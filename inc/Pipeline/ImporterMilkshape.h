@@ -31,6 +31,9 @@ public:
 
 	ImporterMilkshape();
 
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
+
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Mesh)
 
@@ -38,7 +41,7 @@ public:
 	RESOURCE_LOADER_CLASS(Mesh)
 
 	// Decodes a Milkshape3D mesh.
-	bool decode(const Stream& stream, Resource* res) OVERRIDE;
+	bool decode(ResourceLoadOptions& options) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "MS3D")

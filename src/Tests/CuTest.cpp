@@ -47,7 +47,7 @@ void CuStringInit(CuString* str)
 
 CuString* CuStringNew(void)
 {
-	CuString* str = Allocate(CuString, gs_AllocatorTests);
+	CuString* str = Allocate(gs_AllocatorTests, CuString);
 	str->length = 0;
 	str->size = STRING_MAX;
 	str->buffer = CuStrAlloc(str->size);
@@ -134,7 +134,7 @@ void CuTestInit(CuTest* t, const char* name, TestFunction function)
 
 CuTest* CuTestNew(const char* name, TestFunction function)
 {
-	CuTest* tc = Allocate(CuTest, gs_AllocatorTests);
+	CuTest* tc = Allocate(gs_AllocatorTests, CuTest);
 	CuTestInit(tc, name, function);
 	return tc;
 }
@@ -259,7 +259,7 @@ void CuSuiteInit(CuSuite* testSuite)
 
 CuSuite* CuSuiteNew(void)
 {
-	CuSuite* testSuite = Allocate(CuSuite, gs_AllocatorTests);
+	CuSuite* testSuite = Allocate(gs_AllocatorTests, CuSuite);
 	CuSuiteInit(testSuite);
 	return testSuite;
 }

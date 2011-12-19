@@ -20,6 +20,7 @@
 //---------------------------------------------------------------------//
 
 #include "Core/API.h"
+#include "Engine/API.h"
 #include "Resources/API.h"
 
 //---------------------------------------------------------------------//
@@ -39,3 +40,5 @@
 
 void PipelineInit();
 void PipelineCleanup();
+
+#include "Core/Memory.h"

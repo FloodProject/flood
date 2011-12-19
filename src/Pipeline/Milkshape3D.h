@@ -51,7 +51,7 @@ public:
 	void buildAnimations();
 
 	// Builds an animation from a metadata.
-	AnimationPtr buildAnimation(AnimationMetadata& data);
+	Animation* buildAnimation(AnimationMetadata& data);
 
 	// Builds the animation metadata.
 	void buildAnimationMetadata();

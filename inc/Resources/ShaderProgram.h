@@ -86,6 +86,8 @@ public:
 
 	// Holds the compilation log.
 	String log;
+
+	uint32 id;
 	
 	// Is this shader already compiled?	
 	bool compiled;

@@ -26,15 +26,26 @@ NAMESPACE_EDITOR_BEGIN
 class EditorFrame;
 class EditorPlugin;
 
-class API_EDITOR PluginTool
+class API_EDITOR EditorExtension : public Extension
 {
 public:
 
-	PluginTool()
-		: toolbar(nullptr)
-		, item(nullptr)
-		, plugin(nullptr)
-	{}
+	EditorExtension();
+
+	// Plugin that owns the extension.
+	EditorPlugin* plugin;
+};
+
+//-----------------------------------//
+
+class API_EDITOR ToolExtension : public EditorExtension
+{
+public:
+
+	ToolExtension();
+
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
 
 	// Sets the toolbar.
 	void setToolbar(wxAuiToolBar*);
@@ -44,12 +55,23 @@ public:
 	
 	// Item that triggers the toolbar.
 	wxAuiToolBarItem* item;
-
-	// Plugin that owns the tool.
-	EditorPlugin* plugin;
 };
 
-typedef std::vector<PluginTool> PluginTools;
+typedef std::vector<ToolExtension> ToolExtensions;
+
+//-----------------------------------//
+
+class API_EDITOR DocumentExtension : public EditorExtension
+{
+public:
+
+	DocumentExtension();
+
+	// Gets metadata about this extension.
+	ExtensionMetadata* getMetadata() OVERRIDE;
+};
+
+//-----------------------------------//
 
 /**
  * A 3D editor needs to provide different kind of tools to the user,
@@ -74,10 +96,10 @@ public:
 	virtual ~EditorPlugin();
 
 	// Finds if there is a tool with given id.
-	PluginTool* findTool( wxAuiToolBarItem* tool );
+	ToolExtension* findTool( wxAuiToolBarItem* tool );
 
 	// Finds if there is a tool with given id.
-	PluginTool* findToolById( int toolId );
+	ToolExtension* findToolById( int toolId );
 
 	// Plugin update callback.
 	virtual void onPluginUpdate() {}
@@ -142,7 +164,7 @@ protected:
 	virtual void doPluginDisable() OVERRIDE;
 	
 	// Registers a new tool in the plugin.
-	void addTool( PluginTool& tool, bool addToMenu = false );
+	void addTool( ToolExtension& tool, bool addToMenu = false );
 	void addTool( wxAuiToolBarItem* tool, bool addToMenu = false );
 
 	// Removes all the registered tools.
@@ -152,7 +174,7 @@ protected:
 	void removePage( wxWindow* page );
 
 	// Keeps track of all the registered tools.
-	PluginTools tools;
+	ToolExtensions tools;
 
 	// Editor frame.
 	EditorFrame* editor;

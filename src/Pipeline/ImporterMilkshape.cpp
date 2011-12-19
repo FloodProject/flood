@@ -30,14 +30,27 @@ ImporterMilkshape::ImporterMilkshape()
 
 //-----------------------------------//
 
-bool ImporterMilkshape::decode(const Stream& stream, Resource* res)
+ExtensionMetadata* ImporterMilkshape::getMetadata()
 {
-	Mesh* mesh = static_cast<Mesh*>(res);
+	static ExtensionMetadata s_ExtensionMetadata =
+	{
+		"Milkshape3D",
+		"Imports a MS3D mesh."
+	};
+
+	return &s_ExtensionMetadata;
+}
+
+//-----------------------------------//
+
+bool ImporterMilkshape::decode(ResourceLoadOptions& options)
+{
+	Mesh* mesh = static_cast<Mesh*>(options.resource);
 	
 	Milkshape3D milkshape;
 	milkshape.setMesh(mesh);
 
-	return milkshape.load(stream);
+	return milkshape.load(*options.stream);
 }
 
 //-----------------------------------//

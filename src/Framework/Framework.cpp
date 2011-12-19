@@ -11,7 +11,7 @@
 #include "Core/Archive.h"
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Scene/Scene.h"
 #include "Input/InputManager.h"
@@ -23,6 +23,7 @@ NAMESPACE_ENGINE_BEGIN
 
 Framework::Framework(const String& app)
 	: window(nullptr)
+	, numUpdatesSecond(30)
 {
 	LogInfo( "Engine framework getting into action" );
 }
@@ -31,8 +32,7 @@ Framework::Framework(const String& app)
 
 Framework::~Framework()
 {
-	ArchiveDestroy(archive);
-	Deallocate(window);
+
 }
 
 //-----------------------------------//
@@ -41,14 +41,24 @@ void Framework::init()
 {
 	// Init the engine.
 	Engine::init(true);
+
+	// Sets up the main window.
+	setupWindow();
 }
 
 //-----------------------------------//
 
-void Framework::setupWindow(Window* newWindow)
+void Framework::cleanup()
 {
-	// Initialize the window.
-	window = newWindow;
+	ArchiveDestroy(archive);
+	Deallocate(window);
+}
+
+//-----------------------------------//
+
+void Framework::setupWindow()
+{
+	assert( window != nullptr );
 
 	// Input setup.
 	window->getInput()->createDefaultDevices();
@@ -74,7 +84,6 @@ void Framework::setupResourcePaths()
 {
 	// Create the archive and mount the paths.
 	archive = ArchiveCreateVirtual( AllocatorGetHeap() );
-	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
 
 	// Set as the resource archive.
 	ResourceManager* res = getResourceManager();
@@ -85,22 +94,11 @@ void Framework::setupResourcePaths()
 
 void Framework::run()
 {
-	// User init callback.
-	onInit();
-
 	// User resources setup callback.
 	onSetupResources();
 
 	// User scene setup callback.
 	onSetupScene();
-
-	// Wait until all resources are loaded.
-	ResourceManager* res = getResourceManager();
-	//res->loadQueuedResources();
-
-	mainLoop();
-
-	onCleanup();
 }
 
 //-----------------------------------//
@@ -112,7 +110,6 @@ void Framework::run()
 
 void Framework::mainLoop()
 {
-	const uint16 numUpdatesSecond = 25;
 	const float maxUpdateTime = 1.0f / numUpdatesSecond;
 
 	Timer updateTimer;
@@ -120,35 +117,29 @@ void Framework::mainLoop()
 
 	float nextTick = TimerGetCurrentTimeMs();
 
-	while( true )
-	{
-		TimerReset(&frameTimer);
+	TimerReset(&frameTimer);
 		
-		if( !window->pumpEvents() ) break;
+	do
+	{
+		// User update callback.
+		onUpdate( maxUpdateTime );
 
-		while( TimerGetCurrentTimeMs() > nextTick )
-		{
-			update();
+		update();
 
-			// User update callback.
-			onUpdate( maxUpdateTime );
-
-			nextTick += maxUpdateTime;
-		}
-
-		// User rendering callback.
-		onRender();
-
-		// Update the active target (swaps buffers).
-		window->update();
-
-		stepFrame();
-
-		// Calculates the new frame times.
-		updateFrameTimes();
-
-		SystemSleep(0);
+		nextTick += maxUpdateTime;
 	}
+	while( TimerGetCurrentTimeMs() > nextTick );
+
+	// User rendering callback.
+	onRender();
+
+	// Update the active target (swaps buffers).
+	window->update();
+
+	stepFrame();
+
+	// Calculates the new frame times.
+	updateFrameTimes();
 }
 
 //-----------------------------------//

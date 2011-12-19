@@ -15,9 +15,8 @@
 #include "Resources/Skeleton.h"
 #include "Resources/Bone.h"
 #include "Resources/Attachment.h"
-#include "Graphics/Device.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
-#include "Graphics/MeshManager.h"
 #include "Graphics/Program.h"
 #include "Graphics/ProgramManager.h"
 #include "Math/Helpers.h"
@@ -36,22 +35,16 @@ REFLECT_CHILD_CLASS(Model, Geometry)
 	FIELD_PRIMITIVE(6, float, animationSpeed)
 	FIELD_PRIMITIVE(7, bool, animationEnabled)
 	FIELD_ENUM_SETTER(8, SkinningMode, skinningMode, SkinningMode)
-	FIELD_CLASS_PTR_SETTER(9, Mesh, MeshHandle, mesh, Handle, Mesh)
+	FIELD_CLASS_PTR_SETTER(9, Mesh, MeshHandle, meshHandle, Handle, Mesh)
+	FIELD_ALIAS(meshHandle, mesh)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
+Model::MeshRenderablesMap Model::meshRenderables;
+
 Model::Model()
 {
-	init();
-}
-
-//-----------------------------------//
-
-Model::Model( const MeshHandle& meshHandle )
-	: mesh(meshHandle)
-{
-	init();
 }
 
 //-----------------------------------//
@@ -68,7 +61,7 @@ void Model::init()
 	modelBuilt = false;
 	debugRenderable = nullptr;
 	skinningMode = SkinningMode::Native;
-	pmesh = nullptr;
+	mesh = nullptr;
 
 	animationEnabled = true;
 	animationFadeTime = 0;
@@ -85,14 +78,14 @@ void Model::init()
 
 void Model::setMesh(const MeshHandle& meshHandle)
 {
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
-		const RenderablePtr& rend = renderables[i];
+		Renderable* rend = renderables[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
 	}
 
 	init();
-	mesh = meshHandle;
+	this->meshHandle = meshHandle;
 }
 
 //-----------------------------------//
@@ -107,29 +100,29 @@ void Model::setSkinningMode( SkinningMode::Enum mode )
 
 void Model::updateSkinning()
 {
-	if( !pmesh->isAnimated() ) return;
+	if( !mesh->isAnimated() ) return;
 	
 	bool isCPU = skinningMode == SkinningMode::CPU;
 	String shader = isCPU ? "VertexLit" : "VertexLitSkinned";
 	
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
-		const RenderablePtr& rend = renderables[i];
+		const RenderBatch* rend = renderables[i].get();
 	
 		Material* material = rend->getMaterial().Resolve();
 		material->setShader(shader);
 	}
 
-	if( !isCPU ) rebuildPositions();
+	//if( !isCPU ) rebuildPositions();
 }
 
 //-----------------------------------//
 
 void Model::update( float delta )
 {
-	pmesh = mesh.Resolve();
+	mesh = meshHandle.Resolve();
 
-	if( !pmesh || !pmesh->isLoaded() )
+	if( !mesh || !mesh->isLoaded() )
 		return;
 
 	if( !modelBuilt ) build();
@@ -140,12 +133,10 @@ void Model::update( float delta )
 		updateSkin = false;
 	}
 
-	if( pmesh->isAnimated() )
+	if( mesh->isAnimated() )
 	{
 		if( animations.empty() )
-		{
-			setAnimation( pmesh->getBindPose() );
-		}
+			setAnimation( mesh->getBindPose().get() );
 
 		if( animationEnabled )
 		{
@@ -164,50 +155,38 @@ void Model::update( float delta )
 
 void Model::prepareSkinning()
 {
-	if( !pmesh->isAnimated() ) return;
+	if( !mesh->isAnimated() ) return;
 
-	size_t numBones = pmesh->getSkeleton()->getBones().size();
+	size_t numBones = mesh->getSkeleton()->getBones().size();
 	bones.resize( numBones );
 }
 
 //-----------------------------------//
 
-void Model::rebuildPositions()
-{
-	if( renderables.empty() ) return;
-
-	const RenderablePtr& rend = renderables[0];
-	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
-
-	const std::vector<Vector3>& meshPositions = pmesh->position;
-	gb->set( VertexAttribute::Position, meshPositions );
-	
-	gb->forceRebuild();
-}
-
-//-----------------------------------//
+bool MeshBuild(Mesh* mesh, RenderablesVector& rends);
 
 void Model::build()
 {
 	if( modelBuilt ) return;
 
-	MeshManager* meshes = GetRenderDevice()->getActiveContext()->meshManager;
+	MeshRenderablesMap::iterator it = meshRenderables.find(mesh);
 	
-	RenderablesVector renderables;
-
-	if( !meshes->getMeshRenderables(pmesh, renderables) )
-		return;
-
-	for( size_t i = 0; i < renderables.size(); i++ )
+	if( it == meshRenderables.end() )
 	{
-		const RenderablePtr& rend = renderables[i];
-		const MaterialHandle& handle = rend->getMaterial();
+		RenderablesVector& rends = meshRenderables[mesh];
+	
+		if( !MeshBuild(mesh, rends) )
+		{
+			LogError("Error building mesh '%s'", mesh->getPath().c_str());
+			return;
+		}
+	}
 
-		Material* material = handle.Resolve();
-		
-		if( material && material->isBlendingEnabled() )
-			rend->setRenderLayer(RenderLayer::Transparency);
+	RenderablesVector& rends = meshRenderables[mesh];
 
+	for( size_t i = 0; i < rends.size(); ++i )
+	{
+		Renderable* rend = renderables[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
 		
 		addRenderable( rend );
@@ -217,7 +196,7 @@ void Model::build()
 	updateBounds();
 	
 	// Re-compute the bounding box.
-	TransformPtr transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	transform->markBoundingVolumeDirty();
 
 	prepareSkinning();
@@ -229,7 +208,7 @@ void Model::build()
 
 void Model::updateAnimations(float delta)
 {
-	for( size_t i = 0; i < animations.size(); i++ )
+	for( size_t i = 0; i < animations.size(); ++i )
 	{
 		AnimationState& state = animations[i];
 
@@ -243,7 +222,7 @@ void Model::updateAnimations(float delta)
 		animationCurrentFadeTime = 0;
 
 		if( animations.size() >= 2 )
-			animations.erase( animations.begin()+1 );
+			animations.erase( animations.begin() + 1 );
 	}
 
 	if( animationFadeTime > 0 )
@@ -254,7 +233,7 @@ void Model::updateAnimations(float delta)
 
 void Model::updateAnimationTime(AnimationState& state, float delta)
 {
-	const AnimationPtr& animation = state.animation;
+	Animation* animation = state.animation.get();
 	float& animationTime = state.animationTime;
 	float totalTime = animation->getTotalTime();
 
@@ -305,17 +284,17 @@ void Model::updateAnimationBones(AnimationState& state)
 
 void Model::updateFinalAnimationBones()
 {
-	if( pmesh->animations.empty() )
+	if( mesh->animations.empty() )
 	{
-		const BonesVector& skeletonBones = pmesh->skeleton->getBones();
+		const BonesVector& skeletonBones = mesh->skeleton->getBones();
 		
-		for( size_t i = 0; i < bones.size(); i++ )
+		for( size_t i = 0; i < bones.size(); ++i )
 			bones[i] = skeletonBones[i]->absoluteMatrix;
 		
 		return;
 	}
 
-	for( size_t i = 0; i < bones.size(); i++ )
+	for( size_t i = 0; i < bones.size(); ++i )
 	{
 		if( animations.size() >= 2 )
 		{
@@ -334,7 +313,7 @@ void Model::updateFinalAnimationBones()
 
 void Model::updateAttachments()
 {
-	for( size_t i = 0; i < attachments.size(); i++ )
+	for( size_t i = 0; i < attachments.size(); ++i )
 	{
 		const AttachmentPtr& attachment = attachments[i];
 		const EntityPtr& node = attachment->node;
@@ -349,16 +328,16 @@ void Model::updateAttachments()
 
 void Model::updateBounds()
 {
-	bounds = pmesh->getBoundingVolume();
+	bounds = mesh->getBoundingVolume();
 }
 
 //-----------------------------------//
 
-void Model::setAnimation(const AnimationPtr& animation)
+void Model::setAnimation(Animation* animation)
 {
-	assert( pmesh != nullptr );
+	assert( mesh != nullptr );
 
-	if( !pmesh->isAnimated() ) return;
+	if( !mesh->isAnimated() ) return;
 
 	if( !animation ) return;
 
@@ -366,7 +345,7 @@ void Model::setAnimation(const AnimationPtr& animation)
 	state.animation = animation;
 	state.animationTime = 0;
 
-	size_t numBones = pmesh->getSkeleton()->getBones().size();
+	size_t numBones = mesh->getSkeleton()->getBones().size();
 	state.bonesMatrix.resize(numBones);
 
 	if( animations.empty() )
@@ -381,9 +360,9 @@ void Model::setAnimation(const AnimationPtr& animation)
 
 void Model::setAnimation(const std::string& name)
 {
-	if( !pmesh ) return;
+	if( !mesh ) return;
 
-	AnimationPtr animation = pmesh->findAnimation(name);
+	Animation* animation = mesh->findAnimation(name);
 	setAnimation(animation);
 }
 
@@ -391,9 +370,9 @@ void Model::setAnimation(const std::string& name)
 
 void Model::setAnimationFade(const std::string& name, float fadeTime)
 {
-	assert( pmesh != nullptr );
+	assert( mesh != nullptr );
 
-	if( !pmesh->isAnimated() )
+	if( !mesh->isAnimated() )
 		return;
 
 	if( animations.size() >= 2 )
@@ -422,17 +401,17 @@ bool Model::isHardwareSkinned()
 
 void Model::onRender(RenderView* view, const RenderState&)
 {
-	if( !pmesh || !pmesh->isLoaded() || !pmesh->isAnimated() )
+	if( !mesh || !mesh->isLoaded() || !mesh->isAnimated() )
 		return;
 
 	if( !isHardwareSkinned() )
 	{
 		if( renderables.empty() ) return;
 
-		const RenderablePtr& rend = renderables[0];
+		const RenderBatch* rend = renderables[0].get();
 		
 		const GeometryBufferPtr& gb = rend->getGeometryBuffer();
-		doSkinning(gb);	
+		doSkinning(gb);
 	}
 	else
 	{
@@ -444,15 +423,18 @@ void Model::onRender(RenderView* view, const RenderState&)
 
 void Model::doSkinningRaw(Vector3* positions)
 {
-	const std::vector<Vector3>& meshPositions = pmesh->position;
+	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
+	size_t numVertices = gb->getSizeVertices();
 
-	for(size_t i = 0; i < meshPositions.size(); i++)
+#if 0
+	for(size_t i = 0; i < numVertices; ++i)
 	{
-		int32 boneIndex = (int32) pmesh->boneIndices[i];
+		int32 boneIndex = (int32) gb->getAttribute(VertexAttribute::BoneIndex, i);
 
 		Vector3* pos = positions + i;
 		*pos = bones[boneIndex] * meshPositions[i];
 	}
+#endif
 }
 
 //-----------------------------------//
@@ -463,26 +445,26 @@ void Model::doSkinning(const GeometryBufferPtr& gb)
 	if( !elemPosition ) return;
 
 	// Can only handle buffers with 3 components and float.
-	if(elemPosition->components != 3 || elemPosition->type != VertexType::Float)
+	if(elemPosition->components != 3 || elemPosition->type != VertexDataType::Float)
 		return;
 
+#if 0
 	uint32 numVertices = gb->getSizeVertices();
 
-	if( pmesh->position.size() != numVertices )
+	if( mesh->position.size() != numVertices )
 	{
 		LogDebug("Skinned mesh and its buffer have different vertices");
 		return;
 	}
 
-	const std::vector<Vector3>& meshPositions = pmesh->position;
-
-	for(size_t i = 0; i < meshPositions.size(); i++)
+	for(size_t i = 0; i < meshPositions.size(); ++i)
 	{
-		int32 boneIndex = (int32) pmesh->boneIndices[i];
+		int32 boneIndex = (int32) mesh->boneIndices[i];
 
 		Vector3* pos = (Vector3*) gb->getAttribute(VertexAttribute::Position, i);
 		*pos = bones[boneIndex] * meshPositions[i];
 	}
+#endif
 
 	gb->forceRebuild();
 }
@@ -495,20 +477,20 @@ void Model::setupShaderSkinning()
 	std::vector<Matrix4x4> matrices;
 	matrices.reserve( bones.size() );
 
-	for( size_t i = 0; i < bones.size(); i++ )
+	for( size_t i = 0; i < bones.size(); ++i )
 	{
 		const Matrix4x3& bone = bones[i];
 		matrices.push_back( Matrix4x4(bone) );
 	}
 
 	// Send them to the uniform buffer.
-	const std::vector<RenderablePtr>& rends = getRenderables();
+	const std::vector<RenderBatchPtr>& rends = getRenderables();
 
-	for( size_t i = 0; i < rends.size(); i++ )
+	for( size_t i = 0; i < rends.size(); ++i )
 	{
-		const RenderablePtr& rend = rends[i];
+		const RenderBatch* rend = rends[i].get();
 		
-		const UniformBufferPtr& ub = rend->getUniformBuffer();
+		UniformBuffer* ub = rend->getUniformBuffer().get();
 		ub->setUniform("vp_BonesMatrix", matrices);
 	}
 }
@@ -517,18 +499,15 @@ void Model::setupShaderSkinning()
 
 void Model::setAttachment(const String& boneName, const EntityPtr& node)
 {
-	if(!pmesh)
-		return;
+	if( !mesh ) return;
 
-	SkeletonPtr skeleton = pmesh->getSkeleton();
+	Skeleton* skeleton = mesh->getSkeleton().get();
 	assert( skeleton != nullptr );
 
-	BonePtr bone = skeleton->findBone(boneName);
-	
-	if( !bone )
-		return;
+	Bone* bone = skeleton->findBone(boneName).get();
+	if( !bone ) return;
 
-	AttachmentPtr attachment = new Attachment();
+	Attachment* attachment = AllocateThis(Attachment);
 	
 	attachment->bone = bone;
 	attachment->node = node;
@@ -537,26 +516,27 @@ void Model::setAttachment(const String& boneName, const EntityPtr& node)
 }
 
 //-----------------------------------//
-#if 0
-void Model::updateDebugRenderable() const
+
+void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum debugFlags )
 {
+	const Skeleton* skeleton = mesh->getSkeleton().get();
+	if( !skeleton ) return;
+	
+	if( bones.empty() ) return;
+
 	if( !debugRenderable )
-		return;
+		debugRenderable = createDebugRenderable();
 
-	if( !pmesh->isAnimated() )
-		return;
-
-	GeometryBuffer gb = debugRenderable->getVertexBuffer();
+	GeometryBuffer* gb = debugRenderable->getGeometryBuffer().get();
 
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
 
-	const SkeletonPtr& skel = pmesh->getSkeleton();
-
-	uint numBones = skel->bones.size();
-	for( size_t i = 0; i < numBones; i++ )
+	size_t numBones = skeleton->bones.size();
+	
+	for( size_t i = 0; i < numBones; ++i )
 	{
-		BonePtr& bone = skel->bones[i];
+		Bone* bone = skeleton->bones[i].get();
 
 		Vector3 vertex;
 		Vector3 parentVertex;
@@ -564,7 +544,7 @@ void Model::updateDebugRenderable() const
 		if( bone->indexParent == -1 )
 			continue;
 		
-		parentVertex = bones[bone->indexParent]*parentVertex;	
+		parentVertex = bones[bone->indexParent]*parentVertex;
 
 		pos.push_back( bones[bone->index]*vertex );
 		colors.push_back( Color::Blue );
@@ -575,29 +555,29 @@ void Model::updateDebugRenderable() const
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
+
+	debug.renderables.push_back(debugRenderable.get());
 }
 
 //-----------------------------------//
 
-RenderablePtr Model::createDebugRenderable() const
+RenderBatchPtr Model::createDebugRenderable() const
 {
-	assert( !debugRenderable );
-
 	MaterialHandle handleMaterial = MaterialCreate(AllocatorGetHeap(), "SkeletonDebug");
 
 	Material* material = handleMaterial.Resolve();
 	material->setDepthTest(false);
 
-	GeometryBuffer gb = Allocate(VertexBuffer, AllocatorGetHeap());
+	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 	
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
-	renderable->setPrimitiveType(PolygonType::Lines);
+	RenderBatch* renderable = AllocateHeap(Renderable);
+	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(handleMaterial);
 
 	return renderable;
 }
-#endif
+
 //-----------------------------------//
 
 NAMESPACE_ENGINE_END

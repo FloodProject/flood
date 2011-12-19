@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "GizmoRotate.h"
-#include "Graphics/Cube.h"
+#include "Geometry/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -26,8 +26,8 @@ void GizmoRotate::buildGeometry()
 
 	lines = generateCircles();
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
-	renderable->setPrimitiveType(PolygonType::Lines);
+	RenderablePtr renderable = AllocateHeap(Renderable);
+	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(lines);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
@@ -93,7 +93,7 @@ GeometryBufferPtr GizmoRotate::generateCircles()
 	}
 
 	// Vertex buffer setup
-	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
 
 	assert( pos.size() == colors.size() );
 

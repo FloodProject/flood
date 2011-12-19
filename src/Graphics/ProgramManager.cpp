@@ -9,6 +9,8 @@
 #include "Graphics/API.h"
 #include "Graphics/ProgramManager.h"
 #include "Graphics/Program.h"
+#include "Graphics/RenderContext.h"
+#include "Graphics/RenderBackend.h"
 #include "Resources/Shader.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
@@ -39,6 +41,22 @@ ProgramManager::~ProgramManager()
 
 	GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
 	GetResourceManager()->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
+}
+
+//-----------------------------------//
+
+Program* ProgramManager::createProgram( const Shader* shader )
+{
+	// If the program was not yet found, then we need to create it.
+	Program* program = renderContext->backend->createProgram();
+	
+	program->getVertexShader()->setText( shader->getVertexSource() );
+	program->getFragmentShader()->setText( shader->getFragmentSource() );
+
+	// Force the recompilation of all shader programs.
+	program->forceRecompile();
+
+	return program;
 }
 
 //-----------------------------------//

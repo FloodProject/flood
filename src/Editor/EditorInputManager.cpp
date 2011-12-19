@@ -19,24 +19,14 @@ EditorInputManager::EditorInputManager(InputManager* input)
 
 //-----------------------------------//
 
-void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
+static Keys::Enum ConvertFromWxKey( int keyCode );
+
+void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool isKeyDown )
 {
-	doKeyEvent(event, keyDown);
-}
+	KeyEvent ke = (isKeyDown) ?
+		KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased;
 
-//-----------------------------------//
-
-void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
-{
-	doMouseEvent(event);
-}
-
-//-----------------------------------//
-
-void EditorInputManager::doKeyEvent( const wxKeyEvent& event, bool isKeyDown )
-{
-	KeyEvent ke( (isKeyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased );
-	ke.keyCode = convertKeyEnum( event.GetKeyCode() );
+	ke.keyCode = ConvertFromWxKey( event.GetKeyCode() );
 	ke.altPressed = event.AltDown();
 	ke.shiftPressed = event.ShiftDown();
 	ke.ctrlPressed = event.ControlDown();
@@ -46,32 +36,10 @@ void EditorInputManager::doKeyEvent( const wxKeyEvent& event, bool isKeyDown )
 
 //-----------------------------------//
 
-static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event )
-{
-	switch( event.GetButton() )
-	{
-	case wxMOUSE_BTN_LEFT:   return MouseButton::Left;
-	case wxMOUSE_BTN_RIGHT:  return MouseButton::Right;
-	case wxMOUSE_BTN_MIDDLE: return MouseButton::Middle;
-	case wxMOUSE_BTN_AUX1:   return MouseButton::Mouse4;
-	case wxMOUSE_BTN_AUX2:   return MouseButton::Mouse5;
-	default:
-		assert( 0 && "This should not be reachable" );
-		return MouseButton::Middle;
-	}
-}
+static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event );
+static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event );
 
-//-----------------------------------//
-
-static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event )
-{
-	bool isDown = event.ButtonDown();
-	return isDown ? MouseEventType::MousePress : MouseEventType::MouseRelease;
-}
-
-//-----------------------------------//
-
-void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
+void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 {
 	if( event.Moving() )
 	{
@@ -117,7 +85,32 @@ void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 
 //-----------------------------------//
 
-Keys::Enum EditorInputManager::convertKeyEnum( int keyCode )
+static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event )
+{
+	switch( event.GetButton() )
+	{
+	case wxMOUSE_BTN_LEFT:   return MouseButton::Left;
+	case wxMOUSE_BTN_RIGHT:  return MouseButton::Right;
+	case wxMOUSE_BTN_MIDDLE: return MouseButton::Middle;
+	case wxMOUSE_BTN_AUX1:   return MouseButton::Mouse4;
+	case wxMOUSE_BTN_AUX2:   return MouseButton::Mouse5;
+	default:
+		assert( 0 && "This should not be reachable" );
+		return MouseButton::Middle;
+	}
+}
+
+//-----------------------------------//
+
+static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event )
+{
+	bool isDown = event.ButtonDown();
+	return isDown ? MouseEventType::MousePress : MouseEventType::MouseRelease;
+}
+
+//-----------------------------------//
+
+static Keys::Enum ConvertFromWxKey( int keyCode )
 {
 	// From the wxWidgets docs:
 	// "Note that the range 33 - 126 is reserved for the standard ASCII characters 

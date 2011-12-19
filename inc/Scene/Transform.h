@@ -126,7 +126,7 @@ protected:
 	// Local transform.
 	Matrix4x3 transform;
 
-	// Bounding volume of the renderables.
+	// Bounding volume of the.renderables.
 	BoundingBox bounds;
 
 	// Tracks if the transform has been changed.

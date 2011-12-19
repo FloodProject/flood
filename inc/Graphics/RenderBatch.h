@@ -165,7 +165,7 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( RenderBatch );
 typedef std::vector<RenderBatchPtr> RenderBatchsVector;
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
-typedef std::vector<Renderable> RenderablesVector;
+typedef std::vector<RenderablePtr> RenderablesVector;
 
 //-----------------------------------//
 

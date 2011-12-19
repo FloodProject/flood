@@ -22,9 +22,9 @@ NAMESPACE_ENGINE_BEGIN
 
 REFLECT_DECLARE_ENUM(RolloffMode)
 
-#define AL_INVERSE_DISTANCE_CLAMPED               0xD002
-#define AL_LINEAR_DISTANCE_CLAMPED                0xD004
-#define AL_EXPONENT_DISTANCE_CLAMPED              0xD006
+#define AL_INVERSE_DISTANCE_CLAMPED  0xD002
+#define AL_LINEAR_DISTANCE_CLAMPED   0xD004
+#define AL_EXPONENT_DISTANCE_CLAMPED 0xD006
 
 struct API_AUDIO RolloffMode
 {
@@ -41,6 +41,8 @@ struct API_AUDIO RolloffMode
 class AudioContext;
 class AudioDevice;
 
+const size_t AudioSourceNumBuffers = 2;
+
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 
  * that contains the position of the sound being played in 2D, and also 
@@ -48,14 +50,25 @@ class AudioDevice;
  * buffer from the audio device.
  */
 
-class API_AUDIO AudioSource
+class API_AUDIO AudioSource : public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(AudioSource)
 
 public:
 
-	AudioSource( AudioContext* context, const SoundHandle& sound );
+	enum SourceState
+	{
+		PLAYING,
+		PAUSED,
+		STOPPED,
+		PENDING_PLAY
+	};
+
+	AudioSource( AudioContext* context );
 	~AudioSource();
+
+	// Sets the sound of the source.
+	void setSound(const SoundHandle& sound);
 
 	// Plays the sound buffer resuming if paused.
 	void play( int timesToPlay = 1 );
@@ -95,29 +108,41 @@ public:
 
 	// Sets the position of the source.
 	void setPosition( const Vector3& position );
-  
-protected:
+
+	// Empties the source buffers.
+	void empty();
 
 	// Queues the buffer data in the source.
 	void queue();
 
-	// Clears the buffer queue.
-	void clear();
+	// Updates the source buffers.
+	bool update();
+
+	// Prepares the source buffers for the given sound.
+	void prepare(const SoundHandle&);
+
+protected:
 
 	// Callback when buffer is uploaded.
 	void onBufferUploaded(AudioBuffer*);
 
-	// Holds if the source is pending play.
-	bool isPendingPlay;
+	// Holds the source state.
+	SourceState state;
 
-	// Holds a pointer to the audio device.
-	AudioDevice* device;
+	// Handle to the sound resource.
+	SoundHandle soundHandle;
+
+	// Sound resource.
+	Sound* sound;
 
 	// Holds a pointer to the audio context.
 	AudioContext* context;
 	
 	// Holds a pointer to the audio data buffer.
-	AudioBufferPtr buffer;
+	AudioBufferPtr buffers[AudioSourceNumBuffers];
+
+	// Keeps if the source loops.
+	bool loop;
 
 	// Holds the source id from OpenAL.
 	ALuint id;

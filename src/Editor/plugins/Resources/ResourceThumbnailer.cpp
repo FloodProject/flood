@@ -10,6 +10,7 @@
 #include "ResourceThumbnailer.h"
 #include "Resources/ResourceIndexer.h"
 #include "Core/Utilities.h"
+#include "Graphics/RenderBuffer.h"
 #include "Settings.h"
 
 NAMESPACE_EDITOR_BEGIN
@@ -116,7 +117,7 @@ bool ResourceThumbnailer::setupRender()
 	if( !renderBuffer ) return false;
 
 	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
-	
+
 	//colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
 	//if( !colorTexture ) return false;
 
@@ -124,7 +125,7 @@ bool ResourceThumbnailer::setupRender()
 
 	if( !renderBuffer->check() )
 		return false;
-	
+
 	camera.reset( AllocateThis(Camera) );
 	Frustum& frustum = camera->getFrustum();
 	frustum.nearPlane = 0.01f;
@@ -143,8 +144,9 @@ bool ResourceThumbnailer::setupRender()
 	scene.reset( AllocateThis(Scene) );
 	scene->entities.add( entityCamera );
 
-	renderView = AllocateThis(RenderView, camera);
+	renderView = AllocateThis(RenderView);
 	renderView->setRenderTarget(renderBuffer);
+	camera->setView(renderView);
 
 	return true;
 }
@@ -159,17 +161,20 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 	if( !scene && !setupRender() )
 		return nullptr;
 
-	EntityPtr entityResource = AllocateThis(Entity);
+	Model* model = AllocateThis(Model);
+	model->setMesh(meshHandle);
+	
+	Entity* entityResource = AllocateThis(Entity);
 	entityResource->addTransform();
-	entityResource->addComponent( AllocateThis(Model, meshHandle) );
+	entityResource->addComponent(model);
 	scene->entities.add( entityResource );
 
-	TransformPtr transResource = entityResource->getTransform();
+	Transform* transResource = entityResource->getTransform().get();
 	const BoundingBox& box = mesh->getBoundingVolume();
 	const Vector3& center = box.getCenter();
 	transResource->setPosition( Vector3(-center.x, -center.y, 0) );
 
-	TransformPtr transCamera = entityCamera->getTransform();
+	Transform* transCamera = entityCamera->getTransform().get();
 	const Frustum& frustum = camera->getFrustum();
 	
 	float angle = std::tan(MathDegreeToRadian(frustum.fieldOfView) / 2);
@@ -180,14 +185,15 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 
 	scene->update(0);
 
-	ResourceManager* rm = GetResourceManager();
-	rm->loadQueuedResources();
-	rm->update();
+	ResourceManager* res = GetResourceManager();
+	res->loadQueuedResources();
+	res->update();
 
 	scene->update(0);
 
 	renderBuffer->bind();
-	renderView->update(scene.get());
+
+	camera->render(scene.get());
 	
 	Vector2i size = renderBuffer->getSettings().getSize();
 
@@ -196,13 +202,11 @@ ImagePtr ResourceThumbnailer::generateMesh(const MeshHandle& meshHandle)
 
 	renderBuffer->unbind();
 
-	ImagePtr image = AllocateThis(Image);
+	Image* image = AllocateThis(Image);
 	image->setWidth( size.x );
 	image->setHeight( size.y );
 	image->setPixelFormat( PixelFormat::R8G8B8A8 );
 	image->setBuffer( pixels );
-
-	//ImagePtr image = colorTexture->readImage();
 
 	scene->entities.remove( entityResource );
 

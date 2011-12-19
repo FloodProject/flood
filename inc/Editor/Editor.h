@@ -40,7 +40,9 @@ class Document;
 class DocumentManager;
 class EditorInputManager;
 class PluginManager;
+class InputManager;
 class Engine;
+struct Archive;
 
 class API_EDITOR EditorFrame : public wxFrame
 {
@@ -89,10 +91,10 @@ protected:
 	void createEngine();
 	void createPlugins();
 
-    // wxWidgets main events.
+	// wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
 	void OnClose(wxCloseEvent& event);
-    void OnAbout(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
 	void OnAboutWx(wxCommandEvent& event);
 	void OnPreferences(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
@@ -101,7 +103,7 @@ protected:
 
 	// wxWidgets menu events.
 	void OnMenuOpenEvent(wxMenuEvent& event);
-    void OnMenuExitEvent(wxCommandEvent& event);
+	void OnMenuExitEvent(wxCommandEvent& event);
 	void OnPanelsMenuEvent(wxCommandEvent& event);
 	void OnPanelsMenuUpdate(wxUpdateUIEvent& event);
 	void OnSettingsRender(wxCommandEvent& event);
@@ -118,7 +120,9 @@ public:
 	PluginManager* pluginManager;
 	DocumentManager* documentManager;
 	EventManager* eventManager;
-	
+	Archive* archive;
+	InputManager* input;
+
 	// Drag and drop coordinates.
 	Vector2 dropCoords;
 

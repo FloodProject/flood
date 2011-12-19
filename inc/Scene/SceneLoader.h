@@ -36,7 +36,7 @@ public:
 	RESOURCE_LOADER_CLASS(Scene)
 
 	// Parses a Lua text script to a buffer.
-	bool decode(const Stream& file, Resource* res) OVERRIDE;
+	bool decode(ResourceLoadOptions&) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "Scene")

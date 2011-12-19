@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Scene/Light.h"
-#include "Graphics/Sphere.h"
+#include "Geometry/Sphere.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -43,12 +43,12 @@ Light::Light( LightType::Enum type )
 void Light::update( float delta )
 {
 	if( !debugRenderable )
-		debugRenderable = createDebugRenderable();
+		debugRenderable = createDebuRenderable();
 }
 
 //-----------------------------------//
 
-RenderablePtr Light::createDebugRenderable() const
+RenderBatchPtr Light::createDebuRenderable() const
 {
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "LightMaterial");
 

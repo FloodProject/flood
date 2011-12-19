@@ -10,9 +10,9 @@
 
 #include "Core/Object.h"
 #include "Core/References.h"
-#include "Graphics/DebugGeometry.h"
+#include "Geometry/DebugGeometry.h"
 
-FWD_DECL_INTRUSIVE(Renderable)
+FWD_DECL_INTRUSIVE(RenderBatch)
 FWD_DECL_INTRUSIVE(Camera)
 FWD_DECL_INTRUSIVE(Entity)
 
@@ -54,16 +54,16 @@ public:
 	// Called just before the camera renders this component.
 	virtual void onPreRender( const Camera& camera );
 
-	// Gets if the debug renderable is visible.
+	// Gets if the debug.renderable is visible.
 	virtual bool isDebugRenderableVisible() const;
 	
-	// Sets the debug renderable as visible.
+	// Sets the debug.renderable as visible.
 	virtual void setDebugRenderableVisible( bool visible );
 
 	// Called when it is time to draw debug data.
 	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum );
 
-	// Gets/sets if the debug renderable inherits the transform.
+	// Gets/sets if the debug.renderable inherits the transform.
 	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
 
 public:
@@ -77,8 +77,8 @@ public:
 	// Does the debug inherit the transform.
 	mutable bool debugInheritsTransform;
 
-	// Debug renderable of component.
-	mutable RenderablePtr debugRenderable;
+	// Debug.renderable of component.
+	mutable RenderBatchPtr debugRenderable;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Component )

@@ -31,7 +31,7 @@ typedef std::map<void*, RefPtr<DocumentContext>> DocumentContextMap;
  */
 
 class UndoManager;
-class PluginTool;
+class ToolExtension;
 
 REFLECT_DECLARE_CLASS(Document)
 
@@ -91,7 +91,7 @@ public:
 	virtual DocumentBar* createDocumentBar();
 
 	// Tool selection callbacks.
-	virtual void onToolSelect(PluginTool* tool) {}
+	virtual void onToolSelect(ToolExtension* tool) {}
 
 	// File dialog description.
 	virtual const char* getFileDialogDescription() = 0;

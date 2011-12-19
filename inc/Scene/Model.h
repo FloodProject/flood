@@ -9,7 +9,10 @@
 #pragma once
 
 #include "Scene/Geometry.h"
+
 #include "Resources/Mesh.h"
+#include "Resources/Animation.h"
+#include "Resources/Skeleton.h"
 
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
@@ -49,12 +52,10 @@ class API_SCENE Model : public Geometry
 public:
 
 	Model();
-	Model( const MeshHandle& mesh );
-
 	~Model();
 
 	// Gets the mesh associated with the model.
-	GETTER(Mesh, const MeshHandle&, mesh)
+	GETTER(Mesh, const MeshHandle&, meshHandle)
 
 	// Gets the skinning mode of the mesh.
 	GETTER(SkinningMode, SkinningMode::Enum, skinningMode)
@@ -66,7 +67,7 @@ public:
 	void setMesh(const MeshHandle& mesh);
 
 	// Sets the current animation.
-	void setAnimation(const AnimationPtr& animation);
+	void setAnimation(Animation* animation);
 
 	// Sets the current animation.
 	void setAnimation(const String& name);
@@ -91,7 +92,7 @@ public:
 	
 	// Updates the model.
 	void update( float delta ) OVERRIDE;
-  
+
 	// Builds the mesh when it is fully loaded.
 	void build();
 
@@ -118,13 +119,11 @@ protected:
 	// Updates the final animation matrix.
 	void updateFinalAnimationBones();
 
-#if 0
-	// Updates the debug renderable of the skeleton.
-	void updateDebugRenderable() const OVERRIDE;
+	// Called when it is time to draw debug data.
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
 
 	// Creates a debug renderable of the skeleton.
-	RenderablePtr createDebugRenderable() const OVERRIDE;
-#endif
+	RenderBatchPtr createDebugRenderable() const;
 
 	// Pre-render callback.
 	void onRender(RenderView* view, const RenderState& state);
@@ -135,14 +134,11 @@ protected:
 	// Sets up shader skinning.
 	void setupShaderSkinning();
 
-	// Rebuilds the model with the mesh positions.
-	void rebuildPositions();
-
 	// Mesh that the model renders.
-	MeshHandle mesh;
+	MeshHandle meshHandle;
 
 	// Pointer to the mesh.
-	Mesh* pmesh;
+	Mesh* mesh;
 
 	// Has the model been built.
 	bool modelBuilt;
@@ -173,6 +169,11 @@ protected:
 
 	// Final bones matrices.
 	std::vector<Matrix4x3> bones;
+
+	RenderBatchPtr debugRenderable;
+
+	typedef std::map<Mesh*, RenderablesVector> MeshRenderablesMap;
+	static MeshRenderablesMap meshRenderables;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Model );

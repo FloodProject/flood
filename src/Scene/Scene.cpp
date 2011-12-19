@@ -11,13 +11,17 @@
 #include "Scene/Transform.h"
 #include "Scene/Tags.h"
 #include "Scene/Geometry.h"
-#include "Scene/Model.h"
 #include "Scene/SceneLoader.h"
-#include "Graphics/Device.h"
-#include "Core/Profiler.h"
+#include "Graphics/RenderDevice.h"
 
+#include "Core/Profiler.h"
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
+
+#include "Scene/Model.h"
+#include "Resources/Animation.h"
+#include "Resources/Skeleton.h"
+
 #include <jansson.h>
 
 NAMESPACE_ENGINE_BEGIN
@@ -99,14 +103,14 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	// Do some ray casting to find a collision.
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& entity = entities[i];
+		Entity* entity = entities[i].get();
 		if( !entity ) continue;
 
 		Class* klass = entity->getType();
 
 		if( ClassInherits(klass, ReflectionGetType(Group)) )
 		{
-			const Group* group = (const Group*) entity.get();
+			const Group* group = (const Group*) entity;
 
 			if( doRayGroupQuery(group, culler, list, all) && !all )
 				return true;
@@ -117,11 +121,11 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 			if( !entity->isVisible() || entity->getTag(Tags::NonPickable) )
 				continue;
 
-			const TransformPtr& transform = entity->getTransform();
+			const Transform* transform = entity->getTransform().get();
 			if( !transform ) continue;
 
 			const BoundingBox& box = transform->getWorldBoundingVolume();
-				
+
 			float distance = -1;
 
 			bool intersectsBox = culler.ray && box.intersects(*culler.ray, distance);
@@ -219,33 +223,32 @@ static void BuildQueryResult( RayTriangleQueryResult& res, const Ray& ray,
 
 //-----------------------------------//
 
-#define index(i) (indices[(i)])
-
-static bool DoRayQueryIndexed( const Ray& ray, const GeometryBufferPtr& gb,
-	Vector3* vertices, uint32 numVertices, int8 vertexStride,
+static bool DoRayQueryIndexed( const Ray& ray, const GeometryBuffer* gb,
+	Vector3* verticesVec, uint32 numVertices, int8 vertexStride,
 	RayTriangleQueryResult& res )
-{				
+{
 	int32 indexSizeBytes = gb->indexSize / 8;
 	
 	uint16* indices = (uint16*) &gb->indexData.front();
 	uint32 numIndices = gb->indexData.size() / indexSizeBytes;
 
-	Vector3* texCoords = (Vector3*) gb->getAttribute(VertexAttribute::TexCoord0, 0);
-	
+	uint8* texCoords = (uint8*) gb->getAttribute(VertexAttribute::TexCoord0, 0);
+	size_t texCoordsOffset = gb->declarations.getOffset(VertexAttribute::TexCoord0);
+
+	uint8* vertices = (uint8*) verticesVec;
+
 	for( size_t i = 0; i < numIndices; i += 3 )
 	{
 		#pragma TODO("Validate the index is not out-of-bounds")
 
-		uint16 i0 = index(i+0);
-		uint16 i1 = index(i+1);
-		uint16 i2 = index(i+2);
-
-		uint32 offset = i * vertexStride;
+		uint16 i0 = indices[i+0];
+		uint16 i1 = indices[i+1];
+		uint16 i2 = indices[i+2];
 
 		Vector3 tri[3];
-		tri[0] = vertices[i0 + offset];
-		tri[1] = vertices[i1 + offset];
-		tri[2] = vertices[i2 + offset];
+		tri[0] = *(Vector3*) gb->getAttribute(VertexAttribute::Position, i0);
+		tri[1] = *(Vector3*) gb->getAttribute(VertexAttribute::Position, i1);
+		tri[2] = *(Vector3*) gb->getAttribute(VertexAttribute::Position, i2);
 
 		float t, u, v;
 		float &o = u, &n = v;
@@ -257,9 +260,9 @@ static bool DoRayQueryIndexed( const Ray& ray, const GeometryBufferPtr& gb,
 
 		if( texCoords )
 		{
-			tex[0] = texCoords[i0 + offset];
-			tex[1] = texCoords[i1 + offset];
-			tex[2] = texCoords[i2 + offset];
+			tex[0] = *(Vector2*) gb->getAttribute(VertexAttribute::TexCoord0, i0);
+			tex[1] = *(Vector2*) gb->getAttribute(VertexAttribute::TexCoord0, i1);
+			tex[2] = *(Vector2*) gb->getAttribute(VertexAttribute::TexCoord0, i2);
 		}
 
 		BuildQueryResult(res, ray, tri, tex, u, v, t);
@@ -271,7 +274,7 @@ static bool DoRayQueryIndexed( const Ray& ray, const GeometryBufferPtr& gb,
 
 //-----------------------------------//
 
-static bool DoRayQuery( const Ray& ray,	const GeometryBufferPtr& gb,
+static bool DoRayQuery( const Ray& ray,	const GeometryBuffer* gb,
 	Vector3* vertices, uint32 numVertices, int8 vertexStride,
 	RayTriangleQueryResult& res )
 {
@@ -298,18 +301,19 @@ static bool DoRayQuery( const Ray& ray,	const GeometryBufferPtr& gb,
 
 //-----------------------------------//
 
-static bool DoSkinning(const GeometryPtr& geo, std::vector<Vector3>& skinnedPositions)
+static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositions)
 {
 	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
 	if( !isModel ) return false;
 
-	ModelPtr model = RefCast<Model>(geo);
+	Model* model = (Model*) geo;
 	
 	Mesh* mesh = model->getMesh().Resolve();
 	if( !mesh || !mesh->isAnimated() ) return false;
 
 	// Resize the output vector to be of the proper size.
-	size_t size = mesh->position.size();
+	size_t size = mesh->getGeometryBuffer()->getSizeVertices();
+
 	skinnedPositions.resize(size);
 
 	if( model->isHardwareSkinned() )
@@ -347,12 +351,12 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 	Ray entityRay = TransformRay(ray, entity);
 	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 	
-	const TransformPtr& transform = entity->getTransform();
+	const Transform* transform = entity->getTransform().get();
 	Matrix4x3 absolute = transform->getAbsoluteTransform();
 
 	for( size_t i = 0; i < geoms.size(); i++ )
-	{		
-		const GeometryPtr& geo = geoms[i];
+	{
+		const Geometry* geo = geoms[i].get();
 		if( !geo ) continue;
 
 		// Let's do a rough bounding volume level intersection test on each
@@ -366,22 +370,22 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 		if( !bound.intersects(ray, distance) )
 			continue;
 
-		const std::vector<RenderablePtr>& rends = geo->getRenderables();
+		const std::vector<RenderBatchPtr>& rends = geo->getRenderables();
 
 		std::vector<Vector3> skinnedPositions;
 		bool didSkinning = DoSkinning(geo, skinnedPositions);
 
 		for( size_t j = 0; j < rends.size(); j++ )
 		{
-			const RenderablePtr& rend = rends[j];
+			const RenderBatch* rend = rends[j].get();
 	
-			if( rend->getPrimitiveType() != PolygonType::Triangles )
+			if( rend->getPrimitiveType() != PrimitiveType::Triangles )
 				continue;
 
-			const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+			const GeometryBuffer* gb = rend->getGeometryBuffer().get();
 
 			Vector3* vertices = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
-			uint32 verticesSize = gb->getSizeVertices();
+			uint32 numVertices = gb->getSizeVertices();
 
 			int8 vertexStride = gb->getAttributeStride(VertexAttribute::Position);
 			
@@ -396,16 +400,16 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			bool hit = false;
 
 			if( !isIndexed )
-				hit = DoRayQuery(entityRay, gb, vertices, verticesSize, vertexStride, res);
+				hit = DoRayQuery(entityRay, gb, vertices, numVertices, vertexStride, res);
 			else
-				hit = DoRayQueryIndexed(entityRay, gb, vertices, verticesSize, vertexStride, res);
+				hit = DoRayQueryIndexed(entityRay, gb, vertices, numVertices, vertexStride, res);
 
 			if(hit)
 			{
 				res.intersectionWorld = absolute * res.intersectionLocal;
-				res.entity = entity;
-				res.geometry = geo;
-				res.renderable = rend;
+				res.entity = entity.get();
+				res.geometry = (Geometry*) geo;
+				res.renderable = (Renderable*) rend;
 				res.distance = (ray.origin - res.intersectionWorld).lengthSquared();
 
 				return true;

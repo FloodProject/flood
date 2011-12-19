@@ -112,8 +112,8 @@ void InputManager::processEvent( const InputEvent& event )
 
 void InputManager::createDefaultDevices()
 {
-	addDevice( Allocate(Keyboard, gs_InputAllocator) );
-	addDevice( Allocate(Mouse, gs_InputAllocator) );
+	addDevice( Allocate(gs_InputAllocator, Keyboard) );
+	addDevice( Allocate(gs_InputAllocator, Mouse) );
 }
 
 //-----------------------------------//

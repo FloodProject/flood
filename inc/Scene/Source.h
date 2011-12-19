@@ -96,7 +96,7 @@ public:
 	void setSound( const SoundHandle& sound );
 
 	// Updates the component.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 public:
 

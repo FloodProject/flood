@@ -9,12 +9,10 @@
 #pragma once
 
 #include "Core/References.h"
-#include "Core/Event.h"
-
 #include "Math/Vector.h"
-#include "Graphics/Buffer.h"
+#include "Resources/Buffer.h"
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -22,7 +20,7 @@ NAMESPACE_ENGINE_BEGIN
  * Attribute of a vertex element.
  */
 
-struct API_RENDER VertexAttribute
+struct API_RESOURCE VertexAttribute
 {
 	enum Enum
 	{
@@ -42,7 +40,7 @@ struct API_RENDER VertexAttribute
 	};
 };
 
-struct API_RENDER VertexType
+struct API_RESOURCE VertexDataType
 {
 	enum Enum
 	{
@@ -58,21 +56,24 @@ struct API_RENDER VertexType
  * Each element inside a vertex declaration.
  */
 
-struct API_RENDER VertexElement
+struct API_RESOURCE VertexElementP
 {
-	VertexElement();
-
-	// Returns the size of this element.
-	uint8 getSize() const;
-
 	// Semantic attribute of the element.
 	VertexAttribute::Enum attribute;
 
 	// Data type of the element.
-	VertexType::Enum type;
+	VertexDataType::Enum type;
 
 	// Number of components of the element.
 	uint8 components;
+};
+
+struct API_RESOURCE VertexElement : public VertexElementP
+{
+	VertexElement(VertexAttribute::Enum, VertexDataType::Enum, uint8 components);
+
+	// Returns the size of this element.
+	uint8 getSize() const;
 
 	// Stride between elements.
 	int8 stride;
@@ -84,17 +85,22 @@ struct API_RENDER VertexElement
 	uint32 size;
 };
 
+ //-----------------------------------//
+
 /**
  * This describes structure of a geometry buffer.
  */
 
-struct API_RENDER VertexDeclaration
+struct API_RESOURCE VertexDeclaration
 {
 	// Adds a new vertex element.
 	void add(VertexAttribute::Enum, int numComponents);
 
 	// Adds a new vertex element.
 	void add(const VertexElement&);
+
+	// Adds a new vertex element.
+	void add(const VertexElementP&);
 
 	// Resets the vertex elements.
 	void reset();
@@ -121,7 +127,7 @@ struct API_RENDER VertexDeclaration
  * data layout to the buffer so it can be used by the engine.
  */
 
-class API_RENDER GeometryBuffer : public ReferenceCounted
+class API_RESOURCE GeometryBuffer : public ReferenceCounted
 {
 public:
 
@@ -184,9 +190,7 @@ public:
 
 		if( !declarations.find(attr) )
 		{
-			VertexElement decl;
-			decl.attribute = attr;
-			decl.components = sizeof(T) / sizeof(float);
+			VertexElement decl(attr, VertexDataType::Float, sizeof(T) / sizeof(float));
 			decl.stride = 0;
 			decl.offset = this->data.size();
 			decl.size = sizeInBytes;
@@ -230,4 +234,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GeometryBuffer );
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_RESOURCES_END

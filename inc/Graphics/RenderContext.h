@@ -54,12 +54,6 @@ public:
 	// Logs the GPU capabilities.
 	void showCapabilities(RenderCapabilities*);
 
-	// Gets and parses the OpenGL information.
-	void checkCapabilities(RenderCapabilities*);
-
-	// Checks that all needed OpenGL extensions are available.
-	void checkExtensions();
-
 	// Creates a new render buffer (offscreen render target).
 	RenderBuffer* createRenderBuffer( const Settings& );
 

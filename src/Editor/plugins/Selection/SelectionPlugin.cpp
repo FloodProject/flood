@@ -118,7 +118,7 @@ void SelectionPlugin::onToolSelect( int id )
 void SelectionPlugin::onToolNone()
 {
 	// When there is no tool selected, select the 'Select' tool.
-	PluginTool* selectTool = findToolById(SelectionTool::Select);
+	ToolExtension* selectTool = findToolById(SelectionTool::Select);
 	GetEditor().getEventManager()->setCurrentTool(selectTool);
 }
 
@@ -388,9 +388,9 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	const ScenePtr& scene = sceneDocument->scene;
 	
 	RenderView* view = sceneDocument->sceneWindow->getView();
-	const CameraPtr& camera = view->getCamera();
+	Camera* camera = sceneDocument->sceneWindow->getCamera().get();
 
-	OverlayPtr overlay = selections->dragRectangle->getComponent<Overlay>();
+	Overlay* overlay = selections->dragRectangle->getComponent<Overlay>().get();
 	const Vector3& pos = overlay->getOffset();
 	const Vector3& size = overlay->getSize();
 
@@ -466,8 +466,8 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	sceneDocument->editorScene->entities.remove(selections->dragRectangle);
 
 	RenderView* view = sceneDocument->sceneWindow->getView();
-	const CameraPtr& camera = view->getCamera();
-	const ScenePtr& scene = sceneDocument->scene;
+	Camera* camera = sceneDocument->sceneWindow->getCamera().get();
+	Scene* scene = sceneDocument->scene.get();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -492,8 +492,11 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	{
 		const RayQueryResult& query = list[i];
 		
+		// Skip entities that we are inside of.
+		//if( query.distance == 0 ) continue;
+
 		RayTriangleQueryResult res;
-		
+
 		if( !scene->doRayTriangleQuery(pickRay, res, query.entity) )
 			continue;
 

@@ -31,9 +31,6 @@ public:
 
 	ScenePlugin();
 
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
-
 	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;

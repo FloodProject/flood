@@ -12,26 +12,17 @@
 
 #include "Audio/Context.h"
 #include "Audio/Device.h"
+#include "Audio/Source.h"
 #include "Audio/AL.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-AudioContext::AudioContext(AudioDevice* device)
-	: device(device)
-	, context(nullptr)
+AudioContext::AudioContext(ALCcontext* context)
+	: context(context)
 	, error(ALC_NO_ERROR)
 {
-	if(!device)
-	{
-		LogWarn("Invalid audio device.");
-		return;
-	}
-
-	context = createContext();
-	makeCurrent();
-
 	// Sets a default listener.
 	setPosition(Vector3::Zero);
 
@@ -45,28 +36,15 @@ AudioContext::~AudioContext()
 {
 	if(!context) return;
 
-	makeCurrent();
-
 	alcDestroyContext(context);
 	alcMakeContextCurrent(nullptr);
-
-	if(device->context == context)
-		device->context = nullptr;
 }
 
 //-----------------------------------//
 
-ALCcontext* AudioContext::createContext()
+AudioSourcePtr AudioContext::createSource()
 {
-	ALCcontext* context = alcCreateContext(device->device, nullptr);
-
-	if(checkError())
-	{
-		LogWarn("Error creating OpenAL context", getError());
-		return nullptr;
-	}
-
-	return context;
+	return AllocateThis(AudioSource, this);
 }
 
 //-----------------------------------//
@@ -76,9 +54,9 @@ void AudioContext::setVolume(float volume)
 	// Update OpenAL's volume.
 	alListenerf(AL_GAIN, volume);
 
-	if(checkError())
+	if(AudioCheckError())
 	{
-		LogWarn("Could not set new volume: %s", getError());
+		LogWarn("Could not set new volume: %s", AudioGetError());
 		return;
 	}
 }
@@ -90,9 +68,9 @@ void AudioContext::setPosition(const Vector3& position)
 	// Update OpenAL's listener position.
 	alListenerfv(AL_POSITION, &position.x);
 
-	if(checkError())
+	if(AudioCheckError())
 	{
-		LogWarn( "Could not set listener position: %s", getError());
+		LogWarn( "Could not set listener position: %s", AudioGetError());
 		return;
 	}
 }
@@ -105,9 +83,9 @@ void AudioContext::setOrientation(const Vector3& rotation)
 
 	alListenerfv(AL_ORIENTATION, (const ALfloat *) &data );
 
-	if(checkError())
+	if(AudioCheckError())
 	{
-		LogWarn( "Could not set listener orientation: %s", getError());
+		LogWarn( "Could not set listener orientation: %s", AudioGetError());
 		return;
 	}
 }
@@ -127,34 +105,9 @@ void AudioContext::makeCurrent()
 
 //-----------------------------------//
 
-const char* AudioContext::getError()
+void AudioContext::process()
 {
-#ifdef DEBUG_BUILD
-	switch (error)
-	{
-	case ALC_NO_ERROR: return "No error";
-    case ALC_INVALID_DEVICE: return "Invalid device";
-    case ALC_INVALID_CONTEXT: return "Invalid context";
-	case ALC_INVALID_ENUM: return "Invalid enum";
-	case ALC_INVALID_VALUE: return "Invalid value";
-    case ALC_OUT_OF_MEMORY: return "Out of memory";
-	default: return "Unknown error";
-	}
-#else
-	return nullptr;
-#endif
-}
-
-//-----------------------------------//
-
-bool AudioContext::checkError()
-{
-#ifdef DEBUG_BUILD
-	error = alcGetError(device->device);
-	return (error != AL_NO_ERROR);
-#else
-	return false;
-#endif
+	alcProcessContext(context);
 }
 
 //-----------------------------------//

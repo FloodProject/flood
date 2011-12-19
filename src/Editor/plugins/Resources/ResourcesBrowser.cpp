@@ -354,10 +354,10 @@ static Vector3 CalculatePlacementCoords(const Vector2& coords)
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	
-	ScenePtr scene = document->scene;
-	RenderView* view = document->getViewframe()->view;
+	Scene* scene = document->scene.get();
+	Camera* camera = document->getViewframe()->getCamera().get();
 
-	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
+	Ray ray = camera->getRay(coords.x, coords.y);
 	RayTriangleQueryResult res;
 
 	Vector3 dropPoint;
@@ -410,7 +410,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	MeshHandle mesh = HandleCast<Mesh>(handle);
 	if( !mesh ) return;
 
-	EntityPtr entity = EntityCreate( AllocatorGetHeap() );
+	Entity* entity = EntityCreate( AllocatorGetHeap() );
 	entity->setName(PathGetFile(name));
 	entity->addTransform();
 
@@ -419,11 +419,13 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 	entity->getTransform()->setPosition(dropPoint);
 
-	ModelPtr model = AllocateThis(Model, mesh);
+	Model* model = AllocateThis(Model);
+	model->setMesh(mesh);
+
 	entity->addComponent(model);
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	ScenePtr scene = document->scene;
+	Scene* scene = document->scene.get();
 
 	EntityOperation* entityOperation = AllocateThis(EntityOperation);
 	entityOperation->type = EntityOperation::EntityAdded;

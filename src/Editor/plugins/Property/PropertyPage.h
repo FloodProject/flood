@@ -63,14 +63,11 @@ public:
 	// Creates a new property grid.
 	PropertyGrid* createPropertyGrid(wxWindow* parent);
 
-	// Appends a separator header to the property grid.
-	void appendHeader( PropertyGrid*, const String& name );
-
 	// Appends the type fields to the property grid.
 	void appendObjectFields( PropertyGrid*, Class*, void* object );
 
 	// Populates properties on the grid.
-	void showProperties( Object* object, bool reset = true );
+	void showProperties( PropertyGrid*, Object* object, bool reset = true );
 
 	// Gets the value of a field.
 	wxAny getFieldValue(const Field* field, void* object);

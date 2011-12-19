@@ -83,8 +83,8 @@ public:
 
 protected:
 
-	// Creates the debug renderable of this component.
-	RenderablePtr createDebugRenderable() const;
+	// Creates the debug.renderable of this component.
+	RenderBatchPtr createDebuRenderable() const;
 
 	// Light type and colors
 	LightType::Enum lightType;

@@ -6,14 +6,13 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "Graphics/API.h"
+#include "GLSL_ShaderProgram.h"
+#include "GL.h"
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Graphics/GLSL_ShaderProgram.h"
-#include "Graphics/GL.h"
-
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -23,18 +22,16 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 GLSL_ShaderProgram::GLSL_ShaderProgram() 
-	: id(0)
-	, created(false)
-{ }
+	: created(false)
+{
+}
 
 //-----------------------------------//
 
 GLSL_ShaderProgram::~GLSL_ShaderProgram()
 {
 	glDeleteShader(id);
-
-	if( CheckLastErrorGL("Could not delete shader object") )
-		return;
+	CheckLastErrorGL("Could not delete shader object");
 }
 
 //-----------------------------------//
@@ -43,7 +40,7 @@ bool GLSL_ShaderProgram::create()
 {
 	if( created ) return true;
 
-	id = glCreateShader( getGLShaderType(type) );
+	id = glCreateShader( ConvertShaderTypeGL(type) );
 
 	if( CheckLastErrorGL("Could not create a new shader object") )
 	{
@@ -110,42 +107,21 @@ bool GLSL_ShaderProgram::upload()
 void GLSL_ShaderProgram::getCompileLog()
 {
 	// Get compilation log size.
-
 	GLint size;
 	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &size);
 
 	GLsizei length;
 
 	// Store the info into the log.
-
 	log.resize(size);
 	glGetShaderInfoLog(id, log.size(), &length, (GLchar*) log.data());
 
 	if( log.empty() )
-	{
 		log = "Shader source compiled with success";
-	}
 }
 
 //-----------------------------------//
 
-uint32 GLSL_ShaderProgram::getGLShaderType( ShaderType::Enum type )
-{
-	switch( type )
-	{
-	case ShaderType::Vertex:
-		return GL_VERTEX_SHADER;
-	case ShaderType::Fragment:
-		return GL_FRAGMENT_SHADER;
-	case ShaderType::Geometry:
-		return GL_GEOMETRY_SHADER_EXT;
-	default:
-		return 0;
-	}	
-}
-
-//-----------------------------------//
-
-NAMESPACE_ENGINE_END
+NAMESPACE_GRAPHICS_END
 
 #endif

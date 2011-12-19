@@ -18,7 +18,7 @@
 #include "Network/Host.h"
 #include "Network/Session.h"
 #include "Network/Message.h"
-#include "Network/Dispatcher.h"
+#include "Network/MessageDispatcher.h"
 
 #include "Resources/API.h"
 

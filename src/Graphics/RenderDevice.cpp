@@ -67,7 +67,7 @@ RenderDevice::RenderDevice()
 	, activeTarget(nullptr)
 	, activeView(nullptr)
 	, renderBackend(nullptr)
-	, shadowDepthBuffer(nullptr)
+	//, shadowDepthBuffer(nullptr)
 	, pipeline(RenderPipeline::ShaderForward)
 {
 	gs_RenderDevice = this;
@@ -91,6 +91,8 @@ static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 	return (rA == rB) ? (pA < pB) : (rA < rB);
 }
 
+//-----------------------------------//
+
 void RenderDevice::render( RenderBlock& queue ) 
 {
 	#pragma TODO("Sort the render group by depth distance")
@@ -109,32 +111,6 @@ void RenderDevice::render( RenderBlock& queue )
 //-----------------------------------//
 
 void RenderDevice::render( const RenderState& state, const LightQueue& lights )
-{
-#ifdef BUILD_DEBUG
-	const RenderBatch* renderable = state.renderable;
-	if( renderable ) return;
-
-	const Material* material = state.material;
-	if( !material ) return;
-#endif
-
-	switch(pipeline)
-	{
-	//case RenderPipeline::Fixed:
-	//	setupRenderFixed(state, lights);
-	//	return;
-	case RenderPipeline::ShaderForward:
-		setupRenderForward(state, lights);
-		return;
-	default:
-		LogError("Unknown render pipeline");
-		return;
-	}
-}
-
-//-----------------------------------//
-
-void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue& lights)
 {
 	BufferManager* buffers = activeContext->bufferManager;
 	ProgramManager* programs = activeContext->programManager;
@@ -162,7 +138,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 
 	program->bind();
 
-	setupRenderStateMaterial(state, true);
+	renderBackend->setupRenderState(state, true);
 
 	RenderLayer::Enum stage = renderable->getRenderLayer();
 
@@ -177,8 +153,8 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 		if( !setupRenderStateMatrix(state) )
 			return;
 
-		if( !setupRenderStateLight(state, lights) )
-			return;
+		//if( !setupRenderStateLight(state, lights) )
+		//	return;
 	}
 	else if( stage == RenderLayer::Overlays )
 	{
@@ -189,7 +165,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	UniformBuffer* ub = renderable->getUniformBuffer().get();
 	program->setUniforms(ub);
 
-	render(renderable);
+	renderBackend->renderBatch(renderable);
 	
 	if( renderable->onPostRender.empty() )
 	{
@@ -197,53 +173,12 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 		renderable->onPostRender(activeView, state);
 	}
 	
-	undoRenderStateMaterial(material);
+	renderBackend->unsetupRenderState(state);
 	
 	program->unbind();
 
 	renderBackend->unbindVertexBuffer(vb);
 	unbindBuffers(renderable);
-}
-#if 0
-//-----------------------------------//
-
-void RenderDevice::render RenderBatch* renderable)
-{	
-	PrimitiveRasterMode::Enum mode =.renderable->getPrimitiveRasterMode();
-	
-	if( mode == PrimitiveRasterMode::Wireframe )
-	{
-		// Switch the OpenGL polygon mode to the one requested.
-		glPrimitiveRasterMode( GL_FRONT_AND_BACK, PrimitiveRasterMode::Wireframe );
-	}
-
-	GLenum primitiveType = ConvertPrimitiveGL.renderable->getPrimitiveType());
-	const GeometryBuffer* gb =.renderable->getGeometryBuffer().get();
-
-	if( !gb->isIndexed() )
-	{
-		uint32 numVertices = gb->getSizeVertices();
-		
-		if( numVertices )
-		{
-			glDrawArrays( primitiveType, 0, numVertices );
- 			CheckLastErrorGL("Error drawing vertex buffer");
-		}
-	}
-	else
-	{
-		GLenum indexType = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-		int numIndices = gb->indexData.size() / (gb->indexSize / 8);
-
-		glDrawElements( primitiveType, numIndices, indexType, 0 );
-		CheckLastErrorGL("Error drawing index buffer");
-	}
-
-	if( mode == PrimitiveRasterMode::Wireframe )
-	{
-		// Restore the polygon rendering mode.
-		glPrimitiveRasterMode( GL_FRONT_AND_BACK, PrimitiveRasterMode::Solid );
-	}
 }
 
 //-----------------------------------//
@@ -264,76 +199,11 @@ bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 
 //-----------------------------------//
 
-void RenderDevice::bindTextures(const RenderState& state, bool bindUniforms)
-{
-	TextureUnitMap& units = state.material->textureUnits;
-	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
-
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
-	{
-		const TextureUnit& unit = it->second;
-		
-		const ImageHandle& handle = unit.image;
-		Image* image = handle.Resolve();
-
-		Texture* texture = activeContext->textureManager->getTexture(image).get();
-		if( !texture ) continue;
-
-		uint8 index = unit.unit;
-		texture->bind(index);
-
-		if(unit.overrideModes)
-		{
-			GLint filter = Texture::convertFilterFormat(unit.getFilterMode());
-			glTexParameteri( texture->target, GL_TEXTURE_MIN_FILTER, filter );
-			glTexParameteri( texture->target, GL_TEXTURE_MAG_FILTER, filter );
-
-			GLint wrap = Texture::convertWrapFormat(unit.getWrapMode());
-			glTexParameteri( texture->target, GL_TEXTURE_WRAP_S, wrap );
-			glTexParameteri( texture->target, GL_TEXTURE_WRAP_T, wrap );
-		}
-
-		if( !bindUniforms ) continue;
-
-		char s_TextureUniform[] = "vp_Texture0";
-		size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 1;
-
-		// Build the uniform string without allocating memory.
-		char indexChar = (index + '0');
-		s_TextureUniform[s_TextureUniformSize] = indexChar;
-
-		ub->setUniform( s_TextureUniform, (int32) index );
-	}
-}
-
-//-----------------------------------//
-
-void RenderDevice::unbindTextures(Material* material)
-{
-	TextureUnitMap& units = material->textureUnits;
-	TextureManager* textureManager = activeContext->textureManager;
-
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
-	{
-		const TextureUnit& unit = it->second;
-		const ImageHandle& handle = unit.image;
-
-		Texture* tex = textureManager->getTexture(handle.Resolve()).get();
-		if( !tex ) continue;
-
-		tex->unbind( it->first );
-	}
-}
-
-//-----------------------------------//
-
-bool RenderDevice::bindBuffers RenderBatch* renderable)
+bool RenderDevice::bindBuffers( RenderBatch* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
 
-	GeometryBuffer* gb =.renderable->getGeometryBuffer().get();
+	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
 	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
 	
@@ -341,21 +211,21 @@ bool RenderDevice::bindBuffers RenderBatch* renderable)
 
 	if( !vb->isBuilt() || gb->needsRebuild )
 	{
-		// If the vertex buffer is not build yet, then we build it.
-		vb->build(gb);
+		// If the vertex buffer is not built yet, then we build it.
+		renderBackend->buildVertexBuffer(vb/*, gb*/);
 	}
 
-	vb->bind();
+	renderBackend->bindVertexBuffer(vb);
 
 	// If there is no index buffer associated with the geometry, we are done.
 	if( !ib ) goto done;
 
-	ib->bind();
+	renderBackend->bindIndexBuffer(ib);
 	
 	if( !ib->isBuilt || gb->needsRebuild )
 	{
 		// If the index buffer is not built, we also need to build it.
-		ib->build(gb);
+		renderBackend->buildIndexBuffer(ib);
 	}
 
 done:
@@ -366,24 +236,24 @@ done:
 
 //-----------------------------------//
 
-bool RenderDevice::unbindBuffers RenderBatch* renderable)
+bool RenderDevice::unbindBuffers( RenderBatch* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
-	const GeometryBuffer* gb =.renderable->getGeometryBuffer().get();
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	
 	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
 	if( !vb ) return false;
 	
-	vb->unbind();
+	renderBackend->unbindVertexBuffer(vb);
 
 	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
-	if( ib ) ib->unbind();
+	if( ib ) renderBackend->unbindIndexBuffer(ib);
 
 	return true;
 }
 
 //-----------------------------------//
-
+#if 0
 void RenderDevice::updateLightDepth( LightState& state )
 {
 #if 0
@@ -496,7 +366,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 	return true;
 }
-
+#endif
 //-----------------------------------//
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
@@ -515,126 +385,26 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 
 //-----------------------------------//
 
-void RenderDevice::setupRenderStateMaterial( const RenderState& state, bool bindUniforms )
-{
-	bindTextures(state, bindUniforms);
-	Material* mat = state.material;
-
-	if( mat->lineSmooth )
-	{
-		glEnable( GL_LINE_SMOOTH );
-		glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-	}
-
-	if( mat->lineWidth != Material::DefaultLineWidth )
-		glLineWidth( mat->getLineWidth() );
-
-	if( mat->depthCompare != DepthCompare::Less )
-		glDepthFunc( mat->depthCompare );
-
-	if( mat->depthRange != Vector2::UnitY )
-		glDepthRange( mat->depthRange.x, mat->depthRange.y );
-
-	if( mat->depthOffset != Vector2::Zero )
-	{
-		glPolygonOffset( mat->depthOffset.x, mat->depthOffset.y );
-		glEnable(GL_POLYGON_OFFSET_FILL);
-	}
-
-	if( !mat->cullBackfaces )
-		glDisable( GL_CULL_FACE );
-
-	if( mat->alphaTest )
-		glEnable( GL_ALPHA_TEST );
-
-	if( !mat->depthTest )
-		glDisable( GL_DEPTH_TEST );
-
-	if( !mat->depthWrite )
-		glDepthMask( GL_FALSE );
-
-	if( mat->isBlendingEnabled() ) 
-	{
-		glEnable( GL_BLEND );
-		glBlendFunc( mat->getBlendSource(), mat->getBlendDestination() );
-	}
-}
-
-//-----------------------------------//
-
-void RenderDevice::undoRenderStateMaterial( Material* mat )
-{
-	if( mat->isBlendingEnabled() ) 
-		glDisable( GL_BLEND );
-
-	if( !mat->cullBackfaces )
-		glEnable( GL_CULL_FACE );
-
-	if( mat->alphaTest )
-		glDisable( GL_ALPHA_TEST );
-
-	if( mat->depthCompare != DepthCompare::Less )
-		glDepthFunc( DepthCompare::Less );
-
-	if( mat->depthRange != Vector2::UnitY )
-		glDepthRange(0, 1);
-
-	if( mat->depthOffset != Vector2::Zero )
-	{
-		glPolygonOffset( 0, 0 );
-		glDisable(GL_POLYGON_OFFSET_FILL);
-	}
-
-	if( !mat->depthTest )
-		glEnable( GL_DEPTH_TEST );
-
-	if( !mat->depthWrite )
-		glDepthMask( GL_TRUE );
-
-	if( mat->lineSmooth )
-		glDisable( GL_LINE_SMOOTH );
-
-	if( mat->lineWidth != Material::DefaultLineWidth ) 
-		glLineWidth( Material::DefaultLineWidth );
-
-	unbindTextures(mat);
-}
-
-//-----------------------------------//
-
 void RenderDevice::setActiveView( RenderView* view )
 {
 	activeView = view;
-
 	if( !activeView ) return;
 
-	activeContext->setClearColor( view->getClearColor() );
-
-	const Vector2i& origin = activeView->getOrigin();
-	const Vector2i& size = activeView->getSize();
-
-	glViewport( origin.x, origin.y, size.x, size.y );
+	renderBackend->setupRenderView(view);
 }
 
 //-----------------------------------//
 
 void RenderDevice::clearView()
 {
-	const Vector2i& origin = activeView->getOrigin();
-	const Vector2i& size = activeView->getSize();
-
-	//glScissor(origin.x, origin.y, size.x, size.y);
-
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	CheckLastErrorGL("Could not clear the render target");
+	renderBackend->clearRenderView(activeView);
 }
-#endif
+
 //-----------------------------------//
 
 void RenderDevice::setRenderTarget(RenderTarget* target)
 {
 	activeTarget = target;
-
 	if( !activeTarget ) return;
 
 	activeTarget->makeCurrent();

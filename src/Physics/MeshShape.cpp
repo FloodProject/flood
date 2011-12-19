@@ -54,11 +54,11 @@ btTriangleIndexVertexArray* MeshShape::convertMesh()
 	
 	foreach( const GeometryPtr& geometry, node->getGeometry() )
 	{
-		const RenderableVector& rends = geometry->getRenderables();
+		const.renderableVector& rends = geometry->ge.renderables();
 
-		foreach( const RenderablePtr& rend, rends )
+		foreach( const.renderablePtr& rend, rends )
 		{
-			if( rend->getPrimitiveType() != PolygonType::Triangles )
+			if( rend->getPrimitiveType() != PrimitiveType::Triangles )
 				continue;
 
 			GeometryBuffer gb = rend->getVertexBuffer();
@@ -92,13 +92,13 @@ btTriangleMesh* MeshShape::convertMesh()
 	for( size_t i = 0; i < geometries.size(); i++ )
 	{
 		const GeometryPtr& geometry = geometries[i];
-		const RenderableVector& rends = geometry->getRenderables();
+		const.renderableVector& rends = geometry->ge.renderables();
 
 		for( uint e = 0; e < rends.size(); e++ )
 		{
-			const RenderablePtr& rend = rends[e];
+			const.renderablePtr& rend = rends[e];
 
-			if( rend->getPrimitiveType() != PolygonType::Triangles )
+			if( rend->getPrimitiveType() != PrimitiveType::Triangles )
 				continue;
 
 			GeometryBuffer gb = rend->getVertexBuffer();

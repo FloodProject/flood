@@ -15,6 +15,65 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_ABSTRACT_CHILD_CLASS(EditorExtension, Extension)
+REFLECT_CLASS_END()
+
+EditorExtension::EditorExtension()
+	: plugin(nullptr)
+{
+
+}
+
+//-----------------------------------//
+
+REFLECT_ABSTRACT_CHILD_CLASS(ToolExtension, EditorExtension)
+REFLECT_CLASS_END()
+
+ToolExtension::ToolExtension()
+	: toolbar(nullptr)
+	, item(nullptr)
+{
+
+}
+
+//-----------------------------------//
+
+ExtensionMetadata* ToolExtension::getMetadata()
+{
+	static ExtensionMetadata s_ToolExtension =
+	{
+		"Tool",
+		"Extends the editor with tools."
+	};
+
+	return &s_ToolExtension;
+}
+
+//-----------------------------------//
+
+REFLECT_ABSTRACT_CHILD_CLASS(DocumentExtension, EditorExtension)
+REFLECT_CLASS_END()
+
+DocumentExtension::DocumentExtension()
+{
+
+}
+
+//-----------------------------------//
+
+ExtensionMetadata* DocumentExtension::getMetadata()
+{
+	static ExtensionMetadata s_DocumentExtension =
+	{
+		"Document",
+		"Extends the editor with documents."
+	};
+
+	return &s_DocumentExtension;
+}
+
+//-----------------------------------//
+
 REFLECT_ABSTRACT_CHILD_CLASS(EditorPlugin, Plugin)
 REFLECT_CLASS_END()
 
@@ -47,7 +106,7 @@ void EditorPlugin::doPluginDisable()
 
 //-----------------------------------//
 
-PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
+ToolExtension* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 {
 	if( !tool ) return nullptr;
 	
@@ -57,11 +116,11 @@ PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 
 //-----------------------------------//
 
-PluginTool* EditorPlugin::findToolById( int toolId )
+ToolExtension* EditorPlugin::findToolById( int toolId )
 {
 	for( size_t i = 0; i < tools.size(); i++ )
 	{
-		PluginTool& tool = tools[i];
+		ToolExtension& tool = tools[i];
 		
 		wxAuiToolBarItem* item = tool.item;
 		if( !item ) continue;
@@ -74,7 +133,7 @@ PluginTool* EditorPlugin::findToolById( int toolId )
 
 //-----------------------------------//
 
-void EditorPlugin::addTool( PluginTool& tool, bool addToMenu )
+void EditorPlugin::addTool( ToolExtension& tool, bool addToMenu )
 {
 	tool.item->SetUserData((long)this);
 	tool.plugin = this;
@@ -107,7 +166,7 @@ void EditorPlugin::addTool( PluginTool& tool, bool addToMenu )
 
 void EditorPlugin::addTool( wxAuiToolBarItem* item, bool addToMenu )
 {
-	PluginTool tool;
+	ToolExtension tool;
 	tool.item = item;
 
 	addTool(tool);
@@ -115,7 +174,7 @@ void EditorPlugin::addTool( wxAuiToolBarItem* item, bool addToMenu )
 
 //-----------------------------------//
 
-void PluginTool::setToolbar(wxAuiToolBar* tb)
+void ToolExtension::setToolbar(wxAuiToolBar* tb)
 {
 	tb->Realize();
 	toolbar = tb;

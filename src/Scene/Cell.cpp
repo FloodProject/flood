@@ -58,7 +58,7 @@ void Cell::setHeights( const std::vector<float>& heights )
 	this->heights = heights;
 
 	rend = AllocateThis(Renderable);
-	rend->setPrimitiveType(PolygonType::Triangles);
+	rend->setPrimitiveType(PrimitiveType::Triangles);
 	rend->setGeometryBuffer( AllocateThis(GeometryBuffer) );
 	rend->setMaterial(material);
 

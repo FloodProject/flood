@@ -58,17 +58,17 @@ FWD_DECL_INTRUSIVE(Session)
 // Macro declarations
 //---------------------------------------------------------------------//
 
-#define PROTOCOL_PLUGIN_BEGIN(name) \
-	PluginMetadata name::getMetadata() { \
-	PluginMetadata metadata;
+#define PROTOCOL_EXTENSION_BEGIN(name) \
+	ExtensionMetadata* name::getMetadata() { \
+	static ExtensionMetadata metadata = {
 
-#define METADATA_NAME(n) metadata.name = #n;
-#define METADATA_DESC(d) metadata.description = #d;
-#define METADATA_AUTHOR(a) metadata.author = #a;
-#define METADATA_VERSION(v) metadata.version = #v;
-#define METADATA_PRIORITY(p) metadata.priority = p;
+#define METADATA_NAME(n) #n,
+#define METADATA_DESC(d) #d,
+#define METADATA_AUTHOR(a) //metadata.author = #a;
+#define METADATA_VERSION(v) //metadata.version = #v;
+#define METADATA_PRIORITY(p) p,
 
-#define PROTOCOL_PLUGIN_END() return metadata; }
+#define PROTOCOL_EXTENSION_END() }; return &metadata; }
 
 #define PROTOCOL_MESSAGE_HANDLERS(name) \
 	static MessageMapping gs_##name##RawMessages[] = {

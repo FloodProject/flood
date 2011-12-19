@@ -7,8 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Graphics/DebugGeometry.h"
-#include "Graphics/Renderable.h"
+#include "Geometry/DebugGeometry.h"
+#include "Geometry/GeometryBuffer.h"
+#include "Graphics/RenderBatch.h"
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
 #include "Scene/Tags.h"
@@ -42,9 +43,9 @@ DebugDrawer::DebugDrawer()
 	linesVB->setBufferUsage(BufferUsage::Dynamic);
 	SetupDebugVertexFormat(linesVB.get());
 
-	lines = RenderableCreate(alloc);
+	lines = RenderBatchCreate(alloc);
 	lines->setGeometryBuffer(linesVB);
-	lines->setPrimitiveType(PolygonType::Lines);
+	lines->setPrimitiveType(PrimitiveType::Lines);
 	lines->setMaterial(debug);
 	lines->setRenderLayer(RenderLayer::PostTransparency);
 	renderables.push_back(lines.get());
@@ -55,9 +56,9 @@ DebugDrawer::DebugDrawer()
 	trianglesVB->setBufferUsage(BufferUsage::Dynamic);
 	SetupDebugVertexFormat(trianglesVB.get());
 
-	triangles = RenderableCreate(alloc);
+	triangles = RenderBatchCreate(alloc);
 	triangles->setGeometryBuffer(trianglesVB);
-	triangles->setPrimitiveType(PolygonType::Triangles);
+	triangles->setPrimitiveType(PrimitiveType::Triangles);
 	triangles->setMaterial(debug);
 	triangles->setRenderLayer(RenderLayer::PostTransparency);
 	renderables.push_back(triangles.get());
@@ -68,9 +69,9 @@ DebugDrawer::DebugDrawer()
 	quadsVB->setBufferUsage(BufferUsage::Dynamic);
 	SetupDebugVertexFormat(quadsVB.get());
 
-	quads = RenderableCreate(alloc);
+	quads = RenderBatchCreate(alloc);
 	quads->setGeometryBuffer(quadsVB);
-	quads->setPrimitiveType(PolygonType::Quads);
+	quads->setPrimitiveType(PrimitiveType::Quads);
 	quads->setMaterial(debug);
 	quads->setRenderLayer(RenderLayer::PostTransparency);
 	renderables.push_back(quads.get());
@@ -92,16 +93,10 @@ static void SetupDebugVertexFormat(GeometryBuffer* gb)
 	// Setup the vertex format.
 	gb->declarations.reset();
 
-	VertexElement elemPosition;
-	elemPosition.attribute = VertexAttribute::Position;
-	elemPosition.type = VertexType::Float;
-	elemPosition.components = 3;
+	VertexElementP elemPosition = { VertexAttribute::Position, VertexDataType::Float, 3 };
 	gb->declarations.add(elemPosition);
 
-	VertexElement elemColor;
-	elemColor.attribute = VertexAttribute::Color;
-	elemColor.type = VertexType::Float;
-	elemColor.components = 4;
+	VertexElementP elemColor = { VertexAttribute::Color, VertexDataType::Float, 4 };
 	gb->declarations.add(elemColor);
 
 	gb->declarations.calculateStrides();
@@ -182,10 +177,10 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	//mat->setDepthRange( Vector2(0.1f, 0.9f) );
 
 	RenderablePtr renderable = AllocateHeap(Renderable);
-	renderable->setPrimitiveType(PolygonType::Quads);
+	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
-	renderable->setPolygonMode( PolygonMode::Wireframe );
+	renderable->setPrimitiveRasterMode( PrimitiveRasterMode::Wireframe );
 
 	DebugUpdateBoudingBox(gb.get(), box, Color::White);
 
@@ -244,7 +239,7 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
 	RenderablePtr renderable = AllocateHeap(Renderable);
-	renderable->setPrimitiveType(PolygonType::Lines);
+	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
 	
@@ -255,17 +250,17 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 RenderablePtr DebugBuildFrustum( const Frustum& box )
 {
-	GeometryBufferPtr gb = Allocate(GeometryBuffer, AllocatorGetHeap());
+	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
 	Material* material = materialHandle.Resolve();
 	material->setBackfaceCulling( false );
 
 	RenderablePtr renderable = AllocateHeap(Renderable);
-	renderable->setPrimitiveType(PolygonType::Quads);
+	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
-	renderable->setPolygonMode( PolygonMode::Wireframe );
+	renderable->setPrimitiveRasterMode( PrimitiveRasterMode::Wireframe );
 
 	DebugUpdateFrustum(renderable, box);
 	return renderable;

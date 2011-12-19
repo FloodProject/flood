@@ -17,9 +17,9 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Label, Overlay)
-	FIELD_PRIMITIVE_SETTER(4, string, text, Text)
-	FIELD_PRIMITIVE(5, bool, isDirty) FIELD_READONLY(isDirty) FIELD_NO_SERIALIZE(isDirty)
-	FIELD_CLASS_PTR_SETTER(6, Font, FontHandle, font, Handle, Font) 
+	FIELD_PRIMITIVE_SETTER(5, string, text, Text)
+	FIELD_PRIMITIVE(6, bool, isDirty) FIELD_READONLY(isDirty) FIELD_NO_SERIALIZE(isDirty)
+	FIELD_CLASS_PTR_SETTER(7, Font, FontHandle, font, Handle, Font) 
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -85,7 +85,7 @@ void Label::update( float delta )
 
 void Label::rebuildGeometry()
 {
-	const GeometryBufferPtr& gb = renderable->getGeometryBuffer();
+	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	
 	// Invalidate the existing vertex buffer contents
 	gb->declarations.reset();

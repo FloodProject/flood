@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Graphics/Cube.h"
-#include "Graphics/Renderable.h"
+#include "Geometry/Cube.h"
+#include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -42,8 +42,8 @@ void Cube::create()
 	MaterialHandle mat = MaterialCreate(AllocatorGetHeap(), "Cube");
 	mat.Resolve()->setShader("VertexColor");
 
-	RenderablePtr rend = RenderableCreate( AllocatorGetHeap() );
-	rend->setPrimitiveType(PolygonType::Quads);
+	RenderablePtr rend = RenderBatchCreate( AllocatorGetHeap() );
+	rend->setPrimitiveType(PrimitiveType::Quads);
 	rend->setGeometryBuffer(gb);
 	rend->setMaterial(mat);
 

@@ -31,15 +31,6 @@ public:
 	// Processes a wxWidgets mouse input event.
 	void processMouseEvent( const wxMouseEvent& );
 
-	// Custom processing of input events.
-	void doKeyEvent( const wxKeyEvent&, bool keyDown );
-	void doMouseEvent( const wxMouseEvent& );
-
-private:
-
-	// Converts from wxWidgets events to vapor3D events.
-	static Keys::Enum convertKeyEnum( int keyCode );
-
 	InputManager* input;
 };
 

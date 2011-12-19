@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Scene/Geometry.h"
-#include "Graphics/Sphere.h"
+#include "Geometry/Sphere.h"
 #include "Resources/Image.h"
 
 FWD_DECL_INTRUSIVE(Entity)

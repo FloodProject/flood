@@ -93,7 +93,7 @@ protected:
 	MaterialHandle material;
 
 	// Renderable of the cell.
-	RenderablePtr rend;
+	RenderBatchPtr rend;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cell );

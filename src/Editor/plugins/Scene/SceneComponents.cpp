@@ -15,7 +15,7 @@
 #include "DocumentWindow.h"
 #include "UndoManager.h"
 #include "Scene/Projector.h"
-#include "Graphics/Cube.h"
+#include "Geometry/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -34,43 +34,43 @@ struct ComponentEntry
 
 static ComponentEntry components[] =
 {
-	{ nullptr, TYPE(Model),				BMP(shape_flip_horizontal) },
-	{ nullptr, TYPE(Transform),			BMP(chart_line) },
-	{ nullptr, TYPE(Camera),			BMP(camera) },
-	{ nullptr, TYPE(Light),				BMP(lightbulb_off) },
-	{ nullptr, TYPE(Particles),			BMP(chart_pie) },
+	{ nullptr, TYPE(Model),                BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Transform),            BMP(chart_line) },
+	{ nullptr, TYPE(Camera),               BMP(camera) },
+	{ nullptr, TYPE(Light),                BMP(lightbulb_off) },
+	{ nullptr, TYPE(Particles),            BMP(chart_pie) },
 	{ "Primitives", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Cube),				BMP(cube) },
-	{ nullptr, TYPE(Quad),				BMP(cube) },
+	{ nullptr, TYPE(Cube),                 BMP(cube) },
+	{ nullptr, TYPE(Quad),                 BMP(cube) },
 	{ "Nature", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Skydome),			BMP(weather_clouds) },
-	{ nullptr, TYPE(Water),				BMP(weather_clouds) },
+	{ nullptr, TYPE(Skydome),              BMP(weather_clouds) },
+	{ nullptr, TYPE(Water),                BMP(weather_clouds) },
 	{ "GUI", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Label),				BMP(text_align_left) },
+	{ nullptr, TYPE(Label),                BMP(text_align_left) },
 #ifdef ENABLE_AUDIO_OPENAL	
 	{ "Audio", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Source),			BMP(sound) },
-	{ nullptr, TYPE(Listener),			BMP(status_online) },
+	{ nullptr, TYPE(Source),               BMP(sound) },
+	{ nullptr, TYPE(Listener),             BMP(status_online) },
 #endif
 	{ "Controllers", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(FirstPersonController), BMP(camera) },
-	{ nullptr, TYPE(ThirdPersonController), BMP(camera) },
+	{ nullptr, TYPE(FirstPersonController),BMP(camera) },
+	{ nullptr, TYPE(ThirdPersonController),BMP(camera) },
 #ifdef ENABLE_SCRIPTING_LUA
 	{ "Scripting", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(ScriptController),     BMP(shape_flip_horizontal) },
 #endif
 #ifdef ENABLE_PHYSICS_BULLET
 	{ "Physics", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(CharacterController),	BMP(link) },
-	{ nullptr, TYPE(BoxShape),				BMP(link) },
-	{ nullptr, TYPE(MeshShape),				BMP(link) },
-	{ nullptr, TYPE(CapsuleShape),			BMP(link) },
-	{ nullptr, TYPE(Body),					BMP(link) },
+	{ nullptr, TYPE(CharacterController),  BMP(link) },
+	{ nullptr, TYPE(BoxShape),             BMP(link) },
+	{ nullptr, TYPE(MeshShape),            BMP(link) },
+	{ nullptr, TYPE(CapsuleShape),         BMP(link) },
+	{ nullptr, TYPE(Body),                 BMP(link) },
 #endif
 	{ "Extra", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Projector),			BMP(lightbulb_off) },
-	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
-	{ nullptr, TYPE(Grid),				BMP(grid_icon_white_bg) },
+	{ nullptr, TYPE(Projector),            BMP(lightbulb_off) },
+	{ nullptr, TYPE(Billboard),            BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Grid),                 BMP(grid_icon_white_bg) },
 };
 
 //-----------------------------------//
@@ -113,7 +113,7 @@ void ScenePage::initIcons()
 
 //-----------------------------------//
 
-void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
+void ScenePage::populateEntityItemMenu(wxMenu& menu, Entity* node)
 {
 	menu.AppendCheckItem(ID_MenuSceneEntityVisible, "&Visible");
 	menu.Check(ID_MenuSceneEntityVisible, node->isVisible() );
@@ -122,11 +122,11 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 	
 	if( !geo.empty() )
 	{
-		const std::vector<RenderablePtr>& rend = geo.front()->getRenderables();
+		const RenderablesVector& rend = geo.front()->getRenderables();
 		
 		if( !rend.empty() )
 		{
-			bool state = (rend.front()->getPolygonMode() != PolygonMode::Solid);
+			bool state = (rend.front()->getPrimitiveRasterMode() != PrimitiveRasterMode::Solid);
 			menu.AppendCheckItem(ID_MenuSceneEntityWireframe, "&Wireframe");
 			menu.Check(ID_MenuSceneEntityWireframe, state );
 		}

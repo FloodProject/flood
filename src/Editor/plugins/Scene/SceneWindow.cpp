@@ -67,7 +67,7 @@ RenderControl* SceneWindow::createControl()
 
 void SceneWindow::switchToDefaultCamera()
 {
-	const CameraPtr& camera = mainCamera;
+	Camera* camera = mainCamera.get();
 	if( !camera ) return;
 
 #if 0
@@ -76,7 +76,7 @@ void SceneWindow::switchToDefaultCamera()
 	if( controller ) controller->setEnabled(true);
 #endif
 
-	view->setCamera(camera);
+	setCamera(camera);
 }
 
 //-----------------------------------//
@@ -86,7 +86,7 @@ RenderView* SceneWindow::createView()
 	Window* window = control->getRenderWindow();
 
 	view = window->createView();
-	view->onCameraChanged.Connect(this, &SceneWindow::onCameraChanged);
+	//view->onCameraChanged.Connect(this, &SceneWindow::onCameraChanged);
 	
 	return view;
 }
@@ -98,7 +98,7 @@ void SceneWindow::onCameraChanged(const CameraPtr& camera)
 	flagRedraw();
 
 	// Subscribe to the camera transform events.
-	TransformPtr transform = camera->getEntity()->getTransform();
+	Transform* transform = camera->getEntity()->getTransform().get();
 	transform->onTransform.Connect( this, &SceneWindow::flagRedraw );
 }
 

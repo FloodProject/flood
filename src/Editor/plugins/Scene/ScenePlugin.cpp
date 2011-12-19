@@ -18,7 +18,7 @@
 #include "Protocol/ReplicaContext.h"
 #include "Network/Session.h"
 #include "Network/Host.h"
-#include "Network/Dispatcher.h"
+#include "Network/MessageDispatcher.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "EditorTags.h"
@@ -41,7 +41,7 @@ ScenePlugin::ScenePlugin() : scenePage(nullptr)
 
 PluginMetadata ScenePlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Scene";
 	metadata.description = "Provides a page with the scene contents.";
@@ -161,7 +161,7 @@ void ScenePlugin::setBoundingBoxVisible(const EntityPtr& entity, bool state)
 {
 	if( !entity ) return;
 
-	const TransformPtr& transform = entity->getTransform();
+	Transform* transform = entity->getTransform().get();
 	if( !transform ) return;
 
 	transform->setDebugRenderableVisible( state );

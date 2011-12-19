@@ -14,6 +14,7 @@
 
 #include "Core/API.h"
 #include "Resources/API.h"
+#include "Graphics/API.h"
 
 //---------------------------------------------------------------------//
 // API Exports
@@ -27,7 +28,6 @@
 	#define API_ENGINE
 #endif
 
-#define API_RENDER API_ENGINE
 #define API_SCENE API_ENGINE
 #define API_AUDIO API_ENGINE
 #define API_INPUT API_ENGINE

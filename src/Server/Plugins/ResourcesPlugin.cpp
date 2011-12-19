@@ -34,9 +34,6 @@ public:
 
 	ResourcesPlugin();
 
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
-
 	// Plugin callbacks.
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
@@ -69,7 +66,7 @@ ResourcesPlugin::ResourcesPlugin()
 
 PluginMetadata ResourcesPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	metadata.name = "Resources";
 	metadata.description = "Provides resources services";
 	return metadata;
@@ -84,15 +81,15 @@ void ResourcesPlugin::onPluginEnable()
 
 	// Initialize resources.
 	ResourcesInitialize();
-	resources = Allocate(ResourceManager, alloc);
+	resources = Allocate(alloc, ResourceManager);
 	resources->setTaskPool(taskPool);
 	resources->setArchive(archive);
 	resources->setAsynchronousLoading(true);
 	resources->setupResourceLoaders(ResourceLoaderGetType());
 
-	indexer = Allocate(ResourceIndexer, alloc);
+	indexer = Allocate(alloc, ResourceIndexer);
 
-	database = Allocate(ResourceDatabase, alloc);
+	database = Allocate(alloc, ResourceDatabase);
 	database->setIndexer(indexer);
 
 	// Create a resource archive and index it.

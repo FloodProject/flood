@@ -32,7 +32,7 @@ struct API_CORE Vector3 : public Vector3P
 
 	// Relational.
 	bool operator == (const Vector3& v) const { return (x == v.x) && (y == v.y) && (z == v.z); }
-    bool operator != (const Vector3& v) const { return (x != v.x) || (y != v.y) || (z != v.z); }
+	bool operator != (const Vector3& v) const { return (x != v.x) || (y != v.y) || (z != v.z); }
 	bool operator < ( const Vector3& rhs ) const { return (x < rhs.x) && (y < rhs.y) && (z < rhs.z); }
 	bool operator > ( const Vector3& rhs ) const { return (x > rhs.x) && (y > rhs.y) && (z > rhs.z); }
 
@@ -57,8 +57,8 @@ struct API_CORE Vector3 : public Vector3P
 #ifndef SWIG
 	static const Vector3 Zero;
 	static const Vector3 UnitX;
-    static const Vector3 UnitY;
-    static const Vector3 UnitZ;
+	static const Vector3 UnitY;
+	static const Vector3 UnitZ;
 #endif
 
 	// Zeroes the vector.
@@ -127,7 +127,7 @@ struct Vector4
 
 	// Relational.
 	bool operator == (const Vector4& v) const { return (x == v.x) && (y == v.y) && (z == v.z) && (w == v.w); }
-    bool operator != (const Vector4& v) const { return (x != v.x) || (y != v.y) || (z != v.z) || (w != v.w); }
+	bool operator != (const Vector4& v) const { return (x != v.x) || (y != v.y) || (z != v.z) || (w != v.w); }
 	bool operator < ( const Vector4& rhs ) const { return (x < rhs.x) && (y < rhs.y) && (z < rhs.z) && (w < rhs.w); }
 	bool operator > ( const Vector4& rhs ) const { return (x > rhs.x) && (y > rhs.y) && (z > rhs.z) && (w > rhs.w); }
 
@@ -163,21 +163,24 @@ struct Vector4
 
 //-----------------------------------//
 
-struct Vector2
+struct API_CORE Vector2P
 {
 	float x, y;
+};
 
+struct API_CORE Vector2 : public Vector2P
+{
 	// Constructors.
-	Vector2() : x(0), y(0) { }
-	Vector2(float x, float y) : x(x), y(y) { }
-	Vector2 (const Vector2& v) : x(v.x), y(v.y) { }
+	Vector2() { x = 0; y = 0; }
+	Vector2(float x, float y) { this->x = x; this->y = y; }
+	Vector2 (const Vector2& v) { x = v.x; y = v.y; }
 
 	// Assignment
 	Vector2& operator = (const Vector2& v) { x = v.x; y = v.y; return *this; }
 
 	// Relational.
 	bool operator == (const Vector2& v) const { return (x == v.x) && (y == v.y); }
-    bool operator != (const Vector2& v) const { return (x != v.x) || (y != v.y); }
+	bool operator != (const Vector2& v) const { return (x != v.x) || (y != v.y); }
 	bool operator < ( const Vector2& rhs ) const { return (x < rhs.x) && (y < rhs.y); }
 	bool operator > ( const Vector2& rhs ) const { return (x > rhs.x) && (y > rhs.y); }
 
@@ -228,7 +231,7 @@ struct Vector2i
 
 	// Relational.
 	bool operator == (const Vector2i& v) const { return (x == v.x) && (y == v.y); }
-    bool operator != (const Vector2i& v) const { return (x != v.x) || (y != v.y); }
+	bool operator != (const Vector2i& v) const { return (x != v.x) || (y != v.y); }
 	bool operator < ( const Vector2i& rhs ) const { return (x < rhs.x) && (y < rhs.y); }
 	bool operator > ( const Vector2i& rhs ) const { return (x > rhs.x) && (y > rhs.y); }
 

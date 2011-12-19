@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Graphics/Quad.h"
+#include "Geometry/Quad.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -25,8 +25,8 @@ Quad::Quad( float width, float height )
 	MaterialHandle mat = MaterialCreate(AllocatorGetThis(), "Quad");
 	mat.Resolve()->setBackfaceCulling(false);
 
-	RenderablePtr rend = RenderableCreate( AllocatorGetThis() );
-	rend->setPrimitiveType(PolygonType::TriangleStrip);
+	RenderablePtr rend = RenderBatchCreate( AllocatorGetThis() );
+	rend->setPrimitiveType(PrimitiveType::TriangleStrip);
 	rend->setGeometryBuffer(gb);
 	rend->setMaterial(mat);
 

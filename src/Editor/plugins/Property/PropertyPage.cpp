@@ -135,18 +135,16 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 //-----------------------------------//
 
-void PropertyPage::showProperties( Object* object, bool resetObject )
+void PropertyPage::showProperties(PropertyGrid* grid, Object* object, bool resetObject )
 {
 	if( resetObject ) reset();
 	
 	currentObject = object;
 	
-#if 0
 	Class* klass = ClassGetType(object);
 	
-	appendHeader(klass->name);
-	appendObjectFields(klass, object);
-#endif
+	//appendHeader(grid, klass->name);
+	appendObjectFields(grid, klass, object);
 }
 
 //-----------------------------------//

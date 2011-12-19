@@ -11,9 +11,9 @@
 #include "Scene/Scene.h"
 #include "Scene/Geometry.h"
 #include "Scene/Tags.h"
-#include "Graphics/Device.h"
-#include "Graphics/View.h"
-#include "Graphics/DebugGeometry.h"
+#include "Graphics/RenderDevice.h"
+#include "Graphics/RenderView.h"
+#include "Geometry/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -86,10 +86,11 @@ void Camera::updateFrustum()
 
 void Camera::setView( RenderView* view )
 {
-	if( !view || activeView == view )
-		return;
+	if( !view ) return;
 
 	activeView = view;
+	activeView->viewMatrix = viewMatrix;
+	activeView->projectionMatrix = frustum.matProjection;
 
 	updateFrustum();
 }
@@ -98,28 +99,17 @@ void Camera::setView( RenderView* view )
 
 void Camera::update( float )
 {
-	drawer.reset();
+	if( !activeView ) return;
 
+	drawer.reset();
 	bool frustumUpdated = false;
 
-#if 0
-	if( !activeView )
-	{
-		RenderView* view = GetRenderDevice()->getActiveView();
-		setView(view);
-
-		frustumUpdated = true;
-	}
-#endif
-
-	if( !activeView || activeView->getSize() == Vector2i(0,0) )
-		return;
-
-	if( !frustumUpdated) updateFrustum();
+	if( !frustumUpdated)
+		updateFrustum();
 
 	// Only run the following code once.
 	if( transform ) return;
-		
+
 	transform = getEntity()->getTransform().get();
 	transform->onTransform.Connect( this, &Camera::onTransform );
 
@@ -194,7 +184,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 		return;
 	}
 
-	// If this is a visible renderable object, then we perform frustum culling
+	// If this is a visible.renderable object, then we perform frustum culling
 	// and then we push it to a list of things passed later to the renderer.
 
 	//entity->onPreCull();
@@ -253,17 +243,42 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 //-----------------------------------//
 
+static Vector3 UnprojectViewPoint( const Vector3& screen, const RenderView* view, const Camera* camera )
+{
+	Matrix4x4 matView = camera->getViewMatrix();
+	const Matrix4x4& matProjection = camera->getFrustum().matProjection;
+	Matrix4x4 matInverseViewProjection = (matView * matProjection).inverse();
+
+	const Vector2i& size = view->getSize();
+
+	// Map x and y from window coordinates, map to range -1 to 1.
+
+	Vector4 pos;
+	pos.x = (screen.x /*- offset.x*/) / float(size.x) * 2.0f - 1.0f;
+	pos.y = (screen.y /*- offset.y*/) / float(size.y) * 2.0f - 1.0f;
+	pos.z = screen.z * 2.0f - 1.0f;
+	pos.w = 1.0f;
+ 
+	Vector4 pos2 = matInverseViewProjection * pos;
+	Vector3 out( pos2.x, pos2.y, pos2.z );
+ 
+	return out / pos2.w;
+}
+
+//-----------------------------------//
+
 Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
-	assert( activeView != nullptr );
+	//assert( activeView != nullptr );
+	if( !activeView ) return Ray();
 	
 	Vector2i size = activeView->getSize();
 
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
 	Vector3 farPoint (screenX, size.y - screenY, 1);
 
-	Vector3 rayOrigin = activeView->unprojectPoint(nearPoint, this);
-	Vector3 rayTarget = activeView->unprojectPoint(farPoint, this);
+	Vector3 rayOrigin = UnprojectViewPoint(nearPoint, activeView, this);
+	Vector3 rayTarget = UnprojectViewPoint(farPoint, activeView, this);
 	
 	Vector3 rayDirection = rayTarget - rayOrigin;
 	rayDirection.normalize();
@@ -316,7 +331,7 @@ Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop,
 		Ray ul = getRay(screenLeft, screenTop);
 		Ray br = getRay(screenRight, screenBottom);
 
-		volume.planes[0] = Plane(frustum.planes[0].normal, ul.origin);	
+		volume.planes[0] = Plane(frustum.planes[0].normal, ul.origin);
 		volume.planes[1] = Plane(frustum.planes[1].normal, br.origin);
 		volume.planes[2] = Plane(frustum.planes[2].normal, ul.origin);
 		volume.planes[3] = Plane(frustum.planes[3].normal, br.origin);

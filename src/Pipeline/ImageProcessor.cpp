@@ -53,21 +53,41 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
+static bool g_InitializedNVTT = false;
+
 ImageProcessor::ImageProcessor()
 	: format(CompressionFormat::DXT5)
 	, quality(CompressionQuality::Normal)
 	, generateMipmaps(true)
 	, mipmapFilter(MipmapFilter::Box)
 {
-	static bool once = false;
-	if( !once )
-		//LogInfo("Using NVIDIA Texture Tools %u", nvtt::version());
-	once = true;
+#if 0
+	if( !g_InitializedNVTT )
+	{
+		LogInfo("Using NVIDIA Texture Tools %u", nvtt::version());
+		g_InitializedNVTT = true;
+	}
+#endif
 }
 
 //-----------------------------------//
 
-ImageProcessor::~ImageProcessor() { }
+ImageProcessor::~ImageProcessor()
+{
+}
+
+//-----------------------------------//
+
+ExtensionMetadata* ImageProcessor::getMetadata()
+{
+	static ExtensionMetadata s_ExtensionMetadata =
+	{
+		"Image",
+		"Processes an image resource."
+	};
+
+	return &s_ExtensionMetadata;
+}
 
 //-----------------------------------//
 

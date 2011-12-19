@@ -86,7 +86,7 @@ void ScenePlugin::onReplicaContextCreate(ReplicaContext* context, ClassId classI
 	if( ReflectionGetType(Scene)->id == classId )
 	{
 		LogDebug("Creating scene");
-		scene = Allocate(Scene, AllocatorGetThis());
+		scene = AllocateThis(Scene);
 
 		context->onReplicaAdded.Bind(this, &ScenePlugin::onReplicaAdded); 
 	}

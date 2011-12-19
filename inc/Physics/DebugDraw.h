@@ -15,7 +15,7 @@
 
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 FWD_DECL_INTRUSIVE(Material)
-FWD_DECL_INTRUSIVE(Renderable)
+FWD_DECL_INTRUSIVE(RenderBatch)
 
 #include <LinearMath/btIDebugDraw.h>
 
@@ -30,7 +30,7 @@ public:
 	BulletDebugDrawer();
 
 	// Gets the renderable.
-	GETTER(Renderable, RenderablePtr, renderable)
+	GETTER(Renderable, RenderBatchPtr, renderable)
 
 	// Gets the dynamic geometry buffer.
 	GETTER(GeometryBuffer, GeometryBufferPtr, gb)
@@ -61,7 +61,7 @@ public:
 
 protected:
 	
-	RenderablePtr renderable;
+	RenderBatchPtr renderable;
 	GeometryBufferPtr gb;
 	MaterialHandle material;
 };

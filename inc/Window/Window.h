@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Math/Vector.h"
-#include "Graphics/Target.h"
+#include "Graphics/RenderTarget.h"
 #include "Input/InputManager.h"
 
 NAMESPACE_ENGINE_BEGIN

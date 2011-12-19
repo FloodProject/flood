@@ -34,17 +34,17 @@ public:
 	// Updates this component.
 	void update( float delta );
 
-	// Appends all the renderables of this geometry to the queue.
+	// Appends all the.renderables of this geometry to the queue.
 	void appendRenderables( RenderQueue& queue, const Transform* transform ) OVERRIDE;
 
 	// Pre-render callback.
 	void onPreRender(RenderView*, const RenderState& state);
 
-	// Updates the debug renderable of the camera.
+	// Updates the debug.renderable of the camera.
 	void updateDebugRenderable() const;
 
-	// Creates the debug renderable of the camera.
-	RenderablePtr createDebugRenderable() const;
+	// Creates the debug.renderable of the camera.
+	RenderBatchPtr createDebuRenderable() const;
 
 	// Projector frustum.
 	Frustum frustum;

@@ -18,14 +18,11 @@ NAMESPACE_SERVER_BEGIN
 
 REFLECT_DECLARE_CLASS(ChatPlugin)
 
-class ChatPlugin : public ServerPlugin, public ChatMessageHandler
+class ChatPlugin : public ChatMessageHandler
 {
 	REFLECT_DECLARE_OBJECT(ChatPlugin)
 
 public:
-
-	// Gets metadata about this plugin.
-	PluginMetadata getMetadata() OVERRIDE;
 
 	void handleChatClient(const SessionPtr&, const ChatClientMessage&) OVERRIDE;
 };

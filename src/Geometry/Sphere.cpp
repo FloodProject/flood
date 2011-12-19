@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Graphics/Sphere.h"
+#include "Geometry/Sphere.h"
 #include "Math/EulerAngles.h"
 #include "Math/Helpers.h"
 #include "Math/BoundingBox.h"
@@ -75,7 +75,7 @@ static const byte OctaSphereIndices[][3] =
 
 Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 {
-	setPrimitiveType( PolygonType::Triangles );
+	setPrimitiveType( PrimitiveType::Triangles );
 	
 	VertexData position;
 	buildGeometry( fullSphere, numSubDiv, position, dim );

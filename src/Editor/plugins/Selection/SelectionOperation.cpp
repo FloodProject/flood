@@ -89,7 +89,7 @@ void SelectionOperation::setPreviousSelections(SelectionCollection selections)
 
 SelectionOperation* CreateSelectionOperation(const String& desc)
 {
-	SelectionOperation* selection = Allocate(SelectionOperation, AllocatorGetHeap());
+	SelectionOperation* selection = AllocateHeap(SelectionOperation);
 	selection->description = desc;
 
 	return selection;

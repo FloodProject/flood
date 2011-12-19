@@ -81,6 +81,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	, pluginManager(nullptr)
 	, documentManager(nullptr)
 	, engine(nullptr)
+	, archive(nullptr)
+	, input(nullptr)
 {
 	gs_EditorInstance = this;
 
@@ -130,10 +132,13 @@ EditorFrame::~EditorFrame()
 
 	eventManager->disconnectPluginListeners();
 
+	ArchiveDestroy(archive);
+
 	pluginManager->disablePlugins();
 	Deallocate(pluginManager);
- 	
+
 	Deallocate(eventManager);
+	Deallocate(input);
 
 	notebookCtrl->Destroy();
 	paneCtrl->DetachPane(notebookCtrl);
@@ -190,7 +195,7 @@ void EditorFrame::createPlugins()
 
 	// Find and instantiate plugins.
 	ClassCreateChilds(ReflectionGetType(EditorPlugin), AllocatorGetThis(), plugins);
-	Plugin::sortByPriority(plugins);
+	PluginsSortByPriority(plugins);
 	pluginManager->registerPlugins(plugins);
 }
 
@@ -201,7 +206,7 @@ void EditorFrame::createEngine()
 	engine = AllocateThis(Engine);
 	engine->init(false);
 
-	InputManager* input = AllocateThis(InputManager);
+	input = AllocateThis(InputManager);
 	input->createDefaultDevices();
 
 	engine->setInputManager(input);
@@ -209,7 +214,7 @@ void EditorFrame::createEngine()
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();
 	
-	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
+	archive = ArchiveCreateVirtual( GetResourcesAllocator() );
 	ArchiveMountDirectories(archive, MediaFolder, GetResourcesAllocator());
 	
 	res->setArchive(archive);

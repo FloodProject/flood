@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "GizmoScale.h"
-#include "Graphics/Cube.h"
+#include "Geometry/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -24,8 +24,8 @@ void GizmoScale::buildGeometry()
 {
 	lines = generateLines();
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
-	renderable->setPrimitiveType(PolygonType::Lines);
+	RenderablePtr renderable = AllocateHeap(Renderable);
+	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(lines);
 	renderable->setMaterial(material);
 
@@ -33,8 +33,8 @@ void GizmoScale::buildGeometry()
 
 	cubes = generateCubes();
 
-	renderable = Allocate(Renderable, AllocatorGetHeap());
-	renderable->setPrimitiveType(PolygonType::Quads);
+	renderable = AllocateHeap(Renderable);
+	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer(cubes);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);

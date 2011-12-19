@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Scene/Geometry.h"
-#include "Graphics/Quad.h"
+#include "Geometry/Quad.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -22,7 +22,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
-								    const RayTriangleQueryResult& res )
+							const RayTriangleQueryResult& res )
 	: brushSize(0)
 	, brushStrength(0)
 	, tool(tool)
@@ -88,10 +88,10 @@ void TerrainOperation::redo()
 
 void TerrainOperation::updateNormals()
 {
-	//RenderablePtr renderable = rayQuery.renderable;
+	RenderablePtr renderable = rayQuery.renderable;
 
 	#pragma TODO("Generate terrain normals in the background")
-	//CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
+	//CellPtr cell = boost::static_pointer_cast<Cell>(.renderable );
 
 	const Vector3& pick = rayQuery.intersectionWorld;
 
@@ -111,7 +111,7 @@ void TerrainOperation::updateNormals()
 
 void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 {	
-	const RenderablePtr& rend = rayQuery.renderable;
+	const Renderable* rend = rayQuery.renderable;
 	
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 	uint32 numVertices = gb->getSizeVertices();
@@ -143,8 +143,8 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 
 void TerrainOperation::loadSaveImage( std::vector<byte>& state, bool save )
 {	
-	RenderablePtr rend = rayQuery.renderable;
-	MaterialPtr material = rend->getMaterial().Resolve();
+	Renderable* rend = rayQuery.renderable;
+	Material* material = rend->getMaterial().Resolve();
 	Image* texture = material->getTexture(0).Resolve();
 
 	if( save )
@@ -193,10 +193,10 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 		GeometryPtr geometry = node->getComponent<Geometry>();
 		assert( geometry != nullptr );
 
-		const RenderableVector& renderables = geometry->getRenderables();
-		assert( !renderables.empty() );
+		const.renderableVector&.renderables = geometry->ge.renderables();
+		assert( .renderables.empty() );
 
-		const CellPtr& cell = RefCast<Cell>(renderables[0]);
+		const CellPtr& cell = RefCast<Cell>.renderables[0]);
 		cells.push_back(cell);
 #endif
 	}
@@ -206,7 +206,7 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 
 void TerrainOperation::applyRaiseTool()
 {
-	RenderablePtr rend = rayQuery.renderable;
+	Renderable* rend = rayQuery.renderable;
 
 	// Each cell geometry is in local space, so transform the pick point.
 	const Vector3& pick = rayQuery.intersectionLocal;
@@ -230,9 +230,9 @@ void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& c
 {
 	bool updateVB = false;
 	
-	RenderablePtr rend = cell->getRenderables()[0];
+	Renderable* rend = cell->getRenderables()[0].get();
 
-	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
+	GeometryBuffer* gb = rend->getGeometryBuffer().get();
 	uint32 numVertices = gb->getSizeVertices();
 
 	for( size_t i = 0; i < numVertices; i++ )
@@ -317,7 +317,7 @@ void TerrainOperation::applyPaintTool()
 {
 	if( !paintImage ) return;
 
-	const RenderablePtr& rend = rayQuery.renderable;
+	Renderable* rend = rayQuery.renderable;
 
 	//const Vector3 (&uv)[3] = rayQuery.triangleUV;
 	Vector3 uv[3];

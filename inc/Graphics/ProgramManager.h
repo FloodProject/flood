@@ -22,6 +22,8 @@ typedef std::pair<const Shader*, ProgramPtr> ShaderProgramsMapPair;
 class ResourceManager;
 struct ResourceEvent;
 
+class RenderContext;
+
 /**
  * Manages a set of programs. The rest of the engine, when needing a 
  * program will request the program for a given shader.
@@ -55,6 +57,8 @@ protected:
 
 	// Maps the identifiers to the programs.
 	ShaderProgramsMap programs;
+
+	RenderContext* renderContext;
 };
 
 //-----------------------------------//

@@ -29,16 +29,16 @@ public:
 	SceneWindow( wxWindow* parent );
 	virtual ~SceneWindow();
 
-	// Creates and adds a control to the SceneWindow.
+	// Creates and adds a control to the window.
 	RenderControl* createControl();
 
-	// Destroys the current control in the SceneWindow.
+	// Destroys the current control in the window.
 	void destroyControl();
 
 	// Gets the associated control.
 	GETTER(Control, RenderControl*, control)
 
-	// Creates and adds a new view to the SceneWindow.
+	// Creates and adds a new view to the window.
 	RenderView* createView();
 
 	// Gets the associated view.
@@ -50,16 +50,22 @@ public:
 	// Switches to the default camera.
 	void switchToDefaultCamera();
 
-	// Gets the main camera of the SceneWindow.
+	// Gets/sets the camera of the window.
+	ACESSOR(Camera, const CameraPtr&, camera)
+
+	// Gets the main camera of the window.
 	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)
 
-	// Sets the main camera of the SceneWindow.
+	// Sets the main camera of the window.
 	SETTER(MainCamera, const CameraPtr&, mainCamera)
 
 	// Gets called when camera changes in the view.
 	void onCameraChanged(const CameraPtr& camera);
 
-	// Camera of the SceneWindow.
+	// Current camera of the window.
+	CameraPtr camera;
+
+	// Camera of the window.
 	CameraWeakPtr mainCamera;
 
 	// Control where the scene will be drawn.

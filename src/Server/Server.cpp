@@ -20,7 +20,7 @@
 #include "Network/Network.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"
-#include "Network/Dispatcher.h"
+#include "Network/MessageDispatcher.h"
 #include "Network/SessionManager.h"
 #include "Protocol/UserMessages.h"
 #include "Engine/Engine.h"
@@ -94,10 +94,10 @@ bool Server::init()
 	// Find and instantiate plugins.
 	std::vector<Plugin*> found;
 	ClassCreateChilds(ReflectionGetType(ServerPlugin), AllocatorGetThis(), found);
-	Plugin::sortByPriority(found);
+	PluginsSortByPriority(found);
 	plugins->registerPlugins(found);
 
-	dispatcher = AllocateThis(Dispatcher);
+	dispatcher = AllocateThis(MessageDispatcher);
 	dispatcher->initServer(host);
 
 #ifdef NETWORK_THREAD

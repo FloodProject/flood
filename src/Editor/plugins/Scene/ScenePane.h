@@ -121,12 +121,12 @@ protected:
 	void initIcons();
 
 	// Tree management.
-	void addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup = true );
-	wxTreeItemId addEntity( wxTreeItemId id, const EntityPtr& node );
+	void addGroup( wxTreeItemId id, Entity*, bool createGroup = true );
+	wxTreeItemId addEntity( wxTreeItemId id, Entity* node );
 
 	// Creates a new entity operation.
 	EntityOperation* createEntityOperation(const String& desc);
-	EntityOperation* createEntityAddOperation(const EntityPtr&);
+	EntityOperation* createEntityAddOperation(Entity*);
 
 	// wxWidgets event callbacks.
 	void onFocus(wxFocusEvent&);
@@ -144,7 +144,7 @@ protected:
 	void onButtonEntityDeleteUpdate(wxUpdateUIEvent&);
 
 	// Event helpers.
-	void populateEntityItemMenu(wxMenu& menu, const EntityPtr& node);
+	void populateEntityItemMenu(wxMenu& menu, Entity* node);
 	void populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component);
 	void onComponentMenuSelected(wxCommandEvent&);
 	void onAnimationMenuSelected(wxCommandEvent&);
