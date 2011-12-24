@@ -144,8 +144,6 @@ void SceneDocument::setScene( Scene* newScene )
 	EventManager* events = GetEditor().getEventManager();
 	events->onSceneLoad(scene);
 
-	sceneWindow->setMainCamera(nullptr);
-
 	// Update the scenes.
 	onUpdate(0);
 }
@@ -171,6 +169,9 @@ void SceneDocument::resetScene()
 	if( scene && scene.get()->references != 1 )
 		LogAssert("Scene should not have any references");
 #endif
+
+	sceneWindow->setCamera(nullptr);
+	sceneWindow->setMainCamera(nullptr);
 
 	editorScene.reset();
 	scene.reset();
@@ -324,11 +325,11 @@ void SceneDocument::createEditorScene()
 	editorScene = Allocate(alloc, Scene);
 	
 	// Create a grid entity.
-	GridPtr grid = Allocate(alloc, Grid);
+	Grid* grid = Allocate(alloc, Grid);
 	grid->update(0);
 	grid->updateBounds();
 
-	EntityPtr entityGrid = EntityCreate(alloc);
+	Entity* entityGrid = EntityCreate(alloc);
 	entityGrid->setName("Grid");
 	entityGrid->addTransform();
 	entityGrid->addComponent(grid);
@@ -336,10 +337,10 @@ void SceneDocument::createEditorScene()
 	editorScene->entities.add( entityGrid );
 
 #ifdef ENABLE_PHYSICS_BULLET
-	BoxShapePtr shape = Allocate(alloc, BoxShape);
+	BoxShape* shape = Allocate(alloc, BoxShape);
 	entityGrid->addComponent(shape);
 
-	BodyPtr body = Allocate(alloc, Body);
+	Body* body = Allocate(alloc, Body);
 	body->setMass(0);
 
 	entityGrid->addComponent(body);
@@ -351,7 +352,7 @@ void SceneDocument::createEditorScene()
 	entityCamera->getTransform()->setPosition(initialPosition);
 	editorScene->entities.add( entityCamera );
 
-	CameraPtr camera = entityCamera->getComponent<Camera>();
+	Camera* camera = entityCamera->getComponent<Camera>().get();
 	sceneWindow->setMainCamera(camera);
 	sceneWindow->switchToDefaultCamera();
 
@@ -400,9 +401,10 @@ EntityPtr SceneDocument::createCamera()
 
 void SceneDocument::onRender()
 {
-	RenderView* view = sceneWindow->getView();
-	
 	Camera* camera = sceneWindow->getCamera().get();
+	assert( camera != nullptr );
+
+	RenderView* view = sceneWindow->getView();
 	camera->setView( view );
 
 	RenderBlock block;

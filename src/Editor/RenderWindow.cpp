@@ -49,8 +49,8 @@ bool RenderWindow::createContext()
 {
 	if( !canvas ) return false;
 
-    // create OpenGL context
-    contextGL = new wxGLContext(canvas);
+	// Create the OpenGL context.
+	contextGL = new wxGLContext(canvas);
 	
 	if( !contextGL )
 	{

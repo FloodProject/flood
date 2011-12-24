@@ -114,7 +114,7 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 	const Renderable* rend = rayQuery.renderable;
 	
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
-	uint32 numVertices = gb->getSizeVertices();
+	uint32 numVertices = gb->getNumVertices();
 
 	if( save )
 	{
@@ -233,7 +233,7 @@ void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& c
 	Renderable* rend = cell->getRenderables()[0].get();
 
 	GeometryBuffer* gb = rend->getGeometryBuffer().get();
-	uint32 numVertices = gb->getSizeVertices();
+	uint32 numVertices = gb->getNumVertices();
 
 	for( size_t i = 0; i < numVertices; i++ )
 	{

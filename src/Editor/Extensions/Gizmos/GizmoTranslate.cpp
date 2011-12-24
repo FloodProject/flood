@@ -67,7 +67,7 @@ GizmoAxis::Enum GizmoTranslate::getAxis(Color& pickColor)
 
 void GizmoTranslate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 {
-	uint32 sizeColors = lines->getSizeVertices();
+	uint32 sizeColors = lines->getNumVertices();
 	assert( sizeColors == 6 ); // 2 vertices * 3 lines
 	
 	Color c = (highlight) ? Color::White : getAxisColor(axis);

@@ -59,7 +59,7 @@ GeometryBufferPtr GizmoScale::generateCubes()
 	GeometryBufferPtr vb = AllocateThis(GeometryBuffer);
 	BuildCube(vb.get(), 0.05f, 1.0f);
 	
-	uint32 sizePosition = vb->getSizeVertices();
+	uint32 sizePosition = vb->getNumVertices();
 	Vector3* cubePosition = (Vector3*) vb->getAttribute(VertexAttribute::Position, 0);
 
 	// Vertex data

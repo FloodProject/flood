@@ -30,7 +30,7 @@ LogPlugin::LogPlugin()
 
 PluginMetadata LogPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Log";
 	metadata.description = "Provides a view of the logs.";

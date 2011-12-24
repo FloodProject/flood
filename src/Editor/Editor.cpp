@@ -23,13 +23,12 @@
 //#define CREATE_WELCOME_SCREEN
 
 #include <wx/webview.h>
+#include <wx/debugrpt.h>
 
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 //wxIMPLEMENT_WXWIN_MAIN
 
 wxIMPLEMENT_APP_NO_MAIN(EditorApp);
-
-#include "Graphics/Program.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -86,9 +85,13 @@ EditorFrame::EditorFrame(const wxString& title)
 {
 	gs_EditorInstance = this;
 
+	createPlugins();
 	createUI();
 	createEngine();
-	createPlugins();
+
+	eventManager = AllocateThis(EventManager);
+
+	enablePlugins();
 	createToolbar();
 	createLastUI();
 
@@ -189,14 +192,35 @@ void EditorFrame::createPlugins()
 	documentManager->onDocumentRenamed.Connect(this, &EditorFrame::onDocumentRenamed);
 
 	pluginManager = AllocateThis(PluginManager);
-	eventManager = AllocateThis(EventManager);
-
-	std::vector<Plugin*> plugins;
 
 	// Find and instantiate plugins.
+	std::vector<Plugin*> plugins;
 	ClassCreateChilds(ReflectionGetType(EditorPlugin), AllocatorGetThis(), plugins);
+	
 	PluginsSortByPriority(plugins);
 	pluginManager->registerPlugins(plugins);
+
+	// Notify plugins that they have been registered.
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
+		plugin->onPluginRegistered();
+	}
+}
+
+//-----------------------------------//
+
+void EditorFrame::enablePlugins()
+{
+	const std::vector<Plugin*>& plugins = pluginManager->getPlugins();
+	
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
+		
+		if(plugin->getMetadata().startEnabled)
+			pluginManager->enablePlugin(plugin);
+	}
 }
 
 //-----------------------------------//

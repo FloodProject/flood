@@ -29,13 +29,12 @@ public:
 	MonoPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable();
-
-	// Plugin disable callback.
-	virtual void onPluginDisable();
+	void onPluginRegistered() OVERRIDE;
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
 	MonoDomain* domain;
 	MonoDomain* domainEditor;
