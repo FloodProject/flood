@@ -8,16 +8,16 @@
 
 #pragma once
 
-FWD_DECL_INTRUSIVE(Program)
+FWD_DECL_INTRUSIVE(ShaderProgram)
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-class Shader;
+class ShaderMaterial;
 
-typedef std::map<const Shader*, ProgramPtr> ShaderProgramsMap;
-typedef std::pair<const Shader*, ProgramPtr> ShaderProgramsMapPair;
+typedef std::map<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMap;
+typedef std::pair<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMapPair;
 
 class ResourceManager;
 struct ResourceEvent;
@@ -39,13 +39,13 @@ public:
 	~ProgramManager();
 
 	// Gets a program given a shader identifier.
-	Program* getProgram( const Shader*, bool precompile = false );
+	ShaderProgram* getProgram( const ShaderMaterial*, bool precompile = false );
 
 	// Creates a program given a shader.
-	Program* createProgram( const Shader* shader );
+	ShaderProgram* createProgram( const ShaderMaterial* shader );
 
 	// Registers a new program in the manager.
-	bool registerProgram( const Shader*, Program* program );
+	bool registerProgram( const ShaderMaterial*, ShaderProgram* program );
 
 protected:
 
@@ -57,8 +57,6 @@ protected:
 
 	// Maps the identifiers to the programs.
 	ShaderProgramsMap programs;
-
-	RenderContext* renderContext;
 };
 
 //-----------------------------------//

@@ -11,15 +11,17 @@
 
 NAMESPACE_GRAPHICS_BEGIN
 		
-//-----------------------------------//		
+//-----------------------------------//
 
 Buffer::Buffer() 
-	: usage(BufferUsage::Static)
+	: id(0)
+	, usage(BufferUsage::Static)
 	, access(BufferAccess::Read)
+	, gb(nullptr)
 {
 }
 
-//-----------------------------------//		
+//-----------------------------------//
 
 Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access) 
 	: usage(usage)

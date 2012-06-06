@@ -18,6 +18,8 @@ NAMESPACE_GRAPHICS_BEGIN
 class ResourceManager;
 struct ResourceEvent;
 
+class RenderBackend;
+
 /**
  * Manages a set of textures. The rest of the engine, when needing a 
  * texture will ask the texture manager for the texture for a given image.
@@ -47,6 +49,9 @@ public:
 	// Gets the memory usage of the textures loaded (in kbytes).
 	uint32 getMemoryUsage();
 
+	// Sets the rendering backend.
+	SETTER(RenderBackend, RenderBackend*, backend)
+
 protected:
 
 	// Populates a texture when the image is loaded.
@@ -65,6 +70,8 @@ protected:
 	typedef std::map< Image*, TexturePtr > TextureMap;
 	typedef std::pair< Image*, TexturePtr > TextureMapPair;
 	TextureMap textures;
+
+	RenderBackend* backend;
 };
 
 //-----------------------------------//

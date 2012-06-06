@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "Resources/ShaderProgram.h"
-#include "Graphics/VertexBuffer.h"
+#include "Graphics/Shader.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
+#include "Geometry/GeometryBuffer.h"
 
 FWD_DECL_INTRUSIVE( UniformBuffer )
 
@@ -28,11 +28,11 @@ NAMESPACE_GRAPHICS_BEGIN
  * engine parameters bound, like world matrices and lighting information.
  */
 
-class API_RENDER Program : public ReferenceCounted
+class API_GRAPHICS ShaderProgram : public ReferenceCounted
 {
 public:
 
-	virtual ~Program();
+	virtual ~ShaderProgram();
 
 	// Creates the program.
 	virtual bool create() = 0;
@@ -59,10 +59,10 @@ public:
 	bool validateShaders() const;
 
 	// Gets the vertex shader in the program.
-	GETTER(VertexShader, ShaderProgram*, vertex)
+	GETTER(VertexShader, Shader*, vertex)
 
 	// Gets the fragment shader in the program.
-	GETTER(FragmentShader, ShaderProgram*, fragment)
+	GETTER(FragmentShader, Shader*, fragment)
 
 	// Forces the recompilation of all shader programs.
 	virtual void forceRecompile() = 0;
@@ -71,20 +71,20 @@ public:
 	virtual void setAttribute( const String& slot, VertexAttribute::Enum attribute ) = 0;
 
 	// Sets the uniforms in the program.
-	virtual void setUniforms( const UniformBufferPtr& ub ) = 0;
+	virtual void setUniforms( UniformBuffer* ub ) = 0;
 
 protected:
 
-	Program();
+	ShaderProgram();
 
-	ShaderProgram* vertex;
-	ShaderProgram* fragment;
+	Shader* vertex;
+	Shader* fragment;
 
 	String log;
 	bool linked;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Program );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( ShaderProgram );
 
 //-----------------------------------//
 

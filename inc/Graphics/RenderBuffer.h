@@ -16,7 +16,7 @@ NAMESPACE_GRAPHICS_BEGIN
 //-----------------------------------//
 
 /**
- * Render buffers need to have.renderable attachments. These attachments
+ * Render buffers need to have renderable attachments. These attachments
  * can be of different types depending on your needs. This enum works
  * like a bitmask, so you can combine more than one type when attaching.
  */

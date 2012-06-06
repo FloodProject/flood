@@ -241,7 +241,7 @@ bool GeometryBuffer::isIndexed() const
 
 //-----------------------------------//
 
-uint32 GeometryBuffer::getSizeVertices() const
+uint32 GeometryBuffer::getNumVertices() const
 {
 	if( declarations.decls.empty() ) return 0;
 
@@ -259,13 +259,12 @@ uint32 GeometryBuffer::getSizeVertices() const
 
 //-----------------------------------//
 
-uint32 GeometryBuffer::getSizeIndices() const
+uint32 GeometryBuffer::getNumIndices() const
 {
 	uint8 indexSizeBytes = indexSize / 8;
 	assert( indexSizeBytes != 0 );
 
 	uint32 numIndices = indexData.size() / indexSizeBytes;
-	
 	return numIndices;
 }
 

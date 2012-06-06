@@ -7,41 +7,45 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
-
-#ifdef ENABLE_RENDERER_OPENGL
-
-#include "Graphics/VertexBuffer.h"
+#include "Graphics/ShaderProgram.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-VertexBuffer::VertexBuffer() : built(false)
+ShaderProgram::ShaderProgram()
+	: linked( false )
+	, vertex( nullptr )
+	, fragment( nullptr )
+{ }
+
+//-----------------------------------//
+
+ShaderProgram::~ShaderProgram()
 {
+	LogDebug("Destroying program");
 }
 
 //-----------------------------------//
 
-VertexBuffer::~VertexBuffer()
+bool ShaderProgram::validateShaders() const
 {
+	if( vertex->getShaderType() != ShaderType::Vertex )
+		return false;
+
+	if( fragment->getShaderType() != ShaderType::Fragment )
+		return false;
+
+	return true;
 }
 
 //-----------------------------------//
 
-void VertexBuffer::forceRebuild()
+bool ShaderProgram::isLinked() const
 {
-	built = false;
-}
-
-//-----------------------------------//
-
-bool VertexBuffer::isBuilt() const
-{
-	return built;
+	return linked;
 }
 
 //-----------------------------------//
 
 NAMESPACE_GRAPHICS_END
-
-#endif

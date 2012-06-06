@@ -11,7 +11,6 @@
 #include "Math/Vector.h"
 #include "Math/Color.h"
 #include "Graphics/Buffer.h"
-#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -33,9 +32,6 @@ public:
 
 	VertexBuffer();
 	~VertexBuffer();
-
-	// Gets/sets the geometry buffer.
-	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
 	
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
@@ -45,9 +41,6 @@ public:
 
 	// Keeps if the buffer has been built.
 	bool built;
-
-	// Keeps the geometry buffer associated with this buffer.
-	const GeometryBuffer* gb;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );

@@ -87,8 +87,8 @@ public:
 	// Gets the current rendering pipeline.
 	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
 
-	// Gets the texture manager.
-	//GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
+	// Gets the current rendering backend.
+	ACESSOR(Backend, RenderBackend*, renderBackend)
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
@@ -119,6 +119,9 @@ protected:
 	bool setupRenderStateShadow( LightQueue& lights );
 	//bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
+
+	void bindTextureUnits(const RenderState& state, bool bindUniforms);
+	void unbindTextureUnits(Material* material);
 
 	// Binds the buffers needed to draw the batch.
 	bool bindBuffers(RenderBatch*);

@@ -22,6 +22,14 @@ RenderBatch* RenderBatchCreate( Allocator* alloc )
 
 //-----------------------------------//
 
+RenderBatchRange::RenderBatchRange()
+	: start(0)
+	, end(0)
+{
+}
+
+//-----------------------------------//
+
 RenderBatch::RenderBatch()
 	: type( PrimitiveType::Triangles )
 	, mode( PrimitiveRasterMode::Solid )

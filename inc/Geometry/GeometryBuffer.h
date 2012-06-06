@@ -176,10 +176,10 @@ public:
 	int8 getAttributeStride(VertexAttribute::Enum) const;
 
 	// Gets the number of vertices in the buffer.
-	uint32 getSizeVertices() const;
+	uint32 getNumVertices() const;
 
 	// Gets the number of indices in the buffer.
-	uint32 getSizeIndices() const;
+	uint32 getNumIndices() const;
 
 	template<typename T>
 	void set(VertexAttribute::Enum attr, const std::vector<T>& data)

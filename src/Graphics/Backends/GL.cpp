@@ -19,9 +19,9 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-#ifdef BUILD_DEBUG
 bool CheckLastErrorGL( const char* msg )
 {
+#ifdef BUILD_DEBUG
 	bool occured = false;
 	uint numMaxErrors = 5;
 
@@ -33,10 +33,10 @@ bool CheckLastErrorGL( const char* msg )
 	}
 
 	return occured;
-}
 #else
-#define CheckLastErrorGL(...) (false)
+	return false;
 #endif
+}
 
 //-----------------------------------//
 
@@ -69,18 +69,20 @@ static const struct TokenString errors[] =
 	{ GL_FRAMEBUFFER_UNSUPPORTED_EXT, "Framebuffer" },
 };
 
+#endif
+
 const char* glErrorString(GLenum errorCode)
 {
+#ifdef BUILD_DEBUG
 	for (int i = 0; errors[i].string; i++) 
 	{
 		if(errors[i].token == errorCode)
 			return errors[i].string;
 	}
+#endif
 
 	return nullptr;
 }
-
-#endif
 
 //-----------------------------------//
 
@@ -282,6 +284,20 @@ GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode::Enum mode)
 	case PrimitiveRasterMode::Solid: return GL_FILL;
 	case PrimitiveRasterMode::Wireframe: return GL_LINE;
 	case PrimitiveRasterMode::Point: return GL_POINT;
+	}
+
+	assert( 0 && "This should not be reached" );
+	return 0;
+}
+
+//-----------------------------------//
+
+int ConvertTextureTargetGL( Texture::TextureTarget target )
+{
+	switch( target )
+	{
+	case Texture::Target2D: return GL_TEXTURE_2D;
+	case Texture::Target3D: return GL_TEXTURE_3D;
 	}
 
 	assert( 0 && "This should not be reached" );

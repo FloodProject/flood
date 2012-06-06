@@ -16,10 +16,10 @@
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderBackend.h"
 #include "Graphics/RenderView.h"
-#include "Graphics/Program.h"
+#include "Graphics/ShaderProgram.h"
 
 #include "Graphics/BufferManager.h"
-#include "Graphics/ProgramManager.h"
+#include "Graphics/ShaderProgramManager.h"
 #include "Graphics/TextureManager.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -58,7 +58,7 @@ void RenderDeinitialize()
 {
 	AllocatorDestroy(gs_FrameAllocator);
 	AllocatorDestroy(gs_RenderAllocator);
-};
+}
 
 //-----------------------------------//
 
@@ -128,25 +128,26 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	renderBackend->setupVertexBuffer(vb);
 	
 	Material* material = state.material;
-	Shader* shader = material->getShader().Resolve();
+	ShaderMaterial* shader = material->getShader().Resolve();
 
-	Program* program = programs->getProgram(shader);
-	if( !program ) return;
+	ShaderProgram* shaderProgram = programs->getProgram(shader);
+	if( !shaderProgram ) return;
 
-	if( !program->isLinked() && !program->link() )
+	if( !shaderProgram->isLinked() && !shaderProgram->link() )
 		return;
 
-	program->bind();
+	shaderProgram->bind();
 
 	renderBackend->setupRenderState(state, true);
+	bindTextureUnits(state, true);
 
-	RenderLayer::Enum stage = renderable->getRenderLayer();
-
-	if( renderable->onPreRender.empty() )
+	if( !renderable->onPreRender.empty() )
 	{
 		// Call the user pre render hook.
 		renderable->onPreRender(activeView, state);
 	}
+
+	RenderLayer::Enum stage = renderable->getRenderLayer();
 
 	if( stage != RenderLayer::Overlays )
 	{
@@ -163,22 +164,85 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	}
 
 	UniformBuffer* ub = renderable->getUniformBuffer().get();
-	program->setUniforms(ub);
+	shaderProgram->setUniforms(ub);
 
 	renderBackend->renderBatch(renderable);
 	
-	if( renderable->onPostRender.empty() )
+	if( !renderable->onPostRender.empty() )
 	{
 		// Call the user post render hook.
 		renderable->onPostRender(activeView, state);
 	}
 	
 	renderBackend->unsetupRenderState(state);
+	unbindTextureUnits(state.material);
 	
-	program->unbind();
+	shaderProgram->unbind();
 
 	renderBackend->unbindVertexBuffer(vb);
 	unbindBuffers(renderable);
+}
+
+//-----------------------------------//
+
+void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
+{
+	TextureUnitMap& units = state.material->textureUnits;
+	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
+
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		const TextureUnit& unit = it->second;
+		
+		const ImageHandle& handle = unit.image;
+		Image* image = handle.Resolve();
+
+		Texture* texture = activeContext->textureManager->getTexture(image).get();
+		if( !texture ) continue;
+
+		if( !texture->uploaded )
+		{
+			renderBackend->uploadTexture(texture);
+			renderBackend->configureTexture(texture);
+		}
+
+		renderBackend->setupTextureUnit(texture, unit);
+		renderBackend->bindTexture(texture);
+		
+		if( !bindUniforms ) continue;
+
+		char s_TextureUniform[] = "vp_Texture0";
+		size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 2;
+
+		// Build the uniform string without allocating memory.
+		uint8 index = unit.unit;
+		char indexChar = (index + '0');
+		
+		s_TextureUniform[s_TextureUniformSize] = indexChar;
+		ub->setUniform( s_TextureUniform, (int32) index );
+	}
+}
+
+//-----------------------------------//
+
+void RenderDevice::unbindTextureUnits(Material* material)
+{
+	TextureUnitMap& units = material->textureUnits;
+	TextureManager* textureManager = activeContext->textureManager;
+
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		const TextureUnit& unit = it->second;
+		const ImageHandle& handle = unit.image;
+
+		Texture* texture = textureManager->getTexture(handle.Resolve()).get();
+		if( !texture ) continue;
+
+		renderBackend->setupTextureUnit(texture, unit);
+		renderBackend->unbindTexture(texture);
+	}
 }
 
 //-----------------------------------//
@@ -199,11 +263,11 @@ bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 
 //-----------------------------------//
 
-bool RenderDevice::bindBuffers( RenderBatch* renderable)
+bool RenderDevice::bindBuffers(RenderBatch* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
-
 	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
+
 	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
 	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
 	
@@ -212,7 +276,7 @@ bool RenderDevice::bindBuffers( RenderBatch* renderable)
 	if( !vb->isBuilt() || gb->needsRebuild )
 	{
 		// If the vertex buffer is not built yet, then we build it.
-		renderBackend->buildVertexBuffer(vb/*, gb*/);
+		renderBackend->buildVertexBuffer(vb);
 	}
 
 	renderBackend->bindVertexBuffer(vb);
@@ -236,7 +300,7 @@ done:
 
 //-----------------------------------//
 
-bool RenderDevice::unbindBuffers( RenderBatch* renderable)
+bool RenderDevice::unbindBuffers(RenderBatch* renderable)
 {
 	BufferManager* buffers = activeContext->bufferManager;
 	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();

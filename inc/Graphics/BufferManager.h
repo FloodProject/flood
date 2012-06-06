@@ -28,6 +28,8 @@ struct BufferEntry
 typedef std::map<const GeometryBuffer*, BufferEntry> BuffersMap;
 typedef std::pair<const String&, BufferPtr> BuffersPair;
 
+class RenderBackend;
+
 /**
  * Manages a set of buffers.
  */
@@ -50,8 +52,12 @@ public:
 	// Gets an index buffer with the geometry given.
 	IndexBufferPtr getIndexBuffer(const GeometryBuffer*);
 
+	// Sets the rendering backend.
+	SETTER(RenderBackend, RenderBackend*, backend)
+
 protected:
 
+	RenderBackend* backend;
 	BuffersMap buffers;
 };
 

@@ -87,6 +87,19 @@ void RenderTarget::setContext(RenderContext* newContext)
 
 //-----------------------------------//
 
+void RenderTarget::handleResize()
+{
+	for( size_t i = 0; i < views.size(); i++ )
+	{
+		RenderView* view = views[i];
+		view->handleRenderTargetResize();
+	}
+
+	onTargetResize( getSettings() );
+}
+
+//-----------------------------------//
+
 Vector2i Settings::getSize() const
 {
 	return Vector2i(width, height);

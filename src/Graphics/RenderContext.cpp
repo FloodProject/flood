@@ -12,7 +12,7 @@
 #include "Graphics/RenderBackend.h"
 #include "Graphics/BufferManager.h"
 #include "Graphics/TextureManager.h"
-#include "Graphics/ProgramManager.h"
+#include "Graphics/ShaderProgramManager.h"
 #include "Graphics/RenderCapabilities.h"
 #include "Backends/GL.h"
 
@@ -38,11 +38,11 @@ RenderContext::~RenderContext()
 {
 	LogInfo("Destroying rendering context");
 
-	Deallocate(backend);
-	Deallocate(caps);
 	Deallocate(bufferManager);
 	Deallocate(textureManager);
 	Deallocate(programManager);
+	Deallocate(caps);
+	Deallocate(backend);
 }
 
 //-----------------------------------//
@@ -64,8 +64,12 @@ void RenderContext::init()
 	caps = Allocate(GetRenderAllocator(), RenderCapabilities);
 	backend->checkCapabilities(caps);
 
-	bufferManager  = Allocate(GetRenderAllocator(), BufferManager);
+	bufferManager = Allocate(GetRenderAllocator(), BufferManager);
+	bufferManager->setRenderBackend(backend);
+
 	textureManager = Allocate(GetRenderAllocator(), TextureManager);
+	textureManager->setRenderBackend(backend);
+
 	programManager = Allocate(GetRenderAllocator(), ProgramManager);
 
 	showCapabilities(caps);
@@ -81,7 +85,7 @@ void RenderContext::showCapabilities(RenderCapabilities* card)
 {
 	if( card->name.empty() ) return;
 
-	LogInfo( "Graphics RenderCapabilities: %s", card->name.c_str() );
+	LogInfo( "Graphics card: %s", card->name.c_str() );
 	LogInfo( "OpenGL version: %s", card->driverVersion.c_str() );
 	LogInfo( "OpenGL shading language: %s", card->shadingLanguageVersion.c_str() );
 	

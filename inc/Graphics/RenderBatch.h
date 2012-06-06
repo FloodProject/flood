@@ -84,6 +84,8 @@ namespace RenderLayer
 
 struct API_RENDER RenderBatchRange
 {
+	RenderBatchRange();
+
 	RenderIndexOffset start;
 	RenderIndexOffset end;
 };
@@ -130,7 +132,7 @@ public:
 	// Post-render callback.
 	Delegate2<RenderView*, const RenderState&> onPostRender;
 
-protected:
+public:
 
 	// Index range.
 	RenderBatchRange range;
@@ -153,7 +155,7 @@ protected:
 	// Uniform buffer with shader constants.
 	UniformBufferPtr ub;
 
-	// Material of this RenderBatch.
+	// Material of this batch.
 	MaterialHandle material;
 };
 

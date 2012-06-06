@@ -8,12 +8,13 @@
 
 #pragma once
 
-#include "Core/References.h"
 #include "Resources/Buffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
+
+class GeometryBuffer;
 
 /**
  * Represents a buffer of data stored in memory. They mainly store
@@ -42,9 +43,15 @@ public:
 	// Gets/sets the buffer access type.
 	ACESSOR(BufferAccess, BufferAccess::Enum, access)
 
+	// Gets/sets the geometry buffer.
+	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
+
 	BufferId id;
 	BufferUsage::Enum usage;
 	BufferAccess::Enum access;
+
+	// Keeps the geometry buffer associated with this buffer.
+	const GeometryBuffer* gb;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Buffer );

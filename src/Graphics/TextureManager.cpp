@@ -8,6 +8,7 @@
 
 #include "Graphics/API.h"
 #include "Graphics/TextureManager.h"
+#include "Graphics/RenderBackend.h"
 #include "Resources/ResourceManager.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -54,7 +55,7 @@ void TextureManager::removeTexture(Image* image)
 
 //-----------------------------------//
 
-const uint8 TEX_SIZE = 64;
+static const uint8 TEX_SIZE = 64;
 
 TexturePtr TextureManager::getTexture( const String& name )
 {
@@ -82,7 +83,7 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Image not loaded yet.
 	else if( !image->isLoaded() ) 
 	{
-		Texture* texture = AllocateHeap(Texture);
+		Texture* texture = backend->createTexture();
 		texture->allocate(Vector2i(TEX_SIZE, TEX_SIZE), PixelFormat::R8G8B8A8);
 
 		textures[image] = texture;
@@ -92,7 +93,7 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Create a new texture from image.
 	else
 	{
-		Texture* texture = AllocateHeap(Texture);
+		Texture* texture = backend->createTexture();
 		texture->setImage(image);
 
 		textures[image] = texture;
@@ -117,8 +118,10 @@ void TextureManager::onLoaded( const ResourceEvent& event )
 	if( textures.find(image) == textures.end() )
 		return;
 
-	TexturePtr texture = textures[image];
+	Texture* texture = textures[image].get();
 	texture->setImage(image);
+
+	backend->uploadTexture(texture);
 }
 
 //-----------------------------------//
@@ -156,7 +159,7 @@ void TextureManager::onReloaded( const ResourceEvent& event )
 
 	LogDebug( "Reloading texture '%s'", newImage->getPath().c_str() );
 
-	TexturePtr texture = textures[oldImage];
+	Texture* texture = textures[oldImage].get();
 	texture->setImage(newImage);
 
 	textures.erase(oldImage);
@@ -169,7 +172,7 @@ void TextureManager::onReloaded( const ResourceEvent& event )
 
 void TextureManager::switchImage( const ImagePtr& curr, const ImagePtr& new_ )
 {
-	TexturePtr texture = textures[curr.get()];
+	Texture* texture = textures[curr.get()].get();
 	texture->setImage(new_.get());
 	
 	textures.erase(curr.get());

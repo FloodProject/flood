@@ -14,7 +14,8 @@
 #include <GL/glew.h>
 
 #include "Graphics/RenderBatch.h"
-#include "Resources/ShaderProgram.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/Texture.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -36,10 +37,11 @@ int ConvertBufferGL(BufferUsage::Enum, BufferAccess::Enum);
 GLenum ConvertPrimitiveGL(PrimitiveType::Enum);
 GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode::Enum);
 
-int ConvertTextureFilterFormatGL( TextureFilterMode::Enum format );
-int ConvertTextureWrapFormatGL( TextureWrapMode::Enum format );
-GLint ConvertTextureInternalFormatGL( PixelFormat::Enum format );
-GLint ConvertTextureSourceFormatGL( PixelFormat::Enum format );
+int ConvertTextureFilterFormatGL( TextureFilterMode::Enum );
+int ConvertTextureWrapFormatGL( TextureWrapMode::Enum );
+GLint ConvertTextureInternalFormatGL( PixelFormat::Enum );
+GLint ConvertTextureSourceFormatGL( PixelFormat::Enum );
+GLint ConvertTextureTargetGL( Texture::TextureTarget );
 
 GLenum ConvertBlendSourceGL(BlendSource::Enum);
 GLenum ConvertBlendDestinationGL(BlendDestination::Enum);

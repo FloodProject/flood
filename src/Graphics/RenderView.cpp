@@ -34,11 +34,10 @@ RenderView::~RenderView()
 void RenderView::handleRenderTargetResize()
 {
 	#pragma TODO("Views need to be updated when render targets change")
-	
-#if 0
-	//size = target->getSettings().getSize();
+	size = target->getSettings().getSize();
 
-	const CameraPtr& camera = weakCamera;
+#if 0
+	Camera* camera = weakCamera;
 	if( !camera ) return;
 
 	camera->updateFrustum();
@@ -82,7 +81,7 @@ void RenderView::update(const Scene* scene)
 {
 	if( !scene ) return;
 
-	const CameraPtr& camera = weakCamera;
+	Camera* camera = weakCamera;
 	if( !camera ) return;
 
 	camera->setView(this);

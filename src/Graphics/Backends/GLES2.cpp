@@ -20,7 +20,7 @@
 #include "Graphics/RenderQueue.h"
 #include "Graphics/RenderView.h"
 #include "GL.h"
-#include "GLSL_Program.h"
+#include "GLSL_Shader.h"
 #include "GLSL_ShaderProgram.h"
 #include "GL_RenderBuffer.h"
 
@@ -73,8 +73,12 @@ public:
 	void unbindTexture(Texture*) OVERRIDE;
 	Image* readTexture(Texture*) OVERRIDE;
 
+	// Texture units.
+	void setupTextureUnit(Texture* texture, const TextureUnit& unit) OVERRIDE;
+	void undoTextureUnit(Texture* texture, const TextureUnit& unit) OVERRIDE;
+
 	// Shaders.
-	Program* createProgram() OVERRIDE;
+	ShaderProgram* createProgram() OVERRIDE;
 	ShaderProgram* createShader() OVERRIDE;
 	void releaseShader(ShaderProgram*) OVERRIDE;
 	void compileShader(ShaderProgram*) OVERRIDE;
@@ -104,6 +108,9 @@ void RenderBackendGLES2::init()
 	}
 
 	LogInfo( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
+
+	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_CULL_FACE );
 }
 
 //-----------------------------------//
@@ -151,14 +158,18 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 
 	GLenum primitiveType = ConvertPrimitiveGL( batch->getPrimitiveType() );
 	const GeometryBuffer* gb = batch->getGeometryBuffer().get();
-
+	 
 	if( !gb->isIndexed() )
 	{
-		uint32 numVertices = gb->getSizeVertices();
+#if 0
+		int sizeRange = batch->range.end - batch->range.start;
+		GLsizei numVertices = sizeRange / gb->declarations.getVertexSize();
+#endif
+		GLsizei numVertices = gb->getNumVertices();
 		
-		if( numVertices )
+		if( numVertices > 0 )
 		{
-			glDrawArrays( primitiveType, 0, numVertices );
+			glDrawArrays( primitiveType, batch->range.start, numVertices );
  			CheckLastErrorGL("Error drawing vertex buffer");
 		}
 	}
@@ -174,7 +185,8 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 	if( rasterMode != PrimitiveRasterMode::Solid )
 	{
 		// Restore the polygon rendering mode.
-		glPolygonMode( GL_FRONT_AND_BACK, PrimitiveRasterMode::Solid );
+		GLenum mode = ConvertPrimitiveRasterGL(PrimitiveRasterMode::Solid);
+		glPolygonMode( GL_FRONT_AND_BACK, mode );
 	}
 }
 
@@ -182,8 +194,6 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 
 void RenderBackendGLES2::setupRenderState( const RenderState& state, bool bindUniforms )
 {
-	//bindTextures(state, bindUniforms);
-	
 	Material* mat = state.material;
 
 	if( mat->lineSmooth )
@@ -196,7 +206,7 @@ void RenderBackendGLES2::setupRenderState( const RenderState& state, bool bindUn
 		glLineWidth( mat->getLineWidth() );
 
 	if( mat->depthCompare != DepthCompare::Less )
-		glDepthFunc( mat->depthCompare );
+		glDepthFunc( ConvertDepthModeGL(mat->depthCompare) );
 
 	if( mat->depthRange != Vector2::UnitY )
 		glDepthRange( mat->depthRange.x, mat->depthRange.y );
@@ -222,7 +232,9 @@ void RenderBackendGLES2::setupRenderState( const RenderState& state, bool bindUn
 	if( mat->isBlendingEnabled() ) 
 	{
 		glEnable( GL_BLEND );
-		glBlendFunc( mat->getBlendSource(), mat->getBlendDestination() );
+		GLenum bs = ConvertBlendSourceGL( mat->getBlendSource() );
+		GLenum bd = ConvertBlendDestinationGL( mat->getBlendDestination() );
+		glBlendFunc(bs, bd);
 	}
 }
 
@@ -242,7 +254,7 @@ void RenderBackendGLES2::unsetupRenderState( const RenderState& state )
 		glDisable( GL_ALPHA_TEST );
 
 	if( mat->depthCompare != DepthCompare::Less )
-		glDepthFunc( DepthCompare::Less );
+		glDepthFunc( GL_LESS );
 
 	if( mat->depthRange != Vector2::UnitY )
 		glDepthRange(0, 1);
@@ -264,75 +276,8 @@ void RenderBackendGLES2::unsetupRenderState( const RenderState& state )
 
 	if( mat->lineWidth != Material::DefaultLineWidth ) 
 		glLineWidth( Material::DefaultLineWidth );
-
-	//unbindTextures(mat);
 }
 
-//-----------------------------------//
-#if 0
-void RenderBackendGLES2::bindTextures(const RenderState& state, bool bindUniforms)
-{
-	TextureUnitMap& units = state.material->textureUnits;
-	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
-
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
-	{
-		const TextureUnit& unit = it->second;
-		
-		const ImageHandle& handle = unit.image;
-		Image* image = handle.Resolve();
-
-		Texture* texture = activeContext->textureManager->getTexture(image).get();
-		if( !texture ) continue;
-
-		uint8 index = unit.unit;
-		renderBackend->bindTextureUnit(index);
-
-		if(unit.overrideModes)
-		{
-			GLint filter = Texture::convertFilterFormat(unit.getFilterMode());
-			glTexParameteri( texture->target, GL_TEXTURE_MIN_FILTER, filter );
-			glTexParameteri( texture->target, GL_TEXTURE_MAG_FILTER, filter );
-
-			GLint wrap = Texture::convertWrapFormat(unit.getWrapMode());
-			glTexParameteri( texture->target, GL_TEXTURE_WRAP_S, wrap );
-			glTexParameteri( texture->target, GL_TEXTURE_WRAP_T, wrap );
-		}
-
-		if( !bindUniforms ) continue;
-
-		char s_TextureUniform[] = "vp_Texture0";
-		size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 1;
-
-		// Build the uniform string without allocating memory.
-		char indexChar = (index + '0');
-		s_TextureUniform[s_TextureUniformSize] = indexChar;
-
-		ub->setUniform( s_TextureUniform, (int32) index );
-	}
-}
-
-//-----------------------------------//
-
-void RenderBackendGLES2::unbindTextures(Material* material)
-{
-	TextureUnitMap& units = material->textureUnits;
-	TextureManager* textureManager = activeContext->textureManager;
-
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
-	{
-		const TextureUnit& unit = it->second;
-		const ImageHandle& handle = unit.image;
-
-		Texture* tex = textureManager->getTexture(handle.Resolve()).get();
-		if( !tex ) continue;
-
-		tex->unbind( it->first );
-	}
-}
-#endif
 //-----------------------------------//
 
 void RenderBackendGLES2::checkCapabilities(RenderCapabilities* caps)
@@ -354,14 +299,6 @@ void RenderBackendGLES2::checkCapabilities(RenderCapabilities* caps)
 		caps->shadingLanguageVersion = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 
 	caps->supportsFixedPipeline = true;
-
-#if 0
-	if( caps->supportsShaders )
-	{
-		LogInfo( "Shaders support detected. Switching to forward shaders pipeline" );
-		pipeline = RenderPipeline::ShaderForward;
-	}
-#endif
 }
 
 //-----------------------------------//
@@ -434,7 +371,7 @@ void RenderBackendGLES2::buildVertexBuffer(VertexBuffer* vb)
 	GLenum usage = ConvertBufferGL(gb->usage, gb->access);
 
 	// Upload all the vertex elements.
-	glBufferData( GL_ARRAY_BUFFER, data.size(), &data.front(), usage );
+	glBufferData( GL_ARRAY_BUFFER, data.size(), data.data(), usage );
 	CheckLastErrorGL("Could not allocate storage for buffer");
 
 	vb->built = true;
@@ -490,20 +427,22 @@ void RenderBackendGLES2::unbindIndexBuffer(IndexBuffer* ib)
 
 void RenderBackendGLES2::buildIndexBuffer(IndexBuffer* ib)
 {
-	//if( !gb ) return false;
-	//assert( gb->isIndexed() );
+	const GeometryBuffer* gb = ib->getGeometryBuffer();
+	if( !gb ) return;
 
-	//GLsizeiptr indexSize = gb->indexData.size();
-	//if( indexSize == 0 ) return false;
+	assert( gb->isIndexed() );
 
-	//bind();
+	GLsizeiptr indexSize = gb->indexData.size();
+	if( indexSize == 0 ) return;
 
-	//const GLvoid* data = &gb->indexData.front();
+	bindIndexBuffer(ib);
+
+	const GLvoid* data = &gb->indexData.front();
 
 	// Reserve space for all the buffer elements.
-	//GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
-	//glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSize, data, usage );
-	//CheckLastErrorGL("Could not buffer data in index buffer");
+	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSize, data, usage );
+	CheckLastErrorGL("Could not buffer data in index buffer");
 
 	ib->isBuilt = true;
 }
@@ -521,7 +460,7 @@ RenderBuffer* RenderBackendGLES2::createRenderBuffer(const Settings& settings)
 Texture* RenderBackendGLES2::createTexture()
 {
 	Texture* tex = AllocateRender(Texture);
-	tex->target = GL_TEXTURE_2D;
+	tex->target = Texture::Target2D;
 
 	glGenTextures( 1, (GLuint*) &tex->id );
 	CheckLastErrorGL("Could not generate a new texture object");
@@ -543,11 +482,53 @@ void RenderBackendGLES2::releaseTexture(Texture* tex)
 
 void RenderBackendGLES2::bindTexture(Texture* tex)
 {
+	if( !tex ) return;
+	
+	GLint target = ConvertTextureTargetGL(tex->target);
+	glBindTexture(target, tex->id);
 }
 
 //-----------------------------------//
 
 void RenderBackendGLES2::unbindTexture(Texture* tex)
+{
+	if( !tex ) return;
+	
+	GLint target = ConvertTextureTargetGL(tex->target);
+	glBindTexture( target, 0 );
+}
+
+//-----------------------------------//
+
+void RenderBackendGLES2::setupTextureUnit(Texture* texture, const TextureUnit& unit)
+{
+	uint8 index = unit.unit;
+	
+	// Setup the texture unit.
+	glActiveTexture( GL_TEXTURE0 + index );
+	CheckLastErrorGL("Could not set the active texture slot");
+
+	GLint target = ConvertTextureTargetGL(texture->target);
+	glEnable(target);
+
+	//glClientActiveTexture( GL_TEXTURE0 + index );
+	//CheckLastErrorGL("Could not set the client active texture slot");
+
+	if(unit.overrideModes)
+	{
+		GLint filter = ConvertTextureFilterFormatGL(unit.getFilterMode());
+		glTexParameteri( target, GL_TEXTURE_MIN_FILTER, filter );
+		glTexParameteri( target, GL_TEXTURE_MAG_FILTER, filter );
+
+		GLint wrap = ConvertTextureWrapFormatGL(unit.getWrapMode());
+		glTexParameteri( target, GL_TEXTURE_WRAP_S, wrap );
+		glTexParameteri( target, GL_TEXTURE_WRAP_T, wrap );
+	}
+}
+
+//-----------------------------------//
+
+void RenderBackendGLES2::undoTextureUnit(Texture* texture, const TextureUnit& unit)
 {
 }
 
@@ -555,20 +536,21 @@ void RenderBackendGLES2::unbindTexture(Texture* tex)
 
 void RenderBackendGLES2::uploadTexture(Texture* tex)
 {
-	GLint internalFormat = ConvertTextureInternalFormatGL(tex->format);
-	GLint sourceFormat = ConvertTextureSourceFormatGL(tex->format);
-	
 	bool hasData = tex->image && !tex->image->getBuffer().empty();
 	uint8* data = hasData ? tex->image->getBuffer().data() : nullptr;
 
 	bindTexture(tex);
 
-	glTexImage2D( tex->target, 0, internalFormat, tex->width,
+	GLint target = ConvertTextureTargetGL(tex->target);
+	GLint internalFormat = ConvertTextureInternalFormatGL(tex->format);
+	GLint sourceFormat = ConvertTextureSourceFormatGL(tex->format);
+
+	glTexImage2D( target, 0, internalFormat, tex->width,
 		tex->height, 0, sourceFormat, GL_UNSIGNED_BYTE, data );
 
-	unbindTexture(tex);
-
 	CheckLastErrorGL("Could not upload pixel data to texture object");
+
+	unbindTexture(tex);
 
 	tex->uploaded = true;
 }
@@ -594,10 +576,12 @@ void RenderBackendGLES2::configureTexture(Texture* tex)
 
 	#pragma TODO("Add support for mipmaps")
 
-	if( glGenerateMipmap ) glGenerateMipmap(tex->target);
+	GLint target = ConvertTextureTargetGL(tex->target);
 
-	glTexParameteri(tex->target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(tex->target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); 
+	if( glGenerateMipmap ) glGenerateMipmap(target);
+
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); 
 
 	unbindTexture(tex);
 }
@@ -610,8 +594,10 @@ Image* RenderBackendGLES2::readTexture(Texture* tex)
 	data.resize( tex->getExpectedSize() );
 
 	bindTexture(tex);
+
+	GLint target = ConvertTextureTargetGL(tex->target);
 	
-	glGetTexImage( tex->target, 0 /* base mipmap level */,
+	glGetTexImage( target, 0 /* base mipmap level */,
 		ConvertTextureSourceFormatGL(tex->format), GL_UNSIGNED_BYTE, data.data() );
 	
 	if( CheckLastErrorGL("Could not read texture data") )
@@ -630,9 +616,9 @@ Image* RenderBackendGLES2::readTexture(Texture* tex)
 
 //-----------------------------------//
 
-Program* RenderBackendGLES2::createProgram()
+ShaderProgram* RenderBackendGLES2::createProgram()
 {
-	Program* program = AllocateRender(GLSL_Program);
+	ShaderProgram* program = AllocateRender(GLSL_ShaderProgram);
 	return program;
 }
 
@@ -648,7 +634,9 @@ ShaderProgram* RenderBackendGLES2::createShader()
 
 void RenderBackendGLES2::releaseShader(ShaderProgram* shader)
 {
-	glDeleteShader(shader->id);
+	GLSL_ShaderProgram* glsl = (GLSL_ShaderProgram*) shader;
+	
+	glDeleteShader(glsl->id);
 	CheckLastErrorGL("Could not delete shader object");
 }
 

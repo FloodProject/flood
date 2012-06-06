@@ -21,6 +21,7 @@ Texture::Texture()
 	uploaded = false;
 	image = nullptr;
 	anisotropicFilter = 1.0f;
+	target = Texture::Target2D;
 }
 
 //-----------------------------------//

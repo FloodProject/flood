@@ -7,43 +7,28 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Graphics/Program.h"
+#include "Graphics/Shader.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-Program::Program()
-	: linked( false )
-	, vertex( nullptr )
-	, fragment( nullptr )
-{ }
-
-//-----------------------------------//
-
-Program::~Program()
+Shader::Shader()
 {
-	LogDebug("Destroying program");
 }
 
 //-----------------------------------//
 
-bool Program::validateShaders() const
+void Shader::forceRecompile()
 {
-	if( vertex->getShaderType() != ShaderType::Vertex )
-		return false;
-
-	if( fragment->getShaderType() != ShaderType::Fragment )
-		return false;
-
-	return true;
+	compiled = false;
 }
 
 //-----------------------------------//
 
-bool Program::isLinked() const
+bool Shader::isCompiled() const
 {
-	return linked;
+	return compiled;
 }
 
 //-----------------------------------//

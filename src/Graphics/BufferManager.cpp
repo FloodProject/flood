@@ -8,6 +8,7 @@
 
 #include "Graphics/API.h"
 #include "Graphics/BufferManager.h"
+#include "Graphics/RenderBackend.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -22,6 +23,7 @@ BufferEntry::BufferEntry()
 //-----------------------------------//
 
 BufferManager::BufferManager()
+	: backend(nullptr)
 {
 }
 
@@ -46,16 +48,17 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 	}
 
 	BufferEntry& entry = buffers[gb];
-	entry.vb = AllocateThis(VertexBuffer);
+	entry.vb = backend->createVertexBuffer();
 	entry.vb->setBufferAccess( gb->getBufferAccess() );
 	entry.vb->setBufferUsage( gb->getBufferUsage() );
 	entry.vb->setGeometryBuffer( gb );
 
 	if( gb->isIndexed() )
 	{
-		entry.ib = AllocateThis(IndexBuffer);
+		entry.ib = backend->createIndexBuffer();
 		entry.ib->setBufferAccess( gb->getBufferAccess() );
 		entry.ib->setBufferUsage( gb->getBufferUsage() );
+		entry.ib->setGeometryBuffer( gb );
 	}
 
 	return &entry;

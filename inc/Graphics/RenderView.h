@@ -18,8 +18,6 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-class RenderTarget;
-
 /**
  * A view is a region in a render target that can be rendered into.
  * It has an associated renderer that will render into the view.

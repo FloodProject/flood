@@ -89,6 +89,9 @@ public:
 
 protected:
 
+	// Handles resizing the target views.
+	void handleResize();
+
 	RenderContext* context;
 	RenderViewsVector views;
 };

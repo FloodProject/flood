@@ -38,10 +38,10 @@ DebugDrawer::DebugDrawer()
 	//mat->setDepthWrite(false);
 
 	// Lines
-	GeometryBufferPtr linesVB = AllocateThis(GeometryBuffer);
+	GeometryBuffer* linesVB = AllocateThis(GeometryBuffer);
 	linesVB->setBufferAccess(BufferAccess::Write);
 	linesVB->setBufferUsage(BufferUsage::Dynamic);
-	SetupDebugVertexFormat(linesVB.get());
+	SetupDebugVertexFormat(linesVB);
 
 	lines = RenderBatchCreate(alloc);
 	lines->setGeometryBuffer(linesVB);
@@ -167,7 +167,7 @@ void DebugDrawer::drawIcon( const Vector3& pos )
 
 RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 {
-	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
+	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
 	
@@ -176,13 +176,13 @@ RenderablePtr DebugBuildBoundingBox( const BoundingBox& box )
 	mat->setBackfaceCulling( false );
 	//mat->setDepthRange( Vector2(0.1f, 0.9f) );
 
-	RenderablePtr renderable = AllocateHeap(Renderable);
+	Renderable* renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPrimitiveRasterMode( PrimitiveRasterMode::Wireframe );
 
-	DebugUpdateBoudingBox(gb.get(), box, Color::White);
+	DebugUpdateBoudingBox(gb, box, Color::White);
 
 	return renderable;
 }
@@ -232,13 +232,13 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 	std::vector<Vector3> colors( 2, Color::Red );
 
-	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
+	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 	gb->set( VertexAttribute::Position, vertex );
 	gb->set( VertexAttribute::Color, colors );
 
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
-	RenderablePtr renderable = AllocateHeap(Renderable);
+	Renderable* renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PrimitiveType::Lines);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(material);
@@ -250,13 +250,13 @@ RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 
 RenderablePtr DebugBuildFrustum( const Frustum& box )
 {
-	GeometryBufferPtr gb = AllocateHeap(GeometryBuffer);
+	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
 	Material* material = materialHandle.Resolve();
 	material->setBackfaceCulling( false );
 
-	RenderablePtr renderable = AllocateHeap(Renderable);
+	Renderable* renderable = AllocateHeap(Renderable);
 	renderable->setPrimitiveType(PrimitiveType::Quads);
 	renderable->setGeometryBuffer(gb);
 	renderable->setMaterial(materialHandle);
@@ -284,7 +284,7 @@ void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 	ADD_BOX_FRUSTUM( 0, 2, 6, 4 ) // Left
 	ADD_BOX_FRUSTUM( 5, 1, 3, 7 ) // Right
 
-	GeometryBufferPtr gb = rend->getGeometryBuffer();
+	GeometryBuffer* gb = rend->getGeometryBuffer().get();
 	gb->set( VertexAttribute::Position, pos );
 
 	std::vector<Vector3> colors( pos.size(), Color::White );

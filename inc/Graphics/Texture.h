@@ -26,6 +26,12 @@ NAMESPACE_GRAPHICS_BEGIN
 class API_GRAPHICS Texture : public ReferenceCounted
 {
 public:
+
+	enum TextureTarget
+	{
+		Target2D,
+		Target3D
+	};
 	
 	Texture();
 	~Texture();
@@ -52,7 +58,7 @@ public:
 	uint32 getExpectedSize() const;
 
 	uint32 id;
-	uint32 target;
+	TextureTarget target;
 	bool uploaded;
 	
 	uint16 width;

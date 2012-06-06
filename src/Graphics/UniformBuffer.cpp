@@ -54,7 +54,7 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 
 	element->type = (UniformDataType::Enum) 0;
 	element->count = 0;
-	element->name = AllocateName(name);
+	element->name = (char*) name; // AllocateName(name);
 
 	elements[name] = element;
 	return element;
