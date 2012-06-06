@@ -46,14 +46,14 @@
 // Resource-related Includes
 //---------------------------------------------------------------------//
 
-#include "Resources/Resource.h"
-#include "Resources/ResourceManager.h"
-#include "Resources/ResourceLoader.h"
+#include <Resources/Resource.h>
+#include <Resources/ResourceManager.h>
+#include <Resources/ResourceLoader.h>
 #include <Resources/Image.h>
 #include <Resources/Mesh.h>
 #include <Resources/Sound.h>
 #include <Resources/Font.h>
-#include <Resources/Shader.h>
+#include <Resources/ShaderMaterial.h>
 
 //---------------------------------------------------------------------//
 // Scene-related Includes
@@ -85,11 +85,11 @@
 #include "Graphics/RenderContext.h"
 #include <Graphics/Buffer.h>
 #include <Graphics/Texture.h>
-#include <Graphics/Program.h>
+#include <Graphics/Shader.h>
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/RenderBatch.h>
 #include <Graphics/TextureManager.h>
-#include <Graphics/ProgramManager.h>
+#include <Graphics/ShaderProgramManager.h>
 #include <Graphics/FrameStatistics.h>
 
 //---------------------------------------------------------------------//

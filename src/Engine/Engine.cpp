@@ -57,7 +57,11 @@ Engine::~Engine()
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
+
+#ifdef ENABLE_AUDIO_OPENAL
 	Deallocate(audioDevice);
+#endif
+
 	Deallocate(resourceManager);
 
 	InputDeinitialize();
@@ -86,8 +90,6 @@ void Engine::init( bool createWindow )
 	// Sets up the main logger.
 	setupLogger();
 
-	LogInfo( "Starting vapor3D" );
-
 	// Creates the task system.
 	taskPool = TaskPoolCreate( AllocatorGetThis(), 2 );
 
@@ -109,7 +111,9 @@ void Engine::init( bool createWindow )
 #ifdef ENABLE_AUDIO_OPENAL
 	// Creates the audio device.
 	audioDevice = AudioCreateDevice("");
-	audioDevice->createMainContext();
+
+	if( audioDevice )
+		audioDevice->createMainContext();
 #endif
 
 #ifdef ENABLE_SCRIPTING_LUA
