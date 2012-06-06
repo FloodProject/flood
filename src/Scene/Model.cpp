@@ -17,8 +17,8 @@
 #include "Resources/Attachment.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
-#include "Graphics/Program.h"
-#include "Graphics/ProgramManager.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/ShaderProgramManager.h"
 #include "Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -186,7 +186,7 @@ void Model::build()
 
 	for( size_t i = 0; i < rends.size(); ++i )
 	{
-		Renderable* rend = renderables[i].get();
+		Renderable* rend = rends[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
 		
 		addRenderable( rend );
@@ -424,7 +424,7 @@ void Model::onRender(RenderView* view, const RenderState&)
 void Model::doSkinningRaw(Vector3* positions)
 {
 	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
-	size_t numVertices = gb->getSizeVertices();
+	size_t numVertices = gb->getNumVertices();
 
 #if 0
 	for(size_t i = 0; i < numVertices; ++i)
@@ -449,7 +449,7 @@ void Model::doSkinning(const GeometryBufferPtr& gb)
 		return;
 
 #if 0
-	uint32 numVertices = gb->getSizeVertices();
+	uint32 numVertices = gb->getNumVertices();
 
 	if( mesh->position.size() != numVertices )
 	{

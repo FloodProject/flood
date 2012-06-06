@@ -220,7 +220,7 @@ BoundingBox Transform::getWorldBoundingVolume() const
 
 void Transform::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum )
 {
-	debug.drawBox( getWorldBoundingVolume() );
+	//debug.drawBox( getWorldBoundingVolume() );
 }
 
 //-----------------------------------//

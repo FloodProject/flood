@@ -145,7 +145,6 @@ void Camera::render( RenderBlock& block, bool clearView )
 	if( !activeView ) return;
 	
 	RenderDevice* renderDevice = GetRenderDevice();
-
 	renderDevice->setActiveView( activeView );
 
 	if( clearView )
@@ -237,8 +236,8 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 		DebugDrawFlags::Enum flags = (DebugDrawFlags::Enum) 0;
 		component->onDebugDraw(drawer, flags);
-#endif
 	}
+#endif
 }
 
 //-----------------------------------//
@@ -298,7 +297,7 @@ Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop,
 
 	Frustum volume;
 
-	if(frustum.projection == Projection::Perspective)
+	if(frustum.projection == FrustumProjection::Perspective)
 	{
 		Ray ul = getRay(screenLeft, screenTop);
 		Ray ur = getRay(screenRight, screenTop);
@@ -346,7 +345,7 @@ Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop,
 
 //-----------------------------------//
 
-static Frustum CalculateWorldFrustum(const TransformPtr& transform, Frustum local)
+static Frustum CalculateWorldFrustum(const Transform* transform, Frustum local)
 {
 	const Matrix4x3& absolute = transform->getAbsoluteTransform();
 

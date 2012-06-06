@@ -312,7 +312,7 @@ static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositio
 	if( !mesh || !mesh->isAnimated() ) return false;
 
 	// Resize the output vector to be of the proper size.
-	size_t size = mesh->getGeometryBuffer()->getSizeVertices();
+	size_t size = mesh->getGeometryBuffer()->getNumVertices();
 
 	skinnedPositions.resize(size);
 
@@ -385,7 +385,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			const GeometryBuffer* gb = rend->getGeometryBuffer().get();
 
 			Vector3* vertices = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
-			uint32 numVertices = gb->getSizeVertices();
+			uint32 numVertices = gb->getNumVertices();
 
 			int8 vertexStride = gb->getAttributeStride(VertexAttribute::Position);
 			

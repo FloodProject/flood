@@ -36,7 +36,7 @@ FWD_DECL_INTRUSIVE(Geometry)
 struct RayTriangleQueryResult : public RayQueryResult
 {
 	Geometry* geometry;
- RenderBatch* renderable;
+	RenderBatch* renderable;
 
 	Vector3 intersectionLocal;
 	Vector3 intersectionWorld;

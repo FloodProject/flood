@@ -23,11 +23,11 @@ static const short MainLineStep = 8;
 //-----------------------------------//
 
 Grid::Grid()
-  : sizeX(1024)
-  , sizeZ(1024)
-  , divX(32)
-  , divZ(32)
-  , strongMainLines(true)
+	: sizeX(1024)
+	, sizeZ(1024)
+	, divX(32)
+	, divZ(32)
+	, strongMainLines(true)
 {
 }
 
@@ -36,7 +36,7 @@ Grid::Grid()
 GeometryBufferPtr Grid::buildGeometry()
 {
 	// Create a new VBO and upload triangle data
-	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
+	GeometryBuffer* gb = AllocateThis(GeometryBuffer);
 
 	// Vertex data
 	std::vector< Vector3 > vertex;
@@ -44,7 +44,7 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	// Let's make the lines perpendicular to the X-axis.
 	float x_pos = -sizeX / 2;
-	float z_pos = -sizeZ / 2;	
+	float z_pos = -sizeZ / 2;
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
@@ -69,7 +69,7 @@ GeometryBufferPtr Grid::buildGeometry()
 
 	// Now the lines perpendicular to the Z-axis.
 	x_pos = -sizeX / 2;
-	z_pos = -sizeZ / 2;	
+	z_pos = -sizeZ / 2;
 	
 	for( int i = 0; i < divZ+1; i++ )
 	{
@@ -103,7 +103,7 @@ GeometryBufferPtr Grid::buildGeometry()
 
 void Grid::update( float update )
 {
-	if( renderables.empty() ) return;
+	if( !renderables.empty() ) return;
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
 

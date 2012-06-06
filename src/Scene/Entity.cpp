@@ -211,12 +211,12 @@ void Entity::update( float delta )
 
 	for( size_t i = 0; i < geoms.size(); i++ )
 	{
-		const GeometryPtr& geom = geoms[i];
+		Geometry* geom = geoms[i].get();
 		geom->update( delta );
 	}
 
 	// Update the transform component.
-	const TransformPtr& transform = getTransform();
+	Transform* transform = getTransform().get();
 	if( transform ) transform->update( delta );
 
 	// Update the other components.
@@ -238,7 +238,7 @@ void Entity::fixUp()
 {
 	for(size_t i = 0; i < components.size(); i++ )
 	{
-		const ComponentPtr& component = components[i];
+		Component* component = components[i].get();
 		if( !component ) continue;
 
 		component->setEntity(this);
@@ -269,7 +269,7 @@ void Entity::sendEvents()
 
 bool Entity::addTransform()
 {
-	TransformPtr transform = TransformCreate( AllocatorGetThis() );
+	Transform* transform = TransformCreate( AllocatorGetThis() );
 	return addComponent(transform);
 }
 

@@ -105,7 +105,7 @@ void Overlay::rebuildGeometry()
 		colors.push_back(color);
 	}
 
-	const GeometryBufferPtr& gb =renderable->getGeometryBuffer();
+	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
 	
 	gb->clear();
 	gb->declarations.reset();

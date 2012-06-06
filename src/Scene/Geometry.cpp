@@ -46,7 +46,7 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		RenderBatch* renderable = renderables[i].get();
-		if( renderable ) continue;
+		if( !renderable ) continue;
 
 		RenderState state( renderable );
 		state.modelMatrix = absoluteTransform;
@@ -69,7 +69,7 @@ void Geometry::updateBounds()
 		GeometryBuffer* gb = rend->getGeometryBuffer().get();
 		if( !gb ) continue;
 
-		uint32 numVertices = gb->getSizeVertices();
+		uint32 numVertices = gb->getNumVertices();
 		
 		for( size_t j = 0; j < numVertices; j++ )
 		{

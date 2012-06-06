@@ -12,8 +12,8 @@
 #include "Scene/Entity.h"
 #include "Geometry/DebugGeometry.h"
 #include "Graphics/RenderDevice.h"
-#include "Graphics/Program.h"
-#include "Graphics/ProgramManager.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/ShaderProgramManager.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -76,7 +76,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		RenderBatch* renderable = renderables[i].get();
-		if( renderable ) continue;
+		if( !renderable ) continue;
 
 		renderable->onPreRender.Bind(this, &Projector::onPreRender);
 

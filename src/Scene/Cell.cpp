@@ -185,7 +185,7 @@ void Cell::rebuildFaceNormals()
 
 	LogInfo( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
-	uint32 numIndices = gb->getSizeIndices();
+	uint32 numIndices = gb->getNumIndices();
 
 	Vector3* vertexData = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
 	int8 vertexStride = gb->getAttributeStride(VertexAttribute::Position);
@@ -267,7 +267,7 @@ void Cell::rebuildAveragedNormals()
 	std::vector<uint> ns;
 	ns.resize(6);
 
-	uint32 numVertices = gb->getSizeVertices();
+	uint32 numVertices = gb->getNumVertices();
 
 	for(size_t i = 0; i < numVertices; i++)
 	{
@@ -284,7 +284,7 @@ void Cell::rebuildAveragedNormals()
 		normals.push_back( average );
 	}
 
-	assert( normals.size() ==  gb->getSizeVertices() );
+	assert( normals.size() ==  gb->getNumVertices() );
 	gb->set( VertexAttribute::Normal, normals );
 
 	gb->forceRebuild();
