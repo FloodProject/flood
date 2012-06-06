@@ -81,10 +81,10 @@
 #define     ENABLE_FONT_BITMAP
 
 // Enables loading of Lua scripts.
-#define     ENABLE_SCRIPTING_LUA
+//#define     ENABLE_SCRIPTING_LUA
 
 // Enables loading of Mono scripts.
-#define     ENABLE_SCRIPTING_MONO
+//#define     ENABLE_SCRIPTING_MONO
 
 // Enables threaded loading of resources.
 #define     ENABLE_THREADED_LOADING
@@ -117,13 +117,13 @@
 #define     ENABLE_AUDIO_OPENAL
 
 // Enables physics support via Bullet.
-#define     ENABLE_PHYSICS_BULLET
+//#define     ENABLE_PHYSICS_BULLET
 
 //-----------------------------------//
 // Pipeline
 
 // Enables the FBX mesh importer.
-#define ENABLE_IMPORTER_FBX
+//#define ENABLE_IMPORTER_FBX
 
 // Enables the Milkshape3D mesh importer.
 #define ENABLE_IMPORTER_MILKSHAPE
