@@ -4,16 +4,16 @@
  
 message Foo : Bar
 {
-	1: int8 id
-	2: int8 id2
+	id(0) int8 id
+	id(2) int8 id2
 }
 
 // This is a line comment.
 
 message Spam : Foo
 {
-	3: int8 id3
-	4: int8 id4
+	id(3) int8 id3
+	id(4)int8 id4
 }
 
 message Third

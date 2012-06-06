@@ -6,26 +6,28 @@
 *
 ************************************************************************/
 
-namespace vapor
-{
-	class Settings;
-	
-	class RenderQueue;
-	namespace RenderLayer { enum Enum; }
+class RenderQueue;
+namespace RenderLayer { enum Enum; }
 
-	class Light;
-	typedef RefPtr<Light> LightPtr;
+//class Light;
+//typedef RefPtr<Light> LightPtr;
+//
+//class Transform;
+//typedef RefPtr<Transform> TransformPtr;
 
-	class Transform;
-	typedef RefPtr<Transform> TransformPtr;
-}
+%import "Graphics/API.h"
 
-//%include "Render/Texture.h"
-//%include "Render/Buffer.h"
-//%include "Render/VertexBuffer.h"
-//%include "Render/IndexBuffer.h"
+class RenderTarget;
+class RenderView;
+
+%include "Graphics/RenderView.h"
+%include "Graphics/RenderTarget.h"
+%include "Graphics/Texture.h"
+//%include "Graphics/Buffer.h"
+//%include "Graphics/VertexBuffer.h"
+//%include "Graphics/IndexBuffer.h"
 //%include "Resources/Shader.h"
-//%include "Render/Program.h"
-//%include "Render/Material.h"
-//%include "Render/Renderable.h"
-//%include "Render/RenderQueue.h"
+//%include "Graphics/Program.h"
+//%include "Graphics/Material.h"
+//%include "Graphics/Renderable.h"
+//%include "Graphics/RenderQueue.h"

@@ -6,8 +6,7 @@
 *
 ************************************************************************/
 
-%import "input/Device.h"
-
-%include "input/KeyboardEvents.h"
-%include "input/MouseEvents.h"
+%import "Input/Device.h"
+%include "Input/KeyboardEvents.h"
+%include "Input/MouseEvents.h"
 

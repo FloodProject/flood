@@ -6,28 +6,24 @@
 *
 ************************************************************************/
 
-%module vapor
+%module FlushEngine
 
 %begin %{
 #include "Engine/API.h"
-#include "Headers.h"
-using namespace vapor;
+//#include "Engine/Headers.h"
+//using namespace Flush;
 %}
 
-%import "base.i"
+%rename("%(firstuppercase)s") "";
 
-namespace vapor
-{
-	API_ENGINE void LogDebug(const char* msg, ...);
-	API_ENGINE void LogInfo(const char* msg, ...);
-	API_ENGINE void LogWarn(const char* msg, ...);
-	API_ENGINE void LogError(const char* msg, ...);
-}
-
-%include "Math.i"
-%include "Resources.i"
-%include "Input.i"
+%include "Core.i"
+//%include "Math.i"
+//%include "Resources.i"
 %include "Render.i"
-%include "Scene.i"
+//%include "Scene.i"
+//%include "Input.i"
 
-//%include "Engine.h"
+%define NAMESPACE_ENGINE_BEGIN(arg)
+%enddef
+
+//%include "Engine/Engine.h"
