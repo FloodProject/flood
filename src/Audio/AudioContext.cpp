@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef NAMESPACE_ENGINE_BEGIN
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Audio/Context.h"
 #include "Audio/Device.h"

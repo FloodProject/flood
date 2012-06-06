@@ -74,7 +74,6 @@ bool AudioDevice::createMainContext()
 
 	// Create a main context.
 	mainContext = createContext();
-
 	mainContext->makeCurrent();
 
 	const ALchar* version = alGetString(AL_VERSION);
@@ -100,6 +99,8 @@ bool AudioDevice::createMainContext()
 
 AudioContext* AudioDevice::createContext()
 {
+	if( !device ) return nullptr;
+
 	ALCcontext* context = alcCreateContext(device, nullptr);
 
 	if( !context || alcGetError(device) )
@@ -217,13 +218,10 @@ ALint AudioGetFormat(Sound* sound)
 
 //-----------------------------------//
 
-AudioDevice* AudioCreateDevice(const String& deviceName)
+AudioDevice* AudioCreateDevice(const String& name)
 {
-	const char* name =
-		deviceName.empty() ? nullptr : deviceName.c_str();
-
 	// Select the "preferred device".
-	ALCdevice* device = alcOpenDevice(name);
+	ALCdevice* device = alcOpenDevice("");
 
 	if( !device )
 	{
@@ -254,9 +252,9 @@ bool AudioCheckError()
 
 //-----------------------------------//
 
-#ifdef BUILD_DEBUG
 const ALchar* AudioGetError()
 {
+#ifdef BUILD_DEBUG
 	switch(gs_AudioError)
 	{
 	case AL_NO_ERROR:
@@ -270,8 +268,10 @@ const ALchar* AudioGetError()
 	default:
 		return "Unknown error";
 	}
-}
+#else
+	return false;
 #endif
+}
 
 //-----------------------------------//
 
