@@ -8,11 +8,12 @@
 
 #include "Editor/API.h"
 #include "ProjectPlugin.h"
+#include "ProjectPane.h"
 #include "Editor.h"
 #include "EventManager.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
-#include "Plugins/Scene/SceneDocument.h"
+#include "Extensions/Scene/SceneDocument.h"
 
 #if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
 #include <vld.h>
@@ -24,11 +25,6 @@ NAMESPACE_EDITOR_BEGIN
 
 REFLECT_CHILD_CLASS(ProjectPlugin, EditorPlugin)
 REFLECT_CLASS_END()
-
-REFLECT_CHILD_CLASS(Project, Object)
-REFLECT_CLASS_END()
-
-//-----------------------------------//
 
 PluginMetadata ProjectPlugin::getMetadata()
 {
@@ -78,6 +74,22 @@ void ProjectPlugin::onPluginEnable()
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveAsDocument, this, saveAsItem->GetId() );
+
+#if 0
+	projectPane = new ProjectPane(editor);
+
+	wxBitmap icon = wxMEMORY_BITMAP(folder_explore);
+
+	wxAuiPaneInfo pane;
+	pane.Caption("Project Explorer").Left().Dock().Icon(icon);
+	pane.MinSize( wxSize(180, -1) );
+
+	editor->getAUI()->AddPane(projectPane, pane);
+	editor->getAUI()->Update();
+
+	// Test adding a new project to the pane.
+	projectPane->addProject( createProject("Test") );
+#endif
 }
 
 //-----------------------------------//
@@ -128,10 +140,10 @@ Document* ProjectPlugin::createDocument()
 
 void ProjectPlugin::onNewDocument(wxCommandEvent& event)
 {
-	//Document* document = editor->getDocument();
+	Document* document = editor->getDocument();
 
 	EventManager* events = GetEditor().getEventManager();
-	Document* document = nullptr;
+	//Document* document = nullptr;
 
 	if( !document )
 	{
@@ -165,18 +177,30 @@ created:
 
 void ProjectPlugin::onOpenDocument(wxCommandEvent& event)
 {
-	Document* document = editor->getDocument();
-	if( !document ) return;
-
-	if( !askSaveChanges(document) )
+	// Choose the document to open.
+	wxFileDialog fc( &GetEditor(), wxFileSelectorPromptStr, wxEmptyString,
+		wxEmptyString, /*getFileDialogDescription()*/wxEmptyString, wxFC_OPEN );
+	
+	if( fc.ShowModal() != wxID_OK )
 		return;
 
-	if( !document->onDocumentOpen() )
-	{
-		const char* msg = "Could not load document.";
-		wxMessageDialog message(&GetEditor(), msg, "Load", wxOK | wxICON_EXCLAMATION);
-		message.ShowModal();
-	}
+	Document* document = editor->getDocument();
+
+	if( document && !askSaveChanges(document) )
+		return;
+
+	wxString filename = fc.GetFilename();
+
+	// Query extension that handles this file.
+	PluginManager* pluginManager = GetEditor().getPluginManager();
+	std::vector<Plugin*> plugins = pluginManager->getPlugins();
+
+	//if( document && !document->onDocumentOpen() )
+	//{
+	//	const char* msg = "Could not load document.";
+	//	wxMessageDialog message(&GetEditor(), msg, "Load", wxOK | wxICON_EXCLAMATION);
+	//	message.ShowModal();
+	//}
 }
 
 //-----------------------------------//
@@ -223,6 +247,16 @@ void ProjectPlugin::onSaveAsDocument(wxCommandEvent& event)
 	document->setPath((String) newPath);
 
 	onSaveDocument(event);
+}
+
+//-----------------------------------//
+
+Project* ProjectPlugin::createProject(const String& name)
+{
+	Project* project = AllocateHeap(Project);
+	project->name = name;
+
+	return project;
 }
 
 //-----------------------------------//

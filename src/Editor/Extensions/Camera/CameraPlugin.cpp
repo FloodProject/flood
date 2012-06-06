@@ -34,7 +34,7 @@ CameraPlugin::CameraPlugin()
 
 PluginMetadata CameraPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Camera Controls";
 	metadata.description = "Provides advanced camera control";

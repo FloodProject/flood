@@ -9,7 +9,7 @@
 #pragma once
 
 #include <wx/propdlg.h>
-#include "gen/PreferencesGenerated.h"
+#include "GUI/PreferencesGenerated.h"
 
 NAMESPACE_EDITOR_BEGIN
 

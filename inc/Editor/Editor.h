@@ -25,11 +25,6 @@ class EditorApp : public wxApp
 public:
 
 	bool OnInit() OVERRIDE;
-
-#ifndef BUILD_DEBUG
-	void OnFatalException() OVERRIDE;
-#endif
-
 	EditorFrame* mainFrame;
 };
 
@@ -90,6 +85,7 @@ protected:
 	void createLastUI();
 	void createEngine();
 	void createPlugins();
+	void enablePlugins();
 
 	// wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
@@ -135,8 +131,9 @@ public:
 	// Menu widgets.
 	wxMenu* menuFile;
 	wxMenu* menuEdit;
+	wxMenu* menuProject;
 	wxMenu* menuTools;
-	wxMenu* menuPanels;
+	wxMenu* menuWindows;
 	wxMenu* menuSettings;
 	wxMenu* menuServer;
 	wxMenu* menuHelp;

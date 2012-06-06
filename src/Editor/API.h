@@ -15,9 +15,11 @@
 #include "Pipeline/API.h"
 #include "Engine/Headers.h"
 
-#define VAPOR_EDITOR_NAME "vapor3D"
+#define VAPOR_EDITOR_NAME "Flush3D"
 
 #define wxUSE_BINDERAPP
+
+#define EDITOR_OLD_UI
 
 //---------------------------------------------------------------------//
 // API Exports
@@ -75,9 +77,9 @@
 
 #include "Editor/ImageUtils.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_EDITOR_BEGIN
 typedef CameraPtr CameraWeakPtr;
 typedef ScenePtr SceneWeakPtr;
 typedef ComponentPtr ComponentWeakPtr;
 typedef EntityPtr EntityWeakPtr;
-NAMESPACE_END
+NAMESPACE_EDITOR_END

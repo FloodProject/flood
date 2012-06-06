@@ -13,8 +13,8 @@
 #include "TerrainPage.h"
 #include "Core/Utilities.h"
 #include "Resources/ResourceManager.h"
-#include "Settings.h"
-#include "wx/sequentialsizer.h"
+#include "EditorSettings.h"
+#include "Widgets/sequentialsizer.h"
 
 NAMESPACE_EDITOR_BEGIN
 

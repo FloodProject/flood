@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Plugins/Resources/ResourcesPlugin.h"
-#include "Plugins/Resources/ResourcesBrowser.h"
+#include "Extensions/Resources/ResourcesPlugin.h"
+#include "Extensions/Resources/ResourcesBrowser.h"
 #include "Editor.h"
 
 NAMESPACE_EDITOR_BEGIN

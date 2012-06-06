@@ -11,7 +11,7 @@
 #include "Resources/ResourceIndexer.h"
 #include "Core/Utilities.h"
 #include "Graphics/RenderBuffer.h"
-#include "Settings.h"
+#include "EditorSettings.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -36,7 +36,7 @@ void ResourceThumbnailer::setIndexer(ResourceIndexer* indexer)
 
 void ResourceThumbnailer::update()
 {
-	generateThumbnail();
+	//generateThumbnail();
 }
 
 //-----------------------------------//

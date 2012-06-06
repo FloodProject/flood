@@ -122,11 +122,13 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, Entity* node)
 	
 	if( !geo.empty() )
 	{
-		const RenderablesVector& rend = geo.front()->getRenderables();
+		const RenderablesVector& rends = geo.front()->getRenderables();
 		
-		if( !rend.empty() )
+		if( !rends.empty() )
 		{
-			bool state = (rend.front()->getPrimitiveRasterMode() != PrimitiveRasterMode::Solid);
+			Renderable* rend = rends.front().get();
+			bool state = (rend->getPrimitiveRasterMode() != PrimitiveRasterMode::Solid);
+
 			menu.AppendCheckItem(ID_MenuSceneEntityWireframe, "&Wireframe");
 			menu.Check(ID_MenuSceneEntityWireframe, state );
 		}
@@ -153,7 +155,9 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, Entity* node)
 		}
 
 		wxMenuItem* item = subMenu->Append(wxID_ANY, type->name);
-		if(type) item->SetBitmap( bitmaps[type], false );
+		
+		if(type)
+			item->SetBitmap( bitmaps[type], false );
 	}
 }
 

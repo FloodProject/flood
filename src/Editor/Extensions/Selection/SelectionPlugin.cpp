@@ -14,7 +14,7 @@
 #include "UndoManager.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Plugins/Scene/SceneDocument.h"
+#include "Extensions/Scene/SceneDocument.h"
 
 #include <algorithm>
 
@@ -44,7 +44,7 @@ SelectionPlugin::SelectionPlugin()
 
 PluginMetadata SelectionPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = PLUGIN_SELECTION;
 	metadata.description = "Provides selection services.";
@@ -185,8 +185,8 @@ void SelectionPlugin::onSceneUnload( const ScenePtr& scene )
 
 	scene->entities.onEntityRemoved.Disconnect(this, &SelectionPlugin::onEntityRemoved);
 
-	assert( selections );
-	selections->removeCurrent();
+	if( selections )
+		selections->removeCurrent();
 
 	handlingEvents = false;
 }
@@ -331,14 +331,14 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 
 EntityPtr SelectionPlugin::createRectangle()
 {
-	OverlayPtr overlay = AllocateThis(Overlay);
+	Overlay* overlay = AllocateThis(Overlay);
 	overlay->setPositionMode( PositionMode::Absolute );
 	overlay->setOpacity(0.3f);
 	overlay->setBorderWidth(1);
 	overlay->setBorderColor( Color::White );
 	overlay->setBackgroundColor( Color::White );
 
-	EntityPtr dragRectangle = EntityCreate( AllocatorGetHeap() );
+	Entity* dragRectangle = EntityCreate( AllocatorGetHeap() );
 	dragRectangle->addTransform();
 	dragRectangle->addComponent(overlay);
 
@@ -359,7 +359,7 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event, Entity* drag
 	dragMax.x = std::max(dragOrigin.x, dragPoint.x);
 	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
 
-	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
+	Overlay* overlay = dragRectangle->getComponent<Overlay>().get();
 	overlay->setPositionMode(PositionMode::Absolute);
 	overlay->setOffset(dragMin);
 	overlay->setSize( dragMax - dragMin );
@@ -385,7 +385,7 @@ SelectionOperation* SelectionPlugin::createDeselection()
 SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent& event)
 {
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
-	const ScenePtr& scene = sceneDocument->scene;
+	Scene* scene = sceneDocument->scene.get();
 	
 	RenderView* view = sceneDocument->sceneWindow->getView();
 	Camera* camera = sceneDocument->sceneWindow->getCamera().get();

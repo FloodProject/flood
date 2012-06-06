@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
+* vapor3D Editor Â© (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,21 +8,25 @@
 
 #pragma once
 
-#include "Controllers/FirstPersonController.h"
+#include "Editor.h"
+#include "Project.h"
 
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(SceneCameraController)
-
-class SceneCameraController : public FirstPersonController
+class ProjectPane : public wxTreeCtrl
 {
-	REFLECT_DECLARE_OBJECT(SceneCameraController)
-
 public:
- 
-	SceneCameraController();
+
+	ProjectPane(wxWindow* parent);
+
+	void initIcons();
+
+	// Adds a new project to the pane.
+	void addProject(const ProjectPtr&);
+
+	std::vector<ProjectPtr> projects;
 };
 
 //-----------------------------------//

@@ -46,7 +46,8 @@ PluginMetadata LogPlugin::getMetadata()
 void LogPlugin::onPluginEnable()
 {
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-	
+
+#ifdef ENABLE_LOG_TOOL_BUTTON
 	if(toolbarCtrl)
 	{
 		addTool( toolbarCtrl->AddSeparator() );
@@ -58,6 +59,7 @@ void LogPlugin::onPluginEnable()
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 			&LogPlugin::onLogButtonClick, this, logButton->GetId() );
 	}
+#endif
 
 	log = new LogFrame(editor);
 	log->SetSize(500, 300);
@@ -76,6 +78,7 @@ void LogPlugin::onPluginEnable()
 
 void LogPlugin::onPluginDisable()
 {
+#ifdef ENABLE_LOG_TOOL_BUTTON
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 	
 	if(toolbarCtrl)
@@ -83,6 +86,7 @@ void LogPlugin::onPluginDisable()
 		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED,
 			&LogPlugin::onLogButtonClick, this, logButton->GetId() );
 	}
+#endif
 
 	editor->getAUI()->DetachPane(log);
 }

@@ -9,27 +9,14 @@
 #pragma once
 
 #include "EditorPlugin.h"
+#include "Project.h"
 
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class ResourceDatabase;
-
-REFLECT_DECLARE_CLASS(Project)
-
-class Project : public Object
-{
-	REFLECT_DECLARE_OBJECT(Project)
-
-public:
-	
-	ResourceDatabase* database;
-};
-
-//-----------------------------------//
-
 class SceneDocument;
+class ProjectPane;
 
 REFLECT_DECLARE_CLASS(ProjectPlugin)
 
@@ -55,6 +42,9 @@ public:
 	// Creates a new document.
 	Document* createDocument();
 
+	// Creates a new project.
+	Project* createProject(const String& name);
+
 	// New toolbar button.
 	wxAuiToolBarItem* newButton;
 	wxMenuItem* newItem;
@@ -67,6 +57,8 @@ public:
 	wxAuiToolBarItem* saveButton;
 	wxMenuItem* saveItem;
 	wxMenuItem* saveAsItem;
+
+	ProjectPane* projectPane;
 
 protected:
 

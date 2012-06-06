@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_RESOURCE_BROWSER
 
-#include "gen\PreferencesGenerated.h"
+#include "GUI\PreferencesGenerated.h"
 
 NAMESPACE_EDITOR_BEGIN
 

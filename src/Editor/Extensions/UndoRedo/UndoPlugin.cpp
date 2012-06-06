@@ -31,7 +31,7 @@ UndoPlugin::UndoPlugin()
 
 PluginMetadata UndoPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Undo/Redo";
 	metadata.description = "Provides undo and redo functionality.";

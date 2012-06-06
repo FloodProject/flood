@@ -21,9 +21,13 @@ void EditorFrame::createMenus()
 
 	//-----------------------------------//
 
-    menuEdit = new wxMenu;
+	menuEdit = new wxMenu;
 	wxMenuItem* editPreferences = menuEdit->Append(wxID_ANY, "&Preferences...");
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnPreferences, this, editPreferences->GetId());
+
+	//-----------------------------------//
+
+	menuProject = new wxMenu;
 
 	//-----------------------------------//
 
@@ -39,7 +43,7 @@ void EditorFrame::createMenus()
 	
 	//-----------------------------------//
 
-	menuPanels = new wxMenu;
+	menuWindows = new wxMenu;
 	Bind(wxEVT_UPDATE_UI, &EditorFrame::OnPanelsMenuUpdate, this);
 	Bind(wxEVT_MENU_OPEN, &EditorFrame::OnMenuOpenEvent, this);
 	
@@ -52,7 +56,9 @@ void EditorFrame::createMenus()
 
 	//-----------------------------------//
 
+#ifdef ENABLE_PLUGIN_SERVER
 	menuServer = new wxMenu;
+#endif
 
 	//-----------------------------------//
 
@@ -61,8 +67,10 @@ void EditorFrame::createMenus()
 	menuBar->Append(menuEdit, "&Edit");
 	menuBar->Append(menuSettings, "&Settings");
 	menuBar->Append(menuTools, "&Tools");
-	menuBar->Append(menuPanels, "&Panels");
+	menuBar->Append(menuWindows, "&Windows");
+#if ENABLE_PLUGIN_SERVER
 	menuBar->Append(menuServer, "&Server");
+#endif
 	menuBar->Append(menuHelp, "&Help");
 
 	SetMenuBar(menuBar);
@@ -80,22 +88,13 @@ void EditorFrame::createLastUI()
 
 void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 {
-	if( event.GetMenu() != menuPanels )
+	if( event.GetMenu() != menuWindows )
 		return;
 
-	const wxMenuItemList menus = menuPanels->GetMenuItems();
-
-	if( !menus.IsEmpty() )
-		return;
-	//{
-	//	wxMenuItem* item = (wxMenuItem *) menus.GetFirst();
-	//	
-	//	if(item)
-	//		menuPanels->Delete(item);
-	//}
+	const wxMenuItemList& menus = menuWindows->GetMenuItems();
+	if( !menus.IsEmpty() ) return;
 
 	wxAuiManager* aui = getAUI();
-
 	wxAuiPaneInfoArray& panes = aui->GetAllPanes();
 
 	for( size_t i = 0; i < panes.size(); i++ )
@@ -105,9 +104,8 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 		if( pane.caption.IsEmpty() )
 			continue;
 		
-		wxMenuItem* item = menuPanels->Append(wxID_ANY, pane.caption);
-		//item->Check(pane.IsShown());
-		//item->SetBitmap(pane.icon);
+		wxMenuItem* item = menuWindows->AppendCheckItem(wxID_ANY, pane.caption);
+		item->Check( pane.IsShown() );
 
 		Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnPanelsMenuEvent, this, item->GetId());
 	}
@@ -117,22 +115,15 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 
 void EditorFrame::OnPanelsMenuEvent(wxCommandEvent& event)
 {
-	wxMenuItem* item = menuPanels->FindItem( event.GetId() );
-
-	if( !item )
-		return;
+	wxMenuItem* item = menuWindows->FindItem( event.GetId() );
+	if( !item ) return;
 
 	wxAuiPaneInfo& pane = paneCtrl->GetPane( item->GetItemLabelText() );
-
-	if( !pane.IsOk() )
-		return;
+	if( !pane.IsOk() ) return;
 
 	pane.Show( !pane.IsShown() );
-	//item->Check( pane.IsShown() );
-
 	paneCtrl->Update();
 }
-
 
 //-----------------------------------//
 
@@ -175,20 +166,20 @@ void EditorFrame::OnPreferences(wxCommandEvent& event)
 	
 	if( pref->ShowModal() == wxID_OK )
 	{
-		// Save settings
+		#pragma TODO("Handle saving the user preferences")
 	}
 }
 
 //-----------------------------------//
 
-static const char* s_aboutText =
-	"This software is © 2009-2011 João Matos and the rest of the team.\n\n"
+static const char* s_AboutText =
+	"This software is © 2008-201x João Matos and the rest of the team.\n\n"
 	VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
-	" Lua (lua.org),\nBullet (bulletphysics.com), zlib (zlib.org)"
-	" and the list goes on.\n\nCheck the documentation provided with the software"
+	" Mono (mono-project.com),\nBullet (bulletphysics.com), zlib (zlib.org)"
+	" and others.\n\nCheck the documentation provided with the software"
 	" for more details.";
 
-const char* s_siteText = "http://www.vapor3d.org";
+const char* s_SiteText = "http://www.vapor3d.org";
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
@@ -202,7 +193,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, aboutIcon);
 	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
 
-	wxString aboutText(s_aboutText);
+	wxString aboutText(s_AboutText);
 	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
 	m_staticText2->Wrap( -1 );
 	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
@@ -211,7 +202,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
-	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY, s_siteText, s_siteText );
+	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY, s_SiteText, s_SiteText );
 	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );

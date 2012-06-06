@@ -24,11 +24,11 @@
 #include "Resources/Mesh.h"
 #include "Terrain/Terrain.h"
 
-#include "Plugins/Selection/SelectionPlugin.h"
-#include "Plugins/Selection/SelectionManager.h"
-#include "Plugins/Selection/SelectionOperation.h"
+#include "Extensions/Selection/SelectionPlugin.h"
+#include "Extensions/Selection/SelectionManager.h"
+#include "Extensions/Selection/SelectionOperation.h"
 
-#include "Plugins/Networking/ServerPlugin.h"
+#include "Extensions/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Protocol/ReplicaContext.h"
 #include "Network/Host.h"
@@ -149,6 +149,8 @@ void ScenePage::initButtons()
 
 void ScenePage::setScene(const ScenePtr& scene)
 {
+	cleanScene();
+
 	//assert( weakScene.get() == 0 );
 	weakScene = scene;
 
@@ -719,7 +721,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	if( id == wxID_NONE ) return;
 
 	const ScenePtr& scene = weakScene;
-	const EntityPtr& node = weakEntity;
+	const EntityPtr& entity = weakEntity;
 
 	if( !scene ) return;
 
@@ -727,24 +729,24 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	{
 	case ID_MenuSceneEntityVisible:
 	{
-		if( !node ) return;
-		node->setVisible( !node->isVisible() );
+		if( !entity ) return;
+		entity->setVisible( !entity->isVisible() );
 		break;
 	}
 	//-----------------------------------//
 	case ID_MenuSceneEntityDuplicate:
 	{
-		if( !node ) return;
+		if( !entity ) return;
 		#pragma TODO(Add object cloning)
 		break;
 	}
 	//-----------------------------------//
 	case ID_MenuSceneEntityWireframe:
 	{
-		if( !node ) return;
+		if( !entity ) return;
 
 		PrimitiveRasterMode::Enum mode = event.IsChecked() ? PrimitiveRasterMode::Wireframe : PrimitiveRasterMode::Solid;
-		const std::vector<GeometryPtr>& geometries = node->getGeometry();
+		const std::vector<GeometryPtr>& geometries = entity->getGeometry();
 
 		for( size_t i = 0; i < geometries.size(); i++ )
 		{

@@ -10,7 +10,7 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "EditorTags.h"
-#include "Settings.h"
+#include "EditorSettings.h"
 
 #include "Core/PluginManager.h"
 #include "Core/Utilities.h"
@@ -18,15 +18,17 @@
 #include "DocumentManager.h"
 #include "EventManager.h"
 
-#include "Plugins/Project/ProjectPlugin.h"
-#define CREATE_PROJECT_ON_STARTUP
-//#define CREATE_WELCOME_SCREEN
+#include "Extensions/Project/ProjectPlugin.h"
+#include "Extensions/Mono/MonoPlugin.h"
 
 #include <wx/webview.h>
 #include <wx/debugrpt.h>
 
+#ifdef BUILD_DEBUG
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
-//wxIMPLEMENT_WXWIN_MAIN
+#else
+wxIMPLEMENT_WXWIN_MAIN
+#endif
 
 wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
@@ -41,7 +43,9 @@ bool EditorApp::OnInit()
 	wxImage::AddHandler( new wxPNGHandler() );
 
 	mainFrame = new EditorFrame(VAPOR_EDITOR_NAME);
-	mainFrame->SetSize(800, 500);
+	mainFrame->SetSize(900, 550);
+    mainFrame->SetIcon( wxIcon("iconEditor") );
+
 
 	SetTopWindow(mainFrame);
 	mainFrame->Show(true);
@@ -50,25 +54,9 @@ bool EditorApp::OnInit()
 }
 
 //-----------------------------------//
-#ifndef BUILD_DEBUG
-void EditorApp::OnFatalException()
-{
-	wxDebugReport report;
-	wxDebugReportPreviewStd preview;
-
-	report.AddExceptionContext();
-	report.AddExceptionDump();
-
-	if ( preview.Show(report) )
-		report.Process();
-}
-#endif
-//-----------------------------------//
 
 static EditorFrame* gs_EditorInstance = nullptr;;
 EditorFrame& GetEditor() { return *gs_EditorInstance; }
-
-//-----------------------------------//
 
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
@@ -85,55 +73,44 @@ EditorFrame::EditorFrame(const wxString& title)
 {
 	gs_EditorInstance = this;
 
-	createPlugins();
-	createUI();
-	createEngine();
+#ifdef EDITOR_OLD_UI
+	documentManager = AllocateThis(DocumentManager);
+	documentManager->onDocumentAdded.Connect(this, &EditorFrame::onDocumentAdded);
+	documentManager->onDocumentRemoved.Connect(this, &EditorFrame::onDocumentRemoved);
+	documentManager->onDocumentRenamed.Connect(this, &EditorFrame::onDocumentRenamed);
+#endif
 
+	createPlugins();
+
+#ifdef EDITOR_OLD_UI
+	createUI();
+#endif
+
+	createEngine();
 	eventManager = AllocateThis(EventManager);
 
+	Plugin* monoPlugin = pluginManager->getPluginFromClass( ReflectionGetType(MonoPlugin) );
+	pluginManager->enablePlugin(monoPlugin);
+
+#ifdef EDITOR_OLD_UI
 	enablePlugins();
 	createToolbar();
 	createLastUI();
+#endif
 
 	Bind(wxEVT_IDLE, &EditorFrame::OnIdle, this);
 	Bind(wxEVT_CLOSE_WINDOW, &EditorFrame::OnClose, this);
-
-	wxKeyProfile* mainProfile = new wxKeyProfile();
-	mainProfile->SetName("Main");
-	//mainProfile->AttachRecursively(this);
-	mainProfile->ImportMenuBarCmd( GetMenuBar() );
-	mainProfile->Enable();
-
-	keyProfiles.Add(mainProfile);
-	keyProfiles.SetSelProfile(0);
-
-#ifdef CREATE_PROJECT_ON_STARTUP
-	wxCommandEvent event;
-	ProjectPlugin* project = GetPlugin<ProjectPlugin>();
-	project->onNewDocument(event);
-#endif
-
-#ifdef CREATE_WELCOME_SCREEN
-	// Create welcome screen.
-	wxWebView* webView = wxWebView::New(this, wxID_ANY);
-	webView->SetWindowStyle(wxBORDER_NONE);
-	//webView->LoadURL("Layouts/Layout.html");
-
-	notebookCtrl->AddPage(webView, "Welcome");
-#endif
-
-	getAUI()->Update();
-
-	AllocatorDumpInfo();
 }
 
 //-----------------------------------//
 
 EditorFrame::~EditorFrame()
 {
+#ifdef EDITOR_OLD_UI
 	Deallocate(documentManager);
 
 	eventManager->disconnectPluginListeners();
+#endif
 
 	ArchiveDestroy(archive);
 
@@ -143,11 +120,19 @@ EditorFrame::~EditorFrame()
 	Deallocate(eventManager);
 	Deallocate(input);
 
-	notebookCtrl->Destroy();
-	paneCtrl->DetachPane(notebookCtrl);
+#ifdef EDITOR_OLD_UI
+	if(notebookCtrl)
+	{
+		notebookCtrl->Destroy();
+		paneCtrl->DetachPane(notebookCtrl);
+	}
 	
-	paneCtrl->UnInit();
-	delete paneCtrl;
+	if(paneCtrl)
+	{
+		paneCtrl->UnInit();
+		delete paneCtrl;
+	}
+#endif
 
 	Deallocate(engine);
 }
@@ -160,7 +145,7 @@ void EditorFrame::OnIdle(wxIdleEvent& event)
 
 	const std::vector<Plugin*> plugins = pluginManager->getPlugins();
 	
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.size(); ++i )
 	{
 		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
 		if( !plugin->isEnabled() ) continue;
@@ -173,8 +158,6 @@ void EditorFrame::OnIdle(wxIdleEvent& event)
 
 void EditorFrame::OnClose(wxCloseEvent& event)
 {
-	#pragma TODO("Check for unsaved documents when closing")
-
 	// Hide the window in advance so the ugly destroy is not seen.
 	Hide();
 
@@ -186,11 +169,6 @@ void EditorFrame::OnClose(wxCloseEvent& event)
 
 void EditorFrame::createPlugins()
 {
-	documentManager = AllocateThis(DocumentManager);
-	documentManager->onDocumentAdded.Connect(this, &EditorFrame::onDocumentAdded);
-	documentManager->onDocumentRemoved.Connect(this, &EditorFrame::onDocumentRemoved);
-	documentManager->onDocumentRenamed.Connect(this, &EditorFrame::onDocumentRenamed);
-
 	pluginManager = AllocateThis(PluginManager);
 
 	// Find and instantiate plugins.
@@ -230,14 +208,15 @@ void EditorFrame::createEngine()
 	engine = AllocateThis(Engine);
 	engine->init(false);
 
+	// Setup the input manager.
 	input = AllocateThis(InputManager);
 	input->createDefaultDevices();
-
 	engine->setInputManager(input);
 
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();
 	
+	// Get the mount paths from the editor preferences.
 	archive = ArchiveCreateVirtual( GetResourcesAllocator() );
 	ArchiveMountDirectories(archive, MediaFolder, GetResourcesAllocator());
 	
@@ -246,31 +225,8 @@ void EditorFrame::createEngine()
 
 //-----------------------------------//
 
-class wxWideAuiToolbar : public wxAuiToolBar
-{
-public:
-
-	wxWideAuiToolbar(wxWindow* parent, wxWindowID id = -1,
-					const wxPoint& position = wxDefaultPosition,
-					const wxSize& size = wxDefaultSize,
-					long style = wxAUI_TB_DEFAULT_STYLE)
-		: wxAuiToolBar(parent, id, position, size, style)
-	{
-		//Bind(wxEVT_SIZE, &wxWideAuiToolbar::OnSize, this);
-	}
-
-	void OnSize(wxSizeEvent& event)
-	{
-		wxAuiToolBar::OnSize(event);
-		wxSize size = m_sizer->GetSize();
-		m_sizer->SetDimension(0, 0, wxDefaultCoord, size.y);
-	}
-};
-
 void EditorFrame::createUI()
 {
-    SetIcon( wxIcon("iconEditor") );
-	
 	paneCtrl = new wxAuiManager();
 	paneCtrl->SetManagedWindow(this);
 
@@ -288,15 +244,13 @@ void EditorFrame::createUI()
 
 	// Create toolbar
 	int style = wxAUI_TB_DEFAULT_STYLE /*| wxAUI_TB_OVERFLOW*/;
-	toolbarCtrl = new wxWideAuiToolbar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
+	toolbarCtrl = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	toolbarCtrl->SetGripperVisible(false);
 	//toolbarCtrl->GetArtProvider()->SetElementSize(wxAUI_TBART_GRIPPER_SIZE, 0);
 	toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
-
-#if 0
+	
 	// Create status-bar.
 	statusCtrl = CreateStatusBar();
-#endif
 }
 
 //-----------------------------------//

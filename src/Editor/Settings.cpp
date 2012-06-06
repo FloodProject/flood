@@ -7,4 +7,4 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Settings.h"
+#include "EditorSettings.h"

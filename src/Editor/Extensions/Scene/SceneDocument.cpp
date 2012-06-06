@@ -11,14 +11,14 @@
 #include "SceneCamera.h"
 #include "Editor.h"
 #include "EventManager.h"
-#include "Settings.h"
+#include "EditorSettings.h"
 #include "RenderControl.h"
 #include "EditorIcons.h"
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
 #include "EditorPlugin.h"
-#include "Plugins/Selection/SelectionPlugin.h"
-#include "Plugins/Gizmos/GizmoPlugin.h"
+#include "Extensions/Selection/SelectionPlugin.h"
+#include "Extensions/Gizmos/GizmoPlugin.h"
 #include "Physics/Physics.h"
 
 #if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
@@ -374,7 +374,9 @@ EntityPtr SceneDocument::createCamera()
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
 	Camera* camera = AllocateHeap(Camera);
-	cameraController = AllocateHeap(FirstPersonController);
+	
+	cameraController = AllocateHeap(SceneCameraController);
+	cameraController->setMoveSensivity(150.0f);
 	cameraController->setEnabled(false);
 
 	Frustum& frustum = camera->getFrustum();

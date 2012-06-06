@@ -26,6 +26,12 @@ NAMESPACE_EDITOR_BEGIN
 class EditorFrame;
 class EditorPlugin;
 
+/**
+ * Editor extensions are used to extend the editor with new functionality.
+ * The editor has a couple extension points, and each plugins registers
+ * custom extensions.
+ */
+
 class API_EDITOR EditorExtension : public Extension
 {
 public:
@@ -69,14 +75,20 @@ public:
 
 	// Gets metadata about this extension.
 	ExtensionMetadata* getMetadata() OVERRIDE;
+
+	// Gets the file extensions of the documents.
+	//virtual String getFileExtensions() = 0;
 };
+
+typedef std::vector<DocumentExtension> DocumentExtensions;
 
 //-----------------------------------//
 
 /**
- * A 3D editor needs to provide different kind of tools to the user,
+ * An editor needs to provide different kind of tools to the user,
  * so to be flexible and allow extensibility each tool behaviours and
  * functionality is provided by a custom type derived from this class.
+ *
  * As each tool can be loaded/unloaded at runtime, there is a tool
  * lifecycle you must implement. Most of the work is done by asking
  * the editor to execute actions in the different events/callbacks.
@@ -101,7 +113,8 @@ public:
 	// Finds if there is a tool with given id.
 	ToolExtension* findToolById( int toolId );
 
-	// Plugin update callback.
+	// Base callbacks.
+	virtual void onPluginRegistered() {}
 	virtual void onPluginUpdate() {}
 
 	// Plugin tool callback.
@@ -161,7 +174,7 @@ public:
 protected:
 
 	// Disables plugins.
-	virtual void doPluginDisable() OVERRIDE;
+	void doPluginDisable() OVERRIDE;
 	
 	// Registers a new tool in the plugin.
 	void addTool( ToolExtension& tool, bool addToMenu = false );
@@ -175,6 +188,9 @@ protected:
 
 	// Keeps track of all the registered tools.
 	ToolExtensions tools;
+
+	// Keeps track of document extensions.
+	DocumentExtensions documents;
 
 	// Editor frame.
 	EditorFrame* editor;

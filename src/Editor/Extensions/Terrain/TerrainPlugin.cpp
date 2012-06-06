@@ -28,10 +28,10 @@
 #include "Engine/Engine.h"
 #include "EventManager.h"
 #include "RenderControl.h"
-#include "Plugins/Scene/ScenePlugin.h"
-#include "Plugins/Scene/SceneDocument.h"
-#include "Plugins/Property/PropertyPlugin.h"
-#include "Plugins/Property/PropertyPage.h"
+#include "Extensions/Scene/ScenePlugin.h"
+#include "Extensions/Scene/SceneDocument.h"
+#include "Extensions/Property/PropertyPlugin.h"
+#include "Extensions/Property/PropertyPage.h"
 
 #define TERRAIN_PANE_NAME "Terrains"
 
@@ -389,7 +389,7 @@ EntityPtr TerrainPlugin::createProjector(const GeometryPtr& cell)
 	Projector* projector = AllocateThis(Projector);
 	projector->material = materialHandle;
 	projector->geometry = cell;
-	projector->frustum.projection = Projection::Orthographic;
+	projector->frustum.projection = FrustumProjection::Orthographic;
 	entity->addComponent(projector);
 
 	Quaternion quat;

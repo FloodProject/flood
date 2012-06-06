@@ -17,13 +17,13 @@
 
 #include "UndoManager.h"
 #include "EventManager.h"
-#include "Plugins/UndoRedo/UndoPlugin.h"
+#include "Extensions/UndoRedo/UndoPlugin.h"
 
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CLASS(Document)
+REFLECT_ABSTRACT_CHILD_CLASS(Document, Object)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

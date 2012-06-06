@@ -11,12 +11,12 @@
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(SceneCamera, FirstPersonController)
+REFLECT_CHILD_CLASS(SceneCameraController, FirstPersonController)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-SceneCamera::SceneCamera() : FirstPersonController()
+SceneCameraController::SceneCameraController() : FirstPersonController()
 {
 }
 

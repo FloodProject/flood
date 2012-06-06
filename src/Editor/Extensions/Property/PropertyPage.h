@@ -11,7 +11,6 @@
 #ifdef ENABLE_PLUGIN_PROPERTY
 
 #include <wx/foldbar/foldpanelbar.h>
-
 #include "Core/ClassWatcher.h"
 
 class wxPropertyGrid;

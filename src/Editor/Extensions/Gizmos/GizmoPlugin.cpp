@@ -19,9 +19,9 @@
 #include "DocumentWindow.h"
 #include "Core/PluginManager.h"
 
-#include "Plugins/Selection/SelectionPlugin.h"
-#include "Plugins/Selection/SelectionManager.h"
-#include "Plugins/Scene/SceneDocument.h"
+#include "Extensions/Selection/SelectionPlugin.h"
+#include "Extensions/Selection/SelectionManager.h"
+#include "Extensions/Scene/SceneDocument.h"
 
 #ifdef ENABLE_PLUGIN_GIZMO
 

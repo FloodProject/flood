@@ -24,13 +24,15 @@ REFLECT_CLASS_END()
 
 HierarchyPlugin::HierarchyPlugin()
 	: hierarchyPane(nullptr)
-{ }
+{
+
+}
 
 //-----------------------------------//
 
 PluginMetadata HierarchyPlugin::getMetadata()
 {
-	PluginMetadata metadata;
+	static PluginMetadata metadata;
 	
 	metadata.name = "Hierarchy";
 	metadata.description = "Displays hierarchy information.";

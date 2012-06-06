@@ -12,7 +12,7 @@
 
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "Settings.h"
+#include "EditorSettings.h"
 
 #include "Core/Utilities.h"
 #include "Core/PluginManager.h"
@@ -23,11 +23,11 @@
 #include "ResourcesPlugin.h"
 #include "Resources/ResourceDatabase.h"
 
-#include "Plugins/Scene/ScenePane.h"
-#include "Plugins/Scene/SceneDocument.h"
+#include "Extensions/Scene/ScenePane.h"
+#include "Extensions/Scene/SceneDocument.h"
 
-#include "Plugins/Property/PropertyPlugin.h"
-#include "Plugins/Property/PropertyPage.h"
+#include "Extensions/Property/PropertyPlugin.h"
+#include "Extensions/Property/PropertyPage.h"
 
 #ifdef ENABLE_RESOURCE_BROWSER
 

@@ -148,17 +148,13 @@ void EditorPlugin::addTool( ToolExtension& tool, bool addToMenu )
 		toolbar->Realize();
 	}
 	
-	addToMenu = true;
-
-	if( addToMenu && tool.item->GetKind() == wxITEM_NORMAL )
+	if( addToMenu )
 	{
 		wxAuiToolBarItem* item = tool.item;
-		editor->menuTools->Append(item->GetId(), item->GetLabel());
+		editor->menuTools->Append(/*item->GetId()*/wxID_ANY, item->GetLabel());
 
 		wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 		toolbarCtrl->Realize();
-
-		//editor->getAUI()->Update();
 	}
 }
 
@@ -169,7 +165,7 @@ void EditorPlugin::addTool( wxAuiToolBarItem* item, bool addToMenu )
 	ToolExtension tool;
 	tool.item = item;
 
-	addTool(tool);
+	addTool(tool, addToMenu);
 }
 
 //-----------------------------------//

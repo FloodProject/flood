@@ -10,12 +10,13 @@
 
 #include "Core/String.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_EDITOR_BEGIN
 
 //---------------------------------------------------------------------//
 // Paths
 //---------------------------------------------------------------------//
 
+static const char* PluginsFolder = "Plugins/";
 static const String MediaFolder( "Assets/" );
 static const String CacheFolder( "Cache/" );
 static const String ThumbCache( "Thumbs.cache" );
@@ -27,4 +28,4 @@ static const int HostPort = 9999;
 // Scene document settings.
 static const Color SceneEditClearColor(0.0f, 0.10f, 0.25f);
 
-NAMESPACE_END
+NAMESPACE_EDITOR_END

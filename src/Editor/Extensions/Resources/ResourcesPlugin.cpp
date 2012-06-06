@@ -13,11 +13,13 @@
 #include "Resources/ResourceIndexer.h"
 #include "Resources/ResourceDatabase.h"
 #include "ResourceThumbnailer.h"
-#include "Settings.h"
+#include "EditorSettings.h"
 
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Pipeline/ResourceProcessor.h"
+
+#include "Core/Utilities.h"
 
 NAMESPACE_EDITOR_BEGIN
 

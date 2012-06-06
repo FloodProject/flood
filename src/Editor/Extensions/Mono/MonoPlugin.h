@@ -18,6 +18,15 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(MonoScript)
+
+class MonoScript : public Script
+{
+	MonoAssembly* assembly;
+};
+
+//-----------------------------------//
+
 REFLECT_DECLARE_CLASS(MonoPlugin)
 
 class MonoPlugin : public EditorPlugin
@@ -35,9 +44,20 @@ public:
 	void onPluginRegistered() OVERRIDE;
 	void onPluginEnable() OVERRIDE;
 	void onPluginDisable() OVERRIDE;
+	void onPluginUpdate() OVERRIDE;
+
+	// Initializes the Mono stuff.
+	void initialize();
+
+	// Calls a Mono method.
+	void call(MonoMethod*);
 
 	MonoDomain* domain;
 	MonoDomain* domainEditor;
+
+	MonoAssembly* mainAssembly;
+	MonoMethod* mainMethod;
+	MonoMethod* updateMethod;
 };
 
 //-----------------------------------//

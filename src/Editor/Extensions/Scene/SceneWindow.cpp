@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Plugins/Scene/SceneWindow.h"
+#include "Extensions/Scene/SceneWindow.h"
 #include "RenderWindow.h"
 #include "RenderControl.h"
 

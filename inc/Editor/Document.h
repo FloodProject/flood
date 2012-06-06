@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Object.h"
+#include <wx/toolbar.h>
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -113,11 +114,11 @@ protected:
 	// Window representing the document.
 	DocumentWindow* documentWindow;
 
-	// Keeps if the document contains unsaved changes.
-	bool unsavedChanges;
-
 	// Keeps the undo command stacks.
 	UndoManager* undoManager;
+
+	// Keeps if the document contains unsaved changes.
+	bool unsavedChanges;
 };
 
 //-----------------------------------//

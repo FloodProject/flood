@@ -33,7 +33,7 @@ public:
 	void setDocumentBar( DocumentBar* );
 
 	// Flags the backing control for redraw.
-	virtual void flagRedraw() = 0;
+	virtual void flagRedraw() {}
 
 	// Gets the sizer of this panel.
 	GETTER(Sizer, wxSizer*, mainSizer)

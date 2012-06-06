@@ -22,8 +22,8 @@ NAMESPACE_EDITOR_BEGIN
 Preferences::Preferences( wxWindow* parent )
 	: m_listPlugins(nullptr)
 {
-    if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Preferences"))
-        return;
+	if (!wxPropertySheetDialog::Create(parent, wxID_ANY, "Preferences"))
+		return;
 
 	createPages();
 }
@@ -34,7 +34,7 @@ Preferences::Preferences( wxWindow* parent )
 
 bool Preferences::createPages()
 {
-    CreateButtons(wxOK|wxCANCEL);
+	CreateButtons(wxOK|wxCANCEL);
 
 	wxImageList* imageList = new wxImageList(16, 16, true);
 	imageList->Add(wxMEMORY_BITMAP(keyboard));
@@ -55,12 +55,12 @@ bool Preferences::createPages()
 	//bindPanel->ImportKeyProfileCmd(*profiles.GetSelProfile());
 	bindPanel->ImportMenuBarCmd( GetEditor().GetMenuBar() );
 
-    nb->AddPage(bindPanel, "Key Bindings");
+	nb->AddPage(bindPanel, "Key Bindings");
 	nb->SetPageImage(n++, 0);
 
 #if 0
 	bindings = new Bindings(nb);
-    nb->AddPage(bindings, "Key Bindings");
+	nb->AddPage(bindings, "Key Bindings");
 	nb->SetPageImage(n++, 0);
 #endif
 
@@ -70,7 +70,7 @@ bool Preferences::createPages()
 	nb->SetPageImage(n++, 1);
 
 	resources = new Resources(nb);
-    nb->AddPage(resources, "Resources");
+	nb->AddPage(resources, "Resources");
 	resources->InitDialog();
 	nb->SetPageImage(n++, 2);
 
@@ -220,7 +220,7 @@ void Resources::OnResourcesInit( wxInitDialogEvent& event )
 void Resources::OnResourcesPathAdd( wxCommandEvent& event )
 {
 	wxDirDialog dirPicker(nullptr, "Choose directory", wxEmptyString,
-                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+			wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
 	int res = dirPicker.ShowModal();
 	if(res != wxID_OK) return;
