@@ -37,8 +37,6 @@ public:
 //-----------------------------------//
 
 /**
- * Represents an region on the screen that the renderer can send
- * the final representation of the scene, the rendered output image.
  * In most platforms (PCs) this will be just a normal window on the
  * desktop, but on some platforms (consoles, for instance) this might 
  * be slighty different, so some methods might not make much sense. 

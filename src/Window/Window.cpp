@@ -40,8 +40,8 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	//LogInfo("Resizing window to size %dx%d", settings.width, settings.height );
-	onTargetResize( getSettings() );
+	//LogInfo("Resizing window to size %dx%d", settings.width, settings.height);
+	handleResize();
 }
 
 //-----------------------------------//
