@@ -16,6 +16,17 @@ NAMESPACE_EXTERN_BEGIN
 //-----------------------------------//
 
 /**
+ * Types can have metadata attached to them in the form of attributes.
+ */
+
+struct API_CORE TypeAttribute
+{
+
+};
+
+//-----------------------------------//
+
+/**
  * Provides types with a fast RTTI (Runtime Type Information) system that 
  * will be used for fast dynamic type checking, reflection and serialization.
  */
@@ -43,9 +54,14 @@ struct API_CORE Type
 	// Size of the type.
 	uint16 size;
 
+	// Attributes of the type.
+	std::vector<TypeAttribute> attributes;
+
 	// Custom walk function.
 	ReflectionWalkFunction serialize;
 };
+
+typedef std::map<const char*, Type*, RawStringCompare> TypeMap;
 
 // Gets if this type represents a primitive type.
 API_CORE bool ReflectionIsPrimitive(const Type*);
@@ -61,7 +77,14 @@ API_CORE bool ReflectionIsEqual(const Type*, const Type*);
 
 //-----------------------------------//
 
-typedef API_CORE std::map<const char*, Type*, RawStringCompare> ReflectionDatabase;
+// Keeps a map with the types in the database.
+struct API_CORE ReflectionDatabase
+{
+	TypeMap types;
+};
+
+// Registers a new type in the reflection database.
+API_CORE bool ReflectionDatabaseRegisterType(ReflectionDatabase*, Type* type);
 
 // Gets the type for a given type.
 #define ReflectionGetType(T) T##GetType()
@@ -70,29 +93,10 @@ typedef API_CORE std::map<const char*, Type*, RawStringCompare> ReflectionDataba
 API_CORE Type* ReflectionFindType(const char*);
 
 // Registers a new type.
-API_CORE void ReflectionRegisterType(Type*);
+API_CORE bool ReflectionRegisterType(Type*);
 
-// Gets the type registry.
+// Gets the reflection database.
 API_CORE ReflectionDatabase& ReflectionGetDatabase();
-
-//-----------------------------------//
-
-typedef std::map<const char*, int32, RawStringCompare> EnumValuesMap;
-typedef std::pair<const char*, int32> EnumValuesPair;
-
-struct API_CORE Enum : public Type
-{
-	EnumValuesMap values;
-};
-
-// Adds a new enumeration to this enum.
-API_CORE void EnumAddValue(Enum*, const char* name, int32 value);
-
-// Gets the value of this enum name.
-API_CORE int32 EnumGetValue(Enum*, const char* name);
-
-// Gets the name of this enum value.
-API_CORE const char* EnumGetValueName(Enum*, int32 value);
 
 //-----------------------------------//
 
@@ -166,6 +170,9 @@ API_CORE void* ClassGetFieldAddress(const void*, const Field*);
 
 // Creates a new instance of the class.
 API_CORE void* ClassCreateInstance(const Class*, Allocator*);
+
+// Calculates the class id of the given class.
+API_CORE ClassId ClassCalculateId(const Class*);
 
 // Gets the class id map.
 API_CORE ClassIdMap& ClassGetIdMap();
@@ -279,6 +286,26 @@ struct API_CORE Primitive : public Type
 
 //-----------------------------------//
 
+typedef std::map<const char*, int32, RawStringCompare> EnumValuesMap;
+typedef std::pair<const char*, int32> EnumValuesPair;
+
+struct API_CORE Enum : public Type
+{
+	EnumValuesMap values;
+	Primitive::PrimitiveType backing;
+};
+
+// Adds a new enumeration to this enum.
+API_CORE void EnumAddValue(Enum*, const char* name, int32 value);
+
+// Gets the value of this enum name.
+API_CORE int32 EnumGetValue(Enum*, const char* name);
+
+// Gets the name of this enum value.
+API_CORE const char* EnumGetValueName(Enum*, int32 value);
+
+//-----------------------------------//
+
 EXTERN_END
 
 // Gets the value of the field in the object.
@@ -326,3 +353,11 @@ API_CORE void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vecto
 NAMESPACE_CORE_END
 
 #include "Core/ReflectionHelpers.h"
+
+#ifdef COMPILER_CLANG
+#define fl_reflect(b) __attribute__((annotate("fl:reflect="#b)))
+#define fl_attribute(...) __attribute__((annotate("fl:attributes="#__VA_ARGS__)))
+#else
+#define fl_reflect(b)
+#define fl_attribute(...)
+#endif

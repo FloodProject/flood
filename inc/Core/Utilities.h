@@ -27,6 +27,14 @@ API_CORE void SystemSleep( int64 time );
 //API_CORE int64 SystemGenerateUUID();
 
 //---------------------------------------------------------------------//
+// Filesystem helpers
+//---------------------------------------------------------------------//
+
+API_CORE bool FileExists(const Path&);
+API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);
+API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
+
+//---------------------------------------------------------------------//
 // Locales
 //---------------------------------------------------------------------//
 

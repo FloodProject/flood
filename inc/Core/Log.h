@@ -18,16 +18,15 @@ struct Timer;
 struct Mutex;
 struct Allocator;
 
-enum_class LogLevel
-{
+enum_class_begin(LogLevel)
 	Info, Warn, Error, Debug, Assert
-};
+enum_class_end
 
 struct LogEntry
 {
 	float time;
 	String message;
-	LogLevel level;
+	enum_class(LogLevel) level;
 };
 
 typedef void (*LogFunction)(LogEntry*);

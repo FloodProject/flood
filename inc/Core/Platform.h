@@ -28,7 +28,9 @@
 // Compiler detection
 //---------------------------------------------------------------------//
 
-#ifdef _MSC_VER
+#ifdef __clang__
+	#define COMPILER_CLANG
+#elif defined(_MSC_VER)
 	#if _MSC_VER == 1600
 		#define COMPILER_MSVC_2010 0x1600
 		#define COMPILER_MSVC	COMPILER_MSVC_2010
@@ -37,15 +39,13 @@
 		#define COMPILER_MSVC_2008 0x1500
 		#define COMPILER_MSVC	COMPILER_MSVC_2008
 	#else
-		#error "Unknown Visual C++ compiler version"
+		#warn "Unsupported Visual C++ compiler version"
 	#endif
 #elif defined(__GNUG__)
 	#define COMPILER_GCC
 	#if (__GNUG__ >= 4) && (__GNUC_MINOR__ > 5)
 		#define COMPILER_SUPPORTS_CPP0X
 	#endif
-#elif defined(__clang__)
-	#define COMPILER_CLANG
 #else
 	#warn Unknown compiler
 #endif
@@ -56,10 +56,8 @@
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
 	#define BUILD_DEBUG
-	#define DEBUG_BUILD
 #else
 	#define BUILD_RELEASE
-	#define RELEASE_BUILD
 #endif
 
 //---------------------------------------------------------------------//
@@ -132,23 +130,33 @@ typedef uint32 uint;
 	typedef __int64 int64;
 	typedef signed __int64 sint64;
 	typedef unsigned __int64 uint64;
-#elif defined(COMPILER_GCC)
+#elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	typedef long long int64;
 	typedef signed long long sint64;
 	typedef unsigned long long uint64;
 #endif
 
-#ifndef SWIG
+#if !defined(SWIG) && !defined(COMPILER_CLANG)
 static_assert(sizeof(int8)  == 1, "");
 static_assert(sizeof(int16) == 2, "");
 static_assert(sizeof(int32) == 4, "");
 static_assert(sizeof(int64) == 8, "");
 #endif
 
+#ifndef SWIG
 #if defined(COMPILER_MSVC)
-	#define enum_class enum
-#elif defined(COMPILER_GCC)
-	#define enum_class enum class
+	#define enum_class_begin(name) enum name {
+	#define enum_class_end };
+	#define enum_class(name) name
+#elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
+	#define enum_class_begin(name) enum class name {
+	#define enum_class_end };
+	#define enum_class(name) name
+#endif
+#else
+	#define enum_class_begin(name) enum name {
+	#define enum_class_end };
+	#define enum_class(name) name
 #endif
 
 #if !defined(COMPILER_SUPPORTS_CPP0X)
@@ -164,6 +172,11 @@ static_assert(sizeof(int64) == 8, "");
 
 #define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
 #define TODO( x )  message( __FILE__LINE__" TODO :   " #x ) 
+
+//#pragma TODO("Switch to safer sizeof macro")
+
+//((sizeof(a) / sizeof(*(a)))
+//static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 

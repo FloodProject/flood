@@ -44,28 +44,22 @@ class API_CORE Extension : public Object
 
 public:
 
-	Plugin();
-	virtual ~Plugin();
+	Extension();
+	virtual ~Extension();
 
-	// Gets if plugin is enabled.
+	// Gets if extension is enabled.
 	bool isEnabled() const;
 
-	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata() = 0;
+	// Gets metadata about this extesion.
+	virtual ExtensionMetadata getMetadata() = 0;
 
-	// Plugin callbacks.
-	virtual void onPluginEnable() {}
-	virtual void onPluginDisable() {}
-
-	// Sorts plugins by priority.
-	static void sortByPriority(std::vector<Plugin*>& plugins);
+	// Extension callbacks.
+	virtual void onExtensionEnable() {}
+	virtual void onExtensionDisable() {}
 
 protected:
 
-	// Helper method to disable plugins.
-	virtual void doPluginDisable();
-	
-	// Keeps track if plugin is enabled.
+	// Keeps track if extension is enabled.
 	bool enabled;
 };
 

@@ -27,7 +27,7 @@ API_CORE void ReferenceAdd(ReferenceCounted*);
 API_CORE bool ReferenceRelease(ReferenceCounted*);
 
 struct API_CORE NO_VTABLE ReferenceCounted
-{	
+{
 	ReferenceCounted() : references(0) {}
 	ReferenceCounted(const ReferenceCounted&) : references(0) {}
 	ReferenceCounted& operator=(const ReferenceCounted&) { return *this; }
@@ -112,7 +112,7 @@ public:
 		if( px != nullptr && px->releaseReference() )
 		{
 			REFERENCES_DEBUG_CALLBACK();
-		Deallocate(px);
+			Deallocate(px);
 		}
 	}
 
@@ -244,8 +244,8 @@ NAMESPACE_CORE_END
 #define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
 	typedef RefPtr<type> type##Ptr;
 
-#define FWD_DECL_INTRUSIVE(T)						\
-	NAMESPACE_CORE_BEGIN							\
-		class T;									\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
+#define FWD_DECL_INTRUSIVE(T) \
+	NAMESPACE_CORE_BEGIN \
+	class T; \
+	TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T ); \
 	NAMESPACE_CORE_END

@@ -22,10 +22,11 @@ NAMESPACE_EXTERN_BEGIN
  * and system resources.
  */
 
-enum_class ThreadPriority
-{
-	Low = -1, Normal, High
-};
+enum_class_begin(ThreadPriority)
+	Low = -1,
+	Normal,
+	High
+enum_class_end
 
 struct Thread;
 typedef Delegate2<Thread*, void*> ThreadFunction;
@@ -34,7 +35,7 @@ struct Thread
 {
 	void* Handle;
 	volatile bool IsRunning;
-	ThreadPriority Priority;
+	enum_class(ThreadPriority) Priority;
 	ThreadFunction Function;
 	void* Userdata;
 };
@@ -103,7 +104,8 @@ API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
 //-----------------------------------//
 
 /**
- * Tasks provide an high level interface to the concurrency concepts.
+ * Tasks provide an higher level interface to concurrency than threads.
+ * They can be managed by the engine and grouped in different hardware threads.
  */
 
 struct Task;
@@ -142,7 +144,6 @@ NAMESPACE_EXTERN_END
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
-
 
 struct TaskPool
 {

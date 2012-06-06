@@ -23,7 +23,7 @@
 	#define API_CORE
 #endif
 
-#undef  NAMESPACE_CORE_DEFINED
+#undef NAMESPACE_CORE_DEFINED
 
 #ifdef NAMESPACE_CORE_DEFINED
 #define NAMESPACE_CORE vapor
@@ -38,9 +38,6 @@
 #define NAMESPACE_CORE_BEGIN
 #define NAMESPACE_CORE_END
 #endif
-
-#define NAMESPACE_BEGIN NAMESPACE_CORE_BEGIN
-#define NAMESPACE_END NAMESPACE_CORE_END
 
 #if defined(__cplusplus) || defined(SWIG)
 #define EXTERN_BEGIN extern "C" {

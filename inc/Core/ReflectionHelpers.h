@@ -18,7 +18,7 @@ NAMESPACE_CORE_BEGIN
 	Enum* name##GetType();
 
 #define REFLECT_DEFINE_ENUM(name) \
-    static Enum* name##BuildType(); \
+	static Enum* name##BuildType(); \
 	Enum* name##GetType() { \
 		static Enum* _enum = name##BuildType(); \
 		return _enum; } \

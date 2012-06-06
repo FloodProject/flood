@@ -85,9 +85,6 @@ void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
 	{
 		Plugin* plugin = plugins[i];
 		registerPlugin(plugin);
-		
-		const PluginMetadata& metadata = plugin->getMetadata();
-		if(metadata.startEnabled) enablePlugin(plugin);
 	}
 }
 

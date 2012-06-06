@@ -105,9 +105,9 @@ void LogRemoveHandler(Log* log, LogFunction fn)
 
 void LogWrite(Log* log, LogEntry* entry)
 {
-	//MutexLock(log->mutex);
+	MutexLock(log->mutex);
 	log->handlers(entry);
-	//MutexUnlock(log->mutex);
+	MutexUnlock(log->mutex);
 }
 
 //-----------------------------------//

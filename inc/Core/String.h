@@ -28,7 +28,7 @@ struct StringHash
 	uint32 hash;
 };
 
-EXTERN_BEGIN
+//EXTERN_BEGIN
 
 // Hashes the string and returns its hash.
 API_CORE StringHash HashString(const String&);
@@ -94,7 +94,7 @@ API_CORE Path PathGetSeparator();
 // Combines two path elements.
 API_CORE Path PathCombine(Path base, Path extra);
 
-EXTERN_END
+//EXTERN_END
 
 //-----------------------------------//
 	

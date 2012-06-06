@@ -42,8 +42,6 @@ struct FileWatchStruct;
 /// type for a map from FileWatchId to FileWatchStruct pointer
 typedef std::map<FileWatchId, FileWatchStruct*> FileWatchMap;
 
-//-----------------------------------//
-
 /// Implementation for Win32 based on ReadDirectoryChangesW.
 /// @class FileWatcherWin32
 class FileWatcherWin32 : public FileWatcher

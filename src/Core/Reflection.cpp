@@ -46,16 +46,15 @@ bool ReflectionIsEnum(const Type* type)
 
 ReflectionDatabase& ReflectionGetDatabase()
 {
-	static ReflectionDatabase s_ReflectionTypes;
-	return s_ReflectionTypes;
+	static ReflectionDatabase s_ReflectionDatabase;
+	return s_ReflectionDatabase;
 }
 
 //-----------------------------------//
 
 static void RegisterClass(Class* klass)
 {
-	uint32 hash = HashMurmur2(0xBEEF, (uint8*) klass->name, strlen(klass->name));
-	klass->id = (ClassId) hash;
+	klass->id = ClassCalculateId(klass);
 
 	//LogDebug("Registering class: '%s' with id '%u'", klass->name, klass->id);
 
@@ -77,36 +76,45 @@ static void RegisterClass(Class* klass)
 
 //-----------------------------------//
 
-void ReflectionRegisterType(Type* type)
+bool ReflectionDatabaseRegisterType(ReflectionDatabase* db, Type* type)
 {
-	if( !type ) return;
+	if( !db || !type ) return false;
 
-	ReflectionDatabase& map = ReflectionGetDatabase();
 	const char* name = type->name;
 
-	if( map.find(name) != map.end() )
+	if( db->types.find(name) != db->types.end() )
 	{
-		LogAssert("Type '%s' already exists in the registry", name);
-		return;
+		LogAssert("Type '%s' already exists in the database", name);
+		return false;
 	}
 
-	map[name] = type;
+	db->types[name] = type;
 
 	if( !ReflectionIsComposite(type) )
-		return;
+		return true;
 
 	Class* klass = (Class*) type;
 	RegisterClass(klass);
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool ReflectionRegisterType(Type* type)
+{
+	ReflectionDatabase& db = ReflectionGetDatabase();
+	return ReflectionDatabaseRegisterType(&db, type);
 }
 
 //-----------------------------------//
 
 Type* ReflectionFindType(const char* name)
 {
-	ReflectionDatabase& types = ReflectionGetDatabase();
+	ReflectionDatabase& db = ReflectionGetDatabase();
 	
-	ReflectionDatabase::iterator it = types.find(name);
-	if( it == types.end() ) return nullptr;
+	TypeMap::iterator it = db.types.find(name);
+	if( it == db.types.end() ) return nullptr;
 
 	return it->second;
 }
@@ -286,6 +294,14 @@ void* ClassCreateInstance(const Class* klass, Allocator* alloc)
 	
 	void* object = klass->create_fn(alloc);
 	return object;
+}
+
+//-----------------------------------//
+
+ClassId ClassCalculateId(const Class* klass)
+{
+	uint32 hash = HashMurmur2(0xBEEF, (uint8*) klass->name, strlen(klass->name));
+	return (ClassId) hash;
 }
 
 //-----------------------------------//

@@ -23,7 +23,7 @@
 	
 	#include <Windows.h>
 
-	#if defined(ENABLE_MEMORY_LEAK_DETECTOR) && defined(DEBUG_BUILD)
+	#if defined(ENABLE_MEMORY_LEAK_DETECTOR) && defined(BUILD_DEBUG)
 		#include <vld.h>
 	#endif
 	

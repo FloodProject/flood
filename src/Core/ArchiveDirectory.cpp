@@ -11,16 +11,11 @@
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
+#include "Core/Utilities.h"
 
 #ifdef PLATFORM_WINDOWS
-	#include <io.h>
-	#define F_OK 0
 	#include "Core/FileWatcherWin32.h"
-#else
-	#include <unistd.h>
 #endif
-
-#include <dirent.h>
 
 NAMESPACE_CORE_BEGIN
 
@@ -120,8 +115,7 @@ static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
 static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
-	
-	DirArchiveEnumerate(paths, archive->path, "", false);
+	FileEnumerateFiles(archive->path, paths);
 }
 
 //-----------------------------------//
@@ -129,8 +123,7 @@ static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
-	
-	DirArchiveEnumerate(paths, archive->path, "", true);
+	FileEnumerateDirectories(archive->path, paths);
 }
 
 //-----------------------------------//
@@ -204,72 +197,6 @@ static bool DirArchiveMonitor(Archive* archive)
 }
 
 #endif
-
-//-----------------------------------//
-
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path filePath, bool dirs)
-{
-	// Open directory stream.
-	DIR* dir = opendir( dirPath.c_str() );
-	if( !dir ) return;
-
-	dirent* entry = nullptr;
-	
-	// Get all the files and directories within directory.
-	while(entry = readdir(dir))
-	{
-		const Path& name = entry->d_name;
-		
-		switch(entry->d_type)
-		{
-		case DT_REG:
-		{
-			Path sep = filePath.empty() ? "" : PathGetSeparator();
-			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(), name.c_str() );
-			if(!dirs) paths.push_back(path);
-			break;
-		}
-		case DT_DIR:
-		{
-			if(!name.empty() && name[0] == '.') continue;
-		
-			Path _dirPath = PathCombine(dirPath, name);
-			Path _filePath = PathCombine(filePath, name);
-
-			if(dirs) paths.push_back(_filePath);
-			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
-			
-			break;
-		} }
-	}
-
-	closedir(dir);
-}
-
-//-----------------------------------//
-
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
-{
-	DirArchiveEnumerate(files, path, "", false);
-}
-
-//-----------------------------------//
-
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
-{
-	DirArchiveEnumerate(dirs, path, "", true);
-}
-
-//-----------------------------------//
-
-bool FileExists(const Path& path)
-{
-#ifdef COMPILER_MSVC
-	return _access(path.c_str(), F_OK) == 0;
-#else
-	return access(path.c_str(), F_OK) == 0;
-#endif
-}
 
 //-----------------------------------//
 

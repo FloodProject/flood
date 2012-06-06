@@ -55,11 +55,6 @@ API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
 // Creates a new archive from a directory.
 API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
-// Filesystem helpers.
-API_CORE bool FileExists(const Path&);
-API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);
-API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
-
 // Pointer helpers.
 typedef scoped_ptr<Archive, ArchiveDestroy> ArchiveScopedPtr;
 #define ArchiveCreateFromZipScoped(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
