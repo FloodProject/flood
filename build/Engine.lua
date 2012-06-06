@@ -5,7 +5,7 @@ project "Engine"
 	kind "StaticLib"
 	flags { common_flags }
 	
-	builddeps { "Core", "Resources" }
+	builddeps { "Core", "Resources", "Graphics" }
 
 	pchheader "Engine/API.h"
 	pchsource "../src/Engine/Engine.cpp"
@@ -39,6 +39,7 @@ project "Engine"
 		"../src/Window/**.cpp",
 		"../inc/Framework/**.h",
 		"../src/Framework/**.cpp",
+		"../interface/Bindings/*.i",
 	}
 	
 	vpaths
@@ -46,7 +47,7 @@ project "Engine"
 		[""] = { "../../src/", "../../inc/", "../../src/Engine/", "../../inc/Engine/" },
 		["Audio"] = { "Audio*" },
 		["Controllers"] = "Controllers/*",
-		["Controllers/Camera"] = { "CameraController*", "FirstPersonController*", "ThirdPersonController*", },
+		["Controllers/Camera"] = { "*Controller*" },
 		["Framework"] = { "Framework" },
 		["Geometry"] = { "*Geometry*" },
 		["Graphics"] = { "Graphics/*" },
@@ -75,29 +76,38 @@ project "Engine"
 		"../dep/jansson/include",
 		"../dep/freetype/include",
 		"../dep/glew/include",
-		"../dep/lua/include",
 		"../dep/openal/include",
 		"../dep/sfml/include",
-		"../dep/bullet/include",
+		"../dep/Bullet/include",
 		"../dep/sfml/",
 	}
 
 	Engine.libdirs =
 	{
-		"../dep/openal-soft/lib/vs2010",
-		"../dep/bullet/lib/vc10",
+		"../dep/openal/lib/Win32",
+		"../dep/Bullet/lib/",
 		"../dep/glew/lib/vc10",
-		"../dep/lua/lib/vc10",
 		"../dep/freetype/objs",
 	}
 
-	links
+	Engine.links =
 	{
-		"openal_d",
 		"opengl32",
-		"glewd",
-		"luad",
-		"bulletd",
 	}
 
-	defines { "AL_LIBTYPE_STATIC" }
+	Engine.links.Debug =
+	{
+		"glewd",
+		"openal_d",
+		"BulletCollision_debug", "BulletDynamics_debug", "LinearMath_debug"
+	}
+
+	Engine.links.Release =
+	{
+		"glew",
+		"openal",
+		"BulletCollision", "BulletDynamics", "LinearMath"
+	}
+	
+	configuration {}
+		defines { "AL_LIBTYPE_STATIC" }

@@ -10,8 +10,10 @@ project "Graphics"
 	files
 	{
 		"Graphics.lua",
-		"../inc/Graphics/**.h",
-		"../src/Graphics/**.cpp",
+		"../inc/Graphics/*.h",
+		"../src/Graphics/*.cpp",
+		"../src/Graphics/Backends/*.h",
+		"../src/Graphics/Backends/*.cpp",
 	}
 	
 	vpaths
@@ -22,8 +24,8 @@ project "Graphics"
 		["Capabilities"] = { "RenderCapabilities*" },
 		["Contexts"] = { "RenderContext*" },
 		["Queues"] = { "RenderQueue*" },
-		["Textures"] = { "*Texture*" },
-		["Shaders"] = { "*Shader*", "*Program*" },
+		["Textures"] = { "Texture*" },
+		["Shaders"] = { "Shader*" },
 		["Views"] = { "*RenderView*" },
 	}
 
@@ -38,8 +40,17 @@ project "Graphics"
 		"../dep/glew/lib/vc10",
 	}
 
-	links
+	Graphics.links =
 	{
 		"opengl32",
+	}
+
+	Graphics.links.Debug =
+	{
 		"glewd",
+	}
+
+	Graphics.links.Release =
+	{
+		"glew",
 	}

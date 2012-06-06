@@ -120,6 +120,15 @@
 #define     ENABLE_PHYSICS_BULLET
 
 //-----------------------------------//
+// Pipeline
+
+// Enables the FBX mesh importer.
+#define ENABLE_IMPORTER_FBX
+
+// Enables the Milkshape3D mesh importer.
+#define ENABLE_IMPORTER_MILKSHAPE
+
+//-----------------------------------//
 // Editor
 
 // Enables the gizmo manipulators plugin.

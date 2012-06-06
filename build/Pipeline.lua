@@ -45,7 +45,16 @@ project "Pipeline"
 		"../dep/FbxSdk/2012.1/lib/vs2010/x86",
 	}
 	
-	links
+	Pipeline.links =
 	{
-		"fbxsdk-2012.1d",
+	}
+
+	Pipeline.links.Debug =
+	{
+		--"fbxsdk-2012.1d",
+	}
+
+	Pipeline.links.Release =
+	{
+		--"fbxsdk-2012.1",
 	}

@@ -69,12 +69,16 @@ project "Core"
 		"../dep/vld/lib/Win32",
 		"../dep/curl/lib",
 		"../dep/jansson/lib",
-		"../dep/zziplib/lib",
+		("../dep/zziplib/lib/" .. action),
 		"../dep/zlib/lib/vc10",
 		"../dep/enet/lib",
 	}
 	
-	links
+	Core.links =
+	{
+	}
+	
+	Core.links.Debug =
 	{
 		"jansson_d",
 		"zziplib_d",
@@ -84,7 +88,16 @@ project "Core"
 		"libcurld",
 	}
 
+	Core.links.Release =
+	{
+		"jansson",
+		"zziplib",
+		"zlib",
+		"enet",
+		"libcurl",
+	}
+
 	configuration "windows"
-		links { "ws2_32" }
+		table.insert(Core.links, "ws2_32")
 		files { "../src/Platforms/Win32/Concurrency*.cpp" }
 		files { "../src/Platforms/Win32/File*.cpp" }

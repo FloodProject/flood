@@ -6,7 +6,15 @@ action = _ACTION or ""
 common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
 common_msvc_copts = { "/wd4190", "/wd4530" }
 
-solution "vapor"
+-- Common Libraries
+
+Mono = {}
+Mono.links = { "eglib", "libgc", "mono-2.0" }
+
+wxWidgets = {}
+wxWidgets.links = {}
+
+solution "Flush"
 
 	configurations
 	{ 
@@ -14,17 +22,20 @@ solution "vapor"
 		"Release"
 	}
 	
+	startup "Editor"
+	
 	language "C++"
 	
 	location (action)
-	objdir (action .. "/obj")
-	targetdir (action .. "/lib")	
+	objdir (action .. "/obj/")
+	targetdir (action .. "/lib/")
 	
 	-- Build configuration options
 	
 	configuration "Debug"
 		defines { "DEBUG" }
-
+		targetsuffix "_d"
+	
 	configuration "Release"
 		defines { "NDEBUG" }
 		flags { "Optimize" }	
@@ -49,8 +60,11 @@ solution "vapor"
 	dofile "Resources.lua"
 	dofile "Graphics.lua"
 	dofile "Engine.lua"
+	dofile "EngineManaged.lua"
 	dofile "Pipeline.lua"
 	dofile "Editor.lua"
+	dofile "EditorManaged.lua"
+	dofile "Runtime.lua"
 	
 -- Copy a configuration build header if one does not exist yet.
 

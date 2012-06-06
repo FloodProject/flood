@@ -33,7 +33,6 @@ project "Resources"
 		["Meshes"] = "Mesh*",
 		["Scripts"] = { "Script*", "LuaLoader*" },
 		["Shaders"] = "Shader*",
-		["Images/GLSL"] = { "GLSL*" },
 		["Sounds"] = { "Sound*", "ResourceSound*" },
 		["Sounds/OGG"] = "OGG*",
 		["Text"] = "Text*",
@@ -55,10 +54,22 @@ project "Resources"
 		"../dep/vorbis/lib",
 	}
 	
-	links
+	Resources.links =
+	{
+	}
+
+	Resources.links.Debug =
 	{
 		"pngd",
 		"ogg_static_d",
 		"vorbis_static_d",
 		"vorbisfile_static_d"
+	}
+
+	Resources.links.Release =
+	{
+		"png",
+		"ogg_static",
+		"vorbis_static",
+		"vorbisfile_static"
 	}
