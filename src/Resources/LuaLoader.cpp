@@ -12,7 +12,7 @@
 
 #include "Resources/LuaLoader.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -41,6 +41,6 @@ bool Lua_Loader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END
 
 #endif

@@ -85,6 +85,9 @@ public:
 	// Loads or returns an already loaded resource by its name.
 	ResourceHandle loadResource(ResourceLoadOptions& options);
 
+	// Finds the true resource if needed.
+	void findResource( ResourceLoadOptions& options );
+
 	// Removes a resource from the manager.
 	void removeResource(Resource* resource);
 
@@ -97,20 +100,25 @@ public:
 	// Waits until all queued resources are loaded.
 	void loadQueuedResources();
 
-	// Finds the loader for the given extension.
-	ResourceLoader* findLoader(const String& extension);
-
-	// Finds the loader for the given type.
-	ResourceLoader* findLoaderByClass(const Class* klass);
-
 	// Sends resource events to the subscribers.
 	void update();
 
 	// Gets the registered resources.
 	GETTER(Resources, const ResourceMap&, resources)
 
+#ifndef SWIG
+	// Finds the loader for the given extension.
+	ResourceLoader* findLoader(const String& extension);
+
+	// Finds the loader for the given type.
+	ResourceLoader* findLoaderByClass(const Class* klass);
+
+	// Sets up the default resource loaders.
+	void setupResourceLoaders(Class* klass);
+
 	// Gets the registered resource loaders.
 	GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
+#endif
 
 	// Gets/sets the threading status.
 	ACESSOR(AsynchronousLoading, bool, asynchronousLoading)
@@ -127,13 +135,7 @@ public:
 	// Sets the archive.
 	void setArchive(Archive* archive);
 
-	// These events are sent when their correspending actions happen.
-	Event1< const ResourceEvent& > onResourcePrepared;
-	Event1< const ResourceEvent& > onResourceLoaded;
-	Event1< const ResourceEvent& > onResourceRemoved;
-	Event1< const ResourceEvent& > onResourceReloaded;
-	Event1< const ResourceLoader&> onResourceLoaderRegistered;
-
+#ifndef SWIG
 	// Gets an already loaded resource by its name.
 	template <typename T>
 	RESOURCE_HANDLE_TYPE(T) getResource(const String& name)
@@ -157,12 +159,14 @@ public:
 		return HandleCast<T>(res);
 		
 	}
+#endif
 
-	// Sets up the default resource loaders.
-	void setupResourceLoaders(Class* klass);
-
-	// Finds the true resource if needed.
-	void findResource( ResourceLoadOptions& options );
+	// These events are sent when their correspending actions happen.
+	Event1< const ResourceEvent& > onResourcePrepared;
+	Event1< const ResourceEvent& > onResourceLoaded;
+	Event1< const ResourceEvent& > onResourceRemoved;
+	Event1< const ResourceEvent& > onResourceReloaded;
+	Event1< const ResourceLoader&> onResourceLoaderRegistered;
 
 protected:
 
@@ -185,7 +189,7 @@ protected:
 	void destroyHandles();
 
 	// Registers a resource handler.
-	void registerLoader(const ResourceLoaderPtr&);
+	void registerLoader(ResourceLoader*);
 
 	// Maps a name to a resource.
 	ResourceMap resources;

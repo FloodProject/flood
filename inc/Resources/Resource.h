@@ -13,7 +13,7 @@
 #include "Core/References.h"
 #include "Core/Handle.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -129,5 +129,5 @@ ResourceHandle ResourceHandleCreate(Resource*);
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END
 

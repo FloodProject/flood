@@ -15,7 +15,7 @@
 #include "Math/Vector.h"
 #include "Geometry/GeometryBuffer.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -77,7 +77,7 @@ void Mesh::buildBounds()
 
 	if( !geometryBuffer ) return;
 
-	size_t numVertices = geometryBuffer->getSizeVertices();
+	size_t numVertices = geometryBuffer->getNumVertices();
 
 	for( size_t i = 0; i < groups.size(); i++ )
 	{
@@ -108,7 +108,7 @@ void Mesh::setupInitialVertices()
 	if( !isAnimated() ) return;
 
 	const BonesVector& bones = skeleton->getBones();
-	size_t numVertices = geometryBuffer->getSizeVertices();
+	size_t numVertices = geometryBuffer->getNumVertices();
 
 	// Calculate the new vertices.
 	for( size_t i = 0; i < numVertices; i++ )
@@ -123,4 +123,4 @@ void Mesh::setupInitialVertices()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

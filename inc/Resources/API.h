@@ -34,8 +34,8 @@
 // Custom Allocators
 //---------------------------------------------------------------------//
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 Allocator* GetResourcesAllocator();
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

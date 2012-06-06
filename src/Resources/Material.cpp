@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 REFLECT_CHILD_CLASS(Material, Resource)
 	FIELD_PRIMITIVE(4, string, name)
-	FIELD_CLASS_PTR_SETTER(5, Shader, ShaderHandle, shader, Handle, Shader)
+	FIELD_CLASS_PTR_SETTER(5, ShaderMaterial, ShaderMaterialHandle, shader, Handle, Shader)
 	FIELD_PRIMITIVE(6, bool, cullBackfaces)
 	FIELD_PRIMITIVE(7, bool, alphaTest)
 	FIELD_PRIMITIVE(8, bool, lineSmooth)
@@ -202,7 +202,7 @@ void Material::setShader(const String& name)
 	options.isHighPriority = true;
 	options.asynchronousLoad = false;
 	
-	shader = HandleCast<Shader>( GetResourceManager()->loadResource(options) );
+	shader = HandleCast<ShaderMaterial>( GetResourceManager()->loadResource(options) );
 }
 
 //-----------------------------------//

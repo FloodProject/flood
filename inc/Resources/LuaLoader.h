@@ -13,7 +13,7 @@
 #include "Resources/ResourceLoader.h"
 #include "Script/Script.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -49,6 +49,6 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END
 
 #endif

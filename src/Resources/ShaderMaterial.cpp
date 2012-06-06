@@ -7,19 +7,20 @@
 ************************************************************************/
 
 #include "Resources/API.h"
-#include "Resources/Shader.h"
+#include "Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(Shader, Resource)
+REFLECT_ABSTRACT_CHILD_CLASS(ShaderMaterial, Resource)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Shader::Shader()
-{ }
+ShaderMaterial::ShaderMaterial()
+{
+}
 
 //-----------------------------------//
 

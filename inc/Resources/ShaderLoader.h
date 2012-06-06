@@ -11,28 +11,28 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Resources/ResourceLoader.h"
-#include "Resources/Shader.h"
+#include "Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
 /**
- * Loads GLSL shaders as text files.
+ * Loads shaders from text files.
  */
 
-REFLECT_DECLARE_CLASS(GLSL_Loader)
+REFLECT_DECLARE_CLASS(ShaderLoader)
 
-class GLSL_Loader : public ResourceLoader
+class ShaderLoader : public ResourceLoader
 {
-	REFLECT_DECLARE_OBJECT(GLSL_Loader)
+	REFLECT_DECLARE_OBJECT(ShaderLoader)
 
 public:
 
-	GLSL_Loader();
+	ShaderLoader();
 
 	// Gets the class of the resource.
-	RESOURCE_LOADER_CLASS(Shader)
+	RESOURCE_LOADER_CLASS(ShaderMaterial)
 
 	// Creates the resource with no data.
 	virtual Resource* prepare(ResourceLoadOptions&) OVERRIDE;

@@ -13,7 +13,7 @@
 #include "Resources/PNG_Loader.h"
 #include "Resources/STB_Image_Loader.h"
 #include "Resources/OGG_Loader.h"
-#include "Resources/GLSL_Loader.h"
+#include "Resources/ShaderLoader.h"
 #include "Resources/LuaLoader.h"
 #include "Resources/FontLoader.h"
 
@@ -96,7 +96,7 @@ void ReferenceLoaders()
 #endif
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
-	GLSL_LoaderGetType();
+	ShaderLoaderGetType();
 #endif
 
 #ifdef ENABLE_SCRIPTING_LUA

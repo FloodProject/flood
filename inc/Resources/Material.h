@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 #include "Resources/Image.h"
-#include "Resources/Shader.h"
+#include "Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -157,7 +157,7 @@ public:
 	ACESSOR(Name, const String&, name);
 
 	// Gets/sets the shader of the material.
-	ACESSOR(Shader, const ShaderHandle&, shader)
+	ACESSOR(Shader, const ShaderMaterialHandle&, shader)
 
 	// Sets the shader of the material.
 	void setShader(const String& name);
@@ -225,7 +225,7 @@ public:
 	String name;
 
 	// Program of the material.
-	ShaderHandle shader;
+	ShaderMaterialHandle shader;
 
 	// Backface culling.
 	bool cullBackfaces;

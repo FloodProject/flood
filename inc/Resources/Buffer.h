@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Core/References.h"
+
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//

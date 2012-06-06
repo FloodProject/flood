@@ -22,29 +22,29 @@ NAMESPACE_RESOURCES_BEGIN
  * low-level assembly code by the graphics driver.
  */
 
-REFLECT_DECLARE_CLASS(Shader)
+REFLECT_DECLARE_CLASS(ShaderMaterial)
 
-class API_RESOURCE Shader : public Resource
+class API_RESOURCE ShaderMaterial : public Resource
 {
-	REFLECT_DECLARE_OBJECT(Shader)
+	REFLECT_DECLARE_OBJECT(ShaderMaterial)
 
 public:
 
 	// Returns the vertex shader source code.
-	virtual const String& getVertexSource() const = 0;
+	virtual const char* getVertexSource() const = 0;
 
 	// Returns the fragment shader source code.
-	virtual const String& getFragmentSource() const = 0;
+	virtual const char* getFragmentSource() const = 0;
 
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
 protected:
 
-	Shader();
+	ShaderMaterial();
 };
 
-TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Shader );
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shader );
+TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( ShaderMaterial );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( ShaderMaterial );
 
 //-----------------------------------//
 

@@ -455,7 +455,7 @@ void ResourceManager::removeResource(const String& path)
 
 //-----------------------------------//
 
-void ResourceManager::registerLoader(const ResourceLoaderPtr& loader)
+void ResourceManager::registerLoader(ResourceLoader* loader)
 {
 	if( !loader ) return;
 
@@ -478,7 +478,7 @@ void ResourceManager::registerLoader(const ResourceLoaderPtr& loader)
 	}
 
 	// Send callback notifications.
-	onResourceLoaderRegistered( *loader.get() );
+	onResourceLoaderRegistered( *loader );
 }
 
 //-----------------------------------//

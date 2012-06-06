@@ -107,11 +107,11 @@ void ResourceIndexer::indexResources(Task* task)
 		
 	if( !GetResourceGroupFromPath(path, group) )
 	{
-		LogDebug("Error indexing resource '%s': no loader was found", basePath.c_str());
+		//LogDebug("Error indexing resource '%s': no loader was found", basePath.c_str());
 		return;
 	}
 
-	LogDebug("Indexing file '%s'", basePath.c_str());
+	//LogDebug("Indexing file '%s'", basePath.c_str());
 
 	Stream* stream = StreamCreateFromFile(AllocatorGetThis(), path, StreamMode::Read);
 		
@@ -127,7 +127,7 @@ void ResourceIndexer::indexResources(Task* task)
 
 	if( data.empty() )
 	{
-		LogWarn("Error indexing resource '%s': empty stream", basePath.c_str());
+		LogWarn("Resource '%s' is empty", basePath.c_str());
 		return;
 	}
 
