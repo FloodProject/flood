@@ -239,7 +239,7 @@ Matrix4x4 Matrix4x4::inverse() const
 
 Matrix4x4 Matrix4x4::createPerspective( float FOV, float aspectRatio, float nearPlane, float farPlane ) 
 {
-#ifdef DEBUG_BUILD
+#ifdef BUILD_DEBUG
 	static Matrix4x4 null;
 	if( nearPlane < 0 ) return null;
 	if( farPlane  < 0 ) return null;

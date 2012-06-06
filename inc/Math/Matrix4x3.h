@@ -76,10 +76,10 @@ public:
 	// contains a linear transformation, and the last row is the
 	// translation portion.
 
-	float	m11, m12, m13;
-	float	m21, m22, m23;
-	float	m31, m32, m33;
-	float	tx,  ty,  tz;
+	float m11, m12, m13;
+	float m21, m22, m23;
+	float m31, m32, m33;
+	float tx,  ty,  tz;
 
 	// Special matrices
 	static const Matrix4x3 Identity;

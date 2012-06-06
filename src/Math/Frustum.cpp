@@ -14,13 +14,13 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ENUM(Projection)
+REFLECT_ENUM(FrustumProjection)
 	ENUM(Orthographic)
 	ENUM(Perspective)
 REFLECT_ENUM_END()
 
 REFLECT_CLASS(Frustum)
-	FIELD_ENUM(0, Projection, projection)
+	FIELD_ENUM(0, FrustumProjection, projection)
 	FIELD_PRIMITIVE(1, float, fieldOfView)
 	FIELD_PRIMITIVE(2, float, nearPlane)
 	FIELD_PRIMITIVE(3, float, farPlane)
@@ -32,7 +32,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Frustum::Frustum()
-	: projection(Projection::Perspective)
+	: projection(FrustumProjection::Perspective)
 	, fieldOfView(60.0f)
 	, nearPlane(0.1f)
 	, farPlane(100.0f)
@@ -64,10 +64,10 @@ void Frustum::updateProjection()
 {
 	switch(projection)
 	{
-	case Projection::Perspective:
+	case FrustumProjection::Perspective:
 		matProjection = Matrix4x4::createPerspective( fieldOfView, aspectRatio, nearPlane, farPlane );
 		break;
-	case Projection::Orthographic:
+	case FrustumProjection::Orthographic:
 		matProjection = Matrix4x4::createOrthographic( 0, orthoSize.x, 0, orthoSize.y, nearPlane, farPlane );
 		break;
 	}

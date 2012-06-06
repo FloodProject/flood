@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Math/Vector.h"
-#include "Math/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -66,10 +65,10 @@ public:
 
 public:
 
-	float	m11, m12, m13, m14;
-	float	m21, m22, m23, m24;
-	float	m31, m32, m33, m34;
-	float	tx,  ty,  tz,  tw;
+	float m11, m12, m13, m14;
+	float m21, m22, m23, m24;
+	float m31, m32, m33, m34;
+	float tx,  ty,  tz,  tw;
 };
 
 //-----------------------------------//

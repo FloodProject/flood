@@ -20,6 +20,7 @@ const API_CORE Vector2 Vector2::UnitY( 0, 1 );
 //-----------------------------------//
 
 const API_CORE Vector3 Vector3::Zero(  0, 0, 0 );
+const API_CORE Vector3 Vector3::One(   1, 1, 1 );
 const API_CORE Vector3 Vector3::UnitX( 1, 0, 0 );
 const API_CORE Vector3 Vector3::UnitY( 0, 1, 0 );
 const API_CORE Vector3 Vector3::UnitZ( 0, 0, 1 );

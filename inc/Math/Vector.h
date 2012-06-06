@@ -54,13 +54,6 @@ struct API_CORE Vector3 : public Vector3P
 	Vector3 operator / (float s) const { assert(s != 0); float t = 1.0f / s; return *this * t; }
 	Vector3 &operator /= (float s) { assert(s != 0); *this *= 1.0f / s; return *this; }
 
-#ifndef SWIG
-	static const Vector3 Zero;
-	static const Vector3 UnitX;
-	static const Vector3 UnitY;
-	static const Vector3 UnitZ;
-#endif
-
 	// Zeroes the vector.
 	void zero() { x = y = z = 0.0f; }
 
@@ -108,6 +101,13 @@ struct API_CORE Vector3 : public Vector3P
 		if (len > 0.0f) { x /= len; y /= len; z /= len; }
 		return *this;
 	}
+
+	static const Vector3 Zero;
+	static const Vector3 One;
+
+	static const Vector3 UnitX;
+	static const Vector3 UnitY;
+	static const Vector3 UnitZ;
 };
 
 //-----------------------------------//
@@ -152,13 +152,11 @@ struct Vector4
 	// Zeroes the vector.
 	void zero() { x = y = z = w = 0.0f; }
 
-#ifndef SWIG
 	static API_CORE const Vector4 Zero;
 	static API_CORE const Vector4 UnitX;
 	static API_CORE const Vector4 UnitY;
 	static API_CORE const Vector4 UnitZ;
 	static API_CORE const Vector4 UnitW;
-#endif
 };
 
 //-----------------------------------//
@@ -205,11 +203,9 @@ struct API_CORE Vector2 : public Vector2P
 	// Zeroes the vector.
 	void zero() { x = y = 0; }
 
-#ifndef SWIG
 	static API_CORE const Vector2 Zero;
 	static API_CORE const Vector2 UnitX;
 	static API_CORE const Vector2 UnitY;
-#endif
 };
 
 //-----------------------------------//
