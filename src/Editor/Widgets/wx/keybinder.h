@@ -1376,9 +1376,9 @@ protected:      // the subwindows of this dialog
     // (which is required !!) so we will use a wxTextCtrl (on wxGTK)
     wxTextCtrl  *m_pDescLabel;
 #else
-    wxStaticText *m_pDescLabel;
+    wxTextCtrl *m_pDescLabel;
 #endif
-    wxStaticText *m_pCurrCmdField;
+    wxTextCtrl *m_pCurrCmdField;
 
 private:
     DECLARE_CLASS(wxKeyConfigPanel)

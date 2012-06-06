@@ -32,9 +32,9 @@
 #ifdef WXMAKINGDLL_KEYBINDER
     #define WXDLLIMPEXP_KEYBINDER                  WXEXPORT
     #define WXDLLIMPEXP_DATA_KEYBINDER(type)       WXEXPORT type
-#elif defined(WXUSINGDLL)
-    #define WXDLLIMPEXP_KEYBINDER                  WXIMPORT
-    #define WXDLLIMPEXP_DATA_KEYBINDER(type)       WXIMPORT type
+//#elif defined(WXUSINGDLL)
+//    #define WXDLLIMPEXP_KEYBINDER                  WXIMPORT
+//    #define WXDLLIMPEXP_DATA_KEYBINDER(type)       WXIMPORT type
 #else // not making nor using DLL
     #define WXDLLIMPEXP_KEYBINDER
     #define WXDLLIMPEXP_DATA_KEYBINDER(type)	    type

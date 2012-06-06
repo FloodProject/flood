@@ -20,7 +20,7 @@
 #endif
 
 #include "wx/foldbar/foldpanelbar.h"
-#include "wx/sequentialsizer.h"
+#include "Widgets/sequentialsizer.h"
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(wxFoldWindowItemArray);

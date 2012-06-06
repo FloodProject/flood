@@ -23,7 +23,7 @@
     #include "wx/wx.h"
 #endif
 
-#include "wx/sequentialsizer.h"
+#include "Widgets/sequentialsizer.h"
 #include "wx/foldbar/foldpanelbar.h"
 
 //----------------------------------------------------------------------------
