@@ -84,7 +84,7 @@ project "Engine"
 
 	Engine.libdirs =
 	{
-		"../dep/openal/lib/Win32",
+		"../dep/openal-soft/lib/vs2010",
 		"../dep/Bullet/lib/",
 		"../dep/glew/lib/vc10",
 		"../dep/freetype/objs",
@@ -99,7 +99,7 @@ project "Engine"
 	{
 		"glewd",
 		"openal_d",
-		"BulletCollision_debug", "BulletDynamics_debug", "LinearMath_debug"
+		--"BulletCollision_debug", "BulletDynamics_debug", "LinearMath_debug"
 	}
 
 	Engine.links.Release =

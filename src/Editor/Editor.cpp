@@ -44,7 +44,7 @@ bool EditorApp::OnInit()
 
 	mainFrame = new EditorFrame(VAPOR_EDITOR_NAME);
 	mainFrame->SetSize(900, 550);
-    mainFrame->SetIcon( wxIcon("iconEditor") );
+	mainFrame->SetIcon( wxIcon("iconEditor") );
 
 
 	SetTopWindow(mainFrame);
@@ -89,8 +89,10 @@ EditorFrame::EditorFrame(const wxString& title)
 	createEngine();
 	eventManager = AllocateThis(EventManager);
 
+#ifdef ENABLE_PLUGIN_MONO
 	Plugin* monoPlugin = pluginManager->getPluginFromClass( ReflectionGetType(MonoPlugin) );
 	pluginManager->enablePlugin(monoPlugin);
+#endif
 
 #ifdef EDITOR_OLD_UI
 	enablePlugins();

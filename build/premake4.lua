@@ -65,6 +65,7 @@ solution "Flush"
 	dofile "Editor.lua"
 	dofile "EditorManaged.lua"
 	dofile "Runtime.lua"
+	dofile "UnitTests.lua"
 	
 -- Copy a configuration build header if one does not exist yet.
 

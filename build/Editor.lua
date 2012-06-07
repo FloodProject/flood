@@ -78,7 +78,7 @@ project "Editor"
 		"Graphics", Graphics.links,
 		"Engine", Engine.links,
 		"Pipeline", Pipeline.links,
-		Mono.links,
+		--Mono.links,
 		wxWidgets.links
 	}
 
