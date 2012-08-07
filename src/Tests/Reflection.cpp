@@ -115,9 +115,9 @@ void TestClassB(CuTest* tc)
 
 void TestObjects(CuTest* tc)
 {
-	ReflectionDatabase& types = ReflectionGetDatabase();
+    ReflectionDatabase& db = ReflectionGetDatabase();
 
-	for( auto it = types.begin(); it != types.end(); it++ )
+	for( auto it = db.types.begin(); it != db.types.end(); it++ )
 	{
 		Type* type = it->second;
 		if( !ReflectionIsComposite(type) ) continue;
@@ -214,5 +214,5 @@ CuSuite* GetSuiteReflection()
 	SUITE_ADD_TEST(suite, TestObjects);
 	SUITE_ADD_TEST(suite, TestClassWatcher);
 	//SUITE_ADD_TEST(suite, TestWalker);
-    return suite;
+	return suite;
 }

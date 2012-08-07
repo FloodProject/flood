@@ -15,10 +15,9 @@
 
 REFLECT_DECLARE_ENUM(E)
 
-enum_class E
-{
+enum_class_begin(E)
 	F1 = 0, F2, F3, Max
-};
+enum_class_end
 
 //-----------------------------------//
 

@@ -44,7 +44,7 @@ bool EditorApp::OnInit()
 
 	mainFrame = new EditorFrame(VAPOR_EDITOR_NAME);
 	mainFrame->SetSize(900, 550);
-    mainFrame->SetIcon( wxIcon("iconEditor") );
+	mainFrame->SetIcon( wxIcon("iconEditor") );
 
 
 	SetTopWindow(mainFrame);

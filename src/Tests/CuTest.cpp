@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <cassert>
 #include <csetjmp>
 #include <cstdlib>
@@ -8,8 +10,6 @@
 
 #include "Core/Memory.h"
 #include "CuTest.h"
-
-//using namespace vapor;
 
 static std::vector<CuSuite*> suites;
 

@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "CuTest.h"
+#include <UnitTest++.h>
 
 #include "Core/API.h"
 #include "Core/Archive.h"
@@ -14,35 +15,35 @@
 
 //-----------------------------------//
 
-void TestArchiveDir(CuTest* tc)
+TEST(ArchiveDir)
 {
 	ArchiveScopedPtr archive( ArchiveCreateFromDirectoryScoped(AllocatorGetHeap(), "teste") );
-	CuAssertPtrNotNull(tc, archive);
+	CHECK(archive != nullptr);
 
 	std::vector<Path> files;
 	ArchiveEnumerateFiles(archive, files);
-	CuAssertIntEquals( tc, 4, files.size() );
+	CHECK_EQUAL(4, files.size());
 
-	CuAssertTrue(tc, ArchiveExistsFile(archive, "foo.txt") );
-	CuAssertTrue(tc, ArchiveExistsFile(archive, "bar.txt") );
-	CuAssertTrue(tc, ArchiveExistsFile(archive, "foo/bar.txt") );
-	CuAssertTrue(tc, !ArchiveExistsFile(archive, "spam.txt") );
+	CHECK( ArchiveExistsFile(archive, "foo.txt") );
+	CHECK( ArchiveExistsFile(archive, "bar.txt") );
+	CHECK( ArchiveExistsFile(archive, "foo/bar.txt") );
+	CHECK( !ArchiveExistsFile(archive, "spam.txt") );
 
 	Stream* stream = ArchiveOpenFile(archive, "foo.txt", AllocatorGetHeap());
-	CuAssertPtrNotNull(tc, stream);
+	CHECK(stream != nullptr);
 
 	String text;
 	StreamReadString(stream, text);
 	StreamDestroy(stream);
-	CuAssertStrEquals(tc, "foobar", text.c_str());
+	CHECK_EQUAL("foobar", text.c_str());
 
 	std::vector<Path> dirs;
 	ArchiveEnumerateDirectories(archive, dirs);
 	
-	CuAssertIntEquals( tc, 3, dirs.size() );
-	CuAssertTrue(tc, ArchiveExistsDirectory(archive, "foo") );
-	CuAssertTrue(tc, ArchiveExistsDirectory(archive, "foo/bar") );
-	CuAssertTrue(tc, !ArchiveExistsDirectory(archive, "foo/spam") );
+	CHECK_EQUAL(dirs.size(), 2);
+	CHECK( ArchiveExistsDirectory(archive, "foo") );
+	CHECK( ArchiveExistsDirectory(archive, "foo/bar") );
+	CHECK( !ArchiveExistsDirectory(archive, "foo/spam") );
 }
 
 //-----------------------------------//
@@ -129,9 +130,8 @@ void TestArchiveVirtual(CuTest* tc)
 
 CuSuite* GetSuiteArchives()
 {
-    CuSuite* suite = CuSuiteNew();
-	SUITE_ADD_TEST(suite, TestArchiveDir);
-    SUITE_ADD_TEST(suite, TestArchiveZip);
+	CuSuite* suite = CuSuiteNew();
+	SUITE_ADD_TEST(suite, TestArchiveZip);
 	SUITE_ADD_TEST(suite, TestArchiveVirtual);
-    return suite;
+	return suite;
 }

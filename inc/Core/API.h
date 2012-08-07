@@ -26,7 +26,7 @@
 #undef NAMESPACE_CORE_DEFINED
 
 #ifdef NAMESPACE_CORE_DEFINED
-#define NAMESPACE_CORE vapor
+#define NAMESPACE_CORE flood
 #else
 #define NAMESPACE_CORE
 #endif
