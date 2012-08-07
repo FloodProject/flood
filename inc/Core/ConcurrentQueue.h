@@ -83,7 +83,7 @@ public:
 	bool try_pop_front(T& popped_value)
 	{
 		MutexLock(mutex);
-	    
+		
 		if( queue.empty() )
 		{
 			MutexUnlock(mutex);

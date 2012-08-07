@@ -103,10 +103,10 @@ template< typename T >
 NAMESPACE_CORE::String StringFromNumber(const T& t)
 {
 	std::ostringstream oss;
-		
+	
 	oss << t;
 	assert( !oss.fail() );
-		
+	
 	return oss.str();
 }
 
@@ -115,7 +115,7 @@ template< typename T >
 T StringToNumber(const NAMESPACE_CORE::String& s)
 {
 	std::stringstream ss(s);
-		
+	
 	T num;
 	ss >> num; 
 

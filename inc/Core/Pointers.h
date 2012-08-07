@@ -73,10 +73,10 @@ public:
         return px != nullptr;
     }
 
-	operator T*() const
-	{
-		return px;
-	}
+    operator T*() const
+    {
+       return px;
+    }
 
 	void swap(scoped_ptr & b) // never throws
     {

@@ -64,7 +64,8 @@ EXTERN_END
 //-----------------------------------//
 
 #ifdef COMPILER_MSVC
-#pragma warning(disable : 4345) // behavior change: an object of POD type constructed with an initializer of the form () will be default-initialized
+#pragma warning(disable : 4345) // behavior change: an object of POD type
+// constructed with an initializer of the form () will be default-initialized
 #endif
 
 // Calls the object contructor using placement new.
@@ -77,7 +78,8 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 }
 
 // Allocates memory for the object.
-#define Allocate(Alloc, Type, ...) AllocateConstruct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
+#define Allocate(Alloc, Type, ...) AllocateConstruct(Type, \
+    AllocateObject<Type>(Alloc), __VA_ARGS__)
 
 // Allocation helpers.
 #define AllocateThis(Type, ...) Allocate(AllocatorGetThis(), Type, __VA_ARGS__)
