@@ -89,8 +89,10 @@ EditorFrame::EditorFrame(const wxString& title)
 	createEngine();
 	eventManager = AllocateThis(EventManager);
 
+#ifdef ENABLE_PLUGIN_MONO
 	Plugin* monoPlugin = pluginManager->getPluginFromClass( ReflectionGetType(MonoPlugin) );
 	pluginManager->enablePlugin(monoPlugin);
+#endif
 
 #ifdef EDITOR_OLD_UI
 	enablePlugins();

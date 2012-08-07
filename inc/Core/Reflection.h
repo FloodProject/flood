@@ -214,7 +214,7 @@ struct API_CORE Field
 	uint16 pointer_size;
 	uint16 qualifiers;
 	FieldSetterFunction setter;
-	FieldResizeFunction resize;	
+	FieldResizeFunction resize;
 	ReflectionWalkFunction serialize;
 };
 

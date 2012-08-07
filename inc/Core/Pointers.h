@@ -78,7 +78,7 @@ public:
        return px;
     }
 
-	void swap(scoped_ptr & b) // never throws
+    void swap(scoped_ptr & b) // never throws
     {
         T * tmp = b.px;
         b.px = px;
