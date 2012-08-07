@@ -5,9 +5,8 @@ project "Example"
 	objdir (action .. "/obj")
 	targetdir ("../bin")
 	
-	flags { common_flags }
-	
-	files {
+	files
+	{
 		"../src/Examples/**.h",
 		"../src/Examples/**.cpp",
 		"../src/Framework/**.cpp",

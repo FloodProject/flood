@@ -7,8 +7,6 @@ end
 project "Pipeline"
 
 	kind "StaticLib"
-	flags { common_flags }
-
 	builddeps { "Core", "Resources" }
 	
 	pchheader "Pipeline/API.h"

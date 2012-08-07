@@ -2,9 +2,7 @@ Graphics = {}
 
 project "Graphics"
 
-	kind "StaticLib"
-	flags { common_flags }
-	
+	kind "StaticLib"	
 	builddeps { "Core", "Resources" }
 
 	files

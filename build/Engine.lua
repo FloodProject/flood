@@ -3,8 +3,6 @@ Engine = {}
 project "Engine"
 
 	kind "StaticLib"
-	flags { common_flags }
-	
 	builddeps { "Core", "Resources", "Graphics" }
 
 	pchheader "Engine/API.h"
@@ -44,21 +42,7 @@ project "Engine"
 	
 	vpaths
 	{
-		[""] = { "../../src/", "../../inc/", "../../src/Engine/", "../../inc/Engine/" },
-		["Audio"] = { "Audio*" },
-		["Controllers"] = "Controllers/*",
-		["Controllers/Camera"] = { "*Controller*" },
-		["Framework"] = { "Framework" },
-		["Geometry"] = { "*Geometry*" },
-		["Graphics"] = { "Graphics/*" },
-		["GUI"] = { "GUI/*" },
-		["Input"] = "Input*",
-		["Paging"] = "Paging*",
-		["Physics"] = "Physics*",
-		["Scene"] = "Scene*",
-		["Scripts"] = { "Script*" },
-		["Terrain"] = { "Terrain*" },
-		["Window"] = { "Window*" },
+		[""] = { "../src/", "../inc/" },
 	}
 
 	configuration "not windows"
@@ -73,21 +57,20 @@ project "Engine"
 	{
 		"../inc/",
 		"../interface/Bindings",
-		"../dep/jansson/include",
-		"../dep/freetype/include",
-		"../dep/glew/include",
-		"../dep/openal/include",
-		"../dep/sfml/include",
-		"../dep/Bullet/include",
-		"../dep/sfml/",
 	}
+	
+	Engine.deps =
+	{
+		"Bullet",
+		"OpenAL",
+		"GLEW",
+	}
+	
+	deps { Core.deps, Engine.deps }
 
 	Engine.libdirs =
 	{
-		"../dep/openal/lib/Win32",
-		"../dep/Bullet/lib/",
-		"../dep/glew/lib/vc10",
-		"../dep/freetype/objs",
+
 	}
 
 	Engine.links =
@@ -95,19 +78,5 @@ project "Engine"
 		"opengl32",
 	}
 
-	Engine.links.Debug =
-	{
-		"glewd",
-		"openal_d",
-		"BulletCollision_debug", "BulletDynamics_debug", "LinearMath_debug"
-	}
-
-	Engine.links.Release =
-	{
-		"glew",
-		"openal",
-		"BulletCollision", "BulletDynamics", "LinearMath"
-	}
-	
 	configuration {}
 		defines { "AL_LIBTYPE_STATIC" }

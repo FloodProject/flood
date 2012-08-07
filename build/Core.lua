@@ -3,13 +3,12 @@ Core = {}
 project "Core"
 
 	kind "StaticLib"
-	flags { common_flags }
-
 	pchheader "Core/API.h"
 	pchsource "../src/Core/Core.cpp"
 
 	files 
 	{
+		"Config.lua",
 		"Core.lua",
 		"../inc/Core/**.h",
 		"../src/Core/**.cpp",
@@ -17,12 +16,11 @@ project "Core"
 		"../src/Math/**.cpp",
 		"../inc/Network/**.h",
 		"../src/Network/**.cpp",
-		"../dep/FastLZ/*"
 	}
 
 	vpaths
 	{
-		[""] = { "../../src/", "../../inc/", "../../src/Core/", "../../inc/Core/" },
+		[""] = { "../src/", "../inc/", "../src/Core", "../inc/Core", },
 		["Archive"] = "Archive*",
 		["Compression"] = "fastlz*",
 		["Concurrency"] = "Concurren*",
@@ -54,50 +52,38 @@ project "Core"
 	includedirs
 	{
 		"../inc/",
-		"../dep/vld/include",
-		"../dep/jansson/include",
-		"../dep/zziplib/include",
-		"../dep/FastLZ",
-		"../dep/mongoose",
-		"../dep/enet/include",
-		"../dep/curl/include",
-		"../dep/misc/include",
-	}
-
-	Core.libdirs =
-	{
-		"../dep/vld/lib/Win32",
-		"../dep/curl/lib",
-		"../dep/jansson/lib",
-		("../dep/zziplib/lib/" .. action),
-		"../dep/zlib/lib/vc10",
-		"../dep/enet/lib",
+		"../deps/Dirent",
+		"../deps/VisualLeakDetector/include"
 	}
 	
-	Core.links =
-	{
-	}
+	Core.links = {}
+	Core.libdirs = {}
 	
-	Core.links.Debug =
+	Core.deps =
 	{
-		"jansson_d",
-		"zziplib_d",
-		"zlibd",
-		"enetd",
-		"vld",
-		"libcurld",
-	}
-
-	Core.links.Release =
-	{
-		"jansson",
-		"zziplib",
+		"cURL",
+		"ENet",
+		"FastLZ",
+		"Jansson",
+		"Mongoose",
 		"zlib",
-		"enet",
-		"libcurl",
+		"zziplib",
 	}
-
-	configuration "windows"
+	
+	if os.is("windows") then
 		table.insert(Core.links, "ws2_32")
-		files { "../src/Platforms/Win32/Concurrency*.cpp" }
+		
+		-- Setup Visual Leak Detector
+		if config.MEMORY_LEAK_DETECTOR then
+			table.insert(Core.links, "vld")
+			table.insert(Core.libdirs, "../deps/VisualLeakDetector/lib/Win32")
+		end
+	end
+	
+	deps(Core.deps)
+	
+	configuration "windows"
+	
 		files { "../src/Platforms/Win32/File*.cpp" }
+		files { "../src/Platforms/Win32/Concurrency*.cpp" }
+		

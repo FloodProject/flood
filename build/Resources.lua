@@ -3,8 +3,6 @@ Resources = {}
 project "Resources"
 
 	kind "StaticLib"
-	flags { common_flags }
-
 	builddeps { "Core" }
 	
 	pchheader "Resources/API.h"

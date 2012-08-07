@@ -71,7 +71,7 @@ config =
 	FONT_BITMAP = true,
 
 	-- Enables loading of Lua scripts.
-	SCRIPTING_LUA = true,
+	SCRIPTING_LUA = false,
 
 	-- Enables loading of Mono scripts.
 	SCRIPTING_MONO = true,

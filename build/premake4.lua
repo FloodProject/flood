@@ -3,19 +3,30 @@
 -- and calls the build scripts of all the sub-projects.
 
 action = _ACTION or ""
-common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
-common_msvc_copts = { "/wd4190", "/wd4530" }
+flags_common = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
+flags_msvc = { "/wd4190", "/wd4530" }
 
--- Common Libraries
+dofile "Helpers.lua"
 
-Mono = {}
-Mono.links = { "eglib", "libgc", "mono-2.0" }
+-- Copy a configuration build header if one does not exist yet.
 
-wxWidgets = {}
-wxWidgets.links = {}
+if not os.isfile("Config.lua") then
+	print("Build configuration file 'Config.lua' created")
+	os.copyfile("Config0.lua", "Config.lua")
+end
+
+dofile "Config.lua"
+
+FindWxWidgets()
+FindFBX()
+FindMono()
+
+print("Generating the build configuration 'Build.h'")
+local conf = GenerateBuildConfig(config)
+WriteConfigToFile(conf, "Build.h")
 
 solution "Flush"
-
+	
 	configurations
 	{ 
 		"Debug",
@@ -30,6 +41,8 @@ solution "Flush"
 	objdir (action .. "/obj/")
 	targetdir (action .. "/lib/")
 	
+	flags { flags_common }
+		
 	-- Build configuration options
 	
 	configuration "Debug"
@@ -43,7 +56,7 @@ solution "Flush"
 	-- Compiler-specific options
 	
 	configuration "vs*"
-		buildoptions { common_msvc_copts }	
+		buildoptions { flags_msvc }	
 	
 	configuration "gcc"
 		buildoptions "-Wno-invalid-offsetof"	
@@ -54,7 +67,7 @@ solution "Flush"
 	configuration "Windows"
 		defines { "WIN32", "_WINDOWS" }
 		
-	configuration "*"
+	configuration {}
 	
 	dofile "Core.lua"
 	dofile "Resources.lua"
@@ -65,11 +78,4 @@ solution "Flush"
 	dofile "Editor.lua"
 	dofile "EditorManaged.lua"
 	dofile "Runtime.lua"
-	
--- Copy a configuration build header if one does not exist yet.
-
-if not os.isfile("Build.h") then
-	os.copyfile("Build0.h", "Build.h")
-end
-
-
+	dofile "UnitTests.lua"

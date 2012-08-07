@@ -6,8 +6,6 @@ project "EngineManaged"
 	targetdir "../bin"
 	debugdir "../bin"
 	
-	flags { common_flags }
-	
 	files
 	{
 		"EngineManaged.lua",

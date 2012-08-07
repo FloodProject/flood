@@ -1,12 +1,10 @@
 project "Runtime"
 
 	kind "WindowedApp"
-	targetdir "../bin/Runtime"
-	debugdir "../bin"
-
 	builddeps { "Core", "Resources", "Engine", "Pipeline" }
 	
-	flags { common_flags }
+	targetdir "../bin/Runtime"
+	debugdir "../bin"
 
 	--pchheader "Engine/API.h"
 	--pchsource "../src/Runtime/Runtime.cpp"

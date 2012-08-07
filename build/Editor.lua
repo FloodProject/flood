@@ -6,7 +6,7 @@ project "Editor"
 
 	builddeps { "Core", "Resources", "Engine", "Pipeline", "EditorManaged" }
 	
-	editor_flags = common_flags
+	editor_flags = flags_common
 	table.remove(editor_flags, #editor_flags)
 	table.remove(editor_flags, #editor_flags)
 	
@@ -17,7 +17,6 @@ project "Editor"
 	
 	configuration "Debug"
 		kind "ConsoleApp"
-		targetsuffix "_d"
 	
 	configuration "Release"
 		kind "WindowedApp"
