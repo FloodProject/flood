@@ -48,7 +48,7 @@ PluginMetadata MonoPlugin::getMetadata()
 	metadata.description = "Provides .NET scripting via Mono";
 	metadata.author = "triton";
 	metadata.version = "1.0";
-	metadata.startEnabled = true;
+	metadata.startEnabled = false;
 
 	return metadata;
 }
