@@ -1,3 +1,26 @@
-## About
+Flood3D aims to be a modern, open-source 3D game engine and toolset.
+It has been in development since 2008, with a focus on clean, testable,
+modular, high-quality code. It is distributed under the BSD licence.
 
-vapor3D is a general-purpose C++ 3D game engine and toolset which has been in development since 2008. The engine is developed in C++, which is the most used language in the game development universe. For our graphics API we opted for OpenGL which is highly portable between pretty much all platforms.
+Building
+========
+
+All the dependencies are contained in the repository, and they need to
+be built before building the rest of the code.
+
+We use Premake as our build system, so you should be able to generate
+project build files for your platform.
+
+Visual Studio / Windows:
+
+ 1. Run deps/GenerateBuild.bat and generate the solution.
+ 2. Open the solution in deps/build/<vs> and build it.
+ 
+ Remember to build all the configurations you're interested in,
+ like 32-bit / 64-bit and Debug / Release.
+ 
+ 1. Run build/GenerateBuild.bat and generate the solution.
+ 2. Open the solution in build/<vs> and build it.
+ 
+
+Other platforms build instructions will follow soon.
