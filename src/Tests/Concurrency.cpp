@@ -95,9 +95,9 @@ void TestAtomics(CuTest* tc)
 }
 
 CuSuite* GetSuiteConcurrency() {
-    CuSuite* suite = CuSuiteNew();
-    SUITE_ADD_TEST(suite, TestThreads);
+	CuSuite* suite = CuSuiteNew();
+	SUITE_ADD_TEST(suite, TestThreads);
 	SUITE_ADD_TEST(suite, TestCondition);
 	SUITE_ADD_TEST(suite, TestAtomics);
-    return suite;
+	return suite;
 }

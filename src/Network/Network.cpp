@@ -7,10 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-
 #include "Core/Log.h"
-#include "Core/Memory.h"
-
 #include "Network/Network.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"

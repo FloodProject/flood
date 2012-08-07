@@ -8,7 +8,6 @@
 
 #include "Core/API.h"
 #include "Core/Concurrency.h"
-#include "Core/Memory.h"
 #include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN

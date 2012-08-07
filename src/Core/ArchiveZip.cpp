@@ -12,10 +12,10 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
+#ifdef ENABLE_ARCHIVE_ZIP
+
 #include <cstdio>
 #include <zzip/zzip.h>
-
-#ifdef ENABLE_ARCHIVE_ZIP
 
 NAMESPACE_CORE_BEGIN
 
