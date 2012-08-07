@@ -42,13 +42,10 @@ project "Graphics"
 	{
 		"opengl32",
 	}
-
-	Graphics.links.Debug =
+	
+	Graphics.deps =
 	{
-		"glewd",
+		"GLEW",
 	}
-
-	Graphics.links.Release =
-	{
-		"glew",
-	}
+	
+	deps(Graphics.deps)

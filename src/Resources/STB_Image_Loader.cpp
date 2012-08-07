@@ -14,7 +14,7 @@
 #include "Core/Log.h"
 
 #define STBI_HEADER_FILE_ONLY
-#include "stb_image.cpp"
+#include "stb_image.c"
 
 NAMESPACE_RESOURCES_BEGIN
 

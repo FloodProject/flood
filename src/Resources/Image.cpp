@@ -157,7 +157,9 @@ void ImageWriter::save( Image* image, Stream* stream )
 
 bool ImageWriter::convert( Image* image )
 {
-#ifdef ENABLE_IMAGE_WRITER
+    #pragma TODO("Fix the LodePNG image writing code to the new API")
+
+#if defined(ENABLE_IMAGE_WRITER_)
 	LodePNG::Encoder encoder;
 	
 	LodePNG_InfoColor& png = encoder.getInfoPng().color;

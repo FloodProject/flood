@@ -13,13 +13,21 @@ function FindMono()
 	Mono.links = { "eglib", "libgc", "mono-2.0" }
 end
 
+function debug(msg)
+	-- print(msg)
+end
+
 function SetupLibPaths(lib) 
 	c = configuration {}
 	
+	local src = "../deps/" .. lib .. "/src/"
 	local include = "../deps/" .. lib .. "/include/"
+	
 	if os.isdir(path.getabsolute(include)) then
-		--print("Including lib", lib, "from", include)
+		debug("Including lib", lib, "from", include)
 		includedirs { include }
+	elseif os.isdir(path.getabsolute(src)) then
+		includedirs { src }
 	else
 		includedirs { "../deps/" .. lib }
 	end

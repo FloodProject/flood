@@ -73,9 +73,11 @@ solution "Flush"
 	dofile "Resources.lua"
 	dofile "Graphics.lua"
 	dofile "Engine.lua"
-	dofile "EngineManaged.lua"
 	dofile "Pipeline.lua"
 	dofile "Editor.lua"
-	dofile "EditorManaged.lua"
 	dofile "Runtime.lua"
 	dofile "UnitTests.lua"
+	
+	-- Keep the managed layer disabled for now.
+	--dofile "EngineManaged.lua"
+	--dofile "EditorManaged.lua"

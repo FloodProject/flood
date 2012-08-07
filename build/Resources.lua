@@ -13,8 +13,6 @@ project "Resources"
 		"Resources.lua",
 		"../inc/Resources/**.h",
 		"../src/Resources/**.cpp",
-		"../dep/picopng/lode*.cpp",
-		"../dep/stb/stb_image.cpp",
 	}
 	
 	vpaths
@@ -39,35 +37,21 @@ project "Resources"
 	includedirs
 	{
 		"../inc/",
-		"../dep/stb/",
-		"../dep/picopng/",
-		"../dep/ogg/include",
-		"../dep/vorbis/include",
 	}
 
 	Resources.libdirs =
 	{
-		"../dep/png/lib/",
-		"../dep/ogg/lib",
-		"../dep/vorbis/lib",
 	}
 	
 	Resources.links =
 	{
 	}
 
-	Resources.links.Debug =
+	Resources.deps =
 	{
-		"pngd",
-		"ogg_static_d",
-		"vorbis_static_d",
-		"vorbisfile_static_d"
+		"Lode",
+		"OggVorbis",
+		"SeanBarrett"
 	}
-
-	Resources.links.Release =
-	{
-		"png",
-		"ogg_static",
-		"vorbis_static",
-		"vorbisfile_static"
-	}
+	
+	deps(Resources.deps)

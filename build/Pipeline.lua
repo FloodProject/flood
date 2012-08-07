@@ -47,12 +47,9 @@ project "Pipeline"
 	{
 	}
 
-	Pipeline.links.Debug =
+	Pipeline.deps =
 	{
-		--"fbxsdk-2012.1d",
+		"NVIDIATextureTools"
 	}
-
-	Pipeline.links.Release =
-	{
-		--"fbxsdk-2012.1",
-	}
+	
+	deps(Pipeline.deps)
