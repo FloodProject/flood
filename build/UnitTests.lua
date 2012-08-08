@@ -8,7 +8,8 @@ project "UnitTests"
 	{
 		"UnitTests.lua",
 		"../src/Tests/*.cpp",
-		"../src/Tests/*.h"
+		"../src/Tests/*.h",
+		"../src/Core/Test/**",
 	}
 	
 	includedirs
