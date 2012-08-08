@@ -8,10 +8,6 @@
 
 #pragma once
 
-#ifdef ENABLE_SCRIPTING_LUA
-
-struct lua_State;
-
 #include "script/Script.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -32,13 +28,10 @@ class API_ENGINE State
 public:
 
 	// Constructs a new scripting VM.
-	State(lua_State* state);
+	State();
 	
 	// Destructs this scripting VM.
 	~State();
-
-	// Gets the Lua state.
-	GETTER(LuaState, lua_State*, luaState)
 
 	// Loads a script resource.
 	bool load( Script* script );
@@ -60,9 +53,6 @@ public:
 
 protected:
 
-	// Lua VM state.
-	lua_State* luaState;
-
 	// Last error.
 	String lastError;
 };
@@ -70,5 +60,3 @@ protected:
 //-----------------------------------//
 
 NAMESPACE_ENGINE_END
-
-#endif

@@ -27,6 +27,9 @@ public:
 	ScriptManager();
 	~ScriptManager();
 
+	// Creates a new script instance.
+	State* createScriptInstance(Script*);
+
 	// Updates all the registered scripts.
 	void update() OVERRIDE;
 

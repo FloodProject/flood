@@ -70,9 +70,6 @@ config =
 	-- Enables loading of bitmap based fonts.
 	FONT_BITMAP = true,
 
-	-- Enables loading of Lua scripts.
-	SCRIPTING_LUA = true,
-
 	-- Enables loading of Mono scripts.
 	SCRIPTING_MONO = true,
 

@@ -31,6 +31,20 @@ ScriptManager::~ScriptManager()
 
 //-----------------------------------//
 
+State* ScriptManager::createScriptInstance(Script*)
+{
+	return nullptr;
+}
+
+//-----------------------------------//
+
+void ScriptManager::update()
+{
+
+}
+
+//-----------------------------------//
+
 void ScriptManager::onReload( const ResourceEvent& event )
 {
 #if 0
@@ -54,13 +68,6 @@ void ScriptManager::onReload( const ResourceEvent& event )
 		state->load( script );
 	}
 #endif
-}
-
-//-----------------------------------//
-
-void ScriptManager::update()
-{
-
 }
 
 //-----------------------------------//

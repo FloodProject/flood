@@ -11,8 +11,6 @@
 #include "Controllers/Controller.h"
 #include "Script/Script.h"
 
-struct swig_module_info;
-
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -43,12 +41,6 @@ protected:
 
 	// Creates a new state.
 	void createState();
-
-	// Binds the node instance.
-	void bindEntity(Entity* entity);
-
-	// Binds a type into this instance.
-	void bindType(swig_module_info* module, const char* name, const char* type, void* object);
 
 	// Gets the script by its name.
 	ScriptHandle getScript();
