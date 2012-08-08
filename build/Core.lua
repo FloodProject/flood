@@ -27,7 +27,6 @@ project "Core"
 	{
 		"../inc/",
 		"../deps/Dirent",
-		"../deps/VisualLeakDetector/include"
 	}
 	
 	Core.links = {}
@@ -49,10 +48,10 @@ project "Core"
 		table.insert(Core.links, "ws2_32")
 		
 		-- Setup Visual Leak Detector
-		if config.MEMORY_LEAK_DETECTOR then
-			table.insert(Core.links, "vld")
-			table.insert(Core.libdirs, "../deps/VisualLeakDetector/lib/Win32")
-		end
+--		if config.MEMORY_LEAK_DETECTOR then
+--			table.insert(Core.links, "vld")
+--			table.insert(Core.libdirs, "../deps/VisualLeakDetector/lib/Win32")
+--		end
 	end
 	
 	deps(Core.deps)

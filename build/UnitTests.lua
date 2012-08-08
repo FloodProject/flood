@@ -2,7 +2,7 @@ project "UnitTests"
 
 	kind "ConsoleApp"
 	builddeps { "Core" }
-	debugdir "../src/Tests/"
+	debugdir "../src/Core/Test/"
 	
 	files
 	{

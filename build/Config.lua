@@ -13,7 +13,7 @@ config =
 	MEMORY_INTRUSIVE_PTR = true,
 
 	-- Enables the VLD memory leak detector.
-	MEMORY_LEAK_DETECTOR = true,
+	MEMORY_LEAK_DETECTOR = false,
 
 	-- Enables the support for dynamic libraries loading.
 	DYNAMIC_LIBRARY = false,
