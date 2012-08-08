@@ -68,6 +68,7 @@ project "Core"
 		"Mongoose",
 		"zlib",
 		"zziplib",
+		"UnitTest++",
 	}
 	
 	if os.is("windows") then

@@ -14,7 +14,7 @@
 #include "Resources/STB_Image_Loader.h"
 #include "Resources/OGG_Loader.h"
 #include "Resources/ShaderLoader.h"
-#include "Resources/LuaLoader.h"
+//#include "Resources/LuaLoader.h"
 #include "Resources/FontLoader.h"
 
 NAMESPACE_RESOURCES_BEGIN
