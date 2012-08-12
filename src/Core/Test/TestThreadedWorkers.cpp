@@ -21,6 +21,9 @@
 #include <array>
 #include <functional>
 
+#include "Core/ConcurrentEventQueue.h"
+#include "Core/Actor.h"
+
 namespace {
 
 	//////////////////////////////////////////////////////////////////////////
