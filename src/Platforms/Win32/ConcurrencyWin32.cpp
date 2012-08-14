@@ -37,7 +37,7 @@ bool ThreadJoin(Thread* thread)
 
 bool ThreadPause(Thread* thread)
 {
-	if( !thread ) return false;
+	if( !thread || !thread->Handle) return false;
 	return ::SuspendThread((HANDLE) thread->Handle) != -1;
 }
 
@@ -172,6 +172,9 @@ Mutex* MutexCreate(Allocator* alloc)
 
 API_CORE void MutexInit(Mutex* mutex)
 {
+	if(mutex == nullptr)
+		return;
+
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	::InitializeCriticalSectionAndSpinCount(cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
 }
@@ -180,6 +183,9 @@ API_CORE void MutexInit(Mutex* mutex)
 
 void MutexDestroy(Mutex* mutex)
 {
+	if(mutex == nullptr)
+		return;
+
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	DeleteCriticalSection(cs);
 	Deallocate(mutex);

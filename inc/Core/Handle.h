@@ -154,13 +154,14 @@ public:
 	{
 		T* old = Resolve();
 
-		id = newId;
-		addReference();
-
 		if(old && old->releaseReference())
 		{
+			if(DFn) DFn(id);
 			Deallocate(old);
 		}
+
+		id = newId;
+		addReference();
 	}
 
 	HandleId id;
