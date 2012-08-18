@@ -155,7 +155,8 @@ SUITE(Core)
 		Deallocate(watch);
 	}
 
-	namespace {
+	namespace
+	{
 		static uint8 ident = 0;
 		#define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
 
