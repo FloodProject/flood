@@ -247,7 +247,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 		{
 			path = PathNormalize(newPath);
 			break;
-		} 
+		}
 	}
 }
 
