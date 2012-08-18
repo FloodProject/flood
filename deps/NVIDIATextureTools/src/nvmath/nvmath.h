@@ -90,6 +90,7 @@ inline float asinf_assert(const float f)
     return asinf(f);
 }
 
+#if _MSC_VER < 1700
 // Replace default functions with asserting ones.
 #define sqrt sqrt_assert
 #define sqrtf sqrtf_assert
@@ -97,7 +98,7 @@ inline float asinf_assert(const float f)
 #define acosf acosf_assert
 #define asin asin_assert
 #define asinf asinf_assert
-
+#endif
 
 namespace nv
 {
