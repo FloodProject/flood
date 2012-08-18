@@ -56,7 +56,7 @@ SUITE(Core)
 		HandleB handleB = HandleCast<B>(handle);
 		B* instanceB = handleB.Resolve();
 
-#ifdef COMPILER_SUPPORTS_CPP0X
+#ifdef COMPILER_SUPPORTS_CXX11
 		HandleB handleB2 = std::move(handleB);
 		CHECK_EQUAL(HandleInvalid, handleB.getId());
 		handleB = std::move(handleB2);
