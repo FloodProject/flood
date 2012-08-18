@@ -22,9 +22,14 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+static bool ThreadIsValid(Thread* thread)
+{
+	return thread && thread->Handle;
+}
+
 bool ThreadJoin(Thread* thread)
 {
-	if( !thread || !thread->IsRunning )
+	if( !ThreadIsValid(thread) || !thread->IsRunning )
 		return false;
 	
 	thread->IsRunning = false;
@@ -37,7 +42,9 @@ bool ThreadJoin(Thread* thread)
 
 bool ThreadPause(Thread* thread)
 {
-	if( !thread ) return false;
+	if( !ThreadIsValid(thread) )
+		return false;
+
 	return ::SuspendThread((HANDLE) thread->Handle) != -1;
 }
 
@@ -45,7 +52,9 @@ bool ThreadPause(Thread* thread)
 
 bool ThreadResume(Thread* thread)
 {
-	if( !thread ) return false;
+	if( !ThreadIsValid(thread) )
+		return false;
+
 	return ::ResumeThread((HANDLE) thread->Handle) != -1;
 }
 
@@ -172,6 +181,8 @@ Mutex* MutexCreate(Allocator* alloc)
 
 API_CORE void MutexInit(Mutex* mutex)
 {
+	if (!mutex) return;
+
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	::InitializeCriticalSectionAndSpinCount(cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
 }
@@ -180,6 +191,8 @@ API_CORE void MutexInit(Mutex* mutex)
 
 void MutexDestroy(Mutex* mutex)
 {
+	if (!mutex) return;
+
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	DeleteCriticalSection(cs);
 	Deallocate(mutex);

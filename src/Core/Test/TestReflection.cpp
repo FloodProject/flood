@@ -157,7 +157,7 @@ SUITE(Core)
 
 	namespace {
 		static uint8 ident = 0;
-#define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
+		#define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
 
 		static void WalkComposite(ReflectionContext* c, ReflectionWalkType::Enum wt)
 		{

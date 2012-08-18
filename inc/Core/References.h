@@ -123,7 +123,7 @@ public:
 		return *this;
 	}
 
-#ifdef COMPILER_MSVC_2010
+#ifdef COMPILER_SUPPORTS_CXX11
 	RefPtr(RefPtr&& rhs): px(rhs.px)
 	{
 	rhs.px = nullptr;
