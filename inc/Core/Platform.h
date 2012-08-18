@@ -21,7 +21,7 @@
 #elif defined(__native_client__)
 	#define PLATFORM_NATIVE_CLIENT
 #else
-	#warn Unknown platform
+	#pragma warning Unknown platform
 #endif
 
 //---------------------------------------------------------------------//
@@ -31,23 +31,29 @@
 #ifdef __clang__
 	#define COMPILER_CLANG
 #elif defined(_MSC_VER)
-	#if _MSC_VER == 1600
-		#define COMPILER_MSVC_2010 0x1600
+	#if _MSC_VER == 1700
+		#define COMPILER_MSVC_2012 _MSC_VER
+		#define COMPILER_MSVC	COMPILER_MSVC_2012
+	#elif _MSC_VER == 1600
+		#define COMPILER_MSVC_2010 _MSC_VER
 		#define COMPILER_MSVC	COMPILER_MSVC_2010
-		#define COMPILER_SUPPORTS_CPP0X
 	#elif _MSC_VER == 1500
-		#define COMPILER_MSVC_2008 0x1500
+		#define COMPILER_MSVC_2008 _MSC_VER
 		#define COMPILER_MSVC	COMPILER_MSVC_2008
 	#else
-		#warn "Unsupported Visual C++ compiler version"
+		#define COMPILER_MSVC _MSC_VER
+		#pragma warning "Unsupported Visual C++ compiler version"
+	#endif
+	#ifdef _NATIVE_NULLPTR_SUPPORTED
+		#define COMPILER_SUPPORTS_CXX11
 	#endif
 #elif defined(__GNUG__)
 	#define COMPILER_GCC
 	#if (__GNUG__ >= 4) && (__GNUC_MINOR__ > 5)
-		#define COMPILER_SUPPORTS_CPP0X
+		#define COMPILER_SUPPORTS_CXX11
 	#endif
 #else
-	#warn Unknown compiler
+	#pragma warning Unknown compiler
 #endif
 
 //---------------------------------------------------------------------//
@@ -67,7 +73,11 @@
 #define MULTI_LINE_MACRO_BEGIN do {
 
 #if defined(COMPILER_MSVC)
+	#if COMPILER_MSVC >= COMPILER_MSVC_2012
+		#define _ALLOW_KEYWORD_MACROS
+	#endif
 	#define alignof _alignof
+	#define thread_local __declspec(thread)
 	#define ALIGN_BEGIN(size) __declspec(align(size))
 	#define ALIGN_END(size)
 	#define INLINE __forceinline
@@ -79,7 +89,6 @@
 		__pragma(warning(disable:4127)) \
 		} while(0) \
 		__pragma(warning(pop))
-	#define thread_local __declspec(thread)
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	#define alignof __alignof__
 	#define offsetof(type, member)  __builtin_offsetof (type, member)
@@ -159,7 +168,7 @@ static_assert(sizeof(int64) == 8, "");
 	#define enum_class(name) name
 #endif
 
-#if !defined(COMPILER_SUPPORTS_CPP0X)
+#if !defined(COMPILER_SUPPORTS_CXX11)
 	#define nullptr NULL
 #endif
 
