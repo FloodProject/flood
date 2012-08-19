@@ -77,7 +77,7 @@ public:
 		return *this;
 	}
 
-#ifdef COMPILER_MSVC_2010
+#ifdef COMPILER_SUPPORTS_CXX11
 	Handle(Handle && rhs) : id(HandleInvalid)
 	{
 		setId(rhs.id);
@@ -156,9 +156,7 @@ public:
 
 		if(old && old->releaseReference())
 		{
-			if(DFn)
-				DFn(id);
-
+			if(DFn) DFn(id);
 			Deallocate(old);
 		}
 
