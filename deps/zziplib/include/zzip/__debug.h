@@ -6,7 +6,7 @@
 
 /* perhaps want to show on syslog(3) ?? */
 
-#ifdef DEBUG
+#if defined(DEBUG) && defined(HINT)
 #include <stdio.h>
 #define DBG1(X1) ZZIP_FOR1 { \
         fprintf(stderr,"\n%s:%i:"X1"\n", ZZIP_FUNC,__LINE__ \
