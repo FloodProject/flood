@@ -10,8 +10,8 @@
 #include "Core/Handle.h"
 #include "Core/References.h"
 
-namespace {
-
+namespace
+{
 	struct A : public ReferenceCounted
 	{
 	};
