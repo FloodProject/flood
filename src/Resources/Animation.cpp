@@ -65,7 +65,7 @@ bool Animation::isLooped()
 
 //-----------------------------------//
 
-//#define VAPOR_ANIMATION_INTERPOLATION_LINEAR
+//#define ENABLE_ANIMATION_INTERPOLATION_LINEAR
 
 Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 {
@@ -90,7 +90,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 
 	Vector3 position;
 
-#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+#ifdef ENABLE_ANIMATION_INTERPOLATION_LINEAR
 	EulerAngles rotation;
 #else
 	Quaternion rotation;
@@ -114,7 +114,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 
 		position = keyL.position.lerp(keyR.position, interpolator);
 		
-#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+#ifdef ENABLE_ANIMATION_INTERPOLATION_LINEAR
 		rotation = (EulerAngles&)
 			((Vector3&) keyL.rotation).lerp(
 			(Vector3&) keyR.rotation, interpolator);
@@ -126,7 +126,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	}
 
 	Matrix4x3 interp =
-#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+#ifdef ENABLE_ANIMATION_INTERPOLATION_LINEAR
 		Matrix4x3::createRotation(rotation) *
 #else
 		Matrix4x3::createFromQuaternion(rotation) *
