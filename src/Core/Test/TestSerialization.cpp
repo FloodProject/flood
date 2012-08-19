@@ -16,8 +16,9 @@
 #include "Core/Stream.h"
 #include "ReflectionTypes.h"
 
-typedef Serializer* (*SerializerCreateFunction)(Allocator*);
-
+namespace
+{
+	typedef Serializer* (*SerializerCreateFunction)(Allocator*, ReflectionHandleContextMap*);
 
 	void SerializeH(ReflectionContext* context, ReflectionWalkType::Enum wt)
 	{
@@ -42,11 +43,7 @@ typedef Serializer* (*SerializerCreateFunction)(Allocator*);
 		}
 	}
 
-	REFLECT_CHILD_CLASS(H, Object)
-		REFLECT_CLASS_SET_SERIALIZER(SerializeH)
-	REFLECT_CLASS_END()
-
-		void SerializeHookI(ReflectionContext* context, ReflectionWalkType::Enum wt)
+	void SerializeHookI(ReflectionContext* context, ReflectionWalkType::Enum wt)
 	{
 		I* i = (I*) context->object;
 		context->primitive = &Primitive::s_uint32;
@@ -63,18 +60,25 @@ typedef Serializer* (*SerializerCreateFunction)(Allocator*);
 			context->walkPrimitive(context, wt);
 		}
 	}
+}
 
-	REFLECT_CHILD_CLASS(I, Object)
-		FIELD_CLASS(2, H, h)
-		FIELD_PRIMITIVE(3, uint32, hook) FIELD_SET_SERIALIZER(hook, SerializeHookI)
-	REFLECT_CLASS_END()
+REFLECT_CHILD_CLASS(H, Object)
+	REFLECT_CLASS_SET_SERIALIZER(SerializeH)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(I, Object)
+	FIELD_CLASS(2, H, h)
+	FIELD_PRIMITIVE(3, uint32, hook) FIELD_SET_SERIALIZER(hook, SerializeHookI)
+REFLECT_CLASS_END()
 
 SUITE(Core)
 {
 	void ExecuteSerializationTest(SerializerCreateFunction SerializerCreate, const char * ext)
 	{
 		Allocator* alloc = AllocatorGetHeap();
-		Serializer* serializer = SerializerCreate(alloc);
+
+		ReflectionHandleContextMap handleContextMap;
+		Serializer* serializer = SerializerCreate(alloc, &handleContextMap);
 
 		B instanceB;
 		instanceB.change();
@@ -142,7 +146,8 @@ SUITE(Core)
 		Allocator* alloc = AllocatorGetHeap();
 		MemoryStream* ms = StreamCreateFromMemory(alloc, 16);
 
-		SerializerBinary* bin = (SerializerBinary*) SerializerCreateBinary(alloc);
+		ReflectionHandleContextMap handleContextMap;
+		auto bin = (SerializerBinary*) SerializerCreateBinary(alloc, &handleContextMap);
 		bin->ms = ms;
 
 		A a;
@@ -174,7 +179,9 @@ SUITE(Core)
 	TEST(SerializeBinaryHook)
 	{
 		Allocator* alloc = AllocatorGetHeap();
-		Serializer* serializer = SerializerCreateBinary(alloc);
+
+		ReflectionHandleContextMap handleContextMap;
+		Serializer* serializer = SerializerCreateBinary(alloc, &handleContextMap);
 
 		// Test custom type hook functions.
 		H instanceH;

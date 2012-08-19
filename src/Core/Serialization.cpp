@@ -43,6 +43,7 @@ ReflectionContext::ReflectionContext()
 	, field(nullptr)
 	, address(nullptr)
 	, elementAddress(nullptr)
+	, handleContextMap(nullptr)
 	, walkComposite(WalkNull)
 	, walkCompositeField(WalkNull)
 	, walkCompositeFields(WalkNull)
@@ -54,21 +55,26 @@ ReflectionContext::ReflectionContext()
 
 //-----------------------------------//
 
-typedef std::map<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
-static ReflectionHandleContextMap gs_ReflectionHandleMap;
-
-void ReflectionSetHandleContext(ReflectionHandleContext context)
+void ReflectionSetHandleContext( ReflectionHandleContextMap* handleContextMap,
+								    ReflectionHandleContext context)
 {
-	gs_ReflectionHandleMap[context.type] = context;
+	assert(handleContextMap && "Expected a valid context map");
+	if (!handleContextMap ) return;
+
+	(*handleContextMap)[context.type] = context;
 }
 
 //-----------------------------------//
 
-bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx)
+bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
+								    Class* klass, ReflectionHandleContext& ctx)
 {
-	auto it = gs_ReflectionHandleMap.find(klass);
+	assert(handleContextMap && "Expected a valid context map");
+	if (!handleContextMap ) return false;
+
+	auto it = handleContextMap->find(klass);
 	
-	if( it != gs_ReflectionHandleMap.end() )
+	if( it != handleContextMap->end() )
 	{
 		ctx = it->second;
 		return true;
@@ -76,7 +82,7 @@ bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx)
 	else if( ClassHasParent(klass) )
 	{
 		Class* parent = ClassGetParent(klass);
-		return ReflectionFindHandleContext(parent, ctx);
+		return ReflectionFindHandleContext(handleContextMap, parent, ctx);
 	}
 
 	return false;
@@ -221,7 +227,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 		Class* klass = (Class*) field->type;
 
 		ReflectionHandleContext hc;
-		if( !ReflectionFindHandleContext(klass, hc) )
+		if( !ReflectionFindHandleContext(context->handleContextMap, klass, hc) )
 		{
 			LogDebug("No handle context found for class '%s'", klass->name);
 			return false;
@@ -287,20 +293,20 @@ static void ReflectionWalkArray(ReflectionContext* context)
 
 //-----------------------------------//
 
-static ReflectionWalkFunction HandleFindSerializeFunction(Class* klass)
+static ReflectionWalkFunction HandleFindSerializeFunction(ReflectionContext* context, Class* klass)
 {
+	assert(context && "Expected a valid reflection context");
 	if( !klass ) return nullptr;
 
-	ReflectionHandleContextMap::iterator it = gs_ReflectionHandleMap.find(klass);
+	ReflectionHandleContext handleContext;
+	if (!ReflectionFindHandleContext(context->handleContextMap, klass, handleContext))
+		return nullptr;
 
-	if( it != gs_ReflectionHandleMap.end() )
-	{
-		ReflectionHandleContext* context = &it->second;
-		if( context->serialize ) return context->serialize;
-	}
+	if( handleContext.serialize )
+		return handleContext.serialize;
 	
 	Class* parent = klass->parent;
-	return HandleFindSerializeFunction(parent);
+	return HandleFindSerializeFunction(context, parent);
 }
 
 //-----------------------------------//
@@ -332,7 +338,10 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
-	ReflectionWalkFunction handleSerialize = HandleFindSerializeFunction((Class*) field->type);
+	ReflectionWalkFunction handleSerialize = nullptr;
+	
+	if (ReflectionIsComposite(field->type))
+		HandleFindSerializeFunction(context, (Class*) field->type);
 
 	// Check for custom handle serialize functions.
 	if( FieldIsHandle(field) && handleSerialize )

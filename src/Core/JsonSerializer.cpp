@@ -469,15 +469,16 @@ static bool DeserializeHandleName( ReflectionContext* context, const char* name 
 	const Field* field = context->field;
 
 	ReflectionHandleContext handleContext;
-	ReflectionFindHandleContext((Class*) field->type, handleContext);
-			
+	ReflectionFindHandleContext(context->handleContextMap, (Class*) field->type,
+		handleContext);
+	
 	HandleId id = handleContext.deserialize(name);
 	if(id == HandleInvalid) return false;
 
 	typedef Handle<Object, NullResolve, NullDestroy> ObjectHandle;
 	ObjectHandle handleObject;
 	handleObject.setId(id);
-				
+	
 	FieldSet(field, context->object, handleObject);
 
 	return true;
@@ -778,7 +779,7 @@ static void JsonDeallocate(void* p)
 }
 #endif
 
-Serializer* SerializerCreateJSON(Allocator* alloc)
+Serializer* SerializerCreateJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap)
 {
 	#pragma TODO("Hook memory allocators to JSON library")
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
@@ -795,11 +796,13 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 	sCtx.walkCompositeField = SerializeField;
 	sCtx.walkPrimitive = SerializePrimitive;
 	sCtx.walkEnum = SerializeEnum;
+	sCtx.handleContextMap = handleContextMap;
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
 	dCtx.userData = serializer;
 	dCtx.walkCompositeFields = DeserializeFields;
 	dCtx.walkCompositeField = DeserializeField;
+	sCtx.handleContextMap = handleContextMap;
 
 	return serializer;
 }

@@ -172,7 +172,7 @@ SUITE(Core)
 			ident++;
 		}
 
-		static void walkCompositeField(ReflectionContext* c, ReflectionWalkType::Enum wt)
+		static void WalkCompositeField(ReflectionContext* c, ReflectionWalkType::Enum wt)
 		{
 			if(wt != ReflectionWalkType::Begin) return;
 
@@ -185,9 +185,12 @@ SUITE(Core)
 	{
 		ReflectionContext context;
 		context.walkComposite = WalkComposite;
-		context.walkCompositeField = walkCompositeField;
+		context.walkCompositeField = WalkCompositeField;
 		context.walkEnum = nullptr;
 		context.walkPrimitive = nullptr;
+
+		ReflectionHandleContextMap handleContextMap;
+		context.handleContextMap = &handleContextMap;
 
 		A instanceA;
 		B instanceB;

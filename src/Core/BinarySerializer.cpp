@@ -615,7 +615,8 @@ static bool SerializeSave( Serializer* serializer, const Object* object )
 
 //-----------------------------------//
 
-Serializer* SerializerCreateBinary(Allocator* alloc)
+Serializer* SerializerCreateBinary(Allocator* alloc,
+								   ReflectionHandleContextMap* handleContextMap)
 {
 	SerializerBinary* serializer = Allocate(alloc, SerializerBinary);
 	serializer->load = SerializeLoad;
@@ -629,11 +630,13 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 	sCtx.walkPrimitive = SerializePrimitive;
 	sCtx.walkEnum = SerializeEnum;
 	sCtx.walkArray = SerializeArray;
+	sCtx.handleContextMap = handleContextMap;
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
 	dCtx.userData = serializer;
 	dCtx.walkPrimitive = DeserializePrimitive;
 	dCtx.walkEnum = DeserializeEnum;
+	dCtx.handleContextMap = handleContextMap;
 
 	return serializer;
 }

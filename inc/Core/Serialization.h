@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 
 union API_CORE ValueContext
 {
-	bool b;
+	bool   b;
 	sint8  i8;
 	uint8  u8;
 	sint16 i16;
@@ -29,7 +29,7 @@ union API_CORE ValueContext
 	uint32 u32;
 	sint64 i64;
 	uint64 u64;
-	float f32;
+	float  f32;
 	Vector3P v;
 	ColorP c;
 	QuaternionP q;
@@ -49,7 +49,13 @@ struct ReflectionWalkType
 	};
 };
 
+//-----------------------------------//
+
+struct Type;
+struct Enum;
 struct Class;
+struct Field;
+struct Primitive;
 struct Object;
 struct ReflectionContext;
 
@@ -62,46 +68,8 @@ API_CORE void ReflectionWalkComposite(ReflectionContext*);
 // Walks the composite object field.
 API_CORE void ReflectionWalkCompositeField(ReflectionContext*);
 
-//-----------------------------------//
-
-struct Type;
-struct Enum;
-struct Class;
-struct Field;
-struct Primitive;
-
 // Walking functions
 typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType::Enum);
-
-struct API_CORE ReflectionContext
-{
-	ReflectionContext();
-
-	bool loading;
-	void* userData;
-	
-	Object* object;
-	Class* objectClass;
-
-	Type* type;
-	Primitive* primitive;
-	Class* composite;
-	Enum*  enume;
-	
-	ValueContext valueContext;
-
-	const Field* field;
-	void* address;
-	void* elementAddress;
-	uint32 arraySize;
-
-	ReflectionWalkFunction walkComposite;
-	ReflectionWalkFunction walkCompositeField;
-	ReflectionWalkFunction walkCompositeFields;
-	ReflectionWalkFunction walkPrimitive;
-	ReflectionWalkFunction walkEnum;
-	ReflectionWalkFunction walkArray;
-};
 
 //-----------------------------------//
 
@@ -121,8 +89,46 @@ struct API_CORE ReflectionHandleContext
 	ReflectionDeserializeHandleFn deserialize;
 };
 
-API_CORE void ReflectionSetHandleContext(ReflectionHandleContext context);
-API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx);
+typedef std::map<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
+
+API_CORE void ReflectionSetHandleContext(
+	ReflectionHandleContextMap*, ReflectionHandleContext context);
+
+API_CORE bool ReflectionFindHandleContext(
+	ReflectionHandleContextMap*, Class* klass, ReflectionHandleContext& ctx);
+
+//-----------------------------------//
+
+struct API_CORE ReflectionContext
+{
+	ReflectionContext();
+
+	bool loading;
+	void* userData;
+	
+	Object* object;
+	Class* objectClass;
+
+	Type* type;
+	Primitive* primitive;
+	Class* composite;
+	Enum*  enume;
+
+	ValueContext valueContext;
+	ReflectionHandleContextMap* handleContextMap;
+
+	const Field* field;
+	void* address;
+	void* elementAddress;
+	uint32 arraySize;
+
+	ReflectionWalkFunction walkComposite;
+	ReflectionWalkFunction walkCompositeField;
+	ReflectionWalkFunction walkCompositeFields;
+	ReflectionWalkFunction walkPrimitive;
+	ReflectionWalkFunction walkEnum;
+	ReflectionWalkFunction walkArray;
+};
 
 //-----------------------------------//
 
@@ -151,10 +157,10 @@ struct API_CORE Serializer
 //-----------------------------------//
 
 // Creates a new JSON serializer.
-API_CORE Serializer* SerializerCreateJSON(Allocator*);
+API_CORE Serializer* SerializerCreateJSON(Allocator*, ReflectionHandleContextMap*);
 
 // Creates a new binary serializer.
-API_CORE Serializer* SerializerCreateBinary(Allocator*);
+API_CORE Serializer* SerializerCreateBinary(Allocator*, ReflectionHandleContextMap*);
 
 // Destroys the serializer.
 API_CORE void SerializerDestroy(Serializer*);
@@ -165,7 +171,7 @@ API_CORE bool SerializerSave(Serializer*, const Object* object);
 
 // Wrappers for file-based loading and saving.
 API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
-API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path& file, Object* object);
+API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path&, Object* object);
 
 //-----------------------------------//
 
