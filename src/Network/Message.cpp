@@ -154,7 +154,7 @@ void Message::write(const Object* object)
 {
 	SetBitFlag(flags, MessageFlags::Binary, true);
 
-	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis());
+	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis(), 0);
 	serializer->stream = ms;
 
 	SerializerSave(serializer, object);

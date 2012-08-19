@@ -36,7 +36,7 @@ MessageDispatcher::MessageDispatcher()
 {
 	sessions = AllocateThis(SessionManager);
 	handlers = AllocateThis(MessageHandlers);
-	serializer = SerializerCreateBinary(AllocatorGetThis());
+	serializer = SerializerCreateBinary(AllocatorGetThis(), 0);
 }
 
 //-----------------------------------//
