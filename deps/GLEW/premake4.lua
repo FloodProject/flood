@@ -1,6 +1,6 @@
 project "GLEW"
 		
-	local version = "1.7.0"
+	local version = "1.9.0"
 	local repo = "git://glew.git.sourceforge.net/gitroot/glew/glew"
 	local license = "MIT"
 	
