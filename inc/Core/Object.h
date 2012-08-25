@@ -21,7 +21,7 @@ struct Class;
  * Objects are the root class for types using the reflection services.
  */
 
-REFLECT_DECLARE_CLASS(Object)
+API_CORE REFLECT_DECLARE_CLASS(Object)
 
 struct API_CORE NO_VTABLE Object : public ReferenceCounted
 {

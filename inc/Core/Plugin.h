@@ -46,7 +46,7 @@ class PluginManager;
  * Plugins provide units of extensibility to applications.
  */
 
-REFLECT_DECLARE_CLASS(Plugin)
+API_CORE REFLECT_DECLARE_CLASS(Plugin)
 
 class API_CORE Plugin : public Object
 {
@@ -68,6 +68,7 @@ public:
 	// Plugin callbacks.
 	virtual void onPluginEnable() {}
 	virtual void onPluginDisable() {}
+	virtual void onPluginUpdate() {}
 
 protected:
 

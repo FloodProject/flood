@@ -25,14 +25,14 @@ typedef ReferenceCounted* (*HandleResolveFn)(HandleId id);
 
 typedef std::map<HandleId, ReferenceCounted*> HandleMap;
 
-struct HandleManager
+struct API_CORE HandleManager
 {
 	HandleMap handles;
 	volatile Atomic nextHandle;
 };
 
-HandleManager*             HandleCreateManager( Allocator* );
-void                       HandleDestroyManager( HandleManager* );
+API_CORE HandleManager*    HandleCreateManager( Allocator* );
+API_CORE void              HandleDestroyManager( HandleManager* );
 API_CORE HandleId          HandleCreate(HandleManager*, ReferenceCounted*);
 API_CORE void              HandleDestroy(HandleManager*, HandleId id);	
 API_CORE ReferenceCounted* HandleFind(HandleManager*, HandleId id);
