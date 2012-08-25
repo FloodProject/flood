@@ -8,10 +8,10 @@
 
 #include "Core/API.h"
 #include "Core/Log.h"
-#include "Network/Network.h"
-#include "Network/Host.h"
-#include "Network/Peer.h"
-#include "Network/Message.h"
+#include "Core/Network/Network.h"
+#include "Core/Network/Host.h"
+#include "Core/Network/Peer.h"
+#include "Core/Network/Message.h"
 
 #include <enet/enet.h>
 

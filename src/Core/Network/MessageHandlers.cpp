@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "Core/Log.h"
-#include "Network/MessageHandlers.h"
+#include "Core/Network/MessageHandlers.h"
 
 NAMESPACE_CORE_BEGIN
 

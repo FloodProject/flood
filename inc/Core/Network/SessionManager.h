@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core/Event.h"
-#include "Network/Session.h"
+#include "Core/Network/Session.h"
 
 NAMESPACE_CORE_BEGIN
 

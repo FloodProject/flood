@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Network/SessionManager.h"
-#include "Network/Peer.h"
+#include "Core/Network/SessionManager.h"
+#include "Core/Network/Peer.h"
 
 NAMESPACE_CORE_BEGIN
 

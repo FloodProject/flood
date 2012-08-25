@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Network/MessageHandler.h"
-#include "Network/MessageHandlers.h"
+#include "Core/Network/MessageHandler.h"
+#include "Core/Network/MessageHandlers.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -32,8 +32,6 @@ ExtensionMetadata* MessageHandler::getMetadata()
 
 	return &s_Extension;
 }
-
-//-----------------------------------//
 
 MessagesTable MessageHandler::NullMessageTable;
 

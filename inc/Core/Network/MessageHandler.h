@@ -11,7 +11,7 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Extension.h"
-#include "Network/Message.h"
+#include "Core/Network/Message.h"
 
 
 FWD_DECL_INTRUSIVE(Session)

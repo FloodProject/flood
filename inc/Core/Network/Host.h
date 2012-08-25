@@ -12,13 +12,10 @@
 #include "Core/Concurrency.h"
 #include "Core/ConcurrentQueue.h"
 #include "Core/Event.h"
-#include "Network/Peer.h"
+#include "Core/Network/Peer.h"
 
-struct _ENetHost;
-typedef _ENetHost ENetHost;
-
-struct _ENetEvent;
-typedef _ENetEvent ENetEvent;
+typedef struct _ENetHost ENetHost;
+typedef struct _ENetEvent ENetEvent;
 
 FWD_DECL_INTRUSIVE(Message)
 FWD_DECL_INTRUSIVE(Peer)

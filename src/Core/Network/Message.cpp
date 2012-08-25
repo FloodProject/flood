@@ -10,12 +10,14 @@
 #include "Core/Stream.h"
 #include "Core/SerializationHelpers.h"
 
-#include "Network/Message.h"
-#include "Network/Session.h"
-#include "Network/Peer.h"
-#include "Network/Network.h"
+#include "Core/Network/Message.h"
+#include "Core/Network/Session.h"
+#include "Core/Network/Peer.h"
+#include "Core/Network/Network.h"
 
+#define NOMINMAX
 #include <enet/enet.h>
+
 #include <fastlz.h>
 
 NAMESPACE_CORE_BEGIN
@@ -71,7 +73,7 @@ static size_t GetCompressionBufferSize(size_t size)
 	// larger than the input buffer and can not be smaller than 66 bytes."
 
 	size_t bufSize = size + size_t(size * 0.05f);
-	if(bufSize < 66) bufSize = 128;
+	bufSize = std::max(bufSize, (size_t)128);
 
 	return bufSize;
 }

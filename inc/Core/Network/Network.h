@@ -17,8 +17,6 @@ API_CORE void NetworkDeinitialize();
 
 API_CORE Allocator* AllocatorGetNetwork();
 
-
-
 //-----------------------------------//
 
 NAMESPACE_CORE_END

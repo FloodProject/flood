@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Network/Message.h"
-#include "Network/MessageHandler.h"
+#include "Core/Network/Message.h"
+#include "Core/Network/MessageHandler.h"
 
 NAMESPACE_CORE_BEGIN
 

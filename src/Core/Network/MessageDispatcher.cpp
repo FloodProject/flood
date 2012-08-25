@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Network/MessageDispatcher.h"
+#include "Core/Network/MessageDispatcher.h"
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
@@ -15,12 +15,12 @@
 #include "Core/Serialization.h"
 #include "Core/Stream.h"
 
-#include "Network/Host.h"
-#include "Network/Peer.h"
-#include "Network/Message.h"
-#include "Network/MessageHandlers.h"
-#include "Network/Session.h"
-#include "Network/SessionManager.h"
+#include "Core/Network/Host.h"
+#include "Core/Network/Peer.h"
+#include "Core/Network/Message.h"
+#include "Core/Network/MessageHandlers.h"
+#include "Core/Network/Session.h"
+#include "Core/Network/SessionManager.h"
 
 #include <fastlz.h>
 

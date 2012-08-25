@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core/References.h"
-#include "Network/CipherISAAC.h"
+#include "Core/Network/CipherISAAC.h"
 
 FWD_DECL_INTRUSIVE(Peer)
 
@@ -17,15 +17,16 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-namespace SessionState
+/**
+ * Enumerates all the states a network session can be.
+ */
+
+enum class SessionState
 {
-	enum Enum
-	{
-		Connecting,
-		Connected,
-		Authenticated,
-	};
-}
+	Connecting,
+	Connected,
+	Authenticated
+};
 
 //-----------------------------------//
 
@@ -54,7 +55,7 @@ public:
 
 protected:
 
-	SessionState::Enum state;
+	SessionState state;
 	CipherISAAC cipher;
 	PeerPtr peer;
 
