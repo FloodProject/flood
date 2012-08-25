@@ -46,7 +46,8 @@ static StreamFuncs gs_FileFuncs =
 
 //-----------------------------------//
 
-Stream* StreamCreateFromFile(Allocator* alloc, const Path& path, StreamMode::Enum mode)
+Stream* StreamCreateFromFile(Allocator* alloc,
+							 const Path& path, StreamMode::Enum mode)
 {
 	FileStream* fs = Allocate(alloc, FileStream);
 	if( !fs ) return nullptr;
@@ -195,16 +196,17 @@ static int64 FileGetSize(Stream* stream)
 
 //-----------------------------------//
 
-static void FileSetBuffering( bool state )
+static void FileSetBuffering( Stream* stream, bool state )
 {
-#if 0
+	FileStream* fs = (FileStream*) stream;
+	FILE* fp = fs->fp;
+
 	int mode = _IOFBF;
 	
 	if( !state )
 		mode = _IONBF;
 	
 	setvbuf(fp, nullptr, mode, 0);
-#endif
 }
 
 //-----------------------------------//
