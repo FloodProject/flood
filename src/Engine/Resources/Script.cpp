@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Engine/Script/Script.h"
+#include "Script/Script.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

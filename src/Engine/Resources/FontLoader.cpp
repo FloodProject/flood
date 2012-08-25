@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_FONT_BITMAP
 
-#include "Engine/Resources/Loaders/FontLoader.h"
+#include "Engine/Resources/FontLoader.h"
 #include "Resources/ResourceManager.h"
 
 #include "Core/Log.h"

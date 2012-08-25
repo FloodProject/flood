@@ -7,8 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-
-#include "Engine/Script/State.h"
+#include "Script/State.h"
 
 NAMESPACE_ENGINE_BEGIN
 

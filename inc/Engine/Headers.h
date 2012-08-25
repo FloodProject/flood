@@ -132,9 +132,9 @@
 // Scripting-related Includes
 //---------------------------------------------------------------------//
 
-#include "Engine/Script/ScriptManager.h"
-#include "Engine/Script/State.h"
-#include "Engine/Script/Script.h"
+#include "Script/ScriptManager.h"
+#include "Script/State.h"
+#include "Script/Script.h"
 
 //---------------------------------------------------------------------//
 // Physics-related Includes

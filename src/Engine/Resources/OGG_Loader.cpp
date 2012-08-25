@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_AUDIO_OGG
 
-#include "Engine/Resources/Loaders/OGG_Loader.h"
+#include "Engine/Resources/OGG_Loader.h"
 #include "Core/Utilities.h"
 
 NAMESPACE_RESOURCES_BEGIN

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 #include "Graphics/RenderTarget.h"
-#include "Input/InputManager.h"
+#include "Engine/Input/InputManager.h"
 
 NAMESPACE_ENGINE_BEGIN
 

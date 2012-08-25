@@ -30,7 +30,7 @@ public:
 	ACESSOR(Source, const String&, text)
 
 	// Gets the associated resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Scripts)
 
 	// Source code of the script.
 	String text;

@@ -20,9 +20,9 @@
 #include "Graphics/Render.h"
 #include "Engine/Input/InputManager.h"
 #include "Engine/Audio/Device.h"
-#include "Engine/Script/ScriptManager.h"
 #include "Engine/Paging/PageManager.h"
 #include "Engine/Physics/Physics.h"
+#include "Script/ScriptManager.h"
 
 NAMESPACE_ENGINE_BEGIN
 

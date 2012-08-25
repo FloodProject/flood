@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Engine/Controllers/Controller.h"
-#include "Engine/Script/Script.h"
+#include "Script/Script.h"
 
 NAMESPACE_ENGINE_BEGIN
 

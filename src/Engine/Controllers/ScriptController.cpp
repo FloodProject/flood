@@ -11,8 +11,8 @@
 #include "Engine/Controllers/ScriptController.h"
 #include "Engine/Physics/CharacterController.h"
 
-#include "Engine/Script/Script.h"
-#include "Engine/Script/ScriptManager.h"
+#include "Script/Script.h"
+#include "Script/ScriptManager.h"
 #include "Resources/ResourceManager.h"
 
 #include "Engine/Scene/Entity.h"

@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Engine/Resources/Loaders/ShaderLoader.h"
+#include "Engine/Resources/ShaderLoader.h"
 #include "Engine/Resources/ShaderMaterial.h"
 #include "Core/Log.h"
 

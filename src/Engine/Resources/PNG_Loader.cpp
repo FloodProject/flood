@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_IMAGE_PICOPNG
 
-#include "Engine/Resources/Loaders/PNG_Loader.h"
+#include "Engine/Resources/PNG_Loader.h"
 
 int decodePNG(std::vector<byte>& out_image_32bit, uint32& image_width, 
 			  uint32& image_height, const byte* in_png, uint32 in_size);
