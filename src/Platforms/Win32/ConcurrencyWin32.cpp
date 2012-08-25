@@ -22,6 +22,8 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+#pragma region Threads
+
 static bool ThreadIsValid(Thread* thread)
 {
 	return thread && thread->Handle;
@@ -60,12 +62,26 @@ bool ThreadResume(Thread* thread)
 
 //-----------------------------------//
 
-bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
+bool ThreadSetPriority(Thread* thread, ThreadPriority threadPriority)
 {
-	thread->Priority = priority;
+	thread->Priority = threadPriority;
 
-	// Normal priority is 0 under Windows.
-	return ::SetThreadPriority((HANDLE) thread->Handle, thread->Priority) != 0;
+	int priority = 0;
+
+	switch(threadPriority)
+	{
+	case ThreadPriority::Low:
+		priority = THREAD_PRIORITY_BELOW_NORMAL;
+		break;
+	case ThreadPriority::Normal:
+		priority = THREAD_PRIORITY_NORMAL;
+		break;
+	case ThreadPriority::High:
+		priority = THREAD_PRIORITY_ABOVE_NORMAL;
+		break;
+	};
+
+	return ::SetThreadPriority((HANDLE) thread->Handle, priority) != 0;
 }
 
 //-----------------------------------//
@@ -98,8 +114,10 @@ bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
 	thread->Userdata = data;
 
 	// Create the thread suspended.
-	uintptr_t hnd = ::_beginthreadex(nullptr, 0, _ThreadMain, thread, CREATE_SUSPENDED, nullptr);
-	thread->Handle = (void*) hnd;
+	uintptr_t handle = ::_beginthreadex(nullptr,
+		0, _ThreadMain, thread, CREATE_SUSPENDED, nullptr);
+
+	thread->Handle = (void*) handle;
 
 	// State is set up, resume the thread.
 	if( thread->Handle > 0 )
@@ -157,7 +175,11 @@ void ThreadSetName( Thread* thread, const String& name )
 	SetThreadName( pGetThreadId(thread->Handle), name.c_str() ); 
 }
 
+#pragma endregion
+
 //-----------------------------------//
+
+#pragma region Mutex
 
 struct Mutex
 {
@@ -184,7 +206,11 @@ API_CORE void MutexInit(Mutex* mutex)
 	if (!mutex) return;
 
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
-	::InitializeCriticalSectionAndSpinCount(cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
+	
+	BOOL result = ::InitializeCriticalSectionAndSpinCount(
+		cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
+	
+	assert(result && "Could not initialize critical section");
 }
 
 //-----------------------------------//
@@ -195,6 +221,7 @@ void MutexDestroy(Mutex* mutex)
 
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	DeleteCriticalSection(cs);
+
 	Deallocate(mutex);
 }
 
@@ -214,32 +241,56 @@ void MutexUnlock(Mutex* mutex)
 	::LeaveCriticalSection(cs);
 }
 
+#pragma endregion
+
 //-----------------------------------//
 
+#pragma region Condition Variables
+
+/**
+ * Windows only provides condition variables since Windows Vista,
+ * so we must query those functions explicitly to be able to function
+ * under Windows XP, though right now we provide no emulation.
+ */
+
 typedef VOID (WINAPI *InitializeConditionVariableFn)(PCONDITION_VARIABLE);
-typedef BOOL (WINAPI *SleepConditionVariableCSFn)(PCONDITION_VARIABLE, PCRITICAL_SECTION, DWORD);
+typedef BOOL (WINAPI *SleepConditionVariableFn)(PCONDITION_VARIABLE,
+												PCRITICAL_SECTION, DWORD);
 typedef VOID (WINAPI *WakeConditionVariableFn)(PCONDITION_VARIABLE);
 typedef VOID (WINAPI *WakeAllConditionVariableFn)(PCONDITION_VARIABLE);
 
-static InitializeConditionVariableFn pInitializeConditionVariable = nullptr;
-static SleepConditionVariableCSFn pSleepConditionVariableCS = nullptr;
-static WakeConditionVariableFn pWakeConditionVariable = nullptr;
-static WakeAllConditionVariableFn pWakeAllConditionVariable = nullptr;
+struct ConditionFunctions
+{
+	InitializeConditionVariableFn Init;
+	SleepConditionVariableFn Sleep;
+	WakeConditionVariableFn Wake;
+	WakeAllConditionVariableFn WakeAll;
+};
 
-static bool IntializeConditionVars()
+static ConditionFunctions* IntializeConditionFunctions()
 {
 	HMODULE module = GetModuleHandleA("Kernel32.dll");
-	if( module == NULL ) return true;
+	
+	if( module == NULL )
+		return 0;
 
-	pInitializeConditionVariable = (InitializeConditionVariableFn) GetProcAddress(module, "InitializeConditionVariable");
-	pSleepConditionVariableCS = (SleepConditionVariableCSFn) GetProcAddress(module, "SleepConditionVariableCS");
-	pWakeConditionVariable = (WakeConditionVariableFn) GetProcAddress(module, "WakeConditionVariable");
-	pWakeAllConditionVariable = (WakeAllConditionVariableFn) GetProcAddress(module, "WakeAllConditionVariable");
+	static ConditionFunctions functions;
+	functions.Init = (InitializeConditionVariableFn)
+		GetProcAddress(module, "InitializeConditionVariable");
 
-	return true;
+	functions.Sleep = (SleepConditionVariableFn)
+		GetProcAddress(module, "SleepConditionVariableCS");
+
+	functions.Wake = (WakeConditionVariableFn)
+		GetProcAddress(module, "WakeConditionVariable");
+	
+	functions.WakeAll = (WakeAllConditionVariableFn)
+		GetProcAddress(module, "WakeAllConditionVariable");
+
+	return &functions;
 }
 
-static bool g_InitCondVars = false;
+static ConditionFunctions* g_ConditionFunctions = IntializeConditionFunctions();
 
 struct Condition
 {
@@ -269,12 +320,13 @@ void ConditionInit(Condition* cond)
 {
 	if( !cond ) return;
 
-	// Lazy initialization of the condition variable functions.
-	if( !g_InitCondVars )
-		g_InitCondVars = IntializeConditionVars();
+	if( !g_ConditionFunctions )
+		return;
 
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	if(pInitializeConditionVariable) pInitializeConditionVariable(cvar);
+	
+	if(g_ConditionFunctions->Init)
+		g_ConditionFunctions->Init(cvar);
 }
 
 //-----------------------------------//
@@ -287,9 +339,9 @@ void ConditionWait(Condition* cond, Mutex* mutex)
 
 	BOOL ret = FALSE;
 	
-	if(pSleepConditionVariableCS) 
+	if(g_ConditionFunctions->Sleep) 
 	{
-		ret = pSleepConditionVariableCS(cvar, cs, INFINITE);
+		ret = g_ConditionFunctions->Sleep(cvar, cs, INFINITE);
 		assert( ret != FALSE );
 	}
 }
@@ -300,7 +352,9 @@ void ConditionWakeOne(Condition* cond)
 {
 	if( !cond ) return;
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	if(pWakeConditionVariable) pWakeConditionVariable(cvar);
+	
+	if(g_ConditionFunctions->Wake)
+		g_ConditionFunctions->Wake(cvar);
 }
 
 //-----------------------------------//
@@ -309,16 +363,43 @@ void ConditionWakeAll(Condition* cond)
 {
 	if( !cond ) return;
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	if(pWakeAllConditionVariable) pWakeAllConditionVariable(cvar);
+	
+	if(g_ConditionFunctions->WakeAll)
+		g_ConditionFunctions->WakeAll(cvar);
 }
+
+#pragma endregion
 
 //-----------------------------------//
 
-int32 AtomicRead(volatile Atomic* atomic) { return ::InterlockedExchangeAdd(atomic, 0); }
-int32 AtomicWrite(volatile Atomic* atomic, int32 value) { return ::InterlockedExchange(atomic, value); }
-int32 AtomicAdd(volatile Atomic* atomic, int32 value) { return ::InterlockedExchangeAdd(atomic, value); }
-int32 AtomicIncrement(volatile Atomic* atomic) { return ::InterlockedIncrement(atomic); }
-int32 AtomicDecrement(volatile Atomic* atomic) { return ::InterlockedDecrement(atomic); }
+#pragma region Atomics
+
+int32 AtomicRead(volatile Atomic* atomic)
+{
+	return ::InterlockedExchangeAdd(atomic, 0);
+}
+
+int32 AtomicWrite(volatile Atomic* atomic, int32 value)
+{
+	return ::InterlockedExchange(atomic, value);
+}
+
+int32 AtomicAdd(volatile Atomic* atomic, int32 value)
+{
+	return ::InterlockedExchangeAdd(atomic, value);
+}
+
+int32 AtomicIncrement(volatile Atomic* atomic)
+{
+	return ::InterlockedIncrement(atomic);
+}
+
+int32 AtomicDecrement(volatile Atomic* atomic)
+{
+	return ::InterlockedDecrement(atomic);
+}
+
+#pragma endregion
 
 //-----------------------------------//
 
