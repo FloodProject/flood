@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Geometry/BoundingBoxTree.h"
+#include "Engine/Geometry/BoundingBoxTree.h"
 
 // This code snippet allows you to create an axis aligned bounding volume tree for a triangle mesh so that you can do
 // high-speed raycasting.

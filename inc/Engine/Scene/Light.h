@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Scene/Component.h"
-#include "Math/Color.h"
+#include "Engine/Scene/Component.h"
+#include "Core/Math/Color.h"
 
 NAMESPACE_ENGINE_BEGIN
 

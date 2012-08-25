@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Geometry/Sphere.h"
-#include "Math/EulerAngles.h"
-#include "Math/Helpers.h"
-#include "Math/BoundingBox.h"
+#include "Engine/Geometry/Sphere.h"
+#include "Core/Math/EulerAngles.h"
+#include "Core/Math/Helpers.h"
+#include "Core/Math/BoundingBox.h"
 
 NAMESPACE_ENGINE_BEGIN
 

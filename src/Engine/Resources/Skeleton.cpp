@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Skeleton.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Skeleton.h"
 #include "Core/Utilities.h"
 
 NAMESPACE_RESOURCES_BEGIN

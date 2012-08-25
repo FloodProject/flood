@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Grid.h"
+#include "Engine/Scene/Grid.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -10,11 +10,11 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/MeshShape.h"
-#include "Physics/Convert.h"
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-#include "Scene/Geometry.h"
+#include "Engine/Physics/MeshShape.h"
+#include "Engine/Physics/Convert.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Geometry.h"
 
 #include <BulletCollision/CollisionShapes/btTriangleMesh.h>
 #include <BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h>

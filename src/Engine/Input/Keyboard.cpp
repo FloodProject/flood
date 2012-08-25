@@ -7,21 +7,21 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Input/Keyboard.h"
+#include "Engine/Input/Keyboard.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState(Keys::MAX, false)
+	: keyState((int)Keys::MAX, false)
 { }
 
 //-----------------------------------//
 
-bool Keyboard::isKeyPressed( Keys::Enum keycode ) const
+bool Keyboard::isKeyPressed( Keys keycode ) const
 {
-	return keyState[keycode];
+	return keyState[(int)keycode];
 }
 
 //-----------------------------------//
@@ -42,24 +42,21 @@ void Keyboard::processEvent( const InputEvent& event )
 	
 	switch(keyEvent.eventType)
 	{
-		case KeyboardEventType::KeyPressed:
-		{
-			keyPressed(keyEvent);
-			break;
-		}
-
-		case KeyboardEventType::KeyReleased:
-		{
-			keyReleased(keyEvent);
-			break;
-		}
-
-		case KeyboardEventType::KeyText:
-		{
-			onKeyText(keyEvent);
-			break;
-		}
+	case KeyboardEventType::KeyPressed:
+	{
+		keyPressed(keyEvent);
+		break;
 	}
+	case KeyboardEventType::KeyReleased:
+	{
+		keyReleased(keyEvent);
+		break;
+	}
+	case KeyboardEventType::KeyText:
+	{
+		onKeyText(keyEvent);
+		break;
+	} }
 }
 
 //-----------------------------------//
@@ -67,10 +64,10 @@ void Keyboard::processEvent( const InputEvent& event )
 void Keyboard::keyPressed( const KeyEvent& keyEvent )
 {
 	// Ignore automatic key repeat.
-	if( keyState[keyEvent.keyCode] )
+	if( keyState[(int)keyEvent.keyCode] )
 		return;
 
-	keyState[keyEvent.keyCode] = true;
+	keyState[(int)keyEvent.keyCode] = true;
 	lastKey = keyEvent.keyCode;
 
 	onKeyPress(keyEvent);
@@ -80,14 +77,14 @@ void Keyboard::keyPressed( const KeyEvent& keyEvent )
 
 void Keyboard::keyReleased( const KeyEvent& keyEvent )
 {
-	keyState[keyEvent.keyCode] = false;
+	keyState[(int)keyEvent.keyCode] = false;
 
 	onKeyRelease(keyEvent);
 }
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(KeyboardEventType::Enum eventType)
+KeyEvent::KeyEvent(KeyboardEventType eventType)
 	: InputEvent(InputDeviceType::Keyboard)
 	, eventType(eventType)
 { }

@@ -7,19 +7,20 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Model.h"
-#include "Scene/Transform.h"
-#include "Scene/Entity.h"
-#include "Resources/Mesh.h"
-#include "Resources/Animation.h"
-#include "Resources/Skeleton.h"
-#include "Resources/Bone.h"
-#include "Resources/Attachment.h"
+#include "Engine/Scene/Model.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Animation.h"
+#include "Engine/Resources/Skeleton.h"
+#include "Engine/Resources/Bone.h"
+#include "Engine/Resources/Attachment.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/ShaderProgramManager.h"
-#include "Math/Helpers.h"
+#include "Core/Math/Helpers.h"
+#include "Engine/Geometry/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -517,7 +518,7 @@ void Model::setAttachment(const String& boneName, const EntityPtr& node)
 
 //-----------------------------------//
 
-void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum debugFlags )
+void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 {
 	const Skeleton* skeleton = mesh->getSkeleton().get();
 	if( !skeleton ) return;

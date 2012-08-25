@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Scene/Component.h"
+#include "Engine/Scene/Component.h"
 #include "Core/Object.h"
 #include "Core/Event.h"
 

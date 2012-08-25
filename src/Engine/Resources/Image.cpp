@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Image.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Image.h"
 #include "Core/Log.h"
 #include "Core/Stream.h"
 
-#define ENABLE_IMAGE_WRITER
-#define ENABLE_IMAGE_LODEPNG
+//#define ENABLE_IMAGE_WRITER
+//#define ENABLE_IMAGE_LODEPNG
 
 #ifdef ENABLE_IMAGE_LODEPNG
 	#include "lodepng.h"
@@ -79,11 +79,14 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat::Enum _format)
 	switch(format)
 	{
 	case PixelFormat::R8G8B8A8:
-		size = size*4; break;
+		size = size*4;
+		break;
 	case PixelFormat::R8G8B8:
-		size = size*3; break;
+		size = size*3;
+		break;
 	case PixelFormat::Depth:
-		size = size; break;
+		size = size;
+		break;
 	}
 
 	buffer.resize(size);
@@ -91,17 +94,15 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat::Enum _format)
 
 //-----------------------------------//
 
-#define PF(n) PixelFormat::n
-
 bool Image::isCompressed() const
 {
 	switch(format)
 	{
-	case PF(DXT1):
-	case PF(DXT1a):
-	case PF(DXT3):
-	case PF(DXT5):
-	case PF(DXT5nm):
+	case PixelFormat::DXT1:
+	case PixelFormat::DXT1a:
+	case PixelFormat::DXT3:
+	case PixelFormat::DXT5:
+	case PixelFormat::DXT5nm:
 		return true;
 	}
 

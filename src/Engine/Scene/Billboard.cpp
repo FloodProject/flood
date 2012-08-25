@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Billboard.h"
-#include "Resources/Material.h"
-#include "Scene/Entity.h"
+#include "Engine/Scene/Billboard.h"
+#include "Engine/Resources/Material.h"
+#include "Engine/Scene/Entity.h"
 
 NAMESPACE_ENGINE_BEGIN
 

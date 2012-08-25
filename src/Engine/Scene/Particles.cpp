@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Particles.h"
-#include "Scene/Transform.h"
-#include "Scene/Entity.h"
-#include "Geometry/DebugGeometry.h"
+#include "Engine/Scene/Particles.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Geometry/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -12,7 +12,7 @@
 
 #include "Core/References.h"
 #include "Engine/Subsystem.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 class btCollisionConfiguration;
 class btBroadphaseInterface;

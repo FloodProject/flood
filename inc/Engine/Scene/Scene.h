@@ -9,11 +9,11 @@
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Scene/Group.h"
+#include "Engine/Scene/Group.h"
 #include "Graphics/RenderBatch.h"
-#include "Math/Matrix4x3.h"
-#include "Math/Ray.h"
-#include "Math/Frustum.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Ray.h"
+#include "Core/Math/Frustum.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -68,7 +68,7 @@ public:
 	virtual ~Scene();
 
 	// Return the proper resource group for this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scenes)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Scenes)
 
 	// Updates all the scene groups recursively.
 	void update( float delta );

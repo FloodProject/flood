@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Input/Device.h"
-#include "Input/KeyboardEvents.h"
+#include "Engine/Input/Device.h"
+#include "Engine/Input/KeyboardEvents.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -26,7 +26,7 @@ public:
 	Keyboard();
 
 	// Checks if the given key is pressed.
-	bool isKeyPressed( Keys::Enum keyCode ) const;
+	bool isKeyPressed( Keys keyCode ) const;
 
 	// Resets the keys state.
 	void resetKeys();
@@ -61,7 +61,7 @@ private:
 	std::vector<bool> keyState;
 	
 	// Last key pressed.
-	Keys::Enum lastKey;
+	Keys lastKey;
 };
 
 //-----------------------------------//

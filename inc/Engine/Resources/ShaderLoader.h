@@ -11,7 +11,7 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Resources/ResourceLoader.h"
-#include "Resources/ShaderMaterial.h"
+#include "Engine/Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -44,7 +44,7 @@ public:
 	GETTER(Name, const String, "GLSL")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Shaders)
 };
 
 //-----------------------------------//

@@ -11,7 +11,7 @@
 #ifdef ENABLE_IMAGE_PICOPNG
 
 #include "Resources/ResourceLoader.h"
-#include "Resources/Image.h"
+#include "Engine/Resources/Image.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -45,7 +45,7 @@ public:
 	GETTER(Name, const String, "PICOPNG")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
 
 	bool flipAxisY;
 

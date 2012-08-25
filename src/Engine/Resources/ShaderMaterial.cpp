@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/ShaderMaterial.h"
+#include "Engine/API.h"
+#include "Engine/Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/Shape.h"
+#include "Engine/Physics/Shape.h"
 
 class btBoxShape;
 

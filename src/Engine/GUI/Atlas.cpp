@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "GUI/Atlas.h"
+#include "Engine/GUI/Atlas.h"
 
 NAMESPACE_ENGINE_BEGIN
 

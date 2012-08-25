@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Resources/Image.h"
-#include "Resources/ShaderMaterial.h"
+#include "Engine/Resources/Image.h"
+#include "Engine/Resources/ShaderMaterial.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -151,7 +151,7 @@ public:
 	~Material();
 
 	// Gets the associated resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Materials)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Materials)
 
 	// Gets the textual name of the material.
 	ACESSOR(Name, const String&, name);

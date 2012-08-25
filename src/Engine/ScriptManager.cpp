@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#include "Script/ScriptManager.h"
+#include "Engine/Script/ScriptManager.h"
 #include "Resources/ResourceManager.h"
 
 NAMESPACE_ENGINE_BEGIN

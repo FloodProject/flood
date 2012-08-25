@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Resources/Image.h"
-#include "Math/Vector.h"
+#include "Engine/Resources/Image.h"
+#include "Core/Math/Vector.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -69,7 +69,7 @@ public:
 	ACESSOR(Size, int, size)
 
 	// Gets the resource group of the font.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Fonts)
 
 	// Font name.
 	String name;

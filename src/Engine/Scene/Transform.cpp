@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Transform.h"
-#include "Scene/Geometry.h"
-#include "Scene/Entity.h"
-#include "Geometry/DebugGeometry.h"
-#include "Math/Helpers.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -218,7 +218,7 @@ BoundingBox Transform::getWorldBoundingVolume() const
 
 //-----------------------------------//
 
-void Transform::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum )
+void Transform::onDebugDraw( DebugDrawer& debug, DebugDrawFlags )
 {
 	//debug.drawBox( getWorldBoundingVolume() );
 }

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "input/Mouse.h"
+#include "Engine/Input/Mouse.h"
 
 NAMESPACE_ENGINE_BEGIN
 

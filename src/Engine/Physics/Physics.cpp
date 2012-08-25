@@ -10,10 +10,10 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/Physics.h"
-#include "Physics/Body.h"
-#include "Physics/Convert.h"
-#include "Physics/DebugDraw.h"
+#include "Engine/Physics/Physics.h"
+#include "Engine/Physics/Body.h"
+#include "Engine/Physics/Convert.h"
+#include "Engine/Physics/DebugDraw.h"
 #include "Graphics/RenderDevice.h"
 
 #include <btBulletDynamicsCommon.h>

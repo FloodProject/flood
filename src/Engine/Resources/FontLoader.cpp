@@ -6,19 +6,19 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 
 #ifdef ENABLE_FONT_BITMAP
+
+#include "Engine/Resources/Loaders/FontLoader.h"
+#include "Resources/ResourceManager.h"
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/Stream.h"
 #include "Core/Archive.h"
 #include "Core/Utilities.h"
-#include "Math/Helpers.h"
-
-#include "Resources/FontLoader.h"
-#include "Resources/ResourceManager.h"
+#include "Core/Math/Helpers.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

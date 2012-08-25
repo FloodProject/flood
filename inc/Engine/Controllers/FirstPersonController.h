@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Controllers/CameraController.h"
-#include "Math/Vector.h"
-#include "Math/EulerAngles.h"
+#include "Engine/Controllers/CameraController.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/EulerAngles.h"
 
 NAMESPACE_ENGINE_BEGIN
 

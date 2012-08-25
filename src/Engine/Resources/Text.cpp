@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Text.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Text.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Component.h"
+#include "Engine/Scene/Component.h"
 #include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -56,7 +56,7 @@ void Component::onPreRender( const Camera& camera )
 
 //-----------------------------------//
 
-void Component::onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum )
+void Component::onDebugDraw( DebugDrawer&, DebugDrawFlags )
 {
 }
 

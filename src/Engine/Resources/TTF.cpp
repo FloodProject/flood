@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/TTF.h"
+#include "Engine/API.h"
+#include "Engine/Resources/TTF.h"
 
 #ifdef ENABLE_FONT_FREETYPE2
 

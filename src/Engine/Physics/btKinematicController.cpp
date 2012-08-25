@@ -25,7 +25,7 @@ misrepresented as being the original software.
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/btKinematicController.h"
+#include "Engine/Physics/btKinematicController.h"
 
 #include "LinearMath/btIDebugDraw.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"

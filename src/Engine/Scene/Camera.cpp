@@ -7,13 +7,13 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Camera.h"
-#include "Scene/Scene.h"
-#include "Scene/Geometry.h"
-#include "Scene/Tags.h"
+#include "Engine/Scene/Camera.h"
+#include "Engine/Scene/Scene.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Tags.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
-#include "Geometry/DebugGeometry.h"
+#include "Engine/Geometry/DebugGeometry.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -234,7 +234,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 		if( !component->isDebugRenderableVisible() )
 			continue;
 
-		DebugDrawFlags::Enum flags = (DebugDrawFlags::Enum) 0;
+		DebugDrawFlags flags = (DebugDrawFlags) 0;
 		component->onDebugDraw(drawer, flags);
 	}
 #endif
@@ -355,7 +355,7 @@ static Frustum CalculateWorldFrustum(const Transform* transform, Frustum local)
 	return local;
 }
 
-void Camera::onDebugDraw( DebugDrawer& debug, DebugDrawFlags::Enum )
+void Camera::onDebugDraw( DebugDrawer& debug, DebugDrawFlags )
 {
 	debug.drawFrustum( CalculateWorldFrustum(transform, frustum) );
 }

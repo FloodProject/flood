@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Input/InputManager.h"
-#include "Input/Device.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
-#include "Input/Joystick.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Device.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
+#include "Engine/Input/Joystick.h"
 #include "Window/Window.h"
 
 NAMESPACE_ENGINE_BEGIN

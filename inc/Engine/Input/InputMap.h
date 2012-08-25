@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
-#include "Input/Joystick.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
+#include "Engine/Input/Joystick.h"
 
 NAMESPACE_ENGINE_BEGIN
 

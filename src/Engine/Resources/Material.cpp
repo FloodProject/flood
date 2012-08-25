@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Material.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Material.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Log.h"
 

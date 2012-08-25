@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/BitmapFont.h"
+#include "Engine/API.h"
+#include "Engine/Resources/BitmapFont.h"
 
 #ifdef ENABLE_FONT_BITMAP
 

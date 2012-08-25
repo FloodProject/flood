@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/Shape.h"
-#include "Physics/Body.h"
+#include "Engine/Physics/Shape.h"
+#include "Engine/Physics/Body.h"
 
 NAMESPACE_ENGINE_BEGIN
 

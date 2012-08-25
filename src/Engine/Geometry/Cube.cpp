@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Geometry/Cube.h"
+#include "Engine/Geometry/Cube.h"
 #include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN

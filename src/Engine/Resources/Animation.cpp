@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Animation.h"
-#include "Resources/Bone.h"
-#include "Math/Helpers.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Animation.h"
+#include "Engine/Resources/Bone.h"
+#include "Core/Math/Helpers.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

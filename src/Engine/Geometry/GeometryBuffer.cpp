@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 #include "Core/Log.h"
 
 NAMESPACE_RESOURCES_BEGIN

@@ -8,15 +8,15 @@
 
 #include "Engine/API.h"
 #include "Core/Event.h"
-#include "Controllers/FirstPersonController.h"
-#include "Math/Helpers.h"
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-#include "Scene/Camera.h"
+#include "Engine/Controllers/FirstPersonController.h"
+#include "Core/Math/Helpers.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Camera.h"
 #include "Graphics/RenderDevice.h"
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
 #include "Window/Window.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -127,22 +127,22 @@ void FirstPersonController::checkControls( float delta )
 	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	const std::vector< bool >& state = keyboard->getKeyState();
 
-	if( state[Keys::W] )
+	if( keyboard->isKeyPressed(Keys::W) )
 		moveVector +=  Vector3::UnitZ;
 
-	if( state[Keys::S] )
+	if( keyboard->isKeyPressed(Keys::S))
 		moveVector += -Vector3::UnitZ;
 	
-	if( state[Keys::A] )
+	if( keyboard->isKeyPressed(Keys::A) )
 		moveVector +=  Vector3::UnitX;
 
-	if( state[Keys::D] )
+	if( keyboard->isKeyPressed(Keys::D) )
 		moveVector += -Vector3::UnitX;
 	
-	if( state[Keys::Q] )
+	if( keyboard->isKeyPressed(Keys::Q) )
 		moveVector +=  Vector3::UnitY;
 
-	if( state[Keys::Z] )
+	if( keyboard->isKeyPressed(Keys::Z) )
 		moveVector += -Vector3::UnitY;
 
 	if( moveVector != Vector3::Zero )

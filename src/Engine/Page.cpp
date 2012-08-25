@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "paging/Page.h"
+#include "Engine/Paging/Page.h"
 
 NAMESPACE_ENGINE_BEGIN
 

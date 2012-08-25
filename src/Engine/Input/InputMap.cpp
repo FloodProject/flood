@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Input/InputMap.h"
+#include "Engine/Input/InputMap.h"
 
 NAMESPACE_ENGINE_BEGIN
 

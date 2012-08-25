@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Projector.h"
-#include "Scene/Transform.h"
-#include "Scene/Entity.h"
-#include "Geometry/DebugGeometry.h"
+#include "Engine/Scene/Projector.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Geometry/DebugGeometry.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/ShaderProgramManager.h"
@@ -94,7 +94,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 
 void Projector::onPreRender( RenderView*, const RenderState& state )
 {
-	const TransformPtr& transform = getEntity()->getTransform();
+	const Transform* transform = getEntity()->getTransform().get();
 	const Matrix4x4& absoluteTransform = transform->getAbsoluteTransform();
 
 	const UniformBufferPtr& ub = state.renderable->getUniformBuffer();

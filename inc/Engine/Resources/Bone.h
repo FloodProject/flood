@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Math/Vector.h"
-#include "Math/EulerAngles.h"
-#include "Math/Matrix4x3.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/EulerAngles.h"
+#include "Core/Math/Matrix4x3.h"
 #include "Core/References.h"
 
 NAMESPACE_RESOURCES_BEGIN

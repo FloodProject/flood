@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "Scene/Group.h"
-#include "Resources/Image.h"
-#include "Terrain/Cell.h"
-#include "Terrain/Brush.h"
+#include "Engine/Scene/Group.h"
+#include "Engine/Resources/Image.h"
+#include "Engine/Terrain/Cell.h"
+#include "Engine/Terrain/Brush.h"
 
 NAMESPACE_ENGINE_BEGIN
 

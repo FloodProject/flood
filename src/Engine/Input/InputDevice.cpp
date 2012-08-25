@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "input/Device.h"
+#include "Engine/Input/Device.h"
 
 NAMESPACE_ENGINE_BEGIN
 

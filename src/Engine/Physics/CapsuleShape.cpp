@@ -11,12 +11,12 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/CapsuleShape.h"
-#include "Physics/Convert.h"
-#include "Physics/Body.h"
+#include "Engine/Physics/CapsuleShape.h"
+#include "Engine/Physics/Convert.h"
+#include "Engine/Physics/Body.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
 
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 

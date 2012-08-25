@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 
 #ifdef ENABLE_FONT_FREETYPE2
 
 #include "Resources/FontManager.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,11 +20,11 @@ FontManager::FontManager()
 {
 	if(initFT()) 
 	{
-		info("ttf", "Initialized FreeType %d.%d.%d", 
+		LogInfo("Initialized FreeType %d.%d.%d", 
 			FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
-	} else {
-		Log::error("Failed to initialize FreeType");
-		exit(EXIT_FAILURE);
+	} else
+	{
+		LogError("Failed to initialize FreeType");
 	}
 }
 
@@ -51,6 +51,6 @@ bool FontManager::initFT()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

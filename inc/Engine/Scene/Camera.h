@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "Scene/Component.h"
-#include "Math/Frustum.h"
-#include "Math/Matrix4x3.h"
+#include "Engine/Scene/Component.h"
+#include "Core/Math/Frustum.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Engine/Geometry/DebugGeometry.h"
 
 FWD_DECL_INTRUSIVE(Transform)
 FWD_DECL_INTRUSIVE(Scene)
@@ -90,7 +91,7 @@ protected:
 	void onTransform();
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Camera frustum.
 	Frustum frustum;

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Math/Color.h"
+#include "Core/Math/Color.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -82,7 +82,7 @@ public:
 	std::vector<uint8>& getBuffer() { return buffer; }
 
 	// Return the proper resource group for this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
 
 	// Sets the image with the given color.
 	void setColor( const Color& color );

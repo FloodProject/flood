@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/DebugDraw.h"
-#include "Physics/Convert.h"
+#include "Engine/Physics/DebugDraw.h"
+#include "Engine/Physics/Convert.h"
 #include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN

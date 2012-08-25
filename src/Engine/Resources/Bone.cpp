@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Bone.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Bone.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

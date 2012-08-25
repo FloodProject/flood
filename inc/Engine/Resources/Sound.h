@@ -53,7 +53,7 @@ public:
 	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
 	// Return the proper resource group for this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Audio)
 
 	// Sound frequency.
 	int32 frequency;

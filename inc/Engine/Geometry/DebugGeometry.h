@@ -9,9 +9,10 @@
 #pragma once
 
 #include "Core/References.h"
-#include "Math/BoundingBox.h"
-#include "Math/Frustum.h"
-#include "Math/Color.h"
+#include "Graphics/RenderBatch.h"
+#include "Core/Math/BoundingBox.h"
+#include "Core/Math/Frustum.h"
+#include "Core/Math/Color.h"
 
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(RenderBatch)
@@ -63,12 +64,9 @@ public:
 	std::vector<RenderBatch*> renderables;
 };
 
-namespace DebugDrawFlags
+enum class DebugDrawFlags
 {
-	enum Enum
-	{
-		Selected = (1 << 0)
-	};
+	Selected = (1 << 0)
 };
 
 class GeometryBuffer;

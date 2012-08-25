@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Scene/Geometry.h"
-#include "Geometry/Sphere.h"
-#include "Resources/Image.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Geometry/Sphere.h"
+#include "Engine/Resources/Image.h"
 
 FWD_DECL_INTRUSIVE(Entity)
 

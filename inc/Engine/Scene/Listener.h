@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Scene/Component.h"
-#include "Audio/Context.h"
+#include "Engine/Scene/Component.h"
+#include "Engine/Audio/Context.h"
 
 NAMESPACE_ENGINE_BEGIN
 

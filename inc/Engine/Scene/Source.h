@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Scene/Component.h"
-#include "Audio/Source.h"
+#include "Engine/Scene/Component.h"
+#include "Engine/Audio/Source.h"
 
 FWD_DECL_INTRUSIVE(Sound)
 

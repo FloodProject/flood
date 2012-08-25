@@ -11,7 +11,7 @@
 #ifdef ENABLE_IMAGE_STB
 
 #include "Resources/ResourceLoader.h"
-#include "Resources/Image.h"
+#include "Engine/Resources/Image.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -44,7 +44,7 @@ public:
 	GETTER(Name, const String, "STB_IMAGE")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
 };
 
 //-----------------------------------//

@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "GUI/Label.h"
-#include "Core/Utilities.h"
+#include "Engine/GUI/Label.h"
+#include "Engine/Scene/Geometry.h"
 #include "Resources/ResourceManager.h"
-#include "Scene/Geometry.h"
+#include "Core/Utilities.h"
 
 NAMESPACE_ENGINE_BEGIN
 

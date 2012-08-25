@@ -8,18 +8,18 @@
 
 #include "Engine/API.h"
 
-#include "Controllers/ScriptController.h"
-#include "Physics/CharacterController.h"
+#include "Engine/Controllers/ScriptController.h"
+#include "Engine/Physics/CharacterController.h"
 
-#include "Script/Script.h"
-#include "Script/ScriptManager.h"
+#include "Engine/Script/Script.h"
+#include "Engine/Script/ScriptManager.h"
 #include "Resources/ResourceManager.h"
 
-#include "Scene/Entity.h"
+#include "Engine/Scene/Entity.h"
 
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
 
 #include "Engine/Headers.h"
 
@@ -65,6 +65,16 @@ void ScriptController::createState()
 	
 	ScriptManager* scripts = engine->getScriptManager();
 	state = scripts->createScriptInstance(script.Resolve());
+}
+
+//-----------------------------------//
+
+void ScriptController::onKeyPress( const KeyEvent& event )
+{
+	if( !enabled || !state )
+		return;
+
+	Engine* engine = GetEngine();
 }
 
 //-----------------------------------//

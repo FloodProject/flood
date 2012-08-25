@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 typedef struct ALCdevice_struct ALCdevice;
 typedef struct ALCcontext_struct ALCcontext;

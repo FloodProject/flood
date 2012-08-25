@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Controllers/Controller.h"
-#include "Script/Script.h"
+#include "Engine/Controllers/Controller.h"
+#include "Engine/Script/Script.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Core/References.h"
-#include "Math/Vector.h"
-#include "Resources/Buffer.h"
+#include "Core/Math/Vector.h"
+#include "Engine/Resources/Buffer.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

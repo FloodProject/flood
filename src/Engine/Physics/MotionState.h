@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
-#include "Physics/MeshShape.h"
+#include "Engine/Physics/MeshShape.h"
 
 NAMESPACE_ENGINE_BEGIN
 

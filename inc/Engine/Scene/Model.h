@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "Scene/Geometry.h"
+#include "Engine/Scene/Geometry.h"
 
-#include "Resources/Mesh.h"
-#include "Resources/Animation.h"
-#include "Resources/Skeleton.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Animation.h"
+#include "Engine/Resources/Skeleton.h"
 
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
@@ -120,7 +120,7 @@ protected:
 	void updateFinalAnimationBones();
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Creates a debug renderable of the skeleton.
 	RenderBatchPtr createDebugRenderable() const;

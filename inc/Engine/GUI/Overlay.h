@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Scene/Geometry.h"
-#include "Math/Vector.h"
+#include "Engine/Scene/Geometry.h"
+#include "Core/Math/Vector.h"
 
 NAMESPACE_ENGINE_BEGIN
 

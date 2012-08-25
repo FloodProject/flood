@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Scene/Transform.h"
-#include "Math/BoundingBox.h"
+#include "Engine/Scene/Transform.h"
+#include "Core/Math/BoundingBox.h"
 #include "Graphics/RenderBatch.h"
 #include "Graphics/RenderQueue.h"
 

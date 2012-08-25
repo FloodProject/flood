@@ -10,20 +10,20 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/CharacterController.h"
-#include "Physics/Shape.h"
-#include "Physics/Convert.h"
-#include "Physics/Physics.h"
-#include "Physics/Body.h"
-#include "Physics/btKinematicController.h"
+#include "Engine/Physics/CharacterController.h"
+#include "Engine/Physics/Shape.h"
+#include "Engine/Physics/Convert.h"
+#include "Engine/Physics/Physics.h"
+#include "Engine/Physics/Body.h"
+#include "Engine/Physics/btKinematicController.h"
 
-#include "Math/Helpers.h"
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
+#include "Core/Math/Helpers.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
 
 #include "Engine/Engine.h"
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
 
 #include <BulletCollision/CollisionShapes/btConvexShape.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 

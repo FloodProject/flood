@@ -7,29 +7,32 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Scene.h"
-#include "Scene/Transform.h"
-#include "Scene/Tags.h"
-#include "Scene/Geometry.h"
-#include "Scene/SceneLoader.h"
+#include "Engine/Scene/Scene.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Tags.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/SceneLoader.h"
 #include "Graphics/RenderDevice.h"
 
 #include "Core/Profiler.h"
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
 
-#include "Scene/Model.h"
-#include "Resources/Animation.h"
-#include "Resources/Skeleton.h"
+#include "Engine/Scene/Model.h"
+#include "Engine/Resources/Animation.h"
+#include "Engine/Resources/Skeleton.h"
 
+#if SERIALIZE_SCENE
 #include <jansson.h>
+#endif
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-void SerializeScene(ReflectionContext* context, ReflectionWalkType::Enum wt)
+static void SerializeScene(ReflectionContext* context, ReflectionWalkType::Enum wt)
 {
+#if SERIALIZE_SCENE
 	if( !context->loading )
 	{
 		ReflectionWalkComposite(context);
@@ -56,6 +59,7 @@ void SerializeScene(ReflectionContext* context, ReflectionWalkType::Enum wt)
 
 		context->field = field;
 	}
+#endif
 }
 
 REFLECT_CHILD_CLASS(Scene, Resource)
@@ -329,7 +333,7 @@ static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositio
 
 static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
 {
-	const TransformPtr& transform = entity->getTransform();
+	const Transform* transform = entity->getTransform().get();
 	Matrix4x3 absolute = transform->getAbsoluteTransform().inverse();
 
 	Ray transRay;

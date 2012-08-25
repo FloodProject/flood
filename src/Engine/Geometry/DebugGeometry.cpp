@@ -7,12 +7,12 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Geometry/DebugGeometry.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Engine/Geometry/DebugGeometry.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 #include "Graphics/RenderBatch.h"
-#include "Scene/Geometry.h"
-#include "Scene/Entity.h"
-#include "Scene/Tags.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Tags.h"
 
 NAMESPACE_ENGINE_BEGIN
 

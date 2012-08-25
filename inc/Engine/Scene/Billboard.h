@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Scene/Component.h"
-#include "Scene/Transform.h"
-#include "Scene/Camera.h"
+#include "Engine/Scene/Component.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Camera.h"
 #include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN

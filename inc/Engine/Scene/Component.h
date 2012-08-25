@@ -10,7 +10,6 @@
 
 #include "Core/Object.h"
 #include "Core/References.h"
-#include "Geometry/DebugGeometry.h"
 
 FWD_DECL_INTRUSIVE(RenderBatch)
 FWD_DECL_INTRUSIVE(Camera)
@@ -19,6 +18,9 @@ FWD_DECL_INTRUSIVE(Entity)
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
+
+enum class DebugDrawFlags;
+class DebugDrawer;
 
 /**
  * Represents a component, a specific piece of functionality that can be
@@ -61,7 +63,7 @@ public:
 	virtual void setDebugRenderableVisible( bool visible );
 
 	// Called when it is time to draw debug data.
-	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum );
+	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags );
 
 	// Gets/sets if the debug.renderable inherits the transform.
 	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)

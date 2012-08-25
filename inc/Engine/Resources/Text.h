@@ -32,7 +32,7 @@ public:
 
 	virtual void parse() {}
 
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::General)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::General)
 
 protected:
 

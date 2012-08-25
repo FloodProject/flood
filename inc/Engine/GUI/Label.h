@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "GUI/Overlay.h"
-
-#include "Resources/Font.h"
-#include "Resources/Material.h"
+#include "Engine/GUI/Overlay.h"
+#include "Engine/Resources/Font.h"
+#include "Engine/Resources/Material.h"
 
 NAMESPACE_ENGINE_BEGIN
 

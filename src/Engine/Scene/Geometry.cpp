@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Geometry.h"
-#include "Scene/Entity.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Entity.h"
 
 NAMESPACE_ENGINE_BEGIN
 

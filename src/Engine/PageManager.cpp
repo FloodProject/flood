@@ -7,12 +7,12 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Paging/PageManager.h"
-#include "Paging/Page.h"
+#include "Engine/Paging/PageManager.h"
+#include "Engine/Paging/Page.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-#include "Scene/Camera.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Camera.h"
 
 #if 0
 

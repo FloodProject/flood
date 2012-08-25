@@ -10,8 +10,8 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Resources/Sound.h"
-#include "Math/Vector.h"
+#include "Engine/Resources/Sound.h"
+#include "Core/Math/Vector.h"
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)

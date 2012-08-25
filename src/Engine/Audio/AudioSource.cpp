@@ -10,11 +10,11 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Audio/Source.h"
-#include "Audio/Buffer.h"
-#include "Audio/Context.h"
-#include "Audio/Device.h"
-#include "Audio/AL.h"
+#include "Engine/Audio/Source.h"
+#include "Engine/Audio/Buffer.h"
+#include "Engine/Audio/Context.h"
+#include "Engine/Audio/Device.h"
+#include "Engine/Audio/AL.h"
 
 #define LogAudio(s) (LogWarn(s ": %s", AudioGetError()))
 

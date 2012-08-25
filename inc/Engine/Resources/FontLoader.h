@@ -11,9 +11,9 @@
 #ifdef ENABLE_FONT_BITMAP
 
 #include "Resources/ResourceLoader.h"	
-#include "Resources/Font.h"
-#include "Resources/BitmapFont.h"
-#include "Resources/TTF.h"
+#include "Engine/Resources/Font.h"
+#include "Engine/Resources/BitmapFont.h"
+#include "Engine/Resources/TTF.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -68,7 +68,7 @@ public:
 	GETTER(Name, const String, "FONTS")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Fonts)
 
 protected:
 

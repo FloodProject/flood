@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Resources/Text.h"
+#include "Engine/Resources/Text.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -36,7 +36,7 @@ public:
 	// Returns the fragment shader source code.
 	virtual const char* getFragmentSource() const = 0;
 
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Shaders)
 
 protected:
 

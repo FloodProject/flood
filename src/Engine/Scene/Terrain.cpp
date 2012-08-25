@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Terrain/Terrain.h"
-#include "Scene/Geometry.h"
-#include "Math/Helpers.h"
+#include "Engine/Terrain/Terrain.h"
+#include "Engine/Scene/Geometry.h"
+#include "Core/Math/Helpers.h"
 #include "Core/Utilities.h"
 
 NAMESPACE_ENGINE_BEGIN

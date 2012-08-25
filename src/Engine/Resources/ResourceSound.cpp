@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Sound.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Sound.h"
 #include "Core/Stream.h"
 
 NAMESPACE_RESOURCES_BEGIN

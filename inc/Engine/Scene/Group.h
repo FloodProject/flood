@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Scene/Entity.h"
+#include "Engine/Scene/Entity.h"
 
 NAMESPACE_ENGINE_BEGIN
 

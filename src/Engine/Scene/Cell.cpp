@@ -7,12 +7,12 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Terrain/Cell.h"
-#include "Terrain/Terrain.h"
-#include "Scene/Entity.h"
-#include "Scene/Geometry.h"
-#include "Math/Helpers.h"
-#include "Math/Color.h"
+#include "Engine/Terrain/Cell.h"
+#include "Engine/Terrain/Terrain.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Geometry.h"
+#include "Core/Math/Helpers.h"
+#include "Core/Math/Color.h"
 
 NAMESPACE_ENGINE_BEGIN
 

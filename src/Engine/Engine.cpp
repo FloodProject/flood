@@ -6,21 +6,23 @@
 *
 ************************************************************************/
 
+#define INSTANTIATE_TEMPLATES
+
 #include "Engine/API.h"
 #include "Engine/Engine.h"
 
 #include "Core/Memory.h"
+#include "Core/Network/Network.h"
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 #include "Graphics/Texture.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/Render.h"
-#include "Input/InputManager.h"
-#include "Audio/Device.h"
-#include "Script/ScriptManager.h"
-#include "Paging/PageManager.h"
-#include "Physics/Physics.h"
-#include "Network/Network.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Audio/Device.h"
+#include "Engine/Script/ScriptManager.h"
+#include "Engine/Paging/PageManager.h"
+#include "Engine/Physics/Physics.h"
 
 NAMESPACE_ENGINE_BEGIN
 

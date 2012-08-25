@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Resources/ResourceLoader.h"
-#include "Scene/Scene.h"
+#include "Engine/Scene/Scene.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -42,7 +42,7 @@ public:
 	GETTER(Name, const String, "Scene")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scenes)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Scenes)
 };
 
 //-----------------------------------//

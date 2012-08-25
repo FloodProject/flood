@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 
 #ifdef ENABLE_IMAGE_STB
 
-#include "Resources/STB_Image_Loader.h"
+#include "Engine/Resources/Loaders/STB_Image_Loader.h"
 #include "Core/Log.h"
 
 #define STBI_HEADER_FILE_ONLY

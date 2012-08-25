@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Scene/Geometry.h"
-#include "Math/Frustum.h"
+#include "Engine/Scene/Geometry.h"
+#include "Core/Math/Frustum.h"
 
 NAMESPACE_ENGINE_BEGIN
 

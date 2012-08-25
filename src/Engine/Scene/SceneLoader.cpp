@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/SceneLoader.h"
+#include "Engine/Scene/SceneLoader.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -30,11 +30,11 @@ static Serializer* GetSerializerForStream(const Stream& stream)
 	const String& ext = PathGetFileExtension(stream.path);
 
 	if(ext == "json")
-		return SerializerCreateJSON(AllocatorGetHeap());
+		return SerializerCreateJSON(AllocatorGetHeap(), 0);
 	else if(ext == "bin")
-		return SerializerCreateBinary(AllocatorGetHeap());
+		return SerializerCreateBinary(AllocatorGetHeap(), 0);
 
-	return SerializerCreateJSON(AllocatorGetHeap());
+	return SerializerCreateJSON(AllocatorGetHeap(), 0);
 }
 
 //-----------------------------------//

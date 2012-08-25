@@ -7,17 +7,17 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Controllers/ThirdPersonController.h"
+#include "Engine/Controllers/ThirdPersonController.h"
 
 #include "Engine/Engine.h"
-#include "Math/Helpers.h"
-#include "Scene/Entity.h"
-#include "Scene/Camera.h"
-#include "Scene/Scene.h"
+#include "Core/Math/Helpers.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Camera.h"
+#include "Engine/Scene/Scene.h"
 #include "Graphics/RenderDevice.h"
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
 
 NAMESPACE_ENGINE_BEGIN
 

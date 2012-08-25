@@ -6,14 +6,14 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Resources/Mesh.h"
-#include "Resources/Skeleton.h"
-#include "Resources/Animation.h"
+#include "Engine/API.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Skeleton.h"
+#include "Engine/Resources/Animation.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
-#include "Math/Vector.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Core/Math/Vector.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

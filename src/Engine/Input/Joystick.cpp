@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Input/Joystick.h"
+#include "Engine/Input/Joystick.h"
 
 NAMESPACE_ENGINE_BEGIN
 

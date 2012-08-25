@@ -8,11 +8,11 @@
 
 #include "Engine/API.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-#include "Scene/Geometry.h"
-#include "Scene/Group.h"
-#include "Scene/Tags.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Group.h"
+#include "Engine/Scene/Tags.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN

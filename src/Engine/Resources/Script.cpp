@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
-#include "Script/Script.h"
+#include "Engine/API.h"
+#include "Engine/Script/Script.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

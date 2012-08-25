@@ -10,10 +10,10 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Audio/Device.h"
-#include "Audio/Buffer.h"
-#include "Audio/Context.h"
-#include "Audio/AL.h"
+#include "Engine/Audio/Device.h"
+#include "Engine/Audio/Buffer.h"
+#include "Engine/Audio/Context.h"
+#include "Engine/Audio/AL.h"
 #include "Resources/ResourceManager.h"
 
 NAMESPACE_ENGINE_BEGIN

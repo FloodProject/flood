@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_FONT_FREETYPE2
 
-#include "Resources/Font.h"
+#include "Engine/Resources/Font.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

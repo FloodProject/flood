@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Resources/Bone.h"
+#include "Engine/Resources/Bone.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 #include "Resources/Resource.h"
-#include "Math/BoundingBox.h"
-#include "Math/Vector.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Core/Math/BoundingBox.h"
+#include "Core/Math/Vector.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Skeleton)
@@ -77,7 +77,7 @@ public:
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
 
 	// Gets the resource group of this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Meshes)
 
 public:
 

@@ -11,7 +11,7 @@
 #ifdef ENABLE_PHYSICS_BULLET
 
 #include "Core/References.h"
-#include "Resources/Material.h"
+#include "Engine/Resources/Material.h"
 
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 FWD_DECL_INTRUSIVE(Material)

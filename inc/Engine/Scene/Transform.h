@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "Math/EulerAngles.h"
-#include "Math/Quaternion.h"
-#include "Math/BoundingBox.h"
-#include "Scene/Component.h"
+#include "Core/Math/EulerAngles.h"
+#include "Core/Math/Quaternion.h"
+#include "Core/Math/BoundingBox.h"
+#include "Engine/Scene/Component.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -112,7 +112,7 @@ protected:
 	void setChanged(bool state = true);
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags::Enum ) OVERRIDE;
+	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Position.
 	Vector3 position;

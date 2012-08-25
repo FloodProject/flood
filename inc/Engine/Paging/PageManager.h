@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Engine/Subsystem.h"
-#include "Math/Vector.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Vector.h"
 #include "Core/Event.h"
 
 #if 0

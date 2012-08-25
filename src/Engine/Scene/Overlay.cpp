@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "GUI/Overlay.h"
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-#include "Scene/Tags.h"
+#include "Engine/GUI/Overlay.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Scene/Tags.h"
 #include "Graphics/RenderView.h"
 
 NAMESPACE_ENGINE_BEGIN

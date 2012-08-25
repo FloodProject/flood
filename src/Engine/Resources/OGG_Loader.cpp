@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 
 #ifdef ENABLE_AUDIO_OGG
 
-#include "Resources/OGG_Loader.h"
+#include "Engine/Resources/Loaders/OGG_Loader.h"
 #include "Core/Utilities.h"
 
 NAMESPACE_RESOURCES_BEGIN

@@ -11,7 +11,7 @@
 #ifdef ENABLE_AUDIO_OGG
 
 #include "Resources/ResourceLoader.h"
-#include "Resources/Sound.h"
+#include "Engine/Resources/Sound.h"
 
 #ifdef COMPILER_MSVC
 	#pragma warning(disable : 4244 )
@@ -50,7 +50,7 @@ public:
 	GETTER(Name, const String, "OGG")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Audio)
 
 protected:
 

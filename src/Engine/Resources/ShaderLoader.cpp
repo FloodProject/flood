@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "Resources/API.h"
+#include "Engine/API.h"
 
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
-#include "Resources/ShaderLoader.h"
-#include "Resources/ShaderMaterial.h"
+#include "Engine/Resources/Loaders/ShaderLoader.h"
+#include "Engine/Resources/ShaderMaterial.h"
 #include "Core/Log.h"
 
 NAMESPACE_RESOURCES_BEGIN

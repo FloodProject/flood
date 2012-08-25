@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Group.h"
-#include "Scene/Transform.h"
+#include "Engine/Scene/Group.h"
+#include "Engine/Scene/Transform.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN

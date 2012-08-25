@@ -8,8 +8,8 @@
 
 #include "Engine/API.h"
 
-#include "Math/Vector.h"
-#include "Math/Ray.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Ray.h"
 
 NAMESPACE_ENGINE_BEGIN
 

@@ -10,10 +10,10 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Math/Vector.h"
-#include "Math/BoundingBox.h"
-#include "Scene/Transform.h"
-#include "Physics/Body.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/BoundingBox.h"
+#include "Engine/Scene/Transform.h"
+#include "Engine/Physics/Body.h"
 
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btTransform.h>

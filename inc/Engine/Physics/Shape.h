@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Scene/Component.h"
+#include "Engine/Scene/Component.h"
 
 class btCollisionShape;
 

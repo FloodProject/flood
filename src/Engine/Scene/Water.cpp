@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Scene/Water.h"
+#include "Engine/Scene/Water.h"
 
 NAMESPACE_ENGINE_BEGIN
 

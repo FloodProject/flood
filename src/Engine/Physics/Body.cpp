@@ -11,13 +11,13 @@
 
 #ifdef ENABLE_PHYSICS_BULLET
 
-#include "Physics/Body.h"
-#include "Physics/Shape.h"
-#include "Physics/Physics.h"
-#include "Physics/Convert.h"
+#include "Engine/Physics/Body.h"
+#include "Engine/Physics/Shape.h"
+#include "Engine/Physics/Physics.h"
+#include "Engine/Physics/Convert.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
 
 #include "Engine/Engine.h"
 
@@ -49,7 +49,7 @@ Body::Body()
 
 Body::~Body()
 {
-	TransformPtr transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	
 	if(transform)
 		transform->onTransform.Disconnect( this, &Body::onTransform );
@@ -68,7 +68,7 @@ void Body::update( float delta )
 	
 	createBody();
 	
-	TransformPtr transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	transform->onTransform.Connect( this, &Body::onTransform);
 }
 
@@ -84,7 +84,7 @@ void Body::onTransform()
 		return;
 	}
 
-	TransformPtr transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	const Vector3& scale = transform->getScale();
 
 	btCollisionShape* shape = getBulletShape();
@@ -98,7 +98,7 @@ void Body::onTransform()
 
 btCollisionShape* Body::getBulletShape() const
 {
-	ShapePtr shape = entity->getComponentFromFamily<Shape>();
+	Shape* shape = entity->getComponentFromFamily<Shape>().get();
 	if( !shape ) return nullptr;
 
 	return shape->getBulletShape();
