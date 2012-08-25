@@ -21,7 +21,7 @@ project "Pipeline"
 	
 	vpaths
 	{
-		[""] = { "**src/Pipeline*", "**inc/Pipeline*" },
+		[""] = { "../src/", "../inc/" },
 		["Importers"] = { "**/*Importer*" },
 		["Importers/Milkshape"] = { "**/*Milkshape*" },
 		["Importers/FBX"] = { "**/*FBX*" },

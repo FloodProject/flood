@@ -1,10 +1,14 @@
 Resources = {}
+Resources.name = "Resources"
+Resources.defines = {}
 
 project "Resources"
 
 	kind "StaticLib"
 	builddeps { "Core" }
 	
+	defines { Core.defines, Resources.defines }
+
 	pchheader "Resources/API.h"
 	pchsource "../src/Resources/ResourceManager.cpp"
 	
@@ -17,22 +21,8 @@ project "Resources"
 	
 	vpaths
 	{
-		[""] = { "../../src/Resources/", "../../inc/Resources/" },
-		["Animation"] = { "Animation*", "Attachment*", "Bone*", "Skeleton*" },
-		["Database"] = "ResourceDatabase*",
-		["Fonts"] = { "*Font*", "TTF*" },
-		["Images"] = { "Image*" },
-		["Images/STB"] = { "STB*", "stb_image*" },
-		["Images/PNG"] = { "lodepng*", "picopng*", "PNG_Loader*" },
-		["Indexer"] = "ResourceIndexer*",
-		["Materials"] = "Material*",
-		["Meshes"] = "Mesh*",
-		["Scripts"] = { "Script*", "LuaLoader*" },
-		["Shaders"] = "Shader*",
-		["Sounds"] = { "Sound*", "ResourceSound*" },
-		["Sounds/OGG"] = "OGG*",
-		["Text"] = "Text*",
-	}
+		[""] = { "../src/", "../inc/" },
+	}	
 
 	includedirs
 	{
@@ -49,9 +39,6 @@ project "Resources"
 
 	Resources.deps =
 	{
-		"Lode",
-		"OggVorbis",
-		"SeanBarrett"
 	}
 	
 	deps(Resources.deps)

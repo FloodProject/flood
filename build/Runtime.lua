@@ -1,12 +1,13 @@
+Runtime = {}
+Runtime.name = "Runtime"
+
 project "Runtime"
 
-	kind "WindowedApp"
-	builddeps { "Core", "Resources", "Engine", "Pipeline" }
-	
-	targetdir "../bin/Runtime"
-	debugdir "../bin"
+	kind "ConsoleApp"
+	builddeps { "Core", "Resources" }
+	targetdir "../bin/"
 
-	--pchheader "Engine/API.h"
+	--pchheader "Runtime/API.h"
 	--pchsource "../src/Runtime/Runtime.cpp"
 	
 	files
@@ -15,51 +16,48 @@ project "Runtime"
 		"../src/Runtime/**.h",
 		"../src/Runtime/**.cpp",
 		"../src/Runtime/**.rc",
-		"../dep/AnyOption/*.cpp",
-		"../dep/AnyOption/*.h",
 	}
 	
 	vpaths
 	{
-		[""] = { "../../src/Runtime/", "../../inc/Runtime/" },
+		[""] = { "../src/Runtime/", "../inc/Runtime/" },
 	}
 
 	includedirs
 	{
 		"../inc/",
 		"../src/",
-		"../dep/mono/include",
-		"../dep/vld/include",
-		"../dep/AnyOption"
+		"../deps/Mono/eglib/src/"
 	}
 	
 	libdirs
 	{
 		Core.libdirs,
 		Resources.libdirs,
-		Engine.libdirs,
-		Pipeline.libdirs,
-		"../dep/wx/lib/vc_dll",
-		"../dep/mono/lib/",
 	}
-	
+
 	links
 	{
 		"Core", Core.links,
 		"Resources", Resources.links,
-		"Graphics", Graphics.links,
-		"Engine", Engine.links,
-		"Pipeline", Pipeline.links,
-		Mono.links,
 	}
-	
+
+	Runtime.deps =
+	{
+		"AnyOption",
+		"Mono"
+	}
+
+	deps(Runtime.deps)
+
 	configuration "windows"
-		defines { "__WXMSW__" }
-		includedirs { "../dep/wx/include/msvc" }
-		links { "wxmsw29ud","wxmsw29ud_gl" }
+		links
+		{
+			"Mswsock",
+			"ws2_32",
+			"psapi",
+			"version",
+			"winmm"
+		}
 
-	configuration "vs*"
-		defines { "_CRT_SECURE_NO_WARNINGS" }
-
-	configuration "*"
-		defines { '_LIB', 'WXUSINGDLL', 'WXMONOLITHIC' }
+	configuration {}

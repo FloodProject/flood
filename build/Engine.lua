@@ -1,43 +1,32 @@
 Engine = {}
+Engine.name = "Engine"
+Engine.isShared = true
+Engine.defines = {}
 
 project "Engine"
 
-	kind "StaticLib"
-	builddeps { "Core", "Resources", "Graphics" }
+	if Engine.isShared then
+		kind "SharedLib"
+		table.insert(Engine.defines, "API_ENGINE_DLL")
+		defines { Engine.defines, "API_ENGINE_DLL_EXPORT" }
+	else
+		kind "StaticLib"
+	end
+
+	defines { Core.defines }
+
+	builddeps { Core.name, Resources.name, Graphics.name }
 
 	pchheader "Engine/API.h"
 	pchsource "../src/Engine/Engine.cpp"
 
+	defines { "AL_LIBTYPE_STATIC" }
+
 	files
 	{
 		"Engine.lua",
-		"../inc/Audio/**.h",
-		"../src/Audio/**.cpp",
 		"../inc/Engine/**.h",
-		"../src/Engine/**.cpp",
-		"../inc/Geometry/**.h",
-		"../src/Geometry/**.cpp",
-		"../inc/Scene/**.h",
-		"../src/Scene/**.cpp",
-		"../inc/Physics/**.h",
-		"../src/Physics/**.cpp",
-		"../inc/Controllers/**.h",
-		"../src/Controllers/**.cpp",
-		"../inc/Terrain/**.h",
-		"../src/Terrain/**.cpp",
-		"../inc/Input/**.h",
-		"../src/Input/**.cpp",
-		"../inc/Script/**.h",
-		"../src/Script/**.cpp",
-		"../inc/Paging/**.h",
-		"../src/Paging/**.cpp",
-		"../inc/GUI/**.h",
-		"../src/GUI/**.cpp",
-		"../inc/Window/**.h",
-		"../src/Window/**.cpp",
-		"../inc/Framework/**.h",
-		"../src/Framework/**.cpp",
-		"../interface/Bindings/*.i",
+		"../src/Engine/**.cpp",			
 	}
 	
 	vpaths
@@ -56,27 +45,45 @@ project "Engine"
 	includedirs
 	{
 		"../inc/",
-		"../interface/Bindings",
+		"../deps/SeanBarrett",
+		"../deps/Jansson/include"
 	}
 	
 	Engine.deps =
 	{
 		"Bullet",
 		"OpenAL",
-		"GLEW",
-	}
-	
-	deps { Core.deps, Engine.deps }
-
-	Engine.libdirs =
-	{
-
+		"OggVorbis",
+		"stb_image",
+		Graphics.deps
+		--"LodePNG",
 	}
 
 	Engine.links =
 	{
-		"opengl32",
+		Core.name,
+		Graphics.name,
+		Resources.name,
+		Graphics.links
 	}
 
+	configuration "windows"
+		links { "winmm" }
+
+	Engine.libdirs =
+	{
+		"../bin/",
+		Graphics.libdirs
+	}	
+	
+	if Core.isShared == false then
+		deps { Core.deps }
+	else
+		SetupLibLinks(Core.name)
+	end
+
+	deps { Engine.deps  }
+	links { Engine.links }
+	libdirs { Engine.libdirs }
+
 	configuration {}
-		defines { "AL_LIBTYPE_STATIC" }

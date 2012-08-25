@@ -4,7 +4,7 @@
 
 action = _ACTION or ""
 flags_common = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
-flags_msvc = { "/wd4190", "/wd4530" }
+flags_msvc = { "/wd4190", "/wd4530", "/wd4251" }
 
 dofile "Helpers.lua"
 
@@ -17,10 +17,6 @@ end
 
 dofile "Config.lua"
 
-FindWxWidgets()
-FindFBX()
-FindMono()
-
 print("Generating the build configuration 'Build.h'")
 local conf = GenerateBuildConfig(config)
 WriteConfigToFile(conf, "Build.h")
@@ -28,7 +24,7 @@ WriteConfigToFile(conf, "Build.h")
 solution "Flush"
 	
 	configurations
-	{ 
+	{
 		"Debug",
 		"Release"
 	}
@@ -40,8 +36,11 @@ solution "Flush"
 	location (action)
 	objdir (action .. "/obj/")
 	targetdir (action .. "/lib/")
-	
+	debugdir "../bin"
+
 	flags { flags_common }
+
+	libdirs { action .. "/lib/" }
 		
 	-- Build configuration options
 	
@@ -74,10 +73,12 @@ solution "Flush"
 	dofile "Graphics.lua"
 	dofile "Engine.lua"
 	dofile "Pipeline.lua"
-	--dofile "Editor.lua"
-	--dofile "Runtime.lua"
+
+	dofile "Runtime.lua"
 	dofile "UnitTests.lua"
 	
+	--dofile "Editor.lua"
+
 	-- Keep the managed layer disabled for now.
 	--dofile "EngineManaged.lua"
 	--dofile "EditorManaged.lua"

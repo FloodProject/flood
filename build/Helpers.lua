@@ -8,36 +8,35 @@ function FindWxWidgets()
 	wxWidgets.links = {}
 end
 
-function FindMono()
-	Mono = {}
-	Mono.links = { "eglib", "libgc", "mono-2.0" }
-end
-
 function debug(msg)
 	-- print(msg)
 end
 
+local depsdir = "../deps/"
+
 function SetupLibPaths(lib) 
 	c = configuration {}
 	
-	local src = "../deps/" .. lib .. "/src/"
-	local include = "../deps/" .. lib .. "/include/"
+	local src = depsdir .. lib .. "/src/"
+	local include = depsdir .. lib .. "/include/"
 	
 	if os.isdir(path.getabsolute(include)) then
 		debug("Including lib", lib, "from", include)
 		includedirs { include }
 	elseif os.isdir(path.getabsolute(src)) then
+		debug("Including lib", lib, "from", src)
 		includedirs { src }
 	else
-		includedirs { "../deps/" .. lib }
+		debug("Including lib", lib, "from", depsdir .. lib)
+		includedirs { depsdir .. lib }
 	end
 
-	local libpath = "../deps/" .. lib .. "/lib/" .. action
+	local libpath = depsdir .. lib .. "/lib/" .. action
 	if os.isdir(path.getabsolute(libpath)) then
 		libdirs { libpath }
 	end
 	
-	libdirs { "../deps/build/" .. action .. "/lib" }
+	libdirs { depsdir .. "build/" .. action .. "/lib" }
 	
 	configuration(c)
 end
@@ -62,6 +61,12 @@ function deps(dep)
 			SetupLibLinks(lib)
 		end
 	end
+end
+
+function vpaths(arg)
+end
+
+function debugdir(arg)
 end
 
 function startup(prj)

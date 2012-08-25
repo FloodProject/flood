@@ -1,22 +1,26 @@
 Graphics = {}
+Graphics.name = "Graphics"
+Graphics.defines = {}
 
 project "Graphics"
 
 	kind "StaticLib"	
-	builddeps { "Core", "Resources" }
+	builddeps { Core.name, Resources.name }
+
+	defines { Core.defines, Resources.defines }
 
 	files
 	{
 		"Graphics.lua",
-		"../inc/Graphics/*.h",
-		"../src/Graphics/*.cpp",
+		"../inc/Graphics/**.h",
+		"../src/Graphics/**.cpp",
 		"../src/Graphics/Backends/*.h",
 		"../src/Graphics/Backends/*.cpp",
 	}
 	
 	vpaths
 	{
-		[""] = { "../../src/Graphics/", "../../inc/Graphics/" },
+		[""] = { "../src/", "../inc/" },
 		["Buffers"] = { "*Buffer*" },
 		["Managers"] = { "*Manager*" },
 		["Capabilities"] = { "RenderCapabilities*" },
@@ -30,12 +34,10 @@ project "Graphics"
 	includedirs
 	{
 		"../inc/",
-		"../dep/glew/include",
 	}
 
 	Graphics.libdirs =
 	{
-		"../dep/glew/lib/vc10",
 	}
 
 	Graphics.links =

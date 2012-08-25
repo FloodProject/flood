@@ -1,8 +1,19 @@
 Core = {}
+Core.name = "Core"
+Core.isShared = true
+Core.defines = {}
 
 project "Core"
 
-	kind "StaticLib"
+	if Core.isShared then
+		kind "SharedLib"
+		targetdir "../bin/"
+		table.insert(Core.defines, "API_CORE_DLL")
+		defines { Core.defines, "API_CORE_DLL_EXPORT" }
+	else
+		kind "StaticLib"
+	end
+
 	pchheader "Core/API.h"
 	pchsource "../src/Core/Core.cpp"
 
@@ -12,11 +23,16 @@ project "Core"
 		"Core.lua",
 		"../inc/Core/**.h",
 		"../src/Core/**.cpp",
-		"../inc/Math/**.h",
-		"../src/Math/**.cpp",
-		"../inc/Network/**.h",
-		"../src/Network/**.cpp",
+		"../inc/Core/Math/**.h",
+		"../src/Core/Math/**.cpp",
+		"../inc/Core/Network/**.h",
+		"../src/Core/Network/**.cpp",
 	}
+
+	vpaths
+	{
+		[""] = { "../src/", "../inc/" },
+	}	
 
 	excludes
 	{
@@ -30,34 +46,40 @@ project "Core"
 	}
 	
 	Core.links = {}
-	Core.libdirs = {}
 	
+	Core.libdirs = {}
+
 	Core.deps =
 	{
 		"cURL",
+		"dlmalloc",
 		"ENet",
 		"FastLZ",
 		"Jansson",
 		"Mongoose",
 		"zlib",
 		"zziplib",
-		"UnitTest++",
 	}
-	
-	if os.is("windows") then
-		table.insert(Core.links, "ws2_32")
-		
-		-- Setup Visual Leak Detector
---		if config.MEMORY_LEAK_DETECTOR then
---			table.insert(Core.links, "vld")
---			table.insert(Core.libdirs, "../deps/VisualLeakDetector/lib/Win32")
---		end
-	end
-	
-	deps(Core.deps)
-	
+
 	configuration "windows"
 	
 		files { "../src/Platforms/Win32/File*.cpp" }
 		files { "../src/Platforms/Win32/Concurrency*.cpp" }
 		
+		table.insert(Core.links, "ws2_32")
+		table.insert(Core.links, "winmm")
+		
+		-- Setup Visual Leak Detector
+		if config.MEMORY_LEAK_DETECTOR then
+			table.insert(Core.links, "vld")
+			table.insert(Core.libdirs,
+				depsdir .. "VisualLeakDetector/lib/Win32")
+		end
+
+	configuration {}
+
+	links { Core.links }
+	libdirs { Core.libdirs }
+	deps(Core.deps)	
+
+	
