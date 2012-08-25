@@ -8,9 +8,9 @@
 
 #pragma once
 
+#include "Core/Memory.h"
 #include <deque>
 #include <algorithm>
-#include "Core/Memory.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -26,8 +26,7 @@ struct Condition;
  * thread-safe-queue-using-condition-variables.html
  */
 
-template<typename T>
-class API_CORE ConcurrentQueue
+template<typename T> class ConcurrentQueue
 {
 public:
 

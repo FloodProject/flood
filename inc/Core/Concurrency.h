@@ -22,20 +22,21 @@ NAMESPACE_EXTERN_BEGIN
  * and system resources.
  */
 
-enum_class_begin(ThreadPriority)
-	Low = -1,
+enum class ThreadPriority
+{
+	Low,
 	Normal,
 	High
-enum_class_end
+};
 
 struct Thread;
 typedef Delegate2<Thread*, void*> ThreadFunction;
 
-struct Thread
+struct API_CORE Thread
 {
 	void* Handle;
 	volatile bool IsRunning;
-	enum_class(ThreadPriority) Priority;
+	ThreadPriority Priority;
 	ThreadFunction Function;
 	void* Userdata;
 };
@@ -60,7 +61,7 @@ typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
  * computer code called critical sections.
  */
 
-struct Mutex;
+struct API_CORE Mutex;
 
 API_CORE Mutex* MutexCreate(Allocator*);
 API_CORE void   MutexDestroy(Mutex*);
@@ -73,7 +74,7 @@ typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
 
 //-----------------------------------//
 
-struct Condition;
+struct API_CORE Condition;
 
 API_CORE Condition* ConditionCreate(Allocator*);
 API_CORE void       ConditionDestroy(Condition*);
@@ -93,7 +94,7 @@ typedef scoped_ptr<Condition, ConditionDestroy> ConditionPtr;
  * Remarks: On Windows this should be aligned to 32-bits.
  */
 
-typedef int32 Atomic;
+typedef volatile int32 Atomic;
 
 API_CORE int32 AtomicRead(volatile Atomic* atomic);
 API_CORE int32 AtomicWrite(volatile Atomic* atomic, int32 value);
@@ -111,7 +112,7 @@ API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
 struct Task;
 typedef Delegate1<Task*> TaskFunction;
 
-struct Task
+struct API_CORE Task
 {
 	int16 group;
 	int16 priority;
@@ -126,9 +127,14 @@ API_CORE void  TaskRun(Task*);
 typedef scoped_ptr<Task, TaskDestroy> TaskPtr;
 #define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, __VA_ARGS__)
 
-enum TaskState { Added, Started, Finished };
+enum class TaskState
+{
+	Added,
+	Started,
+	Finished
+};
 
-struct TaskEvent
+struct API_CORE TaskEvent
 {
 	Task* task;
 	TaskState state;
@@ -145,7 +151,7 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-struct TaskPool
+struct API_CORE TaskPool
 {
 	std::vector<Thread*> Threads;
 	ConcurrentQueue<Task*> Tasks;
