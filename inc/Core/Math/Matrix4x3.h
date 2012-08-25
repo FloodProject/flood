@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Math/Vector.h"
-#include "Math/EulerAngles.h"
-#include "Math/Quaternion.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/EulerAngles.h"
+#include "Core/Math/Quaternion.h"
 
 NAMESPACE_CORE_BEGIN
 

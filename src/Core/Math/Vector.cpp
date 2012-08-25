@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 

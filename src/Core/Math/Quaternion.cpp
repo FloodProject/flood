@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Quaternion.h"
+#include "Core/Math/Quaternion.h"
 #include "Core/Log.h"
 #include <cassert>
 

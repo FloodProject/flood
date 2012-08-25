@@ -5,7 +5,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Helpers.h"
+#include "Core/Math/Helpers.h"
 
 #include <cstdlib>
 

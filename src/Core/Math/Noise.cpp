@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Noise.h"
-#include "Math/Helpers.h"
+#include "Core/Math/Noise.h"
+#include "Core/Math/Helpers.h"
 #include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN

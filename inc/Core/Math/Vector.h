@@ -203,9 +203,9 @@ struct API_CORE Vector2 : public Vector2P
 	// Zeroes the vector.
 	void zero() { x = y = 0; }
 
-	static API_CORE const Vector2 Zero;
-	static API_CORE const Vector2 UnitX;
-	static API_CORE const Vector2 UnitY;
+	static const Vector2 Zero;
+	static const Vector2 UnitX;
+	static const Vector2 UnitY;
 };
 
 //-----------------------------------//

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Math/Vector.h"
-#include "Math/Matrix4x3.h"
-#include "Math/Ray.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Ray.h"
 
 NAMESPACE_CORE_BEGIN
 

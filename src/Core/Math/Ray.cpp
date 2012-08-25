@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Ray.h"
-#include "Math/Helpers.h"
+#include "Core/Math/Ray.h"
+#include "Core/Math/Helpers.h"
 
 NAMESPACE_CORE_BEGIN
 

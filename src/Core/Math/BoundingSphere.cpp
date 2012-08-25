@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/BoundingSphere.h"
+#include "Core/Math/BoundingSphere.h"
 #include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN

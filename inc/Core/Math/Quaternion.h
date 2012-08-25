@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Math/Helpers.h"
-#include "Math/EulerAngles.h"
+#include "Core/Math/Helpers.h"
+#include "Core/Math/EulerAngles.h"
 #include <cmath>
 
 NAMESPACE_CORE_BEGIN

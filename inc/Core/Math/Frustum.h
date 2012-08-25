@@ -8,12 +8,13 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
-#include "Math/Vector.h"
-#include "Math/Matrix4x4.h"
-#include "Math/Plane.h"
-#include "Math/BoundingBox.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Matrix4x4.h"
+#include "Core/Math/Plane.h"
+#include "Core/Math/BoundingBox.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -36,7 +37,7 @@ REFLECT_DECLARE_ENUM(Projection);
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-REFLECT_DECLARE_CLASS(Frustum)
+API_CORE REFLECT_DECLARE_CLASS(Frustum)
 
 struct API_CORE Frustum
 {

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/EulerAngles.h"
+#include "Core/Math/EulerAngles.h"
 
 NAMESPACE_CORE_BEGIN
 

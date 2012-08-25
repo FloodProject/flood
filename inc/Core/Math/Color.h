@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 

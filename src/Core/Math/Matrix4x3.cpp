@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Math/Matrix4x3.h"
-#include "Math/Helpers.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Helpers.h"
 #include <cmath>
 
 NAMESPACE_CORE_BEGIN
