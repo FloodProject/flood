@@ -34,7 +34,7 @@ NAMESPACE_CORE_BEGIN
 		_enum.type = Type::Enumeration; \
 
 #define ENUM(value) \
- EnumAddValue(&_enum, TOSTRING(value), This::value);
+ EnumAddValue(&_enum, TOSTRING(value), (int32) This::value);
 
 #define REFLECT_ENUM_END() \
 	ReflectionRegisterType(&_enum); \
@@ -183,7 +183,7 @@ NAMESPACE_CORE_BEGIN
 
 #define FIELD_PRIMITIVE(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
-	fieldName.type = &Primitive::s_##fieldType; \
+	fieldName.type = &PrimitiveGetBuiltins().p_##fieldType; \
 	FIELD_COMMON(fieldId, fieldType, fieldName)
 
 #define FIELD_PRIMITIVE_SETTER(fieldId, fieldType, fieldName, setterName) \

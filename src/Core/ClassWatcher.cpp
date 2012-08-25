@@ -11,7 +11,7 @@
 #include "Core/Memory.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
-#include "Math/Hash.h"
+#include "Core/Math/Hash.h"
 
 NAMESPACE_CORE_BEGIN
 

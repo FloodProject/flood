@@ -10,9 +10,9 @@
 
 #include "Core/Handle.h"
 
-#include "Math/Vector.h"
-#include "Math/Color.h"
-#include "Math/Quaternion.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Color.h"
+#include "Core/Math/Quaternion.h"
 
 NAMESPACE_CORE_BEGIN
 

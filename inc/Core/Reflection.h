@@ -21,7 +21,13 @@ NAMESPACE_EXTERN_BEGIN
 
 struct API_CORE TypeAttribute
 {
-
+	enum MetaType : uint8
+	{
+		String,
+		Integer,
+		KeyValue,
+		Flags
+	};
 };
 
 //-----------------------------------//
@@ -40,10 +46,12 @@ struct API_CORE Type
 		Enumeration,
 	};
 
-	Type() {}
+	Type()
+	{}
 
 	Type(MetaType type, const char* name, uint16 size)
-		: type(type), name(name), size(size), serialize(nullptr) {}
+		: type(type), name(name), size(size), serialize(nullptr)
+	{}
 
 	// Meta type of the type.
 	MetaType type;
@@ -55,7 +63,7 @@ struct API_CORE Type
 	uint16 size;
 
 	// Attributes of the type.
-	std::vector<TypeAttribute> attributes;
+	//std::vector<TypeAttribute> attributes;
 
 	// Custom walk function.
 	ReflectionWalkFunction serialize;
@@ -120,7 +128,8 @@ typedef std::map<ClassId, Class*> ClassIdMap;
 
 struct API_CORE Class : public Type
 {
-	Class() : parent(nullptr), create_fn(nullptr) { }
+	Class() : parent(nullptr), create_fn(nullptr)
+	{ }
 
 	// Class id.
 	ClassId id;
@@ -260,29 +269,39 @@ struct API_CORE Primitive : public Type
 		Quaternion,
 	};
 
-	Primitive() {}
+	Primitive()
+	{}
 
 	Primitive(PrimitiveType type, const char* name, uint16 size)
-		: Type(Type::Primitive, name, size), type(type) {}
+		: Type(Type::Primitive, name, size), type(type)
+	{}
 
 	PrimitiveType type;
-
-	static Primitive s_bool;
-	static Primitive s_int8;
-	static Primitive s_uint8;
-	static Primitive s_int16;
-	static Primitive s_uint16;
-	static Primitive s_int32;
-	static Primitive s_uint32;
-	static Primitive s_int64;
-	static Primitive s_uint64;
-	static Primitive s_float;
-	static Primitive s_string;
-	static Primitive s_Vector3;
-	static Primitive s_Color;
-	static Primitive s_Quaternion;
-	static Primitive s_Bitfield;
 };
+
+struct PrimitiveBuiltins
+{
+	PrimitiveBuiltins();
+
+	Primitive p_bool;
+	Primitive p_int8;
+	Primitive p_uint8;
+	Primitive p_int16;
+	Primitive p_uint16;
+	Primitive p_int32;
+	Primitive p_uint32;
+	Primitive p_int64;
+	Primitive p_uint64;
+	Primitive p_float;
+	Primitive p_double;
+	Primitive p_string;
+	Primitive p_Vector3;
+	Primitive p_Color;
+	Primitive p_Quaternion;
+};
+
+// Gets the primitive builtin types.
+API_CORE PrimitiveBuiltins& PrimitiveGetBuiltins();
 
 //-----------------------------------//
 
@@ -329,7 +348,7 @@ void FieldSet( const Field* field, void* object, const T& value )
 
 // Recursively finds and creates instances of child classes.
 template<typename T>
-API_CORE void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& instances)
+void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& instances)
 {
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{

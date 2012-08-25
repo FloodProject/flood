@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Core/Utilities.h"
 #include "Core/String.h"
-#include "Math/Hash.h"
+#include "Core/Math/Hash.h"
 
 #include <sstream>
 #include <algorithm>
