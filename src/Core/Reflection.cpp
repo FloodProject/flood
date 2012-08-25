@@ -10,9 +10,9 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Log.h"
-#include "Math/Hash.h"
-#include "Math/Vector.h"
-#include "Math/Color.h"
+#include "Core/Math/Hash.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Color.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -175,7 +175,8 @@ void ClassAddField(Class* klass, Field* field)
 
 	if( ClassGetFieldById(klass, field->id) )
 	{
-		LogAssert("Duplicate id found for field '%s' in '%s'", field->name, klass->name);
+		LogAssert("Duplicate id found for field '%s' in '%s'",
+			field->name, klass->name);
 		return;
 	}
 
@@ -358,41 +359,49 @@ void FieldSetSetter(Field* field, FieldSetterFunction fn)
 
 #define PT(type) Primitive::PrimitiveType::type
 
-#pragma TODO("Do not use static init for primitive types")
+PrimitiveBuiltins::PrimitiveBuiltins()
+	: p_bool(PT(Bool), "bool", sizeof(bool))
+	, p_int8(PT(Int8), "int8", sizeof(int8))
+	, p_uint8(PT(Uint8), "uint8", sizeof(uint8))
+	, p_uint16(PT(Uint16), "uint16", sizeof(uint16))
+	, p_int16(PT(Int16), "int16", sizeof(int16))
+	, p_int32(PT(Int32), "int32", sizeof(int32))
+	, p_uint32(PT(Uint32), "uint32", sizeof(uint32))
+	, p_int64(PT(Int64), "int64", sizeof(int64))
+	, p_uint64(PT(Uint64), "uint64", sizeof(uint64))
+	, p_float(PT(Float), "float", sizeof(float))
+	, p_string(PT(String), "string", sizeof(String))
+	, p_Vector3(PT(Vector3), "Vector3", sizeof(Vector3))
+	, p_Color(PT(Color), "Color", sizeof(Color))
+	, p_Quaternion(PT(Quaternion), "Quaternion", sizeof(Quaternion))
+{}
 
-Primitive Primitive::s_bool(PT(Bool), "bool", sizeof(bool));
-Primitive Primitive::s_int8(PT(Int8), "int8", sizeof(int8));
-Primitive Primitive::s_uint8(PT(Uint8), "uint8", sizeof(uint8));
-Primitive Primitive::s_uint16(PT(Uint16), "uint16", sizeof(uint16));
-Primitive Primitive::s_int16(PT(Int16), "int16", sizeof(int16));
-Primitive Primitive::s_int32(PT(Int32), "int32", sizeof(int32));
-Primitive Primitive::s_uint32(PT(Uint32), "uint32", sizeof(uint32));
-Primitive Primitive::s_int64(PT(Int64), "int64", sizeof(int64));
-Primitive Primitive::s_uint64(PT(Uint64), "uint64", sizeof(uint64));
-Primitive Primitive::s_float(PT(Float), "float", sizeof(float));
-Primitive Primitive::s_string(PT(String), "string", sizeof(String));
-Primitive Primitive::s_Vector3(PT(Vector3), "Vector3", sizeof(Vector3));
-Primitive Primitive::s_Color(PT(Color), "Color", sizeof(Color));
-Primitive Primitive::s_Quaternion(PT(Quaternion), "Quaternion", sizeof(Quaternion));
+#undef PT
+
+PrimitiveBuiltins& PrimitiveGetBuiltins()
+{
+	static PrimitiveBuiltins g_PrimitiveBuiltins;
+	return g_PrimitiveBuiltins;
+}
 
 //-----------------------------------//
 
 // Specializations for all known primitive types.
-template<> Primitive* GetPrimitiveFromType<bool>() { return &Primitive::s_bool; }
-template<> Primitive* GetPrimitiveFromType<int8>() { return &Primitive::s_int8; }
-template<> Primitive* GetPrimitiveFromType<uint8>() { return &Primitive::s_uint8; }
-template<> Primitive* GetPrimitiveFromType<int16>() { return &Primitive::s_int16; }
-template<> Primitive* GetPrimitiveFromType<uint16>() { return &Primitive::s_uint16; }
-template<> Primitive* GetPrimitiveFromType<int32>() { return &Primitive::s_int32; }
-template<> Primitive* GetPrimitiveFromType<uint32>() { return &Primitive::s_uint32; }
-template<> Primitive* GetPrimitiveFromType<int64>() { return &Primitive::s_int64; }
-template<> Primitive* GetPrimitiveFromType<uint64>() { return &Primitive::s_uint64; }
-template<> Primitive* GetPrimitiveFromType<float>() { return &Primitive::s_float; }
-template<> Primitive* GetPrimitiveFromType<const char*>() { return &Primitive::s_string; }
-template<> Primitive* GetPrimitiveFromType<String>() { return &Primitive::s_string; }
-template<> Primitive* GetPrimitiveFromType<Vector3>() { return &Primitive::s_Vector3; }
-template<> Primitive* GetPrimitiveFromType<Color>() { return &Primitive::s_Color; }
-template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &Primitive::s_Quaternion; }
+template<> Primitive* GetPrimitiveFromType<bool>() { return &PrimitiveGetBuiltins().p_bool; }
+template<> Primitive* GetPrimitiveFromType<int8>() { return &PrimitiveGetBuiltins().p_int8; }
+template<> Primitive* GetPrimitiveFromType<uint8>() { return &PrimitiveGetBuiltins().p_uint8; }
+template<> Primitive* GetPrimitiveFromType<int16>() { return &PrimitiveGetBuiltins().p_int16; }
+template<> Primitive* GetPrimitiveFromType<uint16>() { return &PrimitiveGetBuiltins().p_uint16; }
+template<> Primitive* GetPrimitiveFromType<int32>() { return &PrimitiveGetBuiltins().p_int32; }
+template<> Primitive* GetPrimitiveFromType<uint32>() { return &PrimitiveGetBuiltins().p_uint32; }
+template<> Primitive* GetPrimitiveFromType<int64>() { return &PrimitiveGetBuiltins().p_int64; }
+template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveGetBuiltins().p_uint64; }
+template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveGetBuiltins().p_float; }
+template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveGetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveGetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveGetBuiltins().p_Vector3; }
+template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveGetBuiltins().p_Color; }
+template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveGetBuiltins().p_Quaternion; }
 
 //-----------------------------------//
 
