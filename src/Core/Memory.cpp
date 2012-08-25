@@ -54,6 +54,10 @@ static bool AllocatorSimulateLowMemory = false;
 
 //-----------------------------------//
 
+/**
+ * Tracks statistics for each allocator.
+ */
+
 struct AllocationGroup
 {
 	AllocationGroup();
@@ -66,6 +70,10 @@ AllocationGroup::AllocationGroup()
 	: freed(0), total(0)
 {
 }
+
+/**
+ * Metadata stored with each memory allocation.
+ */
 
 struct AllocationMetadata
 {
@@ -84,7 +92,9 @@ AllocationMetadata::AllocationMetadata()
 
 //-----------------------------------//
 
-const int32 MEMORY_PATTERN = 0xDEADF69F;
+static const int32 MEMORY_PATTERN = 0xDEADBEEF;
+
+// TODO: Do not use STL in this low level code.
 
 typedef std::map<const char*, AllocationGroup, RawStringCompare> MemoryGroupMap;
 
@@ -276,7 +286,11 @@ static void* StackAllocate(Allocator* alloc, int32 size, int32 align)
 	//AllocatorTrackGroup(alloc, size);
 #endif
 
+#ifdef COMPILER_MSVC
+	return _malloca(size);
+#else
 	return alloca(size);
+#endif
 }
 
 //-----------------------------------//
@@ -287,7 +301,9 @@ static void StackDellocate(Allocator* alloc, const void* p)
 	//AllocatorTrackGroup(alloc, 0);
 #endif
 
-	// Stack memory is automatically freed.
+#ifdef COMPILER_MSVC
+	_freea((void *) p);
+#endif
 }
 
 //-----------------------------------//

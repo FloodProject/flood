@@ -9,22 +9,20 @@
 
 #include "Core/API.h"
 
+// Doug Lea's malloc memory space.
+typedef void* mspace;
+
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
 struct Allocator;
 
+#define AllocatorGetThis() (AllocatorGetObject((void*)this))
+
 API_CORE Allocator* AllocatorGetHeap();
 API_CORE Allocator* AllocatorGetStack();
 API_CORE Allocator* AllocatorGetObject(void*);
-#define AllocatorGetThis() (AllocatorGetObject((void*)this))
-
-API_CORE Allocator* AllocatorCreateHeap( Allocator* );
-API_CORE Allocator* AllocatorCreateStack( Allocator* );
-API_CORE Allocator* AllocatorCreatePool( Allocator*, int32 size );
-API_CORE Allocator* AllocatorCreatePage( Allocator* );
-API_CORE Allocator* AllocatorCreateBump( Allocator*, int32 size );
 
 API_CORE void AllocatorDestroy( Allocator* );
 API_CORE void AllocatorReset( Allocator* );
@@ -38,6 +36,10 @@ typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
 typedef void  (*MemoryFreeFunction)(Allocator*, const void* object);
 typedef void  (*MemoryResetFunction)(Allocator*);
 
+/**
+ * Interface for a custom memory allocator.
+ */
+
 struct API_CORE Allocator
 {
 	MemoryAllocateFunction allocate;
@@ -46,10 +48,24 @@ struct API_CORE Allocator
 	const char* group;
 };
 
+/**
+ * Manages memory allocation using a fixed-size object pool. When a new
+ * allocation is requested, we search for the first free object available
+ * and return it.
+ */
+
 struct API_CORE PoolAllocator : public Allocator
 {
 	uint8* current;
 };
+
+API_CORE Allocator* AllocatorCreatePool( Allocator*, int32 size );
+
+/**
+ * Manages memory allocations using a fixed-size buffer that can provide
+ * allocations and deallocations in O(1). The allocated space in the buffer
+ * is not re-used until the whole buffer is reset.
+ */
 
 struct API_CORE BumpAllocator : public Allocator
 {
@@ -57,6 +73,22 @@ struct API_CORE BumpAllocator : public Allocator
 	uint8* current;
 	uint32 size;
 };
+
+API_CORE Allocator* AllocatorCreateBump( Allocator*, int32 size );
+
+/**
+ * Manages memory allocation using Doug Lea's malloc implementation.
+ * This is a boundary-tag allocator that manages memory by keeping
+ * track of the used/free memory blocks.
+ */
+
+struct API_CORE HeapAllocator : public Allocator
+{
+	mspace space;
+};
+
+API_CORE Allocator* AllocatorCreateHeap( Allocator* );
+API_CORE Allocator* AllocatorCreateStack( Allocator* );
 
 EXTERN_END
 
