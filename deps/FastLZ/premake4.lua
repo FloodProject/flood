@@ -5,5 +5,5 @@ project "FastLZ"
 	local license = "MIT"
 	
   kind "StaticLib"
-  files { "src/*.cpp" }
+  files { "src/*.c" }
   includedirs { "include" }
