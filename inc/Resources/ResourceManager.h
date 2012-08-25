@@ -34,7 +34,7 @@ FWD_DECL_INTRUSIVE(ResourceLoader)
  * for example in editors.
  */
 
-struct ResourceEvent
+struct API_RESOURCE ResourceEvent
 {
 	ResourceEvent();
 
@@ -53,6 +53,7 @@ ResourceManager* GetResourceManager();
 
 typedef std::map< String, ResourceHandle > ResourceMap;
 typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;
+typedef ConcurrentQueue<ResourceEvent> ResourceEventQueue;
 
 /**
  * Responsible for managing a set of resources that are added by the app.
@@ -198,7 +199,7 @@ protected:
 	ResourceLoaderMap resourceLoaders;
 
 	// When tasks finish, they queue an event.
-	ConcurrentQueue<ResourceEvent> resourceTaskEvents;
+	ResourceEventQueue resourceEvents;
 
 	// Keeps track if asynchronous loading is enabled.
 	bool asynchronousLoading;

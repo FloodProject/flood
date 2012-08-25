@@ -6,10 +6,6 @@
 *
 ************************************************************************/
 
-#ifdef API_CORE_DLL
-#define INSTANTIATE_TEMPLATES
-#endif
-
 #include "Resources/API.h"
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
@@ -26,18 +22,14 @@ NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-static ResourceManager* gs_ResourcesManager = nullptr;;
+static ResourceManager* gs_ResourcesManager = nullptr;
 ResourceManager* GetResourceManager() { return gs_ResourcesManager; }
 
 static Allocator* gs_ResourcesAllocator = nullptr;
 Allocator* GetResourcesAllocator() { return gs_ResourcesAllocator; }
 
-extern void ReferenceLoaders();
-
 void ResourcesInitialize()
 {
-	ReferenceLoaders();
-
 	gs_ResourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
 	AllocatorSetGroup(gs_ResourcesAllocator, "Resources");
 }
@@ -95,7 +87,7 @@ static void ResourceHandleSerialize( ReflectionContext* context, ReflectionWalkT
 	Resource* resource = (Resource*) context->object;
 	
 	context->valueContext.s = &resource->path;
-	context->primitive = &Primitive::s_string;
+	context->primitive = &PrimitiveGetBuiltins().p_string;
 	context->walkPrimitive(context, wt);
 }
 
@@ -118,8 +110,11 @@ ResourceManager::ResourceManager()
 {
 	handleManager = HandleCreateManager( GetResourcesAllocator() );
 
-	if( !gs_ResourcesManager ) gs_ResourcesManager = this;
-	if( !gs_ResourceHandleManager ) gs_ResourceHandleManager = handleManager;
+	if( !gs_ResourcesManager )
+		gs_ResourcesManager = this;
+
+	if( !gs_ResourceHandleManager )
+		gs_ResourceHandleManager = handleManager;
 
 	ReflectionHandleContext context;
 	context.type = ReflectionGetType(Resource);
@@ -127,7 +122,8 @@ ResourceManager::ResourceManager()
 	context.serialize = ResourceHandleSerialize;
 	context.deserialize = ResourceHandleFind;
 	
-	ReflectionSetHandleContext(context);
+	ReflectionHandleContextMap contextMap;
+	ReflectionSetHandleContext(&contextMap, context);
 
 	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
 	resourceFinishLoad = ConditionCreate( GetResourcesAllocator() );
@@ -380,7 +376,7 @@ void ResourceManager::sendPendingEvents()
 {
 	ResourceEvent event;
 
-	while( resourceTaskEvents.try_pop_front(event) )
+	while( resourceEvents.try_pop_front(event) )
 	{
 		Resource* resource = event.resource;
 		Path base = PathGetFile(resource->path);
@@ -524,7 +520,9 @@ void ResourceManager::setupResourceLoaders(Class* klass)
 	
 		if( ClassIsAbstract(child ) ) continue;
 
-		ResourceLoader* loader = (ResourceLoader*) ClassCreateInstance(child, GetResourcesAllocator());
+		ResourceLoader* loader = (ResourceLoader*)
+			ClassCreateInstance(child, GetResourcesAllocator());
+
 		registerLoader( loader );
 	}
 }

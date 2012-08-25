@@ -23,15 +23,12 @@ NAMESPACE_RESOURCES_BEGIN
  * only be fully loaded when the resource status changes to loaded.
  */
 
-struct API_RESOURCE ResourceStatus
+enum class ResourceStatus
 {
-	enum Enum
-	{
-		Error = 0,
-		Unloaded,
-		Loading,
-		Loaded
-	};
+	Error = 0,
+	Unloaded,
+	Loading,
+	Loaded
 };
 
 REFLECT_DECLARE_ENUM(ResourceStatus)
@@ -44,21 +41,18 @@ REFLECT_DECLARE_ENUM(ResourceStatus)
  * related resources together, and for managing the data.
  */
 
-struct API_RESOURCE ResourceGroup
+enum class ResourceGroup
 {
-	enum Enum
-	{
-		General = 0,
-		Images,
-		Meshes,
-		Fonts,
-		Shaders,
-		Audio,
-		Scripts,
-		Scenes,
-		Materials,
-		Particles,
-	};
+	General = 0,
+	Images,
+	Meshes,
+	Fonts,
+	Shaders,
+	Audio,
+	Scripts,
+	Scenes,
+	Materials,
+	Particles,
 };
 
 REFLECT_DECLARE_ENUM(ResourceGroup)
@@ -92,19 +86,19 @@ public:
 	ACESSOR(Path, const Path&, path)
 
 	// Gets/sets the resource loading status.
-	ACESSOR(Status, ResourceStatus::Enum, status)
+	ACESSOR(Status, ResourceStatus, status)
 
 	// Gets if the resource is fully loaded.
 	bool isLoaded() const;
 
 	// Gets the resource group associated with this resource.
-	virtual ResourceGroup::Enum getResourceGroup() const = 0;
+	virtual ResourceGroup getResourceGroup() const = 0;
 
 	// Path to the resource.
 	Path path;
 
 	// Status of the resource.
-	ResourceStatus::Enum status;
+	ResourceStatus status;
 
 	// Resource stream.
 	ResourceStream* stream;

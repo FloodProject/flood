@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-struct ResourceLoadOption
+struct API_RESOURCE ResourceLoadOption
 {
 	ResourceLoadOption() : key(0), value(0) {}
 
@@ -27,7 +27,7 @@ struct ResourceLoadOption
 
 //-----------------------------------//
 
-struct ResourceLoadOptions
+struct API_RESOURCE ResourceLoadOptions
 {
 	ResourceLoadOptions();
 
@@ -38,7 +38,7 @@ struct ResourceLoadOptions
 	Stream* stream;
 
 	Resource* resource;
-	ResourceGroup::Enum group;
+	ResourceGroup group;
 
 	bool isHighPriority;
 	bool sendLoadEvent;
@@ -52,7 +52,7 @@ struct ResourceLoadOptions
 
 class ResourceLoader;
 
-struct ResourceStream
+struct API_RESOURCE ResourceStream
 {
 	ResourceStream();
 	virtual ~ResourceStream();
@@ -82,7 +82,7 @@ struct ResourceStream
  * The loader also provides the extensions of those formats.
  */
 
-REFLECT_DECLARE_CLASS(ResourceLoader)
+API_RESOURCE REFLECT_DECLARE_CLASS(ResourceLoader)
 
 class API_RESOURCE ResourceLoader : public Extension
 {
@@ -110,7 +110,7 @@ public:
 	virtual Class* getResourceClass() const = 0;
 
 	// Gets the resource group of this loader.
-	virtual ResourceGroup::Enum getResourceGroup() const = 0;
+	virtual ResourceGroup getResourceGroup() const = 0;
 
 	// Gets the recognized extensions of this loader.
 	GETTER(Extensions, const std::vector<String>&, extensions);

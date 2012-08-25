@@ -18,7 +18,7 @@
 #include "Core/Concurrency.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
-#include "Math/Hash.h"
+#include "Core/Math/Hash.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -79,7 +79,7 @@ void ResourceIndexer::addArchive(Archive* archive)
 
 //-----------------------------------//
 
-static bool GetResourceGroupFromPath(const Path& path, ResourceGroup::Enum& group)
+static bool GetResourceGroupFromPath(const Path& path, ResourceGroup& group)
 {
 	String ext = PathGetFileExtension(path);
 	
@@ -103,7 +103,7 @@ void ResourceIndexer::indexResources(Task* task)
 
 	Path basePath = PathGetFile(path);
 
-	ResourceGroup::Enum group;
+	ResourceGroup group;
 		
 	if( !GetResourceGroupFromPath(path, group) )
 	{

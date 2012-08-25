@@ -25,7 +25,7 @@ class ResourceDatabase;
  * Monitors the given archives and indexes all new resources.
  */
 
-class ResourceIndexer
+class API_RESOURCE ResourceIndexer
 {
 public:
 

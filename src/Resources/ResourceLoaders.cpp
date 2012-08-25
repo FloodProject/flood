@@ -10,13 +10,6 @@
 #include "Resources/ResourceLoader.h"
 #include "Resources/ResourceManager.h"
 
-#include "Resources/PNG_Loader.h"
-#include "Resources/STB_Image_Loader.h"
-#include "Resources/OGG_Loader.h"
-#include "Resources/ShaderLoader.h"
-//#include "Resources/LuaLoader.h"
-#include "Resources/FontLoader.h"
-
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
@@ -73,39 +66,6 @@ ExtensionMetadata* ResourceLoader::getMetadata()
 	};
 
 	return &s_ResourceExtension;
-}
-
-//-----------------------------------//
-
-void ReferenceLoaders()
-{
-#ifdef ENABLE_IMAGE_PICOPNG
-	PNG_Pico_LoaderGetType();
-#endif
-
-#ifdef ENABLE_IMAGE_DEVIL
-	IL_Image_LoaderGetType();
-#endif
-
-#ifdef ENABLE_IMAGE_STB
-	STB_Image_LoaderGetType();
-#endif
-
-#ifdef ENABLE_AUDIO_OGG
-	OGG_LoaderGetType();
-#endif
-
-#ifdef ENABLE_RENDERER_OPENGL_GLSL
-	ShaderLoaderGetType();
-#endif
-
-#ifdef ENABLE_SCRIPTING_LUA
-	Lua_LoaderGetType();
-#endif
-
-#ifdef ENABLE_FONT_BITMAP
-	FontLoaderGetType();
-#endif
 }
 
 //-----------------------------------//

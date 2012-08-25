@@ -15,9 +15,9 @@ NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(ResourceMetadata)
+API_RESOURCE REFLECT_DECLARE_CLASS(ResourceMetadata)
 
-struct ResourceMetadata
+struct API_RESOURCE ResourceMetadata
 {
 	// Hash of the resource.
 	uint32 hash;
@@ -29,7 +29,7 @@ struct ResourceMetadata
 	Path preview;
 
 	// Group of the resource.
-	ResourceGroup::Enum group;
+	ResourceGroup group;
 };
 
 typedef std::vector<ResourceMetadata> ResourcesCache;
@@ -44,7 +44,7 @@ class ResourceIndexer;
  * Resource database is used to keep an indexed list of all the resources.
  */
 
-REFLECT_DECLARE_CLASS(ResourceDatabase)
+API_RESOURCE REFLECT_DECLARE_CLASS(ResourceDatabase)
 
 class API_RESOURCE ResourceDatabase : public Object
 {
