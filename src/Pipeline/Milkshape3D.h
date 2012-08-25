@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Core/Stream.h"
-#include "Resources/Mesh.h"
-#include "Resources/Animation.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Animation.h"
 #include "Pipeline/MilkshapeFormat.h"
 
 NAMESPACE_RESOURCES_BEGIN

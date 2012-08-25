@@ -10,12 +10,14 @@
 
 #include "Pipeline/API.h"
 #include "Pipeline/Milkshape3D.h"
-#include "Resources/Skeleton.h"
-#include "Math/Vector.h"
-#include "Math/Helpers.h"
+
+#include "Engine/Resources/Skeleton.h"
+#include "Engine/Geometry/GeometryBuffer.h"
+
+#include "Core/Math/Vector.h"
+#include "Core/Math/Helpers.h"
 #include "Core/Utilities.h"
 #include "Core/Log.h"
-#include "Geometry/GeometryBuffer.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -522,7 +524,8 @@ void Milkshape3D::readGroups()
 
 		if (numGroupTriangles > 0)
 		{
-			MEMCPY_SKIP_INDEX(groups[i].triangleIndices[0], sizeof(uint16)*numGroupTriangles);
+			MEMCPY_SKIP_INDEX(groups[i].triangleIndices[0],
+			 sizeof(uint16) * numGroupTriangles);
 		}
 
 		MEMCPY_SKIP_INDEX(groups[i].materialIndex, sizeof(uint8));

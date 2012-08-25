@@ -12,9 +12,9 @@
 
 #include "Pipeline/ImporterFBX.h"
 #include "Resources/ResourceManager.h"
-#include "Resources/Animation.h"
+#include "Engine/Resources/Animation.h"
 #include "Resources/Skeleton.h"
-#include "Resources/Bone.h"
+#include "Engine/Resources/Bone.h"
 #include "Core/Log.h"
 
 // Workaround for macro conflict.

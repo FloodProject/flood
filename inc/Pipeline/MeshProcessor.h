@@ -9,9 +9,9 @@
 #pragma once
 
 #include "ResourceProcessor.h"
-#include "Resources/Mesh.h"
-#include "Resources/Animation.h"
-#include "Resources/Skeleton.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Resources/Animation.h"
+#include "Engine/Resources/Skeleton.h"
 
 NAMESPACE_PIPELINE_BEGIN
 

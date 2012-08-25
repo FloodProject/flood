@@ -23,9 +23,10 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 MeshProcessor::MeshProcessor()
+	: calculateBounds(true)
+	, calculateTangents(false)
 {
-	calculateBounds = true;
-	calculateTangents = false;
+
 }
 
 //-----------------------------------//

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Math/Color.h"
+#include "Core/Math/Color.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

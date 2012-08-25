@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ResourceProcessor.h"
-#include "Resources/Image.h"
+#include "Engine/Resources/Image.h"
 #include <nvtt/nvtt.h>
 
 NAMESPACE_PIPELINE_BEGIN
