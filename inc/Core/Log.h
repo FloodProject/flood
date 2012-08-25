@@ -14,24 +14,29 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-struct Timer;
-struct Mutex;
-struct Allocator;
+enum class LogLevel
+{
+	Info,
+	Warn,
+	Error,
+	Debug,
+	Assert
+};
 
-enum_class_begin(LogLevel)
-	Info, Warn, Error, Debug, Assert
-enum_class_end
-
-struct LogEntry
+struct API_CORE LogEntry
 {
 	float time;
 	String message;
-	enum_class(LogLevel) level;
+	LogLevel level;
 };
 
 typedef void (*LogFunction)(LogEntry*);
 
-struct Log
+struct Timer;
+struct Mutex;
+struct Allocator;
+
+struct API_CORE Log
 {
 	Log();
 	~Log();
