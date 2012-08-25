@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Graphics/RenderTarget.h"
-#include "Resources/Image.h"
-#include "Resources/Material.h"
+#include "Engine/Resources/Image.h"
+#include "Engine/Resources/Material.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

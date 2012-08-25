@@ -9,11 +9,11 @@
 #pragma once
 
 #include "Graphics/Shader.h"
-#include "Math/Matrix4x3.h"
-#include "Math/Matrix4x4.h"
-#include "Math/EulerAngles.h"
-#include "Math/Color.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Matrix4x4.h"
+#include "Core/Math/EulerAngles.h"
+#include "Core/Math/Color.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 FWD_DECL_INTRUSIVE( UniformBuffer )
 

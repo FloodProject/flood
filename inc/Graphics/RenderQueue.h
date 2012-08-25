@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Math/Matrix4x3.h"
-#include "Math/Matrix4x4.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Matrix4x4.h"
 #include "Graphics/RenderBatch.h"
 
 NAMESPACE_GRAPHICS_BEGIN

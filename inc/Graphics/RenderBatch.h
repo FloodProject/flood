@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Core/Delegate.h"
-#include "Resources/Material.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Engine/Resources/Material.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"

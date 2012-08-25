@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Resources/Image.h"
-#include "Resources/Buffer.h"
+#include "Engine/Resources/Image.h"
+#include "Engine/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
 

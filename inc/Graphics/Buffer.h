@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Resources/Buffer.h"
+#include "Engine/Resources/Buffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

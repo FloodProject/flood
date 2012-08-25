@@ -12,8 +12,8 @@
 
 #include "Graphics/UniformBuffer.h"
 #include "Graphics/Render.h"
-#include "Math/Matrix4x3.h"
-#include "Math/Matrix4x4.h"
+#include "Core/Math/Matrix4x3.h"
+#include "Core/Math/Matrix4x4.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

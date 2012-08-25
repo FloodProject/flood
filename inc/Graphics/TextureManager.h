@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Graphics/Texture.h"
-#include "Resources/Image.h"
+#include "Engine/Resources/Image.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

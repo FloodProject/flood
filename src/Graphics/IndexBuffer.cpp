@@ -11,7 +11,7 @@
 #ifdef ENABLE_RENDERER_OPENGL
 
 #include "Graphics/IndexBuffer.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

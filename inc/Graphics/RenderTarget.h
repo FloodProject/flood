@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core/Event.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 #include "Graphics/RenderContext.h"
 
 NAMESPACE_GRAPHICS_BEGIN

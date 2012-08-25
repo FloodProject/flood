@@ -11,7 +11,7 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"
-#include "Geometry/GeometryBuffer.h"
+#include "Engine/Geometry/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
