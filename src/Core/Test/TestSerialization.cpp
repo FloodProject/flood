@@ -26,7 +26,7 @@ namespace
 
 		if(context->loading)
 		{
-			context->primitive = &Primitive::s_uint32;
+			context->primitive = &PrimitiveGetBuiltins().p_uint32;
 			context->walkPrimitive(context, wt);
 			h->hook = context->valueContext.u32;
 		}
@@ -36,7 +36,7 @@ namespace
 
 			// Serialize a custom integer value.
 			context->valueContext.u32 = h->hook;
-			context->primitive = &Primitive::s_uint32;
+			context->primitive = &PrimitiveGetBuiltins().p_uint32;;
 			context->walkPrimitive(context, wt);
 
 			context->walkComposite(context, ReflectionWalkType::End);
@@ -46,7 +46,7 @@ namespace
 	void SerializeHookI(ReflectionContext* context, ReflectionWalkType::Enum wt)
 	{
 		I* i = (I*) context->object;
-		context->primitive = &Primitive::s_uint32;
+		context->primitive = &PrimitiveGetBuiltins().p_uint32;;
 
 		if(context->loading)
 		{
