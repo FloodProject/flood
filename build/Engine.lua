@@ -68,7 +68,7 @@ project "Engine"
 	}
 
 	configuration "windows"
-		links { "winmm" }
+		links { "winmm", "ws2_32" }
 
 	Engine.libdirs =
 	{
