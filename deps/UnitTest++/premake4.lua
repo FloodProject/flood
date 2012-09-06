@@ -8,8 +8,8 @@ project "UnitTest++"
   files { "src/*.cpp" }
   includedirs { "include" }
   
-  configuration "Windows"
+  if os.is("Windows") then
     files { "src/Win32/*.cpp" }
-    
-  configuration "not Windows"
+  else
     files { "src/Posix/*.cpp" }
+  end
