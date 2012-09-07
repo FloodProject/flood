@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 	// This class represents a completion flag. It is a simple wrapper around an
 	//	atomic integer.
 	// </summary>
-	class ALIGN_BEGIN(16) Completion
+	class ALIGN_BEGIN(16) API_CORE Completion
 	{
 	private:
 		volatile Atomic Status_;
@@ -44,7 +44,7 @@ NAMESPACE_CORE_BEGIN
 	// </summary>
 	
 	
-	class ALIGN_BEGIN(16) TaskBase
+	class ALIGN_BEGIN(16) API_CORE TaskBase
 	{
 	public:
 		typedef std::vector<TaskBase *> Range;

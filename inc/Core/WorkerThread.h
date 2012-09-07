@@ -24,7 +24,7 @@ class Completion;
 
 // -- Class Definition --
 
-class ALIGN_BEGIN(16) WorkerThread
+class ALIGN_BEGIN(16) API_CORE WorkerThread
 {
 public:
 	static const uint32 TaskCapacity = 256;

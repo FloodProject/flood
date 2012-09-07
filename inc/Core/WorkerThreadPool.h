@@ -25,7 +25,7 @@ NAMESPACE_CORE_BEGIN
 
 	// -- Class Definition
 
-	class WorkerThreadPool
+	class API_CORE WorkerThreadPool
 	{
 		// -- Friends --
 		friend class WorkerThread;
