@@ -89,7 +89,7 @@ void StreamAdvanceIndex(MemoryStream* ms, uint64 n);
 #endif
 
 void EncodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64 val);
-void EncodeVariableInteger(MemoryStream* ms, uint64 val);
+void API_CORE EncodeVariableInteger(MemoryStream* ms, uint64 val);
 bool DecodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64& val);
 bool DecodeVariableInteger(MemoryStream* ms, uint64& val);
 uint32 EncodeZigZag32(sint32 n);
