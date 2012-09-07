@@ -5,6 +5,8 @@
 *
 ************************************************************************/
 
+#define INSTANTIATE_TEMPLATES
+
 #include "Runtime/API.h"
 #include "Runtime/Runtime.h"
 
