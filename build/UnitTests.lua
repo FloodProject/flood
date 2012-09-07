@@ -4,6 +4,8 @@ project "UnitTests"
 	builddeps { "Core" }
 	debugdir "../src/Core/Test/"
 	
+	defines { Core.defines }
+
 	files
 	{
 		"UnitTests.lua",
@@ -17,6 +19,11 @@ project "UnitTests"
 		"../inc/",
 	}
 	
-	links { Core.links, "Core" }
-	libdirs { Core.libdirs }
+	libdirs { Core.libdirs, "../bin/" }
 	deps { Core.deps, "UnitTest++" }
+	links { Core.links }
+
+	configuration "Debug"
+		links { "Core_d" }
+	configuration "Release"
+		links { "Core" }
