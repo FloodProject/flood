@@ -122,13 +122,13 @@ public:
 #endif
 
 	// Gets/sets the threading status.
-	ACESSOR(AsynchronousLoading, bool, asynchronousLoading)
+	ACCESSOR(AsynchronousLoading, bool, asynchronousLoading)
 
 	// Gets the handle manager.
 	GETTER(HandleManager, HandleManager*, handleManager)
 
 	// Accesses the task manager.
-	ACESSOR(TaskPool, TaskPool*, taskPool)
+	ACCESSOR(TaskPool, TaskPool*, taskPool)
 
 	// Gets the archive.
 	GETTER(Archive, Archive*, archive)

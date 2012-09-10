@@ -45,7 +45,7 @@ public:
 	~Session();
 
 	// Accesses the peer associated with this session.
-	ACESSOR(Peer, const PeerPtr&, peer)
+	ACCESSOR(Peer, const PeerPtr&, peer)
 
 	// Handles session authentication.
 	void handleAuthentication();

@@ -44,10 +44,10 @@ class API_GRAPHICS Shader : public ReferenceCounted
 public:
 
 	// Gets the shader type.
-	ACESSOR(ShaderType, ShaderType::Enum, type)
+	ACCESSOR(ShaderType, ShaderType::Enum, type)
 
 	// Gets the shader text.
-	ACESSOR(Text, const String&, text)
+	ACCESSOR(Text, const String&, text)
 
 	// Gets the compilation log.
 	GETTER(Log, const String&, log)

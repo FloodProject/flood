@@ -137,10 +137,10 @@ public:
 	~GeometryBuffer();
 
 	// Gets/sets the buffer usage type.
-	ACESSOR(BufferUsage, BufferUsage::Enum, usage)
+	ACCESSOR(BufferUsage, BufferUsage::Enum, usage)
 
 	// Gets/sets the buffer access type.
-	ACESSOR(BufferAccess, BufferAccess::Enum, access)
+	ACCESSOR(BufferAccess, BufferAccess::Enum, access)
 
 	// Forces rebuild of geometry data.
 	void forceRebuild();

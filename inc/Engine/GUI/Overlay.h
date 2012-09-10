@@ -93,25 +93,25 @@ public:
 	Overlay();
 
 	// Gets/sets the current positioning mode.
-	ACESSOR(PositionMode, PositionMode::Enum, positioning) 
+	ACCESSOR(PositionMode, PositionMode::Enum, positioning) 
 
 	// Gets/sets the current anchor settings.
-	ACESSOR(AnchorMode, AnchorMode::Enum, anchor)
+	ACCESSOR(AnchorMode, AnchorMode::Enum, anchor)
 
 	// Gets/sets the offset.
-	ACESSOR(Offset, const Vector3&, offset)
+	ACCESSOR(Offset, const Vector3&, offset)
 
 	// Gets/sets the size.
-	ACESSOR(Size, const Vector3&, size)
+	ACCESSOR(Size, const Vector3&, size)
 
 	// Gets/sets the background color.
-	ACESSOR(BackgroundColor, Color, backgroundColor)
+	ACCESSOR(BackgroundColor, Color, backgroundColor)
 
 	// Gets/sets the border width.
-	ACESSOR(BorderWidth, int, borderWidth)
+	ACCESSOR(BorderWidth, int, borderWidth)
 
 	// Gets/sets the border color.
-	ACESSOR(BorderColor, Color, borderColor)
+	ACCESSOR(BorderColor, Color, borderColor)
 
 	// Sets the offset of the overlay.
 	void setOffset( int x, int y );

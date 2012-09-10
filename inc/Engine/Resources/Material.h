@@ -154,40 +154,40 @@ public:
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Materials)
 
 	// Gets the textual name of the material.
-	ACESSOR(Name, const String&, name);
+	ACCESSOR(Name, const String&, name);
 
 	// Gets/sets the shader of the material.
-	ACESSOR(Shader, const ShaderMaterialHandle&, shader)
+	ACCESSOR(Shader, const ShaderMaterialHandle&, shader)
 
 	// Sets the shader of the material.
 	void setShader(const String& name);
 
 	// Gets/sets the depth writing of the material.
-	ACESSOR(DepthWrite, bool, depthWrite)
+	ACCESSOR(DepthWrite, bool, depthWrite)
 
 	// Gets/sets the depth testing of the material.
-	ACESSOR(DepthTest, bool, depthTest)
+	ACCESSOR(DepthTest, bool, depthTest)
 
 	// Gets/sets the depth testing of the material.
-	ACESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
+	ACCESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
 
 	// Gets/sets the depth range of the material.
-	ACESSOR(DepthRange, Vector2, depthRange)
+	ACCESSOR(DepthRange, Vector2, depthRange)
 
 	// Gets/sets the depth offset of the material.
-	ACESSOR(DepthOffset, Vector2, depthOffset)
+	ACCESSOR(DepthOffset, Vector2, depthOffset)
 
 	// Gets/sets the alpha testing of the material.
-	ACESSOR(AlphaTest, bool, alphaTest)
+	ACCESSOR(AlphaTest, bool, alphaTest)
 
 	// Gets/sets the line width of the material.
-	ACESSOR(LineWidth, float, lineWidth)
+	ACCESSOR(LineWidth, float, lineWidth)
 
 	// Gets/sets the line smoothing of the material.
-	ACESSOR(LineSmoothing, bool, lineSmooth)
+	ACCESSOR(LineSmoothing, bool, lineSmooth)
 
 	// Gets/sets the backface culling of the material.
-	ACESSOR(BackfaceCulling, bool, cullBackfaces)
+	ACCESSOR(BackfaceCulling, bool, cullBackfaces)
 
 	// Gets the blending options for this material.
 	GETTER(BlendSource, BlendSource::Enum, source)

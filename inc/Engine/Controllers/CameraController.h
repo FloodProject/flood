@@ -30,10 +30,10 @@ public:
 	virtual void _update( float delta ) OVERRIDE = 0;
 
 	// Gets/sets the look sensivity of the camera.
-	ACESSOR(LookSensivity, float, lookSensivity);
+	ACCESSOR(LookSensivity, float, lookSensivity);
 	
 	// Gets/sets the move sensivity of the camera.
-	ACESSOR(MoveSensivity, float, moveSensivity);
+	ACCESSOR(MoveSensivity, float, moveSensivity);
 
 protected:
 

@@ -27,7 +27,7 @@ class API_RESOURCE Script : public Resource
 public:
 
 	// Gets the source code of the script.
-	ACESSOR(Source, const String&, text)
+	ACCESSOR(Source, const String&, text)
 
 	// Gets the associated resource group.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Scripts)

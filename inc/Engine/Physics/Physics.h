@@ -55,10 +55,10 @@ public:
 	void update( float delta );
 
 	// Gets/sets the physics simulation state.
-	ACESSOR(Simulation, bool, enableSimulation);
+	ACCESSOR(Simulation, bool, enableSimulation);
 
 	// Gets/sets the physics world debug state.
-	ACESSOR(DebugWorld, bool, drawDebug);
+	ACCESSOR(DebugWorld, bool, drawDebug);
 
 	// Adds a rigid body to the physics world.
 	void addRigidBody(const Body* body);

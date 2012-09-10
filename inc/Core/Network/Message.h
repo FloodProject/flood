@@ -46,7 +46,7 @@ public:
 	void write(const Object* object);
 
 	// Accesses the message flags.
-	ACESSOR(Flags, uint8, flags)
+	ACCESSOR(Flags, uint8, flags)
 
 	// Accesses the message id.
 	GETTER(Id, MessageId, id)

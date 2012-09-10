@@ -38,13 +38,13 @@ public:
 	~Buffer();
 
 	// Gets/sets the buffer usage type.
-	ACESSOR(BufferUsage, BufferUsage::Enum, usage)
+	ACCESSOR(BufferUsage, BufferUsage::Enum, usage)
 
 	// Gets/sets the buffer access type.
-	ACESSOR(BufferAccess, BufferAccess::Enum, access)
+	ACCESSOR(BufferAccess, BufferAccess::Enum, access)
 
 	// Gets/sets the geometry buffer.
-	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
+	ACCESSOR(GeometryBuffer, const GeometryBuffer*, gb)
 
 	BufferId id;
 	BufferUsage::Enum usage;

@@ -71,7 +71,7 @@ public:
 	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
 
 	// Gets/sets the mesh geometry buffer.
-	ACESSOR(GeometryBuffer, GeometryBufferPtr, geometryBuffer)
+	ACCESSOR(GeometryBuffer, GeometryBufferPtr, geometryBuffer)
 
 	// Gets the animations of the mesh.
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)

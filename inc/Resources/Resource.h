@@ -83,10 +83,10 @@ public:
 	virtual ~Resource();
 
 	// Gets/sets the path that identifies this resource.
-	ACESSOR(Path, const Path&, path)
+	ACCESSOR(Path, const Path&, path)
 
 	// Gets/sets the resource loading status.
-	ACESSOR(Status, ResourceStatus, status)
+	ACCESSOR(Status, ResourceStatus, status)
 
 	// Gets if the resource is fully loaded.
 	bool isLoaded() const;

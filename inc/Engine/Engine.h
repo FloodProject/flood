@@ -74,10 +74,10 @@ public:
 	GETTER(ResourceManager, ResourceManager*, resourceManager)
 
 	// Gets/sets the physics manager.
-	ACESSOR(PhysicsManager, PhysicsManager*, physicsManager)
+	ACCESSOR(PhysicsManager, PhysicsManager*, physicsManager)
 
 	// Gets/sets the input manager.
-	ACESSOR(InputManager, InputManager*, inputManager)
+	ACCESSOR(InputManager, InputManager*, inputManager)
 
 	// Gets the main engine logger.
 	GETTER(Logger, Log*, log)

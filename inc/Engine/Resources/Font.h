@@ -63,10 +63,10 @@ public:
 	virtual const Vector2 getGlyphSize() const = 0;
 
 	// Gets/sets the font name.
-	ACESSOR(Name, const String&, name)
+	ACCESSOR(Name, const String&, name)
 
 	// Gets/sets the font size.
-	ACESSOR(Size, int, size)
+	ACCESSOR(Size, int, size)
 
 	// Gets the resource group of the font.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Fonts)
