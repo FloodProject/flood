@@ -1,0 +1,30 @@
+From ff6f0f1dcc3a54d649c6529ed6cbebfd4b0edad9 Mon Sep 17 00:00:00 2001
+From: chart <the.corbin.hart@gmail.com>
+Date: Mon, 10 Sep 2012 19:28:30 -0500
+Subject: [PATCH 2/2] Added a new config define SFML_WIDE_STRING. This is
+ currently only used on the Windows platform to remove
+ the UNICODE define prior to including windows.h.
+ Leaving UNICODE defined causes an error inside of
+ WindowImplWin32.cpp which breaks the build.
+
+---
+ include/SFML/Config.hpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/SFML/Config.hpp b/include/SFML/Config.hpp
+index e51e989..6d9b3fc 100644
+--- a/include/SFML/Config.hpp
++++ b/include/SFML/Config.hpp
+@@ -43,6 +43,9 @@
+     #ifndef NOMINMAX
+         #define NOMINMAX
+     #endif
++    #if !defined(SFML_WIDE_STRING) && defined(UNICODE)
++        #undef UNICODE
++    #endif
+ 
+ #elif defined(linux) || defined(__linux)
+ 
+-- 
+1.7.11.msysgit.1
+
