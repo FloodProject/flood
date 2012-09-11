@@ -9,10 +9,10 @@
 #include "Engine/API.h"
 #include "SFML_Input.h"
 
-#include "Input/InputManager.h"
-#include "Input/Mouse.h"
-#include "Input/Keyboard.h"
-#include "Input/Joystick.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Mouse.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Joystick.h"
 
 #ifdef ENABLE_INPUT_SFML
 
@@ -89,7 +89,7 @@ static JoystickAxis::Enum ConvertJoystickAxisEnum(sf::Joystick::Axis axis)
 
 //-----------------------------------//
 
-static Keys::Enum ConvertKeyEnum(sf::Keyboard::Key keycode)
+static Keys ConvertKeyEnum(sf::Keyboard::Key keycode)
 {
 	switch(keycode)
 	{
@@ -221,15 +221,15 @@ SFML_Input::SFML_Input()
 
 void SFML_Input::processSFMLEvent( const sf::Event& event )
 {
-	if( isMouseEvent(event.Type) )
+	if( isMouseEvent(event.type) )
 	{
 		processMouseEvent(event);
 	}
-	else if ( isKeyboardEvent(event.Type) )
+	else if ( isKeyboardEvent(event.type) )
 	{
 		processKeyboardEvent(event);
 	}
-	else if ( isJoystickEvent(event.Type) )
+	else if ( isJoystickEvent(event.type) )
 	{
 		processJoystickEvent(event);
 	}
@@ -239,10 +239,10 @@ void SFML_Input::processSFMLEvent( const sf::Event& event )
 
 void SFML_Input::processMouseEvent(const sf::Event& event)
 {
-	short mbX = static_cast<short>(event.MouseButton.X); 
-	short mbY = static_cast<short>(event.MouseButton.Y);
+	short mbX = static_cast<short>(event.mouseButton.x); 
+	short mbY = static_cast<short>(event.mouseButton.y);
 
-	switch(event.Type)
+	switch(event.type)
 	{
 	case sf::Event::MouseButtonPressed:
 	{
@@ -250,7 +250,7 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 		
 		mbe.x = mbX;
 		mbe.y = mbY;
-		mbe.button = ConvertMouseButtonEnum( event.MouseButton.Button );
+		mbe.button = ConvertMouseButtonEnum( event.mouseButton.button );
 		
 		processEvent( mbe );
 		break;
@@ -262,7 +262,7 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 		
 		mbe.x = mbX;
 		mbe.y = mbY;
-		mbe.button = ConvertMouseButtonEnum( event.MouseButton.Button );
+		mbe.button = ConvertMouseButtonEnum( event.mouseButton.button );
 
 		processEvent( mbe );
 		break;
@@ -270,8 +270,8 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 
 	case sf::Event::MouseMoved:
 	{
-		short mmX = static_cast<short>(event.MouseMove.X);
-		short mmY = static_cast<short>(event.MouseMove.Y);
+		short mmX = static_cast<short>(event.mouseMove.x);
+		short mmY = static_cast<short>(event.mouseMove.y);
 		
 		MouseMoveEvent mme;
 		mme.x = mmX;
@@ -284,7 +284,7 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 	case sf::Event::MouseWheelMoved:
 	{
 		MouseWheelEvent mwe;
-		mwe.delta = short(event.MouseWheel.Delta);
+		mwe.delta = short(event.mouseWheel.delta);
 		processEvent( mwe );
 
 		break;
@@ -311,15 +311,15 @@ void SFML_Input::processMouseEvent(const sf::Event& event)
 
 void SFML_Input::processKeyboardEvent(const sf::Event& event)
 {
-	switch( event.Type )
+	switch( event.type )
 	{
 	case sf::Event::KeyPressed:
 	{
 		KeyEvent ke(KeyboardEventType::KeyPressed);
-		ke.keyCode = ConvertKeyEnum( event.Key.Code );
-		ke.altPressed = event.Key.Alt;
-		ke.shiftPressed = event.Key.Shift;
-		ke.ctrlPressed = event.Key.Control;
+		ke.keyCode = ConvertKeyEnum( event.key.code );
+		ke.altPressed = event.key.alt;
+		ke.shiftPressed = event.key.shift;
+		ke.ctrlPressed = event.key.control;
 		processEvent( ke );
 		break;
 	}
@@ -327,10 +327,10 @@ void SFML_Input::processKeyboardEvent(const sf::Event& event)
 	case sf::Event::KeyReleased:
 	{
 		KeyEvent ke(KeyboardEventType::KeyReleased);
-		ke.keyCode = ConvertKeyEnum( event.Key.Code );
-		ke.altPressed = event.Key.Alt;
-		ke.shiftPressed = event.Key.Shift;
-		ke.ctrlPressed = event.Key.Control;
+		ke.keyCode = ConvertKeyEnum( event.key.code );
+		ke.altPressed = event.key.alt;
+		ke.shiftPressed = event.key.shift;
+		ke.ctrlPressed = event.key.control;
 		processEvent( ke );
 		break;
 	}
@@ -338,7 +338,7 @@ void SFML_Input::processKeyboardEvent(const sf::Event& event)
 	case sf::Event::TextEntered:
 	{
 		KeyEvent ke(KeyboardEventType::KeyText);
-		ke.unicode = event.Text.Unicode;
+		ke.unicode = event.text.unicode;
 		processEvent(ke);
 		break;
 	} }
@@ -348,7 +348,7 @@ void SFML_Input::processKeyboardEvent(const sf::Event& event)
 
 void SFML_Input::processJoystickEvent(const sf::Event& event)
 {
-	switch( event.Type )
+	switch( event.type )
 	{
 #if 0
 	case sf::Event::JoystickButtonPressed:

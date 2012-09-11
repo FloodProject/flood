@@ -9,10 +9,9 @@
 #pragma once
 
 #define ENABLE_WINDOW_SFML
-
 #ifdef ENABLE_WINDOW_SFML
 
-#include "Window/Window.h"
+#include "Engine/Window/Window.h"
 #include "SFML_Input.h"
 #include <SFML/Window.hpp>
 
@@ -24,7 +23,7 @@ NAMESPACE_ENGINE_BEGIN
  * Window implementation using the SFML library.
  */
 
-class SFML_Window : public Window
+class API_ENGINE SFML_Window : public Window
 {
 public:
 
@@ -38,7 +37,7 @@ public:
 	void update() OVERRIDE;
 
 	// Shows/hides the window.
-	void show( bool hide = false ) OVERRIDE;
+	void show( bool visible = true ) OVERRIDE;
 
 	// Handle the window message events.
 	bool pumpEvents() OVERRIDE;

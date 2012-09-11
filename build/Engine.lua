@@ -20,13 +20,15 @@ project "Engine"
 	pchheader "Engine/API.h"
 	pchsource "../src/Engine/Engine.cpp"
 
-	defines { "AL_LIBTYPE_STATIC" }
+	defines { "AL_LIBTYPE_STATIC", "SFML_WINDOW_EXPORTS" }
 
 	files
 	{
 		"Engine.lua",
 		"../inc/Engine/**.h",
-		"../src/Engine/**.cpp",			
+		"../src/Engine/**.cpp",
+		"../src/Platforms/SFML/*.h",
+		"../src/Platforms/SFML/*.cpp",
 	}
 	
 	vpaths
@@ -46,7 +48,8 @@ project "Engine"
 	{
 		"../inc/",
 		"../deps/SeanBarrett",
-		"../deps/Jansson/include"
+		"../deps/Jansson/include",
+		"../deps/SFML/include/",
 	}
 	
 	Engine.deps =
@@ -86,4 +89,7 @@ project "Engine"
 	links { Engine.links }
 	libdirs { Engine.libdirs }
 
-	configuration {}
+	configuration "Debug"
+		links { "SFML_d" }
+	configuration "Release"
+		links { "SFML" }

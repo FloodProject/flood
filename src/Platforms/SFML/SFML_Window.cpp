@@ -27,18 +27,18 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 
 SFML_Window::~SFML_Window()
 {
-	window.Close();
+	window.close();
 }
 
 //-----------------------------------//
 
 bool SFML_Window::open()
 {
-	contextSettings.DepthBits = settings.depthBits; 
-	contextSettings.StencilBits = settings.stencilBits;
-	contextSettings.AntialiasingLevel = settings.antialiasLevel;
+	contextSettings.depthBits = settings.depthBits; 
+	contextSettings.stencilBits = settings.stencilBits;
+	contextSettings.antialiasingLevel = settings.antialiasLevel;
 	
-	videoMode = sf::VideoMode::GetDesktopMode();
+	videoMode = sf::VideoMode::getDesktopMode();
 
 	if( settings.fullScreen )
 	{
@@ -46,13 +46,13 @@ bool SFML_Window::open()
 	}
 	else
 	{
-		videoMode.Width = settings.width; 
-		videoMode.Height = settings.height;
-		videoMode.BitsPerPixel = settings.bitsPerPixel;
+		videoMode.width = settings.width; 
+		videoMode.height = settings.height;
+		videoMode.bitsPerPixel = settings.bitsPerPixel;
 		
-		if( !videoMode.IsValid() )
+		if( !videoMode.isValid() )
 		{
-			LogError( "Video mode not supportted." );
+			LogError( "Video mode not supported." );
 			return false;
 		}
 		
@@ -61,16 +61,16 @@ bool SFML_Window::open()
 	
 	createWindow();
 
-	contextSettings = window.GetSettings();
+	contextSettings = window.getSettings();
 	
-	assert( contextSettings.DepthBits >= 0 && contextSettings.DepthBits <= 32 );
-	settings.depthBits = contextSettings.DepthBits;
+	assert( contextSettings.depthBits >= 0 && contextSettings.depthBits <= 32 );
+	settings.depthBits = contextSettings.depthBits;
 	
-	assert( contextSettings.StencilBits >= 0 && contextSettings.StencilBits <= 32 );
-	settings.stencilBits = contextSettings.StencilBits;
+	assert( contextSettings.stencilBits >= 0 && contextSettings.stencilBits <= 32 );
+	settings.stencilBits = contextSettings.stencilBits;
 	
-	assert( contextSettings.AntialiasingLevel >= 0 && contextSettings.AntialiasingLevel <= 32 );
-	settings.antialiasLevel = contextSettings.AntialiasingLevel;
+	assert( contextSettings.antialiasingLevel >= 0 && contextSettings.antialiasingLevel <= 32 );
+	settings.antialiasLevel = contextSettings.antialiasingLevel;
 	
 	//window.EnableKeyRepeat( false );
 	
@@ -84,11 +84,11 @@ void SFML_Window::createWindow()
 	if(settings.handle)
 	{
 		sf::WindowHandle handle = (sf::WindowHandle) settings.handle;
-		window.Create( handle, contextSettings );
+		window.create( handle, contextSettings );
 	}
 	else
 	{
-		window.Create( videoMode, settings.title, flags, contextSettings );
+		window.create( videoMode, settings.title, flags, contextSettings );
 	}
 
 	context = AllocateThis(RenderContext);
@@ -99,21 +99,21 @@ void SFML_Window::createWindow()
 
 void SFML_Window::update() 
 {
-	window.Display();
+	window.display();
 }
 
 //-----------------------------------//
 
-void SFML_Window::show( bool hide ) 
+void SFML_Window::show( bool visible ) 
 {
-	window.Show( hide );
+	window.setVisible( visible );
 }
 
 //-----------------------------------//
 
 void SFML_Window::makeCurrent()
 {
-	window.SetActive(); 
+	window.setActive(); 
 }
 
 //-----------------------------------//
@@ -122,9 +122,9 @@ bool SFML_Window::pumpEvents()
 {
 	sf::Event event;
 
-	while( window.PollEvent(event) )
+	while( window.pollEvent(event) )
 	{
-	switch( event.Type )
+	switch( event.type )
 	{
 	case sf::Event::Closed:
 		handleWindowClose();
@@ -165,7 +165,7 @@ void SFML_Window::setTitle(const String& title)
 void SFML_Window::setCursorVisible(bool state)
 {
 	cursorState = state;
-	window.ShowMouseCursor(state);
+	window.setMouseCursorVisible(state);
 }
 
 //-----------------------------------//
@@ -179,14 +179,14 @@ bool SFML_Window::isCursorVisible() const
 
 void SFML_Window::setCursorPosition( int x, int y )
 {
-	sf::Mouse::SetPosition( sf::Vector2i(x, y), window );
+	sf::Mouse::setPosition( sf::Vector2i(x, y), window );
 }
 
 //-----------------------------------//
 
 Vector2i SFML_Window::getCursorPosition() const
 {
-	sf::Vector2i pos = sf::Mouse::GetPosition();
+	sf::Vector2i pos = sf::Mouse::getPosition();
 	return Vector2i(pos.x, pos.y);
 }
 
@@ -194,8 +194,8 @@ Vector2i SFML_Window::getCursorPosition() const
 
 void SFML_Window::processResize(sf::Event event)
 {
-	settings.height = (uint16) event.Size.Height;
-	settings.width = (uint16) event.Size.Width;
+	settings.height = (uint16) event.size.height;
+	settings.width = (uint16) event.size.width;
 
 	handleWindowResize();
 }

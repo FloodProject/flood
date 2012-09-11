@@ -12,8 +12,8 @@
 
 #ifdef ENABLE_INPUT_SFML
 
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
 
 #include <SFML/Window.hpp>
 
@@ -21,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class SFML_Input : public InputManager
+class API_ENGINE SFML_Input : public InputManager
 {
 public:
 
