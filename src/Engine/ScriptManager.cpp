@@ -31,7 +31,7 @@ ScriptManager::~ScriptManager()
 
 //-----------------------------------//
 
-State* ScriptManager::createScriptInstance(Script*)
+ScriptState* ScriptManager::createScriptInstance(Script*)
 {
 	return nullptr;
 }

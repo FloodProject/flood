@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Engine/Subsystem.h"
-#include "Script/State.h"
+#include "Script/ScriptState.h"
 #include "Resources/ResourceManager.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -28,7 +28,7 @@ public:
 	~ScriptManager();
 
 	// Creates a new script instance.
-	State* createScriptInstance(Script*);
+	ScriptState* createScriptInstance(Script*);
 
 	// Updates all the registered scripts.
 	void update() OVERRIDE;

@@ -7,25 +7,25 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Script/State.h"
+#include "Script/ScriptState.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-State::State()
+ScriptState::ScriptState()
 {
 }
 
 //-----------------------------------//
 
-State::~State()
+ScriptState::~ScriptState()
 {
 }
 
 //-----------------------------------//
 
-bool State::load(Script* script)
+bool ScriptState::load(Script* script)
 {
 	if( !script ) return false;
 
@@ -34,28 +34,28 @@ bool State::load(Script* script)
 
 //-----------------------------------//
 
-bool State::execute( Script* script )
+bool ScriptState::execute( Script* script )
 {
 	return execute( script->getSource() );
 }
 
 //-----------------------------------//
 
-bool State::execute( const String& source )
+bool ScriptState::execute( const String& source )
 {
 	return true;
 }
 
 //-----------------------------------//
 
-bool State::invoke( const String& name, uint8 numArguments )
+bool ScriptState::invoke( const String& name, uint8 numArguments )
 {
 	return true;
 }
 
 //-----------------------------------//
 
-void State::handleError()
+void ScriptState::handleError()
 {
 }
 
