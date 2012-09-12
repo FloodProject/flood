@@ -23,7 +23,7 @@ class Plugin;
  * and enabled or disabled as needed during runtime.
  */
 
-class PluginManager
+class API_CORE PluginManager
 {
 public:
 

@@ -61,9 +61,13 @@
 //---------------------------------------------------------------------//
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
+#ifndef BUILD_DEBUG
 	#define BUILD_DEBUG
+#endif
 #else
+#ifndef BUILD_RELEASE
 	#define BUILD_RELEASE
+#endif
 #endif
 
 //---------------------------------------------------------------------//

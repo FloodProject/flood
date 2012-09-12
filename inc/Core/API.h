@@ -66,11 +66,10 @@
 #pragma warning(disable : 4482)
 #endif
 
-#ifdef INSTANTIATE_TEMPLATES
-template class std::basic_string<char>;
-#else
+#define FL_INSTANTIATE_TEMPLATES() \
+    template class std::basic_string<char>;
+
 extern template class std::basic_string<char>;
-#endif
 
 #endif
 

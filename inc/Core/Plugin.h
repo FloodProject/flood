@@ -80,7 +80,7 @@ protected:
 };
 
 // Sorts plugins by priority.
-void PluginsSortByPriority(std::vector<Plugin*>& plugins);
+API_CORE void PluginsSortByPriority(std::vector<Plugin*>& plugins);
 
 //-----------------------------------//
 

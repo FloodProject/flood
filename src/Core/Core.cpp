@@ -8,5 +8,8 @@
 
 // This file used to create the precompiled headers
 
-#define INSTANTIATE_TEMPLATES
 #include "Core/API.h"
+
+#ifdef API_CORE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif

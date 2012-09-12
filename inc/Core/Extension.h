@@ -35,7 +35,7 @@ struct API_CORE ExtensionMetadata
  * some kind of runtime support for loading the extensions from a plugin.
  */
 
-REFLECT_DECLARE_CLASS(Extension)
+API_CORE REFLECT_DECLARE_CLASS(Extension)
 
 class API_CORE Extension : public Object
 {
