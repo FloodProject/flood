@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/API.h"
+#include "Graphics/Resources/Image.h"
 #include "Core/Log.h"
 #include "Core/Stream.h"
 
@@ -18,7 +18,7 @@
 	#include "lodepng.h"
 #endif
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -33,14 +33,14 @@ REFLECT_ENUM(PixelFormat)
 	ENUM(DXT5nm)
 	ENUM(Unknown)
 REFLECT_ENUM_END()
-
+ 
 REFLECT_CHILD_CLASS(Image, Resource)
 	FIELD_ENUM(4, PixelFormat, format) FIELD_READONLY(format)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-ImageHandle ImageCreate(Allocator* alloc, uint32 width, uint32 height, PixelFormat::Enum format)
+ImageHandle ImageCreate(Allocator* alloc, uint32 width, uint32 height, PixelFormat format)
 {
 	Image* image = Allocate(alloc, Image);
 	image->create(width, height, format);
@@ -58,7 +58,7 @@ Image::Image()
 
 //-----------------------------------//
 
-Image::Image(uint32 _width, uint32 _height, PixelFormat::Enum _format)
+Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
@@ -68,7 +68,7 @@ Image::Image(uint32 _width, uint32 _height, PixelFormat::Enum _format)
 
 //-----------------------------------//
 
-void Image::create(uint32 _width, uint32 _height, PixelFormat::Enum _format)
+void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 {
 	this->width  = _width;
 	this->height = _height;
@@ -129,7 +129,7 @@ void Image::setColor( const Color& color )
 
 void Image::log() const
 {
-	const char* desc = EnumGetValueName(PixelFormatGetType(), format);
+	const char* desc = EnumGetValueName(PixelFormatGetType(), (int32)format);
 	LogInfo( "Image has pixel format '%s' and size %dx%d", desc, width, height );
 }
 
@@ -204,4 +204,4 @@ bool ImageWriter::convert( Image* image )
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

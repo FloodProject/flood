@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/API.h"
+#include "Graphics/Resources/Material.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Log.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -109,7 +109,7 @@ bool Material::isBlendingEnabled() const
 
 //-----------------------------------//
 
-void Material::setBlending( BlendSource::Enum source, BlendDestination::Enum destination )
+void Material::setBlending( BlendSource source, BlendDestination destination )
 {
 	this->source = source;
 	this->destination = destination;
@@ -130,7 +130,7 @@ TextureUnit::TextureUnit()
 
 //-----------------------------------//
 
-void TextureUnit::setFilterMode(TextureFilterMode::Enum newFilter)
+void TextureUnit::setFilterMode(TextureFilterMode newFilter)
 {
 	filter = newFilter;
 	overrideModes = true;
@@ -138,7 +138,7 @@ void TextureUnit::setFilterMode(TextureFilterMode::Enum newFilter)
 
 //-----------------------------------//
 
-void TextureUnit::setMipMode(TextureMipMode::Enum newMip)
+void TextureUnit::setMipMode(TextureMipMode newMip)
 {
 	mip = newMip;
 	overrideModes = true;
@@ -146,7 +146,7 @@ void TextureUnit::setMipMode(TextureMipMode::Enum newMip)
 
 //-----------------------------------//
 
-void TextureUnit::setWrapMode(TextureWrapMode::Enum newWrap)
+void TextureUnit::setWrapMode(TextureWrapMode newWrap)
 {
 	wrap = newWrap;
 	overrideModes = true;
@@ -207,4 +207,4 @@ void Material::setShader(const String& name)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END
