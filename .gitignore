@@ -1,4 +1,6 @@
 .DS_Store
-/dep/wx
 /build/vs2010
 /deps/build
+/deps/Mono
+/deps/wxWidgets
+/deps/GWEN
