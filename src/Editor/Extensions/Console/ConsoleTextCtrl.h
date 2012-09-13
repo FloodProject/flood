@@ -45,7 +45,7 @@ protected:
 	void OnSetFocus(wxFocusEvent& event);
 
 	// Holds an instance of the scripting state.
-	State* luaState;
+	ScriptState* luaState;
 
 	// Holds an instance to the vaporEngine.
 	Engine* engine;

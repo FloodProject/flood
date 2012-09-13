@@ -94,7 +94,7 @@ public:
 	GETTER(Peer, const PeerPtr&, peer)
 
 	// Gets the client state.
-	ACESSOR(State, HostState::Enum, state)
+	ACCESSOR(State, HostState::Enum, state)
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 

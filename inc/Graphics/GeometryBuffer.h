@@ -31,10 +31,10 @@ public:
 	~GeometryBuffer();
 
 	// Gets/sets the buffer usage type.
-	ACESSOR(BufferUsage, BufferUsage, usage)
+	ACCESSOR(BufferUsage, BufferUsage, usage)
 
 	// Gets/sets the buffer access type.
-	ACESSOR(BufferAccess, BufferAccess, access)
+	ACCESSOR(BufferAccess, BufferAccess, access)
 
 	// Forces rebuild of geometry data.
 	void forceRebuild();

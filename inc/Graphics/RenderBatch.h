@@ -92,25 +92,25 @@ public:
 	~RenderBatch();
 
 	// Gets/sets the render stage.
-	ACESSOR(RenderLayer, RenderLayer, stage)
+	ACCESSOR(RenderLayer, RenderLayer, stage)
 
 	// Gets/sets the render priority.
-	ACESSOR(RenderPriority, int32, priority)
+	ACCESSOR(RenderPriority, int32, priority)
 
 	// Gets/sets the geometry buffer.
-	ACESSOR(GeometryBuffer, const GeometryBufferPtr&, gb)
+	ACCESSOR(GeometryBuffer, const GeometryBufferPtr&, gb)
 
 	// Gets/sets the index buffer.
-	ACESSOR(UniformBuffer, const UniformBufferPtr&, ub)
+	ACCESSOR(UniformBuffer, const UniformBufferPtr&, ub)
 
 	// Gets/sets the material.
-	ACESSOR(Material, const MaterialHandle&, material)
+	ACCESSOR(Material, const MaterialHandle&, material)
 
 	// Gets/sets the render mode.
-	ACESSOR(PrimitiveRasterMode, PrimitiveRasterMode, mode)
+	ACCESSOR(PrimitiveRasterMode, PrimitiveRasterMode, mode)
 
 	// Gets/sets the primitive type.
-	ACESSOR(PrimitiveType, PrimitiveType, type)
+	ACCESSOR(PrimitiveType, PrimitiveType, type)
 
 	// Pre-render callback.
 	Delegate2<RenderView*, const RenderState&> onPreRender;

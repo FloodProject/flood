@@ -71,13 +71,13 @@ public:
 	~Buffer();
 
 	// Gets/sets the buffer usage type.
-	ACESSOR(BufferUsage, BufferUsage, usage)
+	ACCESSOR(BufferUsage, BufferUsage, usage)
 
 	// Gets/sets the buffer access type.
-	ACESSOR(BufferAccess, BufferAccess, access)
+	ACCESSOR(BufferAccess, BufferAccess, access)
 
 	// Gets/sets the geometry buffer.
-	ACESSOR(GeometryBuffer, const GeometryBuffer*, gb)
+	ACCESSOR(GeometryBuffer, const GeometryBuffer*, gb)
 
 	BufferId id;
 	BufferUsage usage;

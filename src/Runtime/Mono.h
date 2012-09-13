@@ -12,7 +12,7 @@
 
 #include <mono/metadata/metadata.h>
 
-FLUSH_NAMESPACE_BEGIN
+NAMESPACE_RUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -61,4 +61,4 @@ public:
 
 //-----------------------------------//
 
-FLUSH_NAMESPACE_END
+NAMESPACE_RUNTIME_END

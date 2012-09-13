@@ -37,7 +37,7 @@ static LPTOP_LEVEL_EXCEPTION_FILTER gs_MonoUnhandledExceptionFilter = nullptr;
 
 #endif
 
-FLUSH_NAMESPACE_BEGIN
+NAMESPACE_RUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -211,4 +211,4 @@ void MonoRuntime::call(MonoMethod* method)
 
 //-----------------------------------//
 
-FLUSH_NAMESPACE_END
+NAMESPACE_RUNTIME_END

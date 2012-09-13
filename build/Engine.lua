@@ -13,12 +13,14 @@ project "Engine"
 		kind "StaticLib"
 	end
 
-	defines
+	table.insert(Engine.defines, 
 	{
 	 	Core.defines,
 	 	Resources.defines,
 	 	Graphics.defines,
-	}
+	})
+
+	defines { Engine.defines }
 
 	builddeps { Core.name, Resources.name, Graphics.name }
 
@@ -31,7 +33,7 @@ project "Engine"
 	{
 		"Engine.lua",
 		"../inc/Engine/**.h",
-		"../src/Engine/**.cpp",			
+		"../src/Engine/**.cpp",
 	}
 	
 	vpaths
@@ -51,7 +53,7 @@ project "Engine"
 	{
 		"../inc/",
 		"../deps/SeanBarrett",
-		"../deps/Jansson/include"
+		"../deps/Jansson/include",
 	}
 	
 	Engine.deps =
@@ -88,4 +90,7 @@ project "Engine"
 	links { Engine.links }
 	libdirs { Engine.libdirs }
 
-	configuration {}
+	configuration "Debug"
+		links { "SFML_d" }
+	configuration "Release"
+		links { "SFML" }

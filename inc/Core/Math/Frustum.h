@@ -23,12 +23,13 @@ NAMESPACE_EXTERN_BEGIN
  * Projection types.
  */
 
-enum_class_begin(FrustumProjection)
+enum struct FrustumProjection
+{
 	Orthographic,
 	Perspective
-enum_class_end
+};
 
-REFLECT_DECLARE_ENUM(Projection);
+API_CORE REFLECT_DECLARE_ENUM(Projection);
 
 //-----------------------------------//
 

@@ -54,28 +54,28 @@ public:
 	Light( LightType::Enum type = LightType::Point );
 
 	// Gets/sets the type of this light source.
-	ACESSOR(LightType, LightType::Enum, lightType)
+	ACCESSOR(LightType, LightType::Enum, lightType)
 
 	// Gets/sets if this light source is active (powered on).
-	ACESSOR(Active, bool, isLightOn)
+	ACCESSOR(Active, bool, isLightOn)
 
 	// Gets/sets if this light source casts shadows.
-	ACESSOR(CastsShadows, bool, castsShadows)
+	ACCESSOR(CastsShadows, bool, castsShadows)
 
 	// Gets/sets the diffuse color of the light.
-	ACESSOR(DiffuseColor, const Color&, diffuseColor)
+	ACCESSOR(DiffuseColor, const Color&, diffuseColor)
 	
 	// Gets/sets the specular color of the light.
-	ACESSOR(SpecularColor, const Color&, diffuseColor)
+	ACCESSOR(SpecularColor, const Color&, diffuseColor)
 
 	// Gets/sets the emissive color of the light.
-	ACESSOR(EmissiveColor, const Color&, emissiveColor)
+	ACCESSOR(EmissiveColor, const Color&, emissiveColor)
 
 	// Gets/sets the ambient color of the light.
-	ACESSOR(AmbientColor, const Color&, ambientColor)
+	ACCESSOR(AmbientColor, const Color&, ambientColor)
 
 	// Gets/sets the cut-off radius of the light.
-	ACESSOR(CutOffRadius, float, cutoffRadius)
+	ACCESSOR(CutOffRadius, float, cutoffRadius)
 
 	// Called once per frame to update the component.
 	virtual void update( float delta );

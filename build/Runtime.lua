@@ -1,18 +1,25 @@
 Runtime = {}
 Runtime.name = "Runtime"
+Runtime.defines = {}
+Runtime.shared = true
 
 Mono = {}
 Mono.links = { "Mswsock", "ws2_32", "psapi", "version", "winmm" }
 
 project "Runtime"
 
-	kind "ConsoleApp"
-	builddeps { "Core", "Resources" }
-	targetdir "../bin/"
+	if Runtime.shared then
+		kind "SharedLib"
+		table.insert(Runtime.defines, "API_RUNTIME_DLL")
+		defines { "API_RUNTIME_DLL_EXPORT" }
+	else
+		kind "StaticLib"
+	end
 
-	--pchheader "Runtime/API.h"
-	--pchsource "../src/Runtime/Runtime.cpp"
+	builddeps { Core.name, Resources.name }
 	
+	defines { Runtime.defines }
+
 	files
 	{
 		"Runtime.lua",
@@ -33,17 +40,21 @@ project "Runtime"
 		"../deps/Mono/eglib/src/"
 	}
 	
-	libdirs
+	Runtime.libdirs = 
 	{
 		Core.libdirs,
 		Resources.libdirs,
 	}
 
-	links
+	libdirs { Runtime.libdirs }
+
+	Runtime.links = 
 	{
 		Core.name, Core.links,
 		Resources.name, Resources.links,
 	}
+
+	links { Runtime.links }
 
 	Runtime.deps =
 	{
