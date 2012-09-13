@@ -12,7 +12,7 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderBackend.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 

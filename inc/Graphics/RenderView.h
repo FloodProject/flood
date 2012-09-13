@@ -12,11 +12,12 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix4x3.h"
 #include "Core/Math/Matrix4x4.h"
-#include "Graphics/RenderTarget.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
+
+class RenderTarget;
 
 /**
  * A view is a region in a render target that can be rendered into.

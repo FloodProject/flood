@@ -9,14 +9,10 @@
 #pragma once
 
 #include "Core/Delegate.h"
-#include "Engine/Resources/Material.h"
-#include "Engine/Geometry/GeometryBuffer.h"
-
-#include "Graphics/VertexBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 #include "Graphics/IndexBuffer.h"
 #include "Graphics/UniformBuffer.h"
-
-FWD_DECL_INTRUSIVE(Material)
+#include "Graphics/Resources/Material.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -26,22 +22,19 @@ NAMESPACE_GRAPHICS_BEGIN
  * Type of primitive of the RenderBatch.
  */
 
-namespace PrimitiveType
+enum struct PrimitiveType : uint8
 {
-	enum Enum : uint8
-	{
-		Points,
-		Lines,
-		LineLoop,
-		LineStrip,
-		Triangles,
-		TriangleStrip,
-		TriangleFan,
-		Quads,
-		QuadStrip,
-		Polygon
-	};
-}
+	Points,
+	Lines,
+	LineLoop,
+	LineStrip,
+	Triangles,
+	TriangleStrip,
+	TriangleFan,
+	Quads,
+	QuadStrip,
+	Polygon
+};
 
 //-----------------------------------//
 
@@ -49,15 +42,12 @@ namespace PrimitiveType
  * Type of rendering mode of the RenderBatch.
  */
 
-namespace PrimitiveRasterMode
+enum struct PrimitiveRasterMode : uint8
 {
-	enum Enum : uint8
-	{
-		Solid,
-		Wireframe,
-		Point
-	};
-}
+	Solid,
+	Wireframe,
+	Point
+};
 
 //-----------------------------------//
 
@@ -67,22 +57,19 @@ namespace PrimitiveRasterMode
  * Lower numbers render before higher numbers.
  */
 
-namespace RenderLayer
+enum struct RenderLayer : uint8
 {
-	enum Enum : uint8
-	{
-		Normal = 0,
-		Transparency = 5,
-		PostTransparency = 7,
-		Overlays = 10
-	};
-}
+	Normal = 0,
+	Transparency = 5,
+	PostTransparency = 7,
+	Overlays = 10
+};
 
 //-----------------------------------//
 
 /** The range of indices in the render batch */
 
-struct API_RENDER RenderBatchRange
+struct API_GRAPHICS RenderBatchRange
 {
 	RenderBatchRange();
 
@@ -98,7 +85,7 @@ struct API_RENDER RenderBatchRange
 class RenderView;
 class RenderState;
 
-class API_RENDER RenderBatch : public ReferenceCounted
+class API_GRAPHICS RenderBatch : public ReferenceCounted
 {
 public:
 
@@ -106,7 +93,7 @@ public:
 	~RenderBatch();
 
 	// Gets/sets the render stage.
-	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
+	ACESSOR(RenderLayer, RenderLayer, stage)
 
 	// Gets/sets the render priority.
 	ACESSOR(RenderPriority, int32, priority)
@@ -121,10 +108,10 @@ public:
 	ACESSOR(Material, const MaterialHandle&, material)
 
 	// Gets/sets the render mode.
-	ACESSOR(PrimitiveRasterMode, PrimitiveRasterMode::Enum, mode)
+	ACESSOR(PrimitiveRasterMode, PrimitiveRasterMode, mode)
 
 	// Gets/sets the primitive type.
-	ACESSOR(PrimitiveType, PrimitiveType::Enum, type)
+	ACESSOR(PrimitiveType, PrimitiveType, type)
 
 	// Pre-render callback.
 	Delegate2<RenderView*, const RenderState&> onPreRender;
@@ -138,16 +125,16 @@ public:
 	RenderBatchRange range;
 
 	// Rendering stage.
-	RenderLayer::Enum stage;
+	RenderLayer stage;
 
 	// Rendering priority.
 	int32 priority;
 
 	// Primitive type.
-	PrimitiveType::Enum type;
+	PrimitiveType type;
 
 	// Polygon mode.
-	PrimitiveRasterMode::Enum mode;
+	PrimitiveRasterMode mode;
 
 	// Geometry buffer with the geometry data.
 	GeometryBufferPtr gb;

@@ -33,19 +33,19 @@ void UnbindFixedVertexBufferDeclarations(VertexBuffer*);
 void BindGenericVertexBufferDeclarations(VertexBuffer*);
 void UnbindGenericVertexBufferDeclarations(VertexBuffer*);
 
-int ConvertBufferGL(BufferUsage::Enum, BufferAccess::Enum);
-GLenum ConvertPrimitiveGL(PrimitiveType::Enum);
-GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode::Enum);
+int ConvertBufferGL(BufferUsage, BufferAccess);
+GLenum ConvertPrimitiveGL(PrimitiveType);
+GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode);
 
-int ConvertTextureFilterFormatGL( TextureFilterMode::Enum );
-int ConvertTextureWrapFormatGL( TextureWrapMode::Enum );
-GLint ConvertTextureInternalFormatGL( PixelFormat::Enum );
-GLint ConvertTextureSourceFormatGL( PixelFormat::Enum );
-GLint ConvertTextureTargetGL( Texture::TextureTarget );
+int ConvertTextureFilterFormatGL( TextureFilterMode );
+int ConvertTextureWrapFormatGL( TextureWrapMode );
+GLint ConvertTextureInternalFormatGL( PixelFormat );
+GLint ConvertTextureSourceFormatGL( PixelFormat );
+GLint ConvertTextureTargetGL( TextureTarget );
 
-GLenum ConvertBlendSourceGL(BlendSource::Enum);
-GLenum ConvertBlendDestinationGL(BlendDestination::Enum);
-GLenum ConvertDepthModeGL(DepthCompare::Enum);
+GLenum ConvertBlendSourceGL(BlendSource);
+GLenum ConvertBlendDestinationGL(BlendDestination);
+GLenum ConvertDepthModeGL(DepthCompare);
 
 GLenum ConvertShaderTypeGL( ShaderType::Enum );
 

@@ -86,7 +86,7 @@ const char* glErrorString(GLenum errorCode)
 
 //-----------------------------------//
 
-GLenum ConvertBufferTypeGL(VertexDataType::Enum type)
+GLenum ConvertBufferTypeGL(VertexDataType type)
 {
 	switch(type)
 	{
@@ -102,7 +102,7 @@ GLenum ConvertBufferTypeGL(VertexDataType::Enum type)
 
 //-----------------------------------//
 
-int ConvertBufferGL(BufferUsage::Enum usage, BufferAccess::Enum access)
+int ConvertBufferGL(BufferUsage usage, BufferAccess access)
 {
 	if( usage == BufferUsage::Stream && access == BufferAccess::Read )
 		return GL_STREAM_READ;
@@ -256,7 +256,7 @@ void UnbindGenericVertexBufferDeclarations(VertexBuffer* vb)
 
 //-----------------------------------//
 
-GLenum ConvertPrimitiveGL(PrimitiveType::Enum type)
+GLenum ConvertPrimitiveGL(PrimitiveType type)
 {
 	switch(type)
 	{
@@ -277,7 +277,7 @@ GLenum ConvertPrimitiveGL(PrimitiveType::Enum type)
 
 //-----------------------------------//
 
-GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode::Enum mode)
+GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode mode)
 {
 	switch(mode)
 	{
@@ -292,12 +292,12 @@ GLenum ConvertPrimitiveRasterGL(PrimitiveRasterMode::Enum mode)
 
 //-----------------------------------//
 
-int ConvertTextureTargetGL( Texture::TextureTarget target )
+int ConvertTextureTargetGL( TextureTarget target )
 {
 	switch( target )
 	{
-	case Texture::Target2D: return GL_TEXTURE_2D;
-	case Texture::Target3D: return GL_TEXTURE_3D;
+	case TextureTarget::Target2D: return GL_TEXTURE_2D;
+	case TextureTarget::Target3D: return GL_TEXTURE_3D;
 	}
 
 	assert( 0 && "This should not be reached" );
@@ -306,7 +306,7 @@ int ConvertTextureTargetGL( Texture::TextureTarget target )
 
 //-----------------------------------//
 
-int ConvertTextureFilterFormatGL( TextureFilterMode::Enum format )
+int ConvertTextureFilterFormatGL( TextureFilterMode format )
 {
 	switch( format )
 	{
@@ -320,7 +320,7 @@ int ConvertTextureFilterFormatGL( TextureFilterMode::Enum format )
 
 //-----------------------------------//
 
-int ConvertTextureWrapFormatGL( TextureWrapMode::Enum format )
+int ConvertTextureWrapFormatGL( TextureWrapMode format )
 {
 	switch( format )
 	{
@@ -336,7 +336,7 @@ int ConvertTextureWrapFormatGL( TextureWrapMode::Enum format )
 
 //-----------------------------------//
 
-GLint ConvertTextureInternalFormatGL( PixelFormat::Enum format )
+GLint ConvertTextureInternalFormatGL( PixelFormat format )
 {
 	switch( format )
 	{
@@ -351,7 +351,7 @@ GLint ConvertTextureInternalFormatGL( PixelFormat::Enum format )
 
 //-----------------------------------//
 
-GLint ConvertTextureSourceFormatGL( PixelFormat::Enum format )
+GLint ConvertTextureSourceFormatGL( PixelFormat format )
 {
 	switch( format )
 	{
@@ -366,7 +366,7 @@ GLint ConvertTextureSourceFormatGL( PixelFormat::Enum format )
 
 //-----------------------------------//
 
-GLenum ConvertBlendSourceGL(BlendSource::Enum source)
+GLenum ConvertBlendSourceGL(BlendSource source)
 {
 	switch( source )
 	{
@@ -387,7 +387,7 @@ GLenum ConvertBlendSourceGL(BlendSource::Enum source)
 
 //-----------------------------------//
 
-GLenum ConvertBlendDestinationGL(BlendDestination::Enum dest)
+GLenum ConvertBlendDestinationGL(BlendDestination dest)
 {
 	switch( dest )
 	{
@@ -407,7 +407,7 @@ GLenum ConvertBlendDestinationGL(BlendDestination::Enum dest)
 
 //-----------------------------------//
 
-GLenum ConvertDepthModeGL(DepthCompare::Enum depth)
+GLenum ConvertDepthModeGL(DepthCompare depth)
 {
 	switch( depth )
 	{

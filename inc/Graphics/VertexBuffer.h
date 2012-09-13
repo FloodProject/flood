@@ -16,7 +16,105 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-FWD_DECL_INTRUSIVE(GeometryBuffer)
+/**
+ * Attribute of a vertex element.
+ */
+
+enum class VertexAttribute : uint8
+{
+	Position = 0,
+	Normal = 2,
+	Color = 3,
+	BoneIndex = 4,
+	FogCoord = 5,
+	TexCoord0 = 6,
+	TexCoord1,
+	TexCoord2,
+	TexCoord3,
+	TexCoord4,
+	TexCoord5,
+	TexCoord6,
+	TexCoord7,
+};
+
+enum class VertexDataType : uint8
+{
+	Byte,
+	Float,
+	Integer
+};
+
+//-----------------------------------//
+
+/**
+ * Each element inside a vertex declaration.
+ */
+
+struct API_RENDER VertexElementP
+{
+	// Semantic attribute of the element.
+	VertexAttribute attribute;
+
+	// Data type of the element.
+	VertexDataType type;
+
+	// Number of components of the element.
+	uint8 components;
+};
+
+struct API_RENDER VertexElement : public VertexElementP
+{
+	VertexElement(VertexAttribute, VertexDataType, uint8 components);
+
+	// Returns the size of this element.
+	uint8 getSize() const;
+
+	// Stride between elements.
+	int8 stride;
+
+	// Offset to the element.
+	uint32 offset;
+
+	// Total size of the element.
+	uint32 size;
+};
+
+ //-----------------------------------//
+
+/**
+ * This describes structure of a geometry buffer.
+ */
+
+struct API_RENDER VertexDeclaration
+{
+	// Adds a new vertex element.
+	void add(VertexAttribute, int numComponents);
+
+	// Adds a new vertex element.
+	void add(const VertexElement&);
+
+	// Adds a new vertex element.
+	void add(const VertexElementP&);
+
+	// Resets the vertex elements.
+	void reset();
+
+	// Finds the element for the given attribute.
+	VertexElement* find(VertexAttribute) const;
+
+	// Calculates the offset to the given element.
+	uint8 getOffset(VertexAttribute) const;
+
+	// Returns the size of a vertex.
+	uint8 getVertexSize() const;
+
+	// Calculates the strides of the elements.
+	void calculateStrides();
+
+	std::vector<VertexElement> decls;
+};
+
+//-----------------------------------//
 
 /**
  * Represents a vertex buffer. One limitation here is that all data is 

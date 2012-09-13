@@ -9,6 +9,7 @@
 #include "Graphics/API.h"
 #include "Graphics/BufferManager.h"
 #include "Graphics/RenderBackend.h"
+#include "Graphics/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

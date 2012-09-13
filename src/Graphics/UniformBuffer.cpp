@@ -52,7 +52,7 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 
 	if( !element ) return nullptr;
 
-	element->type = (UniformDataType::Enum) 0;
+	element->type = (UniformDataType) 0;
 	element->count = 0;
 	element->name = (char*) name; // AllocateName(name);
 

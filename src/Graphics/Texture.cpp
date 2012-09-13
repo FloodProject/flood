@@ -8,8 +8,6 @@
 
 #include "Graphics/API.h"
 #include "Graphics/Texture.h"
-#include "Graphics/RenderCapabilities.h"
-#include "Graphics/RenderDevice.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -21,7 +19,7 @@ Texture::Texture()
 	uploaded = false;
 	image = nullptr;
 	anisotropicFilter = 1.0f;
-	target = Texture::Target2D;
+	target = TextureTarget::Target2D;
 }
 
 //-----------------------------------//
@@ -33,7 +31,7 @@ Texture::~Texture()
 
 //-----------------------------------//
 
-void Texture::allocate(const Vector2i& size, PixelFormat::Enum pixelFormat)
+void Texture::allocate(const Vector2i& size, PixelFormat pixelFormat)
 {
 	width = (uint16) size.x;
 	height = (uint16) size.y;

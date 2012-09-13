@@ -48,7 +48,7 @@ public:
 	void createShaders() OVERRIDE;
 
 	// Adds a parameter to the shader.
-	void setAttribute( const String&, VertexAttribute::Enum ) OVERRIDE;
+	void setAttribute( const String&, VertexAttribute ) OVERRIDE;
 
 	// Sets the uniforms in the program.
 	void setUniforms( UniformBuffer* ) OVERRIDE;

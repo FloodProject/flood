@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Engine/Resources/Image.h"
-#include "Engine/Resources/Buffer.h"
+#include "Graphics/Resources/Image.h"
+#include "Graphics/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
 
@@ -125,7 +125,7 @@ void GL_RenderBuffer::setBufferState()
 
 TexturePtr GL_RenderBuffer::createRenderTexture( RenderBufferType::Enum type )
 {
-	PixelFormat::Enum format;
+	PixelFormat format;
 
 	if( type == RenderBufferType::Depth )
 	{

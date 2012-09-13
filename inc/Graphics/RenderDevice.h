@@ -17,7 +17,6 @@
 
 #include "Graphics/Render.h"
 #include "Graphics/RenderTarget.h"
-#include "Graphics/RenderBatch.h"
 #include "Graphics/RenderQueue.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -50,6 +49,7 @@ struct RenderPipeline
 class RenderBuffer;
 class RenderContext;
 class RenderBackend;
+class RenderBatch;
 
 /**
  * Represents the rendering device we are using. At startup the application

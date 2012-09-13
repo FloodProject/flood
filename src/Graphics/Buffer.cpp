@@ -23,7 +23,7 @@ Buffer::Buffer()
 
 //-----------------------------------//
 
-Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access) 
+Buffer::Buffer(BufferUsage usage, BufferAccess access) 
 	: usage(usage)
 	, access(access)
 {

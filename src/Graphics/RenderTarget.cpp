@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
 
 NAMESPACE_GRAPHICS_BEGIN

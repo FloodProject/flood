@@ -8,7 +8,6 @@
 
 #include "Graphics/API.h"
 #include "Graphics/RenderBatch.h"
-#include "Graphics/RenderDevice.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

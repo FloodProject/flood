@@ -271,9 +271,9 @@ void GLSL_ShaderProgram::bindDefaultAttributes()
 
 //-----------------------------------//
 
-void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute::Enum attr )
+void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute attr )
 {
-	glBindAttribLocation( id, attr, name.c_str() );
+	glBindAttribLocation( id, (GLuint) attr, name.c_str() );
 
 	if( CheckLastErrorGL("Could not bind attribute variable") )
 		return;

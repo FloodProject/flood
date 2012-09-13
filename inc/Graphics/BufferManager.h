@@ -11,7 +11,6 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"
-#include "Engine/Geometry/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -29,6 +28,7 @@ typedef std::map<const GeometryBuffer*, BufferEntry> BuffersMap;
 typedef std::pair<const String&, BufferPtr> BuffersPair;
 
 class RenderBackend;
+class GeometryBuffer;
 
 /**
  * Manages a set of buffers.
