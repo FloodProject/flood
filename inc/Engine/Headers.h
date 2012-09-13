@@ -1,7 +1,7 @@
 /************************************************************************
 *
 * Flood Project © (2008-201x)
-*"http://www.vapor3d.org"
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
