@@ -21,4 +21,4 @@ project "UnitTests"
 	
 	libdirs { Core.libdirs, "../bin/" }
 	deps { Core.deps, "UnitTest++" }
-	links { Core.links }
+	links { Core.name, Core.links }
