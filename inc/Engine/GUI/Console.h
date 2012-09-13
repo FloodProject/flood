@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Engine/Resources/Font.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/Resources/Material.h"
 #include "Engine/Scene/Geometry.h"
 #include "Engine/GUI/Overlay.h"
 

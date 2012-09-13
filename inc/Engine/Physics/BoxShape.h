@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(BoxShape)
+API_ENGINE REFLECT_DECLARE_CLASS(BoxShape)
 
 class API_ENGINE BoxShape : public Shape
 {

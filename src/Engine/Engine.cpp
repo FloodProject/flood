@@ -6,8 +6,6 @@
 *
 ************************************************************************/
 
-#define INSTANTIATE_TEMPLATES
-
 #include "Engine/API.h"
 #include "Engine/Engine.h"
 
@@ -23,6 +21,10 @@
 #include "Engine/Paging/PageManager.h"
 #include "Engine/Physics/Physics.h"
 #include "Script/ScriptManager.h"
+
+#ifdef API_ENGINE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif
 
 NAMESPACE_ENGINE_BEGIN
 

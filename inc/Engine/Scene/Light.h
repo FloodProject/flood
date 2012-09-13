@@ -24,7 +24,7 @@ NAMESPACE_ENGINE_BEGIN
  * a cone, they have a direction and position and also a cut-off value.
  */
 
-REFLECT_DECLARE_ENUM(LightType)
+API_SCENE REFLECT_DECLARE_ENUM(LightType)
 
 struct LightType
 {
@@ -44,7 +44,7 @@ struct LightType
  * component. Just rotate it to change the direction.
  */
 
-REFLECT_DECLARE_CLASS(Light)
+API_SCENE REFLECT_DECLARE_CLASS(Light)
 
 class API_ENGINE Light : public Component
 {

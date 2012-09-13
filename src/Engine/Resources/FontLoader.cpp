@@ -20,7 +20,7 @@
 #include "Core/Utilities.h"
 #include "Core/Math/Helpers.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -168,6 +168,6 @@ bool FontLoader::validateFont()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

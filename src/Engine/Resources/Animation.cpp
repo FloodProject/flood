@@ -11,7 +11,7 @@
 #include "Engine/Resources/Bone.h"
 #include "Core/Math/Helpers.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -138,4 +138,4 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

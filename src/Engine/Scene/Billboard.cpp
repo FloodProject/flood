@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Scene/Billboard.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/Resources/Material.h"
 #include "Engine/Scene/Entity.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -33,7 +33,7 @@ Billboard::Billboard() : billboardType(BillboardType::ScreenAligned)
 
 //-----------------------------------//
 
-Billboard::Billboard( BillboardType::Enum type ) : billboardType(type)
+Billboard::Billboard( BillboardType type ) : billboardType(type)
 {
 }
 
@@ -47,9 +47,9 @@ void Billboard::update( float )
 
 void Billboard::onPreRender( const Camera& camera )
 {
-	const TransformPtr& transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	
-	const TransformPtr& camTransform = camera.getEntity()->getTransform();
+	const Transform* camTransform = camera.getEntity()->getTransform().get();
 	const Matrix4x3& camView = camera.getViewMatrix();
 
 #if 0

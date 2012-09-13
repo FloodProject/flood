@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Engine/Resources/Text.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 
 	

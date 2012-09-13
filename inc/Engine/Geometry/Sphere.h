@@ -10,7 +10,7 @@
 
 #include "Graphics/RenderBatch.h"
 
-NAMESPACE_GRAPHICS_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -44,4 +44,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sphere );
 
 //-----------------------------------//
 
-NAMESPACE_GRAPHICS_END
+NAMESPACE_ENGINE_END

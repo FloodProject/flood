@@ -9,11 +9,11 @@
 #include "Engine/API.h"
 #include "Engine/Resources/Bone.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

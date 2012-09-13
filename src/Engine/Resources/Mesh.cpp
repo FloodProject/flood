@@ -13,9 +13,9 @@
 #include "Core/Log.h"
 #include "Core/Utilities.h"
 #include "Core/Math/Vector.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -123,4 +123,4 @@ void Mesh::setupInitialVertices()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

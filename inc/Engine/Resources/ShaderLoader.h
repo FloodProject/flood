@@ -11,9 +11,9 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Resources/ResourceLoader.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -49,6 +49,6 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

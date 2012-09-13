@@ -13,7 +13,7 @@
 #include "Core/Math/Matrix4x3.h"
 #include "Core/References.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -57,4 +57,4 @@ typedef std::vector<BonePtr> BonesVector;
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

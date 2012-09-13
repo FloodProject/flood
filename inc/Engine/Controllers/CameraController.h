@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
  * A simple camera controller.
  */
 
-REFLECT_DECLARE_CLASS(CameraController)
+API_ENGINE REFLECT_DECLARE_CLASS(CameraController)
 
 class API_ENGINE CameraController : public Controller
 {

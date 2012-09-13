@@ -21,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 
 FWD_DECL_INTRUSIVE(Entity)
 
-struct RayQueryResult
+struct API_SCENE RayQueryResult
 {
 	Entity* entity;
 	float distance;
@@ -33,7 +33,7 @@ typedef std::vector<RayQueryResult> RayQueryList;
 
 FWD_DECL_INTRUSIVE(Geometry)
 
-struct RayTriangleQueryResult : public RayQueryResult
+struct API_SCENE RayTriangleQueryResult : public RayQueryResult
 {
 	Geometry* geometry;
 	RenderBatch* renderable;
@@ -56,7 +56,7 @@ struct RayTriangleQueryResult : public RayQueryResult
  * before performing frustum culling or before rendering the entity.
  */
 
-REFLECT_DECLARE_CLASS(Scene)
+API_SCENE REFLECT_DECLARE_CLASS(Scene)
 
 class API_SCENE Scene : public Resource
 {

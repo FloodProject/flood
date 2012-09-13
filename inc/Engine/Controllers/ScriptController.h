@@ -23,7 +23,7 @@ struct MouseButtonEvent;
  * Script that can be executed by a script state.
  */
 
-REFLECT_DECLARE_CLASS(ScriptController)
+API_ENGINE REFLECT_DECLARE_CLASS(ScriptController)
 
 class API_ENGINE ScriptController : public Controller
 {

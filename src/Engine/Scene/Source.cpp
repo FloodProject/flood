@@ -108,7 +108,7 @@ void Source::setRolloff(float rolloff)
 
 //-----------------------------------//
 
-void Source::setRolloffMode(RolloffMode::Enum mode)
+void Source::setRolloffMode(RolloffMode mode)
 {
 	this->rolloffMode = mode;
 	if(audioSource) audioSource->setRolloffMode(rolloffMode);
@@ -124,7 +124,7 @@ void Source::setLoop(bool state)
 
 //-----------------------------------//
 
-void Source::setState( SourceState::Enum state )
+void Source::setState( SourceState state )
 {
 	this->state = state;
 	
@@ -142,7 +142,7 @@ void Source::setState( SourceState::Enum state )
 
 //-----------------------------------//
 
-void Source::setMode( SourceMode::Enum mode )
+void Source::setMode( SourceMode mode )
 {
 	this->mode = mode;
 	if(!audioSource) return;

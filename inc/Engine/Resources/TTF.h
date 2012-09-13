@@ -12,7 +12,7 @@
 
 #include "Engine/Resources/Font.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -35,7 +35,7 @@ private:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif
 

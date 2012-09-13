@@ -23,7 +23,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(MeshShape)
+API_ENGINE REFLECT_DECLARE_CLASS(MeshShape)
 
 class API_ENGINE MeshShape : public Shape
 {

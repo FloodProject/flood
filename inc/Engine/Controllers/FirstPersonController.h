@@ -29,7 +29,7 @@ struct MouseWheelEvent;
  * A simple First-Person style camera controller.
  */
 
-REFLECT_DECLARE_CLASS(FirstPersonController)
+API_SCENE REFLECT_DECLARE_CLASS(FirstPersonController)
 
 class API_SCENE FirstPersonController : public CameraController
 {

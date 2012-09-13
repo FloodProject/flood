@@ -10,7 +10,7 @@
 
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Geometry/Sphere.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 
 FWD_DECL_INTRUSIVE(Entity)
 
@@ -24,7 +24,7 @@ NAMESPACE_ENGINE_BEGIN
  * simulates a dynamic sky, with moving clouds.
  */
 
-REFLECT_DECLARE_CLASS(Skydome)
+API_SCENE REFLECT_DECLARE_CLASS(Skydome)
 
 class API_SCENE Skydome : public Geometry
 {

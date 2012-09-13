@@ -19,9 +19,9 @@ NAMESPACE_ENGINE_BEGIN
  * Loads scene files.
  */
 
-REFLECT_DECLARE_CLASS(SceneLoader)
+API_SCENE REFLECT_DECLARE_CLASS(SceneLoader)
 
-class SceneLoader : public ResourceLoader
+class API_SCENE SceneLoader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(SceneLoader)
 

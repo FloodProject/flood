@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Engine/Resources/Font.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -24,4 +24,4 @@ Font::Font()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

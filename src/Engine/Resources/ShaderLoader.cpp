@@ -11,10 +11,10 @@
 #ifdef ENABLE_RENDERER_OPENGL_GLSL
 
 #include "Engine/Resources/ShaderLoader.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 #include "Core/Log.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -83,6 +83,6 @@ bool ShaderLoader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

@@ -19,7 +19,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(CharacterController)
+API_ENGINE REFLECT_DECLARE_CLASS(CharacterController)
 
 class API_ENGINE CharacterController : public Controller
 {

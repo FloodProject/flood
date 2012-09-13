@@ -19,29 +19,23 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_ENUM(SourceState)
+API_SCENE REFLECT_DECLARE_ENUM(SourceState)
 
-struct SourceState
+enum struct SourceState
 {
-	enum Enum
-	{
-		Play,
-		Pause,
-		Stop
-	};
+	Play,
+	Pause,
+	Stop
 };
 
 //-----------------------------------//
 
-REFLECT_DECLARE_ENUM(SourceMode)
+API_SCENE REFLECT_DECLARE_ENUM(SourceMode)
 
-struct SourceMode
+enum struct SourceMode
 {
-	enum Enum
-	{
-		Static,
-		Streaming
-	};
+	Static,
+	Streaming
 };
 
 //-----------------------------------//
@@ -53,9 +47,9 @@ class AudioSource;
  * as the sound source location.
  */
 
-REFLECT_DECLARE_CLASS(Source)
+API_SCENE REFLECT_DECLARE_CLASS(Source)
 
-class API_ENGINE Source : public Component 
+class API_SCENE Source : public Component 
 {
 	REFLECT_DECLARE_OBJECT(Source)
 	DECLARE_UNCOPYABLE(Source)
@@ -66,10 +60,10 @@ public:
 	virtual ~Source();
 
 	// Sets the state of the source.
-	void setState( SourceState::Enum state );
+	void setState( SourceState state );
 
 	// Sets the mode of the source.
-	void setMode( SourceMode::Enum mode );
+	void setMode( SourceMode mode );
 
 	// Sets the volume of the source. Volume is in the range [0.0-1.0].
 	void setVolume( float volume );
@@ -87,7 +81,7 @@ public:
 	void setRolloff( float rolloff );
 
 	// Sets the rolloff mode of the source.
-	void setRolloffMode( RolloffMode::Enum mode );
+	void setRolloffMode( RolloffMode mode );
 
 	// Sets the loop of the source.
 	void setLoop( bool state );
@@ -101,10 +95,10 @@ public:
 public:
 
 	// State of the source.
-	SourceState::Enum state;
+	SourceState state;
 
 	// State of the source.
-	SourceMode::Enum mode;
+	SourceMode mode;
 
 	// Loops the source.
 	bool loop;
@@ -122,7 +116,7 @@ public:
 	float maxDistance;
 
 	// Rolloff mode of the source.
-	RolloffMode::Enum rolloffMode;
+	RolloffMode rolloffMode;
 
 	// Rolloff of the source.
 	float rolloff;

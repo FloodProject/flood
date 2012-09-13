@@ -22,7 +22,7 @@ NAMESPACE_ENGINE_BEGIN
 
 class BodyMotionState;
 
-REFLECT_DECLARE_CLASS(Body)
+API_ENGINE REFLECT_DECLARE_CLASS(Body)
 
 class API_ENGINE Body : public Component
 {

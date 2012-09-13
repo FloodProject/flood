@@ -31,7 +31,7 @@ struct RenderBlock;
  * speed up the rendering by cutting nodes that are outside the view range.
  */
 
-REFLECT_DECLARE_CLASS(Camera)
+API_SCENE REFLECT_DECLARE_CLASS(Camera)
 
 class API_SCENE Camera : public Component
 {

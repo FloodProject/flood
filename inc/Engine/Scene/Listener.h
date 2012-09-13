@@ -17,9 +17,9 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(Listener)
+API_SCENE REFLECT_DECLARE_CLASS(Listener)
 
-class API_ENGINE Listener : public Component
+class API_SCENE Listener : public Component
 {
 	DECLARE_UNCOPYABLE(Listener)
 	REFLECT_DECLARE_OBJECT(Listener)

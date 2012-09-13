@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(CapsuleShape)
+API_ENGINE REFLECT_DECLARE_CLASS(CapsuleShape)
 
 class API_ENGINE CapsuleShape : public Shape
 {

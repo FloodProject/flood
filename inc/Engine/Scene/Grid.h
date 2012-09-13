@@ -18,9 +18,9 @@ NAMESPACE_ENGINE_BEGIN
  * Simple grid component. Can be used for editor applications.
  */
 
-REFLECT_DECLARE_CLASS(Grid)
+API_SCENE REFLECT_DECLARE_CLASS(Grid)
 
-class API_ENGINE Grid : public Geometry
+class API_SCENE Grid : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Grid)
 

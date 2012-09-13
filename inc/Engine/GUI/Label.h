@@ -10,7 +10,7 @@
 
 #include "Engine/GUI/Overlay.h"
 #include "Engine/Resources/Font.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/Resources/Material.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -26,7 +26,7 @@ NAMESPACE_ENGINE_BEGIN
  * changes the resolution.
  */
 
-REFLECT_DECLARE_CLASS(Label)
+API_ENGINE REFLECT_DECLARE_CLASS(Label)
 
 class API_ENGINE Label : public Overlay
 {

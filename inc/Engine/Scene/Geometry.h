@@ -24,9 +24,9 @@ NAMESPACE_ENGINE_BEGIN
  * rendering device for rendering.
  */
 
-REFLECT_DECLARE_CLASS(Geometry)
+API_SCENE REFLECT_DECLARE_CLASS(Geometry)
 
-class API_ENGINE Geometry : public Component
+class API_SCENE Geometry : public Component
 {
 	REFLECT_DECLARE_OBJECT(Geometry)
 

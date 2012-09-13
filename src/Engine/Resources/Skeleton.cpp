@@ -10,7 +10,7 @@
 #include "Engine/Resources/Skeleton.h"
 #include "Core/Utilities.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -44,4 +44,4 @@ BonePtr Skeleton::findBone( const String& name )
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

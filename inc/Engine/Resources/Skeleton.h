@@ -10,7 +10,7 @@
 
 #include "Engine/Resources/Bone.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ NAMESPACE_RESOURCES_BEGIN
  * A skeleton is composed of bones that deform the vertices of a mesh.
  */
 
-class Skeleton : public ReferenceCounted
+class API_ENGINE Skeleton : public ReferenceCounted
 {
 public:
 
@@ -42,4 +42,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Skeleton)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

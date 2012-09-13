@@ -23,7 +23,7 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
-REFLECT_DECLARE_CLASS(Cell)
+API_ENGINE REFLECT_DECLARE_CLASS(Cell)
 
 class API_ENGINE Cell : public Geometry
 {

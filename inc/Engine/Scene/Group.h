@@ -21,9 +21,9 @@ NAMESPACE_ENGINE_BEGIN
  * child node transformations.
  */
 
-REFLECT_DECLARE_CLASS(Group)
+API_SCENE REFLECT_DECLARE_CLASS(Group)
 
-class API_ENGINE Group : public Entity
+class API_SCENE Group : public Entity
 {
 	REFLECT_DECLARE_OBJECT(Group)
 

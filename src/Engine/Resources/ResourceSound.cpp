@@ -10,7 +10,7 @@
 #include "Engine/Resources/Sound.h"
 #include "Core/Stream.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -32,4 +32,4 @@ Sound::Sound()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

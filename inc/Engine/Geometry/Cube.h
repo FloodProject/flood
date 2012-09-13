@@ -10,7 +10,7 @@
 
 #include "Engine/Scene/Geometry.h"
 
-NAMESPACE_GRAPHICS_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
  * Generates a procedural cube mesh.
  */
 
-REFLECT_DECLARE_CLASS(Cube)
+API_SCENE REFLECT_DECLARE_CLASS(Cube)
 
 class API_SCENE Cube : public Geometry
 {
@@ -38,10 +38,10 @@ private:
 	float height;
 };
 
-void BuildCube( GeometryBuffer* vb, float width, float height );
+API_SCENE void BuildCube( GeometryBuffer* vb, float width, float height );
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cube );
 
 //-----------------------------------//
 
-NAMESPACE_GRAPHICS_END
+NAMESPACE_ENGINE_END

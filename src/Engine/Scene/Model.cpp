@@ -91,7 +91,7 @@ void Model::setMesh(const MeshHandle& meshHandle)
 
 //-----------------------------------//
 
-void Model::setSkinningMode( SkinningMode::Enum mode )
+void Model::setSkinningMode( SkinningMode mode )
 {
 	skinningMode = mode;
 	updateSkin = true;

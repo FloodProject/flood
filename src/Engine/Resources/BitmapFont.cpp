@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_FONT_BITMAP
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -23,6 +23,6 @@ const Vector2 BitmapFont::getGlyphSize() const
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

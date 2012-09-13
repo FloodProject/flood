@@ -50,11 +50,11 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Sound.h"
 #include "Engine/Resources/Font.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 
 //---------------------------------------------------------------------//
 // Scene-related Includes

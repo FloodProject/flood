@@ -19,7 +19,7 @@ NAMESPACE_ENGINE_BEGIN
  * Water plane.
  */
 
-REFLECT_DECLARE_CLASS(Water)
+API_SCENE REFLECT_DECLARE_CLASS(Water)
 
 class API_SCENE Water : public Geometry
 {

@@ -15,7 +15,7 @@
 #include "Engine/Resources/BitmapFont.h"
 #include "Engine/Resources/TTF.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -47,7 +47,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 REFLECT_DECLARE_CLASS(FontLoader)
 
-class API_RESOURCE FontLoader : public ResourceLoader
+class API_ENGINE FontLoader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(FontLoader)
 
@@ -93,6 +93,6 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

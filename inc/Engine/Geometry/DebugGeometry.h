@@ -18,7 +18,7 @@ FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(RenderBatch)
 FWD_DECL_INTRUSIVE(VertexBuffer)
 
-NAMESPACE_GRAPHICS_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -88,4 +88,4 @@ API_ENGINE void DebugUpdateFrustum( const RenderBatchPtr&, const Frustum& box );
 
 //-----------------------------------//
 
-NAMESPACE_GRAPHICS_END
+NAMESPACE_ENGINE_END

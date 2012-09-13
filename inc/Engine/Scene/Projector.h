@@ -15,11 +15,11 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(Projector)
-
 class RenderView;
 
-class API_ENGINE Projector : public Geometry
+API_SCENE REFLECT_DECLARE_CLASS(Projector)
+
+class API_SCENE Projector : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Projector)
 

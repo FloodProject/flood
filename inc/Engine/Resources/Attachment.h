@@ -13,7 +13,7 @@
 
 FWD_DECL_INTRUSIVE(Bone)
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -22,7 +22,7 @@ NAMESPACE_RESOURCES_BEGIN
  * For example, you can attach a sword to the hand of a ninja.
  */
 
-class API_RESOURCE Attachment : public ReferenceCounted
+class API_ENGINE Attachment : public ReferenceCounted
 {
 public:
 
@@ -43,4 +43,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Attachment ) ;
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

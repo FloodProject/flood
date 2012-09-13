@@ -16,7 +16,7 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -56,7 +56,7 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 	}
 
 	// Build our image with the pixel data returned by stb_image.
-	PixelFormat::Enum pf = PixelFormat::Unknown;
+	PixelFormat pf = PixelFormat::Unknown;
 	
 	switch( comp )
 	{
@@ -90,6 +90,6 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

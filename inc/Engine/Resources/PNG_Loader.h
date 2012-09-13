@@ -11,9 +11,9 @@
 #ifdef ENABLE_IMAGE_PICOPNG
 
 #include "Resources/ResourceLoader.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -58,6 +58,6 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

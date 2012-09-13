@@ -16,11 +16,11 @@
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct KeyFrame
+struct API_ENGINE KeyFrame
 {
 	// Time of the frame.
 	float time;
@@ -44,7 +44,7 @@ typedef std::pair<const BonePtr, KeyFramesVector> KeyFramesPair;
  * will be interpolated at a given speed rate to produce animation.
  */
 
-class Animation : public ReferenceCounted
+class API_ENGINE Animation : public ReferenceCounted
 {
 public:
 
@@ -85,7 +85,7 @@ protected:
 
 //-----------------------------------//
 
-struct AnimationState
+struct API_ENGINE AnimationState
 {
 	// Animation data.
 	AnimationPtr animation;
@@ -99,7 +99,7 @@ struct AnimationState
 
 //-----------------------------------//
 
-struct AnimationMetadata
+struct API_ENGINE AnimationMetadata
 {
 	int start;
 	int end;
@@ -109,4 +109,4 @@ struct AnimationMetadata
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

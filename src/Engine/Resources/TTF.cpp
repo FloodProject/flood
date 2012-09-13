@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_FONT_FREETYPE2
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -28,6 +28,6 @@ TTF::~TTF()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

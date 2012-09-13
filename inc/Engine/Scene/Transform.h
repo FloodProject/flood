@@ -20,7 +20,7 @@ NAMESPACE_ENGINE_BEGIN
 EXTERN_BEGIN
 
 class Transform;
-API_ENGINE Transform* TransformCreate( Allocator* );
+API_SCENE Transform* TransformCreate( Allocator* );
 
 EXTERN_END
 
@@ -32,9 +32,9 @@ EXTERN_END
  * and keep track of their bounding volumes aswell.
  */
 
-REFLECT_DECLARE_CLASS(Transform)
+API_SCENE REFLECT_DECLARE_CLASS(Transform)
 
-class API_ENGINE Transform : public Component
+class API_SCENE Transform : public Component
 {
 	REFLECT_DECLARE_OBJECT(Transform)
 	DECLARE_UNCOPYABLE(Transform)

@@ -10,7 +10,7 @@
 
 #include "Engine/Scene/Geometry.h"
 
-NAMESPACE_GRAPHICS_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
  * Generates a procedural quad mesh.
  */
 
- REFLECT_DECLARE_CLASS(Quad)
+API_SCENE REFLECT_DECLARE_CLASS(Quad)
 
 class API_SCENE Quad : public Geometry
 {
@@ -37,4 +37,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );
 
 //-----------------------------------//
 
-NAMESPACE_GRAPHICS_END
+NAMESPACE_ENGINE_END

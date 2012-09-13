@@ -20,7 +20,7 @@ NAMESPACE_ENGINE_BEGIN
  * A simple camera controller that follows a node.
  */
 
-REFLECT_DECLARE_CLASS(ThirdPersonController)
+API_ENGINE REFLECT_DECLARE_CLASS(ThirdPersonController)
 
 class API_ENGINE ThirdPersonController : public CameraController
 {

@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Geometry/DebugGeometry.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 #include "Graphics/RenderBatch.h"
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Entity.h"

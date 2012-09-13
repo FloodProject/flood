@@ -12,24 +12,24 @@
 #include "Resources/Resource.h"
 #include "Core/Math/BoundingBox.h"
 #include "Core/Math/Vector.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Skeleton)
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct MeshMaterial
+struct API_ENGINE MeshMaterial
 {
 	String name;
 	String texture;
 	bool alpha;
 };
 
-struct MeshGroup
+struct API_ENGINE MeshGroup
 {
 	std::vector<uint16> indices;
 	MeshMaterial material;
@@ -41,9 +41,9 @@ struct MeshGroup
  * Mesh resources contain 3D geometry data.
  */
 
-REFLECT_DECLARE_CLASS(Mesh)
+API_ENGINE REFLECT_DECLARE_CLASS(Mesh)
 
-class API_RESOURCE Mesh : public Resource
+class API_ENGINE Mesh : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Mesh)
 
@@ -116,4 +116,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Mesh );
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

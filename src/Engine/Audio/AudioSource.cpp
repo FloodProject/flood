@@ -339,9 +339,9 @@ void AudioSource::setRolloff(float rolloff)
 
 //-----------------------------------//
 
-void AudioSource::setRolloffMode( RolloffMode::Enum mode )
+void AudioSource::setRolloffMode( RolloffMode mode )
 {
-	alDistanceModel(mode);
+	alDistanceModel((ALenum)mode);
 }
 
 //-----------------------------------//
