@@ -22,8 +22,3 @@ project "UnitTests"
 	libdirs { Core.libdirs, "../bin/" }
 	deps { Core.deps, "UnitTest++" }
 	links { Core.links }
-
-	configuration "Debug"
-		links { "Core_d" }
-	configuration "Release"
-		links { "Core" }

@@ -1,6 +1,9 @@
 Runtime = {}
 Runtime.name = "Runtime"
 
+Mono = {}
+Mono.links = { "Mswsock", "ws2_32", "psapi", "version", "winmm" }
+
 project "Runtime"
 
 	kind "ConsoleApp"
@@ -38,8 +41,8 @@ project "Runtime"
 
 	links
 	{
-		"Core", Core.links,
-		"Resources", Resources.links,
+		Core.name, Core.links,
+		Resources.name, Resources.links,
 	}
 
 	Runtime.deps =
@@ -51,13 +54,6 @@ project "Runtime"
 	deps(Runtime.deps)
 
 	configuration "windows"
-		links
-		{
-			"Mswsock",
-			"ws2_32",
-			"psapi",
-			"version",
-			"winmm"
-		}
+		links { Mono.links }
 
 	configuration {}
