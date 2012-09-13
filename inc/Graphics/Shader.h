@@ -21,14 +21,11 @@ NAMESPACE_GRAPHICS_BEGIN
  *  - Geometry shaders can be used to generate geometry procedurally.
  */
 
-struct ShaderType
+enum struct ShaderType
 {
-	enum Enum 
-	{
-		Vertex,
-		Fragment,
-		Geometry
-	};
+	Vertex,
+	Fragment,
+	Geometry
 };
 
 //-----------------------------------//
@@ -44,7 +41,7 @@ class API_GRAPHICS Shader : public ReferenceCounted
 public:
 
 	// Gets the shader type.
-	ACESSOR(ShaderType, ShaderType::Enum, type)
+	ACESSOR(ShaderType, ShaderType, type)
 
 	// Gets the shader text.
 	ACESSOR(Text, const String&, text)
@@ -68,7 +65,7 @@ public:
 	bool gotCompileErrors() const;
 
 	// Shader type.
-	ShaderType::Enum type;
+	ShaderType type;
 
 	// Holds the shader text.
 	String text;

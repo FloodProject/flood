@@ -427,7 +427,7 @@ GLenum ConvertDepthModeGL(DepthCompare depth)
 
 //-----------------------------------//
 
-GLenum ConvertShaderTypeGL( ShaderType::Enum type )
+GLenum ConvertShaderTypeGL( ShaderType type )
 {
 	switch( type )
 	{

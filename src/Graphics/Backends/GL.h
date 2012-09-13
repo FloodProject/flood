@@ -47,7 +47,7 @@ GLenum ConvertBlendSourceGL(BlendSource);
 GLenum ConvertBlendDestinationGL(BlendDestination);
 GLenum ConvertDepthModeGL(DepthCompare);
 
-GLenum ConvertShaderTypeGL( ShaderType::Enum );
+GLenum ConvertShaderTypeGL( ShaderType );
 
 class RenderBackend;
 RenderBackend* RenderCreateBackendGLES2();
