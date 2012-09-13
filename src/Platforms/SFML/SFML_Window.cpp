@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -113,7 +112,7 @@ void SFML_Window::show( bool visible )
 
 void SFML_Window::makeCurrent()
 {
-	window.setActive(); 
+	window.setActive();
 }
 
 //-----------------------------------//
