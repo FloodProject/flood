@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2013)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -100,8 +99,8 @@ void Game::frame()
 {
 	const float maxDelta = 1.0f / hertz;
 
-	float tick = TimerGetElapsed(&frameTimer), delta;
 	TimerReset(&frameTimer);
+	float delta;
 
 	do
 	{
@@ -112,8 +111,8 @@ void Game::frame()
 		engine->update();
 
 		// next tick time
-		tick += maxDelta;
-	} while( TimerGetCurrentTimeMs() > tick);
+		delta = TimerGetElapsed(&frameTimer);
+	} while( delta < maxDelta);
 
 	// user render
 	render();
