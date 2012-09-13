@@ -21,7 +21,7 @@ Runtime::Runtime()
 
 //-----------------------------------//
 
-void Runtime::onInit()
+void Runtime::init()
 {
 	// Initialize the Mono scripting runtime.
 	monoRuntime.initialize();
@@ -29,7 +29,7 @@ void Runtime::onInit()
 
 //-----------------------------------//
 
-void Runtime::onCleanup()
+void Runtime::shutdown()
 {
 	// Cleanup the Mono scripting runtime.
 	monoRuntime.cleanup();

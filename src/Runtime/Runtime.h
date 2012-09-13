@@ -23,15 +23,16 @@ NAMESPACE_RUNTIME_BEGIN
  * registering all the core services available to the scripting layer.
  */
 
-class Runtime
+class API_RUNTIME Runtime
 {
 public:
 
 	Runtime();
+	virtual ~Runtime() {}
 
 	// Initialize the runtime.
-	void onInit();
-	void onCleanup();
+	void init();
+	void shutdown();
 
 	MonoRuntime monoRuntime;
 };

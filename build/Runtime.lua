@@ -17,7 +17,6 @@ project "Runtime"
 	end
 
 	builddeps { Core.name, Resources.name }
-	targetdir "../bin/"
 	
 	defines { Runtime.defines }
 

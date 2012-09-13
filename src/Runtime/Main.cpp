@@ -82,7 +82,8 @@ int main(int argc, char** argv)
 	}
 
 	Runtime runtime;
-	runtime.onInit();
+	runtime.init();
+	runtime.shutdown();
 
 	return ret;
 }
