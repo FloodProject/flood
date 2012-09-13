@@ -21,15 +21,12 @@ NAMESPACE_GRAPHICS_BEGIN
  * like a bitmask, so you can combine more than one type when attaching.
  */
 
-namespace RenderBufferType
+enum struct RenderBufferType : uint8
 {
-	enum Enum
-	{
-		Color	= 1 << 0,
-		Depth	= 1 << 1,
-		Stencil	= 1 << 2
-	};
-}
+	Color	= 1 << 0,
+	Depth	= 1 << 1,
+	Stencil	= 1 << 2
+};
 
 //-----------------------------------//
 
@@ -69,10 +66,10 @@ public:
 	virtual void read(int8 attachment, std::vector<uint8>& data) = 0;
 
 	// Creates a new render buffer with the given components.
-	virtual void createRenderBuffer( int bufferComponents ) = 0;
+	virtual void createRenderBuffer( RenderBufferType ) = 0;
 
 	// Creates a render texture.
-	virtual TexturePtr createRenderTexture( RenderBufferType::Enum ) = 0;
+	virtual TexturePtr createRenderTexture( RenderBufferType ) = 0;
 
 	// Attaches a render texture.
 	virtual void attachRenderTexture(const TexturePtr& tex) = 0;
