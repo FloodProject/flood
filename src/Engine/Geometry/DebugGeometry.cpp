@@ -1,14 +1,13 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #include "Engine/API.h"
 #include "Engine/Geometry/DebugGeometry.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 #include "Graphics/RenderBatch.h"
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Entity.h"

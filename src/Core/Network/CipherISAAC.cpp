@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 * Based on 'rand.c: My random number generator, ISAAC.'
 * (c) Bob Jenkins, March 1996, Public Domain

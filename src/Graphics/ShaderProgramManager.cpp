@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,7 +11,7 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderBackend.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 

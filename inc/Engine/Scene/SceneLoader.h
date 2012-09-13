@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -19,9 +18,9 @@ NAMESPACE_ENGINE_BEGIN
  * Loads scene files.
  */
 
-REFLECT_DECLARE_CLASS(SceneLoader)
+API_SCENE REFLECT_DECLARE_CLASS(SceneLoader)
 
-class SceneLoader : public ResourceLoader
+class API_SCENE SceneLoader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(SceneLoader)
 

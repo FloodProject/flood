@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -11,16 +10,19 @@
 #ifdef ENABLE_RENDERER_OPENGL
 
 #include "Graphics/Render.h"
-#include "Core/Utilities.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderBackend.h"
+#include "Graphics/RenderBatch.h"
 #include "Graphics/RenderView.h"
 #include "Graphics/ShaderProgram.h"
+#include "Graphics/GeometryBuffer.h"
 
 #include "Graphics/BufferManager.h"
 #include "Graphics/ShaderProgramManager.h"
 #include "Graphics/TextureManager.h"
+
+#include "Core/Utilities.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -83,8 +85,8 @@ RenderDevice::~RenderDevice()
 
 static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
-	int rA = lhs.renderable->getRenderLayer();
-	int rB = rhs.renderable->getRenderLayer();
+	int rA = (int) lhs.renderable->getRenderLayer();
+	int rB = (int) rhs.renderable->getRenderLayer();
 	int pA = lhs.priority;
 	int pB = rhs.priority;
 
@@ -147,7 +149,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 		renderable->onPreRender(activeView, state);
 	}
 
-	RenderLayer::Enum stage = renderable->getRenderLayer();
+	RenderLayer stage = renderable->getRenderLayer();
 
 	if( stage != RenderLayer::Overlays )
 	{

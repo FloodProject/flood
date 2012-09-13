@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -35,7 +34,7 @@ struct API_CORE ExtensionMetadata
  * some kind of runtime support for loading the extensions from a plugin.
  */
 
-REFLECT_DECLARE_CLASS(Extension)
+API_CORE REFLECT_DECLARE_CLASS(Extension)
 
 class API_CORE Extension : public Object
 {

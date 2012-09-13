@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -17,24 +16,21 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-namespace UniformDataType
+enum struct UniformDataType : uint8
 {
-	enum Enum
-	{
-		Scalar_F,
-		Scalar_I,
-		Vector2_F,
-		Vector3_F,
-		Matrix2_F,
-		Matrix3_F,
-		Matrix4_F,
-		Matrix2x3_F,
-		Matrix3x2_F,
-		Matrix2x4_F,
-		Matrix4x2_F,
-		Matrix3x4_F,
-		Matrix4x3_F
-	};
+	Scalar_F,
+	Scalar_I,
+	Vector2_F,
+	Vector3_F,
+	Matrix2_F,
+	Matrix3_F,
+	Matrix4_F,
+	Matrix2x3_F,
+	Matrix3x2_F,
+	Matrix2x4_F,
+	Matrix4x2_F,
+	Matrix3x4_F,
+	Matrix4x3_F
 };
 
 /**
@@ -46,7 +42,7 @@ namespace UniformDataType
 struct API_RENDER UniformBufferElement
 {
 	char* name;
-	UniformDataType::Enum type;
+	UniformDataType type;
 	uint16 count;
 	uint8 data[1]; // Variable length data.
 };

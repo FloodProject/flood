@@ -1,17 +1,36 @@
 Pipeline = {}
+Pipeline.name = "Pipeline"
+Pipeline.shared = true
+Pipeline.defines = {}
 
-function FindFBX()
-	
+function SetupFBX()
+	-- "../dep/FbxSdk/2012.1/lib/vs2010/x86",
 end
 
 project "Pipeline"
 
-	kind "StaticLib"
-	builddeps { "Core", "Resources" }
+	if Pipeline.shared then
+		kind "SharedLib"
+		table.insert(Pipeline.defines, "API_PIPELINE_DLL")
+		defines { "API_PIPELINE_DLL_EXPORT" }
+	else
+		kind "StaticLib"
+	end
+
+	builddeps { "Core", "Resources", "Graphics", "Engine" }
 	
 	pchheader "Pipeline/API.h"
 	pchsource "../src/Pipeline/Pipeline.cpp"
 	
+	defines
+	{
+	 	Core.defines,
+	 	Resources.defines,
+	 	Graphics.defines,
+	 	Engine.defines,
+	 	Pipeline.defines
+	}
+
 	files
 	{
 		"Pipeline.lua",
@@ -34,18 +53,26 @@ project "Pipeline"
 	{
 		"../src/",
 		"../inc/",
-		"../dep/nvtt/include",
-		"../dep/FbxSdk/2012.1/include",
 	}
 
 	Pipeline.libdirs =
 	{
-		"../dep/FbxSdk/2012.1/lib/vs2010/x86",
+	
 	}
+
+	libdirs { Pipeline.libdirs }
+
+	SetupFBX()
 	
 	Pipeline.links =
 	{
+		Core.name,
+		Resources.name,
+		Graphics.name,
+		Engine.name
 	}
+
+	links { Pipeline.links }
 
 	Pipeline.deps =
 	{

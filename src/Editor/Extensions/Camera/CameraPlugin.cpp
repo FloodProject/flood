@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,7 +11,7 @@
 #include "Editor.h"
 #include "DocumentWindow.h"
 #include "EventManager.h"
-#include "Scene/Scene.h"
+#include "Engine/Scene/Scene.h"
 
 #ifdef ALL_PLUGINS
 

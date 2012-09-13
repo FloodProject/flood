@@ -1,12 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 // This file used to create the precompiled headers
 
-#define INSTANTIATE_TEMPLATES
 #include "Core/API.h"
+
+#ifdef API_CORE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif

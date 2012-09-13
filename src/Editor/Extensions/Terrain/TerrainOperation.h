@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -13,7 +12,7 @@
 #include "EditorPlugin.h"
 #include "UndoOperation.h"
 #include "TerrainPlugin.h"
-#include "Math/BoundingSphere.h"
+#include "Core/Math/BoundingSphere.h"
 
 NAMESPACE_EDITOR_BEGIN
 

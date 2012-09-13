@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -31,7 +30,7 @@ NAMESPACE_PIPELINE_BEGIN
  * Loads a mesh in the FBX format using the official SDK.
  */
 
-REFLECT_DECLARE_CLASS(ImporterFBX)
+API_PIPELINE REFLECT_DECLARE_CLASS(ImporterFBX)
 
 class API_PIPELINE ImporterFBX : public ResourceImporter
 {

@@ -1,15 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Graphics/Texture.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

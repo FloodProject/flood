@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -19,7 +18,7 @@
 
 #include <vorbis/vorbisfile.h>
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +28,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 REFLECT_DECLARE_CLASS(OGG_Loader)
 
-class API_RESOURCE OGG_Loader : public ResourceLoader
+class API_ENGINE OGG_Loader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(OGG_Loader)
 
@@ -66,6 +65,6 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

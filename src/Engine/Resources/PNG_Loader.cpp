@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -15,7 +14,7 @@
 int decodePNG(std::vector<byte>& out_image_32bit, uint32& image_width, 
 			  uint32& image_height, const byte* in_png, uint32 in_size);
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -78,6 +77,6 @@ void PNG_Pico_Loader::flip( std::vector<byte>& buffer, uint32 width, uint32 heig
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

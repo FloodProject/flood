@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,7 +11,7 @@
 #include "Pipeline/Milkshape3D.h"
 
 #include "Engine/Resources/Skeleton.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Helpers.h"

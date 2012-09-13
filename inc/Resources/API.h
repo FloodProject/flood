@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -36,6 +35,6 @@
 
 NAMESPACE_RESOURCES_BEGIN
 
-Allocator* GetResourcesAllocator();
+API_RESOURCE Allocator* GetResourcesAllocator();
 
 NAMESPACE_RESOURCES_END

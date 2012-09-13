@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -17,7 +16,6 @@
 
 #include "Graphics/Render.h"
 #include "Graphics/RenderTarget.h"
-#include "Graphics/RenderBatch.h"
 #include "Graphics/RenderQueue.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -35,14 +33,11 @@ class Texture;
 
 REFLECT_DECLARE_ENUM(RenderPipeline)
 
-struct RenderPipeline
+enum struct RenderPipeline
 {
-	enum Enum
-	{
-		Fixed,
-		ShaderForward,
-		ShaderDeferred
-	};
+	Fixed,
+	ShaderForward,
+	ShaderDeferred
 };
 
 //-----------------------------------//
@@ -50,6 +45,7 @@ struct RenderPipeline
 class RenderBuffer;
 class RenderContext;
 class RenderBackend;
+class RenderBatch;
 
 /**
  * Represents the rendering device we are using. At startup the application
@@ -85,7 +81,7 @@ public:
 	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.
-	ACCESSOR(Pipeline, RenderPipeline::Enum, pipeline)
+	ACCESSOR(Pipeline, RenderPipeline, pipeline)
 
 	// Gets the current rendering backend.
 	ACCESSOR(Backend, RenderBackend*, renderBackend)
@@ -128,7 +124,7 @@ protected:
 	bool unbindBuffers(RenderBatch*);
 
 	// Rendering pipeline.
-	RenderPipeline::Enum pipeline;
+	RenderPipeline pipeline;
 
 	// Active render target
 	RenderTarget* activeTarget;

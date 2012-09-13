@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,9 +18,9 @@ NAMESPACE_RESOURCES_BEGIN
  * Script that can be executed by a script state.
  */
 
-REFLECT_DECLARE_CLASS(Script)
+API_ENGINE REFLECT_DECLARE_CLASS(Script)
 
-class API_RESOURCE Script : public Resource
+class API_ENGINE Script : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Script)
 
@@ -40,4 +40,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Script );
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

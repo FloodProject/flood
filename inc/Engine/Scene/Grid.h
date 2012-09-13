@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -18,9 +17,9 @@ NAMESPACE_ENGINE_BEGIN
  * Simple grid component. Can be used for editor applications.
  */
 
-REFLECT_DECLARE_CLASS(Grid)
+API_SCENE REFLECT_DECLARE_CLASS(Grid)
 
-class API_ENGINE Grid : public Geometry
+class API_SCENE Grid : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Grid)
 

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -18,7 +17,7 @@ FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(RenderBatch)
 FWD_DECL_INTRUSIVE(VertexBuffer)
 
-NAMESPACE_GRAPHICS_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -88,4 +87,4 @@ API_ENGINE void DebugUpdateFrustum( const RenderBatchPtr&, const Frustum& box );
 
 //-----------------------------------//
 
-NAMESPACE_GRAPHICS_END
+NAMESPACE_ENGINE_END

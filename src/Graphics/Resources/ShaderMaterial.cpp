@@ -1,15 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/API.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -24,4 +23,4 @@ ShaderMaterial::ShaderMaterial()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

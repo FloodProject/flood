@@ -1,15 +1,14 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
 
 NAMESPACE_EDITOR_BEGIN
 

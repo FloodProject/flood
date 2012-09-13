@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -136,7 +135,7 @@ void EditorFrame::OnPanelsMenuUpdate(wxUpdateUIEvent& event)
 
 void EditorFrame::OnSettingsRender(wxCommandEvent& event)
 {
-	RenderPipeline::Enum pipeline = event.IsChecked() ?
+	RenderPipeline pipeline = event.IsChecked() ?
 		RenderPipeline::Fixed : RenderPipeline::ShaderForward;
 
 	RenderDevice* render = GetEngine()->getRenderDevice();

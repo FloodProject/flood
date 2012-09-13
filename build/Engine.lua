@@ -1,11 +1,11 @@
 Engine = {}
 Engine.name = "Engine"
-Engine.isShared = true
+Engine.shared = true
 Engine.defines = {}
 
 project "Engine"
 
-	if Engine.isShared then
+	if Engine.shared then
 		kind "SharedLib"
 		table.insert(Engine.defines, "API_ENGINE_DLL")
 		defines { Engine.defines, "API_ENGINE_DLL_EXPORT" }
@@ -13,22 +13,27 @@ project "Engine"
 		kind "StaticLib"
 	end
 
-	defines { Core.defines }
+	table.insert(Engine.defines, 
+	{
+	 	Core.defines,
+	 	Resources.defines,
+	 	Graphics.defines,
+	})
+
+	defines { Engine.defines }
 
 	builddeps { Core.name, Resources.name, Graphics.name }
 
 	pchheader "Engine/API.h"
 	pchsource "../src/Engine/Engine.cpp"
 
-	defines { "AL_LIBTYPE_STATIC", "SFML_WINDOW_EXPORTS" }
+	defines { "AL_LIBTYPE_STATIC" }
 
 	files
 	{
 		"Engine.lua",
 		"../inc/Engine/**.h",
 		"../src/Engine/**.cpp",
-		"../src/Platforms/SFML/*.h",
-		"../src/Platforms/SFML/*.cpp",
 	}
 	
 	vpaths
@@ -49,7 +54,6 @@ project "Engine"
 		"../inc/",
 		"../deps/SeanBarrett",
 		"../deps/Jansson/include",
-		"../deps/SFML/include/",
 	}
 	
 	Engine.deps =
@@ -65,9 +69,8 @@ project "Engine"
 	Engine.links =
 	{
 		Core.name,
-		Graphics.name,
 		Resources.name,
-		Graphics.links
+		Graphics.name,
 	}
 
 	configuration "windows"
@@ -79,10 +82,8 @@ project "Engine"
 		Graphics.libdirs
 	}	
 	
-	if Core.isShared == false then
+	if Core.shared == false then
 		deps { Core.deps }
-	else
-		SetupLibLinks(Core.name)
 	end
 
 	deps { Engine.deps  }

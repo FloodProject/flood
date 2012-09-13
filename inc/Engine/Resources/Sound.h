@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -11,7 +10,7 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +28,7 @@ struct SoundStream : public ResourceStream
 
 REFLECT_DECLARE_CLASS(Sound)
 
-class API_RESOURCE Sound : public Resource
+class API_ENGINE Sound : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Sound)
 
@@ -75,4 +74,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Sound );
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

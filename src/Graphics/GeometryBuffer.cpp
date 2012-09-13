@@ -1,21 +1,20 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
-#include "Engine/API.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/API.h"
+#include "Graphics/GeometryBuffer.h"
 #include "Core/Log.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-VertexElement::VertexElement(VertexAttribute::Enum attribute,
-	VertexDataType::Enum type, uint8 components)
+VertexElement::VertexElement(VertexAttribute attribute,
+	VertexDataType type, uint8 components)
 	: stride(-1)
 	, offset(0)
 	, size(0)
@@ -27,7 +26,7 @@ VertexElement::VertexElement(VertexAttribute::Enum attribute,
 
 //-----------------------------------//
 
-static int GetVertexDataTypeSize(VertexDataType::Enum type)
+static int GetVertexDataTypeSize(VertexDataType type)
 {
 	switch(type)
 	{
@@ -65,7 +64,7 @@ void VertexDeclaration::add(const VertexElementP& pod)
 
 //-----------------------------------//
 
-void VertexDeclaration::add(VertexAttribute::Enum attribute, int numComponents)
+void VertexDeclaration::add(VertexAttribute attribute, int numComponents)
 {
 	VertexElement elem(attribute, VertexDataType::Float, numComponents);
 	decls.push_back(elem);
@@ -73,7 +72,7 @@ void VertexDeclaration::add(VertexAttribute::Enum attribute, int numComponents)
 
 //-----------------------------------//
 
-VertexElement* VertexDeclaration::find(VertexAttribute::Enum attribute) const
+VertexElement* VertexDeclaration::find(VertexAttribute attribute) const
 {
 	for(size_t i = 0; i < decls.size(); i++)
 	{
@@ -110,7 +109,7 @@ uint8 VertexDeclaration::getVertexSize() const
 
 //-----------------------------------//
 
-uint8 VertexDeclaration::getOffset(VertexAttribute::Enum attribute) const
+uint8 VertexDeclaration::getOffset(VertexAttribute attribute) const
 {
 	uint8 totalOffset = 0;
 
@@ -156,7 +155,7 @@ GeometryBuffer::GeometryBuffer()
 
 //-----------------------------------//
 
-GeometryBuffer::GeometryBuffer(BufferUsage::Enum usage, BufferAccess::Enum access)
+GeometryBuffer::GeometryBuffer(BufferUsage usage, BufferAccess access)
 {
 }
 
@@ -176,7 +175,7 @@ void GeometryBuffer::clear()
 
 //-----------------------------------//
 
-void GeometryBuffer::set(VertexAttribute::Enum attribute, uint8* buf, uint32 size)
+void GeometryBuffer::set(VertexAttribute attribute, uint8* buf, uint32 size)
 {
 	VertexElement* elem = declarations.find(attribute);
 	if( !elem ) return;
@@ -270,7 +269,7 @@ uint32 GeometryBuffer::getNumIndices() const
 
 //-----------------------------------//
 
-float* GeometryBuffer::getAttribute(VertexAttribute::Enum attribute, uint32 i) const
+float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const
 {
 	VertexElement* elem = declarations.find(attribute);
 	if( !elem ) return nullptr;
@@ -295,7 +294,7 @@ float* GeometryBuffer::getAttribute(VertexAttribute::Enum attribute, uint32 i) c
 
 //-----------------------------------//
 
-int8 GeometryBuffer::getAttributeStride(VertexAttribute::Enum attribute) const
+int8 GeometryBuffer::getAttributeStride(VertexAttribute attribute) const
 {
 	VertexElement* elem = declarations.find(attribute);
 	if( !elem ) return -1;
@@ -312,4 +311,4 @@ void GeometryBuffer::forceRebuild()
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

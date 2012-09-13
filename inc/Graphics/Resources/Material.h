@@ -1,145 +1,65 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Engine/Resources/Image.h"
-#include "Engine/Resources/ShaderMaterial.h"
+#include "Graphics/Resources/Image.h"
+#include "Graphics/Texture.h"
+#include "Graphics/Resources/ShaderMaterial.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-struct BlendSource
+enum struct BlendSource
 {
-	enum Enum
-	{
-		Zero,
-		One,
-		DestinationColor,
-		InverseDestinationColor,
-		SourceAlpha,
-		InverseSourceAlpha,
-		DestinationAlpha,
-		InverseDestinationAlpha,
-		SourceAlphaSaturate
-	};
+	Zero,
+	One,
+	DestinationColor,
+	InverseDestinationColor,
+	SourceAlpha,
+	InverseSourceAlpha,
+	DestinationAlpha,
+	InverseDestinationAlpha,
+	SourceAlphaSaturate
 };
 
-struct BlendDestination
+enum struct BlendDestination
 {
-	enum Enum
-	{
-		Zero,
-		One,
-		SourceColor,
-		InverseSourceColor,
-		SourceAlpha,
-		InverseSourceAlpha,
-		DestinationAlpha,
-		InverseDestinationAlpha
-	};
+	Zero,
+	One,
+	SourceColor,
+	InverseSourceColor,
+	SourceAlpha,
+	InverseSourceAlpha,
+	DestinationAlpha,
+	InverseDestinationAlpha
 };
 
 //-----------------------------------//
 
-struct DepthCompare
+enum struct DepthCompare
 {
-	enum Enum
-	{
-		Never,
-		Less,
-		Equal,
-		LessOrEqual,
-		Greater,
-		NotEqual,
-		GreaterOrEqual,
-		Always
-	};
+	Never,
+	Less,
+	Equal,
+	LessOrEqual,
+	Greater,
+	NotEqual,
+	GreaterOrEqual,
+	Always
 };
 
 //-----------------------------------//
 
-struct TextureFilterMode
-{
-	enum Enum
-	{
-		Nearest,
-		Linear,
-	};
-};
+API_GRAPHICS REFLECT_DECLARE_CLASS(Material)
 
-struct TextureMipMode
-{
-	enum Enum
-	{
-		Nearest,
-		Linear,
-	};
-};
-
-struct TextureWrapMode
-{
-	enum Enum
-	{
-		Repeat,
-		Clamp,
-		ClampToBorder,
-		ClampToEdge
-	};
-};
-
-struct TextureUnit
-{
-	TextureUnit();
-
-	// Texture unit id.
-	uint8 unit;
-
-	// Image used on this texture unit.
-	ImageHandle image;
-
-	// Keeps track if texture modes are overriden.
-	bool overrideModes;
-
-	// Gets the texture filtering mode.
-	GETTER(FilterMode, TextureFilterMode::Enum, filter)
-
-	// Gets the texture mip filtering mode.
-	GETTER(MipMode, TextureMipMode::Enum, mip)
-
-	// Gets the texture wrap mode.
-	GETTER(WrapMode, TextureWrapMode::Enum, wrap)
-
-	// Sets the texture filtering mode.
-	void setFilterMode(TextureFilterMode::Enum);
-
-	// Sets the texture mip filtering mode.
-	void setMipMode(TextureMipMode::Enum);
-
-	// Sets the texture wrap mode.
-	void setWrapMode(TextureWrapMode::Enum);
-
-protected:
-
-	TextureFilterMode::Enum filter;
-	TextureMipMode::Enum mip;
-	TextureWrapMode::Enum wrap;
-};
-
-typedef std::map<uint8, TextureUnit> TextureUnitMap;
-
-//-----------------------------------//
-
-REFLECT_DECLARE_CLASS(Material)
-
-class API_RESOURCE Material : public Resource
+class API_GRAPHICS Material : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Material)
 
@@ -169,7 +89,7 @@ public:
 	ACCESSOR(DepthTest, bool, depthTest)
 
 	// Gets/sets the depth testing of the material.
-	ACCESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
+	ACCESSOR(DepthCompare, DepthCompare, depthCompare)
 
 	// Gets/sets the depth range of the material.
 	ACCESSOR(DepthRange, Vector2, depthRange)
@@ -190,16 +110,16 @@ public:
 	ACCESSOR(BackfaceCulling, bool, cullBackfaces)
 
 	// Gets the blending options for this material.
-	GETTER(BlendSource, BlendSource::Enum, source)
+	GETTER(BlendSource, BlendSource, source)
 	
 	// Gets the blending options for this material.
-	GETTER(BlendDestination, BlendDestination::Enum, destination)
+	GETTER(BlendDestination, BlendDestination, destination)
 
 	// Gets if blending is enabled.
 	bool isBlendingEnabled() const;
 
 	// Sets the blending options for this material.
-	void setBlending( BlendSource::Enum, BlendDestination::Enum );
+	void setBlending( BlendSource, BlendDestination );
 
 	// Sets a texture to the material.
 	void setTexture( uint8 unit, const String& name );
@@ -231,7 +151,7 @@ public:
 	bool cullBackfaces;
 	
 	// Depth settings.
-	DepthCompare::Enum depthCompare;
+	DepthCompare depthCompare;
 	bool depthTest;
 	bool depthWrite;
 	Vector2 depthRange;
@@ -245,8 +165,8 @@ public:
 	float lineWidth;
 
 	// Blending settings.
-	BlendSource::Enum source;
-	BlendDestination::Enum destination;
+	BlendSource source;
+	BlendDestination destination;
 	bool _isBlendingEnabled;
 
 	// Default line width.
@@ -255,8 +175,8 @@ public:
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Material );
 
-MaterialHandle MaterialCreate(Allocator*, const String& name);
+API_GRAPHICS MaterialHandle MaterialCreate(Allocator*, const String& name);
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

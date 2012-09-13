@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -11,7 +10,6 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"
-#include "Engine/Geometry/GeometryBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -29,6 +27,7 @@ typedef std::map<const GeometryBuffer*, BufferEntry> BuffersMap;
 typedef std::pair<const String&, BufferPtr> BuffersPair;
 
 class RenderBackend;
+class GeometryBuffer;
 
 /**
  * Manages a set of buffers.

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "GameRuntime/API.h"
 #include "SFML_Input.h"
 
 #include "Engine/Input/InputManager.h"
@@ -16,7 +16,7 @@
 
 #ifdef ENABLE_INPUT_SFML
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GAMERUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -384,6 +384,6 @@ void SFML_Input::processJoystickEvent(const sf::Event& event)
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GAMERUNTIME_END
 
 #endif

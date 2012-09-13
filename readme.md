@@ -11,6 +11,13 @@ be built before building the rest of the code.
 We use Premake as our build system, so you should be able to generate
 project build files for your platform.
 
+### External Dependencies
+
+Before trying to build, some dependencies need to be check out under
+their respective folders in deps/.
+
+1. Check out the Mono repository from https://github.com/mono/mono
+
 ## Visual Studio / Windows
 
 ### Building Dependencies

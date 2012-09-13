@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -20,20 +19,17 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_ENUM(RolloffMode)
+API_AUDIO REFLECT_DECLARE_ENUM(RolloffMode)
 
 #define AL_INVERSE_DISTANCE_CLAMPED  0xD002
 #define AL_LINEAR_DISTANCE_CLAMPED   0xD004
 #define AL_EXPONENT_DISTANCE_CLAMPED 0xD006
 
-struct API_AUDIO RolloffMode
+enum struct API_AUDIO RolloffMode
 {
-	enum Enum
-	{
-		Logarithmic = AL_INVERSE_DISTANCE_CLAMPED,
-		Linear = AL_LINEAR_DISTANCE_CLAMPED,
-		Exponential = AL_EXPONENT_DISTANCE_CLAMPED
-	};
+	Logarithmic = AL_INVERSE_DISTANCE_CLAMPED,
+	Linear = AL_LINEAR_DISTANCE_CLAMPED,
+	Exponential = AL_EXPONENT_DISTANCE_CLAMPED
 };
 
 //-----------------------------------//
@@ -98,7 +94,7 @@ public:
 	void setMaxDistance( float distance );
 
 	// Sets the rolloff mode of the source.
-	void setRolloffMode( RolloffMode::Enum rolloff );
+	void setRolloffMode( RolloffMode rolloff );
 
 	// Sets the roll-off of the source. Roll-off is in the range [0.0-1.0].
 	void setRolloff( float rolloff );

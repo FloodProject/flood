@@ -1,13 +1,5 @@
 -- This module checks for the all the project dependencies.
 
-function FindFBX()
-end
-
-function FindWxWidgets()
-	wxWidgets = {}
-	wxWidgets.links = {}
-end
-
 function debug(msg)
 	-- print(msg)
 end

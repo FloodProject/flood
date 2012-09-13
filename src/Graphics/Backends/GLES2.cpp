@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -148,7 +147,7 @@ void RenderBackendGLES2::clearRenderView(RenderView* view)
 
 void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 {
-	PrimitiveRasterMode::Enum rasterMode = batch->getPrimitiveRasterMode();
+	PrimitiveRasterMode rasterMode = batch->getPrimitiveRasterMode();
 	
 	if( rasterMode != PrimitiveRasterMode::Solid )
 	{
@@ -460,7 +459,7 @@ RenderBuffer* RenderBackendGLES2::createRenderBuffer(const Settings& settings)
 Texture* RenderBackendGLES2::createTexture()
 {
 	Texture* tex = AllocateRender(Texture);
-	tex->target = Texture::Target2D;
+	tex->target = TextureTarget::Target2D;
 
 	glGenTextures( 1, (GLuint*) &tex->id );
 	CheckLastErrorGL("Could not generate a new texture object");

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -22,16 +21,13 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_ENUM(SkinningMode)
+API_SCENE REFLECT_DECLARE_ENUM(SkinningMode)
 
-struct SkinningMode
+enum struct SkinningMode
 {
-	enum Enum
-	{
-		Native = 0,
-		CPU = 1,
-		GPU = 2
-	};
+	Native = 0,
+	CPU = 1,
+	GPU = 2
 };
 
 struct AnimationState;
@@ -43,7 +39,7 @@ struct AnimationState;
  * for it to be fully loaded.
  */
 
-REFLECT_DECLARE_CLASS(Model)
+API_SCENE REFLECT_DECLARE_CLASS(Model)
 
 class API_SCENE Model : public Geometry
 {
@@ -58,10 +54,10 @@ public:
 	GETTER(Mesh, const MeshHandle&, meshHandle)
 
 	// Gets the skinning mode of the mesh.
-	GETTER(SkinningMode, SkinningMode::Enum, skinningMode)
+	GETTER(SkinningMode, SkinningMode, skinningMode)
 	
 	// Gets the skinning mode of the mesh.
-	void setSkinningMode( SkinningMode::Enum );
+	void setSkinningMode( SkinningMode );
 
 	// Sets the mesh.
 	void setMesh(const MeshHandle& mesh);
@@ -159,7 +155,7 @@ protected:
 	float animationSpeed;
 
 	// Forces skinning to be done via CPU.
-	SkinningMode::Enum skinningMode;
+	SkinningMode skinningMode;
 
 	// Animation states.
 	std::vector<AnimationState> animations;

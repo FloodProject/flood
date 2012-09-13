@@ -1,16 +1,15 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
-#include "Engine/Resources/Text.h"
+#include "Resources/Resource.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -22,9 +21,9 @@ NAMESPACE_RESOURCES_BEGIN
  * low-level assembly code by the graphics driver.
  */
 
-REFLECT_DECLARE_CLASS(ShaderMaterial)
+API_GRAPHICS REFLECT_DECLARE_CLASS(ShaderMaterial)
 
-class API_RESOURCE ShaderMaterial : public Resource
+class API_GRAPHICS ShaderMaterial : public Resource
 {
 	REFLECT_DECLARE_OBJECT(ShaderMaterial)
 
@@ -48,4 +47,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( ShaderMaterial );
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

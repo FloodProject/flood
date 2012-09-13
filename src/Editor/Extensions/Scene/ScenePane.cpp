@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -16,13 +15,13 @@
 #include "UndoManager.h"
 #include "Document.h"
 
-#include "Scene/Tags.h"
-#include "Scene/Scene.h"
-#include "Scene/Component.h"
-#include "Scene/Model.h"
-#include "Scene/Skydome.h"
-#include "Resources/Mesh.h"
-#include "Terrain/Terrain.h"
+#include "Engine/Scene/Tags.h"
+#include "Engine/Scene/Scene.h"
+#include "Engine/Scene/Component.h"
+#include "Engine/Scene/Model.h"
+#include "Engine/Scene/Skydome.h"
+#include "Engine/Resources/Mesh.h"
+#include "Engine/Terrain/Terrain.h"
 
 #include "Extensions/Selection/SelectionPlugin.h"
 #include "Extensions/Selection/SelectionManager.h"
@@ -31,7 +30,7 @@
 #include "Extensions/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Protocol/ReplicaContext.h"
-#include "Network/Host.h"
+#include "Core/Network/Host.h"
 
 #include "SceneDocument.h"
 
@@ -382,7 +381,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	entity->setName(name);
 	entity->addTransform();
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 
 	ReplicaObjectCreateMessage inst;
@@ -443,7 +442,7 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 	EventManager* events = GetEditor().getEventManager();
 	events->onEntityUnselect(entity);
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	ReplicaObjectDeleteMessage del;
 	del.instanceId = 0;
 
@@ -745,7 +744,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	{
 		if( !entity ) return;
 
-		PrimitiveRasterMode::Enum mode = event.IsChecked() ? PrimitiveRasterMode::Wireframe : PrimitiveRasterMode::Solid;
+		PrimitiveRasterMode mode = event.IsChecked() ? PrimitiveRasterMode::Wireframe : PrimitiveRasterMode::Solid;
 		const std::vector<GeometryPtr>& geometries = entity->getGeometry();
 
 		for( size_t i = 0; i < geometries.size(); i++ )
@@ -806,7 +805,7 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 		return;
 	}
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 
 	ReplicaInstanceId instanceId;

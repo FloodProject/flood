@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -15,11 +14,11 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(Projector)
-
 class RenderView;
 
-class API_ENGINE Projector : public Geometry
+API_SCENE REFLECT_DECLARE_CLASS(Projector)
+
+class API_SCENE Projector : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Projector)
 

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -271,9 +270,9 @@ void GLSL_ShaderProgram::bindDefaultAttributes()
 
 //-----------------------------------//
 
-void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute::Enum attr )
+void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute attr )
 {
-	glBindAttribLocation( id, attr, name.c_str() );
+	glBindAttribLocation( id, (GLuint) attr, name.c_str() );
 
 	if( CheckLastErrorGL("Could not bind attribute variable") )
 		return;

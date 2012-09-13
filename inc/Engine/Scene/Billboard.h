@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -32,16 +31,13 @@ NAMESPACE_ENGINE_BEGIN
  * over them.
  */
 
-struct API_SCENE BillboardType
-{
-	REFLECT_DECLARE_ENUM(BillboardType)
+API_SCENE REFLECT_DECLARE_ENUM(BillboardType)
 
-	enum Enum
-	{
-		ScreenAligned,
-		WorldAligned,
-		AxisAligned,
-	};
+enum struct BillboardType
+{
+	ScreenAligned,
+	WorldAligned,
+	AxisAligned,
 };
 
 //-----------------------------------//
@@ -50,7 +46,7 @@ struct API_SCENE BillboardType
  * Billboards always face the direction of the camera.
  */
 
-REFLECT_DECLARE_CLASS(Billboard)
+API_SCENE REFLECT_DECLARE_CLASS(Billboard)
 
 class API_SCENE Billboard : public Component
 {
@@ -59,7 +55,7 @@ class API_SCENE Billboard : public Component
 public:
 
 	Billboard();
-	Billboard( BillboardType::Enum type );
+	Billboard( BillboardType type );
 
 	// Updates the component.
 	void update( float delta ) OVERRIDE;
@@ -73,7 +69,7 @@ public:
 protected:
 
 	// Billboard type
-	BillboardType::Enum billboardType;
+	BillboardType billboardType;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Billboard );

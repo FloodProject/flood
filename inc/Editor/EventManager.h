@@ -1,18 +1,17 @@
 
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "EditorPlugin.h"
-#include "Input/InputManager.h"
-#include "Input/Mouse.h" 
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Mouse.h" 
+#include "Engine/Input/Keyboard.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 
@@ -90,10 +89,10 @@ public:
 	void onRedoOperation(const UndoOperationPtr&);
 
 	// Gets the current tool.
-	ACESSOR(CurrentTool, ToolExtension*, currentTool)
+	ACCESSOR(CurrentTool, ToolExtension*, currentTool)
 
 	// Gets/sets the current plugin.
-	ACESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
+	ACCESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
 
 	// Gets the current tool id.
 	int getCurrentToolId();

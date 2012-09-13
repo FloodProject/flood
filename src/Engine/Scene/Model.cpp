@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -91,7 +90,7 @@ void Model::setMesh(const MeshHandle& meshHandle)
 
 //-----------------------------------//
 
-void Model::setSkinningMode( SkinningMode::Enum mode )
+void Model::setSkinningMode( SkinningMode mode )
 {
 	skinningMode = mode;
 	updateSkin = true;
@@ -390,7 +389,7 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 
 bool Model::isHardwareSkinned()
 {
-	RenderPipeline::Enum pipeline = GetRenderDevice()->getPipeline();
+	RenderPipeline pipeline = GetRenderDevice()->getPipeline();
 	
 	bool isFixed = pipeline == RenderPipeline::Fixed;
 	bool isCPU = skinningMode == SkinningMode::CPU;

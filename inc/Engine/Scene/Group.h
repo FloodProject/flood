@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -21,9 +20,9 @@ NAMESPACE_ENGINE_BEGIN
  * child node transformations.
  */
 
-REFLECT_DECLARE_CLASS(Group)
+API_SCENE REFLECT_DECLARE_CLASS(Group)
 
-class API_ENGINE Group : public Entity
+class API_SCENE Group : public Entity
 {
 	REFLECT_DECLARE_OBJECT(Group)
 

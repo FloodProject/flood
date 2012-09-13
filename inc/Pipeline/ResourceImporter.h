@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -20,7 +19,7 @@ NAMESPACE_PIPELINE_BEGIN
  * assets that are processed and not loaded at runtime.
  */
 
-REFLECT_DECLARE_CLASS(ResourceImporter)
+API_PIPELINE REFLECT_DECLARE_CLASS(ResourceImporter)
 
 class API_PIPELINE NO_VTABLE ResourceImporter : public ResourceLoader
 {

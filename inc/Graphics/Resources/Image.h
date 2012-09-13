@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -11,7 +10,7 @@
 #include "Resources/Resource.h"
 #include "Core/Math/Color.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
@@ -19,29 +18,26 @@ NAMESPACE_RESOURCES_BEGIN
  * Possible pixel formats for an image.
  */
 
-REFLECT_DECLARE_ENUM(PixelFormat)
+API_GRAPHICS REFLECT_DECLARE_ENUM(PixelFormat)
 
-struct PixelFormat 
+enum struct PixelFormat 
 {
-	enum Enum 
-	{
-		// Uncompressed formats
-		R8G8B8A8 = 0,
-		R8G8B8,
-		B8G8R8,
-		B8G8R8A8,
+	// Uncompressed formats
+	R8G8B8A8 = 0,
+	R8G8B8,
+	B8G8R8,
+	B8G8R8A8,
 
-		// Compressed formats
-		DXT1,
-		DXT1a,
-		DXT3,
-		DXT5,
-		DXT5nm,
+	// Compressed formats
+	DXT1,
+	DXT1a,
+	DXT3,
+	DXT5,
+	DXT5nm,
 
-		// Misc. formats
-		Depth,
-		Unknown
-	};
+	// Misc. formats
+	Depth,
+	Unknown
 };
 
 //-----------------------------------//
@@ -52,16 +48,16 @@ struct PixelFormat
  * at creation time.
  */
 
-REFLECT_DECLARE_CLASS(Image)
+API_GRAPHICS REFLECT_DECLARE_CLASS(Image)
 
-class API_RESOURCE Image : public Resource
+class API_GRAPHICS Image : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Image)
 
 public:
 
 	Image();
-	Image(uint32 width, uint32 height, PixelFormat::Enum format);
+	Image(uint32 width, uint32 height, PixelFormat format);
 
 	// Gets/sets the width of the image.
 	ACCESSOR(Width, uint32, width)
@@ -70,7 +66,7 @@ public:
 	ACCESSOR(Height, uint32, height)
 
 	// Gets/sets the pixel format of the image.
-	ACCESSOR(PixelFormat, PixelFormat::Enum, format)
+	ACCESSOR(PixelFormat, PixelFormat, format)
 
 	// Gets/sets the buffer containing the image data.
 	ACCESSOR(Buffer, const std::vector<byte>&, buffer)
@@ -91,7 +87,7 @@ public:
 	void log() const;
 
 	// Creates the image with the given details.
-	void create(uint32 width, uint32 height, PixelFormat::Enum format);
+	void create(uint32 width, uint32 height, PixelFormat format);
 
 	// Image width.
 	uint32 width;
@@ -100,7 +96,7 @@ public:
 	uint32 height;
 
 	// Pixel format.
-	PixelFormat::Enum format;
+	PixelFormat format;
 
 	// Image data.
 	std::vector<uint8> buffer;
@@ -109,11 +105,11 @@ public:
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Image );
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Image );
 
-ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat::Enum);
+API_GRAPHICS ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat);
 
 struct Stream;
 
-class API_RESOURCE ImageWriter
+class API_GRAPHICS ImageWriter
 {
 public:
 
@@ -130,4 +126,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_GRAPHICS_END

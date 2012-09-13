@@ -1,14 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #include "Engine/API.h"
 #include "Engine/GUI/Label.h"
 #include "Engine/Scene/Geometry.h"
+#include "Graphics/Resources/Material.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 
@@ -64,7 +64,7 @@ void Label::setFont( const FontHandle& newFont )
 
 	if( pFont )
 	{
-		MaterialPtr pMaterial = material.Resolve();
+		Material* pMaterial = material.Resolve();
 		pMaterial->setTexture( 0, pFont->getImage() );
 	}
 

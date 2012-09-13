@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* Flood Project © (2008-201x) 
+* Flood Project © (2008-201x)
 * Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
@@ -10,7 +10,7 @@
 #include "Runtime/API.h"
 #include "Runtime/Runtime.h"
 
-FLUSH_NAMESPACE_BEGIN
+NAMESPACE_RUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -37,4 +37,4 @@ void Runtime::onCleanup()
 
 //-----------------------------------//
 
-FLUSH_NAMESPACE_END
+NAMESPACE_RUNTIME_END

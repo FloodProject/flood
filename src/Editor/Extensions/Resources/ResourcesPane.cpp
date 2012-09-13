@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -68,7 +67,7 @@ void ResourcesPage::initControl()
 	EnumValuesMap::const_iterator it;
 	for( it = values.begin(); it != values.end(); it++ )
 	{
-		ResourceGroup::Enum group = (ResourceGroup::Enum) it->second;
+		ResourceGroup group = (ResourceGroup) it->second;
 		resGroupIds[group] = AppendItem(rootId, it->first, resGroupIcons[group]);
 	}
 
@@ -119,7 +118,7 @@ wxTreeItemId ResourcesPage::addResource(const ResourceHandle& handle)
 	if( resourceIds.find(res) != resourceIds.end() )
 		return nullptr;
 
-	ResourceGroup::Enum group = res->getResourceGroup();
+	ResourceGroup group = res->getResourceGroup();
 	const Path& resPath = res->getPath();
 	
 	wxTreeItemId id = AppendItem(resGroupIds[group], resPath, 0 );

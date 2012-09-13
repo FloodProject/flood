@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -49,7 +48,7 @@ API_RESOURCE void ResourcesInitialize();
 API_RESOURCE void ResourcesDeinitialize();
 
 // Gets the resource manager instance.
-ResourceManager* GetResourceManager();
+API_RESOURCE ResourceManager* GetResourceManager();
 
 typedef std::map< String, ResourceHandle > ResourceMap;
 typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;

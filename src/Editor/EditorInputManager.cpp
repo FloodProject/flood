@@ -1,8 +1,7 @@
  /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -19,7 +18,7 @@ EditorInputManager::EditorInputManager(InputManager* input)
 
 //-----------------------------------//
 
-static Keys::Enum ConvertFromWxKey( int keyCode );
+static Keys ConvertFromWxKey( int keyCode );
 
 void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool isKeyDown )
 {
@@ -110,7 +109,7 @@ static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event )
 
 //-----------------------------------//
 
-static Keys::Enum ConvertFromWxKey( int keyCode )
+static Keys ConvertFromWxKey( int keyCode )
 {
 	// From the wxWidgets docs:
 	// "Note that the range 33 - 126 is reserved for the standard ASCII characters 
@@ -118,10 +117,10 @@ static Keys::Enum ConvertFromWxKey( int keyCode )
 	// (which are not really standard and thus should be avoid in portable apps!)."
 
 	if( (keyCode >= 'A') && (keyCode <= 'Z') )
-		return static_cast<Keys::Enum>( keyCode );
+		return static_cast<Keys>( keyCode );
 	
 	if( (keyCode >= '1') && (keyCode <= '9') )
-		return static_cast<Keys::Enum>( keyCode );
+		return static_cast<Keys>( keyCode );
 
 	switch( keyCode )
 	{

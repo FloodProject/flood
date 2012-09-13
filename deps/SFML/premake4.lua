@@ -26,7 +26,9 @@ project "SFML"
   		"src/SFML/System/Win32/*.cpp", "src/SFML/System/Win32/*.hpp",
   		"src/SFML/Window/Win32/*.cpp", "src/SFML/Window/Win32/*.hpp",
   	}
-	
-	libdirs { "extlibs/libs-msvc/x86" }
+    
+	  libdirs { "extlibs/libs-msvc/x86" }
+  
+  configuration {}
 
 	links { "freetype", "glew", "jpeg" }

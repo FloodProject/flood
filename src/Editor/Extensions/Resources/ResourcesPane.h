@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -54,10 +53,10 @@ protected:
 	typedef std::map< Resource*, wxTreeItemId > ResourceIdsMap;
 	ResourceIdsMap resourceIds;
 
-	typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
+	typedef std::map< ResourceGroup, wxTreeItemId > ResourceGroupIdsMap;
 	ResourceGroupIdsMap resGroupIds;
 	
-	typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
+	typedef std::map< ResourceGroup, int > ResourceGroupIconsMap;
 	ResourceGroupIconsMap resGroupIcons;
 };
 

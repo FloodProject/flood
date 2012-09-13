@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -24,11 +23,19 @@
 #include <wx/webview.h>
 #include <wx/debugrpt.h>
 
+FL_INSTANTIATE_TEMPLATES()
+   
 #ifdef BUILD_DEBUG
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 #else
 wxIMPLEMENT_WXWIN_MAIN
 #endif
+
+int main(int argc, char **argv)
+{                                                                     
+    wxDISABLE_DEBUG_SUPPORT();                                       
+    return wxEntry(argc, argv);                                       
+}
 
 wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 

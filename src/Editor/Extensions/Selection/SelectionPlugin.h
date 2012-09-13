@@ -1,15 +1,14 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "EditorPlugin.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 #define PLUGIN_SELECTION "Selection"
 

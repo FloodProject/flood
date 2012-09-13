@@ -1,15 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Engine/Scene/Group.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 #include "Engine/Terrain/Cell.h"
 #include "Engine/Terrain/Brush.h"
 
@@ -21,7 +20,7 @@ NAMESPACE_ENGINE_BEGIN
  * This includes all the terrain settings.
  */
 
-struct TerrainSettings
+struct API_ENGINE TerrainSettings
 {
 	TerrainSettings()
 		: CellSize(4096)
@@ -48,7 +47,7 @@ struct TerrainSettings
 
 //-----------------------------------//
 
-struct CellRequest
+struct API_ENGINE CellRequest
 {
 	ImagePtr image;
 	int x;
@@ -71,7 +70,7 @@ struct CellRequest
  * for any integer value n.
  */
 
-REFLECT_DECLARE_CLASS(Terrain)
+API_ENGINE REFLECT_DECLARE_CLASS(Terrain)
 
 class API_ENGINE Terrain : public Group
 {

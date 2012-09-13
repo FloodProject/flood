@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D © (2008-2011)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -21,7 +20,7 @@ NAMESPACE_PIPELINE_BEGIN
  * Resource processors handle the processing of resource data.
  */
 
-REFLECT_DECLARE_CLASS(MeshProcessor)
+API_PIPELINE REFLECT_DECLARE_CLASS(MeshProcessor)
 
 class API_PIPELINE MeshProcessor : public ResourceProcessor
 {

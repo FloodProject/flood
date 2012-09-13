@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -66,11 +65,10 @@
 #pragma warning(disable : 4482)
 #endif
 
-#ifdef INSTANTIATE_TEMPLATES
-template class std::basic_string<char>;
-#else
+#define FL_INSTANTIATE_TEMPLATES() \
+    template class std::basic_string<char>;
+
 extern template class std::basic_string<char>;
-#endif
 
 #endif
 

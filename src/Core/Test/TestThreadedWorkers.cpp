@@ -1,11 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Flood © (2008-2013)
-// TestThreadedWorkers - Unit tests covering the functionality and behavior of the
-//	threaded task-worker system implemented based on this article:
-//	  http://software.intel.com/en-us/articles/do-it-yourself-game-task-scheduling/
-//
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #include "Core/API.h"
 #include "UnitTest++.h"

@@ -7,7 +7,6 @@ project "Core"
 
 	if Core.isShared then
 		kind "SharedLib"
-		targetdir "../bin/"
 		table.insert(Core.defines, "API_CORE_DLL")
 		defines { Core.defines, "API_CORE_DLL_EXPORT" }
 	else

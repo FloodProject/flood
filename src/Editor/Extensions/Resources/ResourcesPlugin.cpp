@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -165,7 +164,7 @@ bool ResourcesPlugin::loadCache()
 		return false;
 	}
 
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	resourceDatabase = (ResourceDatabase*) SerializerLoadObjectFromFile(serializer, path);
 	Deallocate(serializer);
 
@@ -181,7 +180,7 @@ bool ResourcesPlugin::saveCache()
 {
 	String path = CacheFolder + ThumbCache;
 	
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	
 	if( !SerializerSaveObjectToFile(serializer, path, this) )
 	{

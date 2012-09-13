@@ -1,12 +1,9 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
-
-#define INSTANTIATE_TEMPLATES
 
 #include "Engine/API.h"
 #include "Engine/Engine.h"
@@ -23,6 +20,10 @@
 #include "Engine/Paging/PageManager.h"
 #include "Engine/Physics/Physics.h"
 #include "Script/ScriptManager.h"
+
+#ifdef API_ENGINE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif
 
 NAMESPACE_ENGINE_BEGIN
 

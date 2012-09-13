@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -10,7 +9,7 @@
 
 #include <wx/keybinder.h>
 
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 #include "Core/PluginManager.h"
 #include "DocumentManager.h"
 
@@ -71,7 +70,7 @@ public:
 	Document* getDocument() const;
 
 	// Gets/sets the drag and drop coords.
-	ACESSOR(DropCoords, Vector2, dropCoords)
+	ACCESSOR(DropCoords, Vector2, dropCoords)
 
 	// Gets a document from a page.
 	Document* getDocumentFromPage(int selection);

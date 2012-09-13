@@ -1,8 +1,7 @@
 /************************************************************************
 *
 * vaporEngine by triton © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -23,7 +22,7 @@ Buffer::Buffer()
 
 //-----------------------------------//
 
-Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access) 
+Buffer::Buffer(BufferUsage usage, BufferAccess access) 
 	: usage(usage)
 	, access(access)
 {

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -52,7 +51,7 @@ bool ReflectionIsResourceHandle(const Field* field)
 
 //-----------------------------------//
 
-static ResourceHandle GetResourceUsingBrowser( ResourceGroup::Enum group )
+static ResourceHandle GetResourceUsingBrowser( ResourceGroup group )
 {
 	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
 	ResourcesBrowser* rb = rp->resourcesBrowser;
@@ -74,7 +73,7 @@ static ResourceHandle GetResourceUsingBrowser( ResourceGroup::Enum group )
 
 //-----------------------------------//
 #if 0
-static ResourceHandle GetResourceUsingFile( ResourceGroup::Enum group )
+static ResourceHandle GetResourceUsingFile( ResourceGroup group )
 {
 	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
 			wxEmptyString, wxEmptyString, "Resource files | *.*",

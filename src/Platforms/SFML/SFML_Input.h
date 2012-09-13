@@ -17,11 +17,11 @@
 
 #include <SFML/Window.hpp>
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GAMERUNTIME_BEGIN
 
 //-----------------------------------//
 
-class API_ENGINE SFML_Input : public InputManager
+class API_GAMERUNTIME SFML_Input : public InputManager
 {
 public:
 
@@ -36,6 +36,6 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GAMERUNTIME_END
 
 #endif

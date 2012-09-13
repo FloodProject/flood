@@ -1,14 +1,13 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #include "Engine/API.h"
 #include "Engine/Scene/Billboard.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/Resources/Material.h"
 #include "Engine/Scene/Entity.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -33,7 +32,7 @@ Billboard::Billboard() : billboardType(BillboardType::ScreenAligned)
 
 //-----------------------------------//
 
-Billboard::Billboard( BillboardType::Enum type ) : billboardType(type)
+Billboard::Billboard( BillboardType type ) : billboardType(type)
 {
 }
 
@@ -47,9 +46,9 @@ void Billboard::update( float )
 
 void Billboard::onPreRender( const Camera& camera )
 {
-	const TransformPtr& transform = getEntity()->getTransform();
+	Transform* transform = getEntity()->getTransform().get();
 	
-	const TransformPtr& camTransform = camera.getEntity()->getTransform();
+	const Transform* camTransform = camera.getEntity()->getTransform().get();
 	const Matrix4x3& camView = camera.getViewMatrix();
 
 #if 0

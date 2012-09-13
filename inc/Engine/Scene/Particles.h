@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -16,7 +15,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct Particle
+struct API_SCENE Particle
 {
 	Particle() 
 		: alive(false)
@@ -37,7 +36,7 @@ struct Particle
  * Particles can have different emitters.
  */
 
-struct EmitterType
+struct API_SCENE EmitterType
 {
 	REFLECT_DECLARE_ENUM(EmitterType)
 
@@ -51,9 +50,9 @@ struct EmitterType
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(Particles)
+API_SCENE REFLECT_DECLARE_CLASS(Particles)
 
-class API_ENGINE Particles : public Geometry
+class API_SCENE Particles : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Particles)
 
@@ -71,7 +70,7 @@ public:
 	void updateDebugRenderable() const;
 
 	// Creates the debug.renderable.
-RenderBatchPtr createDebuRenderable() const;
+    RenderBatchPtr createDebuRenderable() const;
 
 protected:
 

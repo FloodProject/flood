@@ -1,13 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Author:  Corbin Hart
-// Project: Genesis
-// Date:    2/12/2011
-//
-// Worker - Implementation for a worker thread.
-//
-// Copyright 2010-2011 (All rights reserved)
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #include "Core/API.h"
 #include "Core/Log.h"

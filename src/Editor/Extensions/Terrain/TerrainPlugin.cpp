@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -20,11 +19,11 @@
 #include "DocumentWindow.h"
 #include "UndoManager.h"
 #include "Graphics/RenderView.h"
-#include "Scene/Camera.h"
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
-#include "Scene/Projector.h"
+#include "Engine/Scene/Camera.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
+#include "Engine/Scene/Projector.h"
 #include "Engine/Engine.h"
 #include "EventManager.h"
 #include "RenderControl.h"

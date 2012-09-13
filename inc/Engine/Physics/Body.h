@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -22,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 
 class BodyMotionState;
 
-REFLECT_DECLARE_CLASS(Body)
+API_ENGINE REFLECT_DECLARE_CLASS(Body)
 
 class API_ENGINE Body : public Component
 {

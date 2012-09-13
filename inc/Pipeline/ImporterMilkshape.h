@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -21,9 +20,9 @@ NAMESPACE_RESOURCES_BEGIN
  * Loads a given Milkshape3D mesh format.
  */
 
-REFLECT_DECLARE_CLASS(ImporterMilkshape)
+API_PIPELINE REFLECT_DECLARE_CLASS(ImporterMilkshape)
 
-class ImporterMilkshape : public ResourceImporter
+class API_PIPELINE ImporterMilkshape : public ResourceImporter
 {
 	REFLECT_DECLARE_OBJECT(ImporterMilkshape)
 

@@ -1,14 +1,13 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
 
 NAMESPACE_GRAPHICS_BEGIN

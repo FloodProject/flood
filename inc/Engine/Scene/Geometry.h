@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -24,9 +23,9 @@ NAMESPACE_ENGINE_BEGIN
  * rendering device for rendering.
  */
 
-REFLECT_DECLARE_CLASS(Geometry)
+API_SCENE REFLECT_DECLARE_CLASS(Geometry)
 
-class API_ENGINE Geometry : public Component
+class API_SCENE Geometry : public Component
 {
 	REFLECT_DECLARE_OBJECT(Geometry)
 

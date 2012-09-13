@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -23,7 +22,7 @@ NAMESPACE_CORE_BEGIN
 
 #ifdef ENABLE_ARCHIVE_DIR
 
-static scoped_ptr<FileWatcherWin32> gs_watcher;
+static scoped_ptr<FileWatcherWin32> gs_FileWatcher;
 
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
@@ -84,12 +83,12 @@ static bool DirArchiveClose(Archive* archive)
 	if(archive->watchId != 0)
 	{
 		// Remove the archive from the watch list.
-		gs_watcher->removeWatch(archive->watchId);
+		gs_FileWatcher->removeWatch(archive->watchId);
 
-		if( gs_watcher->mWatches.empty() )
+		if( gs_FileWatcher->mWatches.empty() )
 		{
 			// Remove the watcher when there are no more watches.
-			gs_watcher.reset();
+			gs_FileWatcher.reset();
 		}
 	}
 
@@ -169,29 +168,22 @@ static bool DirArchiveMonitor(Archive* archive)
 {
 	if( !archive ) return false;
 
-	bool created = false;
-
 	// Setup the watcher if it has not been created.
-	if( !gs_watcher )
+	if( !gs_FileWatcher )
 	{
 		LogInfo("Creating the file watcher");
 
-		gs_watcher.reset( AllocateHeap(FileWatcherWin32) );
-		gs_watcher->onFileWatchEvent.Connect(&HandleFileWatch);
-
-		created = true;
+		gs_FileWatcher.reset( AllocateHeap(FileWatcherWin32) );
+		gs_FileWatcher->onFileWatchEvent.Connect(&HandleFileWatch);
 	}
 
 	if(archive->watchId == 0)
 	{
 		// Add the archive to the watch list.
-		archive->watchId = gs_watcher->addWatch(archive->path, archive);
+		archive->watchId = gs_FileWatcher->addWatch(archive->path, archive);
 	}
 
-	if(archive->watchId == 0 && created )
-		gs_watcher.reset();
-	else
-		gs_watcher->update();
+	gs_FileWatcher->update();
 
 	return true;
 }

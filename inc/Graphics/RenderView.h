@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,11 +11,12 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix4x3.h"
 #include "Core/Math/Matrix4x4.h"
-#include "Graphics/RenderTarget.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
+
+class RenderTarget;
 
 /**
  * A view is a region in a render target that can be rendered into.

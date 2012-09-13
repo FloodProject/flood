@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -16,7 +15,7 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -56,7 +55,7 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 	}
 
 	// Build our image with the pixel data returned by stb_image.
-	PixelFormat::Enum pf = PixelFormat::Unknown;
+	PixelFormat pf = PixelFormat::Unknown;
 	
 	switch( comp )
 	{
@@ -90,6 +89,6 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END
 
 #endif

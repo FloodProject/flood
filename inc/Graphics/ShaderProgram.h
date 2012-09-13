@@ -1,25 +1,25 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Graphics/Shader.h"
+#include "Graphics/VertexBuffer.h"
+
 #include "Core/Math/Matrix4x3.h"
 #include "Core/Math/Matrix4x4.h"
 #include "Core/Math/EulerAngles.h"
 #include "Core/Math/Color.h"
-#include "Engine/Geometry/GeometryBuffer.h"
-
-FWD_DECL_INTRUSIVE( UniformBuffer )
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
+
+class UniformBuffer;
 
 /**
  * A program is a collection of shaders (though it has to have at least
@@ -68,7 +68,7 @@ public:
 	virtual void forceRecompile() = 0;
 
 	// Sets the attribute in the program.
-	virtual void setAttribute( const String& slot, VertexAttribute::Enum attribute ) = 0;
+	virtual void setAttribute( const String& slot, VertexAttribute attribute ) = 0;
 
 	// Sets the uniforms in the program.
 	virtual void setUniforms( UniformBuffer* ub ) = 0;

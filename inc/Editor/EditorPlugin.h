@@ -1,16 +1,15 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Core/Plugin.h"
-#include "Input/MouseEvents.h"
-#include "Input/KeyboardEvents.h"
+#include "Engine/Input/MouseEvents.h"
+#include "Engine/Input/KeyboardEvents.h"
 #include "Document.h"
 #include "UndoOperation.h"
 

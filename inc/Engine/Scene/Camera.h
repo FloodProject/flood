@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -31,7 +30,7 @@ struct RenderBlock;
  * speed up the rendering by cutting nodes that are outside the view range.
  */
 
-REFLECT_DECLARE_CLASS(Camera)
+API_SCENE REFLECT_DECLARE_CLASS(Camera)
 
 class API_SCENE Camera : public Component
 {

@@ -1,18 +1,17 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Resources/Resource.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 #include "Core/Math/Vector.h"
 
-NAMESPACE_RESOURCES_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -47,7 +46,7 @@ struct Glyph
 
 REFLECT_DECLARE_CLASS(Font)
 
-class API_RESOURCE Font : public Resource
+class API_ENGINE Font : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Font)
 
@@ -86,4 +85,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Font );
 
 //-----------------------------------//
 
-NAMESPACE_RESOURCES_END
+NAMESPACE_ENGINE_END

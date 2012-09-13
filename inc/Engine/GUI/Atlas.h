@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,16 +11,16 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct Rect
+struct API_ENGINE AtlasRect
 {
-    Rect(int size)
+    AtlasRect(int size)
         : x(0), y(0), w(size), h(size), ID(-1), rotated(false), packed(false)
     {
         children[0] = -1;
         children[1] = -1;
     }
 
-    Rect(int x, int y, int w, int h, int ID = 1)
+    AtlasRect(int x, int y, int w, int h, int ID = 1)
         : x(x), y(y), w(w), h(h), ID(ID), rotated(false), packed(false)
     {
         children[0] = -1;
@@ -39,7 +38,7 @@ struct Rect
         rotated = !rotated;
     }
     
-    bool operator<(const Rect& rect) const 
+    bool operator<(const AtlasRect& rect) const 
 	{
         return GetArea() < rect.GetArea();
     }
@@ -95,7 +94,7 @@ private:
     void clear();
     void fill(int pack, bool allowRotation);
     void split(int pack, int rect);
-    bool fits(Rect& rect1, const Rect& rect2, bool allowRotation);
+    bool fits(AtlasRect& rect1, const AtlasRect& rect2, bool allowRotation);
     void addPackToArray(int pack, std::vector<int>& array) const;
     
     bool rectIsValid(int i) const;
@@ -104,8 +103,8 @@ private:
     int packSize;
     int numPacked;
 
-    std::vector<Rect> rects;
-    std::vector<Rect> packs;
+    std::vector<AtlasRect> rects;
+    std::vector<AtlasRect> packs;
     std::vector<int>  roots;
 };
 

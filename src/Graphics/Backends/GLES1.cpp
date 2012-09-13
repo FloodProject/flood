@@ -64,7 +64,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	Material* material = state.material;
 	setupRenderStateMaterial(state, false);
 
-	RenderLayer::Enum stage =.renderable->getRenderLayer();
+	RenderLayer stage =.renderable->getRenderLayer();
 
 	if( stage != RenderLayer::Overlays )
 	{

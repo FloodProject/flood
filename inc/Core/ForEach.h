@@ -1,13 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Author:  Corbin Hart
-// Project: Genesis
-// Date:    2/21/2011
-//
-// ForEach - The base wrapper class around a concurrent for-each.
-//
-// Copyright 2010-2011 (All rights reserved)
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #pragma once
 

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -161,7 +160,7 @@ NAMESPACE_CORE_BEGIN
 	FIELD_COMMON(fieldId, fieldType, fieldName)
 
 #define FIELD_ENUM_SETTER(fieldId, fieldType, fieldName, setterName) \
-	FIELD_SETTER_CLASS(fieldType::Enum, fieldName, setterName) \
+	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_ENUM(fieldId, fieldType, fieldName) \
 	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
 

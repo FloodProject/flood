@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Protocol/API.h"
-#include "Network/MessageHandler.h"
+#include "Core/Network/MessageHandler.h"
 #include "Protocol/ReplicaContext.h"
 #include "Core/Event.h"
 

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -29,9 +28,9 @@ class DebugDrawer;
  * A component will also be able to register methods for scripting.
  */
 
-REFLECT_DECLARE_CLASS(Component)
+API_SCENE REFLECT_DECLARE_CLASS(Component)
 
-class API_ENGINE Component : public Object
+class API_SCENE Component : public Object
 {
 	DECLARE_UNCOPYABLE(Component)
 	REFLECT_DECLARE_OBJECT(Component)

@@ -1,8 +1,7 @@
 /************************************************************************
 *
 * vapor3D Resources © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 

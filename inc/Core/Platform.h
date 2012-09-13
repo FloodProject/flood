@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -61,9 +60,13 @@
 //---------------------------------------------------------------------//
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
+#ifndef BUILD_DEBUG
 	#define BUILD_DEBUG
+#endif
 #else
+#ifndef BUILD_RELEASE
 	#define BUILD_RELEASE
+#endif
 #endif
 
 //---------------------------------------------------------------------//

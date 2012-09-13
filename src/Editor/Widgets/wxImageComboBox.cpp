@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -39,11 +38,11 @@ wxBitmap* ConvertImageToBitmap( Image* image, const Path& fullPath )
 	if( !image || !image->isLoaded() )
 		return nullptr;
 
-	PixelFormat::Enum pf = image->getPixelFormat();
+	PixelFormat pf = image->getPixelFormat();
 	
 	if( pf != PixelFormat::R8G8B8A8 )
 	{
-		LogDebug("Invalid image format: %s", EnumGetValueName(ReflectionGetType(PixelFormat), pf));
+		LogDebug("Invalid image format: %s", EnumGetValueName(ReflectionGetType(PixelFormat), (int32)pf));
 		return nullptr;
 	}
 

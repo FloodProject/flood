@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -481,7 +480,7 @@ bool ImporterFBX::buildMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 
 	for( uint8 i = 0; i < uvSetsCount; ++i )
 	{
-		VertexAttribute::Enum attribute = (VertexAttribute::Enum)((int)VertexAttribute::TexCoord0 + i);
+		VertexAttribute attribute = (VertexAttribute)((int)VertexAttribute::TexCoord0 + i);
 		VertexElementP uv = { attribute, VertexDataType::Float, 2 };
 		vertexDecls.add(uv);
 	}

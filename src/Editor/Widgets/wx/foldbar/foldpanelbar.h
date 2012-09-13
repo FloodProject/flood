@@ -46,6 +46,8 @@
 
 class wxFoldPanel
 {
+    //WX_DECLARE_TYPEINFO(wxFoldPanel)
+
 private:
     wxFoldPanelItem *m_item;
 
@@ -115,6 +117,7 @@ WX_DEFINE_ARRAY_WITH_DECL_PTR(wxFoldPanelItem *, wxFoldPanelItemArray, class WXD
 
 class WXDLLIMPEXP_FOLDBAR wxFoldPanelBar: public wxScrolledWindow
 {
+    WX_DECLARE_TYPEINFO(wxFoldPanelBar)
 private:
     DECLARE_DYNAMIC_CLASS( wxFoldPanelBar )
     DECLARE_EVENT_TABLE()

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -31,7 +30,14 @@
 #define NAMESPACE_PIPELINE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_PIPELINE_END NAMESPACE_CORE_END
 
-void PipelineInit();
-void PipelineCleanup();
-
 #include "Core/Memory.h"
+
+NAMESPACE_PIPELINE_BEGIN
+
+// Initializes the default resource processors.
+API_PIPELINE void PipelineInit();
+
+// Cleans the resource processors.
+API_PIPELINE void PipelineCleanup();
+
+NAMESPACE_PIPELINE_END

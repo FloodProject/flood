@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -48,7 +47,7 @@ public:
 	void createShaders() OVERRIDE;
 
 	// Adds a parameter to the shader.
-	void setAttribute( const String&, VertexAttribute::Enum ) OVERRIDE;
+	void setAttribute( const String&, VertexAttribute ) OVERRIDE;
 
 	// Sets the uniforms in the program.
 	void setUniforms( UniformBuffer* ) OVERRIDE;

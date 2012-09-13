@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -16,9 +15,9 @@
 #include "Extensions/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Protocol/ReplicaContext.h"
-#include "Network/Session.h"
-#include "Network/Host.h"
-#include "Network/MessageDispatcher.h"
+#include "Core/Network/Session.h"
+#include "Core/Network/Host.h"
+#include "Core/Network/MessageDispatcher.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "EditorTags.h"
@@ -81,7 +80,7 @@ void ScenePlugin::onPluginEnable()
 	pp->propertyPage->onClassFieldChanged.Bind(this, &ScenePlugin::onSceneClassFieldUpdate);
 #endif
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	ReplicaMessageHandler* rmp = GetMessageHandler<ReplicaMessageHandler>();
 	rmp->onReplicaContextCreate.Connect(this, &ScenePlugin::onReplicaContextCreate);
 	rmp->onReplicaObjectCreate.Connect(this, &ScenePlugin::onReplicaObjectCreate);
@@ -325,7 +324,7 @@ void ScenePlugin::onServerConnect(const SessionPtr&)
 
 //-----------------------------------//
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 
 void ScenePlugin::onReplicaContextCreate(ReplicaContext* context, ClassId, ReplicaLocalId id)
 {
@@ -360,7 +359,7 @@ void ScenePlugin::onReplicaObjectCreate(ReplicaContext* context, ReplicaInstance
 		Entity* entity = (Entity*) object;
 
 		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-		document->scene->add(entity);
+        document->scene->entities.add(entity);
 	}
 }
 
@@ -376,7 +375,7 @@ void ScenePlugin::onReplicaAdded(const ReplicatedObject& obj)
 
 void ScenePlugin::onSceneClassFieldUpdate(const FieldWatchVector& watches)
 {
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	MessagePtr msg = document->replicaContext->createObjectUpdateMessage(watches);
 	GetPlugin<ServerPlugin>()->host->broadcastMessage(msg);

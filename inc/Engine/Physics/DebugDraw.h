@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -11,7 +10,7 @@
 #ifdef ENABLE_PHYSICS_BULLET
 
 #include "Core/References.h"
-#include "Engine/Resources/Material.h"
+#include "Graphics/Resources/Material.h"
 
 FWD_DECL_INTRUSIVE(GeometryBuffer)
 FWD_DECL_INTRUSIVE(Material)

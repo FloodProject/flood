@@ -1,14 +1,13 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #include "Graphics/API.h"
-#include "Engine/Resources/Image.h"
-#include "Engine/Resources/Buffer.h"
+#include "Graphics/Resources/Image.h"
+#include "Graphics/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
 
@@ -123,9 +122,9 @@ void GL_RenderBuffer::setBufferState()
 
 //-----------------------------------//
 
-TexturePtr GL_RenderBuffer::createRenderTexture( RenderBufferType::Enum type )
+TexturePtr GL_RenderBuffer::createRenderTexture( RenderBufferType type )
 {
-	PixelFormat::Enum format;
+	PixelFormat format;
 
 	if( type == RenderBufferType::Depth )
 	{
@@ -156,7 +155,8 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 	if( tex->getPixelFormat() == PixelFormat::Depth )
 		attach = GL_DEPTH_ATTACHMENT_EXT;
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
+	glFramebufferTexture2DEXT(
+		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
 	textureBuffers.push_back( tex );
@@ -166,7 +166,7 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 
 //-----------------------------------//
 
-void GL_RenderBuffer::createRenderBuffer( int bufferComponents )
+void GL_RenderBuffer::createRenderBuffer( RenderBufferType bufferComponents )
 {
 	// Render buffers are just objects which are used to support
 	// offscreen rendering, often for sections of the framebuffer which 
@@ -183,18 +183,21 @@ void GL_RenderBuffer::createRenderBuffer( int bufferComponents )
 
 	bind();
 
-	if( bufferComponents & RenderBufferType::Depth )
+	if( BitwiseAnd(bufferComponents, RenderBufferType::Depth) )
 	{
-		createRenderBufferStorage(renderBuffer, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT_EXT);
+		createRenderBufferStorage(renderBuffer,
+			GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT_EXT);
 	}
-	if( bufferComponents & RenderBufferType::Color )
+	if( BitwiseAnd(bufferComponents, RenderBufferType::Color) )
 	{
-		createRenderBufferStorage(renderBuffer, GL_RGBA, GL_COLOR_ATTACHMENT0_EXT);
+		createRenderBufferStorage(renderBuffer,
+			GL_RGBA, GL_COLOR_ATTACHMENT0_EXT);
 		colorAttach = true;
 	}
-	if( bufferComponents & RenderBufferType::Stencil )
+	if( BitwiseAnd(bufferComponents, RenderBufferType::Stencil) )
 	{
-		createRenderBufferStorage(renderBuffer, GL_STENCIL_INDEX, GL_STENCIL_ATTACHMENT_EXT);
+		createRenderBufferStorage(renderBuffer,
+			GL_STENCIL_INDEX, GL_STENCIL_ATTACHMENT_EXT);
 		colorAttach = true;
 	}
 
@@ -207,10 +210,12 @@ void GL_RenderBuffer::createRenderBuffer( int bufferComponents )
 
 void GL_RenderBuffer::createRenderBufferStorage(int buffer, int type, int attachment)
 {
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, settings.width, settings.height);
+	glRenderbufferStorageEXT(
+		GL_RENDERBUFFER_EXT, type, settings.width, settings.height);
 	CheckLastErrorGL( "Could not create renderbuffer object storage" );
 
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, buffer);
+	glFramebufferRenderbufferEXT(
+		GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, buffer);
 	CheckLastErrorGL( "Could not attach renderbuffer into framebuffer object" );
 }
 
@@ -223,7 +228,7 @@ bool GL_RenderBuffer::checkSize()
 
 	if(settings.width > max || settings.height > max)
 	{
-		LogWarn( "Invalid GL_RenderBuffer dimensions (OpenGL max: %d,%d)", max, max );
+		LogWarn("Invalid GL_RenderBuffer dimensions (OpenGL max: %d,%d)", max, max);
 		return false;
 	}
 

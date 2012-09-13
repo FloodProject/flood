@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -262,6 +261,28 @@ wxFloatProperty* PropertyPage::createFloatProperty(const char* name, float value
 
 //-----------------------------------//
 
+static wxColour ConvertColorToWx( const Color& color )
+{
+	return wxColour(
+		color.r * 255.0f,
+		color.g * 255.0f,
+		color.b * 255.0f,
+		color.a * 255.0f );
+}
+
+//-----------------------------------//
+
+static Color ConvertColorFromWx( wxColour& colour )
+{
+	return Color(
+		colour.Red()   / 255.0f,
+		colour.Green() / 255.0f,
+		colour.Blue()  / 255.0f,
+		colour.Alpha() / 255.0f );
+}
+
+//-----------------------------------//
+
 wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* object)
 {
 	wxPGProperty* prop = nullptr;
@@ -323,17 +344,6 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	} }
 
 	return prop;
-}
-
-//-----------------------------------//
-
-static wxColour convertColor( const Color& color )
-{
-	return wxColour(
-		color.r * 255.0f,
-		color.g * 255.0f,
-		color.b * 255.0f,
-		color.a * 255.0f );
 }
 
 //-----------------------------------//
@@ -497,7 +507,8 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 	case Primitive::Color:
 	{
 		Color val = value.As<Color>();
-		prop->SetValue( wxAny(convertColor(val)) );
+        wxAny any( ConvertColorToWx(val) );
+		//prop->SetValue(any);
 		break;
 	}
 	//-----------------------------------//
@@ -552,17 +563,6 @@ wxAny PropertyPage::getPropertyValue(wxPGProperty* prop)
 
 //-----------------------------------//
 
-static Color convertColorFromWx( wxColour& colour )
-{
-	return Color(
-		colour.Red()   / 255.0f,
-		colour.Green() / 255.0f,
-		colour.Blue()  / 255.0f,
-		colour.Alpha() / 255.0f );
-}
-
-//-----------------------------------//
-
 wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* data)
 {
 	const Primitive& type = (const Primitive&) *data->field->type;
@@ -596,7 +596,7 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 	case Primitive::Color:
 	{
 		wxColour val = prop->GetValue().GetAny().As<wxColour>();
-		return convertColorFromWx(val);
+		return ConvertColorFromWx(val);
 		break;
 	}
 	case Primitive::Quaternion:

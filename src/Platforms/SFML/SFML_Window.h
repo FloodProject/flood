@@ -15,7 +15,7 @@
 #include "SFML_Input.h"
 #include <SFML/Window.hpp>
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GAMERUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -23,7 +23,7 @@ NAMESPACE_ENGINE_BEGIN
  * Window implementation using the SFML library.
  */
 
-class API_ENGINE SFML_Window : public Window
+class API_GAMERUNTIME SFML_Window : public Window
 {
 public:
 
@@ -87,6 +87,6 @@ private:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GAMERUNTIME_END
 
 #endif

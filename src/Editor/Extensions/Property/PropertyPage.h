@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -57,7 +56,7 @@ public:
 	void resetObject(const Object* object);
 
 	// Gets/sets the current object.
-	ACESSOR(Object, Object*, currentObject)
+	ACCESSOR(Object, Object*, currentObject)
 
 	// Creates a new property grid.
 	PropertyGrid* createPropertyGrid(wxWindow* parent);

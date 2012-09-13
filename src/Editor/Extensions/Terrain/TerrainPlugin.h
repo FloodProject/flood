@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,8 +11,8 @@
 
 #include "EditorPlugin.h"
 #include "UndoOperation.h"
-#include "Scene/Scene.h"
-#include "Terrain/Terrain.h"
+#include "Engine/Scene/Scene.h"
+#include "Engine/Terrain/Terrain.h"
 
 class wxFoldPanel;
 

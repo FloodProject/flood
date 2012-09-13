@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -88,7 +87,7 @@ void TerrainOperation::redo()
 
 void TerrainOperation::updateNormals()
 {
-	RenderablePtr renderable = rayQuery.renderable;
+	Renderable* renderable = rayQuery.renderable;
 
 	#pragma TODO("Generate terrain normals in the background")
 	//CellPtr cell = boost::static_pointer_cast<Cell>(.renderable );
@@ -331,7 +330,7 @@ void TerrainOperation::applyPaintTool()
 	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x);
 	float vt = uv[0].y + intUV.x*(uv[1].y-uv[0].y) + intUV.y*(uv[2].y-uv[0].y);
 
-	const MaterialPtr& material = rend->getMaterial().Resolve();
+	Material* material = rend->getMaterial().Resolve();
 	Image* image = material->getTexture(0).Resolve();
 
 	int x = ut * image->getWidth();

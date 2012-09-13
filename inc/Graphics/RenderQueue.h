@@ -1,8 +1,7 @@
 /************************************************************************
 *
 * vaporEngine by triton (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -30,19 +29,13 @@ class Light;
  * rendered to the render target that is currently active on the device.
  */
 
-class RenderState
+class API_GRAPHICS RenderState
 {
 public:
 
-	RenderState() {}
+	RenderState();
 	RenderState( RenderBatch* renderable );
-	
-	RenderState( const RenderState& rhs )
-		: renderable( rhs.renderable )
-		, modelMatrix( rhs.modelMatrix )
-		, material( rhs.material )
-		, priority( rhs.priority )
-	{ }
+	RenderState( const RenderState& rhs );
 
 	RenderBatch* renderable;
 	Material* material;
@@ -56,7 +49,7 @@ public:
  * Light properties that will be passed down to the renderer.
  */
 
-struct LightState
+struct API_GRAPHICS LightState
 {
 	Light* light;
 	Transform* transform;
@@ -76,7 +69,7 @@ struct LightState
 typedef std::vector<RenderState> RenderQueue;
 typedef std::vector<LightState> LightQueue;
 
-struct RenderBlock
+struct API_GRAPHICS RenderBlock
 {
 	RenderQueue renderables;
 	LightQueue lights;

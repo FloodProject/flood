@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -25,7 +24,7 @@ NAMESPACE_ENGINE_BEGIN
  * and set a 5-pixel x-offset from it, then it will always stay there.
  */ 
 
-REFLECT_DECLARE_ENUM(PositionMode)
+API_ENGINE REFLECT_DECLARE_ENUM(PositionMode)
 
 struct PositionMode
 {
@@ -54,7 +53,7 @@ struct PositionMode
  *	
  */
 
-REFLECT_DECLARE_ENUM(AnchorMode)
+API_ENGINE REFLECT_DECLARE_ENUM(AnchorMode)
 
 struct AnchorMode
 {
@@ -82,7 +81,7 @@ struct AnchorMode
  * these different positioning modes, please check out the docs above.
  */
 
-REFLECT_DECLARE_CLASS(Overlay)
+API_ENGINE REFLECT_DECLARE_CLASS(Overlay)
 
 class API_ENGINE Overlay : public Geometry
 {

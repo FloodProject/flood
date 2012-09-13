@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -17,9 +16,9 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(Listener)
+API_SCENE REFLECT_DECLARE_CLASS(Listener)
 
-class API_ENGINE Listener : public Component
+class API_SCENE Listener : public Component
 {
 	DECLARE_UNCOPYABLE(Listener)
 	REFLECT_DECLARE_OBJECT(Listener)

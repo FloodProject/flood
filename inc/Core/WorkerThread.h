@@ -1,13 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Author:  Corbin Hart
-// Project: Genesis
-// Date:    1/6/2011
-//
-// Worker - Wrapper for a boost::thread that consumes work from a pool of tasks.
-//
-// Copyright 2010-2011 (All rights reserved)
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #pragma once
 

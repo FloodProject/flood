@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -52,7 +51,7 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 
 	if( !element ) return nullptr;
 
-	element->type = (UniformDataType::Enum) 0;
+	element->type = (UniformDataType) 0;
 	element->count = 0;
 	element->name = (char*) name; // AllocateName(name);
 

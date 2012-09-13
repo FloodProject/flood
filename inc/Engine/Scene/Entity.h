@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -22,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 
 EXTERN_BEGIN
 
-API_ENGINE Entity* EntityCreate( Allocator* );
+API_SCENE Entity* EntityCreate( Allocator* );
 
 EXTERN_END
 
@@ -39,9 +38,9 @@ typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
  * by default to give it a placement in the world scene.
  */
 
-REFLECT_DECLARE_CLASS(Entity)
+API_SCENE REFLECT_DECLARE_CLASS(Entity)
 
-class API_ENGINE Entity : public Object
+class API_SCENE Entity : public Object
 {
 	REFLECT_DECLARE_OBJECT(Entity);
 	DECLARE_UNCOPYABLE(Entity)

@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "Engine/API.h"
+#include "GameRuntime/API.h"
 #include "SFML_Window.h"
 
 #ifdef ENABLE_WINDOW_SFML
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GAMERUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -202,6 +202,6 @@ void SFML_Window::processResize(sf::Event event)
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GAMERUNTIME_END
 
 #endif

@@ -37,6 +37,8 @@ BEGIN_EVENT_TABLE(wxFoldPanelItem,wxPanel)
     EVT_SIZE(wxFoldPanelItem::OnSize)
 END_EVENT_TABLE()
 
+WX_DEFINE_TYPEINFO(wxFoldPanelItem)
+
 wxFoldPanelItem::wxFoldPanelItem( wxWindow *parent, const wxString &caption, wxImageList *icons, bool collapsedInitially,
                                   const wxCaptionBarStyle &style )
     : m_controlCreated(false)

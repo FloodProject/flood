@@ -1,15 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Author:  Corbin Hart
-// Project: Genesis
-// Date:    2/1/2011
-//
-// Pool - Implementation for the class that wraps the management of a group of
-//	worker threads. Really, the Pool is more a common point of interaction than
-//	a manager.
-//
-// Copyright 2010-2011 (All rights reserved)
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #pragma once
 

@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -12,8 +11,6 @@
 #include "Core/Utilities.h"
 
 #ifdef ENABLE_PLUGIN_MONO
-
-#include "../interface/Bindings/Engine_wrap.cxx"
 
 #include <mono/metadata/mono-config.h>
 #include <mono/mini/jit.h>
@@ -74,8 +71,10 @@ void MonoPlugin::onPluginRegistered()
 {
 	// When Mono is loaded as a DLL, it needs to have the threading initialized early.
 	
-	Path dir = PathCombine(PathGetCurrentDir(), "Plugins");
+#if 0
+	Path dir = PathCombine(PathGetCurrentDir(), "");
 	mono_set_dirs(dir.c_str(), dir.c_str());
+#endif
 
 	// Load the default Mono configuration file.
 	mono_config_parse(nullptr);

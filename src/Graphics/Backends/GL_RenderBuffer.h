@@ -1,14 +1,14 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
 #pragma once
 
 #include "Graphics/RenderBuffer.h"
+#include "Core/EnumHelpers.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -39,10 +39,12 @@ public:
 	void update() OVERRIDE;
 
 	// Creates a new render buffer with the given components.
-	void createRenderBuffer( int bufferComponents = RenderBufferType::Color | RenderBufferType::Depth ) OVERRIDE;
+	void createRenderBuffer( RenderBufferType bufferComponents
+		= BitwiseFlags(RenderBufferType::Color, RenderBufferType::Depth) ) OVERRIDE;
 
 	// Creates a render texture to this FBO.
-	TexturePtr createRenderTexture( RenderBufferType::Enum = RenderBufferType::Color ) OVERRIDE;
+	TexturePtr createRenderTexture( RenderBufferType
+		= RenderBufferType::Color ) OVERRIDE;
 
 	// Attaches a render texture to this FBO.
 	void attachRenderTexture(const TexturePtr& tex) OVERRIDE;

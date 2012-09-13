@@ -16,7 +16,7 @@
 #include "Core/References.h"
 #include "Core/Object.h"
 #include "Core/ReflectionHelpers.h"
-#include "Network/Message.h"
+#include "Core/Network/Message.h"
 
 //---------------------------------------------------------------------//
 // API Exports

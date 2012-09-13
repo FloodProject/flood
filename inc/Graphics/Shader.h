@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -21,14 +20,11 @@ NAMESPACE_GRAPHICS_BEGIN
  *  - Geometry shaders can be used to generate geometry procedurally.
  */
 
-struct ShaderType
+enum struct ShaderType
 {
-	enum Enum 
-	{
-		Vertex,
-		Fragment,
-		Geometry
-	};
+	Vertex,
+	Fragment,
+	Geometry
 };
 
 //-----------------------------------//
@@ -44,7 +40,7 @@ class API_GRAPHICS Shader : public ReferenceCounted
 public:
 
 	// Gets the shader type.
-	ACCESSOR(ShaderType, ShaderType::Enum, type)
+	ACCESSOR(ShaderType, ShaderType, type)
 
 	// Gets the shader text.
 	ACCESSOR(Text, const String&, text)
@@ -68,7 +64,7 @@ public:
 	bool gotCompileErrors() const;
 
 	// Shader type.
-	ShaderType::Enum type;
+	ShaderType type;
 
 	// Holds the shader text.
 	String text;

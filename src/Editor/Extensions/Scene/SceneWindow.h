@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -51,7 +50,7 @@ public:
 	void switchToDefaultCamera();
 
 	// Gets/sets the camera of the window.
-	ACESSOR(Camera, const CameraPtr&, camera)
+	ACCESSOR(Camera, const CameraPtr&, camera)
 
 	// Gets the main camera of the window.
 	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)
