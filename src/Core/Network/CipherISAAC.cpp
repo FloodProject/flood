@@ -1,8 +1,7 @@
 /************************************************************************
 *
 * vapor3D Server © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Licensed under the simplified BSD license. All rights reserved.
 *
 * Based on 'rand.c: My random number generator, ISAAC.'
 * (c) Bob Jenkins, March 1996, Public Domain

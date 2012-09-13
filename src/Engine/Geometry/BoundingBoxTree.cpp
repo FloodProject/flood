@@ -1,8 +1,7 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
-*
-*	<http://www.vapor3d.org>
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
 
@@ -19,25 +18,11 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
-*	A method to compute a ray-AABB intersection.
-*	Original code by Andrew Woo, from "Graphics Gems", Academic Press, 1990
-*	Optimized code by Pierre Terdiman, 2000 (~20-30% faster on my Celeron 500)
-*	Epsilon value added by Klaus Hartmann. (discarding it saves a few cycles only)
-*
-*	Hence this version is faster as well as more robust than the original one.
-*
-*	Should work provided:
-*	1) the integer representation of 0.0f is 0x00000000
-*	2) the sign bit of the float is the most significant one
-*
-*	Report bugs: p.terdiman@codercorner.com
-*
-*	\param		aabb		[in] the axis-aligned bounding box
-*	\param		origin		[in] ray origin
-*	\param		dir			[in] ray direction
-*	\param		coord		[out] impact coordinates
-*	\return		true if ray intersects AABB
+/**A method to compute a ray-AABB intersection.Original code by Andrew Woo, from "Graphics Gems", Academic Press, 1990Optimized code by Pierre Terdiman, 2000 (~20-30% faster on my Celeron 500)Epsilon value added by Klaus Hartmann. (discarding it saves a few cycles only)
+*Hence this version is faster as well as more robust than the original one.
+*Should work provided:1) the integer representation of 0.0f is 0x000000002) the sign bit of the float is the most significant one
+*Report bugs: p.terdiman@codercorner.com
+*\param		aabb		[in] the axis-aligned bounding box\param		origin		[in] ray origin\param		dir			[in] ray direction\param		coord		[out] impact coordinates\return		true if ray intersects AABB
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define RAYAABB_EPSILON 0.00001f

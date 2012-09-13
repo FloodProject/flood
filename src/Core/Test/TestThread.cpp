@@ -1,14 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// Author:  Corbin Hart
-// Project: Flood
-// Date:    6/9/2012
-//
-// CoreThreads - Original Thread tests written for vapor3d converted to
-//	unittest-cpp.
-//
-// Copyright 2010-2013 (All rights reserved)
-//////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
 
 #include "Core/API.h"
 #include "UnitTest++.h"
