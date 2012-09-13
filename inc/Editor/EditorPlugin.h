@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Core/Plugin.h"
-#include "Input/MouseEvents.h"
-#include "Input/KeyboardEvents.h"
+#include "Engine/Input/MouseEvents.h"
+#include "Engine/Input/KeyboardEvents.h"
 #include "Document.h"
 #include "UndoOperation.h"
 

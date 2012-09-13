@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Scene/Geometry.h"
-#include "Scene/Camera.h"
-#include "Resources/Material.h"
+#include "Engine/Scene/Geometry.h"
+#include "Engine/Scene/Camera.h"
+#include "Graphics/Resources/Material.h"
 
 NAMESPACE_EDITOR_BEGIN
 

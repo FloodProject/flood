@@ -71,7 +71,7 @@ public:
 	// Sets the bounding box visibility of the given entity.
 	void setBoundingBoxVisible( const EntityPtr& entity, bool state );
 
-#ifndef NO_NETWORK
+#ifndef ENABLE_NO_NETWORK
 	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
 	void onReplicaObjectCreate(ReplicaContext*, ReplicaInstanceId, Object*);
 	void onReplicaAdded(const ReplicatedObject&);

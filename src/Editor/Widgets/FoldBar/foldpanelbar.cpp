@@ -39,6 +39,8 @@ BEGIN_EVENT_TABLE(wxFoldPanelBar,wxPanel)
 	//EVT_ERASE_BACKGROUND(wxFoldPanelBar::OnEraseBackground)
 END_EVENT_TABLE()
 
+WX_DEFINE_TYPEINFO(wxFoldPanelBar)
+
 wxFoldPanelBar::wxFoldPanelBar()
     : wxScrolledWindow()
     , m_foldPanel(NULL)

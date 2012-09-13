@@ -13,7 +13,7 @@
 #include "EditorPlugin.h"
 #include "UndoOperation.h"
 #include "TerrainPlugin.h"
-#include "Math/BoundingSphere.h"
+#include "Core/Math/BoundingSphere.h"
 
 NAMESPACE_EDITOR_BEGIN
 

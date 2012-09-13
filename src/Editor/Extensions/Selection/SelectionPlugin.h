@@ -9,7 +9,7 @@
 #pragma once
 
 #include "EditorPlugin.h"
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 
 #define PLUGIN_SELECTION "Selection"
 

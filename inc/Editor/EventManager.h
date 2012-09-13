@@ -10,9 +10,9 @@
 #pragma once
 
 #include "EditorPlugin.h"
-#include "Input/InputManager.h"
-#include "Input/Mouse.h" 
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Mouse.h" 
+#include "Engine/Input/Keyboard.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 

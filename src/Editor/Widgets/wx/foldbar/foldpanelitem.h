@@ -116,6 +116,8 @@ WX_DECLARE_OBJARRAY_WITH_DECL(wxFoldWindowItem, wxFoldWindowItemArray, class WXD
 
 class WXDLLIMPEXP_FOLDBAR wxFoldPanelItem: public wxPanel
 {
+    WX_DECLARE_TYPEINFO(wxFoldPanelItem)
+
 private:
     wxSizer* m_sizer;
     wxCaptionBar *m_captionBar;
@@ -138,6 +140,8 @@ private:
     void OnPaint(wxPaintEvent &event);
 
 public:
+    wxFoldPanelItem() {}
+
     // constructors and destructors
     wxFoldPanelItem( wxWindow *parent, const wxString &caption, wxImageList *icons = 0, bool collapsedInitially = false,
                      const wxCaptionBarStyle &style = wxEmptyCaptionBarStyle);

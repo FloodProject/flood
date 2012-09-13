@@ -132,7 +132,7 @@ void ResourcesBrowser::setupGroups()
 	
 	for( auto it = values.begin(); it != values.end(); it++ )
 	{
-		ResourceGroup::Enum group = (ResourceGroup::Enum) it->second;
+		ResourceGroup group = (ResourceGroup) it->second;
 		if(group == ResourceGroup::General) continue;
 
 		int image = m_resourceGroupImagesMap[group];
@@ -164,7 +164,7 @@ void ResourcesBrowser::setupGroupIcons()
 
 //-----------------------------------//
 
-bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group )
+bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup& group )
 {
 	for(auto it = m_resourceGroupIds.begin(); it != m_resourceGroupIds.end(); it++)
 	{
@@ -179,7 +179,7 @@ bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGro
 
 //-----------------------------------//
 
-void ResourcesBrowser::selectGroup(ResourceGroup::Enum group)
+void ResourcesBrowser::selectGroup(ResourceGroup group)
 {
 	selectedGroup = group;
 
@@ -192,7 +192,7 @@ void ResourcesBrowser::selectGroup(ResourceGroup::Enum group)
 void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
 {
 	wxTreeItemId id = event.GetItem();
-	ResourceGroup::Enum group;
+	ResourceGroup group;
 	
 	if( !findResourceGroupFromTreeId(id, group) )
 		return;
@@ -204,7 +204,7 @@ void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
 
 #define LIST_STYLE wxLC_NO_HEADER | wxLC_SINGLE_SEL
 
-void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
+void ResourcesBrowser::showGroup(ResourceGroup group)
 {
 	int imageSize = m_detailSlider->GetValue();
 	bool showImages = imageSize > 0;
@@ -244,7 +244,7 @@ void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
 
 //-----------------------------------//
 
-void ResourcesBrowser::addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group)
+void ResourcesBrowser::addDatabaseGroup(ResourceDatabase* db, ResourceGroup group)
 {
 	bool isGeneral = group == ResourceGroup::General;
 
@@ -340,7 +340,7 @@ void ResourcesBrowser::onResourceSliderScroll( wxScrollEvent& event )
 	wxTreeItemId id = m_resourceGroups->GetSelection();
 	if( !id.IsOk() ) return;
 
-	ResourceGroup::Enum group;
+	ResourceGroup group;
 
 	if( !findResourceGroupFromTreeId(id, group) )
 		return;

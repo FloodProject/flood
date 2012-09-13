@@ -12,8 +12,8 @@
 
 #include "EditorPlugin.h"
 #include "UndoOperation.h"
-#include "Scene/Scene.h"
-#include "Terrain/Terrain.h"
+#include "Engine/Scene/Scene.h"
+#include "Engine/Terrain/Terrain.h"
 
 class wxFoldPanel;
 

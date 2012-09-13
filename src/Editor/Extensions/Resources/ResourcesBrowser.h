@@ -21,8 +21,8 @@ class EditorFrame;
 struct ResourceMetadata;
 class ResourceDatabase;
 
-typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
-typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
+typedef std::map< ResourceGroup, wxTreeItemId > ResourceGroupIdsMap;
+typedef std::map< ResourceGroup, int > ResourceGroupIconsMap;
 
 /**
  * A resources browser is a window where you can choose a resource from
@@ -40,10 +40,10 @@ public:
 	void setDatabase( ResourceDatabase* database );
 
 	// Shows the resources from the given category.
-	void showGroup(ResourceGroup::Enum group);
+	void showGroup(ResourceGroup group);
 
 	// Selects the resources from the given group.
-	void selectGroup(ResourceGroup::Enum group);
+	void selectGroup(ResourceGroup group);
 
 	// Sets the focus to the search control.
 	void setFocusToSearch();
@@ -70,13 +70,13 @@ protected:
 	void onResourceDatabaseAdded(const ResourceMetadata&);
 
 	// Adds a resource group from a database.
-	void addDatabaseGroup(ResourceDatabase* db, ResourceGroup::Enum group);
+	void addDatabaseGroup(ResourceDatabase* db, ResourceGroup group);
 
 	// Adds a resource to the browser.
 	void addResource(const ResourceMetadata& metadata);
 
 	// Finds a resource group from a tree item id.
-	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group );
+	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup& group );
 
 	// Gets the image index for a given resource.
 	int getImageIndex( const ResourceMetadata& metadata );
@@ -92,7 +92,7 @@ protected:
 	wxImageList* m_resourceGroupsImages;
 	ResourceGroupIdsMap m_resourceGroupIds;
 	ResourceGroupIconsMap m_resourceGroupImagesMap;
-	ResourceGroup::Enum selectedGroup;
+	ResourceGroup selectedGroup;
 	ResourceDatabase* database;
 	wxImageList* m_resourceImages;
 	wxTreeItemId m_rootId;

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "EditorInputManager.h"
-#include "Window/Window.h"
+#include "Engine/Window/Window.h"
 
 class wxGLCanvas;
 class wxGLContext;

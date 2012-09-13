@@ -9,7 +9,7 @@
 #pragma once
 
 #include <wx/odcombo.h>
-#include "Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 
 NAMESPACE_EDITOR_BEGIN
 

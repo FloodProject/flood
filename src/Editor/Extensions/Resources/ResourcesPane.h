@@ -54,10 +54,10 @@ protected:
 	typedef std::map< Resource*, wxTreeItemId > ResourceIdsMap;
 	ResourceIdsMap resourceIds;
 
-	typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
+	typedef std::map< ResourceGroup, wxTreeItemId > ResourceGroupIdsMap;
 	ResourceGroupIdsMap resGroupIds;
 	
-	typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
+	typedef std::map< ResourceGroup, int > ResourceGroupIconsMap;
 	ResourceGroupIconsMap resGroupIcons;
 };
 

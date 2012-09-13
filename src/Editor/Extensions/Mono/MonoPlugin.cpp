@@ -13,8 +13,6 @@
 
 #ifdef ENABLE_PLUGIN_MONO
 
-#include "../interface/Bindings/Engine_wrap.cxx"
-
 #include <mono/metadata/mono-config.h>
 #include <mono/mini/jit.h>
 #include <mono/metadata/assembly.h>
@@ -74,8 +72,10 @@ void MonoPlugin::onPluginRegistered()
 {
 	// When Mono is loaded as a DLL, it needs to have the threading initialized early.
 	
-	Path dir = PathCombine(PathGetCurrentDir(), "Plugins");
+#if 0
+	Path dir = PathCombine(PathGetCurrentDir(), "");
 	mono_set_dirs(dir.c_str(), dir.c_str());
+#endif
 
 	// Load the default Mono configuration file.
 	mono_config_parse(nullptr);

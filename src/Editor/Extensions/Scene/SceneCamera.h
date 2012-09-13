@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Controllers/FirstPersonController.h"
+#include "Engine/Controllers/FirstPersonController.h"
 
 NAMESPACE_EDITOR_BEGIN
 

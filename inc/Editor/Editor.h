@@ -10,7 +10,7 @@
 
 #include <wx/keybinder.h>
 
-#include "Math/Vector.h"
+#include "Core/Math/Vector.h"
 #include "Core/PluginManager.h"
 #include "DocumentManager.h"
 

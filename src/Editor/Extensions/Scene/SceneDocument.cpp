@@ -19,7 +19,7 @@
 #include "EditorPlugin.h"
 #include "Extensions/Selection/SelectionPlugin.h"
 #include "Extensions/Gizmos/GizmoPlugin.h"
-#include "Physics/Physics.h"
+#include "Engine/Physics/Physics.h"
 
 #if defined(PLATFORM_WINDOWS) && defined(ENABLE_MEMORY_LEAK_DETECTOR)
 #include <vld.h>
@@ -88,7 +88,7 @@ bool SceneDocument::onDocumentOpen()
 
 	Path filePath = (String) fc.GetPath();
 
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, filePath);
 	Deallocate(serializer);
 
@@ -105,7 +105,7 @@ bool SceneDocument::onDocumentOpen()
 
 bool SceneDocument::onDocumentSave()
 {
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	bool res = SerializerSaveObjectToFile(serializer, path, scene.get());
 	Deallocate(serializer);
 

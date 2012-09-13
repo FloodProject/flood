@@ -165,7 +165,7 @@ bool ResourcesPlugin::loadCache()
 		return false;
 	}
 
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	resourceDatabase = (ResourceDatabase*) SerializerLoadObjectFromFile(serializer, path);
 	Deallocate(serializer);
 
@@ -181,7 +181,7 @@ bool ResourcesPlugin::saveCache()
 {
 	String path = CacheFolder + ThumbCache;
 	
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis(), 0 );
 	
 	if( !SerializerSaveObjectToFile(serializer, path, this) )
 	{

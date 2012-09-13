@@ -14,8 +14,8 @@
 #include "EditorIcons.h"
 #include "DocumentWindow.h"
 #include "UndoManager.h"
-#include "Scene/Projector.h"
-#include "Geometry/Cube.h"
+#include "Engine/Scene/Projector.h"
+#include "Engine/Geometry/Cube.h"
 
 NAMESPACE_EDITOR_BEGIN
 

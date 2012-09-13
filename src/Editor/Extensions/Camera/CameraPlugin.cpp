@@ -12,7 +12,7 @@
 #include "Editor.h"
 #include "DocumentWindow.h"
 #include "EventManager.h"
-#include "Scene/Scene.h"
+#include "Engine/Scene/Scene.h"
 
 #ifdef ALL_PLUGINS
 

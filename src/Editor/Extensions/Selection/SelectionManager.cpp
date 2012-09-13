@@ -14,8 +14,8 @@
 #include "UndoManager.h"
 #include "EventManager.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
 
 NAMESPACE_EDITOR_BEGIN
 
