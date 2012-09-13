@@ -70,7 +70,7 @@ public:
 	Document* getDocument() const;
 
 	// Gets/sets the drag and drop coords.
-	ACESSOR(DropCoords, Vector2, dropCoords)
+	ACCESSOR(DropCoords, Vector2, dropCoords)
 
 	// Gets a document from a page.
 	Document* getDocumentFromPage(int selection);

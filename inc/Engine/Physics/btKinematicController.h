@@ -86,7 +86,7 @@ public:
 	SETTER(MaxJumpHeight, btScalar, m_maxJumpHeight)
 	
 	// Gets/sets the gravity of the controller.
-	ACESSOR(Gravity, btScalar, m_gravity)
+	ACCESSOR(Gravity, btScalar, m_gravity)
 	
 	void setMaxSlope(btScalar slopeRadians);
 	btScalar getMaxSlope() const;

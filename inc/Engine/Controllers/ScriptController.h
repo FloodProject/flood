@@ -14,7 +14,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class State;
+class ScriptState;
 struct KeyEvent;
 struct MouseButtonEvent;
 
@@ -54,7 +54,7 @@ protected:
 	ScriptHandle script;
 
 	// Scripting state.
-	State* state;
+	ScriptState* state;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Script );

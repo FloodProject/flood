@@ -37,19 +37,19 @@ public:
 	Sound();
 
 	// Gets/sets the audio sample frequency.
-	ACESSOR(Frequency, int32, frequency)
+	ACCESSOR(Frequency, int32, frequency)
 
 	// Gets/sets the audio channels.
-	ACESSOR(Channels, int32, channels)
+	ACCESSOR(Channels, int32, channels)
 
 	// Gets/sets the audio sample size.
-	ACESSOR(Size, int32, size)
+	ACCESSOR(Size, int32, size)
 
 	// Gets/sets the audio streaming flag.
-	ACESSOR(Streamed, bool, streamed)
+	ACCESSOR(Streamed, bool, streamed)
 
 	// Gets/sets the buffer containing the data.
-	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
+	ACCESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Audio)

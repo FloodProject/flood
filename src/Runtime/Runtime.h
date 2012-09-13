@@ -10,7 +10,7 @@
 #include "Runtime/API.h"
 #include "Runtime/Mono.h"
 
-FLUSH_NAMESPACE_BEGIN
+NAMESPACE_RUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -23,19 +23,20 @@ FLUSH_NAMESPACE_BEGIN
  * registering all the core services available to the scripting layer.
  */
 
-class Runtime
+class API_RUNTIME Runtime
 {
 public:
 
 	Runtime();
+	virtual ~Runtime() {}
 
 	// Initialize the runtime.
-	void onInit();
-	void onCleanup();
+	void init();
+	void shutdown();
 
 	MonoRuntime monoRuntime;
 };
 
 //-----------------------------------//
 
-FLUSH_NAMESPACE_END
+NAMESPACE_RUNTIME_END

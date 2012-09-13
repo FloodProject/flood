@@ -215,7 +215,7 @@ void EditorFrame::enablePlugins()
 void EditorFrame::createEngine()
 {
 	engine = AllocateThis(Engine);
-	engine->init(false);
+	engine->init();
 
 	// Setup the input manager.
 	input = AllocateThis(InputManager);

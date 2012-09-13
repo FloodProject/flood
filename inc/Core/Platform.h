@@ -219,7 +219,7 @@ static_assert(sizeof(int64) == 8, "");
 #define SETTER(name, type, var) \
 	void set##name(type v) { var = v; }
 
-#define ACESSOR(name, type, var) \
+#define ACCESSOR(name, type, var) \
 	GETTER(name, type, var) \
 	SETTER(name, type, var)
 

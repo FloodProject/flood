@@ -54,7 +54,7 @@ public:
 	void makeCurrent() OVERRIDE {}
 
 	// Shows/hides the window.
-	virtual void show( bool hide = false ) {}
+	virtual void show( bool visible = true ) {}
 
 	// Handles the event loop of the window.
 	virtual bool pumpEvents() { return true; }

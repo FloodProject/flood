@@ -50,7 +50,7 @@ public:
 	void switchToDefaultCamera();
 
 	// Gets/sets the camera of the window.
-	ACESSOR(Camera, const CameraPtr&, camera)
+	ACCESSOR(Camera, const CameraPtr&, camera)
 
 	// Gets the main camera of the window.
 	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)

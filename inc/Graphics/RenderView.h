@@ -33,19 +33,19 @@ public:
 	~RenderView();
 
 	// Gets/sets the render target of the view.
-	ACESSOR(RenderTarget, RenderTarget*, target)
+	ACCESSOR(RenderTarget, RenderTarget*, target)
 
 	// Gets/sets the origin of the view.
-	ACESSOR(Origin, Vector2i, origin)
+	ACCESSOR(Origin, Vector2i, origin)
 
 	// Gets/sets the size of the view.
-	ACESSOR(Size, Vector2i, size)
+	ACCESSOR(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the view.
-	ACESSOR(ClearColor, const Color&, clearColor)
+	ACCESSOR(ClearColor, const Color&, clearColor)
 
 	// Gets/sets the depth (Z-order) priority of the view.
-	ACESSOR(DepthPriority, int, depthPriority)
+	ACCESSOR(DepthPriority, int, depthPriority)
 
 	// Gets the aspect ratio of the view.
 	float getAspectRatio() const;

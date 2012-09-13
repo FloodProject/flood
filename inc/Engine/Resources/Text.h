@@ -27,7 +27,7 @@ class API_ENGINE Text : public Resource
 public:
 
 	// Gets the text.
-	ACESSOR(Text, const String&, text)
+	ACCESSOR(Text, const String&, text)
 
 	virtual void parse() {}
 

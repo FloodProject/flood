@@ -10,7 +10,7 @@
 #include "Runtime/API.h"
 #include "Runtime/Runtime.h"
 
-FLUSH_NAMESPACE_BEGIN
+NAMESPACE_RUNTIME_BEGIN
 
 //-----------------------------------//
 
@@ -21,7 +21,7 @@ Runtime::Runtime()
 
 //-----------------------------------//
 
-void Runtime::onInit()
+void Runtime::init()
 {
 	// Initialize the Mono scripting runtime.
 	monoRuntime.initialize();
@@ -29,7 +29,7 @@ void Runtime::onInit()
 
 //-----------------------------------//
 
-void Runtime::onCleanup()
+void Runtime::shutdown()
 {
 	// Cleanup the Mono scripting runtime.
 	monoRuntime.cleanup();
@@ -37,4 +37,4 @@ void Runtime::onCleanup()
 
 //-----------------------------------//
 
-FLUSH_NAMESPACE_END
+NAMESPACE_RUNTIME_END

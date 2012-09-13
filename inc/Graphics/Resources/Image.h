@@ -60,16 +60,16 @@ public:
 	Image(uint32 width, uint32 height, PixelFormat format);
 
 	// Gets/sets the width of the image.
-	ACESSOR(Width, uint32, width)
+	ACCESSOR(Width, uint32, width)
 	
 	// Gets/sets the height of the image.
-	ACESSOR(Height, uint32, height)
+	ACCESSOR(Height, uint32, height)
 
 	// Gets/sets the pixel format of the image.
-	ACESSOR(PixelFormat, PixelFormat, format)
+	ACCESSOR(PixelFormat, PixelFormat, format)
 
 	// Gets/sets the buffer containing the image data.
-	ACESSOR(Buffer, const std::vector<byte>&, buffer)
+	ACCESSOR(Buffer, const std::vector<byte>&, buffer)
 
 	// Returns if the image is in a compressed format.
 	bool isCompressed() const;

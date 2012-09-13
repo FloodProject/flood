@@ -54,10 +54,10 @@ public:
 	GETTER(BulletBody, btRigidBody*, body)
 
 	// Gets/sets the mass of the physics body.
-	ACESSOR(Mass, float, mass)
+	ACCESSOR(Mass, float, mass)
 
 	// Gets/sets the mass of the physics body.
-	ACESSOR(Friction, float, friction)
+	ACCESSOR(Friction, float, friction)
 
 protected:
 

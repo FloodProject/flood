@@ -30,7 +30,7 @@ public:
 	ThirdPersonController();
 
 	// Gets/sets the follow node.
-	ACESSOR(FollowEntity, EntityPtr, followEntity)
+	ACCESSOR(FollowEntity, EntityPtr, followEntity)
 
 	// Updates this component.
 	virtual void _update( float delta );
