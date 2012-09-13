@@ -46,7 +46,7 @@ public:
 	~Engine();
 
 	// Initialize the engine subsystems.
-	void init( bool createWindow = true );
+	void init();
 
 	// Updates the main subsystems.
 	void update();

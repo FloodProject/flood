@@ -14,8 +14,6 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class Engine;
-
 /**
  * Scripting context that can be used to execute scripts. 
  * Currently this represents a Lua interpreter state. 

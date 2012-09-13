@@ -20,7 +20,7 @@ NAMESPACE_EXTERN_BEGIN
 
 API_CORE float TimerGetCurrentTimeMs();
 
-struct Timer
+struct API_CORE Timer
 {
 	Timer();
 	int64 time;
