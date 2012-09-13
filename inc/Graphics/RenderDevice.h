@@ -34,14 +34,11 @@ class Texture;
 
 REFLECT_DECLARE_ENUM(RenderPipeline)
 
-struct RenderPipeline
+enum struct RenderPipeline
 {
-	enum Enum
-	{
-		Fixed,
-		ShaderForward,
-		ShaderDeferred
-	};
+	Fixed,
+	ShaderForward,
+	ShaderDeferred
 };
 
 //-----------------------------------//
@@ -85,7 +82,7 @@ public:
 	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.
-	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
+	ACESSOR(Pipeline, RenderPipeline, pipeline)
 
 	// Gets the current rendering backend.
 	ACESSOR(Backend, RenderBackend*, renderBackend)
@@ -128,7 +125,7 @@ protected:
 	bool unbindBuffers(RenderBatch*);
 
 	// Rendering pipeline.
-	RenderPipeline::Enum pipeline;
+	RenderPipeline pipeline;
 
 	// Active render target
 	RenderTarget* activeTarget;

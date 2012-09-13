@@ -136,7 +136,7 @@ void EditorFrame::OnPanelsMenuUpdate(wxUpdateUIEvent& event)
 
 void EditorFrame::OnSettingsRender(wxCommandEvent& event)
 {
-	RenderPipeline::Enum pipeline = event.IsChecked() ?
+	RenderPipeline pipeline = event.IsChecked() ?
 		RenderPipeline::Fixed : RenderPipeline::ShaderForward;
 
 	RenderDevice* render = GetEngine()->getRenderDevice();

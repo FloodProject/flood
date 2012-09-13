@@ -390,7 +390,7 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 
 bool Model::isHardwareSkinned()
 {
-	RenderPipeline::Enum pipeline = GetRenderDevice()->getPipeline();
+	RenderPipeline pipeline = GetRenderDevice()->getPipeline();
 	
 	bool isFixed = pipeline == RenderPipeline::Fixed;
 	bool isCPU = skinningMode == SkinningMode::CPU;
