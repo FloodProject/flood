@@ -31,7 +31,7 @@ enum class ResourceStatus
 	Loaded
 };
 
-REFLECT_DECLARE_ENUM(ResourceStatus)
+API_RESOURCE REFLECT_DECLARE_ENUM(ResourceStatus)
 
 //-----------------------------------//
 
@@ -55,7 +55,7 @@ enum class ResourceGroup
 	Particles,
 };
 
-REFLECT_DECLARE_ENUM(ResourceGroup)
+API_RESOURCE REFLECT_DECLARE_ENUM(ResourceGroup)
 
 //-----------------------------------//
 
@@ -69,7 +69,7 @@ REFLECT_DECLARE_ENUM(ResourceGroup)
  * resource from a network connection).
  */
 
-REFLECT_DECLARE_CLASS(Resource)
+API_RESOURCE REFLECT_DECLARE_CLASS(Resource)
 
 struct ResourceStream;
 
@@ -108,8 +108,8 @@ protected:
 	Resource();
 };
 
-ReferenceCounted* ResourceHandleFind(HandleId id);
-void  ResourceHandleDestroy(HandleId id);
+API_RESOURCE ReferenceCounted* ResourceHandleFind(HandleId id);
+API_RESOURCE void  ResourceHandleDestroy(HandleId id);
 
 #define RESOURCE_HANDLE_TYPE(T) \
 	Handle<T, ResourceHandleFind, ResourceHandleDestroy>
@@ -119,7 +119,7 @@ void  ResourceHandleDestroy(HandleId id);
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE(Resource);
 
-ResourceHandle ResourceHandleCreate(Resource*);
+API_RESOURCE ResourceHandle ResourceHandleCreate(Resource*);
 
 //-----------------------------------//
 

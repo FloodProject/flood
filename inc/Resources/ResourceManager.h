@@ -49,7 +49,7 @@ API_RESOURCE void ResourcesInitialize();
 API_RESOURCE void ResourcesDeinitialize();
 
 // Gets the resource manager instance.
-ResourceManager* GetResourceManager();
+API_RESOURCE ResourceManager* GetResourceManager();
 
 typedef std::map< String, ResourceHandle > ResourceMap;
 typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;

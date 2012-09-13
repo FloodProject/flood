@@ -36,6 +36,6 @@
 
 NAMESPACE_RESOURCES_BEGIN
 
-Allocator* GetResourcesAllocator();
+API_RESOURCE Allocator* GetResourcesAllocator();
 
 NAMESPACE_RESOURCES_END

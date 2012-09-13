@@ -11,6 +11,10 @@
 #include "Resources/ResourceLoader.h"
 #include "Core/Log.h"
 
+#ifdef API_RESOURCE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif
+
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
