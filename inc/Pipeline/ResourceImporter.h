@@ -20,7 +20,7 @@ NAMESPACE_PIPELINE_BEGIN
  * assets that are processed and not loaded at runtime.
  */
 
-REFLECT_DECLARE_CLASS(ResourceImporter)
+API_PIPELINE REFLECT_DECLARE_CLASS(ResourceImporter)
 
 class API_PIPELINE NO_VTABLE ResourceImporter : public ResourceLoader
 {

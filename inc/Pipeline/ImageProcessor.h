@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ResourceProcessor.h"
-#include "Engine/Resources/Image.h"
+#include "Graphics/Resources/Image.h"
 #include <nvtt/nvtt.h>
 
 NAMESPACE_PIPELINE_BEGIN
@@ -26,7 +26,7 @@ struct API_PIPELINE MipmapFilter
 	};
 };
 
-REFLECT_DECLARE_ENUM(MipmapFilter)
+API_PIPELINE REFLECT_DECLARE_ENUM(MipmapFilter)
 
 //-----------------------------------//
 
@@ -41,7 +41,7 @@ struct API_PIPELINE CompressionQuality
 	};
 };
 
-REFLECT_DECLARE_ENUM(CompressionQuality)
+API_PIPELINE REFLECT_DECLARE_ENUM(CompressionQuality)
 
 //-----------------------------------//
 
@@ -59,13 +59,13 @@ struct API_PIPELINE CompressionFormat
 	};
 };
 
-REFLECT_DECLARE_ENUM(CompressionFormat)
+API_PIPELINE REFLECT_DECLARE_ENUM(CompressionFormat)
 
 /**
  * Resource processors handle the processing of resource data.
  */
 
-REFLECT_DECLARE_CLASS(ImageProcessor)
+API_PIPELINE REFLECT_DECLARE_CLASS(ImageProcessor)
 
 class API_PIPELINE ImageProcessor : public ResourceProcessor
 {

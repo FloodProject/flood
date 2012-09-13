@@ -21,9 +21,9 @@ NAMESPACE_RESOURCES_BEGIN
  * Loads a given Milkshape3D mesh format.
  */
 
-REFLECT_DECLARE_CLASS(ImporterMilkshape)
+API_PIPELINE REFLECT_DECLARE_CLASS(ImporterMilkshape)
 
-class ImporterMilkshape : public ResourceImporter
+class API_PIPELINE ImporterMilkshape : public ResourceImporter
 {
 	REFLECT_DECLARE_OBJECT(ImporterMilkshape)
 

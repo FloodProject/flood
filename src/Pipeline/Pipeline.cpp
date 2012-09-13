@@ -18,6 +18,10 @@
 #include "Pipeline/ImporterMilkshape.h"
 #include "Pipeline/ImporterFBX.h"
 
+#ifdef API_PIPELINE_DLL_EXPORT
+FL_INSTANTIATE_TEMPLATES()
+#endif
+
 //-----------------------------------//
 
 static void ReferenceProcessors()

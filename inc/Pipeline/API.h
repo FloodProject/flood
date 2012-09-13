@@ -31,7 +31,14 @@
 #define NAMESPACE_PIPELINE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_PIPELINE_END NAMESPACE_CORE_END
 
-void PipelineInit();
-void PipelineCleanup();
-
 #include "Core/Memory.h"
+
+NAMESPACE_PIPELINE_BEGIN
+
+// Initializes the default resource processors.
+API_PIPELINE void PipelineInit();
+
+// Cleans the resource processors.
+API_PIPELINE void PipelineCleanup();
+
+NAMESPACE_PIPELINE_END

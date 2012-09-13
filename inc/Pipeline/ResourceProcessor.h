@@ -23,7 +23,7 @@ typedef std::map<Class*, ResourceProcessor*> ResourceProcessorMap;
  * Resource processors handle the pre-processing of resource data.
  */
 
-REFLECT_DECLARE_CLASS(ResourceProcessor)
+API_PIPELINE REFLECT_DECLARE_CLASS(ResourceProcessor)
 
 class API_PIPELINE NO_VTABLE ResourceProcessor : public Extension
 {
@@ -44,16 +44,8 @@ protected:
 	ResourceProcessor();
 };
 
-NAMESPACE_PIPELINE_BEGIN
-
-// Initializes the default resource processors.
-void PipelineInit();
-
-// Cleans the resource processors.
-void PipelineCleanup();
-
 // Finds a resource processor for a given resource type.
-ResourceProcessor* PipelineFindProcessor(Class* type);
+API_PIPELINE ResourceProcessor* PipelineFindProcessor(Class* type);
 
 // Maps the resource processors to the resource types.
 extern std::vector<ResourceProcessor*> resourceProcessors;

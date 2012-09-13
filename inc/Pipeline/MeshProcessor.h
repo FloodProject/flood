@@ -21,7 +21,7 @@ NAMESPACE_PIPELINE_BEGIN
  * Resource processors handle the processing of resource data.
  */
 
-REFLECT_DECLARE_CLASS(MeshProcessor)
+API_PIPELINE REFLECT_DECLARE_CLASS(MeshProcessor)
 
 class API_PIPELINE MeshProcessor : public ResourceProcessor
 {

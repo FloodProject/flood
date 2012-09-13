@@ -12,7 +12,7 @@
 #include "Pipeline/Milkshape3D.h"
 
 #include "Engine/Resources/Skeleton.h"
-#include "Engine/Geometry/GeometryBuffer.h"
+#include "Graphics/GeometryBuffer.h"
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Helpers.h"

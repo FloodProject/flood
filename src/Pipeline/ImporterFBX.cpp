@@ -481,7 +481,7 @@ bool ImporterFBX::buildMesh(KFbxMesh* fbxMesh, Mesh* mesh)
 
 	for( uint8 i = 0; i < uvSetsCount; ++i )
 	{
-		VertexAttribute::Enum attribute = (VertexAttribute::Enum)((int)VertexAttribute::TexCoord0 + i);
+		VertexAttribute attribute = (VertexAttribute)((int)VertexAttribute::TexCoord0 + i);
 		VertexElementP uv = { attribute, VertexDataType::Float, 2 };
 		vertexDecls.add(uv);
 	}
