@@ -12,16 +12,16 @@
 
 #ifdef ENABLE_INPUT_SFML
 
-#include "Input/InputManager.h"
-#include "Input/Keyboard.h"
+#include "Engine/Input/InputManager.h"
+#include "Engine/Input/Keyboard.h"
 
 #include <SFML/Window.hpp>
 
-NAMESPACE_ENGINE_BEGIN
+NAMESPACE_GAMERUNTIME_BEGIN
 
 //-----------------------------------//
 
-class SFML_Input : public InputManager
+class API_GAMERUNTIME SFML_Input : public InputManager
 {
 public:
 
@@ -36,6 +36,6 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_ENGINE_END
+NAMESPACE_GAMERUNTIME_END
 
 #endif

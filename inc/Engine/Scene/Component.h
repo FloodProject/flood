@@ -65,7 +65,7 @@ public:
 	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags );
 
 	// Gets/sets if the debug.renderable inherits the transform.
-	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
+	ACCESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
 
 public:
 

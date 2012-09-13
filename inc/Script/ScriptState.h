@@ -14,24 +14,22 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class Engine;
-
 /**
  * Scripting context that can be used to execute scripts. 
  * Currently this represents a Lua interpreter state. 
  */
 
-class API_ENGINE State
+class API_ENGINE ScriptState
 {
-	DECLARE_UNCOPYABLE(State)
+	DECLARE_UNCOPYABLE(ScriptState)
 
 public:
 
 	// Constructs a new scripting VM.
-	State();
+	ScriptState();
 	
 	// Destructs this scripting VM.
-	~State();
+	~ScriptState();
 
 	// Loads a script resource.
 	bool load( Script* script );

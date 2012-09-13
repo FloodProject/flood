@@ -19,17 +19,17 @@
 // Runtime APIs
 //---------------------------------------------------------------------//
 
-#if defined(FLUSH_API_DLL) && defined(FLUSH_API_DLL_EXPORT)
-	#define FLUSH_API API_EXPORT
-#elif defined(FLUSH_API_DLL)
-	#define FLUSH_API API_IMPORT
+#if defined(API_RUNTIME_DLL) && defined(API_RUNTIME_DLL_EXPORT)
+	#define API_RUNTIME API_EXPORT
+#elif defined(API_RUNTIME_DLL)
+	#define API_RUNTIME API_IMPORT
 #else
-	#define FLUSH_API
+	#define API_RUNTIME
 #endif
 
-#define FLUSH_NAMESPACE_BEGIN NAMESPACE_CORE_BEGIN
-#define FLUSH_NAMESPACE_END   NAMESPACE_CORE_END
+#define NAMESPACE_RUNTIME_BEGIN NAMESPACE_CORE_BEGIN
+#define NAMESPACE_RUNTIME_END   NAMESPACE_CORE_END
 
-FLUSH_API void RuntimeInit();
-FLUSH_API void RuntimeCleanup();
+API_RUNTIME void RuntimeInit();
+API_RUNTIME void RuntimeCleanup();
 

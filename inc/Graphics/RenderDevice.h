@@ -81,10 +81,10 @@ public:
 	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.
-	ACESSOR(Pipeline, RenderPipeline, pipeline)
+	ACCESSOR(Pipeline, RenderPipeline, pipeline)
 
 	// Gets the current rendering backend.
-	ACESSOR(Backend, RenderBackend*, renderBackend)
+	ACCESSOR(Backend, RenderBackend*, renderBackend)
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
@@ -94,7 +94,7 @@ public:
 	void setRenderTarget(RenderTarget* target);
 
 	// Gets/sets the active context.
-	ACESSOR(ActiveContext, RenderContext*, activeContext)
+	ACCESSOR(ActiveContext, RenderContext*, activeContext)
 
 	// Gets the active view.
 	GETTER(ActiveView, RenderView*, activeView)

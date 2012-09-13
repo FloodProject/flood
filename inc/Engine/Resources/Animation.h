@@ -65,7 +65,7 @@ public:
 	GETTER(KeyFrames, const KeyFramesMap&, keyFrames)
 
 	// Gets/sets the name of the animation.
-	ACESSOR(Name, const String&, name)
+	ACCESSOR(Name, const String&, name)
 
 protected:
 

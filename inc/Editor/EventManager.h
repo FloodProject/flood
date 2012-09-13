@@ -89,10 +89,10 @@ public:
 	void onRedoOperation(const UndoOperationPtr&);
 
 	// Gets the current tool.
-	ACESSOR(CurrentTool, ToolExtension*, currentTool)
+	ACCESSOR(CurrentTool, ToolExtension*, currentTool)
 
 	// Gets/sets the current plugin.
-	ACESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
+	ACCESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
 
 	// Gets the current tool id.
 	int getCurrentToolId();

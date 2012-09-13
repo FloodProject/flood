@@ -88,7 +88,7 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 
 //-----------------------------------//
 
-void Engine::init( bool createWindow )
+void Engine::init()
 {
 	// Sets up the main logger.
 	setupLogger();

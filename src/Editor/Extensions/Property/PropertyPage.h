@@ -56,7 +56,7 @@ public:
 	void resetObject(const Object* object);
 
 	// Gets/sets the current object.
-	ACESSOR(Object, Object*, currentObject)
+	ACCESSOR(Object, Object*, currentObject)
 
 	// Creates a new property grid.
 	PropertyGrid* createPropertyGrid(wxWindow* parent);
