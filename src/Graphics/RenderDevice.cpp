@@ -9,7 +9,6 @@
 
 #ifdef ENABLE_RENDERER_OPENGL
 
-#include "Graphics/Render.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderBackend.h"
@@ -38,31 +37,6 @@ REFLECT_ENUM_END()
 
 static RenderDevice* gs_RenderDevice = nullptr;
 RenderDevice* GetRenderDevice() { return gs_RenderDevice; }
-
-static Allocator* gs_RenderAllocator = nullptr;
-Allocator* GetRenderAllocator() { return gs_RenderAllocator; }
-
-static Allocator* gs_FrameAllocator = nullptr;
-Allocator* GetFrameAllocator() { return gs_FrameAllocator; }
-
-#define MEGABYTE (1 << 20)
-
-void RenderInitialize()
-{
-	gs_RenderAllocator = AllocatorCreateHeap(AllocatorGetHeap());
-	AllocatorSetGroup(gs_RenderAllocator, "Render");
-
-	gs_FrameAllocator = AllocatorCreateBump(gs_RenderAllocator, 1*MEGABYTE);
-	AllocatorSetGroup(gs_FrameAllocator, "Frame");
-}
-
-void RenderDeinitialize()
-{
-	AllocatorDestroy(gs_FrameAllocator);
-	AllocatorDestroy(gs_RenderAllocator);
-}
-
-//-----------------------------------//
 
 RenderDevice::RenderDevice()
 	: activeContext(nullptr)

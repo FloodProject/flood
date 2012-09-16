@@ -28,6 +28,12 @@
 
 #define AllocateGraphics AllocateHeap
 
+API_GRAPHICS Allocator* GetRenderAllocator();
+API_GRAPHICS Allocator* GetFrameAllocator();
+
+API_GRAPHICS void GraphicsInitialize();
+API_GRAPHICS void GraphicsDeinitialize();
+
 //---------------------------------------------------------------------//
 // API Namespaces
 //---------------------------------------------------------------------//

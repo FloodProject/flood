@@ -14,7 +14,6 @@
 #include "Resources/ResourceLoader.h"
 #include "Graphics/Texture.h"
 #include "Graphics/RenderDevice.h"
-#include "Graphics/Render.h"
 #include "Engine/Input/InputManager.h"
 #include "Engine/Audio/Device.h"
 #include "Engine/Paging/PageManager.h"
@@ -68,7 +67,7 @@ Engine::~Engine()
 	Deallocate(resourceManager);
 
 	InputDeinitialize();
-	RenderDeinitialize();
+	GraphicsDeinitialize();
 	ResourcesDeinitialize();
 	NetworkDeinitialize();
 
@@ -99,7 +98,7 @@ void Engine::init()
 	NetworkInitialize();
 	ResourcesInitialize();
 	InputInitialize();
-	RenderInitialize();
+	GraphicsInitialize();
 
 	// Creates the resource manager.
 	resourceManager = AllocateThis(ResourceManager);

@@ -14,7 +14,6 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix4x3.h"
 
-#include "Graphics/Render.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/RenderQueue.h"
 
