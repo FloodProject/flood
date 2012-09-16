@@ -87,7 +87,7 @@ public:
 
 RenderBackend* RenderCreateBackendGLES2()
 {
-	return AllocateRender(RenderBackendGLES2);
+	return AllocateGraphics(RenderBackendGLES2);
 }
 
 //-----------------------------------//
@@ -323,7 +323,7 @@ void RenderBackendGLES2::setClearColor(Color color)
 
 VertexBuffer* RenderBackendGLES2::createVertexBuffer()
 {
-	VertexBuffer* vb = AllocateRender(VertexBuffer);
+	VertexBuffer* vb = AllocateGraphics(VertexBuffer);
 	
 	glGenBuffers( 1, (GLuint*) &vb->id );
 	CheckLastErrorGL("Error generating a new buffer");
@@ -390,7 +390,7 @@ void RenderBackendGLES2::setupVertexBuffer(VertexBuffer* vb)
 
 IndexBuffer* RenderBackendGLES2::createIndexBuffer()
 {
-	IndexBuffer* ib = AllocateRender(IndexBuffer);
+	IndexBuffer* ib = AllocateGraphics(IndexBuffer);
 	
 	glGenBuffers( 1, (GLuint*) &ib->id );
 	CheckLastErrorGL("Error generating a new index buffer");
@@ -450,7 +450,7 @@ void RenderBackendGLES2::buildIndexBuffer(IndexBuffer* ib)
 
 RenderBuffer* RenderBackendGLES2::createRenderBuffer(const Settings& settings)
 {
-	RenderBuffer* renderBuffer = AllocateRender(GL_RenderBuffer, settings);
+	RenderBuffer* renderBuffer = AllocateGraphics(GL_RenderBuffer, settings);
 	return renderBuffer;
 }
 
@@ -458,7 +458,7 @@ RenderBuffer* RenderBackendGLES2::createRenderBuffer(const Settings& settings)
 
 Texture* RenderBackendGLES2::createTexture()
 {
-	Texture* tex = AllocateRender(Texture);
+	Texture* tex = AllocateGraphics(Texture);
 	tex->target = TextureTarget::Target2D;
 
 	glGenTextures( 1, (GLuint*) &tex->id );
@@ -617,7 +617,7 @@ Image* RenderBackendGLES2::readTexture(Texture* tex)
 
 ShaderProgram* RenderBackendGLES2::createProgram()
 {
-	ShaderProgram* program = AllocateRender(GLSL_ShaderProgram);
+	ShaderProgram* program = AllocateGraphics(GLSL_ShaderProgram);
 	return program;
 }
 
@@ -625,7 +625,7 @@ ShaderProgram* RenderBackendGLES2::createProgram()
 
 ShaderProgram* RenderBackendGLES2::createShader()
 {
-	ShaderProgram* shader = AllocateRender(GLSL_ShaderProgram);
+	ShaderProgram* shader = AllocateGraphics(GLSL_ShaderProgram);
 	return shader;
 }
 

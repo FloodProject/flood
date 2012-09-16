@@ -26,7 +26,7 @@
 	#define API_GRAPHICS
 #endif
 
-#define AllocateRender AllocateHeap
+#define AllocateGraphics AllocateHeap
 
 //---------------------------------------------------------------------//
 // API Namespaces

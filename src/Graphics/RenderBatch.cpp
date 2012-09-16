@@ -34,7 +34,7 @@ RenderBatch::RenderBatch()
 	, stage( RenderLayer::Normal )
 	, priority(0)
 {
-	ub = AllocateRender(UniformBuffer);
+	ub = AllocateGraphics(UniformBuffer);
 }
 
 //-----------------------------------//
