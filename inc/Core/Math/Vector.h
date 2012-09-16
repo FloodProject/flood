@@ -252,5 +252,3 @@ struct API_CORE Vector2i
 //-----------------------------------//
 
 NAMESPACE_CORE_END
-
-
