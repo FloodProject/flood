@@ -14,22 +14,17 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct API_CORE PlaneIntersection
+enum struct PlaneIntersection
 {
-	enum Enum
-	{
-		OnPlane,
-		NegativeSide,
-		PositiveSide
-	};
+	OnPlane,
+	NegativeSide,
+	PositiveSide
 };
 
 //-----------------------------------//
 
-class API_CORE Plane
+struct API_CORE Plane
 {
-public:
-
 	Plane();
 
 	// Build a plane based on normal to plane and a point on the plane.
@@ -62,8 +57,6 @@ public:
 	// Returns if the plane intersects with the ray and also
 	// the distance from the ray origin to the plane.
 	bool intersects( const Ray& ray, float& distance ) const;
-
-public:
 
 	Vector3 normal;
 	float offset;

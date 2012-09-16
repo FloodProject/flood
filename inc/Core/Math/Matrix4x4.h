@@ -23,10 +23,8 @@ class Matrix4x3;
  * case of projections a full 4x4 matrix is needed.
  */
 
-class API_CORE Matrix4x4
+struct API_CORE Matrix4x4
 {
-public:
-
 	Matrix4x4();
 	Matrix4x4(const Matrix4x3&);
 
@@ -61,8 +59,6 @@ public:
 
 	// Identity matrix.
 	static const Matrix4x4 Identity;
-
-public:
 
 	float m11, m12, m13, m14;
 	float m21, m22, m23, m24;

@@ -111,7 +111,7 @@ struct API_CORE Vector3 : public Vector3P
 
 //-----------------------------------//
 
-struct Vector4
+struct API_CORE Vector4
 {
 	float x, y, z, w;
 
@@ -151,11 +151,11 @@ struct Vector4
 	// Zeroes the vector.
 	void zero() { x = y = z = w = 0.0f; }
 
-	static API_CORE const Vector4 Zero;
-	static API_CORE const Vector4 UnitX;
-	static API_CORE const Vector4 UnitY;
-	static API_CORE const Vector4 UnitZ;
-	static API_CORE const Vector4 UnitW;
+	static const Vector4 Zero;
+	static const Vector4 UnitX;
+	static const Vector4 UnitY;
+	static const Vector4 UnitZ;
+	static const Vector4 UnitW;
 };
 
 //-----------------------------------//
@@ -209,7 +209,7 @@ struct API_CORE Vector2 : public Vector2P
 
 //-----------------------------------//
 
-struct Vector2i
+struct API_CORE Vector2i
 {
 	int32 x, y;
 

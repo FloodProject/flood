@@ -15,10 +15,8 @@ NAMESPACE_CORE_BEGIN
  * Generates coherent value noise (smooth pseudorandom noise).
  */
 
-class API_CORE Noise
+struct API_CORE Noise
 {
-public:
-
 	Noise( int seed = 329181337 );
 
 	// Generates an array of noise.

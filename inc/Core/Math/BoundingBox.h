@@ -19,10 +19,8 @@ NAMESPACE_CORE_BEGIN
  * Axis-aligned Bounding Box.
  */
 
-class API_CORE BoundingBox
+struct API_CORE BoundingBox
 {
-public:
-
 	BoundingBox();
 	BoundingBox( const Vector3& min, const Vector3& max );
 	BoundingBox( const BoundingBox& box );
@@ -53,8 +51,6 @@ public:
 	
 	// Transforms the bounding box by a matrix.
 	BoundingBox transform( const Matrix4x3& ) const;
-
-public:
 
 	Vector3 min;
 	Vector3 max;

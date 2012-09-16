@@ -20,10 +20,8 @@ NAMESPACE_CORE_BEGIN
  * Bounding Sphere.
  */
 
-class API_CORE BoundingSphere
+struct API_CORE BoundingSphere
 {
-public:
-
 	BoundingSphere();
 	BoundingSphere( const Vector3& center, float radius );
 	BoundingSphere( const BoundingSphere& bs );
@@ -41,8 +39,6 @@ public:
 	// Intersection with a point.
 	bool intersects( const Vector3& pt ) const;
 	
-public:
-
 	Vector3 center;
 	float radius;
 };
