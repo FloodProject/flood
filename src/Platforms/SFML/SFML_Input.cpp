@@ -156,7 +156,7 @@ static Keys ConvertKeyEnum(sf::Keyboard::Key keycode)
 
 	case sf::Keyboard::Space:  return Keys::Space;
 	case sf::Keyboard::Return: return Keys::Return;
-	case sf::Keyboard::Back:   return Keys::Back;
+	case sf::Keyboard::BackSpace:  return Keys::Back;
 	case sf::Keyboard::Tab:    return Keys::Tab;
 
 	case sf::Keyboard::PageUp:   return Keys::PageUp;
