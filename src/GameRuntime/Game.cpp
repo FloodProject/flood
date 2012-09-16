@@ -52,7 +52,7 @@ Game::~Game()
 
 void Game::init()
 {
-	//Runtime::init();
+	Runtime::init();
 
 	// initialize global engine instance
 	engine = AllocateThis(Engine);
@@ -61,7 +61,7 @@ void Game::init()
 	// make up some window settings & allocate
 	// TODO: move this to command line arguments or config file
 	WindowSettings ws(800, 600, "Flood", false);
-	SFML_Window* sfWindow = Allocate(AllocatorGetHeap(), SFML_Window, ws);
+	SFML_Window* sfWindow = AllocateHeap(SFML_Window, ws);
 
 	assert(sfWindow != nullptr);
 
@@ -113,7 +113,7 @@ void Game::frame()
 
 		// next tick time
 		tick += maxDelta;
-	} while( TimerGetCurrentTimeMs() > tick);
+	} while(TimerGetCurrentTimeMs() > tick);
 
 	// user render
 	render();
