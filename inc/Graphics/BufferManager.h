@@ -33,7 +33,7 @@ class GeometryBuffer;
  * Manages a set of buffers.
  */
 
-class API_RENDER BufferManager
+class API_GRAPHICS BufferManager
 {
 	DECLARE_UNCOPYABLE(BufferManager)
 

@@ -40,7 +40,7 @@ enum struct RenderBufferType : uint8
  * render into multiple buffers at the same time.
  */
 
-class API_RENDER RenderBuffer : public RenderTarget
+class API_GRAPHICS RenderBuffer : public RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderBuffer)
 

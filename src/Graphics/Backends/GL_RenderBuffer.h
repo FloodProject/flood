@@ -18,7 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
  * Render buffers are also known as FBOs (frame buffers objects) in OpenGL.
  */
 
-class API_RENDER GL_RenderBuffer : public RenderBuffer
+class API_GRAPHICS GL_RenderBuffer : public RenderBuffer
 {
 public:
 

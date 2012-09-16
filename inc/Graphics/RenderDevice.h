@@ -31,7 +31,7 @@ class Texture;
  * hardware) or user preference (fixed function is faster on some machines).
  */
 
-REFLECT_DECLARE_ENUM(RenderPipeline)
+API_GRAPHICS REFLECT_DECLARE_ENUM(RenderPipeline)
 
 enum struct RenderPipeline
 {
@@ -65,7 +65,7 @@ class RenderBatch;
 
 typedef std::map<Light*, Texture*> ShadowTextureMap;
 
-class API_RENDER RenderDevice
+class API_GRAPHICS RenderDevice
 {
 	DECLARE_UNCOPYABLE(RenderDevice)
 
@@ -145,7 +145,7 @@ protected:
 #endif
 };
 
-API_RENDER RenderDevice* GetRenderDevice();
+API_GRAPHICS RenderDevice* GetRenderDevice();
 
 //-----------------------------------//
 

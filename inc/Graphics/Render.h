@@ -11,11 +11,11 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-API_RENDER Allocator* GetRenderAllocator();
-API_RENDER Allocator* GetFrameAllocator();
+API_GRAPHICS Allocator* GetRenderAllocator();
+API_GRAPHICS Allocator* GetFrameAllocator();
 
-API_RENDER void RenderInitialize();
-API_RENDER void RenderDeinitialize();
+API_GRAPHICS void RenderInitialize();
+API_GRAPHICS void RenderDeinitialize();
 
 //-----------------------------------//
 

@@ -24,7 +24,7 @@ NAMESPACE_GRAPHICS_BEGIN
 typedef std::vector< GLSL_ShaderPtr > ShadersVector;
 typedef std::map< GLSL_ShaderPtr, bool > ShadersAttachMap;
 
-class API_RENDER GLSL_ShaderProgram : public ShaderProgram
+class API_GRAPHICS GLSL_ShaderProgram : public ShaderProgram
 {
 public:
 

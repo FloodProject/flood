@@ -17,7 +17,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 class RenderView;
 
-class API_RENDER Settings
+class API_GRAPHICS Settings
 {
 public:
 
@@ -50,7 +50,7 @@ class RenderContext;
 
 typedef std::vector<RenderView*> RenderViewsVector;
 
-class API_RENDER RenderTarget
+class API_GRAPHICS RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderTarget)
 

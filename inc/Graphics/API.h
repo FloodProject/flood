@@ -26,8 +26,6 @@
 	#define API_GRAPHICS
 #endif
 
-#define API_RENDER API_GRAPHICS
-
 #define AllocateRender AllocateHeap
 
 //---------------------------------------------------------------------//

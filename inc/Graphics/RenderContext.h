@@ -30,7 +30,7 @@ class Settings;
  * Represents a rendering context.
  */
 
-class API_RENDER RenderContext : public ReferenceCounted
+class API_GRAPHICS RenderContext : public ReferenceCounted
 {
 public:
 

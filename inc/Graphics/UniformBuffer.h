@@ -39,7 +39,7 @@ enum struct UniformDataType : uint8
  * that frees all the memory when the frame ends.
  */
 
-struct API_RENDER UniformBufferElement
+struct API_GRAPHICS UniformBufferElement
 {
 	char* name;
 	UniformDataType type;
@@ -55,7 +55,7 @@ typedef std::map<String, UniformBufferElement*> UniformBufferElements;
  * Represents a uniform buffer.
  */
 
-class API_RENDER UniformBuffer : public ReferenceCounted
+class API_GRAPHICS UniformBuffer : public ReferenceCounted
 {
 public:
 
@@ -95,7 +95,7 @@ public:
 	void setUniform( const char* slot, const std::vector<Matrix4x4>& vec );
 };
 
-//API_RENDER UniformBuffer* UniformBufferCreate( Allocator* );
+//API_GRAPHICS UniformBuffer* UniformBufferCreate( Allocator* );
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( UniformBuffer );
 

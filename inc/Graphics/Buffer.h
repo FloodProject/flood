@@ -58,7 +58,7 @@ class GeometryBuffer;
 
 typedef uint32 BufferId;
 
-class API_RENDER Buffer : public ReferenceCounted
+class API_GRAPHICS Buffer : public ReferenceCounted
 {
 public:
 

@@ -49,7 +49,7 @@ enum class VertexDataType : uint8
  * Each element inside a vertex declaration.
  */
 
-struct API_RENDER VertexElementP
+struct API_GRAPHICS VertexElementP
 {
 	// Semantic attribute of the element.
 	VertexAttribute attribute;
@@ -61,7 +61,7 @@ struct API_RENDER VertexElementP
 	uint8 components;
 };
 
-struct API_RENDER VertexElement : public VertexElementP
+struct API_GRAPHICS VertexElement : public VertexElementP
 {
 	VertexElement(VertexAttribute, VertexDataType, uint8 components);
 
@@ -84,7 +84,7 @@ struct API_RENDER VertexElement : public VertexElementP
  * This describes structure of a geometry buffer.
  */
 
-struct API_RENDER VertexDeclaration
+struct API_GRAPHICS VertexDeclaration
 {
 	// Adds a new vertex element.
 	void add(VertexAttribute, int numComponents);
@@ -123,7 +123,7 @@ struct API_RENDER VertexDeclaration
 
 typedef BufferId VertexBufferId;
 
-class API_RENDER VertexBuffer : public Buffer
+class API_GRAPHICS VertexBuffer : public Buffer
 {
 public:
 
