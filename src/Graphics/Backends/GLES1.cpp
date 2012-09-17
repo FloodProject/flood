@@ -51,7 +51,7 @@ bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 
 void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& lights)
 {
- RenderBatch* renderable = state.renderable;
+	RenderBatch* renderable = state.renderable;
 	bindBuffers.renderable);
 
 	GeometryBuffer* gb =.renderable->getGeometryBuffer().get();
