@@ -22,6 +22,8 @@ AudioContext::AudioContext(ALCcontext* context)
 	: context(context)
 	, error(ALC_NO_ERROR)
 {
+	makeCurrent();
+
 	// Sets a default listener.
 	setPosition(Vector3::Zero);
 
