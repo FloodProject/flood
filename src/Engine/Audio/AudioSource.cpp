@@ -100,7 +100,7 @@ void AudioSource::queue()
 	for(size_t i = 0; i < AudioSourceNumBuffers; ++i)
 	{
 		AudioBuffer* buffer = buffers[i].get();
-		if( !buffer ) break;
+		if( !buffer ) continue;
 
 		ALuint bufferId = buffer->getId();
 
@@ -194,22 +194,22 @@ void AudioSource::setSound(const SoundHandle& handle)
 
 bool AudioSource::update()
 {
-	if( !sound ) return false;
+	if( !sound )
+		return false;
 	
-	bool isStreamed = sound->getStreamed();
-	
-	if( !isStreamed ) goto out;
- 
 	int processed;
 	alGetSourcei(id, AL_BUFFERS_PROCESSED, &processed);
 	
-	if( processed == 0 ) return true;
+	// If no buffers have been processed, then there is nothing to do.
+	if( processed == 0 )
+		return true;
 
 	AudioBufferDetails details;
 	AudioGetBufferDataDetails(details, sound);
 
 	ResourceStream& stream = *sound->stream;
 
+	// Remove the processed buffers and replace them with streamed data.
 	while(processed--)
 	{
 		ALuint buffer;
@@ -217,21 +217,28 @@ bool AudioSource::update()
 		
 		if(AudioCheckError())
 			LogAudio("Could not unqueue buffer from audio source");
- 
-		if( !AudioStreamQueueBuffer(id, buffer, details, stream, loop) )
+		
+		if( !sound->getStreamed() )
+			continue;
+			
+		if (!AudioStreamQueueBuffer(id, buffer, details, stream, loop) )
+		{
+			assert(0 && "Could not queue streamed audio buffer");
 			break;
+		}
 	}
-
-out:
 
 	return true;
 }
 
 //-----------------------------------//
 
-void AudioSource::play( const int count )
+void AudioSource::play( int count )
 {
 	if( !sound ) return;
+
+	// If the sound has not been loaded yet, then delay the playback
+	// by setting up a callback that will start playback when it loads.
 
 	if( !sound->getStreamed() && !buffers[0]->getUploaded() )
 	{
@@ -244,8 +251,10 @@ void AudioSource::play( const int count )
 		return;
 	}
 
-	alSourcePlay(id);
+	// Queue the needed sound buffers before playing the source.
+	queue();
 
+	alSourcePlay(id);
 	state = SourceState::PLAYING;
 
 	if(AudioCheckError())

@@ -66,7 +66,7 @@ public:
 	// Sets the sound of the source.
 	void setSound(const SoundHandle& sound);
 
-	// Plays the sound buffer resuming if paused.
+	// Plays the sound resuming it if paused.
 	void play( int timesToPlay = 1 );
 
 	// Stops the sound buffer and seeks to the beginning.

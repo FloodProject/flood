@@ -153,7 +153,7 @@ AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
-	AudioBufferPtr buffer = AllocateThis(AudioBuffer, this);
+	AudioBufferPtr buffer = createBuffer();
 	soundBuffers[sound] = buffer;
 
 	return buffer;
