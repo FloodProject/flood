@@ -30,10 +30,8 @@ Listener::Listener()
 	: volume(0.75f)
 	, audioContext(nullptr)
 {
-#if 0
 	AudioDevice* audioDevice = GetEngine()->getAudioDevice();
 	audioContext = audioDevice->getMainContext();
-#endif
 }
 
 //-----------------------------------//
@@ -61,7 +59,7 @@ void Listener::update( float delta )
 
 	#pragma TODO(Get orientation from the transform)
 
-	const CameraPtr& camera = entity->getComponent<Camera>();
+	const Camera* camera = entity->getComponent<Camera>().get();
 	
 	if(camera)
 	{
@@ -71,7 +69,7 @@ void Listener::update( float delta )
 		audioContext->setOrientation(lookAt);
 	}
 
-	const TransformPtr& transform = entity->getTransform();
+	const Transform* transform = entity->getTransform().get();
 
 	if(transform)
 	{
