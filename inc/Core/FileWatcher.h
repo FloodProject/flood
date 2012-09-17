@@ -98,6 +98,8 @@ public:
 	Event1<const FileWatchEvent&> onFileWatchEvent;
 };
 
+API_CORE FileWatcher* GetFileWatcher();
+
 //-----------------------------------//
 
 NAMESPACE_CORE_END

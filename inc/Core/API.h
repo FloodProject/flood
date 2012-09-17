@@ -78,6 +78,9 @@ extern template class std::basic_string<char>;
 
 NAMESPACE_CORE_BEGIN
 
+API_CORE void CoreInitialize();
+API_CORE void CoreDeinitialize();
+
 struct Allocator;
 
 NAMESPACE_CORE_END

@@ -6,23 +6,18 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_ARCHIVE_DIR
+
 #include "Core/Archive.h"
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
 
-#ifdef PLATFORM_WINDOWS
-	#include "Core/FileWatcherWin32.h"
-#endif
-
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
-
-#ifdef ENABLE_ARCHIVE_DIR
-
-static scoped_ptr<FileWatcherWin32> gs_FileWatcher;
 
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
@@ -83,13 +78,7 @@ static bool DirArchiveClose(Archive* archive)
 	if(archive->watchId != 0)
 	{
 		// Remove the archive from the watch list.
-		gs_FileWatcher->removeWatch(archive->watchId);
-
-		if( gs_FileWatcher->mWatches.empty() )
-		{
-			// Remove the watcher when there are no more watches.
-			gs_FileWatcher.reset();
-		}
+		GetFileWatcher()->removeWatch(archive->watchId);
 	}
 
 	return true;
@@ -168,22 +157,15 @@ static bool DirArchiveMonitor(Archive* archive)
 {
 	if( !archive ) return false;
 
-	// Setup the watcher if it has not been created.
-	if( !gs_FileWatcher )
-	{
-		LogInfo("Creating the file watcher");
-
-		gs_FileWatcher.reset( AllocateHeap(FileWatcherWin32) );
-		gs_FileWatcher->onFileWatchEvent.Connect(&HandleFileWatch);
-	}
+	GetFileWatcher()->onFileWatchEvent.Connect(&HandleFileWatch);
 
 	if(archive->watchId == 0)
 	{
 		// Add the archive to the watch list.
-		archive->watchId = gs_FileWatcher->addWatch(archive->path, archive);
+		archive->watchId = GetFileWatcher()->addWatch(archive->path, archive);
 	}
 
-	gs_FileWatcher->update();
+	GetFileWatcher()->update();
 
 	return true;
 }

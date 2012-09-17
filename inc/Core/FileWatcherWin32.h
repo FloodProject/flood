@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include "Core/API.h"
+
 #ifdef PLATFORM_WINDOWS
 
 #include "Core/FileWatcher.h"
