@@ -6,6 +6,10 @@
 
 config =
 {
+--
+-- Core
+--
+
 	-- Enables custom STL containers in the core.
 	STL_RDE = false,
 	
@@ -52,27 +56,6 @@ config =
 -- Resources
 --
 
-	-- Enables loading of audio OGG resources.
-	AUDIO_OGG = true,
-
-	-- Enables loading of PNG images via picopng.
-	IMAGE_PICOPNG = false,
-
-	-- Enables loading of images via the STB library.
-	IMAGE_STB = true,
-
-	-- Enables loading of OpenGL GLSL shaders.
-	RENDERER_OPENGL_GLSL = true,
-
-	-- Enables loading of fonts via FreeType.
-	FONT_FREETYPE2 = false,
-
-	-- Enables loading of bitmap based fonts.
-	FONT_BITMAP = true,
-
-	-- Enables loading of Mono scripts.
-	SCRIPTING_MONO = true,
-
 	-- Enables threaded loading of resources.
 	THREADED_LOADING = true,
 
@@ -92,6 +75,22 @@ config =
 	-- Enables input support using the SFML library.
 	INPUT_SFML = false,
 
+	-- Enables loading of Mono scripts.
+	SCRIPTING_MONO = true,
+
+	-- Enables physics support via Bullet.
+	PHYSICS_BULLET = true,
+
+	-- Enables loading of PNG images via picopng.
+	IMAGE_PICOPNG = false,
+
+	-- Enables loading of images via the STB library.
+	IMAGE_STB = true,
+
+--
+-- Graphics
+--	
+
 	-- Enables the OpenGL renderer.
 	RENDERER_OPENGL = true,
 
@@ -101,11 +100,34 @@ config =
 	-- Enables the Direct3D renderer.
 	RENDERER_DIRECT3D = false,
 
+	-- Enables loading of OpenGL GLSL shaders.
+	RENDERER_OPENGL_GLSL = true,
+
+--
+-- Audio
+--
+
+	-- Enables loading of audio OGG resources.
+	AUDIO_OGG = true,
+
 	-- Enables audio playback via OpenAL.
 	AUDIO_OPENAL = true,
 
-	-- Enables physics support via Bullet.
-	PHYSICS_BULLET = true,
+--
+-- GUI
+--
+
+	-- Enables the GUI extensions
+	GUI = true,
+
+	-- Enables bitmap font handling.
+	FONT_BITMAP = true,
+
+	-- Enables font handling using FreeType.
+	FONT_FREETYPE2 = false,
+
+	-- Enables font handling using DirectWrite.
+	FONT_DIRECTWRITE = false,	
 
 --
 -- Editor
@@ -124,7 +146,7 @@ config =
 	RESOURCE_BROWSER = true,
 
 	-- Enables the Mono scripting plugin.
-	PLUGIN_MONO = true,
+	PLUGIN_MONO = false,
 
 	-- Enables the server plugin.
 	PLUGIN_SERVER = false,
