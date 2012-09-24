@@ -100,32 +100,33 @@ void Game::frame()
 {
 	const float maxDelta = 1.0f / hertz;
 
-	float tick = TimerGetElapsed(&frameTimer), delta;
+	float tick = TimerGetCurrentTimeMs();		// Time for the whole frame
+	float delta = TimerGetElapsed(&frameTimer);	// Time for the frame delta
 	TimerReset(&frameTimer);
 
 	do
 	{
-		// user update
-		update(maxDelta);	// NOTE: does not pass the actual delta to the update
-		
-		// engine update
+		// NOTE: The value in delta on the first iteration should be
+		// equivalent to the draw time of the last frame.
+		update(delta);
+
 		engine->update();
 
-		// next tick time
-		tick += maxDelta;
-	} while(TimerGetCurrentTimeMs() > tick);
+		delta = TimerGetElapsed(&frameTimer);
+	} while(delta < (maxDelta / 2.f));
 
-	// user render
+	// Reset frame timer to read time since last opportunistic update finished
+	TimerReset(&frameTimer);
+
 	render();
 
-	// swap buffers
+	// Swap buffers
 	window->update();
 
-	// step the engine by a frame
 	engine->stepFrame();
 
-	// update the frame stats
-	frameStats.lastFrameTime = TimerGetElapsed(&frameTimer);
+	tick = TimerGetCurrentTimeMs() - tick;
+	frameStats.lastFrameTime = tick;
 	frameStats.frameStep();
 }
 
