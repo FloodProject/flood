@@ -22,12 +22,7 @@ NAMESPACE_ENGINE_BEGIN
 
 struct API_ENGINE TerrainSettings
 {
-	TerrainSettings()
-		: CellSize(4096)
-		, MaxHeight(0)
-		, NumberTiles(128)
-		, TextureSize(512)
-	{ }
+	TerrainSettings();
 
 	// Material for each cell.
 	MaterialHandle Material;

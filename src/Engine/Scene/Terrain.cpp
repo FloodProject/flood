@@ -20,13 +20,12 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-// Range of valid dimensions for heightmaps.
-static const short validDimensions[] =
-{
-	2,		3,		5,		9,
-	17,		33,		65,		129,
-	257,	513,	1025,	2049
-};
+TerrainSettings::TerrainSettings()
+	: CellSize(4096)
+	, MaxHeight(0)
+	, NumberTiles(128)
+	, TextureSize(512)
+{ }
 
 //-----------------------------------//
 
@@ -138,10 +137,8 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 
 	String name = StringFormat("Cell (%d,%d)", x, y);
 
-	Entity* entity = EntityCreate(AllocatorGetHeap());
-	entity->setName(name);
-
-	EntityPtr entityCell(entity);
+	EntityPtr entityCell = EntityCreate(AllocatorGetHeap());
+	entityCell->setName(name);
 	entityCell->addTransform();
 	entityCell->addComponent(cell);
 
@@ -196,6 +193,14 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& h
 
 //-----------------------------------//
 
+// Range of valid dimensions for heightmaps.
+static const uint16 gs_HeightmapDimensions[] =
+{
+	2,		3,		5,		9,
+	17,		33,		65,		129,
+	257,	513,	1025,	2049
+};
+
 bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 {
 	if( !heightmap ) return false;
@@ -217,9 +222,9 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
-	for( size_t i = 0; i < ARRAY_SIZE(validDimensions); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(gs_HeightmapDimensions); i++ )
 	{
-		if( width == validDimensions[i] ) 
+		if( width == gs_HeightmapDimensions[i] ) 
 		{
 			valid = true;
 			break;
