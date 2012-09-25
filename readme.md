@@ -20,18 +20,14 @@ their respective folders in deps/.
 
 ## Visual Studio / Windows
 
-### Building Dependencies
-
-1. Run `deps/GenerateBuild.bat` and generate the solution.
-2. Open the solution in `deps/build/<vs>` and build it.
-
 Note: Build all the configurations you're interested in,
 like 32-bit / 64-bit and Debug / Release versions.
 
-1. Run `build/GenerateBuild.bat` and generate the solution.
+1. Run `build/GenerateBuild.bat` and generate the solutions.
 2. Customize the features in the generated `build/Config.lua`.
 3. If you change anything in the config, run `build/GenerateConfig.bat`.
-4. Open the solution in `build/<vs>` and build it.
+4. Open the Dependencies.sln solution in `build/<vs>` and build it.
+5. Open the Flush.sln solution in `build/<vs>` and build it.
 
 ---
 
