@@ -5,6 +5,7 @@ Runtime.shared = true
 
 Mono = {}
 Mono.links = { "Mswsock", "ws2_32", "psapi", "version", "winmm" }
+Mono.shared = true
 
 project "Runtime"
 
@@ -65,6 +66,8 @@ project "Runtime"
 	deps(Runtime.deps)
 
 	configuration "windows"
-		links { Mono.links }
+		if not Mono.shared then
+			links { Mono.links }
+		end
 
 	configuration {}

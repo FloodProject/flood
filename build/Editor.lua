@@ -48,7 +48,7 @@ project "Editor"
 		Pipeline.defines
 	}
 
-	editor_flags = flags_common
+	editor_flags = common_flags
 	table.remove(editor_flags, #editor_flags)
 	
 	flags { editor_flags }

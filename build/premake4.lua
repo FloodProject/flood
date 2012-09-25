@@ -3,8 +3,10 @@
 -- and calls the build scripts of all the sub-projects.
 
 action = _ACTION or ""
-flags_common = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
-flags_msvc = { "/wd4190", "/wd4530", "/wd4251" }
+
+common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
+msvc_buildflags = { "/wd4190", "/wd4530", "/wd4251" }
+gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
 
 dofile "Helpers.lua"
 
@@ -23,24 +25,19 @@ WriteConfigToFile(conf, "Build.h")
 
 solution "Flush"
 	
-	configurations
-	{
-		"Debug",
-		"Release"
-	}
-	
-	startup "Editor"
-	
+	configurations { "Debug", "Release" }
+	platforms { "x32", "x64" }
+
+	flags { common_flags }
 	language "C++"
 	
-	location (action)
-	objdir (action .. "/obj/")
-	targetdir (action .. "/lib/")
+	local build = action
+	location (build)
+	objdir (build .. "/obj/")
+	targetdir (build .. "/lib/")
+	libdirs { build .. "/lib/" }
+	
 	debugdir "../bin"
-
-	flags { flags_common }
-
-	libdirs { action .. "/lib/" }
 		
 	-- Build configuration options
 	
@@ -55,11 +52,10 @@ solution "Flush"
 	-- Compiler-specific options
 	
 	configuration "vs*"
-		buildoptions { flags_msvc }	
+		buildoptions { msvc_buildflags }
 	
 	configuration "gcc"
-		buildoptions "-Wno-invalid-offsetof"	
-		buildoptions "-std=gnu++0x"
+		buildoptions { gcc_buildflags }
 	
 	-- OS-specific options
 	
@@ -79,6 +75,8 @@ solution "Flush"
 	
 	dofile "GameRuntime.lua"
 	dofile "Editor.lua"
+
+	startup "GameRuntime"
 
 	-- Keep the managed layer disabled for now.
 	--dofile "EngineManaged.lua"
