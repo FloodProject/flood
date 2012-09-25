@@ -19,19 +19,16 @@ struct MouseInfo;
  * Different types of mouse buttons.
  */
 
-struct MouseButton
+enum struct MouseButton : uint8
 {
-	enum Enum
-	{
-		// Main mouse buttons
-		Left,
-		Right,
-		Middle,
+	// Main mouse buttons
+	Left,
+	Right,
+	Middle,
 
-		// Extra mouse buttons
-		Mouse4,
-		Mouse5,
-	};
+	// Extra mouse buttons
+	Mouse4,
+	Mouse5,
 };
 
 //-----------------------------------//
@@ -40,25 +37,22 @@ struct MouseButton
  * Different types of mouse events.
  */
 
-struct MouseEventType
+enum struct MouseEventType : uint8
 {
-	enum Enum
-	{
-		// Occurs when the mouse wheel is scrolled
-		MouseWheelMove,
-		// Occurs when the mouse is moved
-		MouseMove,
-		// Occurs when the mouse is dragged
-		MouseDrag,
-		// Occurs when a mouse button is pressed
-		MousePress,
-		// Occurs when a mouse button is released
-		MouseRelease,
-		// Occurs when the mouse cursor enters the window
-		MouseEnter,
-		// Occurs when the mouse cursor exits the window
-		MouseExit,
-	};
+	// Occurs when the mouse wheel is scrolled
+	MouseWheelMove,
+	// Occurs when the mouse is moved
+	MouseMove,
+	// Occurs when the mouse is dragged
+	MouseDrag,
+	// Occurs when a mouse button is pressed
+	MousePress,
+	// Occurs when a mouse button is released
+	MouseRelease,
+	// Occurs when the mouse cursor enters the window
+	MouseEnter,
+	// Occurs when the mouse cursor exits the window
+	MouseExit,
 };
 
 //-----------------------------------//
@@ -75,9 +69,9 @@ struct API_ENGINE MouseEvent : public InputEvent
 {
 	friend class Mouse;
 	
-	MouseEvent( MouseEventType::Enum eventType );
+	MouseEvent( MouseEventType eventType );
 
-	MouseEventType::Enum eventType;
+	MouseEventType eventType;
 };
 
 //-----------------------------------//
@@ -125,7 +119,7 @@ struct API_ENGINE MouseDragEvent : public MouseEvent
 
 struct API_ENGINE MouseButtonEvent : public MouseEvent
 {
-	MouseButtonEvent( MouseEventType::Enum eventType );
+	MouseButtonEvent( MouseEventType eventType );
 
 	// Convenience button test methods.
 	bool isLeftButton() const { return button == MouseButton::Left; }
@@ -135,7 +129,7 @@ struct API_ENGINE MouseButtonEvent : public MouseEvent
 	short x;
 	short y;
 
-	MouseButton::Enum button;
+	MouseButton button;
 };
 
 //-----------------------------------//

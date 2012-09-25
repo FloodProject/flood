@@ -75,7 +75,7 @@ void Mouse::processEvent( const InputEvent& event )
 
 //-----------------------------------//
 
-bool Mouse::isButtonPressed( MouseButton::Enum button ) const
+bool Mouse::isButtonPressed( MouseButton button ) const
 {
 	const MouseInfo& mouseInfo = getMouseInfo();
 
@@ -94,7 +94,7 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 	}
 
 	LogWarn( "Could not map enum: Invalid mouse button" );
-	return MouseButton::Left;
+	return false;
 }
 	
 //-----------------------------------//
@@ -170,7 +170,7 @@ void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 
 //-----------------------------------//
 
-void Mouse::setMouseButton( MouseButton::Enum button, bool state )
+void Mouse::setMouseButton( MouseButton button, bool state )
 {
 	switch(button)
 	{
@@ -210,7 +210,7 @@ MouseInfo::MouseInfo()
 
 //-----------------------------------//
 
-MouseEvent::MouseEvent( MouseEventType::Enum eventType )
+MouseEvent::MouseEvent( MouseEventType eventType )
 	: InputEvent( InputDeviceType::Mouse )
 	, eventType( eventType )
 { }
@@ -229,7 +229,7 @@ MouseDragEvent::MouseDragEvent()
 
 //-----------------------------------//
 
-MouseButtonEvent::MouseButtonEvent( MouseEventType::Enum eventType )
+MouseButtonEvent::MouseButtonEvent( MouseEventType eventType )
 	: MouseEvent(eventType)
 { }
 

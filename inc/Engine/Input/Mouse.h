@@ -43,7 +43,7 @@ class API_ENGINE Mouse : public InputDevice
 public:
 	  
 	// Returns whether a given mouse button is pressed.
-	bool isButtonPressed( MouseButton::Enum button ) const;
+	bool isButtonPressed( MouseButton button ) const;
 
 	// Processes an event (only if it's a mouse event).
 	virtual void processEvent( const InputEvent& event );
@@ -78,16 +78,16 @@ public:
 private:
 
 	// Occurs when a mouse button is pressed.
-	void mouseButtonPressed(const MouseButtonEvent& mevt);
+	void mouseButtonPressed(const MouseButtonEvent& event);
 	
 	// Occurs when a mouse button is released.
-	void mouseButtonReleased(const MouseButtonEvent& mevt);
+	void mouseButtonReleased(const MouseButtonEvent& event);
 	
 	// Occurs when the mouse is moved.
-	void mouseMoved(const MouseMoveEvent& mevt);
+	void mouseMoved(const MouseMoveEvent& event);
 
 	// Occurs when the mouse is dragged.
-	void mouseDragged(const MouseDragEvent& mevt);
+	void mouseDragged(const MouseDragEvent& event);
 	
 	// Occurs when the mouse cursor enters the window.
 	void mouseEnter();
@@ -96,10 +96,10 @@ private:
 	void mouseExit();
 	
 	// Occurs when the mouse wheel is scrolled.
-	void mouseWheelMove(const MouseWheelEvent& mevt);
+	void mouseWheelMove(const MouseWheelEvent& event);
 
 	// Sets the button state in the mouse info.
-	void setMouseButton( MouseButton::Enum btn, bool state );
+	void setMouseButton( MouseButton button, bool state );
 	
 	// Holds the current state of the mouse.
 	MouseInfo mouseInfo;
