@@ -42,6 +42,7 @@ Engine::Engine()
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
 {
+	assert(gs_engineInstance == nullptr);
 	gs_engineInstance = this;
 }
 
@@ -55,7 +56,6 @@ Engine::~Engine()
 		Deallocate(system);
 	}
 	
-	//Deallocate(inputManager);
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
