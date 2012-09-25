@@ -16,40 +16,40 @@
 
 NAMESPACE_GAMERUNTIME_BEGIN
 
-	class Engine;
-	class Window;
-	class Archive;
+class Engine;
+class Window;
+class Archive;
 
-	class API_GAMERUNTIME Game : public Runtime
-	{
-	public:
-		Game(uint16 hz = 120);
-		virtual ~Game();
+class API_GAMERUNTIME Game : public Runtime
+{
+public:
+	Game(uint16 hz = 120);
+	virtual ~Game();
 
-		void run();
+	void run();
 
-	protected:
-		void frame();
+protected:
+	void frame();
 
-		virtual void init();
-		virtual void loadContent();
-		virtual void shutdown();
+	virtual void init();
+	virtual void loadContent();
+	virtual void shutdown();
 
-		virtual void update(float delta) {}
-		virtual void render() {}
+	virtual void update(float delta) {}
+	virtual void render() {}
 
-	public:
-		Engine * engine;
+public:
+	Engine * engine;
 
-		Window * window;
-		Archive * archive;
-		SceneHandle scene;
+	Window * window;
+	Archive * archive;
+	SceneHandle scene;
 
-		bool running;
-		uint16 hertz;
-		Timer frameTimer;
-		FrameStatistics frameStats;
-	};
+	bool running;
+	uint16 hertz;
+	Timer frameTimer;
+	FrameStatistics frameStats;
+};
 
 Game * game();
 
