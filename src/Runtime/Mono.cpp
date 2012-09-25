@@ -175,7 +175,8 @@ void MonoRuntime::initialize()
 void MonoRuntime::cleanup()
 {
 	// Cleanup the Mono JIT context.
-	mono_jit_cleanup(domain);
+	if (domain)
+		mono_jit_cleanup(domain);
 
 	//mono_config_cleanup();
 
