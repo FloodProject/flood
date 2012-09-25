@@ -51,7 +51,7 @@ static bool isJoystickEvent(sf::Event::EventType eventType)
 
 //-----------------------------------//
 
-MouseButton::Enum ConvertMouseButtonEnum(sf::Mouse::Button mouseButton)
+MouseButton ConvertMouseButtonEnum(sf::Mouse::Button mouseButton)
 {
 	switch(mouseButton)
 	{

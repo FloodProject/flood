@@ -35,8 +35,8 @@ void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool isKeyDow
 
 //-----------------------------------//
 
-static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event );
-static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event );
+static MouseButton ConvertFromWxMouseButton( const wxMouseEvent& event );
+static MouseEventType ConvertFromWxMouseType( const wxMouseEvent& event );
 
 void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 {
@@ -84,7 +84,7 @@ void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 
 //-----------------------------------//
 
-static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event )
+static MouseButton ConvertFromWxMouseButton( const wxMouseEvent& event )
 {
 	switch( event.GetButton() )
 	{
@@ -101,7 +101,7 @@ static MouseButton::Enum ConvertFromWxMouseButton( const wxMouseEvent& event )
 
 //-----------------------------------//
 
-static MouseEventType::Enum ConvertFromWxMouseType( const wxMouseEvent& event )
+static MouseEventType ConvertFromWxMouseType( const wxMouseEvent& event )
 {
 	bool isDown = event.ButtonDown();
 	return isDown ? MouseEventType::MousePress : MouseEventType::MouseRelease;
