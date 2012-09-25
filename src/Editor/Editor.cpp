@@ -24,20 +24,20 @@
 #include <wx/debugrpt.h>
 
 FL_INSTANTIATE_TEMPLATES()
-   
+
 #ifdef BUILD_DEBUG
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 #else
 wxIMPLEMENT_WXWIN_MAIN
 #endif
 
-int main(int argc, char **argv)
-{                                                                     
-    wxDISABLE_DEBUG_SUPPORT();                                       
-    return wxEntry(argc, argv);                                       
-}
-
 wxIMPLEMENT_APP_NO_MAIN(EditorApp);
+
+int main(int argc, char **argv)
+{
+    wxDISABLE_DEBUG_SUPPORT();
+    return wxEntry(argc, argv);
+}
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -52,7 +52,6 @@ bool EditorApp::OnInit()
 	mainFrame = new EditorFrame(VAPOR_EDITOR_NAME);
 	mainFrame->SetSize(900, 550);
 	mainFrame->SetIcon( wxIcon("iconEditor") );
-
 
 	SetTopWindow(mainFrame);
 	mainFrame->Show(true);
@@ -79,6 +78,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	, input(nullptr)
 {
 	gs_EditorInstance = this;
+
+	CoreInitialize();
 
 #ifdef EDITOR_OLD_UI
 	documentManager = AllocateThis(DocumentManager);
@@ -144,6 +145,8 @@ EditorFrame::~EditorFrame()
 #endif
 
 	Deallocate(engine);
+
+	CoreDeinitialize();
 }
 
 //-----------------------------------//
