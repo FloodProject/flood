@@ -1,14 +1,13 @@
+local version = "2.12"
+local repo = "git|git://github.com/mono/mono.git"
+local license = "LGPL"
+
 project "Mono"
 	
-	local version = "2.12"
-	local repo = "git|git://github.com/mono/mono.git"
-	local license = "LGPL"
-	
-	kind "StaticLib"
+	kind "SharedLib"
 	
 	defines
 	{
-		"__default_codegen__",
 		"HAVE_CONFIG_H",
 	}
 	
@@ -31,7 +30,6 @@ project "Mono"
 	{
 		"eglib/src/*.c",
 		"mono/metadata/*.c",
-		"mono/mini/*.c",
 		"mono/utils/*.c",
 	}
 	
@@ -49,7 +47,91 @@ project "Mono"
 		"mono/metadata/pedump.c",
 		"mono/metadata/tpool-*.c",
 		"mono/metadata/sgen-fin-weak-hash.c",
+
+		"mono/utils/mono-embed.c",
+	}
+	
+	configuration "windows"
+		files
+		{
+			"eglib/src/*-win32.c"
+		}	
+		excludes
+		{
+			"eglib/src/*-unix.c"
+		}
+		defines
+		{
+			"WIN32_THREADS",
+			"WINVER=0x0500",
+			"_WIN32_WINNT=0x0500",
+			"_WIN32_IE=0x0501",
+			"_UNICODE", "UNICODE",
+			"FD_SETSIZE=1024"
+		}
+		links
+		{
+			"MonoMini",
+			"Mswsock",
+			"ws2_32",
+			"psapi",
+			"version",
+			"winmm",
+		}
 		
+	configuration "linux"
+		files
+		{
+			"mono/metadata/tpool-epoll.c"
+		}
+		
+	configuration "macosx or freebsd"
+		files
+		{
+			"mono/metadata/tpool-kqueue.c"
+		}
+
+	--configuration "not windows"
+	--	files { "eglib/src/*-unix.c" }	
+	--	excludes { "eglib/src/*-win32.c" }
+	
+	configuration "vs*"
+		defines { "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE" }
+		buildoptions
+		{
+			"/wd4018", -- signed/unsigned mismatch
+			"/wd4244", -- conversion from 'x' to 'y', possible loss of data
+			"/wd4133", -- incompatible types - from 'x *' to 'y *'
+			"/wd4715", -- not all control paths return a value
+			"/wd4047", -- 'x' differs in levels of indirection from 'y'
+		}
+	
+	configuration ""
+
+project "MonoMini"
+	
+	kind "StaticLib"
+	
+	defines
+	{
+		"__default_codegen__",
+		"HAVE_CONFIG_H",
+	}
+	
+	includedirs
+	{
+		"./",
+		"mono/",
+		"eglib/src/"
+	}
+	
+	files
+	{
+		"mono/mini/*.c",
+	}
+	
+	excludes
+	{
 		"mono/mini/fsacheck.c",
 		"mono/mini/genmdesc.c",
 		"mono/mini/main.c",
@@ -90,50 +172,40 @@ project "Mono"
 		
 		"mono/mini/mini-llvm.c",
 		"mono/mini/mini-posix.c",
-
-		"mono/utils/mono-embed.c",
 	}
 	
-	configuration "not windows"
-		excludes { "eglib/src/*-win32.c" }
-		files { "eglib/src/*-unix.c" }
-	
-	configuration "not x32"
-		excludes
-		{
-			--"mono/mini/mini-x86.c",
-			--"mono/mini/exceptions-x86.c",
-			--"mono/mini/tramp-x86.c",
-		}
+	configuration "x32"
 		files
 		{
-			--"mono/mini/mini-amd64.c",
-			--"mono/mini/exceptions-amd64.c",
-			--"mono/mini/tramp-amd64.c",		
-		}
-		
-	configuration "not x64"
+			"mono/mini/mini-x86.c",
+			"mono/mini/exceptions-x86.c",
+			"mono/mini/tramp-x86.c",	
+		}	
 		excludes
 		{
 			"mono/mini/mini-amd64.c",
 			"mono/mini/exceptions-amd64.c",
 			"mono/mini/tramp-amd64.c",
 		}
+		
+	configuration "x64"
 		files
+		{
+			"mono/mini/mini-amd64.c",
+			"mono/mini/exceptions-amd64.c",
+			"mono/mini/tramp-amd64.c",		
+		}	
+		excludes
 		{
 			"mono/mini/mini-x86.c",
 			"mono/mini/exceptions-x86.c",
-			"mono/mini/tramp-x86.c",	
+			"mono/mini/tramp-x86.c",
 		}
 			
 	configuration "windows"
 		files
 		{
 			"mono/mini/mini-windows.c"
-		}
-		excludes
-		{
-			"eglib/src/*-unix.c"
 		}
 		defines
 		{
@@ -144,26 +216,6 @@ project "Mono"
 			"_UNICODE", "UNICODE",
 			"FD_SETSIZE=1024"
 		}
-		links
-		{
-			"Mswsock",
-			"ws2_32",
-			"psapi",
-			"version",
-			"winmm"
-		}
-		
-	configuration "linux"
-		files
-		{
-			"mono/metadata/tpool-epoll.c"
-		}
-		
-	configuration "macosx or freebsd"
-		files
-		{
-			"mono/metadata/tpool-kqueue.c"
-		}		
 	
 	configuration "vs*"
 		defines { "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE" }
