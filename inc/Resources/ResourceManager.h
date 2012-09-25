@@ -85,8 +85,8 @@ public:
 	// Loads or returns an already loaded resource by its name.
 	ResourceHandle loadResource(ResourceLoadOptions& options);
 
-	// Finds the true resource if needed.
-	void findResource( ResourceLoadOptions& options );
+	// Finds the true resource if it exists.
+	bool findResource( ResourceLoadOptions& options );
 
 	// Removes a resource from the manager.
 	void removeResource(Resource* resource);

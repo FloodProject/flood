@@ -190,7 +190,16 @@ ResourceHandle ResourceManager::loadResource(ResourceLoadOptions& options)
 {
 	if( !archive ) return ResourceHandle(HandleInvalid);
 
-	findResource(options);
+	Path fileExt = PathGetFileExtension(options.name);
+	
+	// If the file has no extension, search for one with the same
+	// name but with known resource loadable file extensions.
+
+	if(fileExt.empty() && !findResource(options))
+	{
+		LogError("Could not find matching file for '%s'", options.name.c_str());
+		return ResourceHandle(HandleInvalid);
+	}
 
 	// Check if the resource is already loaded.
 	ResourceHandle handle = getResource(options.name);
@@ -220,18 +229,15 @@ ResourceHandle ResourceManager::loadResource(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-void ResourceManager::findResource(ResourceLoadOptions& options)
+bool ResourceManager::findResource(ResourceLoadOptions& options)
 {
 	Path& path = options.name;
 	
-	const Path& ext = PathGetFileExtension(path);
-	if( !ext.empty() ) return;
-
 	ResourceLoaderMap::const_iterator it;
 	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
 		const String& ext = it->first;
-		const ResourceLoaderPtr& loader = it->second;
+		const ResourceLoader* loader = it->second.get();
 
 		if( loader->getResourceGroup() != options.group )
 			continue;
@@ -241,9 +247,11 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 		if( ArchiveExistsFile(archive, newPath) )
 		{
 			path = PathNormalize(newPath);
-			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 //-----------------------------------//
