@@ -10,7 +10,7 @@
 #ifdef ENABLE_IMPORTER_MILKSHAPE
 
 #include "Pipeline/ResourceImporter.h"
-#include "Resources/Mesh.h"
+#include "Engine/Resources/Mesh.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -46,7 +46,7 @@ public:
 	GETTER(Name, const String, "MS3D")
 
 	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Meshes)
 };
 
 //-----------------------------------//
