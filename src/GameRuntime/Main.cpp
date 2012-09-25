@@ -13,10 +13,7 @@
 int main(int argc, char** argv)
 {
 	Game gameInstance;
-	
-	game()->run();
+	gameInstance.run();
 
 	return 0;
 }
-
-
