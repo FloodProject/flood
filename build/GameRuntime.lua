@@ -34,6 +34,7 @@ project "GameRuntime"
 		Engine.libdirs,
 		Graphics.libsdirs,
 		Runtime.libdirs,
+		Pipeline.libdirs,
 	}
 
 	links
@@ -41,12 +42,15 @@ project "GameRuntime"
 		Engine.name, Engine.links,
 		Graphics.name, Graphics.links,
 		Runtime.name, Runtime.links,
+		Pipeline.name, Pipeline.links
+
 	}
 
 	GameRuntime.deps =
 	{
 		Engine.deps, -- Engine.deps contains Graphics.deps
 		Runtime.deps,
+		Pipeline.deps,
 		"SFML",
 	}
 
