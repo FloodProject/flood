@@ -100,8 +100,8 @@ void Game::frame()
 {
 	const float maxDelta = 1.0f / hertz;
 
-	float tick = TimerGetCurrentTimeMs();		// Time for the whole frame
-	float delta = TimerGetElapsed(&frameTimer);	// Time for the frame delta
+	float tick = TimerGetCurrentTimeMs();       // Time for the whole frame
+	float delta = TimerGetElapsed(&frameTimer); // Time for the frame delta
 	TimerReset(&frameTimer);
 
 	do
