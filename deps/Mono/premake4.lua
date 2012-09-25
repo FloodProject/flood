@@ -55,7 +55,7 @@ project "Mono"
 		files
 		{
 			"eglib/src/*-win32.c"
-		}	
+		}
 		excludes
 		{
 			"eglib/src/*-unix.c"
@@ -96,6 +96,7 @@ project "Mono"
 	--	excludes { "eglib/src/*-win32.c" }
 	
 	configuration "vs*"
+		files { "msvc/mono.def" }
 		defines { "_CRT_SECURE_NO_WARNINGS", "_CRT_NONSTDC_NO_DEPRECATE" }
 		buildoptions
 		{
