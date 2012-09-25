@@ -140,16 +140,22 @@ void MonoRuntime::initialize()
 	g_MonoVTable.calloc = mono_calloc;
 	g_MonoVTable.try_malloc = mono_try_malloc;
 	g_MonoVTable.try_realloc = mono_try_realloc;
-	g_mem_set_vtable(&g_MonoVTable);
+	//g_mem_set_vtable(&g_MonoVTable);
 
-	Path dir = PathCombine(PathGetCurrentDir(), "Plugins");
-	mono_set_dirs(dir.c_str(), dir.c_str());
+	//Path dir = PathCombine(PathGetCurrentDir(), "Plugins");
+	//mono_set_dirs(dir.c_str(), dir.c_str());
 
 	// Load the default Mono configuration file.
 	mono_config_parse(nullptr);
 
 	// Creates a new domain where each assembly is loaded and run.
 	domain = mono_jit_init_version("Runtime", "v2.0.50727");
+
+	if (!domain)
+	{
+		LogError("Could not initialize the Mono runtime.");
+		return;
+	}
 
 	const char* error = mono_check_corlib_version();
 	
@@ -173,7 +179,7 @@ void MonoRuntime::cleanup()
 
 	//mono_config_cleanup();
 
-	g_mem_set_vtable(nullptr);
+	//g_mem_set_vtable(nullptr);
 }
 
 //-----------------------------------//
