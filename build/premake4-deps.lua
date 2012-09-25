@@ -16,7 +16,7 @@ solution "Dependencies"
 	flags { common_flags }
 	language "C++"
 	
-	local build = "build/" .. action
+	local build = action
 	
 	location (build)
 	objdir (build .. "/obj/")
@@ -25,7 +25,7 @@ solution "Dependencies"
 	-- Build configuration options
 	
 	configuration "Debug"
-		defines { "DEBUG", "_DEBUG" }
+		defines { "_DEBUG" }
 		flags { "NoMinimalRebuild", "FloatFast", "NoEditAndContinue" }
 		targetsuffix "_d"	
 	
@@ -37,6 +37,7 @@ solution "Dependencies"
 	
 	configuration "vs*"
 		buildoptions { msvc_buildflags }
+		defines { "_CRT_SECURE_NO_WARNINGS" }
 	
 	configuration "gcc"
 		buildoptions { gcc_buildflags }
@@ -44,16 +45,13 @@ solution "Dependencies"
 	-- OS-specific options
 	
 	configuration "Windows"
-		defines { "WIN32", "_WINDOWS" }
-		
-	configuration "vs*"
-    defines { "_CRT_SECURE_NO_WARNINGS" }
+		defines { "WIN32", "_WINDOWS" } 	
 		
 	configuration {}
 	
-	--function IncludeDependencies() do
+	function IncludeDependencies()
 		print("Searching for dependencies...")
-		local deps = os.matchdirs("*")
+		local deps = os.matchdirs("../deps/*")
 		
 		for i,dep in ipairs(deps) do
 			local fp = path.join(dep, "premake4.lua")
@@ -64,4 +62,6 @@ solution "Dependencies"
 				include(dep)
 			end
 		end
-	--end
+	end
+
+	IncludeDependencies()
