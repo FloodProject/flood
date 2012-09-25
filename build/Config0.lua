@@ -130,6 +130,16 @@ config =
 	FONT_DIRECTWRITE = false,	
 
 --
+-- Pipeline
+--
+
+	-- Enables the MS3D mesh importer.
+	IMPORTER_MILKSHAPE = true,
+
+	-- Enables the FBX mesh importer.
+	IMPORTER_FBX = false,
+
+--
 -- Editor
 --
 
@@ -152,5 +162,5 @@ config =
 	PLUGIN_SERVER = false,
 
 	-- Disables the networking integration.
-	NO_NETWORK = true,	
+	NO_NETWORK = true,
 }
