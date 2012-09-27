@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "Graphics/Buffer.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
+#include "Graphics/Buffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -123,8 +123,10 @@ struct API_GRAPHICS VertexDeclaration
 
 typedef BufferId VertexBufferId;
 
-struct API_GRAPHICS VertexBuffer : public Buffer
+class API_GRAPHICS VertexBuffer : public Buffer
 {
+public:
+
 	VertexBuffer();
 	~VertexBuffer();
 	

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* Flood Project © (2008-201x)
+* vaporEngine by triton © (2008-2010)
 * Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/

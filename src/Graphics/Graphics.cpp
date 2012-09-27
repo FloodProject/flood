@@ -13,8 +13,6 @@ FL_INSTANTIATE_TEMPLATES()
 
 NAMESPACE_GRAPHICS_BEGIN
 
-//-----------------------------------//
-
 static Allocator* gs_RenderAllocator = nullptr;
 Allocator* GetRenderAllocator() { return gs_RenderAllocator; }
 
@@ -37,7 +35,5 @@ void GraphicsDeinitialize()
 	AllocatorDestroy(gs_FrameAllocator);
 	AllocatorDestroy(gs_RenderAllocator);
 }
-
-//-----------------------------------//
 
 NAMESPACE_GRAPHICS_END

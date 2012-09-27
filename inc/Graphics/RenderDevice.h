@@ -41,10 +41,10 @@ enum struct RenderPipeline
 
 //-----------------------------------//
 
-struct RenderBatch;
 class RenderBuffer;
 class RenderContext;
 class RenderBackend;
+class RenderBatch;
 
 /**
  * Represents the rendering device we are using. At startup the application
@@ -54,9 +54,12 @@ class RenderBackend;
  * details how all the rendering operations are implemented.
  *
  * This class only knows about rendering primitives (Vertex/Index buffers) and
- * renderables. It does not know anything about high-level objects, like meshes.
+ *.renderables. It does not know anything about high-level objects, like meshes.
  *
  * Each render device will also manage a list of render targets (windows, FBOs).
+ * Window implementations depend on the rendering system used, for example, an
+ * OpenGL window will be different from an DirectX window, so this is also
+ * responsible for creating a new window if no window handle is passed to it.
  */
 
 typedef std::map<Light*, Texture*> ShadowTextureMap;
@@ -70,11 +73,11 @@ public:
 	RenderDevice();
 	~RenderDevice();
 
-	// Renders a batch.
-	void render( const RenderBatch& );
+	// Renders a renderable.
+	void render( const RenderState& state, const LightQueue& lights );
 
-	// Renders a queue of batches.
-	void render( RenderQueue& queue );
+	// Renders a list of.renderables.
+	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.
 	ACCESSOR(Pipeline, RenderPipeline, pipeline)
@@ -108,10 +111,12 @@ protected:
 
 	// Forward render state management.
 	bool setupRenderStateMatrix( const RenderState& state );
+	bool setupRenderStateShadow( LightQueue& lights );
+	//bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
 
 	void bindTextureUnits(const RenderState& state, bool bindUniforms);
-	void unbindTextureUnits(RenderStateGroup& stateGroup);
+	void unbindTextureUnits(Material* material);
 
 	// Binds the buffers needed to draw the batch.
 	bool bindBuffers(RenderBatch*);

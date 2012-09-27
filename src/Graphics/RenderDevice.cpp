@@ -43,6 +43,7 @@ RenderDevice::RenderDevice()
 	, activeTarget(nullptr)
 	, activeView(nullptr)
 	, renderBackend(nullptr)
+	//, shadowDepthBuffer(nullptr)
 	, pipeline(RenderPipeline::ShaderForward)
 {
 	gs_RenderDevice = this;
@@ -56,202 +57,182 @@ RenderDevice::~RenderDevice()
 
 //-----------------------------------//
 
-static bool SortBatches(const RenderBatch& lhs, const RenderBatch& rhs)
+static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
-	return lhs.sortingKey.key < rhs.sortingKey.key;
+	int rA = (int) lhs.renderable->getRenderLayer();
+	int rB = (int) rhs.renderable->getRenderLayer();
+	int pA = lhs.priority;
+	int pB = rhs.priority;
+
+	return (rA == rB) ? (pA < pB) : (rA < rB);
 }
 
-void RenderDevice::render( RenderQueue& queue ) 
+//-----------------------------------//
+
+void RenderDevice::render( RenderBlock& queue ) 
 {
-	// Sort the renderables by their sorting key.
-	std::sort( queue.batches.begin(), queue.batches.end(), &SortBatches );
+	#pragma TODO("Sort the render group by depth distance")
+
+	// Sort the.renderables by render group.
+	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
 	// Render all the.renderables in the queue.
-	for( size_t i = 0; i < queue.batches.size(); i++ )
+	for( size_t i = 0; i < queue.renderables.size(); i++ )
 	{
-		const RenderBatch& batch = queue.batches[i];
-		render(batch);
+		const RenderState& state = queue.renderables[i];
+		render(state, queue.lights);
 	}
 }
 
 //-----------------------------------//
 
-void RenderDevice::render( const RenderBatch& batch )
+void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
 	BufferManager* buffers = activeContext->bufferManager;
 	ProgramManager* programs = activeContext->programManager;
-
-	RenderCommand renderCommand(RenderCommandType::DrawCall);
-
-	switch(renderCommand.type)
-	{
-	case RenderCommandType::ClearViewport:
-	{
-		auto command = (ClearViewportCommand&) renderCommand;
-		renderBackend->setClearColor((Color&)command.color);
-		renderBackend->clearRenderView(activeView);
-		break;
-	}
-	case RenderCommandType::BindIndexBuffer:
-	{
-		auto command = (BindIndexBufferCommand&) renderCommand;
-		renderBackend->bindIndexBuffer(0);
-		break;
-	}
-	case RenderCommandType::BindVertexBuffer:
-	{
-		auto command = (BindVertexBufferCommand&) renderCommand;
-		renderBackend->bindVertexBuffer(0);
-		break;
-	}
-	case RenderCommandType::BindVertexBuffer:
-	{
-		auto command = (BindVertexBufferCommand&) renderCommand;
-		renderBackend->bindVertexBuffer(0);
-		break;
-	} };
 	
-	//bindBuffers(batch);
+	RenderBatch* renderable = state.renderable;
+	bindBuffers(renderable);
 
-	//const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
-	//if( gb->data.empty() ) return;
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
+	if( gb->data.empty() ) return;
 
-	//BufferEntry* bufs = buffers->getBuffer(gb);
+	BufferEntry* bufs = buffers->getBuffer(gb);
 
-	//// Setup the vertex buffer format.
-	//VertexBuffer* vb = bufs->vb.get();
-	//renderBackend->setupVertexBuffer(vb);
-	//
-	//Material* material = state.material;
-	//ShaderMaterial* shader = material->getShader().Resolve();
+	// Setup the vertex buffer format.
+	VertexBuffer* vb = bufs->vb.get();
+	renderBackend->setupVertexBuffer(vb);
+	
+	Material* material = state.material;
+	ShaderMaterial* shader = material->getShader().Resolve();
 
-	//ShaderProgram* shaderProgram = programs->getProgram(shader);
-	//if( !shaderProgram ) return;
+	ShaderProgram* shaderProgram = programs->getProgram(shader);
+	if( !shaderProgram ) return;
 
-	//if( !shaderProgram->isLinked() && !shaderProgram->link() )
-	//	return;
+	if( !shaderProgram->isLinked() && !shaderProgram->link() )
+		return;
 
-	//shaderProgram->bind();
+	shaderProgram->bind();
 
-	//renderBackend->setupRenderState(state, true);
-	//bindTextureUnits(state, true);
+	renderBackend->setupRenderState(state, true);
+	bindTextureUnits(state, true);
 
-	//if( !renderable->onPreRender.empty() )
-	//{
-	//	// Call the user pre render hook.
-	//	renderable->onPreRender(activeView, state);
-	//}
+	if( !renderable->onPreRender.empty() )
+	{
+		// Call the user pre render hook.
+		renderable->onPreRender(activeView, state);
+	}
 
-	//RenderLayer stage = renderable->getRenderLayer();
+	RenderLayer stage = renderable->getRenderLayer();
 
-	//if( stage != RenderLayer::Overlays )
-	//{
-	//	if( !setupRenderStateMatrix(state) )
-	//		return;
+	if( stage != RenderLayer::Overlays )
+	{
+		if( !setupRenderStateMatrix(state) )
+			return;
 
-	//	//if( !setupRenderStateLight(state, lights) )
-	//	//	return;
-	//}
-	//else if( stage == RenderLayer::Overlays )
-	//{
-	//	if( !setupRenderStateOverlay(state) )
-	//		return;
-	//}
+		//if( !setupRenderStateLight(state, lights) )
+		//	return;
+	}
+	else if( stage == RenderLayer::Overlays )
+	{
+		if( !setupRenderStateOverlay(state) )
+			return;
+	}
 
-	//UniformBuffer* ub = renderable->getUniformBuffer().get();
-	//shaderProgram->setUniforms(ub);
+	UniformBuffer* ub = renderable->getUniformBuffer().get();
+	shaderProgram->setUniforms(ub);
 
-	//renderBackend->renderBatch(renderable);
-	//
-	//if( !renderable->onPostRender.empty() )
-	//{
-	//	// Call the user post render hook.
-	//	renderable->onPostRender(activeView, state);
-	//}
-	//
-	//renderBackend->unsetupRenderState(state);
-	//unbindTextureUnits(state.material);
-	//
-	//shaderProgram->unbind();
+	renderBackend->renderBatch(renderable);
+	
+	if( !renderable->onPostRender.empty() )
+	{
+		// Call the user post render hook.
+		renderable->onPostRender(activeView, state);
+	}
+	
+	renderBackend->unsetupRenderState(state);
+	unbindTextureUnits(state.material);
+	
+	shaderProgram->unbind();
 
-	//renderBackend->unbindVertexBuffer(vb);
-	//unbindBuffers(renderable);
+	renderBackend->unbindVertexBuffer(vb);
+	unbindBuffers(renderable);
 }
 
 //-----------------------------------//
 
 void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 {
-	//TextureUnitMap& units = state.material->textureUnits;
-	//UniformBuffer* ub = state.renderable->getUniformBuffer().get();
+	TextureUnitMap& units = state.material->textureUnits;
+	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
 
-	//TextureUnitMap::const_iterator it;
-	//for( it = units.begin(); it != units.end(); it++ )
-	//{
-	//	const TextureUnit& unit = it->second;
-	//	
-	//	const ImageHandle& handle = unit.image;
-	//	Image* image = handle.Resolve();
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		const TextureUnit& unit = it->second;
+		
+		const ImageHandle& handle = unit.image;
+		Image* image = handle.Resolve();
 
-	//	Texture* texture = activeContext->textureManager->getTexture(image).get();
-	//	if( !texture ) continue;
+		Texture* texture = activeContext->textureManager->getTexture(image).get();
+		if( !texture ) continue;
 
-	//	if( !texture->uploaded )
-	//	{
-	//		renderBackend->uploadTexture(texture);
-	//		renderBackend->configureTexture(texture);
-	//	}
+		if( !texture->uploaded )
+		{
+			renderBackend->uploadTexture(texture);
+			renderBackend->configureTexture(texture);
+		}
 
-	//	renderBackend->setupTextureUnit(texture, unit);
-	//	renderBackend->bindTexture(texture);
-	//	
-	//	if( !bindUniforms ) continue;
+		renderBackend->setupTextureUnit(texture, unit);
+		renderBackend->bindTexture(texture);
+		
+		if( !bindUniforms ) continue;
 
-	//	char s_TextureUniform[] = "vp_Texture0";
-	//	size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 2;
+		char s_TextureUniform[] = "vp_Texture0";
+		size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 2;
 
-	//	// Build the uniform string without allocating memory.
-	//	uint8 index = unit.unit;
-	//	char indexChar = (index + '0');
-	//	
-	//	s_TextureUniform[s_TextureUniformSize] = indexChar;
-	//	ub->setUniform( s_TextureUniform, (int32) index );
-	//}
+		// Build the uniform string without allocating memory.
+		uint8 index = unit.unit;
+		char indexChar = (index + '0');
+		
+		s_TextureUniform[s_TextureUniformSize] = indexChar;
+		ub->setUniform( s_TextureUniform, (int32) index );
+	}
 }
 
 //-----------------------------------//
 
-void RenderDevice::unbindTextureUnits(RenderStateGroup& stateGroup)
+void RenderDevice::unbindTextureUnits(Material* material)
 {
-	//TextureUnitMap& units = material->textureUnits;
-	//TextureManager* textureManager = activeContext->textureManager;
+	TextureUnitMap& units = material->textureUnits;
+	TextureManager* textureManager = activeContext->textureManager;
 
-	//TextureUnitMap::const_iterator it;
-	//for( it = units.begin(); it != units.end(); it++ )
-	//{
-	//	const TextureUnit& unit = it->second;
-	//	const ImageHandle& handle = unit.image;
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		const TextureUnit& unit = it->second;
+		const ImageHandle& handle = unit.image;
 
-	//	Texture* texture = textureManager->getTexture(handle.Resolve()).get();
-	//	if( !texture ) continue;
+		Texture* texture = textureManager->getTexture(handle.Resolve()).get();
+		if( !texture ) continue;
 
-	//	renderBackend->setupTextureUnit(texture, unit);
-	//	renderBackend->unbindTexture(texture);
-	//}
+		renderBackend->setupTextureUnit(texture, unit);
+		renderBackend->unbindTexture(texture);
+	}
 }
 
 //-----------------------------------//
 
 bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 {
-	//const Matrix4x3& matModel = state.modelMatrix;
-	//const Matrix4x3& matView = activeView->viewMatrix;
-	//const Matrix4x4& matProjection = activeView->projectionMatrix;
+	const Matrix4x3& matModel = state.modelMatrix;
+	const Matrix4x3& matView = activeView->viewMatrix;
+	const Matrix4x4& matProjection = activeView->projectionMatrix;
 
-	//UniformBuffer* ub = state.renderable->getUniformBuffer().get();
-	//ub->setUniform( "vp_ModelMatrix", matModel );
-	//ub->setUniform( "vp_ViewMatrix", matView );
-	//ub->setUniform( "vp_ProjectionMatrix", matProjection );
+	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
+	ub->setUniform( "vp_ModelMatrix", matModel );
+	ub->setUniform( "vp_ViewMatrix", matView );
+	ub->setUniform( "vp_ProjectionMatrix", matProjection );
 
 	return true;
 }
@@ -260,36 +241,36 @@ bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 
 bool RenderDevice::bindBuffers(RenderBatch* renderable)
 {
-//	BufferManager* buffers = activeContext->bufferManager;
-//	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
-//
-//	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
-//	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
-//	
-//	if( !vb ) return false;
-//
-//	if( !vb->isBuilt() || gb->needsRebuild )
-//	{
-//		// If the vertex buffer is not built yet, then we build it.
-//		renderBackend->buildVertexBuffer(vb);
-//	}
-//
-//	renderBackend->bindVertexBuffer(vb);
-//
-//	// If there is no index buffer associated with the geometry, we are done.
-//	if( !ib ) goto done;
-//
-//	renderBackend->bindIndexBuffer(ib);
-//	
-//	if( !ib->isBuilt || gb->needsRebuild )
-//	{
-//		// If the index buffer is not built, we also need to build it.
-//		renderBackend->buildIndexBuffer(ib);
-//	}
-//
-//done:
-//
-//	gb->needsRebuild = false;
+	BufferManager* buffers = activeContext->bufferManager;
+	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
+
+	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
+	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
+	
+	if( !vb ) return false;
+
+	if( !vb->isBuilt() || gb->needsRebuild )
+	{
+		// If the vertex buffer is not built yet, then we build it.
+		renderBackend->buildVertexBuffer(vb);
+	}
+
+	renderBackend->bindVertexBuffer(vb);
+
+	// If there is no index buffer associated with the geometry, we are done.
+	if( !ib ) goto done;
+
+	renderBackend->bindIndexBuffer(ib);
+	
+	if( !ib->isBuilt || gb->needsRebuild )
+	{
+		// If the index buffer is not built, we also need to build it.
+		renderBackend->buildIndexBuffer(ib);
+	}
+
+done:
+
+	gb->needsRebuild = false;
 	return true;
 }
 
@@ -297,16 +278,16 @@ bool RenderDevice::bindBuffers(RenderBatch* renderable)
 
 bool RenderDevice::unbindBuffers(RenderBatch* renderable)
 {
-	//BufferManager* buffers = activeContext->bufferManager;
-	//const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
-	//
-	//VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
-	//if( !vb ) return false;
-	//
-	//renderBackend->unbindVertexBuffer(vb);
+	BufferManager* buffers = activeContext->bufferManager;
+	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
+	
+	VertexBuffer* vb = buffers->getVertexBuffer(gb).get();
+	if( !vb ) return false;
+	
+	renderBackend->unbindVertexBuffer(vb);
 
-	//IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
-	//if( ib ) renderBackend->unbindIndexBuffer(ib);
+	IndexBuffer* ib = buffers->getIndexBuffer(gb).get();
+	if( ib ) renderBackend->unbindIndexBuffer(ib);
 
 	return true;
 }
@@ -430,14 +411,14 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
-	//Vector2i size = activeTarget->getSettings().getSize();
-	//Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x, size.y, 0, -100, 100);
+	Vector2i size = activeTarget->getSettings().getSize();
+	Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x, size.y, 0, -100, 100);
 
-	//const UniformBufferPtr& ub = state.renderable->getUniformBuffer();
-	//ub->setUniform( "vp_ProjectionMatrix", projection );
-	//ub->setUniform( "vp_ModelMatrix", state.modelMatrix );
-	//ub->setUniform( "vp_ViewMatrix", Matrix4x4::Identity );
-	//ub->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
+	const UniformBufferPtr& ub = state.renderable->getUniformBuffer();
+	ub->setUniform( "vp_ProjectionMatrix", projection );
+	ub->setUniform( "vp_ModelMatrix", state.modelMatrix );
+	ub->setUniform( "vp_ViewMatrix", Matrix4x4::Identity );
+	ub->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
 
 	return true;
 }
