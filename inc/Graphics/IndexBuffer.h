@@ -17,10 +17,8 @@ NAMESPACE_GRAPHICS_BEGIN
 
 typedef BufferId IndexBufferId;
 
-class API_GRAPHICS IndexBuffer : public Buffer
+struct API_GRAPHICS IndexBuffer : public Buffer
 {
-public:
-
 	IndexBuffer();
 	bool isBuilt;
 };
