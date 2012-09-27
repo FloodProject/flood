@@ -20,28 +20,8 @@ RenderBatch* RenderBatchCreate( Allocator* alloc )
 
 //-----------------------------------//
 
-RenderBatchRange::RenderBatchRange()
-	: start(0)
-	, end(0)
-{
-}
-
-//-----------------------------------//
-
 RenderBatch::RenderBatch()
-	: type( PrimitiveType::Triangles )
-	, mode( PrimitiveRasterMode::Solid )
-	, stage( RenderLayer::Normal )
-	, priority(0)
 {
-	ub = AllocateGraphics(UniformBuffer);
-}
-
-//-----------------------------------//
-
-RenderBatch::~RenderBatch()
-{
-
 }
 
 //-----------------------------------//
