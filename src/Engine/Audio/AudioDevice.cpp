@@ -273,6 +273,18 @@ const ALchar* AudioGetError()
 
 //-----------------------------------//
 
+void AudioInitialize()
+{
+
+}
+
+void AudioShutdown()
+{
+
+}
+
+//-----------------------------------//
+
 NAMESPACE_ENGINE_END
 
 #endif

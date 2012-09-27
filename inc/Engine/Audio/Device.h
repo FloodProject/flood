@@ -25,6 +25,12 @@ NAMESPACE_ENGINE_BEGIN
 
 class AudioDevice;
 
+// Initializes the audio subsystem.
+API_AUDIO void AudioInitialize();
+
+// Shutdowns the audio subsystem.
+API_AUDIO void AudioShutdown();
+
 // Gets the main audio device.
 API_AUDIO AudioDevice* GetAudioDevice();
 
