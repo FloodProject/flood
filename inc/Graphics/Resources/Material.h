@@ -16,47 +16,6 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-enum struct BlendSource
-{
-	Zero,
-	One,
-	DestinationColor,
-	InverseDestinationColor,
-	SourceAlpha,
-	InverseSourceAlpha,
-	DestinationAlpha,
-	InverseDestinationAlpha,
-	SourceAlphaSaturate
-};
-
-enum struct BlendDestination
-{
-	Zero,
-	One,
-	SourceColor,
-	InverseSourceColor,
-	SourceAlpha,
-	InverseSourceAlpha,
-	DestinationAlpha,
-	InverseDestinationAlpha
-};
-
-//-----------------------------------//
-
-enum struct DepthCompare
-{
-	Never,
-	Less,
-	Equal,
-	LessOrEqual,
-	Greater,
-	NotEqual,
-	GreaterOrEqual,
-	Always
-};
-
-//-----------------------------------//
-
 API_GRAPHICS REFLECT_DECLARE_CLASS(Material)
 
 class API_GRAPHICS Material : public Resource
@@ -70,6 +29,9 @@ public:
 	Material( const Material& rhs );
 	~Material();
 
+	// Initializes the material.
+	void init();
+
 	// Gets the associated resource group.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Materials)
 
@@ -81,6 +43,9 @@ public:
 
 	// Sets the shader of the material.
 	void setShader(const String& name);
+
+	// Gets/sets the render mode.
+	ACCESSOR(PrimitiveRasterMode, PrimitiveRasterMode, mode)
 
 	// Gets/sets the depth writing of the material.
 	ACCESSOR(DepthWrite, bool, depthWrite)
@@ -136,9 +101,6 @@ public:
 	// Texture units.
 	TextureUnitMap textureUnits;
 
-	// Initialization.
-	void init();
-
 public:
 
 	// Name of the material.
@@ -146,31 +108,6 @@ public:
 
 	// Program of the material.
 	ShaderMaterialHandle shader;
-
-	// Backface culling.
-	bool cullBackfaces;
-	
-	// Depth settings.
-	DepthCompare depthCompare;
-	bool depthTest;
-	bool depthWrite;
-	Vector2 depthRange;
-	Vector2 depthOffset;
-
-	// Alpha settings.
-	bool alphaTest;
-
-	// Line settings.
-	bool lineSmooth;
-	float lineWidth;
-
-	// Blending settings.
-	BlendSource source;
-	BlendDestination destination;
-	bool _isBlendingEnabled;
-
-	// Default line width.
-	static float DefaultLineWidth;
 };
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Material );
