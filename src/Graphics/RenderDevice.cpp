@@ -103,6 +103,12 @@ void RenderDevice::render( const RenderBatch& batch )
 		auto command = (BindVertexBufferCommand&) renderCommand;
 		renderBackend->bindVertexBuffer(0);
 		break;
+	}
+	case RenderCommandType::BindVertexBuffer:
+	{
+		auto command = (BindVertexBufferCommand&) renderCommand;
+		renderBackend->bindVertexBuffer(0);
+		break;
 	} };
 	
 	//bindBuffers(batch);
