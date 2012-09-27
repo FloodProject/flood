@@ -44,48 +44,6 @@ public:
 	// Sets the shader of the material.
 	void setShader(const String& name);
 
-	// Gets/sets the render mode.
-	ACCESSOR(PrimitiveRasterMode, PrimitiveRasterMode, mode)
-
-	// Gets/sets the depth writing of the material.
-	ACCESSOR(DepthWrite, bool, depthWrite)
-
-	// Gets/sets the depth testing of the material.
-	ACCESSOR(DepthTest, bool, depthTest)
-
-	// Gets/sets the depth testing of the material.
-	ACCESSOR(DepthCompare, DepthCompare, depthCompare)
-
-	// Gets/sets the depth range of the material.
-	ACCESSOR(DepthRange, Vector2, depthRange)
-
-	// Gets/sets the depth offset of the material.
-	ACCESSOR(DepthOffset, Vector2, depthOffset)
-
-	// Gets/sets the alpha testing of the material.
-	ACCESSOR(AlphaTest, bool, alphaTest)
-
-	// Gets/sets the line width of the material.
-	ACCESSOR(LineWidth, float, lineWidth)
-
-	// Gets/sets the line smoothing of the material.
-	ACCESSOR(LineSmoothing, bool, lineSmooth)
-
-	// Gets/sets the backface culling of the material.
-	ACCESSOR(BackfaceCulling, bool, cullBackfaces)
-
-	// Gets the blending options for this material.
-	GETTER(BlendSource, BlendSource, source)
-	
-	// Gets the blending options for this material.
-	GETTER(BlendDestination, BlendDestination, destination)
-
-	// Gets if blending is enabled.
-	bool isBlendingEnabled() const;
-
-	// Sets the blending options for this material.
-	void setBlending( BlendSource, BlendDestination );
-
 	// Sets a texture to the material.
 	void setTexture( uint8 unit, const String& name );
 
