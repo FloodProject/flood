@@ -14,18 +14,17 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-class VertexBuffer;
-class IndexBuffer;
+struct VertexBuffer;
+struct IndexBuffer;
+struct RenderBatch;
+struct RenderState;
 class RenderBuffer;
 
-class Texture;
 class Image;
-
+class Texture;
 class Shader;
 class ShaderProgram;
 
-class RenderBatch;
-class RenderState;
 class RenderView;
 class RenderCapabilities;
 
@@ -44,7 +43,7 @@ public:
 
 	// Framebuffers.
 	virtual Color getPixel(uint16 x, uint16 y) = 0;
-	virtual void setClearColor(Color color) = 0;
+	virtual void setClearColor(Color) = 0;
 	virtual void setupRenderView(RenderView*) = 0;
 	virtual void clearRenderView(RenderView*) = 0;
 
@@ -76,8 +75,8 @@ public:
 	virtual Image* readTexture(Texture*) = 0;
 
 	// Texture units.
-	virtual void setupTextureUnit(Texture* texture, const TextureUnit& unit) = 0;
-	virtual void undoTextureUnit(Texture* texture, const TextureUnit& unit) = 0;
+	virtual void setupTextureUnit(Texture*, const TextureUnit&) = 0;
+	virtual void undoTextureUnit(Texture*, const TextureUnit&) = 0;
 
 	// Shaders.
 	virtual ShaderProgram* createProgram() = 0;
