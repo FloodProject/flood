@@ -50,12 +50,12 @@ ReferenceCounted* ResourceHandleFind(HandleId id)
 	return res;
 }
 
-ResourceHandle ResourceHandleCreate(Resource* p)
+ResourceHandle ResourceHandleCreate(Resource* res)
 {
 	if( !gs_ResourceHandleManager ) return HandleInvalid;
 	
-	HandleId handle = HandleCreate(gs_ResourceHandleManager, p);
-	LogDebug("ResourceHandleCreate: %lu %s", handle, p->getPath().c_str());
+	HandleId handle = HandleCreate(gs_ResourceHandleManager, res);
+	LogDebug("ResourceHandleCreate: %lu %s", handle, res->getPath().c_str());
 	
 	return handle;
 }
@@ -79,7 +79,8 @@ static HandleId ResourceHandleFind(const char* s)
 	return gs_ResourcesManager->loadResource(s).getId();
 }
 
-static void ResourceHandleSerialize( ReflectionContext* context, ReflectionWalkType::Enum wt )
+static void ResourceHandleSerialize(
+	ReflectionContext* context, ReflectionWalkType::Enum wt )
 {
 	Serializer* serializer = (Serializer*) context->userData;
 
@@ -143,13 +144,13 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::destroyHandles()
 {
-	ResourceMap::iterator it = resources.begin();
-	for( ; it != resources.end(); ++it )
+	for( auto it = resources.begin(); it != resources.end(); ++it )
 	{
 		ResourceHandle& handle = it->second;
 		Resource* res = handle.Resolve();
 		
-		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
+		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(),
+			res->references);
 	}
 
 	gs_RemoveResource = false;
@@ -328,7 +329,9 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 {
 	Task* task = TaskCreate( GetResourcesAllocator() );
 	
-	ResourceLoadOptions* taskOptions = Allocate(GetResourcesAllocator(), ResourceLoadOptions);
+	ResourceLoadOptions* taskOptions = Allocate(GetResourcesAllocator(),
+		ResourceLoadOptions);
+
 	*taskOptions = options;
 
 	task->callback.Bind(ResourceTaskRun);
@@ -473,7 +476,8 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 
 		if(resourceLoaders.find(extension) != resourceLoaders.end())
 		{
-			LogDebug("Extension '%s' already has a resource loader", extension.c_str());
+			LogDebug("Extension '%s' already has a resource loader",
+				extension.c_str());
 			continue;
 		}
 
@@ -527,8 +531,8 @@ void ResourceManager::setupResourceLoaders(Class* klass)
 	
 		if( ClassIsAbstract(child ) ) continue;
 
-		ResourceLoader* loader = (ResourceLoader*)
-			ClassCreateInstance(child, GetResourcesAllocator());
+		auto loader = (ResourceLoader*) ClassCreateInstance(
+			child, GetResourcesAllocator());
 
 		registerLoader( loader );
 	}
