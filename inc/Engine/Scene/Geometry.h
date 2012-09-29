@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
 
 /**
  * This component holds geometry data for rendering. It can hold multiple
- *.renderable objects, each with different materials. When the camera node
+ * renderable objects, each with different materials. When the camera node
  * traverses the scene graph, Geometry nodes are picked and passed to the
  * rendering device for rendering.
  */
