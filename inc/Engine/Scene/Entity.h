@@ -19,13 +19,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-EXTERN_BEGIN
-
 API_SCENE Entity* EntityCreate( Allocator* );
-
-EXTERN_END
-
-//-----------------------------------//
 
 typedef std::map<Class*, ComponentPtr> ComponentMap;
 typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
