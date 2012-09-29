@@ -25,14 +25,11 @@ NAMESPACE_ENGINE_BEGIN
 
 API_SCENE REFLECT_DECLARE_ENUM(LightType)
 
-struct LightType
+enum struct LightType
 {
-	enum Enum
-	{
-		Directional,
-		Point,
-		Spot
-	};
+	Directional,
+	Point,
+	Spot
 };
 
 //-----------------------------------//
@@ -51,10 +48,10 @@ class API_ENGINE Light : public Component
 
 public:
 
-	Light( LightType::Enum type = LightType::Point );
+	Light( LightType type = LightType::Point );
 
 	// Gets/sets the type of this light source.
-	ACCESSOR(LightType, LightType::Enum, lightType)
+	ACCESSOR(LightType, LightType, lightType)
 
 	// Gets/sets if this light source is active (powered on).
 	ACCESSOR(Active, bool, isLightOn)
@@ -86,7 +83,7 @@ protected:
 	RenderBatchPtr createDebuRenderable() const;
 
 	// Light type and colors
-	LightType::Enum lightType;
+	LightType lightType;
 
 	Color diffuseColor;
 	Color specularColor;

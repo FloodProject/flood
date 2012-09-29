@@ -32,7 +32,7 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Light::Light( LightType::Enum type )
+Light::Light( LightType type )
 	: lightType(type)
 	, cutoffRadius(0)
 { }
