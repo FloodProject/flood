@@ -48,7 +48,7 @@ API_CORE bool    ThreadJoin(Thread*);
 API_CORE bool    ThreadPause(Thread*);
 API_CORE bool    ThreadResume(Thread*);
 API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority);
-API_CORE void    ThreadSetName(Thread*, const String& name);
+API_CORE void    ThreadSetName(Thread*, const char* name);
 
 typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
 #define pThreadCreate(alloc, ...) CreateScopedPtr(ThreadCreate, alloc, __VA_ARGS__)

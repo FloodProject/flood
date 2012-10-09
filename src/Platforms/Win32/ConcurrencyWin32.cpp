@@ -158,7 +158,7 @@ static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 
 typedef DWORD (WINAPI *GetThreadIdFn)(HANDLE);
 
-void ThreadSetName( Thread* thread, const String& name )
+void ThreadSetName( Thread* thread, const char* name )
 {
 	if( !thread ) return;
 
@@ -171,7 +171,7 @@ void ThreadSetName( Thread* thread, const String& name )
 	GetThreadIdFn pGetThreadId = (GetThreadIdFn) GetProcAddress(module, "GetThreadId");
 	if( pGetThreadId == NULL ) return;
 
-	SetThreadName( pGetThreadId(thread->Handle), name.c_str() ); 
+	SetThreadName( pGetThreadId(thread->Handle), name ); 
 }
 
 #pragma endregion
