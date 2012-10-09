@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/Event.h"
+#include "Core/String.h"
 
 NAMESPACE_EXTERN_BEGIN
 

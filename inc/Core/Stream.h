@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/Pointers.h"
+#include "Core/String.h"
 
 NAMESPACE_EXTERN_BEGIN
 

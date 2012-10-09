@@ -11,6 +11,7 @@
 
 #include "Core/API.h"
 #include "Core/Network/CipherISAAC.h"
+#include <cstring>
 
 NAMESPACE_CORE_BEGIN
 

@@ -49,12 +49,6 @@
 #define NAMESPACE_EXTERN_BEGIN NAMESPACE_CORE_BEGIN EXTERN_BEGIN
 #define NAMESPACE_EXTERN_END EXTERN_END NAMESPACE_CORE_END
 
-//---------------------------------------------------------------------//
-// String
-//---------------------------------------------------------------------//
-
-#include "Core/String.h"
-
 #ifndef SWIG
 
 #ifdef COMPILER_MSVC
@@ -68,7 +62,7 @@
 #define FL_INSTANTIATE_TEMPLATES() \
     template class std::basic_string<char>;
 
-extern template class std::basic_string<char>;
+//extern template class std::basic_string<char>;
 
 #endif
 

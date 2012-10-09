@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Core/String.h"
+
 NAMESPACE_EXTERN_BEGIN
 
 //---------------------------------------------------------------------//

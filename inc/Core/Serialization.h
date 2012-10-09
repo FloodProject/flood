@@ -12,6 +12,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Quaternion.h"
+#include "Core/String.h"
 
 NAMESPACE_CORE_BEGIN
 

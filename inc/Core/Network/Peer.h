@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/References.h"
+#include "Core/String.h"
 
 struct _ENetPeer;
 typedef _ENetPeer ENetPeer;
