@@ -36,24 +36,24 @@ struct API_CORE TypeAttribute
  * will be used for fast dynamic type checking, reflection and serialization.
  */
 
+enum struct TypeKind : uint8
+{
+	Primitive,
+	Composite,
+	Enumeration,
+};
+
 struct API_CORE Type
 {
-	enum MetaType : uint8
-	{
-		Primitive,
-		Composite,
-		Enumeration,
-	};
-
 	Type()
 	{}
 
-	Type(MetaType type, const char* name, uint16 size)
-		: type(type), name(name), size(size), serialize(nullptr)
+	Type(TypeKind kind, const char* name, uint16 size)
+		: kind(kind), name(name), size(size), serialize(nullptr)
 	{}
 
 	// Meta type of the type.
-	MetaType type;
+	TypeKind kind;
 
 	// Name of the type.
 	const char* name;
@@ -272,7 +272,7 @@ struct API_CORE Primitive : public Type
 	{}
 
 	Primitive(PrimitiveType type, const char* name, uint16 size)
-		: Type(Type::Primitive, name, size), type(type)
+		: Type(TypeKind::Primitive, name, size), type(type)
 	{}
 
 	PrimitiveType type;

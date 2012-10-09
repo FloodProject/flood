@@ -24,21 +24,21 @@ REFLECT_CLASS_END()
 
 bool ReflectionIsPrimitive(const Type* type)
 {
-	return type && type->type == Type::Primitive;
+	return type && type->kind == TypeKind::Primitive;
 }
 
 //-----------------------------------//
 
 bool ReflectionIsComposite(const Type* type)
 {
-	return type && type->type == Type::Composite;
+	return type && type->kind == TypeKind::Composite;
 }
 
 //-----------------------------------//
 
 bool ReflectionIsEnum(const Type* type)
 {
-	return type && type->type == Type::Enumeration;
+	return type && type->kind == TypeKind::Enumeration;
 }
 
 //-----------------------------------//

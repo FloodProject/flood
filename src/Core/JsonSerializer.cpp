@@ -362,19 +362,19 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 {
 	const Field* field = context->field;
 
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Primitive:
-	{
-		assert(0 && "Not implemented");
-		break;
-	}
-	case Type::Enumeration:
+	case TypeKind::Primitive:
 	{
 		assert(0 && "Not implemented");
 		break;
 	}
-	case Type::Composite:
+	case TypeKind::Enumeration:
+	{
+		assert(0 && "Not implemented");
+		break;
+	}
+	case TypeKind::Composite:
 	{
 		context->composite = (Class*) field->type;
 
@@ -539,9 +539,9 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType::En
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();
 
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Composite:
+	case TypeKind::Composite:
 	{
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
@@ -566,13 +566,13 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType::En
 		context->composite = composite;
 		break;
 	}
-	case Type::Primitive:
+	case TypeKind::Primitive:
 	{
 		context->primitive = (Primitive*) context->field->type;
 		DeserializePrimitive(context);
 		break;
 	}
-	case Type::Enumeration:
+	case TypeKind::Enumeration:
 	{
 		context->enume = (Enum*) context->field->type;
 		DeserializeEnum(context);

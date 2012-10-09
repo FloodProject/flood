@@ -30,7 +30,7 @@ NAMESPACE_CORE_BEGIN
 		static Enum _enum; \
 		_enum.name = TOSTRING(enumName); \
 		_enum.size = sizeof(enumName); \
-		_enum.type = Type::Enumeration; \
+		_enum.kind = TypeKind::Enumeration; \
 
 #define ENUM(value) \
  EnumAddValue(&_enum, TOSTRING(value), (int32) This::value);
@@ -66,7 +66,7 @@ NAMESPACE_CORE_BEGIN
 		static Class klass; \
 		klass.name = TOSTRING(className); \
 		klass.size = sizeof(className); \
-		klass.type = Type::Composite;
+		klass.kind = TypeKind::Composite;
 
 #define REFLECT_CLASS_SET_SERIALIZER(fn) \
 	klass.serialize = fn;

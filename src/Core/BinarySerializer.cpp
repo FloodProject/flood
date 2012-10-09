@@ -346,19 +346,19 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	const Field* field = context->field;
 
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Primitive:
-	{
-		LogAssert("Not implemented");
-		break;
-	}
-	case Type::Enumeration:
+	case TypeKind::Primitive:
 	{
 		LogAssert("Not implemented");
 		break;
 	}
-	case Type::Composite:
+	case TypeKind::Enumeration:
+	{
+		LogAssert("Not implemented");
+		break;
+	}
+	case TypeKind::Composite:
 	{
 		context->composite = (Class*) field->type;
 
@@ -427,9 +427,9 @@ static void DeserializeField( ReflectionContext* context )
 		return;
 	}
 	
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Composite:
+	case TypeKind::Composite:
 	{
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
@@ -451,13 +451,13 @@ static void DeserializeField( ReflectionContext* context )
 		context->composite = composite;
 		break;
 	}
-	case Type::Primitive:
+	case TypeKind::Primitive:
 	{
 		context->primitive = (Primitive*) context->field->type;
 		DeserializePrimitive(context);
 		break;
 	}
-	case Type::Enumeration:
+	case TypeKind::Enumeration:
 	{
 		context->enume = (Enum*) context->field->type;
 		DeserializeEnum(context);

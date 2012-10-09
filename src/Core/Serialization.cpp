@@ -422,9 +422,9 @@ static void ReflectionWalkType(ReflectionContext* context, Type* type)
 {
 	bool hasCustomSerialize = type->serialize != 0;
 
-	switch(type->type)
+	switch(type->kind)
 	{
-	case Type::Composite:
+	case TypeKind::Composite:
 	{
 		Class* objectClass = context->objectClass;
 		Class* composite = context->composite;
@@ -442,11 +442,11 @@ static void ReflectionWalkType(ReflectionContext* context, Type* type)
 		context->composite = composite;
 		break;
 	}
-	case Type::Primitive:
+	case TypeKind::Primitive:
 		context->primitive = (Primitive*) type;
 		ReflectionWalkPrimitive(context);
 		break;
-	case Type::Enumeration:
+	case TypeKind::Enumeration:
 		context->enume = (Enum*) type;
 		ReflectionWalkEnum(context);
 		break;
