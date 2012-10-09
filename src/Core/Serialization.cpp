@@ -123,48 +123,48 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 	void* address = context->address;
 	ValueContext& vc = context->valueContext;
 	
-	switch(type->type)
+	switch(type->kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 		vc.b = *(bool*) address;
 		break;
-	case Primitive::Int8:
+	case PrimitiveTypeKind::Int8:
 		vc.i8 = *(sint8*) address;
 		break;
-	case Primitive::Uint8:
+	case PrimitiveTypeKind::Uint8:
 		vc.u8 = *(uint8*) address;
 		break;
-	case Primitive::Int16:
+	case PrimitiveTypeKind::Int16:
 		vc.i16 = *(int16*) address;
 		break;
-	case Primitive::Uint16:
+	case PrimitiveTypeKind::Uint16:
 		vc.u16= *(uint16*) address;
 		break;
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 		vc.i32 = *(int32*) address;
 		break;
-	case Primitive::Uint32:
+	case PrimitiveTypeKind::Uint32:
 		vc.u32 = *(uint32*) address;
 		break;
-	case Primitive::Int64:
+	case PrimitiveTypeKind::Int64:
 		vc.i64 = *(int64*) address;
 		break;
-	case Primitive::Uint64:
+	case PrimitiveTypeKind::Uint64:
 		vc.u64 = *(uint64*) address;
 		break;
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 		vc.f32 = *(float*) address;
 		break;
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 		vc.c = *(Color*) address;
 		break;
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 		vc.v = *(Vector3*) address;
 		break;
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 		vc.q = *(Quaternion*) address;
 		break;
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 		vc.s = (String*) address;
 		break;
 	default:

@@ -95,75 +95,75 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::E
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ValueContext& vc = context->valueContext;
 
-	switch(context->primitive->type)
+	switch(context->primitive->kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		bool& b = vc.b;
 		EncodeVariableInteger(bin->ms, b);
 		break;
 	}
-	case Primitive::Int8:
+	case PrimitiveTypeKind::Int8:
 	{
 		sint8& i = vc.i8;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
-	case Primitive::Uint8:
+	case PrimitiveTypeKind::Uint8:
 	{
 		uint8& i = vc.u8;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
-	case Primitive::Int16:
+	case PrimitiveTypeKind::Int16:
 	{
 		sint16& i = vc.i16;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
-	case Primitive::Uint16:
+	case PrimitiveTypeKind::Uint16:
 	{
 		uint16& i = vc.u16;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		sint32& i = vc.i32;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
-	case Primitive::Uint32:
+	case PrimitiveTypeKind::Uint32:
 	{
 		uint32& i = vc.u32;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
-	case Primitive::Int64:
+	case PrimitiveTypeKind::Int64:
 	{
 		sint64& i = vc.i64;
 		EncodeVariableInteger(bin->ms, EncodeZigZag64(i));
 		break;
 	}
-	case Primitive::Uint64:
+	case PrimitiveTypeKind::Uint64:
 	{
 		uint64& i = vc.u64;
 		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		float& f = vc.f32;
 		EncodeFloat(bin->ms, f);
 		break;
 	}
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		String& s = *vc.s;
 		EncodeString(bin->ms, s);
 		break;
 	}
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		ColorP& c = vc.c;
 		EncodeFloat(bin->ms, c.r);
@@ -172,7 +172,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::E
 		EncodeFloat(bin->ms, c.a);
 		break;
 	}
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		Vector3P& v = vc.v;
 		EncodeFloat(bin->ms, v.x);
@@ -180,7 +180,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::E
 		EncodeFloat(bin->ms, v.z);
 		break;
 	}
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		QuaternionP& q = vc.q;
 		EncodeFloat(bin->ms, q.x);
@@ -225,78 +225,78 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 
 	ValueContext& vc = context->valueContext;
 
-	switch(context->primitive->type)
+	switch(context->primitive->kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.b = i != 0;
 		SetFieldValue(bool, vc.b);
 		break;
 	}
-	case Primitive::Int8:
+	case PrimitiveTypeKind::Int8:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.i8 = (sint8) DecodeZigZag32((uint32)i);
 		SetFieldValue(sint8, vc.i8);
 		break;
 	}
-	case Primitive::Uint8:
+	case PrimitiveTypeKind::Uint8:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.u8 = (uint8) i;
 		SetFieldValue(uint8, vc.u8);
 		break;
 	}
-	case Primitive::Int16:
+	case PrimitiveTypeKind::Int16:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.i16 = (sint16) DecodeZigZag32((uint32)i);
 		SetFieldValue(sint16, vc.i16);
 		break;
 	}
-	case Primitive::Uint16:
+	case PrimitiveTypeKind::Uint16:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.u16 = (uint16) i;
 		SetFieldValue(uint16, vc.u16);
 		break;
 	}
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.i32 = (sint32) DecodeZigZag32((uint32)i);
 		SetFieldValue(sint32, vc.i32);
 		break;
 	}
-	case Primitive::Uint32:
+	case PrimitiveTypeKind::Uint32:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.u32 = (uint32) i;
 		SetFieldValue(uint32, vc.u32);
 		break;
 	}
-	case Primitive::Int64:
+	case PrimitiveTypeKind::Int64:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.i64 = (sint64) DecodeZigZag64(i);
 		SetFieldValue(sint64, vc.i64);
 		break;
 	}
-	case Primitive::Uint64:
+	case PrimitiveTypeKind::Uint64:
 	{
 		DecodeVariableInteger(ms, i);
 		vc.u64 = i;
 		SetFieldValue(uint64, vc.u64);
 		break;
 	}
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		vc.f32 = DecodeFloat(ms);
 		SetFieldValue(float, vc.f32);
 		break;
 	}
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		ColorP& val = vc.c;
 		val.r = DecodeFloat(ms);
@@ -306,7 +306,7 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 		SetFieldValue(ColorP, val);
 		break;
 	}
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		Vector3P& val = vc.v;
 		val.x = DecodeFloat(ms);
@@ -315,7 +315,7 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 		SetFieldValue(Vector3P, val);
 		break;
 	}
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		QuaternionP& val = vc.q;
 		val.x = DecodeFloat(ms);
@@ -325,7 +325,7 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 		SetFieldValue(QuaternionP, val);
 		break;
 	}
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		String val;
 		DecodeString(ms, val);

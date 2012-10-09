@@ -248,34 +248,34 @@ API_CORE void FieldSetSetter(Field*, FieldSetterFunction);
 
 //-----------------------------------//
 
+enum struct PrimitiveTypeKind : uint8
+{
+	Bool,
+	Int8,
+	Uint8,
+	Int16,
+	Uint16,
+	Int32,
+	Uint32,
+	Int64,
+	Uint64,
+	Float,
+	String,
+	Color,
+	Vector3,
+	Quaternion,
+};
+
 struct API_CORE Primitive : public Type
 {
-	enum PrimitiveType
-	{
-		Bool,
-		Int8,
-		Uint8,
-		Int16,
-		Uint16,
-		Int32,
-		Uint32,
-		Int64,
-		Uint64,
-		Float,
-		String,
-		Color,
-		Vector3,
-		Quaternion,
-	};
-
 	Primitive()
 	{}
 
-	Primitive(PrimitiveType type, const char* name, uint16 size)
-		: Type(TypeKind::Primitive, name, size), type(type)
+	Primitive(PrimitiveTypeKind kind, const char* name, uint16 size)
+		: Type(TypeKind::Primitive, name, size), kind(kind)
 	{}
 
-	PrimitiveType type;
+	PrimitiveTypeKind kind;
 };
 
 struct PrimitiveBuiltins
@@ -310,7 +310,7 @@ typedef std::pair<const char*, int32> EnumValuesPair;
 struct API_CORE Enum : public Type
 {
 	EnumValuesMap values;
-	Primitive::PrimitiveType backing;
+	PrimitiveTypeKind backing;
 };
 
 // Adds a new enumeration to this enum.

@@ -103,69 +103,69 @@ static Quaternion ConvertValueToQuaternion( json_t* value )
 
 //-----------------------------------//
 
-ValueContext ConvertValueToPrimitive( Primitive::PrimitiveType type, json_t* value )
+ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value )
 {
 	ValueContext vc;
 
-	switch(type)
+	switch(kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		assert( json_is_boolean(value) );
 		vc.b = json_typeof(value) == JSON_TRUE;
 		break;
 	}
-	case Primitive::Int16:
+	case PrimitiveTypeKind::Int16:
 	{
 		vc.i16 = (int16) json_integer_value(value);
 		break;
 	}
-	case Primitive::Uint16:
+	case PrimitiveTypeKind::Uint16:
 	{
 		vc.u16 = (uint16) json_integer_value(value);
 		break;
 	}
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		vc.i32 = (int32) json_integer_value(value);
 		break;
 	}
-	case Primitive::Uint32:
+	case PrimitiveTypeKind::Uint32:
 	{
 		vc.u32 = (uint32) json_integer_value(value);
 		break;
 	}
-	case Primitive::Int64:
+	case PrimitiveTypeKind::Int64:
 	{
 		vc.i64 = (int64) json_integer_value(value);
 		break;
 	}
-	case Primitive::Uint64:
+	case PrimitiveTypeKind::Uint64:
 	{
 		vc.u64 = (uint64) json_integer_value(value);
 		break;
 	}
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		vc.f32 = (float) json_real_value(value);
 		break;
 	}
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		vc.cs = json_string_value(value);
 		break;
 	}
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		vc.c = ConvertValueToColor(value);
 		break;
 	}
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		vc.v = ConvertValueToVector3(value);
 		break;
 	}
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		vc.q = ConvertValueToQuaternion(value);
 		break;
@@ -260,51 +260,51 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 
 	json_t* value = nullptr;
 
-	switch(context->primitive->type)
+	switch(context->primitive->kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		bool& b = vc.b;
 		value = b ? json_true() : json_false();
 		break;
 	}
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		int32& i = vc.i32;
 		value = json_integer(i);
 		break;
 	}
-	case Primitive::Uint32:
+	case PrimitiveTypeKind::Uint32:
 	{
 		uint32& i = vc.u32;
 		value = json_integer(i);
 		break;
 	}
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		float& f = vc.f32;
 		value = json_real(f);
 		break;
 	}
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		String& s = *vc.s;
 		value = json_string( s.c_str() );
 		break;
 	}
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		ColorP& c = vc.c;
 		value = json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
 		break;
 	}
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		Vector3P& v = vc.v;
 		value = json_pack("[f,f,f]", v.x, v.y, v.z);
 		break;
 	}
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		QuaternionP& q = vc.q;
 		value = json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
@@ -338,18 +338,18 @@ static void DeserializePrimitive( ReflectionContext* context )
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();
 
-	ValueContext vc = ConvertValueToPrimitive(context->primitive->type, value);
+	ValueContext vc = ConvertValueToPrimitive(context->primitive->kind, value);
 
-	switch(context->primitive->type)
+	switch(context->primitive->kind)
 	{
-	case Primitive::Bool: { SetFieldValue(bool, vc.b); break; }
-	case Primitive::Int32: { SetFieldValue(int32, vc.i32); break; }
-	case Primitive::Uint32: { SetFieldValue(uint32, vc.u32); break; }
-	case Primitive::Float: { SetFieldValue(float, vc.f32); break; }
-	case Primitive::String: { SetFieldValue(String, vc.cs); break; }
-	case Primitive::Color: { SetFieldValue(ColorP, vc.c); break; }
-	case Primitive::Vector3: { SetFieldValue(Vector3P, vc.v); break; }
-	case Primitive::Quaternion: { SetFieldValue(QuaternionP, vc.q); break; }
+	case PrimitiveTypeKind::Bool: { SetFieldValue(bool, vc.b); break; }
+	case PrimitiveTypeKind::Int32: { SetFieldValue(int32, vc.i32); break; }
+	case PrimitiveTypeKind::Uint32: { SetFieldValue(uint32, vc.u32); break; }
+	case PrimitiveTypeKind::Float: { SetFieldValue(float, vc.f32); break; }
+	case PrimitiveTypeKind::String: { SetFieldValue(String, vc.cs); break; }
+	case PrimitiveTypeKind::Color: { SetFieldValue(ColorP, vc.c); break; }
+	case PrimitiveTypeKind::Vector3: { SetFieldValue(Vector3P, vc.v); break; }
+	case PrimitiveTypeKind::Quaternion: { SetFieldValue(QuaternionP, vc.q); break; }
 	default: assert(0 && "Unknown primitive type");
 	}
 }

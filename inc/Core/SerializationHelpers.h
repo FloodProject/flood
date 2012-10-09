@@ -40,7 +40,7 @@ struct API_CORE SerializerJSON : public Serializer
 	std::vector<json_t*> arrays;
 };
 
-ValueContext ConvertValueToPrimitive( Primitive::PrimitiveType type, json_t* value );
+ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value );
 
 //-----------------------------------//
 

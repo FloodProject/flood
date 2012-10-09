@@ -356,23 +356,21 @@ void FieldSetSetter(Field* field, FieldSetterFunction fn)
 
 //-----------------------------------//
 
-#define PT(type) Primitive::PrimitiveType::type
-
 PrimitiveBuiltins::PrimitiveBuiltins()
-	: p_bool(PT(Bool), "bool", sizeof(bool))
-	, p_int8(PT(Int8), "int8", sizeof(int8))
-	, p_uint8(PT(Uint8), "uint8", sizeof(uint8))
-	, p_uint16(PT(Uint16), "uint16", sizeof(uint16))
-	, p_int16(PT(Int16), "int16", sizeof(int16))
-	, p_int32(PT(Int32), "int32", sizeof(int32))
-	, p_uint32(PT(Uint32), "uint32", sizeof(uint32))
-	, p_int64(PT(Int64), "int64", sizeof(int64))
-	, p_uint64(PT(Uint64), "uint64", sizeof(uint64))
-	, p_float(PT(Float), "float", sizeof(float))
-	, p_string(PT(String), "string", sizeof(String))
-	, p_Vector3(PT(Vector3), "Vector3", sizeof(Vector3))
-	, p_Color(PT(Color), "Color", sizeof(Color))
-	, p_Quaternion(PT(Quaternion), "Quaternion", sizeof(Quaternion))
+	: p_bool(PrimitiveTypeKind::Bool, "bool", sizeof(bool))
+	, p_int8(PrimitiveTypeKind::Int8, "int8", sizeof(int8))
+	, p_uint8(PrimitiveTypeKind::Uint8, "uint8", sizeof(uint8))
+	, p_uint16(PrimitiveTypeKind::Uint16, "uint16", sizeof(uint16))
+	, p_int16(PrimitiveTypeKind::Int16, "int16", sizeof(int16))
+	, p_int32(PrimitiveTypeKind::Int32, "int32", sizeof(int32))
+	, p_uint32(PrimitiveTypeKind::Uint32, "uint32", sizeof(uint32))
+	, p_int64(PrimitiveTypeKind::Int64, "int64", sizeof(int64))
+	, p_uint64(PrimitiveTypeKind::Uint64, "uint64", sizeof(uint64))
+	, p_float(PrimitiveTypeKind::Float, "float", sizeof(float))
+	, p_string(PrimitiveTypeKind::String, "string", sizeof(String))
+	, p_Vector3(PrimitiveTypeKind::Vector3, "Vector3", sizeof(Vector3))
+	, p_Color(PrimitiveTypeKind::Color, "Color", sizeof(Color))
+	, p_Quaternion(PrimitiveTypeKind::Quaternion, "Quaternion", sizeof(Quaternion))
 {}
 
 #undef PT
