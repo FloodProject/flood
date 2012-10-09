@@ -34,6 +34,7 @@
 #ifdef PLATFORM_WINDOWS
 
 #include "Core/FileWatcher.h"
+#include <map>
 
 NAMESPACE_CORE_BEGIN
 

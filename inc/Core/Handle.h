@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/References.h"
+#include <map>
 
 NAMESPACE_EXTERN_BEGIN
 
