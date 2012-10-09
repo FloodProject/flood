@@ -122,7 +122,7 @@ int64 StreamGetPosition(Stream* stream)
 
 //-----------------------------------//
 
-int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode::Enum mode)
+int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode mode)
 {
 	if( !stream || !stream->fn->seek ) return -1;
 	return stream->fn->seek(stream, offset, (int8) mode);

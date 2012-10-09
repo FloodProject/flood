@@ -46,7 +46,7 @@ static StreamFuncs gs_FileFuncs =
 //-----------------------------------//
 
 Stream* StreamCreateFromFile(Allocator* alloc,
-							 const Path& path, StreamMode::Enum mode)
+							 const Path& path, StreamMode mode)
 {
 	FileStream* fs = Allocate(alloc, FileStream);
 	if( !fs ) return nullptr;

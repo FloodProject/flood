@@ -18,19 +18,23 @@ NAMESPACE_EXTERN_BEGIN
  * Use these for different kinds of access to the streams.
  */
 
-namespace StreamMode
+enum struct StreamMode
 {
-	enum Enum { Read, Write, Append };
-}
+	Read,
+	Write,
+	Append
+};
 
 /**
  * Controls where the seeking will occur from.
  */
 
-namespace StreamSeekMode
+enum struct StreamSeekMode
 {
-	enum Enum { Absolute, Relative, RelativeEnd };
-}
+	Absolute,
+	Relative,
+	RelativeEnd
+};
 
 const int StreamEOF = 0;
 
@@ -69,7 +73,7 @@ struct API_CORE Stream
 	virtual ~Stream() {}
 
 	String path;
-	StreamMode::Enum mode;
+	StreamMode mode;
 	StreamFuncs* fn;
 };
 
@@ -82,7 +86,7 @@ struct API_CORE Stream
  * or zip: would be valid schemes for an HTTP or ZIP stream.
  */
 
-API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamMode::Enum);
+API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamMode);
 #define pStreamCreateFromURI(alloc, ...) CreateScopedPtr(StreamCreateFromURI, alloc, __VA_ARGS__)
 
 API_CORE void   StreamDestroy(Stream*);
@@ -100,7 +104,7 @@ API_CORE int64  StreamWrite(Stream*, uint8* buf, uint64 size);
 API_CORE int64  StreamWriteString(Stream*, const String&);
 
 API_CORE int64  StreamGetPosition(Stream*);
-API_CORE int64  StreamSetPosition(Stream*, int64, StreamSeekMode::Enum);
+API_CORE int64  StreamSetPosition(Stream*, int64, StreamSeekMode);
 
 typedef scoped_ptr<Stream, StreamDestroy> StreamPtr;
 
@@ -111,7 +115,7 @@ struct API_CORE FileStream : Stream
 	FILE* fp;
 };
 
-API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode::Enum);
+API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode);
 #define pStreamCreateFromFile(alloc, ...) CreateScopedPtr(StreamCreateFromFile, alloc, __VA_ARGS__)
 
 //-----------------------------------//
@@ -130,7 +134,7 @@ API_CORE void StreamMemorySetRawBuffer(MemoryStream*, uint8* buffer);
 
 //-----------------------------------//
 
-API_CORE Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamMode::Enum mode);
+API_CORE Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamMode mode);
 
 //-----------------------------------//
 
