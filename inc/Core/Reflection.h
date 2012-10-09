@@ -18,15 +18,12 @@ NAMESPACE_EXTERN_BEGIN
  * Types can have metadata attached to them in the form of attributes.
  */
 
-struct API_CORE TypeAttribute
+enum struct TypeAttributeKind : uint8
 {
-	enum MetaType : uint8
-	{
-		String,
-		Integer,
-		KeyValue,
-		Flags
-	};
+	String,
+	Integer,
+	KeyValue,
+	Flags
 };
 
 //-----------------------------------//
