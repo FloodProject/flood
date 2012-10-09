@@ -8,6 +8,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 NAMESPACE_CORE_BEGIN
 

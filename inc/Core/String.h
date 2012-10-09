@@ -11,6 +11,7 @@
 #include <sstream>
 #include <cstdarg>
 #include <cstring>
+#include <vector>
 
 NAMESPACE_CORE_BEGIN
 

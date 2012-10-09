@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <vector>
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
