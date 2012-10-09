@@ -179,7 +179,7 @@ ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value )
 
 //-----------------------------------//
 
-static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 
@@ -202,7 +202,7 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 // one key and contains the name of the concrete class of the type. This is used
 // to handle polymorphism, where a derived instance is used where a base is expected.
 
-static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 	
@@ -223,7 +223,7 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 
 //-----------------------------------//
 
-static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeField(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 
@@ -239,7 +239,7 @@ static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 //-----------------------------------//
 	
-static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 	
@@ -253,7 +253,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 //-----------------------------------//
 
-static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::Enum wt )
+static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType wt )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	ValueContext& vc = context->valueContext;
@@ -521,7 +521,7 @@ static void DeserializeHandle( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static void DeserializeField( ReflectionContext* context, ReflectionWalkType::Enum wt )
+static void DeserializeField( ReflectionContext* context, ReflectionWalkType wt )
 {
 	const Field* field = context->field;
 
@@ -582,7 +582,7 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType::En
 
 //-----------------------------------//
 
-static void DeserializeFields( ReflectionContext* context, ReflectionWalkType::Enum )
+static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();

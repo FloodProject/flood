@@ -26,7 +26,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static void WalkNull(ReflectionContext*, ReflectionWalkType::Enum)
+static void WalkNull(ReflectionContext*, ReflectionWalkType)
 {
 }
 

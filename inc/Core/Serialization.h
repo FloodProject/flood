@@ -37,16 +37,13 @@ union API_CORE ValueContext
 	const char* cs;
 };
 
-struct ReflectionWalkType
+enum struct ReflectionWalkType : uint8
 {
-	enum Enum
-	{
-		Begin,
-		End,
-		Element,
-		ElementBegin,
-		ElementEnd,
-	};
+	Begin,
+	End,
+	Element,
+	ElementBegin,
+	ElementEnd,
 };
 
 //-----------------------------------//
@@ -69,7 +66,7 @@ API_CORE void ReflectionWalkComposite(ReflectionContext*);
 API_CORE void ReflectionWalkCompositeField(ReflectionContext*);
 
 // Walking functions
-typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType::Enum);
+typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType);
 
 //-----------------------------------//
 

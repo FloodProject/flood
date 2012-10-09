@@ -27,7 +27,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 
@@ -45,7 +45,7 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 //-----------------------------------//
 
-static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 	Class* objectClass = ctx->objectClass;
@@ -64,7 +64,7 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 
 //-----------------------------------//
 
-static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeField(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 	const Field* field = ctx->field;
@@ -78,7 +78,7 @@ static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 //-----------------------------------//
 
-static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 	
@@ -90,7 +90,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 //-----------------------------------//
 
-static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::Enum wt)
+static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ValueContext& vc = context->valueContext;
@@ -196,7 +196,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType::E
 
 //-----------------------------------//
 
-static void DeserializeEnum( ReflectionContext* context, ReflectionWalkType::Enum = ReflectionWalkType::End )
+static void DeserializeEnum( ReflectionContext* context, ReflectionWalkType = ReflectionWalkType::End )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	Enum* enume = (Enum*) context->enume;
@@ -217,7 +217,7 @@ static void DeserializeEnum( ReflectionContext* context, ReflectionWalkType::Enu
 		FieldSet<T>(context->field, context->object, val); \
 	MULTI_LINE_MACRO_END
 
-static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType::Enum = ReflectionWalkType::End )
+static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType = ReflectionWalkType::End )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	MemoryStream* ms = bin->ms;
