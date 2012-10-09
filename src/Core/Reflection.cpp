@@ -322,7 +322,7 @@ Field::Field()
 	, size(0)
 	, offset(0)
 	, pointer_size(0)
-	, qualifiers(0)
+	, qualifiers((FieldQualifier)0)
 	, setter(nullptr)
 	, resize(nullptr)
 	, serialize(nullptr)
@@ -332,18 +332,18 @@ Field::Field()
 
 //-----------------------------------//
 
-bool FieldHasQualifier(const Field* field, FieldQualifier::Enum qual)
+bool FieldHasQualifier(const Field* field, FieldQualifier qual)
 {
 	if( !field ) return false;
-	return (field->qualifiers & qual) != 0;
+	return ((uint16)field->qualifiers & (uint16)qual) != 0;
 }
 
 //-----------------------------------//
 
-void FieldSetQualifier(Field* field, FieldQualifier::Enum qual)
+void FieldSetQualifier(Field* field, FieldQualifier qual)
 {
 	if( !field ) return;
-	field->qualifiers |= qual;
+	*((uint16*)&field->qualifiers) |= (uint16)qual;
 }
 
 //-----------------------------------//

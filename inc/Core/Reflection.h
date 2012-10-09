@@ -190,20 +190,17 @@ API_CORE Class* ClassGetById(ClassId id);
 typedef void (*FieldSetterFunction)(void* object, void* value);
 typedef void* (*FieldResizeFunction)(void* object, size_t size);
 
-struct FieldQualifier
+enum struct FieldQualifier : uint16
 {
-	enum Enum
-	{
-		Array			= 1 << 0,
-		Map				= 1 << 1,
-		Set				= 1 << 2,
-		Handle			= 1 << 3,
-		RawPointer		= 1 << 4,
-		SharedPointer	= 1 << 5,
-		RefPointer		= 1 << 6,
-		ReadOnly		= 1 << 7,
-		NoSerialize		= 1 << 8
-	};
+	Array           = 1 << 0,
+	Map             = 1 << 1,
+	Set             = 1 << 2,
+	Handle          = 1 << 3,
+	RawPointer      = 1 << 4,
+	SharedPointer   = 1 << 5,
+	RefPointer      = 1 << 6,
+	ReadOnly        = 1 << 7,
+	NoSerialize     = 1 << 8
 };
 
 struct API_CORE Field
@@ -217,7 +214,7 @@ struct API_CORE Field
 	uint16 size;
 	uint16 offset;
 	uint16 pointer_size;
-	uint16 qualifiers;
+	FieldQualifier qualifiers;
 	FieldSetterFunction setter;
 	FieldResizeFunction resize;
 	ReflectionWalkFunction serialize;
@@ -226,10 +223,10 @@ struct API_CORE Field
 static FieldId FieldInvalid = 127;
 
 // Returns if the field has the given qualifier.
-API_CORE bool FieldHasQualifier(const Field*, FieldQualifier::Enum);
+API_CORE bool FieldHasQualifier(const Field*, FieldQualifier);
 
 // Sets the given qualifier in the field.
-API_CORE void FieldSetQualifier(Field*, FieldQualifier::Enum);
+API_CORE void FieldSetQualifier(Field*, FieldQualifier);
 
 // Sets the given setter in the field.
 API_CORE void FieldSetSetter(Field*, FieldSetterFunction);

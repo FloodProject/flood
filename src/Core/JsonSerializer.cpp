@@ -350,7 +350,7 @@ static void DeserializePrimitive( ReflectionContext* context )
 	case PrimitiveTypeKind::Color: { SetFieldValue(ColorP, vc.c); break; }
 	case PrimitiveTypeKind::Vector3: { SetFieldValue(Vector3P, vc.v); break; }
 	case PrimitiveTypeKind::Quaternion: { SetFieldValue(QuaternionP, vc.q); break; }
-	default: assert(0 && "Unknown primitive type");
+	default: assert(0 && "Unknown primitive type kind");
 	}
 }
 
