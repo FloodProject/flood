@@ -501,7 +501,7 @@ bool SerializerSave(Serializer* serializer, const Object* object)
 
 Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 {
-	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamMode::Read);	
+	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamOpenMode::Read);	
 	serializer->stream = stream;
 
 	Object* object = SerializerLoad(serializer);
@@ -514,7 +514,7 @@ Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 
 bool SerializerSaveObjectToFile(Serializer* serializer, const Path& file, Object* object)
 {
-	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamMode::Write);
+	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamOpenMode::Write);
 	if( !stream ) return false;
 
 	serializer->stream = stream;

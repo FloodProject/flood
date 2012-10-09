@@ -18,7 +18,7 @@ NAMESPACE_EXTERN_BEGIN
  * Use these for different kinds of access to the streams.
  */
 
-enum struct StreamMode
+enum struct StreamOpenMode
 {
 	Read,
 	Write,
@@ -73,7 +73,7 @@ struct API_CORE Stream
 	virtual ~Stream() {}
 
 	String path;
-	StreamMode mode;
+	StreamOpenMode mode;
 	StreamFuncs* fn;
 };
 
@@ -86,7 +86,7 @@ struct API_CORE Stream
  * or zip: would be valid schemes for an HTTP or ZIP stream.
  */
 
-API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamMode);
+API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamOpenMode);
 #define pStreamCreateFromURI(alloc, ...) CreateScopedPtr(StreamCreateFromURI, alloc, __VA_ARGS__)
 
 API_CORE void   StreamDestroy(Stream*);
@@ -115,7 +115,7 @@ struct API_CORE FileStream : Stream
 	FILE* fp;
 };
 
-API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode);
+API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamOpenMode);
 #define pStreamCreateFromFile(alloc, ...) CreateScopedPtr(StreamCreateFromFile, alloc, __VA_ARGS__)
 
 //-----------------------------------//
@@ -134,7 +134,7 @@ API_CORE void StreamMemorySetRawBuffer(MemoryStream*, uint8* buffer);
 
 //-----------------------------------//
 
-API_CORE Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamMode mode);
+API_CORE Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamOpenMode mode);
 
 //-----------------------------------//
 

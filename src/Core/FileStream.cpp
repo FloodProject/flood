@@ -46,7 +46,7 @@ static StreamFuncs gs_FileFuncs =
 //-----------------------------------//
 
 Stream* StreamCreateFromFile(Allocator* alloc,
-							 const Path& path, StreamMode mode)
+							 const Path& path, StreamOpenMode mode)
 {
 	FileStream* fs = Allocate(alloc, FileStream);
 	if( !fs ) return nullptr;
@@ -75,9 +75,9 @@ static bool FileOpen(Stream* stream)
 
 	switch(fs->mode)
 	{
-	case StreamMode::Read:   mode = "rb"; break;
-	case StreamMode::Write:  mode = "w+b"; break;
-	case StreamMode::Append: mode = "a+b"; break;
+	case StreamOpenMode::Read:   mode = "rb"; break;
+	case StreamOpenMode::Write:  mode = "w+b"; break;
+	case StreamOpenMode::Append: mode = "a+b"; break;
 	}
 
 #ifdef COMPILER_MSVC
@@ -122,7 +122,7 @@ static int64 FileWrite(Stream* stream, void* buffer, int64 size)
 {
 	FileStream* fs = (FileStream*) stream;
 
-	assert( fs->mode == StreamMode::Write || fs->mode == StreamMode::Append );
+	assert( fs->mode == StreamOpenMode::Write || fs->mode == StreamOpenMode::Append );
 	assert( buffer && size >= 0 );
 
 	return fwrite(buffer, size_t(size), 1, fs->fp);

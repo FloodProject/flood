@@ -91,7 +91,7 @@ static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator*
 	if( !archive ) return nullptr;
 	
 	Path fullPath = ArchiveCombinePath(archive, file);
-	Stream* stream = StreamCreateFromFile(alloc, fullPath, StreamMode::Read);
+	Stream* stream = StreamCreateFromFile(alloc, fullPath, StreamOpenMode::Read);
 
 	return stream;
 }

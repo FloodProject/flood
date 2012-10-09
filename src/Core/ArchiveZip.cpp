@@ -205,7 +205,7 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 	stream->dir = (ZZIP_DIR*) archive->handle;
 	stream->handle = nullptr;
 	stream->path = path;
-	stream->mode = StreamMode::Read; // only read-only for zips for now.
+	stream->mode = StreamOpenMode::Read; // only read-only for zips for now.
 	stream->fn = &gs_ZipStreamFuncs;
 
 	if( !ZipStreamOpen(stream) )
