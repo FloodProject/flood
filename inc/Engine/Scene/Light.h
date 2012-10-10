@@ -79,8 +79,8 @@ public:
 
 protected:
 
-	// Creates the debug.renderable of this component.
-	RenderBatchPtr createDebuRenderable() const;
+	// Creates the debug renderable of this component.
+	RenderBatchPtr createDebugRenderable() const;
 
 	// Light type and colors
 	LightType lightType;

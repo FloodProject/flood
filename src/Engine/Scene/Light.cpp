@@ -42,12 +42,12 @@ Light::Light( LightType type )
 void Light::update( float delta )
 {
 	if( !debugRenderable )
-		debugRenderable = createDebuRenderable();
+		debugRenderable = createDebugRenderable();
 }
 
 //-----------------------------------//
 
-RenderBatchPtr Light::createDebuRenderable() const
+RenderBatchPtr Light::createDebugRenderable() const
 {
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "LightMaterial");
 
