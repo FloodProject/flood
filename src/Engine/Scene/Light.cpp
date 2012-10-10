@@ -54,7 +54,7 @@ RenderBatchPtr Light::createDebugRenderable() const
 	Material* material = materialHandle.Resolve();
 	material->setDepthTest(false);
 
-	SpherePtr sphere = new Sphere();
+	SpherePtr sphere = AllocateHeap(Sphere);
 	sphere->setMaterial(materialHandle);
 
 	return sphere;
