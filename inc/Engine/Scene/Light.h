@@ -75,7 +75,7 @@ public:
 	ACCESSOR(CutOffRadius, float, cutoffRadius)
 
 	// Called once per frame to update the component.
-	virtual void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 protected:
 
