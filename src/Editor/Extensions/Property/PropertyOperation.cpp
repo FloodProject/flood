@@ -60,63 +60,63 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		return;
 	}
 
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Enumeration:
+	case TypeKind::Enumeration:
 	{
 		int32 val = value.As<int32>();
 		FieldSet<int32>(field, object, val);
 		break;
 	}
-	case Type::Primitive:
+	case TypeKind::Primitive:
 	{
 		Primitive* primitive = (Primitive*) field->type;
 
-		switch(primitive->type)
+		switch(primitive->kind)
 		{
-		case Primitive::Bool:
+		case PrimitiveTypeKind::Bool:
 		{
 			bool val = value.As<bool>();
 			FieldSet<bool>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::Int32:
+		case PrimitiveTypeKind::Int32:
 		{
 			int32 val = value.As<int32>();
 			FieldSet<int32>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::Float:
+		case PrimitiveTypeKind::Float:
 		{
 			float val = value.As<float>();
 			FieldSet<float>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::String:
+		case PrimitiveTypeKind::String:
 		{
 			String val = value.As<String>();
 			FieldSet<String>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::Color:
+		case PrimitiveTypeKind::Color:
 		{
 			Color val = value.As<Color>();
 			FieldSet<Color>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::Vector3:
+		case PrimitiveTypeKind::Vector3:
 		{
 			Vector3 val = value.As<Vector3>();
 			FieldSet<Vector3>(field, object, val);
 			break;
 		}
 		//-----------------------------------//
-		case Primitive::Quaternion:
+		case PrimitiveTypeKind::Quaternion:
 		{
 			Quaternion val = value.As<Quaternion>();
 			FieldSet<Quaternion>(field, object, val);

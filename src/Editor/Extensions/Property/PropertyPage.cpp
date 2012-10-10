@@ -288,39 +288,39 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	wxPGProperty* prop = nullptr;
 	Primitive* primitive = (Primitive*) field.type;
 
-	switch(primitive->type)
+	switch(primitive->kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		prop = new wxBoolProperty( wxEmptyString, wxPG_LABEL );
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		prop = new wxIntProperty( wxEmptyString, wxPG_LABEL );
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		prop = createFloatProperty( (const char*) wxEmptyString, 0 );
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL );
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		prop = new wxColourProperty( wxEmptyString, wxPG_LABEL );
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		prop->AppendChild( createFloatProperty("X", 0) );
@@ -329,7 +329,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		prop->AppendChild( createFloatProperty("X", 0) );
@@ -370,12 +370,12 @@ wxAny PropertyPage::getFieldValue(const Field* field, void* object)
 		return value;
 	}
 
-	switch(field->type->type)
+	switch(field->type->kind)
 	{
-	case Type::Enumeration:
+	case TypeKind::Enumeration:
 		value = FieldGet<int32>(field, object);
 		break;
-	case Type::Primitive:
+	case TypeKind::Primitive:
 		value = getFieldPrimitiveValue(field, object);
 		break;
 	default:
@@ -393,27 +393,27 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 
 	const Primitive& type = (const Primitive&) *field->type;
 
-	switch(type.type)
+	switch(type.kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 		value = FieldGet<bool>(field, object);
 		break;
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 		value = FieldGet<int32>(field, object);
 		break;
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 		value = FieldGet<float>(field, object);
 		break;
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 		value = FieldGet<String>(field, object);
 		break;
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 		value = FieldGet<Color>(field, object);
 		break;
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 		value = FieldGet<Vector3>(field, object);
 		break;
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 		value = FieldGet<Quaternion>(field, object);
 		break;
 	default:
@@ -473,9 +473,9 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	const Primitive& type = (Primitive&) *data->field->type;
 
-	switch(type.type)
+	switch(type.kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 
 		bool val = value.As<bool>();
@@ -483,36 +483,36 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		int val = value.As<int>();
 		prop->SetValue(val);
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		float val = value.As<float>();
 		prop->SetValue(val);
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		String val = value.As<String>();
 		prop->SetValue(val);
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		Color val = value.As<Color>();
-        wxAny any( ConvertColorToWx(val) );
+		wxAny any( ConvertColorToWx(val) );
 		//prop->SetValue(any);
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Vector3:
 	{
 		Vector3 vec = value.As<Vector3>();
 		prop->GetPropertyByName("X")->SetValue(vec.x);
@@ -521,7 +521,7 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 		break;
 	}
 	//-----------------------------------//
-	case Primitive::Quaternion:
+	case PrimitiveTypeKind::Quaternion:
 	{
 		const Quaternion& quat = value.As<Quaternion>();
 		EulerAngles vec = quat.getEulerAngles();
@@ -567,40 +567,40 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 {
 	const Primitive& type = (const Primitive&) *data->field->type;
 
-	switch(type.type)
+	switch(type.kind)
 	{
-	case Primitive::Bool:
+	case PrimitiveTypeKind::Bool:
 	{
 		bool val = prop->GetValue().GetAny().As<bool>();
 		return val;
 		break;
 	}
-	case Primitive::Int32:
+	case PrimitiveTypeKind::Int32:
 	{
 		int32 val = prop->GetValue().GetAny().As<int32>();
 		return val;
 		break;
 	}
-	case Primitive::Float:
+	case PrimitiveTypeKind::Float:
 	{
 		float val = prop->GetValue().GetAny().As<float>();
 		return val;
 		break;
 	}
-	case Primitive::String:
+	case PrimitiveTypeKind::String:
 	{
 		wxString val = prop->GetValue().GetAny().As<wxString>();
 		return String(val.c_str());
 		break;
 	}
-	case Primitive::Color:
+	case PrimitiveTypeKind::Color:
 	{
 		wxColour val = prop->GetValue().GetAny().As<wxColour>();
 		return ConvertColorFromWx(val);
 		break;
 	}
-	case Primitive::Quaternion:
-	case Primitive::Vector3:
+	case PrimitiveTypeKind::Quaternion:
+	case PrimitiveTypeKind::Vector3:
 	{
 		wxPGProperty* X = prop->GetPropertyByName("X");
 		wxPGProperty* Y = prop->GetPropertyByName("Y");
@@ -612,7 +612,7 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 
 		Vector3 vec( x.As<float>(), y.As<float>(), z.As<float>() );
 			
-		if(type.type == Primitive::Vector3)
+		if(type.kind == PrimitiveTypeKind::Vector3)
 			return wxAny(vec);
 		else
 			return wxAny( Quaternion((EulerAngles&) vec) );

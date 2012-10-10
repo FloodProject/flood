@@ -29,7 +29,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-static void SerializeScene(ReflectionContext* context, ReflectionWalkType::Enum wt)
+static void SerializeScene(ReflectionContext* context, ReflectionWalkType wt)
 {
 #if SERIALIZE_SCENE
 	if( !context->loading )

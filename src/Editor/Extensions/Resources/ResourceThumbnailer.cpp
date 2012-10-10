@@ -92,7 +92,7 @@ void ResourceThumbnailer::generateThumbnail()
 
 	if( !thumbnail ) return;
 
-	Stream* fileStream = StreamCreateFromFile(AllocatorGetHeap(), res.preview, StreamMode::Write);
+	Stream* fileStream = StreamCreateFromFile(AllocatorGetHeap(), res.preview, StreamOpenMode::Write);
 
 	ImageWriter writer;
 	writer.save( thumbnail.get(), fileStream );

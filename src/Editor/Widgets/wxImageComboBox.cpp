@@ -49,7 +49,7 @@ wxBitmap* ConvertImageToBitmap( Image* image, const Path& fullPath )
 	//wxBitmap* bmp = new wxBitmap;
 	//bmp->Create(&image->getBuffer(), wxBITMAP_TYPE_ANY, image->getWidth(), image->getHeight(), 4);
 
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), fullPath, StreamMode::Read);
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), fullPath, StreamOpenMode::Read);
 	if( !stream ) return nullptr;
 	
 	std::vector<byte> data;

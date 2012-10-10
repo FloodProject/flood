@@ -80,7 +80,7 @@ static HandleId ResourceHandleFind(const char* s)
 }
 
 static void ResourceHandleSerialize(
-	ReflectionContext* context, ReflectionWalkType::Enum wt )
+	ReflectionContext* context, ReflectionWalkType wt )
 {
 	Serializer* serializer = (Serializer*) context->userData;
 

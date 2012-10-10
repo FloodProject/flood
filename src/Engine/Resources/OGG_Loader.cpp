@@ -33,7 +33,7 @@ static int OggSeek(void* datasource, ogg_int64_t offset, int whence)
 {
 	Stream* stream = (Stream*) datasource;
 
-	StreamSeekMode::Enum mode;
+	StreamSeekMode mode;
 
 	switch(whence)
 	{

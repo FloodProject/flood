@@ -128,7 +128,7 @@ void Engine::init()
 
 void Engine::setupLogger()
 {
-	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
+	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamOpenMode::Write);
 	log = LogCreate( AllocatorGetHeap() );
 }
 
