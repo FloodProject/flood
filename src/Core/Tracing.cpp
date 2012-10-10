@@ -6,7 +6,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Telemetry.h"
+#include "Core/Tracing.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
@@ -14,20 +14,20 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static Allocator* gs_TelemetryAllocator = nullptr;
+static Allocator* gs_TraceAllocator = nullptr;
 
-void TelemetryInitialize()
-{
-	gs_TelemetryAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
-	AllocatorSetGroup(gs_TelemetryAllocator, "Telemetry");
-}
+const int TRACE_QUEUE_SIZE = 16384;
 
-void TelemetryCreate()
-{
-}
+bool g_TraceEnabled = false;
 
-void TelemetryDestroy()
+void TraceInitialize()
 {
+	assert(gs_TraceAllocator == nullptr);
+
+	gs_TraceAllocator = AllocatorCreateBump(
+		AllocatorGetHeap(), TRACE_QUEUE_SIZE);
+
+	AllocatorSetGroup(gs_TraceAllocator, "Trace");
 }
 
 //-----------------------------------//
