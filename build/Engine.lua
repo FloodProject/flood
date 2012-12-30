@@ -88,9 +88,3 @@ project "Engine"
 
 	deps { Engine.deps  }
 	links { Engine.links }
-	libdirs { Engine.libdirs }
-
-	configuration "Debug"
-		links { "SFML_d" }
-	configuration "Release"
-		links { "SFML" }
