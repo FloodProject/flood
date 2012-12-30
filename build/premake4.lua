@@ -80,6 +80,7 @@ solution "Flush"
 	group "Managed"
 
 		dofile "EngineManaged.lua"
+		dofile "GUI.lua"
 		dofile "EditorManaged.lua"	
 		dofile "Editor.lua"
 
