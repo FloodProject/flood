@@ -29,7 +29,7 @@ project "Resources"
 	
 	vpaths
 	{
-		[""] = { "../src/", "../inc/" },
+		["*"] = { "../src/Resources/", "../inc/Resources/" },
 	}	
 
 	includedirs

@@ -63,21 +63,30 @@ solution "Flush"
 		defines { "WIN32", "_WINDOWS" }
 		
 	configuration {}
-	
-	dofile "Core.lua"
-	dofile "Resources.lua"
-	dofile "Graphics.lua"
-	dofile "Engine.lua"
-	dofile "Pipeline.lua"
 
-	dofile "Runtime.lua"
-	dofile "UnitTests.lua"
+	group "Engines"
 	
-	dofile "GameRuntime.lua"
-	dofile "Editor.lua"
+		dofile "Core.lua"
+		dofile "Resources.lua"
+		dofile "Graphics.lua"
+		dofile "Engine.lua"
+		dofile "Pipeline.lua"
+
+	group "Runtimes"
+
+		dofile "Runtime.lua"
+		dofile "GameRuntime.lua"
+
+	group "Managed"
+
+		dofile "EngineManaged.lua"
+		dofile "EditorManaged.lua"	
+		dofile "Editor.lua"
+
+	group "Tests"
+
+		dofile "UnitTests.lua"
+
+	group "Examples"
 
 	startup "GameRuntime"
-
-	-- Keep the managed layer disabled for now.
-	--dofile "EngineManaged.lua"
-	--dofile "EditorManaged.lua"

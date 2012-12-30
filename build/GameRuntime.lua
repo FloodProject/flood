@@ -22,6 +22,11 @@ project "GameRuntime"
 		"../src/Platforms/SFML/*.cpp",
 	}
 
+	vpaths
+	{
+		["*"] = { "../src/GameRuntime/", "../inc/GameRuntime/" },
+	}
+
 	includedirs
 	{
 		"../inc/",

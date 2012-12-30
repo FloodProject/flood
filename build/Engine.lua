@@ -38,7 +38,7 @@ project "Engine"
 	
 	vpaths
 	{
-		[""] = { "../src/", "../inc/" },
+		["*"] = { "../src/Engine/", "../inc/Engine/" },
 	}
 
 	configuration "not windows"
