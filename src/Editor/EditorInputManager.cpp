@@ -103,7 +103,7 @@ static MouseButton ConvertFromWxMouseButton( const wxMouseEvent& event )
 
 static MouseEventType ConvertFromWxMouseType( const wxMouseEvent& event )
 {
-	bool isDown = event.ButtonDown();
+	bool isDown = event.ButtonDown() || event.ButtonDClick(event.GetButton());
 	return isDown ? MouseEventType::MousePress : MouseEventType::MouseRelease;
 }
 
