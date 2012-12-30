@@ -339,6 +339,8 @@ GLint ConvertTextureInternalFormatGL( PixelFormat format )
 {
 	switch( format )
 	{
+	case PixelFormat::B8G8R8A8:
+	case PixelFormat::B8G8R8:
 	case PixelFormat::R8G8B8A8: return GL_RGBA8;
 	case PixelFormat::R8G8B8: return GL_RGB8;
 	case PixelFormat::Depth: return GL_DEPTH_COMPONENT;
@@ -354,6 +356,8 @@ GLint ConvertTextureSourceFormatGL( PixelFormat format )
 {
 	switch( format )
 	{
+	case PixelFormat::B8G8R8A8: return GL_BGRA;
+	case PixelFormat::B8G8R8: return GL_BGR;
 	case PixelFormat::R8G8B8A8: return GL_RGBA;
 	case PixelFormat::R8G8B8: return GL_RGB;
 	case PixelFormat::Depth: return GL_DEPTH_COMPONENT;
