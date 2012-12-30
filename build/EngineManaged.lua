@@ -1,16 +1,13 @@
 project "EngineManaged"
 
 	kind "SharedLib"
-	language "C#"
-	
-	targetdir "../bin"
-	debugdir "../bin"
+	language "C++"
+	flags { "Managed" }
 	
 	files
 	{
 		"EngineManaged.lua",
-		"../interface/Bindings/Engine/*.cs",
-		"../src/Engine/Managed/*.cs",
+		"../src/EngineManaged/*.cpp",
 	}
 
 	vpaths
@@ -18,9 +15,7 @@ project "EngineManaged"
 		["*"] = { "../src/EngineManaged/", "../inc/EngineManaged/" },
 	}		
 	
-	--vpaths
-	--{
-		--[""] = { "../../src/Editor/Managed/" },
-	--}
-	
-	links { "System" }
+	includedirs
+	{
+		"../inc/"
+	}
