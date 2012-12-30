@@ -79,10 +79,10 @@ project "Editor"
 		["*"] = { "../src/Editor/", "../inc/Editor/" },
 	}
 
-	Editor.deps =
-	{
-		"Mono"
-	}
+	Editor.deps = {}
+	if config.SCRIPTING_MONO then
+		table.insert(Editor.deps,"Mono")
+	end
 	
 	SetupWxWidgets()
 
@@ -119,6 +119,8 @@ project "Editor"
 		
 	configuration "vs*"
 		defines { "_CRT_SECURE_NO_WARNINGS" }
-
-	configuration "windows"
-		links { Mono.links }		
+	
+	if config.SCRIPTING_MONO then
+	  configuration "windows"
+		  links { Mono.links }		
+	end
