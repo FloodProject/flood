@@ -317,6 +317,8 @@ void SceneDocument::onToolSelect(ToolExtension* mode)
 
 //-----------------------------------//
 
+void InitializeGUI(InputManager*);
+
 void SceneDocument::createEditorScene()
 {
 	Allocator* alloc = AllocatorGetHeap();
@@ -361,6 +363,8 @@ void SceneDocument::createEditorScene()
 	physics->createWorld();
 	GetEngine()->setPhysicsManager(physics);
 #endif
+
+	InitializeGUI(GetEngine()->getInputManager());
 }
 
 //-----------------------------------//
@@ -400,6 +404,8 @@ EntityPtr SceneDocument::createCamera()
 
 //-----------------------------------//
 
+void RenderGUI(RenderBlock& rb);
+
 void SceneDocument::onRender()
 {
 	Camera* camera = sceneWindow->getCamera().get();
@@ -416,6 +422,8 @@ void SceneDocument::onRender()
 	for( size_t i = 0; i < camera->drawer.renderables.size(); i++)
 		block.renderables.push_back( camera->drawer.renderables[i] );
 #endif
+
+	RenderGUI(block);
 
 	camera->render(block);
 
