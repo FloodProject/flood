@@ -30,7 +30,8 @@ project "Core"
 
 	vpaths
 	{
-		[""] = { "../src/", "../inc/" },
+		["*"] = { "../src/Core/", "../inc/Core/" },
+		["Platforms/*"] = { "../src/Platforms/" },
 	}	
 
 	excludes

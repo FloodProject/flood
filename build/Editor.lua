@@ -76,7 +76,7 @@ project "Editor"
 	
 	vpaths
 	{
-		[""] = { "src/Editor/", "inc/Editor/" },
+		["*"] = { "../src/Editor/", "../inc/Editor/" },
 	}
 
 	Editor.deps =

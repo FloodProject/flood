@@ -31,7 +31,7 @@ project "Runtime"
 	
 	vpaths
 	{
-		[""] = { "../src/Runtime/", "../inc/Runtime/" },
+		["*"] = { "../src/Runtime/", "../inc/Runtime/" },
 	}
 
 	includedirs

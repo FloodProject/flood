@@ -31,7 +31,7 @@ project "Graphics"
 	
 	vpaths
 	{
-		[""] = { "../src/", "../inc/" },
+		["*"] = { "../src/Graphics/", "../inc/Graphics/" },
 	}
 
 	includedirs

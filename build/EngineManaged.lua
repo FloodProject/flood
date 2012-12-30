@@ -12,6 +12,11 @@ project "EngineManaged"
 		"../interface/Bindings/Engine/*.cs",
 		"../src/Engine/Managed/*.cs",
 	}
+
+	vpaths
+	{
+		["*"] = { "../src/EngineManaged/", "../inc/EngineManaged/" },
+	}		
 	
 	--vpaths
 	--{

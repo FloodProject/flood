@@ -13,6 +13,11 @@ project "UnitTests"
 		"../src/Tests/*.h",
 		"../src/Core/Test/**",
 	}
+
+	vpaths
+	{
+		["*"] = { "../src/UnitTests/", "../inc/UnitTests/" },
+	}
 	
 	includedirs
 	{
