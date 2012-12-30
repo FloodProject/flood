@@ -15,7 +15,7 @@ function SetupWxWidgets()
 		"../deps/wxWidgets/lib/vc_dll",
 	}	
 	
-	wxWidgets.links = { "" }
+	wxWidgets.links = { }
 
 	wxWidgets.defines = { '_LIB', 'WXUSINGDLL', 'WXMONOLITHIC' }
 
