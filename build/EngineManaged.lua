@@ -7,7 +7,7 @@ project "EngineManaged"
 	files
 	{
 		"EngineManaged.lua",
-		"../src/EngineManaged/*.cpp",
+		"../src/EngineManaged/**.cpp",
 	}
 
 	vpaths
