@@ -1,23 +1,25 @@
+EditorManaged = {}
+EditorManaged.name = "EditorManaged"
+
 project "EditorManaged"
 
 	kind "SharedLib"
 	language "C#"
 	
-	targetdir "../bin"
-	debugdir "../bin"
+	--flags { common_flags }
 	
-	flags { common_flags }
+	location "../src/Editor/Managed/"
 	
 	files
 	{
 		"EditorManaged.lua",
-		"../interface/Bindings/Editor/**.cs",
 		"../src/Editor/Managed/**.cs",
 	}
 	
-	--vpaths
-	--{
-		--[""] = { "../../src/Editor/Managed/" },
-	--}
-	
-	links { "System", "EngineManaged" }
+	--links { "System", "EngineManaged" }
+	links {
+		"System", 
+		"System.ComponentModel", 
+		"System.ComponentModel.Composition",
+		"GUI" 
+	}
