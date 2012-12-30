@@ -252,6 +252,13 @@ public ref class TextRenderer
 
 public:
 
+	static void ClearCache(){
+		for each(Gwen::Texture^ tex in m_StringCache->Values){
+			delete(tex);
+		}
+		m_StringCache->Clear();
+	}
+
 	//TODO use scale, remove renderer
     static Gwen::Texture^ StringToTexture(System::String^ text, Gwen::Font^ font, Gwen::Renderer::Base^ renderer)
     {
@@ -839,6 +846,11 @@ public:
 		input->Initialize(managedEditor->GUI->Canvas);
 	}
 
+	void Close() {
+		TextRenderer::ClearCache();
+		delete(managedEditor);
+	}
+
 	void Render(RenderBlock& rb){
 		renderer->Clear();
 		managedEditor->GUI->Render();
@@ -851,6 +863,13 @@ static gcroot<GUI^> gs_GUIInstance = nullptr;
 void InitializeGUI(InputManager* inputManager){
 	gs_GUIInstance = gcnew GUI(inputManager);
 }
+
+void CloseGUI() {
+	gs_GUIInstance->Close();
+	delete(gs_GUIInstance);
+	gs_GUIInstance = nullptr; 
+}
+
 void RenderGUI(RenderBlock& rb) {
 	gs_GUIInstance->Render(rb);
 }

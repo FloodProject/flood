@@ -43,6 +43,8 @@ SceneDocument::~SceneDocument()
 
 //-----------------------------------//
 
+void CloseGUI();
+
 void SceneDocument::onDocumentDestroy()
 {
 	LogDebug("Destroying SceneDocument");
@@ -61,6 +63,8 @@ void SceneDocument::onDocumentDestroy()
 	{
 		sceneWindow->destroyControl();
 	}
+
+	CloseGUI();
 }
 
 //-----------------------------------//

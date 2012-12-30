@@ -10,12 +10,19 @@ using System.Threading.Tasks;
 
 namespace FlushEditor
 {
-     public class EditorGUI {
+     public class EditorGUI : IDisposable{
 
 	    Gwen.Renderer.Base renderer;
 	    Gwen.Skin.Base skin;
 
 	    Gwen.Control.Canvas canvas;
+
+        public void Dispose()
+        {
+            canvas.Dispose();
+            renderer.Dispose();
+            skin.Dispose();
+        }
 
         public ToolBar ToolBar { get; private set; }
 
@@ -48,5 +55,7 @@ namespace FlushEditor
         {
             get { return canvas; }
         }
-    }
+
+        
+     }
 }

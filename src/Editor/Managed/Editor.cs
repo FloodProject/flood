@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace FlushEditor
 {
    
-    public class Editor {
+    public class Editor : IDisposable{
 
         private AggregateCatalog catalog;
 
@@ -38,6 +38,11 @@ namespace FlushEditor
             GUI.Initiated += OnGUIInit;
             
 	    }
+
+        public void Dispose()
+        {
+            GUI.Dispose();
+        }
 
         private void OnGUIInit(){
             documentManager = new DocumentManager();
