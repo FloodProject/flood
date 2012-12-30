@@ -172,10 +172,19 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
  			CheckLastErrorGL("Error drawing vertex buffer");
 		}
 	}
+
+	GLenum indexType = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+
+	int numIndices = batch->range.end - batch->range.start;
+	if (numIndices > 0)
+	{
+		glDrawElements( primitiveType, numIndices, indexType,
+			(const GLvoid*) (batch->range.start * (gb->indexSize / 8)) );
+		CheckLastErrorGL("Error drawing index buffer");
+	}
 	else
 	{
-		GLenum indexType = (gb->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-		int numIndices = gb->indexData.size() / (gb->indexSize / 8);
+		numIndices = gb->indexData.size() / (gb->indexSize / 8);
 
 		glDrawElements( primitiveType, numIndices, indexType, 0 );
 		CheckLastErrorGL("Error drawing index buffer");
