@@ -55,12 +55,6 @@ function deps(dep)
 	end
 end
 
-function vpaths(arg)
-end
-
-function debugdir(arg)
-end
-
 function startup(prj)
 end
 
