@@ -21,6 +21,7 @@ if "%C%"=="0" goto clean
 
 :clean
 "../tools/premake4" --file=premake4.lua clean
+"../tools/premake4" --file=premake4-deps.lua clean
 goto quit
 
 :vs2012
@@ -30,14 +31,17 @@ goto quit
 
 :vs2010
 "../tools/premake4" --file=premake4.lua vs2010
+"../tools/premake4" --file=premake4-deps.lua vs2010
 goto quit
 
 :codelite
 "../tools/premake4" --file=premake4.lua codelite
+"../tools/premake4" --file=premake4-deps.lua codelite
 goto quit
 
 :gmake
 "../tools/premake4" --file=premake4.lua gmake
+"../tools/premake4" --file=premake4-deps.lua gmake
 goto quit
 
 :quit
