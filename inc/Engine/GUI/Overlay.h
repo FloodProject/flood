@@ -119,7 +119,7 @@ public:
 	void setOpacity( float opacity );
 
 	// Updates the overlay if needed.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 	// Layouts the overlay.
 	void layout(const Vector2i& targetSize);

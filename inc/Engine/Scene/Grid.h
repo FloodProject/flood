@@ -27,7 +27,7 @@ public:
 
 	Grid();
 
-	void update( float update ) OVERRIDE;
+	virtual void update( float update ) OVERRIDE;
 
 protected:
 

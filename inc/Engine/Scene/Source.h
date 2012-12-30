@@ -89,7 +89,7 @@ public:
 	void setSound( const SoundHandle& sound );
 
 	// Updates the component.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 public:
 

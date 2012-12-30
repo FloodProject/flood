@@ -111,7 +111,7 @@ protected:
 	void setChanged(bool state = true);
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
+	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Position.
 	Vector3 position;

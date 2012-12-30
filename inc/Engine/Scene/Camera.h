@@ -90,7 +90,7 @@ protected:
 	void onTransform();
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
+	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Camera frustum.
 	Frustum frustum;

@@ -58,10 +58,10 @@ public:
 	Billboard( BillboardType type );
 
 	// Updates the component.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 	// Called just before the camera renders this component.
-	void onPreRender( const Camera& camera ) OVERRIDE;
+	virtual void onPreRender( const Camera& camera ) OVERRIDE;
 
 	// Creates the debug.renderable of the component.
 	//RenderBatchPtr createDebugRenderable() const OVERRIDE;

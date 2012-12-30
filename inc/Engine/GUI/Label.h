@@ -45,7 +45,7 @@ public:
 	void setFont( const FontHandle& font );
 
 	// Updates the geometry to match the new text if needed.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 protected:
 
@@ -53,7 +53,7 @@ protected:
 	void init();
 
 	// Rebuilds the overlay geometry.
-	void rebuildGeometry() OVERRIDE;
+	virtual void rebuildGeometry() OVERRIDE;
 
 	// Initializes the label once the font is loaded.
 	void setupState();

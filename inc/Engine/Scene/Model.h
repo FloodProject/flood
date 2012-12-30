@@ -87,7 +87,7 @@ public:
 	void updateSkinning();
 	
 	// Updates the model.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 	// Builds the mesh when it is fully loaded.
 	void build();
@@ -116,7 +116,7 @@ protected:
 	void updateFinalAnimationBones();
 
 	// Called when it is time to draw debug data.
-	void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
+	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;
 
 	// Creates a debug renderable of the skeleton.
 	RenderBatchPtr createDebugRenderable() const;

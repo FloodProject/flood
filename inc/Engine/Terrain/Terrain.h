@@ -104,7 +104,7 @@ public:
 	bool validateHeightmap( const ImagePtr& heightmap );
 
 	// Updates the terrain geometry if needed.
-	void update( float delta ) OVERRIDE;
+	virtual void update( float delta ) OVERRIDE;
 
 protected:
 

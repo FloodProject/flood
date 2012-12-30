@@ -34,7 +34,7 @@ public:
 	void update( float delta );
 
 	// Appends all the.renderables of this geometry to the queue.
-	void appendRenderables( RenderQueue& queue, const Transform* transform ) OVERRIDE;
+	virtual void appendRenderables( RenderQueue& queue, const Transform* transform ) OVERRIDE;
 
 	// Pre-render callback.
 	void onPreRender(RenderView*, const RenderState& state);
