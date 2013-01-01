@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include <string>
 #include <sstream>
 #include <cstdarg>

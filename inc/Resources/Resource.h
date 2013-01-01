@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Resources/API.h"
 #include "Core/Object.h"
 #include "Core/Reflection.h"
 #include "Core/References.h"
