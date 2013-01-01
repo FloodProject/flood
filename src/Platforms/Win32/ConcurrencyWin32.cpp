@@ -149,7 +149,7 @@ static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 
 	__try 
 	{
-		RaiseException( 0x406D1388, 0, sizeof(info)/sizeof(DWORD), (DWORD*)&info );
+        RaiseException( 0x406D1388, 0, sizeof(info)/sizeof(DWORD), (const ULONG_PTR*)&info );
 	}
 	__except(EXCEPTION_CONTINUE_EXECUTION) { }
 }
