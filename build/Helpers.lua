@@ -55,9 +55,6 @@ function deps(dep)
 	end
 end
 
-function startup(prj)
-end
-
 function GenerateBuildConfig(conf)
 	local contents = ""
 	
