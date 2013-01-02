@@ -4,7 +4,7 @@
 
 action = _ACTION or ""
 
-common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
+common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI", "ParallelBuild" }
 msvc_buildflags = { "/wd4190", "/wd4530", "/wd4251" }
 gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
 
@@ -27,9 +27,11 @@ solution "Flush"
 	
 	configurations { "Debug", "Release" }
 	platforms { "x32", "x64" }
-
+	defaultplatform "x32"
+	
 	flags { common_flags }
 	language "C++"
+	framework "4.5"
 	
 	local build = action
 	location (build)
