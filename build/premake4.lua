@@ -38,7 +38,8 @@ solution "Flush"
 	libdirs { build .. "/lib/" }
 	
 	debugdir "../bin"
-		
+	startup "Editor"
+
 	-- Build configuration options
 	
 	configuration "Debug"
@@ -89,5 +90,3 @@ solution "Flush"
 		dofile "UnitTests.lua"
 
 	group "Examples"
-
-	startup "GameRuntime"

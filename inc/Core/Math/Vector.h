@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include <cmath>
 
 NAMESPACE_CORE_BEGIN

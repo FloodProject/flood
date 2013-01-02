@@ -37,7 +37,7 @@ project "Editor"
 
 	debugdir "../bin"
 
-	builddeps { Core.name, Resources.name, Graphics.name, Engine.name, Pipeline.name }
+	dependson { EngineManaged.name, EditorManaged.name, GUI.name }
 	
 	defines
 	{
@@ -73,7 +73,12 @@ project "Editor"
 		"../src/Editor/**.cpp",
 		"../src/Editor/**.rc",
 	}
-	
+
+	configuration "**/Editor/Managed/GwenRenderer.cpp"
+		usingdirs { action .. "/lib/" }
+		flags { "Managed", "NoMinimalRebuild", "NoRuntimeChecks", "NoPCH" }
+	configuration "*"
+
 	vpaths
 	{
 		["*"] = { "../src/Editor/", "../inc/Editor/" },
@@ -122,5 +127,5 @@ project "Editor"
 	
 	if config.SCRIPTING_MONO then
 	  configuration "windows"
-		  links { Mono.links }		
+		  links { Mono.links }
 	end

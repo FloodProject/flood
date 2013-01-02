@@ -76,7 +76,7 @@ config =
 	INPUT_SFML = false,
 
 	-- Enables loading of Mono scripts.
-	SCRIPTING_MONO = true,
+	SCRIPTING_MONO = false,
 
 	-- Enables physics support via Bullet.
 	PHYSICS_BULLET = true,

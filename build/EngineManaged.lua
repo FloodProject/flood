@@ -1,3 +1,6 @@
+EngineManaged = {}
+EngineManaged.name = "EngineManaged"
+
 project "EngineManaged"
 
 	kind "SharedLib"
@@ -12,7 +15,7 @@ project "EngineManaged"
 
 	vpaths
 	{
-		["*"] = { "../src/EngineManaged/", "../inc/EngineManaged/" },
+		["*"] = { "../src/EngineManaged/" },
 	}		
 	
 	includedirs
