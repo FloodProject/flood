@@ -5,8 +5,8 @@
 #include "CLIInterop.h"
 #include <vcclr.h>
 
-#using "GUI_d.dll"
-#using "EditorManaged_d.dll"
+#using "GUI.dll"
+#using "Editor.Client.dll"
 #using <System.Drawing.dll>
 
 using namespace Gwen; 
@@ -21,12 +21,34 @@ class ManagedGeometryBuffer {
 	
 	GeometryBuffer* gb;
 	std::map<HandleId,BatchInfo> batches;
+	std::map<HandleId,MaterialHandle> materials;
+
+	MaterialHandle GetCreateMaterialHandle(ImageHandle imageHandle){
+		HandleId hId = imageHandle.getId();
+		if(materials.find(hId) == materials.end()){
+			MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "GwenGui");
+			Material* mat = materialHandle.Resolve();
+			mat->setBackfaceCulling(false);
+			mat->setDepthWrite(false);
+			mat->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
+			
+			if(hId==0){
+				mat->setShader("VertexColor");
+			} else {
+				mat->setShader("TexColor");
+				mat->setTexture(0,imageHandle);
+				mat->getTextureUnit(0).setWrapMode(TextureWrapMode::Clamp);
+			}
+			materials[hId] = materialHandle;
+		}
+		return materials[hId];
+	}
 
 	BatchInfo& GetCreateBatchInfo(ImageHandle imageHandle){
-		HandleId hId = imageHandle.getId();
-		if(batches.find(hId) != batches.end()){
-			return batches[hId];
-		}else {
+		static int hId = 0;
+		hId++;
+		//HandleId hId = imageHandle.getId();
+		//if(batches.find(hId) == batches.end()){
 			RenderBatch* batch = new RenderBatch();
 			batch->setGeometryBuffer(gb);
 			batch->setRenderLayer(RenderLayer::Overlays);
@@ -35,20 +57,10 @@ class ManagedGeometryBuffer {
 			bInfo.batch = batch;
 			batches[hId] = bInfo;
 
-			MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "GwenGui");
-			Material* mat = materialHandle.Resolve();
-			mat->setBackfaceCulling(false);
-			mat->setDepthWrite(false);
-			mat->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
-			if(hId>0){
-				mat->setShader("TexColor");
-				mat->setTexture(0,imageHandle);
-				mat->getTextureUnit(0).setWrapMode(TextureWrapMode::Clamp);
-			}
+			MaterialHandle materialHandle = GetCreateMaterialHandle(imageHandle);
 			batch->setMaterial(materialHandle);
-
-			return batches[hId];
-		}
+		//}
+		return batches[hId];
 	}
 
 public:
@@ -149,6 +161,44 @@ public:
 	}
 };
 
+public ref class TextureUtil
+{
+public:
+
+	static void LoadTextureInternal(Gwen::Texture^ t, System::Drawing::Bitmap^ bmp)
+	{
+		
+		//array to vector
+		array<byte>^ imageBytes;
+		{
+			System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
+			int bytes  = std::abs(data->Stride) * bmp->Height;
+			imageBytes = gcnew array<byte>(bytes);
+			System::Runtime::InteropServices::Marshal::Copy(data->Scan0, imageBytes, 0, bytes);
+		}
+
+		LoadTextureInternal(t,imageBytes);
+		
+	}
+
+	static void LoadTextureInternal(Gwen::Texture^ t, array<byte>^ imageBytes) 
+    {
+		ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t->Width,t->Height, PixelFormat::B8G8R8A8);
+		
+		//array to vector
+		std::vector<byte> buffer(imageBytes->Length);
+		{
+			pin_ptr<byte> pin(&imageBytes[0]);
+			byte *first(pin), *last(pin + imageBytes->Length);
+			std::copy(first, last, buffer.begin());
+		}
+
+		iHandle.Resolve()->setBuffer(buffer);
+		t->RendererData = iHandle.getId();
+		iHandle.addReference(); //hackzito
+	}
+};
+
 public ref class TextRenderer
 {
 	typedef System::Collections::Generic::Dictionary<System::Tuple<System::String^, Gwen::Font^>^, Gwen::Texture^> StringTextureCache;
@@ -161,31 +211,6 @@ public ref class TextRenderer
 		m_StringFormat = gcnew System::Drawing::StringFormat(System::Drawing::StringFormat::GenericTypographic);
 		m_StringFormat->FormatFlags = m_StringFormat->FormatFlags | System::Drawing::StringFormatFlags::MeasureTrailingSpaces;
 		m_Graphics = System::Drawing::Graphics::FromImage(gcnew System::Drawing::Bitmap(1024, 1024, System::Drawing::Imaging::PixelFormat::Format32bppArgb));
-	}
-
-	static void LoadTextureInternal(Gwen::Texture^ t, System::Drawing::Bitmap^ bmp)
-	{
-		ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t->Width,t->Height, PixelFormat::B8G8R8A8);
-		
-		//array to vector
-		array<byte>^ imageBytes;
-		{
-			System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
-			int bytes  = std::abs(data->Stride) * bmp->Height;
-			imageBytes = gcnew array<byte>(bytes);
-			System::Runtime::InteropServices::Marshal::Copy(data->Scan0, imageBytes, 0, bytes);
-		}
-		//array to vector
-		std::vector<byte> buffer(imageBytes->Length);
-		{
-			pin_ptr<byte> pin(&imageBytes[0]);
-			byte *first(pin), *last(pin + imageBytes->Length);
-			std::copy(first, last, buffer.begin());
-		}
-
-		iHandle.Resolve()->setBuffer(buffer);
-		t->RendererData = iHandle.getId();
-		iHandle.addReference(); //hackzito
 	}
 
 	static bool LoadFont(Gwen::Font^ font)
@@ -292,7 +317,7 @@ public:
         gfx->Clear(System::Drawing::Color::Transparent);
 
         gfx->DrawString(text, sysFont, brush, System::Drawing::Point::Empty, m_StringFormat); // render text on the bitmap
-		LoadTextureInternal(texture,bmp);
+		TextureUtil::LoadTextureInternal(texture,bmp);
 		AddTexture(font,text,texture);
 		return texture;
     }
@@ -314,40 +339,13 @@ public ref class GwenRenderer : Gwen::Renderer::Base {
 	System::Collections::Generic::Dictionary<System::Tuple<System::String^, Gwen::Font^>^, TextRenderer^>^ m_StringCache;
 	
 	bool m_ClipEnabled;
-	/*private const int MaxVerts = 1024;
-    private Color m_Color;
-    private int m_VertNum;
-    private readonly Vertex[] m_Vertices;
-    private readonly int m_VertexSize;
-
-    private readonly Dictionary<Tuple<String, Font>, TextRenderer> m_StringCache;
-    
-    private int m_DrawCallCount;
-    
-    private bool m_TextureEnabled;
-    static private int m_LastTextureID;
-
-    private bool m_WasBlendEnabled, m_WasTexture2DEnabled, m_WasDepthTestEnabled;
-    private int m_PrevBlendSrc, m_PrevBlendDst, m_PrevAlphaFunc;
-    private float m_PrevAlphaRef;
-    private bool m_RestoreRenderState;
-
-   
-	*/
 
 public:
-	GwenRenderer(/*bool restoreRenderState = true*/)
+	GwenRenderer()
         : Gwen::Renderer::Base()
     {
 		
 		buffer = AllocateHeap(ManagedGeometryBuffer);
-		
-		/* m_Vertices = new Vertex[MaxVerts];
-        m_VertexSize = Marshal.SizeOf(m_Vertices[0]);
-        
-        
-        
-        m_RestoreRenderState = restoreRenderState;*/
     }
 
 	void Render(RenderBlock& rb){
@@ -357,114 +355,8 @@ public:
 	void Clear(){
 		buffer->Clear();
 	}
+	
 
-	/* 
-    virtual void Dispose()
-    {
-        FlushTextCache();
-        base.Dispose();
-    }
-	*/
-    virtual void Begin() override
-    {
-       /* if (m_RestoreRenderState)
-        {
-            // Get previous parameter values before changing them.
-            GL.GetInteger(GetPName.BlendSrc, out m_PrevBlendSrc);
-            GL.GetInteger(GetPName.BlendDst, out m_PrevBlendDst);
-            GL.GetInteger(GetPName.AlphaTestFunc, out m_PrevAlphaFunc);
-            GL.GetFloat(GetPName.AlphaTestRef, out m_PrevAlphaRef);
-
-            m_WasBlendEnabled = GL.IsEnabled(EnableCap.Blend);
-            m_WasTexture2DEnabled = GL.IsEnabled(EnableCap.Texture2D);
-            m_WasDepthTestEnabled = GL.IsEnabled(EnableCap.DepthTest);
-        }
-
-        // Set default values and enable/disable caps.
-        GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-        GL.AlphaFunc(AlphaFunction.Greater, 1.0f);
-        GL.Enable(EnableCap.Blend);
-        GL.Disable(EnableCap.DepthTest);
-        GL.Disable(EnableCap.Texture2D);
-
-        m_VertNum = 0;
-        m_DrawCallCount = 0;
-        m_ClipEnabled = false;
-        m_TextureEnabled = false;
-        m_LastTextureID = -1;
-
-        GL.EnableClientState(ArrayCap.VertexArray);
-        GL.EnableClientState(ArrayCap.ColorArray);
-        GL.EnableClientState(ArrayCap.TextureCoordArray);
-    */}/*
-
-    virtual void End()
-    {
-        Flush();
-
-        if (m_RestoreRenderState)
-        {
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-
-            // Restore the previous parameter values.
-            GL.BlendFunc((BlendingFactorSrc)m_PrevBlendSrc, (BlendingFactorDest)m_PrevBlendDst);
-            GL.AlphaFunc((AlphaFunction)m_PrevAlphaFunc, m_PrevAlphaRef);
-
-            if (!m_WasBlendEnabled)
-                GL.Disable(EnableCap.Blend);
-
-            if (m_WasTexture2DEnabled && !m_TextureEnabled)
-                GL.Enable(EnableCap.Texture2D);
-
-            if (m_WasDepthTestEnabled)
-                GL.Enable(EnableCap.DepthTest);
-        }
-
-        GL.DisableClientState(ArrayCap.VertexArray);
-        GL.DisableClientState(ArrayCap.ColorArray);
-        GL.DisableClientState(ArrayCap.TextureCoordArray);
-    }
-
-    /// <summary>
-    /// Returns number of cached strings in the text cache.
-    /// </summary>
-    public int TextCacheSize { get { return m_StringCache.Count; } }
-
-    public int DrawCallCount { get { return m_DrawCallCount; } }
-
-    public int VertexCount { get { return m_VertNum; } }
-    /// <summary>
-    /// Clears the text rendering cache. Make sure to call this if cached strings size becomes too big (check TextCacheSize).
-    /// </summary>
-    public void FlushTextCache()
-    {
-        // todo: some auto-expiring cache? based on number of elements or age
-        foreach (var textRenderer in m_StringCache.Values)
-        {
-            textRenderer.Dispose();
-        }
-        m_StringCache.Clear();
-    }
-
-    private unsafe void Flush()
-    {
-        if (m_VertNum == 0) return;
-
-        fixed (short* ptr1 = &m_Vertices[0].x)
-        fixed (byte* ptr2 = &m_Vertices[0].r)
-        fixed (float* ptr3 = &m_Vertices[0].u)
-        {
-            GL.VertexPointer(2, VertexPointerType.Short, m_VertexSize, (IntPtr)ptr1);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, m_VertexSize, (IntPtr)ptr2);
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, m_VertexSize, (IntPtr)ptr3);
-
-            GL.DrawArrays(BeginMode.Quads, 0, m_VertNum);
-        }
-
-        m_DrawCallCount++;
-        m_VertNum = 0;
-    }
-	*/
     virtual void DrawFilledRect(System::Drawing::Rectangle rect) override
     {
 		rect = Translate(rect);
@@ -606,54 +498,23 @@ public:
 	}
 
     virtual void LoadTextureRaw(Gwen::Texture^ t, array<byte>^ pixelData) override
-    {/*
-        Bitmap bmp;
-        try
-        {
-            unsafe
-            {
-                fixed (byte* ptr = &pixelData[0])
-                    bmp = new Bitmap(t.Width, t.Height, 4 * t.Width, PixelFormat.Format32bppArgb, (IntPtr)ptr);
-            }
-        }
-        catch (Exception)
-        {
-            t.Failed = true;
-            return;
-        }
-
-        int glTex;
-
-        // Create the opengl texture
-        GL.GenTextures(1, out glTex);
-        GL.BindTexture(TextureTarget.Texture2D, glTex);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Nearest);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-
-        // Sort out our GWEN texture
-        t.RendererData = glTex;
-
-        var data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb);
-
-        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, t.Width, t.Height, 0, global::OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data.Scan0);
-
-        m_LastTextureID = glTex;
-
-        bmp.UnlockBits(data);
-        bmp.Dispose();
-    */}
+    {
+		TextureUtil::LoadTextureInternal(t,pixelData);
+	}
 
     virtual void FreeTexture(Gwen::Texture^ t) override
-    {/*
-        if (t.RendererData == null)
+    {
+        if (t->RendererData == nullptr)
             return;
-        int tex = (int)t.RendererData;
-        if (tex == 0)
-            return;
-        GL.DeleteTextures(1, ref tex);
-        t.RendererData = null;
-    */}
+
+		ImageHandle iHandle;
+		HandleId hId = (HandleId)t->RendererData;
+		iHandle.setId(hId);
+
+		Image* img = iHandle.Resolve();
+
+        GetResourceManager()->removeResource(img);
+    }
 
     virtual System::Drawing::Color PixelColor(Gwen::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
     {
@@ -791,17 +652,17 @@ public:
 
     void ProcessKeyDown(const KeyEvent& keyEvent)
     {
-        char ch = TranslateChar(keyEvent.keyCode);
+        wchar_t ch = TranslateChar(keyEvent.keyCode);
 
         if (Gwen::Input::InputHandler::Instance->DoSpecialKeys(m_Canvas, ch))
             return;
-        /*
+        
         if (ch != ' ')
         {
-            m_Canvas.Input_Character(ch);
+            m_Canvas->Input_Character(ch);
         }
-        */
-        Key iKey = TranslateKeyCode(keyEvent.keyCode);
+        
+        Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
         m_Canvas->Input_Key(iKey, true);
     }
@@ -810,7 +671,7 @@ public:
     {
         char ch = TranslateChar(keyEvent.keyCode);
 
-        Key iKey = TranslateKeyCode(keyEvent.keyCode);
+        Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
         m_Canvas->Input_Key(iKey, false);
     }

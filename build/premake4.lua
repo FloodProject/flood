@@ -40,23 +40,18 @@ solution "Flush"
 	libdirs { build .. "/lib/" }
 	
 	debugdir "../bin"
-	startup "Editor"
+	startup "EditorRuntime"
 
 	-- Build configuration options
 	
-	configuration "Debug"
-		defines { "DEBUG" }
-		targetsuffix "_d"
-	
 	configuration "Release"
-		defines { "NDEBUG" }
 		flags { "Optimize" }	
 
 	-- Compiler-specific options
 	
 	configuration "vs*"
 		buildoptions { msvc_buildflags }
-	
+		
 	configuration "gcc"
 		buildoptions { gcc_buildflags }
 	
@@ -66,7 +61,7 @@ solution "Flush"
 		defines { "WIN32", "_WINDOWS" }
 		
 	configuration {}
-
+	
 	group "Engines"
 	
 		dofile "Core.lua"
@@ -84,8 +79,13 @@ solution "Flush"
 
 		dofile "EngineManaged.lua"
 		dofile "GUI.lua"
-		dofile "EditorManaged.lua"	
-		dofile "Editor.lua"
+		
+	group "Editor"
+	
+		dofile "../src/Editor/Editor.Client/Editor.Client.lua"
+		dofile "EditorRuntime.lua"
+		dofile "../src/Editor/Editor.Shared/Editor.Shared.lua"
+		dofile "../src/Editor/Editor.Server/Editor.Server.lua"
 
 	group "Tests"
 

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlushEditor.GUI.Tools
 {
-    [Tool(Text = "Open Document")]
-    class ToolOpenDoc : SelectableTool
+    class ToolOpenDoc : EditorTool, BarTool
     {
 
         [Import]
@@ -24,6 +19,16 @@ namespace FlushEditor.GUI.Tools
         {
             Console.WriteLine("Open document " + file);
             docManager.Open(file);
+        }
+
+        public string Text
+        {
+            get { return "Open"; }
+        }
+
+        public string Image
+        {
+            get { return "open.png"; }
         }
     }
 }
