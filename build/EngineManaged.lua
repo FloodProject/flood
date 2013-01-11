@@ -7,6 +7,8 @@ project "EngineManaged"
 	language "C++"
 	flags { "Managed" }
 	
+	SetupNativeProjects()
+	
 	files
 	{
 		"EngineManaged.lua",

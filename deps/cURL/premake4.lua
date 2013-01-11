@@ -1,4 +1,6 @@
 project "cURL"
+
+  SetupDependencyProject()
   
   local version = "7.26.0"
   

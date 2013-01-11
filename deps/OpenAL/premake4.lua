@@ -1,5 +1,7 @@
 project "OpenAL"
 
+	SetupDependencyProject()
+
 	local version = "1.14"
 	local repo = "git://repo.or.cz/openal-soft.git"
 	local archive = "http://kcat.strangesoft.net/openal-releases/openal-soft-1.14.tar.bz2"

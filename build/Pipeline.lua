@@ -16,6 +16,8 @@ project "Pipeline"
 	else
 		kind "StaticLib"
 	end
+	
+	SetupNativeProjects()
 
 	builddeps { "Core", "Resources", "Graphics", "Engine" }
 	

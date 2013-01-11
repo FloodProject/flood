@@ -16,6 +16,8 @@ project "Runtime"
 	else
 		kind "StaticLib"
 	end
+	
+	SetupNativeProjects()
 
 	builddeps { Core.name, Resources.name }
 	

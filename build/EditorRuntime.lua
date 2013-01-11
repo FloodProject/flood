@@ -36,6 +36,8 @@ end
 project "EditorRuntime"
 
 	debugdir "../bin"
+	
+	SetupNativeProjects()
 
 	dependson { EngineManaged.name, EditorClient.name, GUI.name }
 	

@@ -2,12 +2,6 @@
 -- It defines the common build settings that all the projects share
 -- and calls the build scripts of all the sub-projects.
 
-action = _ACTION or ""
-
-common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI", "ParallelBuild" }
-msvc_buildflags = { "/wd4190", "/wd4530", "/wd4251" }
-gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
-
 dofile "Helpers.lua"
 
 -- Copy a configuration build header if one does not exist yet.
@@ -23,7 +17,7 @@ print("Generating the build configuration 'Build.h'")
 local conf = GenerateBuildConfig(config)
 WriteConfigToFile(conf, "Build.h")
 
-solution "Flush"
+solution "Flood"
 	
 	configurations { "Debug", "Release" }
 	platforms { "x32", "x64" }

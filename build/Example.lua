@@ -5,6 +5,8 @@ project "Example"
 	objdir (action .. "/obj")
 	targetdir ("../bin")
 	
+	SetupNativeProjects()
+	
 	files
 	{
 		"../src/Examples/**.h",

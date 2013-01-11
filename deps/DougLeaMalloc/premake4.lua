@@ -1,4 +1,6 @@
 project "dlmalloc"
+
+	SetupDependencyProject()
 		
 	local version = "2.8.5"
 	local license = "Public Domain"

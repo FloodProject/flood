@@ -5,6 +5,8 @@ project "UnitTests"
 	debugdir "../src/Core/Test/"
 	
 	defines { Core.defines }
+	
+	SetupNativeProjects()
 
 	files
 	{

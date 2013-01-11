@@ -6,6 +6,8 @@ project "GameRuntime"
 	kind "ConsoleApp"
 	builddeps { Engine.name, Graphics.name, Runtime.name }
 	
+	SetupNativeProjects()
+	
 	defines
 	{
 		Engine.defines,	-- includes Graphics.defines

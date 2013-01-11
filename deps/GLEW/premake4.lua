@@ -1,4 +1,6 @@
 project "GLEW"
+
+	SetupDependencyProject()
 		
 	local version = "1.9.0"
 	local repo = "git://glew.git.sourceforge.net/gitroot/glew/glew"

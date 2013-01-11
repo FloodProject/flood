@@ -3,6 +3,8 @@ local repo = "git|git://github.com/mono/mono.git"
 local license = "LGPL"
 
 project "Mono"
+
+	SetupDependencyProject()
 	
 	kind "SharedLib"
 	
@@ -110,6 +112,8 @@ project "Mono"
 	configuration ""
 
 project "MonoMini"
+
+	SetupDependencyProject()
 	
 	kind "StaticLib"
 	

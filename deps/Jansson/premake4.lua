@@ -1,4 +1,6 @@
 project "Jansson"
+
+	SetupDependencyProject()
 		
 	local version = "2.0-fork"
 	local repo = "https://github.com/tritao/jansson.git"

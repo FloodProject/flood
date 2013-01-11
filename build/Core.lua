@@ -12,6 +12,8 @@ project "Core"
 	else
 		kind "StaticLib"
 	end
+	
+	SetupNativeProjects()
 
 	pchheader "Core/API.h"
 	pchsource "../src/Core/Core.cpp"

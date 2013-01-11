@@ -1,4 +1,6 @@
 project "LodePNG"
+
+	SetupDependencyProject()
 		
 	local version = "20100314"
 	local license = "BSD"
@@ -8,6 +10,8 @@ project "LodePNG"
   files { "lodepng.cpp" }
  
 project "PicoPNG"
+
+	SetupDependencyProject()
 		
 	local version = "20101224"
 	local license = "BSD"

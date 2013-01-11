@@ -2,11 +2,7 @@
 -- It defines the common build settings that all the projects share
 -- and calls the build scripts of all the sub-projects.
 
-action = _ACTION or ""
-
-common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
-msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
-gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
+dofile "Helpers.lua"
 
 solution "Dependencies"
 

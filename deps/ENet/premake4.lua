@@ -1,4 +1,6 @@
 project "ENet"
+
+  SetupDependencyProject()
   
   local version = "1.3.4"
   local repo = "https://github.com/lsalzman/enet.git"

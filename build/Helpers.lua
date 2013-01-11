@@ -1,5 +1,11 @@
 -- This module checks for the all the project dependencies.
 
+action = _ACTION or ""
+
+common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
+msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
+gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
+
 function debug(msg)
 	-- print(msg)
 end
@@ -32,6 +38,27 @@ function SetupLibPaths(lib)
 	
 	configuration(c)
 end
+
+
+
+function SetupNativeProjects()
+	location (path.join(action, "projects"))
+
+	c = configuration "Debug"
+		defines { "DEBUG" }
+		targetsuffix "_d"
+		
+	configuration "Release"
+		defines { "NDEBUG" }
+	
+	configuration(c)
+end
+
+function SetupDependencyProject()
+	location (path.join("..","..","build",action, "deps"))
+end
+
+
 
 function SetupLibLinks(lib)
 	c = configuration "Debug"

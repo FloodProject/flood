@@ -26,3 +26,5 @@ project "NVIDIATextureTools"
 	
 	includedirs { "src/", "extern/poshlib/" }
 	defines { "__MMX__", "__SSE2__", "__SSE__" }
+	
+	SetupDependencyProject()

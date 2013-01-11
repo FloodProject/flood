@@ -1,4 +1,6 @@
 project "zlib"
+
+	SetupDependencyProject()
 		
 	local version = "1.2.7"
 	local repo = "https://github.com/madler/zlib.git"

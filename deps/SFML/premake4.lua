@@ -1,4 +1,6 @@
 project "SFML"
+
+	SetupDependencyProject()
 		
 	local version = "2.0"
 	local repo = "https://github.com/LaurentGomila/SFML.git"

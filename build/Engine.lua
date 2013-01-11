@@ -12,6 +12,8 @@ project "Engine"
 	else
 		kind "StaticLib"
 	end
+	
+	SetupNativeProjects()
 
 	table.insert(Engine.defines, 
 	{

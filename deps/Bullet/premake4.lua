@@ -1,4 +1,6 @@
 project "Bullet"
+
+	SetupDependencyProject()
 	
 	local version = "2.80"
 	local revision = "2531"
