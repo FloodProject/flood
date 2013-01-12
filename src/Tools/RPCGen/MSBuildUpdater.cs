@@ -2,55 +2,74 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flood.Tools.RPCGen
 {
+    /// <summary>
+    /// This class is used to update the MSBuild project so that the generated
+    /// files appear in the IDE right when they are generated. This will most
+    /// likely be triggered by the build system in the post-build events.
+    /// </summary>
     class MSBuildUpdater
     {
-        private const string bof = "<!--RPCGen BOF-->\n";
-        private const string eof = "<!--RPCGen EOF-->\n";
+        static readonly string NewLine = Environment.NewLine;
+        static readonly string bof = "<!--RPCGen BOF-->" + NewLine;
+        static readonly string eof = "<!--RPCGen EOF-->" + NewLine;
 
         public static void UpdateMSBuild(string msbuildPath, List<string> addedFiles)
         {
             string msbuild = File.ReadAllText(msbuildPath);
 
-            int begin,end;
-            
-            begin = msbuild.IndexOf(bof);
-            if(begin>0){
-                end = msbuild.IndexOf(eof);
-                end += eof.Count();
-            }else{
-                begin = end = msbuild.IndexOf("<ItemGroup>");
-            }
+            // Check if there is an item group.
+            var itemIndex = msbuild.IndexOf("<ItemGroup>", StringComparison.Ordinal);
 
-            if (begin < 0)
+            if (itemIndex < 0)
                 throw new Exception("Empty MSBuild Project File");
 
-            var adds = bof;
-            adds += "<ItemGroup>\n";
+            // Check if there are the BOF and EOF XML markers.
+            int bofIndex = msbuild.IndexOf(bof, StringComparison.Ordinal);
+            int eofIndex = msbuild.IndexOf(eof, StringComparison.Ordinal);
+
+            var itemGroup = GenerateItemGroup(msbuildPath, addedFiles);
+            string newMSBuild = null;
+
+            // If we have the markers, then replace the contents between them.
+            if (bofIndex > 0 && eofIndex > 0)
+            {
+                newMSBuild = msbuild.Substring(0, bofIndex) + itemGroup
+                    + msbuild.Substring(eofIndex + eof.Count());
+            }
+            else
+            {
+                newMSBuild = msbuild.Insert(itemIndex, itemGroup);
+            }
+
+            // Do not rewrite the file if the generated contents have not changed.
+            if (msbuild == newMSBuild)
+                return;
+
+            File.WriteAllText(msbuildPath, newMSBuild);
+        }
+
+        private static string GenerateItemGroup(string msbuildPath, List<string> addedFiles)
+        {
+            var str = bof;
+            str += "<ItemGroup>" + NewLine;
             Uri msbuildURI = new Uri(msbuildPath);
-            foreach(var file in addedFiles)
+            foreach (var file in addedFiles)
             {
                 Uri fileURI = new Uri(file);
-                var relativePath = msbuildURI.MakeRelative(fileURI);
-                relativePath = relativePath.Replace('/',Path.DirectorySeparatorChar);
+                var relativePath = msbuildURI.MakeRelativeUri(fileURI).ToString();
+                relativePath = relativePath.Replace('/', Path.DirectorySeparatorChar);
 
-                adds += "    <Compile Include=\""+relativePath+"\">\n";
-                adds += string.Format("      <Link>{0}</Link>\n",
-                    Path.Combine("Generated",Path.GetFileName(relativePath)));
-                adds += "    </Compile>";
+                str += "    <Compile Include=\"" + relativePath + "\">" + NewLine;
+                str += string.Format("      <Link>{0}</Link>{1}",
+                    Path.Combine("Generated", Path.GetFileName(relativePath)), NewLine);
+                str += "    </Compile>" + NewLine;
             }
-            adds += "  </ItemGroup>\n";
-            adds += eof;
-
-            if(begin == end || adds != msbuild.Substring(begin, end-begin)){
-                var newMSBuild = msbuild.Substring(0, begin) + adds + msbuild.Substring(end, msbuild.Length-end);
-                File.WriteAllText(msbuildPath,newMSBuild);
-            }
-
+            str += "  </ItemGroup>" + NewLine;
+            str += eof;
+            return str;
         }
     }
 }
