@@ -2,11 +2,13 @@
 
 action = _ACTION or ""
 
-libdir = path.getabsolute(path.join(action, "lib"));
-gendir = path.getabsolute(path.join(action, "gen"));
-
-local depsdir = "../deps/"
-local builddir = path.getabsolute(action);
+depsdir = path.getabsolute("../deps");
+srcdir = path.getabsolute("../src");
+incdir = path.getabsolute("../inc");
+bindir = path.getabsolute("../bin");
+builddir = path.getabsolute(action);
+libdir = path.join(builddir, "lib");
+gendir = path.join(builddir, "gen");
 
 common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
 msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
@@ -19,8 +21,8 @@ end
 function SetupLibPaths(lib) 
 	c = configuration {}
 	
-	local src = depsdir .. lib .. "/src/"
-	local include = depsdir .. lib .. "/include/"
+	local src = path.join(depsdir, lib, "src")
+	local include = path.join(depsdir, lib, "include")
 	
 	if os.isdir(path.getabsolute(include)) then
 		debug("Including lib", lib, "from", include)
@@ -30,15 +32,15 @@ function SetupLibPaths(lib)
 		includedirs { src }
 	else
 		debug("Including lib", lib, "from", depsdir .. lib)
-		includedirs { depsdir .. lib }
+		includedirs { path.join(depsdir , lib) }
 	end
 
-	local libpath = depsdir .. lib .. "/lib/" .. action
+	local libpath = path.join(depsdir, lib, "lib" , action)
 	if os.isdir(path.getabsolute(libpath)) then
 		libdirs { libpath }
 	end
 	
-	libdirs { depsdir .. "build/" .. action .. "/lib" }
+	libdirs { libdir }
 	
 	configuration(c)
 end
