@@ -2,6 +2,12 @@
 
 action = _ACTION or ""
 
+libdir = path.getabsolute(path.join(action, "lib"));
+gendir = path.getabsolute(path.join(action, "gen"));
+
+local depsdir = "../deps/"
+local builddir = path.getabsolute(action);
+
 common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
 msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
 gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
@@ -9,8 +15,6 @@ gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
 function debug(msg)
 	-- print(msg)
 end
-
-local depsdir = "../deps/"
 
 function SetupLibPaths(lib) 
 	c = configuration {}
@@ -42,7 +46,7 @@ end
 
 
 function SetupNativeProjects()
-	location (path.join(action, "projects"))
+	location (path.join(builddir, "projects"))
 
 	c = configuration "Debug"
 		defines { "DEBUG" }
@@ -55,7 +59,7 @@ function SetupNativeProjects()
 end
 
 function SetupDependencyProject()
-	location (path.join("..","..","build",action, "deps"))
+	location (path.join(builddir, "deps"))
 end
 
 

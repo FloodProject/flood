@@ -72,6 +72,7 @@ solution "Flood"
 	group "Managed"
 
 		dofile "../src/EngineManaged/Bindings/EngineBindings.lua"
+		dofile "../src/EngineManaged/EngineManaged.lua"
 		dofile "GUI.lua"
 		
 	group "Editor"
@@ -84,5 +85,10 @@ solution "Flood"
 	group "Tests"
 
 		dofile "UnitTests.lua"
+		
+	group "Tools"
 
+		dofile "UnitTests.lua"
+		dofile "../src/Tools/RPCGen/RPCGen.lua"
+		
 	group "Examples"

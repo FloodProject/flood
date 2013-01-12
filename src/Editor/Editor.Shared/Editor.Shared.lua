@@ -6,9 +6,11 @@ project "Editor.Shared"
 	kind "SharedLib"
 	language "C#"
 	
-	prebuildcommands
+	dependson { "RPCGen" }
+
+	postbuildcommands
 	{ 
-		--"luac -o  "
+		"\"" .. path.join(libdir,"RPCGen.exe") .. "\" -debug -o\"" .. path.join(gendir,EditorShared.name) .. "\" -msbuild=\"".. path.getabsolute(path.join(".", EditorShared.name .. ".csproj")) .."\" \"" .. path.join(libdir,"Editor.Shared.dll") .. "\""
 	}
 	
 	location "."
@@ -21,5 +23,6 @@ project "Editor.Shared"
 	
 	links {
 		"System", 
+		"EngineManaged"
 		--"FloodManaged"
 	}
