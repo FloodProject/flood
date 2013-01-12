@@ -22,118 +22,118 @@ using System.IO;
 namespace Flood.RPC.Transport
 {
   public class TFramedTransport : TTransport, IDisposable
-	{
-		protected TTransport transport = null;
-		protected MemoryStream writeBuffer;
-		protected MemoryStream readBuffer = null;
+    {
+        protected TTransport transport = null;
+        protected MemoryStream writeBuffer;
+        protected MemoryStream readBuffer = null;
 
-		private const int header_size = 4;
-		private static byte[] header_dummy = new byte[header_size]; // used as header placeholder while initilizing new write buffer
+        private const int header_size = 4;
+        private static byte[] header_dummy = new byte[header_size]; // used as header placeholder while initilizing new write buffer
 
-		public class Factory : TransportFactory
-		{
-			public override TTransport GetTransport(TTransport trans)
-			{
-				return new TFramedTransport(trans);
-			}
-		}
+        public class Factory : TransportFactory
+        {
+            public override TTransport GetTransport(TTransport trans)
+            {
+                return new TFramedTransport(trans);
+            }
+        }
 
-		public TFramedTransport()
-		{
-			InitWriteBuffer();
-		}
+        public TFramedTransport()
+        {
+            InitWriteBuffer();
+        }
 
-		public TFramedTransport(TTransport transport) : this()
-		{
-			this.transport = transport;
-		}
+        public TFramedTransport(TTransport transport) : this()
+        {
+            this.transport = transport;
+        }
 
-		public override void Open()
-		{
-			transport.Open();
-		}
+        public override void Open()
+        {
+            transport.Open();
+        }
 
-		public override bool IsOpen
-		{
-			get
-			{
-				return transport.IsOpen;
-			}
-		}
+        public override bool IsOpen
+        {
+            get
+            {
+                return transport.IsOpen;
+            }
+        }
 
-		public override void Close()
-		{
-			transport.Close();
-		}
+        public override void Close()
+        {
+            transport.Close();
+        }
 
-		public override int Read(byte[] buf, int off, int len)
-		{
-			if (readBuffer != null)
-			{
-				int got = readBuffer.Read(buf, off, len);
-				if (got > 0)
-				{
-					return got;
-				}
-			}
+        public override int Read(byte[] buf, int off, int len)
+        {
+            if (readBuffer != null)
+            {
+                int got = readBuffer.Read(buf, off, len);
+                if (got > 0)
+                {
+                    return got;
+                }
+            }
 
-			// Read another frame of data
-			ReadFrame();
+            // Read another frame of data
+            ReadFrame();
 
-			return readBuffer.Read(buf, off, len);
-		}
+            return readBuffer.Read(buf, off, len);
+        }
 
-		private void ReadFrame()
-		{
-			byte[] i32rd = new byte[header_size];
-			transport.ReadAll(i32rd, 0, header_size);
-			int size =
-				((i32rd[0] & 0xff) << 24) |
-				((i32rd[1] & 0xff) << 16) |
-				((i32rd[2] & 0xff) <<  8) |
-				((i32rd[3] & 0xff));
+        private void ReadFrame()
+        {
+            byte[] i32rd = new byte[header_size];
+            transport.ReadAll(i32rd, 0, header_size);
+            int size =
+                ((i32rd[0] & 0xff) << 24) |
+                ((i32rd[1] & 0xff) << 16) |
+                ((i32rd[2] & 0xff) <<  8) |
+                ((i32rd[3] & 0xff));
 
 
-			byte[] buff = new byte[size];
-			transport.ReadAll(buff, 0, size);
-			readBuffer = new MemoryStream(buff);
-		}
+            byte[] buff = new byte[size];
+            transport.ReadAll(buff, 0, size);
+            readBuffer = new MemoryStream(buff);
+        }
 
-		public override void Write(byte[] buf, int off, int len)
-		{
-			writeBuffer.Write(buf, off, len);
-		}
+        public override void Write(byte[] buf, int off, int len)
+        {
+            writeBuffer.Write(buf, off, len);
+        }
 
-		public override void Flush()
-		{
-			byte[] buf = writeBuffer.GetBuffer();
-			int len = (int)writeBuffer.Length;
-			int data_len = len - header_size;
-			if ( data_len < 0 )
-				throw new System.InvalidOperationException (); // logic error actually
+        public override void Flush()
+        {
+            byte[] buf = writeBuffer.GetBuffer();
+            int len = (int)writeBuffer.Length;
+            int data_len = len - header_size;
+            if ( data_len < 0 )
+                throw new System.InvalidOperationException (); // logic error actually
 
-			InitWriteBuffer();
+            InitWriteBuffer();
 
-			// Inject message header into the reserved buffer space
-			buf[0] = (byte)(0xff & (data_len >> 24));
-			buf[1] = (byte)(0xff & (data_len >> 16));
-			buf[2] = (byte)(0xff & (data_len >> 8));
-			buf[3] = (byte)(0xff & (data_len));
+            // Inject message header into the reserved buffer space
+            buf[0] = (byte)(0xff & (data_len >> 24));
+            buf[1] = (byte)(0xff & (data_len >> 16));
+            buf[2] = (byte)(0xff & (data_len >> 8));
+            buf[3] = (byte)(0xff & (data_len));
 
-			// Send the entire message at once
-			transport.Write(buf, 0, len);
+            // Send the entire message at once
+            transport.Write(buf, 0, len);
 
-			transport.Flush();
-		}
+            transport.Flush();
+        }
 
-		private void InitWriteBuffer ()
-		{
-			// Create new buffer instance
-			writeBuffer = new MemoryStream(1024);
+        private void InitWriteBuffer ()
+        {
+            // Create new buffer instance
+            writeBuffer = new MemoryStream(1024);
 
-			// Reserve space for message header to be put right before sending it out
-			writeBuffer.Write ( header_dummy, 0, header_size );
-		}
+            // Reserve space for message header to be put right before sending it out
+            writeBuffer.Write ( header_dummy, 0, header_size );
+        }
     #region " IDisposable Support "
     private bool _IsDisposed;
 

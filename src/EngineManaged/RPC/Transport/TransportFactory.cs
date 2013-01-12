@@ -25,18 +25,18 @@ using System;
 
 namespace Flood.RPC.Transport
 {
-	/// <summary>
-	/// From Mark Slee & Aditya Agarwal of Facebook:
-	/// Factory class used to create wrapped instance of Transports.
-	/// This is used primarily in servers, which get Transports from
-	/// a ServerTransport and then may want to mutate them (i.e. create
-	/// a BufferedTransport from the underlying base transport)
-	/// </summary>
-	public class TransportFactory
-	{
-		public virtual TTransport GetTransport(TTransport trans)
-		{
-			return trans;
-		}
-	}
+    /// <summary>
+    /// From Mark Slee & Aditya Agarwal of Facebook:
+    /// Factory class used to create wrapped instance of Transports.
+    /// This is used primarily in servers, which get Transports from
+    /// a ServerTransport and then may want to mutate them (i.e. create
+    /// a BufferedTransport from the underlying base transport)
+    /// </summary>
+    public class TransportFactory
+    {
+        public virtual TTransport GetTransport(TTransport trans)
+        {
+            return trans;
+        }
+    }
 }

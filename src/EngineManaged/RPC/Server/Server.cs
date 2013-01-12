@@ -28,112 +28,112 @@ using System.IO;
 
 namespace Flood.RPC.Server
 {
-	public abstract class Server
-	{
-		/**
-		 * Core processor
-		 */
-		protected Processor processor;
+    public abstract class Server
+    {
+        /**
+         * Core processor
+         */
+        protected Processor processor;
 
-		/**
-		 * Server transport
-		 */
-		protected ServerTransport serverTransport;
+        /**
+         * Server transport
+         */
+        protected ServerTransport serverTransport;
 
-		/**
-		 * Input Transport Factory
-		 */
-		protected TransportFactory inputTransportFactory;
+        /**
+         * Input Transport Factory
+         */
+        protected TransportFactory inputTransportFactory;
 
-		/**
-		 * Output Transport Factory
-		 */
-		protected TransportFactory outputTransportFactory;
+        /**
+         * Output Transport Factory
+         */
+        protected TransportFactory outputTransportFactory;
 
-		/**
-		 * Input Protocol Factory
-		 */
-		protected ProtocolFactory inputProtocolFactory;
+        /**
+         * Input Protocol Factory
+         */
+        protected ProtocolFactory inputProtocolFactory;
 
-		/**
-		 * Output Protocol Factory
-		 */
-		protected ProtocolFactory outputProtocolFactory;
-		public delegate void LogDelegate(string str);
-		protected LogDelegate logDelegate;
+        /**
+         * Output Protocol Factory
+         */
+        protected ProtocolFactory outputProtocolFactory;
+        public delegate void LogDelegate(string str);
+        protected LogDelegate logDelegate;
 
-		/**
-		 * Default constructors.
-		 */
+        /**
+         * Default constructors.
+         */
 
-		public Server(Processor processor,
-						  ServerTransport serverTransport)
-			:this(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
-		{
-		}
+        public Server(Processor processor,
+                          ServerTransport serverTransport)
+            :this(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
+        {
+        }
 
-		public Server(Processor processor,
-						ServerTransport serverTransport,
-						LogDelegate logDelegate)
-			: this(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
-		{
-		}
+        public Server(Processor processor,
+                        ServerTransport serverTransport,
+                        LogDelegate logDelegate)
+            : this(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
+        {
+        }
 
-		public Server(Processor processor,
-						  ServerTransport serverTransport,
-						  TransportFactory transportFactory)
-			:this(processor,
-				 serverTransport,
-				 transportFactory,
-				 transportFactory,
-				 new BinaryProtocol.Factory(),
-				 new BinaryProtocol.Factory(),
-				 DefaultLogDelegate)
-		{
-		}
+        public Server(Processor processor,
+                          ServerTransport serverTransport,
+                          TransportFactory transportFactory)
+            :this(processor,
+                 serverTransport,
+                 transportFactory,
+                 transportFactory,
+                 new BinaryProtocol.Factory(),
+                 new BinaryProtocol.Factory(),
+                 DefaultLogDelegate)
+        {
+        }
 
-		public Server(Processor processor,
-						  ServerTransport serverTransport,
-						  TransportFactory transportFactory,
-						  ProtocolFactory protocolFactory)
-			:this(processor,
-				 serverTransport,
-				 transportFactory,
-				 transportFactory,
-				 protocolFactory,
-				 protocolFactory,
-			     DefaultLogDelegate)
-		{
-		}
+        public Server(Processor processor,
+                          ServerTransport serverTransport,
+                          TransportFactory transportFactory,
+                          ProtocolFactory protocolFactory)
+            :this(processor,
+                 serverTransport,
+                 transportFactory,
+                 transportFactory,
+                 protocolFactory,
+                 protocolFactory,
+                 DefaultLogDelegate)
+        {
+        }
 
-		public Server(Processor processor,
-						  ServerTransport serverTransport,
-						  TransportFactory inputTransportFactory,
-						  TransportFactory outputTransportFactory,
-						  ProtocolFactory inputProtocolFactory,
-						  ProtocolFactory outputProtocolFactory,
-						  LogDelegate logDelegate)
-		{
-			this.processor = processor;
-			this.serverTransport = serverTransport;
-			this.inputTransportFactory = inputTransportFactory;
-			this.outputTransportFactory = outputTransportFactory;
-			this.inputProtocolFactory = inputProtocolFactory;
-			this.outputProtocolFactory = outputProtocolFactory;
-			this.logDelegate = logDelegate;
-		}
+        public Server(Processor processor,
+                          ServerTransport serverTransport,
+                          TransportFactory inputTransportFactory,
+                          TransportFactory outputTransportFactory,
+                          ProtocolFactory inputProtocolFactory,
+                          ProtocolFactory outputProtocolFactory,
+                          LogDelegate logDelegate)
+        {
+            this.processor = processor;
+            this.serverTransport = serverTransport;
+            this.inputTransportFactory = inputTransportFactory;
+            this.outputTransportFactory = outputTransportFactory;
+            this.inputProtocolFactory = inputProtocolFactory;
+            this.outputProtocolFactory = outputProtocolFactory;
+            this.logDelegate = logDelegate;
+        }
 
-		/**
-		 * The run method fires up the server and gets things going.
-		 */
-		public abstract void Serve();
+        /**
+         * The run method fires up the server and gets things going.
+         */
+        public abstract void Serve();
 
-		public abstract void Stop();
+        public abstract void Stop();
 
-		protected static void DefaultLogDelegate(string s)
-		{
-			Console.Error.WriteLine(s);
-		}
-	}
+        protected static void DefaultLogDelegate(string s)
+        {
+            Console.Error.WriteLine(s);
+        }
+    }
 }
 

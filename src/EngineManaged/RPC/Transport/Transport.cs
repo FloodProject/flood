@@ -25,54 +25,54 @@ using System;
 
 namespace Flood.RPC.Transport
 {
-	public abstract class TTransport : IDisposable
-	{
-		public abstract bool IsOpen
-		{
-			get;
-		}
+    public abstract class TTransport : IDisposable
+    {
+        public abstract bool IsOpen
+        {
+            get;
+        }
 
-		public bool Peek()
-		{
-			return IsOpen;
-		}
+        public bool Peek()
+        {
+            return IsOpen;
+        }
 
-		public abstract void Open();
+        public abstract void Open();
 
-		public abstract void Close();
+        public abstract void Close();
 
-		public abstract int Read(byte[] buf, int off, int len);
+        public abstract int Read(byte[] buf, int off, int len);
 
-		public int ReadAll(byte[] buf, int off, int len)
-		{
-			int got = 0;
-			int ret = 0;
+        public int ReadAll(byte[] buf, int off, int len)
+        {
+            int got = 0;
+            int ret = 0;
 
-			while (got < len)
-			{
-				ret = Read(buf, off + got, len - got);
-				if (ret <= 0)
-				{
-					throw new TTransportException(
-						TTransportException.ExceptionType.EndOfFile,
-						"Cannot read, Remote side has closed");
-				}
-				got += ret;
-			}
+            while (got < len)
+            {
+                ret = Read(buf, off + got, len - got);
+                if (ret <= 0)
+                {
+                    throw new TTransportException(
+                        TTransportException.ExceptionType.EndOfFile,
+                        "Cannot read, Remote side has closed");
+                }
+                got += ret;
+            }
 
-			return got;
-		}
+            return got;
+        }
 
-		public virtual void Write(byte[] buf) 
-		{
-			Write (buf, 0, buf.Length);
-		}
+        public virtual void Write(byte[] buf) 
+        {
+            Write (buf, 0, buf.Length);
+        }
 
-		public abstract void Write(byte[] buf, int off, int len);
+        public abstract void Write(byte[] buf, int off, int len);
 
-		public virtual void Flush()
-		{
-		}
+        public virtual void Flush()
+        {
+        }
         
         public virtual IAsyncResult BeginFlush(AsyncCallback callback, object state)
         {
@@ -83,16 +83,16 @@ namespace Flood.RPC.Transport
         {
         }
 
-		#region " IDisposable Support "
-		// IDisposable
-		protected abstract void Dispose(bool disposing);
+        #region " IDisposable Support "
+        // IDisposable
+        protected abstract void Dispose(bool disposing);
 
-		public void Dispose()
-		{
-			// Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-		#endregion
-	}
+        public void Dispose()
+        {
+            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+    }
 }

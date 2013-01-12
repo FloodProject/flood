@@ -25,21 +25,21 @@ using System;
 
 namespace Flood.RPC.Protocol
 {
-	public enum TType : byte
-	{
-		Stop = 0,
-		Void = 1,
-		Bool = 2,
-		Byte = 3,
-		Double = 4,
-		Exception = 5,
-		I16 = 6,
-		I32 = 8,
-		I64 = 10,
-		String = 11,
-		Struct = 12,
-		Map = 13,
-		Set = 14,
-		List = 15
-	}
+    public enum TType : byte
+    {
+        Stop = 0,
+        Void = 1,
+        Bool = 2,
+        Byte = 3,
+        Double = 4,
+        Exception = 5,
+        I16 = 6,
+        I32 = 8,
+        I64 = 10,
+        String = 11,
+        Struct = 12,
+        Map = 13,
+        Set = 14,
+        List = 15
+    }
 }

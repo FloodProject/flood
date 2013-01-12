@@ -26,165 +26,165 @@ using Flood.RPC.Transport;
 
 namespace Flood.RPC.Server
 {
-	/// <summary>
-	/// Server that uses C# threads (as opposed to the ThreadPool) when handling requests
-	/// </summary>
-	public class TThreadedServer : Server
-	{
-		private const int DEFAULT_MAX_THREADS = 100;
-		private volatile bool stop = false;
-		private readonly int maxThreads;
+    /// <summary>
+    /// Server that uses C# threads (as opposed to the ThreadPool) when handling requests
+    /// </summary>
+    public class TThreadedServer : Server
+    {
+        private const int DEFAULT_MAX_THREADS = 100;
+        private volatile bool stop = false;
+        private readonly int maxThreads;
 
-		private Queue<TTransport> clientQueue;
-		private THashSet<Thread> clientThreads;
-		private object clientLock;
-		private Thread workerThread;
+        private Queue<TTransport> clientQueue;
+        private THashSet<Thread> clientThreads;
+        private object clientLock;
+        private Thread workerThread;
 
-		public TThreadedServer(Processor processor, ServerTransport serverTransport)
-			: this(processor, serverTransport,
-				 new TransportFactory(), new TransportFactory(),
-				 new BinaryProtocol.Factory(), new BinaryProtocol.Factory(),
-				 DEFAULT_MAX_THREADS, DefaultLogDelegate)
-		{
-		}
+        public TThreadedServer(Processor processor, ServerTransport serverTransport)
+            : this(processor, serverTransport,
+                 new TransportFactory(), new TransportFactory(),
+                 new BinaryProtocol.Factory(), new BinaryProtocol.Factory(),
+                 DEFAULT_MAX_THREADS, DefaultLogDelegate)
+        {
+        }
 
-		public TThreadedServer(Processor processor, ServerTransport serverTransport, LogDelegate logDelegate)
-			: this(processor, serverTransport,
-				 new TransportFactory(), new TransportFactory(),
-				 new BinaryProtocol.Factory(), new BinaryProtocol.Factory(),
-				 DEFAULT_MAX_THREADS, logDelegate)
-		{
-		}
+        public TThreadedServer(Processor processor, ServerTransport serverTransport, LogDelegate logDelegate)
+            : this(processor, serverTransport,
+                 new TransportFactory(), new TransportFactory(),
+                 new BinaryProtocol.Factory(), new BinaryProtocol.Factory(),
+                 DEFAULT_MAX_THREADS, logDelegate)
+        {
+        }
 
 
-		public TThreadedServer(Processor processor,
-								 ServerTransport serverTransport,
-								 TransportFactory transportFactory,
-								 ProtocolFactory protocolFactory)
-			: this(processor, serverTransport,
-				 transportFactory, transportFactory,
-				 protocolFactory, protocolFactory,
-				 DEFAULT_MAX_THREADS, DefaultLogDelegate)
-		{
-		}
+        public TThreadedServer(Processor processor,
+                                 ServerTransport serverTransport,
+                                 TransportFactory transportFactory,
+                                 ProtocolFactory protocolFactory)
+            : this(processor, serverTransport,
+                 transportFactory, transportFactory,
+                 protocolFactory, protocolFactory,
+                 DEFAULT_MAX_THREADS, DefaultLogDelegate)
+        {
+        }
 
-		public TThreadedServer(Processor processor,
-								 ServerTransport serverTransport,
-								 TransportFactory inputTransportFactory,
-								 TransportFactory outputTransportFactory,
-								 ProtocolFactory inputProtocolFactory,
-								 ProtocolFactory outputProtocolFactory,
-								 int maxThreads, LogDelegate logDel)
-			: base(processor, serverTransport, inputTransportFactory, outputTransportFactory,
-				  inputProtocolFactory, outputProtocolFactory, logDel)
-		{
-			this.maxThreads = maxThreads;
-			clientQueue = new Queue<TTransport>();
-			clientLock = new object();
-			clientThreads = new THashSet<Thread>();
-		}
+        public TThreadedServer(Processor processor,
+                                 ServerTransport serverTransport,
+                                 TransportFactory inputTransportFactory,
+                                 TransportFactory outputTransportFactory,
+                                 ProtocolFactory inputProtocolFactory,
+                                 ProtocolFactory outputProtocolFactory,
+                                 int maxThreads, LogDelegate logDel)
+            : base(processor, serverTransport, inputTransportFactory, outputTransportFactory,
+                  inputProtocolFactory, outputProtocolFactory, logDel)
+        {
+            this.maxThreads = maxThreads;
+            clientQueue = new Queue<TTransport>();
+            clientLock = new object();
+            clientThreads = new THashSet<Thread>();
+        }
 
-		/// <summary>
-		/// Use new Thread for each new client connection. block until numConnections < maxThreads
-		/// </summary>
-		public override void Serve()
-		{
-			try
-			{
-				//start worker thread
-				workerThread = new Thread(new ThreadStart(Execute));
-				workerThread.Start();
-				serverTransport.Listen();
-			}
-			catch (TTransportException ttx)
-			{
-				logDelegate("Error, could not listen on ServerTransport: " + ttx);
-				return;
-			}
+        /// <summary>
+        /// Use new Thread for each new client connection. block until numConnections < maxThreads
+        /// </summary>
+        public override void Serve()
+        {
+            try
+            {
+                //start worker thread
+                workerThread = new Thread(new ThreadStart(Execute));
+                workerThread.Start();
+                serverTransport.Listen();
+            }
+            catch (TTransportException ttx)
+            {
+                logDelegate("Error, could not listen on ServerTransport: " + ttx);
+                return;
+            }
 
-			while (!stop)
-			{
-				int failureCount = 0;
-				try
-				{
-					TTransport client = serverTransport.Accept();
-					lock (clientLock)
-					{
-						clientQueue.Enqueue(client);
-						Monitor.Pulse(clientLock);
-					}
-				}
-				catch (TTransportException ttx)
-				{
-					if (stop)
-					{
-						logDelegate("TThreadPoolServer was shutting down, caught " + ttx);
-					}
-					else
-					{
-						++failureCount;
-						logDelegate(ttx.ToString());
-					}
+            while (!stop)
+            {
+                int failureCount = 0;
+                try
+                {
+                    TTransport client = serverTransport.Accept();
+                    lock (clientLock)
+                    {
+                        clientQueue.Enqueue(client);
+                        Monitor.Pulse(clientLock);
+                    }
+                }
+                catch (TTransportException ttx)
+                {
+                    if (stop)
+                    {
+                        logDelegate("TThreadPoolServer was shutting down, caught " + ttx);
+                    }
+                    else
+                    {
+                        ++failureCount;
+                        logDelegate(ttx.ToString());
+                    }
 
-				}
-			}
+                }
+            }
 
-			if (stop)
-			{
-				try
-				{
-					serverTransport.Close();
-				}
-				catch (TTransportException ttx)
-				{
-					logDelegate("TServeTransport failed on close: " + ttx.Message);
-				}
-				stop = false;
-			}
-		}
+            if (stop)
+            {
+                try
+                {
+                    serverTransport.Close();
+                }
+                catch (TTransportException ttx)
+                {
+                    logDelegate("TServeTransport failed on close: " + ttx.Message);
+                }
+                stop = false;
+            }
+        }
 
-		/// <summary>
-		/// Loops on processing a client forever
-		/// threadContext will be a TTransport instance
-		/// </summary>
-		/// <param name="threadContext"></param>
-		private void Execute()
-		{
-			while (!stop)
-			{
-				TTransport client;
-				Thread t;
-				lock (clientLock)
-				{
-					//don't dequeue if too many connections
-					while (clientThreads.Count >= maxThreads)
-					{
-						Monitor.Wait(clientLock);
-					}
+        /// <summary>
+        /// Loops on processing a client forever
+        /// threadContext will be a TTransport instance
+        /// </summary>
+        /// <param name="threadContext"></param>
+        private void Execute()
+        {
+            while (!stop)
+            {
+                TTransport client;
+                Thread t;
+                lock (clientLock)
+                {
+                    //don't dequeue if too many connections
+                    while (clientThreads.Count >= maxThreads)
+                    {
+                        Monitor.Wait(clientLock);
+                    }
 
-					while (clientQueue.Count == 0)
-					{
-						Monitor.Wait(clientLock);
-					}
+                    while (clientQueue.Count == 0)
+                    {
+                        Monitor.Wait(clientLock);
+                    }
 
-					client = clientQueue.Dequeue();
-					t = new Thread(new ParameterizedThreadStart(ClientWorker));
-					clientThreads.Add(t);
-				}
-				//start processing requests from client on new thread
-				t.Start(client);
-			}
-		}
+                    client = clientQueue.Dequeue();
+                    t = new Thread(new ParameterizedThreadStart(ClientWorker));
+                    clientThreads.Add(t);
+                }
+                //start processing requests from client on new thread
+                t.Start(client);
+            }
+        }
 
-		private void ClientWorker(Object context)
-		{
-			TTransport client = (TTransport)context;
-			TTransport inputTransport = null;
-			TTransport outputTransport = null;
-			Serializer inputProtocol = null;
-			Serializer outputProtocol = null;
-			try
-			{
+        private void ClientWorker(Object context)
+        {
+            TTransport client = (TTransport)context;
+            TTransport inputTransport = null;
+            TTransport outputTransport = null;
+            Serializer inputProtocol = null;
+            Serializer outputProtocol = null;
+            try
+            {
         using (inputTransport = inputTransportFactory.GetTransport(client))
         {
           using (outputTransport = outputTransportFactory.GetTransport(client))
@@ -197,33 +197,33 @@ namespace Flood.RPC.Server
             }
           }
         }
-			}
-			catch (TTransportException)
-			{
-			}
-			catch (Exception x)
-			{
-				logDelegate("Error: " + x);
-			}
+            }
+            catch (TTransportException)
+            {
+            }
+            catch (Exception x)
+            {
+                logDelegate("Error: " + x);
+            }
 
-			lock (clientLock)
-			{
-				clientThreads.Remove(Thread.CurrentThread);
-				Monitor.Pulse(clientLock);
-			}
-			return;
-		}
+            lock (clientLock)
+            {
+                clientThreads.Remove(Thread.CurrentThread);
+                Monitor.Pulse(clientLock);
+            }
+            return;
+        }
 
-		public override void Stop()
-		{
-			stop = true;
-			serverTransport.Close();
-			//clean up all the threads myself
-			workerThread.Abort();
-			foreach (Thread t in clientThreads)
-			{
-				t.Abort();
-			}
-		}
-	}
+        public override void Stop()
+        {
+            stop = true;
+            serverTransport.Close();
+            //clean up all the threads myself
+            workerThread.Abort();
+            foreach (Thread t in clientThreads)
+            {
+                t.Abort();
+            }
+        }
+    }
 }

@@ -27,74 +27,74 @@ using Flood.RPC.Protocol;
 
 namespace Flood.RPC.Server
 {
-	/// <summary>
-	/// Simple single-threaded server for testing
-	/// </summary>
-	public class TSimpleServer : Server
-	{
-		private bool stop = false;
+    /// <summary>
+    /// Simple single-threaded server for testing
+    /// </summary>
+    public class TSimpleServer : Server
+    {
+        private bool stop = false;
 
-		public TSimpleServer(Processor processor,
-						  ServerTransport serverTransport)
-			:base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
-		{
-		}
+        public TSimpleServer(Processor processor,
+                          ServerTransport serverTransport)
+            :base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
+        {
+        }
 
-		public TSimpleServer(Processor processor,
-							ServerTransport serverTransport,
-							LogDelegate logDel)
-			: base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), logDel)
-		{
-		}
+        public TSimpleServer(Processor processor,
+                            ServerTransport serverTransport,
+                            LogDelegate logDel)
+            : base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), logDel)
+        {
+        }
 
-		public TSimpleServer(Processor processor,
-						  ServerTransport serverTransport,
-						  TransportFactory transportFactory)
-			:base(processor,
-				 serverTransport,
-				 transportFactory,
-				 transportFactory,
-				 new BinaryProtocol.Factory(),
-				 new BinaryProtocol.Factory(),
-			     DefaultLogDelegate)
-		{
-		}
+        public TSimpleServer(Processor processor,
+                          ServerTransport serverTransport,
+                          TransportFactory transportFactory)
+            :base(processor,
+                 serverTransport,
+                 transportFactory,
+                 transportFactory,
+                 new BinaryProtocol.Factory(),
+                 new BinaryProtocol.Factory(),
+                 DefaultLogDelegate)
+        {
+        }
 
-		public TSimpleServer(Processor processor,
-						  ServerTransport serverTransport,
-						  TransportFactory transportFactory,
-						  ProtocolFactory protocolFactory)
-			:base(processor,
-				 serverTransport,
-				 transportFactory,
-				 transportFactory,
-				 protocolFactory,
-				 protocolFactory,
-				 DefaultLogDelegate)
-		{
-		}
+        public TSimpleServer(Processor processor,
+                          ServerTransport serverTransport,
+                          TransportFactory transportFactory,
+                          ProtocolFactory protocolFactory)
+            :base(processor,
+                 serverTransport,
+                 transportFactory,
+                 transportFactory,
+                 protocolFactory,
+                 protocolFactory,
+                 DefaultLogDelegate)
+        {
+        }
 
-		public override void Serve()
-		{
-			try
-			{
-				serverTransport.Listen();
-			}
-			catch (TTransportException ttx)
-			{
-				logDelegate(ttx.ToString());
-				return;
-			}
+        public override void Serve()
+        {
+            try
+            {
+                serverTransport.Listen();
+            }
+            catch (TTransportException ttx)
+            {
+                logDelegate(ttx.ToString());
+                return;
+            }
 
-			while (!stop)
-			{
-				TTransport client = null;
-				TTransport inputTransport = null;
-				TTransport outputTransport = null;
-				Serializer inputProtocol = null;
-				Serializer outputProtocol = null;
-				try
-				{
+            while (!stop)
+            {
+                TTransport client = null;
+                TTransport inputTransport = null;
+                TTransport outputTransport = null;
+                Serializer inputProtocol = null;
+                Serializer outputProtocol = null;
+                try
+                {
           using(client = serverTransport.Accept())
           {
             if (client != null)
@@ -125,24 +125,24 @@ namespace Flood.RPC.Server
         }
       }
 
-			if (stop)
-			{
-				try
-				{
-					serverTransport.Close();
-				}
-				catch (TTransportException ttx)
-				{
-					logDelegate("TServerTranport failed on close: " + ttx.Message);
-				}
-				stop = false;
-			}
-		}
+            if (stop)
+            {
+                try
+                {
+                    serverTransport.Close();
+                }
+                catch (TTransportException ttx)
+                {
+                    logDelegate("TServerTranport failed on close: " + ttx.Message);
+                }
+                stop = false;
+            }
+        }
 
-		public override void Stop()
-		{
-			stop = true;
-			serverTransport.Close();
-		}
-	}
+        public override void Stop()
+        {
+            stop = true;
+            serverTransport.Close();
+        }
+    }
 }

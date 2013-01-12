@@ -26,125 +26,125 @@ using System.Net.Sockets;
 
 namespace Flood.RPC.Transport
 {
-	public class TSocket : TStreamTransport
-	{
-		private TcpClient client = null;
-		private string host = null;
-		private int port = 0;
-		private int timeout = 0;
+    public class TSocket : TStreamTransport
+    {
+        private TcpClient client = null;
+        private string host = null;
+        private int port = 0;
+        private int timeout = 0;
 
-		public TSocket(TcpClient client)
-		{
-			this.client = client;
+        public TSocket(TcpClient client)
+        {
+            this.client = client;
 
-			if (IsOpen)
-			{
-				inputStream = client.GetStream();
-				outputStream = client.GetStream();
-			}
-		}
+            if (IsOpen)
+            {
+                inputStream = client.GetStream();
+                outputStream = client.GetStream();
+            }
+        }
 
-		public TSocket(string host, int port) : this(host, port, 0)
-		{
-		}
+        public TSocket(string host, int port) : this(host, port, 0)
+        {
+        }
 
-		public TSocket(string host, int port, int timeout)
-		{
-			this.host = host;
-			this.port = port;
-			this.timeout = timeout;
+        public TSocket(string host, int port, int timeout)
+        {
+            this.host = host;
+            this.port = port;
+            this.timeout = timeout;
 
-			InitSocket();
-		}
+            InitSocket();
+        }
 
-		private void InitSocket()
-		{
-			client = new TcpClient();
-			client.ReceiveTimeout = client.SendTimeout = timeout;
-			client.Client.NoDelay = true;
-		}
+        private void InitSocket()
+        {
+            client = new TcpClient();
+            client.ReceiveTimeout = client.SendTimeout = timeout;
+            client.Client.NoDelay = true;
+        }
 
-		public int Timeout
-		{
-			set
-			{
-				client.ReceiveTimeout = client.SendTimeout = timeout = value;
-			}
-		}
+        public int Timeout
+        {
+            set
+            {
+                client.ReceiveTimeout = client.SendTimeout = timeout = value;
+            }
+        }
 
-		public TcpClient TcpClient
-		{
-			get
-			{
-				return client;
-			}
-		}
+        public TcpClient TcpClient
+        {
+            get
+            {
+                return client;
+            }
+        }
 
-		public string Host
-		{
-			get
-			{
-				return host;
-			}
-		}
+        public string Host
+        {
+            get
+            {
+                return host;
+            }
+        }
 
-		public int Port
-		{
-			get
-			{
-				return port;
-			}
-		}
+        public int Port
+        {
+            get
+            {
+                return port;
+            }
+        }
 
-		public override bool IsOpen
-		{
-			get
-			{
-				if (client == null)
-				{
-					return false;
-				}
+        public override bool IsOpen
+        {
+            get
+            {
+                if (client == null)
+                {
+                    return false;
+                }
 
-				return client.Connected;
-			}
-		}
+                return client.Connected;
+            }
+        }
 
-		public override void Open()
-		{
-			if (IsOpen)
-			{
-				throw new TTransportException(TTransportException.ExceptionType.AlreadyOpen, "Socket already connected");
-			}
+        public override void Open()
+        {
+            if (IsOpen)
+            {
+                throw new TTransportException(TTransportException.ExceptionType.AlreadyOpen, "Socket already connected");
+            }
 
-			if (String.IsNullOrEmpty(host))
-			{
-				throw new TTransportException(TTransportException.ExceptionType.NotOpen, "Cannot open null host");
-			}
+            if (String.IsNullOrEmpty(host))
+            {
+                throw new TTransportException(TTransportException.ExceptionType.NotOpen, "Cannot open null host");
+            }
 
-			if (port <= 0)
-			{
-				throw new TTransportException(TTransportException.ExceptionType.NotOpen, "Cannot open without port");
-			}
+            if (port <= 0)
+            {
+                throw new TTransportException(TTransportException.ExceptionType.NotOpen, "Cannot open without port");
+            }
 
-			if (client == null)
-			{
-				InitSocket();
-			}
+            if (client == null)
+            {
+                InitSocket();
+            }
 
-			client.Connect(host, port);
-			inputStream = client.GetStream();
-			outputStream = client.GetStream();
-		}
+            client.Connect(host, port);
+            inputStream = client.GetStream();
+            outputStream = client.GetStream();
+        }
 
-		public override void Close()
-		{
-			base.Close();
-			if (client != null)
-			{
-				client.Close();
-				client = null;
-			}
-		}
+        public override void Close()
+        {
+            base.Close();
+            if (client != null)
+            {
+                client.Close();
+                client = null;
+            }
+        }
 
     #region " IDisposable Support "
     private bool _IsDisposed;

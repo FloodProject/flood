@@ -25,19 +25,19 @@ using System;
 
 namespace Flood.RPC.Transport
 {
-	public abstract class ServerTransport
-	{
-		public abstract void Listen();
-		public abstract void Close();
-		protected abstract TTransport AcceptImpl();
+    public abstract class ServerTransport
+    {
+        public abstract void Listen();
+        public abstract void Close();
+        protected abstract TTransport AcceptImpl();
 
-		public TTransport Accept()
-		{
-			TTransport transport = AcceptImpl();
-			if (transport == null) {
-			  throw new TTransportException("accept() may not return NULL");
-			}
-			return transport;
-		 }
-	}
+        public TTransport Accept()
+        {
+            TTransport transport = AcceptImpl();
+            if (transport == null) {
+              throw new TTransportException("accept() may not return NULL");
+            }
+            return transport;
+         }
+    }
 }

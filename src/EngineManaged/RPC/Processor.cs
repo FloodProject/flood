@@ -28,10 +28,10 @@ using Flood.RPC.Protocol;
 
 namespace Flood.RPC
 {
-	public interface Processor
-	{
-		bool Process(Serializer iprot, Serializer oprot);
-	}
+    public interface Processor
+    {
+        bool Process(Serializer iprot, Serializer oprot);
+    }
 
     public abstract class SimpleProcessor : Processor
     {
