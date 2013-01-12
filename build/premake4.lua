@@ -44,7 +44,7 @@ solution "Flood"
 	-- Compiler-specific options
 	
 	configuration "vs*"
-		buildoptions { msvc_buildflags }
+		buildoptions { msvc_buildflags, "/wd4251" }
 		
 	configuration "gcc"
 		buildoptions { gcc_buildflags }
