@@ -58,37 +58,36 @@ solution "Flood"
 	
 	group "Engines"
 	
-		dofile "Core.lua"
-		dofile "Resources.lua"
-		dofile "Graphics.lua"
-		dofile "Engine.lua"
-		dofile "Pipeline.lua"
+		dofile "../src/Core/Core.lua"
+		dofile "../src/Resources/Resources.lua"
+		dofile "../src/Graphics/Graphics.lua"
+		dofile "../src/Engine/Engine.lua"
+		dofile "../src/Pipeline/Pipeline.lua"
 
 	group "Runtimes"
 
-		dofile "Runtime.lua"
-		dofile "GameRuntime.lua"
+		dofile "../src/Runtime/Runtime.lua"
+		dofile "../src/GameRuntime/GameRuntime.lua"
 
 	group "Managed"
 
 		dofile "../src/EngineManaged/Bindings/EngineBindings.lua"
 		dofile "../src/EngineManaged/EngineManaged.lua"
-		dofile "GUI.lua"
+		dofile "../src/GUI/GUI.lua"
 		
 	group "Editor"
 	
 		dofile "../src/Editor/Editor.Client/Editor.Client.lua"
-		dofile "EditorRuntime.lua"
+		dofile "../src/EditorRuntime/EditorRuntime.lua"
 		dofile "../src/Editor/Editor.Shared/Editor.Shared.lua"
 		dofile "../src/Editor/Editor.Server/Editor.Server.lua"
 
 	group "Tests"
 
-		dofile "UnitTests.lua"
+		dofile "../src/Tests/UnitTests.lua"
 		
 	group "Tools"
 
-		dofile "UnitTests.lua"
 		dofile "../src/Tools/RPCGen/RPCGen.lua"
 		
 	group "Examples"

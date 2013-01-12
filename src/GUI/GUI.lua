@@ -8,12 +8,12 @@ project "GUI"
 	
 	--flags { common_flags }
 	
-	location "../src/GUI"
+	location "."
 	
 	files
 	{
 		"GUI.lua",
-		"../src/GUI/**.cs",
+		"**.cs",
 	}
 	
 	links { 
