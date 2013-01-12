@@ -2,7 +2,7 @@ project "UnitTests"
 
 	kind "ConsoleApp"
 	builddeps { "Core" }
-	debugdir "../src/Core/Test/"
+	debugdir "../Core/Test/"
 	
 	defines { Core.defines }
 	
@@ -11,21 +11,21 @@ project "UnitTests"
 	files
 	{
 		"UnitTests.lua",
-		"../src/Tests/*.cpp",
-		"../src/Tests/*.h",
-		"../src/Core/Test/**",
+		"**.cpp",
+		"**.h",
+		"../Core/Test/**",
 	}
 
 	vpaths
 	{
-		["*"] = { "../src/UnitTests/", "../inc/UnitTests/" },
+		["*"] = { ".", path.join(incdir,"UnitTests") },
 	}
 	
 	includedirs
 	{
-		"../inc/",
+		incdir,
 	}
 	
-	libdirs { Core.libdirs, "../bin/" }
+	libdirs { Core.libdirs, bindir }
 	deps { Core.deps, "UnitTest++" }
 	links { Core.name, Core.links }

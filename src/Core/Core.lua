@@ -16,35 +16,31 @@ project "Core"
 	SetupNativeProjects()
 
 	pchheader "Core/API.h"
-	pchsource "../src/Core/Core.cpp"
+	pchsource "Core.cpp"
 
 	files 
 	{
-		"Config.lua",
+		path.join(builddir,"../Config.lua"),
 		"Core.lua",
-		"../inc/Core/**.h",
-		"../src/Core/**.cpp",
-		"../inc/Core/Math/**.h",
-		"../src/Core/Math/**.cpp",
-		"../inc/Core/Network/**.h",
-		"../src/Core/Network/**.cpp",
+		path.join(incdir,"Core","**.h"),
+		"**.cpp",
 	}
 
 	vpaths
 	{
-		["*"] = { "../src/Core/", "../inc/Core/" },
-		["Platforms/*"] = { "../src/Platforms/" },
+		["*"] = { ".", path.join(incdir,"Core") },
+		["Platforms/*"] = { path.join( srcdir,"Platforms") },
 	}	
 
 	excludes
 	{
-		"../src/Core/Test/**",
+		"Test/**",
 	}
 	
 	includedirs
 	{
-		"../inc/",
-		"../deps/Dirent",
+		incdir,
+		path.join(depsdir,"Dirent"),
 	}
 	
 	Core.links = {}
@@ -65,8 +61,8 @@ project "Core"
 
 	configuration "windows"
 	
-		files { "../src/Platforms/Win32/File*.cpp" }
-		files { "../src/Platforms/Win32/Concurrency*.cpp" }
+		files { path.join( srcdir,"Platforms/Win32/File*.cpp") }
+		files { path.join( srcdir,"Platforms/Win32/Concurrency*.cpp") }
 		
 		table.insert(Core.links, "ws2_32")
 		table.insert(Core.links, "winmm")
@@ -74,8 +70,8 @@ project "Core"
 		-- Setup Visual Leak Detector
 		if config.MEMORY_LEAK_DETECTOR then
 			table.insert(Core.links, "vld")
-			table.insert(Core.libdirs,
-				depsdir .. "VisualLeakDetector/lib/Win32")
+			table.insert(Core.libdirs, path.join( 
+				depsdir, "VisualLeakDetector/lib/Win32"))
 		end
 
 	configuration {}

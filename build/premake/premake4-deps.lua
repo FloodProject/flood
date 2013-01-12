@@ -12,11 +12,9 @@ solution "Dependencies"
 	flags { common_flags }
 	language "C++"
 	
-	local build = action
-	
-	location (build)
-	objdir (build .. "/obj/")
-	targetdir (build .. "/lib/")
+	location (builddir)
+	objdir (builddir .. "/obj/")
+	targetdir (libdir)
 	
 	-- Build configuration options
 	
@@ -47,7 +45,7 @@ solution "Dependencies"
 	
 	function IncludeDependencies()
 		print("Searching for dependencies...")
-		local deps = os.matchdirs("../deps/*")
+		local deps = os.matchdirs(depsdir.."/*")
 		
 		for i,dep in ipairs(deps) do
 			local fp = path.join(dep, "premake4.lua")

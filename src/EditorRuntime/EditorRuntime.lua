@@ -6,13 +6,13 @@ function SetupWxWidgets()
 	
 	wxWidgets.includedirs =
 	{ 
-		"../deps/wxWidgets/include",
-		"../deps/wxWidgets/include/msvc"
+		path.join(depsdir,"wxWidgets/include"),
+		path.join(depsdir,"wxWidgets/include/msvc")
 	}
 
 	wxWidgets.libdirs =
 	{ 
-		"../deps/wxWidgets/lib/vc_dll",
+		path.join(depsdir,"wxWidgets/lib/vc_dll")
 	}	
 	
 	wxWidgets.links = { }
@@ -35,7 +35,7 @@ end
 
 project "EditorRuntime"
 
-	debugdir "../bin"
+	debugdir(bindir)
 	
 	SetupNativeProjects()
 
@@ -56,7 +56,7 @@ project "EditorRuntime"
 	flags { editor_flags }
 
 	pchheader "Editor/API.h"
-	pchsource "../src/EditorRuntime/Editor.cpp"
+	pchsource "Editor.cpp"
 	
 	configuration "Debug"
 		kind "ConsoleApp"
@@ -70,20 +70,20 @@ project "EditorRuntime"
 	files
 	{
 		"EditorRuntime.lua",
-		"../inc/Editor/**.h",
-		"../src/EditorRuntime/**.h",
-		"../src/EditorRuntime/**.cpp",
-		"../src/EditorRuntime/**.rc",
+		path.join(incdir,"Editor/**.h"),
+		"**.h",
+		"**.cpp",
+		"**.rc",
 	}
 
-	configuration "**/EditorRuntime/Managed/GwenRenderer.cpp"
-		usingdirs { action .. "/lib/" }
+	configuration "Managed/GwenRenderer.cpp"
+		usingdirs { libdir }
 		flags { "Managed", "NoMinimalRebuild", "NoRuntimeChecks", "NoPCH" }
 	configuration "*"
 
 	vpaths
 	{
-		["*"] = { "../src/EditorRuntime/", "../inc/Editor/" },
+		["*"] = { ".", path.join(incdir,"Editor") },
 	}
 
 	EditorRuntime.deps = {}
@@ -95,17 +95,17 @@ project "EditorRuntime"
 
 	includedirs
 	{
-		"../inc/",
-		"../src/",
-		"../inc/Editor",
-		"../src/EditorRuntime",
-		"../src/EditorRuntime/Widgets",
+		incdir,
+		srcdir,
+		path.join(incdir,"Editor"),
+		path.join(srcdir,"EditorRuntime"),
+		path.join(srcdir,"EditorRuntime","Widgets"),
 		wxWidgets.includedirs
 	}
 
 	libdirs
 	{
-		"lib/",
+		libdir,
 		Core.libdirs,
 		Resources.libdirs,
 		Engine.libdirs,

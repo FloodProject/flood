@@ -18,22 +18,22 @@ project "GameRuntime"
 	files
 	{
 		"GameRuntime.lua",
-		"../src/GameRuntime/**.h",
-		"../src/GameRuntime/**.cpp",
-		"../src/Platforms/SFML/*.h",
-		"../src/Platforms/SFML/*.cpp",
+		"**.h",
+		"**.cpp",
+		"../Platforms/SFML/*.h",
+		"../Platforms/SFML/*.cpp",
 	}
 
 	vpaths
 	{
-		["*"] = { "../src/GameRuntime/", "../inc/GameRuntime/" },
+		["*"] = { ".", path.join(incdir,"GameRuntime"), srcdir },
 	}
 
 	includedirs
 	{
-		"../inc/",
-		"../src/",
-		"../deps/SFML/include/",
+		incdir,
+		srcdir,
+		path.join(depsdir,"SFML/include/"),
 	}
 	
 	libdirs
