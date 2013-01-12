@@ -117,7 +117,7 @@ namespace Flood.Tools.RPCGen
             var typeName = string.Format("{0}Impl", type.Name);
 
             WriteLine("[Serializable]");
-            WriteLine("public class {0} : TBase", typeName);
+            WriteLine("public class {0} : Base", typeName);
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -192,10 +192,10 @@ namespace Flood.Tools.RPCGen
             WriteLine("using System;");
             WriteLine("using System.Collections.Generic;");
 
-            WriteLine("using Thrift;");
-            WriteLine("using Thrift.Metadata;");
-            WriteLine("using Thrift.Protocol;");
-            WriteLine("using Thrift.Transport;");
+            WriteLine("using Flood.RPC;");
+            WriteLine("using Flood.RPC.Metadata;");
+            WriteLine("using Flood.RPC.Protocol;");
+            WriteLine("using Flood.RPC.Transport;");
             NewLine();
         }
 
@@ -257,12 +257,12 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Client(TProtocol prot) : this(prot, prot)");
+            WriteLine("public Client(Serializer prot) : this(prot, prot)");
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
             NewLine();
 
-            Write("public Client(TProtocol iprot, TProtocol oprot)");
+            Write("public Client(Serializer iprot, Serializer oprot)");
             if (baseType != null)
                 Write(" : base(iprot, oprot)", baseType.Name);
             NewLine();
@@ -274,18 +274,18 @@ namespace Flood.Tools.RPCGen
 
             if (baseType == null)
             {
-                WriteLine("protected TProtocol iprot_;");
-                WriteLine("protected TProtocol oprot_;");
+                WriteLine("protected Serializer iprot_;");
+                WriteLine("protected Serializer oprot_;");
                 WriteLine("protected int seqid_;");
                 NewLine();
 
-                WriteLine("public TProtocol InputProtocol");
+                WriteLine("public Serializer InputProtocol");
                 WriteStartBraceIndent();
                 WriteLine("get { return iprot_; }");
                 WriteCloseBraceIndent();
                 NewLine();
 
-                WriteLine("public TProtocol OutputProtocol");
+                WriteLine("public Serializer OutputProtocol");
                 WriteStartBraceIndent();
                 WriteLine("get { return oprot_; }");
                 WriteCloseBraceIndent();
@@ -342,10 +342,10 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             WriteLine("var msg = iprot_.ReadMessageBegin();");
-            WriteLine("if (msg.Type == TMessageType.Exception)");
+            WriteLine("if (msg.Type == MessageType.Exception)");
 
             WriteStartBraceIndent();
-            WriteLine("var x = TApplicationException.Read(iprot_);");
+            WriteLine("var x = RPCException.Read(iprot_);");
             WriteLine("iprot_.ReadMessageEnd();");
             WriteLine("throw x;");
             WriteCloseBraceIndent();
@@ -371,7 +371,7 @@ namespace Flood.Tools.RPCGen
 
             if (method.ReturnType != typeof (void))
             {
-                WriteLine("throw new TApplicationException(TApplicationException.ExceptionType.MissingResult,");
+                WriteLine("throw new RPCException(RPCException.ExceptionType.MissingResult,");
                 WriteLineIndent(" \"{0} failed: unknown result\");", method.Name);
             }
 
@@ -385,7 +385,7 @@ namespace Flood.Tools.RPCGen
             WriteLine(")");
             WriteStartBraceIndent();
 
-            WriteLine("oprot_.WriteMessageBegin(new TMessage(\"{0}\", TMessageType.Call, seqid_));",
+            WriteLine("oprot_.WriteMessageBegin(new Message(\"{0}\", MessageType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
@@ -404,7 +404,7 @@ namespace Flood.Tools.RPCGen
             GetInheritedService(type, out baseType);
 
             WriteLine("public class Processor : {0}",
-                      baseType == null ? "TSimpleProcessor" :
+                      baseType == null ? "SimpleProcessor" :
                       baseType.Name + "Impl.Processor");
             WriteStartBraceIndent();
 
@@ -441,7 +441,7 @@ namespace Flood.Tools.RPCGen
 
         void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public void {0}_Process(int seqid, TProtocol iprot, TProtocol oprot)",
+            WriteLine("public void {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
                       method.Name);
             WriteStartBraceIndent();
 
@@ -495,7 +495,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("}");
 
             // Create a new message and reply to the RPC call
-            WriteLine("oprot.WriteMessageBegin(new TMessage(\"{0}\", TMessageType.Reply, seqid));",
+            WriteLine("oprot.WriteMessageBegin(new Message(\"{0}\", MessageType.Reply, seqid));",
                       method.Name);
 
             WriteLine("result.Write(oprot);");
@@ -508,7 +508,7 @@ namespace Flood.Tools.RPCGen
         void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_args : TBase", method.Name);
+            WriteLine("public partial class {0}_args : Base", method.Name);
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -748,7 +748,7 @@ namespace Flood.Tools.RPCGen
 
         void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
         {
-            WriteLine("public void Read(TProtocol iprot)");
+            WriteLine("public void Read(Serializer iprot)");
             WriteStartBraceIndent();
 
             WriteLine("iprot.ReadStructBegin();");
@@ -846,14 +846,14 @@ namespace Flood.Tools.RPCGen
             WriteLine("public void Write({0} oprot)", typeof(Serializer).Name);
             WriteStartBraceIndent();
 
-            WriteLine("var struc = new TStruct(\"{0}_{1}\");",
+            WriteLine("var struc = new Struct(\"{0}_{1}\");",
                 typeName, isResult ? "result" : "args");
 
             WriteLine("oprot.WriteStructBegin(struc);");
 
             parameters = ConvertToActualParameters(parameters, isResult);
             if (parameters.Any())
-                WriteLine("var field = new TField();");
+                WriteLine("var field = new Field();");
 
             foreach (var param in parameters)
             {
@@ -906,7 +906,7 @@ namespace Flood.Tools.RPCGen
         void GenerateServiceMethodResult(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_result : TBase", method.Name);
+            WriteLine("public partial class {0}_result : Base", method.Name);
             WriteStartBraceIndent();
 
             var parameters = new List<Parameter>();
