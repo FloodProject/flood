@@ -71,7 +71,7 @@ solution "Flood"
 
 	group "Managed"
 
-		dofile "EngineManaged.lua"
+		dofile "../src/EngineManaged/Bindings/EngineBindings.lua"
 		dofile "GUI.lua"
 		
 	group "Editor"
