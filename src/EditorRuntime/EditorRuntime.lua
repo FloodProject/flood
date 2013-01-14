@@ -10,25 +10,14 @@ function SetupWxWidgets()
 		path.join(depsdir,"wxWidgets/include/msvc")
 	}
 
-	wxWidgets.libdirs =
-	{ 
-		path.join(depsdir,"wxWidgets/lib/vc_dll")
-	}	
-	
+	wxWidgets.libdirs = { }	
 	wxWidgets.links = { }
-
 	wxWidgets.defines = { '_LIB', 'WXUSINGDLL', 'WXMONOLITHIC' }
 
 	defines { wxWidgets.defines }
 
 	local c = configuration "windows"
 		defines { "__WXMSW__" }
-		
-	configuration { "windows", "Debug" }
-		links { "wxmsw29ud","wxmsw29ud_gl" }
-		
-	configuration { "windows", "Release" }
-		links { "wxmsw29u","wxmsw29u_gl" }
 
 	configuration (c)
 end
@@ -86,7 +75,7 @@ project "EditorRuntime"
 		["*"] = { ".", path.join(incdir,"Editor") },
 	}
 
-	EditorRuntime.deps = {}
+	EditorRuntime.deps = { "wxWidgets" }
 	if config.SCRIPTING_MONO then
 		table.insert(EditorRuntime.deps,"Mono")
 	end
