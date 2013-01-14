@@ -33,13 +33,12 @@ class RenderControl : public wxGLCanvas
 {
 public:
 
-	RenderControl( 	wxWindow* parent, wxWindowID id = wxID_ANY,
+	RenderControl( wxWindow* parent, wxWindowID id = wxID_ANY,
 					const int* attribList = nullptr,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
 					long style = wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE,
-					const wxString&	name = "RenderGLCanvas",
-					const wxPalette& palette = wxNullPalette );
+					const wxString&	name = "RenderGLCanvas" );
 
 	~RenderControl();
 

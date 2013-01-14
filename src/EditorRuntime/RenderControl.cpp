@@ -40,7 +40,7 @@ const float MAX_RATE_RENDER = 1.0f / 60;
 
 RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
-	long style,	const wxString&	name, const wxPalette& )
+	long style, const wxString& name )
 	: wxGLCanvas(parent, id, attribList, pos, size, style | wxFULL_REPAINT_ON_RESIZE & (~wxCLIP_CHILDREN), name)
 	, needsRedraw(false)
 	, frameUpdateTimer(this, UPDATE_TIMER)
