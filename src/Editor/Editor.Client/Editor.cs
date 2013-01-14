@@ -1,24 +1,17 @@
 ﻿using FlushEditor.GUI;
-using FlushEditor.GUI.Tools;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlushEditor
 {
-   
     public class Editor : IDisposable{
 
         private AggregateCatalog catalog;
 
         [Export]
-	    public EditorGUI GUI { get; private set; }
+        public EditorGUI GUI { get; private set; }
 
         [Export]
         private CompositionContainer container;
@@ -37,7 +30,7 @@ namespace FlushEditor
 
             GUI.Initiated += OnGUIInit;
             
-	    }
+        }
 
         public void Dispose()
         {
