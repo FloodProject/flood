@@ -12,10 +12,10 @@ namespace FlushEditor
 {
      public class EditorGUI : IDisposable{
 
-	    Gwen.Renderer.Base renderer;
-	    Gwen.Skin.Base skin;
+        Gwen.Renderer.Base renderer;
+        Gwen.Skin.Base skin;
 
-	    Gwen.Control.Canvas canvas;
+        Gwen.Control.Canvas canvas;
 
         public void Dispose()
         {
@@ -47,9 +47,9 @@ namespace FlushEditor
                 Initiated.Invoke();
         }
 
-	    public void Render(){
-		    canvas.RenderCanvas();
-	    }
+        public void Render(){
+            canvas.RenderCanvas();
+        }
 
         public Gwen.Control.Canvas Canvas
         {
