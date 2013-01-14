@@ -32,6 +32,7 @@ solution "Dependencies"
 	configuration "vs*"
 		buildoptions { msvc_buildflags }
 		defines { "_CRT_SECURE_NO_WARNINGS" }
+		defines { msvc_defines }
 	
 	configuration "gcc"
 		buildoptions { gcc_buildflags }

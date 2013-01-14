@@ -14,6 +14,8 @@ common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
 msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
 gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
 
+msvc_defines = { "_SECURE_SCL=0", "_HAS_ITERATOR_DEBUGGING=0" }
+
 function debug(msg)
 	-- print(msg)
 end
