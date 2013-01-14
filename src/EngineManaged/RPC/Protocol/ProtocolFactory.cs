@@ -26,8 +26,8 @@ using Flood.RPC.Transport;
 
 namespace Flood.RPC.Protocol
 {
-	public interface ProtocolFactory
-	{
-		Serializer GetProtocol(TTransport trans);
-	}
+    public interface ProtocolFactory
+    {
+        Serializer GetProtocol(TTransport trans);
+    }
 }

@@ -19,16 +19,16 @@
 
 namespace Flood.RPC.Protocol
 {
-	public interface Base
-	{
-		///
-		/// Reads the TObject from the given input protocol.
-		///
-		void Read(Serializer tProtocol);
+    public interface Base
+    {
+        ///
+        /// Reads the TObject from the given input protocol.
+        ///
+        void Read(Serializer tProtocol);
 
-		///
-		/// Writes the objects out to the protocol
-		///
-		void Write(Serializer tProtocol);
-	}
+        ///
+        /// Writes the objects out to the protocol
+        ///
+        void Write(Serializer tProtocol);
+    }
 }

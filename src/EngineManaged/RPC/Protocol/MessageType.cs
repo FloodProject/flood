@@ -21,11 +21,11 @@ using System;
 
 namespace Flood.RPC.Protocol
 {
-	public enum MessageType
-	{
-		Call = 1,
-		Reply = 2,
-		Exception = 3,
-		Oneway = 4
-	}
+    public enum MessageType
+    {
+        Call = 1,
+        Reply = 2,
+        Exception = 3,
+        Oneway = 4
+    }
 }

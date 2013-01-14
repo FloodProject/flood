@@ -27,36 +27,36 @@ using System.Text;
 
 namespace Flood.RPC.Protocol
 {
-	public struct Message
-	{
-		private string name;
-		private MessageType type;
-		private int seqID;
+    public struct Message
+    {
+        private string name;
+        private MessageType type;
+        private int seqID;
 
-		public Message(string name, MessageType type, int seqid)
-			:this()
-		{
-			this.name = name;
-			this.type = type;
-			this.seqID = seqid;
-		}
+        public Message(string name, MessageType type, int seqid)
+            :this()
+        {
+            this.name = name;
+            this.type = type;
+            this.seqID = seqid;
+        }
 
-		public string Name
-		{
-			get { return name; }
-			set { name = value; }
-		}
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
 
-		public MessageType Type
-		{
-			get { return type; }
-			set { type = value; }
-		}
+        public MessageType Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
 
-		public int SeqID
-		{
-			get { return seqID; }
-			set { seqID = value; }
-		}
-	}
+        public int SeqID
+        {
+            get { return seqID; }
+            set { seqID = value; }
+        }
+    }
 }

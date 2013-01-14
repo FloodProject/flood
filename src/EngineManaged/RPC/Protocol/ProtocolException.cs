@@ -25,42 +25,42 @@ using System;
 
 namespace Flood.RPC.Protocol
 {
-	public class ProtocolException : Exception
-	{
-		public const int UNKNOWN = 0;
-		public const int INVALID_DATA = 1;
-		public const int NEGATIVE_SIZE = 2;
-		public const int SIZE_LIMIT = 3;
-		public const int BAD_VERSION = 4;
-		public const int NOT_IMPLEMENTED= 5;
+    public class ProtocolException : Exception
+    {
+        public const int UNKNOWN = 0;
+        public const int INVALID_DATA = 1;
+        public const int NEGATIVE_SIZE = 2;
+        public const int SIZE_LIMIT = 3;
+        public const int BAD_VERSION = 4;
+        public const int NOT_IMPLEMENTED= 5;
 
-		protected int type_ = UNKNOWN;
+        protected int type_ = UNKNOWN;
 
-		public ProtocolException()
-			: base()
-		{
-		}
+        public ProtocolException()
+            : base()
+        {
+        }
 
-		public ProtocolException(int type)
-			: base()
-		{
-			type_ = type;
-		}
+        public ProtocolException(int type)
+            : base()
+        {
+            type_ = type;
+        }
 
-		public ProtocolException(int type, String message)
-			: base(message)
-		{
-			type_ = type;
-		}
+        public ProtocolException(int type, String message)
+            : base(message)
+        {
+            type_ = type;
+        }
 
-		public ProtocolException(String message)
-			: base(message)
-		{
-		}
+        public ProtocolException(String message)
+            : base(message)
+        {
+        }
 
-		public int getType()
-		{
-			return type_;
-		}
-	}
+        public int getType()
+        {
+            return type_;
+        }
+    }
 }

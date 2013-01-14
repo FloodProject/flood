@@ -27,66 +27,66 @@ using Flood.RPC.Transport;
 
 namespace Flood.RPC.Protocol
 {
-	public abstract class Serializer
-	{
-		protected TTransport trans;
+    public abstract class Serializer
+    {
+        protected TTransport trans;
 
-		protected Serializer(TTransport trans)
-		{
-			this.trans = trans;
-		}
+        protected Serializer(TTransport trans)
+        {
+            this.trans = trans;
+        }
 
-		public TTransport Transport
-		{
-			get { return trans; }
-		}
+        public TTransport Transport
+        {
+            get { return trans; }
+        }
 
-		public abstract void WriteMessageBegin(Message message);
-		public abstract void WriteMessageEnd();
-		public abstract void WriteStructBegin(Struct struc);
-		public abstract void WriteStructEnd();
-		public abstract void WriteFieldBegin(Field field);
-		public abstract void WriteFieldEnd();
-		public abstract void WriteFieldStop();
-		public abstract void WriteMapBegin(Map map);
-		public abstract void WriteMapEnd();
-		public abstract void WriteListBegin(TList list);
-		public abstract void WriteListEnd();
-		public abstract void WriteSetBegin(TSet set);
-		public abstract void WriteSetEnd();
-		public abstract void WriteBool(bool b);
-		public abstract void WriteByte(byte b);
-		public abstract void WriteI16(short i16);
-		public abstract void WriteI32(int i32);
-		public abstract void WriteI64(long i64);
-		public abstract void WriteDouble(double d);
-		public virtual void WriteString(string s) {
-			WriteBinary(Encoding.UTF8.GetBytes(s));
-		}
-		public abstract void WriteBinary(byte[] b);
+        public abstract void WriteMessageBegin(Message message);
+        public abstract void WriteMessageEnd();
+        public abstract void WriteStructBegin(Struct struc);
+        public abstract void WriteStructEnd();
+        public abstract void WriteFieldBegin(Field field);
+        public abstract void WriteFieldEnd();
+        public abstract void WriteFieldStop();
+        public abstract void WriteMapBegin(Map map);
+        public abstract void WriteMapEnd();
+        public abstract void WriteListBegin(TList list);
+        public abstract void WriteListEnd();
+        public abstract void WriteSetBegin(TSet set);
+        public abstract void WriteSetEnd();
+        public abstract void WriteBool(bool b);
+        public abstract void WriteByte(byte b);
+        public abstract void WriteI16(short i16);
+        public abstract void WriteI32(int i32);
+        public abstract void WriteI64(long i64);
+        public abstract void WriteDouble(double d);
+        public virtual void WriteString(string s) {
+            WriteBinary(Encoding.UTF8.GetBytes(s));
+        }
+        public abstract void WriteBinary(byte[] b);
 
-		public abstract Message ReadMessageBegin();
-		public abstract void ReadMessageEnd();
-		public abstract Struct ReadStructBegin();
-		public abstract void ReadStructEnd();
-		public abstract Field ReadFieldBegin();
-		public abstract void ReadFieldEnd();
-		public abstract Map ReadMapBegin();
-		public abstract void ReadMapEnd();
-		public abstract TList ReadListBegin();
-		public abstract void ReadListEnd();
-		public abstract TSet ReadSetBegin();
-		public abstract void ReadSetEnd();
-		public abstract bool ReadBool();
-		public abstract byte ReadByte();
-		public abstract short ReadI16();
-		public abstract int ReadI32();
-		public abstract long ReadI64();
-		public abstract double ReadDouble();
-		public virtual string ReadString() {
+        public abstract Message ReadMessageBegin();
+        public abstract void ReadMessageEnd();
+        public abstract Struct ReadStructBegin();
+        public abstract void ReadStructEnd();
+        public abstract Field ReadFieldBegin();
+        public abstract void ReadFieldEnd();
+        public abstract Map ReadMapBegin();
+        public abstract void ReadMapEnd();
+        public abstract TList ReadListBegin();
+        public abstract void ReadListEnd();
+        public abstract TSet ReadSetBegin();
+        public abstract void ReadSetEnd();
+        public abstract bool ReadBool();
+        public abstract byte ReadByte();
+        public abstract short ReadI16();
+        public abstract int ReadI32();
+        public abstract long ReadI64();
+        public abstract double ReadDouble();
+        public virtual string ReadString() {
             var buf = ReadBinary();
             return Encoding.UTF8.GetString(buf, 0, buf.Length);
         }
-		public abstract byte[] ReadBinary();
-	}
+        public abstract byte[] ReadBinary();
+    }
 }

@@ -27,36 +27,36 @@ using System.Text;
 
 namespace Flood.RPC.Protocol
 {
-	public struct Map
-	{
-		private TType keyType;
-		private TType valueType;
-		private int count;
+    public struct Map
+    {
+        private TType keyType;
+        private TType valueType;
+        private int count;
 
-		public Map(TType keyType, TType valueType, int count)
-			:this()
-		{
-			this.keyType = keyType;
-			this.valueType = valueType;
-			this.count = count;
-		}
+        public Map(TType keyType, TType valueType, int count)
+            :this()
+        {
+            this.keyType = keyType;
+            this.valueType = valueType;
+            this.count = count;
+        }
 
-		public TType KeyType
-		{
-			get { return keyType; }
-			set { keyType = value; }
-		}
+        public TType KeyType
+        {
+            get { return keyType; }
+            set { keyType = value; }
+        }
 
-		public TType ValueType
-		{
-			get { return valueType; }
-			set { valueType = value; }
-		}
+        public TType ValueType
+        {
+            get { return valueType; }
+            set { valueType = value; }
+        }
 
-		public int Count
-		{
-			get { return count; }
-			set { count = value; }
-		}
-	}
+        public int Count
+        {
+            get { return count; }
+            set { count = value; }
+        }
+    }
 }

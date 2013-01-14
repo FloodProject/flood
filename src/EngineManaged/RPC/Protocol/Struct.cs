@@ -27,20 +27,20 @@ using System.Text;
 
 namespace Flood.RPC.Protocol
 {
-	public struct Struct
-	{
-		private string name;
+    public struct Struct
+    {
+        private string name;
 
-		public Struct(string name)
-			:this()
-		{
-			this.name = name;
-		}
+        public Struct(string name)
+            :this()
+        {
+            this.name = name;
+        }
 
-		public string Name
-		{
-			get { return name; }
-			set { name = value; }
-		}
-	}
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+    }
 }

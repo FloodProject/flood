@@ -87,8 +87,8 @@ namespace Flood.RPC.Protocol
         #region CompactProtocol Factory
 
         /**
-		  * Factory
-		  */
+          * Factory
+          */
         public class Factory : ProtocolFactory
         {
             public Factory() { }
@@ -747,7 +747,7 @@ namespace Flood.RPC.Protocol
                 if ((b & 0x80) != 0x80) break;
                 shift += 7;
             }
-			
+            
             return result;
         }
 
