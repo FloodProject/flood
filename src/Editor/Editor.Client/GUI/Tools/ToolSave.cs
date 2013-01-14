@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 
-namespace FlushEditor.GUI.Tools
+namespace Flood.Editor.GUI.Tools
 {
     class ToolSave : EditorTool, BarTool
     {

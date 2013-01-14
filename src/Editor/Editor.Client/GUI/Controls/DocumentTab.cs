@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Gwen.Control;
 using Gwen;
 
-namespace FlushEditor.GUI.Controls
+namespace Flood.Editor.GUI.Controls
 {
     public class DocumentTab
     {

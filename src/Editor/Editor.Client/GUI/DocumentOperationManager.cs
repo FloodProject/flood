@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlushEditor.GUI
+namespace Flood.Editor.GUI
 {
     public class UndoManager<TDoc> where TDoc : Document<TDoc>
     {

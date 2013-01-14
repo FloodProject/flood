@@ -1,5 +1,5 @@
 ﻿
-namespace FlushEditor.GUI.Tools
+namespace Flood.Editor.GUI.Tools
 {
     class ProjectTree : EditorTool, DockableTool
     {

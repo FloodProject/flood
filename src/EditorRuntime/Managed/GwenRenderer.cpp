@@ -685,7 +685,7 @@ public:
 
 public ref class GUI {
 
-	FlushEditor::Editor^ managedEditor;
+	Flood::Editor::Editor^ managedEditor;
 	GwenRenderer^ renderer;
 	GwenInput* input;
 
@@ -699,7 +699,7 @@ public:
 	void Initialize(InputManager* inputManager){
 
 		renderer = gcnew GwenRenderer();
-		managedEditor = gcnew FlushEditor::Editor();
+		managedEditor = gcnew Flood::Editor::Editor();
 
 		managedEditor->GUI->Init(renderer,"DefaultSkin.png");
 

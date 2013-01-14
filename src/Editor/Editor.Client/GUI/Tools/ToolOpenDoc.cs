@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 
-namespace FlushEditor.GUI.Tools
+namespace Flood.Editor.GUI.Tools
 {
     class ToolOpenDoc : EditorTool, BarTool
     {

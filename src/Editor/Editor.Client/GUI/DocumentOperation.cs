@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlushEditor.GUI
+namespace Flood.Editor.GUI
 {
     public interface UndoOperation<TDoc> where TDoc : Document<TDoc>
     {

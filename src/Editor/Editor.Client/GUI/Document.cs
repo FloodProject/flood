@@ -1,4 +1,4 @@
-﻿using FlushEditor.GUI.Tools;
+﻿using Flood.Editor.GUI.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlushEditor.GUI
+namespace Flood.Editor.GUI
 {
     public abstract class Document : Document<Document> {
 

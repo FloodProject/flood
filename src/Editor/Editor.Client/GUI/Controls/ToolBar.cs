@@ -1,6 +1,6 @@
 ﻿
 using System;
-namespace FlushEditor.GUI.Controls
+namespace Flood.Editor.GUI.Controls
 {
     public class ToolBar
     {
