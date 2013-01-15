@@ -182,7 +182,7 @@ public:
 	}
 
 	static void LoadTextureInternal(Gwen::Texture^ t, array<byte>^ imageBytes) 
-    {
+	{
 		ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t->Width,t->Height, PixelFormat::B8G8R8A8);
 		
 		//array to vector
@@ -214,54 +214,54 @@ public ref class TextRenderer
 	}
 
 	static bool LoadFont(Gwen::Font^ font)
-    {
-        //Debug.Print(String.Format("LoadFont {0}", font->FaceName));
-        font->RealSize = font->Size;// * Scale;
-        System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
+	{
+		//Debug.Print(String.Format("LoadFont {0}", font->FaceName));
+		font->RealSize = font->Size;// * Scale;
+		System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
 
-        if (sysFont != nullptr)
-            delete(sysFont);
+		if (sysFont != nullptr)
+			delete(sysFont);
 
-        // apaprently this can't fail @_@
-        // "If you attempt to use a font that is not supported, or the font is not installed on the machine that is running the application, the Microsoft Sans Serif font will be substituted."
-        sysFont = gcnew System::Drawing::Font(font->FaceName, font->Size);
-        font->RendererData = sysFont; 
-        return true;
+		// apaprently this can't fail @_@
+		// "If you attempt to use a font that is not supported, or the font is not installed on the machine that is running the application, the Microsoft Sans Serif font will be substituted."
+		sysFont = gcnew System::Drawing::Font(font->FaceName, font->Size);
+		font->RendererData = sysFont; 
+		return true;
    }
 
    static void FreeFont(Gwen::Font^ font)
    {
-        //Debug.Print(String.Format("FreeFont {0}", font->FaceName));
-        if (font->RendererData == nullptr)
-            return;
-
-        //Debug.Print(String.Format("FreeFont {0} - actual free", font.FaceName));
-        System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
-        if (sysFont == nullptr)
-        //    throw new System::InvalidOperationException("Freeing empty font");
+		//Debug.Print(String.Format("FreeFont {0}", font->FaceName));
+		if (font->RendererData == nullptr)
 			return;
 
-        //sysFont->Dispose();
-        font->RendererData = nullptr;
-    }
+		//Debug.Print(String.Format("FreeFont {0} - actual free", font.FaceName));
+		System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
+		if (sysFont == nullptr)
+		//    throw new System::InvalidOperationException("Freeing empty font");
+			return;
 
-    static  System::Drawing::Font^ ConvertFont(Gwen::Font^ font)
+		//sysFont->Dispose();
+		font->RendererData = nullptr;
+	}
+
+	static  System::Drawing::Font^ ConvertFont(Gwen::Font^ font)
 	{
 		System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
-        if (sysFont == nullptr || std::abs(font->RealSize - font->Size /** Scale*/) > 2)
-        {
-            FreeFont(font);
-            LoadFont(font);
-            sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
-        }
+		if (sysFont == nullptr || std::abs(font->RealSize - font->Size /** Scale*/) > 2)
+		{
+			FreeFont(font);
+			LoadFont(font);
+			sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
+		}
 		return sysFont;
 	}
 
 	static System::Drawing::Point MeasureText(System::Drawing::Font^ font, System::String^ text, System::Drawing::StringFormat^ stringFormat)
-    {
-        System::Drawing::SizeF size = m_Graphics->MeasureString(text, font, System::Drawing::Point::Empty, stringFormat);
-        return System::Drawing::Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
-    }
+	{
+		System::Drawing::SizeF size = m_Graphics->MeasureString(text, font, System::Drawing::Point::Empty, stringFormat);
+		return System::Drawing::Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
+	}
 
 	static Gwen::Texture^ GetTexture(Gwen::Font^ font, System::String^ text){
 		System::Tuple<System::String^, Gwen::Font^>^ key = gcnew System::Tuple<System::String^, Gwen::Font^>(text, font);
@@ -285,13 +285,13 @@ public:
 	}
 
 	//TODO use scale, remove renderer
-    static Gwen::Texture^ StringToTexture(System::String^ text, Gwen::Font^ font, Gwen::Renderer::Base^ renderer)
-    {
+	static Gwen::Texture^ StringToTexture(System::String^ text, Gwen::Font^ font, Gwen::Renderer::Base^ renderer)
+	{
 		System::Drawing::Brush^ brush = System::Drawing::Brushes::White;
 		Gwen::Texture^ texture = GetTexture(font,text);
-        if(texture != nullptr){ //TODO Check stringFormat
-            return texture;
-        }
+		if(texture != nullptr){ //TODO Check stringFormat
+			return texture;
+		}
 
 		System::Drawing::Font^ sysFont = ConvertFont(font);
 
@@ -301,33 +301,33 @@ public:
 		texture->Height = size.Y;
 
 		System::Drawing::Bitmap^ bmp = gcnew System::Drawing::Bitmap(size.X, size.Y, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
-        System::Drawing::Graphics^ gfx = System::Drawing::Graphics::FromImage(bmp);
+		System::Drawing::Graphics^ gfx = System::Drawing::Graphics::FromImage(bmp);
 
-        // NOTE:    TextRenderingHint.AntiAliasGridFit looks sharper and in most cases better
-        //          but it comes with a some problems.
-        //
-        //          1.  Graphic.MeasureString and format.MeasureCharacterRanges 
-        //              seem to return wrong values because of this.
-        //
-        //          2.  While typing the kerning changes in random places in the sentence.
-        // 
-        //          Until 1st problem is fixed we should use TextRenderingHint.AntiAlias...  :-(
+		// NOTE:    TextRenderingHint.AntiAliasGridFit looks sharper and in most cases better
+		//          but it comes with a some problems.
+		//
+		//          1.  Graphic.MeasureString and format.MeasureCharacterRanges 
+		//              seem to return wrong values because of this.
+		//
+		//          2.  While typing the kerning changes in random places in the sentence.
+		// 
+		//          Until 1st problem is fixed we should use TextRenderingHint.AntiAlias...  :-(
 
-        gfx->TextRenderingHint = System::Drawing::Text::TextRenderingHint::AntiAlias;
-        gfx->Clear(System::Drawing::Color::Transparent);
+		gfx->TextRenderingHint = System::Drawing::Text::TextRenderingHint::AntiAlias;
+		gfx->Clear(System::Drawing::Color::Transparent);
 
-        gfx->DrawString(text, sysFont, brush, System::Drawing::Point::Empty, m_StringFormat); // render text on the bitmap
+		gfx->DrawString(text, sysFont, brush, System::Drawing::Point::Empty, m_StringFormat); // render text on the bitmap
 		TextureUtil::LoadTextureInternal(texture,bmp);
 		AddTexture(font,text,texture);
 		return texture;
-    }
+	}
 
 	static System::Drawing::Point MeasureText(System::String^ text, Gwen::Font^ font)
-    {
+	{
 		System::Drawing::Font^ sysFont = ConvertFont(font);
-        System::Drawing::SizeF size = m_Graphics->MeasureString(text, sysFont, System::Drawing::Point::Empty, m_StringFormat);
-        return System::Drawing::Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
-    }
+		System::Drawing::SizeF size = m_Graphics->MeasureString(text, sysFont, System::Drawing::Point::Empty, m_StringFormat);
+		return System::Drawing::Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
+	}
 
 };
 
@@ -342,11 +342,11 @@ public ref class GwenRenderer : Gwen::Renderer::Base {
 
 public:
 	GwenRenderer()
-        : Gwen::Renderer::Base()
-    {
+		: Gwen::Renderer::Base()
+	{
 		
 		buffer = AllocateHeap(ManagedGeometryBuffer);
-    }
+	}
 
 	void Render(RenderBlock& rb){
 		buffer->Render(rb);
@@ -357,32 +357,32 @@ public:
 	}
 	
 
-    virtual void DrawFilledRect(System::Drawing::Rectangle rect) override
-    {
+	virtual void DrawFilledRect(System::Drawing::Rectangle rect) override
+	{
 		rect = Translate(rect);
 
 		buffer->addRectangle(rect, m_Color);
-    }
+	}
 	
-    property virtual System::Drawing::Color DrawColor 
+	property virtual System::Drawing::Color DrawColor 
 	{
 		System::Drawing::Color get() override { return m_Color; }
 		void set (System::Drawing::Color value) override  { m_Color = value;}
 	}
 
 
-    virtual void StartClip() override
-    {
-        m_ClipEnabled = true;
-    }
+	virtual void StartClip() override
+	{
+		m_ClipEnabled = true;
+	}
 
-    virtual void EndClip() override
-    {
-        m_ClipEnabled = false;
-    }
+	virtual void EndClip() override
+	{
+		m_ClipEnabled = false;
+	}
 
-    virtual void DrawTexturedRect(Gwen::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2) override
-    {
+	virtual void DrawTexturedRect(Gwen::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2) override
+	{
 		if(t->RendererData == nullptr){
 			DrawFilledRect(rect);
 		}
@@ -394,93 +394,93 @@ public:
 		rect = Translate(rect);
 
 		if (m_ClipEnabled)
-        {
-            // cpu scissors test
-            if (rect.Y < ClipRegion.Y)
-            {
-                int oldHeight = rect.Height;
-                int delta = ClipRegion.Y - rect.Y;
-                rect.Y = ClipRegion.Y;
-                rect.Height -= delta;
+		{
+			// cpu scissors test
+			if (rect.Y < ClipRegion.Y)
+			{
+				int oldHeight = rect.Height;
+				int delta = ClipRegion.Y - rect.Y;
+				rect.Y = ClipRegion.Y;
+				rect.Height -= delta;
 
-                if (rect.Height <= 0)
-                {
-                    return;
-                }
+				if (rect.Height <= 0)
+				{
+					return;
+				}
 
-                float dv = (float)delta / (float)oldHeight;
+				float dv = (float)delta / (float)oldHeight;
 
-                v1 += dv * (v2 - v1);
-            }
+				v1 += dv * (v2 - v1);
+			}
 
-            if ((rect.Y + rect.Height) > (ClipRegion.Y + ClipRegion.Height))
-            {
-                int oldHeight = rect.Height;
-                int delta = (rect.Y + rect.Height) - (ClipRegion.Y + ClipRegion.Height);
+			if ((rect.Y + rect.Height) > (ClipRegion.Y + ClipRegion.Height))
+			{
+				int oldHeight = rect.Height;
+				int delta = (rect.Y + rect.Height) - (ClipRegion.Y + ClipRegion.Height);
 
-                rect.Height -= delta;
+				rect.Height -= delta;
 
-                if (rect.Height <= 0)
-                {
-                    return;
-                }
+				if (rect.Height <= 0)
+				{
+					return;
+				}
 
-                float dv = (float)delta / (float)oldHeight;
+				float dv = (float)delta / (float)oldHeight;
 
-                v2 -= dv * (v2 - v1);
-            }
+				v2 -= dv * (v2 - v1);
+			}
 
-            if (rect.X < ClipRegion.X)
-            {
-                int oldWidth = rect.Width;
-                int delta = ClipRegion.X - rect.X;
-                rect.X = ClipRegion.X;
-                rect.Width -= delta;
+			if (rect.X < ClipRegion.X)
+			{
+				int oldWidth = rect.Width;
+				int delta = ClipRegion.X - rect.X;
+				rect.X = ClipRegion.X;
+				rect.Width -= delta;
 
-                if (rect.Width <= 0)
-                {
-                    return;
-                }
+				if (rect.Width <= 0)
+				{
+					return;
+				}
 
-                float du = (float)delta / (float)oldWidth;
+				float du = (float)delta / (float)oldWidth;
 
-                u1 += du * (u2 - u1);
-            }
+				u1 += du * (u2 - u1);
+			}
 
-            if ((rect.X + rect.Width) > (ClipRegion.X + ClipRegion.Width))
-            {
-                int oldWidth = rect.Width;
-                int delta = (rect.X + rect.Width) - (ClipRegion.X + ClipRegion.Width);
+			if ((rect.X + rect.Width) > (ClipRegion.X + ClipRegion.Width))
+			{
+				int oldWidth = rect.Width;
+				int delta = (rect.X + rect.Width) - (ClipRegion.X + ClipRegion.Width);
 
-                rect.Width -= delta;
+				rect.Width -= delta;
 
-                if (rect.Width <= 0)
-                {
-                    return;
-                }
+				if (rect.Width <= 0)
+				{
+					return;
+				}
 
-                float du = (float)delta / (float)oldWidth;
+				float du = (float)delta / (float)oldWidth;
 
-                u2 -= du * (u2 - u1);
-            }
-        }
+				u2 -= du * (u2 - u1);
+			}
+		}
 
 		buffer->addRectangle(rect,Vector2(u1,v1), Vector2(u2,v2), iHandle, m_Color);
 	}
 
-    virtual System::Drawing::Point MeasureText(Gwen::Font^ font, System::String^ text) override
-    {
-        return TextRenderer::MeasureText(text,font);
-    }
+	virtual System::Drawing::Point MeasureText(Gwen::Font^ font, System::String^ text) override
+	{
+		return TextRenderer::MeasureText(text,font);
+	}
 
-    virtual void RenderText(Gwen::Font^ font, System::Drawing::Point position, System::String^ text) override
-    {
-       Gwen::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
+	virtual void RenderText(Gwen::Font^ font, System::Drawing::Point position, System::String^ text) override
+	{
+	   Gwen::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
 	   DrawTexturedRect(texture, System::Drawing::Rectangle(position.X, position.Y, texture->Width, texture->Height),0,0,1,1);
-    }
+	}
 	
-    virtual void LoadTexture(Gwen::Texture^ t) override
-    {
+	virtual void LoadTexture(Gwen::Texture^ t) override
+	{
 		ResourceLoadOptions options; 
 		options.name = clix::marshalString<clix::E_UTF8>(t->Name);
 		options.asynchronousLoad = false;
@@ -497,15 +497,15 @@ public:
 		t->RendererData = iHandle.getId();
 	}
 
-    virtual void LoadTextureRaw(Gwen::Texture^ t, array<byte>^ pixelData) override
-    {
+	virtual void LoadTextureRaw(Gwen::Texture^ t, array<byte>^ pixelData) override
+	{
 		TextureUtil::LoadTextureInternal(t,pixelData);
 	}
 
-    virtual void FreeTexture(Gwen::Texture^ t) override
-    {
-        if (t->RendererData == nullptr)
-            return;
+	virtual void FreeTexture(Gwen::Texture^ t) override
+	{
+		if (t->RendererData == nullptr)
+			return;
 
 		ImageHandle iHandle;
 		HandleId hId = (HandleId)t->RendererData;
@@ -513,11 +513,11 @@ public:
 
 		Image* img = iHandle.Resolve();
 
-        GetResourceManager()->removeResource(img);
-    }
+		GetResourceManager()->removeResource(img);
+	}
 
-    virtual System::Drawing::Color PixelColor(Gwen::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
-    {
+	virtual System::Drawing::Color PixelColor(Gwen::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
+	{
 		if(texture->RendererData == nullptr){
 			return defaultColor;
 		}
@@ -528,18 +528,18 @@ public:
 
 		Image* img = iHandle.Resolve();
 
-        System::Drawing::Color pixel;
-        long offset = 4 * (x + y * texture->Width);
-        std::vector<uint8>& data = img->getBuffer();
+		System::Drawing::Color pixel;
+		long offset = 4 * (x + y * texture->Width);
+		std::vector<uint8>& data = img->getBuffer();
 
-        pixel = System::Drawing::Color::FromArgb(data[offset + 3], data[offset + 0], data[offset + 1], data[offset + 2]);
-        
-        // Retrieving the entire texture for a single pixel read
-        // is kind of a waste - maybe cache this pointer in the texture
-        // data and then release later on? It's never called during runtime
-        // - only during initialization.
-        return pixel;
-    }
+		pixel = System::Drawing::Color::FromArgb(data[offset + 3], data[offset + 0], data[offset + 1], data[offset + 2]);
+		
+		// Retrieving the entire texture for a single pixel read
+		// is kind of a waste - maybe cache this pointer in the texture
+		// data and then release later on? It's never called during runtime
+		// - only during initialization.
+		return pixel;
+	}
 
 };
 
@@ -551,14 +551,14 @@ private:
 
 	gcroot<Gwen::Control::Canvas^> m_Canvas;
 
-    int m_MouseX;
-    int m_MouseY;
+	int m_MouseX;
+	int m_MouseY;
 
-    bool m_AltGr;
+	bool m_AltGr;
 
 public:
-    GwenInput(InputManager* inputManager)
-    {
+	GwenInput(InputManager* inputManager)
+	{
 		this->inputManager = inputManager;
 			
 		m_Canvas = nullptr;
@@ -574,56 +574,56 @@ public:
 		inputManager->getKeyboard()->onKeyPress.Connect(this, &GwenInput::ProcessKeyDown);
 		inputManager->getKeyboard()->onKeyRelease.Connect(this, &GwenInput::ProcessKeyUp);
 
-    }
+	}
 
 
-    void Initialize(gcroot<Gwen::Control::Canvas^> c)
-    {
-        m_Canvas = c;
-    }
+	void Initialize(gcroot<Gwen::Control::Canvas^> c)
+	{
+		m_Canvas = c;
+	}
 
 
 private:
 	Gwen::Key TranslateKeyCode(Keys key)
-    {
+	{
 
 		switch (key)
-        {
+		{
 		case Keys::Return: return Gwen::Key::Return;
-        case Keys::Escape: return Gwen::Key::Escape;
-        case Keys::Tab: return Gwen::Key::Tab;
-        case Keys::Space: return Gwen::Key::Space;
-        case Keys::Up: return Gwen::Key::Up;
-        case Keys::Down: return Gwen::Key::Down;
-        case Keys::Left: return Gwen::Key::Left;
-        case Keys::Right: return Gwen::Key::Right;
-        case Keys::Home: return Gwen::Key::Home;
-        case Keys::End: return Gwen::Key::End;
-        case Keys::Delete: return Gwen::Key::Delete;
-        case Keys::LControl:
-            this->m_AltGr = true;
-            return Gwen::Key::Control;
-        case Keys::LAlt: return Gwen::Key::Alt;
-        case Keys::LShift: return Gwen::Key::Shift;
-        case Keys::RControl: return Gwen::Key::Control;
-        case Keys::RAlt: 
-            if (this->m_AltGr)
-            {
-                this->m_Canvas->Input_Key(Gwen::Key::Control, false);
-            }
-            return Gwen::Key::Alt;
-        case Keys::RShift: return Gwen::Key::Shift;
-                
-        }
-        return Gwen::Key::Invalid;
-    }
+		case Keys::Escape: return Gwen::Key::Escape;
+		case Keys::Tab: return Gwen::Key::Tab;
+		case Keys::Space: return Gwen::Key::Space;
+		case Keys::Up: return Gwen::Key::Up;
+		case Keys::Down: return Gwen::Key::Down;
+		case Keys::Left: return Gwen::Key::Left;
+		case Keys::Right: return Gwen::Key::Right;
+		case Keys::Home: return Gwen::Key::Home;
+		case Keys::End: return Gwen::Key::End;
+		case Keys::Delete: return Gwen::Key::Delete;
+		case Keys::LControl:
+			this->m_AltGr = true;
+			return Gwen::Key::Control;
+		case Keys::LAlt: return Gwen::Key::Alt;
+		case Keys::LShift: return Gwen::Key::Shift;
+		case Keys::RControl: return Gwen::Key::Control;
+		case Keys::RAlt: 
+			if (this->m_AltGr)
+			{
+				this->m_Canvas->Input_Key(Gwen::Key::Control, false);
+			}
+			return Gwen::Key::Alt;
+		case Keys::RShift: return Gwen::Key::Shift;
+				
+		}
+		return Gwen::Key::Invalid;
+	}
 
-    static char TranslateChar(Keys key)
-    {
-        if (key >= Keys::A && key <= Keys::Z)
-            return (char)('a' + ((int)key - (int) Keys::A));
-        return ' ';
-    }
+	static char TranslateChar(Keys key)
+	{
+		if (key >= Keys::A && key <= Keys::Z)
+			return (char)('a' + ((int)key - (int) Keys::A));
+		return ' ';
+	}
 
 public:
 	void ProcessMouseMove(const MouseMoveEvent& mouseMoveEvent){
@@ -650,36 +650,36 @@ public:
 		m_Canvas->Input_MouseWheel(mouseWheelEvent.delta*60);
 	}
 
-    void ProcessKeyDown(const KeyEvent& keyEvent)
-    {
-        wchar_t ch = TranslateChar(keyEvent.keyCode);
+	void ProcessKeyDown(const KeyEvent& keyEvent)
+	{
+		wchar_t ch = TranslateChar(keyEvent.keyCode);
 
-        if (Gwen::Input::InputHandler::Instance->DoSpecialKeys(m_Canvas, ch))
-            return;
-        
-        if (ch != ' ')
-        {
-            m_Canvas->Input_Character(ch);
-        }
-        
-        Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
+		if (Gwen::Input::InputHandler::Instance->DoSpecialKeys(m_Canvas, ch))
+			return;
+		
+		if (ch != ' ')
+		{
+			m_Canvas->Input_Character(ch);
+		}
+		
+		Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
-        m_Canvas->Input_Key(iKey, true);
-    }
+		m_Canvas->Input_Key(iKey, true);
+	}
 
-    void ProcessKeyUp(const KeyEvent& keyEvent)
-    {
-        char ch = TranslateChar(keyEvent.keyCode);
+	void ProcessKeyUp(const KeyEvent& keyEvent)
+	{
+		char ch = TranslateChar(keyEvent.keyCode);
 
-        Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
+		Gwen::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
-        m_Canvas->Input_Key(iKey, false);
-    }
+		m_Canvas->Input_Key(iKey, false);
+	}
 
    /* void KeyPress(object sender, KeyPressEventArgs e)
-    {
-        m_Canvas->Input_Character(e.KeyChar);   
-    }*/
+	{
+		m_Canvas->Input_Character(e.KeyChar);   
+	}*/
 
 };
 
