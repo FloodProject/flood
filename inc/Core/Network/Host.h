@@ -63,16 +63,13 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Host )
 
 //-----------------------------------//
 
-namespace HostState
+enum class HostState
 {
-	enum Enum
-	{
-		Disconnected,
-		Connecting,
-		Connected,
-		Disconnecting,
-	};
-}
+	Disconnected,
+	Connecting,
+	Connected,
+	Disconnecting,
+};
 
 struct HostConnectionDetails
 {
@@ -94,7 +91,7 @@ public:
 	GETTER(Peer, const PeerPtr&, peer)
 
 	// Gets the client state.
-	ACCESSOR(State, HostState::Enum, state)
+	ACCESSOR(State, HostState, state)
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 
@@ -107,7 +104,7 @@ protected:
 	void onMessage(const PeerPtr&, const MessagePtr&) OVERRIDE;
 
 	PeerPtr peer;
-	HostState::Enum state;
+	HostState state;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostClient )
