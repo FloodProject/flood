@@ -505,8 +505,8 @@ namespace Gwen.Control
 
         public override string ToString()
         {
-            if (this is MenuItem)
-                return "[MenuItem: " + (this as MenuItem).Text + "]";
+           // if (this is MenuItem)
+           //     return "[MenuItem: " + (this as MenuItem).Text + "]";
             if (this is Label)
                 return "[Label: " + (this as Label).Text + "]";
             if (this is ControlInternal.Text)

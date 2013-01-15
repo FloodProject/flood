@@ -31,6 +31,7 @@ namespace Flood.Editor
         [Export]
         private CompositionContainer container;
 
+
         public Editor()
         {
             Window = new EditorWindow();
