@@ -36,7 +36,7 @@ namespace Flood.RPC.Server
 
         public TSimpleServer(Processor processor,
                           ServerTransport serverTransport)
-            :base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
+            : base(processor, serverTransport, new TransportFactory(), new TransportFactory(), new BinaryProtocol.Factory(), new BinaryProtocol.Factory(), DefaultLogDelegate)
         {
         }
 
@@ -50,7 +50,7 @@ namespace Flood.RPC.Server
         public TSimpleServer(Processor processor,
                           ServerTransport serverTransport,
                           TransportFactory transportFactory)
-            :base(processor,
+            : base(processor,
                  serverTransport,
                  transportFactory,
                  transportFactory,
@@ -64,7 +64,7 @@ namespace Flood.RPC.Server
                           ServerTransport serverTransport,
                           TransportFactory transportFactory,
                           ProtocolFactory protocolFactory)
-            :base(processor,
+            : base(processor,
                  serverTransport,
                  transportFactory,
                  transportFactory,
@@ -95,35 +95,35 @@ namespace Flood.RPC.Server
                 Serializer outputProtocol = null;
                 try
                 {
-          using(client = serverTransport.Accept())
-          {
-            if (client != null)
-            {
-              using(inputTransport = inputTransportFactory.GetTransport(client))
-              {
-                using (outputTransport = outputTransportFactory.GetTransport(client))
-                {
-                  inputProtocol = inputProtocolFactory.GetProtocol(inputTransport);
-                  outputProtocol = outputProtocolFactory.GetProtocol(outputTransport);
-                  while (processor.Process(inputProtocol, outputProtocol)) { }
+                    using (client = serverTransport.Accept())
+                    {
+                        if (client != null)
+                        {
+                            using (inputTransport = inputTransportFactory.GetTransport(client))
+                            {
+                                using (outputTransport = outputTransportFactory.GetTransport(client))
+                                {
+                                    inputProtocol = inputProtocolFactory.GetProtocol(inputTransport);
+                                    outputProtocol = outputProtocolFactory.GetProtocol(outputTransport);
+                                    while (processor.Process(inputProtocol, outputProtocol)) { }
+                                }
+                            }
+                        }
+                    }
                 }
-              }
+                catch (TTransportException ttx)
+                {
+                    // Client died, just move on
+                    if (stop)
+                    {
+                        logDelegate("TSimpleServer was shutting down, caught " + ttx.GetType().Name);
+                    }
+                }
+                catch (Exception x)
+                {
+                    logDelegate(x.ToString());
+                }
             }
-          }
-        }
-        catch (TTransportException ttx)
-        {
-          // Client died, just move on
-          if (stop)
-          {
-            logDelegate("TSimpleServer was shutting down, caught " + ttx.GetType().Name);
-          }
-        }
-        catch (Exception x)
-        {
-          logDelegate(x.ToString());
-        }
-      }
 
             if (stop)
             {
