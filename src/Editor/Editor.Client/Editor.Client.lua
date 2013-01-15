@@ -19,7 +19,9 @@ project "Editor.Client"
 		"System",
 		"System.ComponentModel", 
 		"System.ComponentModel.Composition",
+		"EngineManaged",
 		"Editor.Shared",
 		"Editor.Server",
+		"ServerManaged",
 		"GUI" 
 	}
