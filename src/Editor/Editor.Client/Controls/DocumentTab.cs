@@ -16,11 +16,12 @@ namespace Flood.Editor.Controls
 
         public event Action<int> DocumentSelected;
 
-
         public DocumentTab(Gwen.Control.Base parent)
         {
-            tabControl = new Gwen.Control.TabControl(parent);
-            tabControl.Dock = Gwen.Pos.Fill;
+            tabControl = new Gwen.Control.TabControl(parent)
+                {
+                    Dock = Gwen.Pos.Fill
+                };
 
             tabButtons = new Dictionary<int, TabButton>();
 
