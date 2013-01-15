@@ -1,0 +1,7 @@
+﻿
+namespace ServerManaged
+{
+    class UserManager
+    {
+    }
+}
