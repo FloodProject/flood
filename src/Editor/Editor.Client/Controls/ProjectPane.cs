@@ -21,9 +21,28 @@ namespace Flood.Editor.Controls
         }
     }
 
-    [Export]
-    public class ProjectPane : EditorTool, DockableTool
+    /// <summary>
+    /// Represents the pane with the projects.
+    /// </summary>
+    public class ProjectPane : Pane, IDisposable
     {
+        private readonly ProjectManager projectManager;
+
+        public ProjectPane(ProjectManager projectManager, Canvas canvas)
+        {
+            InitControl(canvas);
+
+            this.projectManager = projectManager;
+
+            projectManager.ProjectAdded += OnProjectAdded;
+            projectManager.ProjectRemoved += OnProjectRemoved;
+        }
+
+        public void Dispose()
+        {
+            projectManager.ProjectAdded -= OnProjectAdded;
+            projectManager.ProjectRemoved -= OnProjectRemoved;
+        }
         /// <summary>
         /// GUI tree node.
         /// </summary>
@@ -36,12 +55,34 @@ namespace Flood.Editor.Controls
                 Dock = Gwen.Pos.Left,
                 Width = 150
             };
+
+            CreateProjectNode("test");
         }
 
         public ProjectNode CreateProjectNode(string name)
         {
             var node = new ProjectNode(Tree, name);
+
             return node;
+        }
+
+        public void RemoveProjectNode(string name)
+        {
+            var child = Tree.FindChildByName(name);
+
+            if (child != null)
+                Tree.RemoveChild(child, dispose: true);
+        }
+
+
+        void OnProjectAdded(object sender, Project project)
+        {
+            CreateProjectNode(project.Name);
+        }
+
+        void OnProjectRemoved(object sender, Project project)
+        {
+            RemoveProjectNode(project.Name);
         }
     }
 }
