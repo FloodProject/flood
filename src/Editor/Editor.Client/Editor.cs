@@ -24,6 +24,8 @@ namespace Flood.Editor
         [Export]
         public ProjectManager ProjectManager { get; private set; }
 
+        private ProjectPane projectPane;
+
         private AggregateCatalog catalog;
 
         [Export]
@@ -31,11 +33,27 @@ namespace Flood.Editor
 
         public Editor()
         {
-            InitializeGUI();
+            Window = new EditorWindow();
+            Window.GUIInitiated += InitializeGUI;
+
             InitializeServer();
             InitializeContainer();
+        }
+
+        public void Dispose()
+        {
+            Window.Dispose();
+        }
+
+        private void InitializeGUI()
+        {
+            container.ComposeParts(this);
+
+            ToolManager = new ToolManager();
+            DocumentManager = new DocumentManager();
 
             ProjectManager = new ProjectManager();
+            projectPane = new ProjectPane(ProjectManager, Window.Canvas);
 
             var client = InitializeClient();
             Console.WriteLine("Connected to the server.");
@@ -46,29 +64,10 @@ namespace Flood.Editor
             ProjectManager.CreateProject(ProjectType.Game, "Sample");
         }
 
-        public void Dispose()
-        {
-            Window.Dispose();
-        }
-
-        private void InitializeGUI()
-        {
-            Window = new EditorWindow();
-            Window.GUIInitiated += OnGUIInit;
-        }
-
         private void InitializeServer()
         {
             ServerManager = new ServerManager();
             ServerManager.CreateBuiltinServer();
-        }
-
-        private void OnGUIInit()
-        {
-            DocumentManager = new DocumentManager();
-            ToolManager = new ToolManager();
-
-            container.ComposeParts(this, ToolManager, DocumentManager);
         }
 
         private static IProjectManagerImpl.Client InitializeClient()
@@ -92,10 +91,16 @@ namespace Flood.Editor
             container = new CompositionContainer(catalog);
             var batch = new CompositionBatch();
 
-            var assemblyCatalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
-            catalog.Catalogs.Add(assemblyCatalog);
+            try
+            {
+                var assemblyCatalog = new AssemblyCatalog(typeof(Editor).Assembly);
+                catalog.Catalogs.Add(assemblyCatalog);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 
-            // this is the new part
             catalog.Changed += catalog_Changed;
         }
 
