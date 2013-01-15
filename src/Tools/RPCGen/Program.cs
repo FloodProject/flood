@@ -119,7 +119,6 @@ namespace Flood.Tools.RPCGen
 
             var compiler = new Compiler(options, assembly);
             compiler.Process();
- 
 
             if(!string.IsNullOrEmpty(options.MSBuildProjectPath)){
                 MSBuildUpdater.UpdateMSBuild(options.MSBuildProjectPath,compiler.GeneratedFiles);

@@ -70,6 +70,23 @@ namespace Flood.Tools.RPCGen
             return parameters;
         }
 
+        static bool IsEventMethod(Type type, MethodInfo method)
+        {
+            foreach (var @event in type.GetEvents())
+            {
+                if (@event.AddMethod == method
+                    || @event.RemoveMethod == method
+                    || @event.RaiseMethod == method)
+                    return true;
+            }
+            return false;
+        }
+
+        public void GenerateEvent(Type type)
+        {
+            
+        }
+
         public void GenerateService(Type type)
         {
             // TODO: Generate namespace
@@ -87,6 +104,9 @@ namespace Flood.Tools.RPCGen
             for (var i = 0; i < methods.Length; i++)
             {
                 var method = methods[i];
+
+                if (IsEventMethod(type, method))
+                    continue;
 
                 GenerateServiceMethodArgs(method);
                 NewLine();
@@ -206,7 +226,12 @@ namespace Flood.Tools.RPCGen
             }
 
             foreach (var method in type.GetMethods())
+            {
+                if (IsEventMethod(type, method))
+                    continue;
+
                 GenerateProtocolMethod(method);
+            }
 
             WriteCloseBraceIndent();
             NewLine();
@@ -335,7 +360,12 @@ namespace Flood.Tools.RPCGen
                 WriteLine("iface_ = iface;");
 
                 foreach (var method in type.GetMethods())
+                {
+                    if (IsEventMethod(type, method))
+                        continue;
+
                     WriteLine("processMap_[\"{0}\"] = {0}_Process;", method.Name);
+                }
 
                 WriteCloseBraceIndent();
                 NewLine();
@@ -344,6 +374,9 @@ namespace Flood.Tools.RPCGen
             // Generate process methods
             foreach (var method in type.GetMethods())
             {
+                if (IsEventMethod(type, method))
+                    continue;
+
                 GenerateServiceProcessMethod(method);
                 NewLine();
             }
