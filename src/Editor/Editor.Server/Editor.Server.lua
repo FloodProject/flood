@@ -6,11 +6,6 @@ project "Editor.Server"
 	kind "SharedLib"
 	language "C#"
 	
-	prebuildcommands
-	{ 
-		--"luac -o  "
-	}
-	
 	location "."
 	
 	files
@@ -19,8 +14,10 @@ project "Editor.Server"
 		"**.cs",
 	}
 	
-	links {
-		"System", 
+	links
+	{
+		"System",
+		"ServerManaged",
+		"EngineManaged",
 		"Editor.Shared",
-		--"FloodManaged"
 	}
