@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flood.Editor.GUI.Documents
+namespace Flood.Editor.Documents
 {
     public class SceneDocument : Document
     {

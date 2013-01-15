@@ -1,12 +1,7 @@
-﻿using Flood.Editor.GUI.Controls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Flood.Editor.GUI
+namespace Flood.Editor
 {
     public class ToolManager : IPartImportsSatisfiedNotification
     {

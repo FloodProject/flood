@@ -1,9 +1,9 @@
-﻿using Flood.Editor.GUI.Documents;
+﻿using Flood.Editor.Documents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
-namespace Flood.Editor.GUI
+namespace Flood.Editor
 {
     //TODO move selection history to gwen control
     public class DocumentManager : IPartImportsSatisfiedNotification

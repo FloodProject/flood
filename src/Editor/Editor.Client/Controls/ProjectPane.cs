@@ -1,7 +1,8 @@
+using System;
 using Gwen.Control;
 using System.ComponentModel.Composition;
 
-namespace Flood.Editor.GUI.Controls
+namespace Flood.Editor.Controls
 {
     public class ProjectNode
     {

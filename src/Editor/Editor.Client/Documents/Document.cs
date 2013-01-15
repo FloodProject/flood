@@ -1,4 +1,4 @@
-﻿using Flood.Editor.GUI.Controls;
+﻿using Flood.Editor.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flood.Editor.GUI
+namespace Flood.Editor
 {
     public abstract class Document : Document<Document> {
 

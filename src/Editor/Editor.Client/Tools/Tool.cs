@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flood.Editor.GUI
+namespace Flood.Editor
 {
-
     [InheritedExport]
     public abstract class EditorTool
     {

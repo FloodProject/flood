@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flood.Editor.GUI
+namespace Flood.Editor
 {
     public interface UndoOperation<TDoc> where TDoc : Document<TDoc>
     {

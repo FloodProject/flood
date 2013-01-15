@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 
-namespace Flood.Editor.GUI.Controls
+namespace Flood.Editor.Controls
 {
     class ToolOpenDoc : EditorTool, BarTool
     {

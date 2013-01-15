@@ -2,7 +2,7 @@
 using System;
 using Gwen.Control;
 
-namespace Flood.Editor.GUI.Controls
+namespace Flood.Editor.Controls
 {
     public class ToolBar
     {

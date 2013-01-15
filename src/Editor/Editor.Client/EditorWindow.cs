@@ -1,4 +1,4 @@
-﻿using Flood.Editor.GUI.Controls;
+﻿using Flood.Editor.Controls;
 using System;
 using Gwen.Control;
 

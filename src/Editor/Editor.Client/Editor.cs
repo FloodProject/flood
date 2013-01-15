@@ -1,10 +1,9 @@
-﻿using Flood.Editor.GUI;
+﻿using Flood.Editor.Controls;
 using Flood.RPC.Protocol;
 using Flood.RPC.Transport;
 using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Reflection;
 
 namespace Flood.Editor
 {
