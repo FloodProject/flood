@@ -1,9 +1,6 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Flood.Editor.GUI;
 using Flood.RPC.Protocol;
 using Flood.RPC.Transport;
-using FlushEditor;
-using FlushEditor.GUI;
 using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -11,62 +8,96 @@ using System.Reflection;
 
 namespace Flood.Editor
 {
-    public class Editor : IDisposable{
+    public class Editor : IDisposable
+    {
+        [Export]
+        public EditorWindow Window { get; private set; }
+
+        [Export]
+        public ToolManager ToolManager { get; private set; }
+
+        [Export]
+        public ServerManager ServerManager { get; private set; }
+
+        [Export]
+        public DocumentManager DocumentManager { get; private set; }
+
+        [Export]
+        public ProjectManager ProjectManager { get; private set; }
 
         private AggregateCatalog catalog;
 
         [Export]
-        public EditorGUI GUI { get; private set; }
-
-        [Export]
         private CompositionContainer container;
-
-        [Export]
-        private ToolManager toolManager;
-
-        [Export]
-        private DocumentManager documentManager;
 
         public Editor()
         {
-            GUI = new EditorGUI();
-           
-            InitContainer();
+            InitializeGUI();
+            InitializeServer();
+            InitializeContainer();
 
-            GUI.Initiated += OnGUIInit;
-            
+            ProjectManager = new ProjectManager();
+
+            var client = InitializeClient();
+            Console.WriteLine("Connected to the server.");
+
+            Console.WriteLine("Creating a sample project via RPC...");
+            client.CreateProject("Sample");
+
+            ProjectManager.CreateProject(ProjectType.Game, "Sample");
         }
 
         public void Dispose()
         {
-            GUI.Dispose();
+            Window.Dispose();
         }
 
-        private void OnGUIInit(){
-            documentManager = new DocumentManager();
-            toolManager = new ToolManager();
-
-            container.ComposeParts(this, toolManager, documentManager);
-        }
-
-        public void InitContainer()
+        private void InitializeGUI()
         {
-            try
-            {
-                catalog = new AggregateCatalog();
-                container = new CompositionContainer(catalog);
-                var batch = new CompositionBatch();
+            Window = new EditorWindow();
+            Window.GUIInitiated += OnGUIInit;
+        }
 
-                catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+        private void InitializeServer()
+        {
+            ServerManager = new ServerManager();
+            ServerManager.CreateBuiltinServer();
+        }
 
-                // this is the new part
-                catalog.Changed += catalog_Changed;
-            }
-            catch (CompositionException compositionException)
+        private void OnGUIInit()
+        {
+            DocumentManager = new DocumentManager();
+            ToolManager = new ToolManager();
+
+            container.ComposeParts(this, ToolManager, DocumentManager);
+        }
+
+        private static IProjectManagerImpl.Client InitializeClient()
+        {
+            TTransport transport = new TSocket("localhost", Settings.RPCPort);
+            Serializer protocol = new BinaryProtocol(transport);
+            var client = new IProjectManagerImpl.Client(protocol);
+
+            for (var i = 0; i < Settings.MaxRetries; i++)
             {
-                // testing
-                throw;
+                transport.Open();
+                if (transport.Peek()) break;
             }
+
+            return client;
+        }
+
+        public void InitializeContainer()
+        {
+            catalog = new AggregateCatalog();
+            container = new CompositionContainer(catalog);
+            var batch = new CompositionBatch();
+
+            var assemblyCatalog = new AssemblyCatalog(Assembly.GetExecutingAssembly());
+            catalog.Catalogs.Add(assemblyCatalog);
+
+            // this is the new part
+            catalog.Changed += catalog_Changed;
         }
 
         void catalog_Changed(object sender, ComposablePartCatalogChangeEventArgs e)
