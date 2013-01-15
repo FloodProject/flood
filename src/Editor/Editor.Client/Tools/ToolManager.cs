@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Flood.Editor.GUI
 {
-    class ToolManager : IPartImportsSatisfiedNotification
+    public class ToolManager : IPartImportsSatisfiedNotification
     {
         [ImportMany(AllowRecomposition = true)]
         Lazy<EditorTool>[] editorTools;
@@ -17,7 +17,7 @@ namespace Flood.Editor.GUI
         Lazy<DocumentTool>[] documentTools;
 
         [Import]
-        EditorGUI editorGUI;
+        EditorWindow editorWindow;
 
         [Import]
         DocumentManager documentManager;
@@ -37,7 +37,7 @@ namespace Flood.Editor.GUI
 
         public void PopulateToolBar()
         {
-            var toolBar = editorGUI.ToolBar;
+            var toolBar = editorWindow.ToolBar;
             toolBar.Clear();
             if (toolBar != null)
             {
@@ -53,7 +53,7 @@ namespace Flood.Editor.GUI
                     if (tool is DockableTool)
                     {
                         DockableTool t = (DockableTool)tool;
-                        t.InitControl(editorGUI.Canvas);
+                        t.InitControl(editorWindow.Canvas);
                     }
                 }
             }

@@ -6,7 +6,7 @@ using System.ComponentModel.Composition;
 namespace Flood.Editor.GUI
 {
     //TODO move selection history to gwen control
-    class DocumentManager : IPartImportsSatisfiedNotification
+    public class DocumentManager : IPartImportsSatisfiedNotification
     {
         int documentIdCount = 1;
         Dictionary<int,Document> documents;
@@ -17,7 +17,7 @@ namespace Flood.Editor.GUI
         public event Action<Document> DocumentRemoved;
 
         [Import]
-        EditorGUI editorGUI;
+        EditorWindow editorWindow;
 
         public Document Current
         {
@@ -53,7 +53,7 @@ namespace Flood.Editor.GUI
 
         public void OnImportsSatisfied()
         {
-            editorGUI.DocumentTab.DocumentSelected += delegate(int id)
+            editorWindow.DocumentTab.DocumentSelected += delegate(int id)
             {
                 Document doc = null;
                 if (documents.TryGetValue(id, out doc))
@@ -62,7 +62,7 @@ namespace Flood.Editor.GUI
 
             DocumentSelected += delegate(Document d)
             {
-                editorGUI.DocumentTab.SelectTab(d.Id);
+                editorWindow.DocumentTab.SelectTab(d.Id);
             };
         }
 
@@ -84,7 +84,7 @@ namespace Flood.Editor.GUI
         {
             var id = documentIdCount++;
             Document doc = new SceneDocument(path, id);
-            editorGUI.DocumentTab.AddTab(id, "Doc" + id, doc.InitGUI);
+            editorWindow.DocumentTab.AddTab(id, "Doc" + id, doc.InitGUI);
             Add(id, doc, true);
             
         }
@@ -92,7 +92,7 @@ namespace Flood.Editor.GUI
         public void Close(int id)
         {
             Remove(id);
-            editorGUI.DocumentTab.RemoveTab(id);
+            editorWindow.DocumentTab.RemoveTab(id);
         }
 
         private void Add(int id, Document document, bool select = true)
@@ -126,13 +126,9 @@ namespace Flood.Editor.GUI
                DocumentSelected.Invoke(Current);
         }
 
-
         public void SaveCurrent()
         {
             Console.WriteLine("SaveCurrent");
         }
-
- 
-        
     }
 }

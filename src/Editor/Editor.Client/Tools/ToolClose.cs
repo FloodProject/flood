@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 
-namespace Flood.Editor.GUI.Tools
+namespace Flood.Editor.GUI.Controls
 {
     class ToolClose : EditorTool, BarTool
     {
