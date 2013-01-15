@@ -701,10 +701,10 @@ public:
 		renderer = gcnew GwenRenderer();
 		managedEditor = gcnew Flood::Editor::Editor();
 
-		managedEditor->GUI->Init(renderer,"DefaultSkin.png");
+		managedEditor->Window->Init(renderer,"DefaultSkin.png");
 
 		input = new GwenInput(inputManager);
-		input->Initialize(managedEditor->GUI->Canvas);
+		input->Initialize(managedEditor->Window->Canvas);
 	}
 
 	void Close() {
@@ -714,7 +714,7 @@ public:
 
 	void Render(RenderBlock& rb){
 		renderer->Clear();
-		managedEditor->GUI->Render();
+		managedEditor->Window->Render();
 		renderer->Render(rb);
 	}
 };
