@@ -14,7 +14,7 @@ common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
 msvc_buildflags = { "/wd4190", "/wd4996", "/wd4530" }
 gcc_buildflags = { "-Wno-invalid-offsetof", "-std=gnu++11" }
 
-msvc_defines = { "_SECURE_SCL=0", "_HAS_ITERATOR_DEBUGGING=0" }
+msvc_cpp_defines = { "_SECURE_SCL=0", "_HAS_ITERATOR_DEBUGGING=0" }
 
 function debug(msg)
 	-- print(msg)
@@ -58,11 +58,26 @@ function SetupNativeProjects()
 		
 	configuration "Release"
 		defines { "NDEBUG" }
+		
+	-- Compiler-specific options
+	
+	configuration "vs*"
+		buildoptions { msvc_buildflags, "/wd4251" }
+		defines { msvc_cpp_defines }
+		
+	configuration "gcc"
+		buildoptions { gcc_buildflags }
+	
+	-- OS-specific options
+	
+	configuration "Windows"
+		defines { "WIN32", "_WINDOWS" }		
 	
 	configuration(c)
 end
 
 function SetupDependencyProject()
+	SetupNativeProjects()
 	location (path.join(builddir, "deps"))
 end
 

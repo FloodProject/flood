@@ -38,21 +38,7 @@ solution "Flood"
 	-- Build configuration options
 	
 	configuration "Release"
-		flags { "Optimize" }	
-
-	-- Compiler-specific options
-	
-	configuration "vs*"
-		buildoptions { msvc_buildflags, "/wd4251" }
-		defines { msvc_defines }
-		
-	configuration "gcc"
-		buildoptions { gcc_buildflags }
-	
-	-- OS-specific options
-	
-	configuration "Windows"
-		defines { "WIN32", "_WINDOWS" }
+		flags { "Optimize" }
 		
 	configuration {}
 	
