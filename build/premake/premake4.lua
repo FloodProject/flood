@@ -33,7 +33,7 @@ solution "Flood"
 	libdirs { libdir }
 	
 	debugdir (bindir)
-	startup "EditorRuntime"
+	startproject "EditorRuntime"
 
 	-- Build configuration options
 	

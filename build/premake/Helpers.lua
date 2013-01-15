@@ -20,6 +20,24 @@ function debug(msg)
 	-- print(msg)
 end
 
+function SafePath(path)
+	return "\"" .. path .. "\""
+end
+
+function SetupRPCGen()
+	dependson { "RPCGen" }
+
+	local exePath = SafePath(path.join(libdir,"RPCGen.exe"))
+	local outPath = SafePath(path.join(gendir,EditorShared.name))
+	local projPath = SafePath(path.getabsolute(path.join(".", EditorShared.name .. ".csproj")))
+	local dllPath = SafePath(path.join(libdir,"Editor.Shared.dll"))
+	
+	postbuildcommands
+	{
+		exePath .. " -o=" .. outPath .. " -msbuild=" .. projPath .. " " .. dllPath
+	}
+end
+
 function SetupLibPaths(lib) 
 	c = configuration {}
 	
