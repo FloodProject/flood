@@ -27,7 +27,7 @@ like 32-bit / 64-bit and Debug / Release versions.
 2. Customize the features in the generated `build/Config.lua`.
 3. If you change anything in the config, run `build/GenerateConfig.bat`.
 4. Open the Dependencies.sln solution in `build/<vs>` and build it.
-5. Open the Flush.sln solution in `build/<vs>` and build it.
+5. Open the Flood.sln solution in `build/<vs>` and build it.
 
 ---
 
