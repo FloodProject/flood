@@ -7,7 +7,6 @@ function SetupWxWidgets()
 	wxWidgets.includedirs =
 	{ 
 		path.join(depsdir,"wxWidgets/include"),
-		path.join(depsdir,"wxWidgets/include/msvc")
 	}
 
 	wxWidgets.libdirs = { }	
