@@ -4,11 +4,14 @@ using Flood.RPC.Transport;
 
 namespace Flood.Server
 {
-    public class Server
+    public abstract class Server
     {
-        public Server()
-        {
+        public TSimpleServer RPCServer { get; set; }
 
+        public TServerSocket Socket { get; set; }
+
+        protected Server()
+        {
         }
 
         public void Init()
