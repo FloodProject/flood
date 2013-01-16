@@ -1,6 +1,6 @@
 project "stb_image"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "1.33"
 	local license = "Public Domain"
@@ -11,7 +11,7 @@ project "stb_image"
 
 project "stb_vorbis"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "0.99996"
 	local license = "Public Domain"
@@ -22,7 +22,7 @@ project "stb_vorbis"
 
  project "stb_truetype"
  
- 	SetupDependencyProject()
+ 	SetupNativeDependencyProject()
 		
 	local version = "0.6"
 	local license = "Public Domain"

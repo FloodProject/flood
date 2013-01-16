@@ -1,6 +1,6 @@
 project "zziplib"
 
-  SetupDependencyProject()
+  SetupNativeDependencyProject()
   
   kind "StaticLib"
   files { "src/*.c" }

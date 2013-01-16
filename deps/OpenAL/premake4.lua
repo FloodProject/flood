@@ -1,6 +1,6 @@
 project "OpenAL"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 
 	local version = "1.14"
 	local repo = "git://repo.or.cz/openal-soft.git"

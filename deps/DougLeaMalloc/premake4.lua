@@ -1,6 +1,6 @@
 project "dlmalloc"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "2.8.5"
 	local license = "Public Domain"

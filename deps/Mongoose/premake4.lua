@@ -1,6 +1,6 @@
 project "Mongoose"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "3.0"
 	local repo = "hg:https://code.google.com/p/mongoose"

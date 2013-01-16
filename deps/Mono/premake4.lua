@@ -4,7 +4,7 @@ local license = "LGPL"
 
 project "Mono"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 	
 	kind "SharedLib"
 	
@@ -113,7 +113,7 @@ project "Mono"
 
 project "MonoMini"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 	
 	kind "StaticLib"
 	

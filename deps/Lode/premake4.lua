@@ -1,6 +1,6 @@
 project "LodePNG"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "20100314"
 	local license = "BSD"
@@ -11,7 +11,7 @@ project "LodePNG"
  
 project "PicoPNG"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "20101224"
 	local license = "BSD"

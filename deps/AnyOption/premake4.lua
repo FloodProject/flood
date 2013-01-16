@@ -1,6 +1,6 @@
 project "AnyOption"
 
-  SetupDependencyProject()
+  SetupNativeDependencyProject()
   
   kind "StaticLib"
   files { "src/*.cpp" }

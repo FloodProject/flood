@@ -1,6 +1,6 @@
 project "UnitTest++"
 
-	SetupDependencyProject()
+	SetupNativeDependencyProject()
 		
 	local version = "1.4.0"
 	local repo = "https://unittest-cpp.svn.sourceforge.net/svnroot/unittest-cpp"

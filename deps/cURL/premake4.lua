@@ -1,6 +1,6 @@
 project "cURL"
 
-  SetupDependencyProject()
+  SetupNativeDependencyProject()
   
   local version = "7.26.0"
   
