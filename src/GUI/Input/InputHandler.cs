@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Gwen.Control;
 using Gwen.DragDrop;
-using System.ComponentModel;
+using Gwen.Containers;
 
 namespace Gwen.Input
 {
@@ -191,7 +191,9 @@ namespace Gwen.Input
             // Send input to canvas for study		
             MousePosition = new PointImmutable(x,y);
 
-            UpdateHoveredControl(canvas);
+            var container = canvas as Container;
+            if(container!=null)
+                UpdateHoveredControl(container);
         }
 
         /// <summary>
@@ -382,7 +384,7 @@ namespace Gwen.Input
             return false;
         }
 
-        private void UpdateHoveredControl(Base inCanvas)
+        private void UpdateHoveredControl(Container inCanvas)
         {
             Base hovered = inCanvas.GetControlAt(MousePosition.X, MousePosition.Y);
 
@@ -421,9 +423,11 @@ namespace Gwen.Input
             if (control.KeyboardInputEnabled)
             {
                 //Make sure none of our children have keyboard focus first - todo recursive
-                if (control.Children.Any(child => child == KeyboardFocus))
-                {
-                    return;
+                if(control is Container){
+                    if (((Container)control).Children.Any(child => child == KeyboardFocus))
+                    {
+                        return;
+                    }
                 }
 
                 control.Focus();

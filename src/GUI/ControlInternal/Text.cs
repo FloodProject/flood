@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using Gwen.Control;
+using Gwen.Containers;
 
 namespace Gwen.ControlInternal
 {
@@ -11,8 +12,7 @@ namespace Gwen.ControlInternal
     /// </summary>
     public class Text : Base
     {
-        private String m_String;
-        private Font m_Font;
+        //Todo: SizeToContents on Font/String change
 
         /// <summary>o
         /// Font used to display the text.
@@ -20,28 +20,12 @@ namespace Gwen.ControlInternal
         /// <remarks>
         /// The font is not being disposed by this class.
         /// </remarks>
-        public Font Font
-        {
-            get { return m_Font; }
-            set
-            {
-                m_Font = value;
-                SizeToContents();
-            }
-        }
+        public Font Font { get; set; }
 
         /// <summary>
         /// Text to display.
         /// </summary>
-        public String String
-        {
-            get { return m_String; }
-            set
-            {
-                m_String = value;
-                SizeToContents();
-            }
-        }
+        public String String { get; set; }
 
         /// <summary>
         /// Text color.
@@ -71,13 +55,9 @@ namespace Gwen.ControlInternal
         /// <summary>
         /// Initializes a new instance of the <see cref="Text"/> class.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
-        public Text(Base parent)
-            : base(parent)
+        public Text()
         {
-            m_Font = Skin.DefaultFont;
-            m_String = string.Empty;
-            TextColor = Skin.Colors.Label.Default;
+            String = string.Empty;
             MouseInputEnabled = false;
             TextColorOverride = Color.FromArgb(0, 255, 255, 255); // A==0, override disabled
         }
@@ -118,20 +98,22 @@ namespace Gwen.ControlInternal
             #endif
         }
 
+        // TODO process text in Skin
+
         /// <summary>
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         protected override void Layout(Skin.Base skin)
         {
-            SizeToContents();
+            SizeToContents(skin);
             base.Layout(skin);
         }
 
         /// <summary>
         /// Handler invoked when control's scale changes.
         /// </summary>
-        protected override void OnScaleChanged()
+        public override void OnScaleChanged()
         {
             Invalidate();
         }
@@ -139,7 +121,7 @@ namespace Gwen.ControlInternal
         /// <summary>
         /// Sizes the control to its contents.
         /// </summary>
-        public void SizeToContents()
+        public void SizeToContents(Skin.Base skin)
         {
             if (String == null)
                 return;
@@ -153,7 +135,7 @@ namespace Gwen.ControlInternal
 
             if (Length > 0)
             {
-                p = Skin.Renderer.MeasureText(Font, TextOverride ?? String);
+                p = skin.Renderer.MeasureText(Font, TextOverride ?? String);
             }
 
             if (p.X == Width && p.Y == Height)
@@ -177,9 +159,9 @@ namespace Gwen.ControlInternal
             }
 
             String sub = (TextOverride ?? String).Substring(0, index);
-            Point p = Skin.Renderer.MeasureText(Font, sub);
+            //TODO Point p = skin.Renderer.MeasureText(Font, sub);
 
-            return p;
+            return Point.Empty;//p;
         }
 
         /// <summary>

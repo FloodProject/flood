@@ -6,7 +6,7 @@ project "GUI"
 	kind "SharedLib"
 	language "C#"
 	
-	--flags { common_flags }
+	SetupEngineWeaver("GUI.dll")
 	
 	location "."
 	
@@ -21,4 +21,5 @@ project "GUI"
 		"System.Core",
 		"System.Drawing",
 		"System.Windows.Forms",
+		"EngineManaged"
 	}

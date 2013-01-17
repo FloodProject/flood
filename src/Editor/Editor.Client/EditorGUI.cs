@@ -1,5 +1,5 @@
-﻿using FlushEditor.GUI;
-using FlushEditor.GUI.Controls;
+﻿//using FlushEditor.GUI;
+//using FlushEditor.GUI.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -24,9 +24,9 @@ namespace FlushEditor
             skin.Dispose();
         }
 
-        public ToolBar ToolBar { get; private set; }
+        //public ToolBar ToolBar { get; private set; }
 
-        public DocumentTab DocumentTab { get; private set; }
+        //public DocumentTab DocumentTab { get; private set; }
 
         public event Action Initiated;
 
@@ -39,19 +39,22 @@ namespace FlushEditor
             //skin.DefaultFont = new Font(renderer, "Courier", 10);
             canvas = new Gwen.Control.Canvas(skin);
 
-            ToolBar = new ToolBar(canvas);
+            //ToolBar = new ToolBar(canvas);
 
-            DocumentTab = new DocumentTab(canvas);
+            //DocumentTab = new DocumentTab(canvas);
 
-            var label = new Gwen.Control.Label(canvas);
+            var label = new Gwen.Control.Label();
+            canvas.AddChild(label);
             label.SetText("YOLO!");
+
+            
 
             if (Initiated != null)
                 Initiated.Invoke();
         }
 
 	    public void Render(){
-		    canvas.RenderCanvas();
+		    canvas.RenderCanvas(skin);
 	    }
 
         public Gwen.Control.Canvas Canvas

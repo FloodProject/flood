@@ -719,7 +719,7 @@ public:
 	}
 };
 
-static gcroot<GUI^> gs_GUIInstance = nullptr;
+static gcroot<::GUI^> gs_GUIInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager){
 	gs_GUIInstance = gcnew GUI(inputManager);

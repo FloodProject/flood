@@ -6,7 +6,7 @@ echo Build Project Generator:
 echo.
 echo [0] Clean
 echo [1] Visual C++ 2012
-echo [2] Visual C++ 2010
+echo [2] Visual C++ 2012 (deps only)
 echo [3] CodeLite
 echo [4] GNU Make
 echo.
@@ -15,7 +15,7 @@ echo.
 set /P C="Choice: "
 if "%C%"=="4" goto gmake
 if "%C%"=="3" goto codelite
-if "%C%"=="2" goto vs2010
+if "%C%"=="2" goto vs2012deps
 if "%C%"=="1" goto vs2012
 if "%C%"=="0" goto clean
 
@@ -29,9 +29,8 @@ goto quit
 "../tools/premake4" --file=premake/premake4-deps.lua vs2012
 goto quit
 
-:vs2010
-"../tools/premake4" --file=premake/premake4.lua vs2010
-"../tools/premake4" --file=premake/premake4-deps.lua vs2010
+:vs2012deps
+"../tools/premake4" --file=premake/premake4-deps.lua vs2012
 goto quit
 
 :codelite
