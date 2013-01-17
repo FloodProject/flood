@@ -62,7 +62,15 @@ namespace DSLToolkit
 
             foreach(var assemblyPath in extra)
             {
-                WeaveAssembly(assemblyPath);
+                try 
+                {
+                    WeaveAssembly(assemblyPath);
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Console.WriteLine(e.InnerException);
+                }
             }  
 
             //WeaveAssembly(@"C:\Users\Marcos\Desktop\vapor\old\BestGUI\Test\bin\Debug\Test.exe");

@@ -52,11 +52,9 @@ namespace DSLToolkit.Weaver
             instructions = new List<Instruction>();
             referenceMap = new Dictionary<MemberReference,MemberReference>();
             copier = new DeepCopier(this);
-
-            ProcessNestedTypes();
         }
 
-        private void ProcessNestedTypes() //TODO something better
+        public void ProcessNestedTypes() //TODO something better
         {
             Map(OriginType,DestinationType);
             foreach(var t in OriginType.NestedTypes.ToList()){
