@@ -16,34 +16,6 @@ solution "Dependencies"
 	objdir (builddir .. "/obj/")
 	targetdir (libdir)
 	
-	-- Build configuration options
-	
-	configuration "Debug"
-		defines { "_DEBUG" }
-		flags { "NoMinimalRebuild", "FloatFast", "NoEditAndContinue" }
-		targetsuffix "_d"	
-	
-	configuration "Release"
-		defines { "NDEBUG" }
-		flags { "Optimize", "NoMinimalRebuild", "FloatFast" }	
-	
-	-- Compiler-specific options
-	
-	configuration "vs*"
-		buildoptions { msvc_buildflags }
-		defines { "_CRT_SECURE_NO_WARNINGS" }
-		defines { msvc_defines }
-	
-	configuration "gcc"
-		buildoptions { gcc_buildflags }
-	
-	-- OS-specific options
-	
-	configuration "Windows"
-		defines { "WIN32", "_WINDOWS" } 	
-		
-	configuration {}
-	
 	function IncludeDependencies()
 		print("Searching for dependencies...")
 		local deps = os.matchdirs(depsdir.."/*")

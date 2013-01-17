@@ -24,17 +24,29 @@ function SafePath(path)
 	return "\"" .. path .. "\""
 end
 
-function SetupRPCGen()
+function SetupRPCGen(projectName,extension)
 	dependson { "RPCGen" }
 
 	local exePath = SafePath(path.join(libdir,"RPCGen.exe"))
-	local outPath = SafePath(path.join(gendir,EditorShared.name))
-	local projPath = SafePath(path.getabsolute(path.join(".", EditorShared.name .. ".csproj")))
-	local dllPath = SafePath(path.join(libdir,"Editor.Shared.dll"))
+	local outPath = SafePath(path.join(gendir,projectName))
+	local projPath = SafePath(path.getabsolute(path.join(".", projectName .. ".csproj")))
+	local dllPath = SafePath(path.join(libdir,projectName .. extension))
 	
 	postbuildcommands
 	{
 		exePath .. " -o=" .. outPath .. " -msbuild=" .. projPath .. " " .. dllPath
+	}
+end
+
+function SetupEngineWeaver(dllName)
+	dependson { "EngineWeaver" }
+
+	local exePath = SafePath(path.join(libdir,"EngineWeaver.exe"))
+	local dllPath = SafePath(path.join(libdir,dllName))
+	
+	postbuildcommands
+	{
+		exePath  .. dllPath
 	}
 end
 
@@ -70,7 +82,7 @@ end
 function SetupNativeProjects()
 	location (path.join(builddir, "projects"))
 
-	c = configuration "Debug"
+	local c = configuration "Debug"
 		defines { "DEBUG" }
 		targetsuffix "_d"
 		
@@ -94,11 +106,41 @@ function SetupNativeProjects()
 	configuration(c)
 end
 
-function SetupDependencyProject()
-	SetupNativeProjects()
+function SetupNativeDependencyProject()
 	location (path.join(builddir, "deps"))
+    
+    -- Build configuration options
+	
+	local c = configuration "Debug"
+		defines { "_DEBUG" }
+		flags { "NoMinimalRebuild", "FloatFast", "NoEditAndContinue" }
+		targetsuffix "_d"	
+	
+	configuration "Release"
+		defines { "NDEBUG" }
+		flags { "Optimize", "NoMinimalRebuild", "FloatFast" }	
+	
+	-- Compiler-specific options
+	
+	configuration "vs*"
+		buildoptions { msvc_buildflags }
+		defines { "_CRT_SECURE_NO_WARNINGS" }
+		defines { msvc_cpp_defines }
+	
+	configuration "gcc"
+		buildoptions { gcc_buildflags }
+	
+	-- OS-specific options
+	
+	configuration "Windows"
+		defines { "WIN32", "_WINDOWS" } 	
+		
+	configuration {}
 end
 
+function SetupManagedDependencyProject()
+	location (path.join(builddir, "deps"))
+end
 
 
 function SetupLibLinks(lib)
