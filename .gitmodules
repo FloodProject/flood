@@ -1,0 +1,9 @@
+[submodule "deps/ICSharpCode.NRefactory"]
+	path = deps/ICSharpCode.NRefactory
+	url = git@github.com:FloodProject/ICSharpCode.NRefactory.git
+[submodule "deps/Mono.Cecil"]
+	path = deps/Mono.Cecil
+	url = git@github.com:FloodProject/Mono.Cecil.git
+[submodule "deps/ICSharpCode.Decompiler"]
+	path = deps/ICSharpCode.Decompiler
+	url = git@github.com:FloodProject/ICSharpCode.Decompiler.git
