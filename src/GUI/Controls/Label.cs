@@ -17,32 +17,22 @@ namespace Gwen.Control
         /// <summary>
         /// Text alignment.
         /// </summary>
-        public Pos Alignment { get { return m_Align; } set { m_Align = value; Invalidate(); } }
+        public Pos Alignment { get; set; }
 
         /// <summary>
         /// Text.
         /// </summary>
-        public String Text { get { return m_Text.String; } set { SetText(value); } }
+        public String Text { get; set; }
 
         /// <summary>
         /// Font.
         /// </summary>
-        public Font Font
-        {
-            get { return m_Text.Font; }
-            set
-            {
-                m_Text.Font = value;
-                if (m_AutoSizeToContents)
-                    SizeToContents();
-                Invalidate();
-            }
-        }
-        
+        public Font Font { get; set; }
+
         /// <summary>
         /// Text color.
         /// </summary>
-        public Color TextColor { get { return m_Text.TextColor; } set { m_Text.TextColor = value; } }
+        public Color TextColor { get; set; }
 
         /// <summary>
         /// Override text color (used by tooltips).
@@ -72,10 +62,6 @@ namespace Gwen.Control
         /// </summary>
         public int TextLength { get { return m_Text.Length; } }
         public int TextRight { get { return m_Text.Right; } }
-        public virtual void MakeColorNormal() { TextColor = Skin.Colors.Label.Default; }
-        public virtual void MakeColorBright() { TextColor = Skin.Colors.Label.Bright; }
-        public virtual void MakeColorDark() { TextColor = Skin.Colors.Label.Dark; }
-        public virtual void MakeColorHighlight() { TextColor = Skin.Colors.Label.Highlight; }
 
         /// <summary>
         /// Determines if the control should autosize to its text.
@@ -90,10 +76,9 @@ namespace Gwen.Control
         /// <summary>
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
-        public Label(Base parent) : base(parent)
+        public Label()
         {
-            m_Text = new Text(this);
+            m_Text = new Text();
             //m_Text.Font = Skin.DefaultFont;
 
             MouseInputEnabled = false;
@@ -109,9 +94,9 @@ namespace Gwen.Control
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        protected int GetClosestCharacter(int x, int y)
+        protected int GetClosestCharacter( int x, int y)
         { 
-            return m_Text.GetClosestCharacter(m_Text.CanvasPosToLocal(new Point(x, y))); 
+            return m_Text.GetClosestCharacter(m_Text.CanvasPosToLocal( new Point(x, y))); 
         }
 
         /// <summary>
@@ -141,7 +126,7 @@ namespace Gwen.Control
             Pos align = m_Align;
 
             if (m_AutoSizeToContents)
-                SizeToContents();
+                SizeToContents(skin);
 
             int x = m_TextPadding.Left + Padding.Left;
             int y = m_TextPadding.Top + Padding.Top;
@@ -170,8 +155,8 @@ namespace Gwen.Control
                 return;
 
             m_Text.String = str;
-            if (m_AutoSizeToContents)
-                SizeToContents();
+            //if (m_AutoSizeToContents)
+            //    SizeToContents();
             Invalidate();
             InvalidateParent();
 
@@ -179,10 +164,10 @@ namespace Gwen.Control
                 OnTextChanged();
         }
 
-        public virtual void SizeToContents()
+        public virtual void SizeToContents(Skin.Base skin)
         {
             m_Text.SetPosition(m_TextPadding.Left + Padding.Left, m_TextPadding.Top + Padding.Top);
-            m_Text.SizeToContents();
+            m_Text.SizeToContents(skin);
 
             SetSize(m_Text.Width + Padding.Left + Padding.Right + m_TextPadding.Left + m_TextPadding.Right, 
                 m_Text.Height + Padding.Top + Padding.Bottom + m_TextPadding.Top + m_TextPadding.Bottom);

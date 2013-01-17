@@ -11,7 +11,7 @@ namespace Gwen.Control.Property
         /// Initializes a new instance of the <see cref="Base"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Base(Control.Base parent) : base(parent)
+        public Base()
         {
             Height = 17;
         }

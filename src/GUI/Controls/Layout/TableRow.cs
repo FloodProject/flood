@@ -44,8 +44,7 @@ namespace Gwen.Control.Layout
         /// Initializes a new instance of the <see cref="TableRow"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TableRow(Base parent)
-            : base(parent)
+        public TableRow()
         {
             m_Columns = new Label[MaxColumns];
             m_ColumnCount = 0;

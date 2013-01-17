@@ -15,12 +15,10 @@ namespace Gwen.Control
         /// <summary>
         /// Initializes a new instance of the <see cref="ImagePanel"/> class.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
-        public ImagePanel(Base parent)
-            : base(parent)
+        public ImagePanel()
         {
             m_uv = new float[4];
-            m_Texture = new Texture(Skin.Renderer);
+            //m_Texture = new Texture(Skin.Renderer);
             SetUV(0, 0, 1, 1);
             MouseInputEnabled = false;
             m_DrawColor = Color.White;
