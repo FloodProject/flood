@@ -9,8 +9,8 @@ namespace Flood.Editor.Controls
 
         public void OnSelect()
         {
-            if (docManager.Current != null)
-                docManager.Close(docManager.Current.Id);
+            //if (docManager.Current != null)
+            //    docManager.Close(docManager.Current.Id);
         }
 
         public string Text
