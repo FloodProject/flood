@@ -10,7 +10,20 @@ namespace Flood.Editor
         Game
     }
 
-    public class Project
+    public interface IProject
+    {
+        /// <summary>
+        /// Type of the project.
+        /// </summary>
+        ProjectType Type { get; }
+
+        /// <summary>
+        /// Name of the project.
+        /// </summary>
+        string Name { get; }
+    }
+
+    public class Project : IProject
     {
         /// <summary>
         /// Type of the project.
@@ -31,10 +44,10 @@ namespace Flood.Editor
 
     public class ProjectManager
     {
-        private List<Project> projects;
+        private readonly List<Project> projects;
 
         /// <summary>
-        /// List of all the projects.
+        /// Read-only list of all the projects.
         /// </summary>
         public IReadOnlyList<Project> Projects
         {
@@ -70,7 +83,7 @@ namespace Flood.Editor
         /// Removes an existing project.
         /// </summary>
         /// <remarks>Invokes the ProjectRemoved event.</remarks>
-        /// <returns>True if the</returns>
+        /// <returns>True if the project was removed, false otherwise.</returns>
         public bool RemoveProject(Project project)
         {
             var didRemove = projects.Remove(project);
