@@ -110,6 +110,9 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	Bind(wxEVT_IDLE, &EditorFrame::OnIdle, this);
 	Bind(wxEVT_CLOSE_WINDOW, &EditorFrame::OnClose, this);
+
+    auto projectPlugin = GetPlugin<ProjectPlugin>();
+    projectPlugin->createDocument();
 }
 
 //-----------------------------------//
