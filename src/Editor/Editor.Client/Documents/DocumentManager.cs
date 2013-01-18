@@ -1,16 +1,16 @@
-﻿using Flood.Editor.Documents;
+﻿using System.Linq;
+using Flood.Editor.Documents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace Flood.Editor
 {
-    //TODO move selection history to gwen control
     public class DocumentManager : IPartImportsSatisfiedNotification
     {
-        int documentIdCount = 1;
-        Dictionary<int,Document> documents;
-        LinkedList<Document> documentSelectionHistory;
+        int nextDocumentId = 1;
+        readonly Dictionary<int,Document> documents;
+        readonly LinkedList<Document> documentSelectionHistory;
 
         public event Action<Document> DocumentSelected;
         public event Action<Document> DocumentAdded;
@@ -23,23 +23,22 @@ namespace Flood.Editor
         {
             get
             {
-                if (documentSelectionHistory.Count == 0)
-                    return null;
-
-                return documentSelectionHistory.First.Value;
+                return documentSelectionHistory.Count == 0 ?
+                    null : documentSelectionHistory.First.Value;
             }
             set
             {
-                if (documentSelectionHistory.Count == 0 || value != documentSelectionHistory.First.Value)
-                {
-                    if (documentSelectionHistory.Contains(value))
-                        documentSelectionHistory.Remove(value);
+                if (documentSelectionHistory.Count != 0
+                    && value == documentSelectionHistory.First.Value)
+                    return;
 
-                    documentSelectionHistory.AddFirst(value);
+                if (documentSelectionHistory.Contains(value))
+                    documentSelectionHistory.Remove(value);
 
-                    if (DocumentSelected != null)
-                        DocumentSelected.Invoke(value);
-                }
+                documentSelectionHistory.AddFirst(value);
+
+                if (DocumentSelected != null)
+                    DocumentSelected.Invoke(value);
             }
         }
 
@@ -47,8 +46,6 @@ namespace Flood.Editor
         {
             documents = new Dictionary<int, Document>();
             documentSelectionHistory = new LinkedList<Document>();
-
-           
         }
 
         public void OnImportsSatisfied()
@@ -60,33 +57,26 @@ namespace Flood.Editor
                     Current = doc;
             };
 
-            DocumentSelected += delegate(Document d)
-            {
-                editorWindow.DocumentTab.SelectTab(d.Id);
-            };
+            //DocumentSelected += d => editorWindow.DocumentTab.SelectTab(d.Id);
         }
 
         public bool FindDocument(string path, out Document document)
         {
             document = null;
-            foreach (var doc in documents.Values)
+            foreach (var doc in documents.Values.Where(doc => doc.Path == path))
             {
-                if (doc.Path == path)
-                {
-                    document = doc;
-                    return true;
-                }
+                document = doc;
+                return true;
             }
             return false;
         }
 
         public void Open(string path)
         {
-            var id = documentIdCount++;
-            Document doc = new SceneDocument(path, id);
-            editorWindow.DocumentTab.AddTab(id, "Doc" + id, doc.InitGUI);
-            Add(id, doc, true);
-            
+            var id = nextDocumentId++;
+            //Document doc = new SceneDocument(path, id);
+            //editorWindow.DocumentTab.AddTab(id, "Doc" + id, doc.InitGUI);
+            //Add(id, doc, true);
         }
 
         public void Close(int id)
@@ -112,7 +102,7 @@ namespace Flood.Editor
 
             var document = documents[id];
 
-            var dirtySelection = id == Current.Id;
+            //var dirtySelection = id == Current.Id;
 
             documents.Remove(id);
             
@@ -122,8 +112,8 @@ namespace Flood.Editor
             if (DocumentRemoved != null)
                 DocumentRemoved.Invoke(document);
 
-            if (dirtySelection && Current != null)
-               DocumentSelected.Invoke(Current);
+            //if (dirtySelection && Current != null)
+            //   DocumentSelected.Invoke(Current);
         }
 
         public void SaveCurrent()
