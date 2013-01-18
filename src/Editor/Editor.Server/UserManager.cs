@@ -1,8 +1,7 @@
-
 using System;
 using System.Collections.Generic;
 
-namespace Flood.Editor
+namespace Flood.Editor.Server
 {
     public class UserManager : IUserManager
     {

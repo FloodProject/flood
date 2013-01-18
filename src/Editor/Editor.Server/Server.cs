@@ -2,12 +2,12 @@ using System;
 using Flood.RPC.Server;
 using Flood.RPC.Transport;
 
-namespace Flood.Editor
+namespace Flood.Editor.Server
 {
     /// <summary>
     /// Represents the editor server.
     /// </summary>
-    public class EditorServer : Server.Server
+    public class EditorServer : Flood.Server.Server
     {
         public UserManager UserManager { get; set; }
 

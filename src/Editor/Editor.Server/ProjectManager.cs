@@ -1,7 +1,6 @@
 using System;
-using Flood.RPC.Metadata;
 
-namespace Flood.Editor
+namespace Flood.Editor.Server
 {
     public class ProjectManager : IProjectManager
     {
