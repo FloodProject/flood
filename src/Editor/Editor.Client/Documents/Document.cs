@@ -1,53 +1,61 @@
-﻿using Flood.Editor.Controls;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Flood.Editor
 {
-    public abstract class Document : Document<Document> {
+    /// <summary>
+    /// Documents are an abstract concept used to decouple and data of
+    /// the application from the views that interact with the user.
+    /// </summary>
+    public interface IDocument : IDisposable
+    {
+        /// <summary>
+        /// Undo manager with the document undo history.
+        /// </summary>
+        IUndoManager UndoManager { get; }
 
-        public Document(string path, int id) : base(path, id)
-        {
+        /// <summary>
+        /// Path to the document.
+        /// </summary>
+        string Path { get; }
 
-        }
-    
+        /// <summary>
+        /// Stores if the document has unsaved changes.
+        /// </summary>
+        bool HasUnsavedChanges { get; }
     }
 
-    public abstract class  Document<TDoc>
-        where TDoc : Document<TDoc>
+    /// <summary>
+    /// Base class to implement new kinds of documents.
+    /// </summary>
+    public abstract class Document : IDocument
     {
-        public UndoManager<TDoc> UndoManager { get; private set; }
+        public IUndoManager UndoManager { get; private set; }
 
         public string Path { get; private set; }
 
-        public int Id { get; private set; }
+        public bool HasUnsavedChanges { get; set; }
 
-        public Document(string path, int id){
+        protected Document(IUndoManager undoManager, string path)
+        {
+            if (undoManager == null)
+                throw new ArgumentNullException();
+
             Path = path;
-            Id = id;
-            UndoManager = new UndoManager<TDoc>(this);
+            UndoManager = undoManager;
+
+            UndoManager.OperationDone += OnUndoRedoEvent;
+            UndoManager.OperationUndone += OnUndoRedoEvent;
         }
 
-        public abstract void InitGUI(Gwen.Control.Base rootGUI);
-
-        /*public abstract void FromBuffer(byte[] buffer);
-        public abstract byte[] ToBuffer();
-
-        public static TDoc Create(string path) 
+        public void Dispose()
         {
-            //byte[] buffer = null;
-            return null; // FromBuffer(buffer);
+            UndoManager.OperationDone -= OnUndoRedoEvent;
+            UndoManager.OperationUndone -= OnUndoRedoEvent;
         }
 
-        public void Save()
+        public void OnUndoRedoEvent(object sender, IUndoOperation operation)
         {
-            byte[] buffer = ToBuffer();
-
-        }*/
-        
+            HasUnsavedChanges = UndoManager.HasUndoneOperations;
+        }
     }
 }
