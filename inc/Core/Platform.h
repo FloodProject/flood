@@ -29,6 +29,7 @@
 
 #ifdef __clang__
 	#define COMPILER_CLANG
+	#define COMPILER_SUPPORTS_CXX11
 #elif defined(_MSC_VER)
 	#if _MSC_VER == 1700
 		#define COMPILER_MSVC_2012 _MSC_VER
@@ -102,6 +103,11 @@
 	#define OVERRIDE //__attribute__((override))
 	#define MULTI_LINE_MACRO_END } while(0)
 	#define thread_local __thread
+#endif
+
+#if defined(COMPILER_CLANG)
+	// This is defined so MSVC headers work properly.
+	#define _ALLOW_KEYWORD_MACROS
 #endif
 
 #if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
