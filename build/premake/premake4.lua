@@ -80,6 +80,7 @@ solution "Flood"
 	group "Tools"
 
 		dofile( srcdir .. "/Tools/RPCGen/RPCGen.lua")
+        dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
         dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
 		dofile( srcdir .. "/Tools/BakefileGen/BakefileGen.lua")
 	
