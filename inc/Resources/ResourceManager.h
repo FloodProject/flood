@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Resources/API.h"
 #include "Core/Concurrency.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
@@ -106,7 +107,6 @@ public:
 	// Gets the registered resources.
 	GETTER(Resources, const ResourceMap&, resources)
 
-#ifndef SWIG
 	// Finds the loader for the given extension.
 	ResourceLoader* findLoader(const String& extension);
 
@@ -118,7 +118,6 @@ public:
 
 	// Gets the registered resource loaders.
 	GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
-#endif
 
 	// Gets/sets the threading status.
 	ACCESSOR(AsynchronousLoading, bool, asynchronousLoading)
@@ -135,7 +134,6 @@ public:
 	// Sets the archive.
 	void setArchive(Archive* archive);
 
-#ifndef SWIG
 	// Gets an already loaded resource by its name.
 	template <typename T>
 	RESOURCE_HANDLE_TYPE(T) getResource(const String& name)
@@ -159,7 +157,6 @@ public:
 		return HandleCast<T>(res);
 		
 	}
-#endif
 
 	// These events are sent when their correspending actions happen.
 	Event1< const ResourceEvent& > onResourcePrepared;

@@ -68,6 +68,13 @@ struct StreamFuncs
 	StreamResizeFunction  resize;
 };
 
+/**
+ * Streams can be created from URIs (Univeral Resource Identifiers).
+ * Each stream protocol supported has a unique scheme that will be
+ * used to identify it when opening the stream. Examples, http:,
+ * or zip: would be valid schemes for an HTTP or ZIP stream.
+ */
+
 struct API_CORE Stream
 {
 	virtual ~Stream() {}
@@ -76,15 +83,6 @@ struct API_CORE Stream
 	StreamOpenMode mode;
 	StreamFuncs* fn;
 };
-
-//-----------------------------------//
-
-/**
- * Streams can be created from URIs (Univeral Resource Identifiers).
- * Each stream protocol supported has a unique scheme that will be
- * used to identify it when opening the stream. Examples, http:,
- * or zip: would be valid schemes for an HTTP or ZIP stream.
- */
 
 API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamOpenMode);
 #define pStreamCreateFromURI(alloc, ...) CreateScopedPtr(StreamCreateFromURI, alloc, __VA_ARGS__)

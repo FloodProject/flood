@@ -73,10 +73,10 @@ void RenderDevice::render( RenderBlock& queue )
 {
 	#pragma TODO("Sort the render group by depth distance")
 
-	// Sort the.renderables by render group.
+	// Sort the renderables by render group.
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
-	// Render all the.renderables in the queue.
+	// Render all the renderables in the queue.
 	for( size_t i = 0; i < queue.renderables.size(); i++ )
 	{
 		const RenderState& state = queue.renderables[i];

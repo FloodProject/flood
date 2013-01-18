@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include "Core/Event.h"
 #include "Core/String.h"
 

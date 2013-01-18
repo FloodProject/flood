@@ -49,7 +49,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 {
 	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
 	
-	// Construct the.renderables for each mesh group.
+	// Construct the renderables for each mesh group.
 	const std::vector<MeshGroup>& groups = mesh->groups;
 
 	for( size_t i = 0; i < groups.size(); i++ )

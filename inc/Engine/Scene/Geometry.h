@@ -36,10 +36,10 @@ public:
 	// Adds a new.renderable to this geometry.
 	void addRenderable( const RenderBatchPtr& renderable );
 
-	// Gets all the.renderables in this geometry.
+	// Gets all the renderables in this geometry.
 	RenderablesVector getRenderables() const;
 
-	// Appends all the.renderables of this geometry to the queue.
+	// Appends all the renderables of this geometry to the queue.
 	virtual void appendRenderables(
 		RenderQueue& queue, const Transform* transform);
 
@@ -63,7 +63,7 @@ protected:
 	// Notifies the transform of rebuilt bounding volumes.
 	void notifiesTransform();
 
-	//.renderables of the geometry.
+	// Renderables of the geometry.
 	RenderablesVector renderables;
 
 	// Bounding volume of the geometry.

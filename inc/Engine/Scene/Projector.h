@@ -33,7 +33,7 @@ public:
 	// Updates this component.
 	void update( float delta );
 
-	// Appends all the.renderables of this geometry to the queue.
+	// Appends all the renderables of this geometry to the queue.
 	virtual void appendRenderables( RenderQueue& queue, const Transform* transform ) OVERRIDE;
 
 	// Pre-render callback.

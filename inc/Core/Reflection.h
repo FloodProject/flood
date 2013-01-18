@@ -10,7 +10,7 @@
 #include "Core/API.h"
 #include "Core/Serialization.h"
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -272,7 +272,7 @@ struct API_CORE Primitive : public Type
 	PrimitiveTypeKind kind;
 };
 
-struct PrimitiveBuiltins
+struct API_CORE PrimitiveBuiltins
 {
 	PrimitiveBuiltins();
 
@@ -317,8 +317,6 @@ API_CORE int32 EnumGetValue(Enum*, const char* name);
 API_CORE const char* EnumGetValueName(Enum*, int32 value);
 
 //-----------------------------------//
-
-EXTERN_END
 
 // Gets the value of the field in the object.
 template<typename T>

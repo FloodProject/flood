@@ -59,6 +59,10 @@ API_RESOURCE REFLECT_DECLARE_ENUM(ResourceGroup)
 
 //-----------------------------------//
 
+API_RESOURCE REFLECT_DECLARE_CLASS(Resource)
+
+struct ResourceStream;
+
 /**
  * Represents a generic resource that tipically is used to hold a piece
  * of data that is used by the various systems of the engine, for example
@@ -69,10 +73,6 @@ API_RESOURCE REFLECT_DECLARE_ENUM(ResourceGroup)
  * resource from a network connection).
  */
 
-API_RESOURCE REFLECT_DECLARE_CLASS(Resource)
-
-struct ResourceStream;
-
 class API_RESOURCE Resource : public Object
 {
 	DECLARE_UNCOPYABLE(Resource)
@@ -82,25 +82,25 @@ public:
 
 	virtual ~Resource();
 
-	// Gets/sets the path that identifies this resource.
+	/// Gets/sets the path that identifies this resource.
 	ACCESSOR(Path, const Path&, path)
 
-	// Gets/sets the resource loading status.
+	/// Gets/sets the resource loading status.
 	ACCESSOR(Status, ResourceStatus, status)
 
-	// Gets if the resource is fully loaded.
+	/// Gets if the resource is fully loaded.
 	bool isLoaded() const;
 
-	// Gets the resource group associated with this resource.
+	/// Gets the resource group associated with this resource.
 	virtual ResourceGroup getResourceGroup() const = 0;
 
-	// Path to the resource.
+	/// Path to the resource.
 	Path path;
 
-	// Status of the resource.
+	/// Status of the resource.
 	ResourceStatus status;
 
-	// Resource stream.
+	/// Resource stream.
 	ResourceStream* stream;
 
 protected:

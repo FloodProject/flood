@@ -54,7 +54,7 @@ class RenderBatch;
  * details how all the rendering operations are implemented.
  *
  * This class only knows about rendering primitives (Vertex/Index buffers) and
- *.renderables. It does not know anything about high-level objects, like meshes.
+ * renderables. It does not know anything about high-level objects, like meshes.
  *
  * Each render device will also manage a list of render targets (windows, FBOs).
  * Window implementations depend on the rendering system used, for example, an
@@ -76,7 +76,7 @@ public:
 	// Renders a renderable.
 	void render( const RenderState& state, const LightQueue& lights );
 
-	// Renders a list of.renderables.
+	// Renders a list of renderables.
 	void render( RenderBlock& queue );
 
 	// Gets the current rendering pipeline.

@@ -373,8 +373,6 @@ PrimitiveBuiltins::PrimitiveBuiltins()
 	, p_Quaternion(PrimitiveTypeKind::Quaternion, "Quaternion", sizeof(Quaternion))
 {}
 
-#undef PT
-
 PrimitiveBuiltins& PrimitiveGetBuiltins()
 {
 	static PrimitiveBuiltins g_PrimitiveBuiltins;

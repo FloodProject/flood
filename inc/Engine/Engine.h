@@ -42,7 +42,7 @@ class API_ENGINE Engine
 {
 public:
 	
-	Engine();	
+	Engine();
 	~Engine();
 
 	// Initialize the engine subsystems.

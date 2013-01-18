@@ -8,6 +8,9 @@
 /deps/Mono
 /deps/wxWidgets
 /deps/GWEN
+/deps/SFML
 
 *.csproj
 *.user
+deps-managed
+/media

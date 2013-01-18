@@ -22,7 +22,8 @@ class AudioContext;
 
 // Buffers data into an audio buffer.
 struct AudioBufferDetails;
-API_AUDIO void AudioBufferData(ALuint buffer, const AudioBufferDetails& details);
+API_AUDIO void AudioBufferData(ALuint buffer,
+                               const AudioBufferDetails& details);
 
 // Uploads the sound into the buffer.
 API_AUDIO void AudioBufferSound(AudioBuffer* buffer, Sound* sound);
@@ -38,7 +39,8 @@ struct AudioBufferDetails
 };
 
 // Gets the buffer data details for a sound.
-API_AUDIO void AudioGetBufferDataDetails(AudioBufferDetails& details, Sound* sound);
+API_AUDIO void AudioGetBufferDataDetails(AudioBufferDetails& details,
+                                         Sound* sound);
 
 //-----------------------------------//
 

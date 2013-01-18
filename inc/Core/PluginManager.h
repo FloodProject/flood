@@ -17,7 +17,7 @@ NAMESPACE_CORE_BEGIN
 class Plugin;
 
 /**
- * Responsible for managing all the plugins aswell as implementing
+ * Responsible for managing all the plugins as well as implementing
  * their lifecycle. Plugins should be registered with the manager
  * and enabled or disabled as needed during runtime.
  */
