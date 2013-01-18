@@ -307,6 +307,20 @@ static void StackDellocate(Allocator* alloc, const void* p)
 
 //-----------------------------------//
 
+Allocator* AllocatorCreateStack( Allocator* alloc )
+{
+	Allocator* stack = Allocate(alloc, Allocator);
+
+	stack->allocate = StackAllocate;
+	stack->deallocate = StackDellocate;
+	stack->reset = nullptr;
+	stack->group = nullptr;
+
+	return stack;
+}
+
+//-----------------------------------//
+
 static Allocator* GetDefaultStackAllocator()
 {
 	static Allocator stack;
