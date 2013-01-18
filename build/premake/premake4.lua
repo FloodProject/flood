@@ -39,6 +39,9 @@ solution "Flood"
 	
 	configuration "Release"
 		flags { "Optimize" }
+        
+    configuration "Debug"
+		defines { "DEBUG" }
 		
 	configuration {}
 	

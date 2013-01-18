@@ -77,13 +77,11 @@ function SetupLibPaths(lib)
 	configuration(c)
 end
 
-
-
 function SetupNativeProjects()
 	location (path.join(builddir, "projects"))
 
 	local c = configuration "Debug"
-		defines { "DEBUG" }
+		defines { "_DEBUG" }
 		targetsuffix "_d"
 		
 	configuration "Release"
