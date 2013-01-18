@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Flood.Editor.Documents
+﻿namespace Flood.Editor.Documents
 {
     public class SceneDocument : Document
     {
-        public SceneDocument(string path, int id)
-            : base(path, id)
+        public SceneDocument(IUndoManager undoManager, string path)
+            : base(undoManager, path)
         {
 
         }
 
-        public override void InitGUI(Gwen.Control.Base rootGUI)
+        public void InitGUI(Gwen.Control.Base rootGUI)
         {
             var label = new Gwen.Control.Label(rootGUI);
             label.SetText("YEAH");
