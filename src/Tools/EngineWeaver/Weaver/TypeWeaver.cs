@@ -27,9 +27,11 @@ namespace DSLToolkit.Weaver
 
         private readonly List<Instruction> instructions;
 
-        private Dictionary<MemberReference,MemberReference> referenceMap;
+        private readonly Dictionary<MemberReference,MemberReference> referenceMap;
 
-        private DeepCopier copier;
+        private readonly Dictionary<FieldReference, object> constants; 
+
+        private readonly DeepCopier copier;
 
         private static TypeDefinition GetTypeDef(Type type)
         {
@@ -51,6 +53,7 @@ namespace DSLToolkit.Weaver
 
             instructions = new List<Instruction>();
             referenceMap = new Dictionary<MemberReference,MemberReference>();
+            constants = new Dictionary<FieldReference, object>();
             copier = new DeepCopier(this);
         }
 
@@ -64,7 +67,8 @@ namespace DSLToolkit.Weaver
 
         public void ProcessInstructions()
         {
-            
+            ReplaceInstructionsWithConstant();
+
             CopyConstructorInitInstructions();
             
             FixGeneratedType();
@@ -73,6 +77,7 @@ namespace DSLToolkit.Weaver
 
             copier.CopyMap.Clear();  //clear new copies
             referenceMap.Clear();    //clear references
+            constants.Clear();       //clear constants
         }
 
        
@@ -83,6 +88,46 @@ namespace DSLToolkit.Weaver
             CheckDestinationMember(destination);
 
             referenceMap.Add(origin,destination);
+        }
+
+        private void ReplaceInstructionsWithConstant()
+        {
+            foreach(var i in instructions)
+            {
+                var fieldRef = i.Operand as FieldReference;
+                if (fieldRef == null || !constants.ContainsKey(fieldRef))
+                    continue;
+
+                var opCode = i.OpCode;
+                if (opCode != OpCodes.Ldfld && opCode != OpCodes.Ldsfld)
+                    throw new Exception(string.Format("Can't apply operation {0} to constant {1},"+
+                        " only ldfld can be processed.", opCode,fieldRef));
+
+                var constant = constants[fieldRef];
+
+                Console.WriteLine("Replacing field {0} by constant value {1}", fieldRef,constant);
+
+                i.Operand = constant;
+
+                if (constant is int)
+                {
+                    i.OpCode = OpCodes.Ldc_I4;
+                    continue;
+                }
+                if (constant is float)
+                {
+                    i.OpCode = OpCodes.Ldc_R4;
+                    continue;
+                }
+                if (constant is string)
+                {
+                    i.OpCode = OpCodes.Ldstr;
+                    continue;
+                }
+
+                throw new NotImplementedException(
+                    "Constants of type " + constant.GetType().FullName +" not implemented.");
+            }
         }
 
         private void ProcessNewInstructions(){
@@ -127,6 +172,7 @@ namespace DSLToolkit.Weaver
             }
         }
 
+
         private void CopyConstructorInitInstructions()
         {
             var constructors = GetConstructors(DestinationType, true);
@@ -167,8 +213,7 @@ namespace DSLToolkit.Weaver
 
            ProcessNewInstructions();
 
-           var d = new DecompilerContext(OriginType.Module);
-           d.CurrentType = OriginType;
+           var d = new DecompilerContext(OriginType.Module) {CurrentType = OriginType};
            var astBuilder = new AstBuilder(d);
            astBuilder.AddType(OriginType);
            astBuilder.SyntaxTree.AcceptVisitor(visitor);
@@ -186,8 +231,7 @@ namespace DSLToolkit.Weaver
 
            ProcessNewInstructions();
 
-           var d = new DecompilerContext(type.Module);
-           d.CurrentType = type;
+           var d = new DecompilerContext(type.Module) {CurrentType = type};
            var astBuilder = new AstBuilder(d);
            astBuilder.AddType(type);
            astBuilder.SyntaxTree.AcceptVisitor(visitor);
@@ -250,8 +294,31 @@ namespace DSLToolkit.Weaver
              return i;
         }
 
-        
-        
+        # region Constants
+
+        public void AddConstant(FieldDefinition def, int constant)
+        {
+            AddConstant2(def, constant);
+        }
+        public void AddConstant(FieldDefinition def, float constant)
+        {
+            AddConstant2(def, constant);
+        }
+        public void AddConstant(FieldDefinition def, string constant)
+        {
+            AddConstant2(def, constant);
+        }
+
+        private void AddConstant2(FieldDefinition def, object constant)
+        {
+            CheckOriginMember(def);
+            if(def.FieldType.FullName != constant.GetType().FullName)
+                throw new ArgumentException(string.Format("Field {0} is not of type {1}",def, constant.GetType().FullName));
+            
+            constants.Add(def,constant);
+        }
+
+        #endregion
 
         # region DEFINITION MERGE
 

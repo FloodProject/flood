@@ -91,6 +91,37 @@ namespace EngineWeaver.Tests
             TestProperty(instance, integerProperty2, eventInfo, 0, 1); //test super type
         }
 
+        
+        public class TestNames : IPropertyNotifier
+        {
+            public event PropertyChanged PropertyChanged;
+
+            [EngineManaged.Property]
+            public int Name1 { get; set; }
+        }
+
+        [Test]
+        public void PropertyName()
+        {
+            var instance = CreateWeavedInstance(typeof (TestNames));
+
+            var eventInfo = instance.GetType().GetEvent("PropertyChanged");
+            var property1 = instance.GetType().GetProperty("Name1");
+
+            var propertyName = "";
+
+            var handler = new PropertyChanged(
+                (o, name, value, nValue) =>
+                    {
+                        propertyName = name;
+                        return false;
+                    });
+
+            eventInfo.AddEventHandler(instance, handler);
+            property1.SetValue(instance,1);
+            Assert.AreEqual(property1.Name,propertyName);
+        }
+
 
         /// <summary>
         /// 

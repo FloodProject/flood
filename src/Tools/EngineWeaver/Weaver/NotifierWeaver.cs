@@ -16,16 +16,6 @@ namespace DSLToolkit.Weaver
         class Template{
             private Dictionary<PropertyChanged, PropertyChanged> handlers = new Dictionary<PropertyChanged,PropertyChanged>();
             
-            public Template() {
-
-            }
-
-            public Template(int i) 
-            :this(){
-
-            }
-
-
             public event PropertyChanged PropertyChanged {
                 add {
                     var handler = value;
@@ -61,7 +51,7 @@ namespace DSLToolkit.Weaver
                 }
             }
 
-            private static string pName = "name";
+            private static string pNameC;
             private object pValue;
             public object Property {
                 get {
@@ -69,7 +59,7 @@ namespace DSLToolkit.Weaver
                 }
                 set {
                     if(value != pValue){
-                        EventInvoke(this, "", pValue, value);
+                        EventInvoke(this, pNameC, pValue, value);
                         pValue = value;
                     }
 
@@ -83,7 +73,7 @@ namespace DSLToolkit.Weaver
 
         private static PropertyDefinition tPropertyProperty;
         private static FieldDefinition tPropertyField;
-        private static FieldDefinition tPropertyName;
+        private static FieldDefinition tPropertyNameC;
 
         private static TypeDefinition originType;
 
@@ -101,7 +91,7 @@ namespace DSLToolkit.Weaver
             
             tPropertyProperty = originType.Properties.Single(e => e.Name == "Property");
             tPropertyField    = originType.Fields.Single(e => e.Name == "pValue");
-            tPropertyName     = originType.Fields.Single(e => e.Name == "pName");
+            tPropertyNameC    = originType.Fields.Single(e => e.Name == "pNameC");
         }
 
         protected void WeaveTypeInterface(TypeDefinition type)
@@ -151,8 +141,7 @@ namespace DSLToolkit.Weaver
                 var propField = weaver.AddDefinition(tPropertyField);
                 propField.FieldType = property.PropertyType;
 
-                //TODO AddConstant
-                //weaver.AddDefinition(tPropertyName);
+                weaver.AddConstant(tPropertyNameC,property.Name);
 
                 //TODO delete property generated field
                 weaver.Merge(tPropertyProperty, property);

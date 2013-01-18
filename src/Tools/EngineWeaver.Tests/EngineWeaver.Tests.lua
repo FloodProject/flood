@@ -18,5 +18,5 @@ project "EngineWeaver.Tests"
         "EngineManaged",
 		"EngineWeaver",
         "Mono.Cecil",
-		"NUnit"
+		path.join(depsdir,"NUnit","nunit.framework")
     }
