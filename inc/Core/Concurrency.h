@@ -51,7 +51,8 @@ API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority);
 API_CORE void    ThreadSetName(Thread*, const char* name);
 
 typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
-#define pThreadCreate(alloc, ...) CreateScopedPtr(ThreadCreate, alloc, __VA_ARGS__)
+#define pThreadCreate(alloc, ...) CreateScopedPtr(ThreadCreate, alloc, \
+    __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -70,7 +71,8 @@ API_CORE void   MutexLock(Mutex*);
 API_CORE void   MutexUnlock(Mutex*);
 
 typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
-#define pMutexCreate(alloc, ...) CreateScopedPtr(MutexCreate, alloc, __VA_ARGS__)
+#define pMutexCreate(alloc, ...) CreateScopedPtr(MutexCreate, alloc, \
+    __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -84,7 +86,8 @@ API_CORE void       ConditionWakeOne(Condition*);
 API_CORE void       ConditionWakeAll(Condition*);
 
 typedef scoped_ptr<Condition, ConditionDestroy> ConditionPtr;
-#define pConditionCreate(alloc, ...) CreateScopedPtr(ConditionCreate, alloc, __VA_ARGS__)
+#define pConditionCreate(alloc, ...) CreateScopedPtr(ConditionCreate, \
+    alloc, __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -106,7 +109,8 @@ API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
 
 /**
  * Tasks provide an higher level interface to concurrency than threads.
- * They can be managed by the engine and grouped in different hardware threads.
+ * They can be managed by the engine and grouped in different hardware
+ * threads.
  */
 
 struct Task;
@@ -125,7 +129,8 @@ API_CORE void  TaskDestroy(Task*);
 API_CORE void  TaskRun(Task*);
 
 typedef scoped_ptr<Task, TaskDestroy> TaskPtr;
-#define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, __VA_ARGS__)
+#define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, \
+    __VA_ARGS__)
 
 enum class TaskState
 {
@@ -166,7 +171,8 @@ API_CORE void       TaskPoolAdd(TaskPool*, Task*, uint8 Priority);
 API_CORE void       TaskPoolUpdate(TaskPool*);
 
 typedef scoped_ptr<TaskPool, TaskPoolDestroy> TaskPoolPtr;
-#define pTaskPoolCreate(alloc, ...) CreateScopedPtr(TaskPoolCreate, alloc, __VA_ARGS__)
+#define pTaskPoolCreate(alloc, ...) CreateScopedPtr(TaskPoolCreate, \
+    alloc, __VA_ARGS__)
 
 //-----------------------------------//
 
