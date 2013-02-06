@@ -12,9 +12,10 @@ namespace Gwen.Control.Property
         /// <summary>
         /// Initializes a new instance of the <see cref="Text"/> class.
         /// </summary>
-        public Text()
+        /// <param name="parent">Parent control.</param>
+        public Text(Control.Base parent) : base(parent)
         {
-            m_TextBox = new TextBox();
+            m_TextBox = new TextBox(this);
             m_TextBox.Dock = Pos.Fill;
             m_TextBox.ShouldDrawBackground = false;
             m_TextBox.TextChanged += OnValueChanged;

@@ -6,7 +6,7 @@ project "GUI"
 	kind "SharedLib"
 	language "C#"
 	
-	SetupEngineWeaver("GUI.dll")
+	--SetupEngineWeaver("GUI.dll")
 	
 	location "."
 	

@@ -103,7 +103,9 @@ namespace Gwen.Control
         /// <summary>
         /// Control constructor.
         /// </summary>
-        public Button()
+        /// <param name="parent">Parent control.</param>
+        public Button(Base parent)
+            : base(parent)
         {
             SetSize(100, 20);
             MouseInputEnabled = true;
@@ -280,8 +282,7 @@ namespace Gwen.Control
         /// </summary>
         public override void UpdateColors()
         {
-            //todo ??
-           /* if (IsDisabled)
+            if (IsDisabled)
             {
                 TextColor = Skin.Colors.Button.Disabled;
                 return;
@@ -299,7 +300,7 @@ namespace Gwen.Control
                 return;
             }
 
-            TextColor = Skin.Colors.Button.Normal;*/
+            TextColor = Skin.Colors.Button.Normal;
         }
 
         /// <summary>

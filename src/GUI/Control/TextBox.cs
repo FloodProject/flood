@@ -83,7 +83,9 @@ namespace Gwen.Control
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBox"/> class.
         /// </summary>
-        public TextBox()
+        /// <param name="parent">Parent control.</param>
+        public TextBox(Base parent)
+            : base(parent)
         {
             SetSize(200, 20);
 

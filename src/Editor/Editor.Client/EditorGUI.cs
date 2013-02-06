@@ -7,6 +7,8 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flood.Editor.Controls;
+using Gwen;
 
 namespace FlushEditor
 {
@@ -24,9 +26,9 @@ namespace FlushEditor
             skin.Dispose();
         }
 
-        //public ToolBar ToolBar { get; private set; }
+        public ToolBar ToolBar { get; private set; }
 
-        //public DocumentTab DocumentTab { get; private set; }
+        public DocumentTab DocumentTab { get; private set; }
 
         public event Action Initiated;
 
@@ -35,15 +37,15 @@ namespace FlushEditor
             this.renderer = renderer;
 
             skin = new Gwen.Skin.TexturedBase(renderer, textureName);
-            //skin = new Gwen.Skin.Simple(renderer);
-            //skin.DefaultFont = new Font(renderer, "Courier", 10);
+            skin = new Gwen.Skin.Simple(renderer);
+            skin.DefaultFont = new Font(renderer, "Courier", 10);
             canvas = new Gwen.Control.Canvas(skin);
 
-            //ToolBar = new ToolBar(canvas);
+            ToolBar = new ToolBar(canvas);
 
-            //DocumentTab = new DocumentTab(canvas);
+            DocumentTab = new DocumentTab(canvas);
 
-            var label = new Gwen.Control.Label();
+            var label = new Gwen.Control.Label(canvas);
             canvas.AddChild(label);
             label.SetText("YOLO!");
 
@@ -54,7 +56,7 @@ namespace FlushEditor
         }
 
 	    public void Render(){
-		    canvas.RenderCanvas(skin);
+		    canvas.RenderCanvas();
 	    }
 
         public Gwen.Control.Canvas Canvas

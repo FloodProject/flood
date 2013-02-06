@@ -7,15 +7,16 @@ using System.Windows.Forms;
 using Gwen.Anim;
 using Gwen.DragDrop;
 using Gwen.Input;
-using Gwen.Containers;
+using System.ComponentModel;
 
 namespace Gwen.Control
 {
     /// <summary>
     /// Base control class.
     /// </summary>
-    public class Base : IDisposable
+    public class Base : IDisposable, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Id
         {
@@ -33,9 +34,23 @@ namespace Gwen.Control
 
         private bool m_Disposed;
 
-        private Container m_Parent;
+        private Base m_Parent;
+
+        /// <summary>
+        /// This is the panel's actual parent - most likely the logical 
+        /// parent's InnerPanel (if it has one). You should rarely need this.
+        /// </summary>
+        private Base m_ActualParent;
+
+        /// <summary>
+        /// If the innerpanel exists our children will automatically become children of that 
+        /// instead of us - allowing us to move them all around by moving that panel (useful for scrolling etc).
+        /// </summary>
+        protected Base m_InnerPanel;
 
         private Base m_ToolTip;
+
+        private Skin.Base m_Skin;
 
         private Rectangle m_RenderBounds;
         private Rectangle m_InnerBounds;
@@ -67,7 +82,10 @@ namespace Gwen.Control
 
         private bool m_DrawDebugOutlines;
 
-
+        /// <summary>
+        /// Real list of children.
+        /// </summary>
+        private readonly List<Base> m_Children;
 
         /// <summary>
         /// Invoked when mouse pointer enters the control.
@@ -91,30 +109,46 @@ namespace Gwen.Control
 
         public const int MaxCoord = 4096; // added here from various places in code
 
-       
+        /// <summary>
+        /// Logical list of children. If InnerPanel is not null, returns InnerPanel's children.
+        /// </summary>
+        public List<Base> Children
+        {
+            get
+            {
+                if (m_InnerPanel != null)
+                    return m_InnerPanel.Children;
+                return m_Children;
+            }
+        }
 
         /// <summary>
         /// The logical parent. It's usually what you expect, the control you've parented it to.
         /// </summary>
-        public Container Parent
+        public Base Parent
         {
             get { return m_Parent; }
-            internal set
+            set
             {
-                if(m_Parent == value)
+                if (m_Parent == value)
                     return;
 
+                if (m_Parent != null)
+                {
+                    m_Parent.RemoveChild(this, false);
+                }
+
                 m_Parent = value;
+                m_ActualParent = null;
 
                 if (m_Parent != null)
-                    OnParentChange(m_Parent);
+                {
+                    m_Parent.AddChild(this);
+                }
             }
         }
 
-        public virtual void OnParentChange(Container parent)
-        {
-            
-        }
+        // todo: ParentChanged event?
 
         /// <summary>
         /// Dock position.
@@ -135,6 +169,22 @@ namespace Gwen.Control
         }
 
         /// <summary>
+        /// Current skin.
+        /// </summary>
+        public Skin.Base Skin
+        {
+            get
+            {
+                if (m_Skin != null)
+                    return m_Skin;
+                if (m_Parent != null)
+                    return m_Parent.Skin;
+
+                throw new InvalidOperationException("GetSkin: null");
+            }
+        }
+
+        /// <summary>
         /// Current tooltip.
         /// </summary>
         public Base ToolTip
@@ -145,7 +195,7 @@ namespace Gwen.Control
                 m_ToolTip = value;
                 if (m_ToolTip != null)
                 {
-                   // m_ToolTip.Parent = this;
+                    m_ToolTip.Parent = this;
                     m_ToolTip.IsHidden = true;
                 }
             }
@@ -206,7 +256,7 @@ namespace Gwen.Control
         /// <summary>
         ///  n.
         /// </summary>
-        public virtual bool IsOnTop { get { return this == Parent.Children.First(); } } // todo: validate
+        public virtual bool IsOnTop { get { return this == Parent.m_Children.First(); } } // todo: validate
 
         /// <summary>
         /// User data associated with the control.
@@ -346,12 +396,18 @@ namespace Gwen.Control
         /// <summary>
         /// Determines whether margin, padding and bounds outlines for the control will be drawn. Applied recursively to all children.
         /// </summary>
-        public virtual bool DrawDebugOutlines
+        public bool DrawDebugOutlines
         {
             get { return m_DrawDebugOutlines; }
             set
             {
+                if (m_DrawDebugOutlines == value)
+                    return;
                 m_DrawDebugOutlines = value;
+                foreach (Base child in Children)
+                {
+                    child.DrawDebugOutlines = value;
+                }
             }
         }
 
@@ -363,9 +419,12 @@ namespace Gwen.Control
         /// Initializes a new instance of the <see cref="Base"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Base()
+        public Base(Base parent = null)
         {
+            m_Children = new List<Base>();
             m_Accelerators = new Dictionary<string, GwenEventHandler>();
+
+            Parent = parent;
 
             m_Hidden = false;
             Bounds = new Rectangle(0, 0, 10, 10);
@@ -419,6 +478,11 @@ namespace Gwen.Control
             Gwen.ToolTip.ControlDeleted(this);
             Animation.Cancel(this);
 
+            foreach (Base child in m_Children)
+                child.Dispose();
+
+            m_Children.Clear();
+
             m_Disposed = true;
             GC.SuppressFinalize(this);
         }
@@ -441,8 +505,8 @@ namespace Gwen.Control
 
         public override string ToString()
         {
-           // if (this is MenuItem)
-           //     return "[MenuItem: " + (this as MenuItem).Text + "]";
+            if (this is MenuItem)
+                return "[MenuItem: " + (this as MenuItem).Text + "]";
             if (this is Label)
                 return "[Label: " + (this as Label).Text + "]";
             if (this is ControlInternal.Text)
@@ -518,17 +582,39 @@ namespace Gwen.Control
         /// <param name="text">Tooltip text.</param>
         public virtual void SetToolTipText(String text)
         {
-            Label tooltip = new Label();
+            Label tooltip = new Label(this);
             tooltip.AutoSizeToContents = true;
             tooltip.Text = text;
-            //tooltip.TextColorOverride = Skin.Colors.TooltipText;
+            tooltip.TextColorOverride = Skin.Colors.TooltipText;
             tooltip.Padding = new Padding(5, 3, 5, 3);
-            //tooltip.SizeToContents();
+            tooltip.SizeToContents();
 
             ToolTip = tooltip;
         }
 
-        
+        /// <summary>
+        /// Invalidates the control's children (relayout/repaint).
+        /// </summary>
+        /// <param name="recursive">Determines whether the operation should be carried recursively.</param>
+        protected virtual void InvalidateChildren(bool recursive = false)
+        {
+            foreach (Base child in m_Children)
+            {
+                child.Invalidate();
+                if (recursive)
+                    child.InvalidateChildren(true);
+            }
+
+            if (m_InnerPanel != null)
+            {
+                foreach (Base child in m_InnerPanel.m_Children)
+                {
+                    child.Invalidate();
+                    if (recursive)
+                        child.InvalidateChildren(true);
+                }
+            }
+        }
 
         /// <summary>
         /// Invalidates the control.
@@ -547,15 +633,15 @@ namespace Gwen.Control
         /// </summary>
         public virtual void SendToBack()
         {
-            if (m_Parent == null)
+            if (m_ActualParent == null)
                 return;
-            if (m_Parent.Children.Count == 0)
+            if (m_ActualParent.m_Children.Count == 0)
                 return;
-            if (m_Parent.Children.First() == this)
+            if (m_ActualParent.m_Children.First() == this)
                 return;
 
-            m_Parent.Children.Remove(this);
-            m_Parent.Children.Insert(0, this);
+            m_ActualParent.m_Children.Remove(this);
+            m_ActualParent.m_Children.Insert(0, this);
 
             InvalidateParent();
         }
@@ -565,27 +651,27 @@ namespace Gwen.Control
         /// </summary>
         public virtual void BringToFront()
         {
-            if (m_Parent == null)
+            if (m_ActualParent == null)
                 return;
-            if (m_Parent.Children.Last() == this)
+            if (m_ActualParent.m_Children.Last() == this)
                 return;
 
-            m_Parent.Children.Remove(this);
-            m_Parent.Children.Add(this);
+            m_ActualParent.m_Children.Remove(this);
+            m_ActualParent.m_Children.Add(this);
             InvalidateParent();
             Redraw();
         }
 
         public virtual void BringNextToControl(Base child, bool behind)
         {
-            if (null == m_Parent)
+            if (null == m_ActualParent)
                 return;
 
-            m_Parent.Children.Remove(this);
+            m_ActualParent.m_Children.Remove(this);
 
             // todo: validate
-            int idx = m_Parent.Children.IndexOf(child);
-            if (idx == m_Parent.Children.Count - 1)
+            int idx = m_ActualParent.m_Children.IndexOf(child);
+            if (idx == m_ActualParent.m_Children.Count - 1)
             {
                 BringToFront();
                 return;
@@ -595,18 +681,119 @@ namespace Gwen.Control
             {
                 ++idx;
 
-                if (idx == m_Parent.Children.Count - 1)
+                if (idx == m_ActualParent.m_Children.Count - 1)
                 {
                     BringToFront();
                     return;
                 }
             }
 
-            m_Parent.Children.Insert(idx, this);
+            m_ActualParent.m_Children.Insert(idx, this);
             InvalidateParent();
         }
 
-       
+        /// <summary>
+        /// Finds a child by name.
+        /// </summary>
+        /// <param name="name">Child name.</param>
+        /// <param name="recursive">Determines whether the search should be recursive.</param>
+        /// <returns>Found control or null.</returns>
+        public virtual Base FindChildByName(String name, bool recursive = false)
+        {
+            Base b = m_Children.Find(x => x.m_Name == name);
+            if (b != null)
+                return b;
+
+            if (recursive)
+            {
+                foreach (Base child in m_Children)
+                {
+                    b = child.FindChildByName(name, true);
+                    if (b != null)
+                        return b;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Attaches specified control as a child of this one.
+        /// </summary>
+        /// <remarks>
+        /// If InnerPanel is not null, it will become the parent.
+        /// </remarks>
+        /// <param name="child">Control to be added as a child.</param>
+        public virtual void AddChild(Base child)
+        {
+            if (m_InnerPanel != null)
+            {
+                m_InnerPanel.AddChild(child);
+                return;
+            }
+
+            m_Children.Add(child);
+            OnChildAdded(child);
+
+            child.m_ActualParent = this;
+        }
+
+        /// <summary>
+        /// Detaches specified control from this one.
+        /// </summary>
+        /// <param name="child">Child to be removed.</param>
+        /// <param name="dispose">Determines whether the child should be disposed (added to delayed delete queue).</param>
+        public virtual void RemoveChild(Base child, bool dispose)
+        {
+            // If we removed our innerpanel
+            // remove our pointer to it
+            if (m_InnerPanel == child)
+            {
+                m_Children.Remove(m_InnerPanel);
+                m_InnerPanel.DelayedDelete();
+                m_InnerPanel = null;
+                return;
+            }
+
+            if (m_InnerPanel != null && m_InnerPanel.Children.Contains(child))
+            {
+                m_InnerPanel.RemoveChild(child, dispose);
+                return;
+            }
+
+            m_Children.Remove(child);
+            OnChildRemoved(child);
+            
+            if (dispose)
+                child.DelayedDelete();
+        }
+
+        /// <summary>
+        /// Removes all children (and disposes them).
+        /// </summary>
+        public virtual void DeleteAllChildren()
+        {
+            // todo: probably shouldn't invalidate after each removal
+            while (m_Children.Count > 0)
+                RemoveChild(m_Children[0], true);
+        }
+
+        /// <summary>
+        /// Handler invoked when a child is added.
+        /// </summary>
+        /// <param name="child">Child added.</param>
+        protected virtual void OnChildAdded(Base child)
+        {
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Handler invoked when a child is removed.
+        /// </summary>
+        /// <param name="child">Child removed.</param>
+        protected virtual void OnChildRemoved(Base child)
+        {
+            Invalidate();
+        }
 
         /// <summary>
         /// Moves the control by a specific amount.
@@ -790,8 +977,12 @@ namespace Gwen.Control
         /// <summary>
         /// Handler invoked when control's scale changes.
         /// </summary>
-        public virtual void OnScaleChanged()
+        protected virtual void OnScaleChanged()
         {
+            foreach (Base child in m_Children)
+            {
+                child.OnScaleChanged();
+            }
         }
 
         /// <summary>
@@ -817,7 +1008,6 @@ namespace Gwen.Control
         /// <param name="master">Root parent.</param>
         protected virtual void DoCacheRender(Skin.Base skin, Base master)
         {
-            //todo: remove this?
             Renderer.Base render = skin.Renderer;
             Renderer.ICacheToTexture cache = render.CTT;
 
@@ -854,7 +1044,7 @@ namespace Gwen.Control
                 //render.RenderOffset = old;
                 //render.ClipRegion = old;
 
-                /*if (m_Children.Count > 0)
+                if (m_Children.Count > 0)
                 {
                     //Now render my kids
                     foreach (Base child in m_Children)
@@ -863,9 +1053,7 @@ namespace Gwen.Control
                             continue;
                         child.DoCacheRender(skin, master);
                     }
-                }*/
-
-                throw new NotImplementedException();
+                }
 
                 if (ShouldCacheToTexture)
                 {
@@ -888,6 +1076,11 @@ namespace Gwen.Control
         /// <param name="skin">Skin to use.</param>
         internal virtual void DoRender(Skin.Base skin)
         {
+            // If this control has a different skin, 
+            // then so does its children.
+            if (m_Skin != null)
+                skin = m_Skin;
+
             // Do think
             Think();
 
@@ -938,6 +1131,17 @@ namespace Gwen.Control
             //Render myself first
             Render(skin);
 
+            if (m_Children.Count > 0)
+            {
+                //Now render my kids
+                foreach (Base child in m_Children)
+                {
+                    if (child.IsHidden)
+                        continue;
+                    child.DoRender(skin);
+                }
+            }
+
             render.ClipRegion = oldRegion;
             render.StartClip();
             RenderOver(skin);
@@ -945,6 +1149,29 @@ namespace Gwen.Control
             RenderFocus(skin);
 
             render.RenderOffset = oldRenderOffset;
+        }
+
+        /// <summary>
+        /// Sets the control's skin.
+        /// </summary>
+        /// <param name="skin">New skin.</param>
+        /// <param name="doChildren">Deterines whether to change children skin.</param>
+        public virtual void SetSkin(Skin.Base skin, bool doChildren = false)
+        {
+            if (m_Skin == skin)
+                return;
+            m_Skin = skin;
+            Invalidate();
+            Redraw();
+            OnSkinChanged(skin);
+
+            if (doChildren)
+            {
+                foreach (Base child in m_Children)
+                {
+                    child.SetSkin(skin, true);
+                }
+            }
         }
 
         /// <summary>
@@ -962,8 +1189,8 @@ namespace Gwen.Control
         /// <param name="delta">Scroll delta.</param>
         protected virtual bool OnMouseWheeled(int delta)
         {
-            if (m_Parent != null)
-                return m_Parent.OnMouseWheeled(delta);
+            if (m_ActualParent != null)
+                return m_ActualParent.OnMouseWheeled(delta);
 
             return false;
         }
@@ -1160,6 +1387,35 @@ namespace Gwen.Control
         }
 
         /// <summary>
+        /// Gets a child by its coordinates.
+        /// </summary>
+        /// <param name="x">Child X.</param>
+        /// <param name="y">Child Y.</param>
+        /// <returns>Control or null if not found.</returns>
+        public virtual Base GetControlAt(int x, int y)
+        {
+            if (IsHidden)
+                return null;
+
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
+                return null;
+
+            // todo: convert to linq FindLast
+            var rev = ((IList<Base>)m_Children).Reverse(); // IList.Reverse creates new list, List.Reverse works in place.. go figure
+            foreach (Base child in rev)
+            {
+                Base found = child.GetControlAt(x - child.X, y - child.Y);
+                if (found != null)
+                    return found;
+            }
+
+            if (!MouseInputEnabled)
+                return null;
+
+            return this;
+        }
+
+        /// <summary>
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
@@ -1169,13 +1425,14 @@ namespace Gwen.Control
                 skin.Renderer.CTT.CreateControlCacheTexture(this);
         }
 
-        // TODO: remove layout from here
         /// <summary>
         /// Recursively lays out the control's interior according to alignment, margin, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         protected virtual void RecurseLayout(Skin.Base skin)
         {
+            if (m_Skin != null)
+                skin = m_Skin;
             if (IsHidden)
                 return;
 
@@ -1193,91 +1450,83 @@ namespace Gwen.Control
             bounds.Y += m_Padding.Top;
             bounds.Height -= m_Padding.Top + m_Padding.Bottom;
 
-            var container = this as Container;
-            if(container!=null)
+            foreach (Base child in m_Children)
             {
-                foreach (Base child in container.Children)
+                if (child.IsHidden)
+                    continue;
+
+                Pos dock = child.Dock;
+
+                if (0 != (dock & Pos.Fill))
+                    continue;
+
+                if (0 != (dock & Pos.Top))
                 {
-                    if (child.IsHidden)
-                        continue;
+                    Margin margin = child.Margin;
 
-                    Pos dock = child.Dock;
+                    child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
+                                    bounds.Width - margin.Left - margin.Right, child.Height);
 
-                    if (0 != (dock & Pos.Fill))
-                        continue;
-
-                    if (0 != (dock & Pos.Top))
-                    {
-                        Margin margin = child.Margin;
-
-                        child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
-                                        bounds.Width - margin.Left - margin.Right, child.Height);
-
-                        int height = margin.Top + margin.Bottom + child.Height;
-                        bounds.Y += height;
-                        bounds.Height -= height;
-                    }
-
-                    if (0 != (dock & Pos.Left))
-                    {
-                        Margin margin = child.Margin;
-
-                        child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top, child.Width,
-                                        bounds.Height - margin.Top - margin.Bottom);
-
-                        int width = margin.Left + margin.Right + child.Width;
-                        bounds.X += width;
-                        bounds.Width -= width;
-                    }
-
-                    if (0 != (dock & Pos.Right))
-                    {
-                        // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
-                        Margin margin = child.Margin;
-
-                        child.SetBounds((bounds.X + bounds.Width) - child.Width - margin.Right, bounds.Y + margin.Top,
-                                        child.Width, bounds.Height - margin.Top - margin.Bottom);
-
-                        int width = margin.Left + margin.Right + child.Width;
-                        bounds.Width -= width;
-                    }
-
-                    if (0 != (dock & Pos.Bottom))
-                    {
-                        // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
-                        Margin margin = child.Margin;
-
-                        child.SetBounds(bounds.X + margin.Left,
-                                        (bounds.Y + bounds.Height) - child.Height - margin.Bottom,
-                                        bounds.Width - margin.Left - margin.Right, child.Height);
-                        bounds.Height -= child.Height + margin.Bottom + margin.Top;
-                    }
-
-                    child.RecurseLayout(skin);
+                    int height = margin.Top + margin.Bottom + child.Height;
+                    bounds.Y += height;
+                    bounds.Height -= height;
                 }
+
+                if (0 != (dock & Pos.Left))
+                {
+                    Margin margin = child.Margin;
+
+                    child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top, child.Width,
+                                      bounds.Height - margin.Top - margin.Bottom);
+
+                    int width = margin.Left + margin.Right + child.Width;
+                    bounds.X += width;
+                    bounds.Width -= width;
+                }
+
+                if (0 != (dock & Pos.Right))
+                {
+                    // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
+                    Margin margin = child.Margin;
+
+                    child.SetBounds((bounds.X + bounds.Width) - child.Width - margin.Right, bounds.Y + margin.Top,
+                                      child.Width, bounds.Height - margin.Top - margin.Bottom);
+
+                    int width = margin.Left + margin.Right + child.Width;
+                    bounds.Width -= width;
+                }
+
+                if (0 != (dock & Pos.Bottom))
+                {
+                    // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
+                    Margin margin = child.Margin;
+
+                    child.SetBounds(bounds.X + margin.Left,
+                                      (bounds.Y + bounds.Height) - child.Height - margin.Bottom,
+                                      bounds.Width - margin.Left - margin.Right, child.Height);
+                    bounds.Height -= child.Height + margin.Bottom + margin.Top;
+                }
+
+                child.RecurseLayout(skin);
             }
 
             m_InnerBounds = bounds;
 
-            if(container!=null)
+            //
+            // Fill uses the left over space, so do that now.
+            //
+            foreach (Base child in m_Children)
             {
-                //
-                // Fill uses the left over space, so do that now.
-                //
-                foreach (Base child in container.Children)
-                {
-                    Pos dock = child.Dock;
+                Pos dock = child.Dock;
 
-                    if (0 == (dock & Pos.Fill))
-                        continue;
+                if (!(0 != (dock & Pos.Fill)))
+                    continue;
 
-                    Margin margin = child.Margin;
+                Margin margin = child.Margin;
 
-                    child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
-                                    bounds.Width - margin.Left - margin.Right,
-                                    bounds.Height - margin.Top - margin.Bottom);
-                    child.RecurseLayout(skin);
-                }
+                child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
+                                  bounds.Width - margin.Left - margin.Right, bounds.Height - margin.Top - margin.Bottom);
+                child.RecurseLayout(skin);
             }
 
             PostLayout(skin);
@@ -1296,7 +1545,15 @@ namespace Gwen.Control
             }
         }
 
-        
+        /// <summary>
+        /// Checks if the given control is a child of this instance.
+        /// </summary>
+        /// <param name="child">Control to examine.</param>
+        /// <returns>True if the control is out child.</returns>
+        public bool IsChild(Base child)
+        {
+            return m_Children.Contains(child);
+        }
 
         /// <summary>
         /// Converts local coordinates to canvas coordinates.
@@ -1309,6 +1566,15 @@ namespace Gwen.Control
             {
                 int x = pnt.X + X;
                 int y = pnt.Y + Y;
+
+                // If our parent has an innerpanel and we're a child of it
+                // add its offset onto us.
+                //
+                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
+                {
+                    x += m_Parent.m_InnerPanel.X;
+                    y += m_Parent.m_InnerPanel.Y;
+                }
 
                 return m_Parent.LocalPosToCanvas(new Point(x, y));
             }
@@ -1328,6 +1594,16 @@ namespace Gwen.Control
                 int x = pnt.X - X;
                 int y = pnt.Y - Y;
 
+                // If our parent has an innerpanel and we're a child of it
+                // add its offset onto us.
+                //
+                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
+                {
+                    x -= m_Parent.m_InnerPanel.X;
+                    y -= m_Parent.m_InnerPanel.Y;
+                }
+
+
                 return m_Parent.CanvasPosToLocal(new Point(x, y));
             }
 
@@ -1342,14 +1618,10 @@ namespace Gwen.Control
             //Debug.Print("Base.CloseMenus: {0}", this);
 
             // todo: not very efficient with the copying and recursive closing, maybe store currently open menus somewhere (canvas)?
-             var container = this as Container;
-            if(container!=null)
+            var childrenCopy = m_Children.FindAll(x => true);
+            foreach (Base child in childrenCopy)
             {
-                var childrenCopy = container.Children.FindAll(x => true);
-                foreach (Base child in childrenCopy)
-                {
-                    child.CloseMenus();
-                }
+                child.CloseMenus();
             }
         }
 
@@ -1378,8 +1650,6 @@ namespace Gwen.Control
         public event Func<Base, Package, int, int,bool> DragAndDropHandleDrop;
 
 
-
-        //TODO refactor drag and drop
         // giver
         public virtual Package DragAndDrop_GetPackage(int x, int y)
         {
@@ -1430,7 +1700,7 @@ namespace Gwen.Control
         {
             if (DragAndDropHandleDrop != null)
                 return DragAndDropHandleDrop.Invoke(this,p,x,y);
-            //DragAndDrop.SourceControl.Parent = this;
+            DragAndDrop.SourceControl.Parent = this;
             return true;
         }
 
@@ -1461,13 +1731,48 @@ namespace Gwen.Control
         }
 
         /// <summary>
+        /// Resizes the control to fit its children.
+        /// </summary>
+        /// <param name="width">Determines whether to change control's width.</param>
+        /// <param name="height">Determines whether to change control's height.</param>
+        /// <returns>True if bounds changed.</returns>
+        public virtual bool SizeToChildren(bool width = true, bool height = true)
+        {
+            Point size = GetChildrenSize();
+            size.X += Padding.Right;
+            size.Y += Padding.Bottom;
+            return SetSize(width ? size.X : Width, height ? size.Y : Height);
+        }
+
+        /// <summary>
+        /// Returns the total width and height of all children.
+        /// </summary>
+        /// <remarks>Default implementation returns maximum size of children since the layout is unknown.
+        /// Implement this in derived compound controls to properly return their size.</remarks>
+        /// <returns></returns>
+        public virtual Point GetChildrenSize()
+        {
+            Point size = Point.Empty;
+
+            foreach (Base child in m_Children)
+            {
+                if (child.IsHidden)
+                    continue;
+
+                size.X = Math.Max(size.X, child.Right);
+                size.Y = Math.Max(size.Y, child.Bottom);
+            }
+
+            return size;
+        }
+
+        /// <summary>
         /// Handles keyboard accelerator.
         /// </summary>
         /// <param name="accelerator">Accelerator text.</param>
         /// <returns>True if handled.</returns>
         internal virtual bool HandleAccelerator(String accelerator)
         {
-            //todo refactor input handler
             if (InputHandler.Instance.KeyboardFocus == this || !AccelOnlyFocus)
             {
                 if (m_Accelerators.ContainsKey(accelerator))
@@ -1477,12 +1782,7 @@ namespace Gwen.Control
                 }
             }
 
-            // hack
-            var container = this as Container;
-            if(container!=null)
-                return container.Children.Any(child => child.HandleAccelerator(accelerator));
-
-            return false;
+            return m_Children.Any(child => child.HandleAccelerator(accelerator));
         }
 
         /// <summary>
