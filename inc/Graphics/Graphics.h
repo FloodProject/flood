@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Graphics/API.h"
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//

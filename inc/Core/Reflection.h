@@ -8,7 +8,8 @@
 #pragma once
 
 #include "Core/API.h"
-#include "Core/Serialization.h"
+#include "Core/String.h"
+#include <map>
 
 NAMESPACE_CORE_BEGIN
 
@@ -39,6 +40,11 @@ enum struct TypeKind : uint8
 	Composite,
 	Enumeration,
 };
+
+struct ReflectionContext;
+enum struct ReflectionWalkType : uint8;
+
+typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType);
 
 struct API_CORE Type
 {

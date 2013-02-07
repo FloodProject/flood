@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "Graphics/API.h"
+#include "Core/References.h"
+
 FWD_DECL_INTRUSIVE(ShaderProgram)
 
 NAMESPACE_GRAPHICS_BEGIN

@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Scene/SceneLoader.h"
+#include "Core/Serialization.h"
 
 NAMESPACE_ENGINE_BEGIN
 

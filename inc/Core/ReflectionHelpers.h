@@ -8,6 +8,9 @@
 #pragma once
 
 #include "Core/Memory.h"
+#include "Core/Reflection.h"
+#include "Core/Math/Color.h"
+#include "Core/Math/Quaternion.h"
 
 NAMESPACE_CORE_BEGIN
 

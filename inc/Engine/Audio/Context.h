@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "Engine/API.h"
+#include "Core/References.h"
+
 #ifdef ENABLE_AUDIO_OPENAL
 
 #include "Core/Math/Vector.h"

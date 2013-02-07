@@ -14,7 +14,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Stream* StreamCreateFromURI(Allocator*, const Path&)
+Stream* StreamCreateFromURI(Allocator*, const Path&, StreamOpenMode)
 {
 	assert("TODO: Creating URIs from schemes");
 	return nullptr;

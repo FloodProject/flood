@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/Handle.h"
+#include "Core/Reflection.h"
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
@@ -64,9 +65,6 @@ API_CORE void ReflectionWalkComposite(ReflectionContext*);
 
 // Walks the composite object field.
 API_CORE void ReflectionWalkCompositeField(ReflectionContext*);
-
-// Walking functions
-typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType);
 
 //-----------------------------------//
 

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <cfloat>
 #include "Core/Math/Vector.h"
+#include <cfloat>
 
 NAMESPACE_EXTERN_BEGIN
 
