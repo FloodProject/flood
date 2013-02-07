@@ -76,8 +76,8 @@ namespace Flood.Editor
 
         private static IProjectManagerImpl.Client InitializeClient()
         {
-            TTransport transport = new TSocket("localhost", Settings.RPCPort);
-            Serializer protocol = new BinaryProtocol(transport);
+            var transport = new TSocket("localhost", Settings.RPCPort);
+            var protocol = new BinaryProtocol(transport);
             var client = new IProjectManagerImpl.Client(protocol);
 
             for (var i = 0; i < Settings.MaxRetries; i++)
