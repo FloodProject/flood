@@ -20,10 +20,19 @@ namespace Flood
 
     public value struct Vector3P
     {
+    public:
+        Vector3P(::Vector3P* native);
+        Vector3P(System::IntPtr native);
+        float X;
+        float Y;
+        float Z;
     };
 
     public value struct Vector3
     {
+    public:
+        Vector3(::Vector3* native);
+        Vector3(System::IntPtr native);
         Vector3(float v);
         Vector3(float a, float b, float c);
         bool operator==(Flood::Vector3 v);
@@ -54,6 +63,13 @@ namespace Flood
 
     public value struct Vector4
     {
+    public:
+        Vector4(::Vector4* native);
+        Vector4(System::IntPtr native);
+        float X;
+        float Y;
+        float Z;
+        float W;
         Vector4(float v);
         Vector4(float a, float b, float c, float d);
         Vector4(Flood::Vector3 v, float d);
@@ -76,10 +92,18 @@ namespace Flood
 
     public value struct Vector2P
     {
+    public:
+        Vector2P(::Vector2P* native);
+        Vector2P(System::IntPtr native);
+        float X;
+        float Y;
     };
 
     public value struct Vector2
     {
+    public:
+        Vector2(::Vector2* native);
+        Vector2(System::IntPtr native);
         Vector2(float x, float y);
         bool operator==(Flood::Vector2 v);
         bool operator!=(Flood::Vector2 v);
@@ -97,6 +121,11 @@ namespace Flood
 
     public value struct Vector2i
     {
+    public:
+        Vector2i(::Vector2i* native);
+        Vector2i(System::IntPtr native);
+        int X;
+        int Y;
         Vector2i(int x, int y);
         bool operator==(Flood::Vector2i v);
         bool operator!=(Flood::Vector2i v);
@@ -112,4 +141,3 @@ namespace Flood
         void Zero();
     };
 }
-

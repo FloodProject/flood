@@ -5,46 +5,61 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "Extension.h"
+#include "Reflection.h"
+#include "Memory.h"
+#include "Serialization.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
+
+Flood::ExtensionMetadata::ExtensionMetadata(::ExtensionMetadata* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::ExtensionMetadata::ExtensionMetadata(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
 
 Flood::Extension::Extension(::Extension* native)
 {
     NativePtr = native;
 }
 
-Flood::Extension::Extension()
+Flood::Extension::Extension(System::IntPtr native)
 {
+    NativePtr = (::Extension*)native.ToPointer();
 }
 
 Flood::Class^ Flood::Extension::GetType()
 {
-    return nullptr;
+    auto ret = NativePtr->getType();
+    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::Extension::GetStaticType()
 {
-    return nullptr;
+    auto ret = NativePtr->getStaticType();
+    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ExtensionMetadata Flood::Extension::GetMetadata()
 {
-    return ExtensionMetadata();
+    auto ret = NativePtr->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
 void Flood::Extension::OnInit()
 {
+    NativePtr->onInit();
 }
 
 void Flood::Extension::OnCleanup()
 {
+    NativePtr->onCleanup();
 }
-
-Flood::Class^ Flood::FloodExtension::ExtensionGetType()
-{
-    return nullptr;
-}
-
 

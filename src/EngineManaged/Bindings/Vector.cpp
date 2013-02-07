@@ -5,10 +5,32 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
+
+Flood::Vector3P::Vector3P(::Vector3P* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector3P::Vector3P(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector3::Vector3(::Vector3* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector3::Vector3(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
 
 Flood::Vector3::Vector3(float v)
 {
@@ -20,121 +42,209 @@ Flood::Vector3::Vector3(float a, float b, float c)
 
 bool Flood::Vector3::operator==(Flood::Vector3 v)
 {
-    return false;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator==(arg0);
+    return ret;
 }
 
 bool Flood::Vector3::operator!=(Flood::Vector3 v)
 {
-    return false;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator!=(arg0);
+    return ret;
 }
 
 bool Flood::Vector3::operator<(Flood::Vector3 rhs)
 {
-    return false;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator<(arg0);
+    return ret;
 }
 
 bool Flood::Vector3::operator>(Flood::Vector3 rhs)
 {
-    return false;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator>(arg0);
+    return ret;
 }
 
 Flood::Vector3 Flood::Vector3::operator+(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator+=(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+=(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator-()
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->operator-();
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator-(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator-=(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-=(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator*(float s)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->operator*(s);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator*(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator*(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator*=(float s)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->operator*=(s);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator/(float s)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->operator/(s);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::operator/=(float s)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->operator/=(s);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 void Flood::Vector3::Zero()
 {
+    auto this0 = (::Vector3*) 0;
+    this0->zero();
 }
 
 float Flood::Vector3::Length()
 {
-    return 0.0f;
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->length();
+    return ret;
 }
 
 float Flood::Vector3::LengthSquared()
 {
-    return 0.0f;
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->lengthSquared();
+    return ret;
 }
 
 float Flood::Vector3::Dot(Flood::Vector3 v)
 {
-    return 0.0f;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->dot(arg0);
+    return ret;
 }
 
 Flood::Vector3 Flood::Vector3::Cross(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->cross(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 float Flood::Vector3::Distance(Flood::Vector3 v)
 {
-    return 0.0f;
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->distance(arg0);
+    return ret;
 }
 
 Flood::Vector3 Flood::Vector3::Project(Flood::Vector3 v)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->project(arg0);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::Lerp(Flood::Vector3 vec, float blend)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&vec;
+    auto arg0 = *_arg0;
+    auto ret = this0->lerp(arg0, blend);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::Serp(Flood::Vector3 vec, float t)
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto _arg0 = (::Vector3*)&vec;
+    auto arg0 = *_arg0;
+    auto ret = this0->serp(arg0, t);
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector3 Flood::Vector3::Normalize()
 {
-    return Vector3();
+    auto this0 = (::Vector3*) 0;
+    auto ret = this0->normalize();
+    return Flood::Vector3((::Vector3*)&ret);
+}
+
+Flood::Vector4::Vector4(::Vector4* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector4::Vector4(System::IntPtr native)
+{
+    // TODO: Struct marshaling
 }
 
 Flood::Vector4::Vector4(float v)
@@ -151,76 +261,144 @@ Flood::Vector4::Vector4(Flood::Vector3 v, float d)
 
 bool Flood::Vector4::operator==(Flood::Vector4 v)
 {
-    return false;
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator==(arg0);
+    return ret;
 }
 
 bool Flood::Vector4::operator!=(Flood::Vector4 v)
 {
-    return false;
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator!=(arg0);
+    return ret;
 }
 
 bool Flood::Vector4::operator<(Flood::Vector4 rhs)
 {
-    return false;
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator<(arg0);
+    return ret;
 }
 
 bool Flood::Vector4::operator>(Flood::Vector4 rhs)
 {
-    return false;
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator>(arg0);
+    return ret;
 }
 
 Flood::Vector4 Flood::Vector4::operator+(Flood::Vector4 v)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+(arg0);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator+=(Flood::Vector4 v)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+=(arg0);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator-()
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto ret = this0->operator-();
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator-(Flood::Vector4 v)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-(arg0);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator-=(Flood::Vector4 v)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-=(arg0);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator*(float s)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto ret = this0->operator*(s);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator*(Flood::Vector4 v)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto _arg0 = (::Vector4*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator*(arg0);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator*=(float s)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto ret = this0->operator*=(s);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator/(float s)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto ret = this0->operator/(s);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Vector4 Flood::Vector4::operator/=(float s)
 {
-    return Vector4();
+    auto this0 = (::Vector4*) 0;
+    auto ret = this0->operator/=(s);
+    return Flood::Vector4((::Vector4*)&ret);
 }
 
 void Flood::Vector4::Zero()
 {
+    auto this0 = (::Vector4*) 0;
+    this0->zero();
+}
+
+Flood::Vector2P::Vector2P(::Vector2P* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector2P::Vector2P(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector2::Vector2(::Vector2* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector2::Vector2(System::IntPtr native)
+{
+    // TODO: Struct marshaling
 }
 
 Flood::Vector2::Vector2(float x, float y)
@@ -229,61 +407,111 @@ Flood::Vector2::Vector2(float x, float y)
 
 bool Flood::Vector2::operator==(Flood::Vector2 v)
 {
-    return false;
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator==(arg0);
+    return ret;
 }
 
 bool Flood::Vector2::operator!=(Flood::Vector2 v)
 {
-    return false;
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator!=(arg0);
+    return ret;
 }
 
 bool Flood::Vector2::operator<(Flood::Vector2 rhs)
 {
-    return false;
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator<(arg0);
+    return ret;
 }
 
 bool Flood::Vector2::operator>(Flood::Vector2 rhs)
 {
-    return false;
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator>(arg0);
+    return ret;
 }
 
 Flood::Vector2 Flood::Vector2::operator+(Flood::Vector2 v)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+(arg0);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator+=(Flood::Vector2 v)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+=(arg0);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator-()
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto ret = this0->operator-();
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator-(Flood::Vector2 v)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-(arg0);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator-=(Flood::Vector2 v)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto _arg0 = (::Vector2*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-=(arg0);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator*(float s)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto ret = this0->operator*(s);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 Flood::Vector2 Flood::Vector2::operator/(int s)
 {
-    return Vector2();
+    auto this0 = (::Vector2*) 0;
+    auto ret = this0->operator/(s);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 void Flood::Vector2::Zero()
 {
+    auto this0 = (::Vector2*) 0;
+    this0->zero();
+}
+
+Flood::Vector2i::Vector2i(::Vector2i* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Vector2i::Vector2i(System::IntPtr native)
+{
+    // TODO: Struct marshaling
 }
 
 Flood::Vector2i::Vector2i(int x, int y)
@@ -292,61 +520,101 @@ Flood::Vector2i::Vector2i(int x, int y)
 
 bool Flood::Vector2i::operator==(Flood::Vector2i v)
 {
-    return false;
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator==(arg0);
+    return ret;
 }
 
 bool Flood::Vector2i::operator!=(Flood::Vector2i v)
 {
-    return false;
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator!=(arg0);
+    return ret;
 }
 
 bool Flood::Vector2i::operator<(Flood::Vector2i rhs)
 {
-    return false;
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator<(arg0);
+    return ret;
 }
 
 bool Flood::Vector2i::operator>(Flood::Vector2i rhs)
 {
-    return false;
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&rhs;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator>(arg0);
+    return ret;
 }
 
 Flood::Vector2i Flood::Vector2i::operator+(Flood::Vector2i v)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+(arg0);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator+=(Flood::Vector2i v)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator+=(arg0);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator-()
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto ret = this0->operator-();
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator-(Flood::Vector2i v)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-(arg0);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator-=(Flood::Vector2i v)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto _arg0 = (::Vector2i*)&v;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator-=(arg0);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator*(int s)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto arg0 = (int32)s;
+    auto ret = this0->operator*(arg0);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 Flood::Vector2i Flood::Vector2i::operator/(int s)
 {
-    return Vector2i();
+    auto this0 = (::Vector2i*) 0;
+    auto ret = this0->operator/(s);
+    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 void Flood::Vector2i::Zero()
 {
+    auto this0 = (::Vector2i*) 0;
+    this0->zero();
 }
-
 

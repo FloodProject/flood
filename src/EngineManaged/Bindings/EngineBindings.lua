@@ -19,7 +19,15 @@ project "EngineBindings"
 	--vpaths
 	--{
 	--	["*"] = { "../src/EngineManaged/" },
-	--}		
+	--}
+
+	links
+	{
+		"Core",
+		"Resources",
+		"Engine",
+		"Graphics"
+	}
 	
 	includedirs
 	{

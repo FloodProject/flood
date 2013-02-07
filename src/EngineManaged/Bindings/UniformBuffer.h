@@ -1,0 +1,75 @@
+/************************************************************************
+*
+* Flood Project © (2008-201x)
+* Licensed under the simplified BSD license. All rights reserved.
+*
+************************************************************************/
+
+#pragma once
+
+#include <Graphics/UniformBuffer.h>
+
+namespace Flood
+{
+    enum struct UniformDataType : unsigned char;
+    ref class UniformBufferElement;
+    ref class UniformBuffer;
+    value struct Vector3;
+    ref class Matrix4x3;
+    value struct Matrix4x4;
+    value struct Vector4;
+    ref class RefPtr;
+
+    public enum struct UniformDataType : unsigned char
+    {
+        Scalar_F = 0,
+        Scalar_I = 1,
+        Vector2_F = 2,
+        Vector3_F = 3,
+        Matrix2_F = 4,
+        Matrix3_F = 5,
+        Matrix4_F = 6,
+        Matrix2x3_F = 7,
+        Matrix3x2_F = 8,
+        Matrix2x4_F = 9,
+        Matrix4x2_F = 10,
+        Matrix3x4_F = 11,
+        Matrix4x3_F = 12
+    };
+
+    /// <summary>
+    /// Uniforms are named constants that can be set in programs. These are
+    /// allocated from a special frame bump allocator, that frees all the memory
+    /// when the frame ends.
+    /// </summary>
+    public ref class UniformBufferElement
+    {
+    public:
+        property ::UniformBufferElement* NativePtr;
+
+        UniformBufferElement(::UniformBufferElement* native);
+        UniformBufferElement(System::IntPtr native);
+        property System::String^ Name;
+        property Flood::UniformDataType Type;
+        property unsigned short Count;
+        property cli::array<unsigned char>^ Data;
+    };
+
+    /// <summary>
+    /// Represents a uniform buffer.
+    /// </summary>
+    public ref class UniformBuffer
+    {
+    public:
+        property ::UniformBuffer* NativePtr;
+
+        UniformBuffer(::UniformBuffer* native);
+        UniformBuffer(System::IntPtr native);
+        Flood::UniformBufferElement^ GetElement(System::String^ name, unsigned int size);
+        void RemoveUniform(System::String^ slot);
+        void SetUniform(System::String^ slot, int data);
+        void SetUniform(System::String^ slot, float value);
+        void SetUniform(System::String^ slot, Flood::Vector3 vec);
+        void SetUniform(System::String^ slot, Flood::Matrix4x4 _196);
+    };
+}

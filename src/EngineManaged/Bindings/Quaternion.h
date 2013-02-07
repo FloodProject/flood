@@ -21,10 +21,20 @@ namespace Flood
     /// </summary>
     public value struct QuaternionP
     {
+    public:
+        QuaternionP(::QuaternionP* native);
+        QuaternionP(System::IntPtr native);
+        float X;
+        float Y;
+        float Z;
+        float W;
     };
 
     public value struct Quaternion
     {
+    public:
+        Quaternion(::Quaternion* native);
+        Quaternion(System::IntPtr native);
         Quaternion(float u);
         Quaternion(float a, float b, float c, float d);
         Quaternion(Flood::EulerAngles angles);
@@ -48,4 +58,3 @@ namespace Flood
         Flood::Quaternion Slerp(Flood::Quaternion q, float t);
     };
 }
-

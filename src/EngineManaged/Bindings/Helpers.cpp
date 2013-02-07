@@ -5,49 +5,58 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "Helpers.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
 
 bool Flood::FloodHelpers::MathFloatCompare(float a, float b)
 {
-    return false;
+    auto ret = ::MathFloatCompare(a, b);
+    return ret;
 }
 
 float Flood::FloodHelpers::MathFloatRandom(float min, float max)
 {
-    return 0.0f;
+    auto ret = ::MathFloatRandom(min, max);
+    return ret;
 }
 
 float Flood::FloodHelpers::MathLogBase(float base, float value)
 {
-    return 0.0f;
+    auto ret = ::MathLogBase(base, value);
+    return ret;
 }
 
 float Flood::FloodHelpers::MathDegreeToRadian(float degree)
 {
-    return 0.0f;
+    auto ret = ::MathDegreeToRadian(degree);
+    return ret;
 }
 
 float Flood::FloodHelpers::MathRadianToDegree(float radian)
 {
-    return 0.0f;
+    auto ret = ::MathRadianToDegree(radian);
+    return ret;
 }
 
 float Flood::FloodHelpers::InterpolateLinear(float a, float b, float t)
 {
-    return 0.0f;
+    auto ret = ::InterpolateLinear(a, b, t);
+    return ret;
 }
 
 float Flood::FloodHelpers::InterpolateCosine(float a, float b, float t)
 {
-    return 0.0f;
+    auto ret = ::InterpolateCosine(a, b, t);
+    return ret;
 }
 
 float Flood::FloodHelpers::InterpolateCubic(float a, float b, float t)
 {
-    return 0.0f;
+    auto ret = ::InterpolateCubic(a, b, t);
+    return ret;
 }
-
 

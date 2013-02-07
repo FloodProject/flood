@@ -13,12 +13,15 @@ namespace Flood
 {
     enum struct LogLevel;
     ref class Log;
-    ref class Allocator;
-    value struct LogEntry;
     ref class Timer;
     ref class Mutex;
-    ref class Mutex;
     ref class Event1;
+    ref class Delegate0;
+    ref class ClosurePtr;
+    ref class GenericClass;
+    ref class DelegateMemento;
+    ref class Allocator;
+    value struct LogEntry;
 
     public enum struct LogLevel
     {
@@ -29,37 +32,36 @@ namespace Flood
         Assert = 4
     };
 
-    delegate void LogFunction(Flood::LogEntry);
+    public delegate void LogFunction(Flood::LogEntry);
 
     public value struct LogEntry
     {
+    public:
+        LogEntry(::LogEntry* native);
+        LogEntry(System::IntPtr native);
+        float Time;
+        System::String^ Message;
+        Flood::LogLevel Level;
     };
-
-
 
     public ref class Log
     {
+    public:
         property ::Log* NativePtr;
 
-    public:
         Log(::Log* native);
+        Log(System::IntPtr native);
         Log();
-    };
-
-    public ref class FloodLog
-    {
-    public:
-        static void LogDestroy (Flood::Log^ _122);
-        static void LogAddHandler (Flood::Log^ _123, System::Action<Flood::LogEntry>^ _124);
-        static void LogRemoveHandler (Flood::Log^ _125, System::Action<Flood::LogEntry>^ _126);
-        static void LogWrite (Flood::Log^ _127, Flood::LogEntry entry);
-        static Flood::Log^ LogGetDefault ();
-        static void LogSetDefault (Flood::Log^ _128);
-        static void LogInfo (System::String^ msg);
-        static void LogWarn (System::String^ msg);
-        static void LogError (System::String^ msg);
-        static void LogDebug (System::String^ msg);
-        static void LogAssert (System::String^ msg);
+        void Destroy();
+        void AddHandler(Flood::LogFunction^ _4);
+        void RemoveHandler(Flood::LogFunction^ _6);
+        void Write(Flood::LogEntry entry);
+        void SetDefault();
+        static Flood::Log^ GetDefault();
+        static void Info(System::String^ msg);
+        static void Warn(System::String^ msg);
+        static void Error(System::String^ msg);
+        static void Debug(System::String^ msg);
+        static void Assert(System::String^ msg);
     };
 }
-

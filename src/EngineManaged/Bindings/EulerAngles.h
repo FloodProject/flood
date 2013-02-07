@@ -20,11 +20,16 @@ namespace Flood
     /// </summary>
     public value struct EulerAngles
     {
+    public:
+        EulerAngles(::EulerAngles* native);
+        EulerAngles(System::IntPtr native);
+        float X;
+        float Y;
+        float Z;
         EulerAngles(float x, float y, float z);
-        Flood::EulerAngles operator+=(Flood::EulerAngles);
-        Flood::EulerAngles operator+=(Flood::Vector3);
+        Flood::EulerAngles operator+=(Flood::EulerAngles _64);
+        Flood::EulerAngles operator+=(Flood::Vector3 _65);
         void Rotate(float x, float y, float z);
         void Identity();
     };
 }
-

@@ -5,12 +5,34 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "Quaternion.h"
 #include "EulerAngles.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
+
+Flood::QuaternionP::QuaternionP(::QuaternionP* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::QuaternionP::QuaternionP(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Quaternion::Quaternion(::Quaternion* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::Quaternion::Quaternion(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
 
 Flood::Quaternion::Quaternion(float u)
 {
@@ -26,86 +48,137 @@ Flood::Quaternion::Quaternion(Flood::EulerAngles angles)
 
 bool Flood::Quaternion::operator==(Flood::Quaternion q)
 {
-    return false;
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&q;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator==(arg0);
+    return ret;
 }
 
 bool Flood::Quaternion::operator!=(Flood::Quaternion q)
 {
-    return false;
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&q;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator!=(arg0);
+    return ret;
 }
 
 void Flood::Quaternion::Identity()
 {
+    auto this0 = (::Quaternion*) 0;
+    this0->identity();
 }
 
 Flood::Quaternion Flood::Quaternion::Conjugate(Flood::Quaternion q)
 {
-    return Quaternion();
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&q;
+    auto arg0 = *_arg0;
+    auto ret = this0->conjugate(arg0);
+    return Flood::Quaternion((::Quaternion*)&ret);
 }
 
 Flood::Quaternion Flood::Quaternion::operator*(Flood::Quaternion a)
 {
-    return Quaternion();
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&a;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator*(arg0);
+    return Flood::Quaternion((::Quaternion*)&ret);
 }
 
 Flood::Quaternion Flood::Quaternion::operator*=(Flood::Quaternion a)
 {
-    return Quaternion();
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&a;
+    auto arg0 = *_arg0;
+    auto ret = this0->operator*=(arg0);
+    return Flood::Quaternion((::Quaternion*)&ret);
 }
 
 float Flood::Quaternion::Magnitude()
 {
-    return 0.0f;
+    auto this0 = (::Quaternion*) 0;
+    auto ret = this0->magnitude();
+    return ret;
 }
 
 void Flood::Quaternion::Normalize()
 {
+    auto this0 = (::Quaternion*) 0;
+    this0->normalize();
 }
 
 void Flood::Quaternion::SetToRotateAboutX(float theta)
 {
+    auto this0 = (::Quaternion*) 0;
+    this0->setToRotateAboutX(theta);
 }
 
 void Flood::Quaternion::SetToRotateAboutY(float theta)
 {
+    auto this0 = (::Quaternion*) 0;
+    this0->setToRotateAboutY(theta);
 }
 
 void Flood::Quaternion::SetToRotateAboutZ(float theta)
 {
+    auto this0 = (::Quaternion*) 0;
+    this0->setToRotateAboutZ(theta);
 }
 
 void Flood::Quaternion::SetToRotateAboutAxis(Flood::Vector3 axis, float theta)
 {
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Vector3*)&axis;
+    auto arg0 = *_arg0;
+    this0->setToRotateAboutAxis(arg0, theta);
 }
 
 float Flood::Quaternion::SafeAcos(float x)
 {
-    return 0.0f;
+    auto this0 = (::Quaternion*) 0;
+    auto ret = this0->safeAcos(x);
+    return ret;
 }
 
 float Flood::Quaternion::GetRotationAngle()
 {
-    return 0.0f;
+    auto this0 = (::Quaternion*) 0;
+    auto ret = this0->getRotationAngle();
+    return ret;
 }
 
 Flood::Vector3 Flood::Quaternion::GetRotationAxis()
 {
-    return Vector3();
+    auto this0 = (::Quaternion*) 0;
+    auto ret = this0->getRotationAxis();
+    return Flood::Vector3((::Vector3*)&ret);
 }
 
 float Flood::Quaternion::Dot(Flood::Quaternion a)
 {
-    return 0.0f;
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&a;
+    auto arg0 = *_arg0;
+    auto ret = this0->dot(arg0);
+    return ret;
 }
 
 Flood::EulerAngles Flood::Quaternion::GetEulerAngles()
 {
-    return EulerAngles();
+    auto this0 = (::Quaternion*) 0;
+    auto ret = this0->getEulerAngles();
+    return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 
 Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
 {
-    return Quaternion();
+    auto this0 = (::Quaternion*) 0;
+    auto _arg0 = (::Quaternion*)&q;
+    auto arg0 = *_arg0;
+    auto ret = this0->slerp(arg0, t);
+    return Flood::Quaternion((::Quaternion*)&ret);
 }
-
 

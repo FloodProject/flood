@@ -5,30 +5,66 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "ResourceLoader.h"
+#include "Reflection.h"
+#include "Memory.h"
+#include "Serialization.h"
 #include "Stream.h"
-#include "Extension.h"
 #include "Resource.h"
+#include "Extension.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
+
+Flood::ResourceLoadOption::ResourceLoadOption(::ResourceLoadOption* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
+
+void Flood::ResourceLoadOptions::AddOption(int key, int value)
+{
+    auto this0 = (::ResourceLoadOptions*) 0;
+    this0->addOption(key, value);
+}
 
 Flood::ResourceStream::ResourceStream(::ResourceStream* native)
 {
     NativePtr = native;
 }
 
-Flood::ResourceStream::ResourceStream()
+Flood::ResourceStream::ResourceStream(System::IntPtr native)
 {
+    NativePtr = (::ResourceStream*)native.ToPointer();
 }
 
-int Flood::ResourceStream::Decode(unsigned char buffer, unsigned int size)
+int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
 {
-    return 0;
+    auto arg0 = (uint8*)buffer.ToPointer();
+    auto arg1 = (size_t)size;
+    auto ret = NativePtr->decode(arg0, arg1);
+    return ret;
 }
 
 void Flood::ResourceStream::Reset()
 {
+    NativePtr->reset();
 }
 
 Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
@@ -36,62 +72,60 @@ Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
     NativePtr = native;
 }
 
-Flood::ResourceLoader::ResourceLoader()
+Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
 {
+    NativePtr = (::ResourceLoader*)native.ToPointer();
 }
 
 Flood::Class^ Flood::ResourceLoader::GetType()
 {
-    return nullptr;
+    auto ret = NativePtr->getType();
+    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::ResourceLoader::GetStaticType()
 {
-    return nullptr;
+    auto ret = NativePtr->getStaticType();
+    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
 {
-    return ExtensionMetadata();
+    auto ret = NativePtr->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
-Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions)
+Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _173)
 {
-    return nullptr;
+    auto _arg0 = (::ResourceLoadOptions*)&_173;
+    auto arg0 = *_arg0;
+    auto ret = NativePtr->prepare(arg0);
+    return gcnew Flood::Resource((::Resource*)ret);
 }
 
-bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions)
+bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _174)
 {
-    return false;
+    auto _arg0 = (::ResourceLoadOptions*)&_174;
+    auto arg0 = *_arg0;
+    auto ret = NativePtr->decode(arg0);
+    return ret;
 }
 
 System::String^ Flood::ResourceLoader::GetName()
 {
-    return nullptr;
+    auto ret = NativePtr->getName();
+    return marshalString<E_UTF8>(ret);
 }
 
 Flood::Class^ Flood::ResourceLoader::GetResourceClass()
 {
-    return nullptr;
+    auto ret = NativePtr->getResourceClass();
+    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()
 {
-    return ResourceGroup::General;
+    auto ret = NativePtr->getResourceGroup();
+    return (Flood::ResourceGroup)ret;
 }
-
-System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::GetExtensions()
-{
-    return nullptr;
-}
-
-void Flood::ResourceLoadOptions::AddOption(int key, int value)
-{
-}
-
-Flood::Class^ Flood::FloodResourceLoader::ResourceLoaderGetType()
-{
-    return nullptr;
-}
-
 

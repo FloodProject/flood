@@ -5,122 +5,136 @@
 *
 ************************************************************************/
 
+#include "_Marshal.h"
 #include "ResourceManager.h"
-#include "Concurrency.h"
 #include "ResourceLoader.h"
+#include "Stream.h"
+#include "Memory.h"
 #include "Resource.h"
+#include "Reflection.h"
+#include "Serialization.h"
+#include "Extension.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace clix;
+
+Flood::ResourceEvent::ResourceEvent(::ResourceEvent* native)
+{
+    // TODO: Struct marshaling
+}
+
+Flood::ResourceEvent::ResourceEvent(System::IntPtr native)
+{
+    // TODO: Struct marshaling
+}
 
 Flood::ResourceManager::ResourceManager(::ResourceManager* native)
 {
     NativePtr = native;
 }
 
+Flood::ResourceManager::ResourceManager(System::IntPtr native)
+{
+    NativePtr = (::ResourceManager*)native.ToPointer();
+}
+
 Flood::ResourceManager::ResourceManager()
 {
+    NativePtr = new ::ResourceManager();
 }
 
 uint Flood::ResourceManager::GetResource(System::String^ name)
 {
-    return 0;
+    auto arg0 = marshalString<E_UTF8>(name);
+    auto ret = NativePtr->getResource(arg0);
+    return ret.id;
 }
 
 uint Flood::ResourceManager::LoadResource(System::String^ name)
 {
-    return 0;
+    auto arg0 = marshalString<E_UTF8>(name);
+    auto ret = NativePtr->loadResource(arg0);
+    return ret.id;
 }
 
 uint Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
 {
-    return 0;
+    auto _arg0 = (::ResourceLoadOptions*)&options;
+    auto arg0 = *_arg0;
+    auto ret = NativePtr->loadResource(arg0);
+    return ret.id;
 }
 
 bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
-    return false;
+    auto _arg0 = (::ResourceLoadOptions*)&options;
+    auto arg0 = *_arg0;
+    auto ret = NativePtr->findResource(arg0);
+    return ret;
 }
 
 void Flood::ResourceManager::RemoveResource(Flood::Resource^ resource)
 {
+    auto arg0 = resource->NativePtr;
+    NativePtr->removeResource(arg0);
 }
 
 void Flood::ResourceManager::RemoveResource(System::String^ name)
 {
+    auto arg0 = marshalString<E_UTF8>(name);
+    NativePtr->removeResource(arg0);
 }
 
 void Flood::ResourceManager::RemoveUnusedResources()
 {
+    NativePtr->removeUnusedResources();
 }
 
 void Flood::ResourceManager::LoadQueuedResources()
 {
+    NativePtr->loadQueuedResources();
 }
 
 void Flood::ResourceManager::Update()
 {
-}
-
-System::Collections::Generic::Dictionary<System::String^, uint>^ Flood::ResourceManager::GetResources()
-{
-    return nullptr;
+    NativePtr->update();
 }
 
 Flood::ResourceLoader^ Flood::ResourceManager::FindLoader(System::String^ extension)
 {
-    return nullptr;
+    auto arg0 = marshalString<E_UTF8>(extension);
+    auto ret = NativePtr->findLoader(arg0);
+    return gcnew Flood::ResourceLoader((::ResourceLoader*)ret);
 }
 
 Flood::ResourceLoader^ Flood::ResourceManager::FindLoaderByClass(Flood::Class^ klass)
 {
-    return nullptr;
+    auto arg0 = klass->NativePtr;
+    auto ret = NativePtr->findLoaderByClass(arg0);
+    return gcnew Flood::ResourceLoader((::ResourceLoader*)ret);
 }
 
 void Flood::ResourceManager::SetupResourceLoaders(Flood::Class^ klass)
 {
-}
-
-System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^>^ Flood::ResourceManager::GetResourceLoaders()
-{
-    return nullptr;
+    auto arg0 = klass->NativePtr;
+    NativePtr->setupResourceLoaders(arg0);
 }
 
 bool Flood::ResourceManager::GetAsynchronousLoading()
 {
-    return false;
+    auto ret = NativePtr->getAsynchronousLoading();
+    return ret;
 }
 
 void Flood::ResourceManager::SetAsynchronousLoading(bool v)
 {
-}
-
-Flood::HandleManager^ Flood::ResourceManager::GetHandleManager()
-{
-    return nullptr;
-}
-
-Flood::TaskPool^ Flood::ResourceManager::GetTaskPool()
-{
-    return nullptr;
-}
-
-void Flood::ResourceManager::SetTaskPool(Flood::TaskPool^ v)
-{
-}
-
-Flood::Archive^ Flood::ResourceManager::GetArchive()
-{
-    return nullptr;
-}
-
-void Flood::ResourceManager::SetArchive(Flood::Archive^ archive)
-{
+    NativePtr->setAsynchronousLoading(v);
 }
 
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
 {
-    return nullptr;
+    auto ret = ::GetResourceManager();
+    return gcnew Flood::ResourceManager((::ResourceManager*)ret);
 }
-
 
