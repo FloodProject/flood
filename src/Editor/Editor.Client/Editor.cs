@@ -24,6 +24,8 @@ namespace Flood.Editor
         [Export]
         public ProjectManager ProjectManager { get; private set; }
 
+        public Engine Engine { get; private set; }
+
         private ProjectPane projectPane;
 
         private AggregateCatalog catalog;
@@ -31,9 +33,10 @@ namespace Flood.Editor
         [Export]
         private CompositionContainer container;
 
-
-        public Editor()
+        public Editor(Engine engine)
         {
+            Engine = engine;
+
             Window = new EditorWindow();
             Window.GUIInitiated += InitializeGUI;
 

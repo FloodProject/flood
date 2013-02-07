@@ -20,6 +20,7 @@ project "Editor.Client"
 		"System.ComponentModel", 
 		"System.ComponentModel.Composition",
 		"EngineManaged",
+		"EngineBindings",
 		"Editor.Shared",
 		"Editor.Server",
 		"ServerManaged",

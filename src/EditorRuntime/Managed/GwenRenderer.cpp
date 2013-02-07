@@ -7,6 +7,7 @@
 
 #using "GUI.dll"
 #using "Editor.Client.dll"
+#using "EngineBindings.dll"
 #using <System.Drawing.dll>
 
 using namespace Gwen; 
@@ -699,7 +700,9 @@ public:
 	void Initialize(InputManager* inputManager){
 
 		renderer = gcnew GwenRenderer();
-		managedEditor = gcnew Flood::Editor::Editor();
+
+		auto engine = gcnew Flood::Engine(System::IntPtr(GetEngine()));
+		managedEditor = gcnew Flood::Editor::Editor(engine);
 
 		managedEditor->Window->Init(renderer,"DefaultSkin.png");
 
