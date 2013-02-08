@@ -9,13 +9,13 @@ namespace Flood.RPC.Metadata
 
     }
 
-    [AttributeUsage(AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
     public class MessageAttribute : System.Attribute
     {
 
     }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
     public class IdAttribute : System.Attribute
     {
         public IdAttribute(int id)

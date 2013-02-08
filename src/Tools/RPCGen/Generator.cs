@@ -385,6 +385,18 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
+        static PropertyInfo GetProperty(MethodInfo method)
+        {
+
+            bool takesArg = method.GetParameters().Length == 1;
+            bool hasReturn = method.ReturnType != typeof(void);
+            if (takesArg == hasReturn) return null;
+            if (takesArg)
+                return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetSetMethod() == method);
+            
+            return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetGetMethod() == method);
+        }
+
         void GenerateServiceProcessMethod(MethodInfo method)
         {
             WriteLine("public void {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
@@ -409,20 +421,36 @@ namespace Flood.Tools.RPCGen
             if (method.ReturnType != typeof (void))
                 Write("result.Success = ");
 
+            
             // Call the service method
-            Write("iface_.{0}(", method.Name);
-
-            var parameters = method.GetParameters();
-            for (var i = 0; i < parameters.Length; i++)
+            PropertyInfo prop = GetProperty(method);
+            if ( prop == null)
             {
-                var param = parameters[i];
-                Write("args.{0}", ToTitleCase(param.Name));
+                Write("iface_.{0}(", method.Name);
+                var parameters = method.GetParameters();
+                for (var i = 0; i < parameters.Length; i++)
+                {
+                    var param = parameters[i];
+                    Write("args.{0}", ToTitleCase(param.Name));
 
-                if (i < parameters.Length - 1)
-                    Write(", ");
+                    if (i < parameters.Length - 1)
+                        Write(", ");
+                }
+
+                WriteLine(");");
+            }
+            else
+            {
+                if (prop.GetGetMethod() == method)
+                    Write("iface_.{0}", prop.Name);
+                else
+                    Write("iface_.{0} = args.{1}", prop.Name, ToTitleCase(method.GetParameters()[0].Name));
+
+                WriteLine(";");
+                
             }
 
-            WriteLine(");");
+
 
             if (hasExceptions)
                 PopIndent();
@@ -921,7 +949,7 @@ namespace Flood.Tools.RPCGen
         {
             Type type = instance.GetType();
 
-            while (type != null)
+            while (type != typeof(System.Object))
             {
                 if (type.IsGenericType &&
                     type.GetGenericTypeDefinition() == genericType)
@@ -929,19 +957,16 @@ namespace Flood.Tools.RPCGen
                     return true;
                 }
 
-                foreach (var @interface in type.GetInterfaces())
-                {
-                    if (@interface.IsAssignableFrom(type))
+                if (genericType.IsAssignableFrom(type))
                         return true;
-                }
-
+                
                 type = type.BaseType;
             }
 
             return false;
         }
 
-        static TType ConvertFromTypeToThrift(Type type)
+        public static TType ConvertFromTypeToThrift(Type type)
         {
             if (type == typeof(void))
                 return TType.Void;
@@ -1097,7 +1122,13 @@ namespace Flood.Tools.RPCGen
             {
                 Name = info.Name;
                 ParameterType = info.ParameterType;
-
+                
+                if (Generator.GetProperty((info.Member as MethodInfo)) != null)
+                {
+                    Id = 0;
+                    return;
+                }
+               
                 var id = info.GetCustomAttribute<IdAttribute>();
                 if (id == null)
                     throw new Exception("expected an Id() attribute");

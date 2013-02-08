@@ -13,7 +13,7 @@ project build files for your platform.
 
 ### External Dependencies
 
-Before trying to build, some dependencies need to be check out under
+Before trying to build, some dependencies need to be checked out under
 their respective folders in deps/.
 
 1. Check out the Mono repository from https://github.com/mono/mono

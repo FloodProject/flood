@@ -15,6 +15,11 @@ project "ServerManaged"
 		"ServerManaged.lua",
 		"**.cs",
 	}
+
+	defines
+	{
+		--"RAVENDB"
+	}
 	
 	links
 	{
