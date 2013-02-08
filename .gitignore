@@ -7,10 +7,6 @@
 /deps/build
 /deps/Mono
 /deps/wxWidgets
-/deps/ICSharpCode.Decompiler
-/deps/ICSharpCode.NRefactory
-/deps/Mono.Cecil
-/deps/MonoGame
 
 /deps/GWEN
 /deps/SFML
