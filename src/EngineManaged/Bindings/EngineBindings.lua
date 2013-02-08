@@ -9,6 +9,10 @@ project "EngineBindings"
 	
 	SetupNativeProjects()
 	
+	local c = configuration "Debug"
+		targetsuffix ""
+	configuration(c)
+
 	files
 	{
 		"EngineBindings.lua",
