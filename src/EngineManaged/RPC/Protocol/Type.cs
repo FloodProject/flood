@@ -40,6 +40,7 @@ namespace Flood.RPC.Protocol
         Struct = 12,
         Map = 13,
         Set = 14,
-        List = 15
+        List = 15,
+        Collection = 16
     }
 }

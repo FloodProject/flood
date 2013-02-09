@@ -146,7 +146,7 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        public IReadOnlyDictionary<Guid, Project> Projects
+        public IDictionary<Guid, Project> Projects
         {
             get { return _projects; }
         }

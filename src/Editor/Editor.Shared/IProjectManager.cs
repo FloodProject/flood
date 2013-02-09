@@ -11,33 +11,33 @@ namespace Flood.Editor
         /// <summary>
         /// Adds user to project
         /// </summary>
-        //bool AddUserToProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
+        bool AddUserToProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
 
         /// <summary>
         /// Removes user from project
         /// </summary>
-        //bool RemoveUserFromProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
+        bool RemoveUserFromProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
 
         /// <summary>
         /// Modifies user permissions 
         /// </summary>
         /// <remarks /> New permissions are passed insed the ProjectUser
-        //bool ModifyUserPermissions([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
+        bool ModifyUserPermissions([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
 
         /// <summary>
         /// Returns all project users 
         /// </summary>
-        //ICollection<ProjectUser> GetUsers([Id(0)]Guid projectId);
+        ICollection<ProjectUser> GetUsers([Id(0)]Guid projectId);
 
         /// <summary>
         /// Returns project 
         /// </summary>
-        //Project GetProject([Id(0)]Guid projectId);
+        Project GetProject([Id(0)]Guid projectId);
 
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        //IDictionary<Guid, Project> Projects { get; }
+        IDictionary<Guid, Project> Projects { get; }
 
         /// <summary>
         /// Event fired when a project is added.
@@ -54,13 +54,13 @@ namespace Flood.Editor
         /// </summary>
         /// <remarks>Invokes the ProjectRemoved event.</remarks>
         /// <returns>True if the project was removed, false otherwise.</returns>
-        //bool RemoveProject([Id(0)] Guid id);
+        bool RemoveProject([Id(0)] Guid id);
 
         /// <summary>
         /// Creates a new project of the given type and name and adds
         /// it to the list.
         /// </summary>
         /// <returns>Returns a new project of this type.</returns>
-        //Project CreateProject([Id(0)] ProjectType type, [Id(1)] string name, [Id(2)] Owner founder);
+        Project CreateProject([Id(0)] ProjectType type, [Id(1)] string name, [Id(2)] Owner founder);
     }
 }

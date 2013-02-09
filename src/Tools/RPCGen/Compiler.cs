@@ -49,7 +49,7 @@ namespace Flood.Tools.RPCGen
                 var message = type.GetCustomAttribute<MessageAttribute>();
                 if (message != null)
                 {
-                    Debug.Assert(type.IsValueType);
+                    Debug.Assert(type.IsValueType || type.IsClass);
                     ProcessMessage(type);
                 }
 
