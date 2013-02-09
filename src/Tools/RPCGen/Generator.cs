@@ -949,7 +949,7 @@ namespace Flood.Tools.RPCGen
         {
             Type type = instance.GetType();
 
-            while (type != typeof(System.Object))
+            while (type != null)
             {
                 if (type.IsGenericType &&
                     type.GetGenericTypeDefinition() == genericType)
@@ -959,8 +959,27 @@ namespace Flood.Tools.RPCGen
 
                 if (genericType.IsAssignableFrom(type))
                         return true;
-                
-                type = type.BaseType;
+
+                type = (type == typeof(System.Object)) ? null : type.BaseType;
+            }
+
+            return false;
+        }
+
+        static bool IsInstanceOfGenericType(Type genericType, Type type)
+        {
+            while (type != null)
+            {
+                if (type.IsGenericType &&
+                    type.GetGenericTypeDefinition() == genericType)
+                {
+                    return true;
+                }
+
+                if (genericType.IsAssignableFrom(type))
+                    return true;
+
+                type = (type == typeof(System.Object))? null : type.BaseType;
             }
 
             return false;
@@ -990,7 +1009,7 @@ namespace Flood.Tools.RPCGen
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
             else if (type.IsValueType && !type.IsPrimitive)
                 return TType.Struct;
-            else if (type.IsSubclassOf(typeof(Exception)))
+            else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
                 return TType.Exception;
             else if (IsInstanceOfGenericType(typeof (IList<>), type))
                 return TType.List;
@@ -998,6 +1017,10 @@ namespace Flood.Tools.RPCGen
                 return TType.Map;
             else if (IsInstanceOfGenericType(typeof (ISet<>), type))
                 return TType.Set;
+            else if (IsInstanceOfGenericType(typeof(ICollection<>), type))
+                return TType.Collection;
+            else if (type.IsClass)
+                return TType.Struct;
 
             throw new NotImplementedException();
         }
@@ -1066,6 +1089,9 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Set:
                     sb.Append("ISet<");
+                    break;
+                case TType.Collection:
+                    sb.Append("ICollection<");
                     break;
             }
 
