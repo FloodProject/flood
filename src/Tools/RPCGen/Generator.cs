@@ -25,7 +25,7 @@ namespace Flood.Tools.RPCGen
             GenerateMessageClass(type);
         }
 
-        void GenerateMessageClass(Type type)
+        public void GenerateMessageClass(Type type)
         {
             var typeName = string.Format("{0}Impl", type.Name);
 
@@ -33,11 +33,23 @@ namespace Flood.Tools.RPCGen
             WriteLine("public class {0} : Base", typeName);
             WriteStartBraceIndent();
 
-            // Generate private fields.
-            foreach (var field in type.GetFields())
+            // Generate fields.
+            foreach (var field in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            {
+                //WARNING: backing field identifying substring is implementation dependent, this may need revising
+                if (field.Name.Contains("k__BackingField")) 
+                    continue;
+                else
+                    WriteLine("private {0} _{1};",
+                        ConvertToTypeString(field.FieldType), field.Name);
+                NeedNewLine();
+            }
+
+            // Generate properties.
+            foreach (var property in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
             {
                 WriteLine("private {0} _{1};",
-                    ConvertToTypeString(field.FieldType), field.Name);
+                    ConvertToTypeString(property.PropertyType), property.Name);
                 NeedNewLine();
             }
             NewLineIfNeeded();
@@ -62,11 +74,31 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
+
+        private void GeneratePropertyAccessors(PropertyInfo info)
+        {
+            //this is a very basic function, if accessors are not utterly simple it won't translate them correctly
+            var getter = info.GetGetMethod();
+            var setter = info.GetSetMethod();
+            if(getter != null )
+                Write("{0}get; ", (getter.IsPrivate)? "private " : "" );
+            if (setter != null)
+                Write("{0}set; ", (setter.IsPrivate)? "private " : "");
+        }
+
         private List<Parameter> ConvertFieldToParametersList(Type type)
         {
             var parameters = new List<Parameter>();
-            foreach (var field in type.GetFields())
+            foreach(var field in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            {
+                //WARNING: backing field identifying substring is implementation dependent, this may need revising
+                if (field.Name.Contains("k__BackingField"))
+                    continue;
                 parameters.Add(new Parameter(field));
+            }
+
+            foreach(var property in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+                parameters.Add(new Parameter(property));
             return parameters;
         }
 
@@ -558,6 +590,7 @@ namespace Flood.Tools.RPCGen
                 case TType.List:
                 case TType.Map:
                 case TType.Set:
+                case TType.Collection:
                     GenerateContainerSerialize(param);
                     break;
                 case TType.Bool:
@@ -591,7 +624,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("{0}Impl.Write(oprot);", ToTitleCase(param.Name));
         }
 
-        // Used to generate unique names when de/serializing collections.
+        // Used to generate unique names when (de)serializing collections.
         int GenericIndex = 0;
 
         void GenerateContainerSerialize(Parameter param)
@@ -617,6 +650,7 @@ namespace Flood.Tools.RPCGen
                 case TType.List:
                 case TType.Map:
                 case TType.Set:
+                case TType.Collection:
                     GenerateContainerDeserialize(param);
                     break;
                 case TType.Bool:
@@ -659,6 +693,7 @@ namespace Flood.Tools.RPCGen
             GenerateListDeserialize(param);
         }
 
+        //TODO: Fix this to handle classes?
         void GenerateListSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
@@ -686,6 +721,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("oprot.WriteListEnd();");
         }
 
+        //TODO: Fix this to handle classes
         void GenerateListDeserialize(Parameter param)
         {
             var listElemType = param.ParameterType.GetGenericArguments()[0];
@@ -1116,6 +1152,7 @@ namespace Flood.Tools.RPCGen
                 case TType.List:
                 case TType.Map:
                 case TType.Set:
+                case TType.Collection:
                     return ConvertToGenericTypeString(type, thriftType);
             }
 
@@ -1166,6 +1203,18 @@ namespace Flood.Tools.RPCGen
             {
                 Name = info.Name;
                 ParameterType = info.FieldType;
+
+                var id = info.GetCustomAttribute<IdAttribute>();
+                if (id == null)
+                    throw new Exception("expected an Id() attribute");
+
+                Id = id.Id;
+            }
+
+            public Parameter(PropertyInfo info)
+            {
+                Name = info.Name;
+                ParameterType = info.PropertyType;
 
                 var id = info.GetCustomAttribute<IdAttribute>();
                 if (id == null)
