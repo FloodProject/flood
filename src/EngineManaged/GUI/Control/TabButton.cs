@@ -1,7 +1,7 @@
 ﻿using System;
-using Gwen.Input;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Tab header.

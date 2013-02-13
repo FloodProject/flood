@@ -1,9 +1,13 @@
-﻿using Flood.Editor.Controls;
+﻿//using Flood.Editor.Controls;
 using System;
-using Gwen.Control;
+using System.ComponentModel.Composition;
+using EngineManaged.GUI;
+using EngineManaged.GUI.Control;
+using Flood.Editor.Controls;
 
 namespace Flood.Editor
 {
+    [Export]
     public class EditorWindow : IDisposable
     {
         /// <summary>
@@ -21,6 +25,8 @@ namespace Flood.Editor
         /// </summary>
         public Canvas Canvas { get; private set; }
 
+        private EngineManaged.GUI.Renderer.Base renderer;
+        private EngineManaged.GUI.Skin.Base skin
         /// <summary>
         /// Size of the main editor window.
         /// </summary>
@@ -60,14 +66,21 @@ namespace Flood.Editor
 
         internal event Action GUIInitiated;
 
-        public void Init(Gwen.Renderer.Base renderer, string textureName)
+        public void Init(EngineManaged.GUI.Renderer.Base renderer, string textureName)
         {
             this.renderer = renderer;
-            skin = new Gwen.Skin.TexturedBase(renderer, textureName);
-            Canvas = new Gwen.Control.Canvas(skin);
+            skin = new EngineManaged.GUI.Skin.TexturedBase(renderer, textureName);
+            Canvas = new EngineManaged.GUI.Control.Canvas(skin);
 
             ToolBar = new ToolBar(Canvas);
             DocumentTab = new DocumentTab(Canvas);
+
+            /*var label = new Label();
+            label.Text = "YOLO!";
+            label.SetSize(200, 200);
+            label.SetPosition(200,200);
+            Canvas.AddChild(label);
+            */
 
             if (GUIInitiated != null)
                 GUIInitiated.Invoke();

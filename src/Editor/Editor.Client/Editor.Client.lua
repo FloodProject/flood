@@ -23,6 +23,5 @@ project "Editor.Client"
 		"EngineBindings",
 		"Editor.Shared",
 		"Editor.Server",
-		"ServerManaged",
-		"GUI" 
+		"ServerManaged"
 	}

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Gwen.Anim;
-using Gwen.DragDrop;
-using Gwen.Input;
+using EngineManaged.GUI.Anim;
+using EngineManaged.GUI.DragDrop;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Canvas control. It should be the root parent for all other controls.
@@ -128,7 +128,7 @@ namespace Gwen.Control
 
             DragAndDrop.RenderOverlay(this, Skin);
 
-            Gwen.ToolTip.RenderToolTip(Skin);
+            EngineManaged.GUI.ToolTip.RenderToolTip(Skin);
 
             render.EndClip();
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// RGBA color picker.
@@ -176,7 +176,7 @@ namespace Gwen.Control
                 SetColorByName(GetColorFromName(slider.Name), (int)slider.Value);
 
             UpdateControls();
-            //SetColor( Gwen::Color( redSlider->GetValue(), greenSlider->GetValue(), blueSlider->GetValue(), alphaSlider->GetValue() ) );
+            //SetColor( EngineManaged::GUI::Color( redSlider->GetValue(), greenSlider->GetValue(), blueSlider->GetValue(), alphaSlider->GetValue() ) );
         }
 
         /// <summary>

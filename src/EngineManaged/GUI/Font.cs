@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gwen
+namespace EngineManaged.GUI
 {
     /// <summary>
     /// Represents font resource.

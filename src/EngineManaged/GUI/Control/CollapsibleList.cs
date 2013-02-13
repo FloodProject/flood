@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// CollapsibleList control. Groups CollapsibleCategory controls.

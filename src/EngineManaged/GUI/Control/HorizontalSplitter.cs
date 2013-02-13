@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     public class HorizontalSplitter : Base
     {

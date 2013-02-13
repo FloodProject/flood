@@ -1,7 +1,7 @@
 ﻿using System;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Single property row.

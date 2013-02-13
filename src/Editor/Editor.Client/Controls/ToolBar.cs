@@ -1,28 +1,28 @@
 ﻿
 using System;
-using Gwen.Control;
+using EngineManaged.GUI.Control;
 
 namespace Flood.Editor.Controls
 {
     public class ToolBar
     {
-        Gwen.Control.Layout.Tile pTileLayout;
+        EngineManaged.GUI.Control.Layout.Tile pTileLayout;
 
-        public ToolBar(Gwen.Control.Base parent)
+        public ToolBar(EngineManaged.GUI.Control.Base parent)
         {
-            pTileLayout = new Gwen.Control.Layout.Tile(parent);
+            pTileLayout = new EngineManaged.GUI.Control.Layout.Tile(parent);
             pTileLayout.SetTileSize(22, 22);
             pTileLayout.Height = 24;
-            pTileLayout.Dock = Gwen.Pos.Top;
+            pTileLayout.Dock = EngineManaged.GUI.Pos.Top;
         }
 
         public void AddTool(string name /* Image image */, Action onSelect)
         {
-            var pButton = new Gwen.Control.Button(pTileLayout);
+            var pButton = new EngineManaged.GUI.Control.Button(pTileLayout);
             pButton.SetSize(20, 20);
             pButton.SetToolTipText(name);
             pButton.ShouldDrawBackground = true;
-            pButton.Clicked += new Gwen.Control.Base.GwenEventHandler(
+            pButton.Clicked += new EngineManaged.GUI.Control.Base.GwenEventHandler(
                 b => onSelect.Invoke());
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Numeric text box - accepts only float numbers.

@@ -11,7 +11,7 @@ namespace Flood.Editor.Controls
 
         public void OnSelect()
         {
-            Gwen.Platform.Neutral.FileOpen("Open Document", "", "", Open);
+            EngineManaged.GUI.Platform.Neutral.FileOpen("Open Document", "", "", Open);
             
         }
 

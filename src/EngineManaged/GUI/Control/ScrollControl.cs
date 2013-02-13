@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Base for controls whose interior can be scrolled.
@@ -180,16 +180,16 @@ namespace Gwen.Control
 
     // Debug render - this shouldn't render ANYTHING REALLY - it should be up to the parent!
 
-    Gwen::Rect rect = GetRenderBounds();
-    Gwen::Renderer::Base* render = skin->GetRender();
+    EngineManaged::GUI::Rect rect = GetRenderBounds();
+    EngineManaged::GUI::Renderer::Base* render = skin->GetRender();
 
-    render->SetDrawColor( Gwen::Color( 255, 255, 0, 100 ) );
+    render->SetDrawColor( EngineManaged::GUI::Color( 255, 255, 0, 100 ) );
     render->DrawFilledRect( rect );
 
-    render->SetDrawColor( Gwen::Color( 255, 0, 0, 100 ) );
+    render->SetDrawColor( EngineManaged::GUI::Color( 255, 0, 0, 100 ) );
     render->DrawFilledRect( m_InnerPanel->GetBounds() );
 
-    render->RenderText( skin->GetDefaultFont(), Gwen::Point( 0, 0 ), Utility::Format( L"Offset: %i %i", m_InnerPanel->X(), m_InnerPanel->Y() ) );
+    render->RenderText( skin->GetDefaultFont(), EngineManaged::GUI::Point( 0, 0 ), Utility::Format( L"Offset: %i %i", m_InnerPanel->X(), m_InnerPanel->Y() ) );
 #endif
         }
 

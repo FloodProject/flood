@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.
@@ -23,6 +23,11 @@ namespace Gwen.Control
         /// Invoked when a tab has been removed.
         /// </summary>
         public event GwenEventHandler TabRemoved;
+
+        /// <summary>
+        /// Invoked when a tab has been selected.
+        /// </summary>
+        public event GwenEventHandler TabSelected;
 
         /// <summary>
         /// Determines if tabs can be reordered by dragging.
@@ -132,6 +137,12 @@ namespace Gwen.Control
             Invalidate();
         }
 
+        public void RemovePage(TabButton button)
+        {
+            RemoveChild(button.Page, true);
+            m_TabStrip.RemoveChild(button, true);
+        }
+
         private void UnsubscribeTabEvent(TabButton button)
         {
             button.Clicked -= OnTabPressed;
@@ -164,6 +175,9 @@ namespace Gwen.Control
             }
 
             m_CurrentButton = button;
+
+            if (TabSelected != null)
+                TabSelected.Invoke(m_CurrentButton);
 
             page.IsHidden = false;
 

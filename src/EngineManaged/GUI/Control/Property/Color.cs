@@ -1,8 +1,8 @@
 ﻿using System;
-using Gwen.ControlInternal;
-using Gwen.Input;
+using EngineManaged.GUI.ControlInternal;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control.Property
+namespace EngineManaged.GUI.Control.Property
 {
     /// <summary>
     /// Color property.

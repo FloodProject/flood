@@ -16,5 +16,7 @@ project "EngineManaged"
 	
 	links {
 		"System",
-		"System.Web"
+		"System.Web",
+		"System.Drawing",
+		"System.Windows.Forms"
 	}

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Movable window with title bar.
@@ -56,7 +56,7 @@ namespace Gwen.Control
         {
             m_TitleBar = new Dragger(this);
             m_TitleBar.Height = 24;
-            m_TitleBar.Padding = Gwen.Padding.Zero;
+            m_TitleBar.Padding = EngineManaged.GUI.Padding.Zero;
             m_TitleBar.Margin = new Margin(0, 0, 0, 4);
             m_TitleBar.Target = this;
             m_TitleBar.Dock = Pos.Top;

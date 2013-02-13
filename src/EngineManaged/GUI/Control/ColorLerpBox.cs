@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.Input;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Linear-interpolated HSV color box.

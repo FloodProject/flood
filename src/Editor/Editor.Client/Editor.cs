@@ -1,4 +1,6 @@
-﻿using Flood.Editor.Controls;
+﻿//using Flood.Editor.Controls;
+
+using Flood.Editor.Controls;
 using Flood.RPC.Protocol;
 using Flood.RPC.Transport;
 using System;
@@ -9,22 +11,19 @@ namespace Flood.Editor
 {
     public class Editor : IDisposable
     {
-        [Export]
+        [Import]
         public EditorWindow Window { get; private set; }
 
-        [Export]
+        [Import]
         public ToolManager ToolManager { get; private set; }
 
-        [Export]
-        public ServerManager ServerManager { get; private set; }
-
-        [Export]
+        [Import]
         public DocumentManager DocumentManager { get; private set; }
 
-        [Export]
+        [Import]
         public ProjectManager ProjectManager { get; private set; }
 
-        public Engine Engine { get; private set; }
+        public ServerManager ServerManager { get; private set; }
 
         private ProjectPane projectPane;
 
@@ -33,15 +32,12 @@ namespace Flood.Editor
         [Export]
         private CompositionContainer container;
 
-        public Editor(Engine engine)
+        public Editor()
         {
-            Engine = engine;
-
-            Window = new EditorWindow();
-            Window.GUIInitiated += InitializeGUI;
-
             InitializeServer();
             InitializeContainer();
+
+            Window.GUIInitiated += InitializeGUI;
         }
 
         public void Dispose()
@@ -51,13 +47,7 @@ namespace Flood.Editor
 
         private void InitializeGUI()
         {
-            container.ComposeParts(this);
-
-            ToolManager = new ToolManager();
-            DocumentManager = new DocumentManager();
-
-            ProjectManager = new ProjectManager();
-            projectPane = new ProjectPane(ProjectManager, Window.Canvas);
+            
 
             var client = InitializeClient();
             Console.WriteLine("Connected to the server.");
@@ -99,6 +89,7 @@ namespace Flood.Editor
             {
                 var assemblyCatalog = new AssemblyCatalog(typeof(Editor).Assembly);
                 catalog.Catalogs.Add(assemblyCatalog);
+                container.ComposeParts(this);
             }
             catch (Exception ex)
             {
@@ -106,6 +97,7 @@ namespace Flood.Editor
             }
 
             catalog.Changed += catalog_Changed;
+
         }
 
         void catalog_Changed(object sender, ComposablePartCatalogChangeEventArgs e)

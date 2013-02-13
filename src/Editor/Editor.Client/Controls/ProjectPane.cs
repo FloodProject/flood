@@ -1,5 +1,6 @@
 using System;
-using Gwen.Control;
+using EngineManaged.GUI;
+using EngineManaged.GUI.Control;
 using System.ComponentModel.Composition;
 
 namespace Flood.Editor.Controls
@@ -16,7 +17,7 @@ namespace Flood.Editor.Controls
             Node = new TreeNode(parent)
             {
                 Text = name,
-                Dock = Gwen.Pos.Top
+                Dock = Pos.Top
             };
         }
     }
@@ -24,35 +25,19 @@ namespace Flood.Editor.Controls
     /// <summary>
     /// Represents the pane with the projects.
     /// </summary>
-    public class ProjectPane : Pane, IDisposable
+    public class ProjectPane : Pane
     {
-        private readonly ProjectManager projectManager;
 
-        public ProjectPane(ProjectManager projectManager, Canvas canvas)
-        {
-            InitControl(canvas);
-
-            this.projectManager = projectManager;
-
-            projectManager.ProjectAdded += OnProjectAdded;
-            projectManager.ProjectRemoved += OnProjectRemoved;
-        }
-
-        public void Dispose()
-        {
-            projectManager.ProjectAdded -= OnProjectAdded;
-            projectManager.ProjectRemoved -= OnProjectRemoved;
-        }
         /// <summary>
         /// GUI tree node.
         /// </summary>
         public TreeControl Tree { get; private set; }
 
-        public void InitControl(Base parent)
+        public override void InitControl(Base parent)
         {
             Tree = new TreeControl(parent)
             {
-                Dock = Gwen.Pos.Left,
+                Dock = EngineManaged.GUI.Pos.Left,
                 Width = 150
             };
 

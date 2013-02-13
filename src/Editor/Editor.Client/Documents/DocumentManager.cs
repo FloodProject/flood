@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Flood.Editor.Controls;
 using Flood.Editor.Documents;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel.Composition;
 
 namespace Flood.Editor
 {
+    [Export]
     public class DocumentManager : IPartImportsSatisfiedNotification
     {
         int nextDocumentId = 1;
@@ -50,14 +52,17 @@ namespace Flood.Editor
 
         public void OnImportsSatisfied()
         {
-            editorWindow.DocumentTab.DocumentSelected += delegate(int id)
-            {
-                Document doc = null;
-                if (documents.TryGetValue(id, out doc))
-                    Current = doc;
-            };
-
-            //DocumentSelected += d => editorWindow.DocumentTab.SelectTab(d.Id);
+            editorWindow.GUIInitiated +=
+                () =>
+                    {
+                        editorWindow.DocumentTab.DocumentSelected +=
+                            delegate(int id)
+                                {
+                                    Document doc = null;
+                                    if (documents.TryGetValue(id, out doc))
+                                        Current = doc;
+                                };
+                    };
         }
 
         public bool FindDocument(string path, out Document document)

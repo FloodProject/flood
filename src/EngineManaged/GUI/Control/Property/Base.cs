@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gwen.Control.Property
+namespace EngineManaged.GUI.Control.Property
 {
     /// <summary>
     /// Base control for property entry.

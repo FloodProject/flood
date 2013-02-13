@@ -1,7 +1,7 @@
 ﻿using System;
-using Gwen.Control;
+using EngineManaged.GUI.Control;
 
-namespace Gwen
+namespace EngineManaged.GUI
 {
     /// <summary>
     /// Utility class for manipulating control's position according to its parent. Rarely needed, use control.Dock.

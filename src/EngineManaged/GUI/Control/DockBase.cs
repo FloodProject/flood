@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.ControlInternal;
-using Gwen.DragDrop;
+using EngineManaged.GUI.ControlInternal;
+using EngineManaged.GUI.DragDrop;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Base for dockable containers.

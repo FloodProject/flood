@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.Control.Layout;
+using EngineManaged.GUI.Control.Layout;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// List box row (selectable).

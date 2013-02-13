@@ -1,7 +1,7 @@
 ﻿using System;
-using Gwen.DragDrop;
+using EngineManaged.GUI.DragDrop;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Titlebar for DockedTabControl.

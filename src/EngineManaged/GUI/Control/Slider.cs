@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.ControlInternal;
-using Gwen.Input;
+using EngineManaged.GUI.ControlInternal;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Base slider.

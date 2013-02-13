@@ -1,7 +1,7 @@
 ﻿using System;
-using Gwen.Control;
+using EngineManaged.GUI.Control;
 
-namespace Gwen.ControlInternal
+namespace EngineManaged.GUI.ControlInternal
 {
     /// <summary>
     /// Tree node toggle button (the little plus sign).

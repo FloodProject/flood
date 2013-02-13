@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Base resizable control.

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-namespace Gwen.Renderer
+namespace EngineManaged.GUI.Renderer
 {
     /// <summary>
     /// Base renderer.

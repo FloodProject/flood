@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Vertical slider.

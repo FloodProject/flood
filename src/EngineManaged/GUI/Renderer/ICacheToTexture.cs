@@ -1,5 +1,5 @@
 ﻿
-namespace Gwen.Renderer
+namespace EngineManaged.GUI.Renderer
 {
     public interface ICacheToTexture
     {

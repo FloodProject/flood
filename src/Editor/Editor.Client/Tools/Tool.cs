@@ -33,6 +33,6 @@ namespace Flood.Editor
 
     interface DockableTool
     {
-        void InitControl(Gwen.Control.Base parent);
+        void InitControl(EngineManaged.GUI.Control.Base parent);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Gwen
+namespace EngineManaged.GUI
 {
     /// <summary>
     /// Represents a texture.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Gwen.Control.Layout
+namespace EngineManaged.GUI.Control.Layout
 {
     /// <summary>
     /// Base class for multi-column tables.

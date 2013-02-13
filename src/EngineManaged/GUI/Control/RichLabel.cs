@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Multiline label with text chunks having different color/font.

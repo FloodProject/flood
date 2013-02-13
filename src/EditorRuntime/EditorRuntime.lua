@@ -27,7 +27,7 @@ project "EditorRuntime"
 	
 	SetupNativeProjects()
 
-	dependson { EngineManaged.name, EditorClient.name, GUI.name }
+	dependson { EngineManaged.name, EditorClient.name }
 	
 	defines
 	{

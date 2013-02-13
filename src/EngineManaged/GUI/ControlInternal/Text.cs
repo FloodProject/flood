@@ -2,9 +2,9 @@
 
 using System;
 using System.Drawing;
-using Gwen.Control;
+using EngineManaged.GUI.Control;
 
-namespace Gwen.ControlInternal
+namespace EngineManaged.GUI.ControlInternal
 {
     /// <summary>
     /// Displays text. Always sized to contents.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Gwen.Control;
-using Gwen.Input;
+using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.ControlInternal
+namespace EngineManaged.GUI.ControlInternal
 {
     /// <summary>
     /// Base for controls that can be dragged by mouse.

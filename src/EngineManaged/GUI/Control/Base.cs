@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
-using Gwen.Anim;
-using Gwen.DragDrop;
-using Gwen.Input;
+using EngineManaged.GUI.Anim;
+using EngineManaged.GUI.DragDrop;
+using EngineManaged.GUI.Input;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Base control class.
@@ -464,7 +464,7 @@ namespace Gwen.Control
                 InputHandler.MouseFocus = null;
 
             DragAndDrop.ControlDeleted(this);
-            Gwen.ToolTip.ControlDeleted(this);
+            EngineManaged.GUI.ToolTip.ControlDeleted(this);
             Animation.Cancel(this);
 
             foreach (Base child in m_Children)
@@ -1298,9 +1298,9 @@ namespace Gwen.Control
                 HoverEnter.Invoke(this);
 
             if (ToolTip != null)
-                Gwen.ToolTip.Enable(this);
+                EngineManaged.GUI.ToolTip.Enable(this);
             else if (Parent != null && Parent.ToolTip != null)
-                Gwen.ToolTip.Enable(Parent);
+                EngineManaged.GUI.ToolTip.Enable(Parent);
 
             Redraw();
         }
@@ -1322,7 +1322,7 @@ namespace Gwen.Control
                 HoverLeave.Invoke(this);
 
             if (ToolTip != null)
-                Gwen.ToolTip.Disable(this);
+                EngineManaged.GUI.ToolTip.Disable(this);
 
             Redraw();
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Radio button group.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Gwen.Control.Layout
+namespace EngineManaged.GUI.Control.Layout
 {
     /// <summary>
     /// Single table row.

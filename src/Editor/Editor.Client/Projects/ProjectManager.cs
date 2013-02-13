@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Flood.Editor
 {
@@ -42,6 +43,7 @@ namespace Flood.Editor
         }
     }
 
+    [Export]
     public class ProjectManager
     {
         private readonly List<Project> projects;

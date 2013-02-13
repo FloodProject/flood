@@ -1,8 +1,8 @@
 ﻿using System;
-using Gwen.Control.Layout;
-using Gwen.ControlInternal;
+using EngineManaged.GUI.Control.Layout;
+using EngineManaged.GUI.ControlInternal;
 
-namespace Gwen.Control
+namespace EngineManaged.GUI.Control
 {
     /// <summary>
     /// Numeric up/down.

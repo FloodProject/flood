@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 
 namespace Flood.Editor
 {
+    [Export]
     public class ToolManager : IPartImportsSatisfiedNotification
     {
         [ImportMany(AllowRecomposition = true)]
@@ -27,12 +28,17 @@ namespace Flood.Editor
                 initiated = true;
             }
 
-
-            PopulateToolBar();
+            if(editorWindow.ToolBar != null)
+            {
+                PopulateToolBar();
+            } else
+            {
+                editorWindow.GUIInitiated += PopulateToolBar;
+            }
         }
 
         public void PopulateToolBar()
-        {
+        { 
             var toolBar = editorWindow.ToolBar;
             toolBar.Clear();
 
