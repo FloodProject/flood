@@ -11,3 +11,6 @@
 [submodule "deps/MonoGame"]
 	path = deps/MonoGame
 	url = git@github.com:FloodProject/MonoGame.git
+[submodule "deps/Mono.Addins"]
+	path = deps/Mono.Addins
+	url = git@github.com:FloodProject/Mono.Addins.git
