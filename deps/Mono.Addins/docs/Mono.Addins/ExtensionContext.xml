@@ -1,0 +1,645 @@
+<Type Name="ExtensionContext" FullName="Mono.Addins.ExtensionContext">
+  <TypeSignature Language="C#" Value="public class ExtensionContext" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Addins</AssemblyName>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>An extension context.</summary>
+    <remarks>
+      <para>Extension contexts can be used to query the extension tree using particular condition values.
+
+Extension points which declare the availability of a condition type can only be queryed using an extension context which provides an evaluator for that condition.
+</para>
+      <para>
+This is a complete example of using ExtensionContext together with conditions. In this example, we want to implement an extensible library called "WriterService" which offers the following class:
+</para>
+      <example>
+        <code lang="C#">
+namespace WriterService
+{
+	public class WriterManager
+	{
+		public WriterManager (string[] flags) { ... }
+		public IWriter[] GetWriters () { ... }
+	}
+}
+  </code>
+      </example>
+      <para>
+The IWriter interface is defined like this:
+</para>
+      <example>
+        <code lang="C#">
+namespace WriterService
+{
+	public interface IWriter
+	{
+		string Write ();
+	}
+}
+  </code>
+      </example>
+      <para>
+An application can use this library to get a set of writers, which will be implemented in add-ins extending WriterService.
+We also want add-ins to be able to decide which writers should be returned, depending on some flags defined provided by the user.
+Notice that different WriterManager instances can have different flags.
+</para>
+      <para>
+This is an example of consumer application:
+</para>
+      <example>
+        <code lang="C#">
+	Console.WriteLine ("Normal writers:");
+
+	// Creates a WriterManager which will return all writers
+	WriterManager manager = new WriterManager (new string[0]);
+
+	// Get the writers and print them
+	foreach (IWriter w in manager.GetWriters ())
+		Console.WriteLine (w.Write ());
+	
+	Console.WriteLine ("Including debug writers:");
+
+	// Now this creates a new WriterManager, and providers a debug flag
+	WriterManager debugManager = new WriterManager (new string[] { "debug" });
+
+	foreach (IWriter w in debugManager.GetWriters ())
+		Console.WriteLine (w.Write ());
+  </code>
+      </example>
+      <para>
+THE WRITER-SERVICE LIBRARY
+</para>
+      <para>
+The WriterService library needs to define an extension point where add-ins can register new writer types. 
+The add-in description file could be the following:
+</para>
+      <example>
+        <code lang="XML">
+&lt;Addin id = "WriterService" version = "0.1.0" isroot="true"&gt;
+
+	&lt;Runtime&gt;
+		&lt;Import assembly="WriterService.dll"/&gt;
+	&lt;/Runtime&gt;
+	
+	&lt;ExtensionPoint path = "/WriterService/Writers"&gt;
+		&lt;ExtensionNode id="Writer" objectType="WriterService.IWriter"/&gt;
+		&lt;Condition id="HasFlag"/&gt;
+	&lt;/ExtensionPoint&gt;
+	
+&lt;/Addin&gt;
+  </code>
+      </example>
+      <para>
+Notice that the Writers extension point specifies that a "HasFlag" condition type which can be used by extenders when defining extension nodes. This condition will be implemented by the WriterService in
+the FlagsCondition class:
+</para>
+      <example>
+        <code lang="C#">
+namespace WriterService
+{
+	public class FlagsCondition: ConditionType
+	{
+		string[] flags;
+		
+		public FlagsCondition (string[] flags)
+		{
+			this.flags = flags;
+		}
+		
+		public override bool Evaluate (INodeInfo attributes)
+		{
+			// Return true if the provided flag can be found in the condition's flag list
+			string flag = attributes.GetAttribute ("value");
+			return Array.IndexOf (flags, flag) != -1;
+		}
+	}
+}
+  </code>
+      </example>
+      <para>
+Now let's see the complete implementation of the WriterManager class:
+</para>
+      <example>
+        <code lang="C#">
+namespace WriterService
+{
+	public class WriterManager
+	{
+		ExtensionContext ctx;
+		
+		public WriterManager (string[] flags)
+		{
+			// Create a new extension context
+			ctx = AddinManager.CreateExtensionContext ();
+			
+			// Register the flags condition in the new context
+			FlagsCondition condition = new FlagsCondition (flags);
+			ctx.RegisterCondition ("HasFlag", condition);
+		}
+		
+		public IWriter[] GetWriters ()
+		{
+			// Returns the IWriter objects registered in the Writers path
+			return (IWriter[]) ctx.GetExtensionObjects ("/WriterService/Writers", typeof(IWriter));
+		}
+	}
+}
+  </code>
+      </example>
+      <para>
+The WriterManager class creates a new ExtensionContext instance and registers a properly initialized FlagsCondition object on it. 
+The ExtensionContext instance is needed because every WriterManager needs to have it's particular FlagsCondition object. 
+The GetWriters method calls <see cref="M:Mono.Addins.ExtensionContext.GetExtensionObjects(System.String)" /> on the created extension
+context to get the extension nodes, so it will only return those matching the registered condition.
+</para>
+      <para>In this case it would not be possible to use the global <see cref="M:Mono.Addins.AddinManager.GetExtensionObjects(System.String)" /> method to get the writers because
+the HasFlag condition is not registered at global level, only for a particular context. 
+</para>
+      <para>
+SAMPLE ADD-IN
+</para>
+      <para>
+This is a sample add-in which extends the WriterService by adding two writer types. One of them is under a condition, so it will only be visible if the debug flag is defined:
+</para>
+      <example>
+        <code lang="XML">
+&lt;Addin&gt;
+
+	&lt;Runtime&gt;
+		&lt;Import assembly="SampleExtender.dll"/&gt;
+	&lt;/Runtime&gt;
+	
+	&lt;Dependencies&gt;
+		&lt;Addin id="WriterService" version="0.1.0" /&gt;
+	&lt;/Dependencies&gt;
+	
+	&lt;Extension path = "/WriterService/Writers"&gt;
+		&lt;Writer type="SampleExtender.MyWriter" /&gt;
+		&lt;Condition id="HasFlag" value="debug"&gt;
+			&lt;Writer type="SampleExtender.DebugWriter" /&gt;
+		&lt;/Condition&gt;
+	&lt;/Extension&gt;
+	
+&lt;/Addin&gt;
+  </code>
+      </example>
+      <para>
+The new writers are implemented like this:
+</para>
+      <example>
+        <code lang="C#">
+namespace SampleExtender
+{
+	public class MyWriter: IWriter
+	{
+		public string Write ()
+		{
+			return "Some writer";
+		}
+	}
+	
+	public class DebugWriter: IWriter
+	{
+		public string Write ()
+		{
+			return "Some debug output";
+		}
+	}
+}
+  </code>
+      </example>
+      <para>
+The sample application shown earlier would give the following output after installing the previous add-in:
+</para>
+      <example>
+        <code>
+Normal writers:
+Some writer
+Including debug writers:
+Some writer
+Some debug output
+  </code>
+      </example>
+    </remarks>
+  </Docs>
+  <Members>
+    <Member MemberName="AddExtensionNodeHandler">
+      <MemberSignature Language="C#" Value="public void AddExtensionNodeHandler (string path, Mono.Addins.ExtensionNodeEventHandler handler);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="handler" Type="Mono.Addins.ExtensionNodeEventHandler" />
+      </Parameters>
+      <Docs>
+        <param name="path">Path of the node.</param>
+        <param name="handler">A handler method.</param>
+        <summary>Register a listener of extension node changes.</summary>
+        <remarks>This method registers a delegate to be called when a node is added to or removed from the provided extension path.
+
+<block subset="none" type="note"><para>
+The handler will be called for all nodes existing in the path at the moment of registration.
+  </para></block></remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="ExtensionChanged">
+      <MemberSignature Language="C#" Value="public event Mono.Addins.ExtensionEventHandler ExtensionChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Addins.ExtensionEventHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="Finalize">
+      <MemberSignature Language="C#" Value="~ExtensionContext ();" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GetExtensionNode">
+      <MemberSignature Language="C#" Value="public Mono.Addins.ExtensionNode GetExtensionNode (string path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Addins.ExtensionNode</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">Location of the node.</param>
+        <summary>Returns the extension node in a path</summary>
+        <returns>The node, or null if not found.</returns>
+        <remarks>
+          <para>This method returns the extension node located at the provided path. For example, given the following extension point:</para>
+          <example>
+            <code lang="XML">
+	&lt;Extension path="/MonoDevelop/Workbench/MainMenu"&gt;
+		&lt;ItemSet id="File" _label="_File"&gt;
+			&lt;CommandItem id="NewFile" /&gt;
+			&lt;CommandItem id="NewProject" /&gt;
+		&lt;/ItemSet&gt;
+	&lt;/Extension&gt;
+	</code>
+          </example>
+          <para> The following calls are valid: </para>
+          <example>
+            <code lang="C#">
+ExtensionContext ctx;
+...
+// The following call returns the root element of the extension point
+ExtensionNode node = ctx.GetExtensionNode ("/MonoDevelop/Workbench/MainMenu");
+
+// The following call returns an specific node of the extension point
+ExtensionNode node = ctx.GetExtensionNode ("/MonoDevelop/Workbench/MainMenu/File");
+
+// The following call returns a child of a node of the extension point
+ExtensionNode node = ctx.GetExtensionNode ("/MonoDevelop/Workbench/MainMenu/File/NewProject");
+</code>
+          </example>
+        </remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionNodes">
+      <MemberSignature Language="C#" Value="public Mono.Addins.ExtensionNodeList GetExtensionNodes (string path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Addins.ExtensionNodeList</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <summary>Gets extension nodes registered in a path.</summary>
+        <returns>All nodes registered in the provided path.</returns>
+        <remarks>
+          <para>This method returns all nodes registered under the provided path. For example, given the following extension point:</para>
+          <example>
+            <code lang="XML">
+	&lt;Extension path="/MonoDevelop/Workbench/MainMenu"&gt;
+		&lt;ItemSet id="File" _label="_File"&gt;
+			&lt;CommandItem id="NewFile" /&gt;
+			&lt;CommandItem id="NewProject" /&gt;
+		&lt;/ItemSet&gt;
+		&lt;ItemSet id="Edit" _label="_Edit"/&gt;
+		&lt;ItemSet id="View" _label="_View"/&gt;
+	&lt;/Extension&gt;
+	</code>
+          </example>
+          <para> The following calls are valid: </para>
+          <example>
+            <code lang="C#">
+ExtensionContext ctx;
+...
+// The following call prints 'File', 'Edit' and 'View'
+ExtensionNodeList nodes = ctx.GetExtensionNodes ("/MonoDevelop/Workbench/MainMenu");
+foreach (ExtensionNode node in nodes)
+	Console.WriteLine (node.Id);
+
+// The following call prints 'NewFile' and 'NewProject'
+nodes = ctx.GetExtensionNodes ("/MonoDevelop/Workbench/MainMenu/File");
+foreach (ExtensionNode node in nodes)
+	Console.WriteLine (node.Id);
+</code>
+          </example>
+        </remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionNodes">
+      <MemberSignature Language="C#" Value="public Mono.Addins.ExtensionNodeList GetExtensionNodes (string path, Type expectedNodeType);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Addins.ExtensionNodeList</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="expectedNodeType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <param name="expectedNodeType">Expected node type.</param>
+        <summary>Gets extension nodes registered in a path.</summary>
+        <returns>All nodes registered in the provided path.</returns>
+        <remarks>This method returns all nodes registered under the provided path. It will throw a <see cref="T:System.InvalidOperationException" /> if the type of one of the registered nodes is not assignable to the provided type.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (string path);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <summary>Gets extension objects registered in a path.</summary>
+        <returns>An array of objects registered in the path.</returns>
+        <remarks>This method can only be used if all nodes in the provided extension path are of type <see cref="T:Mono.Addins.TypeExtensionNode" />. The returned objects
+are created by calling <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance()" />.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (Type instanceType);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="instanceType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="instanceType">Type for which to query extension objects.</param>
+        <summary>Gets extension objects registered in an extension point.</summary>
+        <returns>An array of objects registered in the extension point.</returns>
+        <remarks>
+          <para>This method can be used to query the extension point of a type which does not have a path. For example:</para>
+          <example>
+            <code lang="C#">
+[TypeExtensionPoint]
+public interface ICommand
+{
+	void Run ();
+}
+  </code>
+          </example>
+          <para>The previous interface declares an extension point which will accept types that implement ICommand interface. Since the extension path is not provided in this declaration, the host has to use the GetExtensionObject method to get the registered object. For example:
+</para>
+          <example>
+            <code lang="C#">
+ExtensionContext context;
+...
+foreach (ICommand cmd in context.GetExtensionObjects (typeof(ICommand)))
+	cmd.Run ();
+  </code>
+          </example>
+          <para>The returned array is composed by all objects created by calling the <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance(System.Type)" /> method for each node.</para>
+        </remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (string path, bool reuseCachedInstance);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="reuseCachedInstance" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <param name="reuseCachedInstance">True if the method can reuse instances created in previous calls.</param>
+        <summary>Gets extension objects registered in a path.</summary>
+        <returns>An array of objects registered in the path.</returns>
+        <remarks>This method can only be used if all nodes in the provided extension path are of type <see cref="T:Mono.Addins.TypeExtensionNode" />. The returned array is composed by all objects created by calling the <see cref="M:Mono.Addins.TypeExtensionNode.CreateInstance()" /> method for each node (or <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance()" /> if reuseCachedInstance is set to true).</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (string path, Type arrayElementType);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="arrayElementType" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <param name="arrayElementType">Type of the return array elements.</param>
+        <summary>Gets extension objects registered in a path.</summary>
+        <returns>An array of objects registered in the path.</returns>
+        <remarks>This method can only be used if all nodes in the provided extension path are of type <see cref="T:Mono.Addins.TypeExtensionNode" />. The returned objects
+are created by calling <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance(System.Type)" />.
+
+<para>
+A <see cref="T:System.InvalidOperationException" /> exception is thrown if one of the found objects is not a subclass of the provided type.
+</para></remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (Type instanceType, bool reuseCachedInstance);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="instanceType" Type="System.Type" />
+        <Parameter Name="reuseCachedInstance" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="instanceType">Type for which to query extension objects.</param>
+        <param name="reuseCachedInstance">True if the method can reuse instances created in previous calls.</param>
+        <summary>Gets extension objects registered in an extension point.</summary>
+        <returns>An array of objects registered in the extension point.</returns>
+        <remarks>
+          <para>This method can be used to query the extension point of a type which does not have a path. For example:</para>
+          <example>
+            <code lang="C#">
+[TypeExtensionPoint]
+public interface ICommand
+{
+	void Run ();
+}
+  </code>
+          </example>
+          <para>The previous interface declares an extension point which will accept types that implement ICommand interface. Since the extension path is not provided in this declaration, the host has to use the GetExtensionObject method to get the registered object. For example:
+</para>
+          <example>
+            <code lang="C#">
+ExtensionContext context;
+...
+foreach (ICommand cmd in context.GetExtensionObjects (typeof(ICommand)))
+	cmd.Run ();
+  </code>
+          </example>
+          <para>The returned array is composed by all objects created by calling the <see cref="M:Mono.Addins.TypeExtensionNode.CreateInstance(System.Type)" /> method for each node (or <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance(System.Type)" /> if reuseCachedInstance is set to true).</para>
+        </remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="GetExtensionObjects">
+      <MemberSignature Language="C#" Value="public object[] GetExtensionObjects (string path, Type arrayElementType, bool reuseCachedInstance);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object[]</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="arrayElementType" Type="System.Type" />
+        <Parameter Name="reuseCachedInstance" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="path">An extension path.</param>
+        <param name="arrayElementType">Type of the return array elements.</param>
+        <param name="reuseCachedInstance">True if the method can reuse instances created in previous calls.</param>
+        <summary>Gets extension objects registered in a path.</summary>
+        <returns>An array of objects registered in the path.</returns>
+        <remarks>This method can only be used if all nodes in the provided extension path are of type <see cref="T:Mono.Addins.TypeExtensionNode" />. The returned array is composed by all objects created by calling the <see cref="M:Mono.Addins.TypeExtensionNode.CreateInstance(System.Type)" /> method for each node (or <see cref="M:Mono.Addins.TypeExtensionNode.GetInstance(System.Type)" /> if reuseCachedInstance is set to true).
+
+<para>
+A <see cref="T:System.InvalidOperationException" /> exception is thrown if one of the found objects is not a subclass of the provided type.
+</para></remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="RegisterCondition">
+      <MemberSignature Language="C#" Value="public void RegisterCondition (string id, Mono.Addins.ConditionType type);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.String" />
+        <Parameter Name="type" Type="Mono.Addins.ConditionType" />
+      </Parameters>
+      <Docs>
+        <param name="id">Identifier of the condition.</param>
+        <param name="type">Condition evaluator.</param>
+        <summary>Registers a new condition in the extension context.</summary>
+        <remarks>The registered condition will be particular to this extension context. Any event that might be fired as a result of changes in the condition will only be fired in this context.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="RegisterCondition">
+      <MemberSignature Language="C#" Value="public void RegisterCondition (string id, Type type);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.String" />
+        <Parameter Name="type" Type="System.Type" />
+      </Parameters>
+      <Docs>
+        <param name="id">Identifier of the condition.</param>
+        <param name="type">Type of the condition evaluator. Must be a subclass of <see cref="T:Mono.Addins.ConditionType" /></param>
+        <summary>Registers a new condition in the extension context.</summary>
+        <remarks>
+          <para>The registered condition will be particular to this extension context. Any event that might be fired as a result of changes in the condition will only be fired in this context.
+</para>
+
+An instance of the condition will be created the first time it is requested, and it will be cached.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="RemoveExtensionNodeHandler">
+      <MemberSignature Language="C#" Value="public void RemoveExtensionNodeHandler (string path, Mono.Addins.ExtensionNodeEventHandler handler);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+        <Parameter Name="handler" Type="Mono.Addins.ExtensionNodeEventHandler" />
+      </Parameters>
+      <Docs>
+        <param name="path">Path of the node.</param>
+        <param name="handler">A handler method.</param>
+        <summary>Unregister a listener of extension node changes.</summary>
+        <remarks>This method unregisters a delegate from the node change event of a path.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+  </Members>
+</Type>

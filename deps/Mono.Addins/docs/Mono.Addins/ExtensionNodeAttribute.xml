@@ -1,0 +1,121 @@
+<Type Name="ExtensionNodeAttribute" FullName="Mono.Addins.ExtensionNodeAttribute">
+  <TypeSignature Language="C#" Value="public class ExtensionNodeAttribute : Attribute" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Addins</AssemblyName>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Attribute</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.AttributeUsage(System.AttributeTargets.Class)</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>
+      <para>This attribute can be applied to an ExtensionNode subclass to specify the default name and description. This information will be used when an extension point does not define a name or description for a node type.
+</para>
+      <example>
+        <code lang="C#">
+	[ExtensionNode ("ToolbarItem", "Declares a new item of a toolbar.")]
+	public class ToolbarItemNode: ExtensionNode
+	{
+		[NodeAttribute]
+		string icon;
+		
+		[NodeAttribute]
+		string label;
+		
+		public string Icon {
+			get { return icon; }
+		}
+		
+		public string Label {
+			get { return label; }
+		}
+	}
+  </code>
+      </example>
+    </remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ExtensionNodeAttribute ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs>
+        <summary>Initializes a new instance.</summary>
+        <remarks />
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ExtensionNodeAttribute (string nodeName);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="nodeName" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="nodeName">Default name of the extension node.</param>
+        <summary>Initializes a new instance.</summary>
+        <remarks />
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ExtensionNodeAttribute (string nodeName, string description);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="nodeName" Type="System.String" />
+        <Parameter Name="description" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="nodeName">Default name of the extension node.</param>
+        <param name="description">Default description of the extension node.</param>
+        <summary>Initializes a new instance.</summary>
+        <remarks />
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="Description">
+      <MemberSignature Language="C#" Value="public string Description { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Default description of the extension node.</summary>
+        <value>Description of the node.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="NodeName">
+      <MemberSignature Language="C#" Value="public string NodeName { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Default name of the extension node.</summary>
+        <value>The name.</value>
+        <remarks>Name of the node type. When an element is added to an extension point, its name must match one of the declared node types.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+  </Members>
+</Type>

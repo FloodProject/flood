@@ -1,0 +1,169 @@
+<Type Name="ExtensionAttribute" FullName="Mono.Addins.ExtensionAttribute">
+  <TypeSignature Language="C#" Value="public class ExtensionAttribute : Attribute" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Addins</AssemblyName>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Attribute</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple=true)</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Docs>
+    <summary>Declares an extension.</summary>
+    <remarks>
+      <para>When applied to a class, specifies that the class is an extension class to be registered in a matching extension point. For example:</para>
+      <example>
+        <code lang="C#">
+[Extension]
+class MyWritter: IWritter
+{
+	public string Write ()
+	{
+		return "hello";
+	}
+}
+</code>
+      </example>
+      <para>
+The previous example class would be registered as an extension of the following extension point defined in a host:
+</para>
+      <example>
+        <code lang="C#">
+[TypeExtensionPoint]
+public interface IWritter
+{
+	string Write ();
+}
+</code>
+      </example>
+      <para>
+It would also be registered in an extension point declared in an .addin file with the following declaration:
+</para>
+      <example>
+        <code lang="XML">
+	&lt;ExtensionPoint path = "/Writers"&gt;
+		&lt;ExtensionNode objectType="IWriter" /&gt;
+	&lt;/ExtensionPoint&gt;
+</code>
+      </example>
+    </remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ExtensionAttribute ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs>
+        <summary>Initializes a new instance.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ExtensionAttribute (string path);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="path" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="path">Path of the extension point being extended.</param>
+        <summary>Initializes a new instance.</summary>
+        <remarks />
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="Id">
+      <MemberSignature Language="C#" Value="public string Id { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Identifier of the extension node.</summary>
+        <value>Identifier of the extension node.</value>
+        <remarks />
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="InsertAfter">
+      <MemberSignature Language="C#" Value="public string InsertAfter { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Identifier of the extension node after which this node has to be added in the extension point.</summary>
+        <value>Identifier of an extension node.</value>
+        <remarks>The <see cref="P:Mono.Addins.ExtensionAttribute.InsertAfter" /> and <see cref="P:Mono.Addins.ExtensionAttribute.InsertBefore" /> properties can be used to specify the relative location of a node. The nodes referenced in those properties must be defined either in the add-in host being extended, or in any add-in on which this add-in depends.
+
+<para>
+The add-in engine ensures that if <see cref="P:Mono.Addins.ExtensionAttribute.InsertAfter" /> is specified, the node will be inserted after the specified node, and before any other node defined in the same extension.
+</para></remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="InsertBefore">
+      <MemberSignature Language="C#" Value="public string InsertBefore { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Identifier of the extension node before which this node has to be added in the extension point.</summary>
+        <value>Identifier of an extension node.</value>
+        <remarks>The <see cref="P:Mono.Addins.ExtensionAttribute.InsertAfter" /> and <see cref="P:Mono.Addins.ExtensionAttribute.InsertBefore" /> properties can be used to specify the relative location of a node. The nodes referenced in those properties must be defined either in the add-in host being extended, or in any add-in on which this add-in depends.
+
+<para>
+The add-in engine ensures that if <see cref="P:Mono.Addins.ExtensionAttribute.InsertAfter" /> is specified, the node will be inserted after the specified node, and before any other node defined in the same extension.
+</para></remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="NodeName">
+      <MemberSignature Language="C#" Value="public string NodeName { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Name of the node.</summary>
+        <value>Name of the node.</value>
+        <remarks>Extension points may require extensions to use a specific node name. This is needed when an extension point may contain several different types nodes.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+    <Member MemberName="Path">
+      <MemberSignature Language="C#" Value="public string Path { set; get; }" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Path to which the extension type should be registered.</summary>
+        <value>The path.</value>
+        <remarks>When provided, the add-in manager will register this type in the specified extension path. If not provided, the extension will be registered in any available extension point which accepts this type.</remarks>
+      </Docs>
+      <AssemblyInfo>
+        <AssemblyVersion>0.4.0.0</AssemblyVersion>
+      </AssemblyInfo>
+    </Member>
+  </Members>
+</Type>
