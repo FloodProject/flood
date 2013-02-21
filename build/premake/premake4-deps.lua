@@ -8,7 +8,8 @@ solution "Dependencies"
 
 	configurations { "Debug", "Release" }
 	platforms { "x32", "x64" }
-	
+	defaultplatform "x32"
+    
 	flags { common_flags }
 	language "C++"
 	
