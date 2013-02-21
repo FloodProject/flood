@@ -24,6 +24,20 @@ function SafePath(path)
 	return "\"" .. path .. "\""
 end
 
+function IncludePremakeProjects(basedir)
+    local deps = os.matchdirs(basedir)
+    
+    for i,dep in ipairs(deps) do
+        local fp = path.join(dep, "premake4.lua")
+        fp = path.join(os.getcwd(), fp)
+        
+        if os.isfile(fp) then
+            print(string.format(" including %s", dep))
+            include(dep)
+        end
+    end
+end
+
 function SetupRPCGen(projectName,extension)
 	dependson { "RPCGen" }
 
