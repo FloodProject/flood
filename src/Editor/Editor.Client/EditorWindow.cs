@@ -25,8 +25,6 @@ namespace Flood.Editor
         /// </summary>
         public Canvas Canvas { get; private set; }
 
-        private EngineManaged.GUI.Renderer.Base renderer;
-        private EngineManaged.GUI.Skin.Base skin
         /// <summary>
         /// Size of the main editor window.
         /// </summary>
@@ -50,12 +48,12 @@ namespace Flood.Editor
         /// <summary>
         /// Renderer of the GUI.
         /// </summary>
-        private Gwen.Renderer.Base renderer;
+        private EngineManaged.GUI.Renderer.Base renderer;
 
         /// <summary>
         /// Skin of the GUI.
         /// </summary>
-        private Gwen.Skin.Base skin;
+        private EngineManaged.GUI.Skin.Base skin;
 
         public void Dispose()
         {
