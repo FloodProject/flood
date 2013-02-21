@@ -6,7 +6,7 @@ dofile "Helpers.lua"
 
 -- Copy a configuration build header if one does not exist yet.
 
-if not os.isfile("Config.lua") then
+if not os.isfile("../Config.lua") then
 	print("Build configuration file 'Config.lua' created")
 	os.copyfile("Config0.lua", "../Config.lua")
 end
