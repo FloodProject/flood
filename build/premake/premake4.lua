@@ -39,8 +39,8 @@ solution "Flood"
 	
 	configuration "Release"
 		flags { "Optimize" }
-        
-    configuration "Debug"
+
+	configuration "Debug"
 		defines { "DEBUG" }
 		
 	configuration {}
@@ -62,7 +62,7 @@ solution "Flood"
 
 		dofile( srcdir .. "/EngineManaged/Bindings/EngineBindings.lua")
 		dofile( srcdir .. "/EngineManaged/EngineManaged.lua")
-        dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
+		dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
 		dofile( srcdir .. "/GUI/GUI.lua")
 		dofile( srcdir .. "/ServerManaged/ServerManaged.lua")
 		
@@ -80,9 +80,16 @@ solution "Flood"
 		
 	group "Tools"
 
+		if config.BINDINGGEN then
+			dofile( srcdir .. "/Tools/BindingsGen/BindingsGen.lua")
+		end
+
+		if config.BAKEFILEGEN then
+			dofile( srcdir .. "/Tools/BakefileGen/BakefileGen.lua")
+		end
+
 		dofile( srcdir .. "/Tools/RPCGen/RPCGen.lua")
-        dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
-        dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
-		dofile( srcdir .. "/Tools/BakefileGen/BakefileGen.lua")
-	
+		dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
+		dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
+
 	group "Examples"

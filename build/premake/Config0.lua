@@ -7,6 +7,16 @@
 config =
 {
 --
+-- Build
+--
+
+	-- Includes the BindingGen project in the solution.
+	BINDINGGEN = false,
+
+	-- Includes the BakefileGen project in the solution.
+	BAKEFILEGEN = false,
+
+--
 -- Core
 --
 
