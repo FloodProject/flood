@@ -19,8 +19,6 @@ project "Runtime"
 	
 	SetupNativeProjects()
 
-	builddeps { Core.name, Resources.name }
-	
 	defines { Runtime.defines }
 
 	files

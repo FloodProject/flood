@@ -1,7 +1,6 @@
 project "UnitTests"
 
 	kind "ConsoleApp"
-	builddeps { "Core" }
 	debugdir "../Core/Test/"
 	
 	defines { Core.defines }

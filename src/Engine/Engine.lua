@@ -24,8 +24,6 @@ project "Engine"
 
 	defines { Engine.defines }
 
-	builddeps { Core.name, Resources.name, Graphics.name }
-
 	pchheader "Engine/API.h"
 	pchsource "Engine.cpp"
 

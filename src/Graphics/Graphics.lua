@@ -15,8 +15,6 @@ project "Graphics"
 	
 	SetupNativeProjects()
 
-	builddeps { Core.name, Resources.name }
-
 	defines { Core.defines, Resources.defines, Graphics.defines }
 
 	files

@@ -4,8 +4,7 @@ GameRuntime.name = "GameRuntime"
 project "GameRuntime"
 
 	kind "ConsoleApp"
-	builddeps { Engine.name, Graphics.name, Runtime.name }
-	
+
 	SetupNativeProjects()
 	
 	defines

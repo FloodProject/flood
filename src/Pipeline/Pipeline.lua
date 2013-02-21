@@ -19,8 +19,6 @@ project "Pipeline"
 	
 	SetupNativeProjects()
 
-	builddeps { "Core", "Resources", "Graphics", "Engine" }
-	
 	pchheader "Pipeline/API.h"
 	pchsource "Pipeline.cpp"
 	

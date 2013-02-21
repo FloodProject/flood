@@ -150,9 +150,6 @@ function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
 end
 
-function builddeps(deps)
-end
-
 function deps(dep)
 	for i,lib in ipairs(dep) do
 		if type(lib) == "table" then

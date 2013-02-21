@@ -15,8 +15,6 @@ project "Resources"
 	
 	SetupNativeProjects()
 
-	builddeps { Core.name }
-	
 	defines { Core.defines, Resources.defines }
 
 	pchheader "Resources/API.h"
