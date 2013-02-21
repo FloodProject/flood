@@ -7,7 +7,7 @@ srcdir = path.getabsolute("../../src");
 incdir = path.getabsolute("../../inc");
 bindir = path.getabsolute("../../bin");
 builddir = path.getabsolute("../" .. action);
-libdir = path.join(builddir, "lib");
+libdir = path.join(builddir, "lib","%{cfg.buildcfg}_%{cfg.platform}");
 gendir = path.join(builddir, "gen");
 
 common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
@@ -41,22 +41,20 @@ end
 function SetupRPCGen(projectName,extension)
 	dependson { "RPCGen" }
 
-	local exePath = SafePath(path.join(libdir,"RPCGen.exe"))
+	local exePath = SafePath("$(TargetDir)" .. "RPCGen.exe")
 	local outPath = SafePath(path.join(gendir,projectName))
 	local projPath = SafePath(path.getabsolute(path.join(".", projectName .. ".csproj")))
-	local dllPath = SafePath(path.join(libdir,projectName .. extension))
-	
-	postbuildcommands
-	{
-		exePath .. " -o=" .. outPath .. " -msbuild=" .. projPath .. " " .. dllPath
-	}
+	local dllPath = SafePath("$(TargetDir)" .. projectName .. extension)
+	local command = exePath .. " -o=" .. outPath .. " -msbuild=" .. projPath .. " " .. dllPath;
+    
+	postbuildcommands { command }
 end
 
 function SetupEngineWeaver(dllName)
 	dependson { "EngineWeaver" }
 
-	local exePath = SafePath(path.join(libdir,"EngineWeaver.exe"))
-	local dllPath = SafePath(path.join(libdir,dllName))
+	local exePath = SafePath("$(TargetDir)" .. "EngineWeaver.exe");
+	local dllPath = SafePath("$(TargetDir)" .. dllName)
 	
 	postbuildcommands
 	{
@@ -96,7 +94,6 @@ function SetupNativeProjects()
 
 	local c = configuration "Debug"
 		defines { "_DEBUG" }
-		targetsuffix "_d"
 		
 	configuration "Release"
 		defines { "NDEBUG" }
@@ -126,7 +123,6 @@ function SetupNativeDependencyProject()
 	local c = configuration "Debug"
 		defines { "_DEBUG" }
 		flags { "NoMinimalRebuild", "FloatFast", "NoEditAndContinue" }
-		targetsuffix "_d"	
 	
 	configuration "Release"
 		defines { "NDEBUG" }
@@ -154,15 +150,6 @@ function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
 end
 
-
-function SetupLibLinks(lib)
-	c = configuration "Debug"
-		links { lib .. "_d" }
-	configuration "Release"
-		links { lib }
-	configuration(c)
-end
-
 function builddeps(deps)
 end
 
@@ -172,7 +159,7 @@ function deps(dep)
 			deps(lib)
 		else
 			SetupLibPaths(lib)
-			SetupLibLinks(lib)
+            links {lib}
 		end
 	end
 end
