@@ -697,8 +697,7 @@ public:
 
 	delegate void Foo(int);
 
-	void Initialize(InputManager* inputManager){
-
+	void Initialize(InputManager* inputManager) {
 		renderer = gcnew GwenRenderer();
 
 		auto engine = gcnew Flood::Engine(System::IntPtr(GetEngine()));
@@ -720,12 +719,20 @@ public:
 		managedEditor->Window->Render();
 		renderer->Render(rb);
 	}
+
+	void SetSize(int x, int y){
+		managedEditor->Window->SetCanvasSize(x, y);
+	}
 };
 
 static gcroot<::GUI^> gs_GUIInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager){
 	gs_GUIInstance = gcnew GUI(inputManager);
+}
+
+void ResizeGUI(int x, int y) {
+	gs_GUIInstance->SetSize(x, y);
 }
 
 void CloseGUI() {

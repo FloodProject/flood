@@ -66,6 +66,7 @@ protected:
 	// View callbacks.
 	void onUpdate( float delta );
 	void onRender();
+	void onResize(const Settings&);
 
 	void setupRenderWindow();
 

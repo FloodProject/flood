@@ -305,6 +305,7 @@ RenderWindow* SceneDocument::getRenderWindow()
 void SceneDocument::setupRenderWindow()
 {
 	Window* window = getRenderWindow();
+	window->onTargetResize.Connect(this, &SceneDocument::onResize);
 
 	RenderDevice* device = GetRenderDevice();
 	device->setRenderTarget( window );
@@ -459,6 +460,15 @@ void SceneDocument::onUpdate( float delta )
 		LogDebug("Camera failsafe, this should not happen");
 		cameraController->setEnabled(false);
 	}
+}
+
+//-----------------------------------//
+
+void ResizeGUI(int x, int y);
+
+void SceneDocument::onResize(const Settings& settings)
+{
+	ResizeGUI(settings.width, settings.height);
 }
 
 //-----------------------------------//
