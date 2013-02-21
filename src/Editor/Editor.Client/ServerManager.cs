@@ -23,7 +23,7 @@ namespace Flood.Editor
             serverCreatedEvent = new ManualResetEventSlim();
             Server = new EditorServer();
 
-            Task.Run((Action) RunBuiltinServer);
+            System.Threading.Tasks.Task.Run((Action) RunBuiltinServer);
             serverCreatedEvent.Wait();
         }
     }
