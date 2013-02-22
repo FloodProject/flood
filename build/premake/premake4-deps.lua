@@ -4,6 +4,8 @@
 
 dofile "Helpers.lua"
 
+ImportConfigs()
+
 solution "Dependencies"
 
 	configurations { "Debug", "Release" }

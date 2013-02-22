@@ -24,6 +24,15 @@ function SafePath(path)
 	return "\"" .. path .. "\""
 end
 
+-- Copy a configuration build header if one does not exist yet.
+function ImportConfigs()
+    if not os.isfile("../Config.lua") then
+        print("Build configuration file 'Config.lua' created")
+        os.copyfile("Config0.lua", "../Config.lua")
+    end
+    dofile "../Config.lua"
+end
+
 function IncludePremakeProjects(basedir)
     local deps = os.matchdirs(basedir)
     
