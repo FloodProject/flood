@@ -209,10 +209,12 @@ void ScenePlugin::onSceneLoad( const ScenePtr& scene )
 void ScenePlugin::onSceneUnload( const ScenePtr& scene )
 {
 	LogDebug("Scene unloaded, removing items from scene tree");
-	scenePage->cleanScene();
 
-	PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage;
-	page->reset();
+	if (scenePage)
+		scenePage->cleanScene();
+
+	if (PropertyPage* page = GetPlugin<PropertyPlugin>()->propertyPage)
+		page->reset();
 }
 
 //-----------------------------------//

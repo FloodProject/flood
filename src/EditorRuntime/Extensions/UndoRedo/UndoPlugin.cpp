@@ -22,6 +22,10 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 UndoPlugin::UndoPlugin()
+	: undoItem(nullptr)
+	, redoItem(nullptr)
+	, undoButton(nullptr)
+	, redoButton(nullptr)
 {
 
 }
@@ -45,9 +49,7 @@ PluginMetadata UndoPlugin::getMetadata()
 
 void UndoPlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-	
-	if(toolbarCtrl)
+	if(wxAuiToolBar* toolbarCtrl = editor->getToolbar())
 	{
 		addTool( toolbarCtrl->AddSeparator() );
 
@@ -88,16 +90,21 @@ void UndoPlugin::onPluginDisable()
 
 	// Remove entries from the menu.
 	wxMenu* menu = editor->menuEdit;
-	menu->Delete( undoItem->GetId() );
-	menu->Delete( redoItem->GetId() );
+
+	if (undoItem)
+		menu->Delete( undoItem->GetId() );
+
+	if (redoItem)
+		menu->Delete( redoItem->GetId() );
 
 	// Disconnect from all the events.
-	editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
-	editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
+	if (undoButton)
+		editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
 
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-	
-	if(toolbarCtrl)
+	if (redoButton)
+		editor->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
+
+	if(wxAuiToolBar* toolbarCtrl = editor->getToolbar())
 	{
 		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
 		toolbarCtrl->Unbind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );

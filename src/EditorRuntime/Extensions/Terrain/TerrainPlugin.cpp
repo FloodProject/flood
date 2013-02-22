@@ -194,9 +194,11 @@ void TerrainPlugin::disableTerrainMode()
 {
 	disableBrushProjection();
 
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-	toolbarCtrl->EnableTool(buttonRaise->GetId(), false);
-	toolbarCtrl->EnableTool(buttonPaint->GetId(), false);
+	if (wxAuiToolBar* toolbarCtrl = editor->getToolbar())
+	{
+		toolbarCtrl->EnableTool(buttonRaise->GetId(), false);
+		toolbarCtrl->EnableTool(buttonPaint->GetId(), false);
+	}
 
 	terrain = nullptr;
 	terrainOperation = nullptr;

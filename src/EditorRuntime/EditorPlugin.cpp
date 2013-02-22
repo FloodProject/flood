@@ -180,16 +180,18 @@ void ToolExtension::setToolbar(wxAuiToolBar* tb)
 void EditorPlugin::removeTools()
 {
 	// Clean up toolbar stuff.
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-
-	for( size_t i = 0; i < tools.size(); i++ )
+	if (wxAuiToolBar* toolbarCtrl = editor->getToolbar())
 	{
-		wxAuiToolBarItem* tool = tools[i].item;
-		int id = tool->GetId();
-		toolbarCtrl->DeleteTool(id);
+		for( size_t i = 0; i < tools.size(); i++ )
+		{
+			wxAuiToolBarItem* tool = tools[i].item;
+			int id = tool->GetId();
+			toolbarCtrl->DeleteTool(id);
+		}
+
+		toolbarCtrl->Realize();
 	}
 
-	toolbarCtrl->Realize();
 	//editor->getAUI()->Update();
 
 	tools.clear();
