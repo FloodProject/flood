@@ -6,12 +6,12 @@ using System.Text;
 
 namespace EngineManaged.GUI.Controls.Layout
 {
-    public class Tile : Base
+    public class Tile : Control
     {
 
         Point   m_TileSize;
 
-        public Tile ( Base parent)
+        public Tile ( Control parent)
             : base(parent)
         {
             Dock = Pos.Fill;

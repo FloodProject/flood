@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="UpDownButton_Up"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public UpDownButton_Up(Base parent)
+        public UpDownButton_Up(Control parent)
             : base(parent)
         {
             SetSize(7, 7);

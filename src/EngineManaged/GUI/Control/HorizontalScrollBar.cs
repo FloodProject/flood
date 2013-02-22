@@ -46,7 +46,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="HorizontalScrollBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public HorizontalScrollBar(Base parent)
+        public HorizontalScrollBar(Control parent)
             : base(parent)
         {
             m_Bar.IsHorizontal = true;
@@ -92,13 +92,13 @@ namespace EngineManaged.GUI.Controls
             }
         }
 
-        public void NudgeLeft(Base control)
+        public void NudgeLeft(Control control)
         {
             if (!IsDisabled)
                 SetScrollAmount(ScrollAmount - NudgeAmount, true);
         }
 
-        public void NudgeRight(Base control)
+        public void NudgeRight(Control control)
         {
             if (!IsDisabled)
                 SetScrollAmount(ScrollAmount + NudgeAmount, true);
@@ -189,7 +189,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for the BarMoved event.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected override void OnBarMoved(Base control)
+        protected override void OnBarMoved(Control control)
         {
             if (m_Bar.IsHeld)
             {

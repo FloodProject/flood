@@ -21,7 +21,7 @@ namespace EngineManaged.GUI.Controls
         /// <param name="parent">Parent control.</param>
         /// <param name="text">Message to display.</param>
         /// <param name="caption">Window caption.</param>
-        public MessageBox(Base parent, String text, String caption = "") 
+        public MessageBox(Control parent, String text, String caption = "") 
             : base(parent, caption, true)
         {
             DeleteOnClose = true;
@@ -43,7 +43,7 @@ namespace EngineManaged.GUI.Controls
             Align.Center(this);
         }
 
-        private void DismissedHandler(Base control)
+        private void DismissedHandler(Control control)
         {
             if (Dismissed != null)
                 Dismissed.Invoke(this);

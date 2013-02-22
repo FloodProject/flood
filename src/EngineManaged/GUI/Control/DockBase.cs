@@ -8,7 +8,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Base for dockable containers.
     /// </summary>
-    public class DockBase : Base
+    public class DockBase : Control
     {
         private DockBase m_Left;
         private DockBase m_Right;
@@ -51,7 +51,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="DockBase"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public DockBase(Base parent)
+        public DockBase(Control parent)
             : base(parent)
         {
             Padding = Padding.One;
@@ -274,7 +274,7 @@ namespace EngineManaged.GUI.Controls
             }
         }
 
-        protected virtual void OnTabRemoved(Base control)
+        protected virtual void OnTabRemoved(Control control)
         {
             DoRedundancyCheck();
             DoConsolidateCheck();

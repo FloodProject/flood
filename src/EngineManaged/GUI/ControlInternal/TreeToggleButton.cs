@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="TreeToggleButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TreeToggleButton(Base parent)
+        public TreeToggleButton(Control parent)
             : base(parent)
         {
             IsToggle = true;

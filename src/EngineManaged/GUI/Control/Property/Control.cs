@@ -5,13 +5,13 @@ namespace EngineManaged.GUI.Controls.Property
     /// <summary>
     /// Base control for property entry.
     /// </summary>
-    public class Base : Controls.Base
+    public class Control : Controls.Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Base"/> class.
+        /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Base(Controls.Base parent) : base(parent)
+        public Control(Controls.Control parent) : base(parent)
         {
             Height = 17;
         }
@@ -37,7 +37,7 @@ namespace EngineManaged.GUI.Controls.Property
                 ValueChanged.Invoke(this);
         }
 
-        protected virtual void OnValueChanged(Controls.Base control)
+        protected virtual void OnValueChanged(Controls.Control control)
         {
             DoChanged();
         }

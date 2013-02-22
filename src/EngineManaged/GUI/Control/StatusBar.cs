@@ -11,7 +11,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="StatusBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public StatusBar(Base parent)
+        public StatusBar(Control parent)
             : base(parent)
         {
             Height = 22;
@@ -26,7 +26,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="control">Control to add.</param>
         /// <param name="right">Determines whether the control should be added to the right side of the bar.</param>
-        public void AddControl(Base control, bool right)
+        public void AddControl(Control control, bool right)
         {
             control.Parent = this;
             control.Dock = right ? Pos.Right : Pos.Left;

@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.
     /// </summary>
-    public class TabControl : Base
+    public class TabControl : Control
     {
         private readonly TabStrip m_TabStrip;
         private readonly ScrollBarButton[] m_Scroll;
@@ -53,7 +53,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="TabControl"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TabControl(Base parent)
+        public TabControl(Control parent)
             : base(parent)
         {
             m_Scroll = new ScrollBarButton[2];
@@ -86,11 +86,11 @@ namespace EngineManaged.GUI.Controls
         /// <param name="label">Tab label.</param>
         /// <param name="page">Page contents.</param>
         /// <returns>Newly created control.</returns>
-        public TabButton AddPage(String label, Base page = null)
+        public TabButton AddPage(String label, Control page = null)
         {
             if (null == page)
             {
-                page = new Base(this);
+                page = new Control(this);
             }
             else
             {
@@ -112,7 +112,7 @@ namespace EngineManaged.GUI.Controls
         /// <param name="button">Page to add. (well, it's a TabButton which is a parent to the page).</param>
         public void AddPage(TabButton button)
         {
-            Base page = button.Page;
+            Control page = button.Page;
             page.Parent = this;
             page.IsHidden = true;
             page.Margin = new Margin(6, 6, 6, 6);
@@ -152,12 +152,12 @@ namespace EngineManaged.GUI.Controls
         /// Handler for tab selection.
         /// </summary>
         /// <param name="control">Event source (TabButton).</param>
-        internal virtual void OnTabPressed(Base control)
+        internal virtual void OnTabPressed(Control control)
         {
             TabButton button = control as TabButton;
             if (null == button) return;
 
-            Base page = button.Page;
+            Control page = button.Page;
             if (null == page) return;
 
             if (m_CurrentButton == button)
@@ -165,7 +165,7 @@ namespace EngineManaged.GUI.Controls
 
             if (null != m_CurrentButton)
             {
-                Base page2 = m_CurrentButton.Page;
+                Control page2 = m_CurrentButton.Page;
                 if (page2 != null)
                 {
                     page2.IsHidden = true;
@@ -251,12 +251,12 @@ namespace EngineManaged.GUI.Controls
             m_Scroll[1].SetPosition(m_Scroll[0].Right, 5);
         }
 
-        protected virtual void ScrollPressedLeft(Base control)
+        protected virtual void ScrollPressedLeft(Control control)
         {
             m_ScrollOffset -= 120;
         }
 
-        protected virtual void ScrollPressedRight(Base control)
+        protected virtual void ScrollPressedRight(Control control)
         {
             m_ScrollOffset += 120;
         }

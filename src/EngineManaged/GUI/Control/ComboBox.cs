@@ -10,7 +10,7 @@ namespace EngineManaged.GUI.Controls
     public class ComboBox : Button
     {
         private readonly Menu m_Menu;
-        private readonly Base m_Button;
+        private readonly Control m_Button;
         private MenuItem m_SelectedItem;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ComboBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ComboBox(Base parent)
+        public ComboBox(Control parent)
             : base(parent)
         {
             SetSize(100, 20);
@@ -119,7 +119,7 @@ namespace EngineManaged.GUI.Controls
         /// Internal handler for item selected event.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnItemSelected(Base control)
+        protected virtual void OnItemSelected(Control control)
         {
             //Convert selected to a menu item
             MenuItem item = control as MenuItem;

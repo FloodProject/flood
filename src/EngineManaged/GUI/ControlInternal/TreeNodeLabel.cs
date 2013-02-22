@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="TreeNodeLabel"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TreeNodeLabel(Base parent)
+        public TreeNodeLabel(Control parent)
             : base(parent)
         {
             Alignment = Pos.Left | Pos.CenterV;

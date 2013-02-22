@@ -8,9 +8,9 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Tab strip - groups TabButtons and allows reordering.
     /// </summary>
-    public class TabStrip : Base
+    public class TabStrip : Control
     {
-        private Base m_TabDragControl;
+        private Control m_TabDragControl;
         private bool m_AllowReorder;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="TabStrip"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TabStrip(Base parent)
+        public TabStrip(Control parent)
             : base(parent)
         {
             m_AllowReorder = false;
@@ -71,7 +71,7 @@ namespace EngineManaged.GUI.Controls
                 }
             }
 
-            Base droppedOn = GetControlAt(LocalPos.X, LocalPos.Y);
+            Control droppedOn = GetControlAt(LocalPos.X, LocalPos.Y);
             if (droppedOn != null)
             {
                 Point dropPos = droppedOn.CanvasPosToLocal(new Point(x, y));
@@ -180,7 +180,7 @@ namespace EngineManaged.GUI.Controls
         {
             Point localPos = CanvasPosToLocal(new Point(x, y));
 
-            Base droppedOn = GetControlAt(localPos.X, localPos.Y);
+            Control droppedOn = GetControlAt(localPos.X, localPos.Y);
             if (droppedOn != null && droppedOn != this)
             {
                 Point dropPos = droppedOn.CanvasPosToLocal(new Point(x, y));

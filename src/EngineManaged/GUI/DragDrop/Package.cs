@@ -9,7 +9,7 @@ namespace EngineManaged.GUI.DragDrop
         public String Name;
         public object UserData;
         public bool IsDraggable;
-        public Base DrawControl;
+        public Control DrawControl;
         public Point HoldOffset;
     }
 }

@@ -13,7 +13,7 @@ namespace EngineManaged.GUI.Controls
         private bool m_Checkable;
         private bool m_Checked;
         private Menu m_Menu;
-        private Base m_SubmenuArrow;
+        private Control m_SubmenuArrow;
         private Label m_Accelerator;
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="MenuItem"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public MenuItem(Base parent)
+        public MenuItem(Control parent)
             : base(parent)
         {
             m_OnStrip = false;

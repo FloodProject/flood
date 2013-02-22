@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Linear-interpolated HSV color box.
     /// </summary>
-    public class ColorLerpBox : Base
+    public class ColorLerpBox : Control
     {
         private Point m_CursorPos;
         private bool m_Depressed;
@@ -23,7 +23,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ColorLerpBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ColorLerpBox(Base parent) : base(parent)
+        public ColorLerpBox(Control parent) : base(parent)
         {
             SetColor(Color.FromArgb(255, 255, 128, 0));
             SetSize(128, 128);

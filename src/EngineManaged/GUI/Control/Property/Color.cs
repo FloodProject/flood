@@ -15,7 +15,7 @@ namespace EngineManaged.GUI.Controls.Property
         /// Initializes a new instance of the <see cref="Color"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Color(Controls.Base parent) : base(parent)
+        public Color(Controls.Control parent) : base(parent)
         {
             m_Button = new ColorButton(m_TextBox);
             m_Button.Dock = Pos.Right;
@@ -28,7 +28,7 @@ namespace EngineManaged.GUI.Controls.Property
         /// Color-select button press handler.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnButtonPressed(Controls.Base control)
+        protected virtual void OnButtonPressed(Controls.Control control)
         {
             Menu menu = new Menu(GetCanvas());
             menu.SetSize(256, 180);
@@ -51,7 +51,7 @@ namespace EngineManaged.GUI.Controls.Property
         /// Color changed handler.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnColorChanged(Controls.Base control)
+        protected virtual void OnColorChanged(Controls.Control control)
         {
             HSVColorPicker picker = control as HSVColorPicker;
             SetTextFromColor(picker.SelectedColor);

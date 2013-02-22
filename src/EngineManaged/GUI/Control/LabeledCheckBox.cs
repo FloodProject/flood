@@ -5,7 +5,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// CheckBox with label.
     /// </summary>
-    public class LabeledCheckBox : Base
+    public class LabeledCheckBox : Control
     {
         private readonly CheckBox m_CheckBox;
         private readonly LabelClickable m_Label;
@@ -39,7 +39,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="LabeledCheckBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public LabeledCheckBox(Base parent)
+        public LabeledCheckBox(Control parent)
             : base(parent)
         {
             SetSize(200, 19);
@@ -60,7 +60,7 @@ namespace EngineManaged.GUI.Controls
         /// <summary>
         /// Handler for CheckChanged event.
         /// </summary>
-        protected virtual void OnCheckChanged(Base control)
+        protected virtual void OnCheckChanged(Control control)
         {
             if (m_CheckBox.IsChecked)
             {

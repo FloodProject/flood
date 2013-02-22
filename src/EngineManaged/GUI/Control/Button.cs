@@ -104,7 +104,7 @@ namespace EngineManaged.GUI.Controls
         /// Control constructor.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Button(Base parent)
+        public Button(Control parent)
             : base(parent)
         {
             SetSize(100, 20);
@@ -124,7 +124,7 @@ namespace EngineManaged.GUI.Controls
         /// <summary>
         /// "Clicks" the button.
         /// </summary>
-        public virtual void Press(Base control = null)
+        public virtual void Press(Control control = null)
         {
             OnClicked();
         }

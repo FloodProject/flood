@@ -9,7 +9,7 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// Displays text. Always sized to contents.
     /// </summary>
-    public class Text : Base
+    public class Text : Control
     {
         private String m_String;
         private Font m_Font;
@@ -72,7 +72,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="Text"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Text(Base parent)
+        public Text(Control parent)
             : base(parent)
         {
             m_Font = Skin.DefaultFont;

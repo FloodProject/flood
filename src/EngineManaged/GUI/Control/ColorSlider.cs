@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// HSV hue selector.
     /// </summary>
-    public class ColorSlider : Base
+    public class ColorSlider : Control
     {
         private int m_SelectedDist;
         private bool m_Depressed;
@@ -22,7 +22,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ColorSlider"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ColorSlider(Base parent)
+        public ColorSlider(Control parent)
             : base(parent)
         {
             SetSize(32, 128);

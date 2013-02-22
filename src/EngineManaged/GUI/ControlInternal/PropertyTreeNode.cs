@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="PropertyTreeNode"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public PropertyTreeNode(Base parent)
+        public PropertyTreeNode(Control parent)
             : base(parent)
         {
             m_Title.TextColorOverride = Skin.Colors.Properties.Title;

@@ -6,13 +6,13 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// Divider menu item.
     /// </summary>
-    public class MenuDivider : Base
+    public class MenuDivider : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MenuDivider"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public MenuDivider(Base parent)
+        public MenuDivider(Control parent)
             : base(parent)
         {
             Height = 1;

@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Properties table.
     /// </summary>
-    public class Properties : Base
+    public class Properties : Control
     {
         private readonly SplitterBar m_SplitterBar;
 
@@ -25,7 +25,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="Properties"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Properties(Base parent)
+        public Properties(Control parent)
             : base(parent)
         {
             m_SplitterBar = new SplitterBar(this);
@@ -55,7 +55,7 @@ namespace EngineManaged.GUI.Controls
         /// Handles the splitter moved event.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnSplitterMoved(Base control)
+        protected virtual void OnSplitterMoved(Control control)
         {
             InvalidateChildren();
         }
@@ -78,7 +78,7 @@ namespace EngineManaged.GUI.Controls
         /// <param name="prop">Property control.</param>
         /// <param name="value">Initial value.</param>
         /// <returns>Newly created row.</returns>
-        public PropertyRow Add(String label, Property.Base prop, String value="")
+        public PropertyRow Add(String label, Property.Control prop, String value="")
         {
             PropertyRow row = new PropertyRow(this, prop);
             row.Dock = Pos.Top;
@@ -91,7 +91,7 @@ namespace EngineManaged.GUI.Controls
             return row;
         }
 
-        private void OnRowValueChanged(Base control)
+        private void OnRowValueChanged(Control control)
         {
             if (ValueChanged != null)
                 ValueChanged.Invoke(control);

@@ -6,13 +6,13 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// Drag&drop highlight.
     /// </summary>
-    public class Highlight : Base
+    public class Highlight : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Highlight"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Highlight(Base parent) : base(parent)
+        public Highlight(Control parent) : base(parent)
         {
             
         }

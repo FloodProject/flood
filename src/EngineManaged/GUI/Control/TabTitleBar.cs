@@ -8,7 +8,7 @@ namespace EngineManaged.GUI.Controls
     /// </summary>
     public class TabTitleBar : Label
     {
-        public TabTitleBar(Base parent) : base(parent)
+        public TabTitleBar(Control parent) : base(parent)
         {
             MouseInputEnabled = true;
             TextPadding = new Padding(5, 2, 5, 2);

@@ -40,7 +40,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         /// <param name="label">Label for the outlining GroupBox.</param>
-        public RadioButtonGroup(Base parent, String label)
+        public RadioButtonGroup(Control parent, String label)
             : base(parent)
         {
             IsTabable = false;
@@ -84,7 +84,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for the option change.
         /// </summary>
         /// <param name="fromPanel">Event source.</param>
-        protected virtual void OnRadioClicked(Base fromPanel)
+        protected virtual void OnRadioClicked(Control fromPanel)
         {
             RadioButton @checked = fromPanel as RadioButton;
             foreach (LabeledRadioButton rb in Children.OfType<LabeledRadioButton>()) // todo: optimize

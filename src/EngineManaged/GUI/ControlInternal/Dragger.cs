@@ -8,13 +8,13 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// Base for controls that can be dragged by mouse.
     /// </summary>
-    public class Dragger : Base
+    public class Dragger : Control
     {
         protected bool m_Held;
         protected Point m_HoldPos;
-        protected Base m_Target;
+        protected Control m_Target;
 
-        internal Base Target { get { return m_Target; } set { m_Target = value; } }
+        internal Control Target { get { return m_Target; } set { m_Target = value; } }
 
         /// <summary>
         /// Indicates if the control is being dragged.
@@ -30,7 +30,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="Dragger"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Dragger(Base parent) : base(parent)
+        public Dragger(Control parent) : base(parent)
         {
             MouseInputEnabled = true;
             m_Held = false;

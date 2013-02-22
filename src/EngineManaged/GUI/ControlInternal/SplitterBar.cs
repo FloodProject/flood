@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="SplitterBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public SplitterBar(Base parent)
+        public SplitterBar(Control parent)
             : base(parent)
         {
             Target = this;

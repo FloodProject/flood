@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// HSV color picker with "before" and "after" color boxes.
     /// </summary>
-    public class HSVColorPicker : Base, IColorPicker
+    public class HSVColorPicker : Control, IColorPicker
     {
         private readonly ColorLerpBox m_LerpBox;
         private readonly ColorSlider m_ColorSlider;
@@ -33,7 +33,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="HSVColorPicker"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public HSVColorPicker(Base parent)
+        public HSVColorPicker(Control parent)
             : base(parent)
         {
             MouseInputEnabled = true;
@@ -109,7 +109,7 @@ namespace EngineManaged.GUI.Controls
             SetColor(DefaultColor);
         }
 
-        private void NumericTyped(Base control)
+        private void NumericTyped(Control control)
         {
             TextBoxNumeric box = control as TextBoxNumeric;
             if (null == box) return;
@@ -182,13 +182,13 @@ namespace EngineManaged.GUI.Controls
             m_After.Color = color;
         }
 
-        private void ColorBoxChanged(Base control)
+        private void ColorBoxChanged(Control control)
         {
             UpdateControls(SelectedColor);
             Invalidate();
         }
 
-        private void ColorSliderChanged(Base control)
+        private void ColorSliderChanged(Control control)
         {
             if (m_LerpBox != null)
                 m_LerpBox.SetColor(m_ColorSlider.SelectedColor, true);

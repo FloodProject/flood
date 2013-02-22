@@ -11,7 +11,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="MenuStrip"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public MenuStrip(Base parent)
+        public MenuStrip(Control parent)
             : base(parent)
         {
             SetBounds(0, 0, 200, 22);

@@ -27,7 +27,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="CheckBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public CheckBox(Base parent)
+        public CheckBox(Control parent)
             : base(parent)
         {
             SetSize(15, 15);

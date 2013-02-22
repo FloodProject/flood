@@ -31,7 +31,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="Menu"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Menu(Base parent)
+        public Menu(Control parent)
             : base(parent)
         {
             SetBounds(0, 0, 10, 10);
@@ -160,7 +160,7 @@ namespace EngineManaged.GUI.Controls
         /// Mouse hover handler.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnHoverItem(Base control)
+        protected virtual void OnHoverItem(Control control)
         {
             if (!ShouldHoverOpenMenu) return;
 

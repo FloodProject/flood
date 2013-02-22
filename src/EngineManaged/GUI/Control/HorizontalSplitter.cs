@@ -4,10 +4,10 @@ using EngineManaged.GUI.ControlInternal;
 
 namespace EngineManaged.GUI.Controls
 {
-    public class HorizontalSplitter : Base
+    public class HorizontalSplitter : Control
     {
         private readonly SplitterBar m_VSplitter;
-        private readonly Base[] m_Sections;
+        private readonly Control[] m_Sections;
 
         private float m_VVal; // 0-1
         private int m_BarSize; // pixels
@@ -32,10 +32,10 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="CrossSplitter"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public HorizontalSplitter(Base parent)
+        public HorizontalSplitter(Control parent)
             : base(parent)
         {
-            m_Sections = new Base[2];
+            m_Sections = new Control[2];
             
             m_VSplitter = new SplitterBar(this);
             m_VSplitter.SetPosition(0, 128);
@@ -89,7 +89,7 @@ namespace EngineManaged.GUI.Controls
             m_VSplitter.MoveTo(m_VSplitter.X, (Height - m_VSplitter.Height) * (m_VVal));
         }
         
-        protected void OnVerticalMoved(Base control)
+        protected void OnVerticalMoved(Control control)
         {
             m_VVal = CalculateValueVertical();
             Invalidate();
@@ -130,7 +130,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="index">Section index (0-3).</param>
         /// <param name="panel">Control to assign.</param>
-        public void SetPanel(int index, Base panel)
+        public void SetPanel(int index, Control panel)
         {
             m_Sections[index] = panel;
             
@@ -148,7 +148,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="index">Section index (0-3).</param>
         /// <returns>Specified section.</returns>
-        public Base GetPanel(int index)
+        public Control GetPanel(int index)
         {
             return m_Sections[index];
         }

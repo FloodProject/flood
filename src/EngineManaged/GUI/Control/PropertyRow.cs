@@ -6,10 +6,10 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Single property row.
     /// </summary>
-    public class PropertyRow : Base
+    public class PropertyRow : Control
     {
         private readonly Label m_Label;
-        private readonly Property.Base m_Property;
+        private readonly Property.Control m_Property;
         private bool m_LastEditing;
         private bool m_LastHover;
 
@@ -49,7 +49,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         /// <param name="prop">Property control associated with this row.</param>
-        public PropertyRow(Base parent, Property.Base prop)
+        public PropertyRow(Control parent, Property.Control prop)
             : base(parent)
         {
             PropertyRowLabel label = new PropertyRowLabel(this);
@@ -104,7 +104,7 @@ namespace EngineManaged.GUI.Controls
             }
         }
 
-        protected virtual void OnValueChanged(Base control)
+        protected virtual void OnValueChanged(Control control)
         {
             if (ValueChanged != null)
                 ValueChanged.Invoke(this);

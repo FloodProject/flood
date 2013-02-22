@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// ComboBox arrow.
     /// </summary>
-    public class DownArrow : Base
+    public class DownArrow : Control
     {
         private readonly ComboBox m_ComboBox;
 

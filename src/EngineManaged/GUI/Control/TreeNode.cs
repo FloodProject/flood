@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Tree control node.
     /// </summary>
-    public class TreeNode : Base
+    public class TreeNode : Control
     {
         public const int TreeIndentation = 14;
 
@@ -116,7 +116,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="TreeNode"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TreeNode(Base parent)
+        public TreeNode(Control parent)
             : base(parent)
         {
             m_ToggleButton = new TreeToggleButton(this);
@@ -129,7 +129,7 @@ namespace EngineManaged.GUI.Controls
             m_Title.DoubleClickedLeft += OnDoubleClickName;
             m_Title.Clicked += OnClickName;
 
-            m_InnerPanel = new Base(this);
+            m_InnerPanel = new Control(this);
             m_InnerPanel.Dock = Pos.Top;
             m_InnerPanel.Height = 100;
             m_InnerPanel.Margin = new Margin(TreeIndentation, 1, 0, 0);
@@ -258,7 +258,7 @@ namespace EngineManaged.GUI.Controls
         public void ExpandAll()
         {
             Open();
-            foreach (Base child in Children)
+            foreach (Control child in Children)
             {
                 TreeNode node = child as TreeNode;
                 if (node == null)
@@ -276,7 +276,7 @@ namespace EngineManaged.GUI.Controls
             if (m_Title != null)
                 m_Title.ToggleState = false;
 
-            foreach (Base child in Children)
+            foreach (Control child in Children)
             {
                 TreeNode node = child as TreeNode;
                 if (node == null)
@@ -289,7 +289,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for the toggle button.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnToggleButtonPress(Base control)
+        protected virtual void OnToggleButtonPress(Control control)
         {
             if (m_ToggleButton.ToggleState)
             {
@@ -305,7 +305,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for label double click.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnDoubleClickName(Base control)
+        protected virtual void OnDoubleClickName(Control control)
         {
             if (!m_ToggleButton.IsVisible)
                 return;
@@ -316,7 +316,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for label click.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnClickName(Base control)
+        protected virtual void OnClickName(Control control)
         {
             if (LabelPressed != null)
                 LabelPressed.Invoke(this);

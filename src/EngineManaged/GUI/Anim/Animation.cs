@@ -6,10 +6,10 @@ namespace EngineManaged.GUI.Anim
 {
     public class Animation
     {
-        protected Base m_Control;
+        protected Control m_Control;
 
         //private static List<Animation> g_AnimationsListed = new List<Animation>(); // unused
-        private static readonly Dictionary<Base, List<Animation>> m_Animations = new Dictionary<Base, List<Animation>>();
+        private static readonly Dictionary<Control, List<Animation>> m_Animations = new Dictionary<Control, List<Animation>>();
 
         protected virtual void Think()
         {
@@ -21,7 +21,7 @@ namespace EngineManaged.GUI.Anim
             get { throw new InvalidOperationException("Pure virtual function call"); }
         }
 
-        public static void Add(Base control, Animation animation)
+        public static void Add(Control control, Animation animation)
         {
             animation.m_Control = control;
             if (!m_Animations.ContainsKey(control))
@@ -29,7 +29,7 @@ namespace EngineManaged.GUI.Anim
             m_Animations[control].Add(animation);
         }
 
-        public static void Cancel(Base control)
+        public static void Cancel(Control control)
         {
             if (m_Animations.ContainsKey(control))
             {
@@ -40,7 +40,7 @@ namespace EngineManaged.GUI.Anim
 
         internal static void GlobalThink()
         {
-            foreach (KeyValuePair<Base, List<Animation>> pair in m_Animations)
+            foreach (KeyValuePair<Control, List<Animation>> pair in m_Animations)
             {
                 var valCopy = pair.Value.FindAll(x =>true); // list copy so foreach won't break when we remove elements
                 foreach (Animation animation in valCopy)

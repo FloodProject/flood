@@ -47,7 +47,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ProgressBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ProgressBar(Base parent)
+        public ProgressBar(Control parent)
             : base(parent)
         {
             MouseInputEnabled = false; // [omeg] what? was true

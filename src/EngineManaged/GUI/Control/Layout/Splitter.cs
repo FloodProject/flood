@@ -5,18 +5,18 @@ namespace EngineManaged.GUI.Controls.Layout
     /// <summary>
     /// Base splitter class.
     /// </summary>
-    public class Splitter : Base
+    public class Splitter : Control
     {
-        private readonly Base[] m_Panel;
+        private readonly Control[] m_Panel;
         private readonly bool[] m_Scale;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Splitter"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Splitter(Base parent) : base(parent)
+        public Splitter(Control parent) : base(parent)
         {
-            m_Panel = new Base[2];
+            m_Panel = new Control[2];
             m_Scale = new bool[2];
             m_Scale[0] = true;
             m_Scale[1] = true;
@@ -28,7 +28,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// <param name="panelIndex">Panel index (0-1).</param>
         /// <param name="panel">Panel contents.</param>
         /// <param name="noScale">Determines whether the content is to be scaled.</param>
-        public void SetPanel(int panelIndex, Base panel, bool noScale = false)
+        public void SetPanel(int panelIndex, Control panel, bool noScale = false)
         {
             if (panelIndex < 0 || panelIndex > 1)
                 throw new ArgumentException("Invalid panel index", "panelIndex");
@@ -47,7 +47,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// </summary>
         /// <param name="panelIndex">Panel index (0-1).</param>
         /// <returns></returns>
-        Base GetPanel(int panelIndex)
+        Control GetPanel(int panelIndex)
         {
             if (panelIndex < 0 || panelIndex > 1)
                 throw new ArgumentException("Invalid panel index", "panelIndex");

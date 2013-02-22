@@ -503,7 +503,7 @@ namespace EngineManaged.GUI.Skin
         #endregion
 
         #region UI elements
-        public override void DrawButton(Controls.Base control, bool depressed, bool hovered, bool disabled)
+        public override void DrawButton(Controls.Control control, bool depressed, bool hovered, bool disabled)
         {
             if (disabled)
             {
@@ -523,12 +523,12 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.Button.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawMenuRightArrow(Controls.Base control)
+        public override void DrawMenuRightArrow(Controls.Control control)
         {
             Textures.Menu.RightArrow.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawMenuItem(Controls.Base control, bool submenuOpen, bool isChecked)
+        public override void DrawMenuItem(Controls.Control control, bool submenuOpen, bool isChecked)
         {
             if (submenuOpen || control.IsHovered)
                 Textures.Menu.Hover.Draw(Renderer, control.RenderBounds);
@@ -537,12 +537,12 @@ namespace EngineManaged.GUI.Skin
                 Textures.Menu.Check.Draw(Renderer, new Rectangle(control.RenderBounds.X + 4, control.RenderBounds.Y + 3, 15, 15));
         }
 
-        public override void DrawMenuStrip(Controls.Base control)
+        public override void DrawMenuStrip(Controls.Control control)
         {
             Textures.Menu.Strip.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawMenu(Controls.Base control, bool paddingDisabled)
+        public override void DrawMenu(Controls.Control control, bool paddingDisabled)
         {
             if (!paddingDisabled)
             {
@@ -553,7 +553,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Menu.Background.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawShadow(Controls.Base control)
+        public override void DrawShadow(Controls.Control control)
         {
             Rectangle r = control.RenderBounds;
             r.X -= 4;
@@ -563,7 +563,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Shadow.Draw(Renderer, r);
         }
 
-        public override void DrawRadioButton(Controls.Base control, bool selected, bool depressed)
+        public override void DrawRadioButton(Controls.Control control, bool selected, bool depressed)
         {
             if (selected)
             {
@@ -581,7 +581,7 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        public override void DrawCheckBox(Controls.Base control, bool selected, bool depressed)
+        public override void DrawCheckBox(Controls.Control control, bool selected, bool depressed)
         {
             if (selected)
             {
@@ -599,7 +599,7 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        public override void DrawGroupBox(Controls.Base control, int textStart, int textHeight, int textWidth)
+        public override void DrawGroupBox(Controls.Control control, int textStart, int textHeight, int textWidth)
         {
             Rectangle rect = control.RenderBounds;
 
@@ -628,7 +628,7 @@ namespace EngineManaged.GUI.Skin
             Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
         }
 
-        public override void DrawTextBox(Controls.Base control)
+        public override void DrawTextBox(Controls.Control control)
         {
             if (control.IsDisabled)
             {
@@ -642,7 +642,7 @@ namespace EngineManaged.GUI.Skin
                 Textures.TextBox.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawTabButton(Controls.Base control, bool active, Pos dir)
+        public override void DrawTabButton(Controls.Control control, bool active, Pos dir)
         {
             if (active)
             {
@@ -672,7 +672,7 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        private void DrawActiveTabButton(Controls.Base control, Pos dir)
+        private void DrawActiveTabButton(Controls.Control control, Pos dir)
         {
             if (dir == Pos.Top)
             {
@@ -696,17 +696,17 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        public override void DrawTabControl(Controls.Base control)
+        public override void DrawTabControl(Controls.Control control)
         {
             Textures.Tab.Control.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawTabTitleBar(Controls.Base control)
+        public override void DrawTabTitleBar(Controls.Control control)
         {
             Textures.Tab.HeaderBar.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawWindow(Controls.Base control, int topHeight, bool inFocus)
+        public override void DrawWindow(Controls.Control control, int topHeight, bool inFocus)
         {
             if (inFocus) 
                Textures.Window.Normal.Draw(Renderer, control.RenderBounds);
@@ -714,14 +714,14 @@ namespace EngineManaged.GUI.Skin
                 Textures.Window.Inactive.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawHighlight(Controls.Base control)
+        public override void DrawHighlight(Controls.Control control)
         {
             Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = Color.FromArgb(255, 255, 100, 255);
             Renderer.DrawFilledRect(rect);
         }
 
-        public override void DrawScrollBar(Controls.Base control, bool horizontal, bool depressed)
+        public override void DrawScrollBar(Controls.Control control, bool horizontal, bool depressed)
         {
             if (horizontal)
                 Textures.Scroller.TrackH.Draw(Renderer, control.RenderBounds);
@@ -729,7 +729,7 @@ namespace EngineManaged.GUI.Skin
                 Textures.Scroller.TrackV.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawScrollBarBar(Controls.Base control, bool depressed, bool hovered, bool horizontal)
+        public override void DrawScrollBarBar(Controls.Control control, bool depressed, bool hovered, bool horizontal)
         {
             if (!horizontal)
             {
@@ -776,7 +776,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Scroller.ButtonH_Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawProgressBar(Controls.Base control, bool horizontal, float progress)
+        public override void DrawProgressBar(Controls.Control control, bool horizontal, float progress)
         {
             Rectangle rect = control.RenderBounds;
 
@@ -795,12 +795,12 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        public override void DrawListBox(Controls.Base control)
+        public override void DrawListBox(Controls.Control control)
         {
             Textures.Input.ListBox.Background.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawListBoxLine(Controls.Base control, bool selected, bool even)
+        public override void DrawListBoxLine(Controls.Control control, bool selected, bool even)
         {
             if (selected)
             {
@@ -846,7 +846,7 @@ namespace EngineManaged.GUI.Skin
                 Renderer.DrawFilledRect(Util.FloatRect(rect.X + dist - 2, rect.Y + iSpacing * i, 5, 1));
         }
 
-        public override void DrawSlider(Controls.Base control, bool horizontal, int numNotches, int barSize)
+        public override void DrawSlider(Controls.Control control, bool horizontal, int numNotches, int barSize)
         {
             Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = Color.FromArgb(100, 0, 0, 0);
@@ -870,7 +870,7 @@ namespace EngineManaged.GUI.Skin
             Renderer.DrawFilledRect(rect);
         }
 
-        public override void DrawComboBox(Controls.Base control, bool down, bool open)
+        public override void DrawComboBox(Controls.Control control, bool down, bool open)
         {
             if (control.IsDisabled)
             {
@@ -893,7 +893,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.ComboBox.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawKeyboardHighlight(Controls.Base control, Rectangle r, int offset)
+        public override void DrawKeyboardHighlight(Controls.Control control, Rectangle r, int offset)
         {
             Rectangle rect = r;
 
@@ -924,12 +924,12 @@ namespace EngineManaged.GUI.Skin
             }
         }
 
-        public override void DrawToolTip(Controls.Base control)
+        public override void DrawToolTip(Controls.Control control)
         {
             Textures.Tooltip.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawScrollButton(Controls.Base control, Pos direction, bool depressed, bool hovered, bool disabled)
+        public override void DrawScrollButton(Controls.Control control, Pos direction, bool depressed, bool hovered, bool disabled)
         {
             int i = 0;
             if (direction == Pos.Top) i = 1;
@@ -957,7 +957,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Scroller.Button.Normal[i].Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawComboBoxArrow(Controls.Base control, bool hovered, bool down, bool open, bool disabled)
+        public override void DrawComboBoxArrow(Controls.Control control, bool hovered, bool down, bool open, bool disabled)
         {
             if (disabled)
             {
@@ -980,7 +980,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.ComboBox.Button.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawNumericUpDownButton(Controls.Base control, bool depressed, bool up)
+        public override void DrawNumericUpDownButton(Controls.Control control, bool depressed, bool up)
         {
             if (up)
             {
@@ -1027,12 +1027,12 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.UpDown.Down.Normal.DrawCenter(Renderer, control.RenderBounds);
         }
 
-        public override void DrawStatusBar(Controls.Base control)
+        public override void DrawStatusBar(Controls.Control control)
         {
             Textures.StatusBar.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawTreeButton(Controls.Base control, bool open)
+        public override void DrawTreeButton(Controls.Control control, bool open)
         {
             Rectangle rect = control.RenderBounds;
 
@@ -1042,12 +1042,12 @@ namespace EngineManaged.GUI.Skin
                 Textures.Tree.Plus.Draw(Renderer, rect);
         }
 
-        public override void DrawTreeControl(Controls.Base control)
+        public override void DrawTreeControl(Controls.Control control)
         {
             Textures.Tree.Background.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawTreeNode(Controls.Base ctrl, bool open, bool selected, int labelHeight, int labelWidth, int halfWay, int lastBranch, bool isRoot)
+        public override void DrawTreeNode(Controls.Control ctrl, bool open, bool selected, int labelHeight, int labelWidth, int halfWay, int lastBranch, bool isRoot)
         {
             if (selected)
             {
@@ -1057,7 +1057,7 @@ namespace EngineManaged.GUI.Skin
             base.DrawTreeNode(ctrl, open, selected, labelHeight, labelWidth, halfWay, lastBranch, isRoot);
         }
 
-        public override void DrawColorDisplay(Controls.Base control, Color color)
+        public override void DrawColorDisplay(Controls.Control control, Color color)
         {
             Rectangle rect = control.RenderBounds;
 
@@ -1079,7 +1079,7 @@ namespace EngineManaged.GUI.Skin
             Renderer.DrawLinedRect(rect);
         }
 
-        public override void DrawModalControl(Controls.Base control)
+        public override void DrawModalControl(Controls.Control control)
         {
             if (!control.ShouldDrawBackground)
                 return;
@@ -1088,14 +1088,14 @@ namespace EngineManaged.GUI.Skin
             Renderer.DrawFilledRect(rect);
         }
 
-        public override void DrawMenuDivider(Controls.Base control)
+        public override void DrawMenuDivider(Controls.Control control)
         {
             Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = Color.FromArgb(100, 0, 0, 0);
             Renderer.DrawFilledRect(rect);
         }
 
-        public override void DrawWindowCloseButton(Controls.Base control, bool depressed, bool hovered, bool disabled)
+        public override void DrawWindowCloseButton(Controls.Control control, bool depressed, bool hovered, bool disabled)
         {
 
             if (disabled)
@@ -1119,7 +1119,7 @@ namespace EngineManaged.GUI.Skin
             Textures.Window.Close.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawSliderButton(Controls.Base control, bool depressed, bool horizontal)
+        public override void DrawSliderButton(Controls.Control control, bool depressed, bool horizontal)
         {
             if (!horizontal)
             {
@@ -1166,12 +1166,12 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.Slider.H.Normal.DrawCenter(Renderer, control.RenderBounds);
         }
 
-        public override void DrawCategoryHolder(Controls.Base control)
+        public override void DrawCategoryHolder(Controls.Control control)
         {
             Textures.CategoryList.Outer.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawCategoryInner(Controls.Base control, bool collapsed)
+        public override void DrawCategoryInner(Controls.Control control, bool collapsed)
         {
             if (collapsed)
                 Textures.CategoryList.Header.Draw(Renderer, control.RenderBounds);

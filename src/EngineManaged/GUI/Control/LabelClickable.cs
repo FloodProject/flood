@@ -11,7 +11,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="LabelClickable"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public LabelClickable(Base parent)
+        public LabelClickable(Control parent)
             : base(parent)
         {
             IsToggle = false;

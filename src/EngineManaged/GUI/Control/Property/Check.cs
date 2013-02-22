@@ -5,7 +5,7 @@ namespace EngineManaged.GUI.Controls.Property
     /// <summary>
     /// Checkable property.
     /// </summary>
-    public class Check : Base
+    public class Check : Control
     {
         protected readonly CheckBox m_CheckBox;
 
@@ -13,7 +13,7 @@ namespace EngineManaged.GUI.Controls.Property
         /// Initializes a new instance of the <see cref="Check"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Check(Controls.Base parent)
+        public Check(Controls.Control parent)
             : base(parent)
         {
             m_CheckBox = new CheckBox(this);

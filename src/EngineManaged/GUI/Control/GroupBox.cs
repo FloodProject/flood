@@ -13,7 +13,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="GroupBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public GroupBox(Base parent)
+        public GroupBox(Control parent)
             : base(parent)
         {
             // Set to true, because it's likely that our  
@@ -26,7 +26,7 @@ namespace EngineManaged.GUI.Controls
             Alignment = Pos.Top | Pos.Left;
             Invalidate();
 
-            m_InnerPanel = new Base(this);
+            m_InnerPanel = new Control(this);
             m_InnerPanel.Dock = Pos.Fill;
             m_InnerPanel.Margin = new Margin(5, TextHeight+5, 5, 5);
             //Margin = new Margin(5, 5, 5, 5);

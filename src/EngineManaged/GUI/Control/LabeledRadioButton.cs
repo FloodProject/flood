@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// RadioButton with label.
     /// </summary>
-    public class LabeledRadioButton : Base
+    public class LabeledRadioButton : Control
     {
         private readonly RadioButton m_RadioButton;
         private readonly LabelClickable m_Label;
@@ -20,7 +20,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="LabeledRadioButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public LabeledRadioButton(Base parent)
+        public LabeledRadioButton(Control parent)
             : base(parent)
         {
             SetSize(100, 20);

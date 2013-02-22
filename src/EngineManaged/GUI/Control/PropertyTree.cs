@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="PropertyTree"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public PropertyTree(Base parent)
+        public PropertyTree(Control parent)
             : base(parent)
         {
 

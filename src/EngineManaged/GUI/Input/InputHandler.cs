@@ -19,17 +19,17 @@ namespace EngineManaged.GUI.Input
         /// <summary>
         /// Control currently hovered by mouse.
         /// </summary>
-        public static Base HoveredControl;
+        public static Control HoveredControl;
 
         /// <summary>
         /// Control that corrently has keyboard focus.
         /// </summary>
-        public static Base KeyboardFocus;
+        public static Control KeyboardFocus;
 
         /// <summary>
         /// Control that currently has mouse focus.
         /// </summary>
-        public static Base MouseFocus;
+        public static Control MouseFocus;
 
         /// <summary>
         /// Maximum number of mouse buttons supported.
@@ -92,7 +92,7 @@ namespace EngineManaged.GUI.Input
         /// <param name="canvas">Canvas.</param>
         /// <param name="chr">Input character.</param>
         /// <returns>True if the key was handled.</returns>
-        public static bool DoSpecialKeys(Base canvas, char chr)
+        public static bool DoSpecialKeys(Control canvas, char chr)
         {
             if (null == KeyboardFocus) return false;
             if (KeyboardFocus.GetCanvas() != canvas) return false;
@@ -132,7 +132,7 @@ namespace EngineManaged.GUI.Input
         /// <param name="canvas">Canvas.</param>
         /// <param name="chr">Input character.</param>
         /// <returns>True if the key was handled.</returns>
-        public static bool HandleAccelerator(Base canvas, char chr)
+        public static bool HandleAccelerator(Control canvas, char chr)
         {
             //Build the accelerator search string
             StringBuilder accelString = new StringBuilder();
@@ -167,7 +167,7 @@ namespace EngineManaged.GUI.Input
         /// <param name="y"></param>
         /// <param name="dx"></param>
         /// <param name="dy"></param>
-        public static void OnMouseMoved(Base canvas, int x, int y, int dx, int dy)
+        public static void OnMouseMoved(Control canvas, int x, int y, int dx, int dy)
         {
             // Send input to canvas for study		
             MousePosition.X = x;
@@ -180,7 +180,7 @@ namespace EngineManaged.GUI.Input
         /// Handles focus updating and key autorepeats.
         /// </summary>
         /// <param name="control">Unused.</param>
-        public static void OnCanvasThink(Base control)
+        public static void OnCanvasThink(Control control)
         {
             if (MouseFocus != null && !MouseFocus.IsVisible)
                 MouseFocus = null;
@@ -223,7 +223,7 @@ namespace EngineManaged.GUI.Input
         /// <param name="mouseButton">Mouse button number.</param>
         /// <param name="down">Specifies if the button is down.</param>
         /// <returns>True if handled.</returns>
-        public static bool OnMouseClicked(Base canvas, int mouseButton, bool down)
+        public static bool OnMouseClicked(Control canvas, int mouseButton, bool down)
         {
             // If we click on a control that isn't a menu we want to close
             // all the open menus. Menus are children of the canvas.
@@ -320,7 +320,7 @@ namespace EngineManaged.GUI.Input
         /// <param name="key">Key.</param>
         /// <param name="down">True if the key is down.</param>
         /// <returns>True if handled.</returns>
-        public static bool OnKeyEvent(Base canvas, Key key, bool down)
+        public static bool OnKeyEvent(Control canvas, Key key, bool down)
         {
             if (null == KeyboardFocus) return false;
             if (KeyboardFocus.GetCanvas() != canvas) return false;
@@ -355,9 +355,9 @@ namespace EngineManaged.GUI.Input
             return false;
         }
 
-        private static void UpdateHoveredControl(Base inCanvas)
+        private static void UpdateHoveredControl(Control inCanvas)
         {
-            Base hovered = inCanvas.GetControlAt(MousePosition.X, MousePosition.Y);
+            Control hovered = inCanvas.GetControlAt(MousePosition.X, MousePosition.Y);
 
             if (hovered != HoveredControl)
             {
@@ -388,7 +388,7 @@ namespace EngineManaged.GUI.Input
             }
         }
 
-        private static void FindKeyboardFocus(Base control)
+        private static void FindKeyboardFocus(Control control)
         {
             if (null == control) return;
             if (control.KeyboardInputEnabled)

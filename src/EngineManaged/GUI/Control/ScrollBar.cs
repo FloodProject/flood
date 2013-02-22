@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Base class for scrollbars.
     /// </summary>
-    public class ScrollBar : Base
+    public class ScrollBar : Control
     {
         protected readonly ScrollBarButton[] m_ScrollButton;
         protected readonly ScrollBarBar m_Bar;
@@ -51,7 +51,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ScrollBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        protected ScrollBar(Base parent) : base(parent)
+        protected ScrollBar(Control parent) : base(parent)
         {
             m_ScrollButton = new ScrollBarButton[2];
             m_ScrollButton[0] = new ScrollBarButton(this);
@@ -109,7 +109,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for the BarMoved event.
         /// </summary>
         /// <param name="control">The control.</param>
-        protected virtual void OnBarMoved(Base control)
+        protected virtual void OnBarMoved(Control control)
         {
             if (BarMoved != null)
                 BarMoved.Invoke(this);

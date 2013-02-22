@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// CollapsibleCategory control. Used in CollapsibleList.
     /// </summary>
-    public class CollapsibleCategory : Base
+    public class CollapsibleCategory : Control
     {
         private readonly Button m_HeaderButton;
         private readonly CollapsibleList m_List;
@@ -54,7 +54,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         public Button GetSelectedButton()
         {
-            foreach (Base child in Children)
+            foreach (Control child in Children)
             {
                 CategoryButton button = child as CategoryButton;
                 if (button == null)
@@ -71,7 +71,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for header button toggle event.
         /// </summary>
         /// <param name="control">Source control.</param>
-        protected virtual void OnHeaderToggle(Base control)
+        protected virtual void OnHeaderToggle(Control control)
         {
             if (Collapsed != null)
                 Collapsed.Invoke(this);
@@ -81,7 +81,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for Selected event.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnSelected(Base control)
+        protected virtual void OnSelected(Control control)
         {
             CategoryButton child = control as CategoryButton;
             if (child == null) return;
@@ -134,7 +134,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         public void UnselectAll()
         {
-            foreach (Base child in Children)
+            foreach (Control child in Children)
             {
                 CategoryButton button = child as CategoryButton;
                 if (button == null)
@@ -161,7 +161,7 @@ namespace EngineManaged.GUI.Controls
 
             // alternate row coloring
             bool b = true;
-            foreach (Base child in Children)
+            foreach (Control child in Children)
             {
                 CategoryButton button = child as CategoryButton;
                 if (button == null)

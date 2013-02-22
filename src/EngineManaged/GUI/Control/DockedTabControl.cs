@@ -18,7 +18,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="DockedTabControl"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public DockedTabControl(Base parent)
+        public DockedTabControl(Control parent)
             : base(parent)
         {
             Dock = Pos.Fill;
@@ -68,7 +68,7 @@ namespace EngineManaged.GUI.Controls
         public void MoveTabsTo(DockedTabControl target)
         {
             var children = TabStrip.Children.ToArray(); // copy because collection will be modified
-            foreach (Base child in children)
+            foreach (Control child in children)
             {
                 TabButton button = child as TabButton;
                 if (button == null)

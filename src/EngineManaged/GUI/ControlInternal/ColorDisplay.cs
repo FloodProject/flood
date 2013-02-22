@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.ControlInternal
     /// <summary>
     /// Color square.
     /// </summary>
-    public class ColorDisplay : Base
+    public class ColorDisplay : Control
     {
         private Color m_Color;
         //private bool m_DrawCheckers;
@@ -16,7 +16,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="ColorDisplay"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ColorDisplay(Base parent) : base(parent)
+        public ColorDisplay(Control parent) : base(parent)
         {
             SetSize(32, 32);
             m_Color = Color.FromArgb(255, 255, 0, 0);

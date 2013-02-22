@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Base for controls whose interior can be scrolled.
     /// </summary>
-    public class ScrollControl : Base
+    public class ScrollControl : Control
     {
         private bool m_CanScrollH;
         private bool m_CanScrollV;
@@ -34,7 +34,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ScrollControl"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ScrollControl(Base parent)
+        public ScrollControl(Control parent)
             : base(parent)
         {
             MouseInputEnabled = false;
@@ -51,7 +51,7 @@ namespace EngineManaged.GUI.Controls
             m_CanScrollH = true;
             m_HorizontalScrollBar.NudgeAmount = 30;
 
-            m_InnerPanel = new Base(this);
+            m_InnerPanel = new Control(this);
             m_InnerPanel.SetPosition(0, 0);
             m_InnerPanel.Margin = Margin.Five;
             m_InnerPanel.SendToBack();
@@ -116,12 +116,12 @@ namespace EngineManaged.GUI.Controls
             m_InnerPanel.SetSize(width, height);
         }
 
-        protected virtual void VBarMoved(Base control)
+        protected virtual void VBarMoved(Control control)
         {
             Invalidate();
         }
 
-        protected virtual void HBarMoved(Base control)
+        protected virtual void HBarMoved(Control control)
         {
             Invalidate();
         }
@@ -131,7 +131,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="oldChildBounds"></param>
         /// <param name="child"></param>
-        protected override void OnChildBoundsChanged(System.Drawing.Rectangle oldChildBounds, Base child)
+        protected override void OnChildBoundsChanged(System.Drawing.Rectangle oldChildBounds, Control child)
         {
             UpdateScrollBars();
         }

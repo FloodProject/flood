@@ -24,7 +24,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="ScrollBarBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ScrollBarBar(Base parent)
+        public ScrollBarBar(Control parent)
             : base(parent)
         {
             RestrictToParent = true;

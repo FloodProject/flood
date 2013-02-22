@@ -5,7 +5,7 @@ namespace EngineManaged.GUI.Controls.Layout
     /// <summary>
     /// Helper control that positions its children in a specific way.
     /// </summary>
-    public class Positioner : Base
+    public class Positioner : Control
     {
         private Pos m_Pos;
 
@@ -18,7 +18,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Initializes a new instance of the <see cref="Positioner"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Positioner(Base parent) : base(parent)
+        public Positioner(Control parent) : base(parent)
         {
             Pos = Pos.Left | Pos.Top;
         }
@@ -29,7 +29,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// <param name="skin">Skin to use.</param>
         protected override void PostLayout(Skin.Base skin)
         {
-            foreach (Base child in Children) // ok?
+            foreach (Control child in Children) // ok?
             {
                 child.Position(m_Pos);
             }
@@ -45,7 +45,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Initializes a new instance of the <see cref="Center"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Center(Base parent) : base(parent)
+        public Center(Control parent) : base(parent)
         {
             Pos = Pos.Center;
         }

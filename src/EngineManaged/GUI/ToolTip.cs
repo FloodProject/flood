@@ -8,13 +8,13 @@ namespace EngineManaged.GUI
     /// </summary>
     public static class ToolTip
     {
-        private static Base g_ToolTip;
+        private static Control g_ToolTip;
 
         /// <summary>
         /// Enables tooltip display for the specified control.
         /// </summary>
         /// <param name="control">Target control.</param>
-        public static void Enable(Base control)
+        public static void Enable(Control control)
         {
             if (null == control.ToolTip)
                 return;
@@ -26,7 +26,7 @@ namespace EngineManaged.GUI
         /// Disables tooltip display for the specified control.
         /// </summary>
         /// <param name="control">Target control.</param>
-        public static void Disable(Base control)
+        public static void Disable(Control control)
         {
             if (g_ToolTip == control)
             {
@@ -38,7 +38,7 @@ namespace EngineManaged.GUI
         /// Disables tooltip display for the specified control.
         /// </summary>
         /// <param name="control">Target control.</param>
-        public static void ControlDeleted(Base control)
+        public static void ControlDeleted(Control control)
         {
             Disable(control);
         }

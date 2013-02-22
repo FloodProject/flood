@@ -20,7 +20,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="ColorButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ColorButton(Base parent) : base(parent)
+        public ColorButton(Control parent) : base(parent)
         {
             m_Color = Color.Black;
             Text = String.Empty;

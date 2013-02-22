@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Multiline label with text chunks having different color/font.
     /// </summary>
-    public class RichLabel : Base
+    public class RichLabel : Control
     {
         protected struct TextBlock
         {
@@ -31,7 +31,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="RichLabel"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public RichLabel(Base parent)
+        public RichLabel(Control parent)
             : base(parent)
         {
             newline = new string[] { Environment.NewLine };
@@ -240,8 +240,8 @@ namespace EngineManaged.GUI.Controls
                 Rebuild();
 
             // align bottoms. this is still not ideal, need to take font metrics into account.
-            Base prev = null;
-            foreach (Base child in Children)
+            Control prev = null;
+            foreach (Control child in Children)
             {
                 if (prev != null && child.Y == prev.Y)
                 {

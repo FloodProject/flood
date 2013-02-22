@@ -19,7 +19,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="SliderBar"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public SliderBar(Base parent)
+        public SliderBar(Control parent)
             : base(parent)
         {
             Target = this;

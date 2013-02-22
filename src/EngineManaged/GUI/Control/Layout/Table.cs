@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls.Layout
     /// <summary>
     /// Base class for multi-column tables.
     /// </summary>
-    public class Table : Base
+    public class Table : Control
     {
         // only children of this control should be TableRow.
 
@@ -43,7 +43,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Table(Base parent) : base(parent)
+        public Table(Control parent) : base(parent)
         {
             m_ColumnCount = 1;
             m_DefaultRowHeight = 22;
@@ -222,7 +222,7 @@ namespace EngineManaged.GUI.Controls.Layout
 
                 for (int i = 0; i < ColumnCount; i++)
                 {
-                    Base cell = row.GetColumn(i);
+                    Control cell = row.GetColumn(i);
                     if (null != cell)
                     {
                         if (i < ColumnCount - 1 || m_MaxWidth == 0)

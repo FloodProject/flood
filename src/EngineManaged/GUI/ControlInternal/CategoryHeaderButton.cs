@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="CategoryHeaderButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public CategoryHeaderButton(Base parent)
+        public CategoryHeaderButton(Control parent)
             : base(parent)
         {
             ShouldDrawBackground = false;

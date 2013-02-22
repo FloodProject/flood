@@ -5,7 +5,7 @@ namespace EngineManaged.GUI.Controls.Property
     /// <summary>
     /// Text property.
     /// </summary>
-    public class Text : Base
+    public class Text : Control
     {
         protected readonly TextBox m_TextBox;
 
@@ -13,7 +13,7 @@ namespace EngineManaged.GUI.Controls.Property
         /// Initializes a new instance of the <see cref="Text"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Text(Controls.Base parent) : base(parent)
+        public Text(Controls.Control parent) : base(parent)
         {
             m_TextBox = new TextBox(this);
             m_TextBox.Dock = Pos.Fill;

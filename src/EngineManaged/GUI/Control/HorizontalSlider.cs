@@ -12,7 +12,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="HorizontalSlider"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public HorizontalSlider(Base parent)
+        public HorizontalSlider(Control parent)
             : base(parent)
         {
             m_SliderBar.IsHorizontal = true;

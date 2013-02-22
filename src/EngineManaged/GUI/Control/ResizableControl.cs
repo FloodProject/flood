@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Base resizable control.
     /// </summary>
-    public class ResizableControl : Base
+    public class ResizableControl : Control
     {
         private bool m_ClampMovement;
         private readonly Resizer[] m_Resizer;
@@ -26,7 +26,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ResizableControl"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ResizableControl(Base parent)
+        public ResizableControl(Control parent)
             : base(parent)
         {
             m_Resizer = new Resizer[10];
@@ -86,7 +86,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for the resized event.
         /// </summary>
         /// <param name="control">Event source.</param>
-        protected virtual void OnResized(Base control)
+        protected virtual void OnResized(Control control)
         {
             if (Resized != null)
                 Resized.Invoke(this);
@@ -145,7 +145,7 @@ namespace EngineManaged.GUI.Controls
             if (height < minSize.Y) height = minSize.Y;
 
             // Clamp to parent's window
-            Base parent = Parent;
+            Control parent = Parent;
             if (parent != null && m_ClampMovement)
             {
                 if (x + width > parent.Width) x = parent.Width - width;

@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls.Layout
     /// <summary>
     /// Single table row.
     /// </summary>
-    public class TableRow : Base
+    public class TableRow : Control
     {
         // [omeg] todo: get rid of this
         public const int MaxColumns = 5;
@@ -44,7 +44,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Initializes a new instance of the <see cref="TableRow"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TableRow(Base parent)
+        public TableRow(Control parent)
             : base(parent)
         {
             m_Columns = new Label[MaxColumns];
@@ -127,7 +127,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// <param name="column">Column number.</param>
         /// <param name="control">Cell contents.</param>
         /// <param name="enableMouseInput">Determines whether mouse input should be enabled for the cell.</param>
-        public void SetCellContents(int column, Base control, bool enableMouseInput = false)
+        public void SetCellContents(int column, Control control, bool enableMouseInput = false)
         {
             if (null == m_Columns[column]) 
                 return;
@@ -141,7 +141,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// </summary>
         /// <param name="column">Column number.</param>
         /// <returns>Control embedded in the cell.</returns>
-        public Base GetCellContents(int column)
+        public Control GetCellContents(int column)
         {
             return m_Columns[column];
         }
@@ -213,7 +213,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Handler for Copy event.
         /// </summary>
         /// <param name="from">Source control.</param>
-        protected override void OnCopy(Base from)
+        protected override void OnCopy(Control from)
         {
             Platform.Neutral.SetClipboardText(Text);
         }

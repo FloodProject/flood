@@ -10,7 +10,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Canvas control. It should be the root parent for all other controls.
     /// </summary>
-    public class Canvas : Base
+    public class Canvas : Control
     {
         private bool m_NeedsRedraw;
         private float m_Scale;
@@ -18,8 +18,8 @@ namespace EngineManaged.GUI.Controls
         private Color m_BackgroundColor;
 
         // [omeg] these are not created by us, so no disposing
-        internal Base FirstTab;
-        internal Base NextTab;
+        internal Control FirstTab;
+        internal Control NextTab;
 
         private readonly List<IDisposable> m_DisposeQueue; // dictionary for faster access?
 
@@ -186,7 +186,7 @@ namespace EngineManaged.GUI.Controls
         /// Adds given control to the delete queue and detaches it from canvas. Don't call from Dispose, it modifies child list.
         /// </summary>
         /// <param name="control">Control to delete.</param>
-        public void AddDelayedDelete(Base control)
+        public void AddDelayedDelete(Control control)
         {
             if (!m_DisposeQueue.Contains(control))
             {

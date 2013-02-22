@@ -16,7 +16,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="TextBoxNumeric"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TextBoxNumeric(Base parent)
+        public TextBoxNumeric(Control parent)
             : base(parent)
         {
             SetText("0", false);

@@ -14,7 +14,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="ScrollBarButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ScrollBarButton(Base parent)
+        public ScrollBarButton(Control parent)
             : base(parent)
         {
             SetDirectionUp();

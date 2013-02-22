@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using EngineManaged.GUI.Controls;
+using Control = EngineManaged.GUI.Controls.Control;
 
 namespace EngineManaged.GUI.ControlInternal
 {
@@ -21,7 +22,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Initializes a new instance of the <see cref="Resizer"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Resizer(Base parent)
+        public Resizer(Control parent)
             : base(parent)
         {
             m_ResizeDir = Pos.Left;

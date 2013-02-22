@@ -4,10 +4,10 @@ using EngineManaged.GUI.ControlInternal;
 
 namespace EngineManaged.GUI.Controls
 {
-    public class VerticalSplitter : Base
+    public class VerticalSplitter : Control
     {
         private readonly SplitterBar m_HSplitter;
-        private readonly Base[] m_Sections;
+        private readonly Control[] m_Sections;
 
         private float m_HVal; // 0-1
         private int m_BarSize; // pixels
@@ -32,10 +32,10 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="CrossSplitter"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public VerticalSplitter(Base parent)
+        public VerticalSplitter(Control parent)
             : base(parent)
         {
-            m_Sections = new Base[2];
+            m_Sections = new Control[2];
 
             m_HSplitter = new SplitterBar(this);
             m_HSplitter.SetPosition(128, 0);
@@ -95,7 +95,7 @@ namespace EngineManaged.GUI.Controls
             m_HSplitter.MoveTo((Width - m_HSplitter.Width) * (m_HVal), m_HSplitter.Y);
         }
 
-        protected void OnHorizontalMoved(Base control)
+        protected void OnHorizontalMoved(Control control)
         {
             m_HVal = CalculateValueHorizontal();
             Invalidate();
@@ -136,7 +136,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="index">Section index (0-3).</param>
         /// <param name="panel">Control to assign.</param>
-        public void SetPanel(int index, Base panel)
+        public void SetPanel(int index, Control panel)
         {
             m_Sections[index] = panel;
 
@@ -154,7 +154,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="index">Section index (0-3).</param>
         /// <returns>Specified section.</returns>
-        public Base GetPanel(int index)
+        public Control GetPanel(int index)
         {
             return m_Sections[index];
         }

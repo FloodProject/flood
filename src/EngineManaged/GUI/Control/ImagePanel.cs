@@ -6,7 +6,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Image container.
     /// </summary>
-    public class ImagePanel : Base
+    public class ImagePanel : Control
     {
         private readonly Texture m_Texture;
         private readonly float[] m_uv;
@@ -16,7 +16,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="ImagePanel"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ImagePanel(Base parent)
+        public ImagePanel(Control parent)
             : base(parent)
         {
             m_uv = new float[4];

@@ -8,7 +8,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Base slider.
     /// </summary>
-    public class Slider : Base
+    public class Slider : Control
     {
         protected readonly SliderBar m_SliderBar;
         protected bool m_SnapToNotches;
@@ -63,7 +63,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="Slider"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        protected Slider(Base parent)
+        protected Slider(Control parent)
             : base(parent)
         {
             SetBounds(new Rectangle(0, 0, 32, 128));
@@ -177,7 +177,7 @@ namespace EngineManaged.GUI.Controls
             
         }
 
-        protected virtual void OnMoved(Base control)
+        protected virtual void OnMoved(Control control)
         {
             SetValueInternal(CalculateValue());
         }

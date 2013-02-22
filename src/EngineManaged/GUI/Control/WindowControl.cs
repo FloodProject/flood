@@ -51,7 +51,7 @@ namespace EngineManaged.GUI.Controls
         /// <param name="parent">Parent control.</param>
         /// <param name="caption">Window caption.</param>
         /// <param name="modal">Determines whether the window should be modal.</param>
-        public WindowControl(Base parent, String caption = "", bool modal = false)
+        public WindowControl(Control parent, String caption = "", bool modal = false)
             : base(parent)
         {
             m_TitleBar = new Dragger(this);
@@ -77,7 +77,7 @@ namespace EngineManaged.GUI.Controls
             m_CloseButton.Name = "closeButton";
 
             //Create a blank content control, dock it to the top - Should this be a ScrollControl?
-            m_InnerPanel = new Base(this);
+            m_InnerPanel = new Control(this);
             m_InnerPanel.Dock = Pos.Fill;
             GetResizer(8).Hide();
             BringToFront();
@@ -91,7 +91,7 @@ namespace EngineManaged.GUI.Controls
                 MakeModal();
         }
 
-        protected virtual void CloseButtonPressed(Base control)
+        protected virtual void CloseButtonPressed(Control control)
         {
             IsHidden = true;
 

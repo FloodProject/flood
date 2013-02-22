@@ -84,7 +84,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="TextBox"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public TextBox(Base parent)
+        public TextBox(Control parent)
             : base(parent)
         {
             SetSize(200, 20);
@@ -234,7 +234,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for Paste event.
         /// </summary>
         /// <param name="from">Source control.</param>
-        protected override void OnPaste(Base from)
+        protected override void OnPaste(Control from)
         {
             base.OnPaste(from);
             InsertText(Platform.Neutral.GetClipboardText());
@@ -244,7 +244,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for Copy event.
         /// </summary>
         /// <param name="from">Source control.</param>
-        protected override void OnCopy(Base from)
+        protected override void OnCopy(Control from)
         {
             if (!HasSelection) return;
             base.OnCopy(from);
@@ -256,7 +256,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for Cut event.
         /// </summary>
         /// <param name="from">Source control.</param>
-        protected override void OnCut(Base from)
+        protected override void OnCut(Control from)
         {
             if (!HasSelection) return;
             base.OnCut(from);
@@ -269,7 +269,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler for Select All event.
         /// </summary>
         /// <param name="from">Source control.</param>
-        protected override void OnSelectAll(Base from)
+        protected override void OnSelectAll(Control from)
         {
             //base.OnSelectAll(from);
             m_CursorEnd = 0;

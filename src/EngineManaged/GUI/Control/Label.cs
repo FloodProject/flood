@@ -7,7 +7,7 @@ namespace EngineManaged.GUI.Controls
     /// <summary>
     /// Static text label.
     /// </summary>
-    public class Label : Base
+    public class Label : Control
     {
         private readonly Text m_Text;
         private Pos m_Align;
@@ -91,7 +91,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="Label"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Label(Base parent) : base(parent)
+        public Label(Control parent) : base(parent)
         {
             m_Text = new Text(this);
             //m_Text.Font = Skin.DefaultFont;
