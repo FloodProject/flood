@@ -61,18 +61,19 @@ void ProjectPlugin::onPluginEnable()
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewDocument, this, newButton->GetId() );
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
+
+		wxMenu* menu = editor->menuFile;
+
+		newItem = menu->Append(newButton->GetId(), newButton->GetLabel() + "\tCtrl-N");
+		openItem = menu->Append(openButton->GetId(), openButton->GetLabel() + "\tCtrl-O");
+		saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel() + "\tCtrl-S");
+		saveAsItem = menu->Append(wxID_ANY, "Save As...");
+
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewDocument, this, newButton->GetId() );
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveAsDocument, this, saveAsItem->GetId() );
 	}
-
-	wxMenu* menu = editor->menuFile;
-	newItem = menu->Append(newButton->GetId(), newButton->GetLabel() + "\tCtrl-N");
-	openItem = menu->Append(openButton->GetId(), openButton->GetLabel() + "\tCtrl-O");
-	saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel() + "\tCtrl-S");
-	saveAsItem = menu->Append(wxID_ANY, "Save As...");
-
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewDocument, this, newButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenDocument, this, openButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveDocument, this, saveButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveAsDocument, this, saveAsItem->GetId() );
 
 #if 0
 	projectPane = new ProjectPane(editor);

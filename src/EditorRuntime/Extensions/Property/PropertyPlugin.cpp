@@ -42,6 +42,7 @@ PluginMetadata PropertyPlugin::getMetadata()
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 300;
+	metadata.startEnabled = false;
 
 	return metadata;
 }

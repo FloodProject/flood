@@ -47,6 +47,7 @@ PluginMetadata ScenePlugin::getMetadata()
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 500;
+	metadata.startEnabled = false;
 
 	return metadata;
 }
@@ -69,7 +70,8 @@ void ScenePlugin::onPluginEnable()
 	editor->getAUI()->Update();
 
 	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
-	toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &ScenePlugin::onPlayCommand, this, Toolbar_TooglePlay);
+	if (toolbarCtrl)
+		toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &ScenePlugin::onPlayCommand, this, Toolbar_TooglePlay);
 
 	// Subscribe as an event listener.
 	EventManager* events = editor->getEventManager();
@@ -77,7 +79,8 @@ void ScenePlugin::onPluginEnable()
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 	PropertyPlugin* pp = GetPlugin<PropertyPlugin>();
-	pp->propertyPage->onClassFieldChanged.Bind(this, &ScenePlugin::onSceneClassFieldUpdate);
+	if (pp->propertyPage)
+		pp->propertyPage->onClassFieldChanged.Bind(this, &ScenePlugin::onSceneClassFieldUpdate);
 #endif
 
 #ifndef ENABLE_NO_NETWORK
@@ -195,6 +198,9 @@ void ScenePlugin::onComponentChanged(const ComponentPtr& component)
 
 void ScenePlugin::onSceneLoad( const ScenePtr& scene )
 {
+	if (!scenePage)
+		return;
+
 	scenePage->setScene(scene);
 }
 

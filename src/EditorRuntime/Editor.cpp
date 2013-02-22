@@ -257,6 +257,7 @@ void EditorFrame::createUI()
 	// Create menus
 	createMenus();
 
+#if 0
 	// Create toolbar
 	int style = wxAUI_TB_DEFAULT_STYLE /*| wxAUI_TB_OVERFLOW*/;
 	toolbarCtrl = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
@@ -266,6 +267,7 @@ void EditorFrame::createUI()
 	
 	// Create status-bar.
 	statusCtrl = CreateStatusBar();
+#endif
 }
 
 //-----------------------------------//

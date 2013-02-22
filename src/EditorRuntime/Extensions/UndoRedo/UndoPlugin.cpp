@@ -61,14 +61,14 @@ void UndoPlugin::onPluginEnable()
 
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
 		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
+
+		wxMenu* menu = editor->menuEdit;
+		undoItem = menu->Append(undoButton->GetId(), undoButton->GetLabel() + "\tCtrl-Z");
+		redoItem = menu->Append(redoButton->GetId(), redoButton->GetLabel() + "\tCtrl-Y");
+
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
+		editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
 	}
-
-	wxMenu* menu = editor->menuEdit;
-	undoItem = menu->Append(undoButton->GetId(), undoButton->GetLabel() + "\tCtrl-Z");
-	redoItem = menu->Append(redoButton->GetId(), redoButton->GetLabel() + "\tCtrl-Y");
-
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButton, this, undoButton->GetId() );
-	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButton, this, redoButton->GetId() );
 
 	// Subscribe as an event listener.
 	EventManager* events = editor->getEventManager();
@@ -181,13 +181,13 @@ void UndoPlugin::updateButtons()
 		redoEmpty = undoManager->getRedoOperations().empty();
 	}
 
-	undoItem->Enable( !undoEmpty );
-	redoItem->Enable( !redoEmpty );
-
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
 	if(toolbarCtrl)
 	{
+		undoItem->Enable( !undoEmpty );
+		redoItem->Enable( !redoEmpty );
+
 		toolbarCtrl->EnableTool( undoButton->GetId(), !undoEmpty );
 		toolbarCtrl->EnableTool( redoButton->GetId(), !redoEmpty );
 		toolbarCtrl->Refresh();
