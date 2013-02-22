@@ -2,6 +2,8 @@ local version = "2.12"
 local repo = "git|git://github.com/mono/mono.git"
 local license = "LGPL"
 
+if config.MONODEP then
+
 project "Mono"
 
 	SetupNativeDependencyProject()
@@ -234,3 +236,5 @@ project "MonoMini"
 		}
 	
 	configuration ""
+    
+end

@@ -16,6 +16,9 @@ config =
 	-- Includes the BakefileGen project in the solution.
 	BAKEFILEGEN = false,
 
+    -- Includes mono dependencies
+    MONODEP = false,
+    
 --
 -- Core
 --
