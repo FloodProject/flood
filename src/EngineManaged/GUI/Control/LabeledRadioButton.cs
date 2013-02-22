@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// RadioButton with label.
@@ -41,7 +41,7 @@ namespace EngineManaged.GUI.Controls
             m_Label.AutoSizeToContents = true;
         }
 
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             // ugly stuff because we don't have anchoring without docking (docking resizes children)
             if (m_Label.Height > m_RadioButton.Height) // usually radio is smaller than label so it gets repositioned to avoid clipping with negative Y
@@ -57,7 +57,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the focus overlay.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderFocus(Skin.Base skin)
+        protected override void RenderFocus(Skins.Skin skin)
         {
             if (InputHandler.KeyboardFocus != this) return;
             if (!IsTabable) return;

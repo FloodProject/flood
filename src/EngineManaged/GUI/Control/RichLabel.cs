@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Multiline label with text chunks having different color/font.
@@ -233,7 +233,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             base.Layout(skin);
             if (m_NeedsRebuild)

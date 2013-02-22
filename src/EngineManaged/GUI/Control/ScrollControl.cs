@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base for controls whose interior can be scrolled.
@@ -140,7 +140,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             UpdateScrollBars();
             base.Layout(skin);
@@ -174,7 +174,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
 #if false
 

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Misc utility functions.

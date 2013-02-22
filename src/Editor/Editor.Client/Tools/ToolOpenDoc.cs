@@ -1,18 +1,17 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using Flood.GUI.Platform;
 
 namespace Flood.Editor.Controls
 {
     class ToolOpenDoc : EditorTool, BarTool
     {
-
         [Import]
         DocumentManager docManager;
 
         public void OnSelect()
         {
-            EngineManaged.GUI.Platform.Neutral.FileOpen("Open Document", "", "", Open);
-            
+            Neutral.FileOpen("Open Document", "", "", Open);
         }
 
         private void Open(string file)

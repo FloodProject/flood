@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Tree node toggle button (the little plus sign).
@@ -23,7 +23,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Renders the focus overlay.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderFocus(Skin.Base skin)
+        protected override void RenderFocus(Skins.Skin skin)
         {
 
         }
@@ -32,7 +32,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             skin.DrawTreeButton(this, ToggleState);
         }

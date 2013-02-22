@@ -2,9 +2,9 @@
 
 using System;
 using System.Drawing;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Displays text. Always sized to contents.
@@ -86,7 +86,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             if (Length == 0 || Font == null) return;
 
@@ -122,7 +122,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             SizeToContents();
             base.Layout(skin);

@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
-using EngineManaged.GUI.Anim;
-using EngineManaged.GUI.DragDrop;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Anim;
+using Flood.GUI.DragDrop;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base control class.
@@ -40,7 +40,7 @@ namespace EngineManaged.GUI.Controls
 
         private Control m_ToolTip;
 
-        private Skin.Base m_Skin;
+        private Skins.Skin m_Skin;
 
         private Rectangle m_Bounds;
         private Rectangle m_RenderBounds;
@@ -162,7 +162,7 @@ namespace EngineManaged.GUI.Controls
         /// <summary>
         /// Current skin.
         /// </summary>
-        public Skin.Base Skin
+        public Skins.Skin Skin
         {
             get
             {
@@ -464,7 +464,7 @@ namespace EngineManaged.GUI.Controls
                 InputHandler.MouseFocus = null;
 
             DragAndDrop.ControlDeleted(this);
-            EngineManaged.GUI.ToolTip.ControlDeleted(this);
+            GUI.ToolTip.ControlDeleted(this);
             Animation.Cancel(this);
 
             foreach (Control child in m_Children)
@@ -989,7 +989,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void Render(Skin.Base skin)
+        protected virtual void Render(Skins.Skin skin)
         {
         }
 
@@ -998,10 +998,10 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         /// <param name="master">Root parent.</param>
-        protected virtual void DoCacheRender(Skin.Base skin, Control master)
+        protected virtual void DoCacheRender(Skins.Skin skin, Control master)
         {
-            Renderer.Base render = skin.Renderer;
-            Renderer.ICacheToTexture cache = render.CTT;
+            Renderers.Renderer render = skin.Renderer;
+            Renderers.ICacheToTexture cache = render.CTT;
 
             if (cache == null)
                 return;
@@ -1066,7 +1066,7 @@ namespace EngineManaged.GUI.Controls
         /// Rendering logic implementation.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        internal virtual void DoRender(Skin.Base skin)
+        internal virtual void DoRender(Skins.Skin skin)
         {
             // If this control has a different skin, 
             // then so does its children.
@@ -1076,7 +1076,7 @@ namespace EngineManaged.GUI.Controls
             // Do think
             Think();
 
-            Renderer.Base render = skin.Renderer;
+            Renderers.Renderer render = skin.Renderer;
 
             if (render.CTT != null && ShouldCacheToTexture)
             {
@@ -1095,9 +1095,9 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         /// <param name="clipRect">Clipping rectangle.</param>
-        protected virtual void RenderRecursive(Skin.Base skin, Rectangle clipRect)
+        protected virtual void RenderRecursive(Skins.Skin skin, Rectangle clipRect)
         {
-            Renderer.Base render = skin.Renderer;
+            Renderers.Renderer render = skin.Renderer;
             Point oldRenderOffset = render.RenderOffset;
 
             render.AddRenderOffset(clipRect);
@@ -1148,7 +1148,7 @@ namespace EngineManaged.GUI.Controls
         /// </summary>
         /// <param name="skin">New skin.</param>
         /// <param name="doChildren">Deterines whether to change children skin.</param>
-        public virtual void SetSkin(Skin.Base skin, bool doChildren = false)
+        public virtual void SetSkin(Skins.Skin skin, bool doChildren = false)
         {
             if (m_Skin == skin)
                 return;
@@ -1170,7 +1170,7 @@ namespace EngineManaged.GUI.Controls
         /// Handler invoked when control's skin changes.
         /// </summary>
         /// <param name="newSkin">New skin.</param>
-        protected virtual void OnSkinChanged(Skin.Base newSkin)
+        protected virtual void OnSkinChanged(Skins.Skin newSkin)
         {
 
         }
@@ -1298,9 +1298,9 @@ namespace EngineManaged.GUI.Controls
                 HoverEnter.Invoke(this);
 
             if (ToolTip != null)
-                EngineManaged.GUI.ToolTip.Enable(this);
+                GUI.ToolTip.Enable(this);
             else if (Parent != null && Parent.ToolTip != null)
-                EngineManaged.GUI.ToolTip.Enable(Parent);
+                GUI.ToolTip.Enable(Parent);
 
             Redraw();
         }
@@ -1322,7 +1322,7 @@ namespace EngineManaged.GUI.Controls
                 HoverLeave.Invoke(this);
 
             if (ToolTip != null)
-                EngineManaged.GUI.ToolTip.Disable(this);
+                GUI.ToolTip.Disable(this);
 
             Redraw();
         }
@@ -1411,7 +1411,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void Layout(Skin.Base skin)
+        protected virtual void Layout(Skins.Skin skin)
         {
             if (skin.Renderer.CTT != null && ShouldCacheToTexture)
                 skin.Renderer.CTT.CreateControlCacheTexture(this);
@@ -1421,7 +1421,7 @@ namespace EngineManaged.GUI.Controls
         /// Recursively lays out the control's interior according to alignment, margin, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void RecurseLayout(Skin.Base skin)
+        protected virtual void RecurseLayout(Skins.Skin skin)
         {
             if (m_Skin != null)
                 skin = m_Skin;
@@ -1792,7 +1792,7 @@ namespace EngineManaged.GUI.Controls
         /// Function invoked after layout.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void PostLayout(Skin.Base skin)
+        protected virtual void PostLayout(Skins.Skin skin)
         {
 
         }
@@ -2032,7 +2032,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the focus overlay.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void RenderFocus(Skin.Base skin)
+        protected virtual void RenderFocus(Skins.Skin skin)
         {
             if (InputHandler.KeyboardFocus != this)
                 return;
@@ -2046,7 +2046,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders under the actual control (shadows etc).
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void RenderUnder(Skin.Base skin)
+        protected virtual void RenderUnder(Skins.Skin skin)
         {
 
         }
@@ -2055,7 +2055,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders over the actual control (overlays).
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void RenderOver(Skin.Base skin)
+        protected virtual void RenderOver(Skins.Skin skin)
         {
 
         }

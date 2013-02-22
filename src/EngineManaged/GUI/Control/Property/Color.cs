@@ -1,8 +1,8 @@
 ﻿using System;
-using EngineManaged.GUI.ControlInternal;
-using EngineManaged.GUI.Input;
+using Flood.GUI.ControlInternal;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls.Property
+namespace Flood.GUI.Controls.Property
 {
     /// <summary>
     /// Color property.

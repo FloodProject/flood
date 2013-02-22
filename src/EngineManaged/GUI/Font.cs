@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Represents font resource.
@@ -35,12 +35,12 @@ namespace EngineManaged.GUI
         /// </summary>
         public float RealSize { get; set; }
 
-        private readonly Renderer.Base m_Renderer;
+        private readonly Renderers.Renderer m_Renderer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class.
         /// </summary>
-        public Font(Renderer.Base renderer)
+        public Font(Renderers.Renderer renderer)
             : this(renderer, "Arial", 10)
         {
 
@@ -52,7 +52,7 @@ namespace EngineManaged.GUI
         /// <param name="renderer">Renderer to use.</param>
         /// <param name="faceName">Face name.</param>
         /// <param name="size">Font size.</param>
-        public Font(Renderer.Base renderer, String faceName, int size = 10)
+        public Font(Renderers.Renderer renderer, String faceName, int size = 10)
         {
             m_Renderer = renderer;
             FaceName = faceName;

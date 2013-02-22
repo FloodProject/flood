@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EngineManaged.GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Base class for multi-column tables.
@@ -175,7 +175,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             base.Layout(skin);
 
@@ -191,7 +191,7 @@ namespace EngineManaged.GUI.Controls.Layout
             }
         }
 
-        protected override void PostLayout(Skin.Base skin)
+        protected override void PostLayout(Skins.Skin skin)
         {
             base.PostLayout(skin);
             if (m_SizeToContents)

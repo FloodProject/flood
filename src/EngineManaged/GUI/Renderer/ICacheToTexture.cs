@@ -1,5 +1,5 @@
 ﻿
-namespace EngineManaged.GUI.Renderer
+namespace Flood.GUI.Renderers
 {
     public interface ICacheToTexture
     {
@@ -31,6 +31,6 @@ namespace EngineManaged.GUI.Renderer
         void CreateControlCacheTexture(Controls.Control control);
         
         void UpdateControlCacheTexture(Controls.Control control);
-        void SetRenderer(Base renderer);
+        void SetRenderer(Renderer renderer);
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using EngineManaged.GUI.Controls;
-using EngineManaged.GUI.Input;
-using Control = EngineManaged.GUI.Controls.Control;
+using Flood.GUI.Controls;
+using Flood.GUI.Input;
+using Control = Flood.GUI.Controls.Control;
 
-namespace EngineManaged.GUI.DragDrop
+namespace Flood.GUI.DragDrop
 {
     /// <summary>
     /// Drag and drop handling.
@@ -13,11 +13,11 @@ namespace EngineManaged.GUI.DragDrop
     public static class DragAndDrop
     {
         public static Package CurrentPackage;
-        public static Control HoveredControl;
-        public static Control SourceControl;
+        public static Controls.Control HoveredControl;
+        public static Controls.Control SourceControl;
 
-        private static Control m_LastPressedControl;
-        private static Control m_NewHoveredControl;
+        private static Controls.Control m_LastPressedControl;
+        private static Controls.Control m_NewHoveredControl;
         private static Point m_LastPressedPos;
         private static int m_MouseX;
         private static int m_MouseY;
@@ -84,7 +84,7 @@ namespace EngineManaged.GUI.DragDrop
             return true;
         }
 
-        private static void UpdateHoveredControl(Control control, int x, int y)
+        private static void UpdateHoveredControl(Controls.Control control, int x, int y)
         {
             //
             // We use this global variable to represent our hovered control
@@ -136,7 +136,7 @@ namespace EngineManaged.GUI.DragDrop
             m_NewHoveredControl = null;
         }
 
-        public static bool Start(Control control, Package package)
+        public static bool Start(Controls.Control control, Package package)
         {
             if (CurrentPackage != null)
             {
@@ -148,7 +148,7 @@ namespace EngineManaged.GUI.DragDrop
             return true;
         }
 
-        public static bool OnMouseButton(Control hoveredControl, int x, int y, bool down)
+        public static bool OnMouseButton(Controls.Control hoveredControl, int x, int y, bool down)
         {
             if (!down)
             {
@@ -177,7 +177,7 @@ namespace EngineManaged.GUI.DragDrop
             return false;
         }
 
-        public static void OnMouseMoved(Control hoveredControl, int x, int y)
+        public static void OnMouseMoved(Controls.Control hoveredControl, int x, int y)
         {
             // Always keep these up to date, they're used to draw the dragged control.
             m_MouseX = x;
@@ -205,7 +205,7 @@ namespace EngineManaged.GUI.DragDrop
             hoveredControl.Redraw();
         }
 
-        public static void RenderOverlay(Canvas canvas, Skin.Base skin)
+        public static void RenderOverlay(Canvas canvas, Skins.Skin skin)
         {
             if (CurrentPackage == null) 
                 return;
@@ -222,7 +222,7 @@ namespace EngineManaged.GUI.DragDrop
             skin.Renderer.RenderOffset = old;
         }
 
-        public static void ControlDeleted(Control control)
+        public static void ControlDeleted(Controls.Control control)
         {
             if (SourceControl == control)
             {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// CheckBox control.
@@ -88,7 +88,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             base.Render(skin);
             skin.DrawCheckBox(this, m_Checked, IsDepressed);

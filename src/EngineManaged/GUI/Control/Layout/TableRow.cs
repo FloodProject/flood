@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Single table row.

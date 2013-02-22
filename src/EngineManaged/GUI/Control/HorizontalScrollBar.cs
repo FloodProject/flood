@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Horizontal scrollbar.
@@ -64,7 +64,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             base.Layout(skin);
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Skin
+namespace Flood.GUI.Skins
 {
     /// <summary>
     /// Simple skin (non-textured). Deprecated and incomplete, do not use.
     /// </summary>
     [Obsolete]
-    public class Simple : Skin.Base
+    public class Simple : Skin
     {
         private readonly Color m_colBorderColor;
         private readonly Color m_colControlOutlineLight;
@@ -24,7 +24,7 @@ namespace EngineManaged.GUI.Skin
         private readonly Color m_colToolTipBorder;
         private readonly Color m_colModal;
 
-        public Simple(Renderer.Base renderer) : base(renderer)
+        public Simple(Renderers.Renderer renderer) : base(renderer)
         {
             m_colBorderColor = Color.FromArgb(255, 80, 80, 80);
             //m_colBG = Color.FromArgb(255, 248, 248, 248);

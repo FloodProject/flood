@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// HSV hue selector.
@@ -44,7 +44,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             //Is there any way to move this into skin? Not for now, no idea how we'll "actually" render these
 

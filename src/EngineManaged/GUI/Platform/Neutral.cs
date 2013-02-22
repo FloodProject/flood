@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace EngineManaged.GUI.Platform
+namespace Flood.GUI.Platform
 {
     /// <summary>
     /// Platform-agnostic utility functions.

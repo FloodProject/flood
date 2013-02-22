@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.ControlInternal;
+using Flood.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Property table/tree.

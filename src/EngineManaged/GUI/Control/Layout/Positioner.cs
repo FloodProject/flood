@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Helper control that positions its children in a specific way.
@@ -27,7 +27,7 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Function invoked after layout.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void PostLayout(Skin.Base skin)
+        protected override void PostLayout(Skins.Skin skin)
         {
             foreach (Control child in Children) // ok?
             {

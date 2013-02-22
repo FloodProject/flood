@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.ControlInternal;
-using EngineManaged.GUI.DragDrop;
+using Flood.GUI.ControlInternal;
+using Flood.GUI.DragDrop;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base for dockable containers.
@@ -106,7 +106,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
 
         }
@@ -418,12 +418,12 @@ namespace EngineManaged.GUI.Controls
         /// Renders over the actual control (overlays).
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderOver(Skin.Base skin)
+        protected override void RenderOver(Skins.Skin skin)
         {
             if (!m_DrawHover)
                 return;
 
-            Renderer.Base render = skin.Renderer;
+            Renderers.Renderer render = skin.Renderer;
             render.DrawColor = Color.FromArgb(20, 255, 200, 255);
             render.DrawFilledRect(RenderBounds);
 

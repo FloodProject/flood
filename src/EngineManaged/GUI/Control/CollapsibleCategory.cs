@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.ControlInternal;
+using Flood.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// CollapsibleCategory control. Used in CollapsibleList.
@@ -123,7 +123,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             skin.DrawCategoryInner(this, m_HeaderButton.ToggleState);
             base.Render(skin);
@@ -148,7 +148,7 @@ namespace EngineManaged.GUI.Controls
         /// Function invoked after layout.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void PostLayout(Skin.Base skin)
+        protected override void PostLayout(Skins.Skin skin)
         {
             if (IsCollapsed)
             {

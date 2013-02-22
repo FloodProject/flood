@@ -10,7 +10,7 @@
 #using "EngineBindings.dll"
 #using <System.Drawing.dll>
 
-using namespace EngineManaged::GUI; 
+using namespace Flood::GUI; 
 using namespace System::Collections::Generic;
 
 class ManagedGeometryBuffer {
@@ -165,14 +165,14 @@ public ref class TextureUtil
 {
 public:
 
-	static void LoadTextureInternal(EngineManaged::GUI::Texture^ t, System::Drawing::Bitmap^ bmp)
+	static void LoadTextureInternal(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bmp)
 	{
 		System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
 		int bytes = std::abs(data->Stride) * bmp->Height;
 		LoadTextureInternal(t,(uint8*)data->Scan0.ToPointer(), bytes);
 	}
 
-	static void LoadTextureInternal(EngineManaged::GUI::Texture^ t, uint8* data, int size) 
+	static void LoadTextureInternal(Flood::GUI::Texture^ t, uint8* data, int size) 
 	{
 		ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t->Width,t->Height, PixelFormat::B8G8R8A8);
 		
@@ -188,7 +188,7 @@ public:
 
 public ref class TextRenderer
 {
-	typedef System::Collections::Generic::Dictionary<System::Tuple<System::String^, EngineManaged::GUI::Font^>^, EngineManaged::GUI::Texture^> StringTextureCache;
+	typedef System::Collections::Generic::Dictionary<System::Tuple<System::String^, Flood::GUI::Font^>^, Flood::GUI::Texture^> StringTextureCache;
 
 	static System::Drawing::StringFormat^ m_StringFormat;
 	static System::Drawing::Graphics^ m_Graphics; // only used for text measurement
@@ -200,7 +200,7 @@ public ref class TextRenderer
 		m_Graphics = System::Drawing::Graphics::FromImage(gcnew System::Drawing::Bitmap(1024, 1024, System::Drawing::Imaging::PixelFormat::Format32bppArgb));
 	}
 
-	static bool LoadFont(EngineManaged::GUI::Font^ font)
+	static bool LoadFont(Flood::GUI::Font^ font)
 	{
 		//Debug.Print(String.Format("LoadFont {0}", font->FaceName));
 		font->RealSize = font->Size;// * Scale;
@@ -216,7 +216,7 @@ public ref class TextRenderer
 		return true;
    }
 
-   static void FreeFont(EngineManaged::GUI::Font^ font)
+   static void FreeFont(Flood::GUI::Font^ font)
    {
 		//Debug.Print(String.Format("FreeFont {0}", font->FaceName));
 		if (font->RendererData == nullptr)
@@ -232,7 +232,7 @@ public ref class TextRenderer
 		font->RendererData = nullptr;
 	}
 
-	static  System::Drawing::Font^ ConvertFont(EngineManaged::GUI::Font^ font)
+	static  System::Drawing::Font^ ConvertFont(Flood::GUI::Font^ font)
 	{
 		System::Drawing::Font^ sysFont = safe_cast<System::Drawing::Font^>(font->RendererData);
 		if (sysFont == nullptr || std::abs(font->RealSize - font->Size /** Scale*/) > 2)
@@ -250,32 +250,32 @@ public ref class TextRenderer
 		return System::Drawing::Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
 	}
 
-	static EngineManaged::GUI::Texture^ GetTexture(EngineManaged::GUI::Font^ font, System::String^ text){
-		System::Tuple<System::String^, EngineManaged::GUI::Font^>^ key = gcnew System::Tuple<System::String^, EngineManaged::GUI::Font^>(text, font);
+	static Flood::GUI::Texture^ GetTexture(Flood::GUI::Font^ font, System::String^ text){
+		System::Tuple<System::String^, Flood::GUI::Font^>^ key = gcnew System::Tuple<System::String^, Flood::GUI::Font^>(text, font);
 		if (m_StringCache->ContainsKey(key))
 			return m_StringCache[key];
 		return nullptr;
 	}
 
-	static void AddTexture(EngineManaged::GUI::Font^ font, System::String^ text, EngineManaged::GUI::Texture^ texture){
-		System::Tuple<System::String^, EngineManaged::GUI::Font^>^ key = gcnew System::Tuple<System::String^, EngineManaged::GUI::Font^>(text, font);
+	static void AddTexture(Flood::GUI::Font^ font, System::String^ text, Flood::GUI::Texture^ texture){
+		System::Tuple<System::String^, Flood::GUI::Font^>^ key = gcnew System::Tuple<System::String^, Flood::GUI::Font^>(text, font);
 		m_StringCache->Add(key,texture);
 	}
 
 public:
 
 	static void ClearCache(){
-		for each(EngineManaged::GUI::Texture^ tex in m_StringCache->Values){
+		for each(Flood::GUI::Texture^ tex in m_StringCache->Values){
 			delete(tex);
 		}
 		m_StringCache->Clear();
 	}
 
 	//TODO use scale, remove renderer
-	static EngineManaged::GUI::Texture^ StringToTexture(System::String^ text, EngineManaged::GUI::Font^ font, EngineManaged::GUI::Renderer::Base^ renderer)
+	static Flood::GUI::Texture^ StringToTexture(System::String^ text, Flood::GUI::Font^ font, Flood::GUI::Renderers::Renderer^ renderer)
 	{
 		System::Drawing::Brush^ brush = System::Drawing::Brushes::White;
-		EngineManaged::GUI::Texture^ texture = GetTexture(font,text);
+		Flood::GUI::Texture^ texture = GetTexture(font,text);
 		if(texture != nullptr){ //TODO Check stringFormat
 			return texture;
 		}
@@ -283,7 +283,7 @@ public:
 		System::Drawing::Font^ sysFont = ConvertFont(font);
 
 		System::Drawing::Point size = TextRenderer::MeasureText(sysFont, text, m_StringFormat);
-		texture = gcnew EngineManaged::GUI::Texture(renderer);
+		texture = gcnew Flood::GUI::Texture(renderer);
 		texture->Width = size.X;
 		texture->Height = size.Y;
 
@@ -309,7 +309,7 @@ public:
 		return texture;
 	}
 
-	static System::Drawing::Point MeasureText(System::String^ text, EngineManaged::GUI::Font^ font)
+	static System::Drawing::Point MeasureText(System::String^ text, Flood::GUI::Font^ font)
 	{
 		System::Drawing::Font^ sysFont = ConvertFont(font);
 		System::Drawing::SizeF size = m_Graphics->MeasureString(text, sysFont, System::Drawing::Point::Empty, m_StringFormat);
@@ -318,18 +318,17 @@ public:
 
 };
 
-public ref class GwenRenderer : EngineManaged::GUI::Renderer::Base {
+public ref class GwenRenderer : Flood::GUI::Renderers::Renderer {
 		
 	ManagedGeometryBuffer* buffer;
 
 	System::Drawing::Color m_Color;
-	System::Collections::Generic::Dictionary<System::Tuple<System::String^, EngineManaged::GUI::Font^>^, TextRenderer^>^ m_StringCache;
+	System::Collections::Generic::Dictionary<System::Tuple<System::String^, Flood::GUI::Font^>^, TextRenderer^>^ m_StringCache;
 	
 	bool m_ClipEnabled;
 
 public:
-	GwenRenderer()
-		: EngineManaged::GUI::Renderer::Base()
+	GwenRenderer() : Flood::GUI::Renderers::Renderer()
 	{
 		
 		buffer = AllocateHeap(ManagedGeometryBuffer);
@@ -368,7 +367,7 @@ public:
 		m_ClipEnabled = false;
 	}
 
-	virtual void DrawTexturedRect(EngineManaged::GUI::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2) override
+	virtual void DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2) override
 	{
 		if(t->RendererData == nullptr){
 			DrawFilledRect(rect);
@@ -455,18 +454,18 @@ public:
 		buffer->addRectangle(rect,Vector2(u1,v1), Vector2(u2,v2), iHandle, m_Color);
 	}
 
-	virtual System::Drawing::Point MeasureText(EngineManaged::GUI::Font^ font, System::String^ text) override
+	virtual System::Drawing::Point MeasureText(Flood::GUI::Font^ font, System::String^ text) override
 	{
 		return TextRenderer::MeasureText(text,font);
 	}
 
-	virtual void RenderText(EngineManaged::GUI::Font^ font, System::Drawing::Point position, System::String^ text) override
+	virtual void RenderText(Flood::GUI::Font^ font, System::Drawing::Point position, System::String^ text) override
 	{
-	   EngineManaged::GUI::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
+	   Flood::GUI::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
 	   DrawTexturedRect(texture, System::Drawing::Rectangle(position.X, position.Y, texture->Width, texture->Height),0,0,1,1);
 	}
 	
-	virtual void LoadTexture(EngineManaged::GUI::Texture^ t) override
+	virtual void LoadTexture(Flood::GUI::Texture^ t) override
 	{
 		ResourceLoadOptions options; 
 		options.name = clix::marshalString<clix::E_UTF8>(t->Name);
@@ -484,12 +483,12 @@ public:
 		t->RendererData = iHandle.getId();
 	}
 
-	virtual void LoadTextureRaw(EngineManaged::GUI::Texture^ t, array<byte>^ pixelData) override
+	virtual void LoadTextureRaw(Flood::GUI::Texture^ t, array<byte>^ pixelData) override
 	{
         TextureUtil::LoadTextureInternal(t,(uint8*)&pixelData, pixelData->Length);
 	}
 
-	virtual void FreeTexture(EngineManaged::GUI::Texture^ t) override
+	virtual void FreeTexture(Flood::GUI::Texture^ t) override
 	{
 		if (t->RendererData == nullptr)
 			return;
@@ -503,7 +502,7 @@ public:
 		GetResourceManager()->removeResource(img);
 	}
 
-	virtual System::Drawing::Color PixelColor(EngineManaged::GUI::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
+	virtual System::Drawing::Color PixelColor(Flood::GUI::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
 	{
 		if(texture->RendererData == nullptr){
 			return defaultColor;
@@ -536,7 +535,7 @@ class GwenInput
 private:
 	InputManager* inputManager;
 
-	gcroot<EngineManaged::GUI::Controls::Canvas^> m_Canvas;
+	gcroot<Flood::GUI::Controls::Canvas^> m_Canvas;
 
 	int m_MouseX;
 	int m_MouseY;
@@ -564,45 +563,45 @@ public:
 	}
 
 
-	void Initialize(gcroot<EngineManaged::GUI::Controls::Canvas^> c)
+	void Initialize(gcroot<Flood::GUI::Controls::Canvas^> c)
 	{
 		m_Canvas = c;
 	}
 
 
 private:
-	EngineManaged::GUI::Key TranslateKeyCode(Keys key)
+	Flood::GUI::Key TranslateKeyCode(Keys key)
 	{
 
 		switch (key)
 		{
-		case Keys::Return: return EngineManaged::GUI::Key::Return;
-		case Keys::Escape: return EngineManaged::GUI::Key::Escape;
-		case Keys::Tab: return EngineManaged::GUI::Key::Tab;
-		case Keys::Space: return EngineManaged::GUI::Key::Space;
-		case Keys::Up: return EngineManaged::GUI::Key::Up;
-		case Keys::Down: return EngineManaged::GUI::Key::Down;
-		case Keys::Left: return EngineManaged::GUI::Key::Left;
-		case Keys::Right: return EngineManaged::GUI::Key::Right;
-		case Keys::Home: return EngineManaged::GUI::Key::Home;
-		case Keys::End: return EngineManaged::GUI::Key::End;
-		case Keys::Delete: return EngineManaged::GUI::Key::Delete;
+		case Keys::Return: return Flood::GUI::Key::Return;
+		case Keys::Escape: return Flood::GUI::Key::Escape;
+		case Keys::Tab: return Flood::GUI::Key::Tab;
+		case Keys::Space: return Flood::GUI::Key::Space;
+		case Keys::Up: return Flood::GUI::Key::Up;
+		case Keys::Down: return Flood::GUI::Key::Down;
+		case Keys::Left: return Flood::GUI::Key::Left;
+		case Keys::Right: return Flood::GUI::Key::Right;
+		case Keys::Home: return Flood::GUI::Key::Home;
+		case Keys::End: return Flood::GUI::Key::End;
+		case Keys::Delete: return Flood::GUI::Key::Delete;
 		case Keys::LControl:
 			this->m_AltGr = true;
-			return EngineManaged::GUI::Key::Control;
-		case Keys::LAlt: return EngineManaged::GUI::Key::Alt;
-		case Keys::LShift: return EngineManaged::GUI::Key::Shift;
-		case Keys::RControl: return EngineManaged::GUI::Key::Control;
+			return Flood::GUI::Key::Control;
+		case Keys::LAlt: return Flood::GUI::Key::Alt;
+		case Keys::LShift: return Flood::GUI::Key::Shift;
+		case Keys::RControl: return Flood::GUI::Key::Control;
 		case Keys::RAlt: 
 			if (this->m_AltGr)
 			{
-				this->m_Canvas->Input_Key(EngineManaged::GUI::Key::Control, false);
+				this->m_Canvas->Input_Key(Flood::GUI::Key::Control, false);
 			}
-			return EngineManaged::GUI::Key::Alt;
-		case Keys::RShift: return EngineManaged::GUI::Key::Shift;
+			return Flood::GUI::Key::Alt;
+		case Keys::RShift: return Flood::GUI::Key::Shift;
 				
 		}
-		return EngineManaged::GUI::Key::Invalid;
+		return Flood::GUI::Key::Invalid;
 	}
 
 	static char TranslateChar(Keys key)
@@ -641,7 +640,7 @@ public:
 	{
 		wchar_t ch = TranslateChar(keyEvent.keyCode);
 
-		if (EngineManaged::GUI::Input::InputHandler::DoSpecialKeys(m_Canvas, ch))
+		if (Flood::GUI::Input::InputHandler::DoSpecialKeys(m_Canvas, ch))
 			return;
 		
 		if (ch != ' ')
@@ -649,7 +648,7 @@ public:
 			m_Canvas->Input_Character(ch);
 		}
 		
-		EngineManaged::GUI::Key iKey = TranslateKeyCode(keyEvent.keyCode);
+		Flood::GUI::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
 		m_Canvas->Input_Key(iKey, true);
 	}
@@ -658,7 +657,7 @@ public:
 	{
 		char ch = TranslateChar(keyEvent.keyCode);
 
-		EngineManaged::GUI::Key iKey = TranslateKeyCode(keyEvent.keyCode);
+		Flood::GUI::Key iKey = TranslateKeyCode(keyEvent.keyCode);
 
 		m_Canvas->Input_Key(iKey, false);
 	}

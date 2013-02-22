@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     public interface IColorPicker
     {

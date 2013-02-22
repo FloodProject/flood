@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EditorManaged_d
+namespace Flood
 {
     class Component
     {

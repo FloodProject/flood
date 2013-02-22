@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace EngineManaged.GUI.Skin.Texturing
+namespace Flood.GUI.Skins.Texturing
 {
     public struct SubRect
     {
@@ -33,7 +33,7 @@ namespace EngineManaged.GUI.Skin.Texturing
             Init(texture, x, y, w, h, inMargin, drawMarginScale);
         }
 
-        void DrawRect(Renderer.Base render, int i, int x, int y, int w, int h)
+        void DrawRect(Renderers.Renderer render, int i, int x, int y, int w, int h)
         {
             render.DrawTexturedRect(m_Texture,
                                     new Rectangle(x, y, w, h),
@@ -87,12 +87,12 @@ namespace EngineManaged.GUI.Skin.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderer.Base render, Rectangle r)
+        public void Draw(Renderers.Renderer render, Rectangle r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderer.Base render, Rectangle r, Color col)
+        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
         {
             if (m_Texture == null)
                 return;

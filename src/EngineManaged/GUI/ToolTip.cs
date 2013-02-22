@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Tooltip handling.
@@ -47,11 +47,11 @@ namespace EngineManaged.GUI
         /// Renders the currently visible tooltip.
         /// </summary>
         /// <param name="skin"></param>
-        public static void RenderToolTip(Skin.Base skin)
+        public static void RenderToolTip(Skins.Skin skin)
         {
             if (null == g_ToolTip) return;
 
-            Renderer.Base render = skin.Renderer;
+            Renderers.Renderer render = skin.Renderer;
 
             Point oldRenderOffset = render.RenderOffset;
             Point mousePos = Input.InputHandler.MousePosition;

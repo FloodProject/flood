@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flood.GUI.Controls;
 
 namespace Flood.Editor
 {
@@ -33,6 +34,6 @@ namespace Flood.Editor
 
     interface DockableTool
     {
-        void InitControl(EngineManaged.GUI.Controls.Base parent);
+        void InitControl(Control parent);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using EngineManaged.GUI.Controls;
-using Control = EngineManaged.GUI.Controls.Control;
+using Flood.GUI.Controls;
+using Control = Flood.GUI.Controls.Control;
 
-namespace EngineManaged.GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Grab point for resizing.
@@ -16,13 +16,13 @@ namespace EngineManaged.GUI.ControlInternal
         /// <summary>
         /// Invoked when the control has been resized.
         /// </summary>
-        public event GwenEventHandler Resized;
+        public event Controls.Control.GwenEventHandler Resized;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Resizer"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Resizer(Control parent)
+        public Resizer(Controls.Control parent)
             : base(parent)
         {
             m_ResizeDir = Pos.Left;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using EngineManaged.GUI.ControlInternal;
+using Flood.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Movable window with title bar.
@@ -56,7 +56,7 @@ namespace EngineManaged.GUI.Controls
         {
             m_TitleBar = new Dragger(this);
             m_TitleBar.Height = 24;
-            m_TitleBar.Padding = EngineManaged.GUI.Padding.Zero;
+            m_TitleBar.Padding = Padding.Zero;
             m_TitleBar.Margin = new Margin(0, 0, 0, 4);
             m_TitleBar.Target = this;
             m_TitleBar.Dock = Pos.Top;
@@ -137,7 +137,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             bool hasFocus = IsOnTop;
 
@@ -153,7 +153,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders under the actual control (shadows etc).
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderUnder(Skin.Base skin)
+        protected override void RenderUnder(Skins.Skin skin)
         {
             base.RenderUnder(skin);
             skin.DrawShadow(this);
@@ -169,7 +169,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the focus overlay.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderFocus(Skin.Base skin)
+        protected override void RenderFocus(Skins.Skin skin)
         {
             
         }

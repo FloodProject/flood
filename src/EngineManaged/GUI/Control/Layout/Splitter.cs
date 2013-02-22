@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Base splitter class.
@@ -58,12 +58,12 @@ namespace EngineManaged.GUI.Controls.Layout
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             LayoutVertical(skin);
         }
 
-        protected virtual void LayoutVertical(Skin.Base skin)
+        protected virtual void LayoutVertical(Skins.Skin skin)
         {
             int w = Width;
             int h = Height;
@@ -87,7 +87,7 @@ namespace EngineManaged.GUI.Controls.Layout
             }
         }
 
-        protected virtual void LayoutHorizontal(Skin.Base skin)
+        protected virtual void LayoutHorizontal(Skins.Skin skin)
         {
             throw new NotImplementedException();
         }

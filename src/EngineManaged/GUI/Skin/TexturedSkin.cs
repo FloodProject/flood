@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using EngineManaged.GUI.Skin.Texturing;
-using Single = EngineManaged.GUI.Skin.Texturing.Single;
+using Flood.GUI.Skins.Texturing;
+using Single = Flood.GUI.Skins.Texturing.Single;
 
-namespace EngineManaged.GUI.Skin
+namespace Flood.GUI.Skins
 {
     #region UI element textures
     public struct SkinTextures
@@ -26,23 +26,23 @@ namespace EngineManaged.GUI.Skin
         {
             public Bordered Normal;
             public Bordered Inactive;
-            public Single Close;
-            public Single Close_Hover;
-            public Single Close_Down;
-            public Single Close_Disabled;
+            public Texturing.Single Close;
+            public Texturing.Single Close_Hover;
+            public Texturing.Single Close_Down;
+            public Texturing.Single Close_Disabled;
         }
 
         public struct _CheckBox
         {
             public struct _Active
             {
-                public Single Normal;
-                public Single Checked;
+                public Texturing.Single Normal;
+                public Texturing.Single Checked;
             }
             public struct _Disabled
             {
-                public Single Normal;
-                public Single Checked;
+                public Texturing.Single Normal;
+                public Texturing.Single Checked;
             }
 
             public _Active Active;
@@ -53,13 +53,13 @@ namespace EngineManaged.GUI.Skin
         {
             public struct _Active
             {
-                public Single Normal;
-                public Single Checked;
+                public Texturing.Single Normal;
+                public Texturing.Single Checked;
             }
             public struct _Disabled
             {
-                public Single Normal;
-                public Single Checked;
+                public Texturing.Single Normal;
+                public Texturing.Single Checked;
             }
 
             public _Active Active;
@@ -76,8 +76,8 @@ namespace EngineManaged.GUI.Skin
         public struct _Tree
         {
             public Bordered Background;
-            public Single Minus;
-            public Single Plus;
+            public Texturing.Single Minus;
+            public Texturing.Single Plus;
         }
 
         public struct _ProgressBar
@@ -112,8 +112,8 @@ namespace EngineManaged.GUI.Skin
 
         public struct _Menu
         {
-            public Single RightArrow;
-            public Single Check;
+            public Texturing.Single RightArrow;
+            public Texturing.Single Check;
 
             public Bordered Strip;
             public Bordered Background;
@@ -140,10 +140,10 @@ namespace EngineManaged.GUI.Skin
 
                 public struct _Button
                 {
-                    public Single Normal;
-                    public Single Hover;
-                    public Single Down;
-                    public Single Disabled;
+                    public Texturing.Single Normal;
+                    public Texturing.Single Hover;
+                    public Texturing.Single Down;
+                    public Texturing.Single Disabled;
                 }
 
                 public _Button Button;
@@ -153,18 +153,18 @@ namespace EngineManaged.GUI.Skin
             {
                 public struct _H
                 {
-                    public Single Normal;
-                    public Single Hover;
-                    public Single Down;
-                    public Single Disabled;
+                    public Texturing.Single Normal;
+                    public Texturing.Single Hover;
+                    public Texturing.Single Down;
+                    public Texturing.Single Disabled;
                 }
 
                 public struct _V
                 {
-                    public Single Normal;
-                    public Single Hover;
-                    public Single Down;
-                    public Single Disabled;
+                    public Texturing.Single Normal;
+                    public Texturing.Single Hover;
+                    public Texturing.Single Down;
+                    public Texturing.Single Disabled;
                 }
 
                 public _H H;
@@ -185,18 +185,18 @@ namespace EngineManaged.GUI.Skin
             {
                 public struct _Up
                 {
-                    public Single Normal;
-                    public Single Hover;
-                    public Single Down;
-                    public Single Disabled;
+                    public Texturing.Single Normal;
+                    public Texturing.Single Hover;
+                    public Texturing.Single Down;
+                    public Texturing.Single Disabled;
                 }
 
                 public struct _Down
                 {
-                    public Single Normal;
-                    public Single Hover;
-                    public Single Down;
-                    public Single Disabled;
+                    public Texturing.Single Normal;
+                    public Texturing.Single Hover;
+                    public Texturing.Single Down;
+                    public Texturing.Single Disabled;
                 }
 
                 public _Up Up;
@@ -270,18 +270,18 @@ namespace EngineManaged.GUI.Skin
     /// <summary>
     /// Base textured skin.
     /// </summary>
-    public class TexturedBase : Skin.Base
+    public class TexturedSkin : Skin
     {
         protected SkinTextures Textures;
 
         private readonly Texture m_Texture;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TexturedBase"/> class.
+        /// Initializes a new instance of the <see cref="TexturedSkin"/> class.
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
         /// <param name="textureName">Name of the skin texture map.</param>
-        public TexturedBase(Renderer.Base renderer, String textureName)
+        public TexturedSkin(Renderers.Renderer renderer, String textureName)
             : base(renderer)
         {
             m_Texture = new Texture(Renderer);
@@ -291,7 +291,7 @@ namespace EngineManaged.GUI.Skin
             InitializeTextures();
         }
 
-        public TexturedBase(Renderer.Base renderer, Stream textureData)
+        public TexturedSkin(Renderers.Renderer renderer, Stream textureData)
             : base(renderer)
         {
             m_Texture = new Texture(Renderer);
@@ -387,15 +387,15 @@ namespace EngineManaged.GUI.Skin
             Textures.Window.Normal   = new Bordered(m_Texture, 0, 0, 127, 127, new Margin(8, 32, 8, 8));
             Textures.Window.Inactive = new Bordered(m_Texture, 128, 0, 127, 127, new Margin(8, 32, 8, 8));
 
-            Textures.CheckBox.Active.Checked  = new Single(m_Texture, 448, 32, 15, 15);
-            Textures.CheckBox.Active.Normal   = new Single(m_Texture, 464, 32, 15, 15);
-            Textures.CheckBox.Disabled.Normal = new Single(m_Texture, 448, 48, 15, 15);
-            Textures.CheckBox.Disabled.Normal = new Single(m_Texture, 464, 48, 15, 15);
+            Textures.CheckBox.Active.Checked  = new Texturing.Single(m_Texture, 448, 32, 15, 15);
+            Textures.CheckBox.Active.Normal   = new Texturing.Single(m_Texture, 464, 32, 15, 15);
+            Textures.CheckBox.Disabled.Normal = new Texturing.Single(m_Texture, 448, 48, 15, 15);
+            Textures.CheckBox.Disabled.Normal = new Texturing.Single(m_Texture, 464, 48, 15, 15);
 
-            Textures.RadioButton.Active.Checked  = new Single(m_Texture, 448, 64, 15, 15);
-            Textures.RadioButton.Active.Normal   = new Single(m_Texture, 464, 64, 15, 15);
-            Textures.RadioButton.Disabled.Normal = new Single(m_Texture, 448, 80, 15, 15);
-            Textures.RadioButton.Disabled.Normal = new Single(m_Texture, 464, 80, 15, 15);
+            Textures.RadioButton.Active.Checked  = new Texturing.Single(m_Texture, 448, 64, 15, 15);
+            Textures.RadioButton.Active.Normal   = new Texturing.Single(m_Texture, 464, 64, 15, 15);
+            Textures.RadioButton.Disabled.Normal = new Texturing.Single(m_Texture, 448, 80, 15, 15);
+            Textures.RadioButton.Disabled.Normal = new Texturing.Single(m_Texture, 464, 80, 15, 15);
 
             Textures.TextBox.Normal   = new Bordered(m_Texture, 0, 150, 127, 21, Margin.Four);
             Textures.TextBox.Focus    = new Bordered(m_Texture, 0, 172, 127, 21, Margin.Four);
@@ -405,8 +405,8 @@ namespace EngineManaged.GUI.Skin
             Textures.Menu.BackgroundWithMargin = new Bordered(m_Texture, 128, 128, 127, 63, new Margin(24, 8, 8, 8));
             Textures.Menu.Background           = new Bordered(m_Texture, 128, 192, 127, 63, Margin.Eight);
             Textures.Menu.Hover                = new Bordered(m_Texture, 128, 256, 127, 31, Margin.Eight);
-            Textures.Menu.RightArrow           = new Single(m_Texture, 464, 112, 15, 15);
-            Textures.Menu.Check                = new Single(m_Texture, 448, 112, 15, 15);
+            Textures.Menu.RightArrow           = new Texturing.Single(m_Texture, 464, 112, 15, 15);
+            Textures.Menu.Check                = new Texturing.Single(m_Texture, 448, 112, 15, 15);
 
             Textures.Tab.Control         = new Bordered(m_Texture, 0, 256, 127, 127, Margin.Eight);
             Textures.Tab.Bottom.Active   = new Bordered(m_Texture, 0, 416, 63, 31, Margin.Eight);
@@ -419,10 +419,10 @@ namespace EngineManaged.GUI.Skin
             Textures.Tab.Right.Inactive  = new Bordered(m_Texture, 96 + 128, 384, 31, 63, Margin.Eight);
             Textures.Tab.HeaderBar       = new Bordered(m_Texture, 128, 352, 127, 31, Margin.Four);
 
-            Textures.Window.Close       = new Single(m_Texture, 0, 224, 24, 24);
-            Textures.Window.Close_Hover = new Single(m_Texture, 32, 224, 24, 24);
-            Textures.Window.Close_Hover = new Single(m_Texture, 64, 224, 24, 24);
-            Textures.Window.Close_Hover = new Single(m_Texture, 96, 224, 24, 24);
+            Textures.Window.Close       = new Texturing.Single(m_Texture, 0, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 32, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 64, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 96, 224, 24, 24);
 
             Textures.Scroller.TrackV           = new Bordered(m_Texture, 384, 208, 15, 127, Margin.Four);
             Textures.Scroller.ButtonV_Normal   = new Bordered(m_Texture, 384 + 16, 208, 15, 127, Margin.Four);
@@ -441,8 +441,8 @@ namespace EngineManaged.GUI.Skin
             Textures.Scroller.Button.Down     = new Bordered[4];
 
             Textures.Tree.Background = new Bordered(m_Texture, 256, 128, 127, 127, new Margin(16, 16, 16, 16));
-            Textures.Tree.Plus       = new Single(m_Texture, 448, 96, 15, 15);
-            Textures.Tree.Minus      = new Single(m_Texture, 464, 96, 15, 15);
+            Textures.Tree.Plus       = new Texturing.Single(m_Texture, 448, 96, 15, 15);
+            Textures.Tree.Minus      = new Texturing.Single(m_Texture, 464, 96, 15, 15);
 
             Textures.Input.Button.Normal   = new Bordered(m_Texture, 480, 0, 31, 31, Margin.Eight);
             Textures.Input.Button.Hovered  = new Bordered(m_Texture, 480, 32, 31, 31, Margin.Eight);
@@ -469,32 +469,32 @@ namespace EngineManaged.GUI.Skin
             Textures.Input.ComboBox.Down     = new Bordered(m_Texture, 384, 336 + 64, 127, 31, new Margin(8, 8, 32, 8));
             Textures.Input.ComboBox.Disabled = new Bordered(m_Texture, 384, 336 + 96, 127, 31, new Margin(8, 8, 32, 8));
 
-            Textures.Input.ComboBox.Button.Normal   = new Single(m_Texture, 496, 272, 15, 15);
-            Textures.Input.ComboBox.Button.Hover    = new Single(m_Texture, 496, 272 + 16, 15, 15);
-            Textures.Input.ComboBox.Button.Down     = new Single(m_Texture, 496, 272 + 32, 15, 15);
-            Textures.Input.ComboBox.Button.Disabled = new Single(m_Texture, 496, 272 + 48, 15, 15);
+            Textures.Input.ComboBox.Button.Normal   = new Texturing.Single(m_Texture, 496, 272, 15, 15);
+            Textures.Input.ComboBox.Button.Hover    = new Texturing.Single(m_Texture, 496, 272 + 16, 15, 15);
+            Textures.Input.ComboBox.Button.Down     = new Texturing.Single(m_Texture, 496, 272 + 32, 15, 15);
+            Textures.Input.ComboBox.Button.Disabled = new Texturing.Single(m_Texture, 496, 272 + 48, 15, 15);
 
-            Textures.Input.UpDown.Up.Normal     = new Single(m_Texture, 384, 112, 7, 7);
-            Textures.Input.UpDown.Up.Hover      = new Single(m_Texture, 384 + 8, 112, 7, 7);
-            Textures.Input.UpDown.Up.Down       = new Single(m_Texture, 384 + 16, 112, 7, 7);
-            Textures.Input.UpDown.Up.Disabled   = new Single(m_Texture, 384 + 24, 112, 7, 7);
-            Textures.Input.UpDown.Down.Normal   = new Single(m_Texture, 384, 120, 7, 7);
-            Textures.Input.UpDown.Down.Hover    = new Single(m_Texture, 384 + 8, 120, 7, 7);
-            Textures.Input.UpDown.Down.Down     = new Single(m_Texture, 384 + 16, 120, 7, 7);
-            Textures.Input.UpDown.Down.Disabled = new Single(m_Texture, 384 + 24, 120, 7, 7);
+            Textures.Input.UpDown.Up.Normal     = new Texturing.Single(m_Texture, 384, 112, 7, 7);
+            Textures.Input.UpDown.Up.Hover      = new Texturing.Single(m_Texture, 384 + 8, 112, 7, 7);
+            Textures.Input.UpDown.Up.Down       = new Texturing.Single(m_Texture, 384 + 16, 112, 7, 7);
+            Textures.Input.UpDown.Up.Disabled   = new Texturing.Single(m_Texture, 384 + 24, 112, 7, 7);
+            Textures.Input.UpDown.Down.Normal   = new Texturing.Single(m_Texture, 384, 120, 7, 7);
+            Textures.Input.UpDown.Down.Hover    = new Texturing.Single(m_Texture, 384 + 8, 120, 7, 7);
+            Textures.Input.UpDown.Down.Down     = new Texturing.Single(m_Texture, 384 + 16, 120, 7, 7);
+            Textures.Input.UpDown.Down.Disabled = new Texturing.Single(m_Texture, 384 + 24, 120, 7, 7);
 
             Textures.ProgressBar.Back  = new Bordered(m_Texture, 384, 0, 31, 31, Margin.Eight);
             Textures.ProgressBar.Front = new Bordered(m_Texture, 384 + 32, 0, 31, 31, Margin.Eight);
 
-            Textures.Input.Slider.H.Normal   = new Single(m_Texture, 416, 32, 15, 15);
-            Textures.Input.Slider.H.Hover    = new Single(m_Texture, 416, 32 + 16, 15, 15);
-            Textures.Input.Slider.H.Down     = new Single(m_Texture, 416, 32 + 32, 15, 15);
-            Textures.Input.Slider.H.Disabled = new Single(m_Texture, 416, 32 + 48, 15, 15);
+            Textures.Input.Slider.H.Normal   = new Texturing.Single(m_Texture, 416, 32, 15, 15);
+            Textures.Input.Slider.H.Hover    = new Texturing.Single(m_Texture, 416, 32 + 16, 15, 15);
+            Textures.Input.Slider.H.Down     = new Texturing.Single(m_Texture, 416, 32 + 32, 15, 15);
+            Textures.Input.Slider.H.Disabled = new Texturing.Single(m_Texture, 416, 32 + 48, 15, 15);
 
-            Textures.Input.Slider.V.Normal   = new Single(m_Texture, 416 + 16, 32, 15, 15);
-            Textures.Input.Slider.V.Hover    = new Single(m_Texture, 416 + 16, 32 + 16, 15, 15);
-            Textures.Input.Slider.V.Down     = new Single(m_Texture, 416 + 16, 32 + 32, 15, 15);
-            Textures.Input.Slider.V.Disabled = new Single(m_Texture, 416 + 16, 32 + 48, 15, 15);
+            Textures.Input.Slider.V.Normal   = new Texturing.Single(m_Texture, 416 + 16, 32, 15, 15);
+            Textures.Input.Slider.V.Hover    = new Texturing.Single(m_Texture, 416 + 16, 32 + 16, 15, 15);
+            Textures.Input.Slider.V.Down     = new Texturing.Single(m_Texture, 416 + 16, 32 + 32, 15, 15);
+            Textures.Input.Slider.V.Disabled = new Texturing.Single(m_Texture, 416 + 16, 32 + 48, 15, 15);
 
             Textures.CategoryList.Outer  = new Bordered(m_Texture, 256, 384, 63, 63, Margin.Eight);
             Textures.CategoryList.Inner  = new Bordered(m_Texture, 256 + 64, 384, 63, 63, new Margin(8, 21, 8, 8));

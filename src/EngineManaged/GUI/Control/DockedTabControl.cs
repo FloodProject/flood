@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Docked tab control.
@@ -32,7 +32,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             TabStrip.IsHidden = (TabCount <= 1);
             UpdateTitleBar();

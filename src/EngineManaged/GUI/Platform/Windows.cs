@@ -5,7 +5,7 @@ using Microsoft.Win32;
 
 // todo: compile/run only on windows
 
-namespace EngineManaged.GUI.Platform
+namespace Flood.GUI.Platform
 {
     /// <summary>
     /// Windows-specific utility functions.

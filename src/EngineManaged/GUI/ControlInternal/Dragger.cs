@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Controls;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Controls;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Base for controls that can be dragged by mouse.
@@ -88,7 +88,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             
         }

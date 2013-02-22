@@ -1,8 +1,8 @@
-﻿//using Flood.Editor.Controls;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
-using EngineManaged.GUI;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
+using Flood.GUI.Renderers;
+using Flood.GUI.Skins;
 using Flood.Editor.Controls;
 
 namespace Flood.Editor
@@ -48,12 +48,12 @@ namespace Flood.Editor
         /// <summary>
         /// Renderer of the GUI.
         /// </summary>
-        private EngineManaged.GUI.Renderer.Base renderer;
+        private Renderer renderer;
 
         /// <summary>
         /// Skin of the GUI.
         /// </summary>
-        private EngineManaged.GUI.Skin.Base skin;
+        private Skin skin;
 
         public void Dispose()
         {
@@ -64,11 +64,11 @@ namespace Flood.Editor
 
         internal event Action GUIInitiated;
 
-        public void Init(EngineManaged.GUI.Renderer.Base renderer, string textureName)
+        public void Init(Renderer renderer, string textureName)
         {
             this.renderer = renderer;
-            skin = new EngineManaged.GUI.Skin.TexturedBase(renderer, textureName);
-            Canvas = new EngineManaged.GUI.Controls.Canvas(skin);
+            skin = new TexturedSkin(renderer, textureName);
+            Canvas = new Canvas(skin);
 
             ToolBar = new ToolBar(Canvas);
             DocumentTab = new DocumentTab(Canvas);

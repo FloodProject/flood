@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Divider menu item.
@@ -22,7 +22,7 @@ namespace EngineManaged.GUI.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             skin.DrawMenuDivider(this);
         }

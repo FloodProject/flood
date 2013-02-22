@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Utility class for manipulating control's position according to its parent. Rarely needed, use control.Dock.

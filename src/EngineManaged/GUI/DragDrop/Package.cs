@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI.DragDrop
+namespace Flood.GUI.DragDrop
 {
     public class Package
     {

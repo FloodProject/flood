@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using EngineManaged.GUI.Anim;
-using EngineManaged.GUI.DragDrop;
-using EngineManaged.GUI.Input;
+using Flood.GUI.Anim;
+using Flood.GUI.DragDrop;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Canvas control. It should be the root parent for all other controls.
@@ -60,7 +60,7 @@ namespace EngineManaged.GUI.Controls
         /// Initializes a new instance of the <see cref="Canvas"/> class.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public Canvas(Skin.Base skin)
+        public Canvas(Skins.Skin skin)
         {
             SetBounds(0, 0, 10000, 10000);
             SetSkin(skin);
@@ -108,7 +108,7 @@ namespace EngineManaged.GUI.Controls
         {
             DoThink();
 
-            Renderer.Base render = Skin.Renderer;
+            Renderers.Renderer render = Skin.Renderer;
 
             render.Begin();
 
@@ -128,7 +128,7 @@ namespace EngineManaged.GUI.Controls
 
             DragAndDrop.RenderOverlay(this, Skin);
 
-            EngineManaged.GUI.ToolTip.RenderToolTip(Skin);
+            GUI.ToolTip.RenderToolTip(Skin);
 
             render.EndClip();
 
@@ -139,7 +139,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Render(Skin.Base skin)
+        protected override void Render(Skins.Skin skin)
         {
             //skin.Renderer.rnd = new Random(1);
             base.Render(skin);

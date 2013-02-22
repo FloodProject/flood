@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Represents outer spacing.

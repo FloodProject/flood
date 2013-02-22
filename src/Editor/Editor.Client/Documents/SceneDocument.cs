@@ -1,4 +1,6 @@
-﻿namespace Flood.Editor.Documents
+﻿using Flood.GUI.Controls;
+
+namespace Flood.Editor.Documents
 {
     public class SceneDocument : Document
     {
@@ -8,9 +10,9 @@
 
         }
 
-        public void InitGUI(EngineManaged.GUI.Controls.Base rootGUI)
+        public void InitGUI(Control rootGUI)
         {
-            var label = new EngineManaged.GUI.Controls.Label(rootGUI);
+            var label = new Label(rootGUI);
             label.SetText("YEAH");
             label.Height = 100;
         }

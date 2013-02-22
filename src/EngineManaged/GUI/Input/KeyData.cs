@@ -1,7 +1,7 @@
 ﻿using System;
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
-namespace EngineManaged.GUI.Input
+namespace Flood.GUI.Input
 {
     /// <summary>
     /// Keyboard state.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Skin
+namespace Flood.GUI.Skins
 {
     /// <summary>
     /// UI colors used by skins.

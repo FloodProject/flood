@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Skin
+namespace Flood.GUI.Skins
 {
     /// <summary>
     /// Base skin.
     /// </summary>
-    public class Base : IDisposable
+    public class Skin : IDisposable
     {
         protected Font m_DefaultFont;
-        protected readonly Renderer.Base m_Renderer;
+        protected readonly Renderers.Renderer m_Renderer;
 
         /// <summary>
         /// Colors of various UI elements.
@@ -32,13 +32,13 @@ namespace EngineManaged.GUI.Skin
         /// <summary>
         /// Renderer used.
         /// </summary>
-        public Renderer.Base Renderer { get { return m_Renderer; } }
+        public Renderers.Renderer Renderer { get { return m_Renderer; } }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Base"/> class.
+        /// Initializes a new instance of the <see cref="Skin"/> class.
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
-        protected Base(Renderer.Base renderer)
+        protected Skin(Renderers.Renderer renderer)
         {
             m_DefaultFont = new Font(renderer);
             m_Renderer = renderer;
@@ -54,7 +54,7 @@ namespace EngineManaged.GUI.Skin
         }
 
 #if DEBUG
-        ~Base()
+        ~Skin()
         {
             throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
             //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));

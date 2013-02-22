@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace EngineManaged.GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Represents a texture.
@@ -33,13 +33,13 @@ namespace EngineManaged.GUI
         /// </summary>
         public int Height { get; set; }
 
-        private readonly Renderer.Base m_Renderer;
+        private readonly Renderers.Renderer m_Renderer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Texture"/> class.
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
-        public Texture(Renderer.Base renderer)
+        public Texture(Renderers.Renderer renderer)
         {
             m_Renderer = renderer;
             Width = 4;

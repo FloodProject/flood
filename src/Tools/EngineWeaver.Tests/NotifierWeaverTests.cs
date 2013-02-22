@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mono.Cecil;
 using NUnit.Framework;
-using EngineManaged;
+using Flood;
 using DSLToolkit.Weaver;
 using System.IO;
 
@@ -57,13 +57,13 @@ namespace EngineWeaver.Tests
         {
             public event PropertyChanged PropertyChanged;
 
-            [EngineManaged.Property]
+            [Flood.Property]
             public int Integer { get; set; }
         }
 
         public class InheritedTestClass : TestClass
         {
-            [EngineManaged.Property]
+            [Flood.Property]
             public int Integer2 { get; set; }
         }
 
@@ -96,7 +96,7 @@ namespace EngineWeaver.Tests
         {
             public event PropertyChanged PropertyChanged;
 
-            [EngineManaged.Property]
+            [Flood.Property]
             public int Name1 { get; set; }
         }
 

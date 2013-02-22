@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using EngineManaged.GUI.Controls;
-using EngineManaged.GUI.DragDrop;
+using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
 
-namespace EngineManaged.GUI.Input
+namespace Flood.GUI.Input
 {
     /// <summary>
     /// Input handling.

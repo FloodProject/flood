@@ -1,6 +1,6 @@
 using System;
-using EngineManaged.GUI;
-using EngineManaged.GUI.Controls;
+using Flood.GUI;
+using Flood.GUI.Controls;
 using System.ComponentModel.Composition;
 
 namespace Flood.Editor.Controls
@@ -12,7 +12,7 @@ namespace Flood.Editor.Controls
         /// </summary>
         public TreeNode Node { get; private set; }
 
-        protected internal ProjectNode(Base parent, string name)
+        protected internal ProjectNode(Control parent, string name)
         {
             Node = new TreeNode(parent)
             {
@@ -33,11 +33,11 @@ namespace Flood.Editor.Controls
         /// </summary>
         public TreeControl Tree { get; private set; }
 
-        public override void InitControl(Base parent)
+        public override void InitControl(Control parent)
         {
             Tree = new TreeControl(parent)
             {
-                Dock = EngineManaged.GUI.Pos.Left,
+                Dock = Pos.Left,
                 Width = 150
             };
 

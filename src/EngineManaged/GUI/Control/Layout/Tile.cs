@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace EngineManaged.GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     public class Tile : Control
     {
@@ -18,7 +18,7 @@ namespace EngineManaged.GUI.Controls.Layout
             SetTileSize( 22, 22 );
         }
 
-        protected override void PostLayout(Skin.Base skin)
+        protected override void PostLayout(Skins.Skin skin)
         {
             var  bounds = InnerBounds;
             var pos = new Point( bounds.X, bounds.Y );

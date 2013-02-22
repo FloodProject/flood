@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using EngineManaged.GUI.ControlInternal;
+using Flood.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Properties table.
@@ -39,7 +39,7 @@ namespace EngineManaged.GUI.Controls
         /// Function invoked after layout.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void PostLayout(Skin.Base skin)
+        protected override void PostLayout(Skins.Skin skin)
         {
             m_SplitterBar.Height = 0;
 

@@ -1,8 +1,8 @@
 ﻿using System;
-using EngineManaged.GUI.ControlInternal;
-using EngineManaged.GUI.Controls.Layout;
+using Flood.GUI.ControlInternal;
+using Flood.GUI.Controls.Layout;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Numeric up/down.

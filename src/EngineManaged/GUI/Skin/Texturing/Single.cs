@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Skin.Texturing
+namespace Flood.GUI.Skins.Texturing
 {
     /// <summary>
     /// Single textured element.
@@ -31,12 +31,12 @@ namespace EngineManaged.GUI.Skin.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderer.Base render, Rectangle r)
+        public void Draw(Renderers.Renderer render, Rectangle r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderer.Base render, Rectangle r, Color col)
+        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
         {
             if (m_Texture == null)
                 return;
@@ -45,7 +45,7 @@ namespace EngineManaged.GUI.Skin.Texturing
             render.DrawTexturedRect(m_Texture, r, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
         }
 
-        public void DrawCenter(Renderer.Base render, Rectangle r)
+        public void DrawCenter(Renderers.Renderer render, Rectangle r)
         {
             if (m_Texture == null)
                 return;
@@ -53,7 +53,7 @@ namespace EngineManaged.GUI.Skin.Texturing
             DrawCenter(render, r, Color.White);
         }
 
-        public void DrawCenter(Renderer.Base render, Rectangle r, Color col)
+        public void DrawCenter(Renderers.Renderer render, Rectangle r, Color col)
         {
             r.X += (int)((r.Width - m_Width) * 0.5);
             r.Y += (int)((r.Height - m_Height) * 0.5);

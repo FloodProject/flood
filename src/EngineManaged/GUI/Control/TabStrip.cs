@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.ControlInternal;
-using EngineManaged.GUI.DragDrop;
+using Flood.GUI.ControlInternal;
+using Flood.GUI.DragDrop;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Tab strip - groups TabButtons and allows reordering.
@@ -99,7 +99,7 @@ namespace EngineManaged.GUI.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void Layout(Skin.Base skin)
+        protected override void Layout(Skins.Skin skin)
         {
             Point largestTab = new Point(5, 5);
 

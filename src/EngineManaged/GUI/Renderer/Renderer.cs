@@ -2,12 +2,12 @@
 using System.Drawing;
 using System.IO;
 
-namespace EngineManaged.GUI.Renderer
+namespace Flood.GUI.Renderers
 {
     /// <summary>
     /// Base renderer.
     /// </summary>
-    public class Base : IDisposable
+    public class Renderer : IDisposable
     {
         //public Random rnd;
         private Point m_RenderOffset;
@@ -17,9 +17,9 @@ namespace EngineManaged.GUI.Renderer
         public float Scale { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Base"/> class.
+        /// Initializes a new instance of the <see cref="Renderer"/> class.
         /// </summary>
-        protected Base()
+        protected Renderer()
         {
             //rnd = new Random();
             m_RenderOffset = Point.Empty;
@@ -40,7 +40,7 @@ namespace EngineManaged.GUI.Renderer
         }
 
 #if DEBUG
-        ~Base()
+        ~Renderer()
         {
             throw new InvalidOperationException(String.Format("IDisposable object finalized: {0}", GetType()));
             //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));

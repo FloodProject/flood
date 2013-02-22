@@ -1,5 +1,5 @@
 
-using EngineManaged.GUI.Controls;
+using Flood.GUI.Controls;
 
 namespace Flood.Editor.Controls
 {
@@ -8,6 +8,6 @@ namespace Flood.Editor.Controls
     /// </summary>
     public abstract class Pane : EditorTool, DockableTool 
     {
-        public abstract void InitControl(Base parent);
+        public abstract void InitControl(Control parent);
     }
 }

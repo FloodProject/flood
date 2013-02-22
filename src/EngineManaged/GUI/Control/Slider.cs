@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.ControlInternal;
-using EngineManaged.GUI.Input;
+using Flood.GUI.ControlInternal;
+using Flood.GUI.Input;
 
-namespace EngineManaged.GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base slider.
@@ -225,7 +225,7 @@ namespace EngineManaged.GUI.Controls
         /// Renders the focus overlay.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected override void RenderFocus(Skin.Base skin)
+        protected override void RenderFocus(Skins.Skin skin)
         {
             if (InputHandler.KeyboardFocus != this) return;
             if (!IsTabable) return;
