@@ -5,8 +5,8 @@
 #include "CLIInterop.h"
 #include <vcclr.h>
 
-#using "EngineManaged.dll"
 #using "Editor.Client.dll"
+#using "EngineManaged.dll"
 #using "EngineBindings.dll"
 #using <System.Drawing.dll>
 
@@ -16,7 +16,7 @@ using namespace System::Collections::Generic;
 class ManagedGeometryBuffer {
 
 	struct BatchInfo {
-		RenderBatch* batch;
+		RenderBatch batch;
 		std::vector<int> ranges;
 	};
 	
@@ -46,21 +46,20 @@ class ManagedGeometryBuffer {
 	}
 
 	BatchInfo& GetCreateBatchInfo(ImageHandle imageHandle){
-		static int hId = 0;
-		hId++;
-		//HandleId hId = imageHandle.getId();
-		//if(batches.find(hId) == batches.end()){
-			RenderBatch* batch = new RenderBatch();
-			batch->setGeometryBuffer(gb);
-			batch->setRenderLayer(RenderLayer::Overlays);
-			batch->setPrimitiveType(PrimitiveType::Quads);
+		HandleId hId = imageHandle.getId();
+		if(batches.find(hId) == batches.end()){
+			RenderBatch batch;
+			batch.setGeometryBuffer(gb);
+			batch.setRenderLayer(RenderLayer::Overlays);
+			batch.setPrimitiveType(PrimitiveType::Quads);
+
+			MaterialHandle materialHandle = GetCreateMaterialHandle(imageHandle);
+			batch.setMaterial(materialHandle);
+
 			BatchInfo bInfo;
 			bInfo.batch = batch;
 			batches[hId] = bInfo;
-
-			MaterialHandle materialHandle = GetCreateMaterialHandle(imageHandle);
-			batch->setMaterial(materialHandle);
-		//}
+		}
 		return batches[hId];
 	}
 
@@ -136,7 +135,7 @@ public:
 
 			if(bInfo.ranges.size() > 0)
 			{
-				bInfo.batch->range.start = gb->getNumIndices();
+				bInfo.batch.range.start = gb->getNumIndices();
 				for(size_t ir = 0; ir < bInfo.ranges.size(); ++ir){
 					int vertexIndex = bInfo.ranges[ir];
 					gb->addIndex(vertexIndex++);
@@ -144,9 +143,9 @@ public:
 					gb->addIndex(vertexIndex++);
 					gb->addIndex(vertexIndex);
 				}
-				bInfo.batch->range.end = gb->getNumIndices();
+				bInfo.batch.range.end = gb->getNumIndices();
 
-				RenderState state(bInfo.batch);
+				RenderState state(&bInfo.batch);
 				rb.renderables.push_back(state);
 			}
 		}
@@ -168,31 +167,18 @@ public:
 
 	static void LoadTextureInternal(EngineManaged::GUI::Texture^ t, System::Drawing::Bitmap^ bmp)
 	{
-		
-		//array to vector
-		array<byte>^ imageBytes;
-		{
-			System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
-			int bytes  = std::abs(data->Stride) * bmp->Height;
-			imageBytes = gcnew array<byte>(bytes);
-			System::Runtime::InteropServices::Marshal::Copy(data->Scan0, imageBytes, 0, bytes);
-		}
-
-		LoadTextureInternal(t,imageBytes);
-		
+		System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
+		int bytes = std::abs(data->Stride) * bmp->Height;
+		LoadTextureInternal(t,(uint8*)data->Scan0.ToPointer(), bytes);
 	}
 
-	static void LoadTextureInternal(EngineManaged::GUI::Texture^ t, array<byte>^ imageBytes) 
+	static void LoadTextureInternal(EngineManaged::GUI::Texture^ t, uint8* data, int size) 
 	{
 		ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t->Width,t->Height, PixelFormat::B8G8R8A8);
 		
 		//array to vector
-		std::vector<byte> buffer(imageBytes->Length);
-		{
-			pin_ptr<byte> pin(&imageBytes[0]);
-			byte *first(pin), *last(pin + imageBytes->Length);
-			std::copy(first, last, buffer.begin());
-		}
+		std::vector<byte> buffer(size);
+		std::copy(data, data+size, buffer.begin());
 
 		iHandle.Resolve()->setBuffer(buffer);
 		t->RendererData = iHandle.getId();
@@ -500,7 +486,7 @@ public:
 
 	virtual void LoadTextureRaw(EngineManaged::GUI::Texture^ t, array<byte>^ pixelData) override
 	{
-		TextureUtil::LoadTextureInternal(t,pixelData);
+        TextureUtil::LoadTextureInternal(t,(uint8*)&pixelData, pixelData->Length);
 	}
 
 	virtual void FreeTexture(EngineManaged::GUI::Texture^ t) override
