@@ -80,8 +80,8 @@ namespace Cxxi.Libraries
         {
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
-            options.OutputDir = @"C:\Development\flood2\src\EngineManaged\Bindings";
-            options.IncludeDirs.Add(@"C:\Development\flood2\inc");
+            options.OutputDir = @"../../../src/EngineManaged/Bindings";
+            options.IncludeDirs.Add(@"../../../inc");
             options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
 
             SetupHeaders(options.Headers);
@@ -195,7 +195,7 @@ namespace Cxxi.Libraries
         {
             public static void Main(string[] args)
             {
-                Cxxi.Program.Run(new Libraries.Flood());
+                Driver.Run(new Libraries.Flood());
             }
         }
     }
