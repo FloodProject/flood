@@ -89,6 +89,7 @@ class API_GRAPHICS RenderBatch : public ReferenceCounted
 public:
 
 	RenderBatch();
+	RenderBatch(const RenderBatch&);
 	~RenderBatch();
 
 	// Gets/sets the render stage.

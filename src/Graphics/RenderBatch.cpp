@@ -39,6 +39,20 @@ RenderBatch::RenderBatch()
 
 //-----------------------------------//
 
+RenderBatch::RenderBatch(const RenderBatch& b)
+	: range(b.range)
+	, stage(b.stage)
+	, priority(b.priority)
+	, type(b.type)
+	, mode(b.mode)
+	, gb(b.gb)
+	, ub(b.ub)
+	, material(b.material)
+{
+}
+
+//-----------------------------------//
+
 RenderBatch::~RenderBatch()
 {
 
