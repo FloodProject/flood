@@ -14,7 +14,7 @@
 #include "Pipeline/API.h"
 #include "Engine/Headers.h"
 
-#define VAPOR_EDITOR_NAME "Flush3D"
+#define VAPOR_EDITOR_NAME "Flood IDE"
 
 #define wxUSE_BINDERAPP
 
