@@ -106,7 +106,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         public void RenderCanvas()
         {
-            DoThink();
+            Update();
 
             Renderers.Renderer render = Skin.Renderer;
 
@@ -159,7 +159,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Processes input and layout. Also purges delayed delete queue.
         /// </summary>
-        private void DoThink()
+        private void Update()
         {
             if (IsHidden)
                 return;
