@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 using EngineManaged.GUI;
 
 namespace Flood.Editor.Controls
 {
     public class DocumentTab
     {
-        EngineManaged.GUI.Control.TabControl tabControl;
+        EngineManaged.GUI.Controls.TabControl tabControl;
 
         Dictionary<int,TabButton> tabButtons;
 
         public event Action<int> DocumentSelected;
 
-        public DocumentTab(EngineManaged.GUI.Control.Base parent)
+        public DocumentTab(EngineManaged.GUI.Controls.Base parent)
         {
-            tabControl = new EngineManaged.GUI.Control.TabControl(parent)
+            tabControl = new EngineManaged.GUI.Controls.TabControl(parent)
                 {
                     Dock = EngineManaged.GUI.Pos.Fill
                 };
@@ -28,13 +28,13 @@ namespace Flood.Editor.Controls
             tabControl.TabSelected += OnTabSelected;
         }
 
-        private void OnTabSelected(EngineManaged.GUI.Control.Base control)
+        private void OnTabSelected(EngineManaged.GUI.Controls.Base control)
         {
             if (DocumentSelected != null)
                 DocumentSelected.Invoke(tabButtons.Single(kvp => kvp.Value == control).Key);
         }
 
-        public void AddTab(int id, string name, Action<EngineManaged.GUI.Control.Base> createControl)
+        public void AddTab(int id, string name, Action<EngineManaged.GUI.Controls.Base> createControl)
         {
             tabControl.TabSelected -= OnTabSelected;
             var button = tabControl.AddPage(name);

@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using EngineManaged.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Properties table.

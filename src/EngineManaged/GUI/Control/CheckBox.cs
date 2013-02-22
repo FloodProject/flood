@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// CheckBox control.

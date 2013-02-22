@@ -1,5 +1,5 @@
 ﻿using System;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 
 namespace EngineManaged.GUI.ControlInternal
 {

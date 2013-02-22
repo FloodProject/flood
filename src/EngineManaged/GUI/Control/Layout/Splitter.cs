@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control.Layout
+namespace EngineManaged.GUI.Controls.Layout
 {
     /// <summary>
     /// Base splitter class.

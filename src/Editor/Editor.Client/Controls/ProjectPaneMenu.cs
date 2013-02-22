@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flood.Editor;
 using Flood.Editor.Controls;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 
 namespace Editor.Client.GUI
 {
@@ -19,9 +19,9 @@ namespace Editor.Client.GUI
         [Import] 
         private ProjectPane projectPane;
 
-        private EngineManaged.GUI.Control.Menu menu; 
+        private EngineManaged.GUI.Controls.Menu menu; 
 
-        public void InitControl(EngineManaged.GUI.Control.Base parent)
+        public void InitControl(EngineManaged.GUI.Controls.Base parent)
         {
             menu = new Menu(parent);
         }

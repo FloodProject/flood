@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Numeric text box - accepts only float numbers.

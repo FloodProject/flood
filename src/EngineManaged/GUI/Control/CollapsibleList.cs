@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// CollapsibleList control. Groups CollapsibleCategory controls.

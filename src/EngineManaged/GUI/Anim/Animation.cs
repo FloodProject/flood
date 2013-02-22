@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 
 namespace EngineManaged.GUI.Anim
 {

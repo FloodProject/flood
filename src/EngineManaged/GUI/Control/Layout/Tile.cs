@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace EngineManaged.GUI.Control.Layout
+namespace EngineManaged.GUI.Controls.Layout
 {
     public class Tile : Base
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Multiline label with text chunks having different color/font.

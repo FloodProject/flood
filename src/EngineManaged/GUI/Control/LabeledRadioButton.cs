@@ -1,7 +1,7 @@
 ﻿using System;
 using EngineManaged.GUI.Input;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// RadioButton with label.

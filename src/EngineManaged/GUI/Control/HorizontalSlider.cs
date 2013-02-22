@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Horizontal slider.

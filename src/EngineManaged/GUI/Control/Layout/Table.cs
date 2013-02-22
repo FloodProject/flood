@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EngineManaged.GUI.Control.Layout
+namespace EngineManaged.GUI.Controls.Layout
 {
     /// <summary>
     /// Base class for multi-column tables.

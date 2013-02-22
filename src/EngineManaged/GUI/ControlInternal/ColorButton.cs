@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 
 namespace EngineManaged.GUI.ControlInternal
 {

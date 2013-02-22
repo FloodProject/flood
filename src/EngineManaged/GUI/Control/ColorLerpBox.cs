@@ -2,7 +2,7 @@
 using System.Drawing;
 using EngineManaged.GUI.Input;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Linear-interpolated HSV color box.

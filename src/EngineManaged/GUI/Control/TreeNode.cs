@@ -2,7 +2,7 @@
 using System.Linq;
 using EngineManaged.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Tree control node.

@@ -3,7 +3,7 @@ using System.Drawing;
 using EngineManaged.GUI.ControlInternal;
 using EngineManaged.GUI.DragDrop;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Tab strip - groups TabButtons and allows reordering.

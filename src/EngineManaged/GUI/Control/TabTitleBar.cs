@@ -1,7 +1,7 @@
 ﻿using System;
 using EngineManaged.GUI.DragDrop;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Titlebar for DockedTabControl.

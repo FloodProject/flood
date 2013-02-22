@@ -1,6 +1,6 @@
 using System;
 using EngineManaged.GUI;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 using System.ComponentModel.Composition;
 
 namespace Flood.Editor.Controls

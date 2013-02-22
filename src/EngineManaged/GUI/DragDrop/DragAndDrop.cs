@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 using EngineManaged.GUI.Input;
 
 namespace EngineManaged.GUI.DragDrop

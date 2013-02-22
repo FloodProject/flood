@@ -5,7 +5,7 @@ using EngineManaged.GUI.Anim;
 using EngineManaged.GUI.DragDrop;
 using EngineManaged.GUI.Input;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Canvas control. It should be the root parent for all other controls.

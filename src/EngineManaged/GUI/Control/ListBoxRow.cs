@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using EngineManaged.GUI.Control.Layout;
+using EngineManaged.GUI.Controls.Layout;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// List box row (selectable).

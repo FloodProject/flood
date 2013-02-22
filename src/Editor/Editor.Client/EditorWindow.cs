@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.Composition;
 using EngineManaged.GUI;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 using Flood.Editor.Controls;
 
 namespace Flood.Editor
@@ -68,7 +68,7 @@ namespace Flood.Editor
         {
             this.renderer = renderer;
             skin = new EngineManaged.GUI.Skin.TexturedBase(renderer, textureName);
-            Canvas = new EngineManaged.GUI.Control.Canvas(skin);
+            Canvas = new EngineManaged.GUI.Controls.Canvas(skin);
 
             ToolBar = new ToolBar(Canvas);
             DocumentTab = new DocumentTab(Canvas);

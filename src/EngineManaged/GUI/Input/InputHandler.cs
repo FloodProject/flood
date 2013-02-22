@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 using EngineManaged.GUI.DragDrop;
 
 namespace EngineManaged.GUI.Input

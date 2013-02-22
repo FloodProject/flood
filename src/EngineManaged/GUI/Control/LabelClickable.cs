@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Clickable label (for checkboxes etc).

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using EngineManaged.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// RGBA color picker.

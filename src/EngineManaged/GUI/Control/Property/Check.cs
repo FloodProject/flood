@@ -1,22 +1,22 @@
 ﻿using System;
 
-namespace EngineManaged.GUI.Control.Property
+namespace EngineManaged.GUI.Controls.Property
 {
     /// <summary>
     /// Checkable property.
     /// </summary>
     public class Check : Base
     {
-        protected readonly Control.CheckBox m_CheckBox;
+        protected readonly CheckBox m_CheckBox;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Check"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Check(Control.Base parent)
+        public Check(Controls.Base parent)
             : base(parent)
         {
-            m_CheckBox = new Control.CheckBox(this);
+            m_CheckBox = new CheckBox(this);
             m_CheckBox.ShouldDrawBackground = false;
             m_CheckBox.CheckChanged += OnValueChanged;
             m_CheckBox.IsTabable = true;

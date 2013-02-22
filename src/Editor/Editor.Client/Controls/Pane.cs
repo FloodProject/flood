@@ -1,5 +1,5 @@
 
-using EngineManaged.GUI.Control;
+using EngineManaged.GUI.Controls;
 
 namespace Flood.Editor.Controls
 {

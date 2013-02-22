@@ -536,7 +536,7 @@ class GwenInput
 private:
 	InputManager* inputManager;
 
-	gcroot<EngineManaged::GUI::Control::Canvas^> m_Canvas;
+	gcroot<EngineManaged::GUI::Controls::Canvas^> m_Canvas;
 
 	int m_MouseX;
 	int m_MouseY;
@@ -564,7 +564,7 @@ public:
 	}
 
 
-	void Initialize(gcroot<EngineManaged::GUI::Control::Canvas^> c)
+	void Initialize(gcroot<EngineManaged::GUI::Controls::Canvas^> c)
 	{
 		m_Canvas = c;
 	}

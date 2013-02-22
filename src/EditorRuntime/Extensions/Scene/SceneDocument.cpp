@@ -13,6 +13,7 @@
 #include "EditorSettings.h"
 #include "RenderControl.h"
 #include "EditorIcons.h"
+
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
 #include "EditorPlugin.h"

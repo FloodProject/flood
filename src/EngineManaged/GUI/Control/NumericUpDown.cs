@@ -1,8 +1,8 @@
 ﻿using System;
-using EngineManaged.GUI.Control.Layout;
 using EngineManaged.GUI.ControlInternal;
+using EngineManaged.GUI.Controls.Layout;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Numeric up/down.

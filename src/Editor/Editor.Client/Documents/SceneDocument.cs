@@ -8,9 +8,9 @@
 
         }
 
-        public void InitGUI(EngineManaged.GUI.Control.Base rootGUI)
+        public void InitGUI(EngineManaged.GUI.Controls.Base rootGUI)
         {
-            var label = new EngineManaged.GUI.Control.Label(rootGUI);
+            var label = new EngineManaged.GUI.Controls.Label(rootGUI);
             label.SetText("YEAH");
             label.Height = 100;
         }

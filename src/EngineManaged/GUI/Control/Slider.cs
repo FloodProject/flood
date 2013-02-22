@@ -3,7 +3,7 @@ using System.Drawing;
 using EngineManaged.GUI.ControlInternal;
 using EngineManaged.GUI.Input;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Base slider.

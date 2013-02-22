@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Radio button group.

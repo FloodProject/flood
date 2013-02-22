@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace EngineManaged.GUI.Control.Layout
+namespace EngineManaged.GUI.Controls.Layout
 {
     /// <summary>
     /// Single table row.

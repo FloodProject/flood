@@ -2,7 +2,7 @@
 using System.Drawing;
 using EngineManaged.GUI.ControlInternal;
 
-namespace EngineManaged.GUI.Control
+namespace EngineManaged.GUI.Controls
 {
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.
