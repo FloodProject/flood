@@ -1,24 +1,35 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Flood.RPC.Protocol;
 using Flood.RPC.Metadata;
 
+[assembly: InternalsVisibleToAttribute("Flood.Tools.RPCGen.Tests.GeneratorTests")]
 namespace Flood.Tools.RPCGen
 {
     internal class Generator : TextGenerator
     {
         private readonly Options options;
 
+        
         public Generator(Options options)
         {
             this.options = options;
         }
 
+
+        /********************************************
+         * *****************************************
+         *          Generate Messages
+         * *****************************************
+         ********************************************/
+        
         public void GenerateMessage(Type type)
         {
             GenerateUsings();
@@ -33,21 +44,22 @@ namespace Flood.Tools.RPCGen
             WriteLine("public class {0} : Base", typeName);
             WriteStartBraceIndent();
 
-            // Generate fields.
-            foreach (var field in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            // Generate fields
+            foreach (var field in GetAllFields(type))
             {
-                //WARNING: backing field identifying substring is implementation dependent, this may need revising
-                if (field.Name.Contains("k__BackingField")) 
+                if (field.GetCustomAttribute<IdAttribute>() == null)
                     continue;
-                else
-                    WriteLine("private {0} _{1};",
-                        ConvertToTypeString(field.FieldType), field.Name);
+
+                WriteLine("private {0} _{1};", ConvertToTypeString(field.FieldType), field.Name);
                 NeedNewLine();
             }
 
             // Generate properties.
-            foreach (var property in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            foreach (var property in GetAllProperties(type))
             {
+                if (property.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
+
                 WriteLine("private {0} _{1};",
                     ConvertToTypeString(property.PropertyType), property.Name);
                 NeedNewLine();
@@ -74,51 +86,36 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-
-        private void GeneratePropertyAccessors(PropertyInfo info)
-        {
-            //this is a very basic function, if accessors are not utterly simple it won't translate them correctly
-            var getter = info.GetGetMethod();
-            var setter = info.GetSetMethod();
-            if(getter != null )
-                Write("{0}get; ", (getter.IsPrivate)? "private " : "" );
-            if (setter != null)
-                Write("{0}set; ", (setter.IsPrivate)? "private " : "");
-        }
-
-        private List<Parameter> ConvertFieldToParametersList(Type type)
+        internal List<Parameter> ConvertFieldToParametersList(Type type)
         {
             var parameters = new List<Parameter>();
-            foreach(var field in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            foreach(var field in GetAllFields(type))
             {
-                //WARNING: backing field identifying substring is implementation dependent, this may need revising
-                if (field.Name.Contains("k__BackingField"))
+                if ((field.GetCustomAttribute<IdAttribute>() == null))
                     continue;
                 parameters.Add(new Parameter(field));
             }
 
-            foreach(var property in type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public))
+            foreach (var property in GetAllProperties(type))
+            {
+                if (property.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
+                
                 parameters.Add(new Parameter(property));
+            }
+
             return parameters;
         }
 
-        static bool IsEventMethod(Type type, MethodInfo method)
-        {
-            foreach (var @event in type.GetEvents())
-            {
-                if (@event.AddMethod == method
-                    || @event.RemoveMethod == method
-                    || @event.RaiseMethod == method)
-                    return true;
-            }
-            return false;
-        }
 
-        public void GenerateEvent(Type type)
-        {
-            
-        }
-
+        /********************************************
+         ********************************************
+         ************* Generate Services ************
+         ********************************************
+         ********************************************/
+        
+        /************* Main Function ************/
+        
         public void GenerateService(Type type)
         {
             // TODO: Generate namespace
@@ -152,70 +149,16 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        void GenerateUsings()
-        {
-            WriteLine("using System;");
-            WriteLine("using System.Collections.Generic;");
 
-            WriteLine("using Flood.RPC;");
-            WriteLine("using Flood.RPC.Metadata;");
-            WriteLine("using Flood.RPC.Protocol;");
-            WriteLine("using Flood.RPC.Transport;");
-            NewLine();
-        }
+        /************* Service Client ************/
 
-        void GenerateInterface(Type type)
-        {
-            WriteLine("public interface {0}");
-            WriteStartBraceIndent();
-
-            foreach (var method in type.GetMethods())
-            {
-                Write("{0} {1}(", method.ReturnType.Name, method.Name);
-                WriteLine(");");
-            }
-
-            WriteCloseBraceIndent();
-            NewLine();
-        }
-
-        void GenerateParameterList(IList<ParameterInfo> parameters)
-        {
-            for (var i = 0; i < parameters.Count; i++)
-            {
-                var param = parameters[i];
-                Write("{0} {1}", ConvertToTypeString(param.ParameterType),
-                      param.Name);
-
-                if (i < parameters.Count - 1)
-                    Write(", ");
-            }
-        }
-
-        static bool GetInheritedService(Type type, out Type @base)
-        {
-            @base = null;
-
-            foreach (var @interface in type.GetInterfaces())
-            {
-                var service = @interface.GetCustomAttribute<ServiceAttribute>();
-                if (service == null)
-                    continue;
-
-                @base = @interface;
-                return true;
-            }
-
-            return false;
-        }
-
-        void GenerateServiceClient(Type type)
+        internal void GenerateServiceClient(Type type)
         {
             Type baseType;
             GetInheritedService(type, out baseType);
 
             Write("public class Client");
-            
+
             if (baseType != null)
                 Write(" : {0}Impl.Client", baseType.Name);
             NewLine();
@@ -269,7 +212,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        void GenerateProtocolMethod(MethodInfo method)
+        internal void GenerateProtocolMethod(MethodInfo method)
         {
             Write("public {0} {1}(", ConvertToTypeString(method.ReturnType),
                 method.Name);
@@ -304,7 +247,7 @@ namespace Flood.Tools.RPCGen
             GenerateProtocolReceive(method);
         }
 
-        void GenerateProtocolReceive(MethodInfo method)
+        internal void GenerateProtocolReceive(MethodInfo method)
         {
             Write("public {0} recv_{1}(", ConvertToTypeString(method.ReturnType),
                   method.Name);
@@ -324,7 +267,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("result.Read(iprot_);");
             WriteLine("iprot_.ReadMessageEnd();");
 
-            if (method.ReturnType != typeof (void))
+            if (method.ReturnType != typeof(void))
             {
                 WriteLine("if (result.__isset.success)");
                 WriteLineIndent("return result.Success;");
@@ -339,7 +282,7 @@ namespace Flood.Tools.RPCGen
                 WriteCloseBraceIndent();
             }
 
-            if (method.ReturnType != typeof (void))
+            if (method.ReturnType != typeof(void))
             {
                 WriteLine("throw new RPCException(RPCException.ExceptionType.MissingResult,");
                 WriteLineIndent(" \"{0} failed: unknown result\");", method.Name);
@@ -348,7 +291,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
+        internal void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
             Write("public void send_{0}(", method.Name);
             GenerateParameterList(parameters);
@@ -368,7 +311,23 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        void GenerateServiceProcessor(Type type)
+        internal void GenerateParameterList(IList<ParameterInfo> parameters)
+        {
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                var param = parameters[i];
+                Write("{0} {1}", ConvertToTypeString(param.ParameterType),
+                      param.Name);
+
+                if (i < parameters.Count - 1)
+                    Write(", ");
+            }
+        }
+
+
+        /************* Service Processor ************/
+
+        internal void GenerateServiceProcessor(Type type)
         {
             Type baseType;
             GetInheritedService(type, out baseType);
@@ -417,19 +376,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        static PropertyInfo GetProperty(MethodInfo method)
-        {
-
-            bool takesArg = method.GetParameters().Length == 1;
-            bool hasReturn = method.ReturnType != typeof(void);
-            if (takesArg == hasReturn) return null;
-            if (takesArg)
-                return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetSetMethod() == method);
-            
-            return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetGetMethod() == method);
-        }
-
-        void GenerateServiceProcessMethod(MethodInfo method)
+        internal void GenerateServiceProcessMethod(MethodInfo method)
         {
             WriteLine("public void {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
                       method.Name);
@@ -450,13 +397,13 @@ namespace Flood.Tools.RPCGen
                 PushIndent();
             }
 
-            if (method.ReturnType != typeof (void))
+            if (method.ReturnType != typeof(void))
                 Write("result.Success = ");
 
-            
+
             // Call the service method
             PropertyInfo prop = GetProperty(method);
-            if ( prop == null)
+            if (prop == null)
             {
                 Write("iface_.{0}(", method.Name);
                 var parameters = method.GetParameters();
@@ -479,26 +426,27 @@ namespace Flood.Tools.RPCGen
                     Write("iface_.{0} = args.{1}", prop.Name, ToTitleCase(method.GetParameters()[0].Name));
 
                 WriteLine(";");
-                
+
             }
 
 
 
             if (hasExceptions)
-                PopIndent();
-
-            // Write the catch part of the exception handling.
-            foreach (var exception in throws)
             {
-                WriteLine("}} catch ({0} ex{1}) {{", exception.Exception.FullName,
-                    exception.Id);
-                PushIndent();
-                WriteLine("result.Exception{0} = ex{0};", exception.Id);
                 PopIndent();
-            }
 
-            if (hasExceptions)
+                // Write the catch part of the exception handling.
+                foreach (var exception in throws)
+                {
+                    WriteLine("}} catch ({0} ex{1}) {{", exception.Exception.FullName,
+                              exception.Id);
+                    PushIndent();
+                    WriteLine("result.Exception{0} = ex{0};", exception.Id);
+                    PopIndent();
+                }
+            
                 WriteLine("}");
+            }
 
             // Create a new message and reply to the RPC call
             WriteLine("oprot.WriteMessageBegin(new Message(\"{0}\", MessageType.Reply, seqid));",
@@ -511,7 +459,10 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        void GenerateServiceMethodArgs(MethodInfo method)
+
+        /************* Service Method Args ************/
+
+        internal void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
             WriteLine("public partial class {0}_args : Base", method.Name);
@@ -546,7 +497,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        static List<Parameter> ConvertToParametersList(MethodInfo method)
+        internal static List<Parameter> ConvertToParametersList(MethodInfo method)
         {
             // Convert from PropertyInfo to our own struct. This makes it easier
             // to use the same code for argument and result marshaling.
@@ -555,8 +506,236 @@ namespace Flood.Tools.RPCGen
                 parameters.Add(new Parameter(param));
             return parameters;
         }
+ 
 
-        void GenerateIsSet(IEnumerable<Parameter> parameters)
+        /************* General Auxiliaries ************/
+
+        internal void GenerateServiceMethodResult(MethodInfo method)
+        {
+            WriteLine("[Serializable]");
+            WriteLine("public partial class {0}_result : Base", method.Name);
+            WriteStartBraceIndent();
+
+            var parameters = new List<Parameter>();
+
+            var hasReturn = method.ReturnType != typeof(void);
+            if (hasReturn)
+            {
+                parameters.Add(new Parameter
+                {
+                    Name = "success",
+                    ParameterType = method.ReturnType
+                });
+            }
+
+            var throws = method.GetCustomAttributes<ThrowsAttribute>();
+            foreach (var exception in throws)
+            {
+                var param = new Parameter()
+                {
+                    Name = "exception" + exception.Id,
+                    ParameterType = exception.Exception,
+                    Id = exception.Id
+                };
+                parameters.Add(param);
+            }
+
+            foreach (var param in parameters)
+            {
+                WriteLine("private {0} _{1};",
+                    ConvertToTypeString(param.ParameterType), param.Name);
+            }
+            NewLine();
+
+            GeneratePropertyList(parameters);
+
+            // Generate an __isset structure that keeps track of what variables
+            // have been set.
+            WriteLine("public Isset __isset;");
+            NewLine();
+
+            WriteLine("[Serializable]");
+            WriteLine("public struct Isset");
+            WriteStartBraceIndent();
+            foreach (var param in parameters)
+                WriteLine("public bool {0};", param.Name);
+            WriteCloseBraceIndent();
+            NewLine();
+
+            // Generate constructor
+            WriteLine("public {0}_result()", method.Name);
+            WriteLine("{");
+            WriteLine("}");
+            NewLine();
+
+            // Generate read method
+            GenerateServiceMethodRead(parameters, isResult: true);
+            NewLine();
+
+            // Generate write method
+            GenerateServiceMethodWrite(method.Name, parameters, isResult: true);
+
+            WriteCloseBraceIndent();
+        }
+
+        internal static bool IsEventMethod(Type type, MethodInfo method)
+        {
+            foreach (var @event in type.GetEvents())
+            {
+                if (@event.AddMethod == method
+                    || @event.RemoveMethod == method
+                    || @event.RaiseMethod == method)
+                    return true;
+            }
+            return false;
+        }
+
+        internal static bool GetInheritedService(Type type, out Type @base)
+        {
+            @base = null;
+
+            foreach (var @interface in type.GetInterfaces())
+            {
+                var service = @interface.GetCustomAttribute<ServiceAttribute>();
+                if (service == null)
+                    continue;
+
+                @base = @interface;
+                return true;
+            }
+
+            return false;
+        }
+
+        internal void GenerateEvent(Type type)
+        {
+
+        }
+
+        internal void GenerateInterface(Type type)
+        {
+            WriteLine("public interface {0}");
+            WriteStartBraceIndent();
+
+            foreach (var method in type.GetMethods())
+            {
+                Write("{0} {1}(", method.ReturnType.Name, method.Name);
+                WriteLine(");");
+            }
+
+            WriteCloseBraceIndent();
+            NewLine();
+        }
+
+
+        /********************************************
+         ********************************************
+         *********** Shared Auxiliaries *************
+         ********************************************
+         ********************************************/
+
+        /************* General Auxiliaries ************/
+
+        /// <summary>
+        /// Converts string to title case
+        /// </summary>
+        internal static string ToTitleCase(string str)
+        {
+            var result = str;
+            if (!string.IsNullOrEmpty(str))
+            {
+                var words = str.Split(' ');
+                for (int index = 0; index < words.Length; index++)
+                {
+                    var s = words[index];
+                    if (s.Length > 0)
+                    {
+                        words[index] = s[0].ToString(CultureInfo.InvariantCulture)
+                            .ToUpper() + s.Substring(1);
+                    }
+                }
+                result = string.Join(" ", words);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// If method is getter or setter of a property returns the PropertyInfo associated
+        /// </summary>
+        /// <returns>PropertyInfo or null if not a property getter/setter</returns>
+        internal static PropertyInfo GetProperty(MethodInfo method)
+        {
+
+            bool takesArg = method.GetParameters().Length == 1;
+            bool hasReturn = method.ReturnType != typeof(void);
+            if (takesArg == hasReturn) return null;
+            if (takesArg)
+                return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetSetMethod() == method);
+
+            return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetGetMethod() == method);
+        }
+
+        internal IEnumerable<Parameter> ConvertToActualParameters(IEnumerable<Parameter> parameters, bool isResult)
+        {
+            var actualParams = new List<Parameter>();
+            foreach (var param in parameters)
+            {
+                if (isResult && param.ParameterType == typeof(void))
+                    continue;
+                actualParams.Add(param);
+            }
+            return actualParams;
+        }
+
+        internal static bool IsNullableType(Type type)
+        {
+            switch (ConvertFromTypeToThrift(type))
+            {
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.String:
+                case TType.Collection:
+                case TType.Class:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal static IEnumerable<FieldInfo> GetAllFields(Type t)
+        {
+            if (t == null)
+                return Enumerable.Empty<FieldInfo>();
+
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            return t.GetFields(flags).Union(GetAllFields(t.BaseType));
+        }
+
+        internal static IEnumerable<PropertyInfo> GetAllProperties(Type t)
+        {
+            if (t == null)
+                return Enumerable.Empty<PropertyInfo>();
+
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            return t.GetProperties(flags).Union(GetAllProperties(t.BaseType));
+        }
+
+        /************* Code Generation ************/
+
+        internal void GenerateUsings()
+        {
+            WriteLine("using System;");
+            WriteLine("using System.Collections.Generic;");
+
+            WriteLine("using Flood.RPC;");
+            WriteLine("using Flood.RPC.Metadata;");
+            WriteLine("using Flood.RPC.Protocol;");
+            WriteLine("using Flood.RPC.Transport;");
+            NewLine();
+        }
+
+        internal void GenerateIsSet(IEnumerable<Parameter> parameters)
         {
             // Generate an __isset structure that keeps track of what variables
             // have been set.
@@ -572,7 +751,58 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        void GenerateFieldSerialize(Parameter param)
+
+        //TODO : this function seems to generate useless code if there are no actual parameters, 
+        //TODO : should it even be called in that case?
+        internal void GenerateServiceMethodWrite(string typeName,
+            IEnumerable<Parameter> parameters, bool isResult)
+        {
+            WriteLine("public void Write({0} oprot)", typeof(Serializer).Name);
+            WriteStartBraceIndent();
+
+            WriteLine("var struc = new Struct(\"{0}_{1}\");",
+                typeName, isResult ? "result" : "args");
+
+            WriteLine("oprot.WriteStructBegin(struc);");
+
+            parameters = ConvertToActualParameters(parameters, isResult);
+            if (parameters.Any())
+                WriteLine("var field = new Field();");
+
+            foreach (var param in parameters)
+            {
+                /* this shouldn't be needed ConvertToActualParameters already does this
+                 * if (isResult && param.ParameterType == typeof(void))
+                    continue;
+                */
+                if (IsNullableType(param.ParameterType))
+                    WriteLine("if ({0} != null && __isset.{1})", ToTitleCase(param.Name),
+                        param.Name);
+                else
+                    WriteLine("if (__isset.{0})", param.Name);
+
+                WriteStartBraceIndent();
+
+                WriteLine("field.Name = \"{0}\";", param.Name);
+                WriteLine("field.Type = TType.{0};",
+                    ConvertFromTypeToThrift(param.ParameterType).ToString());
+                WriteLine("field.ID = {0};", param.Id);
+                WriteLine("oprot.WriteFieldBegin(field);");
+
+                GenerateFieldSerialize(param);
+
+                WriteLine("oprot.WriteFieldEnd();");
+
+                WriteCloseBraceIndent();
+            }
+
+            WriteLine("oprot.WriteFieldStop();");
+            WriteLine("oprot.WriteStructEnd();");
+
+            WriteCloseBraceIndent();
+        }
+
+        internal void GenerateFieldSerialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -582,8 +812,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Void:
                     throw new NotSupportedException();
                 case TType.Struct:
-                    GenerateStructSerialize(param);
-                    break;
+                case TType.Class:
                 case TType.Exception:
                     GenerateStructSerialize(param);
                     break;
@@ -605,17 +834,21 @@ namespace Flood.Tools.RPCGen
                         Write("({0})", Enum.GetUnderlyingType(type).ToString());
                     WriteLine("_{0});", param.Name);
                     break;
+                case TType.Guid:
+                    WriteLine("oprot.WriteString(_{0}.ToString());", param.Name);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        void GenerateStructSerialize(Parameter param)
+        internal void GenerateStructSerialize(Parameter param)
         {
             WriteLine("var {0}Impl = new {1}Impl()", ToTitleCase(param.Name),
                 param.ParameterType.Name);
             WriteStartBraceIndent();
 
+            //TODO  : Fix getFields and see if GetAllProperties is needed 
             foreach (var field in param.ParameterType.GetFields())
                 WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
 
@@ -627,12 +860,12 @@ namespace Flood.Tools.RPCGen
         // Used to generate unique names when (de)serializing collections.
         int GenericIndex = 0;
 
-        void GenerateContainerSerialize(Parameter param)
+        internal void GenerateContainerSerialize(Parameter param)
         {
             GenerateListSerialize(param);
         }
 
-        void GenerateFieldDeserialize(Parameter param)
+        internal void GenerateFieldDeserialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -642,9 +875,8 @@ namespace Flood.Tools.RPCGen
                 case TType.Void:
                     throw new NotSupportedException();
                 case TType.Struct:
-                    GenerateStructDeserialize(param);
-                    break;
                 case TType.Exception:
+                case TType.Class:
                     GenerateStructDeserialize(param);
                     break;
                 case TType.List:
@@ -666,12 +898,17 @@ namespace Flood.Tools.RPCGen
                         Write("({0}) ", type.FullName);
                     WriteLine("iprot.Read{0}();", thriftType.ToString());
                     break;
+                case TType.Guid:
+                    Write("{0} = ", ToTitleCase(param.Name));
+                    WriteLine("new Guid(iprot.ReadString());");
+                    break;
+ 
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        void GenerateStructDeserialize(Parameter param)
+        internal void GenerateStructDeserialize(Parameter param)
         {
             WriteLine("var {0}Impl = new {1}Impl();", ToTitleCase(param.Name),
                 param.ParameterType.Name);
@@ -681,6 +918,7 @@ namespace Flood.Tools.RPCGen
                 ConvertToTypeString(param.ParameterType));
             WriteStartBraceIndent();
 
+            //TODO  : Fix getFields and see if GetAllProperties is needed
             foreach (var field in param.ParameterType.GetFields())
                 WriteLine("{1} = {0}Impl.{1},", ToTitleCase(param.Name), field.Name);
 
@@ -688,13 +926,13 @@ namespace Flood.Tools.RPCGen
             WriteLine("};");
         }
 
-        void GenerateContainerDeserialize(Parameter param)
+        internal void GenerateContainerDeserialize(Parameter param)
         {
             GenerateListDeserialize(param);
         }
 
         //TODO: Fix this to handle classes?
-        void GenerateListSerialize(Parameter param)
+        internal void GenerateListSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
             var listElemType = param.ParameterType.GetGenericArguments()[0];
@@ -710,6 +948,7 @@ namespace Flood.Tools.RPCGen
             var elemName = string.Format("_elem{0}", GenericIndex++);
             WriteLine("var {0} = new {1}Impl()", elemName, listElemType.Name);
             WriteStartBraceIndent();
+            //TODO  : Fix getFields and see if GetAllProperties is needed
             foreach (var field in listElemType.GetFields())
                 WriteLine("{0} = {1}.{0},", field.Name, iterName);
             PopIndent();
@@ -722,7 +961,7 @@ namespace Flood.Tools.RPCGen
         }
 
         //TODO: Fix this to handle classes
-        void GenerateListDeserialize(Parameter param)
+        internal void GenerateListDeserialize(Parameter param)
         {
             var listElemType = param.ParameterType.GetGenericArguments()[0];
 
@@ -745,6 +984,7 @@ namespace Flood.Tools.RPCGen
             var elemName2 = string.Format("_elem{0}", GenericIndex++);
             WriteLine("var {0} = new {1}()", elemName2, listElemType.FullName);
             WriteStartBraceIndent();
+            //TODO  : Fix getFields and see if GetAllProperties is needed
             foreach (var field in listElemType.GetFields())
                 WriteLine("{0} = {1}.{0},", field.Name, elemName);
             PopIndent();
@@ -756,7 +996,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("iprot.ReadListEnd();");
         }
 
-        void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
+        internal void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
         {
             WriteLine("public void Read(Serializer iprot)");
             WriteStartBraceIndent();
@@ -774,7 +1014,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        void GenerateServiceMethodReadFields(IEnumerable<Parameter> parameters, bool isResult)
+        internal void GenerateServiceMethodReadFields(IEnumerable<Parameter> parameters, bool isResult)
         {
             WriteLine("var field = iprot.ReadFieldBegin();");
             WriteLine("if (field.Type == TType.Stop)");
@@ -786,7 +1026,7 @@ namespace Flood.Tools.RPCGen
 
             foreach (var param in parameters)
             {
-                if (isResult && param.ParameterType == typeof (void))
+                if (isResult && param.ParameterType == typeof(void))
                     continue;
 
                 var typeName = ConvertFromTypeToThrift(param.ParameterType);
@@ -806,7 +1046,7 @@ namespace Flood.Tools.RPCGen
                 WriteCloseBraceIndent();
                 WriteLine("else");
                 WriteStartBraceIndent();
-                WriteLine("{0}.Skip(iprot, field.Type);", typeof (ProtocolUtil).Name);
+                WriteLine("{0}.Skip(iprot, field.Type);", typeof(ProtocolUtil).Name);
                 WriteCloseBraceIndent();
                 WriteLine("break;");
 
@@ -815,7 +1055,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("default:");
             PushIndent();
-            WriteLine("{0}.Skip(iprot, field.Type);", typeof (ProtocolUtil).Name);
+            WriteLine("{0}.Skip(iprot, field.Type);", typeof(ProtocolUtil).Name);
             WriteLine("break;");
             PopIndent();
 
@@ -823,81 +1063,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("iprot.ReadFieldEnd();");
         }
 
-        IEnumerable<Parameter> ConvertToActualParameters(IEnumerable<Parameter> parameters,
-            bool isResult)
-        {
-            var actualParams = new List<Parameter>();
-            foreach (var param in parameters)
-            {
-                if (isResult && param.ParameterType == typeof (void))
-                    continue;
-                actualParams.Add(param);
-            }
-            return actualParams;
-        }
-
-        static bool IsNullableType(Type type)
-        {
-            switch (ConvertFromTypeToThrift(type))
-            {
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.String:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        void GenerateServiceMethodWrite(string typeName,
-            IEnumerable<Parameter> parameters, bool isResult)
-        {
-            WriteLine("public void Write({0} oprot)", typeof(Serializer).Name);
-            WriteStartBraceIndent();
-
-            WriteLine("var struc = new Struct(\"{0}_{1}\");",
-                typeName, isResult ? "result" : "args");
-
-            WriteLine("oprot.WriteStructBegin(struc);");
-
-            parameters = ConvertToActualParameters(parameters, isResult);
-            if (parameters.Any())
-                WriteLine("var field = new Field();");
-
-            foreach (var param in parameters)
-            {
-                if (isResult && param.ParameterType == typeof(void))
-                    continue;
-
-                if (IsNullableType(param.ParameterType))
-                    WriteLine("if ({0} != null && __isset.{1})", ToTitleCase(param.Name),
-                        param.Name);
-                else
-                    WriteLine("if (__isset.{0})", param.Name);
-
-                WriteStartBraceIndent();
-
-                WriteLine("field.Name = \"{0}\";", param.Name);
-                WriteLine("field.Type = TType.{0};",
-                    ConvertFromTypeToThrift(param.ParameterType).ToString());
-                WriteLine("field.ID = {0};", param.Id);
-                WriteLine("oprot.WriteFieldBegin(field);");
-                
-                GenerateFieldSerialize(param);
-                
-                WriteLine("oprot.WriteFieldEnd();");
-
-                WriteCloseBraceIndent();
-            }
-
-            WriteLine("oprot.WriteFieldStop();");
-            WriteLine("oprot.WriteStructEnd();");
-
-            WriteCloseBraceIndent();
-        }
-
-        void GeneratePropertyList(IEnumerable<Parameter> parameters)
+        internal void GeneratePropertyList(IEnumerable<Parameter> parameters)
         {
             foreach (var param in parameters)
             {
@@ -913,75 +1079,14 @@ namespace Flood.Tools.RPCGen
             }
         }
 
-        void GenerateServiceMethodResult(MethodInfo method)
-        {
-            WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_result : Base", method.Name);
-            WriteStartBraceIndent();
 
-            var parameters = new List<Parameter>();
+        /************* Type Conversion ************/
 
-            var hasReturn = method.ReturnType != typeof (void);
-            if (hasReturn)
-            {
-                parameters.Add(new Parameter
-                    {
-                        Name = "success",
-                        ParameterType = method.ReturnType
-                    });
-            }
-
-            var throws = method.GetCustomAttributes<ThrowsAttribute>();
-            foreach (var exception in throws)
-            {
-                var param = new Parameter()
-                    {
-                        Name = "exception" + exception.Id,
-                        ParameterType = exception.Exception,
-                        Id = exception.Id
-                    };
-                parameters.Add(param);
-            }
-
-            foreach(var param in parameters)
-            {
-                WriteLine("private {0} _{1};",
-                    ConvertToTypeString(param.ParameterType), param.Name);
-            }
-            NewLine();
-
-            GeneratePropertyList(parameters);
-
-            // Generate an __isset structure that keeps track of what variables
-            // have been set.
-            WriteLine("public Isset __isset;");
-            NewLine();
-
-            WriteLine("[Serializable]");
-            WriteLine("public struct Isset");
-            WriteStartBraceIndent();
-            foreach(var param in parameters)
-                WriteLine("public bool {0};", param.Name);
-            WriteCloseBraceIndent();
-            NewLine();
-
-            // Generate constructor
-            WriteLine("public {0}_result()", method.Name);
-            WriteLine("{");
-            WriteLine("}");
-            NewLine();
-
-            // Generate read method
-            GenerateServiceMethodRead(parameters, isResult: true);
-            NewLine();
-
-            // Generate write method
-            GenerateServiceMethodWrite(method.Name, parameters, isResult: true);
-
-            WriteCloseBraceIndent();
-        }
-
-        static bool IsInstanceOfGenericType(Type genericType, object instance)
+        /// <summary>
+        /// Checks if type of instance is a generic type and if it is of the type of genericType 
+        /// or assignable to it
+        /// </summary>
+        internal static bool IsInstanceOfGenericType(Type genericType, object instance)
         {
             Type type = instance.GetType();
 
@@ -994,15 +1099,19 @@ namespace Flood.Tools.RPCGen
                 }
 
                 if (genericType.IsAssignableFrom(type))
-                        return true;
+                    return true;
 
-                type = (type == typeof(System.Object)) ? null : type.BaseType;
+                type = type.BaseType;
             }
 
             return false;
         }
-
-        static bool IsInstanceOfGenericType(Type genericType, Type type)
+        
+        /// <summary>
+        /// Checks if type is a generic type and if it is of the type of genericType 
+        /// or assignable to it
+        /// </summary>
+        internal static bool IsInstanceOfGenericType(Type genericType, Type type)
         {
             while (type != null)
             {
@@ -1015,13 +1124,16 @@ namespace Flood.Tools.RPCGen
                 if (genericType.IsAssignableFrom(type))
                     return true;
 
-                type = (type == typeof(System.Object))? null : type.BaseType;
+                type = type.BaseType;
             }
 
             return false;
         }
 
-        public static TType ConvertFromTypeToThrift(Type type)
+        /// <summary>
+        /// Converts from regular type to equivalent TType.
+        /// </summary>
+        internal static TType ConvertFromTypeToThrift(Type type)
         {
             if (type == typeof(void))
                 return TType.Void;
@@ -1041,27 +1153,32 @@ namespace Flood.Tools.RPCGen
                 return TType.Double;
             else if (type == typeof(string))
                 return TType.String;
+            else if (type == typeof(Guid) || typeof(Guid).IsAssignableFrom(type))
+                return TType.Guid;
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
             else if (type.IsValueType && !type.IsPrimitive)
                 return TType.Struct;
             else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
                 return TType.Exception;
-            else if (IsInstanceOfGenericType(typeof (IList<>), type))
+            else if (IsInstanceOfGenericType(typeof(IList<>), type))
                 return TType.List;
-            else if (IsInstanceOfGenericType(typeof (IDictionary<,>), type))
+            else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))
                 return TType.Map;
-            else if (IsInstanceOfGenericType(typeof (ISet<>), type))
+            else if (IsInstanceOfGenericType(typeof(ISet<>), type))
                 return TType.Set;
             else if (IsInstanceOfGenericType(typeof(ICollection<>), type))
                 return TType.Collection;
             else if (type.IsClass)
-                return TType.Struct;
+                return TType.Class;
 
             throw new NotImplementedException();
         }
 
-        static string ConvertToTypeString(TType type)
+        /// <summary>
+        /// Converts a basic TType to string.
+        /// </summary>
+        internal static string ConvertToTypeString(TType type)
         {
             switch (type)
             {
@@ -1086,29 +1203,38 @@ namespace Flood.Tools.RPCGen
             }
         }
 
-        static string ConvertToGenericArgsString(Type type)
+        /// <summary>
+        /// Converts the type of enums, structs exceptions, regular classes and generic classes 
+        /// to string form.
+        /// </summary>
+        internal static string ConvertToTypeString(Type type)
         {
+            if (type.IsEnum)
+                return type.FullName;
+
             var thriftType = ConvertFromTypeToThrift(type);
-            return ConvertToGenericArgsString(type, thriftType);
-        }
 
-        static string ConvertToGenericArgsString(Type type, TType thriftType)
-        {
-            var sb = new StringBuilder();
-
-            var parameters = type.GetGenericArguments();
-            for (var i = 0; i < parameters.Length; i++)
+            switch (thriftType)
             {
-                var param = parameters[i];
-                sb.Append(param.FullName);
-                if (i < parameters.Length - 1)
-                    sb.Append(", ");
+                case TType.Struct:
+                case TType.Exception:
+                case TType.Class:
+                case TType.Guid:
+                    return type.FullName;
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.Collection:
+                    return ConvertToGenericTypeString(type, thriftType);
             }
 
-            return sb.ToString();
+            return ConvertToTypeString(thriftType);
         }
 
-        static string ConvertToGenericTypeString(Type type, TType thriftType)
+        /// <summary>
+        /// Auxiliary that converts a generic type(List, Set, etc.) to string form.
+        /// </summary>
+        internal static string ConvertToGenericTypeString(Type type, TType thriftType)
         {
             var sb = new StringBuilder();
             Debug.Assert(type.IsGenericType);
@@ -1137,61 +1263,50 @@ namespace Flood.Tools.RPCGen
             return sb.ToString();
         }
 
-        static string ConvertToTypeString(Type type)
+        /// <summary>
+        /// Converts a group of parameters or arguments to string form.
+        /// </summary>
+        internal static string ConvertToGenericArgsString(Type type)
         {
-            if (type.IsEnum)
-                return type.FullName;
-
             var thriftType = ConvertFromTypeToThrift(type);
-
-            switch (thriftType)
-            {
-                case TType.Struct:
-                case TType.Exception:
-                    return type.FullName;
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                    return ConvertToGenericTypeString(type, thriftType);
-            }
-
-            return ConvertToTypeString(thriftType);
+            return ConvertToGenericArgsString(type, thriftType);
         }
 
-        static string ToTitleCase(string str)
+        /// <summary>
+        /// Converts a group of parameters or arguments to string form.
+        /// </summary>
+        internal static string ConvertToGenericArgsString(Type type, TType thriftType)
         {
-            var result = str;
-            if (!string.IsNullOrEmpty(str))
+            var sb = new StringBuilder();
+
+            var parameters = type.GetGenericArguments();
+            for (var i = 0; i < parameters.Length; i++)
             {
-                var words = str.Split(' ');
-                for (int index = 0; index < words.Length; index++)
-                {
-                    var s = words[index];
-                    if (s.Length > 0)
-                    {
-                        words[index] = s[0].ToString(CultureInfo.InvariantCulture)
-                            .ToUpper() + s.Substring(1);
-                    }
-                }
-                result = string.Join(" ", words);
+                var param = parameters[i];
+                sb.Append(param.FullName);
+                if (i < parameters.Length - 1)
+                    sb.Append(", ");
             }
-            return result;
+
+            return sb.ToString();
         }
 
-        struct Parameter
+
+        /************* Data Types ************/
+
+        internal struct Parameter
         {
             public Parameter(ParameterInfo info)
             {
                 Name = info.Name;
                 ParameterType = info.ParameterType;
-                
+
                 if (Generator.GetProperty((info.Member as MethodInfo)) != null)
                 {
                     Id = 0;
                     return;
                 }
-               
+
                 var id = info.GetCustomAttribute<IdAttribute>();
                 if (id == null)
                     throw new Exception("expected an Id() attribute");
@@ -1223,6 +1338,12 @@ namespace Flood.Tools.RPCGen
                 Id = id.Id;
             }
 
+            public Parameter(string  name, Type type, int id)
+            {
+                Name = name;
+                ParameterType = type;           
+                Id = id;
+            }
             public string Name;
             public Type ParameterType;
             public int Id;
