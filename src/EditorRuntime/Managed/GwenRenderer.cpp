@@ -170,6 +170,7 @@ public:
 		System::Drawing::Imaging::BitmapData^ data = bmp->LockBits(System::Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, System::Drawing::Imaging::PixelFormat::Format32bppArgb);
 		int bytes = std::abs(data->Stride) * bmp->Height;
 		LoadTextureInternal(t,(uint8*)data->Scan0.ToPointer(), bytes);
+		bmp->UnlockBits(data);
 	}
 
 	static void LoadTextureInternal(Flood::GUI::Texture^ t, uint8* data, int size) 
