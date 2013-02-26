@@ -12,6 +12,7 @@
 #include "Memory.h"
 #include "Reflection.h"
 #include "ResourceLoader.h"
+#include "Extension.h"
 
 namespace Flood
 {
@@ -80,9 +81,9 @@ namespace Flood
 
         ResourceManager(::ResourceManager* native);
         ResourceManager(System::IntPtr native);
+        ResourceManager();
         property bool AsynchronousLoading;
         property int NumResourcesQueuedLoad;
-        ResourceManager();
         uint GetResource(System::String^ name);
         uint LoadResource(System::String^ name);
         uint LoadResource(Flood::ResourceLoadOptions options);

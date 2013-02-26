@@ -48,6 +48,10 @@ Flood::RenderTarget::RenderTarget(System::IntPtr native)
     NativePtr = (::RenderTarget*)native.ToPointer();
 }
 
+Flood::RenderTarget::RenderTarget()
+{
+}
+
 void Flood::RenderTarget::RemoveViews()
 {
     NativePtr->removeViews();

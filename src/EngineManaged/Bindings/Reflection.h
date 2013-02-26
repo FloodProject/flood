@@ -96,11 +96,11 @@ namespace Flood
 
         Type(::Type* native);
         Type(System::IntPtr native);
+        Type();
+        Type(Flood::TypeKind kind, System::String^ name, unsigned short size);
         property Flood::TypeKind Kind;
         property System::String^ Name;
         property unsigned short Size;
-        Type();
-        Type(Flood::TypeKind kind, System::String^ name, unsigned short size);
     };
 
     public ref class ReflectionDatabase
@@ -118,17 +118,17 @@ namespace Flood
     /// system that will be used for fast dynamic type checking and reflection.
     /// Main use is for serialization and property introspection.
     /// </summary>
-    public ref class Class
+    public ref class Class : Type
     {
     public:
         property ::Class* NativePtr;
 
         Class(::Class* native);
         Class(System::IntPtr native);
+        Class();
         property unsigned short Id;
         property Flood::Class^ Parent;
         property Flood::ClassCreateFunction^ Create_fn;
-        Class();
         bool Inherits(Flood::Class^ test);
         bool IsAbstract();
         void AddField(Flood::Field^ field);
@@ -147,6 +147,7 @@ namespace Flood
 
         Field(::Field* native);
         Field(System::IntPtr native);
+        Field();
         property Flood::Type^ Type;
         property unsigned char Id;
         property System::String^ Name;
@@ -156,22 +157,21 @@ namespace Flood
         property Flood::FieldQualifier Qualifiers;
         property Flood::FieldSetterFunction^ Setter;
         property Flood::FieldResizeFunction^ Resize;
-        Field();
         bool HasQualifier(Flood::FieldQualifier _29);
         void SetQualifier(Flood::FieldQualifier _31);
         void SetSetter(Flood::FieldSetterFunction^ _33);
     };
 
-    public ref class Primitive
+    public ref class Primitive : Type
     {
     public:
         property ::Primitive* NativePtr;
 
         Primitive(::Primitive* native);
         Primitive(System::IntPtr native);
-        property Flood::PrimitiveTypeKind Kind;
         Primitive();
         Primitive(Flood::PrimitiveTypeKind kind, System::String^ name, unsigned short size);
+        property Flood::PrimitiveTypeKind Kind;
         static Flood::PrimitiveBuiltins^ GetBuiltins();
     };
 
@@ -182,6 +182,7 @@ namespace Flood
 
         PrimitiveBuiltins(::PrimitiveBuiltins* native);
         PrimitiveBuiltins(System::IntPtr native);
+        PrimitiveBuiltins();
         property Flood::Primitive^ P_bool;
         property Flood::Primitive^ P_int8;
         property Flood::Primitive^ P_uint8;
@@ -197,10 +198,9 @@ namespace Flood
         property Flood::Primitive^ P_Vector3;
         property Flood::Primitive^ P_Color;
         property Flood::Primitive^ P_Quaternion;
-        PrimitiveBuiltins();
     };
 
-    public ref class Enum
+    public ref class Enum : Type
     {
     public:
         property ::Enum* NativePtr;

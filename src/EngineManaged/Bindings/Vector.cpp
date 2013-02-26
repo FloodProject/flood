@@ -12,16 +12,6 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
 
-Flood::Vector3P::Vector3P(::Vector3P* native)
-{
-    // TODO: Struct marshaling
-}
-
-Flood::Vector3P::Vector3P(System::IntPtr native)
-{
-    // TODO: Struct marshaling
-}
-
 Flood::Vector3::Vector3(::Vector3* native)
 {
     // TODO: Struct marshaling
@@ -379,16 +369,6 @@ void Flood::Vector4::Zero()
 {
     auto this0 = (::Vector4*) 0;
     this0->zero();
-}
-
-Flood::Vector2P::Vector2P(::Vector2P* native)
-{
-    // TODO: Struct marshaling
-}
-
-Flood::Vector2P::Vector2P(System::IntPtr native)
-{
-    // TODO: Struct marshaling
 }
 
 Flood::Vector2::Vector2(::Vector2* native)

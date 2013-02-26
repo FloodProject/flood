@@ -7,6 +7,8 @@
 
 #include "_Marshal.h"
 #include "Memory.h"
+#include "Reflection.h"
+#include "Serialization.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -97,32 +99,32 @@ Flood::Allocator^ Flood::Allocator::CreateStack()
 }
 
 Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)
+    : Allocator(native)
 {
-    NativePtr = native;
 }
 
 Flood::PoolAllocator::PoolAllocator(System::IntPtr native)
+    : Allocator(native)
 {
-    NativePtr = (::PoolAllocator*)native.ToPointer();
 }
 
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
+    : Allocator(native)
 {
-    NativePtr = native;
 }
 
 Flood::BumpAllocator::BumpAllocator(System::IntPtr native)
+    : Allocator(native)
 {
-    NativePtr = (::BumpAllocator*)native.ToPointer();
 }
 
 Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)
+    : Allocator(native)
 {
-    NativePtr = native;
 }
 
 Flood::HeapAllocator::HeapAllocator(System::IntPtr native)
+    : Allocator(native)
 {
-    NativePtr = (::HeapAllocator*)native.ToPointer();
 }
 

@@ -27,19 +27,19 @@ Flood::EulerAngles::EulerAngles(float x, float y, float z)
 {
 }
 
-Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::EulerAngles _64)
+Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::EulerAngles _98)
 {
     auto this0 = (::EulerAngles*) 0;
-    auto _arg0 = (::EulerAngles*)&_64;
+    auto _arg0 = (::EulerAngles*)&_98;
     auto arg0 = *_arg0;
     auto ret = this0->operator+=(arg0);
     return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 
-Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _65)
+Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _99)
 {
     auto this0 = (::EulerAngles*) 0;
-    auto _arg0 = (::Vector3*)&_65;
+    auto _arg0 = (::Vector3*)&_99;
     auto arg0 = *_arg0;
     auto ret = this0->operator+=(arg0);
     return Flood::EulerAngles((::EulerAngles*)&ret);

@@ -54,6 +54,10 @@ Flood::ResourceStream::ResourceStream(System::IntPtr native)
     NativePtr = (::ResourceStream*)native.ToPointer();
 }
 
+Flood::ResourceStream::ResourceStream()
+{
+}
+
 int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
 {
     auto arg0 = (uint8*)buffer.ToPointer();
@@ -68,13 +72,18 @@ void Flood::ResourceStream::Reset()
 }
 
 Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
+    : Extension(native)
 {
-    NativePtr = native;
 }
 
 Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
+    : Extension(native)
 {
-    NativePtr = (::ResourceLoader*)native.ToPointer();
+}
+
+Flood::ResourceLoader::ResourceLoader()
+    : Extension(nullptr)
+{
 }
 
 Flood::Class^ Flood::ResourceLoader::GetType()

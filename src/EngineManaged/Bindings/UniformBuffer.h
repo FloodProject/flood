@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Graphics/UniformBuffer.h>
+#include "Vector.h"
 
 namespace Flood
 {

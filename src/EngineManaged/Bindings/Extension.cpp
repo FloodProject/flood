@@ -35,6 +35,10 @@ Flood::Extension::Extension(System::IntPtr native)
     NativePtr = (::Extension*)native.ToPointer();
 }
 
+Flood::Extension::Extension()
+{
+}
+
 Flood::Class^ Flood::Extension::GetType()
 {
     auto ret = NativePtr->getType();

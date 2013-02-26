@@ -8,6 +8,8 @@
 #pragma once
 
 #include <Graphics/RenderContext.h>
+#include "Vector.h"
+#include "Color.h"
 
 namespace Flood
 {
@@ -42,9 +44,9 @@ namespace Flood
 
         RenderContext(::RenderContext* native);
         RenderContext(System::IntPtr native);
+        RenderContext();
         property bool InitDone;
         property Flood::RenderTarget^ MainTarget;
-        RenderContext();
         void MakeCurrent();
         void Init();
         void ResetState();

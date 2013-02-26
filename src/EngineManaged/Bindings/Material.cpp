@@ -19,21 +19,23 @@ using namespace System::Runtime::InteropServices;
 using namespace clix;
 
 Flood::Material::Material(::Material* native)
+    : Resource(native)
 {
-    NativePtr = native;
 }
 
 Flood::Material::Material(System::IntPtr native)
+    : Resource(native)
 {
-    NativePtr = (::Material*)native.ToPointer();
 }
 
 Flood::Material::Material()
+    : Resource(nullptr)
 {
     NativePtr = new ::Material();
 }
 
 Flood::Material::Material(System::String^ name)
+    : Resource(nullptr)
 {
     auto arg0 = marshalString<E_UTF8>(name);
     NativePtr = new ::Material(arg0);

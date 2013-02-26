@@ -149,12 +149,12 @@ Flood::Stream^ Flood::Stream::CreateWeb(Flood::Allocator^ alloc, System::String^
 }
 
 Flood::MemoryStream::MemoryStream(::MemoryStream* native)
+    : Stream(native)
 {
-    NativePtr = native;
 }
 
 Flood::MemoryStream::MemoryStream(System::IntPtr native)
+    : Stream(native)
 {
-    NativePtr = (::MemoryStream*)native.ToPointer();
 }
 

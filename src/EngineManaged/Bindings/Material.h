@@ -11,6 +11,7 @@
 #include "Reflection.h"
 #include "Memory.h"
 #include "Vector.h"
+#include "Resource.h"
 
 namespace Flood
 {
@@ -72,13 +73,15 @@ namespace Flood
         Always = 7
     };
 
-    public ref class Material
+    public ref class Material : Resource
     {
     public:
         property ::Material* NativePtr;
 
         Material(::Material* native);
         Material(System::IntPtr native);
+        Material();
+        Material(System::String^ name);
         property System::String^ Name;
         property bool CullBackfaces;
         property Flood::DepthCompare DepthCompare;
@@ -92,8 +95,6 @@ namespace Flood
         property Flood::BlendSource Source;
         property Flood::BlendDestination Destination;
         property bool _isBlendingEnabled;
-        Material();
-        Material(System::String^ name);
         Flood::Class^ GetType();
         Flood::Class^ GetStaticType();
         Flood::ResourceGroup GetResourceGroup();

@@ -8,6 +8,8 @@
 #pragma once
 
 #include <Graphics/RenderTarget.h>
+#include "Vector.h"
+#include "Color.h"
 
 namespace Flood
 {
@@ -37,9 +39,9 @@ namespace Flood
 
         Settings(::Settings* native);
         Settings(System::IntPtr native);
+        Settings(unsigned short width, unsigned short height);
         property unsigned short Width;
         property unsigned short Height;
-        Settings(unsigned short width, unsigned short height);
         Flood::Vector2i GetSize();
     };
 
@@ -50,6 +52,7 @@ namespace Flood
 
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
+        RenderTarget();
         property Flood::RenderContext^ Context;
         void RemoveViews();
         void MakeCurrent();

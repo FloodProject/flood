@@ -10,6 +10,7 @@
 #include <Graphics/Resources/ShaderMaterial.h>
 #include "Reflection.h"
 #include "Memory.h"
+#include "Resource.h"
 
 namespace Flood
 {
@@ -33,7 +34,7 @@ namespace Flood
     /// shaders in the engine, which are compiled to low-level assembly code by the
     /// graphics driver.
     /// </summary>
-    public ref class ShaderMaterial
+    public ref class ShaderMaterial : Resource
     {
     public:
         property ::ShaderMaterial* NativePtr;

@@ -14,16 +14,17 @@ using namespace System::Runtime::InteropServices;
 using namespace clix;
 
 Flood::IndexBuffer::IndexBuffer(::IndexBuffer* native)
+    : Buffer(native)
 {
-    NativePtr = native;
 }
 
 Flood::IndexBuffer::IndexBuffer(System::IntPtr native)
+    : Buffer(native)
 {
-    NativePtr = (::IndexBuffer*)native.ToPointer();
 }
 
 Flood::IndexBuffer::IndexBuffer()
+    : Buffer(nullptr)
 {
     NativePtr = new ::IndexBuffer();
 }

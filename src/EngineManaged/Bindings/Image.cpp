@@ -20,21 +20,23 @@ using namespace System::Runtime::InteropServices;
 using namespace clix;
 
 Flood::Image::Image(::Image* native)
+    : Resource(native)
 {
-    NativePtr = native;
 }
 
 Flood::Image::Image(System::IntPtr native)
+    : Resource(native)
 {
-    NativePtr = (::Image*)native.ToPointer();
 }
 
 Flood::Image::Image()
+    : Resource(nullptr)
 {
     NativePtr = new ::Image();
 }
 
 Flood::Image::Image(unsigned int width, unsigned int height, Flood::PixelFormat format)
+    : Resource(nullptr)
 {
     auto arg0 = (uint32)width;
     auto arg1 = (uint32)height;

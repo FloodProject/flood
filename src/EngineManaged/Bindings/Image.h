@@ -10,6 +10,9 @@
 #include <Graphics/Resources/Image.h>
 #include "Reflection.h"
 #include "Memory.h"
+#include "Vector.h"
+#include "Color.h"
+#include "Resource.h"
 
 namespace Flood
 {
@@ -56,18 +59,18 @@ namespace Flood
     /// image data, stored in an pixel array in a given pixel format specified at
     /// creation time.
     /// </summary>
-    public ref class Image
+    public ref class Image : Resource
     {
     public:
         property ::Image* NativePtr;
 
         Image(::Image* native);
         Image(System::IntPtr native);
+        Image();
+        Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
         property unsigned int Width;
         property unsigned int Height;
         property Flood::PixelFormat Format;
-        Image();
-        Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
         Flood::Class^ GetType();
         Flood::Class^ GetStaticType();
         unsigned int GetWidth();

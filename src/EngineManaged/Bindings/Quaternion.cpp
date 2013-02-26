@@ -9,20 +9,11 @@
 #include "Quaternion.h"
 #include "EulerAngles.h"
 #include "Vector.h"
+#include "Reflection.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
-
-Flood::QuaternionP::QuaternionP(::QuaternionP* native)
-{
-    // TODO: Struct marshaling
-}
-
-Flood::QuaternionP::QuaternionP(System::IntPtr native)
-{
-    // TODO: Struct marshaling
-}
 
 Flood::Quaternion::Quaternion(::Quaternion* native)
 {

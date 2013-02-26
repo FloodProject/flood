@@ -13,16 +13,6 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
 
-Flood::ColorP::ColorP(::ColorP* native)
-{
-    // TODO: Struct marshaling
-}
-
-Flood::ColorP::ColorP(System::IntPtr native)
-{
-    // TODO: Struct marshaling
-}
-
 Flood::Color::Color(::Color* native)
 {
     // TODO: Struct marshaling
@@ -31,6 +21,10 @@ Flood::Color::Color(::Color* native)
 Flood::Color::Color(System::IntPtr native)
 {
     // TODO: Struct marshaling
+}
+
+Flood::Color::Color(float r, float g, float b, float a)
+{
 }
 
 Flood::Color::Color(int r, int g, int b, int a)

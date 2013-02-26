@@ -10,6 +10,9 @@
 #include <Graphics/Texture.h>
 #include "Reflection.h"
 #include "Memory.h"
+#include "Vector.h"
+#include "Color.h"
+#include "Resource.h"
 
 namespace Flood
 {
@@ -75,6 +78,7 @@ namespace Flood
 
         Texture(::Texture* native);
         Texture(System::IntPtr native);
+        Texture();
         property unsigned int Id;
         property Flood::TextureTarget Target;
         property bool Uploaded;
@@ -83,7 +87,6 @@ namespace Flood
         property Flood::PixelFormat Format;
         property float AnisotropicFilter;
         property Flood::Image^ Image;
-        Texture();
         void Alloc(Flood::Vector2i size, Flood::PixelFormat _206);
         unsigned int GetId();
         Flood::PixelFormat GetPixelFormat();
@@ -100,12 +103,12 @@ namespace Flood
 
         TextureUnit(::TextureUnit* native);
         TextureUnit(System::IntPtr native);
+        TextureUnit();
         property unsigned char Unit;
         property bool OverrideModes;
         property Flood::TextureFilterMode Filter;
         property Flood::TextureMipMode Mip;
         property Flood::TextureWrapMode Wrap;
-        TextureUnit();
         Flood::TextureFilterMode GetFilterMode();
         Flood::TextureMipMode GetMipMode();
         Flood::TextureWrapMode GetWrapMode();

@@ -23,6 +23,11 @@ namespace Flood
     enum struct FieldQualifier : unsigned short;
     value struct ExtensionMetadata;
     ref class Extension;
+    ref class HandleManager;
+    ref class ReferenceCounted;
+    ref class Handle;
+    ref class Object;
+    ref class scoped_ptr;
 
     public value struct ExtensionMetadata
     {
@@ -46,6 +51,7 @@ namespace Flood
 
         Extension(::Extension* native);
         Extension(System::IntPtr native);
+        Extension();
         Flood::Class^ GetType();
         Flood::Class^ GetStaticType();
         Flood::ExtensionMetadata GetMetadata();

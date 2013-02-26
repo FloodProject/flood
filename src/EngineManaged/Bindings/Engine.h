@@ -52,10 +52,10 @@ namespace Flood
 
         Engine(::Engine* native);
         Engine(System::IntPtr native);
+        Engine();
         property Flood::Log^ Log;
         property Flood::Stream^ Stream;
         property Flood::ResourceManager^ ResourceManager;
-        Engine();
         void Init();
         void Update();
         void SetupLogger();

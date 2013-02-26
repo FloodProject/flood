@@ -23,16 +23,17 @@ Flood::VertexElementP::VertexElementP(System::IntPtr native)
 }
 
 Flood::VertexElement::VertexElement(::VertexElement* native)
+    : VertexElementP(native)
 {
-    NativePtr = native;
 }
 
 Flood::VertexElement::VertexElement(System::IntPtr native)
+    : VertexElementP(native)
 {
-    NativePtr = (::VertexElement*)native.ToPointer();
 }
 
 Flood::VertexElement::VertexElement(Flood::VertexAttribute _185, Flood::VertexDataType _186, unsigned char components)
+    : VertexElementP(nullptr)
 {
     auto arg0 = (::VertexAttribute)_185;
     auto arg1 = (::VertexDataType)_186;
@@ -105,16 +106,17 @@ void Flood::VertexDeclaration::CalculateStrides()
 }
 
 Flood::VertexBuffer::VertexBuffer(::VertexBuffer* native)
+    : Buffer(native)
 {
-    NativePtr = native;
 }
 
 Flood::VertexBuffer::VertexBuffer(System::IntPtr native)
+    : Buffer(native)
 {
-    NativePtr = (::VertexBuffer*)native.ToPointer();
 }
 
 Flood::VertexBuffer::VertexBuffer()
+    : Buffer(nullptr)
 {
     NativePtr = new ::VertexBuffer();
 }

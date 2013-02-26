@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Graphics/VertexBuffer.h>
+#include "Buffer.h"
 
 namespace Flood
 {
@@ -61,17 +62,17 @@ namespace Flood
         property unsigned char Components;
     };
 
-    public ref class VertexElement
+    public ref class VertexElement : VertexElementP
     {
     public:
         property ::VertexElement* NativePtr;
 
         VertexElement(::VertexElement* native);
         VertexElement(System::IntPtr native);
+        VertexElement(Flood::VertexAttribute _185, Flood::VertexDataType _186, unsigned char components);
         property char Stride;
         property unsigned int Offset;
         property unsigned int Size;
-        VertexElement(Flood::VertexAttribute _185, Flood::VertexDataType _186, unsigned char components);
         unsigned char GetSize();
     };
 
@@ -95,15 +96,15 @@ namespace Flood
         void CalculateStrides();
     };
 
-    public ref class VertexBuffer
+    public ref class VertexBuffer : Buffer
     {
     public:
         property ::VertexBuffer* NativePtr;
 
         VertexBuffer(::VertexBuffer* native);
         VertexBuffer(System::IntPtr native);
-        property bool Built;
         VertexBuffer();
+        property bool Built;
         bool IsBuilt();
         void ForceRebuild();
     };

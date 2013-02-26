@@ -19,8 +19,8 @@ namespace Flood
     public:
         StringHash(::StringHash* native);
         StringHash(System::IntPtr native);
-        unsigned int Hash;
         StringHash(System::String^ str, unsigned int size);
+        unsigned int Hash;
     };
 
 

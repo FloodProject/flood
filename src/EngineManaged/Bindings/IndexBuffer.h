@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Graphics/IndexBuffer.h>
+#include "Buffer.h"
 
 namespace Flood
 {
@@ -15,14 +16,14 @@ namespace Flood
     ref class IndexBuffer;
     ref class RefPtr;
 
-    public ref class IndexBuffer
+    public ref class IndexBuffer : Buffer
     {
     public:
         property ::IndexBuffer* NativePtr;
 
         IndexBuffer(::IndexBuffer* native);
         IndexBuffer(System::IntPtr native);
-        property bool IsBuilt;
         IndexBuffer();
+        property bool IsBuilt;
     };
 }

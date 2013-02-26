@@ -57,16 +57,17 @@ bool Flood::ReflectionDatabase::RegisterType(Flood::Type^ type)
 }
 
 Flood::Class::Class(::Class* native)
+    : Type(native)
 {
-    NativePtr = native;
 }
 
 Flood::Class::Class(System::IntPtr native)
+    : Type(native)
 {
-    NativePtr = (::Class*)native.ToPointer();
 }
 
 Flood::Class::Class()
+    : Type(nullptr)
 {
     NativePtr = new ::Class();
 }
@@ -178,21 +179,23 @@ void Flood::Field::SetSetter(Flood::FieldSetterFunction^ _33)
 }
 
 Flood::Primitive::Primitive(::Primitive* native)
+    : Type(native)
 {
-    NativePtr = native;
 }
 
 Flood::Primitive::Primitive(System::IntPtr native)
+    : Type(native)
 {
-    NativePtr = (::Primitive*)native.ToPointer();
 }
 
 Flood::Primitive::Primitive()
+    : Type(nullptr)
 {
     NativePtr = new ::Primitive();
 }
 
 Flood::Primitive::Primitive(Flood::PrimitiveTypeKind kind, System::String^ name, unsigned short size)
+    : Type(nullptr)
 {
     auto arg0 = (::PrimitiveTypeKind)kind;
     auto _arg1 = clix::marshalString<clix::E_UTF8>(name);
@@ -223,13 +226,13 @@ Flood::PrimitiveBuiltins::PrimitiveBuiltins()
 }
 
 Flood::Enum::Enum(::Enum* native)
+    : Type(native)
 {
-    NativePtr = native;
 }
 
 Flood::Enum::Enum(System::IntPtr native)
+    : Type(native)
 {
-    NativePtr = (::Enum*)native.ToPointer();
 }
 
 void Flood::Enum::AddValue(System::String^ name, int value)

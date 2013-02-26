@@ -11,6 +11,7 @@
 #include "Reflection.h"
 #include "Memory.h"
 #include "Stream.h"
+#include "Extension.h"
 
 namespace Flood
 {
@@ -71,6 +72,7 @@ namespace Flood
 
         ResourceStream(::ResourceStream* native);
         ResourceStream(System::IntPtr native);
+        ResourceStream();
         property Flood::Stream^ Stream;
         property Flood::ResourceLoader^ Loader;
         int Decode(System::IntPtr buffer, unsigned int size);
@@ -83,13 +85,14 @@ namespace Flood
     /// for the formats handled by the loader. The loader also provides the
     /// extensions of those formats.
     /// </summary>
-    public ref class ResourceLoader
+    public ref class ResourceLoader : Extension
     {
     public:
         property ::ResourceLoader* NativePtr;
 
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
+        ResourceLoader();
         Flood::Class^ GetType();
         Flood::Class^ GetStaticType();
         Flood::ExtensionMetadata GetMetadata();

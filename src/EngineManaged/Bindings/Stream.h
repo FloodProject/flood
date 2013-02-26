@@ -88,7 +88,7 @@ namespace Flood
         static Flood::Stream^ CreateWeb(Flood::Allocator^ alloc, System::String^ URL, Flood::StreamOpenMode mode);
     };
 
-    public ref class MemoryStream
+    public ref class MemoryStream : Stream
     {
     public:
         property ::MemoryStream* NativePtr;

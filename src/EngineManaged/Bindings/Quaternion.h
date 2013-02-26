@@ -8,6 +8,8 @@
 #pragma once
 
 #include <Core/Math/Quaternion.h>
+#include "Vector.h"
+#include "Reflection.h"
 
 namespace Flood
 {
@@ -15,20 +17,13 @@ namespace Flood
     value struct Quaternion;
     value struct EulerAngles;
     value struct Vector3;
-
-    /// <summary>
-    /// Represents a quaternion, useful for storing orientations.
-    /// </summary>
-    public value struct QuaternionP
-    {
-    public:
-        QuaternionP(::QuaternionP* native);
-        QuaternionP(System::IntPtr native);
-        float X;
-        float Y;
-        float Z;
-        float W;
-    };
+    ref class Primitive;
+    enum struct PrimitiveTypeKind : unsigned char;
+    ref class PrimitiveBuiltins;
+    ref class scoped_ptr;
+    ref class ConcurrentQueue;
+    ref class Mutex;
+    ref class Condition;
 
     public value struct Quaternion
     {

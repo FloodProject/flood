@@ -77,9 +77,9 @@ namespace Flood
 
         RenderBatchRange(::RenderBatchRange* native);
         RenderBatchRange(System::IntPtr native);
+        RenderBatchRange();
         property unsigned short Start;
         property unsigned short End;
-        RenderBatchRange();
     };
 
     public ref class RenderBatch
@@ -89,12 +89,12 @@ namespace Flood
 
         RenderBatch(::RenderBatch* native);
         RenderBatch(System::IntPtr native);
+        RenderBatch();
         property Flood::RenderBatchRange^ Range;
         property Flood::RenderLayer Stage;
         property int Priority;
         property Flood::PrimitiveType Type;
         property Flood::PrimitiveRasterMode Mode;
-        RenderBatch();
         Flood::RenderLayer GetRenderLayer();
         void SetRenderLayer(Flood::RenderLayer v);
         int GetRenderPriority();

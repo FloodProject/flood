@@ -54,12 +54,12 @@ namespace Flood
 
         Buffer(::Buffer* native);
         Buffer(System::IntPtr native);
+        Buffer();
+        Buffer(Flood::BufferUsage usage, Flood::BufferAccess access);
         property unsigned int Id;
         property Flood::BufferUsage Usage;
         property Flood::BufferAccess Access;
         property Flood::GeometryBuffer^ Gb;
-        Buffer();
-        Buffer(Flood::BufferUsage usage, Flood::BufferAccess access);
         Flood::BufferUsage GetBufferUsage();
         void SetBufferUsage(Flood::BufferUsage v);
         Flood::BufferAccess GetBufferAccess();

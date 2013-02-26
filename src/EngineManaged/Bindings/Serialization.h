@@ -67,9 +67,6 @@ namespace Flood
         property long long I64;
         property unsigned long long U64;
         property float F32;
-        property Flood::Vector3P V;
-        property Flood::ColorP C;
-        property Flood::QuaternionP Q;
         property System::String^ S;
         property System::String^ Cs;
     };
@@ -92,6 +89,7 @@ namespace Flood
 
         ReflectionContext(::ReflectionContext* native);
         ReflectionContext(System::IntPtr native);
+        ReflectionContext();
         property bool Loading;
         property System::IntPtr UserData;
         property Flood::Class^ ObjectClass;
@@ -104,7 +102,6 @@ namespace Flood
         property System::IntPtr Address;
         property System::IntPtr ElementAddress;
         property unsigned int ArraySize;
-        ReflectionContext();
     };
 
     public ref class Serializer
@@ -114,11 +111,11 @@ namespace Flood
 
         Serializer(::Serializer* native);
         Serializer(System::IntPtr native);
+        Serializer();
         property Flood::Allocator^ Alloc;
         property Flood::Stream^ Stream;
         property Flood::ReflectionContext^ SerializeContext;
         property Flood::ReflectionContext^ DeserializeContext;
-        Serializer();
         void Destroy();
     };
 

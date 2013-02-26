@@ -29,14 +29,14 @@ namespace Flood
 
         GeometryBuffer(::GeometryBuffer* native);
         GeometryBuffer(System::IntPtr native);
+        GeometryBuffer();
+        GeometryBuffer(Flood::BufferUsage _180, Flood::BufferAccess _181);
         property Flood::BufferUsage Usage;
         property Flood::BufferAccess Access;
         property unsigned char IndexSize;
         property bool NeedsRebuild;
         property unsigned int Hash;
         property Flood::VertexDeclaration^ Declarations;
-        GeometryBuffer();
-        GeometryBuffer(Flood::BufferUsage _180, Flood::BufferAccess _181);
         Flood::BufferUsage GetBufferUsage();
         void SetBufferUsage(Flood::BufferUsage v);
         Flood::BufferAccess GetBufferAccess();
