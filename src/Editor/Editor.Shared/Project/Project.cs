@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flood.RPC.Metadata;
 
 namespace Flood.Editor.Shared
 {
@@ -70,23 +71,26 @@ namespace Flood.Editor.Shared
     }
 
 
-
+    [Message]
     public class Project : IProject
     {
 
         /// <summary>
         /// Id of the project.
         /// </summary>
+        [Id(0)]
         public Guid Id { get; private set; }
 
         /// <summary>
         /// Date the project was created. 
         /// </summary>
+        [Id(1)]
         public DateTime DateCreated { get; private set; }
 
         /// <summary>
         /// Users assigned to the project.
         /// </summary>
+        [Id(2)]
         public Dictionary<Guid, ProjectUser> Users { get; private set; }
 
         public ICollection<ProjectUser> GetUsers()
@@ -97,21 +101,25 @@ namespace Flood.Editor.Shared
         /// <summary>
         /// Current version of the project.
         /// </summary>
+        [Id(3)]
         public string CurrentVersion { get; private set; }
 
         /// <summary>
         /// Description of the project.
         /// </summary>
+        [Id(4)]
         public string Description { get; private set; }
 
         /// <summary>
         /// Type of the project.
         /// </summary>
+        [Id(5)]
         public ProjectType Type { get; private set; }
 
         /// <summary>
         /// Name of the project.
         /// </summary>
+        [Id(6)]
         public string Name { get; private set; }
 
         /// <summary>

@@ -66,7 +66,6 @@ namespace Flood.Editor
     [Message]
     public struct UserInfo
     {
-        /*
         [Id(0)]
         public string Name;
         [Id(1)]
@@ -75,7 +74,7 @@ namespace Flood.Editor
         public bool Auth;
         [Id(3)]
         public Dictionary<Guid, ProjectUser> ProjectList;
-         */ 
+
     }
 
     [Service]
@@ -104,24 +103,24 @@ namespace Flood.Editor
         /// <summary>
         /// User id.
         /// </summary>
-        //Guid Id { get; }
+        Guid Id { get; }
 
         /// <summary>
         /// List of projects user is member of and permission level of the user.
         /// </summary>
-        //Dictionary<Guid, ProjectUser> ProjectList { get; }
+        Dictionary<Guid, ProjectUser> ProjectList { get; }
 
         /// <summary>
         /// Add project to user list
         /// </summary>
         /// <remarks/> can be  used to change user permission level(Owner, member ...) within existing project
-        //void AddProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
+        void AddProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
 
         /// <summary>
         /// Remove project from user list
         /// </summary>
         /// <returns>True if the project was removed, false otherwise.</returns>
-        //bool RemoveProject([Id(0)]Guid projectId);
+        bool RemoveProject([Id(0)]Guid projectId);
 
     }
 

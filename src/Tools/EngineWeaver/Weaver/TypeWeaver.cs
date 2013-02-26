@@ -451,7 +451,7 @@ namespace DSLToolkit.Weaver
                     return  (FieldReference)copier.CopyMap[@ref];
                 if(referenceMap.ContainsKey(@ref))
                     return  (FieldReference)referenceMap[@ref];
-                throw new Exception("Cannot find Field "+@ref.FullName+". Try to Copy/Merge/Map it first.");
+                throw new Exception("Cannot find Field "+@ref.FullName+". Try to Copy/Merge/TMap it first.");
             }
 
             copier.Log("Importing "+@ref.FullName+ " from "+ @ref.DeclaringType.Scope.Name);
@@ -465,7 +465,7 @@ namespace DSLToolkit.Weaver
                     return  (MethodReference)copier.CopyMap[@ref];
                 if(referenceMap.ContainsKey(@ref))
                     return  (MethodReference)referenceMap[@ref];
-                throw new Exception("Cannot find Method "+@ref.FullName+". Try to Copy/Merge/Map it first.");
+                throw new Exception("Cannot find Method "+@ref.FullName+". Try to Copy/Merge/TMap it first.");
             }
 
             copier.Log("Importing "+@ref.FullName+ " from "+ @ref.DeclaringType.Scope.Name);
@@ -479,7 +479,7 @@ namespace DSLToolkit.Weaver
                     return  (TypeReference)copier.CopyMap[@ref];
                 if(referenceMap.ContainsKey(@ref))
                     return  (TypeReference)referenceMap[@ref];
-                throw new Exception("Cannot find Type "+@ref.FullName+". Try to Copy/Merge/Map it first.");
+                throw new Exception("Cannot find Type "+@ref.FullName+". Try to Copy/Merge/TMap it first.");
             }
 
             copier.Log("Importing "+@ref.FullName+ " from "+ @ref.Scope.Name);

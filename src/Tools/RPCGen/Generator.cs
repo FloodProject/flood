@@ -24,12 +24,8 @@ namespace Flood.Tools.RPCGen
         }
 
 
-        /********************************************
-         * *****************************************
-         *          Generate Messages
-         * *****************************************
-         ********************************************/
-        
+#region Generate Messages
+
         public void GenerateMessage(Type type)
         {
             GenerateUsings();
@@ -107,15 +103,10 @@ namespace Flood.Tools.RPCGen
             return parameters;
         }
 
+#endregion
 
-        /********************************************
-         ********************************************
-         ************* Generate Services ************
-         ********************************************
-         ********************************************/
-        
-        /************* Main Function ************/
-        
+#region Generate Services
+
         public void GenerateService(Type type)
         {
             // TODO: Generate namespace
@@ -149,8 +140,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-
-        /************* Service Client ************/
+        #region Service Client 
 
         internal void GenerateServiceClient(Type type)
         {
@@ -324,8 +314,9 @@ namespace Flood.Tools.RPCGen
             }
         }
 
+        #endregion
 
-        /************* Service Processor ************/
+        #region Service Processor
 
         internal void GenerateServiceProcessor(Type type)
         {
@@ -459,8 +450,9 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
+        #endregion
 
-        /************* Service Method Args ************/
+        #region Service Method Args
 
         internal void GenerateServiceMethodArgs(MethodInfo method)
         {
@@ -506,9 +498,10 @@ namespace Flood.Tools.RPCGen
                 parameters.Add(new Parameter(param));
             return parameters;
         }
- 
+        
+        #endregion
 
-        /************* General Auxiliaries ************/
+        #region General Auxiliaries
 
         internal void GenerateServiceMethodResult(MethodInfo method)
         {
@@ -627,18 +620,14 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
+        #endregion
 
-        /********************************************
-         ********************************************
-         *********** Shared Auxiliaries *************
-         ********************************************
-         ********************************************/
+#endregion
 
-        /************* General Auxiliaries ************/
+#region Shared Auxiliaries 
 
-        /// <summary>
-        /// Converts string to title case
-        /// </summary>
+        #region General Auxiliaries 
+
         internal static string ToTitleCase(string str)
         {
             var result = str;
@@ -721,7 +710,12 @@ namespace Flood.Tools.RPCGen
             return t.GetProperties(flags).Union(GetAllProperties(t.BaseType));
         }
 
-        /************* Code Generation ************/
+        #endregion
+
+        #region Code Generation
+
+        // Used to generate unique names when (de)serializing collections.
+        int GenericIndex = 0;
 
         internal void GenerateUsings()
         {
@@ -750,8 +744,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
             NewLine();
         }
-
-
+        
         //TODO : this function seems to generate useless code if there are no actual parameters, 
         //TODO : should it even be called in that case?
         internal void GenerateServiceMethodWrite(string typeName,
@@ -802,6 +795,9 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
+        /// <summary>
+        /// Generates the code to serialize a field
+        /// </summary>
         internal void GenerateFieldSerialize(Parameter param)
         {
             var type = param.ParameterType;
@@ -837,11 +833,17 @@ namespace Flood.Tools.RPCGen
                 case TType.Guid:
                     WriteLine("oprot.WriteString(_{0}.ToString());", param.Name);
                     break;
+                case TType.DateTime:
+                    WriteLine("oprot.WriteI64(_{0}.Ticks);", param.Name);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
         }
 
+        /// <summary>
+        /// Generates the code to serialize a field of type struct
+        /// </summary>
         internal void GenerateStructSerialize(Parameter param)
         {
             WriteLine("var {0}Impl = new {1}Impl()", ToTitleCase(param.Name),
@@ -857,14 +859,36 @@ namespace Flood.Tools.RPCGen
             WriteLine("{0}Impl.Write(oprot);", ToTitleCase(param.Name));
         }
 
-        // Used to generate unique names when (de)serializing collections.
-        int GenericIndex = 0;
-
+        /// <summary>
+        /// Generates the code to serialize a container field  
+        /// </summary>
         internal void GenerateContainerSerialize(Parameter param)
         {
-            GenerateListSerialize(param);
+            var type = param.ParameterType;
+            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                    GenerateListSerialize(param);
+                    break;
+                case TType.Map:
+                    GenerateMapSerialize(param);
+                    break;
+                case TType.Set:
+                    GenerateSetSerialize(param);
+                    break;
+                case TType.Collection:
+                    GenerateCollectionSerialize(param);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
+        /// <summary>
+        /// Generates the code to deserialize a field
+        /// </summary>
         internal void GenerateFieldDeserialize(Parameter param)
         {
             var type = param.ParameterType;
@@ -902,12 +926,19 @@ namespace Flood.Tools.RPCGen
                     Write("{0} = ", ToTitleCase(param.Name));
                     WriteLine("new Guid(iprot.ReadString());");
                     break;
+                case TType.DateTime:
+                    Write("{0} = ", ToTitleCase(param.Name));
+                    WriteLine("new DateTime(iprot.ReadI64());");
+                    break;
  
                 default:
                     throw new NotImplementedException();
             }
         }
 
+        /// <summary>
+        /// Generates the code to deserialize a field of type struct
+        /// </summary>
         internal void GenerateStructDeserialize(Parameter param)
         {
             WriteLine("var {0}Impl = new {1}Impl();", ToTitleCase(param.Name),
@@ -926,6 +957,9 @@ namespace Flood.Tools.RPCGen
             WriteLine("};");
         }
 
+        /// <summary>
+        /// Generates the code to deserialize a container field  
+        /// </summary>
         internal void GenerateContainerDeserialize(Parameter param)
         {
             GenerateListDeserialize(param);
@@ -945,11 +979,91 @@ namespace Flood.Tools.RPCGen
             WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
             WriteStartBraceIndent();
 
+            GenerateContainerElementSerialization(listElemType, iterName);
+
+            WriteCloseBraceIndent();
+
+            WriteLine("oprot.WriteListEnd();");
+        }
+
+        internal void GenerateContainerElementSerialization(Type elemType, string iterName)
+        {
+
             var elemName = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = new {1}Impl()", elemName, listElemType.Name);
+
+            var thriftType = ConvertFromTypeToThrift(elemType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.Collection:
+                case TType.Void:
+                    throw new NotSupportedException();
+                case TType.Struct:
+                case TType.Class:
+                case TType.Exception:
+                    WriteLine("var {0} = new {1}Impl()", elemName, elemType.Name);
+                    WriteStartBraceIndent();    
+                    foreach (var field in GetAllFields(elemType))
+                    {
+                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+
+                        WriteLine("{0} = {1}.{0},", field.Name, iterName);
+                    }
+                    foreach (var property in GetAllProperties(elemType))
+                    {
+                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+
+                        WriteLine("{0} = {1}.{0},", property.Name, iterName);
+                    }
+                    PopIndent();
+                    WriteLine("};");
+                    WriteLine("{0}.Write(oprot);", elemName);
+                    break;
+                case TType.Bool:
+                case TType.Byte:
+                case TType.Double:
+                case TType.I16:
+                case TType.I32:
+                case TType.I64:
+                case TType.String:
+                    Debug.Assert(elemType.IsPrimitive);
+                    WriteLine("oprot.Write{0}({1});", thriftType.ToString(), iterName);    
+                    break;
+                case TType.Guid:
+                    WriteLine("oprot.WriteString({0}.ToString());", iterName);
+                    break;
+                case TType.DateTime:
+                    WriteLine("oprot.WriteI64({0}.Ticks);", iterName);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+        }
+
+        internal void GenerateCollectionSerialize(Parameter param)
+        {
+            var paramType = param.ParameterType;
+            var collectionElemType = param.ParameterType.GetGenericArguments()[0];
+
+            WriteLine("oprot.WriteCollectionBegin(new TCollection(TType.{0}, {1}.Count));",
+                      ConvertFromTypeToThrift(paramType).ToString(),
+                      ToTitleCase(param.Name));
+
+            var iterName = string.Format("_iter{0}", GenericIndex++);
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteStartBraceIndent();
+
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+            WriteLine("var {0} = new {1}Impl()", elemName, collectionElemType.Name);
             WriteStartBraceIndent();
             //TODO  : Fix getFields and see if GetAllProperties is needed
-            foreach (var field in listElemType.GetFields())
+            foreach (var field in collectionElemType.GetFields())
                 WriteLine("{0} = {1}.{0},", field.Name, iterName);
             PopIndent();
             WriteLine("};");
@@ -957,7 +1071,17 @@ namespace Flood.Tools.RPCGen
             WriteLine("{0}.Write(oprot);", elemName);
             WriteCloseBraceIndent();
 
-            WriteLine("oprot.WriteListEnd();");
+            WriteLine("oprot.WriteCollectionEnd();");
+        }
+
+        internal void GenerateSetSerialize(Parameter param)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void GenerateMapSerialize(Parameter param)
+        {
+            throw new NotImplementedException();
         }
 
         //TODO: Fix this to handle classes
@@ -1079,8 +1203,9 @@ namespace Flood.Tools.RPCGen
             }
         }
 
+        #endregion
 
-        /************* Type Conversion ************/
+        #region Type Conversion 
 
         /// <summary>
         /// Checks if type of instance is a generic type and if it is of the type of genericType 
@@ -1124,6 +1249,9 @@ namespace Flood.Tools.RPCGen
                 if (genericType.IsAssignableFrom(type))
                     return true;
 
+                if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericType))
+                    return true;
+
                 type = type.BaseType;
             }
 
@@ -1155,6 +1283,8 @@ namespace Flood.Tools.RPCGen
                 return TType.String;
             else if (type == typeof(Guid) || typeof(Guid).IsAssignableFrom(type))
                 return TType.Guid;
+            else if (type == typeof(DateTime) || typeof(DateTime).IsAssignableFrom(type))
+                return TType.DateTime;
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
             else if (type.IsValueType && !type.IsPrimitive)
@@ -1220,6 +1350,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Exception:
                 case TType.Class:
                 case TType.Guid:
+                case TType.DateTime:
                     return type.FullName;
                 case TType.List:
                 case TType.Map:
@@ -1291,8 +1422,9 @@ namespace Flood.Tools.RPCGen
             return sb.ToString();
         }
 
+        #endregion
 
-        /************* Data Types ************/
+        #region Data Types
 
         internal struct Parameter
         {
@@ -1348,5 +1480,9 @@ namespace Flood.Tools.RPCGen
             public Type ParameterType;
             public int Id;
         }
+
+        #endregion
+
+#endregion
     }
 }
