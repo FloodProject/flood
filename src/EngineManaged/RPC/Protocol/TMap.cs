@@ -27,13 +27,13 @@ using System.Text;
 
 namespace Flood.RPC.Protocol
 {
-    public struct Map
+    public struct TMap
     {
         private TType keyType;
         private TType valueType;
         private int count;
 
-        public Map(TType keyType, TType valueType, int count)
+        public TMap(TType keyType, TType valueType, int count)
             :this()
         {
             this.keyType = keyType;

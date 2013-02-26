@@ -124,7 +124,7 @@ namespace Flood.RPC.Protocol
             WriteByte((byte)TType.Stop);
         }
 
-        public override void WriteMapBegin(Map map)
+        public override void WriteMapBegin(TMap map)
         {
             WriteByte((byte)map.KeyType);
             WriteByte((byte)map.ValueType);
@@ -152,6 +152,16 @@ namespace Flood.RPC.Protocol
         }
 
         public override void WriteSetEnd()
+        {
+        }
+
+        public override void WriteCollectionBegin(TCollection collection)
+        {
+            WriteByte((byte)collection.ElementType);
+            WriteI32(collection.Count);
+        }
+
+        public override void WriteCollectionEnd()
         {
         }
 
@@ -277,9 +287,9 @@ namespace Flood.RPC.Protocol
         {
         }
 
-        public override Map ReadMapBegin()
+        public override TMap ReadMapBegin()
         {
-            Map map = new Map();
+            TMap map = new TMap();
             map.KeyType = (TType)ReadByte();
             map.ValueType = (TType)ReadByte();
             map.Count = ReadI32();
@@ -314,6 +324,19 @@ namespace Flood.RPC.Protocol
         }
 
         public override void ReadSetEnd()
+        {
+        }
+
+        public override TCollection ReadCollectionBegin()
+        {
+            TCollection collection = new TCollection();
+            collection.ElementType = (TType)ReadByte();
+            collection.Count = ReadI32();
+
+            return collection;
+        }
+
+        public override void ReadCollectionEnd()
         {
         }
 

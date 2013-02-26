@@ -43,7 +43,8 @@ namespace Flood.RPC.Protocol
         List = 15,
         Collection = 16,
         Class = 17,
-        Guid = 18
+        Guid = 18,
+        DateTime = 19
 
     }
 }

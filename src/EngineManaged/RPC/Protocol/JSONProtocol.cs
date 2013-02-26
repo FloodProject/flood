@@ -628,7 +628,7 @@ namespace Flood.RPC.Protocol
 
         public override void WriteFieldStop() { }
 
-        public override void WriteMapBegin(Map map)
+        public override void WriteMapBegin(TMap map)
         {
             WriteJSONArrayStart();
             WriteJSONString(GetTypeNameForTypeID(map.KeyType));
@@ -663,6 +663,18 @@ namespace Flood.RPC.Protocol
         }
 
         public override void WriteSetEnd()
+        {
+            WriteJSONArrayEnd();
+        }
+
+        public override void WriteCollectionBegin(TCollection collection)
+        {
+            WriteJSONArrayStart();
+            WriteJSONString(GetTypeNameForTypeID(collection.ElementType));
+            WriteJSONInteger(collection.Count);
+        }
+
+        public override void WriteCollectionEnd()
         {
             WriteJSONArrayEnd();
         }
@@ -983,9 +995,9 @@ namespace Flood.RPC.Protocol
             ReadJSONObjectEnd();
         }
 
-        public override Map ReadMapBegin()
+        public override TMap ReadMapBegin()
         {
-            Map map = new Map();
+            TMap map = new TMap();
             ReadJSONArrayStart();
             map.KeyType = GetTypeIDForTypeName(ReadJSONString(false));
             map.ValueType = GetTypeIDForTypeName(ReadJSONString(false));
@@ -1024,6 +1036,20 @@ namespace Flood.RPC.Protocol
         }
 
         public override void ReadSetEnd()
+        {
+            ReadJSONArrayEnd();
+        }
+
+        public override TCollection ReadCollectionBegin()
+        {
+            TCollection collection = new TCollection();
+            ReadJSONArrayStart();
+            collection.ElementType = GetTypeIDForTypeName(ReadJSONString(false));
+            collection.Count = (int)ReadJSONInteger();
+            return collection;
+        }
+
+        public override void ReadCollectionEnd()
         {
             ReadJSONArrayEnd();
         }

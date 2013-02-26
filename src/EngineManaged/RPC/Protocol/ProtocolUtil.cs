@@ -68,7 +68,7 @@ namespace Flood.RPC.Protocol
                     prot.ReadStructEnd();
                     break;
                 case TType.Map:
-                    Map map = prot.ReadMapBegin();
+                    TMap map = prot.ReadMapBegin();
                     for (int i = 0; i < map.Count; i++)
                     {
                         Skip(prot, map.KeyType);

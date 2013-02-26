@@ -266,7 +266,7 @@ namespace Flood.RPC.Protocol
          * Write a map header. If the map is empty, omit the key and value type 
          * headers, as we don't need any additional information to skip it.
          */
-        public override void WriteMapBegin(Map map)
+        public override void WriteMapBegin(TMap map)
         {
             if (map.Count == 0)
             {
@@ -288,11 +288,19 @@ namespace Flood.RPC.Protocol
         }
 
         /**
-         * Write a set header.
+         * Write a collection header.
          */
         public override void WriteSetBegin(TSet set)
         {
             WriteCollectionBegin(set.ElementType, set.Count);
+        }
+
+        /**
+        * Write a collection header.
+        */
+        public override void WriteCollectionBegin(TCollection collection)
+        {
+            WriteCollectionBegin(collection.ElementType, collection.Count);
         }
 
         /**
@@ -390,6 +398,7 @@ namespace Flood.RPC.Protocol
         public override void WriteMapEnd() { }
         public override void WriteListEnd() { }
         public override void WriteSetEnd() { }
+        public override void WriteCollectionEnd() { }
         public override void WriteFieldEnd() { }
 
         //
@@ -564,11 +573,11 @@ namespace Flood.RPC.Protocol
          * and value type. This means that 0-length maps will yield TMaps without the
          * "correct" types.
          */
-        public override Map ReadMapBegin()
+        public override TMap ReadMapBegin()
         {
             int size = (int)ReadVarint32();
             byte keyAndValueType = size == 0 ? (byte)0 : ReadByte();
-            return new Map(getTType((byte)(keyAndValueType >> 4)), getTType((byte)(keyAndValueType & 0xf)), size);
+            return new TMap(getTType((byte)(keyAndValueType >> 4)), getTType((byte)(keyAndValueType & 0xf)), size);
         }
 
         /**
@@ -598,6 +607,17 @@ namespace Flood.RPC.Protocol
         public override TSet ReadSetBegin()
         {
             return new TSet(ReadListBegin());
+        }
+
+        /**
+         * Read a collection header off the wire. If the collection size is 0-14, the size will 
+         * be packed into the element type header. If it's a longer collection, the 4 MSB
+         * of the element type header will be 0xF, and a varint will follow with the
+         * true size.
+         */
+        public override TCollection ReadCollectionBegin()
+        {
+            return new TCollection(ReadListBegin());
         }
 
         /**
@@ -709,13 +729,14 @@ namespace Flood.RPC.Protocol
         public override void ReadMapEnd() { }
         public override void ReadListEnd() { }
         public override void ReadSetEnd() { }
+        public override void ReadCollectionEnd() { }
 
         //
         // Internal Reading methods
         //
 
         /**
-         * Read an i32 from the wire as a varint. The MSB of each byte is set
+         * Read an i32 from the wire as a varint. The MSB of each byte is collection
          * if there is another byte to follow. This can Read up to 5 bytes.
          */
         private uint ReadVarint32()
@@ -733,7 +754,7 @@ namespace Flood.RPC.Protocol
         }
 
         /**
-         * Read an i64 from the wire as a proper varint. The MSB of each byte is set 
+         * Read an i64 from the wire as a proper varint. The MSB of each byte is collection 
          * if there is another byte to follow. This can Read up to 10 bytes.
          */
         private ulong ReadVarint64()
