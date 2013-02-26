@@ -554,6 +554,7 @@ public:
 		m_AltGr = false;
 
 		inputManager->getMouse()->onMouseMove.Connect(this, &GwenInput::ProcessMouseMove);
+		inputManager->getMouse()->onMouseDrag.Connect(this, &GwenInput::ProcessMouseDrag);
 		inputManager->getMouse()->onMouseButtonPress.Connect(this, &GwenInput::ProcessMouseButtonPressed);
 		inputManager->getMouse()->onMouseButtonRelease.Connect(this, &GwenInput::ProcessMouseButtonReleased);
 		inputManager->getMouse()->onMouseWheelMove.Connect(this, &GwenInput::ProcessMouseWheel);
@@ -620,6 +621,18 @@ public:
 
 		m_MouseX = mouseMoveEvent.x;
 		m_MouseY = mouseMoveEvent.y;
+
+		m_Canvas->Input_MouseMoved(m_MouseX, m_MouseY, dx, dy);
+		
+	}
+
+	void ProcessMouseDrag(const MouseDragEvent& mouseDragEvent){
+		
+		int dx = mouseDragEvent.x - m_MouseX;
+		int dy = mouseDragEvent.y - m_MouseY;
+
+		m_MouseX = mouseDragEvent.x;
+		m_MouseY = mouseDragEvent.y;
 
 		m_Canvas->Input_MouseMoved(m_MouseX, m_MouseY, dx, dy);
 		
