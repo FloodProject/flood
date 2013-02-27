@@ -55,6 +55,8 @@ namespace Flood.GUI.Controls
             set { m_Texture.Load(value); }
         }
 
+        internal Texture Texture { get { return m_Texture; } }
+
         /// <summary>
         /// Renders the control using specified skin.
         /// </summary>
