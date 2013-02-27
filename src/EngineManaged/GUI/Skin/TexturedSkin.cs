@@ -291,16 +291,6 @@ namespace Flood.GUI.Skins
             InitializeTextures();
         }
 
-        public TexturedSkin(Renderers.Renderer renderer, Stream textureData)
-            : base(renderer)
-        {
-            m_Texture = new Texture(Renderer);
-            m_Texture.LoadStream(textureData);
-
-            InitializeColors();
-            InitializeTextures();
-        }
-
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
