@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Core/Math/Vector.h"
 #include "Graphics/RenderTarget.h"
 #include "Engine/Input/InputManager.h"
