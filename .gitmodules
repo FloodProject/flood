@@ -8,9 +8,6 @@
 [submodule "deps/ICSharpCode.NRefactory"]
 	path = deps/ICSharpCode.NRefactory
 	url = git@github.com:FloodProject/ICSharpCode.NRefactory.git
-[submodule "deps/MonoGame"]
-	path = deps/MonoGame
-	url = git@github.com:FloodProject/MonoGame.git
 [submodule "deps/Mono.Addins"]
 	path = deps/Mono.Addins
 	url = git@github.com:FloodProject/Mono.Addins.git
