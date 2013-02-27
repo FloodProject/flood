@@ -12,13 +12,13 @@ project "Editor.Client"
 	{
 		"Editor.Client.lua",
 		"**.cs",
+		"**.addin.xml"
 	}
 	
 	links
 	{
 		"System",
-		"System.ComponentModel", 
-		"System.ComponentModel.Composition",
+		"System.Drawing", 
 		"EngineManaged",
 		"EngineBindings",
 		"Editor.Shared",
