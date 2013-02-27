@@ -142,7 +142,7 @@ namespace clix {
         typedef typename StringTypeSelector<encoding>::Type StringType;
 
         // Empty strings would cause a problem when accessing the empty managed array
-        if(string->Length == 0) {
+        if(!string || string->Length == 0) {
           return StringType();
         }
 
