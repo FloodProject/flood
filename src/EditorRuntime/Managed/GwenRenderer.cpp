@@ -698,12 +698,10 @@ public:
 
 	void Initialize(InputManager* inputManager) {
 		renderer = gcnew GwenRenderer();
-		managedEditor = gcnew Flood::Editor::Editor();
-
-		managedEditor->Window->Init(renderer,"DefaultSkin.png");
+		managedEditor = gcnew Flood::Editor::Editor(renderer,"DefaultSkin.png");
 
 		input = new GwenInput(inputManager);
-		input->Initialize(managedEditor->Window->Canvas);
+		input->Initialize(managedEditor->MainWindow->Canvas);
 	}
 
 	void Close() {
@@ -713,12 +711,12 @@ public:
 
 	void Render(RenderBlock& rb){
 		renderer->Clear();
-		managedEditor->Window->Render();
+		managedEditor->MainWindow->Render();
 		renderer->Render(rb);
 	}
 
 	void SetSize(int x, int y){
-		managedEditor->Window->SetCanvasSize(x, y);
+		managedEditor->MainWindow->Canvas->SetSize(x, y);
 	}
 };
 
