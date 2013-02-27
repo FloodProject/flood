@@ -8,6 +8,7 @@ incdir = path.getabsolute("../../inc");
 bindir = path.getabsolute("../../bin");
 builddir = path.getabsolute("../" .. action);
 libdir = path.join(builddir, "lib","%{cfg.buildcfg}_%{cfg.platform}");
+addindir = path.join(libdir, "Addins");
 gendir = path.join(builddir, "gen");
 
 common_flags = { "Unicode", "Symbols", "NoExceptions", "NoRTTI" }
@@ -157,6 +158,10 @@ end
 
 function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
+end
+
+function SetupAddin()
+    targetdir (addindir)
 end
 
 function deps(dep)
