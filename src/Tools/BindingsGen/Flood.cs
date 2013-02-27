@@ -60,6 +60,11 @@ namespace Cxxi.Libraries
             lib.SetClassAsValueType("Quaternion");
             lib.SetClassAsValueType("Matrix4x4");
 
+            lib.IgnoreClassWithName("ColorP");
+            lib.IgnoreClassWithName("Vector2P");
+            lib.IgnoreClassWithName("Vector3P");
+            lib.IgnoreClassWithName("QuaternionP");
+
             // Resources
             lib.IgnoreFunctionWithName("ResourcesInitialize");
             lib.IgnoreFunctionWithName("ResourcesDeinitialize");
@@ -70,6 +75,8 @@ namespace Cxxi.Libraries
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
+            lib.SetClassAsValueType("Settings");
+            lib.SetClassAsValueType("WindowSettings");
         }
 
         public void Postprocess(Library lib)
@@ -80,8 +87,8 @@ namespace Cxxi.Libraries
         {
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
-            options.OutputDir = @"../../../src/EngineManaged/Bindings";
-            options.IncludeDirs.Add(@"../../../inc");
+            options.OutputDir = @"../../../../src/EngineManaged/Bindings";
+            options.IncludeDirs.Add(@"../../../../inc");
             options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
 
             SetupHeaders(options.Headers);
@@ -102,7 +109,9 @@ namespace Cxxi.Libraries
                     "Graphics/RenderDevice.h",
                     "Graphics/RenderBatch.h",
                     "Graphics/Texture.h",
-                    "Engine/Engine.h"
+                    "Engine/Engine.h",
+                    "Engine/Window/Window.h",
+                    "Input/InputManager.h",
                 };
 
             headers.AddRange(sources);
