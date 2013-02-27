@@ -69,12 +69,7 @@
 #include <wx/aui/auibar.h>
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
-
-//---------------------------------------------------------------------//
-// Image Conversion Utilities
-//---------------------------------------------------------------------//
-
-#include "Editor/ImageUtils.h"
+#define wxID_INVALID -1
 
 NAMESPACE_EDITOR_BEGIN
 typedef CameraPtr CameraWeakPtr;
