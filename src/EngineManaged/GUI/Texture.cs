@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 
 namespace Flood.GUI
@@ -58,21 +59,14 @@ namespace Flood.GUI
         }
 
         /// <summary>
-        /// Initializes the texture from raw pixel data.
+        /// Initializes the texture from a bitmap.
         /// </summary>
-        /// <param name="width">Texture width.</param>
-        /// <param name="height">Texture height.</param>
-        /// <param name="pixelData">Color array in RGBA format.</param>
-        public void LoadRaw(int width, int height, byte[] pixelData)
+        /// <param name="image">Image bitmap.</param>
+        public void LoadBitmap(Bitmap image)
         {
-            Width = width;
-            Height = height;
-            m_Renderer.LoadTextureRaw(this, pixelData);
-        }
-
-        public void LoadStream(Stream data)
-        {
-            m_Renderer.LoadTextureStream(this, data);
+            Width = image.Width;
+            Height = image.Height;
+            m_Renderer.LoadTextureBitmap(this, image);
         }
 
         /// <summary>

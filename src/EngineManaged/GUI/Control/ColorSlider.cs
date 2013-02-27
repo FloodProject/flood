@@ -50,24 +50,19 @@ namespace Flood.GUI.Controls
 
             if (m_Texture == null)
             {
-                byte[] pixelData = new byte[Width * Height * 4];
+                var bitmap = new Bitmap(Width, Height);
 
                 for (int y = 0; y < Height; y++)
                 {
                     Color c = GetColorAtHeight(y);
                     for (int x = 0; x < Width; x++)
                     {
-                        pixelData[4 * (x + y * Width)] = c.R;
-                        pixelData[4 * (x + y * Width) + 1] = c.G;
-                        pixelData[4 * (x + y * Width) + 2] = c.B;
-                        pixelData[4 * (x + y * Width) + 3] = c.A;
+                        bitmap.SetPixel(x,y,Color.FromArgb(c.A,c.R,c.G,c.B));
                     }
                 }
 
                 m_Texture = new Texture(skin.Renderer);
-                m_Texture.Width = Width;
-                m_Texture.Height = Height;
-                m_Texture.LoadRaw(Width, Height, pixelData);
+                m_Texture.LoadBitmap(bitmap);
             }
 
             skin.Renderer.DrawColor = Color.White;

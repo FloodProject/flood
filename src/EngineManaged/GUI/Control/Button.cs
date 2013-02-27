@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using Flood.GUI.Input;
 
 namespace Flood.GUI.Controls
@@ -216,6 +218,28 @@ namespace Flood.GUI.Controls
             }
 
             m_Image.ImageName = textureName;
+            m_Image.SizeToContents( );
+            m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);
+            m_CenterImage = center;
+
+            TextPadding = new Padding(m_Image.Right + 2, TextPadding.Top, TextPadding.Right, TextPadding.Bottom);
+        }
+
+        /// <summary>
+        /// Sets the button's image.
+        /// </summary>
+        /// <param name="image">Image bitmap.</param>
+        /// <param name="center">Determines whether the image should be centered.</param>
+        public virtual void SetImage(Bitmap image, bool center = false)
+        {
+            
+            if (m_Image == null)
+            {
+                m_Image = new ImagePanel(this);
+            }
+
+            m_Image.Texture.LoadBitmap(image);
+
             m_Image.SizeToContents( );
             m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);
             m_CenterImage = center;

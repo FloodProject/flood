@@ -125,19 +125,11 @@ namespace Flood.GUI.Renderers
         {}
 
         /// <summary>
-        /// Initializes texture from raw pixel data.
-        /// </summary>
-        /// <param name="t">Texture to initialize. Dimensions need to be set.</param>
-        /// <param name="pixelData">Pixel data in RGBA format.</param>
-        public virtual void LoadTextureRaw(Texture t, byte[] pixelData)
-        {}
-
-        /// <summary>
         /// Initializes texture from image file data.
         /// </summary>
         /// <param name="t">Texture to initialize.</param>
-        /// <param name="data">Image file as stream.</param>
-        public virtual void LoadTextureStream(Texture t, Stream data)
+        /// <param name="data">Image bitmap.</param>
+        public virtual void LoadTextureBitmap(Texture t, Bitmap data)
         {}
 
         /// <summary>

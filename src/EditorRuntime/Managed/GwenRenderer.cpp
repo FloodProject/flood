@@ -484,9 +484,9 @@ public:
 		t->RendererData = iHandle.getId();
 	}
 
-	virtual void LoadTextureRaw(Flood::GUI::Texture^ t, array<byte>^ pixelData) override
+	virtual void LoadTextureBitmap(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bitmap) override
 	{
-        TextureUtil::LoadTextureInternal(t,(uint8*)&pixelData, pixelData->Length);
+        TextureUtil::LoadTextureInternal(t,bitmap);
 	}
 
 	virtual void FreeTexture(Flood::GUI::Texture^ t) override
