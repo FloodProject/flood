@@ -162,6 +162,23 @@ end
 
 function SetupAddin()
     targetdir (addindir)
+    
+    SetupAddinResources()
+end
+
+function SetupAddinResources()
+    local resources =
+    {
+        "**.addin.xml", 
+        path.join("icons","**.png")
+    }
+    
+    files (resources)
+    
+    local c = configuration (resources)
+        buildaction "Embed"
+    
+    configuration(c)
 end
 
 function deps(dep)

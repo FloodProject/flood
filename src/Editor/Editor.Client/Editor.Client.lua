@@ -8,11 +8,12 @@ project "Editor.Client"
 	
 	location "."
 	
+    SetupAddinResources()
+    
 	files
 	{
 		"Editor.Client.lua",
 		"**.cs",
-		"**.addin.xml"
 	}
 	
 	links
