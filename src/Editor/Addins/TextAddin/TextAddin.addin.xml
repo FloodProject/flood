@@ -1,0 +1,16 @@
+﻿<Addin namespace="Editor.Client" id="TextAddin" version="1.0">
+
+  <Dependencies>
+    <Addin id = "Core" version = "1.0"/>
+  </Dependencies>
+      
+  <Extension path = "/Flood/Editor/Client/StockIcons">
+    <StockIcon stockid = "save" resource = "TextAddin.icons.disk.png"/>
+  </Extension>
+
+  <Extension path = "/Flood/Editor/Client/Toolbar">
+    <ToolButton icon="save" commandType="TextEditor.NewCommand" />
+    <ToolButton icon="save" commandType="TextEditor.NewCommand" />
+  </Extension>
+
+</Addin>
