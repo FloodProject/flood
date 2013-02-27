@@ -66,16 +66,34 @@ uint Flood::ResourceManager::LoadResource(System::String^ name)
 
 uint Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
 {
-    auto _arg0 = (::ResourceLoadOptions*)&options;
-    auto arg0 = *_arg0;
+    auto arg0 = ::ResourceLoadOptions();
+    arg0.name = marshalString<E_UTF8>(options.Name);
+    arg0.stream = options.Stream->NativePtr;
+    arg0.resource = options.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)options.Group;
+    arg0.isHighPriority = options.IsHighPriority;
+    arg0.sendLoadEvent = options.SendLoadEvent;
+    arg0.asynchronousLoad = options.AsynchronousLoad;
+    arg0.keepStreamOpen = options.KeepStreamOpen;
+    arg0.option = ::ResourceLoadOption();
+
     auto ret = NativePtr->loadResource(arg0);
     return ret.id;
 }
 
 bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
-    auto _arg0 = (::ResourceLoadOptions*)&options;
-    auto arg0 = *_arg0;
+    auto arg0 = ::ResourceLoadOptions();
+    arg0.name = marshalString<E_UTF8>(options.Name);
+    arg0.stream = options.Stream->NativePtr;
+    arg0.resource = options.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)options.Group;
+    arg0.isHighPriority = options.IsHighPriority;
+    arg0.sendLoadEvent = options.SendLoadEvent;
+    arg0.asynchronousLoad = options.AsynchronousLoad;
+    arg0.keepStreamOpen = options.KeepStreamOpen;
+    arg0.option = ::ResourceLoadOption();
+
     auto ret = NativePtr->findResource(arg0);
     return ret;
 }

@@ -107,8 +107,7 @@ Flood::ResourceGroup Flood::Image::GetResourceGroup()
 
 void Flood::Image::SetColor(Flood::Color color)
 {
-    auto _arg0 = (::Color*)&color;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Color();
     NativePtr->setColor(arg0);
 }
 

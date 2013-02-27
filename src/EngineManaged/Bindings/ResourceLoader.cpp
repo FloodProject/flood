@@ -128,16 +128,34 @@ Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
 
 Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _173)
 {
-    auto _arg0 = (::ResourceLoadOptions*)&_173;
-    auto arg0 = *_arg0;
+    auto arg0 = ::ResourceLoadOptions();
+    arg0.name = marshalString<E_UTF8>(_173.Name);
+    arg0.stream = _173.Stream->NativePtr;
+    arg0.resource = _173.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)_173.Group;
+    arg0.isHighPriority = _173.IsHighPriority;
+    arg0.sendLoadEvent = _173.SendLoadEvent;
+    arg0.asynchronousLoad = _173.AsynchronousLoad;
+    arg0.keepStreamOpen = _173.KeepStreamOpen;
+    arg0.option = ::ResourceLoadOption();
+
     auto ret = NativePtr->prepare(arg0);
     return gcnew Flood::Resource((::Resource*)ret);
 }
 
 bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _174)
 {
-    auto _arg0 = (::ResourceLoadOptions*)&_174;
-    auto arg0 = *_arg0;
+    auto arg0 = ::ResourceLoadOptions();
+    arg0.name = marshalString<E_UTF8>(_174.Name);
+    arg0.stream = _174.Stream->NativePtr;
+    arg0.resource = _174.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)_174.Group;
+    arg0.isHighPriority = _174.IsHighPriority;
+    arg0.sendLoadEvent = _174.SendLoadEvent;
+    arg0.asynchronousLoad = _174.AsynchronousLoad;
+    arg0.keepStreamOpen = _174.KeepStreamOpen;
+    arg0.option = ::ResourceLoadOption();
+
     auto ret = NativePtr->decode(arg0);
     return ret;
 }

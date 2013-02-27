@@ -39,8 +39,7 @@ Flood::Quaternion::Quaternion(Flood::EulerAngles angles)
 bool Flood::Quaternion::operator==(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&q;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->operator==(arg0);
     return ret;
 }
@@ -48,8 +47,7 @@ bool Flood::Quaternion::operator==(Flood::Quaternion q)
 bool Flood::Quaternion::operator!=(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&q;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->operator!=(arg0);
     return ret;
 }
@@ -63,8 +61,7 @@ void Flood::Quaternion::Identity()
 Flood::Quaternion Flood::Quaternion::Conjugate(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&q;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->conjugate(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
 }
@@ -72,8 +69,7 @@ Flood::Quaternion Flood::Quaternion::Conjugate(Flood::Quaternion q)
 Flood::Quaternion Flood::Quaternion::operator*(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&a;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->operator*(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
 }
@@ -81,8 +77,7 @@ Flood::Quaternion Flood::Quaternion::operator*(Flood::Quaternion a)
 Flood::Quaternion Flood::Quaternion::operator*=(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&a;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->operator*=(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
 }
@@ -121,8 +116,7 @@ void Flood::Quaternion::SetToRotateAboutZ(float theta)
 void Flood::Quaternion::SetToRotateAboutAxis(Flood::Vector3 axis, float theta)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Vector3*)&axis;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Vector3();
     this0->setToRotateAboutAxis(arg0, theta);
 }
 
@@ -150,8 +144,7 @@ Flood::Vector3 Flood::Quaternion::GetRotationAxis()
 float Flood::Quaternion::Dot(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&a;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->dot(arg0);
     return ret;
 }
@@ -166,8 +159,7 @@ Flood::EulerAngles Flood::Quaternion::GetEulerAngles()
 Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
 {
     auto this0 = (::Quaternion*) 0;
-    auto _arg0 = (::Quaternion*)&q;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Quaternion();
     auto ret = this0->slerp(arg0, t);
     return Flood::Quaternion((::Quaternion*)&ret);
 }

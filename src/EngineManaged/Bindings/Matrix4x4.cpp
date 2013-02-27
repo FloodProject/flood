@@ -77,8 +77,24 @@ Flood::Matrix4x4 Flood::Matrix4x4::Transpose()
 Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto _arg0 = (::Matrix4x4*)&m;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Matrix4x4();
+    arg0.m11 = m.M11;
+    arg0.m12 = m.M12;
+    arg0.m13 = m.M13;
+    arg0.m14 = m.M14;
+    arg0.m21 = m.M21;
+    arg0.m22 = m.M22;
+    arg0.m23 = m.M23;
+    arg0.m24 = m.M24;
+    arg0.m31 = m.M31;
+    arg0.m32 = m.M32;
+    arg0.m33 = m.M33;
+    arg0.m34 = m.M34;
+    arg0.tx = m.Tx;
+    arg0.ty = m.Ty;
+    arg0.tz = m.Tz;
+    arg0.tw = m.Tw;
+
     auto ret = this0->operator*(arg0);
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
@@ -86,8 +102,7 @@ Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
 Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto _arg0 = (::Vector3*)&v;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Vector3();
     auto ret = this0->operator*(arg0);
     return Flood::Vector3((::Vector3*)&ret);
 }
@@ -95,8 +110,12 @@ Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 Flood::Vector4 Flood::Matrix4x4::operator*(Flood::Vector4 v)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto _arg0 = (::Vector4*)&v;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Vector4();
+    arg0.x = v.X;
+    arg0.y = v.Y;
+    arg0.z = v.Z;
+    arg0.w = v.W;
+
     auto ret = this0->operator*(arg0);
     return Flood::Vector4((::Vector4*)&ret);
 }

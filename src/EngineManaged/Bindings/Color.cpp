@@ -33,8 +33,7 @@ Flood::Color::Color(int r, int g, int b, int a)
 bool Flood::Color::operator==(Flood::Color v)
 {
     auto this0 = (::Color*) 0;
-    auto _arg0 = (::Color*)&v;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Color();
     auto ret = this0->operator==(arg0);
     return ret;
 }
@@ -42,8 +41,7 @@ bool Flood::Color::operator==(Flood::Color v)
 bool Flood::Color::NearEqual(Flood::Color a, float tolerance)
 {
     auto this0 = (::Color*) 0;
-    auto _arg0 = (::Color*)&a;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Color();
     auto ret = this0->nearEqual(arg0, tolerance);
     return ret;
 }

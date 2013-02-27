@@ -37,8 +37,10 @@ Flood::Texture::Texture()
 
 void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _206)
 {
-    auto _arg0 = (::Vector2i*)&size;
-    auto arg0 = *_arg0;
+    auto arg0 = ::Vector2i();
+    arg0.x = (int32)size.X;
+    arg0.y = (int32)size.Y;
+
     auto arg1 = (::PixelFormat)_206;
     NativePtr->allocate(arg0, arg1);
 }
