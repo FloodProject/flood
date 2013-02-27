@@ -17,8 +17,7 @@ namespace Editor.Client.GUI
 
         public PaneGroup(Control parent) : base(parent)
         {
-            if(PaneService.FocusPaneGroup == null)
-                PaneService.FocusPaneGroup = this;
+
         }
 
         public void AddPane(Pane pane)
@@ -36,9 +35,5 @@ namespace Editor.Client.GUI
             RemovePage(tabButton);
         }
 
-        protected override void OnKeyboardFocus()
-        {
-            PaneService.FocusPaneGroup = this;
-        }
     }
 }
