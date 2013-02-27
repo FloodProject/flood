@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Flood.GUI.Controls;
-using Flood.GUI.Input;
 using Flood.GUI.Renderers;
 using Flood.GUI.Skins;
 
 namespace Editor.Client.Gui
 {
-    public abstract class Window
+    public abstract class Window : IDisposable
     {
         /// <summary>
         /// Renderer of the GUI.
@@ -23,6 +18,22 @@ namespace Editor.Client.Gui
         public Skin Skin  { get; private set; }
 
         public Canvas Canvas  { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Canvas.Dispose();
+                Skin.Dispose();
+                Renderer.Dispose();
+            }
+        }
 
         public void Init(Renderer renderer, string textureName)
         {
