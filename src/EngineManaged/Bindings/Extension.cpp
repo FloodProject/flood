@@ -17,12 +17,17 @@ using namespace clix;
 
 Flood::ExtensionMetadata::ExtensionMetadata(::ExtensionMetadata* native)
 {
-    // TODO: Struct marshaling
+    Name = clix::marshalString<clix::E_UTF8>(native->name);
+    Description = clix::marshalString<clix::E_UTF8>(native->description);
+    Priority = native->priority;
 }
 
 Flood::ExtensionMetadata::ExtensionMetadata(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::ExtensionMetadata*)native.ToPointer();
+    Name = clix::marshalString<clix::E_UTF8>(__native->name);
+    Description = clix::marshalString<clix::E_UTF8>(__native->description);
+    Priority = __native->priority;
 }
 
 Flood::Extension::Extension(::Extension* native)
@@ -32,7 +37,8 @@ Flood::Extension::Extension(::Extension* native)
 
 Flood::Extension::Extension(System::IntPtr native)
 {
-    NativePtr = (::Extension*)native.ToPointer();
+    auto __native = (::Extension*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Extension::Extension()

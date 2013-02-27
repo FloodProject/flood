@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Stream.h"
+#include "InputManager.h"
 #include "ResourceManager.h"
 
 using namespace System;
@@ -22,7 +23,8 @@ Flood::Engine::Engine(::Engine* native)
 
 Flood::Engine::Engine(System::IntPtr native)
 {
-    NativePtr = (::Engine*)native.ToPointer();
+    auto __native = (::Engine*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Engine::Engine()
@@ -49,6 +51,18 @@ Flood::ResourceManager^ Flood::Engine::GetResourceManager()
 {
     auto ret = NativePtr->getResourceManager();
     return gcnew Flood::ResourceManager((::ResourceManager*)ret);
+}
+
+Flood::InputManager^ Flood::Engine::GetInputManager()
+{
+    auto ret = NativePtr->getInputManager();
+    return gcnew Flood::InputManager((::InputManager*)ret);
+}
+
+void Flood::Engine::SetInputManager(Flood::InputManager^ v)
+{
+    auto arg0 = v->NativePtr;
+    NativePtr->setInputManager(arg0);
 }
 
 Flood::Log^ Flood::Engine::GetLogger()

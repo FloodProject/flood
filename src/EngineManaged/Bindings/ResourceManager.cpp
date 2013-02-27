@@ -21,12 +21,17 @@ using namespace clix;
 
 Flood::ResourceEvent::ResourceEvent(::ResourceEvent* native)
 {
-    // TODO: Struct marshaling
+    Resource = gcnew Flood::Resource((::Resource*)native->resource);
+    OldResource = gcnew Flood::Resource((::Resource*)native->oldResource);
+    Handle = native->handle.id;
 }
 
 Flood::ResourceEvent::ResourceEvent(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::ResourceEvent*)native.ToPointer();
+    Resource = gcnew Flood::Resource((::Resource*)__native->resource);
+    OldResource = gcnew Flood::Resource((::Resource*)__native->oldResource);
+    Handle = __native->handle.id;
 }
 
 Flood::ResourceManager::ResourceManager(::ResourceManager* native)
@@ -36,7 +41,8 @@ Flood::ResourceManager::ResourceManager(::ResourceManager* native)
 
 Flood::ResourceManager::ResourceManager(System::IntPtr native)
 {
-    NativePtr = (::ResourceManager*)native.ToPointer();
+    auto __native = (::ResourceManager*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::ResourceManager::ResourceManager()

@@ -17,24 +17,25 @@ using namespace clix;
 
 Flood::Settings::Settings(::Settings* native)
 {
-    NativePtr = native;
+    Width = native->width;
+    Height = native->height;
 }
 
 Flood::Settings::Settings(System::IntPtr native)
 {
-    NativePtr = (::Settings*)native.ToPointer();
+    auto __native = (::Settings*)native.ToPointer();
+    Width = __native->width;
+    Height = __native->height;
 }
 
 Flood::Settings::Settings(unsigned short width, unsigned short height)
 {
-    auto arg0 = (uint16)width;
-    auto arg1 = (uint16)height;
-    NativePtr = new ::Settings(arg0, arg1);
 }
 
 Flood::Vector2i Flood::Settings::GetSize()
 {
-    auto ret = NativePtr->getSize();
+    auto this0 = (::Settings*) 0;
+    auto ret = this0->getSize();
     return Flood::Vector2i((::Vector2i*)&ret);
 }
 
@@ -45,7 +46,8 @@ Flood::RenderTarget::RenderTarget(::RenderTarget* native)
 
 Flood::RenderTarget::RenderTarget(System::IntPtr native)
 {
-    NativePtr = (::RenderTarget*)native.ToPointer();
+    auto __native = (::RenderTarget*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::RenderTarget::RenderTarget()
@@ -67,10 +69,10 @@ void Flood::RenderTarget::Update()
     NativePtr->update();
 }
 
-Flood::Settings^ Flood::RenderTarget::GetSettings()
+Flood::Settings Flood::RenderTarget::GetSettings()
 {
     auto ret = &NativePtr->getSettings();
-    return gcnew Flood::Settings((::Settings*)ret);
+    return Flood::Settings((::Settings*)&ret);
 }
 
 Flood::RenderContext^ Flood::RenderTarget::GetContext()

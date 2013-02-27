@@ -21,7 +21,8 @@ Flood::Allocator::Allocator(::Allocator* native)
 
 Flood::Allocator::Allocator(System::IntPtr native)
 {
-    NativePtr = (::Allocator*)native.ToPointer();
+    auto __native = (::Allocator*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Allocator^ Flood::Allocator::GetHeap()
@@ -106,6 +107,7 @@ Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)
 Flood::PoolAllocator::PoolAllocator(System::IntPtr native)
     : Allocator(native)
 {
+    auto __native = (::PoolAllocator*)native.ToPointer();
 }
 
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
@@ -116,6 +118,7 @@ Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
 Flood::BumpAllocator::BumpAllocator(System::IntPtr native)
     : Allocator(native)
 {
+    auto __native = (::BumpAllocator*)native.ToPointer();
 }
 
 Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)
@@ -126,5 +129,6 @@ Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)
 Flood::HeapAllocator::HeapAllocator(System::IntPtr native)
     : Allocator(native)
 {
+    auto __native = (::HeapAllocator*)native.ToPointer();
 }
 

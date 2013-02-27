@@ -21,7 +21,8 @@ Flood::UniformBufferElement::UniformBufferElement(::UniformBufferElement* native
 
 Flood::UniformBufferElement::UniformBufferElement(System::IntPtr native)
 {
-    NativePtr = (::UniformBufferElement*)native.ToPointer();
+    auto __native = (::UniformBufferElement*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::UniformBuffer::UniformBuffer(::UniformBuffer* native)
@@ -31,7 +32,8 @@ Flood::UniformBuffer::UniformBuffer(::UniformBuffer* native)
 
 Flood::UniformBuffer::UniformBuffer(System::IntPtr native)
 {
-    NativePtr = (::UniformBuffer*)native.ToPointer();
+    auto __native = (::UniformBuffer*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::UniformBufferElement^ Flood::UniformBuffer::GetElement(System::String^ name, unsigned int size)

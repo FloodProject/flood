@@ -14,12 +14,13 @@ using namespace clix;
 
 Flood::StringHash::StringHash(::StringHash* native)
 {
-    // TODO: Struct marshaling
+    Hash = native->hash;
 }
 
 Flood::StringHash::StringHash(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::StringHash*)native.ToPointer();
+    Hash = __native->hash;
 }
 
 Flood::StringHash::StringHash(System::String^ str, unsigned int size)

@@ -19,7 +19,8 @@ Flood::VertexElementP::VertexElementP(::VertexElementP* native)
 
 Flood::VertexElementP::VertexElementP(System::IntPtr native)
 {
-    NativePtr = (::VertexElementP*)native.ToPointer();
+    auto __native = (::VertexElementP*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::VertexElement::VertexElement(::VertexElement* native)
@@ -30,6 +31,7 @@ Flood::VertexElement::VertexElement(::VertexElement* native)
 Flood::VertexElement::VertexElement(System::IntPtr native)
     : VertexElementP(native)
 {
+    auto __native = (::VertexElement*)native.ToPointer();
 }
 
 Flood::VertexElement::VertexElement(Flood::VertexAttribute _185, Flood::VertexDataType _186, unsigned char components)
@@ -54,7 +56,8 @@ Flood::VertexDeclaration::VertexDeclaration(::VertexDeclaration* native)
 
 Flood::VertexDeclaration::VertexDeclaration(System::IntPtr native)
 {
-    NativePtr = (::VertexDeclaration*)native.ToPointer();
+    auto __native = (::VertexDeclaration*)native.ToPointer();
+    NativePtr = __native;
 }
 
 void Flood::VertexDeclaration::Add(Flood::VertexAttribute _188, int numComponents)
@@ -113,6 +116,7 @@ Flood::VertexBuffer::VertexBuffer(::VertexBuffer* native)
 Flood::VertexBuffer::VertexBuffer(System::IntPtr native)
     : Buffer(native)
 {
+    auto __native = (::VertexBuffer*)native.ToPointer();
 }
 
 Flood::VertexBuffer::VertexBuffer()

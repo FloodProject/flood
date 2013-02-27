@@ -23,7 +23,8 @@ Flood::Resource::Resource(::Resource* native)
 
 Flood::Resource::Resource(System::IntPtr native)
 {
-    NativePtr = (::Resource*)native.ToPointer();
+    auto __native = (::Resource*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Class^ Flood::Resource::GetType()

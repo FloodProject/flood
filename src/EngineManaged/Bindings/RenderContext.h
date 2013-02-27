@@ -22,7 +22,7 @@ namespace Flood
     ref class TextureManager;
     value struct Color;
     ref class RenderBuffer;
-    ref class Settings;
+    value struct Settings;
     ref class RenderContext;
     ref class Event1;
     ref class Delegate0;

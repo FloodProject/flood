@@ -15,12 +15,11 @@ using namespace clix;
 
 Flood::Color::Color(::Color* native)
 {
-    // TODO: Struct marshaling
 }
 
 Flood::Color::Color(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Color*)native.ToPointer();
 }
 
 Flood::Color::Color(float r, float g, float b, float a)

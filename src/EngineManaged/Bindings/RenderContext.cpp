@@ -22,7 +22,8 @@ Flood::RenderContext::RenderContext(::RenderContext* native)
 
 Flood::RenderContext::RenderContext(System::IntPtr native)
 {
-    NativePtr = (::RenderContext*)native.ToPointer();
+    auto __native = (::RenderContext*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::RenderContext::RenderContext()

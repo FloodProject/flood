@@ -15,12 +15,17 @@ using namespace clix;
 
 Flood::EulerAngles::EulerAngles(::EulerAngles* native)
 {
-    // TODO: Struct marshaling
+    X = native->x;
+    Y = native->y;
+    Z = native->z;
 }
 
 Flood::EulerAngles::EulerAngles(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::EulerAngles*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
+    Z = __native->z;
 }
 
 Flood::EulerAngles::EulerAngles(float x, float y, float z)

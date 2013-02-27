@@ -21,7 +21,8 @@ Flood::Buffer::Buffer(::Buffer* native)
 
 Flood::Buffer::Buffer(System::IntPtr native)
 {
-    NativePtr = (::Buffer*)native.ToPointer();
+    auto __native = (::Buffer*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Buffer::Buffer()

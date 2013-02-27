@@ -55,11 +55,14 @@ namespace Flood
         Engine();
         property Flood::Log^ Log;
         property Flood::Stream^ Stream;
+        property Flood::InputManager^ InputManager;
         property Flood::ResourceManager^ ResourceManager;
         void Init();
         void Update();
         void SetupLogger();
         Flood::ResourceManager^ GetResourceManager();
+        Flood::InputManager^ GetInputManager();
+        void SetInputManager(Flood::InputManager^ v);
         Flood::Log^ GetLogger();
         void StepFrame();
     };

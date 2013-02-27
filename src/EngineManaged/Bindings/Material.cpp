@@ -26,6 +26,7 @@ Flood::Material::Material(::Material* native)
 Flood::Material::Material(System::IntPtr native)
     : Resource(native)
 {
+    auto __native = (::Material*)native.ToPointer();
 }
 
 Flood::Material::Material()

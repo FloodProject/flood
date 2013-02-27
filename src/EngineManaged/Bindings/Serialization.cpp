@@ -22,7 +22,8 @@ Flood::ValueContext::ValueContext(::ValueContext* native)
 
 Flood::ValueContext::ValueContext(System::IntPtr native)
 {
-    NativePtr = (::ValueContext*)native.ToPointer();
+    auto __native = (::ValueContext*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::ReflectionHandleContext::ReflectionHandleContext(::ReflectionHandleContext* native)
@@ -32,7 +33,8 @@ Flood::ReflectionHandleContext::ReflectionHandleContext(::ReflectionHandleContex
 
 Flood::ReflectionHandleContext::ReflectionHandleContext(System::IntPtr native)
 {
-    NativePtr = (::ReflectionHandleContext*)native.ToPointer();
+    auto __native = (::ReflectionHandleContext*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::ReflectionContext::ReflectionContext(::ReflectionContext* native)
@@ -42,7 +44,8 @@ Flood::ReflectionContext::ReflectionContext(::ReflectionContext* native)
 
 Flood::ReflectionContext::ReflectionContext(System::IntPtr native)
 {
-    NativePtr = (::ReflectionContext*)native.ToPointer();
+    auto __native = (::ReflectionContext*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::ReflectionContext::ReflectionContext()
@@ -57,7 +60,8 @@ Flood::Serializer::Serializer(::Serializer* native)
 
 Flood::Serializer::Serializer(System::IntPtr native)
 {
-    NativePtr = (::Serializer*)native.ToPointer();
+    auto __native = (::Serializer*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Serializer::Serializer()

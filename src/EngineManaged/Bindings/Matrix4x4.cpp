@@ -15,12 +15,43 @@ using namespace clix;
 
 Flood::Matrix4x4::Matrix4x4(::Matrix4x4* native)
 {
-    // TODO: Struct marshaling
+    M11 = native->m11;
+    M12 = native->m12;
+    M13 = native->m13;
+    M14 = native->m14;
+    M21 = native->m21;
+    M22 = native->m22;
+    M23 = native->m23;
+    M24 = native->m24;
+    M31 = native->m31;
+    M32 = native->m32;
+    M33 = native->m33;
+    M34 = native->m34;
+    Tx = native->tx;
+    Ty = native->ty;
+    Tz = native->tz;
+    Tw = native->tw;
 }
 
 Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Matrix4x4*)native.ToPointer();
+    M11 = __native->m11;
+    M12 = __native->m12;
+    M13 = __native->m13;
+    M14 = __native->m14;
+    M21 = __native->m21;
+    M22 = __native->m22;
+    M23 = __native->m23;
+    M24 = __native->m24;
+    M31 = __native->m31;
+    M32 = __native->m32;
+    M33 = __native->m33;
+    M34 = __native->m34;
+    Tx = __native->tx;
+    Ty = __native->ty;
+    Tz = __native->tz;
+    Tw = __native->tw;
 }
 
 void Flood::Matrix4x4::Identity()

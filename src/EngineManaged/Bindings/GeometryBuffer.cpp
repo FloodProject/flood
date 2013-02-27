@@ -21,7 +21,8 @@ Flood::GeometryBuffer::GeometryBuffer(::GeometryBuffer* native)
 
 Flood::GeometryBuffer::GeometryBuffer(System::IntPtr native)
 {
-    NativePtr = (::GeometryBuffer*)native.ToPointer();
+    auto __native = (::GeometryBuffer*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::GeometryBuffer::GeometryBuffer()

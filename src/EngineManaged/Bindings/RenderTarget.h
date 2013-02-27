@@ -14,7 +14,7 @@
 namespace Flood
 {
     ref class RenderView;
-    ref class Settings;
+    value struct Settings;
     value struct Vector2i;
     value struct Vector3;
     ref class RenderContext;
@@ -32,16 +32,14 @@ namespace Flood
     value struct Color;
     ref class RenderBuffer;
 
-    public ref class Settings
+    public value struct Settings
     {
     public:
-        property ::Settings* NativePtr;
-
         Settings(::Settings* native);
         Settings(System::IntPtr native);
         Settings(unsigned short width, unsigned short height);
-        property unsigned short Width;
-        property unsigned short Height;
+        unsigned short Width;
+        unsigned short Height;
         Flood::Vector2i GetSize();
     };
 
@@ -57,7 +55,7 @@ namespace Flood
         void RemoveViews();
         void MakeCurrent();
         void Update();
-        Flood::Settings^ GetSettings();
+        Flood::Settings GetSettings();
         Flood::RenderContext^ GetContext();
         void SetContext(Flood::RenderContext^ context);
     };

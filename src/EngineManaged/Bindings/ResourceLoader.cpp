@@ -20,22 +20,42 @@ using namespace clix;
 
 Flood::ResourceLoadOption::ResourceLoadOption(::ResourceLoadOption* native)
 {
-    // TODO: Struct marshaling
+    Key = native->key;
+    Value = native->value;
 }
 
 Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::ResourceLoadOption*)native.ToPointer();
+    Key = __native->key;
+    Value = __native->value;
 }
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
-    // TODO: Struct marshaling
+    Name = marshalString<E_UTF8>(native->name);
+    Stream = gcnew Flood::Stream((::Stream*)native->stream);
+    Resource = gcnew Flood::Resource((::Resource*)native->resource);
+    Group = (Flood::ResourceGroup)native->group;
+    IsHighPriority = native->isHighPriority;
+    SendLoadEvent = native->sendLoadEvent;
+    AsynchronousLoad = native->asynchronousLoad;
+    KeepStreamOpen = native->keepStreamOpen;
+    Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&native->option);
 }
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::ResourceLoadOptions*)native.ToPointer();
+    Name = marshalString<E_UTF8>(__native->name);
+    Stream = gcnew Flood::Stream((::Stream*)__native->stream);
+    Resource = gcnew Flood::Resource((::Resource*)__native->resource);
+    Group = (Flood::ResourceGroup)__native->group;
+    IsHighPriority = __native->isHighPriority;
+    SendLoadEvent = __native->sendLoadEvent;
+    AsynchronousLoad = __native->asynchronousLoad;
+    KeepStreamOpen = __native->keepStreamOpen;
+    Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&__native->option);
 }
 
 void Flood::ResourceLoadOptions::AddOption(int key, int value)
@@ -51,7 +71,8 @@ Flood::ResourceStream::ResourceStream(::ResourceStream* native)
 
 Flood::ResourceStream::ResourceStream(System::IntPtr native)
 {
-    NativePtr = (::ResourceStream*)native.ToPointer();
+    auto __native = (::ResourceStream*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::ResourceStream::ResourceStream()
@@ -79,6 +100,7 @@ Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
 Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
     : Extension(native)
 {
+    auto __native = (::ResourceLoader*)native.ToPointer();
 }
 
 Flood::ResourceLoader::ResourceLoader()

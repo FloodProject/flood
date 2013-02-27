@@ -24,6 +24,7 @@ Flood::ShaderMaterial::ShaderMaterial(::ShaderMaterial* native)
 Flood::ShaderMaterial::ShaderMaterial(System::IntPtr native)
     : Resource(native)
 {
+    auto __native = (::ShaderMaterial*)native.ToPointer();
 }
 
 Flood::Class^ Flood::ShaderMaterial::GetType()

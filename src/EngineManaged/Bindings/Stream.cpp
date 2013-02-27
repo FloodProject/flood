@@ -20,7 +20,8 @@ Flood::Stream::Stream(::Stream* native)
 
 Flood::Stream::Stream(System::IntPtr native)
 {
-    NativePtr = (::Stream*)native.ToPointer();
+    auto __native = (::Stream*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Stream^ Flood::Stream::CreateFromURI(Flood::Allocator^ _135, System::String^ _136, Flood::StreamOpenMode _137)
@@ -156,5 +157,6 @@ Flood::MemoryStream::MemoryStream(::MemoryStream* native)
 Flood::MemoryStream::MemoryStream(System::IntPtr native)
     : Stream(native)
 {
+    auto __native = (::MemoryStream*)native.ToPointer();
 }
 

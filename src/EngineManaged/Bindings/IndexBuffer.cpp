@@ -21,6 +21,7 @@ Flood::IndexBuffer::IndexBuffer(::IndexBuffer* native)
 Flood::IndexBuffer::IndexBuffer(System::IntPtr native)
     : Buffer(native)
 {
+    auto __native = (::IndexBuffer*)native.ToPointer();
 }
 
 Flood::IndexBuffer::IndexBuffer()

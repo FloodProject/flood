@@ -17,12 +17,11 @@ using namespace clix;
 
 Flood::Quaternion::Quaternion(::Quaternion* native)
 {
-    // TODO: Struct marshaling
 }
 
 Flood::Quaternion::Quaternion(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Quaternion*)native.ToPointer();
 }
 
 Flood::Quaternion::Quaternion(float u)

@@ -20,7 +20,8 @@ Flood::RenderBatchRange::RenderBatchRange(::RenderBatchRange* native)
 
 Flood::RenderBatchRange::RenderBatchRange(System::IntPtr native)
 {
-    NativePtr = (::RenderBatchRange*)native.ToPointer();
+    auto __native = (::RenderBatchRange*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::RenderBatchRange::RenderBatchRange()
@@ -35,7 +36,8 @@ Flood::RenderBatch::RenderBatch(::RenderBatch* native)
 
 Flood::RenderBatch::RenderBatch(System::IntPtr native)
 {
-    NativePtr = (::RenderBatch*)native.ToPointer();
+    auto __native = (::RenderBatch*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::RenderBatch::RenderBatch()

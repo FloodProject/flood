@@ -21,7 +21,8 @@ Flood::Type::Type(::Type* native)
 
 Flood::Type::Type(System::IntPtr native)
 {
-    NativePtr = (::Type*)native.ToPointer();
+    auto __native = (::Type*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Type::Type()
@@ -45,7 +46,8 @@ Flood::ReflectionDatabase::ReflectionDatabase(::ReflectionDatabase* native)
 
 Flood::ReflectionDatabase::ReflectionDatabase(System::IntPtr native)
 {
-    NativePtr = (::ReflectionDatabase*)native.ToPointer();
+    auto __native = (::ReflectionDatabase*)native.ToPointer();
+    NativePtr = __native;
 }
 
 bool Flood::ReflectionDatabase::RegisterType(Flood::Type^ type)
@@ -64,6 +66,7 @@ Flood::Class::Class(::Class* native)
 Flood::Class::Class(System::IntPtr native)
     : Type(native)
 {
+    auto __native = (::Class*)native.ToPointer();
 }
 
 Flood::Class::Class()
@@ -116,7 +119,7 @@ System::IntPtr Flood::Class::GetFieldAddress(System::IntPtr _23, Flood::Field^ _
     auto arg0 = _23.ToPointer();
     auto arg1 = _24->NativePtr;
     auto ret = ::ClassGetFieldAddress(arg0, arg1);
-    return IntPtr();
+    return IntPtr(ret);
 }
 
 System::IntPtr Flood::Class::CreateInstance(Flood::Allocator^ _26)
@@ -124,7 +127,7 @@ System::IntPtr Flood::Class::CreateInstance(Flood::Allocator^ _26)
     auto arg0 = NativePtr;
     auto arg1 = _26->NativePtr;
     auto ret = ::ClassCreateInstance(arg0, arg1);
-    return IntPtr();
+    return IntPtr(ret);
 }
 
 unsigned short Flood::Class::CalculateId()
@@ -148,7 +151,8 @@ Flood::Field::Field(::Field* native)
 
 Flood::Field::Field(System::IntPtr native)
 {
-    NativePtr = (::Field*)native.ToPointer();
+    auto __native = (::Field*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Field::Field()
@@ -186,6 +190,7 @@ Flood::Primitive::Primitive(::Primitive* native)
 Flood::Primitive::Primitive(System::IntPtr native)
     : Type(native)
 {
+    auto __native = (::Primitive*)native.ToPointer();
 }
 
 Flood::Primitive::Primitive()
@@ -217,7 +222,8 @@ Flood::PrimitiveBuiltins::PrimitiveBuiltins(::PrimitiveBuiltins* native)
 
 Flood::PrimitiveBuiltins::PrimitiveBuiltins(System::IntPtr native)
 {
-    NativePtr = (::PrimitiveBuiltins*)native.ToPointer();
+    auto __native = (::PrimitiveBuiltins*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::PrimitiveBuiltins::PrimitiveBuiltins()
@@ -233,6 +239,7 @@ Flood::Enum::Enum(::Enum* native)
 Flood::Enum::Enum(System::IntPtr native)
     : Type(native)
 {
+    auto __native = (::Enum*)native.ToPointer();
 }
 
 void Flood::Enum::AddValue(System::String^ name, int value)

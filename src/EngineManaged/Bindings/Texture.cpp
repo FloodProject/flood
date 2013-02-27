@@ -26,7 +26,8 @@ Flood::Texture::Texture(::Texture* native)
 
 Flood::Texture::Texture(System::IntPtr native)
 {
-    NativePtr = (::Texture*)native.ToPointer();
+    auto __native = (::Texture*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Texture::Texture()
@@ -85,7 +86,8 @@ Flood::TextureUnit::TextureUnit(::TextureUnit* native)
 
 Flood::TextureUnit::TextureUnit(System::IntPtr native)
 {
-    NativePtr = (::TextureUnit*)native.ToPointer();
+    auto __native = (::TextureUnit*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::TextureUnit::TextureUnit()

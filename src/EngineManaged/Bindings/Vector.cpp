@@ -14,12 +14,11 @@ using namespace clix;
 
 Flood::Vector3::Vector3(::Vector3* native)
 {
-    // TODO: Struct marshaling
 }
 
 Flood::Vector3::Vector3(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Vector3*)native.ToPointer();
 }
 
 Flood::Vector3::Vector3(float v)
@@ -229,12 +228,19 @@ Flood::Vector3 Flood::Vector3::Normalize()
 
 Flood::Vector4::Vector4(::Vector4* native)
 {
-    // TODO: Struct marshaling
+    X = native->x;
+    Y = native->y;
+    Z = native->z;
+    W = native->w;
 }
 
 Flood::Vector4::Vector4(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Vector4*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
+    Z = __native->z;
+    W = __native->w;
 }
 
 Flood::Vector4::Vector4(float v)
@@ -373,12 +379,11 @@ void Flood::Vector4::Zero()
 
 Flood::Vector2::Vector2(::Vector2* native)
 {
-    // TODO: Struct marshaling
 }
 
 Flood::Vector2::Vector2(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Vector2*)native.ToPointer();
 }
 
 Flood::Vector2::Vector2(float x, float y)
@@ -486,12 +491,15 @@ void Flood::Vector2::Zero()
 
 Flood::Vector2i::Vector2i(::Vector2i* native)
 {
-    // TODO: Struct marshaling
+    X = native->x;
+    Y = native->y;
 }
 
 Flood::Vector2i::Vector2i(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::Vector2i*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
 }
 
 Flood::Vector2i::Vector2i(int x, int y)

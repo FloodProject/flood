@@ -15,12 +15,17 @@ using namespace clix;
 
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
-    // TODO: Struct marshaling
+    Time = native->time;
+    Message = marshalString<E_UTF8>(native->message);
+    Level = (Flood::LogLevel)native->level;
 }
 
 Flood::LogEntry::LogEntry(System::IntPtr native)
 {
-    // TODO: Struct marshaling
+    auto __native = (::LogEntry*)native.ToPointer();
+    Time = __native->time;
+    Message = marshalString<E_UTF8>(__native->message);
+    Level = (Flood::LogLevel)__native->level;
 }
 
 Flood::Log::Log(::Log* native)
@@ -30,7 +35,8 @@ Flood::Log::Log(::Log* native)
 
 Flood::Log::Log(System::IntPtr native)
 {
-    NativePtr = (::Log*)native.ToPointer();
+    auto __native = (::Log*)native.ToPointer();
+    NativePtr = __native;
 }
 
 Flood::Log::Log()

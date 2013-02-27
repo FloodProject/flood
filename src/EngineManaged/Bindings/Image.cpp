@@ -27,6 +27,7 @@ Flood::Image::Image(::Image* native)
 Flood::Image::Image(System::IntPtr native)
     : Resource(native)
 {
+    auto __native = (::Image*)native.ToPointer();
 }
 
 Flood::Image::Image()
@@ -131,7 +132,8 @@ Flood::ImageWriter::ImageWriter(::ImageWriter* native)
 
 Flood::ImageWriter::ImageWriter(System::IntPtr native)
 {
-    NativePtr = (::ImageWriter*)native.ToPointer();
+    auto __native = (::ImageWriter*)native.ToPointer();
+    NativePtr = __native;
 }
 
 void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
