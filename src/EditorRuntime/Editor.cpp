@@ -9,11 +9,9 @@
 #include "Editor.h"
 #include "EditorSettings.h"
 
-#include "Core/PluginManager.h"
-#include "Core/Utilities.h"
-
-#include <wx/webview.h>
-#include <wx/debugrpt.h>
+#include "SceneWindow.h"
+#include "RenderControl.h"
+#include "RenderWindow.h"
 
 FL_INSTANTIATE_TEMPLATES()
 
@@ -27,8 +25,8 @@ wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 int main(int argc, char **argv)
 {
-    wxDISABLE_DEBUG_SUPPORT();
-    return wxEntry(argc, argv);
+	wxDISABLE_DEBUG_SUPPORT();
+	return wxEntry(argc, argv);
 }
 
 NAMESPACE_EDITOR_BEGIN
@@ -41,9 +39,9 @@ bool EditorApp::OnInit()
 
 	wxImage::AddHandler( new wxPNGHandler() );
 
-	mainFrame = new EditorFrame(VAPOR_EDITOR_NAME);
+	mainFrame = new EditorFrame(EDITOR_NAME);
 	mainFrame->SetSize(900, 550);
-	mainFrame->SetIcon( wxIcon("iconEditor") );
+	mainFrame->SetIcon( wxIcon("EditorIcon") );
 
 	SetTopWindow(mainFrame);
 	mainFrame->Show(true);
@@ -59,9 +57,6 @@ EditorFrame& GetEditor() { return *gs_EditorInstance; }
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, paneCtrl(nullptr)
-	, toolbarCtrl(nullptr)
-	, statusCtrl(nullptr)
-	, notebookCtrl(nullptr)
 	, engine(nullptr)
 	, archive(nullptr)
 	, input(nullptr)
@@ -70,14 +65,11 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	CoreInitialize();
 
-#ifdef EDITOR_OLD_UI
-	createUI();
-#endif
-
 	createEngine();
+	createUI();
 
 #ifdef ENABLE_PLUGIN_MONO
-	Plugin* monoPlugin = pluginManager->getPluginFromClass( ReflectionGetType(MonoPlugin) );
+	Plugin* monoPlugin = pluginManager->getPluginFromClass<MonoPlugin>();
 	pluginManager->enablePlugin(monoPlugin);
 #endif
 
@@ -89,24 +81,12 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
+	sceneWindow->getControl()->stopFrameLoop();
+	Deallocate(sceneWindow);
+
 	ArchiveDestroy(archive);
 
 	Deallocate(input);
-
-#ifdef EDITOR_OLD_UI
-	if(notebookCtrl)
-	{
-		notebookCtrl->Destroy();
-		paneCtrl->DetachPane(notebookCtrl);
-	}
-
-	if(paneCtrl)
-	{
-		paneCtrl->UnInit();
-		delete paneCtrl;
-	}
-#endif
-
 	Deallocate(engine);
 
 	CoreDeinitialize();
@@ -121,8 +101,12 @@ void EditorFrame::OnIdle(wxIdleEvent& event)
 
 //-----------------------------------//
 
+void CloseGUI();
+
 void EditorFrame::OnClose(wxCloseEvent& event)
 {
+	CloseGUI();
+
 	// Hide the window in advance so the ugly destroy is not seen.
 	Hide();
 
@@ -131,6 +115,8 @@ void EditorFrame::OnClose(wxCloseEvent& event)
 }
 
 //-----------------------------------//
+
+void InitializeGUI(InputManager*);
 
 void EditorFrame::createEngine()
 {
@@ -150,21 +136,74 @@ void EditorFrame::createEngine()
 	ArchiveMountDirectories(archive, MediaFolder, GetResourcesAllocator());
 	
 	res->setArchive(archive);
+
+	InitializeGUI(input);
 }
 
 //-----------------------------------//
 
 void EditorFrame::createUI()
 {
-	paneCtrl = new wxAuiManager();
-	paneCtrl->SetManagedWindow(this);
+	sceneWindow = new SceneWindow(this);
+	sceneWindow->createControl();
+	sceneWindow->createView();
 
-	// Create notebook
-	notebookCtrl = new wxAuiNotebook(this);
-	
-	wxAuiPaneInfo pane;
-	pane.CenterPane().PaneBorder(false);
-	paneCtrl->AddPane(notebookCtrl, pane);
+	RenderControl* control = sceneWindow->getControl();
+	control->onUpdate.Bind(this, &EditorFrame::onUpdate);
+	control->onRender.Bind(this, &EditorFrame::onRender);
+	control->startFrameLoop();
+	control->SetFocus();
+
+	Window* window = control->getRenderWindow();
+	window->onTargetResize.Connect(this, &EditorFrame::onResize);
+
+	RenderDevice* device = GetRenderDevice();
+	device->setRenderTarget(window);
+	window->getContext()->init();
+
+	Camera* camera = AllocateHeap(Camera);
+
+	Frustum& frustum = camera->getFrustum();
+	frustum.farPlane = 10000;
+
+	sceneWindow->setMainCamera(camera);
+	sceneWindow->switchToDefaultCamera();
+}
+
+//-----------------------------------//
+
+void RenderGUI(RenderBlock& rb);
+
+void EditorFrame::onRender()
+{
+	Camera* camera = sceneWindow->getCamera().get();
+	assert( camera != nullptr );
+
+	RenderView* view = sceneWindow->getView();
+	camera->setView(view);
+
+	RenderBlock block;
+
+	RenderGUI(block);
+	camera->render(block);
+
+	GetEngine()->stepFrame();
+}
+
+//-----------------------------------//
+
+void EditorFrame::onUpdate(float delta)
+{
+
+}
+
+//-----------------------------------//
+
+void ResizeGUI(int x, int y);
+
+void EditorFrame::onResize(const Settings& settings)
+{
+	ResizeGUI(settings.width, settings.height);
 }
 
 //-----------------------------------//

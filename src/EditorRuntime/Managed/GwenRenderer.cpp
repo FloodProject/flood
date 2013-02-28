@@ -676,9 +676,9 @@ public:
 		m_Canvas->Input_Key(iKey, false);
 	}
 
-   /* void KeyPress(object sender, KeyPressEventArgs e)
+	/* void KeyPress(object sender, KeyPressEventArgs e)
 	{
-		m_Canvas->Input_Character(e.KeyChar);   
+		m_Canvas->Input_Character(e.KeyChar);
 	}*/
 
 };
