@@ -14,11 +14,7 @@
 #include "Pipeline/API.h"
 #include "Engine/Headers.h"
 
-#define VAPOR_EDITOR_NAME "Flood IDE"
-
-#define wxUSE_BINDERAPP
-
-#define EDITOR_OLD_UI
+#define EDITOR_NAME "Flood IDE"
 
 //---------------------------------------------------------------------//
 // API Exports

@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "Core/Math/Vector.h"
-#include "Core/PluginManager.h"
-
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -26,8 +23,8 @@ public:
 
 //-----------------------------------//
 
+class SceneWindow;
 class EditorInputManager;
-class PluginManager;
 class InputManager;
 class Engine;
 struct Archive;
@@ -39,9 +36,6 @@ public:
 	EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 	
-	// Gets the notebook control.
-	GETTER(Notebook, wxAuiNotebook*, notebookCtrl)
-
 	// Gets the AUI interface manager.
 	GETTER(AUI, wxAuiManager*, paneCtrl)
 
@@ -51,6 +45,10 @@ protected:
 	void createUI();
 	void createEngine();
 
+	void onRender();
+	void onUpdate(float);
+	void onResize(const Settings& settings);
+
 	// wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
 	void OnClose(wxCloseEvent& event);
@@ -58,26 +56,16 @@ protected:
 public:
 
 	Engine* engine;
-	PluginManager* pluginManager;
 	Archive* archive;
 	InputManager* input;
 
 	// Docking widgets.
 	wxAuiManager* paneCtrl;
-	wxAuiToolBar* toolbarCtrl;
-	wxAuiNotebook* notebookCtrl;
-	wxStatusBar* statusCtrl;
+	SceneWindow* sceneWindow;
 };
 
 // Gets the editor instance.
 API_EDITOR EditorFrame& GetEditor();
-
-template<typename T>
-T* GetPlugin()
-{
-	PluginManager* pm = GetEditor().getPluginManager();
-	return (T*) pm->getPluginFromClass(T::getStaticType());
-}
 
 //-----------------------------------//
 
