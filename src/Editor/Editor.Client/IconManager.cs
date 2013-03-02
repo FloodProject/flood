@@ -12,12 +12,12 @@ using Mono.Addins;
 namespace Editor.Client
 {
 
-    public static class IconService
+    public static class IconManager
     {
         static readonly Dictionary<int,StockIconCodon> IconStock = new Dictionary<int,StockIconCodon>();
         static readonly Dictionary<int,Bitmap> IconData = new Dictionary<int,Bitmap>();
 
-        static IconService()
+        static IconManager()
         {
             AddinManager.AddExtensionNodeHandler(
                 "/Flood/Editor/Client/StockIcons",
