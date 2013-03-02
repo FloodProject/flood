@@ -146,6 +146,16 @@ namespace Flood.GUI.Controls
         private void UnsubscribeTabEvent(TabButton button)
         {
             button.Clicked -= OnTabPressed;
+
+            if(button.TabControl.m_CurrentButton == button)
+            {
+                m_CurrentButton = null;
+            }
+
+            if(m_TabStrip.Children.Count > 0)
+            {
+                ((TabButton)m_TabStrip.Children[0]).Press();
+            }
         }
 
         /// <summary>
