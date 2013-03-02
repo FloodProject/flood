@@ -174,9 +174,14 @@ function SetupAddinResources()
     }
     
     files (resources)
-    
-    local c = configuration (resources)
-        buildaction "Embed"
+
+    local c = configuration (resources[1])
+            buildaction "Embed"
+            
+    for resourceIt = 2, #resources do
+        configuration (resources[resourceIt])
+            buildaction "Embed"
+    end
     
     configuration(c)
 end
