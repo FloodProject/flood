@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Editor.Client.GUI;
+﻿using Editor.Client.GUI;
 using Editor.Client.GUI.Controls;
 using Flood.GUI;
-using Flood.GUI.Controls;
 
 namespace Editor.Client.Gui
 {
@@ -25,6 +19,11 @@ namespace Editor.Client.Gui
             toolBarContainer = new ToolBarContainer(Canvas,"/Flood/Editor/Client/Toolbar");
 
             toolBarContainer.Dock = Pos.Fill;
+
+            PaneManager.AddPane(new Pane());
+            PaneManager.AddPane(new Pane());
+            PaneManager.AddPane(new Pane());
+            PaneManager.AddPane(new Pane());
         }
     }
 }

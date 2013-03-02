@@ -29,7 +29,7 @@ namespace Editor.Client.Extensions
             
             btn.ShouldDrawBackground = false;
 
-            var iBuffer = IconService.GetIconData(icon, IconSize.Invalid);
+            var iBuffer = IconManager.GetIconData(icon, IconSize.Invalid);
             btn.SetImage(iBuffer,true);
             btn.SetSize(20, 20);
 

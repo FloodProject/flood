@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
 
 namespace Editor.Client.GUI
 {
@@ -17,7 +14,10 @@ namespace Editor.Client.GUI
 
         public PaneGroup(Control parent) : base(parent)
         {
+            if(PaneManager.FocusedPaneGroup==null)
+                PaneManager.FocusedPaneGroup = this;
 
+            AllowReorder = true;
         }
 
         public void AddPane(Pane pane)
@@ -35,5 +35,16 @@ namespace Editor.Client.GUI
             RemovePage(tabButton);
         }
 
+        protected override void OnKeyboardFocus()
+        {
+            base.OnKeyboardFocus();
+            PaneManager.FocusedPaneGroup = this;
+        }
+
+        public override bool DragAndDrop_CanAcceptPackage(Package p)
+        {
+             PaneManager.ShowDockHelper(this);
+ 	         return base.DragAndDrop_CanAcceptPackage(p);
+        }
     }
 }
