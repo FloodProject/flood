@@ -36,6 +36,7 @@ namespace Flood.GUI.Controls
                 {
                     RelativePosition = ((float)Y)/parent.Height;
                 }
+                Invalidate();
                 InvalidateParent();
             }
 
@@ -51,7 +52,7 @@ namespace Flood.GUI.Controls
                 if(parent == null)
                     throw new Exception("Invalid parent");
 
-                if(parent.IsHorizontal)
+                if (parent.IsHorizontal)
                 {
                     SetSize(Space,parent.Height);
                     MoveTo(parent.Width*RelativePosition, 0);
@@ -100,6 +101,8 @@ namespace Flood.GUI.Controls
 
         private void InsertPanelAt(Control panel, int panelIndex, int rSIndex)
         {
+            panel.Parent = this;
+
             if (panels.Count > 0)
             {
                 float right = 1;
@@ -121,20 +124,42 @@ namespace Flood.GUI.Controls
 
         public void RemovePanel(Control panel)
         {
-            if (panels.Contains(panel))
-            {
-                var index = panels.IndexOf(panel);
-                panels.RemoveAt(index);
+            if (!panels.Contains(panel)) 
+                return;
 
-                var sRIndex = Math.Min(index, splitters.Count - 1);
-                var sLIndex = Math.Max(index - 1, 0);
-                var sRight = splitters[sRIndex];
-                var sLeft = splitters[sLIndex];
-                sLeft.RelativePosition = (sRight.RelativePosition + sLeft.RelativePosition)/2;
-                sLeft.Invalidate();
-                splitters.RemoveAt(sRIndex);
-                base.RemoveChild(sRight,true);
-                panel.IsHidden = true;
+            var index = panels.IndexOf(panel);
+            panels.RemoveAt(index);
+
+            var sRIndex = Math.Min(index, splitters.Count - 1);
+            var sLIndex = Math.Max(index - 1, 0);
+            var sRight = splitters[sRIndex];
+            var sLeft = splitters[sLIndex];
+            sLeft.RelativePosition = (sRight.RelativePosition + sLeft.RelativePosition)/2;
+            sLeft.Invalidate();
+            splitters.RemoveAt(sRIndex);
+            base.RemoveChild(sRight,true);
+            panel.IsHidden = true;
+        }
+
+        public void ReplacePanel(Control oldPanel, Control newPanel)
+        {
+            var index = panels.IndexOf(oldPanel);
+            if (index >= 0)
+            {
+                newPanel.Parent = this;
+
+                panels.RemoveAt(index);
+                panels.Insert(index,newPanel);
+                Invalidate();
+            }
+        }
+
+        public override void Invalidate()
+        {
+            base.Invalidate();
+            foreach (var child in Children)
+            {
+                child.Invalidate();
             }
         }
 
@@ -171,7 +196,8 @@ namespace Flood.GUI.Controls
                 {
                     panel.SetBounds(0, left, Width, right - left);
                 }
-        }
+                panel.Invalidate();
+            }
         }
     }
 }
