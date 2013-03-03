@@ -9,15 +9,15 @@ namespace Flood.Editor
 {
     public sealed class Editor : IDisposable
     {
-
         public MainWindow MainWindow { get; private set; }
+        public Window PaneWindow;
 
         public Editor(Renderer renderer, string textureName)
         {
-            InitAddins();
+            InitializeAddins();
 
             MainWindow = new MainWindow();
-            MainWindow.Init(renderer,textureName);
+            MainWindow.Init(renderer, textureName);
         }
 
         public void Dispose()
@@ -25,7 +25,36 @@ namespace Flood.Editor
             MainWindow.Dispose();
         }
 
-        private void InitAddins()
+        public void Update()
+        {
+            if (PaneWindow == null)
+            {
+                CreatePaneWindow();
+                MainWindow.NativeWindow.MakeCurrent();
+            }
+        }
+
+        private void CreatePaneWindow()
+        {
+            var engine = FloodEngine.GetEngine();
+            var windowManager = engine.GetWindowManager();
+
+            var settings = new WindowSettings
+                {
+                    Width = 640,
+                    Height = 480,
+                    Title = "Pane",
+                    Styles = WindowStyles.TopLevel
+                };
+
+            PaneWindow = windowManager.CreateWindow(settings);
+            PaneWindow.Show(visible: true);
+
+            PaneWindow.SetContext(MainWindow.NativeWindow.GetContext());
+            PaneWindow.MakeCurrent();
+        }
+
+        private void InitializeAddins()
         {
             AddinManager.AddinLoadError += OnLoadError;
             AddinManager.AddinLoaded += OnLoad;
