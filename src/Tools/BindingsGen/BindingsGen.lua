@@ -9,6 +9,8 @@ project "BindingsGen"
 
   files { "**.cs", "./*.lua" }
 
+  dependson { "Parser" }
+
   links
   {
     path.join(depsdir, "cxxi", "build", action, "lib", "Bridge"),
