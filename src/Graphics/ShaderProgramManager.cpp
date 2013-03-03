@@ -19,7 +19,8 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-ProgramManager::ProgramManager()
+ProgramManager::ProgramManager(RenderBackend* backend)
+	: backend(backend)
 {
 	GetResourceManager()->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
 	GetResourceManager()->onResourceReloaded.Connect( this, &ProgramManager::onReload );
@@ -50,7 +51,7 @@ ProgramManager::~ProgramManager()
 ShaderProgram* ProgramManager::createProgram( const ShaderMaterial* shader )
 {
 	// If the program was not yet found, then we need to create it.
-	ShaderProgram* program = GetRenderDevice()->getBackend()->createProgram();
+	ShaderProgram* program = backend->createProgram();
 	
 	program->getVertexShader()->setText( shader->getVertexSource() );
 	program->getFragmentShader()->setText( shader->getFragmentSource() );

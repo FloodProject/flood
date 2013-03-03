@@ -60,16 +60,16 @@ void RenderContext::init()
 
 	LogInfo( "Initializing OpenGL rendering context" );
 
-	caps = Allocate(GetRenderAllocator(), RenderCapabilities);
+	caps = AllocateGraphics(RenderCapabilities);
 	backend->checkCapabilities(caps);
 
-	bufferManager = Allocate(GetRenderAllocator(), BufferManager);
+	bufferManager = AllocateGraphics(BufferManager);
 	bufferManager->setRenderBackend(backend);
 
-	textureManager = Allocate(GetRenderAllocator(), TextureManager);
+	textureManager = AllocateGraphics(TextureManager);
 	textureManager->setRenderBackend(backend);
 
-	programManager = Allocate(GetRenderAllocator(), ProgramManager);
+	programManager = AllocateGraphics(ProgramManager, backend);
 
 	showCapabilities(caps);
 

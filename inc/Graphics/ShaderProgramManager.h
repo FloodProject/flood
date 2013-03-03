@@ -25,6 +25,7 @@ class ResourceManager;
 struct ResourceEvent;
 
 class RenderContext;
+class RenderBackend;
 
 /**
  * Manages a set of programs. The rest of the engine, when needing a 
@@ -37,7 +38,7 @@ class API_GRAPHICS ProgramManager
 
 public:
 
-	ProgramManager();
+	ProgramManager(RenderBackend* backend);
 	~ProgramManager();
 
 	// Gets a program given a shader identifier.
@@ -59,6 +60,8 @@ protected:
 
 	// Maps the identifiers to the programs.
 	ShaderProgramsMap programs;
+
+	RenderBackend* backend;
 };
 
 //-----------------------------------//
