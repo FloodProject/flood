@@ -1,5 +1,6 @@
 ﻿using Editor.Client.GUI;
 using Editor.Client.GUI.Controls;
+using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
@@ -10,9 +11,15 @@ namespace Editor.Client
         private static DockHelper dockHelper;
 
         internal static PaneGroup FocusedPaneGroup { get; set; }
+        internal static Container FocusedContainer { get; set; }
 
         public static void AddPane(Pane pane)
         {
+            if(FocusedPaneGroup == null)
+            {
+                FocusedPaneGroup = new PaneGroup(FocusedContainer);
+                FocusedContainer.InsertPanel(FocusedPaneGroup);
+            }
             FocusedPaneGroup.AddPane(pane);
         }
 
@@ -37,7 +44,6 @@ namespace Editor.Client
                 var container = GetParentContainer(paneGroup);
                 container.RemovePanel(paneGroup);
             }
-                
         }
 
         internal static void HideDockHelper()
@@ -75,8 +81,15 @@ namespace Editor.Client
         /// <param name="moveRigth"> True to move pane to the rigth of targetPaneGroup </param>
         internal static void MovePaneHorizontally(TabButton pane, PaneGroup targetPaneGroup, uint depth, bool moveRigth)
         {
-            //TODO check container orientation
             var container = GetParentContainer(targetPaneGroup);
+            if (!container.IsHorizontal)
+            {
+                var childContainer = new Container(container);
+                childContainer.IsHorizontal = true;
+                container.ReplacePanel(targetPaneGroup,childContainer,false);
+                childContainer.InsertPanel(targetPaneGroup);
+                container = childContainer;
+            }
             var paneGroup = new PaneGroup(container);
             container.InsertPanel(paneGroup,targetPaneGroup,!moveRigth);
             paneGroup.AddPage(pane);
@@ -93,8 +106,15 @@ namespace Editor.Client
         /// <param name="moveUp"> True to move pane above targetPaneGroup </param>
         internal static void MovePaneVertically(TabButton pane, PaneGroup targetPaneGroup, uint depth, bool moveUp)
         {
-            //TODO check container orientation
             var container = GetParentContainer(targetPaneGroup);
+            if (container.IsHorizontal)
+            {
+                var childContainer = new Container(container);
+                childContainer.IsHorizontal = false;
+                container.ReplacePanel(targetPaneGroup,childContainer,false);
+                childContainer.InsertPanel(targetPaneGroup);
+                container = childContainer;
+            }
             var paneGroup = new PaneGroup(container);
             container.InsertPanel(paneGroup,targetPaneGroup,moveUp);
             paneGroup.AddPage(pane);

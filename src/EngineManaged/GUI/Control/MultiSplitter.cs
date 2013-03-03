@@ -7,7 +7,7 @@ namespace Flood.GUI.Controls
     public class MultiSplitter : Control
     {
         
-        private class Splitter : Dragger
+        public class Splitter : Dragger
         {
             public int Space { get; set; }
 
@@ -68,10 +68,16 @@ namespace Flood.GUI.Controls
         private readonly List<Control> panels;
         private readonly List<Splitter> splitters;
         private readonly IReadOnlyList<Control> readOnlyPanels;
+        private readonly IReadOnlyList<Splitter> readOnlySplitter;
 
         public IReadOnlyList<Control> Panels
         {
             get { return readOnlyPanels; }
+        }
+
+        public IReadOnlyList<Splitter> Splitters
+        {
+            get { return readOnlySplitter; }
         }
 
         public bool IsHorizontal { get; set; }
@@ -81,6 +87,7 @@ namespace Flood.GUI.Controls
             panels = new List<Control>();
             splitters = new List<Splitter>();
             readOnlyPanels = panels.AsReadOnly();
+            readOnlySplitter = splitters.AsReadOnly();
             IsHorizontal = true;
         }
 
@@ -102,6 +109,7 @@ namespace Flood.GUI.Controls
         private void InsertPanelAt(Control panel, int panelIndex, int rSIndex)
         {
             panel.Parent = this;
+            panel.IsHidden = false;
 
             if (panels.Count > 0)
             {
@@ -130,7 +138,10 @@ namespace Flood.GUI.Controls
             var index = panels.IndexOf(panel);
             panels.RemoveAt(index);
 
-            var sRIndex = Math.Min(index, splitters.Count - 1);
+            if(panels.Count == 0)
+                return;
+
+            var sRIndex = Math.Max(0, Math.Min(index, splitters.Count - 1));
             var sLIndex = Math.Max(index - 1, 0);
             var sRight = splitters[sRIndex];
             var sLeft = splitters[sLIndex];
@@ -141,7 +152,7 @@ namespace Flood.GUI.Controls
             panel.IsHidden = true;
         }
 
-        public void ReplacePanel(Control oldPanel, Control newPanel)
+        public void ReplacePanel(Control oldPanel, Control newPanel, bool disposeOldPanel)
         {
             var index = panels.IndexOf(oldPanel);
             if (index >= 0)
@@ -150,6 +161,7 @@ namespace Flood.GUI.Controls
 
                 panels.RemoveAt(index);
                 panels.Insert(index,newPanel);
+                RemoveChild(oldPanel,disposeOldPanel);
                 Invalidate();
             }
         }

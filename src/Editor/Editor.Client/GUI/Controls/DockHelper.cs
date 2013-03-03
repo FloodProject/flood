@@ -34,7 +34,6 @@ namespace Editor.Client.GUI.Controls
                 skin.Renderer.DrawColor = Color.Fuchsia;
                 Rectangle testRect = new Rectangle(0, 0, 20, 20);
                 skin.Renderer.DrawFilledRect(testRect);
-                skin.Renderer.RenderText(skin.DefaultFont,new Point(0,0),iconId);
                 base.Render(skin);
             }
         }
