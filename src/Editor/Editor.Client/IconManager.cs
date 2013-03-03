@@ -36,7 +36,7 @@ namespace Editor.Client
                     });
 
             foreach (ExtensionNode node in AddinManager.GetExtensionNodes ("/Flood/Editor/Client/StockIcons")) {
-	            AddStockIcon((StockIconCodon)node);
+                AddStockIcon((StockIconCodon)node);
             }
         }
 
@@ -68,19 +68,19 @@ namespace Editor.Client
             var iconCodon = IconStock[hash];
 
             if (!string.IsNullOrEmpty (iconCodon.Resource) || !string.IsNullOrEmpty (iconCodon.File)) {
-				Bitmap bitmap;
-				Stream stream;
-				if (iconCodon.Resource != null)
-					stream = iconCodon.Addin.GetResource (iconCodon.Resource);
-				else
-					stream = File.OpenRead (iconCodon.Addin.GetFilePath (iconCodon.File));
-				using (stream) {
-					if (stream == null || stream.Length < 0) {
-						throw new Exception(string.Format("Did not find resource '{0}' in addin '{1}' for icon '{2}'", 
-							                        iconCodon.Resource, iconCodon.Addin.Id, iconCodon.StockId));
-					}
-				    bitmap = (Bitmap) Image.FromStream(stream);
-				}
+                Bitmap bitmap;
+                Stream stream;
+                if (iconCodon.Resource != null)
+                    stream = iconCodon.Addin.GetResource (iconCodon.Resource);
+                else
+                    stream = File.OpenRead (iconCodon.Addin.GetFilePath (iconCodon.File));
+                using (stream) {
+                    if (stream == null || stream.Length < 0) {
+                        throw new Exception(string.Format("Did not find resource '{0}' in addin '{1}' for icon '{2}'", 
+                                                    iconCodon.Resource, iconCodon.Addin.Id, iconCodon.StockId));
+                    }
+                    bitmap = (Bitmap) Image.FromStream(stream);
+                }
                 
 
                 IconData[hash] = bitmap;

@@ -110,7 +110,7 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 
 // Allocates memory for the object.
 #define Allocate(Alloc, Type, ...) AllocateConstruct(Type, \
-    AllocateObject<Type>(Alloc), __VA_ARGS__)
+	AllocateObject<Type>(Alloc), __VA_ARGS__)
 
 // Allocation helpers.
 #define AllocateThis(Type, ...) Allocate(AllocatorGetThis(), Type, __VA_ARGS__)

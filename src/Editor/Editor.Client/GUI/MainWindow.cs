@@ -16,9 +16,11 @@ namespace Editor.Client.Gui
         protected override void Init()
         {
             menuBar = new MenuBar(Canvas,"/Flood/Editor/Client/Menubar");
-            toolBarContainer = new ToolBarContainer(Canvas,"/Flood/Editor/Client/Toolbar");
 
-            toolBarContainer.Dock = Pos.Fill;
+            toolBarContainer = new ToolBarContainer(Canvas,"/Flood/Editor/Client/Toolbar")
+                {
+                    Dock = Pos.Fill
+                };
 
             PaneManager.AddPane(new Pane());
             PaneManager.AddPane(new Pane());

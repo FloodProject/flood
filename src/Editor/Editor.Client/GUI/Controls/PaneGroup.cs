@@ -45,7 +45,7 @@ namespace Editor.Client.GUI
         {
              if (p.Name == "TabButtonMove")
                 PaneManager.ShowDockHelper(this);
- 	         return base.DragAndDrop_CanAcceptPackage(p);
+             return base.DragAndDrop_CanAcceptPackage(p);
         }
     }
 }

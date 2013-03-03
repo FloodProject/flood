@@ -210,6 +210,8 @@ namespace Flood.GUI.Controls
             m_DisposeQueue.Clear();
         }
 
+        #region Input Handlers
+
         /// <summary>
         /// Handles mouse movement events. Called from Input subsystems.
         /// </summary>
@@ -294,5 +296,7 @@ namespace Flood.GUI.Controls
 
             return InputHandler.HoveredControl.InputMouseWheeled(val);
         }
+
+        #endregion
     }
 }
