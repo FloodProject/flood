@@ -70,7 +70,7 @@ void FirstPersonController::setEnabled(bool enabled)
 	}
 	else
 	{
-		window->setCursorPosition(oldMousePosition);
+        window->setCursorPosition(oldMousePosition.x, oldMousePosition.y);
 		relativePosition.zero();
 	}
 }
@@ -211,7 +211,7 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 		}
 		else
 		{
-			window->setCursorPosition( oldMousePosition );
+            window->setCursorPosition(oldMousePosition.x, oldMousePosition.y);
 			window->setCursorVisible( true );
 		}
 
@@ -272,7 +272,7 @@ void FirstPersonController::centerCursor()
 	if( !window ) return;
 
 	lastPosition = window->getSettings().getSize() / 2;
-	window->setCursorPosition( lastPosition );
+	window->setCursorPosition(lastPosition.x, lastPosition.y);
 }
 
 //-----------------------------------//
