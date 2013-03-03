@@ -1,5 +1,7 @@
-﻿using Flood.GUI;
+﻿using System;
+using Flood.GUI;
 using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
 
 namespace Editor.Client.GUI
 {
@@ -15,23 +17,35 @@ namespace Editor.Client.GUI
                 PaneManager.FocusedContainer = this;
         }
 
-        protected override void OnChildAdded(Control child)
-        {
-            var newPaneGroup = child as PaneGroup;
-            if (newPaneGroup == null)
-                return;
-            
-           newPaneGroup.TabRemoved += control =>
-                                           {
-                                               if (newPaneGroup.TabCount == 0)
-                                                   RemoveEmptyPaneGroups();
-                                           };
-        }
-
         protected override void OnKeyboardFocus()
         {
             base.OnKeyboardFocus();
             PaneManager.FocusedContainer = this;
+        }
+
+        public override void Think()
+        {
+            //Remove empty panel on drag instead of drop
+            if (DragAndDrop.SourceControl != null && //TabButton
+                DragAndDrop.SourceControl.Parent != null && //TabStrip
+                DragAndDrop.SourceControl.Parent.Parent is PaneGroup)
+            {
+                var sourcePaneGroup = (PaneGroup) DragAndDrop.SourceControl.Parent.Parent;
+                if(sourcePaneGroup.TabCount == 1)
+                {
+                    var container = sourcePaneGroup.Parent as Container;
+                    if (container == null)
+                        throw new Exception();
+
+                    container.RemovePanel(sourcePaneGroup);
+
+                }
+            }
+
+            if (DragAndDrop.SourceControl == null)
+                RemoveEmptyPaneGroups();
+
+            base.Think();
         }
 
         private void RemoveEmptyPaneGroups()

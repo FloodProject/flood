@@ -35,18 +35,6 @@ namespace Editor.Client
                 dockHelper.Invalidate();
             }
             dockHelper.IsHidden = false;
-
-            if (DragAndDrop.SourceControl != null && //TabButton
-                DragAndDrop.SourceControl.Parent != null && //TabStrip
-                DragAndDrop.SourceControl.Parent.Parent is PaneGroup)
-            {
-                var sourcePaneGroup = (PaneGroup) DragAndDrop.SourceControl.Parent.Parent;
-                if(sourcePaneGroup.TabCount == 1)
-                {
-                    var container = GetParentContainer(sourcePaneGroup);
-                    container.RemovePanel(sourcePaneGroup,false);
-                }
-            }
         }
 
         internal static void HideDockHelper()
@@ -94,8 +82,9 @@ namespace Editor.Client
                 container = childContainer;
             }
             var paneGroup = new PaneGroup(container);
-            container.InsertPanel(paneGroup,targetPaneGroup,!moveRigth);
             paneGroup.AddPage(pane);
+            container.InsertPanel(paneGroup,targetPaneGroup,!moveRigth);
+            
         }
 
         /// <summary>
