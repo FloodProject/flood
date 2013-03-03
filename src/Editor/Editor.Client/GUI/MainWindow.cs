@@ -7,7 +7,7 @@ namespace Editor.Client.Gui
     /// <summary>
     /// Window composed by a MenuBar a Container.
     /// </summary>
-    public class MainWindow : Window
+    public class MainWindow : GuiWindow
     {
         private MenuBar menuBar;
 

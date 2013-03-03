@@ -6,7 +6,7 @@ namespace Editor.Client.Gui
     /// <summary>
     /// Window composed exclusively by a Container.
     /// </summary>
-    public class PaneWindow : Window
+    public class PaneWindow : GuiWindow
     {
         public Container Container { get; private set; }
 
