@@ -41,7 +41,7 @@ struct API_CORE Matrix4x4
 	Matrix4x4 operator*(const Matrix4x4& m) const;
 
 	// Multiplies two matrices together.
-	Matrix4x4 operator*(const Matrix4x3& m) const;
+	//Matrix4x4 operator*(const Matrix4x3& m) const;
 
 	// Multiplies a vector by the matrix.
 	Vector3 operator*( const Vector3& v ) const;
