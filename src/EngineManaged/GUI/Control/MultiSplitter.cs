@@ -119,11 +119,11 @@ namespace Flood.GUI.Controls
             Invalidate();
         }
 
-        public override void RemoveChild(Control child, bool dispose)
+        public void RemovePanel(Control panel)
         {
-            if (panels.Contains(child))
+            if (panels.Contains(panel))
             {
-                var index = panels.IndexOf(child);
+                var index = panels.IndexOf(panel);
                 panels.RemoveAt(index);
 
                 var sRIndex = Math.Min(index, splitters.Count - 1);
@@ -133,9 +133,14 @@ namespace Flood.GUI.Controls
                 sLeft.RelativePosition = (sRight.RelativePosition + sLeft.RelativePosition)/2;
                 sLeft.Invalidate();
                 splitters.RemoveAt(sRIndex);
-                base.RemoveChild(sRight,dispose);
+                base.RemoveChild(sRight,true);
+                panel.IsHidden = true;
             }
+        }
 
+        public override void RemoveChild(Control child, bool dispose)
+        {
+            RemovePanel(child);
             base.RemoveChild(child,dispose);
             Invalidate();
         }
@@ -166,8 +171,7 @@ namespace Flood.GUI.Controls
                 {
                     panel.SetBounds(0, left, Width, right - left);
                 }
-                
-            }
+        }
         }
     }
 }

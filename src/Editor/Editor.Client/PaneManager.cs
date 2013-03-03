@@ -1,6 +1,7 @@
 ﻿using Editor.Client.GUI;
 using Editor.Client.GUI.Controls;
 using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
 
 namespace Editor.Client
 {
@@ -27,6 +28,16 @@ namespace Editor.Client
                 dockHelper.Invalidate();
             }
             dockHelper.IsHidden = false;
+
+            if (paneGroup.TabCount == 1 && 
+                DragAndDrop.SourceControl != null && //TabButton
+                DragAndDrop.SourceControl.Parent != null && //TabStrip
+                DragAndDrop.SourceControl.Parent.Parent == paneGroup)
+            {
+                var container = GetParentContainer(paneGroup);
+                container.RemovePanel(paneGroup);
+            }
+                
         }
 
         internal static void HideDockHelper()
