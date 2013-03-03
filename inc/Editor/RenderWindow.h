@@ -19,7 +19,7 @@ NAMESPACE_EDITOR_BEGIN
 
 /**
  * Window implementation using the wxWidgets GUI framework (wxGLCanvas).
- * This will be used to integrate vapor rendering into wxWidgets-based
+ * This will be used to integrate engine rendering into wxWidgets-based
  * applications, thus making it possible to do custom tools, like world
  * editors, model viewers, etc. This class only implements the Window
  * interface on the engine side. There is another class, RenderControl,
@@ -34,6 +34,9 @@ public:
 
 	RenderWindow(const WindowSettings&, wxGLCanvas* const);
 	virtual ~RenderWindow();
+
+	// Creates a new render context.
+	RenderContext* createContext(const RenderContextSettings&) OVERRIDE;
 
 	// Swaps the buffers (updates the display).
 	void update() OVERRIDE;
@@ -79,14 +82,8 @@ private:
 	// Processes a window resize.
 	void processResize(const wxSize& size);
 
-	// Creates a new OpenGL context.
-	bool createContext();
-
 	// OpenGL Canvas Widget.
 	wxGLCanvas* canvas;
-
-	// OpenGL context.
-	wxGLContext* contextGL;
 
 	// wxWidgets Input Manager.
 	EditorInputManager* inputManager;

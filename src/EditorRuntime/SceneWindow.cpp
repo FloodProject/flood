@@ -61,6 +61,8 @@ RenderControl* SceneWindow::createControl()
 	};
 
 	control = new RenderControl(this, wxID_ANY, attribList);
+	control->SetSize(GetSize());
+
 	sizer->Add(control, 1, wxEXPAND);
 
 	return control;

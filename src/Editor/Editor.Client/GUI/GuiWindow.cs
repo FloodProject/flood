@@ -5,7 +5,7 @@ using Flood.GUI.Skins;
 
 namespace Editor.Client.Gui
 {
-    public abstract class Window : IDisposable
+    public abstract class GuiWindow : IDisposable
     {
         /// <summary>
         /// Renderer of the GUI.
@@ -27,12 +27,11 @@ namespace Editor.Client.Gui
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Canvas.Dispose();
-                Skin.Dispose();
-                Renderer.Dispose();
-            }
+            if (!disposing) return;
+
+            Canvas.Dispose();
+            Skin.Dispose();
+            Renderer.Dispose();
         }
 
         public void Init(Renderer renderer, string textureName)
@@ -45,6 +44,7 @@ namespace Editor.Client.Gui
         }
 
         protected abstract void Init();
+
         public void Render()
         {
             Canvas.RenderCanvas();

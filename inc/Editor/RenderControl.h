@@ -20,16 +20,20 @@ NAMESPACE_EDITOR_BEGIN
 class RenderWindow;
 class EditorInputManager;
 
-/**
- * Let's link vapor with wxWidgets. There are some different approaches
- * that can be used to do this, some more flexible/difficult than others.
- * We create a custom wxWidgets window impementation for vapor3D. This is
- * probably the most difficult approach but also the most flexible since.
- * wxWidgets creates the OpenGL context (wxGLCanvas control) and we can
- * control various attributes of the context.
- */
+class WxRenderContext : public RenderContext
+{
+public:
 
-class RenderControl : public wxGLCanvas 
+	WxRenderContext(wxGLCanvas* canvas);
+	virtual ~WxRenderContext();
+
+	void makeCurrent(wxGLCanvas* canvas);
+
+	// OpenGL context.
+	wxGLContext* contextGL;
+};
+
+class RenderControl : public wxGLCanvas
 {
 public:
 
@@ -87,9 +91,6 @@ protected:
 
 	// Timer responsible for rendering ticks.
 	wxTimer frameRenderTimer;
-
-	// Holds an instance to the engine.
-	Engine* engine;
 
 	// Window associated with this control.
 	RenderWindow* window;

@@ -5,8 +5,8 @@
 *
 ************************************************************************/
 
-iconEditor			ICON		"editor.ico"
-cursorArrowPlus		CURSOR		"aero_arrow_plus.cur"
+EditorIcon       ICON    "editor.ico"
+CursorArrowPlus  CURSOR  "aero_arrow_plus.cur"
 
-#define wxUSE_NO_MANIFEST 1  
+#define wxUSE_NO_MANIFEST 1
 #include <wx/msw/wx.rc>

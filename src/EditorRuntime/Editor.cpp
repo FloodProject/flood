@@ -12,6 +12,7 @@
 #include "SceneWindow.h"
 #include "RenderControl.h"
 #include "RenderWindow.h"
+#include "EditorWindowManager.h"
 
 FL_INSTANTIATE_TEMPLATES()
 
@@ -44,7 +45,7 @@ bool EditorApp::OnInit()
 	mainFrame->SetIcon( wxIcon("EditorIcon") );
 
 	SetTopWindow(mainFrame);
-	mainFrame->Show(true);
+	mainFrame->Show();
 
 	return true;
 }
@@ -64,7 +65,6 @@ EditorFrame::EditorFrame(const wxString& title)
 	gs_EditorInstance = this;
 
 	CoreInitialize();
-
 	createEngine();
 	createUI();
 
@@ -75,6 +75,8 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	Bind(wxEVT_IDLE, &EditorFrame::OnIdle, this);
 	Bind(wxEVT_CLOSE_WINDOW, &EditorFrame::OnClose, this);
+	Bind(wxEVT_SIZE, &EditorFrame::OnSize, this);
+	Bind(wxEVT_SIZING, &EditorFrame::OnSizing, this);
 }
 
 //-----------------------------------//
@@ -85,6 +87,8 @@ EditorFrame::~EditorFrame()
 	Deallocate(sceneWindow);
 
 	ArchiveDestroy(archive);
+
+	engine->getWindowManager()->destroyWindows();
 
 	Deallocate(input);
 	Deallocate(engine);
@@ -116,6 +120,20 @@ void EditorFrame::OnClose(wxCloseEvent& event)
 
 //-----------------------------------//
 
+void EditorFrame::OnSize(wxSizeEvent& event)
+{
+	sceneWindow->SetSize(GetClientSize());
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnSizing(wxSizeEvent& event)
+{
+	sceneWindow->SetSize(GetClientSize());
+}
+
+//-----------------------------------//
+
 void InitializeGUI(InputManager*);
 
 void EditorFrame::createEngine()
@@ -127,6 +145,10 @@ void EditorFrame::createEngine()
 	input = AllocateThis(InputManager);
 	input->createDefaultDevices();
 	engine->setInputManager(input);
+
+	// Setup the window manager.
+	WindowManager* windowManager = AllocateThis(EditorWindowManager);
+	engine->setWindowManager(windowManager);
 
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();
@@ -156,10 +178,10 @@ void EditorFrame::createUI()
 
 	Window* window = control->getRenderWindow();
 	window->onTargetResize.Connect(this, &EditorFrame::onResize);
+	window->show();
 
-	RenderDevice* device = GetRenderDevice();
-	device->setRenderTarget(window);
-	window->getContext()->init();
+	RenderContextSettings settings;
+	RenderContext* context = window->createContext(settings);
 
 	Camera* camera = AllocateHeap(Camera);
 

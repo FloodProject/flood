@@ -9,8 +9,40 @@
 #include "RenderControl.h"
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
+#include <wx/glcanvas.h>
 
 NAMESPACE_EDITOR_BEGIN
+
+//-----------------------------------//
+
+WxRenderContext::WxRenderContext(wxGLCanvas* canvas)
+	: contextGL(nullptr)
+{
+	// Create the OpenGL context.
+	contextGL = new wxGLContext(canvas);
+	
+	if( !contextGL )
+	{
+		LogError("Error creating wxGLCanvas context");
+		return;
+	}
+}
+
+//-----------------------------------//
+
+WxRenderContext::~WxRenderContext()
+{
+	LogDebug("Destroying OpenGL Context");
+	Deallocate(contextGL);
+}
+
+//-----------------------------------//
+
+void WxRenderContext::makeCurrent(wxGLCanvas* canvas)
+{
+	canvas->SetCurrent(*contextGL);
+	GetRenderDevice()->setActiveContext(this);
+}
 
 //-----------------------------------//
 
@@ -113,14 +145,7 @@ void RenderControl::flagRedraw()
 //-----------------------------------//
 
 void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
-{   
-#if 0
-	// TODO: Seems wxWidgets won't invalidate the entire window region
-	// on things like window overlap or tooltip hovering, so we need 
-	// to force a complete redraw.
-	Refresh();
-#endif
-
+{
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html

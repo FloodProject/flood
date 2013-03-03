@@ -52,6 +52,8 @@ protected:
 	// wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
 	void OnClose(wxCloseEvent& event);
+	void OnSize(wxSizeEvent& event);
+	void OnSizing(wxSizeEvent& event);
 
 public:
 
