@@ -43,7 +43,8 @@ namespace Editor.Client.GUI
 
         public override bool DragAndDrop_CanAcceptPackage(Package p)
         {
-             PaneManager.ShowDockHelper(this);
+             if (p.Name == "TabButtonMove")
+                PaneManager.ShowDockHelper(this);
  	         return base.DragAndDrop_CanAcceptPackage(p);
         }
     }
