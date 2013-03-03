@@ -24,13 +24,15 @@ class ManagedGeometryBuffer {
 	std::map<HandleId,BatchInfo> batches;
 	std::map<HandleId,MaterialHandle> materials;
 
+	float zcount;
+
 	MaterialHandle GetCreateMaterialHandle(ImageHandle imageHandle){
 		HandleId hId = imageHandle.getId();
 		if(materials.find(hId) == materials.end()){
 			MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "GwenGui");
 			Material* mat = materialHandle.Resolve();
 			mat->setBackfaceCulling(false);
-			mat->setDepthWrite(false);
+			//mat->setDepthWrite(false);
 			mat->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
 			
 			if(hId==0){
@@ -60,6 +62,7 @@ class ManagedGeometryBuffer {
 			bInfo.batch = batch;
 			batches[hId] = bInfo;
 		}
+
 		return batches[hId];
 	}
 
@@ -67,7 +70,7 @@ public:
 
 	struct Vertex
 	{
-		Vector2 position;
+		Vector3 position;
 		Vector2 uv;
 		Color color;
 	};
@@ -75,10 +78,12 @@ public:
 	ManagedGeometryBuffer(){
 		gb = AllocateHeap(GeometryBuffer);
 
-		gb->declarations.add(VertexElement( VertexAttribute::Position, VertexDataType::Float, 2));
+		gb->declarations.add(VertexElement( VertexAttribute::Position, VertexDataType::Float, 3));
 		gb->declarations.add(VertexElement( VertexAttribute::TexCoord0, VertexDataType::Float, 2));
 		gb->declarations.add(VertexElement( VertexAttribute::Color, VertexDataType::Float, 4));
 		gb->declarations.calculateStrides();
+
+		zcount = -100;
 	}
 
 	~ManagedGeometryBuffer(){
@@ -102,10 +107,13 @@ public:
 
 		Vertex v1,v2,v3,v4;
 
-		v1.position = Vector2(left, bottom);
-		v2.position = Vector2(right, bottom);
-		v3.position = Vector2(right, top);
-		v4.position = Vector2(left, top);
+		v1.position = Vector3(left, bottom,zcount);
+		v2.position = Vector3(right, bottom,zcount);
+		v3.position = Vector3(right, top,zcount);
+		v4.position = Vector3(left, top,zcount);
+
+		//TODO optimize precision/usage
+		zcount += 0.001;
 		
 		Color c = Color(color.R/255.0f,color.G/255.0f,color.B/255.0f,color.A/255.0f);
 
@@ -158,6 +166,7 @@ public:
 		}
 		gb->clear();
 		gb->indexData.clear();
+		zcount = -100;
 	}
 };
 
