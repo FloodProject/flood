@@ -36,13 +36,16 @@ namespace Editor.Client
             }
             dockHelper.IsHidden = false;
 
-            if (paneGroup.TabCount == 1 && 
-                DragAndDrop.SourceControl != null && //TabButton
+            if (DragAndDrop.SourceControl != null && //TabButton
                 DragAndDrop.SourceControl.Parent != null && //TabStrip
-                DragAndDrop.SourceControl.Parent.Parent == paneGroup)
+                DragAndDrop.SourceControl.Parent.Parent is PaneGroup)
             {
-                var container = GetParentContainer(paneGroup);
-                container.RemovePanel(paneGroup);
+                var sourcePaneGroup = (PaneGroup) DragAndDrop.SourceControl.Parent.Parent;
+                if(sourcePaneGroup.TabCount == 1)
+                {
+                    var container = GetParentContainer(sourcePaneGroup);
+                    container.RemovePanel(sourcePaneGroup,false);
+                }
             }
         }
 

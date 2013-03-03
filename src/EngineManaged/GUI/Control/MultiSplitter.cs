@@ -130,7 +130,7 @@ namespace Flood.GUI.Controls
             Invalidate();
         }
 
-        public void RemovePanel(Control panel)
+        public void RemovePanel(Control panel, bool dispose)
         {
             if (!panels.Contains(panel)) 
                 return;
@@ -150,6 +150,8 @@ namespace Flood.GUI.Controls
             splitters.RemoveAt(sRIndex);
             base.RemoveChild(sRight,true);
             panel.IsHidden = true;
+
+            base.RemoveChild(panel,dispose);
         }
 
         public void ReplacePanel(Control oldPanel, Control newPanel, bool disposeOldPanel)
@@ -161,7 +163,7 @@ namespace Flood.GUI.Controls
 
                 panels.RemoveAt(index);
                 panels.Insert(index,newPanel);
-                RemoveChild(oldPanel,disposeOldPanel);
+                base.RemoveChild(oldPanel,disposeOldPanel);
                 Invalidate();
             }
         }
@@ -177,8 +179,9 @@ namespace Flood.GUI.Controls
 
         public override void RemoveChild(Control child, bool dispose)
         {
-            RemovePanel(child);
-            base.RemoveChild(child,dispose);
+            RemovePanel(child,dispose);
+            if(Children.Contains(child))
+                base.RemoveChild(child,dispose);
             Invalidate();
         }
 
