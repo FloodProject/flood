@@ -72,7 +72,7 @@ namespace Flood.GUI.Controls
             }
 
             Control droppedOn = GetControlAt(LocalPos.X, LocalPos.Y);
-            if (droppedOn != null)
+            if (droppedOn != null && droppedOn != this)
             {
                 Point dropPos = droppedOn.CanvasPosToLocal(new Point(x, y));
                 DragAndDrop.SourceControl.BringNextToControl(droppedOn, dropPos.X > droppedOn.Width/2);
