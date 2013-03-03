@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <Engine/Input/InputManager.h>
+#include <Engine/Window/WindowManager.h>
 #include "Window.h"
 #include "RenderTarget.h"
 #include "Vector.h"
@@ -15,8 +15,8 @@
 
 namespace Flood
 {
-    ref class InputManager;
     ref class Window;
+    ref class WindowManager;
     ref class Event0;
     ref class Delegate0;
     ref class ClosurePtr;
@@ -39,34 +39,24 @@ namespace Flood
     value struct Settings;
     ref class RenderContextSettings;
     value struct Vector2i;
+    ref class InputManager;
     ref class InputDevice;
     ref class Keyboard;
     ref class Mouse;
     ref class InputEvent;
-    ref class Joystick;
 
     /// <summary>
-    /// Manages a set of input devices.
+    /// Window manager manages windows (Windows baby!).
     /// </summary>
-    public ref class InputManager
+    public ref class WindowManager
     {
     public:
-        property ::InputManager* NativePtr;
+        property ::WindowManager* NativePtr;
 
-        InputManager(::InputManager* native);
-        InputManager(System::IntPtr native);
-        InputManager();
-        property Flood::Window^ Window;
-        void CreateDefaultDevices();
-        Flood::Window^ GetWindow();
-        void SetWindow(Flood::Window^ window);
-    };
-
-    public ref class FloodInputManager
-    {
-    public:
-        static void InputInitialize();
-        static void InputDeinitialize();
-        static Flood::InputManager^ GetInputManager();
+        WindowManager(::WindowManager* native);
+        WindowManager(System::IntPtr native);
+        WindowManager();
+        Flood::Window^ CreateWindow(Flood::WindowSettings settings);
+        void DestroyWindows();
     };
 }

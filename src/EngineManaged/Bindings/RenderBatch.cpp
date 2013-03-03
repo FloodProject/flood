@@ -8,6 +8,7 @@
 #include "_Marshal.h"
 #include "RenderBatch.h"
 #include "Memory.h"
+#include "RenderView.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -47,55 +48,55 @@ Flood::RenderBatch::RenderBatch()
 
 Flood::RenderLayer Flood::RenderBatch::GetRenderLayer()
 {
-    auto ret = NativePtr->getRenderLayer();
+    auto ret = ((::RenderBatch*)NativePtr)->getRenderLayer();
     return (Flood::RenderLayer)ret;
 }
 
 void Flood::RenderBatch::SetRenderLayer(Flood::RenderLayer v)
 {
     auto arg0 = (::RenderLayer)v;
-    NativePtr->setRenderLayer(arg0);
+    ((::RenderBatch*)NativePtr)->setRenderLayer(arg0);
 }
 
 int Flood::RenderBatch::GetRenderPriority()
 {
-    auto ret = NativePtr->getRenderPriority();
+    auto ret = ((::RenderBatch*)NativePtr)->getRenderPriority();
     return ret;
 }
 
 void Flood::RenderBatch::SetRenderPriority(int v)
 {
     auto arg0 = (int32)v;
-    NativePtr->setRenderPriority(arg0);
+    ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
 
 Flood::PrimitiveRasterMode Flood::RenderBatch::GetPrimitiveRasterMode()
 {
-    auto ret = NativePtr->getPrimitiveRasterMode();
+    auto ret = ((::RenderBatch*)NativePtr)->getPrimitiveRasterMode();
     return (Flood::PrimitiveRasterMode)ret;
 }
 
 void Flood::RenderBatch::SetPrimitiveRasterMode(Flood::PrimitiveRasterMode v)
 {
     auto arg0 = (::PrimitiveRasterMode)v;
-    NativePtr->setPrimitiveRasterMode(arg0);
+    ((::RenderBatch*)NativePtr)->setPrimitiveRasterMode(arg0);
 }
 
 Flood::PrimitiveType Flood::RenderBatch::GetPrimitiveType()
 {
-    auto ret = NativePtr->getPrimitiveType();
+    auto ret = ((::RenderBatch*)NativePtr)->getPrimitiveType();
     return (Flood::PrimitiveType)ret;
 }
 
 void Flood::RenderBatch::SetPrimitiveType(Flood::PrimitiveType v)
 {
     auto arg0 = (::PrimitiveType)v;
-    NativePtr->setPrimitiveType(arg0);
+    ((::RenderBatch*)NativePtr)->setPrimitiveType(arg0);
 }
 
-Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^ _217)
+Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^ _218)
 {
-    auto arg0 = _217->NativePtr;
+    auto arg0 = (::Allocator*)_218->NativePtr;
     auto ret = ::RenderBatchCreate(arg0);
     return gcnew Flood::RenderBatch((::RenderBatch*)ret);
 }

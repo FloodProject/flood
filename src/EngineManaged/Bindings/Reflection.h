@@ -121,8 +121,6 @@ namespace Flood
     public ref class Class : Type
     {
     public:
-        property ::Class* NativePtr;
-
         Class(::Class* native);
         Class(System::IntPtr native);
         Class();
@@ -165,8 +163,6 @@ namespace Flood
     public ref class Primitive : Type
     {
     public:
-        property ::Primitive* NativePtr;
-
         Primitive(::Primitive* native);
         Primitive(System::IntPtr native);
         Primitive();
@@ -203,8 +199,6 @@ namespace Flood
     public ref class Enum : Type
     {
     public:
-        property ::Enum* NativePtr;
-
         Enum(::Enum* native);
         Enum(System::IntPtr native);
         property Flood::PrimitiveTypeKind Backing;

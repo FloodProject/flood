@@ -85,8 +85,6 @@ namespace Flood
     public ref class PoolAllocator : Allocator
     {
     public:
-        property ::PoolAllocator* NativePtr;
-
         PoolAllocator(::PoolAllocator* native);
         PoolAllocator(System::IntPtr native);
         property System::IntPtr Current;
@@ -100,8 +98,6 @@ namespace Flood
     public ref class BumpAllocator : Allocator
     {
     public:
-        property ::BumpAllocator* NativePtr;
-
         BumpAllocator(::BumpAllocator* native);
         BumpAllocator(System::IntPtr native);
         property System::IntPtr Start;
@@ -117,8 +113,6 @@ namespace Flood
     public ref class HeapAllocator : Allocator
     {
     public:
-        property ::HeapAllocator* NativePtr;
-
         HeapAllocator(::HeapAllocator* native);
         HeapAllocator(System::IntPtr native);
         property System::IntPtr Space;

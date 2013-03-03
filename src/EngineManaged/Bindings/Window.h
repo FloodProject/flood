@@ -10,9 +10,11 @@
 #include <Engine/Window/Window.h>
 #include "RenderTarget.h"
 #include "Vector.h"
+#include "Color.h"
 
 namespace Flood
 {
+    enum struct WindowStyles;
     value struct WindowSettings;
     ref class Window;
     ref class Event0;
@@ -21,14 +23,33 @@ namespace Flood
     ref class GenericClass;
     ref class DelegateMemento;
     ref class Event1;
-    value struct Vector2i;
+    ref class RefPtr;
+    ref class RenderContext;
+    ref class RenderCapabilities;
+    ref class BufferManager;
+    ref class TextureManager;
+    ref class ProgramManager;
+    ref class RenderTarget;
+    ref class RenderBackend;
+    value struct Color;
     value struct Vector3;
+    ref class RenderBuffer;
+    value struct Settings;
+    ref class RenderContextSettings;
+    value struct Vector2i;
     ref class InputManager;
     ref class InputDevice;
     ref class Keyboard;
     ref class Mouse;
     ref class InputEvent;
-    value struct Settings;
+
+    [System::Flags]
+    public enum struct WindowStyles
+    {
+        None = 0,
+        TopLevel = 1,
+        MiniFrame = 2
+    };
 
     public value struct WindowSettings
     {
@@ -38,11 +59,8 @@ namespace Flood
         WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen);
         System::String^ Title;
         bool FullScreen;
-        unsigned short BitsPerPixel;
-        unsigned short DepthBits;
-        unsigned short StencilBits;
-        unsigned short AntialiasLevel;
         System::IntPtr Handle;
+        Flood::WindowStyles Styles;
         unsigned short Width;
         unsigned short Height;
     };
@@ -55,12 +73,11 @@ namespace Flood
     public ref class Window : RenderTarget
     {
     public:
-        property ::Window* NativePtr;
-
         Window(::Window* native);
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
         property Flood::WindowSettings Settings;
+        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings^ _224);
         void Update();
         void MakeCurrent();
         void Show(bool visible);
@@ -71,7 +88,6 @@ namespace Flood
         void SetCursorCapture(bool state);
         Flood::Vector2i GetCursorPosition();
         void SetCursorPosition(int x, int y);
-        void SetCursorPosition(Flood::Vector2i pos);
         bool HasFocus();
         Flood::InputManager^ GetInput();
         Flood::Settings GetSettings();

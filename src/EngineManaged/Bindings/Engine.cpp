@@ -11,6 +11,7 @@
 #include "Stream.h"
 #include "InputManager.h"
 #include "ResourceManager.h"
+#include "WindowManager.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -34,46 +35,58 @@ Flood::Engine::Engine()
 
 void Flood::Engine::Init()
 {
-    NativePtr->init();
+    ((::Engine*)NativePtr)->init();
 }
 
 void Flood::Engine::Update()
 {
-    NativePtr->update();
+    ((::Engine*)NativePtr)->update();
 }
 
 void Flood::Engine::SetupLogger()
 {
-    NativePtr->setupLogger();
+    ((::Engine*)NativePtr)->setupLogger();
 }
 
 Flood::ResourceManager^ Flood::Engine::GetResourceManager()
 {
-    auto ret = NativePtr->getResourceManager();
+    auto ret = ((::Engine*)NativePtr)->getResourceManager();
     return gcnew Flood::ResourceManager((::ResourceManager*)ret);
 }
 
 Flood::InputManager^ Flood::Engine::GetInputManager()
 {
-    auto ret = NativePtr->getInputManager();
+    auto ret = ((::Engine*)NativePtr)->getInputManager();
     return gcnew Flood::InputManager((::InputManager*)ret);
 }
 
 void Flood::Engine::SetInputManager(Flood::InputManager^ v)
 {
-    auto arg0 = v->NativePtr;
-    NativePtr->setInputManager(arg0);
+    auto arg0 = (::InputManager*)v->NativePtr;
+    ((::Engine*)NativePtr)->setInputManager(arg0);
+}
+
+Flood::WindowManager^ Flood::Engine::GetWindowManager()
+{
+    auto ret = ((::Engine*)NativePtr)->getWindowManager();
+    return gcnew Flood::WindowManager((::WindowManager*)ret);
+}
+
+void Flood::Engine::SetWindowManager(Flood::WindowManager^ v)
+{
+    auto arg0 = (::WindowManager*)v->NativePtr;
+    ((::Engine*)NativePtr)->setWindowManager(arg0);
 }
 
 Flood::Log^ Flood::Engine::GetLogger()
 {
-    auto ret = NativePtr->getLogger();
+    auto ret = ((::Engine*)NativePtr)->getLogger();
     return gcnew Flood::Log((::Log*)ret);
 }
 
 void Flood::Engine::StepFrame()
 {
-    NativePtr->stepFrame();
+    ((::Engine*)NativePtr)->stepFrame();
 }
 
 Flood::Engine^ Flood::FloodEngine::GetEngine()

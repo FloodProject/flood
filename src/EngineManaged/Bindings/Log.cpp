@@ -46,27 +46,27 @@ Flood::Log::Log()
 
 void Flood::Log::Destroy()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Log*)NativePtr;
     ::LogDestroy(arg0);
 }
 
 void Flood::Log::AddHandler(Flood::LogFunction^ _4)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Log*)NativePtr;
     auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_4).ToPointer());
     ::LogAddHandler(arg0, arg1);
 }
 
 void Flood::Log::RemoveHandler(Flood::LogFunction^ _6)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Log*)NativePtr;
     auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_6).ToPointer());
     ::LogRemoveHandler(arg0, arg1);
 }
 
 void Flood::Log::Write(Flood::LogEntry entry)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Log*)NativePtr;
     auto arg1 = ::LogEntry();
     arg1.time = entry.Time;
     arg1.message = marshalString<E_UTF8>(entry.Message);
@@ -83,7 +83,7 @@ Flood::Log^ Flood::Log::GetDefault()
 
 void Flood::Log::SetDefault()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Log*)NativePtr;
     ::LogSetDefault(arg0);
 }
 

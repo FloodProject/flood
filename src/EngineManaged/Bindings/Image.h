@@ -62,8 +62,6 @@ namespace Flood
     public ref class Image : Resource
     {
     public:
-        property ::Image* NativePtr;
-
         Image(::Image* native);
         Image(System::IntPtr native);
         Image();

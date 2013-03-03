@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "RenderTarget.h"
+#include "RenderView.h"
 #include "Vector.h"
 #include "RenderContext.h"
 #include "Color.h"
@@ -54,36 +55,42 @@ Flood::RenderTarget::RenderTarget()
 {
 }
 
+Flood::RenderView^ Flood::RenderTarget::CreateView()
+{
+    auto ret = ((::RenderTarget*)NativePtr)->createView();
+    return gcnew Flood::RenderView((::RenderView*)ret);
+}
+
 void Flood::RenderTarget::RemoveViews()
 {
-    NativePtr->removeViews();
+    ((::RenderTarget*)NativePtr)->removeViews();
 }
 
 void Flood::RenderTarget::MakeCurrent()
 {
-    NativePtr->makeCurrent();
+    ((::RenderTarget*)NativePtr)->makeCurrent();
 }
 
 void Flood::RenderTarget::Update()
 {
-    NativePtr->update();
+    ((::RenderTarget*)NativePtr)->update();
 }
 
 Flood::Settings Flood::RenderTarget::GetSettings()
 {
-    auto ret = &NativePtr->getSettings();
+    auto ret = &((::RenderTarget*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 
 Flood::RenderContext^ Flood::RenderTarget::GetContext()
 {
-    auto ret = NativePtr->getContext();
+    auto ret = ((::RenderTarget*)NativePtr)->getContext();
     return gcnew Flood::RenderContext((::RenderContext*)ret);
 }
 
 void Flood::RenderTarget::SetContext(Flood::RenderContext^ context)
 {
-    auto arg0 = context->NativePtr;
-    NativePtr->setContext(arg0);
+    auto arg0 = (::RenderContext*)context->NativePtr;
+    ((::RenderTarget*)NativePtr)->setContext(arg0);
 }
 

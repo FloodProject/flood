@@ -71,19 +71,19 @@ Flood::Serializer::Serializer()
 
 void Flood::Serializer::Destroy()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Serializer*)NativePtr;
     ::SerializerDestroy(arg0);
 }
 
 void Flood::FloodSerialization::ReflectionWalkComposite(Flood::ReflectionContext^ _112)
 {
-    auto arg0 = _112->NativePtr;
+    auto arg0 = (::ReflectionContext*)_112->NativePtr;
     ::ReflectionWalkComposite(arg0);
 }
 
 void Flood::FloodSerialization::ReflectionWalkCompositeField(Flood::ReflectionContext^ _113)
 {
-    auto arg0 = _113->NativePtr;
+    auto arg0 = (::ReflectionContext*)_113->NativePtr;
     ::ReflectionWalkCompositeField(arg0);
 }
 

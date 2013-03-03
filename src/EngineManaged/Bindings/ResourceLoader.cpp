@@ -83,13 +83,13 @@ int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
 {
     auto arg0 = (uint8*)buffer.ToPointer();
     auto arg1 = (size_t)size;
-    auto ret = NativePtr->decode(arg0, arg1);
+    auto ret = ((::ResourceStream*)NativePtr)->decode(arg0, arg1);
     return ret;
 }
 
 void Flood::ResourceStream::Reset()
 {
-    NativePtr->reset();
+    ((::ResourceStream*)NativePtr)->reset();
 }
 
 Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
@@ -110,19 +110,19 @@ Flood::ResourceLoader::ResourceLoader()
 
 Flood::Class^ Flood::ResourceLoader::GetType()
 {
-    auto ret = NativePtr->getType();
+    auto ret = ((::ResourceLoader*)NativePtr)->getType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::ResourceLoader::GetStaticType()
 {
-    auto ret = NativePtr->getStaticType();
+    auto ret = ((::ResourceLoader*)NativePtr)->getStaticType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
 {
-    auto ret = NativePtr->getMetadata();
+    auto ret = ((::ResourceLoader*)NativePtr)->getMetadata();
     return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
@@ -130,8 +130,8 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _173)
 {
     auto arg0 = ::ResourceLoadOptions();
     arg0.name = marshalString<E_UTF8>(_173.Name);
-    arg0.stream = _173.Stream->NativePtr;
-    arg0.resource = _173.Resource->NativePtr;
+    arg0.stream = (::Stream*)_173.Stream->NativePtr;
+    arg0.resource = (::Resource*)_173.Resource->NativePtr;
     arg0.group = (::ResourceGroup)_173.Group;
     arg0.isHighPriority = _173.IsHighPriority;
     arg0.sendLoadEvent = _173.SendLoadEvent;
@@ -139,7 +139,7 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _173)
     arg0.keepStreamOpen = _173.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
-    auto ret = NativePtr->prepare(arg0);
+    auto ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
     return gcnew Flood::Resource((::Resource*)ret);
 }
 
@@ -147,8 +147,8 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _174)
 {
     auto arg0 = ::ResourceLoadOptions();
     arg0.name = marshalString<E_UTF8>(_174.Name);
-    arg0.stream = _174.Stream->NativePtr;
-    arg0.resource = _174.Resource->NativePtr;
+    arg0.stream = (::Stream*)_174.Stream->NativePtr;
+    arg0.resource = (::Resource*)_174.Resource->NativePtr;
     arg0.group = (::ResourceGroup)_174.Group;
     arg0.isHighPriority = _174.IsHighPriority;
     arg0.sendLoadEvent = _174.SendLoadEvent;
@@ -156,25 +156,25 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _174)
     arg0.keepStreamOpen = _174.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
-    auto ret = NativePtr->decode(arg0);
+    auto ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
     return ret;
 }
 
 System::String^ Flood::ResourceLoader::GetName()
 {
-    auto ret = NativePtr->getName();
+    auto ret = ((::ResourceLoader*)NativePtr)->getName();
     return marshalString<E_UTF8>(ret);
 }
 
 Flood::Class^ Flood::ResourceLoader::GetResourceClass()
 {
-    auto ret = NativePtr->getResourceClass();
+    auto ret = ((::ResourceLoader*)NativePtr)->getResourceClass();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()
 {
-    auto ret = NativePtr->getResourceGroup();
+    auto ret = ((::ResourceLoader*)NativePtr)->getResourceGroup();
     return (Flood::ResourceGroup)ret;
 }
 

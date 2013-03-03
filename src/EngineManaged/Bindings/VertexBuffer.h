@@ -65,11 +65,9 @@ namespace Flood
     public ref class VertexElement : VertexElementP
     {
     public:
-        property ::VertexElement* NativePtr;
-
         VertexElement(::VertexElement* native);
         VertexElement(System::IntPtr native);
-        VertexElement(Flood::VertexAttribute _185, Flood::VertexDataType _186, unsigned char components);
+        VertexElement(Flood::VertexAttribute _188, Flood::VertexDataType _189, unsigned char components);
         property char Stride;
         property unsigned int Offset;
         property unsigned int Size;
@@ -86,12 +84,12 @@ namespace Flood
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
-        void Add(Flood::VertexAttribute _188, int numComponents);
-        void Add(Flood::VertexElement^ _189);
-        void Add(Flood::VertexElementP^ _190);
+        void Add(Flood::VertexAttribute _191, int numComponents);
+        void Add(Flood::VertexElement^ _192);
+        void Add(Flood::VertexElementP^ _193);
         void Reset();
-        Flood::VertexElement^ Find(Flood::VertexAttribute _191);
-        unsigned char GetOffset(Flood::VertexAttribute _192);
+        Flood::VertexElement^ Find(Flood::VertexAttribute _194);
+        unsigned char GetOffset(Flood::VertexAttribute _195);
         unsigned char GetVertexSize();
         void CalculateStrides();
     };
@@ -99,8 +97,6 @@ namespace Flood
     public ref class VertexBuffer : Buffer
     {
     public:
-        property ::VertexBuffer* NativePtr;
-
         VertexBuffer(::VertexBuffer* native);
         VertexBuffer(System::IntPtr native);
         VertexBuffer();

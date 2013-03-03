@@ -91,8 +91,6 @@ namespace Flood
     public ref class MemoryStream : Stream
     {
     public:
-        property ::MemoryStream* NativePtr;
-
         MemoryStream(::MemoryStream* native);
         MemoryStream(System::IntPtr native);
         property System::IntPtr Buffer;

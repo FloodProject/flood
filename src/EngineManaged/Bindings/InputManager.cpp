@@ -8,8 +8,10 @@
 #include "_Marshal.h"
 #include "InputManager.h"
 #include "Window.h"
-#include "Vector.h"
+#include "RenderContext.h"
 #include "RenderTarget.h"
+#include "Color.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -33,19 +35,19 @@ Flood::InputManager::InputManager()
 
 void Flood::InputManager::CreateDefaultDevices()
 {
-    NativePtr->createDefaultDevices();
+    ((::InputManager*)NativePtr)->createDefaultDevices();
 }
 
 Flood::Window^ Flood::InputManager::GetWindow()
 {
-    auto ret = NativePtr->getWindow();
+    auto ret = ((::InputManager*)NativePtr)->getWindow();
     return gcnew Flood::Window((::Window*)ret);
 }
 
 void Flood::InputManager::SetWindow(Flood::Window^ window)
 {
-    auto arg0 = window->NativePtr;
-    NativePtr->setWindow(arg0);
+    auto arg0 = (::Window*)window->NativePtr;
+    ((::InputManager*)NativePtr)->setWindow(arg0);
 }
 
 void Flood::FloodInputManager::InputInitialize()

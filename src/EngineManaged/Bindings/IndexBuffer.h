@@ -19,8 +19,6 @@ namespace Flood
     public ref class IndexBuffer : Buffer
     {
     public:
-        property ::IndexBuffer* NativePtr;
-
         IndexBuffer(::IndexBuffer* native);
         IndexBuffer(System::IntPtr native);
         IndexBuffer();

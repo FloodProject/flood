@@ -88,8 +88,6 @@ namespace Flood
     public ref class ResourceLoader : Extension
     {
     public:
-        property ::ResourceLoader* NativePtr;
-
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
         ResourceLoader();

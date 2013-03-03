@@ -108,6 +108,6 @@ namespace Flood
     public ref class FloodRenderBatch
     {
     public:
-        static Flood::RenderBatch^ RenderBatchCreate(Flood::Allocator^ _217);
+        static Flood::RenderBatch^ RenderBatchCreate(Flood::Allocator^ _218);
     };
 }

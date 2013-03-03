@@ -76,8 +76,6 @@ namespace Flood
     public ref class Material : Resource
     {
     public:
-        property ::Material* NativePtr;
-
         Material(::Material* native);
         Material(System::IntPtr native);
         Material();
@@ -122,7 +120,7 @@ namespace Flood
         Flood::BlendSource GetBlendSource();
         Flood::BlendDestination GetBlendDestination();
         bool IsBlendingEnabled();
-        void SetBlending(Flood::BlendSource _214, Flood::BlendDestination _215);
+        void SetBlending(Flood::BlendSource _215, Flood::BlendDestination _216);
         void SetTexture(unsigned char unit, System::String^ name);
         Flood::TextureUnit^ GetTextureUnit(unsigned char unit);
         void Init();

@@ -44,183 +44,183 @@ Flood::Material::Material(System::String^ name)
 
 Flood::Class^ Flood::Material::GetType()
 {
-    auto ret = NativePtr->getType();
+    auto ret = ((::Material*)NativePtr)->getType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::Material::GetStaticType()
 {
-    auto ret = NativePtr->getStaticType();
+    auto ret = ((::Material*)NativePtr)->getStaticType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ResourceGroup Flood::Material::GetResourceGroup()
 {
-    auto ret = NativePtr->getResourceGroup();
+    auto ret = ((::Material*)NativePtr)->getResourceGroup();
     return (Flood::ResourceGroup)ret;
 }
 
 System::String^ Flood::Material::GetName()
 {
-    auto ret = &NativePtr->getName();
+    auto ret = &((::Material*)NativePtr)->getName();
     return marshalString<E_UTF8>(*ret);
 }
 
 void Flood::Material::SetName(System::String^ v)
 {
     auto arg0 = marshalString<E_UTF8>(v);
-    NativePtr->setName(arg0);
+    ((::Material*)NativePtr)->setName(arg0);
 }
 
 void Flood::Material::SetShader(System::String^ name)
 {
     auto arg0 = marshalString<E_UTF8>(name);
-    NativePtr->setShader(arg0);
+    ((::Material*)NativePtr)->setShader(arg0);
 }
 
 bool Flood::Material::GetDepthWrite()
 {
-    auto ret = NativePtr->getDepthWrite();
+    auto ret = ((::Material*)NativePtr)->getDepthWrite();
     return ret;
 }
 
 void Flood::Material::SetDepthWrite(bool v)
 {
-    NativePtr->setDepthWrite(v);
+    ((::Material*)NativePtr)->setDepthWrite(v);
 }
 
 bool Flood::Material::GetDepthTest()
 {
-    auto ret = NativePtr->getDepthTest();
+    auto ret = ((::Material*)NativePtr)->getDepthTest();
     return ret;
 }
 
 void Flood::Material::SetDepthTest(bool v)
 {
-    NativePtr->setDepthTest(v);
+    ((::Material*)NativePtr)->setDepthTest(v);
 }
 
 Flood::DepthCompare Flood::Material::GetDepthCompare()
 {
-    auto ret = NativePtr->getDepthCompare();
+    auto ret = ((::Material*)NativePtr)->getDepthCompare();
     return (Flood::DepthCompare)ret;
 }
 
 void Flood::Material::SetDepthCompare(Flood::DepthCompare v)
 {
     auto arg0 = (::DepthCompare)v;
-    NativePtr->setDepthCompare(arg0);
+    ((::Material*)NativePtr)->setDepthCompare(arg0);
 }
 
 Flood::Vector2 Flood::Material::GetDepthRange()
 {
-    auto ret = NativePtr->getDepthRange();
+    auto ret = ((::Material*)NativePtr)->getDepthRange();
     return Flood::Vector2((::Vector2*)&ret);
 }
 
 void Flood::Material::SetDepthRange(Flood::Vector2 v)
 {
     auto arg0 = ::Vector2();
-    NativePtr->setDepthRange(arg0);
+    ((::Material*)NativePtr)->setDepthRange(arg0);
 }
 
 Flood::Vector2 Flood::Material::GetDepthOffset()
 {
-    auto ret = NativePtr->getDepthOffset();
+    auto ret = ((::Material*)NativePtr)->getDepthOffset();
     return Flood::Vector2((::Vector2*)&ret);
 }
 
 void Flood::Material::SetDepthOffset(Flood::Vector2 v)
 {
     auto arg0 = ::Vector2();
-    NativePtr->setDepthOffset(arg0);
+    ((::Material*)NativePtr)->setDepthOffset(arg0);
 }
 
 bool Flood::Material::GetAlphaTest()
 {
-    auto ret = NativePtr->getAlphaTest();
+    auto ret = ((::Material*)NativePtr)->getAlphaTest();
     return ret;
 }
 
 void Flood::Material::SetAlphaTest(bool v)
 {
-    NativePtr->setAlphaTest(v);
+    ((::Material*)NativePtr)->setAlphaTest(v);
 }
 
 float Flood::Material::GetLineWidth()
 {
-    auto ret = NativePtr->getLineWidth();
+    auto ret = ((::Material*)NativePtr)->getLineWidth();
     return ret;
 }
 
 void Flood::Material::SetLineWidth(float v)
 {
-    NativePtr->setLineWidth(v);
+    ((::Material*)NativePtr)->setLineWidth(v);
 }
 
 bool Flood::Material::GetLineSmoothing()
 {
-    auto ret = NativePtr->getLineSmoothing();
+    auto ret = ((::Material*)NativePtr)->getLineSmoothing();
     return ret;
 }
 
 void Flood::Material::SetLineSmoothing(bool v)
 {
-    NativePtr->setLineSmoothing(v);
+    ((::Material*)NativePtr)->setLineSmoothing(v);
 }
 
 bool Flood::Material::GetBackfaceCulling()
 {
-    auto ret = NativePtr->getBackfaceCulling();
+    auto ret = ((::Material*)NativePtr)->getBackfaceCulling();
     return ret;
 }
 
 void Flood::Material::SetBackfaceCulling(bool v)
 {
-    NativePtr->setBackfaceCulling(v);
+    ((::Material*)NativePtr)->setBackfaceCulling(v);
 }
 
 Flood::BlendSource Flood::Material::GetBlendSource()
 {
-    auto ret = NativePtr->getBlendSource();
+    auto ret = ((::Material*)NativePtr)->getBlendSource();
     return (Flood::BlendSource)ret;
 }
 
 Flood::BlendDestination Flood::Material::GetBlendDestination()
 {
-    auto ret = NativePtr->getBlendDestination();
+    auto ret = ((::Material*)NativePtr)->getBlendDestination();
     return (Flood::BlendDestination)ret;
 }
 
 bool Flood::Material::IsBlendingEnabled()
 {
-    auto ret = NativePtr->isBlendingEnabled();
+    auto ret = ((::Material*)NativePtr)->isBlendingEnabled();
     return ret;
 }
 
-void Flood::Material::SetBlending(Flood::BlendSource _214, Flood::BlendDestination _215)
+void Flood::Material::SetBlending(Flood::BlendSource _215, Flood::BlendDestination _216)
 {
-    auto arg0 = (::BlendSource)_214;
-    auto arg1 = (::BlendDestination)_215;
-    NativePtr->setBlending(arg0, arg1);
+    auto arg0 = (::BlendSource)_215;
+    auto arg1 = (::BlendDestination)_216;
+    ((::Material*)NativePtr)->setBlending(arg0, arg1);
 }
 
 void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
 {
     auto arg0 = (uint8)unit;
     auto arg1 = marshalString<E_UTF8>(name);
-    NativePtr->setTexture(arg0, arg1);
+    ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
     auto arg0 = (uint8)unit;
-    auto ret = &NativePtr->getTextureUnit(arg0);
-    return gcnew Flood::TextureUnit((::TextureUnit*)ret);
+    auto ret = &((::Material*)NativePtr)->getTextureUnit(arg0);
+    return gcnew Flood::TextureUnit((::TextureUnit*)&ret);
 }
 
 void Flood::Material::Init()
 {
-    NativePtr->init();
+    ((::Material*)NativePtr)->init();
 }
 

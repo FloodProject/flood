@@ -29,31 +29,31 @@ Flood::ShaderMaterial::ShaderMaterial(System::IntPtr native)
 
 Flood::Class^ Flood::ShaderMaterial::GetType()
 {
-    auto ret = NativePtr->getType();
+    auto ret = ((::ShaderMaterial*)NativePtr)->getType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::ShaderMaterial::GetStaticType()
 {
-    auto ret = NativePtr->getStaticType();
+    auto ret = ((::ShaderMaterial*)NativePtr)->getStaticType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 System::String^ Flood::ShaderMaterial::GetVertexSource()
 {
-    auto ret = NativePtr->getVertexSource();
+    auto ret = ((::ShaderMaterial*)NativePtr)->getVertexSource();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
 System::String^ Flood::ShaderMaterial::GetFragmentSource()
 {
-    auto ret = NativePtr->getFragmentSource();
+    auto ret = ((::ShaderMaterial*)NativePtr)->getFragmentSource();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
 Flood::ResourceGroup Flood::ShaderMaterial::GetResourceGroup()
 {
-    auto ret = NativePtr->getResourceGroup();
+    auto ret = ((::ShaderMaterial*)NativePtr)->getResourceGroup();
     return (Flood::ResourceGroup)ret;
 }
 

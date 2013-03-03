@@ -37,8 +37,6 @@ namespace Flood
     public ref class ShaderMaterial : Resource
     {
     public:
-        property ::ShaderMaterial* NativePtr;
-
         ShaderMaterial(::ShaderMaterial* native);
         ShaderMaterial(System::IntPtr native);
         Flood::Class^ GetType();

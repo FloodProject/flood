@@ -23,16 +23,24 @@ namespace Flood
     value struct Color;
     ref class RenderBuffer;
     value struct Settings;
+    ref class RenderContextSettings;
     ref class RenderContext;
-    ref class Event1;
-    ref class Delegate0;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
-    ref class RenderView;
-    value struct Vector2i;
     value struct Vector3;
     ref class RefPtr;
+
+    public ref class RenderContextSettings
+    {
+    public:
+        property ::RenderContextSettings* NativePtr;
+
+        RenderContextSettings(::RenderContextSettings* native);
+        RenderContextSettings(System::IntPtr native);
+        RenderContextSettings();
+        property unsigned short BitsPerPixel;
+        property unsigned short DepthBits;
+        property unsigned short StencilBits;
+        property unsigned short AntialiasLevel;
+    };
 
     /// <summary>
     /// Represents a rendering context.

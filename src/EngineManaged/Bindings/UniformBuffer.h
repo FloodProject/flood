@@ -71,6 +71,7 @@ namespace Flood
         void SetUniform(System::String^ slot, int data);
         void SetUniform(System::String^ slot, float value);
         void SetUniform(System::String^ slot, Flood::Vector3 vec);
-        void SetUniform(System::String^ slot, Flood::Matrix4x4 _196);
+        void SetUniform(System::String^ slot, Flood::Matrix4x3^ _198);
+        void SetUniform(System::String^ slot, Flood::Matrix4x4 _199);
     };
 }

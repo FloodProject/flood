@@ -46,19 +46,19 @@ Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _49)
 
 void Flood::Allocator::Destroy()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     ::AllocatorDestroy(arg0);
 }
 
 void Flood::Allocator::ResetMemory()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     ::AllocatorReset(arg0);
 }
 
 void Flood::Allocator::SetGroup(System::String^ group)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     auto _arg1 = clix::marshalString<clix::E_UTF8>(group);
     auto arg1 = _arg1.c_str();
     ::AllocatorSetGroup(arg0, arg1);
@@ -71,7 +71,7 @@ void Flood::Allocator::DumpInfo()
 
 Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     auto arg1 = (int32)size;
     auto ret = ::AllocatorCreatePool(arg0, arg1);
     return gcnew Flood::Allocator((::Allocator*)ret);
@@ -79,7 +79,7 @@ Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     auto arg1 = (int32)size;
     auto ret = ::AllocatorCreateBump(arg0, arg1);
     return gcnew Flood::Allocator((::Allocator*)ret);
@@ -87,14 +87,14 @@ Flood::Allocator^ Flood::Allocator::CreateBump(int size)
 
 Flood::Allocator^ Flood::Allocator::CreateHeap()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     auto ret = ::AllocatorCreateHeap(arg0);
     return gcnew Flood::Allocator((::Allocator*)ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateStack()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Allocator*)NativePtr;
     auto ret = ::AllocatorCreateStack(arg0);
     return gcnew Flood::Allocator((::Allocator*)ret);
 }

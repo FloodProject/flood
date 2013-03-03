@@ -35,49 +35,49 @@ Flood::Texture::Texture()
     NativePtr = new ::Texture();
 }
 
-void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _206)
+void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _207)
 {
     auto arg0 = ::Vector2i();
     arg0.x = (int32)size.X;
     arg0.y = (int32)size.Y;
 
-    auto arg1 = (::PixelFormat)_206;
-    NativePtr->allocate(arg0, arg1);
+    auto arg1 = (::PixelFormat)_207;
+    ((::Texture*)NativePtr)->allocate(arg0, arg1);
 }
 
 unsigned int Flood::Texture::GetId()
 {
-    auto ret = NativePtr->getId();
+    auto ret = ((::Texture*)NativePtr)->getId();
     return ret;
 }
 
 Flood::PixelFormat Flood::Texture::GetPixelFormat()
 {
-    auto ret = NativePtr->getPixelFormat();
+    auto ret = ((::Texture*)NativePtr)->getPixelFormat();
     return (Flood::PixelFormat)ret;
 }
 
 Flood::Image^ Flood::Texture::GetImage()
 {
-    auto ret = NativePtr->getImage();
+    auto ret = ((::Texture*)NativePtr)->getImage();
     return gcnew Flood::Image((::Image*)ret);
 }
 
 void Flood::Texture::SetImage(Flood::Image^ image)
 {
-    auto arg0 = image->NativePtr;
-    NativePtr->setImage(arg0);
+    auto arg0 = (::Image*)image->NativePtr;
+    ((::Texture*)NativePtr)->setImage(arg0);
 }
 
 Flood::Image^ Flood::Texture::ReadImage()
 {
-    auto ret = NativePtr->readImage();
+    auto ret = ((::Texture*)NativePtr)->readImage();
     return gcnew Flood::Image((::Image*)ret);
 }
 
 unsigned int Flood::Texture::GetExpectedSize()
 {
-    auto ret = NativePtr->getExpectedSize();
+    auto ret = ((::Texture*)NativePtr)->getExpectedSize();
     return ret;
 }
 
@@ -99,37 +99,37 @@ Flood::TextureUnit::TextureUnit()
 
 Flood::TextureFilterMode Flood::TextureUnit::GetFilterMode()
 {
-    auto ret = NativePtr->getFilterMode();
+    auto ret = ((::TextureUnit*)NativePtr)->getFilterMode();
     return (Flood::TextureFilterMode)ret;
 }
 
 Flood::TextureMipMode Flood::TextureUnit::GetMipMode()
 {
-    auto ret = NativePtr->getMipMode();
+    auto ret = ((::TextureUnit*)NativePtr)->getMipMode();
     return (Flood::TextureMipMode)ret;
 }
 
 Flood::TextureWrapMode Flood::TextureUnit::GetWrapMode()
 {
-    auto ret = NativePtr->getWrapMode();
+    auto ret = ((::TextureUnit*)NativePtr)->getWrapMode();
     return (Flood::TextureWrapMode)ret;
 }
 
-void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _208)
+void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _209)
 {
-    auto arg0 = (::TextureFilterMode)_208;
-    NativePtr->setFilterMode(arg0);
+    auto arg0 = (::TextureFilterMode)_209;
+    ((::TextureUnit*)NativePtr)->setFilterMode(arg0);
 }
 
-void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _209)
+void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _210)
 {
-    auto arg0 = (::TextureMipMode)_209;
-    NativePtr->setMipMode(arg0);
+    auto arg0 = (::TextureMipMode)_210;
+    ((::TextureUnit*)NativePtr)->setMipMode(arg0);
 }
 
-void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _210)
+void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _211)
 {
-    auto arg0 = (::TextureWrapMode)_210;
-    NativePtr->setWrapMode(arg0);
+    auto arg0 = (::TextureWrapMode)_211;
+    ((::TextureUnit*)NativePtr)->setWrapMode(arg0);
 }
 

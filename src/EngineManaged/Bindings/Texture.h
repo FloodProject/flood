@@ -87,7 +87,7 @@ namespace Flood
         property Flood::PixelFormat Format;
         property float AnisotropicFilter;
         property Flood::Image^ Image;
-        void Alloc(Flood::Vector2i size, Flood::PixelFormat _206);
+        void Alloc(Flood::Vector2i size, Flood::PixelFormat _207);
         unsigned int GetId();
         Flood::PixelFormat GetPixelFormat();
         Flood::Image^ GetImage();
@@ -112,8 +112,8 @@ namespace Flood
         Flood::TextureFilterMode GetFilterMode();
         Flood::TextureMipMode GetMipMode();
         Flood::TextureWrapMode GetWrapMode();
-        void SetFilterMode(Flood::TextureFilterMode _208);
-        void SetMipMode(Flood::TextureMipMode _209);
-        void SetWrapMode(Flood::TextureWrapMode _210);
+        void SetFilterMode(Flood::TextureFilterMode _209);
+        void SetMipMode(Flood::TextureMipMode _210);
+        void SetWrapMode(Flood::TextureWrapMode _211);
     };
 }

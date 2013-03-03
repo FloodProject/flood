@@ -52,8 +52,8 @@ Flood::ReflectionDatabase::ReflectionDatabase(System::IntPtr native)
 
 bool Flood::ReflectionDatabase::RegisterType(Flood::Type^ type)
 {
-    auto arg0 = NativePtr;
-    auto arg1 = type->NativePtr;
+    auto arg0 = (::ReflectionDatabase*)NativePtr;
+    auto arg1 = (::Type*)type->NativePtr;
     auto ret = ::ReflectionDatabaseRegisterType(arg0, arg1);
     return ret;
 }
@@ -77,29 +77,29 @@ Flood::Class::Class()
 
 bool Flood::Class::Inherits(Flood::Class^ test)
 {
-    auto arg0 = NativePtr;
-    auto arg1 = test->NativePtr;
+    auto arg0 = (::Class*)NativePtr;
+    auto arg1 = (::Class*)test->NativePtr;
     auto ret = ::ClassInherits(arg0, arg1);
     return ret;
 }
 
 bool Flood::Class::IsAbstract()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Class*)NativePtr;
     auto ret = ::ClassIsAbstract(arg0);
     return ret;
 }
 
 void Flood::Class::AddField(Flood::Field^ field)
 {
-    auto arg0 = NativePtr;
-    auto arg1 = field->NativePtr;
+    auto arg0 = (::Class*)NativePtr;
+    auto arg1 = (::Field*)field->NativePtr;
     ::ClassAddField(arg0, arg1);
 }
 
 Flood::Field^ Flood::Class::GetField(System::String^ name)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Class*)NativePtr;
     auto _arg1 = clix::marshalString<clix::E_UTF8>(name);
     auto arg1 = _arg1.c_str();
     auto ret = ::ClassGetField(arg0, arg1);
@@ -108,7 +108,7 @@ Flood::Field^ Flood::Class::GetField(System::String^ name)
 
 Flood::Field^ Flood::Class::GetFieldById(unsigned char id)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Class*)NativePtr;
     auto arg1 = (FieldId)(uint8)id;
     auto ret = ::ClassGetFieldById(arg0, arg1);
     return gcnew Flood::Field((::Field*)ret);
@@ -117,22 +117,22 @@ Flood::Field^ Flood::Class::GetFieldById(unsigned char id)
 System::IntPtr Flood::Class::GetFieldAddress(System::IntPtr _23, Flood::Field^ _24)
 {
     auto arg0 = _23.ToPointer();
-    auto arg1 = _24->NativePtr;
+    auto arg1 = (::Field*)_24->NativePtr;
     auto ret = ::ClassGetFieldAddress(arg0, arg1);
     return IntPtr(ret);
 }
 
 System::IntPtr Flood::Class::CreateInstance(Flood::Allocator^ _26)
 {
-    auto arg0 = NativePtr;
-    auto arg1 = _26->NativePtr;
+    auto arg0 = (::Class*)NativePtr;
+    auto arg1 = (::Allocator*)_26->NativePtr;
     auto ret = ::ClassCreateInstance(arg0, arg1);
     return IntPtr(ret);
 }
 
 unsigned short Flood::Class::CalculateId()
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Class*)NativePtr;
     auto ret = ::ClassCalculateId(arg0);
     return ret;
 }
@@ -162,7 +162,7 @@ Flood::Field::Field()
 
 bool Flood::Field::HasQualifier(Flood::FieldQualifier _29)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Field*)NativePtr;
     auto arg1 = (::FieldQualifier)_29;
     auto ret = ::FieldHasQualifier(arg0, arg1);
     return ret;
@@ -170,14 +170,14 @@ bool Flood::Field::HasQualifier(Flood::FieldQualifier _29)
 
 void Flood::Field::SetQualifier(Flood::FieldQualifier _31)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Field*)NativePtr;
     auto arg1 = (::FieldQualifier)_31;
     ::FieldSetQualifier(arg0, arg1);
 }
 
 void Flood::Field::SetSetter(Flood::FieldSetterFunction^ _33)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Field*)NativePtr;
     auto arg1 = static_cast<::FieldSetterFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_33).ToPointer());
     ::FieldSetSetter(arg0, arg1);
 }
@@ -212,7 +212,7 @@ Flood::Primitive::Primitive(Flood::PrimitiveTypeKind kind, System::String^ name,
 Flood::PrimitiveBuiltins^ Flood::Primitive::GetBuiltins()
 {
     auto ret = &::PrimitiveGetBuiltins();
-    return gcnew Flood::PrimitiveBuiltins((::PrimitiveBuiltins*)ret);
+    return gcnew Flood::PrimitiveBuiltins((::PrimitiveBuiltins*)&ret);
 }
 
 Flood::PrimitiveBuiltins::PrimitiveBuiltins(::PrimitiveBuiltins* native)
@@ -244,7 +244,7 @@ Flood::Enum::Enum(System::IntPtr native)
 
 void Flood::Enum::AddValue(System::String^ name, int value)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Enum*)NativePtr;
     auto _arg1 = clix::marshalString<clix::E_UTF8>(name);
     auto arg1 = _arg1.c_str();
     auto arg2 = (int32)value;
@@ -253,7 +253,7 @@ void Flood::Enum::AddValue(System::String^ name, int value)
 
 int Flood::Enum::GetValue(System::String^ name)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Enum*)NativePtr;
     auto _arg1 = clix::marshalString<clix::E_UTF8>(name);
     auto arg1 = _arg1.c_str();
     auto ret = ::EnumGetValue(arg0, arg1);
@@ -262,7 +262,7 @@ int Flood::Enum::GetValue(System::String^ name)
 
 System::String^ Flood::Enum::GetValueName(int value)
 {
-    auto arg0 = NativePtr;
+    auto arg0 = (::Enum*)NativePtr;
     auto arg1 = (int32)value;
     auto ret = ::EnumGetValueName(arg0, arg1);
     return clix::marshalString<clix::E_UTF8>(ret);
@@ -270,29 +270,29 @@ System::String^ Flood::Enum::GetValueName(int value)
 
 bool Flood::FloodReflection::ReflectionIsPrimitive(Flood::Type^ _11)
 {
-    auto arg0 = _11->NativePtr;
+    auto arg0 = (::Type*)_11->NativePtr;
     auto ret = ::ReflectionIsPrimitive(arg0);
     return ret;
 }
 
 bool Flood::FloodReflection::ReflectionIsComposite(Flood::Type^ _12)
 {
-    auto arg0 = _12->NativePtr;
+    auto arg0 = (::Type*)_12->NativePtr;
     auto ret = ::ReflectionIsComposite(arg0);
     return ret;
 }
 
 bool Flood::FloodReflection::ReflectionIsEnum(Flood::Type^ _13)
 {
-    auto arg0 = _13->NativePtr;
+    auto arg0 = (::Type*)_13->NativePtr;
     auto ret = ::ReflectionIsEnum(arg0);
     return ret;
 }
 
 bool Flood::FloodReflection::ReflectionIsEqual(Flood::Type^ _14, Flood::Type^ _15)
 {
-    auto arg0 = _14->NativePtr;
-    auto arg1 = _15->NativePtr;
+    auto arg0 = (::Type*)_14->NativePtr;
+    auto arg1 = (::Type*)_15->NativePtr;
     auto ret = ::ReflectionIsEqual(arg0, arg1);
     return ret;
 }
@@ -307,7 +307,7 @@ Flood::Type^ Flood::FloodReflection::ReflectionFindType(System::String^ _17)
 
 bool Flood::FloodReflection::ReflectionRegisterType(Flood::Type^ _18)
 {
-    auto arg0 = _18->NativePtr;
+    auto arg0 = (::Type*)_18->NativePtr;
     auto ret = ::ReflectionRegisterType(arg0);
     return ret;
 }
@@ -315,6 +315,6 @@ bool Flood::FloodReflection::ReflectionRegisterType(Flood::Type^ _18)
 Flood::ReflectionDatabase^ Flood::FloodReflection::ReflectionGetDatabase()
 {
     auto ret = &::ReflectionGetDatabase();
-    return gcnew Flood::ReflectionDatabase((::ReflectionDatabase*)ret);
+    return gcnew Flood::ReflectionDatabase((::ReflectionDatabase*)&ret);
 }
 

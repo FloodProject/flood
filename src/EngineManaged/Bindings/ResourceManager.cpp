@@ -53,14 +53,14 @@ Flood::ResourceManager::ResourceManager()
 uint Flood::ResourceManager::GetResource(System::String^ name)
 {
     auto arg0 = marshalString<E_UTF8>(name);
-    auto ret = NativePtr->getResource(arg0);
+    auto ret = ((::ResourceManager*)NativePtr)->getResource(arg0);
     return ret.id;
 }
 
 uint Flood::ResourceManager::LoadResource(System::String^ name)
 {
     auto arg0 = marshalString<E_UTF8>(name);
-    auto ret = NativePtr->loadResource(arg0);
+    auto ret = ((::ResourceManager*)NativePtr)->loadResource(arg0);
     return ret.id;
 }
 
@@ -68,8 +68,8 @@ uint Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
 {
     auto arg0 = ::ResourceLoadOptions();
     arg0.name = marshalString<E_UTF8>(options.Name);
-    arg0.stream = options.Stream->NativePtr;
-    arg0.resource = options.Resource->NativePtr;
+    arg0.stream = (::Stream*)options.Stream->NativePtr;
+    arg0.resource = (::Resource*)options.Resource->NativePtr;
     arg0.group = (::ResourceGroup)options.Group;
     arg0.isHighPriority = options.IsHighPriority;
     arg0.sendLoadEvent = options.SendLoadEvent;
@@ -77,7 +77,7 @@ uint Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
     arg0.keepStreamOpen = options.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
-    auto ret = NativePtr->loadResource(arg0);
+    auto ret = ((::ResourceManager*)NativePtr)->loadResource(arg0);
     return ret.id;
 }
 
@@ -85,8 +85,8 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
     auto arg0 = ::ResourceLoadOptions();
     arg0.name = marshalString<E_UTF8>(options.Name);
-    arg0.stream = options.Stream->NativePtr;
-    arg0.resource = options.Resource->NativePtr;
+    arg0.stream = (::Stream*)options.Stream->NativePtr;
+    arg0.resource = (::Resource*)options.Resource->NativePtr;
     arg0.group = (::ResourceGroup)options.Group;
     arg0.isHighPriority = options.IsHighPriority;
     arg0.sendLoadEvent = options.SendLoadEvent;
@@ -94,66 +94,66 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
     arg0.keepStreamOpen = options.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
-    auto ret = NativePtr->findResource(arg0);
+    auto ret = ((::ResourceManager*)NativePtr)->findResource(arg0);
     return ret;
 }
 
 void Flood::ResourceManager::RemoveResource(Flood::Resource^ resource)
 {
-    auto arg0 = resource->NativePtr;
-    NativePtr->removeResource(arg0);
+    auto arg0 = (::Resource*)resource->NativePtr;
+    ((::ResourceManager*)NativePtr)->removeResource(arg0);
 }
 
 void Flood::ResourceManager::RemoveResource(System::String^ name)
 {
     auto arg0 = marshalString<E_UTF8>(name);
-    NativePtr->removeResource(arg0);
+    ((::ResourceManager*)NativePtr)->removeResource(arg0);
 }
 
 void Flood::ResourceManager::RemoveUnusedResources()
 {
-    NativePtr->removeUnusedResources();
+    ((::ResourceManager*)NativePtr)->removeUnusedResources();
 }
 
 void Flood::ResourceManager::LoadQueuedResources()
 {
-    NativePtr->loadQueuedResources();
+    ((::ResourceManager*)NativePtr)->loadQueuedResources();
 }
 
 void Flood::ResourceManager::Update()
 {
-    NativePtr->update();
+    ((::ResourceManager*)NativePtr)->update();
 }
 
 Flood::ResourceLoader^ Flood::ResourceManager::FindLoader(System::String^ extension)
 {
     auto arg0 = marshalString<E_UTF8>(extension);
-    auto ret = NativePtr->findLoader(arg0);
+    auto ret = ((::ResourceManager*)NativePtr)->findLoader(arg0);
     return gcnew Flood::ResourceLoader((::ResourceLoader*)ret);
 }
 
 Flood::ResourceLoader^ Flood::ResourceManager::FindLoaderByClass(Flood::Class^ klass)
 {
-    auto arg0 = klass->NativePtr;
-    auto ret = NativePtr->findLoaderByClass(arg0);
+    auto arg0 = (::Class*)klass->NativePtr;
+    auto ret = ((::ResourceManager*)NativePtr)->findLoaderByClass(arg0);
     return gcnew Flood::ResourceLoader((::ResourceLoader*)ret);
 }
 
 void Flood::ResourceManager::SetupResourceLoaders(Flood::Class^ klass)
 {
-    auto arg0 = klass->NativePtr;
-    NativePtr->setupResourceLoaders(arg0);
+    auto arg0 = (::Class*)klass->NativePtr;
+    ((::ResourceManager*)NativePtr)->setupResourceLoaders(arg0);
 }
 
 bool Flood::ResourceManager::GetAsynchronousLoading()
 {
-    auto ret = NativePtr->getAsynchronousLoading();
+    auto ret = ((::ResourceManager*)NativePtr)->getAsynchronousLoading();
     return ret;
 }
 
 void Flood::ResourceManager::SetAsynchronousLoading(bool v)
 {
-    NativePtr->setAsynchronousLoading(v);
+    ((::ResourceManager*)NativePtr)->setAsynchronousLoading(v);
 }
 
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()

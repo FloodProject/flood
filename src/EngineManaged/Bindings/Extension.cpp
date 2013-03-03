@@ -47,29 +47,29 @@ Flood::Extension::Extension()
 
 Flood::Class^ Flood::Extension::GetType()
 {
-    auto ret = NativePtr->getType();
+    auto ret = ((::Extension*)NativePtr)->getType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::Class^ Flood::Extension::GetStaticType()
 {
-    auto ret = NativePtr->getStaticType();
+    auto ret = ((::Extension*)NativePtr)->getStaticType();
     return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ExtensionMetadata Flood::Extension::GetMetadata()
 {
-    auto ret = NativePtr->getMetadata();
+    auto ret = ((::Extension*)NativePtr)->getMetadata();
     return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
 void Flood::Extension::OnInit()
 {
-    NativePtr->onInit();
+    ((::Extension*)NativePtr)->onInit();
 }
 
 void Flood::Extension::OnCleanup()
 {
-    NativePtr->onCleanup();
+    ((::Extension*)NativePtr)->onCleanup();
 }
 

@@ -33,6 +33,7 @@ namespace Flood
     ref class ResourceManager;
     ref class PhysicsManager;
     ref class ScriptManager;
+    ref class WindowManager;
     ref class Subsystem;
     ref class Scene;
     ref class PageManager;
@@ -57,12 +58,15 @@ namespace Flood
         property Flood::Stream^ Stream;
         property Flood::InputManager^ InputManager;
         property Flood::ResourceManager^ ResourceManager;
+        property Flood::WindowManager^ WindowManager;
         void Init();
         void Update();
         void SetupLogger();
         Flood::ResourceManager^ GetResourceManager();
         Flood::InputManager^ GetInputManager();
         void SetInputManager(Flood::InputManager^ v);
+        Flood::WindowManager^ GetWindowManager();
+        void SetWindowManager(Flood::WindowManager^ v);
         Flood::Log^ GetLogger();
         void StepFrame();
     };

@@ -15,6 +15,22 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
 
+Flood::RenderContextSettings::RenderContextSettings(::RenderContextSettings* native)
+{
+    NativePtr = native;
+}
+
+Flood::RenderContextSettings::RenderContextSettings(System::IntPtr native)
+{
+    auto __native = (::RenderContextSettings*)native.ToPointer();
+    NativePtr = __native;
+}
+
+Flood::RenderContextSettings::RenderContextSettings()
+{
+    NativePtr = new ::RenderContextSettings();
+}
+
 Flood::RenderContext::RenderContext(::RenderContext* native)
 {
     NativePtr = native;
@@ -33,24 +49,24 @@ Flood::RenderContext::RenderContext()
 
 void Flood::RenderContext::MakeCurrent()
 {
-    NativePtr->makeCurrent();
+    ((::RenderContext*)NativePtr)->makeCurrent();
 }
 
 void Flood::RenderContext::Init()
 {
-    NativePtr->init();
+    ((::RenderContext*)NativePtr)->init();
 }
 
 void Flood::RenderContext::ResetState()
 {
-    NativePtr->resetState();
+    ((::RenderContext*)NativePtr)->resetState();
 }
 
 Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
 {
     auto arg0 = (uint16)x;
     auto arg1 = (uint16)y;
-    auto ret = NativePtr->getPixel(arg0, arg1);
+    auto ret = ((::RenderContext*)NativePtr)->getPixel(arg0, arg1);
     return Flood::Color((::Color*)&ret);
 }
 

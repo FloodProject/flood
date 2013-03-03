@@ -52,6 +52,7 @@ namespace Flood
         RenderTarget(System::IntPtr native);
         RenderTarget();
         property Flood::RenderContext^ Context;
+        Flood::RenderView^ CreateView();
         void RemoveViews();
         void MakeCurrent();
         void Update();
