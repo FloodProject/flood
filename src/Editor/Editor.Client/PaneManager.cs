@@ -17,7 +17,7 @@ namespace Editor.Client
 
         internal static void ShowDockHelper(PaneGroup paneGroup)
         {
-            if (dockHelper == null)
+            if (dockHelper == null || dockHelper.Disposed)
             {
                 dockHelper = new DockHelper(paneGroup);
             }
