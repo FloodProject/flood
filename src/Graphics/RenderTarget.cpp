@@ -38,8 +38,6 @@ RenderTarget::~RenderTarget()
 		RenderView* view = views[i];
 		Deallocate(view);
 	}
-
-	Deallocate(context);
 }
 
 //-----------------------------------//
@@ -81,7 +79,6 @@ void RenderTarget::removeViews()
 void RenderTarget::setContext(RenderContext* newContext)
 {
 	context = newContext;
-	context->mainTarget = this;
 }
 
 //-----------------------------------//

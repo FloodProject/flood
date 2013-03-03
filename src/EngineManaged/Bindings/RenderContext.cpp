@@ -44,12 +44,18 @@ Flood::RenderContext::RenderContext(System::IntPtr native)
 
 Flood::RenderContext::RenderContext()
 {
-    NativePtr = new ::RenderContext();
 }
 
-void Flood::RenderContext::MakeCurrent()
+void Flood::RenderContext::MakeCurrent(Flood::RenderTarget^ target)
 {
-    ((::RenderContext*)NativePtr)->makeCurrent();
+    auto arg0 = (::RenderTarget*)target->NativePtr;
+    ((::RenderContext*)NativePtr)->makeCurrent(arg0);
+}
+
+void Flood::RenderContext::SetTarget(Flood::RenderTarget^ target)
+{
+    auto arg0 = (::RenderTarget*)target->NativePtr;
+    ((::RenderContext*)NativePtr)->setTarget(arg0);
 }
 
 void Flood::RenderContext::Init()

@@ -450,7 +450,6 @@ void RenderDevice::setRenderTarget(RenderTarget* target)
 
 	//activeTarget->makeCurrent();
 	activeContext = activeTarget->getContext();
-	activeContext->makeCurrent();
 
 	renderBackend = activeContext->backend;
 }

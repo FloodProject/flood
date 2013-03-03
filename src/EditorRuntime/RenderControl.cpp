@@ -38,9 +38,14 @@ WxRenderContext::~WxRenderContext()
 
 //-----------------------------------//
 
-void WxRenderContext::makeCurrent(wxGLCanvas* canvas)
+void WxRenderContext::makeCurrent(RenderTarget* target)
 {
-	canvas->SetCurrent(*contextGL);
+	wxGLCanvas* canvas = (wxGLCanvas*)target->getUserData();
+	assert(canvas && "Expected a valid wxGLCanvas instance");
+
+	contextGL->SetCurrent(*canvas);
+
+	setTarget(target);
 	GetRenderDevice()->setActiveContext(this);
 }
 
@@ -164,8 +169,8 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void RenderControl::OnSize(wxSizeEvent& event)
 {
-	if( frameUpdateTimer.IsRunning() )
-		onUpdate(0);
+	//if( frameUpdateTimer.IsRunning() )
+	//	onUpdate(0);
 	
 	window->processResize( event.GetSize() );
 	flagRedraw();

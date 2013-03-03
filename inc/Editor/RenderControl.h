@@ -17,6 +17,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+class RenderTarget;
 class RenderWindow;
 class EditorInputManager;
 
@@ -27,7 +28,7 @@ public:
 	WxRenderContext(wxGLCanvas* canvas);
 	virtual ~WxRenderContext();
 
-	void makeCurrent(wxGLCanvas* canvas);
+	void makeCurrent(RenderTarget* target) OVERRIDE;
 
 	// OpenGL context.
 	wxGLContext* contextGL;

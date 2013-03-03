@@ -32,6 +32,8 @@ Window* EditorWindowManager::createWindow(const WindowSettings& settings)
     }
 
     RenderControl* control = new RenderControl(parent);
+    control->Show();
+
     return control->getRenderWindow();
 }
 

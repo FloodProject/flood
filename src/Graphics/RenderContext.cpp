@@ -29,7 +29,7 @@ RenderContextSettings::RenderContextSettings()
 //-----------------------------------//
 
 RenderContext::RenderContext()
-	: mainTarget(nullptr)
+	: currentTarget(nullptr)
 	, bufferManager(nullptr)
 	, textureManager(nullptr)
 	, programManager(nullptr)
@@ -55,10 +55,12 @@ RenderContext::~RenderContext()
 
 //-----------------------------------//
 
-void RenderContext::makeCurrent()
+void RenderContext::setTarget(RenderTarget* target)
 {
-	if( !mainTarget ) return;
-	mainTarget->makeCurrent();
+	if( target == currentTarget )
+		return;
+
+	currentTarget = target;
 
 	if (!initDone)
 		init();

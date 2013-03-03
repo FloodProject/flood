@@ -24,6 +24,7 @@ namespace Flood
     ref class ClosurePtr;
     ref class GenericClass;
     ref class DelegateMemento;
+    ref class RefPtr;
     ref class RenderCapabilities;
     ref class BufferManager;
     ref class TextureManager;
@@ -51,7 +52,7 @@ namespace Flood
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
         RenderTarget();
-        property Flood::RenderContext^ Context;
+        property System::IntPtr UserData;
         Flood::RenderView^ CreateView();
         void RemoveViews();
         void MakeCurrent();
@@ -59,5 +60,7 @@ namespace Flood
         Flood::Settings GetSettings();
         Flood::RenderContext^ GetContext();
         void SetContext(Flood::RenderContext^ context);
+        System::IntPtr GetUserData();
+        void SetUserData(System::IntPtr v);
     };
 }

@@ -49,7 +49,10 @@ public:
 	virtual ~RenderContext();
 
 	// Makes the context current.
-	void makeCurrent();
+	virtual void makeCurrent(RenderTarget* target) = 0;
+
+	// Sets the current render target.
+	void setTarget(RenderTarget* target);
 
 	// Initializes the context.
 	void init();
@@ -82,8 +85,8 @@ public:
 	// Keeps if the context initialization has already been done.
 	bool initDone;
 
-	// Context main target.
-	RenderTarget* mainTarget;
+	// Current render target.
+	RenderTarget* currentTarget;
 
 	// Render backend.
 	RenderBackend* backend;

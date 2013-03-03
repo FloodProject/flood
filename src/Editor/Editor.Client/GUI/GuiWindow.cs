@@ -1,4 +1,5 @@
 ﻿using System;
+using Flood;
 using Flood.GUI.Controls;
 using Flood.GUI.Renderers;
 using Flood.GUI.Skins;
@@ -7,6 +8,11 @@ namespace Editor.Client.Gui
 {
     public abstract class GuiWindow : IDisposable
     {
+        /// <summary>
+        /// Native GUI window.
+        /// </summary>
+        public Window NativeWindow;
+
         /// <summary>
         /// Renderer of the GUI.
         /// </summary>

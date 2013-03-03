@@ -164,6 +164,8 @@ void EditorFrame::createEngine()
 
 //-----------------------------------//
 
+void SetMainWindow(Window* window);
+
 void EditorFrame::createUI()
 {
 	sceneWindow = new SceneWindow(this);
@@ -182,6 +184,9 @@ void EditorFrame::createUI()
 
 	RenderContextSettings settings;
 	RenderContext* context = window->createContext(settings);
+
+	window->makeCurrent();
+	SetMainWindow(window);
 
 	Camera* camera = AllocateHeap(Camera);
 
@@ -214,9 +219,11 @@ void EditorFrame::onRender()
 
 //-----------------------------------//
 
+void UpdateGUI();
+
 void EditorFrame::onUpdate(float delta)
 {
-
+	UpdateGUI();
 }
 
 //-----------------------------------//

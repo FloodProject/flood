@@ -76,7 +76,6 @@ VertexBufferPtr BufferManager::getVertexBuffer(const GeometryBuffer* gb)
 
 //-----------------------------------//
 
-
 IndexBufferPtr BufferManager::getIndexBuffer(const GeometryBuffer* gb)
 {
 	BufferEntry* bufs = getBuffer(gb);

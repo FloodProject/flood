@@ -224,10 +224,10 @@ public ref class TextRenderer
 		sysFont = gcnew System::Drawing::Font(font->FaceName, font->Size);
 		font->RendererData = sysFont; 
 		return true;
-   }
+	}
 
-   static void FreeFont(Flood::GUI::Font^ font)
-   {
+	static void FreeFont(Flood::GUI::Font^ font)
+	{
 		//Debug.Print(String.Format("FreeFont {0}", font->FaceName));
 		if (font->RendererData == nullptr)
 			return;
@@ -495,7 +495,7 @@ public:
 
 	virtual void LoadTextureBitmap(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bitmap) override
 	{
-        TextureUtil::LoadTextureInternal(t,bitmap);
+		TextureUtil::LoadTextureInternal(t,bitmap);
 	}
 
 	virtual void FreeTexture(Flood::GUI::Texture^ t) override
@@ -536,7 +536,6 @@ public:
 		// - only during initialization.
 		return pixel;
 	}
-
 };
 
 class GwenInput
@@ -570,9 +569,7 @@ public:
 
 		inputManager->getKeyboard()->onKeyPress.Connect(this, &GwenInput::ProcessKeyDown);
 		inputManager->getKeyboard()->onKeyRelease.Connect(this, &GwenInput::ProcessKeyUp);
-
 	}
-
 
 	void Initialize(gcroot<Flood::GUI::Controls::Canvas^> c)
 	{
@@ -693,12 +690,12 @@ public:
 };
 
 public ref class NativeGUI {
+public:
 
 	Flood::Editor::Editor^ managedEditor;
 	GwenRenderer^ renderer;
 	GwenInput* input;
 
-public:
 	NativeGUI(InputManager* inputManager){
 		Initialize(inputManager);
 	}
@@ -735,6 +732,10 @@ void InitializeGUI(InputManager* inputManager){
 	gs_GUIInstance = gcnew NativeGUI(inputManager);
 }
 
+void UpdateGUI() {
+	gs_GUIInstance->managedEditor->Update();
+}
+
 void ResizeGUI(int x, int y) {
 	gs_GUIInstance->SetSize(x, y);
 }
@@ -747,5 +748,10 @@ void CloseGUI() {
 
 void RenderGUI(RenderBlock& rb) {
 	gs_GUIInstance->Render(rb);
+}
+
+void SetMainWindow(Window* window) {
+	auto NativeWindow = gcnew Flood::Window(System::IntPtr(window));
+	gs_GUIInstance->managedEditor->MainWindow->NativeWindow = NativeWindow;
 }
 

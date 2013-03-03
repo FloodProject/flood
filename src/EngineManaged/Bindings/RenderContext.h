@@ -54,8 +54,9 @@ namespace Flood
         RenderContext(System::IntPtr native);
         RenderContext();
         property bool InitDone;
-        property Flood::RenderTarget^ MainTarget;
-        void MakeCurrent();
+        property Flood::RenderTarget^ CurrentTarget;
+        void MakeCurrent(Flood::RenderTarget^ target);
+        void SetTarget(Flood::RenderTarget^ target);
         void Init();
         void ResetState();
         Flood::Color GetPixel(unsigned short x, unsigned short y);

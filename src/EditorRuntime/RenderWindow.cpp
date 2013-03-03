@@ -22,6 +22,7 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 	, cursorPriority(0)
 {
 	inputManager = new EditorInputManager(GetInputManager());
+	setUserData(canvas);
 }
 
 //-----------------------------------//
@@ -32,7 +33,7 @@ RenderWindow::~RenderWindow()
 	removeViews();
 
 	LogDebug("Destroying RenderContext");
-	Deallocate(context);
+	context.reset();
 
 	Deallocate(inputManager);
 }
@@ -43,7 +44,7 @@ RenderContext* RenderWindow::createContext(const RenderContextSettings&)
 {
 	if( !canvas ) return false;
 
-	context = AllocateThis(WxRenderContext, canvas);
+	RenderContext* context = AllocateThis(WxRenderContext, canvas);
 	setContext(context);
 
 	return context;
@@ -73,7 +74,7 @@ void RenderWindow::makeCurrent()
 	if( !context || !canvas ) 
 		return;
 
-	((WxRenderContext*)context)->makeCurrent(canvas);
+	((WxRenderContext*)context.get())->makeCurrent(this);
 }
 
 //-----------------------------------//

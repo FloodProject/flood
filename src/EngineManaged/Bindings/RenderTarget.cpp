@@ -94,3 +94,15 @@ void Flood::RenderTarget::SetContext(Flood::RenderContext^ context)
     ((::RenderTarget*)NativePtr)->setContext(arg0);
 }
 
+System::IntPtr Flood::RenderTarget::GetUserData()
+{
+    auto ret = ((::RenderTarget*)NativePtr)->getUserData();
+    return IntPtr(ret);
+}
+
+void Flood::RenderTarget::SetUserData(System::IntPtr v)
+{
+    auto arg0 = v.ToPointer();
+    ((::RenderTarget*)NativePtr)->setUserData(arg0);
+}
+

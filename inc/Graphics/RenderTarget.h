@@ -76,13 +76,16 @@ public:
 	virtual const Settings& getSettings() const = 0;
 
 	// Gets the context associated with the target.
-	GETTER(Context, RenderContext*, context)
+	GETTER(Context, RenderContext*, context.get())
 
 	// Sets the context associated with the target.
 	void setContext(RenderContext* context);
 
 	// Gets the list of views associated with the target.
 	GETTER(Views, const RenderViewsVector&, views)
+
+	// Gets/sets custom user data.
+	ACCESSOR(UserData, void*, userData)
 
 	// Event fired when the target gets resized.
 	Event1<const Settings&> onTargetResize;
@@ -92,8 +95,11 @@ protected:
 	// Handles resizing the target views.
 	void handleResize();
 
-	RenderContext* context;
+	RenderContextPtr context;
 	RenderViewsVector views;
+
+	// User data.
+	void* userData;
 };
 
 //-----------------------------------//
