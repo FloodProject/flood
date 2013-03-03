@@ -77,6 +77,7 @@ namespace Cxxi.Libraries
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
             lib.SetClassAsValueType("Settings");
             lib.SetClassAsValueType("WindowSettings");
+            lib.SetEnumAsFlags("WindowStyles");
         }
 
         public void Postprocess(Library lib)
@@ -106,11 +107,15 @@ namespace Cxxi.Libraries
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
                     "Graphics/Graphics.h",
+                    "Graphics/RenderContext.h",
                     "Graphics/RenderDevice.h",
                     "Graphics/RenderBatch.h",
+                    "Graphics/RenderTarget.h",
+                    "Graphics/RenderView.h",
                     "Graphics/Texture.h",
                     "Engine/Engine.h",
                     "Engine/Window/Window.h",
+                    "Engine/Window/WindowManager.h",
                     "Input/InputManager.h",
                 };
 
