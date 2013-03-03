@@ -100,6 +100,11 @@ namespace Flood.GUI.Controls
 
         public const int MaxCoord = 4096; // added here from various places in code
 
+        public bool Disposed
+        {
+            get { return m_Disposed; }
+        }
+
         /// <summary>
         /// Logical list of children. If InnerPanel is not null, returns InnerPanel's children.
         /// </summary>
