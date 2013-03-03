@@ -27,6 +27,16 @@ struct Color;
 class RenderBuffer;
 class Settings;
 
+struct API_GRAPHICS RenderContextSettings
+{
+	RenderContextSettings();
+
+	uint16 bitsPerPixel;
+	uint16 depthBits;
+	uint16 stencilBits;
+	uint16 antialiasLevel;
+};
+
 /**
  * Represents a rendering context.
  */
@@ -36,7 +46,7 @@ class API_GRAPHICS RenderContext : public ReferenceCounted
 public:
 
 	RenderContext();
-	~RenderContext();
+	virtual ~RenderContext();
 
 	// Makes the context current.
 	void makeCurrent();

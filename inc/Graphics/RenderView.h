@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Graphics/API.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Matrix4x3.h"

@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Engine/API.h"
-#include "Core/Math/Vector.h"
 #include "Graphics/RenderTarget.h"
 #include "Engine/Input/InputManager.h"
 
@@ -16,7 +15,14 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-typedef void WindowHandle;
+typedef void* WindowHandle;
+
+enum class WindowStyles
+{
+	None = 0,
+	TopLevel   = 1 << 0,
+	MiniFrame  = 1 << 1,
+};
 
 class API_ENGINE WindowSettings : public Settings
 {
@@ -27,19 +33,16 @@ public:
 
 	String title;
 	bool fullScreen;
-	uint16 bitsPerPixel;
-	uint16 depthBits;
-	uint16 stencilBits;
-	uint16 antialiasLevel;
-	WindowHandle* handle;
+	WindowHandle handle;
+	WindowStyles styles;
 };
 
 //-----------------------------------//
 
 /**
  * In most platforms (PCs) this will be just a normal window on the
- * desktop, but on some platforms (consoles, for instance) this might 
- * be slighty different, so some methods might not make much sense. 
+ * desktop, but on some platforms (consoles, for instance) this might
+ * be slighty different, so some methods might not make much sense.
  */
 
 class API_ENGINE Window : public RenderTarget
@@ -47,6 +50,9 @@ class API_ENGINE Window : public RenderTarget
 public:
 
 	Window (const WindowSettings& settings);
+
+	// Creates a new render context.
+	virtual RenderContext* createContext(const RenderContextSettings&) = 0;
 
 	// Updates the window content.
 	void update() OVERRIDE {}
@@ -76,8 +82,7 @@ public:
 	virtual Vector2i getCursorPosition() const { return Vector2i(0,0); }
 
 	// Sets the cursor position on screen.
-	virtual void setCursorPosition( int x, int y ) {}
-	void setCursorPosition( const Vector2i& pos );
+	virtual void setCursorPosition( int x, int y );
 
 	// Gets if the window has focus.
 	virtual bool hasFocus() { return false; }
@@ -107,6 +112,9 @@ protected:
 
 	// Holds the window settings.
 	WindowSettings settings;
+
+	// Render context associated with this window.
+	RenderContextPtr renderContext;
 };
 
 //-----------------------------------//

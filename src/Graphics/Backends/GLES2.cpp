@@ -169,7 +169,7 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 		if( numVertices > 0 )
 		{
 			glDrawArrays( primitiveType, batch->range.start, numVertices );
- 			CheckLastErrorGL("Error drawing vertex buffer");
+			CheckLastErrorGL("Error drawing vertex buffer");
 		}
 	}
 

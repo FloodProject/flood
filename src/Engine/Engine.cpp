@@ -18,6 +18,7 @@
 #include "Engine/Audio/Device.h"
 #include "Engine/Paging/PageManager.h"
 #include "Engine/Physics/Physics.h"
+#include "Engine/Window/WindowManager.h"
 #include "Script/ScriptManager.h"
 
 #ifdef API_ENGINE_DLL_EXPORT
@@ -41,6 +42,7 @@ Engine::Engine()
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
+	, windowManager(nullptr)
 {
 	assert(gs_engineInstance == nullptr);
 	gs_engineInstance = this;
@@ -59,6 +61,7 @@ Engine::~Engine()
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
+	Deallocate(windowManager);
 
 #ifdef ENABLE_AUDIO_OPENAL
 	Deallocate(audioDevice);

@@ -27,6 +27,7 @@ class PhysicsManager;
 class PageManager;
 class InputManager;
 class ScriptManager;
+class WindowManager;
 
 //-----------------------------------//
 
@@ -78,6 +79,9 @@ public:
 	// Gets/sets the input manager.
 	ACCESSOR(InputManager, InputManager*, inputManager)
 
+	// Gets/sets the window manager.
+	ACCESSOR(WindowManager, WindowManager*, windowManager)
+
 	// Gets the main engine logger.
 	GETTER(Logger, Log*, log)
 
@@ -112,8 +116,11 @@ protected:
 	// Physics manager.
 	PhysicsManager* physicsManager;
 
-	// Scripting state.
+	// Script manager.
 	ScriptManager* scriptManager;
+
+	// Window manager.
+	WindowManager* windowManager;
 };
 
 // Gets the engine instance.

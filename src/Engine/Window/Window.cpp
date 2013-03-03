@@ -19,11 +19,8 @@ WindowSettings::WindowSettings( uint16 width, uint16 height, const String& title
 	: Settings( width, height )
 	, title(title)
 	, fullScreen(fullscreen)
-	, bitsPerPixel(32)
-	, stencilBits(8)
-	, depthBits(24)
-	, antialiasLevel(0)
 	, handle(nullptr)
+	, styles(WindowStyles::None)
 { }
 
 //-----------------------------------//
@@ -64,9 +61,8 @@ void Window::handleWindowFocus( bool focusLost )
 
 //-----------------------------------//
 
-void Window::setCursorPosition( const Vector2i& pos )
+void Window::setCursorPosition(int x, int y)
 {
-	setCursorPosition( pos.x, pos.y );
 }
 
 //-----------------------------------//

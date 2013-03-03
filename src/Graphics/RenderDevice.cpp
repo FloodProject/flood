@@ -430,6 +430,7 @@ void RenderDevice::setActiveView( RenderView* view )
 	activeView = view;
 	if( !activeView ) return;
 
+	setRenderTarget(view->getRenderTarget());
 	renderBackend->setupRenderView(view);
 }
 
@@ -447,8 +448,10 @@ void RenderDevice::setRenderTarget(RenderTarget* target)
 	activeTarget = target;
 	if( !activeTarget ) return;
 
-	activeTarget->makeCurrent();
+	//activeTarget->makeCurrent();
 	activeContext = activeTarget->getContext();
+	activeContext->makeCurrent();
+
 	renderBackend = activeContext->backend;
 }
 

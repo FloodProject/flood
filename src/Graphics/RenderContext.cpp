@@ -19,6 +19,15 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
+RenderContextSettings::RenderContextSettings()
+	: bitsPerPixel(32)
+	, stencilBits(8)
+	, depthBits(24)
+	, antialiasLevel(0)
+{ }
+
+//-----------------------------------//
+
 RenderContext::RenderContext()
 	: mainTarget(nullptr)
 	, bufferManager(nullptr)
@@ -50,6 +59,9 @@ void RenderContext::makeCurrent()
 {
 	if( !mainTarget ) return;
 	mainTarget->makeCurrent();
+
+	if (!initDone)
+		init();
 }
 
 //-----------------------------------//
