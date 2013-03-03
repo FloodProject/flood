@@ -22,6 +22,19 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
+Type::Type()
+{
+}
+
+//-----------------------------------//
+
+Type::Type(TypeKind kind, const char* name, uint16 size)
+	: kind(kind), name(name), size(size), serialize(nullptr)
+{
+}
+
+//-----------------------------------//
+
 bool ReflectionIsPrimitive(const Type* type)
 {
 	return type && type->kind == TypeKind::Primitive;

@@ -48,12 +48,8 @@ typedef void (*ReflectionWalkFunction)(ReflectionContext*, ReflectionWalkType);
 
 struct API_CORE Type
 {
-	Type()
-	{}
-
-	Type(TypeKind kind, const char* name, uint16 size)
-		: kind(kind), name(name), size(size), serialize(nullptr)
-	{}
+	Type();
+	Type(TypeKind kind, const char* name, uint16 size);
 
 	// Meta type of the type.
 	TypeKind kind;
