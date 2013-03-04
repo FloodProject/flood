@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Flood.GUI.ControlInternal;
 
 namespace Flood.GUI.Controls
@@ -16,6 +17,8 @@ namespace Flood.GUI.Controls
                 Space = 10;
                 Target = this;
                 RestrictToParent = true;
+
+                Cursor = (parent.IsHorizontal)? Cursors.SizeWE : Cursors.SizeNS;
 
                 Dragged += control => UpdateRelativePosition();
             }
