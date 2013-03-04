@@ -852,7 +852,7 @@ namespace Flood.Tools.RPCGen
             var paramType = param.ParameterType;
             var arrayElemType = paramType.GetElementType();
 
-            WriteLine("oprot.WriteArrayBegin(new TArray(TType.{0}, {1}.Count));",
+            WriteLine("oprot.WriteArrayBegin(new TArray(TType.{0}, {1}.Length));",
                       ConvertFromTypeToThrift(paramType).ToString(),
                       ToTitleCase(param.Name));
 
@@ -1135,8 +1135,9 @@ namespace Flood.Tools.RPCGen
             var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
             var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
 
-            WriteLine("oprot.WriteMapBegin(new TMap(TType.{0}, {1}.Count));",
-                      ConvertFromTypeToThrift(paramType).ToString(),
+            WriteLine("oprot.WriteMapBegin(new TMap(TType.{0}, TType.{1}, {2}.Count));",
+                      ConvertFromTypeToThrift(mapElemType1).ToString(),
+                      ConvertFromTypeToThrift(mapElemType2).ToString(),
                       ToTitleCase(param.Name));
 
             var iterName = string.Format("_iter{0}", GenericIndex++);

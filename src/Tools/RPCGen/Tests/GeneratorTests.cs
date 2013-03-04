@@ -784,7 +784,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Type = TType.Map;\r\n"+
                     "            field.ID = 0;\r\n"+
                     "            oprot.WriteFieldBegin(field);\r\n"+
-                    "            oprot.WriteMapBegin(new TMap(TType.Map, T1.Count));\r\n"+
+                    "            oprot.WriteMapBegin(new TMap(TType.I32, TType.String, T1.Count));\r\n" +
                     "            foreach (var _iter6 in T1)\r\n"+
                     "            {\r\n"+
                     "                oprot.WriteI32(_iter6.Key);\r\n"+
@@ -877,7 +877,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Type = TType.Array;\r\n" +
                     "            field.ID = 0;\r\n" +
                     "            oprot.WriteFieldBegin(field);\r\n" +
-                    "            oprot.WriteArrayBegin(new TArray(TType.Array, T1.Count));\r\n" +
+                    "            oprot.WriteArrayBegin(new TArray(TType.Array, T1.Length));\r\n" +
                     "            foreach (var _iter3 in T1)\r\n" +
                     "            {\r\n" +
                     "                oprot.WriteI32(_iter3);\r\n" +
@@ -1213,7 +1213,7 @@ namespace Flood.Tools.RPCGen.Tests
         public void GenerateMapSerialize()
         {
             string expected =
-                "oprot.WriteMapBegin(new TMap(TType.Map, Map.Count));\r\n" +
+                "oprot.WriteMapBegin(new TMap(TType.I32, TType.String, Map.Count));\r\n" +
                 "foreach (var _iter0 in Map)\r\n" +
                 "{\r\n" +
                 "    oprot.WriteI32(_iter0.Key);\r\n" +
@@ -1230,7 +1230,7 @@ namespace Flood.Tools.RPCGen.Tests
         public void GenerateMapSerialize2()
         {
             string expected =
-                "oprot.WriteMapBegin(new TMap(TType.Map, Map.Count));\r\n" +
+                "oprot.WriteMapBegin(new TMap(TType.Class, TType.String, Map.Count));\r\n" +
                 "foreach (var _iter0 in Map)\r\n" +
                 "{\r\n" +
                 "    var _elem1 = new TestClass2Impl()\r\n" +
