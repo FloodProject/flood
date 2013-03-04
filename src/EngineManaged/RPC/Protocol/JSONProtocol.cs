@@ -655,6 +655,18 @@ namespace Flood.RPC.Protocol
             WriteJSONArrayEnd();
         }
 
+        public override void WriteArrayBegin(TArray array)
+        {
+            WriteJSONArrayStart();
+            WriteJSONString(GetTypeNameForTypeID(array.ElementType));
+            WriteJSONInteger(array.Count);
+        }
+
+        public override void WriteArrayEnd()
+        {
+            WriteJSONArrayEnd();
+        }
+
         public override void WriteSetBegin(TSet set)
         {
             WriteJSONArrayStart();
@@ -1022,6 +1034,20 @@ namespace Flood.RPC.Protocol
         }
 
         public override void ReadListEnd()
+        {
+            ReadJSONArrayEnd();
+        }
+
+        public override TArray ReadArrayBegin()
+        {
+            TArray array = new TArray();
+            ReadJSONArrayStart();
+            array.ElementType = GetTypeIDForTypeName(ReadJSONString(false));
+            array.Count = (int)ReadJSONInteger();
+            return array;
+        }
+
+        public override void ReadArrayEnd()
         {
             ReadJSONArrayEnd();
         }

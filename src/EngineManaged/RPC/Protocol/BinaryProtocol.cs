@@ -124,6 +124,17 @@ namespace Flood.RPC.Protocol
             WriteByte((byte)TType.Stop);
         }
 
+        public override void WriteArrayBegin(TArray array)
+        {
+            WriteByte((byte)array.ElementType);
+            WriteI32(array.Count);
+        }
+
+        public override void WriteArrayEnd()
+        {
+        }
+
+
         public override void WriteMapBegin(TMap map)
         {
             WriteByte((byte)map.KeyType);
@@ -311,6 +322,19 @@ namespace Flood.RPC.Protocol
         }
 
         public override void ReadListEnd()
+        {
+        }
+
+        public override TArray ReadArrayBegin()
+        {
+            TArray array = new TArray();
+            array.ElementType = (TType)ReadByte();
+            array.Count = ReadI32();
+
+            return array;
+        }
+
+        public override void ReadArrayEnd()
         {
         }
 

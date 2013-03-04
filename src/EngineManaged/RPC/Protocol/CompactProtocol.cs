@@ -280,15 +280,24 @@ namespace Flood.RPC.Protocol
         }
 
         /** 
-         * Write a list header.
+         * Write a array header.
          */
         public override void WriteListBegin(TList list)
         {
             WriteCollectionBegin(list.ElementType, list.Count);
         }
 
+        /** 
+         * Write a array header.
+         */
+        public override void WriteArrayBegin(TArray array)
+        {
+            WriteCollectionBegin(array.ElementType, array.Count);
+        }
+
+
         /**
-         * Write a collection header.
+         * Write a set header.
          */
         public override void WriteSetBegin(TSet set)
         {
@@ -397,6 +406,7 @@ namespace Flood.RPC.Protocol
         public override void WriteMessageEnd() { }
         public override void WriteMapEnd() { }
         public override void WriteListEnd() { }
+        public override void WriteArrayEnd() { }
         public override void WriteSetEnd() { }
         public override void WriteCollectionEnd() { }
         public override void WriteFieldEnd() { }
@@ -581,8 +591,8 @@ namespace Flood.RPC.Protocol
         }
 
         /**
-         * Read a list header off the wire. If the list size is 0-14, the size will 
-         * be packed into the element type header. If it's a longer list, the 4 MSB
+         * Read a array header off the wire. If the array size is 0-14, the size will 
+         * be packed into the element type header. If it's a longer array, the 4 MSB
          * of the element type header will be 0xF, and a varint will follow with the
          * true size.
          */
@@ -596,6 +606,24 @@ namespace Flood.RPC.Protocol
             }
             TType type = getTType(size_and_type);
             return new TList(type, size);
+        }
+
+        /**
+         * Read a array header off the wire. If the array size is 0-14, the size will 
+         * be packed into the element type header. If it's a longer array, the 4 MSB
+         * of the element type header will be 0xF, and a varint will follow with the
+         * true size.
+         */
+        public override TArray ReadArrayBegin()
+        {
+            byte size_and_type = ReadByte();
+            int size = (size_and_type >> 4) & 0x0f;
+            if (size == 15)
+            {
+                size = (int)ReadVarint32();
+            }
+            TType type = getTType(size_and_type);
+            return new TArray(type, size);
         }
 
         /**
@@ -727,6 +755,7 @@ namespace Flood.RPC.Protocol
         public override void ReadMessageEnd() { }
         public override void ReadFieldEnd() { }
         public override void ReadMapEnd() { }
+        public override void ReadArrayEnd() { }
         public override void ReadListEnd() { }
         public override void ReadSetEnd() { }
         public override void ReadCollectionEnd() { }

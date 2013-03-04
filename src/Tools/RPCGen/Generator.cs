@@ -680,6 +680,7 @@ namespace Flood.Tools.RPCGen
         {
             switch (ConvertFromTypeToThrift(type))
             {
+                case TType.Array:
                 case TType.List:
                 case TType.Map:
                 case TType.Set:
@@ -808,9 +809,14 @@ namespace Flood.Tools.RPCGen
                 case TType.Void:
                     throw new NotSupportedException();
                 case TType.Struct:
-                case TType.Class:
                 case TType.Exception:
                     GenerateStructSerialize(param);
+                    break;
+                case TType.Class:
+                    GenerateClassSerialize(param);
+                    break;
+                case TType.Array:
+                    GenerateArraySerialize(param);
                     break;
                 case TType.List:
                 case TType.Map:
@@ -841,6 +847,52 @@ namespace Flood.Tools.RPCGen
             }
         }
 
+        internal void GenerateArraySerialize(Parameter param)
+        {
+            var paramType = param.ParameterType;
+            var arrayElemType = paramType.GetElementType();
+
+            WriteLine("oprot.WriteArrayBegin(new TArray(TType.{0}, {1}.Count));",
+                      ConvertFromTypeToThrift(paramType).ToString(),
+                      ToTitleCase(param.Name));
+
+            var iterName = string.Format("_iter{0}", GenericIndex++);
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteStartBraceIndent();
+
+            GenerateContainerSingleElementSerialization(arrayElemType, iterName);
+
+            WriteCloseBraceIndent();
+
+            WriteLine("oprot.WriteArrayEnd();");
+        }
+
+        internal void GenerateClassSerialize(Parameter param)
+        {
+            WriteLine("var {0}Impl = new {1}Impl()", ToTitleCase(param.Name),
+                param.ParameterType.Name);
+            WriteStartBraceIndent();
+
+            foreach (var field in GetAllFields(param.ParameterType))
+            {
+                if (field.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
+
+                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
+            }
+            foreach (var property in GetAllProperties(param.ParameterType))
+            {
+                if (property.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
+
+                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), property.Name);
+            }
+
+            PopIndent();
+            WriteLine("};");
+            WriteLine("{0}Impl.Write(oprot);", ToTitleCase(param.Name));
+        }
+
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
@@ -850,10 +902,21 @@ namespace Flood.Tools.RPCGen
                 param.ParameterType.Name);
             WriteStartBraceIndent();
 
-            //TODO  : Fix getFields and see if GetAllProperties is needed 
-            foreach (var field in param.ParameterType.GetFields())
-                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
+            foreach (var field in GetAllFields(param.ParameterType))
+            {
+                if (field.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
 
+                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
+            }
+            foreach (var property in GetAllProperties(param.ParameterType))
+            {
+                if (property.GetCustomAttribute<IdAttribute>() == null)
+                    continue;
+
+                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), property.Name);
+            }
+    
             PopIndent();
             WriteLine("};");
             WriteLine("{0}Impl.Write(oprot);", ToTitleCase(param.Name));
@@ -903,6 +966,9 @@ namespace Flood.Tools.RPCGen
                 case TType.Class:
                     GenerateStructDeserialize(param);
                     break;
+                case TType.Array:
+                    GenerateArrayDeserialize(param);
+                    break;
                 case TType.List:
                 case TType.Map:
                 case TType.Set:
@@ -936,6 +1002,28 @@ namespace Flood.Tools.RPCGen
             }
         }
 
+        internal void GenerateArrayDeserialize(Parameter param)
+        {
+            var arrayElemType = param.ParameterType.GetElementType();
+
+            var arrayName = string.Format("_array{0}", GenericIndex++);
+            WriteLine("var {0} = iprot.ReadArrayBegin();", arrayName);
+
+            WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(param.Name),
+                      ConvertToTypeString(arrayElemType), arrayName);
+
+            var iterName = string.Format("_i{0}", GenericIndex++);
+            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
+                      iterName, arrayName);
+
+            WriteStartBraceIndent();
+
+            GenerateArraySingleElementDeserialization(arrayElemType, ToTitleCase(param.Name), iterName);
+
+            WriteCloseBraceIndent();
+            WriteLine("iprot.ReadArrayEnd();");
+        }
+
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
@@ -962,10 +1050,31 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         internal void GenerateContainerDeserialize(Parameter param)
         {
-            GenerateListDeserialize(param);
+            var type = param.ParameterType;
+            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                    GenerateListDeserialize(param);
+                    break;
+                case TType.Map:
+                    GenerateMapDeserialize(param);
+                    break;
+                case TType.Set:
+                    GenerateSetDeserialize(param);
+                    break;
+                case TType.Collection:
+                    GenerateCollectionDeserialize(param);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
-        //TODO: Fix this to handle classes?
+        /// <summary>
+        /// Generates the code to serialize a list  
+        /// </summary>
         internal void GenerateListSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
@@ -979,14 +1088,73 @@ namespace Flood.Tools.RPCGen
             WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
             WriteStartBraceIndent();
 
-            GenerateContainerElementSerialization(listElemType, iterName);
+            GenerateContainerSingleElementSerialization(listElemType, iterName);
 
             WriteCloseBraceIndent();
 
             WriteLine("oprot.WriteListEnd();");
         }
 
-        internal void GenerateContainerElementSerialization(Type elemType, string iterName)
+        /// <summary>
+        /// Generates the code to serialize a collection  
+        /// </summary>
+        internal void GenerateCollectionSerialize(Parameter param)
+        {
+            GenerateListSerialize(param);
+        }
+
+        /// <summary>
+        /// Generates the code to serialize a set  
+        /// </summary>
+        internal void GenerateSetSerialize(Parameter param)
+        {
+            var paramType = param.ParameterType;
+            var setElemType = param.ParameterType.GetGenericArguments()[0];
+
+            WriteLine("oprot.WriteSetBegin(new TSet(TType.{0}, {1}.Count));",
+                      ConvertFromTypeToThrift(paramType).ToString(),
+                      ToTitleCase(param.Name));
+
+            var iterName = string.Format("_iter{0}", GenericIndex++);
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteStartBraceIndent();
+
+            GenerateContainerSingleElementSerialization(setElemType, iterName);
+
+            WriteCloseBraceIndent();
+
+            WriteLine("oprot.WriteSetEnd();");
+        }
+
+        /// <summary>
+        /// Generates the code to serialize a map  
+        /// </summary>
+        internal void GenerateMapSerialize(Parameter param)
+        {
+            var paramType = param.ParameterType;
+            var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
+            var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
+
+            WriteLine("oprot.WriteMapBegin(new TMap(TType.{0}, {1}.Count));",
+                      ConvertFromTypeToThrift(paramType).ToString(),
+                      ToTitleCase(param.Name));
+
+            var iterName = string.Format("_iter{0}", GenericIndex++);
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteStartBraceIndent();
+
+            GenerateContainerDoubleElementSerialization(mapElemType1, mapElemType2, iterName);
+
+            WriteCloseBraceIndent();
+
+            WriteLine("oprot.WriteMapEnd();");
+
+        }
+
+        /// <summary>
+        /// Generates the code to serialize a container element  
+        /// </summary>
+        internal void GenerateContainerSingleElementSerialization(Type elemType, string iterName)
         {
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1005,7 +1173,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Class:
                 case TType.Exception:
                     WriteLine("var {0} = new {1}Impl()", elemName, elemType.Name);
-                    WriteStartBraceIndent();    
+                    WriteStartBraceIndent();
                     foreach (var field in GetAllFields(elemType))
                     {
                         if (field.GetCustomAttribute<IdAttribute>() == null)
@@ -1031,8 +1199,7 @@ namespace Flood.Tools.RPCGen
                 case TType.I32:
                 case TType.I64:
                 case TType.String:
-                    Debug.Assert(elemType.IsPrimitive);
-                    WriteLine("oprot.Write{0}({1});", thriftType.ToString(), iterName);    
+                    WriteLine("oprot.Write{0}({1});", thriftType.ToString(), iterName);
                     break;
                 case TType.Guid:
                     WriteLine("oprot.WriteString({0}.ToString());", iterName);
@@ -1046,45 +1213,18 @@ namespace Flood.Tools.RPCGen
 
         }
 
-        internal void GenerateCollectionSerialize(Parameter param)
+        /// <summary>
+        /// Generates the code to serialize a dual element container  
+        /// </summary>
+        internal void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName)
         {
-            var paramType = param.ParameterType;
-            var collectionElemType = param.ParameterType.GetGenericArguments()[0];
-
-            WriteLine("oprot.WriteCollectionBegin(new TCollection(TType.{0}, {1}.Count));",
-                      ConvertFromTypeToThrift(paramType).ToString(),
-                      ToTitleCase(param.Name));
-
-            var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
-            WriteStartBraceIndent();
-
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = new {1}Impl()", elemName, collectionElemType.Name);
-            WriteStartBraceIndent();
-            //TODO  : Fix getFields and see if GetAllProperties is needed
-            foreach (var field in collectionElemType.GetFields())
-                WriteLine("{0} = {1}.{0},", field.Name, iterName);
-            PopIndent();
-            WriteLine("};");
-
-            WriteLine("{0}.Write(oprot);", elemName);
-            WriteCloseBraceIndent();
-
-            WriteLine("oprot.WriteCollectionEnd();");
+            GenerateContainerSingleElementSerialization(elemType1, iterName + ".Key");
+            GenerateContainerSingleElementSerialization(elemType2, iterName + ".Value");
         }
 
-        internal void GenerateSetSerialize(Parameter param)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void GenerateMapSerialize(Parameter param)
-        {
-            throw new NotImplementedException();
-        }
-
-        //TODO: Fix this to handle classes
+        /// <summary>
+        /// Generates the code to deserialize a list  
+        /// </summary>
         internal void GenerateListDeserialize(Parameter param)
         {
             var listElemType = param.ParameterType.GetGenericArguments()[0];
@@ -1095,29 +1235,280 @@ namespace Flood.Tools.RPCGen
             var listName = string.Format("_list{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadListBegin();", listName);
 
-            var loopName = string.Format("_i{0}", GenericIndex++);
+            var iterName = string.Format("_i{0}", GenericIndex++);
             WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
-                      loopName, listName);
+                      iterName, listName);
 
             WriteStartBraceIndent();
 
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = new {1}Impl();", elemName, listElemType.Name);
-            WriteLine("{0}.Read(iprot);", elemName);
-
-            var elemName2 = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = new {1}()", elemName2, listElemType.FullName);
-            WriteStartBraceIndent();
-            //TODO  : Fix getFields and see if GetAllProperties is needed
-            foreach (var field in listElemType.GetFields())
-                WriteLine("{0} = {1}.{0},", field.Name, elemName);
-            PopIndent();
-            WriteLine("};");
-
-            WriteLine("{0}.Add({1});", ToTitleCase(param.Name), elemName2);
+            GenerateContainerSingleElementDeserialization(listElemType, ToTitleCase(param.Name));
 
             WriteCloseBraceIndent();
             WriteLine("iprot.ReadListEnd();");
+        }
+
+        /// <summary>
+        /// Generates the code to deserialize a collection  
+        /// </summary>
+        internal void GenerateCollectionDeserialize(Parameter param)
+        {
+            GenerateListDeserialize(param);
+        }
+
+        /// <summary>
+        /// Generates the code to deserialize a set  
+        /// </summary>
+        internal void GenerateSetDeserialize(Parameter param)
+        {
+            var setElemType = param.ParameterType.GetGenericArguments()[0];
+
+            WriteLine("{0} = new HashSet<{1}>();", ToTitleCase(param.Name),
+                      ConvertToGenericArgsString(param.ParameterType));
+
+            var setName = string.Format("_set{0}", GenericIndex++);
+            WriteLine("var {0} = iprot.ReadSetBegin();", setName);
+
+            var iterName = string.Format("_i{0}", GenericIndex++);
+            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
+                      iterName, setName);
+
+            WriteStartBraceIndent();
+
+            GenerateContainerSingleElementDeserialization(setElemType, ToTitleCase(param.Name));
+
+            WriteCloseBraceIndent();
+            WriteLine("iprot.ReadSetEnd();");
+        }
+
+        /// <summary>
+        /// Generates the code to deserialize a map  
+        /// </summary>
+        internal void GenerateMapDeserialize(Parameter param)
+        {
+            var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
+            var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
+
+            WriteLine("{0} = new Dictionary<{1}>();", ToTitleCase(param.Name),
+                      ConvertToGenericArgsString(param.ParameterType));
+
+            var mapName = string.Format("_set{0}", GenericIndex++);
+            WriteLine("var {0} = iprot.ReadMapBegin();", mapName);
+
+            var iterName = string.Format("_i{0}", GenericIndex++);
+            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
+                      iterName, mapName);
+
+            WriteStartBraceIndent();
+
+            GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(param.Name));
+
+            WriteCloseBraceIndent();
+            WriteLine("iprot.ReadMapEnd();");
+        }
+
+        /// <summary>
+        /// Generates the code to deserialize a container element  
+        /// </summary>
+        internal void GenerateContainerSingleElementDeserialization(Type elemType, string containerName)
+        {
+
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+
+            var thriftType = ConvertFromTypeToThrift(elemType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.Collection:
+                case TType.Void:
+                    throw new NotSupportedException();
+                case TType.Struct:
+                case TType.Class:
+                case TType.Exception:
+                    WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
+                    WriteLine("{0}.Read(iprot);", elemName);
+
+                    var elemName2 = string.Format("_elem{0}", GenericIndex++);
+                    WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
+                    WriteStartBraceIndent();
+                    foreach (var field in GetAllFields(elemType))
+                    {
+                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+
+                        WriteLine("{0} = {1}.{0},", field.Name, elemName);
+                    }
+                    foreach (var property in GetAllProperties(elemType))
+                    {
+                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+                        WriteLine("{0} = {1}.{0},", property.Name, elemName);
+                    }
+                    PopIndent();
+                    WriteLine("};");
+                    WriteLine("{0}.Add({1});", containerName, elemName2);
+                    break;
+                case TType.Bool:
+                case TType.Byte:
+                case TType.Double:
+                case TType.I16:
+                case TType.I32:
+                case TType.I64:
+                case TType.String:
+                    Debug.Assert(elemType.IsPrimitive);
+                    WriteLine("{0}.Add(iprot.Read{1}());", containerName, thriftType.ToString());
+                    break;
+                case TType.Guid:
+                    WriteLine("{0}.Add(new System.Guid(iprot.ReadString()));", containerName);
+                    break;
+                case TType.DateTime:
+                    WriteLine("{0}.Add(new System.DateTime(iprot.ReadI64()));", containerName);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+        }
+
+        internal void GenerateArraySingleElementDeserialization(Type elemType, string containerName, string iterName)
+        {
+
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+
+            var thriftType = ConvertFromTypeToThrift(elemType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.Collection:
+                case TType.Void:
+                    throw new NotSupportedException();
+                case TType.Struct:
+                case TType.Class:
+                case TType.Exception:
+                    WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
+                    WriteLine("{0}.Read(iprot);", elemName);
+
+                    var elemName2 = string.Format("_elem{0}", GenericIndex++);
+                    WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
+                    WriteStartBraceIndent();
+                    foreach (var field in GetAllFields(elemType))
+                    {
+                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+
+                        WriteLine("{0} = {1}.{0},", field.Name, elemName);
+                    }
+                    foreach (var property in GetAllProperties(elemType))
+                    {
+                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+                        WriteLine("{0} = {1}.{0},", property.Name, elemName);
+                    }
+                    PopIndent();
+                    WriteLine("};");
+                    WriteLine("{0}[{1}] = {2};", containerName, iterName, elemName2);
+                    break;
+                case TType.Bool:
+                case TType.Byte:
+                case TType.Double:
+                case TType.I16:
+                case TType.I32:
+                case TType.I64:
+                case TType.String:
+                    Debug.Assert(elemType.IsPrimitive);
+                    WriteLine("{0}[{1}] = iprot.Read{2}();", containerName, iterName, thriftType.ToString());
+                    break;
+                case TType.Guid:
+                    WriteLine("{0}[{1}] = new System.Guid(iprot.ReadString());", containerName, iterName);
+                    break;
+                case TType.DateTime:
+                    WriteLine("{0}[{1}] = new System.DateTime(iprot.ReadI64());", containerName, iterName);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+        }
+
+        /// <summary>
+        /// Generates the code to deserialize a double element container  
+        /// </summary>
+        internal void GenerateContainerDoubleElementDeserialization(Type elemType1, Type elemType2, string containerName)
+        {
+            var elemName1 = string.Format("_elem{0}", GenericIndex++);
+            var elemName2 = string.Format("_elem{0}", GenericIndex++);
+
+            GenerateContainerDoubleElementDeserializationAux(elemType1, elemName1);
+            GenerateContainerDoubleElementDeserializationAux(elemType2, elemName2);
+
+            WriteLine("{0}.Add({1}, {2});", containerName, elemName1, elemName2);
+
+        }
+
+        /// <summary>
+        /// Auxiliary method to generate the code to deserialize a  double element container 
+        /// </summary>
+        internal void GenerateContainerDoubleElementDeserializationAux(Type elemType, string elemName)
+        {
+            var elemNameImpl = string.Format("_elem{0}", GenericIndex++);
+            var thriftType = ConvertFromTypeToThrift(elemType);
+
+            switch (thriftType)
+            {
+                case TType.List:
+                case TType.Map:
+                case TType.Set:
+                case TType.Collection:
+                case TType.Void:
+                    throw new NotSupportedException();
+                case TType.Struct:
+                case TType.Class:
+                case TType.Exception:
+                    WriteLine("var {0} = new {1}Impl();", elemNameImpl, elemType.Name);
+                    WriteLine("{0}.Read(iprot);", elemNameImpl);
+
+                    WriteLine("var {0} = new {1}()", elemName, elemType.FullName);
+                    WriteStartBraceIndent();
+                    foreach (var field in GetAllFields(elemType))
+                    {
+                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+
+                        WriteLine("{0} = {1}.{0},", field.Name, elemNameImpl);
+                    }
+                    foreach (var property in GetAllProperties(elemType))
+                    {
+                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                            continue;
+                        WriteLine("{0} = {1}.{0},", property.Name, elemNameImpl);
+                    }
+                    PopIndent();
+                    WriteLine("};");
+
+                    break;
+                case TType.Bool:
+                case TType.Byte:
+                case TType.Double:
+                case TType.I16:
+                case TType.I32:
+                case TType.I64:
+                case TType.String:
+                    WriteLine("var {0} = iprot.Read{1}();", elemName, thriftType.ToString());
+                    break;
+                case TType.Guid:
+                    WriteLine("var {0} = new System.Guid(iprot.ReadString());", elemName);
+                    break;
+                case TType.DateTime:
+                    WriteLine("var {0} = new System.DateTime(iprot.ReadI64());", elemName);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         internal void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
@@ -1281,6 +1672,8 @@ namespace Flood.Tools.RPCGen
                 return TType.Double;
             else if (type == typeof(string))
                 return TType.String;
+            else if (type.IsArray)
+                return TType.Array;
             else if (type == typeof(Guid) || typeof(Guid).IsAssignableFrom(type))
                 return TType.Guid;
             else if (type == typeof(DateTime) || typeof(DateTime).IsAssignableFrom(type))
@@ -1352,6 +1745,8 @@ namespace Flood.Tools.RPCGen
                 case TType.Guid:
                 case TType.DateTime:
                     return type.FullName;
+                case TType.Array:
+                    return ConvertToTypeString(type.GetElementType()) +"[]";
                 case TType.List:
                 case TType.Map:
                 case TType.Set:

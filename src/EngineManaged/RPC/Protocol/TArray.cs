@@ -22,30 +22,33 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Flood.RPC.Protocol
 {
-    public enum TType : byte
+    public struct TArray
     {
-        Stop = 0,
-        Void = 1,
-        Bool = 2,
-        Byte = 3,
-        Double = 4,
-        Exception = 5,
-        I16 = 6,
-        I32 = 8,
-        I64 = 10,
-        String = 11,
-        Struct = 12,
-        Map = 13,
-        Set = 14,
-        List = 15,
-        Collection = 16,
-        Class = 17,
-        Guid = 18,
-        DateTime = 19,
-        Array = 20
+        private TType elementType;
+        private int count;
 
+        public TArray(TType elementType, int count)
+            :this()
+        {
+            this.elementType = elementType;
+            this.count = count;
+        }
+
+        public TType ElementType
+        {
+            get { return elementType; }
+            set { elementType = value; }
+        }
+
+        public int Count
+        {
+            get { return count; }
+            set { count = value; }
+        }
     }
 }

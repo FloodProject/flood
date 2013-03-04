@@ -50,6 +50,8 @@ namespace Flood.RPC.Protocol
         public abstract void WriteFieldStop();
         public abstract void WriteMapBegin(TMap map);
         public abstract void WriteMapEnd();
+        public abstract void WriteArrayBegin(TArray array);
+        public abstract void WriteArrayEnd();
         public abstract void WriteListBegin(TList list);
         public abstract void WriteListEnd();
         public abstract void WriteSetBegin(TSet set);
@@ -75,6 +77,8 @@ namespace Flood.RPC.Protocol
         public abstract void ReadFieldEnd();
         public abstract TMap ReadMapBegin();
         public abstract void ReadMapEnd();
+        public abstract TArray ReadArrayBegin();
+        public abstract void ReadArrayEnd();
         public abstract TList ReadListBegin();
         public abstract void ReadListEnd();
         public abstract TSet ReadSetBegin();

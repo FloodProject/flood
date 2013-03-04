@@ -68,6 +68,12 @@ namespace Flood.Tools.RPCGen.Tests
         public Dictionary<int, string> t1;
     }
 
+    public class TestClass5
+    {
+        [Id(0)]
+        public int[] t1;
+    }
+
     public enum TestEnum : byte
     {
     }
@@ -107,6 +113,13 @@ namespace Flood.Tools.RPCGen.Tests
         {
             TType type = Generator.ConvertFromTypeToThrift(typeof(ICollection<>));
             Assert.AreEqual(TType.Collection, type);
+        }
+
+        [Test]
+        public void ThriftArray()
+        {
+            TType type = Generator.ConvertFromTypeToThrift(typeof(byte[]));
+            Assert.AreEqual(TType.Array, type);
         }
 
         [Test]
@@ -496,7 +509,6 @@ namespace Flood.Tools.RPCGen.Tests
             Assert.AreEqual(expected, generator.ToString());
         }
 
-
         [Test]
         public void GenerateMessageClass3()
         {
@@ -697,103 +709,187 @@ namespace Flood.Tools.RPCGen.Tests
         [Test]
         public void GenerateMessageClass4()
         {
-            //TODO: fix this to serialoiize dictionaries instead of lists
+
             generator.GenerateMessageClass(typeof(TestClass4));
             string expected =
-                   "[Serializable]\r\n"+
-                   "public class TestClass4Impl : Base\r\n"+
-                   "{\r\n"+
-                   "    private IDictionary<System.Int32, System.String> _t1;\r\n"+
-                   "\r\n"+
-                   "    public IDictionary<System.Int32, System.String> T1\r\n"+
-                   "    {\r\n"+
-                   "        get { return _t1; }\r\n"+
-                   "        set { __isset.t1 = true; this._t1 = value; }\r\n"+
-                   "    }\r\n"+
-                   "\r\n"+
-                   "    public Isset __isset;\r\n"+
-                   "\r\n"+
-                   "    [Serializable]\r\n"+
-                   "    public struct Isset\r\n"+
-                   "    {\r\n"+
-                   "        public bool t1;\r\n"+
-                   "    }\r\n"+
-                   "\r\n"+
-                   "    public TestClass4Impl()\r\n"+
-                   "    {\r\n"+
-                   "    }\r\n"+
-                   "\r\n"+
-                   "    public void Read(Serializer iprot)\r\n"+
-                   "    {\r\n"+
-                   "        iprot.ReadStructBegin();\r\n"+
-                   "        while (true)\r\n"+
-                   "        {\r\n"+
-                   "            var field = iprot.ReadFieldBegin();\r\n"+
-                   "            if (field.Type == TType.Stop)\r\n"+
-                   "                break;\r\n"+
-                   "\r\n"+
-                   "            switch (field.ID)\r\n"+
-                   "            {\r\n"+
-                   "                case 0:\r\n"+
-                   "                    if (field.Type == TType.TMap)\r\n"+
-                   "                    {\r\n"+
-                   "                        T1 = new List<System.Int32, System.String>();\r\n"+
-                   "                        var _list0 = iprot.ReadListBegin();\r\n"+
-                   "                        for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n"+
-                   "                        {\r\n"+
-                   "                            var _elem2 = new Int32Impl();\r\n"+
-                   "                            _elem2.Read(iprot);\r\n"+
-                   "                            var _elem3 = new System.Int32()\r\n"+
-                   "                            {\r\n"+
-                   "                                MaxValue = _elem2.MaxValue,\r\n"+
-                   "                                MinValue = _elem2.MinValue,\r\n"+
-                   "                            };\r\n"+
-                   "                            T1.Add(_elem3);\r\n"+
-                   "                        }\r\n"+
-                   "                        iprot.ReadListEnd();\r\n"+
-                   "                    }\r\n"+
-                   "                    else\r\n"+
-                   "                    {\r\n"+
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n"+
-                   "                    }\r\n"+
-                   "                    break;\r\n"+
-                   "                default:\r\n"+
-                   "                    ProtocolUtil.Skip(iprot, field.Type);\r\n"+
-                   "                    break;\r\n"+
-                   "            }\r\n"+
-                   "            iprot.ReadFieldEnd();\r\n"+
-                   "        }\r\n"+
-                   "        iprot.ReadStructEnd();\r\n"+
-                   "    }\r\n"+
-                   "\r\n"+
-                   "    public void Write(Serializer oprot)\r\n"+
-                   "    {\r\n"+
-                   "        var struc = new Struct(\"TestClass4_args\");\r\n"+
-                   "        oprot.WriteStructBegin(struc);\r\n"+
-                   "        var field = new Field();\r\n"+
-                   "        if (T1 != null && __isset.t1)\r\n"+
-                   "        {\r\n"+
-                   "            field.Name = \"t1\";\r\n"+
-                   "            field.Type = TType.TMap;\r\n"+
-                   "            field.ID = 0;\r\n"+
-                   "            oprot.WriteFieldBegin(field);\r\n"+
-                   "            oprot.WriteListBegin(new TList(TType.TMap, T1.Count));\r\n"+
-                   "            foreach (var _iter4 in T1)\r\n"+
-                   "            {\r\n"+
-                   "                var _elem5 = new Int32Impl()\r\n"+
-                   "                {\r\n"+
-                   "                    MaxValue = _iter4.MaxValue,\r\n"+
-                   "                    MinValue = _iter4.MinValue,\r\n"+
-                   "                };\r\n"+
-                   "                _elem5.Write(oprot);\r\n"+
-                   "            }\r\n"+
-                   "            oprot.WriteListEnd();\r\n"+
-                   "            oprot.WriteFieldEnd();\r\n"+
-                   "        }\r\n"+
-                   "        oprot.WriteFieldStop();\r\n"+
-                   "        oprot.WriteStructEnd();\r\n"+
-                   "    }\r\n"+
-                   "}\r\n";
+                    "[Serializable]\r\n"+
+                    "public class TestClass4Impl : Base\r\n"+
+                    "{\r\n"+
+                    "    private IDictionary<System.Int32, System.String> _t1;\r\n"+
+                    "\r\n"+
+                    "    public IDictionary<System.Int32, System.String> T1\r\n"+
+                    "    {\r\n"+
+                    "        get { return _t1; }\r\n"+
+                    "        set { __isset.t1 = true; this._t1 = value; }\r\n"+
+                    "    }\r\n"+
+                    "\r\n"+
+                    "    public Isset __isset;\r\n"+
+                    "\r\n"+
+                    "    [Serializable]\r\n"+
+                    "    public struct Isset\r\n"+
+                    "    {\r\n"+
+                    "        public bool t1;\r\n"+
+                    "    }\r\n"+
+                    "\r\n"+
+                    "    public TestClass4Impl()\r\n"+
+                    "    {\r\n"+
+                    "    }\r\n"+
+                    "\r\n"+
+                    "    public void Read(Serializer iprot)\r\n"+
+                    "    {\r\n"+
+                    "        iprot.ReadStructBegin();\r\n"+
+                    "        while (true)\r\n"+
+                    "        {\r\n"+
+                    "            var field = iprot.ReadFieldBegin();\r\n"+
+                    "            if (field.Type == TType.Stop)\r\n"+
+                    "                break;\r\n"+
+                    "\r\n"+
+                    "            switch (field.ID)\r\n"+
+                    "            {\r\n"+
+                    "                case 0:\r\n"+
+                    "                    if (field.Type == TType.Map)\r\n"+
+                    "                    {\r\n"+
+                    "                        T1 = new Dictionary<System.Int32, System.String>();\r\n"+
+                    "                        var _set0 = iprot.ReadMapBegin();\r\n"+
+                    "                        for (var _i1 = 0; _i1 < _set0.Count; ++_i1)\r\n"+
+                    "                        {\r\n"+
+                    "                            var _elem2 = iprot.ReadI32();\r\n"+
+                    "                            var _elem3 = iprot.ReadString();\r\n"+
+                    "                            T1.Add(_elem2, _elem3);\r\n"+
+                    "                        }\r\n"+
+                    "                        iprot.ReadMapEnd();\r\n"+
+                    "                    }\r\n"+
+                    "                    else\r\n"+
+                    "                    {\r\n"+
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n"+
+                    "                    }\r\n"+
+                    "                    break;\r\n"+
+                    "                default:\r\n"+
+                    "                    ProtocolUtil.Skip(iprot, field.Type);\r\n"+
+                    "                    break;\r\n"+
+                    "            }\r\n"+
+                    "            iprot.ReadFieldEnd();\r\n"+
+                    "        }\r\n"+
+                    "        iprot.ReadStructEnd();\r\n"+
+                    "    }\r\n"+
+                    "\r\n"+
+                    "    public void Write(Serializer oprot)\r\n"+
+                    "    {\r\n"+
+                    "        var struc = new Struct(\"TestClass4_args\");\r\n"+
+                    "        oprot.WriteStructBegin(struc);\r\n"+
+                    "        var field = new Field();\r\n"+
+                    "        if (T1 != null && __isset.t1)\r\n"+
+                    "        {\r\n"+
+                    "            field.Name = \"t1\";\r\n"+
+                    "            field.Type = TType.Map;\r\n"+
+                    "            field.ID = 0;\r\n"+
+                    "            oprot.WriteFieldBegin(field);\r\n"+
+                    "            oprot.WriteMapBegin(new TMap(TType.Map, T1.Count));\r\n"+
+                    "            foreach (var _iter6 in T1)\r\n"+
+                    "            {\r\n"+
+                    "                oprot.WriteI32(_iter6.Key);\r\n"+
+                    "                oprot.WriteString(_iter6.Value);\r\n"+
+                    "            }\r\n"+
+                    "            oprot.WriteMapEnd();\r\n"+
+                    "            oprot.WriteFieldEnd();\r\n"+
+                    "        }\r\n"+
+                    "        oprot.WriteFieldStop();\r\n"+
+                    "        oprot.WriteStructEnd();\r\n"+
+                    "    }\r\n"+
+                    "}\r\n";
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMessageClass5()
+        { 
+
+            generator.GenerateMessageClass(typeof(TestClass5));
+            string expected =
+                    "[Serializable]\r\n" +
+                    "public class TestClass5Impl : Base\r\n" +
+                    "{\r\n" +
+                    "    private int[] _t1;\r\n" +
+                    "\r\n" +
+                    "    public int[] T1\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t1; }\r\n" +
+                    "        set { __isset.t1 = true; this._t1 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public Isset __isset;\r\n" +
+                    "\r\n" +
+                    "    [Serializable]\r\n" +
+                    "    public struct Isset\r\n" +
+                    "    {\r\n" +
+                    "        public bool t1;\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public TestClass5Impl()\r\n" +
+                    "    {\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Read(Serializer iprot)\r\n" +
+                    "    {\r\n" +
+                    "        iprot.ReadStructBegin();\r\n" +
+                    "        while (true)\r\n" +
+                    "        {\r\n" +
+                    "            var field = iprot.ReadFieldBegin();\r\n" +
+                    "            if (field.Type == TType.Stop)\r\n" +
+                    "                break;\r\n" +
+                    "\r\n" +
+                    "            switch (field.ID)\r\n" +
+                    "            {\r\n" +
+                    "                case 0:\r\n" +
+                    "                    if (field.Type == TType.Array)\r\n" +
+                    "                    {\r\n" +
+                    "                        var _array0 = iprot.ReadArrayBegin();\r\n" +
+                    "                        T1 = new int[_array0.Count];\r\n" +
+                    "                        for (var _i1 = 0; _i1 < _array0.Count; ++_i1)\r\n" +
+                    "                        {\r\n" +
+                    "                            T1[_i1] = iprot.ReadI32();\r\n" +
+                    "                        }\r\n" +
+                    "                        iprot.ReadArrayEnd();\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                default:\r\n" +
+                    "                    ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    break;\r\n" +
+                    "            }\r\n" +
+                    "            iprot.ReadFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        iprot.ReadStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Write(Serializer oprot)\r\n" +
+                    "    {\r\n" +
+                    "        var struc = new Struct(\"TestClass5_args\");\r\n" +
+                    "        oprot.WriteStructBegin(struc);\r\n" +
+                    "        var field = new Field();\r\n" +
+                    "        if (T1 != null && __isset.t1)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t1\";\r\n" +
+                    "            field.Type = TType.Array;\r\n" +
+                    "            field.ID = 0;\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            oprot.WriteArrayBegin(new TArray(TType.Array, T1.Count));\r\n" +
+                    "            foreach (var _iter3 in T1)\r\n" +
+                    "            {\r\n" +
+                    "                oprot.WriteI32(_iter3);\r\n" +
+                    "            }\r\n" +
+                    "            oprot.WriteArrayEnd();\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        oprot.WriteFieldStop();\r\n" +
+                    "        oprot.WriteStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "}\r\n";
+
             Assert.AreEqual(expected, generator.ToString());
         }
 
@@ -902,11 +998,11 @@ namespace Flood.Tools.RPCGen.Tests
 
             Assert.AreEqual(expected, generator.ToString());
         }
+
         [Test]
         public void GenerateService()
         {
         }
-
 
         [Test]
         public void GenerateParameterList()
@@ -1016,6 +1112,186 @@ namespace Flood.Tools.RPCGen.Tests
                 "oprot.WriteListEnd();\r\n";
 
             generator.GenerateListSerialize(new Generator.Parameter("Lst", typeof(List<TestClass2>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateListSerialize7()
+        {
+            string expected =
+                "oprot.WriteListBegin(new TList(TType.List, Lst.Count));\r\n" +
+                "foreach (var _iter0 in Lst)\r\n" +
+                "{\r\n" +
+                "    oprot.WriteString(_iter0);\r\n" +
+                "}\r\n" +
+                "oprot.WriteListEnd();\r\n";
+
+            generator.GenerateListSerialize(new Generator.Parameter("Lst", typeof(List<string>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateListDeserialize()
+        {
+            string expected =
+                "Lst = new List<System.Double>();\r\n" +
+                "var _list0 = iprot.ReadListBegin();\r\n" +
+                "for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n" +
+                "{\r\n" +
+                "    Lst.Add(iprot.ReadDouble());\r\n" +
+                "}\r\n" +
+                "iprot.ReadListEnd();\r\n";
+
+            generator.GenerateListDeserialize(new Generator.Parameter("Lst", typeof(List<double>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateListDeserialize2()
+        {
+            string expected =
+                "Lst = new List<System.Guid>();\r\n" +
+                "var _list0 = iprot.ReadListBegin();\r\n" +
+                "for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n" +
+                "{\r\n" +
+                "    Lst.Add(new System.Guid(iprot.ReadString()));\r\n" +
+                "}\r\n" +
+                "iprot.ReadListEnd();\r\n";
+
+            generator.GenerateListDeserialize(new Generator.Parameter("Lst", typeof(List<Guid>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateListDeserialize3()
+        {
+            string expected =
+                "Lst = new List<System.DateTime>();\r\n" +
+                "var _list0 = iprot.ReadListBegin();\r\n" +
+                "for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n" +
+                "{\r\n" +
+                "    Lst.Add(new System.DateTime(iprot.ReadI64()));\r\n" +
+                "}\r\n" +
+                "iprot.ReadListEnd();\r\n";
+
+            generator.GenerateListDeserialize(new Generator.Parameter("Lst", typeof(List<DateTime>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateListDeserialize4()
+        {
+            string expected =
+                "Lst = new List<Flood.Tools.RPCGen.Tests.TestClass2>();\r\n" +
+                "var _list0 = iprot.ReadListBegin();\r\n" +
+                "for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n" +
+                "{\r\n" +
+                "    var _elem2 = new TestClass2Impl();\r\n" +
+                "    _elem2.Read(iprot);\r\n" +
+                "    var _elem3 = new Flood.Tools.RPCGen.Tests.TestClass2()\r\n" +
+                "    {\r\n" +
+                "        t1 = _elem2.t1,\r\n" +
+                "        t2 = _elem2.t2,\r\n" +
+                "        t3 = _elem2.t3,\r\n" +
+                "        t4 = _elem2.t4,\r\n" +
+                "    };\r\n" +
+                "    Lst.Add(_elem3);\r\n" +
+                "}\r\n" +
+                "iprot.ReadListEnd();\r\n";
+
+            generator.GenerateListDeserialize(new Generator.Parameter("Lst", typeof(List<TestClass2>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMapSerialize()
+        {
+            string expected =
+                "oprot.WriteMapBegin(new TMap(TType.Map, Map.Count));\r\n" +
+                "foreach (var _iter0 in Map)\r\n" +
+                "{\r\n" +
+                "    oprot.WriteI32(_iter0.Key);\r\n" +
+                "    oprot.WriteString(_iter0.Value);\r\n" +
+                "}\r\n" +
+                "oprot.WriteMapEnd();\r\n";
+
+            generator.GenerateMapSerialize(new Generator.Parameter("Map", typeof(Dictionary<int, string>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMapSerialize2()
+        {
+            string expected =
+                "oprot.WriteMapBegin(new TMap(TType.Map, Map.Count));\r\n" +
+                "foreach (var _iter0 in Map)\r\n" +
+                "{\r\n" +
+                "    var _elem1 = new TestClass2Impl()\r\n" +
+                "    {\r\n" +
+                "        t1 = _iter0.Key.t1,\r\n" +
+                "        t2 = _iter0.Key.t2,\r\n" +
+                "        t3 = _iter0.Key.t3,\r\n" +
+                "        t4 = _iter0.Key.t4,\r\n" +
+                "    };\r\n" +
+                "    _elem1.Write(oprot);\r\n" +
+                "    oprot.WriteString(_iter0.Value);\r\n" +
+                "}\r\n" +
+                "oprot.WriteMapEnd();\r\n";
+
+            generator.GenerateMapSerialize(new Generator.Parameter("Map", typeof(Dictionary<TestClass2, string>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMapDeserialize()
+        {
+            string expected =
+                "Map = new Dictionary<Flood.Tools.RPCGen.Tests.TestClass2, System.String>();\r\n"+
+                "var _set0 = iprot.ReadMapBegin();\r\n"+
+                "for (var _i1 = 0; _i1 < _set0.Count; ++_i1)\r\n"+
+                "{\r\n"+
+                "    var _elem4 = new TestClass2Impl();\r\n"+
+                "    _elem4.Read(iprot);\r\n"+
+                "    var _elem2 = new Flood.Tools.RPCGen.Tests.TestClass2()\r\n"+
+                "    {\r\n"+
+                "        t1 = _elem4.t1,\r\n"+
+                "        t2 = _elem4.t2,\r\n"+
+                "        t3 = _elem4.t3,\r\n"+
+                "        t4 = _elem4.t4,\r\n"+
+                "    };\r\n"+
+                "    var _elem3 = iprot.ReadString();\r\n"+
+                "    Map.Add(_elem2, _elem3);\r\n"+
+                "}\r\n"+
+                "iprot.ReadMapEnd();\r\n";
+
+            generator.GenerateMapDeserialize(new Generator.Parameter("Map", typeof(Dictionary<TestClass2, string>), 0));
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMapDeserialize2()
+        {
+            string expected =
+                "Map = new Dictionary<System.Int64, System.Boolean>();\r\n" +
+                "var _set0 = iprot.ReadMapBegin();\r\n" +
+                "for (var _i1 = 0; _i1 < _set0.Count; ++_i1)\r\n" +
+                "{\r\n" +
+                "    var _elem2 = iprot.ReadI64();\r\n" +
+                "    var _elem3 = iprot.ReadBool();\r\n" +
+                "    Map.Add(_elem2, _elem3);\r\n" +
+                "}\r\n" +
+                "iprot.ReadMapEnd();\r\n";
+            
+            generator.GenerateMapDeserialize(new Generator.Parameter("Map", typeof(Dictionary<long, bool>), 0));
 
             Assert.AreEqual(expected, generator.ToString());
         }
