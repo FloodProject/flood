@@ -156,6 +156,136 @@ void Flood::ResourceManager::SetAsynchronousLoading(bool v)
     ((::ResourceManager*)NativePtr)->setAsynchronousLoading(v);
 }
 
+void Flood::ResourceManager::ResourcePrepared::add(System::Action<Flood::ResourceEvent>^ evt)
+{
+    if (!_ResourcePreparedDelegateInstance)
+    {
+        _ResourcePreparedDelegateInstance = gcnew _ResourcePreparedDelegate(this, &Flood::ResourceManager::_ResourcePreparedRaise);
+        auto _fptr = (void (*)(const ::ResourceEvent&))Marshal::GetFunctionPointerForDelegate(_ResourcePreparedDelegateInstance).ToPointer();
+        ((::ResourceManager*)NativePtr)->onResourcePrepared.Connect(_fptr);
+    }
+    _ResourcePrepared = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Combine(_ResourcePrepared, evt));
+}
+
+void Flood::ResourceManager::ResourcePrepared::remove(System::Action<Flood::ResourceEvent>^ evt)
+{
+    _ResourcePrepared = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Remove(_ResourcePrepared, evt));
+}
+
+void Flood::ResourceManager::ResourcePrepared::raise(Flood::ResourceEvent _0)
+{
+    _ResourcePrepared(_0);
+}
+
+void Flood::ResourceManager::_ResourcePreparedRaise(const ::ResourceEvent& _0)
+{
+    ResourcePrepared::raise(Flood::ResourceEvent((::ResourceEvent*)&_0));
+}
+
+void Flood::ResourceManager::ResourceLoaded::add(System::Action<Flood::ResourceEvent>^ evt)
+{
+    if (!_ResourceLoadedDelegateInstance)
+    {
+        _ResourceLoadedDelegateInstance = gcnew _ResourceLoadedDelegate(this, &Flood::ResourceManager::_ResourceLoadedRaise);
+        auto _fptr = (void (*)(const ::ResourceEvent&))Marshal::GetFunctionPointerForDelegate(_ResourceLoadedDelegateInstance).ToPointer();
+        ((::ResourceManager*)NativePtr)->onResourceLoaded.Connect(_fptr);
+    }
+    _ResourceLoaded = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Combine(_ResourceLoaded, evt));
+}
+
+void Flood::ResourceManager::ResourceLoaded::remove(System::Action<Flood::ResourceEvent>^ evt)
+{
+    _ResourceLoaded = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Remove(_ResourceLoaded, evt));
+}
+
+void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent _0)
+{
+    _ResourceLoaded(_0);
+}
+
+void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _0)
+{
+    ResourceLoaded::raise(Flood::ResourceEvent((::ResourceEvent*)&_0));
+}
+
+void Flood::ResourceManager::ResourceRemoved::add(System::Action<Flood::ResourceEvent>^ evt)
+{
+    if (!_ResourceRemovedDelegateInstance)
+    {
+        _ResourceRemovedDelegateInstance = gcnew _ResourceRemovedDelegate(this, &Flood::ResourceManager::_ResourceRemovedRaise);
+        auto _fptr = (void (*)(const ::ResourceEvent&))Marshal::GetFunctionPointerForDelegate(_ResourceRemovedDelegateInstance).ToPointer();
+        ((::ResourceManager*)NativePtr)->onResourceRemoved.Connect(_fptr);
+    }
+    _ResourceRemoved = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Combine(_ResourceRemoved, evt));
+}
+
+void Flood::ResourceManager::ResourceRemoved::remove(System::Action<Flood::ResourceEvent>^ evt)
+{
+    _ResourceRemoved = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Remove(_ResourceRemoved, evt));
+}
+
+void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent _0)
+{
+    _ResourceRemoved(_0);
+}
+
+void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _0)
+{
+    ResourceRemoved::raise(Flood::ResourceEvent((::ResourceEvent*)&_0));
+}
+
+void Flood::ResourceManager::ResourceReloaded::add(System::Action<Flood::ResourceEvent>^ evt)
+{
+    if (!_ResourceReloadedDelegateInstance)
+    {
+        _ResourceReloadedDelegateInstance = gcnew _ResourceReloadedDelegate(this, &Flood::ResourceManager::_ResourceReloadedRaise);
+        auto _fptr = (void (*)(const ::ResourceEvent&))Marshal::GetFunctionPointerForDelegate(_ResourceReloadedDelegateInstance).ToPointer();
+        ((::ResourceManager*)NativePtr)->onResourceReloaded.Connect(_fptr);
+    }
+    _ResourceReloaded = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Combine(_ResourceReloaded, evt));
+}
+
+void Flood::ResourceManager::ResourceReloaded::remove(System::Action<Flood::ResourceEvent>^ evt)
+{
+    _ResourceReloaded = static_cast<System::Action<Flood::ResourceEvent>^>(System::Delegate::Remove(_ResourceReloaded, evt));
+}
+
+void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent _0)
+{
+    _ResourceReloaded(_0);
+}
+
+void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _0)
+{
+    ResourceReloaded::raise(Flood::ResourceEvent((::ResourceEvent*)&_0));
+}
+
+void Flood::ResourceManager::ResourceLoaderRegistered::add(System::Action<Flood::ResourceLoader^>^ evt)
+{
+    if (!_ResourceLoaderRegisteredDelegateInstance)
+    {
+        _ResourceLoaderRegisteredDelegateInstance = gcnew _ResourceLoaderRegisteredDelegate(this, &Flood::ResourceManager::_ResourceLoaderRegisteredRaise);
+        auto _fptr = (void (*)(const ::ResourceLoader&))Marshal::GetFunctionPointerForDelegate(_ResourceLoaderRegisteredDelegateInstance).ToPointer();
+        ((::ResourceManager*)NativePtr)->onResourceLoaderRegistered.Connect(_fptr);
+    }
+    _ResourceLoaderRegistered = static_cast<System::Action<Flood::ResourceLoader^>^>(System::Delegate::Combine(_ResourceLoaderRegistered, evt));
+}
+
+void Flood::ResourceManager::ResourceLoaderRegistered::remove(System::Action<Flood::ResourceLoader^>^ evt)
+{
+    _ResourceLoaderRegistered = static_cast<System::Action<Flood::ResourceLoader^>^>(System::Delegate::Remove(_ResourceLoaderRegistered, evt));
+}
+
+void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoader^ _0)
+{
+    _ResourceLoaderRegistered(_0);
+}
+
+void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _0)
+{
+    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
+}
+
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
 {
     auto ret = ::GetResourceManager();

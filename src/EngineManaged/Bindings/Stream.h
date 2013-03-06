@@ -45,17 +45,17 @@ namespace Flood
 
     public delegate bool StreamCloseFunction(Flood::Stream^);
 
-    public delegate long long StreamReadFunction(Flood::Stream^, System::IntPtr, long long);
+    public delegate long long StreamReadFunction(Flood::Stream^ ,System::IntPtr ,long long);
 
-    public delegate long long StreamWriteFunction(Flood::Stream^, System::IntPtr, long long);
+    public delegate long long StreamWriteFunction(Flood::Stream^ ,System::IntPtr ,long long);
 
     public delegate long long StreamTellFunction(Flood::Stream^);
 
-    public delegate long long StreamSeekFunction(Flood::Stream^, long long, char);
+    public delegate long long StreamSeekFunction(Flood::Stream^ ,long long ,char);
 
     public delegate long long StreamSizeFunction(Flood::Stream^);
 
-    public delegate void StreamResizeFunction(Flood::Stream^, long long size);
+    public delegate void StreamResizeFunction(Flood::Stream^ ,long long size);
 
     /// <summary>
     /// A stream allows uniform access to data backed by different storage mediums

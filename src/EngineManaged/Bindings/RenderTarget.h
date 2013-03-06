@@ -53,6 +53,18 @@ namespace Flood
         RenderTarget(System::IntPtr native);
         RenderTarget();
         property System::IntPtr UserData;
+    private:
+        delegate void _TargetResizeDelegate(const ::Settings& _0);
+        _TargetResizeDelegate^ _TargetResizeDelegateInstance;
+        void _TargetResizeRaise(const ::Settings& _0);
+        System::Action<Flood::Settings>^ _TargetResize;
+    public:
+        event System::Action<Flood::Settings>^ TargetResize
+        {
+            void add(System::Action<Flood::Settings>^ evt);
+            void remove(System::Action<Flood::Settings>^ evt);
+            void raise(Flood::Settings);
+        }
         Flood::RenderView^ CreateView();
         void RemoveViews();
         void MakeCurrent();

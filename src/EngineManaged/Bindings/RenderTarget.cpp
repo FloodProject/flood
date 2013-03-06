@@ -106,3 +106,29 @@ void Flood::RenderTarget::SetUserData(System::IntPtr v)
     ((::RenderTarget*)NativePtr)->setUserData(arg0);
 }
 
+void Flood::RenderTarget::TargetResize::add(System::Action<Flood::Settings>^ evt)
+{
+    if (!_TargetResizeDelegateInstance)
+    {
+        _TargetResizeDelegateInstance = gcnew _TargetResizeDelegate(this, &Flood::RenderTarget::_TargetResizeRaise);
+        auto _fptr = (void (*)(const ::Settings&))Marshal::GetFunctionPointerForDelegate(_TargetResizeDelegateInstance).ToPointer();
+        ((::RenderTarget*)NativePtr)->onTargetResize.Connect(_fptr);
+    }
+    _TargetResize = static_cast<System::Action<Flood::Settings>^>(System::Delegate::Combine(_TargetResize, evt));
+}
+
+void Flood::RenderTarget::TargetResize::remove(System::Action<Flood::Settings>^ evt)
+{
+    _TargetResize = static_cast<System::Action<Flood::Settings>^>(System::Delegate::Remove(_TargetResize, evt));
+}
+
+void Flood::RenderTarget::TargetResize::raise(Flood::Settings _0)
+{
+    _TargetResize(_0);
+}
+
+void Flood::RenderTarget::_TargetResizeRaise(const ::Settings& _0)
+{
+    TargetResize::raise(Flood::Settings((::Settings*)&_0));
+}
+

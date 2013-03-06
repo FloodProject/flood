@@ -48,7 +48,7 @@ namespace Flood
 
     public delegate Flood::Object^ SerializerLoadFunction(Flood::Serializer^);
 
-    public delegate bool SerializerSaveFunction(Flood::Serializer^, Flood::Object^);
+    public delegate bool SerializerSaveFunction(Flood::Serializer^ ,Flood::Object^);
 
     public ref class ValueContext
     {

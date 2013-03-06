@@ -122,3 +122,29 @@ void Flood::Log::Assert(System::String^ msg)
     ::LogAssert(arg0);
 }
 
+void Flood::Log::Handlers::add(System::Action<Flood::LogEntry>^ evt)
+{
+    if (!_HandlersDelegateInstance)
+    {
+        _HandlersDelegateInstance = gcnew _HandlersDelegate(this, &Flood::Log::_HandlersRaise);
+        auto _fptr = (void (*)(::LogEntry*))Marshal::GetFunctionPointerForDelegate(_HandlersDelegateInstance).ToPointer();
+        ((::Log*)NativePtr)->handlers.Connect(_fptr);
+    }
+    _Handlers = static_cast<System::Action<Flood::LogEntry>^>(System::Delegate::Combine(_Handlers, evt));
+}
+
+void Flood::Log::Handlers::remove(System::Action<Flood::LogEntry>^ evt)
+{
+    _Handlers = static_cast<System::Action<Flood::LogEntry>^>(System::Delegate::Remove(_Handlers, evt));
+}
+
+void Flood::Log::Handlers::raise(Flood::LogEntry _0)
+{
+    _Handlers(_0);
+}
+
+void Flood::Log::_HandlersRaise(::LogEntry* _0)
+{
+    Handlers::raise(Flood::LogEntry((::LogEntry*)_0));
+}
+

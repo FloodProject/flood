@@ -52,6 +52,18 @@ namespace Flood
         Log(::Log* native);
         Log(System::IntPtr native);
         Log();
+    private:
+        delegate void _HandlersDelegate(::LogEntry* _0);
+        _HandlersDelegate^ _HandlersDelegateInstance;
+        void _HandlersRaise(::LogEntry* _0);
+        System::Action<Flood::LogEntry>^ _Handlers;
+    public:
+        event System::Action<Flood::LogEntry>^ Handlers
+        {
+            void add(System::Action<Flood::LogEntry>^ evt);
+            void remove(System::Action<Flood::LogEntry>^ evt);
+            void raise(Flood::LogEntry);
+        }
         void Destroy();
         void AddHandler(Flood::LogFunction^ _4);
         void RemoveHandler(Flood::LogFunction^ _6);

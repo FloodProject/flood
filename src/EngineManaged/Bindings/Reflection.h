@@ -81,13 +81,13 @@ namespace Flood
         Quaternion = 13
     };
 
-    public delegate void ReflectionWalkFunction(Flood::ReflectionContext^, Flood::ReflectionWalkType);
+    public delegate void ReflectionWalkFunction(Flood::ReflectionContext^ ,Flood::ReflectionWalkType);
 
     public delegate System::IntPtr ClassCreateFunction(Flood::Allocator^);
 
-    public delegate void FieldSetterFunction(System::IntPtr object, System::IntPtr value);
+    public delegate void FieldSetterFunction(System::IntPtr object ,System::IntPtr value);
 
-    public delegate System::IntPtr FieldResizeFunction(System::IntPtr object, unsigned int size);
+    public delegate System::IntPtr FieldResizeFunction(System::IntPtr object ,unsigned int size);
 
     public ref class Type
     {

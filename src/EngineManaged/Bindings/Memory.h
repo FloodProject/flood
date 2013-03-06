@@ -44,9 +44,9 @@ namespace Flood
     ref class TaskEvent;
     ref class scoped_ptr;
 
-    public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^, int size, int align);
+    public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ ,int size ,int align);
 
-    public delegate void MemoryFreeFunction(Flood::Allocator^, System::IntPtr object);
+    public delegate void MemoryFreeFunction(Flood::Allocator^ ,System::IntPtr object);
 
     public delegate void MemoryResetFunction(Flood::Allocator^);
 

@@ -77,6 +77,30 @@ namespace Flood
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
         property Flood::WindowSettings Settings;
+    private:
+        delegate void _WindowCloseDelegate();
+        _WindowCloseDelegate^ _WindowCloseDelegateInstance;
+        void _WindowCloseRaise();
+        System::Action^ _WindowClose;
+    public:
+        event System::Action^ WindowClose
+        {
+            void add(System::Action^ evt);
+            void remove(System::Action^ evt);
+            void raise();
+        }
+    private:
+        delegate void _WindowFocusChangeDelegate(bool _0);
+        _WindowFocusChangeDelegate^ _WindowFocusChangeDelegateInstance;
+        void _WindowFocusChangeRaise(bool _0);
+        System::Action<bool>^ _WindowFocusChange;
+    public:
+        event System::Action<bool>^ WindowFocusChange
+        {
+            void add(System::Action<bool>^ evt);
+            void remove(System::Action<bool>^ evt);
+            void raise(bool);
+        }
         Flood::RenderContext^ CreateContext(Flood::RenderContextSettings^ _224);
         void Update();
         void MakeCurrent();

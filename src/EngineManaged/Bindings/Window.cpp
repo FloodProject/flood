@@ -133,3 +133,55 @@ Flood::Settings Flood::Window::GetSettings()
     return Flood::Settings((::Settings*)&ret);
 }
 
+void Flood::Window::WindowClose::add(System::Action^ evt)
+{
+    if (!_WindowCloseDelegateInstance)
+    {
+        _WindowCloseDelegateInstance = gcnew _WindowCloseDelegate(this, &Flood::Window::_WindowCloseRaise);
+        auto _fptr = (void (*)())Marshal::GetFunctionPointerForDelegate(_WindowCloseDelegateInstance).ToPointer();
+        ((::Window*)NativePtr)->onWindowClose.Connect(_fptr);
+    }
+    _WindowClose = static_cast<System::Action^>(System::Delegate::Combine(_WindowClose, evt));
+}
+
+void Flood::Window::WindowClose::remove(System::Action^ evt)
+{
+    _WindowClose = static_cast<System::Action^>(System::Delegate::Remove(_WindowClose, evt));
+}
+
+void Flood::Window::WindowClose::raise()
+{
+    _WindowClose();
+}
+
+void Flood::Window::_WindowCloseRaise()
+{
+    WindowClose::raise();
+}
+
+void Flood::Window::WindowFocusChange::add(System::Action<bool>^ evt)
+{
+    if (!_WindowFocusChangeDelegateInstance)
+    {
+        _WindowFocusChangeDelegateInstance = gcnew _WindowFocusChangeDelegate(this, &Flood::Window::_WindowFocusChangeRaise);
+        auto _fptr = (void (*)(bool))Marshal::GetFunctionPointerForDelegate(_WindowFocusChangeDelegateInstance).ToPointer();
+        ((::Window*)NativePtr)->onWindowFocusChange.Connect(_fptr);
+    }
+    _WindowFocusChange = static_cast<System::Action<bool>^>(System::Delegate::Combine(_WindowFocusChange, evt));
+}
+
+void Flood::Window::WindowFocusChange::remove(System::Action<bool>^ evt)
+{
+    _WindowFocusChange = static_cast<System::Action<bool>^>(System::Delegate::Remove(_WindowFocusChange, evt));
+}
+
+void Flood::Window::WindowFocusChange::raise(bool _0)
+{
+    _WindowFocusChange(_0);
+}
+
+void Flood::Window::_WindowFocusChangeRaise(bool _0)
+{
+    WindowFocusChange::raise(_0);
+}
+
