@@ -583,7 +583,7 @@ class DelegateMemento {
 protected:
 	// the data is protected, not private, because many
 	// compilers have problems with template friends.
-	typedef void (detail::GenericClass::*GenericMemFuncType)(); // arbitrary MFP.
+	typedef void (::detail::GenericClass::*GenericMemFuncType)(); // arbitrary MFP.
 	detail::GenericClass *m_pthis;
 	GenericMemFuncType m_pFunction;
 
@@ -876,11 +876,11 @@ public:
 template<class RetType=detail::DefaultVoid>
 class Delegate0 {
 private:
-	typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+	typedef typename ::detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
 	typedef DesiredRetType (*StaticFunctionPtr)();
 	typedef RetType (*UnvoidStaticFunctionPtr)();
-	typedef RetType (detail::GenericClass::*GenericMemFn)();
-	typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+	typedef RetType (::detail::GenericClass::*GenericMemFn)();
+	typedef ::detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
 	ClosureType m_Closure;
 public:
 	// Typedefs to aid generic programming
@@ -903,17 +903,17 @@ public:
 	// Binding to non-const member functions
 	template < class X, class Y >
 	Delegate0(Y *pthis, DesiredRetType (X::* function_to_bind)() ) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind); }
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind); }
 	template < class X, class Y >
 	inline void Bind(Y *pthis, DesiredRetType (X::* function_to_bind)()) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);	}
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind);	}
 	// Binding to const member functions.
 	template < class X, class Y >
 	Delegate0(const Y *pthis, DesiredRetType (X::* function_to_bind)() const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X*>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X*>(pthis), function_to_bind);	}
 	template < class X, class Y >
 	inline void Bind(const Y *pthis, DesiredRetType (X::* function_to_bind)() const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X *>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X *>(pthis), function_to_bind);	}
 	// Static functions. We convert them into a member function call.
 	// This constructor also provides implicit conversion
 	Delegate0(DesiredRetType (*function_to_bind)() ) {
@@ -961,11 +961,11 @@ private:	// Invoker for static functions
 template<class Param1, class RetType=detail::DefaultVoid>
 class Delegate1 {
 private:
-	typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+	typedef typename ::detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
 	typedef DesiredRetType (*StaticFunctionPtr)(Param1 p1);
 	typedef RetType (*UnvoidStaticFunctionPtr)(Param1 p1);
-	typedef RetType (detail::GenericClass::*GenericMemFn)(Param1 p1);
-	typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+	typedef RetType (::detail::GenericClass::*GenericMemFn)(Param1 p1);
+	typedef ::detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
 	ClosureType m_Closure;
 public:
 	// Typedefs to aid generic programming
@@ -988,17 +988,17 @@ public:
 	// Binding to non-const member functions
 	template < class X, class Y >
 	Delegate1(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1) ) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind); }
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind); }
 	template < class X, class Y >
 	inline void Bind(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1)) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);	}
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind);	}
 	// Binding to const member functions.
 	template < class X, class Y >
 	Delegate1(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X*>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X*>(pthis), function_to_bind);	}
 	template < class X, class Y >
 	inline void Bind(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X *>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X *>(pthis), function_to_bind);	}
 	// Static functions. We convert them into a member function call.
 	// This constructor also provides implicit conversion
 	Delegate1(DesiredRetType (*function_to_bind)(Param1 p1) ) {
@@ -1046,11 +1046,11 @@ private:	// Invoker for static functions
 template<class Param1, class Param2, class RetType=detail::DefaultVoid>
 class Delegate2 {
 private:
-	typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+	typedef typename ::detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
 	typedef DesiredRetType (*StaticFunctionPtr)(Param1 p1, Param2 p2);
 	typedef RetType (*UnvoidStaticFunctionPtr)(Param1 p1, Param2 p2);
-	typedef RetType (detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2);
-	typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+	typedef RetType (::detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2);
+	typedef ::detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
 	ClosureType m_Closure;
 public:
 	// Typedefs to aid generic programming
@@ -1073,17 +1073,17 @@ public:
 	// Binding to non-const member functions
 	template < class X, class Y >
 	Delegate2(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2) ) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind); }
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind); }
 	template < class X, class Y >
 	inline void Bind(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2)) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);	}
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind);	}
 	// Binding to const member functions.
 	template < class X, class Y >
 	Delegate2(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X*>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X*>(pthis), function_to_bind);	}
 	template < class X, class Y >
 	inline void Bind(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X *>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X *>(pthis), function_to_bind);	}
 	// Static functions. We convert them into a member function call.
 	// This constructor also provides implicit conversion
 	Delegate2(DesiredRetType (*function_to_bind)(Param1 p1, Param2 p2) ) {
@@ -1131,11 +1131,11 @@ private:	// Invoker for static functions
 template<class Param1, class Param2, class Param3, class RetType=detail::DefaultVoid>
 class Delegate3 {
 private:
-	typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+	typedef typename ::detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
 	typedef DesiredRetType (*StaticFunctionPtr)(Param1 p1, Param2 p2, Param3 p3);
 	typedef RetType (*UnvoidStaticFunctionPtr)(Param1 p1, Param2 p2, Param3 p3);
-	typedef RetType (detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2, Param3 p3);
-	typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+	typedef RetType (::detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2, Param3 p3);
+	typedef ::detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
 	ClosureType m_Closure;
 public:
 	// Typedefs to aid generic programming
@@ -1158,17 +1158,17 @@ public:
 	// Binding to non-const member functions
 	template < class X, class Y >
 	Delegate3(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3) ) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind); }
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind); }
 	template < class X, class Y >
 	inline void Bind(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3)) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);	}
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind);	}
 	// Binding to const member functions.
 	template < class X, class Y >
 	Delegate3(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X*>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X*>(pthis), function_to_bind);	}
 	template < class X, class Y >
 	inline void Bind(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X *>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X *>(pthis), function_to_bind);	}
 	// Static functions. We convert them into a member function call.
 	// This constructor also provides implicit conversion
 	Delegate3(DesiredRetType (*function_to_bind)(Param1 p1, Param2 p2, Param3 p3) ) {
@@ -1216,11 +1216,11 @@ private:	// Invoker for static functions
 template<class Param1, class Param2, class Param3, class Param4, class RetType=detail::DefaultVoid>
 class Delegate4 {
 private:
-	typedef typename detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
+	typedef typename ::detail::DefaultVoidToVoid<RetType>::type DesiredRetType;
 	typedef DesiredRetType (*StaticFunctionPtr)(Param1 p1, Param2 p2, Param3 p3, Param4 p4);
 	typedef RetType (*UnvoidStaticFunctionPtr)(Param1 p1, Param2 p2, Param3 p3, Param4 p4);
-	typedef RetType (detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2, Param3 p3, Param4 p4);
-	typedef detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
+	typedef RetType (::detail::GenericClass::*GenericMemFn)(Param1 p1, Param2 p2, Param3 p3, Param4 p4);
+	typedef ::detail::ClosurePtr<GenericMemFn, StaticFunctionPtr, UnvoidStaticFunctionPtr> ClosureType;
 	ClosureType m_Closure;
 public:
 	// Typedefs to aid generic programming
@@ -1243,17 +1243,17 @@ public:
 	// Binding to non-const member functions
 	template < class X, class Y >
 	Delegate4(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3, Param4 p4) ) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind); }
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind); }
 	template < class X, class Y >
 	inline void Bind(Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3, Param4 p4)) {
-		m_Closure.bindmemfunc(detail::implicit_cast<X*>(pthis), function_to_bind);	}
+		m_Closure.bindmemfunc(::detail::implicit_cast<X*>(pthis), function_to_bind);	}
 	// Binding to const member functions.
 	template < class X, class Y >
 	Delegate4(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3, Param4 p4) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X*>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X*>(pthis), function_to_bind);	}
 	template < class X, class Y >
 	inline void Bind(const Y *pthis, DesiredRetType (X::* function_to_bind)(Param1 p1, Param2 p2, Param3 p3, Param4 p4) const) {
-		m_Closure.bindconstmemfunc(detail::implicit_cast<const X *>(pthis), function_to_bind);	}
+		m_Closure.bindconstmemfunc(::detail::implicit_cast<const X *>(pthis), function_to_bind);	}
 	// Static functions. We convert them into a member function call.
 	// This constructor also provides implicit conversion
 	Delegate4(DesiredRetType (*function_to_bind)(Param1 p1, Param2 p2, Param3 p3, Param4 p4) ) {
