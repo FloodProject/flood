@@ -48,6 +48,9 @@ namespace Flood.Editor
                 };
 
             PaneWindow = windowManager.CreateWindow(settings);
+            PaneWindow.WindowClose += () => Log.Info("Window closed!");
+            PaneWindow.WindowFocusChange += hasFocus => Log.Info("Window focus: " + hasFocus);
+            PaneWindow.TargetResize += s => Log.Info("Size: " + s.Width);
             PaneWindow.Show(visible: true);
 
             PaneWindow.SetContext(MainWindow.NativeWindow.GetContext());
