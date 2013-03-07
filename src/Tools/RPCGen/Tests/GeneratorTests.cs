@@ -389,11 +389,11 @@ namespace Flood.Tools.RPCGen.Tests
                     "                case 3:\r\n" +
                     "                    if (field.Type == TType.Class)\r\n" + 
                     "                    {\r\n" + 
-                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
-                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
-                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
+                    "                        var _typeImpl0 = System.Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = System.Type.GetType(field.ClassName);\r\n" +
+                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0) as TestClassImpl;\r\n" +
                     "                        T4Impl.Read(iprot);\r\n" +
-                    "                        T4 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        T4 = Activator.CreateInstance(_typeBase1) as Flood.Tools.RPCGen.Tests.TestClass;\r\n" +
                     "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
                     "                        foreach (var _iter3 in _props2)\r\n" +
                     "                        {\r\n" +
@@ -464,10 +464,10 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Type = TType.Class;\r\n" + 
                     "            field.ID = 3;\r\n" +
                     "            field.ClassName = T4.GetType().Name;\r\n" +   
-                    "            oprot.WriteFieldBegin(field);\r\n" + 
-                    "            var _typeImpl8 = Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            var _typeImpl8 = System.Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
                     "            var _typeBase9 = T4.GetType();\r\n" +
-                    "            var T4Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            var T4Impl = Activator.CreateInstance(_typeImpl8) as TestClassImpl;\r\n" +
                     "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
                     "            foreach (var _iter11 in _props10)\r\n" +
                     "            {\r\n" +
@@ -713,11 +713,11 @@ namespace Flood.Tools.RPCGen.Tests
                     "                case 3:\r\n" +
                     "                    if (field.Type == TType.Class)\r\n" +
                     "                    {\r\n" +
-                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
-                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
-                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
+                    "                        var _typeImpl0 = System.Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = System.Type.GetType(field.ClassName);\r\n" +
+                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0) as TestClassImpl;\r\n" +
                     "                        T4Impl.Read(iprot);\r\n" +
-                    "                        T4 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        T4 = Activator.CreateInstance(_typeBase1) as Flood.Tools.RPCGen.Tests.TestClass;\r\n" +
                     "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
                     "                        foreach (var _iter3 in _props2)\r\n" +
                     "                        {\r\n" +
@@ -799,9 +799,9 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.ID = 3;\r\n" +
                     "            field.ClassName = T4.GetType().Name;\r\n" +
                     "            oprot.WriteFieldBegin(field);\r\n" +
-                    "            var _typeImpl8 = Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
+                    "            var _typeImpl8 = System.Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
                     "            var _typeBase9 = T4.GetType();\r\n" +
-                    "            var T4Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            var T4Impl = Activator.CreateInstance(_typeImpl8) as TestClassImpl;\r\n" +
                     "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
                     "            foreach (var _iter11 in _props10)\r\n" +
                     "            {\r\n" +
@@ -833,9 +833,9 @@ namespace Flood.Tools.RPCGen.Tests
                     "[Serializable]\r\n"+
                     "public class TestClass4Impl : Base\r\n"+
                     "{\r\n"+
-                    "    private IDictionary<System.Int32, System.String> _t1;\r\n"+
+                    "    private Dictionary<System.Int32, System.String> _t1;\r\n"+
                     "\r\n"+
-                    "    public IDictionary<System.Int32, System.String> T1\r\n"+
+                    "    public Dictionary<System.Int32, System.String> T1\r\n"+
                     "    {\r\n"+
                     "        get { return _t1; }\r\n"+
                     "        set { __isset.t1 = true; this._t1 = value; }\r\n"+
@@ -1056,11 +1056,11 @@ namespace Flood.Tools.RPCGen.Tests
                     "                case 0:\r\n" +
                     "                    if (field.Type == TType.Class)\r\n" +
                     "                    {\r\n" +
-                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
-                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
-                    "                        var T1Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
+                    "                        var _typeImpl0 = System.Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = System.Type.GetType(field.ClassName);\r\n" +
+                    "                        var T1Impl = Activator.CreateInstance(_typeImpl0) as TestAbstract2Impl;\r\n" +
                     "                        T1Impl.Read(iprot);\r\n" +
-                    "                        T1 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        T1 = Activator.CreateInstance(_typeBase1) as Flood.Tools.RPCGen.Tests.TestAbstract2;\r\n" +
                     "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
                     "                        foreach (var _iter3 in _props2)\r\n" +
                     "                        {\r\n" +
@@ -1102,9 +1102,9 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.ID = 0;\r\n" +
                     "            field.ClassName = T1.GetType().Name;\r\n" +
                     "            oprot.WriteFieldBegin(field);\r\n" +
-                    "            var _typeImpl8 = Type.GetType(T1.GetType().Name + \"Impl\");\r\n" +
+                    "            var _typeImpl8 = System.Type.GetType(T1.GetType().Name + \"Impl\");\r\n" +
                     "            var _typeBase9 = T1.GetType();\r\n" +
-                    "            var T1Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            var T1Impl = Activator.CreateInstance(_typeImpl8) as TestAbstract2Impl;\r\n" +
                     "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
                     "            foreach (var _iter11 in _props10)\r\n" +
                     "            {\r\n" +
@@ -1336,14 +1336,23 @@ namespace Flood.Tools.RPCGen.Tests
                 "oprot.WriteListBegin(new TList(TType.List, Lst.Count));\r\n" +
                 "foreach (var _iter0 in Lst)\r\n" +
                 "{\r\n" +
-                "    var _elem1 = new TestClass2Impl()\r\n" +
+                "    var _typeImpl2 = System.Type.GetType(_iter0.GetType().Name + \"Impl\");\r\n" +
+                "    var _typeBase3 = _iter0.GetType();\r\n" +
+                "    oprot.WriteString(_typeBase3.Name);\r\n" +
+                "    oprot.WriteString(_typeBase3.Namespace);\r\n" +
+                "    var _elem4 = Activator.CreateInstance(_typeImpl2) as TestClass2Impl;\r\n" +
+                "    IEnumerable<PropertyInfo> _props5 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl2);\r\n" +
+                "    foreach (var _iter6 in _props5)\r\n" +
                 "    {\r\n" +
-                "        t1 = _iter0.t1,\r\n" +
-                "        t2 = _iter0.t2,\r\n" +
-                "        t3 = _iter0.t3,\r\n" +
-                "        t4 = _iter0.t4,\r\n" +
-                "    };\r\n" +
-                "    _elem1.Write(oprot);\r\n" +
+                "        var _propName7 = _iter6.Name;\r\n" +
+                "        var _fInfo8 = Flood.Editor.Shared.Utils.GetField(_typeBase3, _propName7);\r\n" +
+                "        var _pInfo9 = Flood.Editor.Shared.Utils.GetProperty(_typeBase3, _propName7);\r\n" +
+                "        if (!(_fInfo8 != null ^ _pInfo9 != null))\r\n" +
+                "            continue;\r\n" +
+                "        var _value10 = (_fInfo8 != null) ? _fInfo8.GetValue(_iter0) : _pInfo9.GetValue(_iter0);\r\n" +
+                "        _iter6.SetValue(_elem4, _value10);\r\n" +
+                "    }\r\n" +
+                "    _elem4.Write(oprot);\r\n" +
                 "}\r\n" +
                 "oprot.WriteListEnd();\r\n";
 
@@ -1427,16 +1436,28 @@ namespace Flood.Tools.RPCGen.Tests
                 "var _list0 = iprot.ReadListBegin();\r\n" +
                 "for (var _i1 = 0; _i1 < _list0.Count; ++_i1)\r\n" +
                 "{\r\n" +
-                "    var _elem2 = new TestClass2Impl();\r\n" +
-                "    _elem2.Read(iprot);\r\n" +
-                "    var _elem3 = new Flood.Tools.RPCGen.Tests.TestClass2()\r\n" +
+                "    var _typeName3 = iprot.ReadString();\r\n" +
+                "    var _typeNameSpace4 = iprot.ReadString();\r\n" +
+                "    var _typeImpl5 = System.Type.GetType(_typeName3 + \"Impl\");\r\n" +
+                "    var _typeBase6 = System.Type.GetType(_typeNameSpace4 + \".\" + _typeName3);\r\n" +
+                "    var _elem2Impl = Activator.CreateInstance(_typeImpl5) as TestClass2Impl;\r\n" +
+                "    _elem2Impl.Read(iprot);\r\n" +
+                "    var _elem2 = Activator.CreateInstance(_typeBase6) as Flood.Tools.RPCGen.Tests.TestClass2;\r\n" +
+                "    IEnumerable<PropertyInfo> _props7 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl5);\r\n" +
+                "    foreach (var _iter8 in _props7)\r\n" +
                 "    {\r\n" +
-                "        t1 = _elem2.t1,\r\n" +
-                "        t2 = _elem2.t2,\r\n" +
-                "        t3 = _elem2.t3,\r\n" +
-                "        t4 = _elem2.t4,\r\n" +
-                "    };\r\n" +
-                "    Lst.Add(_elem3);\r\n" +
+                "        var _propName9 = _iter8.Name;\r\n" +
+                "        var _fInfo10 = Flood.Editor.Shared.Utils.GetField(_typeBase6, _propName9);\r\n" +
+                "        var _pInfo11 = Flood.Editor.Shared.Utils.GetProperty(_typeBase6, _propName9);\r\n" +
+                "        if (!(_fInfo10 != null ^ _pInfo11 != null))\r\n" +
+                "            continue;\r\n" +
+                "        var _value12 = _iter8.GetValue(_elem2Impl);\r\n" +
+                "        if (_fInfo10 != null)\r\n" +
+                "            _fInfo10.SetValue(_elem2, _value12);\r\n" +
+                "        else\r\n" +
+                "            _pInfo11.SetValue(_elem2, _value12);\r\n" +
+                "    }\r\n" +
+                "    Lst.Add(_elem2);\r\n" +
                 "}\r\n" +
                 "iprot.ReadListEnd();\r\n";
 
@@ -1469,14 +1490,23 @@ namespace Flood.Tools.RPCGen.Tests
                 "oprot.WriteMapBegin(new TMap(TType.Class, TType.String, Map.Count));\r\n" +
                 "foreach (var _iter0 in Map)\r\n" +
                 "{\r\n" +
-                "    var _elem1 = new TestClass2Impl()\r\n" +
+                "    var _typeImpl2 = System.Type.GetType(_iter0.Key.GetType().Name + \"Impl\");\r\n" +
+                "    var _typeBase3 = _iter0.Key.GetType();\r\n" +
+                "    oprot.WriteString(_typeBase3.Name);\r\n" +
+                "    oprot.WriteString(_typeBase3.Namespace);\r\n" +
+                "    var _elem4 = Activator.CreateInstance(_typeImpl2) as TestClass2Impl;\r\n" +
+                "    IEnumerable<PropertyInfo> _props5 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl2);\r\n" +
+                "    foreach (var _iter6 in _props5)\r\n" +
                 "    {\r\n" +
-                "        t1 = _iter0.Key.t1,\r\n" +
-                "        t2 = _iter0.Key.t2,\r\n" +
-                "        t3 = _iter0.Key.t3,\r\n" +
-                "        t4 = _iter0.Key.t4,\r\n" +
-                "    };\r\n" +
-                "    _elem1.Write(oprot);\r\n" +
+                "        var _propName7 = _iter6.Name;\r\n" +
+                "        var _fInfo8 = Flood.Editor.Shared.Utils.GetField(_typeBase3, _propName7);\r\n" +
+                "        var _pInfo9 = Flood.Editor.Shared.Utils.GetProperty(_typeBase3, _propName7);\r\n" +
+                "        if (!(_fInfo8 != null ^ _pInfo9 != null))\r\n" +
+                "            continue;\r\n" +
+                "        var _value10 = (_fInfo8 != null) ? _fInfo8.GetValue(_iter0.Key) : _pInfo9.GetValue(_iter0.Key);\r\n" +
+                "        _iter6.SetValue(_elem4, _value10);\r\n" +
+                "    }\r\n" +
+                "    _elem4.Write(oprot);\r\n" +
                 "    oprot.WriteString(_iter0.Value);\r\n" +
                 "}\r\n" +
                 "oprot.WriteMapEnd();\r\n";
@@ -1494,15 +1524,27 @@ namespace Flood.Tools.RPCGen.Tests
                 "var _set0 = iprot.ReadMapBegin();\r\n"+
                 "for (var _i1 = 0; _i1 < _set0.Count; ++_i1)\r\n"+
                 "{\r\n"+
-                "    var _elem4 = new TestClass2Impl();\r\n"+
-                "    _elem4.Read(iprot);\r\n"+
-                "    var _elem2 = new Flood.Tools.RPCGen.Tests.TestClass2()\r\n"+
-                "    {\r\n"+
-                "        t1 = _elem4.t1,\r\n"+
-                "        t2 = _elem4.t2,\r\n"+
-                "        t3 = _elem4.t3,\r\n"+
-                "        t4 = _elem4.t4,\r\n"+
-                "    };\r\n"+
+                "    var _typeName5 = iprot.ReadString();\r\n" +
+                "    var _typeNameSpace6 = iprot.ReadString();\r\n" +
+                "    var _typeImpl7 = System.Type.GetType(_typeName5 + \"Impl\");\r\n" +
+                "    var _typeBase8 = System.Type.GetType(_typeNameSpace6 + \".\" + _typeName5);\r\n" +
+                "    var _elem2Impl = Activator.CreateInstance(_typeImpl7) as TestClass2Impl;\r\n" +
+                "    _elem2Impl.Read(iprot);\r\n" +
+                "    var _elem2 = Activator.CreateInstance(_typeBase8) as Flood.Tools.RPCGen.Tests.TestClass2;\r\n" +
+                "    IEnumerable<PropertyInfo> _props9 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl7);\r\n" +
+                "    foreach (var _iter10 in _props9)\r\n" +
+                "    {\r\n" +
+                "        var _propName11 = _iter10.Name;\r\n" +
+                "        var _fInfo12 = Flood.Editor.Shared.Utils.GetField(_typeBase8, _propName11);\r\n" +
+                "        var _pInfo13 = Flood.Editor.Shared.Utils.GetProperty(_typeBase8, _propName11);\r\n" +
+                "        if (!(_fInfo12 != null ^ _pInfo13 != null))\r\n" +
+                "            continue;\r\n" +
+                "        var _value14 = _iter10.GetValue(_elem2Impl);\r\n" +
+                "        if (_fInfo12 != null)\r\n" +
+                "            _fInfo12.SetValue(_elem2, _value14);\r\n" +
+                "        else\r\n" +
+                "            _pInfo13.SetValue(_elem2, _value14);\r\n" +
+                "    }\r\n" +
                 "    var _elem3 = iprot.ReadString();\r\n"+
                 "    Map.Add(_elem2, _elem3);\r\n"+
                 "}\r\n"+
