@@ -2,7 +2,6 @@
 using Flood.Editor.Shared;
 using Flood.RPC.Metadata;
 using System.Collections.Generic;
-using Flood.Editor.Shared;
 
 namespace Flood.Editor
 {

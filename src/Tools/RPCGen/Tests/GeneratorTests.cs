@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Reflection;
 using Flood.RPC.Metadata;
 using Flood.RPC.Protocol;
@@ -73,6 +74,64 @@ namespace Flood.Tools.RPCGen.Tests
         [Id(0)]
         public int[] t1;
     }
+
+    public abstract class TestAbstract2
+    {
+        [Id(0)]
+        private double t0 = 5.6;
+        [Id(1)]
+        protected int t1;
+
+    }
+
+    public class TestClass6 : TestAbstract2
+    {
+        [Id(2)]
+        public string t2;
+        public TestClass6()
+        {
+        }
+
+        public TestClass6(int t, string s)
+        {
+            t1 = t;
+            t2 = s;
+        }
+    }
+
+    public class TestClass6Impl
+    {
+        private double _t0;
+        private int _t1;
+        private string _t2;
+
+        public double T0
+        {
+            get { return _t0; }
+            set { _t0 = value; }
+        }
+        public int T1
+        {
+            get { return _t1; }
+            set { _t1 = value; }
+        }
+
+        public string T2
+        {
+            get { return _t2; }
+            set { _t2 = value; }
+        }
+
+
+
+    }
+
+    public class TestClass7
+    {
+        [Id(0)]
+        public TestAbstract2 t1;
+    }
+
 
     public enum TestEnum : byte
     {
@@ -330,11 +389,25 @@ namespace Flood.Tools.RPCGen.Tests
                     "                case 3:\r\n" +
                     "                    if (field.Type == TType.Class)\r\n" + 
                     "                    {\r\n" + 
-                    "                        var T4Impl = new TestClassImpl();\r\n" + 
+                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
+                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
                     "                        T4Impl.Read(iprot);\r\n" +
-                    "                        T4 = new Flood.Tools.RPCGen.Tests.TestClass()\r\n" + 
-                    "                        {\r\n" + 
-                    "                        };\r\n" + 
+                    "                        T4 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
+                    "                        foreach (var _iter3 in _props2)\r\n" +
+                    "                        {\r\n" +
+                    "                            var _propName4 = _iter3.Name;\r\n" +
+                    "                            var _fInfo5 = Flood.Editor.Shared.Utils.GetField(_typeBase1, _propName4);\r\n" +
+                    "                            var _pInfo6 = Flood.Editor.Shared.Utils.GetProperty(_typeBase1, _propName4);\r\n" +
+                    "                            if (!(_fInfo5 != null ^ _pInfo6 != null))\r\n" +
+                    "                                continue;\r\n" +
+                    "                            var _value7 = _iter3.GetValue(T4Impl);\r\n" +
+                    "                            if (_fInfo5 != null)\r\n" +
+                    "                                _fInfo5.SetValue(T4, _value7);\r\n" +
+                    "                            else\r\n" +
+                    "                                _pInfo6.SetValue(T4, _value7);\r\n" +
+                    "                        }\r\n" +
                     "                    }\r\n" + 
                     "                    else\r\n" + 
                     "                    {\r\n" + 
@@ -360,6 +433,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"t1\";\r\n" + 
                     "            field.Type = TType.I32;\r\n" + 
                     "            field.ID = 0;\r\n" + 
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n" + 
                     "            oprot.WriteI32(_t1);\r\n" + 
                     "            oprot.WriteFieldEnd();\r\n" + 
@@ -368,7 +442,8 @@ namespace Flood.Tools.RPCGen.Tests
                     "        {\r\n" + 
                     "            field.Name = \"t2\";\r\n" + 
                     "            field.Type = TType.String;\r\n" + 
-                    "            field.ID = 1;\r\n" + 
+                    "            field.ID = 1;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +  
                     "            oprot.WriteFieldBegin(field);\r\n" + 
                     "            oprot.WriteString(_t2);\r\n" + 
                     "            oprot.WriteFieldEnd();\r\n" + 
@@ -377,7 +452,8 @@ namespace Flood.Tools.RPCGen.Tests
                     "        {\r\n" + 
                     "            field.Name = \"t3\";\r\n" + 
                     "            field.Type = TType.Double;\r\n" + 
-                    "            field.ID = 2;\r\n" + 
+                    "            field.ID = 2;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +  
                     "            oprot.WriteFieldBegin(field);\r\n" + 
                     "            oprot.WriteDouble(_t3);\r\n" + 
                     "            oprot.WriteFieldEnd();\r\n" + 
@@ -386,11 +462,23 @@ namespace Flood.Tools.RPCGen.Tests
                     "        {\r\n" + 
                     "            field.Name = \"t4\";\r\n" +
                     "            field.Type = TType.Class;\r\n" + 
-                    "            field.ID = 3;\r\n" + 
+                    "            field.ID = 3;\r\n" +
+                    "            field.ClassName = T4.GetType().Name;\r\n" +   
                     "            oprot.WriteFieldBegin(field);\r\n" + 
-                    "            var T4Impl = new TestClassImpl()\r\n" + 
-                    "            {\r\n" + 
-                    "            };\r\n" + 
+                    "            var _typeImpl8 = Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
+                    "            var _typeBase9 = T4.GetType();\r\n" +
+                    "            var T4Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
+                    "            foreach (var _iter11 in _props10)\r\n" +
+                    "            {\r\n" +
+                    "                var _propName12 = _iter11.Name;\r\n" +
+                    "                var _fInfo13 = Flood.Editor.Shared.Utils.GetField(_typeBase9, _propName12);\r\n" +
+                    "                var _pInfo14 = Flood.Editor.Shared.Utils.GetProperty(_typeBase9, _propName12);\r\n" +
+                    "                if (!(_fInfo13 != null ^ _pInfo14 != null))\r\n" +
+                    "                    continue;\r\n" +
+                    "                var _value15 = (_fInfo13 != null) ? _fInfo13.GetValue(T4) : _pInfo14.GetValue(T4);\r\n" +
+                    "                _iter11.SetValue(T4Impl, _value15);\r\n" +
+                    "            }\r\n" +
                     "            T4Impl.Write(oprot);\r\n" + 
                     "            oprot.WriteFieldEnd();\r\n" + 
                     "        }\r\n" + 
@@ -488,6 +576,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"t1\";\r\n" +
                     "            field.Type = TType.I32;\r\n" +
                     "            field.ID = 0;\r\n" +
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n" +
                     "            oprot.WriteI32(_t1);\r\n" +
                     "            oprot.WriteFieldEnd();\r\n" +
@@ -497,6 +586,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"t2\";\r\n" +
                     "            field.Type = TType.I64;\r\n" +
                     "            field.ID = 1;\r\n" +
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n" +
                     "            oprot.WriteI64(_t2);\r\n" +
                     "            oprot.WriteFieldEnd();\r\n" +
@@ -514,194 +604,222 @@ namespace Flood.Tools.RPCGen.Tests
         {
             generator.GenerateMessageClass(typeof(TestInheritance));
             string expected =
-                   "[Serializable]\r\n" +
-                   "public class TestInheritanceImpl : Base\r\n" +
-                   "{\r\n" +
-                   "    private bool _t5;\r\n" +
-                   "    private int _t1;\r\n" +
-                   "    private string _t2;\r\n" +
-                   "    private double _t3;\r\n" +
-                   "    private Flood.Tools.RPCGen.Tests.TestClass _t4;\r\n" +
-                   "\r\n" +
-                   "    public bool T5\r\n" +
-                   "    {\r\n" +
-                   "        get { return _t5; }\r\n" +
-                   "        set { __isset.t5 = true; this._t5 = value; }\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public int T1\r\n" +
-                   "    {\r\n" +
-                   "        get { return _t1; }\r\n" +
-                   "        set { __isset.t1 = true; this._t1 = value; }\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public string T2\r\n" +
-                   "    {\r\n" +
-                   "        get { return _t2; }\r\n" +
-                   "        set { __isset.t2 = true; this._t2 = value; }\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public double T3\r\n" +
-                   "    {\r\n" +
-                   "        get { return _t3; }\r\n" +
-                   "        set { __isset.t3 = true; this._t3 = value; }\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public Flood.Tools.RPCGen.Tests.TestClass T4\r\n" +
-                   "    {\r\n" +
-                   "        get { return _t4; }\r\n" +
-                   "        set { __isset.t4 = true; this._t4 = value; }\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public Isset __isset;\r\n" +
-                   "\r\n" +
-                   "    [Serializable]\r\n" +
-                   "    public struct Isset\r\n" +
-                   "    {\r\n" +
-                   "        public bool t5;\r\n" +
-                   "        public bool t1;\r\n" +
-                   "        public bool t2;\r\n" +
-                   "        public bool t3;\r\n" +
-                   "        public bool t4;\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public TestInheritanceImpl()\r\n" +
-                   "    {\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public void Read(Serializer iprot)\r\n" +
-                   "    {\r\n" +
-                   "        iprot.ReadStructBegin();\r\n" +
-                   "        while (true)\r\n" +
-                   "        {\r\n" +
-                   "            var field = iprot.ReadFieldBegin();\r\n" +
-                   "            if (field.Type == TType.Stop)\r\n" +
-                   "                break;\r\n" +
-                   "\r\n" +
-                   "            switch (field.ID)\r\n" +
-                   "            {\r\n" +
-                   "                case 4:\r\n" +
-                   "                    if (field.Type == TType.Bool)\r\n" +
-                   "                    {\r\n" +
-                   "                        T5 = iprot.ReadBool();\r\n" +
-                   "                    }\r\n" +
-                   "                    else\r\n" +
-                   "                    {\r\n" +
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    }\r\n" +
-                   "                    break;\r\n" +
-                   "                case 0:\r\n" +
-                   "                    if (field.Type == TType.I32)\r\n" +
-                   "                    {\r\n" +
-                   "                        T1 = iprot.ReadI32();\r\n" +
-                   "                    }\r\n" +
-                   "                    else\r\n" +
-                   "                    {\r\n" +
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    }\r\n" +
-                   "                    break;\r\n" +
-                   "                case 1:\r\n" +
-                   "                    if (field.Type == TType.String)\r\n" +
-                   "                    {\r\n" +
-                   "                        T2 = iprot.ReadString();\r\n" +
-                   "                    }\r\n" +
-                   "                    else\r\n" +
-                   "                    {\r\n" +
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    }\r\n" +
-                   "                    break;\r\n" +
-                   "                case 2:\r\n" +
-                   "                    if (field.Type == TType.Double)\r\n" +
-                   "                    {\r\n" +
-                   "                        T3 = iprot.ReadDouble();\r\n" +
-                   "                    }\r\n" +
-                   "                    else\r\n" +
-                   "                    {\r\n" +
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    }\r\n" +
-                   "                    break;\r\n" +
-                   "                case 3:\r\n" +
-                   "                    if (field.Type == TType.Class)\r\n" +
-                   "                    {\r\n" +
-                   "                        var T4Impl = new TestClassImpl();\r\n" +
-                   "                        T4Impl.Read(iprot);\r\n" +
-                   "                        T4 = new Flood.Tools.RPCGen.Tests.TestClass()\r\n" +
-                   "                        {\r\n" +
-                   "                        };\r\n" +
-                   "                    }\r\n" +
-                   "                    else\r\n" +
-                   "                    {\r\n" +
-                   "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    }\r\n" +
-                   "                    break;\r\n" +
-                   "                default:\r\n" +
-                   "                    ProtocolUtil.Skip(iprot, field.Type);\r\n" +
-                   "                    break;\r\n" +
-                   "            }\r\n" +
-                   "            iprot.ReadFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        iprot.ReadStructEnd();\r\n" +
-                   "    }\r\n" +
-                   "\r\n" +
-                   "    public void Write(Serializer oprot)\r\n" +
-                   "    {\r\n" +
-                   "        var struc = new Struct(\"TestInheritance_args\");\r\n" +
-                   "        oprot.WriteStructBegin(struc);\r\n" +
-                   "        var field = new Field();\r\n" +
-                   "        if (__isset.t5)\r\n" +
-                   "        {\r\n" +
-                   "            field.Name = \"t5\";\r\n" +
-                   "            field.Type = TType.Bool;\r\n" +
-                   "            field.ID = 4;\r\n" +
-                   "            oprot.WriteFieldBegin(field);\r\n" +
-                   "            oprot.WriteBool(_t5);\r\n" +
-                   "            oprot.WriteFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        if (__isset.t1)\r\n" +
-                   "        {\r\n" +
-                   "            field.Name = \"t1\";\r\n" +
-                   "            field.Type = TType.I32;\r\n" +
-                   "            field.ID = 0;\r\n" +
-                   "            oprot.WriteFieldBegin(field);\r\n" +
-                   "            oprot.WriteI32(_t1);\r\n" +
-                   "            oprot.WriteFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        if (T2 != null && __isset.t2)\r\n" +
-                   "        {\r\n" +
-                   "            field.Name = \"t2\";\r\n" +
-                   "            field.Type = TType.String;\r\n" +
-                   "            field.ID = 1;\r\n" +
-                   "            oprot.WriteFieldBegin(field);\r\n" +
-                   "            oprot.WriteString(_t2);\r\n" +
-                   "            oprot.WriteFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        if (__isset.t3)\r\n" +
-                   "        {\r\n" +
-                   "            field.Name = \"t3\";\r\n" +
-                   "            field.Type = TType.Double;\r\n" +
-                   "            field.ID = 2;\r\n" +
-                   "            oprot.WriteFieldBegin(field);\r\n" +
-                   "            oprot.WriteDouble(_t3);\r\n" +
-                   "            oprot.WriteFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        if (T4 != null && __isset.t4)\r\n" +
-                   "        {\r\n" +
-                   "            field.Name = \"t4\";\r\n" +
-                   "            field.Type = TType.Class;\r\n" +
-                   "            field.ID = 3;\r\n" +
-                   "            oprot.WriteFieldBegin(field);\r\n" +
-                   "            var T4Impl = new TestClassImpl()\r\n" +
-                   "            {\r\n" +
-                   "            };\r\n" +
-                   "            T4Impl.Write(oprot);\r\n" +
-                   "            oprot.WriteFieldEnd();\r\n" +
-                   "        }\r\n" +
-                   "        oprot.WriteFieldStop();\r\n" +
-                   "        oprot.WriteStructEnd();\r\n" +
-                   "    }\r\n" +
-                   "}\r\n";
-
-
+                    "[Serializable]\r\n" +
+                    "public class TestInheritanceImpl : Base\r\n" +
+                    "{\r\n" +
+                    "    private bool _t5;\r\n" +
+                    "    private int _t1;\r\n" +
+                    "    private string _t2;\r\n" +
+                    "    private double _t3;\r\n" +
+                    "    private Flood.Tools.RPCGen.Tests.TestClass _t4;\r\n" +
+                    "\r\n" +
+                    "    public bool T5\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t5; }\r\n" +
+                    "        set { __isset.t5 = true; this._t5 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public int T1\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t1; }\r\n" +
+                    "        set { __isset.t1 = true; this._t1 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public string T2\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t2; }\r\n" +
+                    "        set { __isset.t2 = true; this._t2 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public double T3\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t3; }\r\n" +
+                    "        set { __isset.t3 = true; this._t3 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public Flood.Tools.RPCGen.Tests.TestClass T4\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t4; }\r\n" +
+                    "        set { __isset.t4 = true; this._t4 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public Isset __isset;\r\n" +
+                    "\r\n" +
+                    "    [Serializable]\r\n" +
+                    "    public struct Isset\r\n" +
+                    "    {\r\n" +
+                    "        public bool t5;\r\n" +
+                    "        public bool t1;\r\n" +
+                    "        public bool t2;\r\n" +
+                    "        public bool t3;\r\n" +
+                    "        public bool t4;\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public TestInheritanceImpl()\r\n" +
+                    "    {\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Read(Serializer iprot)\r\n" +
+                    "    {\r\n" +
+                    "        iprot.ReadStructBegin();\r\n" +
+                    "        while (true)\r\n" +
+                    "        {\r\n" +
+                    "            var field = iprot.ReadFieldBegin();\r\n" +
+                    "            if (field.Type == TType.Stop)\r\n" +
+                    "                break;\r\n" +
+                    "\r\n" +
+                    "            switch (field.ID)\r\n" +
+                    "            {\r\n" +
+                    "                case 4:\r\n" +
+                    "                    if (field.Type == TType.Bool)\r\n" +
+                    "                    {\r\n" +
+                    "                        T5 = iprot.ReadBool();\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                case 0:\r\n" +
+                    "                    if (field.Type == TType.I32)\r\n" +
+                    "                    {\r\n" +
+                    "                        T1 = iprot.ReadI32();\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                case 1:\r\n" +
+                    "                    if (field.Type == TType.String)\r\n" +
+                    "                    {\r\n" +
+                    "                        T2 = iprot.ReadString();\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                case 2:\r\n" +
+                    "                    if (field.Type == TType.Double)\r\n" +
+                    "                    {\r\n" +
+                    "                        T3 = iprot.ReadDouble();\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                case 3:\r\n" +
+                    "                    if (field.Type == TType.Class)\r\n" +
+                    "                    {\r\n" +
+                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
+                    "                        var T4Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
+                    "                        T4Impl.Read(iprot);\r\n" +
+                    "                        T4 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
+                    "                        foreach (var _iter3 in _props2)\r\n" +
+                    "                        {\r\n" +
+                    "                            var _propName4 = _iter3.Name;\r\n" +
+                    "                            var _fInfo5 = Flood.Editor.Shared.Utils.GetField(_typeBase1, _propName4);\r\n" +
+                    "                            var _pInfo6 = Flood.Editor.Shared.Utils.GetProperty(_typeBase1, _propName4);\r\n" +
+                    "                            if (!(_fInfo5 != null ^ _pInfo6 != null))\r\n" +
+                    "                                continue;\r\n" +
+                    "                            var _value7 = _iter3.GetValue(T4Impl);\r\n" +
+                    "                            if (_fInfo5 != null)\r\n" +
+                    "                                _fInfo5.SetValue(T4, _value7);\r\n" +
+                    "                            else\r\n" +
+                    "                                _pInfo6.SetValue(T4, _value7);\r\n" +
+                    "                        }\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                default:\r\n" +
+                    "                    ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    break;\r\n" +
+                    "            }\r\n" +
+                    "            iprot.ReadFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        iprot.ReadStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Write(Serializer oprot)\r\n" +
+                    "    {\r\n" +
+                    "        var struc = new Struct(\"TestInheritance_args\");\r\n" +
+                    "        oprot.WriteStructBegin(struc);\r\n" +
+                    "        var field = new Field();\r\n" +
+                    "        if (__isset.t5)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t5\";\r\n" +
+                    "            field.Type = TType.Bool;\r\n" +
+                    "            field.ID = 4;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            oprot.WriteBool(_t5);\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        if (__isset.t1)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t1\";\r\n" +
+                    "            field.Type = TType.I32;\r\n" +
+                    "            field.ID = 0;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            oprot.WriteI32(_t1);\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        if (T2 != null && __isset.t2)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t2\";\r\n" +
+                    "            field.Type = TType.String;\r\n" +
+                    "            field.ID = 1;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            oprot.WriteString(_t2);\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        if (__isset.t3)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t3\";\r\n" +
+                    "            field.Type = TType.Double;\r\n" +
+                    "            field.ID = 2;\r\n" +
+                    "            field.ClassName = \"\";\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            oprot.WriteDouble(_t3);\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        if (T4 != null && __isset.t4)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t4\";\r\n" +
+                    "            field.Type = TType.Class;\r\n" +
+                    "            field.ID = 3;\r\n" +
+                    "            field.ClassName = T4.GetType().Name;\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            var _typeImpl8 = Type.GetType(T4.GetType().Name + \"Impl\");\r\n" +
+                    "            var _typeBase9 = T4.GetType();\r\n" +
+                    "            var T4Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
+                    "            foreach (var _iter11 in _props10)\r\n" +
+                    "            {\r\n" +
+                    "                var _propName12 = _iter11.Name;\r\n" +
+                    "                var _fInfo13 = Flood.Editor.Shared.Utils.GetField(_typeBase9, _propName12);\r\n" +
+                    "                var _pInfo14 = Flood.Editor.Shared.Utils.GetProperty(_typeBase9, _propName12);\r\n" +
+                    "                if (!(_fInfo13 != null ^ _pInfo14 != null))\r\n" +
+                    "                    continue;\r\n" +
+                    "                var _value15 = (_fInfo13 != null) ? _fInfo13.GetValue(T4) : _pInfo14.GetValue(T4);\r\n" +
+                    "                _iter11.SetValue(T4Impl, _value15);\r\n" +
+                    "            }\r\n" +
+                    "            T4Impl.Write(oprot);\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        oprot.WriteFieldStop();\r\n" +
+                    "        oprot.WriteStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "}\r\n";
 
             Assert.AreEqual(expected, generator.ToString());
         }
@@ -783,6 +901,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"t1\";\r\n"+
                     "            field.Type = TType.Map;\r\n"+
                     "            field.ID = 0;\r\n"+
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n"+
                     "            oprot.WriteMapBegin(new TMap(TType.I32, TType.String, T1.Count));\r\n" +
                     "            foreach (var _iter6 in T1)\r\n"+
@@ -876,6 +995,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"t1\";\r\n" +
                     "            field.Type = TType.Array;\r\n" +
                     "            field.ID = 0;\r\n" +
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n" +
                     "            oprot.WriteArrayBegin(new TArray(TType.Array, T1.Length));\r\n" +
                     "            foreach (var _iter3 in T1)\r\n" +
@@ -883,6 +1003,120 @@ namespace Flood.Tools.RPCGen.Tests
                     "                oprot.WriteI32(_iter3);\r\n" +
                     "            }\r\n" +
                     "            oprot.WriteArrayEnd();\r\n" +
+                    "            oprot.WriteFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        oprot.WriteFieldStop();\r\n" +
+                    "        oprot.WriteStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "}\r\n";
+
+            Assert.AreEqual(expected, generator.ToString());
+        }
+
+        [Test]
+        public void GenerateMessageClass6()
+        {
+
+            generator.GenerateMessageClass(typeof(TestClass7));
+            string expected =
+                    "[Serializable]\r\n" +
+                    "public class TestClass7Impl : Base\r\n" +
+                    "{\r\n" +
+                    "    private Flood.Tools.RPCGen.Tests.TestAbstract2 _t1;\r\n" +
+                    "\r\n" +
+                    "    public Flood.Tools.RPCGen.Tests.TestAbstract2 T1\r\n" +
+                    "    {\r\n" +
+                    "        get { return _t1; }\r\n" +
+                    "        set { __isset.t1 = true; this._t1 = value; }\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public Isset __isset;\r\n" +
+                    "\r\n" +
+                    "    [Serializable]\r\n" +
+                    "    public struct Isset\r\n" +
+                    "    {\r\n" +
+                    "        public bool t1;\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public TestClass7Impl()\r\n" +
+                    "    {\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Read(Serializer iprot)\r\n" +
+                    "    {\r\n" +
+                    "        iprot.ReadStructBegin();\r\n" +
+                    "        while (true)\r\n" +
+                    "        {\r\n" +
+                    "            var field = iprot.ReadFieldBegin();\r\n" +
+                    "            if (field.Type == TType.Stop)\r\n" +
+                    "                break;\r\n" +
+                    "\r\n" +
+                    "            switch (field.ID)\r\n" +
+                    "            {\r\n" +
+                    "                case 0:\r\n" +
+                    "                    if (field.Type == TType.Class)\r\n" +
+                    "                    {\r\n" +
+                    "                        var _typeImpl0 = Type.GetType(field.ClassName + \"Impl\");\r\n" +
+                    "                        var _typeBase1 = Type.GetType(field.ClassName);\r\n" +
+                    "                        var T1Impl = Activator.CreateInstance(_typeImpl0);\r\n" +
+                    "                        T1Impl.Read(iprot);\r\n" +
+                    "                        T1 = Activator.CreateInstance(_typeBase1);\r\n" +
+                    "                        IEnumerable<PropertyInfo> _props2 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl0);\r\n" +
+                    "                        foreach (var _iter3 in _props2)\r\n" +
+                    "                        {\r\n" +
+                    "                            var _propName4 = _iter3.Name;\r\n" +
+                    "                            var _fInfo5 = Flood.Editor.Shared.Utils.GetField(_typeBase1, _propName4);\r\n" +
+                    "                            var _pInfo6 = Flood.Editor.Shared.Utils.GetProperty(_typeBase1, _propName4);\r\n" +
+                    "                            if (!(_fInfo5 != null ^ _pInfo6 != null))\r\n" +
+                    "                                continue;\r\n" +
+                    "                            var _value7 = _iter3.GetValue(T1Impl);\r\n" +
+                    "                            if (_fInfo5 != null)\r\n" +
+                    "                                _fInfo5.SetValue(T1, _value7);\r\n" +
+                    "                            else\r\n" +
+                    "                                _pInfo6.SetValue(T1, _value7);\r\n" +
+                    "                        }\r\n" +
+                    "                    }\r\n" +
+                    "                    else\r\n" +
+                    "                    {\r\n" +
+                    "                        ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    }\r\n" +
+                    "                    break;\r\n" +
+                    "                default:\r\n" +
+                    "                    ProtocolUtil.Skip(iprot, field.Type);\r\n" +
+                    "                    break;\r\n" +
+                    "            }\r\n" +
+                    "            iprot.ReadFieldEnd();\r\n" +
+                    "        }\r\n" +
+                    "        iprot.ReadStructEnd();\r\n" +
+                    "    }\r\n" +
+                    "\r\n" +
+                    "    public void Write(Serializer oprot)\r\n" +
+                    "    {\r\n" +
+                    "        var struc = new Struct(\"TestClass7_args\");\r\n" +
+                    "        oprot.WriteStructBegin(struc);\r\n" +
+                    "        var field = new Field();\r\n" +
+                    "        if (T1 != null && __isset.t1)\r\n" +
+                    "        {\r\n" +
+                    "            field.Name = \"t1\";\r\n" +
+                    "            field.Type = TType.Class;\r\n" +
+                    "            field.ID = 0;\r\n" +
+                    "            field.ClassName = T1.GetType().Name;\r\n" +
+                    "            oprot.WriteFieldBegin(field);\r\n" +
+                    "            var _typeImpl8 = Type.GetType(T1.GetType().Name + \"Impl\");\r\n" +
+                    "            var _typeBase9 = T1.GetType();\r\n" +
+                    "            var T1Impl = Activator.CreateInstance(_typeImpl8));\r\n" +
+                    "            IEnumerable<PropertyInfo> _props10 = Flood.Editor.Shared.Utils.GetAllProperties(_typeImpl8);\r\n" +
+                    "            foreach (var _iter11 in _props10)\r\n" +
+                    "            {\r\n" +
+                    "                var _propName12 = _iter11.Name;\r\n" +
+                    "                var _fInfo13 = Flood.Editor.Shared.Utils.GetField(_typeBase9, _propName12);\r\n" +
+                    "                var _pInfo14 = Flood.Editor.Shared.Utils.GetProperty(_typeBase9, _propName12);\r\n" +
+                    "                if (!(_fInfo13 != null ^ _pInfo14 != null))\r\n" +
+                    "                    continue;\r\n" +
+                    "                var _value15 = (_fInfo13 != null) ? _fInfo13.GetValue(T1) : _pInfo14.GetValue(T1);\r\n" +
+                    "                _iter11.SetValue(T1Impl, _value15);\r\n" +
+                    "            }\r\n" +
+                    "            T1Impl.Write(oprot);\r\n" +
                     "            oprot.WriteFieldEnd();\r\n" +
                     "        }\r\n" +
                     "        oprot.WriteFieldStop();\r\n" +
@@ -978,6 +1212,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"What\";\r\n"+
                     "            field.Type = TType.I32;\r\n"+
                     "            field.ID = 1;\r\n"+
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n"+
                     "            oprot.WriteI32(_What);\r\n"+
                     "            oprot.WriteFieldEnd();\r\n"+
@@ -987,6 +1222,7 @@ namespace Flood.Tools.RPCGen.Tests
                     "            field.Name = \"Why\";\r\n"+
                     "            field.Type = TType.String;\r\n"+
                     "            field.ID = 2;\r\n"+
+                    "            field.ClassName = \"\";\r\n" + 
                     "            oprot.WriteFieldBegin(field);\r\n"+
                     "            oprot.WriteString(_Why);\r\n"+
                     "            oprot.WriteFieldEnd();\r\n"+
@@ -1312,6 +1548,109 @@ namespace Flood.Tools.RPCGen.Tests
         public void ToTitleCase()
         {
             Assert.AreEqual("Some Random String", Generator.ToTitleCase("some random string"));
+        }
+
+        [Test]
+        public void test()
+        {
+            var user = new TestClass7();
+            user.t1 = new TestClass6(12, "foo");
+            var baseclass = user.t1.GetType();
+            var name = baseclass.FullName; 
+            var type = Type.GetType(name + "Impl");
+            var UserImpl = Activator.CreateInstance(type);
+            IEnumerable<PropertyInfo> props = Generator.GetAllProperties(type);
+            foreach(var pi in props)
+            {
+                var propname = pi.Name;
+                var finfo = GetField(baseclass, propname);
+                var pinfo = GetProperty(baseclass, propname);
+                if(!(finfo != null ^ pinfo != null))
+                    continue;
+                var value = (finfo != null) ? finfo.GetValue(user.t1) : pinfo.GetValue(user.t1);
+                pi.SetValue(UserImpl, value);
+            }
+
+
+        }
+
+        [Test]
+        public void test2()
+        {
+            var UserImpl = new TestClass6Impl();
+            UserImpl.T0 = 6.2;
+            UserImpl.T1 = 8;
+            UserImpl.T2 = "bar";
+            var typeBase = typeof(TestClass6);
+            var typeImpl = typeof(TestClass6Impl);
+            var User = Activator.CreateInstance(typeBase);
+            IEnumerable<PropertyInfo> props = Generator.GetAllProperties(typeImpl);
+            foreach (var pi in props)
+            {
+                var propname = pi.Name;
+                var finfo = GetField(typeBase, propname);
+                var pinfo = GetProperty(typeBase, propname);
+                if (!(finfo != null ^ pinfo != null))
+                    continue;
+                var value = pi.GetValue(UserImpl);
+                if (finfo != null)
+                    finfo.SetValue(User, value);
+                else
+                    pinfo.SetValue(User, value);
+            }
+        }
+
+        public static FieldInfo GetField(Type t, string name)
+        {
+            var type = t;
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            FieldInfo finfo = null;
+            while(t != null)
+            {
+                finfo = t.GetField(name, flags) ?? t.GetField(UnTitleCase(name), flags);
+                if (finfo != null)
+                    return finfo;
+                
+                t = t.BaseType;
+            }
+            return finfo;
+        }
+
+        public static PropertyInfo GetProperty(Type t, string name)
+        {
+            var type = t;
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            PropertyInfo pinfo = null;
+            while (t != null)
+            {
+                pinfo = t.GetProperty(name, flags) ?? t.GetProperty(UnTitleCase(name), flags);
+                if (pinfo != null)
+                    return pinfo;
+
+                t = t.BaseType;
+            }
+            return pinfo;
+        }
+
+
+        public static string UnTitleCase(string str)
+        {
+            var result = str;
+            if (!string.IsNullOrEmpty(str))
+            {
+                var words = str.Split(' ');
+                for (int index = 0; index < words.Length; index++)
+                {
+                    var s = words[index];
+                    if (s.Length > 0)
+                    {
+                        words[index] = s[0].ToString(CultureInfo.InvariantCulture)
+                            .ToLower() + s.Substring(1);
+                    }
+                }
+                result = string.Join(" ", words);
+            }
+            return result;
         }
         /*
         [Test]

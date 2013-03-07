@@ -113,6 +113,9 @@ namespace Flood.RPC.Protocol
         {
             WriteByte((byte)field.Type);
             WriteI16(field.ID);
+            WriteString(field.Name ?? "");
+            WriteString(field.ClassName ?? "");
+
         }
 
         public override void WriteFieldEnd()
@@ -289,6 +292,9 @@ namespace Flood.RPC.Protocol
             if (field.Type != TType.Stop)
             {
                 field.ID = ReadI16();
+                field.Name = ReadString();
+                field.ClassName = ReadString();
+
             }
 
             return field;

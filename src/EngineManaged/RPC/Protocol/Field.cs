@@ -58,5 +58,11 @@ namespace Flood.RPC.Protocol
             get { return id; }
             set { id = value; }
         }
+
+        public string ClassName
+        {
+            get;
+            set; 
+        }
     }
 }

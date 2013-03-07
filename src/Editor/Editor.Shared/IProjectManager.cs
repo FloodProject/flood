@@ -37,7 +37,7 @@ namespace Flood.Editor
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        IDictionary<Guid, Project> Projects { get; }
+        Dictionary<Guid, Project> Projects { get; }
 
         /// <summary>
         /// Event fired when a project is added.
