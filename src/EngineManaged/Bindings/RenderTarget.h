@@ -8,30 +8,17 @@
 #pragma once
 
 #include <Graphics/RenderTarget.h>
-#include "Vector.h"
-#include "Color.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     ref class RenderView;
     value struct Settings;
     value struct Vector2i;
-    value struct Vector3;
     ref class RenderContext;
     ref class RenderTarget;
     ref class Event1;
-    ref class Delegate0;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
     ref class RefPtr;
-    ref class RenderCapabilities;
-    ref class BufferManager;
-    ref class TextureManager;
-    ref class ProgramManager;
-    ref class RenderBackend;
-    value struct Color;
-    ref class RenderBuffer;
 
     public value struct Settings
     {
@@ -52,6 +39,7 @@ namespace Flood
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
         RenderTarget();
+        property Flood::RenderContext^ Context;
         property System::IntPtr UserData;
     private:
         delegate void _TargetResizeDelegate(const ::Settings& _0);

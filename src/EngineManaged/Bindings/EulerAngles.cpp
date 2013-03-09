@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "EulerAngles.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
@@ -32,19 +33,19 @@ Flood::EulerAngles::EulerAngles(float x, float y, float z)
 {
 }
 
-Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::EulerAngles _98)
+Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::EulerAngles _86)
 {
     auto this0 = (::EulerAngles*) 0;
     auto arg0 = ::EulerAngles();
-    arg0.x = _98.X;
-    arg0.y = _98.Y;
-    arg0.z = _98.Z;
+    arg0.x = _86.X;
+    arg0.y = _86.Y;
+    arg0.z = _86.Z;
 
     auto ret = this0->operator+=(arg0);
     return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 
-Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _99)
+Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _87)
 {
     auto this0 = (::EulerAngles*) 0;
     auto arg0 = ::Vector3();

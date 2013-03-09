@@ -8,20 +8,15 @@
 #pragma once
 
 #include <Core/Math/Quaternion.h>
-#include "Vector.h"
-#include "Reflection.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
-    value struct QuaternionP;
     value struct Quaternion;
     value struct EulerAngles;
     value struct Vector3;
     ref class Primitive;
-    enum struct PrimitiveTypeKind : unsigned char;
-    ref class PrimitiveBuiltins;
     ref class scoped_ptr;
-    ref class ConcurrentQueue;
     ref class Mutex;
     ref class Condition;
 

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <Core/Math/Matrix4x4.h>
-#include "Vector.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -29,7 +29,7 @@ namespace Flood
     public:
         Matrix4x4(::Matrix4x4* native);
         Matrix4x4(System::IntPtr native);
-        Matrix4x4(Flood::Matrix4x3^ _197);
+        Matrix4x4(Flood::Matrix4x3^ _185);
         float M11;
         float M12;
         float M13;

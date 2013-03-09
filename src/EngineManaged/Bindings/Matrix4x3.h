@@ -8,8 +8,7 @@
 #pragma once
 
 #include <Core/Math/Matrix4x3.h>
-#include "Vector.h"
-#include "Quaternion.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {

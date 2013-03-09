@@ -8,33 +8,18 @@
 #pragma once
 
 #include <Resources/ResourceLoader.h>
-#include "Reflection.h"
-#include "Memory.h"
-#include "Stream.h"
 #include "Extension.h"
+#include "Resource.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
     value struct ResourceLoadOption;
     value struct ResourceLoadOptions;
     ref class Stream;
-    enum struct StreamOpenMode;
-    ref class StreamFuncs;
-    enum struct StreamSeekMode;
-    ref class MemoryStream;
     ref class Resource;
-    enum struct ResourceStatus;
-    ref class ResourceStream;
     enum struct ResourceGroup;
-    ref class Handle;
+    ref class ResourceStream;
     ref class ResourceLoader;
     value struct ExtensionMetadata;
     ref class RefPtr;
@@ -85,19 +70,16 @@ namespace Flood
     /// for the formats handled by the loader. The loader also provides the
     /// extensions of those formats.
     /// </summary>
-    public ref class ResourceLoader : Extension
+    public ref class ResourceLoader : Flood::Extension
     {
     public:
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
         ResourceLoader();
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         Flood::ExtensionMetadata GetMetadata();
-        Flood::Resource^ Prepare(Flood::ResourceLoadOptions _173);
-        bool Decode(Flood::ResourceLoadOptions _174);
+        Flood::Resource^ Prepare(Flood::ResourceLoadOptions _161);
+        bool Decode(Flood::ResourceLoadOptions _162);
         System::String^ GetName();
-        Flood::Class^ GetResourceClass();
         Flood::ResourceGroup GetResourceGroup();
     };
 }

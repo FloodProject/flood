@@ -9,8 +9,7 @@
 
 #include <Engine/Window/Window.h>
 #include "RenderTarget.h"
-#include "Vector.h"
-#include "Color.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -18,30 +17,13 @@ namespace Flood
     value struct WindowSettings;
     ref class Window;
     ref class Event0;
-    ref class Delegate0;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
     ref class Event1;
-    ref class RefPtr;
     ref class RenderContext;
-    ref class RenderCapabilities;
-    ref class BufferManager;
-    ref class TextureManager;
-    ref class ProgramManager;
-    ref class RenderTarget;
-    ref class RenderBackend;
-    value struct Color;
-    value struct Vector3;
-    ref class RenderBuffer;
-    value struct Settings;
-    ref class RenderContextSettings;
+    ref class RefPtr;
+    value struct RenderContextSettings;
     value struct Vector2i;
     ref class InputManager;
-    ref class InputDevice;
-    ref class Keyboard;
-    ref class Mouse;
-    ref class InputEvent;
+    value struct Settings;
 
     [System::Flags]
     public enum struct WindowStyles
@@ -70,13 +52,14 @@ namespace Flood
     /// but on some platforms (consoles, for instance) this might be slighty
     /// different, so some methods might not make much sense.
     /// </summary>
-    public ref class Window : RenderTarget
+    public ref class Window : Flood::RenderTarget
     {
     public:
         Window(::Window* native);
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
         property Flood::WindowSettings Settings;
+        property Flood::RenderContext^ RenderContext;
     private:
         delegate void _WindowCloseDelegate();
         _WindowCloseDelegate^ _WindowCloseDelegateInstance;
@@ -101,7 +84,7 @@ namespace Flood
             void remove(System::Action<bool>^ evt);
             void raise(bool);
         }
-        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings^ _224);
+        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _212);
         void Update();
         void MakeCurrent();
         void Show(bool visible);

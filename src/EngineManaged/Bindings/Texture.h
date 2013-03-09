@@ -8,11 +8,8 @@
 #pragma once
 
 #include <Graphics/Texture.h>
-#include "Reflection.h"
-#include "Memory.h"
-#include "Vector.h"
-#include "Color.h"
-#include "Resource.h"
+#include "Image.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -23,17 +20,6 @@ namespace Flood
     ref class Texture;
     enum struct PixelFormat;
     ref class Image;
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    enum struct ResourceGroup;
-    value struct Color;
-    value struct Vector3;
     value struct Vector2i;
     ref class TextureUnit;
     ref class Handle;
@@ -87,7 +73,7 @@ namespace Flood
         property Flood::PixelFormat Format;
         property float AnisotropicFilter;
         property Flood::Image^ Image;
-        void Alloc(Flood::Vector2i size, Flood::PixelFormat _207);
+        void Alloc(Flood::Vector2i size, Flood::PixelFormat _195);
         unsigned int GetId();
         Flood::PixelFormat GetPixelFormat();
         Flood::Image^ GetImage();
@@ -105,6 +91,7 @@ namespace Flood
         TextureUnit(System::IntPtr native);
         TextureUnit();
         property unsigned char Unit;
+        property Flood::ResourceHandle<Flood::Image^> Image;
         property bool OverrideModes;
         property Flood::TextureFilterMode Filter;
         property Flood::TextureMipMode Mip;
@@ -112,8 +99,8 @@ namespace Flood
         Flood::TextureFilterMode GetFilterMode();
         Flood::TextureMipMode GetMipMode();
         Flood::TextureWrapMode GetWrapMode();
-        void SetFilterMode(Flood::TextureFilterMode _209);
-        void SetMipMode(Flood::TextureMipMode _210);
-        void SetWrapMode(Flood::TextureWrapMode _211);
+        void SetFilterMode(Flood::TextureFilterMode _197);
+        void SetMipMode(Flood::TextureMipMode _198);
+        void SetWrapMode(Flood::TextureWrapMode _199);
     };
 }

@@ -8,8 +8,8 @@
 #include "_Marshal.h"
 #include "Quaternion.h"
 #include "EulerAngles.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
-#include "Reflection.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

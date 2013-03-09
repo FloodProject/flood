@@ -8,14 +8,13 @@
 #pragma once
 
 #include <Core/Stream.h>
-#include "Memory.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct StreamOpenMode;
     enum struct StreamSeekMode;
     ref class Stream;
-    ref class StreamFuncs;
     ref class Allocator;
     ref class MemoryStream;
     ref class FileStream;
@@ -75,20 +74,20 @@ namespace Flood
         long long GetSize();
         void Resize(long long size);
         long long ReadBuffer(System::IntPtr buffer, long long size);
-        long long ReadString(System::String^ _145);
+        long long ReadString(System::String^ _133);
         long long Write(System::IntPtr buf, unsigned long long size);
-        long long WriteString(System::String^ _150);
+        long long WriteString(System::String^ _138);
         long long GetPosition();
-        long long SetPosition(long long _153, Flood::StreamSeekMode _154);
-        static Flood::Stream^ CreateFromURI(Flood::Allocator^ _135, System::String^ _136, Flood::StreamOpenMode _137);
-        static Flood::Stream^ CreateFromFile(Flood::Allocator^ _155, System::String^ _156, Flood::StreamOpenMode _157);
-        static Flood::MemoryStream^ CreateFromMemory(Flood::Allocator^ _158, unsigned long long size);
-        static void MemoryInit(Flood::MemoryStream^ _159);
-        static void MemorySetRawBuffer(Flood::MemoryStream^ _160, System::IntPtr buffer);
+        long long SetPosition(long long _141, Flood::StreamSeekMode _142);
+        static Flood::Stream^ CreateFromURI(Flood::Allocator^ _123, System::String^ _124, Flood::StreamOpenMode _125);
+        static Flood::Stream^ CreateFromFile(Flood::Allocator^ _143, System::String^ _144, Flood::StreamOpenMode _145);
+        static Flood::MemoryStream^ CreateFromMemory(Flood::Allocator^ _146, unsigned long long size);
+        static void MemoryInit(Flood::MemoryStream^ _147);
+        static void MemorySetRawBuffer(Flood::MemoryStream^ _148, System::IntPtr buffer);
         static Flood::Stream^ CreateWeb(Flood::Allocator^ alloc, System::String^ URL, Flood::StreamOpenMode mode);
     };
 
-    public ref class MemoryStream : Stream
+    public ref class MemoryStream : Flood::Stream
     {
     public:
         MemoryStream(::MemoryStream* native);

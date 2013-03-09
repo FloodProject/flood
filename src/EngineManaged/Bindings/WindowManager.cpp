@@ -7,12 +7,8 @@
 
 #include "_Marshal.h"
 #include "WindowManager.h"
+#include "ResourceHandle.h"
 #include "Window.h"
-#include "RenderContext.h"
-#include "RenderTarget.h"
-#include "Color.h"
-#include "Vector.h"
-#include "InputManager.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

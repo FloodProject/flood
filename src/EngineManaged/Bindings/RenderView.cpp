@@ -7,9 +7,10 @@
 
 #include "_Marshal.h"
 #include "RenderView.h"
-#include "RenderTarget.h"
-#include "Vector.h"
 #include "Color.h"
+#include "RenderTarget.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -75,7 +76,7 @@ void Flood::RenderView::SetSize(Flood::Vector2i v)
 
 Flood::Color Flood::RenderView::GetClearColor()
 {
-    auto ret = &((::RenderView*)NativePtr)->getClearColor();
+    auto ret = ((::RenderView*)NativePtr)->getClearColor();
     return Flood::Color((::Color*)&ret);
 }
 

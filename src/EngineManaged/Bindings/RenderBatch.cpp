@@ -7,8 +7,12 @@
 
 #include "_Marshal.h"
 #include "RenderBatch.h"
+#include "GeometryBuffer.h"
+#include "Material.h"
 #include "Memory.h"
 #include "RenderView.h"
+#include "ResourceHandle.h"
+#include "UniformBuffer.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -16,18 +20,15 @@ using namespace clix;
 
 Flood::RenderBatchRange::RenderBatchRange(::RenderBatchRange* native)
 {
-    NativePtr = native;
+    Start = native->start;
+    End = native->end;
 }
 
 Flood::RenderBatchRange::RenderBatchRange(System::IntPtr native)
 {
     auto __native = (::RenderBatchRange*)native.ToPointer();
-    NativePtr = __native;
-}
-
-Flood::RenderBatchRange::RenderBatchRange()
-{
-    NativePtr = new ::RenderBatchRange();
+    Start = __native->start;
+    End = __native->end;
 }
 
 Flood::RenderBatch::RenderBatch(::RenderBatch* native)
@@ -70,6 +71,42 @@ void Flood::RenderBatch::SetRenderPriority(int v)
     ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
 
+Flood::GeometryBuffer^ Flood::RenderBatch::GetGeometryBuffer()
+{
+    auto ret = ((::RenderBatch*)NativePtr)->getGeometryBuffer();
+    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)ret.get());
+}
+
+void Flood::RenderBatch::SetGeometryBuffer(Flood::GeometryBuffer^ v)
+{
+    auto arg0 = (::GeometryBuffer*)v->NativePtr;
+    ((::RenderBatch*)NativePtr)->setGeometryBuffer(arg0);
+}
+
+Flood::UniformBuffer^ Flood::RenderBatch::GetUniformBuffer()
+{
+    auto ret = ((::RenderBatch*)NativePtr)->getUniformBuffer();
+    return gcnew Flood::UniformBuffer((::UniformBuffer*)ret.get());
+}
+
+void Flood::RenderBatch::SetUniformBuffer(Flood::UniformBuffer^ v)
+{
+    auto arg0 = (::UniformBuffer*)v->NativePtr;
+    ((::RenderBatch*)NativePtr)->setUniformBuffer(arg0);
+}
+
+Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::GetMaterial()
+{
+    auto ret = ((::RenderBatch*)NativePtr)->getMaterial();
+    return Flood::ResourceHandle<Flood::Material^>(ret.id);
+}
+
+void Flood::RenderBatch::SetMaterial(Flood::ResourceHandle<Flood::Material^> v)
+{
+    auto arg0 = (HandleId)v.Id;
+    ((::RenderBatch*)NativePtr)->setMaterial(arg0);
+}
+
 Flood::PrimitiveRasterMode Flood::RenderBatch::GetPrimitiveRasterMode()
 {
     auto ret = ((::RenderBatch*)NativePtr)->getPrimitiveRasterMode();
@@ -94,9 +131,9 @@ void Flood::RenderBatch::SetPrimitiveType(Flood::PrimitiveType v)
     ((::RenderBatch*)NativePtr)->setPrimitiveType(arg0);
 }
 
-Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^ _218)
+Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^ _206)
 {
-    auto arg0 = (::Allocator*)_218->NativePtr;
+    auto arg0 = (::Allocator*)_206->NativePtr;
     auto ret = ::RenderBatchCreate(arg0);
     return gcnew Flood::RenderBatch((::RenderBatch*)ret);
 }

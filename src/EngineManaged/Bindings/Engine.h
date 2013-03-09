@@ -8,35 +8,23 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include "Log.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     ref class Engine;
-    ref class TaskPool;
-    ref class ConcurrentQueue;
-    ref class Mutex;
-    ref class Condition;
-    ref class Event1;
-    ref class Delegate0;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
-    ref class Log;
-    ref class Timer;
-    value struct LogEntry;
-    enum struct LogLevel;
+    ref class Scene;
     ref class Stream;
-    ref class RenderDevice;
-    ref class InputManager;
-    ref class AudioDevice;
+    ref class Subsystem;
     ref class ResourceManager;
+    ref class RenderDevice;
+    ref class AudioDevice;
     ref class PhysicsManager;
+    ref class PageManager;
+    ref class InputManager;
     ref class ScriptManager;
     ref class WindowManager;
-    ref class Subsystem;
-    ref class Scene;
-    ref class PageManager;
+    ref class Log;
     ref class RefPtr;
 
     /// <summary>

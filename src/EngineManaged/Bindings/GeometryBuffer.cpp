@@ -8,6 +8,7 @@
 #include "_Marshal.h"
 #include "GeometryBuffer.h"
 #include "Buffer.h"
+#include "ResourceHandle.h"
 #include "VertexBuffer.h"
 
 using namespace System;
@@ -30,10 +31,10 @@ Flood::GeometryBuffer::GeometryBuffer()
     NativePtr = new ::GeometryBuffer();
 }
 
-Flood::GeometryBuffer::GeometryBuffer(Flood::BufferUsage _183, Flood::BufferAccess _184)
+Flood::GeometryBuffer::GeometryBuffer(Flood::BufferUsage _168, Flood::BufferAccess _169)
 {
-    auto arg0 = (::BufferUsage)_183;
-    auto arg1 = (::BufferAccess)_184;
+    auto arg0 = (::BufferUsage)_168;
+    auto arg1 = (::BufferAccess)_169;
     NativePtr = new ::GeometryBuffer(arg0, arg1);
 }
 
@@ -71,9 +72,9 @@ void Flood::GeometryBuffer::Clear()
     ((::GeometryBuffer*)NativePtr)->clear();
 }
 
-void Flood::GeometryBuffer::Set(Flood::VertexAttribute _185, System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::Set(Flood::VertexAttribute _170, System::IntPtr data, unsigned int size)
 {
-    auto arg0 = (::VertexAttribute)_185;
+    auto arg0 = (::VertexAttribute)_170;
     auto arg1 = (uint8*)data.ToPointer();
     auto arg2 = (uint32)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1, arg2);
@@ -119,17 +120,17 @@ bool Flood::GeometryBuffer::IsIndexed()
     return ret;
 }
 
-float Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _186, unsigned int i)
+float Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _171, unsigned int i)
 {
-    auto arg0 = (::VertexAttribute)_186;
+    auto arg0 = (::VertexAttribute)_171;
     auto arg1 = (uint32)i;
     auto ret = ((::GeometryBuffer*)NativePtr)->getAttribute(arg0, arg1);
     return *ret;
 }
 
-char Flood::GeometryBuffer::GetAttributeStride(Flood::VertexAttribute _187)
+char Flood::GeometryBuffer::GetAttributeStride(Flood::VertexAttribute _172)
 {
-    auto arg0 = (::VertexAttribute)_187;
+    auto arg0 = (::VertexAttribute)_172;
     auto ret = ((::GeometryBuffer*)NativePtr)->getAttributeStride(arg0);
     return ret;
 }

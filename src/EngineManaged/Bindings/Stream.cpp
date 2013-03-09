@@ -8,6 +8,7 @@
 #include "_Marshal.h"
 #include "Stream.h"
 #include "Memory.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -24,11 +25,11 @@ Flood::Stream::Stream(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::Stream^ Flood::Stream::CreateFromURI(Flood::Allocator^ _135, System::String^ _136, Flood::StreamOpenMode _137)
+Flood::Stream^ Flood::Stream::CreateFromURI(Flood::Allocator^ _123, System::String^ _124, Flood::StreamOpenMode _125)
 {
-    auto arg0 = (::Allocator*)_135->NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_136);
-    auto arg2 = (::StreamOpenMode)_137;
+    auto arg0 = (::Allocator*)_123->NativePtr;
+    auto arg1 = marshalString<E_UTF8>(_124);
+    auto arg2 = (::StreamOpenMode)_125;
     auto ret = ::StreamCreateFromURI(arg0, arg1, arg2);
     return gcnew Flood::Stream((::Stream*)ret);
 }
@@ -69,10 +70,10 @@ long long Flood::Stream::ReadBuffer(System::IntPtr buffer, long long size)
     return ret;
 }
 
-long long Flood::Stream::ReadString(System::String^ _145)
+long long Flood::Stream::ReadString(System::String^ _133)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_145);
+    auto arg1 = marshalString<E_UTF8>(_133);
     auto ret = ::StreamReadString(arg0, arg1);
     return ret;
 }
@@ -86,10 +87,10 @@ long long Flood::Stream::Write(System::IntPtr buf, unsigned long long size)
     return ret;
 }
 
-long long Flood::Stream::WriteString(System::String^ _150)
+long long Flood::Stream::WriteString(System::String^ _138)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_150);
+    auto arg1 = marshalString<E_UTF8>(_138);
     auto ret = ::StreamWriteString(arg0, arg1);
     return ret;
 }
@@ -101,41 +102,41 @@ long long Flood::Stream::GetPosition()
     return ret;
 }
 
-long long Flood::Stream::SetPosition(long long _153, Flood::StreamSeekMode _154)
+long long Flood::Stream::SetPosition(long long _141, Flood::StreamSeekMode _142)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = (int64)_153;
-    auto arg2 = (::StreamSeekMode)_154;
+    auto arg1 = (int64)_141;
+    auto arg2 = (::StreamSeekMode)_142;
     auto ret = ::StreamSetPosition(arg0, arg1, arg2);
     return ret;
 }
 
-Flood::Stream^ Flood::Stream::CreateFromFile(Flood::Allocator^ _155, System::String^ _156, Flood::StreamOpenMode _157)
+Flood::Stream^ Flood::Stream::CreateFromFile(Flood::Allocator^ _143, System::String^ _144, Flood::StreamOpenMode _145)
 {
-    auto arg0 = (::Allocator*)_155->NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_156);
-    auto arg2 = (::StreamOpenMode)_157;
+    auto arg0 = (::Allocator*)_143->NativePtr;
+    auto arg1 = marshalString<E_UTF8>(_144);
+    auto arg2 = (::StreamOpenMode)_145;
     auto ret = ::StreamCreateFromFile(arg0, arg1, arg2);
     return gcnew Flood::Stream((::Stream*)ret);
 }
 
-Flood::MemoryStream^ Flood::Stream::CreateFromMemory(Flood::Allocator^ _158, unsigned long long size)
+Flood::MemoryStream^ Flood::Stream::CreateFromMemory(Flood::Allocator^ _146, unsigned long long size)
 {
-    auto arg0 = (::Allocator*)_158->NativePtr;
+    auto arg0 = (::Allocator*)_146->NativePtr;
     auto arg1 = (uint64)size;
     auto ret = ::StreamCreateFromMemory(arg0, arg1);
     return gcnew Flood::MemoryStream((::MemoryStream*)ret);
 }
 
-void Flood::Stream::MemoryInit(Flood::MemoryStream^ _159)
+void Flood::Stream::MemoryInit(Flood::MemoryStream^ _147)
 {
-    auto arg0 = (::MemoryStream*)_159->NativePtr;
+    auto arg0 = (::MemoryStream*)_147->NativePtr;
     ::StreamMemoryInit(arg0);
 }
 
-void Flood::Stream::MemorySetRawBuffer(Flood::MemoryStream^ _160, System::IntPtr buffer)
+void Flood::Stream::MemorySetRawBuffer(Flood::MemoryStream^ _148, System::IntPtr buffer)
 {
-    auto arg0 = (::MemoryStream*)_160->NativePtr;
+    auto arg0 = (::MemoryStream*)_148->NativePtr;
     auto arg1 = (uint8*)buffer.ToPointer();
     ::StreamMemorySetRawBuffer(arg0, arg1);
 }

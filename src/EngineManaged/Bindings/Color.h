@@ -8,11 +8,10 @@
 #pragma once
 
 #include <Core/Math/Color.h>
-#include "Vector.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
-    value struct ColorP;
     value struct Color;
     value struct Vector3;
 

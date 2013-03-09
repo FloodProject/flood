@@ -7,12 +7,10 @@
 
 #include "_Marshal.h"
 #include "Image.h"
-#include "Reflection.h"
-#include "Memory.h"
-#include "Serialization.h"
-#include "Resource.h"
 #include "Color.h"
-#include "Vector.h"
+#include "Memory.h"
+#include "Resource.h"
+#include "ResourceHandle.h"
 #include "Stream.h"
 
 using namespace System;
@@ -43,18 +41,6 @@ Flood::Image::Image(unsigned int width, unsigned int height, Flood::PixelFormat 
     auto arg1 = (uint32)height;
     auto arg2 = (::PixelFormat)format;
     NativePtr = new ::Image(arg0, arg1, arg2);
-}
-
-Flood::Class^ Flood::Image::GetType()
-{
-    auto ret = ((::Image*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::Image::GetStaticType()
-{
-    auto ret = ((::Image*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
 }
 
 unsigned int Flood::Image::GetWidth()
@@ -122,6 +108,16 @@ void Flood::Image::Create(unsigned int width, unsigned int height, Flood::PixelF
     auto arg1 = (uint32)height;
     auto arg2 = (::PixelFormat)format;
     ((::Image*)NativePtr)->create(arg0, arg1, arg2);
+}
+
+Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _188, unsigned int width, unsigned int height, Flood::PixelFormat _189)
+{
+    auto arg0 = (::Allocator*)_188->NativePtr;
+    auto arg1 = (uint32)width;
+    auto arg2 = (uint32)height;
+    auto arg3 = (::PixelFormat)_189;
+    auto ret = ::ImageCreate(arg0, arg1, arg2, arg3);
+    return Flood::ResourceHandle<Flood::Image^>(ret.id);
 }
 
 Flood::ImageWriter::ImageWriter(::ImageWriter* native)

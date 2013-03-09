@@ -8,30 +8,18 @@
 #pragma once
 
 #include <Graphics/Resources/Image.h>
-#include "Reflection.h"
-#include "Memory.h"
-#include "Vector.h"
-#include "Color.h"
 #include "Resource.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct PixelFormat;
     ref class Enum;
-    enum struct PrimitiveTypeKind : unsigned char;
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    ref class Handle;
     ref class Image;
+    ref class Handle;
+    ref class Allocator;
     enum struct ResourceGroup;
     value struct Color;
-    value struct Vector3;
     ref class Stream;
     ref class ImageWriter;
     ref class RefPtr;
@@ -59,7 +47,7 @@ namespace Flood
     /// image data, stored in an pixel array in a given pixel format specified at
     /// creation time.
     /// </summary>
-    public ref class Image : Resource
+    public ref class Image : Flood::Resource
     {
     public:
         Image(::Image* native);
@@ -69,8 +57,6 @@ namespace Flood
         property unsigned int Width;
         property unsigned int Height;
         property Flood::PixelFormat Format;
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         unsigned int GetWidth();
         void SetWidth(unsigned int v);
         unsigned int GetHeight();
@@ -82,6 +68,7 @@ namespace Flood
         void SetColor(Flood::Color color);
         void Log();
         void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
+        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _188, unsigned int width, unsigned int height, Flood::PixelFormat _189);
     };
 
     public ref class ImageWriter

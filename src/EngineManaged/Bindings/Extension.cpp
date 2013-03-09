@@ -7,9 +7,8 @@
 
 #include "_Marshal.h"
 #include "Extension.h"
-#include "Reflection.h"
 #include "Memory.h"
-#include "Serialization.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -43,18 +42,6 @@ Flood::Extension::Extension(System::IntPtr native)
 
 Flood::Extension::Extension()
 {
-}
-
-Flood::Class^ Flood::Extension::GetType()
-{
-    auto ret = ((::Extension*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::Extension::GetStaticType()
-{
-    auto ret = ((::Extension*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ExtensionMetadata Flood::Extension::GetMetadata()

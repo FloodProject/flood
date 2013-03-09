@@ -8,6 +8,8 @@
 #include "_Marshal.h"
 #include "Log.h"
 #include "Memory.h"
+#include "ResourceHandle.h"
+#include "Serialization.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

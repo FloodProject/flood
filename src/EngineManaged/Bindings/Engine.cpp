@@ -7,10 +7,11 @@
 
 #include "_Marshal.h"
 #include "Engine.h"
-#include "Log.h"
-#include "Stream.h"
 #include "InputManager.h"
+#include "Log.h"
+#include "ResourceHandle.h"
 #include "ResourceManager.h"
+#include "Stream.h"
 #include "WindowManager.h"
 
 using namespace System;

@@ -9,13 +9,14 @@
 
 #include <Graphics/VertexBuffer.h>
 #include "Buffer.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct VertexAttribute : unsigned char;
     enum struct VertexDataType : unsigned char;
-    ref class VertexElementP;
-    ref class VertexElement;
+    value struct VertexElementP;
+    value struct VertexElement;
     ref class VertexDeclaration;
     ref class VertexBuffer;
     ref class RefPtr;
@@ -50,27 +51,28 @@ namespace Flood
     /// <summary>
     /// Each element inside a vertex declaration.
     /// </summary>
-    public ref class VertexElementP
+    public value struct VertexElementP
     {
     public:
-        property ::VertexElementP* NativePtr;
-
         VertexElementP(::VertexElementP* native);
         VertexElementP(System::IntPtr native);
-        property Flood::VertexAttribute Attribute;
-        property Flood::VertexDataType Type;
-        property unsigned char Components;
+        Flood::VertexAttribute Attribute;
+        Flood::VertexDataType Type;
+        unsigned char Components;
     };
 
-    public ref class VertexElement : VertexElementP
+    public value struct VertexElement
     {
     public:
         VertexElement(::VertexElement* native);
         VertexElement(System::IntPtr native);
-        VertexElement(Flood::VertexAttribute _188, Flood::VertexDataType _189, unsigned char components);
-        property char Stride;
-        property unsigned int Offset;
-        property unsigned int Size;
+        VertexElement(Flood::VertexAttribute _173, Flood::VertexDataType _174, unsigned char components);
+        char Stride;
+        unsigned int Offset;
+        unsigned int Size;
+        Flood::VertexAttribute Attribute;
+        Flood::VertexDataType Type;
+        unsigned char Components;
         unsigned char GetSize();
     };
 
@@ -84,17 +86,17 @@ namespace Flood
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
-        void Add(Flood::VertexAttribute _191, int numComponents);
-        void Add(Flood::VertexElement^ _192);
-        void Add(Flood::VertexElementP^ _193);
+        void Add(Flood::VertexAttribute _176, int numComponents);
+        void Add(Flood::VertexElement _177);
+        void Add(Flood::VertexElementP _178);
         void Reset();
-        Flood::VertexElement^ Find(Flood::VertexAttribute _194);
-        unsigned char GetOffset(Flood::VertexAttribute _195);
+        Flood::VertexElement Find(Flood::VertexAttribute _179);
+        unsigned char GetOffset(Flood::VertexAttribute _180);
         unsigned char GetVertexSize();
         void CalculateStrides();
     };
 
-    public ref class VertexBuffer : Buffer
+    public ref class VertexBuffer : Flood::Buffer
     {
     public:
         VertexBuffer(::VertexBuffer* native);

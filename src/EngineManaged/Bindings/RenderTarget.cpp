@@ -7,10 +7,10 @@
 
 #include "_Marshal.h"
 #include "RenderTarget.h"
-#include "RenderView.h"
-#include "Vector.h"
 #include "RenderContext.h"
-#include "Color.h"
+#include "RenderView.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -78,7 +78,7 @@ void Flood::RenderTarget::Update()
 
 Flood::Settings Flood::RenderTarget::GetSettings()
 {
-    auto ret = &((::RenderTarget*)NativePtr)->getSettings();
+    auto ret = ((::RenderTarget*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 

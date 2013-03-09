@@ -8,20 +8,11 @@
 #pragma once
 
 #include <Graphics/Resources/ShaderMaterial.h>
-#include "Reflection.h"
-#include "Memory.h"
 #include "Resource.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
     ref class ShaderMaterial;
     enum struct ResourceGroup;
     ref class Handle;
@@ -34,13 +25,11 @@ namespace Flood
     /// shaders in the engine, which are compiled to low-level assembly code by the
     /// graphics driver.
     /// </summary>
-    public ref class ShaderMaterial : Resource
+    public ref class ShaderMaterial : Flood::Resource
     {
     public:
         ShaderMaterial(::ShaderMaterial* native);
         ShaderMaterial(System::IntPtr native);
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         System::String^ GetVertexSource();
         System::String^ GetFragmentSource();
         Flood::ResourceGroup GetResourceGroup();

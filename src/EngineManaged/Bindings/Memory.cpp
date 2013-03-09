@@ -7,8 +7,7 @@
 
 #include "_Marshal.h"
 #include "Memory.h"
-#include "Reflection.h"
-#include "Serialization.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -37,9 +36,9 @@ Flood::Allocator^ Flood::Allocator::GetStack()
     return gcnew Flood::Allocator((::Allocator*)ret);
 }
 
-Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _49)
+Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _37)
 {
-    auto arg0 = _49.ToPointer();
+    auto arg0 = _37.ToPointer();
     auto ret = ::AllocatorGetObject(arg0);
     return gcnew Flood::Allocator((::Allocator*)ret);
 }

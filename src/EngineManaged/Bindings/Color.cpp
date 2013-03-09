@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "Color.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Graphics/Buffer.h>
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -15,8 +16,6 @@ namespace Flood
     enum struct BufferAccess : unsigned char;
     ref class GeometryBuffer;
     ref class Buffer;
-    ref class VertexDeclaration;
-    enum struct VertexAttribute : unsigned char;
     ref class RefPtr;
 
     /// <summary>

@@ -7,9 +7,10 @@
 
 #include "_Marshal.h"
 #include "Matrix4x3.h"
-#include "Vector.h"
 #include "EulerAngles.h"
 #include "Quaternion.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

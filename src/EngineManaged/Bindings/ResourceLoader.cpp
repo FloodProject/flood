@@ -7,12 +7,10 @@
 
 #include "_Marshal.h"
 #include "ResourceLoader.h"
-#include "Reflection.h"
-#include "Memory.h"
-#include "Serialization.h"
-#include "Stream.h"
-#include "Resource.h"
 #include "Extension.h"
+#include "Resource.h"
+#include "ResourceHandle.h"
+#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -108,52 +106,40 @@ Flood::ResourceLoader::ResourceLoader()
 {
 }
 
-Flood::Class^ Flood::ResourceLoader::GetType()
-{
-    auto ret = ((::ResourceLoader*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::ResourceLoader::GetStaticType()
-{
-    auto ret = ((::ResourceLoader*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
 Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
 {
     auto ret = ((::ResourceLoader*)NativePtr)->getMetadata();
     return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
-Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _173)
+Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _161)
 {
     auto arg0 = ::ResourceLoadOptions();
-    arg0.name = marshalString<E_UTF8>(_173.Name);
-    arg0.stream = (::Stream*)_173.Stream->NativePtr;
-    arg0.resource = (::Resource*)_173.Resource->NativePtr;
-    arg0.group = (::ResourceGroup)_173.Group;
-    arg0.isHighPriority = _173.IsHighPriority;
-    arg0.sendLoadEvent = _173.SendLoadEvent;
-    arg0.asynchronousLoad = _173.AsynchronousLoad;
-    arg0.keepStreamOpen = _173.KeepStreamOpen;
+    arg0.name = marshalString<E_UTF8>(_161.Name);
+    arg0.stream = (::Stream*)_161.Stream->NativePtr;
+    arg0.resource = (::Resource*)_161.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)_161.Group;
+    arg0.isHighPriority = _161.IsHighPriority;
+    arg0.sendLoadEvent = _161.SendLoadEvent;
+    arg0.asynchronousLoad = _161.AsynchronousLoad;
+    arg0.keepStreamOpen = _161.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
     auto ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
     return gcnew Flood::Resource((::Resource*)ret);
 }
 
-bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _174)
+bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _162)
 {
     auto arg0 = ::ResourceLoadOptions();
-    arg0.name = marshalString<E_UTF8>(_174.Name);
-    arg0.stream = (::Stream*)_174.Stream->NativePtr;
-    arg0.resource = (::Resource*)_174.Resource->NativePtr;
-    arg0.group = (::ResourceGroup)_174.Group;
-    arg0.isHighPriority = _174.IsHighPriority;
-    arg0.sendLoadEvent = _174.SendLoadEvent;
-    arg0.asynchronousLoad = _174.AsynchronousLoad;
-    arg0.keepStreamOpen = _174.KeepStreamOpen;
+    arg0.name = marshalString<E_UTF8>(_162.Name);
+    arg0.stream = (::Stream*)_162.Stream->NativePtr;
+    arg0.resource = (::Resource*)_162.Resource->NativePtr;
+    arg0.group = (::ResourceGroup)_162.Group;
+    arg0.isHighPriority = _162.IsHighPriority;
+    arg0.sendLoadEvent = _162.SendLoadEvent;
+    arg0.asynchronousLoad = _162.AsynchronousLoad;
+    arg0.keepStreamOpen = _162.KeepStreamOpen;
     arg0.option = ::ResourceLoadOption();
 
     auto ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
@@ -164,12 +150,6 @@ System::String^ Flood::ResourceLoader::GetName()
 {
     auto ret = ((::ResourceLoader*)NativePtr)->getName();
     return marshalString<E_UTF8>(ret);
-}
-
-Flood::Class^ Flood::ResourceLoader::GetResourceClass()
-{
-    auto ret = ((::ResourceLoader*)NativePtr)->getResourceClass();
-    return gcnew Flood::Class((::Class*)ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()

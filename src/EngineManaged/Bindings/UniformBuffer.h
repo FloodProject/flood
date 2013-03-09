@@ -8,17 +8,17 @@
 #pragma once
 
 #include <Graphics/UniformBuffer.h>
-#include "Vector.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct UniformDataType : unsigned char;
-    ref class UniformBufferElement;
+    value struct UniformBufferElement;
     ref class UniformBuffer;
     value struct Vector3;
+    value struct Color;
     ref class Matrix4x3;
     value struct Matrix4x4;
-    value struct Vector4;
     ref class RefPtr;
 
     public enum struct UniformDataType : unsigned char
@@ -43,17 +43,15 @@ namespace Flood
     /// allocated from a special frame bump allocator, that frees all the memory
     /// when the frame ends.
     /// </summary>
-    public ref class UniformBufferElement
+    public value struct UniformBufferElement
     {
     public:
-        property ::UniformBufferElement* NativePtr;
-
         UniformBufferElement(::UniformBufferElement* native);
         UniformBufferElement(System::IntPtr native);
-        property System::String^ Name;
-        property Flood::UniformDataType Type;
-        property unsigned short Count;
-        property cli::array<unsigned char>^ Data;
+        System::String^ Name;
+        Flood::UniformDataType Type;
+        unsigned short Count;
+        cli::array<unsigned char>^ Data;
     };
 
     /// <summary>
@@ -66,12 +64,12 @@ namespace Flood
 
         UniformBuffer(::UniformBuffer* native);
         UniformBuffer(System::IntPtr native);
-        Flood::UniformBufferElement^ GetElement(System::String^ name, unsigned int size);
+        Flood::UniformBufferElement GetElement(System::String^ name, unsigned int size);
         void RemoveUniform(System::String^ slot);
         void SetUniform(System::String^ slot, int data);
         void SetUniform(System::String^ slot, float value);
         void SetUniform(System::String^ slot, Flood::Vector3 vec);
-        void SetUniform(System::String^ slot, Flood::Matrix4x3^ _198);
-        void SetUniform(System::String^ slot, Flood::Matrix4x4 _199);
+        void SetUniform(System::String^ slot, Flood::Matrix4x3^ _186);
+        void SetUniform(System::String^ slot, Flood::Matrix4x4 _187);
     };
 }

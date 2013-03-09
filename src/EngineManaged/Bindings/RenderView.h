@@ -8,9 +8,10 @@
 #pragma once
 
 #include <Graphics/RenderView.h>
-#include "Vector.h"
 #include "Color.h"
 #include "Matrix4x4.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
 
 namespace Flood
 {
@@ -18,7 +19,6 @@ namespace Flood
     ref class RenderView;
     ref class Matrix4x3;
     value struct Vector2i;
-    value struct Vector3;
     value struct Color;
 
     /// <summary>

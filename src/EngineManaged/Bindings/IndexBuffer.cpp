@@ -8,6 +8,7 @@
 #include "_Marshal.h"
 #include "IndexBuffer.h"
 #include "GeometryBuffer.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

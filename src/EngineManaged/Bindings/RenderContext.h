@@ -8,8 +8,7 @@
 #pragma once
 
 #include <Graphics/RenderContext.h>
-#include "Vector.h"
-#include "Color.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -23,23 +22,19 @@ namespace Flood
     value struct Color;
     ref class RenderBuffer;
     value struct Settings;
-    ref class RenderContextSettings;
+    value struct RenderContextSettings;
     ref class RenderContext;
-    value struct Vector3;
     ref class RefPtr;
 
-    public ref class RenderContextSettings
+    public value struct RenderContextSettings
     {
     public:
-        property ::RenderContextSettings* NativePtr;
-
         RenderContextSettings(::RenderContextSettings* native);
         RenderContextSettings(System::IntPtr native);
-        RenderContextSettings();
-        property unsigned short BitsPerPixel;
-        property unsigned short DepthBits;
-        property unsigned short StencilBits;
-        property unsigned short AntialiasLevel;
+        unsigned short BitsPerPixel;
+        unsigned short DepthBits;
+        unsigned short StencilBits;
+        unsigned short AntialiasLevel;
     };
 
     /// <summary>

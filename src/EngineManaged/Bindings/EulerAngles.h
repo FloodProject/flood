@@ -8,7 +8,7 @@
 #pragma once
 
 #include <Core/Math/EulerAngles.h>
-#include "Vector.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -28,8 +28,8 @@ namespace Flood
         float X;
         float Y;
         float Z;
-        Flood::EulerAngles operator+=(Flood::EulerAngles _98);
-        Flood::EulerAngles operator+=(Flood::Vector3 _99);
+        Flood::EulerAngles operator+=(Flood::EulerAngles _86);
+        Flood::EulerAngles operator+=(Flood::Vector3 _87);
         void Rotate(float x, float y, float z);
         void Identity();
     };

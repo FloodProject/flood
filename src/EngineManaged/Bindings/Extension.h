@@ -8,25 +8,14 @@
 #pragma once
 
 #include <Core/Extension.h>
-#include "Reflection.h"
-#include "Memory.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
     value struct ExtensionMetadata;
     ref class Extension;
-    ref class HandleManager;
-    ref class ReferenceCounted;
+    ref class Allocator;
     ref class Handle;
-    ref class Object;
     ref class scoped_ptr;
 
     public value struct ExtensionMetadata
@@ -52,8 +41,6 @@ namespace Flood
         Extension(::Extension* native);
         Extension(System::IntPtr native);
         Extension();
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         Flood::ExtensionMetadata GetMetadata();
         void OnInit();
         void OnCleanup();

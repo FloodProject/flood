@@ -8,11 +8,11 @@
 #pragma once
 
 #include <Core/String.h>
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     value struct StringHash;
-    ref class RawStringCompare;
 
     public value struct StringHash
     {

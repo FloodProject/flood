@@ -7,12 +7,13 @@
 
 #include "_Marshal.h"
 #include "Material.h"
-#include "Reflection.h"
+#include "Image.h"
 #include "Memory.h"
-#include "Serialization.h"
 #include "Resource.h"
-#include "Vector.h"
+#include "ResourceHandle.h"
+#include "ShaderMaterial.h"
 #include "Texture.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -42,18 +43,6 @@ Flood::Material::Material(System::String^ name)
     NativePtr = new ::Material(arg0);
 }
 
-Flood::Class^ Flood::Material::GetType()
-{
-    auto ret = ((::Material*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::Material::GetStaticType()
-{
-    auto ret = ((::Material*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
 Flood::ResourceGroup Flood::Material::GetResourceGroup()
 {
     auto ret = ((::Material*)NativePtr)->getResourceGroup();
@@ -62,14 +51,26 @@ Flood::ResourceGroup Flood::Material::GetResourceGroup()
 
 System::String^ Flood::Material::GetName()
 {
-    auto ret = &((::Material*)NativePtr)->getName();
-    return marshalString<E_UTF8>(*ret);
+    auto ret = ((::Material*)NativePtr)->getName();
+    return marshalString<E_UTF8>(ret);
 }
 
 void Flood::Material::SetName(System::String^ v)
 {
     auto arg0 = marshalString<E_UTF8>(v);
     ((::Material*)NativePtr)->setName(arg0);
+}
+
+Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::GetShader()
+{
+    auto ret = ((::Material*)NativePtr)->getShader();
+    return Flood::ResourceHandle<Flood::ShaderMaterial^>(ret.id);
+}
+
+void Flood::Material::SetShader(Flood::ResourceHandle<Flood::ShaderMaterial^> v)
+{
+    auto arg0 = (HandleId)v.Id;
+    ((::Material*)NativePtr)->setShader(arg0);
 }
 
 void Flood::Material::SetShader(System::String^ name)
@@ -198,10 +199,10 @@ bool Flood::Material::IsBlendingEnabled()
     return ret;
 }
 
-void Flood::Material::SetBlending(Flood::BlendSource _215, Flood::BlendDestination _216)
+void Flood::Material::SetBlending(Flood::BlendSource _203, Flood::BlendDestination _204)
 {
-    auto arg0 = (::BlendSource)_215;
-    auto arg1 = (::BlendDestination)_216;
+    auto arg0 = (::BlendSource)_203;
+    auto arg1 = (::BlendDestination)_204;
     ((::Material*)NativePtr)->setBlending(arg0, arg1);
 }
 
@@ -212,15 +213,37 @@ void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
+void Flood::Material::SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image)
+{
+    auto arg0 = (uint8)unit;
+    auto arg1 = (HandleId)image.Id;
+    ((::Material*)NativePtr)->setTexture(arg0, arg1);
+}
+
+Flood::ResourceHandle<Flood::Image^> Flood::Material::GetTexture(unsigned char unit)
+{
+    auto arg0 = (uint8)unit;
+    auto ret = ((::Material*)NativePtr)->getTexture(arg0);
+    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+}
+
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
     auto arg0 = (uint8)unit;
-    auto ret = &((::Material*)NativePtr)->getTextureUnit(arg0);
+    auto ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
     return gcnew Flood::TextureUnit((::TextureUnit*)&ret);
 }
 
 void Flood::Material::Init()
 {
     ((::Material*)NativePtr)->init();
+}
+
+Flood::ResourceHandle<Flood::Material^> Flood::Material::Create(Flood::Allocator^ _202, System::String^ name)
+{
+    auto arg0 = (::Allocator*)_202->NativePtr;
+    auto arg1 = marshalString<E_UTF8>(name);
+    auto ret = ::MaterialCreate(arg0, arg1);
+    return Flood::ResourceHandle<Flood::Material^>(ret.id);
 }
 

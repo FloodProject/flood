@@ -7,10 +7,8 @@
 
 #include "_Marshal.h"
 #include "ShaderMaterial.h"
-#include "Reflection.h"
-#include "Memory.h"
-#include "Serialization.h"
 #include "Resource.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -25,18 +23,6 @@ Flood::ShaderMaterial::ShaderMaterial(System::IntPtr native)
     : Resource(native)
 {
     auto __native = (::ShaderMaterial*)native.ToPointer();
-}
-
-Flood::Class^ Flood::ShaderMaterial::GetType()
-{
-    auto ret = ((::ShaderMaterial*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::ShaderMaterial::GetStaticType()
-{
-    auto ret = ((::ShaderMaterial*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
 }
 
 System::String^ Flood::ShaderMaterial::GetVertexSource()

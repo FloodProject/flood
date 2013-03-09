@@ -8,20 +8,29 @@
 #pragma once
 
 #include <Core/Log.h>
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct LogLevel;
     ref class Log;
+    ref class Allocator;
+    value struct LogEntry;
     ref class Timer;
     ref class Mutex;
     ref class Event1;
-    ref class Delegate0;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
-    ref class Allocator;
-    value struct LogEntry;
+    enum struct TypeAttributeKind : unsigned char;
+    enum struct TypeKind : unsigned char;
+    enum struct ReflectionWalkType : unsigned char;
+    enum struct FieldQualifier : unsigned short;
+    enum struct PrimitiveTypeKind : unsigned char;
+    ref class Type;
+    ref class ReflectionDatabase;
+    ref class Field;
+    ref class PrimitiveBuiltins;
+    ref class Enum;
+    ref class ReflectionContext;
+    ref class Primitive;
 
     public enum struct LogLevel
     {

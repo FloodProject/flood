@@ -7,8 +7,8 @@
 
 #include "_Marshal.h"
 #include "Serialization.h"
-#include "Reflection.h"
 #include "Memory.h"
+#include "ResourceHandle.h"
 #include "Stream.h"
 
 using namespace System;
@@ -75,15 +75,15 @@ void Flood::Serializer::Destroy()
     ::SerializerDestroy(arg0);
 }
 
-void Flood::FloodSerialization::ReflectionWalkComposite(Flood::ReflectionContext^ _112)
+void Flood::FloodSerialization::ReflectionWalkComposite(Flood::ReflectionContext^ _100)
 {
-    auto arg0 = (::ReflectionContext*)_112->NativePtr;
+    auto arg0 = (::ReflectionContext*)_100->NativePtr;
     ::ReflectionWalkComposite(arg0);
 }
 
-void Flood::FloodSerialization::ReflectionWalkCompositeField(Flood::ReflectionContext^ _113)
+void Flood::FloodSerialization::ReflectionWalkCompositeField(Flood::ReflectionContext^ _101)
 {
-    auto arg0 = (::ReflectionContext*)_113->NativePtr;
+    auto arg0 = (::ReflectionContext*)_101->NativePtr;
     ::ReflectionWalkCompositeField(arg0);
 }
 

@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "VertexBuffer.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -14,38 +15,42 @@ using namespace clix;
 
 Flood::VertexElementP::VertexElementP(::VertexElementP* native)
 {
-    NativePtr = native;
+    Attribute = (Flood::VertexAttribute)native->attribute;
+    Type = (Flood::VertexDataType)native->type;
+    Components = native->components;
 }
 
 Flood::VertexElementP::VertexElementP(System::IntPtr native)
 {
     auto __native = (::VertexElementP*)native.ToPointer();
-    NativePtr = __native;
+    Attribute = (Flood::VertexAttribute)__native->attribute;
+    Type = (Flood::VertexDataType)__native->type;
+    Components = __native->components;
 }
 
 Flood::VertexElement::VertexElement(::VertexElement* native)
-    : VertexElementP(native)
 {
+    Stride = native->stride;
+    Offset = native->offset;
+    Size = native->size;
 }
 
 Flood::VertexElement::VertexElement(System::IntPtr native)
-    : VertexElementP(native)
 {
     auto __native = (::VertexElement*)native.ToPointer();
+    Stride = __native->stride;
+    Offset = __native->offset;
+    Size = __native->size;
 }
 
-Flood::VertexElement::VertexElement(Flood::VertexAttribute _188, Flood::VertexDataType _189, unsigned char components)
-    : VertexElementP(nullptr)
+Flood::VertexElement::VertexElement(Flood::VertexAttribute _173, Flood::VertexDataType _174, unsigned char components)
 {
-    auto arg0 = (::VertexAttribute)_188;
-    auto arg1 = (::VertexDataType)_189;
-    auto arg2 = (uint8)components;
-    NativePtr = new ::VertexElement(arg0, arg1, arg2);
 }
 
 unsigned char Flood::VertexElement::GetSize()
 {
-    auto ret = ((::VertexElement*)NativePtr)->getSize();
+    auto this0 = (::VertexElement*) 0;
+    auto ret = this0->getSize();
     return ret;
 }
 
@@ -60,21 +65,29 @@ Flood::VertexDeclaration::VertexDeclaration(System::IntPtr native)
     NativePtr = __native;
 }
 
-void Flood::VertexDeclaration::Add(Flood::VertexAttribute _191, int numComponents)
+void Flood::VertexDeclaration::Add(Flood::VertexAttribute _176, int numComponents)
 {
-    auto arg0 = (::VertexAttribute)_191;
+    auto arg0 = (::VertexAttribute)_176;
     ((::VertexDeclaration*)NativePtr)->add(arg0, numComponents);
 }
 
-void Flood::VertexDeclaration::Add(Flood::VertexElement^ _192)
+void Flood::VertexDeclaration::Add(Flood::VertexElement _177)
 {
-    auto &arg0 = *(::VertexElement*)_192->NativePtr;
+    auto arg0 = ::VertexElement();
+    arg0.stride = (int8)_177.Stride;
+    arg0.offset = (uint32)_177.Offset;
+    arg0.size = (uint32)_177.Size;
+
     ((::VertexDeclaration*)NativePtr)->add(arg0);
 }
 
-void Flood::VertexDeclaration::Add(Flood::VertexElementP^ _193)
+void Flood::VertexDeclaration::Add(Flood::VertexElementP _178)
 {
-    auto &arg0 = *(::VertexElementP*)_193->NativePtr;
+    auto arg0 = ::VertexElementP();
+    arg0.attribute = (::VertexAttribute)_178.Attribute;
+    arg0.type = (::VertexDataType)_178.Type;
+    arg0.components = (uint8)_178.Components;
+
     ((::VertexDeclaration*)NativePtr)->add(arg0);
 }
 
@@ -83,16 +96,16 @@ void Flood::VertexDeclaration::Reset()
     ((::VertexDeclaration*)NativePtr)->reset();
 }
 
-Flood::VertexElement^ Flood::VertexDeclaration::Find(Flood::VertexAttribute _194)
+Flood::VertexElement Flood::VertexDeclaration::Find(Flood::VertexAttribute _179)
 {
-    auto arg0 = (::VertexAttribute)_194;
+    auto arg0 = (::VertexAttribute)_179;
     auto ret = ((::VertexDeclaration*)NativePtr)->find(arg0);
-    return gcnew Flood::VertexElement((::VertexElement*)ret);
+    return Flood::VertexElement((::VertexElement*)ret);
 }
 
-unsigned char Flood::VertexDeclaration::GetOffset(Flood::VertexAttribute _195)
+unsigned char Flood::VertexDeclaration::GetOffset(Flood::VertexAttribute _180)
 {
-    auto arg0 = (::VertexAttribute)_195;
+    auto arg0 = (::VertexAttribute)_180;
     auto ret = ((::VertexDeclaration*)NativePtr)->getOffset(arg0);
     return ret;
 }

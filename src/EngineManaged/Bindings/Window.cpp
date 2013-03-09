@@ -7,11 +7,11 @@
 
 #include "_Marshal.h"
 #include "Window.h"
+#include "InputManager.h"
 #include "RenderContext.h"
 #include "RenderTarget.h"
-#include "Color.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
-#include "InputManager.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -54,9 +54,14 @@ Flood::Window::Window(Flood::WindowSettings settings)
 {
 }
 
-Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings^ _224)
+Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _212)
 {
-    auto &arg0 = *(::RenderContextSettings*)_224->NativePtr;
+    auto arg0 = ::RenderContextSettings();
+    arg0.bitsPerPixel = (uint16)_212.BitsPerPixel;
+    arg0.depthBits = (uint16)_212.DepthBits;
+    arg0.stencilBits = (uint16)_212.StencilBits;
+    arg0.antialiasLevel = (uint16)_212.AntialiasLevel;
+
     auto ret = ((::Window*)NativePtr)->createContext(arg0);
     return gcnew Flood::RenderContext((::RenderContext*)ret);
 }
@@ -129,7 +134,7 @@ Flood::InputManager^ Flood::Window::GetInput()
 
 Flood::Settings Flood::Window::GetSettings()
 {
-    auto ret = &((::Window*)NativePtr)->getSettings();
+    auto ret = ((::Window*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 

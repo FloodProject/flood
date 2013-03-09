@@ -7,9 +7,9 @@
 
 #include "_Marshal.h"
 #include "RenderContext.h"
-#include "RenderTarget.h"
 #include "Color.h"
-#include "Vector.h"
+#include "RenderTarget.h"
+#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -17,18 +17,19 @@ using namespace clix;
 
 Flood::RenderContextSettings::RenderContextSettings(::RenderContextSettings* native)
 {
-    NativePtr = native;
+    BitsPerPixel = native->bitsPerPixel;
+    DepthBits = native->depthBits;
+    StencilBits = native->stencilBits;
+    AntialiasLevel = native->antialiasLevel;
 }
 
 Flood::RenderContextSettings::RenderContextSettings(System::IntPtr native)
 {
     auto __native = (::RenderContextSettings*)native.ToPointer();
-    NativePtr = __native;
-}
-
-Flood::RenderContextSettings::RenderContextSettings()
-{
-    NativePtr = new ::RenderContextSettings();
+    BitsPerPixel = __native->bitsPerPixel;
+    DepthBits = __native->depthBits;
+    StencilBits = __native->stencilBits;
+    AntialiasLevel = __native->antialiasLevel;
 }
 
 Flood::RenderContext::RenderContext(::RenderContext* native)

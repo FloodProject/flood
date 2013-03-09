@@ -9,6 +9,7 @@
 
 #include <Graphics/IndexBuffer.h>
 #include "Buffer.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -16,7 +17,7 @@ namespace Flood
     ref class IndexBuffer;
     ref class RefPtr;
 
-    public ref class IndexBuffer : Buffer
+    public ref class IndexBuffer : Flood::Buffer
     {
     public:
         IndexBuffer(::IndexBuffer* native);

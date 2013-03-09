@@ -8,33 +8,25 @@
 #pragma once
 
 #include <Graphics/Resources/Material.h>
-#include "Reflection.h"
-#include "Memory.h"
-#include "Vector.h"
 #include "Resource.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
+#include "ShaderMaterial.h"
+#include "Image.h"
 
 namespace Flood
 {
     enum struct BlendSource;
     enum struct BlendDestination;
     enum struct DepthCompare;
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    ref class Handle;
     ref class Material;
+    ref class Handle;
+    ref class Allocator;
+    ref class TextureUnit;
+    ref class ShaderMaterial;
     enum struct ResourceGroup;
     value struct Vector2;
-    value struct Vector3;
-    ref class TextureUnit;
-    enum struct TextureFilterMode;
-    enum struct TextureMipMode;
-    enum struct TextureWrapMode;
+    ref class Image;
 
     public enum struct BlendSource
     {
@@ -73,7 +65,7 @@ namespace Flood
         Always = 7
     };
 
-    public ref class Material : Resource
+    public ref class Material : Flood::Resource
     {
     public:
         Material(::Material* native);
@@ -81,6 +73,7 @@ namespace Flood
         Material();
         Material(System::String^ name);
         property System::String^ Name;
+        property Flood::ResourceHandle<Flood::ShaderMaterial^> Shader;
         property bool CullBackfaces;
         property Flood::DepthCompare DepthCompare;
         property bool DepthTest;
@@ -93,11 +86,11 @@ namespace Flood
         property Flood::BlendSource Source;
         property Flood::BlendDestination Destination;
         property bool _isBlendingEnabled;
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         Flood::ResourceGroup GetResourceGroup();
         System::String^ GetName();
         void SetName(System::String^ v);
+        Flood::ResourceHandle<Flood::ShaderMaterial^> GetShader();
+        void SetShader(Flood::ResourceHandle<Flood::ShaderMaterial^> v);
         void SetShader(System::String^ name);
         bool GetDepthWrite();
         void SetDepthWrite(bool v);
@@ -120,9 +113,12 @@ namespace Flood
         Flood::BlendSource GetBlendSource();
         Flood::BlendDestination GetBlendDestination();
         bool IsBlendingEnabled();
-        void SetBlending(Flood::BlendSource _215, Flood::BlendDestination _216);
+        void SetBlending(Flood::BlendSource _203, Flood::BlendDestination _204);
         void SetTexture(unsigned char unit, System::String^ name);
+        void SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image);
+        Flood::ResourceHandle<Flood::Image^> GetTexture(unsigned char unit);
         Flood::TextureUnit^ GetTextureUnit(unsigned char unit);
         void Init();
+        static Flood::ResourceHandle<Flood::Material^> Create(Flood::Allocator^ _202, System::String^ name);
     };
 }

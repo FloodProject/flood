@@ -7,9 +7,7 @@
 
 #include "_Marshal.h"
 #include "Resource.h"
-#include "Reflection.h"
-#include "Memory.h"
-#include "Serialization.h"
+#include "ResourceHandle.h"
 #include "ResourceLoader.h"
 
 using namespace System;
@@ -27,22 +25,10 @@ Flood::Resource::Resource(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::Class^ Flood::Resource::GetType()
-{
-    auto ret = ((::Resource*)NativePtr)->getType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
-Flood::Class^ Flood::Resource::GetStaticType()
-{
-    auto ret = ((::Resource*)NativePtr)->getStaticType();
-    return gcnew Flood::Class((::Class*)ret);
-}
-
 System::String^ Flood::Resource::GetPath()
 {
-    auto ret = &((::Resource*)NativePtr)->getPath();
-    return marshalString<E_UTF8>(*ret);
+    auto ret = ((::Resource*)NativePtr)->getPath();
+    return marshalString<E_UTF8>(ret);
 }
 
 void Flood::Resource::SetPath(System::String^ v)
@@ -81,10 +67,10 @@ void Flood::Resource::HandleDestroy(unsigned int id)
     ::ResourceHandleDestroy(arg0);
 }
 
-uint Flood::Resource::HandleCreate()
+Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate(Flood::Resource^ _120)
 {
-    auto arg0 = (::Resource*)NativePtr;
+    auto arg0 = (::Resource*)_120->NativePtr;
     auto ret = ::ResourceHandleCreate(arg0);
-    return ret.id;
+    return Flood::ResourceHandle<Flood::Resource^>(ret.id);
 }
 

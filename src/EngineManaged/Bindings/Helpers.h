@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Core/Math/Helpers.h>
+#include "ResourceHandle.h"
 
 namespace Flood
 {

@@ -8,31 +8,23 @@
 #pragma once
 
 #include <Core/Serialization.h>
-#include "Reflection.h"
-#include "Memory.h"
-#include "Vector.h"
 #include "Color.h"
 #include "Quaternion.h"
+#include "ResourceHandle.h"
+#include "Vector.h"
 
 namespace Flood
 {
     enum struct ReflectionWalkType : unsigned char;
-    ref class Object;
     ref class ReflectionContext;
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    ref class Primitive;
-    enum struct PrimitiveTypeKind : unsigned char;
-    ref class PrimitiveBuiltins;
-    ref class Enum;
-    ref class ValueContext;
     ref class ReflectionHandleContext;
-    ref class HandleManager;
     ref class Serializer;
+    ref class Allocator;
+    ref class ValueContext;
+    ref class Type;
+    ref class Enum;
+    ref class Field;
+    ref class Primitive;
     ref class Stream;
 
     public enum struct ReflectionWalkType : unsigned char
@@ -45,10 +37,6 @@ namespace Flood
     };
 
     public delegate unsigned int ReflectionDeserializeHandleFn(System::String^);
-
-    public delegate Flood::Object^ SerializerLoadFunction(Flood::Serializer^);
-
-    public delegate bool SerializerSaveFunction(Flood::Serializer^ ,Flood::Object^);
 
     public ref class ValueContext
     {
@@ -78,7 +66,6 @@ namespace Flood
 
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
-        property Flood::Class^ Type;
         property Flood::ReflectionDeserializeHandleFn^ Deserialize;
     };
 
@@ -92,10 +79,8 @@ namespace Flood
         ReflectionContext();
         property bool Loading;
         property System::IntPtr UserData;
-        property Flood::Class^ ObjectClass;
         property Flood::Type^ Type;
         property Flood::Primitive^ Primitive;
-        property Flood::Class^ Composite;
         property Flood::Enum^ Enume;
         property Flood::ValueContext^ ValueContext;
         property Flood::Field^ Field;
@@ -122,7 +107,7 @@ namespace Flood
     public ref class FloodSerialization
     {
     public:
-        static void ReflectionWalkComposite(Flood::ReflectionContext^ _112);
-        static void ReflectionWalkCompositeField(Flood::ReflectionContext^ _113);
+        static void ReflectionWalkComposite(Flood::ReflectionContext^ _100);
+        static void ReflectionWalkCompositeField(Flood::ReflectionContext^ _101);
     };
 }

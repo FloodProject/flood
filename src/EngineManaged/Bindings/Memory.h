@@ -8,7 +8,7 @@
 #pragma once
 
 #include <Core/Memory.h>
-#include "Reflection.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -16,32 +16,15 @@ namespace Flood
     ref class PoolAllocator;
     ref class BumpAllocator;
     ref class HeapAllocator;
-    ref class Class;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    ref class Object;
-    ref class ReferenceCounted;
     ref class RefPtr;
     enum struct ThreadPriority;
     enum struct TaskState;
     ref class Thread;
-    ref class Delegate2;
-    ref class ClosurePtr;
-    ref class GenericClass;
-    ref class DelegateMemento;
     ref class Mutex;
     ref class Condition;
     ref class Task;
-    ref class Delegate1;
-    ref class TaskPool;
-    ref class ConcurrentQueue;
-    ref class Event1;
-    ref class Delegate0;
     ref class TaskEvent;
+    ref class Event1;
     ref class scoped_ptr;
 
     public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ ,int size ,int align);
@@ -73,7 +56,7 @@ namespace Flood
         Flood::Allocator^ CreateStack();
         static Flood::Allocator^ GetHeap();
         static Flood::Allocator^ GetStack();
-        static Flood::Allocator^ GetObject(System::IntPtr _49);
+        static Flood::Allocator^ GetObject(System::IntPtr _37);
         static void DumpInfo();
     };
 
@@ -82,7 +65,7 @@ namespace Flood
     /// allocation is requested, we search for the first free object available and
     /// return it.
     /// </summary>
-    public ref class PoolAllocator : Allocator
+    public ref class PoolAllocator : Flood::Allocator
     {
     public:
         PoolAllocator(::PoolAllocator* native);
@@ -95,7 +78,7 @@ namespace Flood
     /// allocations and deallocations in O(1). The allocated space in the buffer is
     /// not re-used until the whole buffer is reset.
     /// </summary>
-    public ref class BumpAllocator : Allocator
+    public ref class BumpAllocator : Flood::Allocator
     {
     public:
         BumpAllocator(::BumpAllocator* native);
@@ -110,7 +93,7 @@ namespace Flood
     /// boundary-tag allocator that manages memory by keeping track of the
     /// used/free memory blocks.
     /// </summary>
-    public ref class HeapAllocator : Allocator
+    public ref class HeapAllocator : Flood::Allocator
     {
     public:
         HeapAllocator(::HeapAllocator* native);

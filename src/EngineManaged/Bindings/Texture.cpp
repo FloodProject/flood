@@ -8,11 +8,7 @@
 #include "_Marshal.h"
 #include "Texture.h"
 #include "Image.h"
-#include "Reflection.h"
-#include "Memory.h"
-#include "Serialization.h"
-#include "Resource.h"
-#include "Color.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
@@ -35,13 +31,13 @@ Flood::Texture::Texture()
     NativePtr = new ::Texture();
 }
 
-void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _207)
+void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _195)
 {
     auto arg0 = ::Vector2i();
     arg0.x = (int32)size.X;
     arg0.y = (int32)size.Y;
 
-    auto arg1 = (::PixelFormat)_207;
+    auto arg1 = (::PixelFormat)_195;
     ((::Texture*)NativePtr)->allocate(arg0, arg1);
 }
 
@@ -115,21 +111,21 @@ Flood::TextureWrapMode Flood::TextureUnit::GetWrapMode()
     return (Flood::TextureWrapMode)ret;
 }
 
-void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _209)
+void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _197)
 {
-    auto arg0 = (::TextureFilterMode)_209;
+    auto arg0 = (::TextureFilterMode)_197;
     ((::TextureUnit*)NativePtr)->setFilterMode(arg0);
 }
 
-void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _210)
+void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _198)
 {
-    auto arg0 = (::TextureMipMode)_210;
+    auto arg0 = (::TextureMipMode)_198;
     ((::TextureUnit*)NativePtr)->setMipMode(arg0);
 }
 
-void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _211)
+void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _199)
 {
-    auto arg0 = (::TextureWrapMode)_211;
+    auto arg0 = (::TextureWrapMode)_199;
     ((::TextureUnit*)NativePtr)->setWrapMode(arg0);
 }
 

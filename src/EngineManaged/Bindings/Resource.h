@@ -8,26 +8,15 @@
 #pragma once
 
 #include <Resources/Resource.h>
-#include "Reflection.h"
-#include "Memory.h"
+#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct ResourceStatus;
     enum struct ResourceGroup;
     ref class Enum;
-    enum struct PrimitiveTypeKind : unsigned char;
-    ref class Class;
-    ref class Allocator;
-    ref class Field;
-    ref class Type;
-    enum struct TypeKind : unsigned char;
-    ref class ReflectionContext;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    ref class ReferenceCounted;
-    ref class Handle;
     ref class Resource;
+    ref class Handle;
     ref class ResourceStream;
 
     /// <summary>
@@ -90,15 +79,13 @@ namespace Flood
         /// Resource stream.
         /// </summary>
         property Flood::ResourceStream^ Stream;
-        Flood::Class^ GetType();
-        Flood::Class^ GetStaticType();
         System::String^ GetPath();
         void SetPath(System::String^ v);
         Flood::ResourceStatus GetStatus();
         void SetStatus(Flood::ResourceStatus v);
         bool IsLoaded();
         Flood::ResourceGroup GetResourceGroup();
-        uint HandleCreate();
         static void HandleDestroy(unsigned int id);
+        static Flood::ResourceHandle<Flood::Resource^> HandleCreate(Flood::Resource^ _120);
     };
 }

@@ -8,6 +8,9 @@
 #pragma once
 
 #include <Graphics/GeometryBuffer.h>
+#include "Buffer.h"
+#include "ResourceHandle.h"
+#include "VertexBuffer.h"
 
 namespace Flood
 {
@@ -30,7 +33,7 @@ namespace Flood
         GeometryBuffer(::GeometryBuffer* native);
         GeometryBuffer(System::IntPtr native);
         GeometryBuffer();
-        GeometryBuffer(Flood::BufferUsage _183, Flood::BufferAccess _184);
+        GeometryBuffer(Flood::BufferUsage _168, Flood::BufferAccess _169);
         property Flood::BufferUsage Usage;
         property Flood::BufferAccess Access;
         property unsigned char IndexSize;
@@ -43,15 +46,15 @@ namespace Flood
         void SetBufferAccess(Flood::BufferAccess v);
         void ForceRebuild();
         void Clear();
-        void Set(Flood::VertexAttribute _185, System::IntPtr data, unsigned int size);
+        void Set(Flood::VertexAttribute _170, System::IntPtr data, unsigned int size);
         void Set(System::IntPtr data, unsigned int size);
         void Add(System::IntPtr data, unsigned int size);
         void SetIndex(System::IntPtr data, unsigned int size);
         void AddIndex(System::IntPtr data, unsigned int size);
         void AddIndex(unsigned short index);
         bool IsIndexed();
-        float GetAttribute(Flood::VertexAttribute _186, unsigned int i);
-        char GetAttributeStride(Flood::VertexAttribute _187);
+        float GetAttribute(Flood::VertexAttribute _171, unsigned int i);
+        char GetAttributeStride(Flood::VertexAttribute _172);
         unsigned int GetNumVertices();
         unsigned int GetNumIndices();
     };

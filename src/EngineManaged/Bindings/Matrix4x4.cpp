@@ -8,6 +8,7 @@
 #include "_Marshal.h"
 #include "Matrix4x4.h"
 #include "Matrix4x3.h"
+#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
@@ -55,7 +56,7 @@ Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
     Tw = __native->tw;
 }
 
-Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3^ _197)
+Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3^ _185)
 {
 }
 
