@@ -41,7 +41,7 @@ enum struct UniformDataType : uint8
 
 struct API_GRAPHICS UniformBufferElement
 {
-	char* name;
+	const char* name;
 	UniformDataType type;
 	uint16 count;
 	uint8 data[1]; // Variable length data.
