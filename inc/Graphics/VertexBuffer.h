@@ -63,6 +63,7 @@ struct API_GRAPHICS VertexElementP
 
 struct API_GRAPHICS VertexElement : public VertexElementP
 {
+	VertexElement();
 	VertexElement(VertexAttribute, VertexDataType, uint8 components);
 
 	// Returns the size of this element.

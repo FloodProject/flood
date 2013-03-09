@@ -13,6 +13,13 @@ NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
+VertexElement::VertexElement()
+	: stride(-1)
+	, offset(0)
+	, size(0)
+{
+}
+
 VertexElement::VertexElement(VertexAttribute attribute,
 	VertexDataType type, uint8 components)
 	: stride(-1)
