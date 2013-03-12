@@ -1,50 +1,65 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Cxxi;
 using Cxxi.Generators;
 using Cxxi.Generators.CLI;
 using Cxxi.Passes;
 using Cxxi.Types;
 
-namespace Cxxi.Libraries
+namespace Flood
 {
-    /// <summary>
-    /// Transform the Flood library declarations to something more .NET friendly.
-    /// </summary>
     class Flood : ILibrary
     {
         public void Preprocess(Library lib)
         {
-            lib.IgnoreModulessWithName("API.h");
-            lib.IgnoreModulessWithName("Concurrency.h");
-            lib.IgnoreModulessWithName("ConcurrentQueue.h");
-            lib.IgnoreModulessWithName("Delegate.h");
-            lib.IgnoreModulessWithName("Event.h");
-            lib.IgnoreModulessWithName("Handle.h");
-            lib.IgnoreModulessWithName("Object.h");
-            lib.IgnoreModulessWithName("Pointers.h");
-            lib.IgnoreModulessWithName("References.h");
-            lib.IgnoreModulessWithName("ReflectionHelpers.h");
+            lib.IgnoreHeadersWithName("API.h");
+            lib.IgnoreHeadersWithName("Concurrency.h");
+            lib.IgnoreHeadersWithName("ConcurrentQueue.h");
+            lib.IgnoreHeadersWithName("Delegate.h");
+            lib.IgnoreHeadersWithName("Event.h");
+            lib.IgnoreHeadersWithName("Handle.h");
+            lib.IgnoreHeadersWithName("Object.h");
+            lib.IgnoreHeadersWithName("Pointers.h");
+            lib.IgnoreHeadersWithName("References.h");
+            lib.IgnoreHeadersWithName("Reflection.h");
+            lib.IgnoreHeadersWithName("ReflectionHelpers.h");
 
             //Core
+            lib.IgnoreClassWithName("Object");
+            lib.IgnoreClassWithName("Class");
+            lib.IgnoreClassWithName("ReferenceCounted");
+            lib.IgnoreClassWithName("HandleManager");
+
+            lib.IgnoreClassWithName("Delegate0");
+            lib.IgnoreClassWithName("Delegate1");
+            lib.IgnoreClassWithName("Delegate2");
+
+            lib.IgnoreClassWithName("TaskPool");
+            lib.IgnoreClassWithName("ConcurrentQueue");
+            
             lib.SetClassAsValueType("StringHash");
             lib.IgnoreClassWithName("RawStringCompare");
 
-            lib.IgnoreFunctionWithName("LogCreate");
             lib.SetClassAsValueType("LogEntry");
-            lib.SetClassAsValueType("FileWatchEvent");
-            lib.SetClassAsValueType("ExtensionMetadata");
+            lib.IgnoreFunctionWithName("LogCreate");
 
             lib.IgnoreFunctionWithName("AllocatorAllocate");
             lib.IgnoreFunctionWithName("AllocatorDeallocate");
             lib.SetNameOfFunction("AllocatorReset", "AllocatorResetMemory");
-            lib.IgnoreFunctionWithPattern(".+GetType");
-
-            lib.SetClassAsOpaque("FileStream");
 
             lib.IgnoreClassWithName("StreamFuncs");
+            lib.SetClassAsOpaque("FileStream");
+            lib.SetClassAsValueType("FileWatchEvent");
+
+            lib.IgnoreFunctionWithPattern(".+GetType");
             lib.IgnoreFunctionWithName("ClassGetIdMap");
+
             lib.IgnoreFunctionWithName("ReflectionSetHandleContext");
             lib.IgnoreFunctionWithName("SerializerCreateJSON");
             lib.IgnoreFunctionWithName("SerializerCreateBinary");
+
+            lib.SetClassAsValueType("ExtensionMetadata");
 
             // Math
             lib.SetClassAsValueType("ColorP");
@@ -68,10 +83,18 @@ namespace Cxxi.Libraries
             // Resources
             lib.IgnoreFunctionWithName("ResourcesInitialize");
             lib.IgnoreFunctionWithName("ResourcesDeinitialize");
-            lib.SetClassAsValueType("ResourceEvent");
+            //lib.SetClassAsValueType("ResourceEvent");
             lib.SetClassAsValueType("ResourceLoadOption");
             lib.SetClassAsValueType("ResourceLoadOptions");
             lib.SetNameOfClassMethod("Texture", "allocate", "alloc");
+            lib.ExcludeFromPass("ResourceHandleCreate", typeof(FunctionToInstanceMethodPass));
+
+            // Graphics
+            lib.SetClassAsValueType("RenderContextSettings");
+            lib.SetClassAsValueType("RenderBatchRange");
+            lib.SetClassAsValueType("VertexElementP");
+            lib.SetClassAsValueType("VertexElement");
+            lib.SetClassAsValueType("UniformBufferElement");
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
@@ -107,6 +130,7 @@ namespace Cxxi.Libraries
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
                     "Graphics/Graphics.h",
+                    "Graphics/GeometryBuffer.h",
                     "Graphics/RenderContext.h",
                     "Graphics/RenderDevice.h",
                     "Graphics/RenderBatch.h",
@@ -122,15 +146,16 @@ namespace Cxxi.Libraries
             headers.AddRange(sources);
         }
 
-        public void SetupPasses(PassBuilder p)
+        public void SetupPasses(Driver driver, PassBuilder builder)
         {
             const RenameTargets renameTargets = RenameTargets.Function
                 | RenameTargets.Method | RenameTargets.Field;
-            p.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
+            builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
 
-            p.FunctionToInstanceMethod();
-            p.FunctionToStaticMethod();
-            p.CheckDuplicateNames();
+            builder.FindEvents(driver.TypeDatabase);
+            builder.FunctionToInstanceMethod();
+            builder.FunctionToStaticMethod();
+            builder.CheckDuplicateNames();
         }
 
         public void GenerateStart(TextTemplate template)
@@ -142,8 +167,24 @@ namespace Cxxi.Libraries
             template.WriteLine("*");
             template.WriteLine("************************************************************************/");
             template.NewLine();
+
             if (template is CLISourcesTemplate)
+            {
                 template.WriteLine("#include \"_Marshal.h\"");
+            }
+
+            if (template is CLITextTemplate)
+            {
+                var cliTemplate = template as CLITextTemplate;
+
+                var include = new Include()
+                    {
+                        File = "ResourceHandle.h",
+                        Kind = Include.IncludeKind.Quoted
+                    };
+
+                cliTemplate.Includes.Add(include);
+            }
         }
 
         public void GenerateAfterNamespaces(TextTemplate template)
@@ -153,64 +194,176 @@ namespace Cxxi.Libraries
         }
     }
 
-    namespace Types.Flood
+    #region Passes
+    class FindEventsPass : TranslationUnitPass
     {
-        [TypeMap("RefPtr")]
-        public class RefPtr : TypeMap
+        readonly ITypeMapDatabase typeMapDatabase;
+
+        public FindEventsPass(ITypeMapDatabase typeMapDatabase)
         {
-            public override string Signature()
-            {
-                var type = Type as TemplateSpecializationType;
-                return string.Format("{0}", type.Arguments[0].Type);
-            }
-
-            public override string MarshalToNative(MarshalContext ctx)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override string MarshalFromNative(MarshalContext ctx)
-            {
-                return "nullptr";
-            }
+            this.typeMapDatabase = typeMapDatabase;
         }
 
-        [TypeMap("ResourceHandle")]
-        public class ResourceHandle : TypeMap
+        public override bool VisitFieldDecl(Field field)
         {
-            public override string Signature()
+            TypeMap typeMap;
+            if (!typeMapDatabase.FindTypeMap(field.Type, out typeMap))
+                return false;
+
+            if (!(typeMap is EventMap))
+                return false;
+
+            ITypedDecl decl = field;
+
+            var typedef = field.Type as TypedefType;
+            if (typedef != null)
+                return false;
+
+            var template = decl.Type as TemplateSpecializationType;
+            var @params = template.Arguments.Select(param => param.Type).ToList();
+
+            if (template.Template.TemplatedDecl.Name.StartsWith("Delegate"))
+                return false;
+
+            // Clean up the event name.
+            var names = StringHelpers.SplitCamelCase(field.Name);
+
+            if (names.Length > 1 &&
+                names[0].Equals("On", StringComparison.InvariantCultureIgnoreCase))
             {
-                return "uint";
+                names = names.Skip(1).ToArray();
             }
 
-            public override string MarshalToNative(MarshalContext ctx)
+            var @event = new Event()
             {
-                return string.Format("(HandleId){0}", ctx.Parameter.Name);
-            }
+                Name = string.Join(string.Empty, names),
+                OriginalName = field.OriginalName,
+                Namespace = field.Namespace,
+                QualifiedType = field.QualifiedType,
+                Parameters = @params
+            };
 
-            public override string MarshalFromNative(MarshalContext ctx)
-            {
-                return string.Format("{0}.id", ctx.ReturnVarName);
-            }
+            field.Class.Events.Add(@event);
+            return true;
+        }
+    }
+
+    static class FindEventsPassExtensions
+    {
+        public static void FindEvents(this PassBuilder builder,
+            TypeMapDatabase database)
+        {
+            var pass = new FindEventsPass(database);
+            builder.AddPass(pass);
+        }
+    }
+    #endregion
+
+    #region Type Maps
+    [TypeMap("RefPtr")]
+    public class RefPtrMap : TypeMap
+    {
+        public override string CLISignature()
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("{0}", type.Arguments[0].Type);
         }
 
-        [TypeMap("Path")]
-        [TypeMap("String")]
-        public class String : Cxxi.Types.Std.String
+        public override void CLIMarshalToNative(MarshalContext ctx)
         {
+            var type = Type as TemplateSpecializationType;
+
+            Class @class;
+            if (!type.Arguments[0].Type.Type.IsTagDecl(out @class))
+                return;
+
+            ctx.Return.Write("(::{0}*){1}->NativePtr",
+                @class.QualifiedOriginalName, ctx.Parameter.Name);
         }
 
-        [TypeMap("StringWide")]
-        public class StringWide : Cxxi.Types.Std.WString
+        public override void CLIMarshalToManaged(MarshalContext ctx)
         {
+            var type = Type as TemplateSpecializationType;
+
+            Class @class;
+            if (!type.Arguments[0].Type.Type.IsTagDecl(out @class))
+                return;
+
+            var instance = string.Format("{0}.get()", ctx.ReturnVarName);
+            ctx.MarshalToManaged.WriteClassInstance(@class, instance);
+        }
+    }
+
+    [TypeMap("Path")]
+    [TypeMap("String")]
+    public class String : Cxxi.Types.Std.String
+    {
+    }
+
+    [TypeMap("StringWide")]
+    public class StringWide : Cxxi.Types.Std.WString
+    {
+    }
+
+    [TypeMap("Event0")]
+    [TypeMap("Event1")]
+    [TypeMap("Event2")]
+    [TypeMap("Event3")]
+    [TypeMap("Event4")]
+    [TypeMap("Delegate0")]
+    [TypeMap("Delegate1")]
+    [TypeMap("Delegate2")]
+    [TypeMap("Delegate3")]
+    [TypeMap("Delegate4")]
+    public class EventMap : TypeMap
+    {
+        public override string CLISignature()
+        {
+            var type = Type as TemplateSpecializationType;
+            var args = type.Arguments.Select(arg => arg.Type.ToString()).
+                ToList();
+
+            var output = "System::Action";
+
+            if (args.Count > 0)
+                output += string.Format("<{0}>", string.Join(", ", args));
+
+            output += "^";
+
+            return output;
         }
 
-        static class Program
+        public override bool IsIgnored { get { return true; } }
+    }
+
+    [TypeMap("Handle")]
+    [TypeMap("ResourceHandle")]
+    public class HandleMap : TypeMap
+    {
+        public override string CLISignature()
         {
-            public static void Main(string[] args)
-            {
-                Driver.Run(new Libraries.Flood());
-            }
+            var type = Type.Desugar() as TemplateSpecializationType;
+            return string.Format("{0}::ResourceHandle<{1}>", "Flood",
+                type.Arguments[0].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("(HandleId){0}.Id", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("{0}({1}.id)", CLISignature(), ctx.ReturnVarName);
+        }
+    }
+    #endregion
+
+    static class Program
+    {
+        public static void Main(string[] args)
+        {
+            Driver.Run(new Flood());
         }
     }
 }
