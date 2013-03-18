@@ -12,7 +12,7 @@
 #include "Resources/ResourceLoader.h"	
 #include "Engine/Resources/Font.h"
 #include "Engine/Resources/BitmapFont.h"
-#include "Engine/Resources/TTF.h"
+#include "Engine/Resources/TrueTypeFont.h"
 
 NAMESPACE_ENGINE_BEGIN
 
