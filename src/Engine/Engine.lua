@@ -56,8 +56,9 @@ project "Engine"
 		"OpenAL",
 		"OggVorbis",
 		"stb_image",
-		Graphics.deps
-		--"LodePNG",
+		Graphics.deps,
+        "stb_truetype",
+        --"LodePNG",
 	}
 
 	Engine.links =
