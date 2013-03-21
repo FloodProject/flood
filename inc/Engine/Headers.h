@@ -123,9 +123,7 @@
 //---------------------------------------------------------------------//
 
 #include "Engine/GUI/Overlay.h"
-#include "Engine/GUI/Label.h"
 #include "Engine/GUI/Window.h"
-#include "Engine/GUI/Console.h"
 
 //---------------------------------------------------------------------//
 // Scripting-related Includes
