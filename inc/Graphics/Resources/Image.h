@@ -75,8 +75,20 @@ public:
 	// Returns if the image is in a compressed format.
 	bool isCompressed() const;
 
-	// Gets/sets the buffer containing the image data.
+	// Gets the buffer containing the image data.
 	std::vector<uint8>& getBuffer() { return buffer; }
+
+    // Sets the buffer containing the image data.
+	void setBuffer(byte* data, uint size);
+
+    // Copies an image to the buffer containing the image data.
+	void setBuffer(Image* image, Vector2i offset  = Vector2i(0,0));
+
+    // Gets the number of bytes per pixel.
+	uint32 getPixelSize();
+
+    // Gets the buffer number of bytes.
+	uint32 getSize();
 
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
@@ -90,7 +102,14 @@ public:
 	// Creates the image with the given details.
 	void create(uint32 width, uint32 height, PixelFormat format);
 
-	// Image width.
+    // Image timestamp, incremented each time the image is modified.
+    GETTER(Timestamp, uint32, timestamp)
+
+private:
+
+	uint32 timestamp;
+
+    // Image width.
 	uint32 width;
 
 	// Image height.
@@ -101,6 +120,7 @@ public:
 
 	// Image data.
 	std::vector<uint8> buffer;
+
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Image );
