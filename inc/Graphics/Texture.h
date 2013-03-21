@@ -78,9 +78,12 @@ public:
 	// Gets the expected size of the image.
 	uint32 getExpectedSize() const;
 
+    bool isUploaded() const;
+
+    void setUploaded();
+
 	uint32 id;
 	TextureTarget target;
-	bool uploaded;
 	
 	uint16 width;
 	uint16 height;
@@ -88,6 +91,12 @@ public:
 	float anisotropicFilter;
 	
 	Image* image;
+
+private:
+
+    bool uploaded;
+    uint32 uploadedImageTimestamp;
+
 };
 
 //-----------------------------------//
