@@ -23,4 +23,21 @@ Font::Font()
 
 //-----------------------------------//
 
+bool Font::getGlyph(int codepoint, Glyph& glyph)
+{
+    if (glyphs.find(codepoint) == glyphs.end())
+    {
+        Glyph newGlyph;
+        if (!createGlyph(codepoint, newGlyph))
+            return false;
+
+        glyphs[codepoint] = newGlyph;
+    }
+
+    glyph = glyphs[codepoint];
+    return true;
+}
+
+//-----------------------------------//
+
 NAMESPACE_ENGINE_END

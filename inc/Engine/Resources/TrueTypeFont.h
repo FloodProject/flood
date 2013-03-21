@@ -7,8 +7,10 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Engine/Resources/Font.h"
-#include "stb_truetype.h"
+
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,15 +20,29 @@
  * and packs them all into a big texture (texture atlas) for rendering.
  */
 
-class TrueTypeFont : public Font
+class  API_ENGINE TrueTypeFont : public Font
 {
 public:
 
-	TrueTypeFont(const String& font);
-	~TrueTypeFont();
+    TrueTypeFont(const String& font);
+    ~TrueTypeFont();
+
+    virtual Vector2i getKerning(int codepoint1, int codepoint2)  const OVERRIDE;
 
 private:
 
+    virtual bool createGlyph(int codepoint,  Glyph& glyph) const OVERRIDE;
+
+    unsigned char ttf_buffer[1<<25];
+
+    struct FontInfo; 
+    FontInfo* fontInfo;
+
+    float scale;
+    int lineHeigth;
+    int baseLine;
+
+    mutable std::map<int, Glyph> glyphs;
 };
 
 //-----------------------------------//

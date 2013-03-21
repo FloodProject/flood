@@ -25,14 +25,17 @@ class BitmapFont : public Font
 {
 public:
 
-	// Gets the size information of a glyph.
-	virtual const Vector2 getGlyphSize() const;
-
 	// Gets/sets the font image.
 	ACCESSOR(Image, const ImageHandle&, image)
 
 	// Gets/sets the font glyphs.
 	ACCESSOR(Glyphs, const std::vector<Glyph>&, glyphs)
+
+protected:
+
+    virtual bool createGlyph(int codepoint, Glyph& glyph) const OVERRIDE;
+
+    virtual Vector2i getKerning(int codepoint1, int codepoint2)  const OVERRIDE;
 
 private:
 
@@ -45,4 +48,3 @@ private:
 NAMESPACE_ENGINE_END
 
 #endif
-

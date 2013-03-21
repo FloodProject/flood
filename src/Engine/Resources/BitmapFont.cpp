@@ -14,13 +14,19 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-const Vector2 BitmapFont::getGlyphSize() const
+bool BitmapFont::createGlyph(int codepoint, Glyph& glyph) const
 {
-	// TODO: ...
-	return Vector2(16, 16);
+	// TODO Read glyph data
+    return false;
 }
 
 //-----------------------------------//
+
+Vector2i BitmapFont::getKerning(int codepoint1, int codepoint2)  const 
+{
+	// TODO
+    return Vector2i();
+}
 
 NAMESPACE_ENGINE_END
 

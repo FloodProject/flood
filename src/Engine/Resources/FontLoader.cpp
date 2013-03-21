@@ -86,33 +86,7 @@ void FontLoader::parseGlyphs()
 
 	glyphs.clear();
 
-	uint16 x = 0;
-	uint16 y = 0;
-	
-	for( size_t i = 0; i < data.size(); i+=2 )
-	{
-		Glyph glyph;
-		
-		glyph.x = x;
-		glyph.y = y;
-
-		short* w = (short*) &data[i]; 
-
-		glyph.width = *w;
-		glyph.height = glyph_height;
-
-		glyphs.push_back( glyph );
-
-		if( x == image_width-glyph_width )
-		{
-			x = 0;
-			y += glyph_height;
-		} 
-		else
-		{
-			x += glyph_width;
-		}
-	}
+	//TODO
 }
 
 //-----------------------------------//
