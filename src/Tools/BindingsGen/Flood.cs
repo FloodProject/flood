@@ -80,6 +80,11 @@ namespace Flood
             lib.IgnoreClassWithName("Vector3P");
             lib.IgnoreClassWithName("QuaternionP");
 
+            lib.SetNameOfClassMethod("Quaternion", "identity", "setIdentity");
+            lib.SetNameOfClassMethod("Vector2", "zero", "setZero");
+            lib.SetNameOfClassMethod("Vector3", "zero", "setZero");
+            lib.SetNameOfClassMethod("Vector4", "zero", "setZero");
+
             // Resources
             lib.IgnoreFunctionWithName("ResourcesInitialize");
             lib.IgnoreFunctionWithName("ResourcesDeinitialize");
@@ -95,6 +100,9 @@ namespace Flood
             lib.SetClassAsValueType("VertexElementP");
             lib.SetClassAsValueType("VertexElement");
             lib.SetClassAsValueType("UniformBufferElement");
+            lib.SetClassAsValueType("RenderBlock");
+            lib.SetClassAsValueType("RenderState");
+            lib.SetClassAsValueType("LightState");
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
@@ -109,6 +117,7 @@ namespace Flood
 
         public void Setup(DriverOptions options)
         {
+            options.OutputInteropIncludes = false;
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
             options.OutputDir = @"../../../../src/EngineManaged/Bindings";
@@ -138,9 +147,12 @@ namespace Flood
                     "Graphics/RenderView.h",
                     "Graphics/Texture.h",
                     "Engine/Engine.h",
+
                     "Engine/Window/Window.h",
                     "Engine/Window/WindowManager.h",
-                    "Input/InputManager.h",
+                    "Engine/Input/InputManager.h",
+                    "Engine/Input/Keyboard.h",
+                    "Engine/Input/Mouse.h",
                 };
 
             headers.AddRange(sources);
