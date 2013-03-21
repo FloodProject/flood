@@ -60,7 +60,7 @@ namespace Flood.GUI.Controls
         /// Initializes a new instance of the <see cref="Canvas"/> class.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public Canvas(Skins.Skin skin)
+        public Canvas(Skins.Skin skin) : base(null)
         {
             SetBounds(0, 0, 10000, 10000);
             SetSkin(skin);

@@ -415,7 +415,7 @@ namespace Flood.GUI.Controls
         /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public Control(Control parent = null)
+        public Control(Control parent)
         {
             m_Children = new List<Control>();
             m_Accelerators = new Dictionary<string, GwenEventHandler>();
