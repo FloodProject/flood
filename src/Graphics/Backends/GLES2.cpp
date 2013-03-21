@@ -560,7 +560,7 @@ void RenderBackendGLES2::uploadTexture(Texture* tex)
 
 	unbindTexture(tex);
 
-	tex->uploaded = true;
+	tex->setUploaded();
 }
 
 //-----------------------------------//

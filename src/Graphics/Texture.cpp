@@ -13,12 +13,13 @@ NAMESPACE_GRAPHICS_BEGIN
 //-----------------------------------//
 
 Texture::Texture()
+    : id(0)
+    , uploaded(false)
+    , uploadedImageTimestamp(0)
+    , image(nullptr)
+    , anisotropicFilter(1.0f)
+    , target(TextureTarget::Target2D)
 {
-	id = 0;
-	uploaded = false;
-	image = nullptr;
-	anisotropicFilter = 1.0f;
-	target = TextureTarget::Target2D;
 }
 
 //-----------------------------------//
@@ -49,7 +50,7 @@ void Texture::setImage( Image* image )
 	height = (uint16) image->getHeight();
 	format = image->getPixelFormat();
 
-	uploaded = false;
+    uploaded = false;
 }
 
 //-----------------------------------//
@@ -75,6 +76,26 @@ uint Texture::getExpectedSize() const
 
 	assert( 0 && "This should not be reached" );
 	return 0;
+}
+
+//-----------------------------------//
+
+bool Texture::isUploaded() const
+{
+    if (image)
+        return uploadedImageTimestamp == image->getTimestamp();
+
+    return uploaded;
+}
+
+//-----------------------------------//
+
+void Texture::setUploaded()
+{
+    if (image)
+        uploadedImageTimestamp = image->getTimestamp();
+
+    uploaded = true;
 }
 
 //-----------------------------------//

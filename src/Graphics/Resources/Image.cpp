@@ -67,28 +67,79 @@ Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
 
 //-----------------------------------//
 
+uint32 Image::getPixelSize()
+{
+    switch(format)
+    {
+    case PixelFormat::R8G8B8A8:
+    case PixelFormat::B8G8R8A8:
+        return 4;
+    case PixelFormat::R8G8B8:
+    case PixelFormat::B8G8R8:
+        return 3;
+    case PixelFormat::Depth:
+        return 1;
+    default:
+        assert(false);
+    }
+}
+
+//-----------------------------------//
+
+uint32 Image::getSize()
+{
+    return width*height*getPixelSize();
+}
+
+//-----------------------------------//
+
 void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 {
 	this->width  = _width;
 	this->height = _height;
 	this->format = _format;
 
-	uint32 size = width*height;
+    buffer.resize(getSize());
+}
 
-	switch(format)
-	{
-	case PixelFormat::R8G8B8A8:
-		size = size*4;
-		break;
-	case PixelFormat::R8G8B8:
-		size = size*3;
-		break;
-	case PixelFormat::Depth:
-		size = size;
-		break;
-	}
+//-----------------------------------//
 
-	buffer.resize(size);
+void Image::setBuffer(byte* data, uint size)
+{
+    uint32 expectedSize = getSize();
+    assert(size == expectedSize);
+
+    if(buffer.size() != expectedSize)
+        buffer.resize(expectedSize);
+
+    memcpy(buffer.data(), data, size * sizeof(byte));
+
+    timestamp++;
+}
+
+//-----------------------------------//
+
+void Image::setBuffer(Image* image, Vector2i offset)
+{
+    assert(offset.x + image->width <= width);
+    assert(offset.y + image->height <= height);
+    assert(image->format == this->format);
+
+    uint32 expectedSize = getSize();
+    if (buffer.size() != expectedSize)
+        buffer.resize(expectedSize);
+
+    uint32 pixelSize = getPixelSize();
+    auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
+    auto origData = image->buffer.data();
+    for (int i = 0; i < image->height; ++i)
+    {
+        memcpy(destData, origData, image->width * pixelSize * sizeof(byte));
+        destData += width * pixelSize;
+        origData += image->width * pixelSize;
+    }
+
+    timestamp++;
 }
 
 //-----------------------------------//
@@ -122,6 +173,8 @@ void Image::setColor( const Color& color )
 		buffer[i+2] = byte(color.b * 255);
 		buffer[i+3] = 1;
 	}
+
+    timestamp++;
 }
 
 //-----------------------------------//

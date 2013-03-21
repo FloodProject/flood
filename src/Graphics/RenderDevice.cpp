@@ -177,7 +177,7 @@ void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 		Texture* texture = activeContext->textureManager->getTexture(image).get();
 		if( !texture ) continue;
 
-		if( !texture->uploaded )
+		if( !texture->isUploaded() )
 		{
 			renderBackend->uploadTexture(texture);
 			renderBackend->configureTexture(texture);
