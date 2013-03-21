@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Engine/Input/Device.h"
 #include "Engine/Input/MouseEvents.h"
 #include "Core/Event.h"
@@ -52,7 +53,7 @@ public:
 	GETTER(MouseInfo, const MouseInfo&, mouseInfo)
 
 	// Return this device as a mouse.
-	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Mouse)
+	GETTER(Type, const InputDeviceType, InputDeviceType::Mouse)
 
 	// Mouse move event.
 	Event1< const MouseMoveEvent& > onMouseMove;

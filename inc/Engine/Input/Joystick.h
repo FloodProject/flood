@@ -25,33 +25,27 @@ struct JoystickID
  * Different types of joystick axis.
  */
 
-namespace JoystickAxis
+enum struct JoystickAxis
 {
-	enum Enum
-	{
-		AxisX,
-		AxisY,
-		AxisZ,
-		AxisR,
-		AxisU,
-		AxisV,
-		AxisPOV,
-	};
-}
+	AxisX,
+	AxisY,
+	AxisZ,
+	AxisR,
+	AxisU,
+	AxisV,
+	AxisPOV,
+};
 
 /**
  * Different types of joystick events.
  */
 
-namespace JoystickEventType
+enum struct JoystickEventType
 {
-	enum Enum
-	{
-		JoystickPress,
-		JoystickRelease,
-		JoystickMove
-	};
-}
+	JoystickPress,
+	JoystickRelease,
+	JoystickMove
+};
 
 //-----------------------------------//
 
@@ -63,11 +57,11 @@ struct JoystickEvent : public InputEvent
 {
 	friend class Joystick;
 
-	JoystickEvent( JoystickEventType::Enum eventType );
+	JoystickEvent( JoystickEventType eventType );
 
 private:
 
-	JoystickEventType::Enum eventType;
+	JoystickEventType eventType;
 };
 
 //-----------------------------------//
@@ -78,10 +72,10 @@ private:
 
 struct JoyMoveEvent: public JoystickEvent
 {
-	JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos);
+	JoyMoveEvent(uint id, JoystickAxis axis, float pos);
 	
 	uint JoystickId;
-	JoystickAxis::Enum Axis;
+	JoystickAxis Axis;
 	float Position;
 };
 
@@ -94,7 +88,7 @@ struct JoyMoveEvent: public JoystickEvent
 struct JoyButtonEvent: public JoystickEvent
 {	
 	JoyButtonEvent(uint JoystickId, uint Button, 
-		JoystickEventType::Enum eventType);
+		JoystickEventType eventType);
 
 	uint JoystickId;
 	uint Button;
@@ -108,7 +102,7 @@ class API_ENGINE Joystick : public InputDevice
 	virtual void processEvent( const InputEvent& event );
 
 	// Return this device as a joystick.
-	virtual const InputDeviceType::Enum getType();
+	virtual const InputDeviceType getType();
 
 	// Events
 

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Core/Reflection.h"
 #include "Core/Event.h"
 
@@ -18,14 +19,11 @@ NAMESPACE_ENGINE_BEGIN
  * Different types of input devices.
  */
 
-struct InputDeviceType
+enum struct InputDeviceType
 {
-	enum Enum
-	{
-		Keyboard,
-		Mouse,
-		Joystick
-	};
+	Keyboard,
+	Mouse,
+	Joystick
 };
 
 REFLECT_DECLARE_ENUM(InputDeviceType)
@@ -42,8 +40,8 @@ struct API_INPUT InputEvent
 
 public:
 
-	InputEvent( InputDeviceType::Enum );
-	InputDeviceType::Enum deviceType;
+	InputEvent( InputDeviceType );
+	InputDeviceType deviceType;
 };
 
 //-----------------------------------//
@@ -65,7 +63,7 @@ public:
 	virtual void processEvent( const InputEvent& event ) = 0;
 
 	// Gets the type of this device.
-	virtual const InputDeviceType::Enum getType() const = 0;
+	virtual const InputDeviceType getType() const = 0;
 };
 
 //-----------------------------------//

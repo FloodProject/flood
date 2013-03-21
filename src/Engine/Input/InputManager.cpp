@@ -65,7 +65,7 @@ void InputManager::addDevice( InputDevice* device )
 	devices.push_back( device );
 
 	LogInfo( "Registered a new input device: '%s'",
-		EnumGetValueName(ReflectionGetType(InputDeviceType), device->getType()));
+		EnumGetValueName(ReflectionGetType(InputDeviceType), (int32)device->getType()));
 }
 
 //-----------------------------------//

@@ -19,14 +19,14 @@ JoystickID::JoystickID(int id, int button)
 
 //-----------------------------------//
 
-JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
+JoystickEvent::JoystickEvent( JoystickEventType eventType )
 	: InputEvent( InputDeviceType::Joystick )
 	, eventType( eventType )
 { }
 
 //-----------------------------------//
 
-const InputDeviceType::Enum Joystick::getType()
+const InputDeviceType Joystick::getType()
 {
 	return InputDeviceType::Joystick; 
 }
@@ -89,7 +89,7 @@ void Joystick::joyButtonReleased(const JoyButtonEvent& jbe)
 
 //-----------------------------------//
 
-JoyMoveEvent::JoyMoveEvent(uint32 id, JoystickAxis::Enum axis, float pos)
+JoyMoveEvent::JoyMoveEvent(uint32 id, JoystickAxis axis, float pos)
 	: JoystickEvent(JoystickEventType::JoystickMove)
 	, JoystickId(id)
 	, Axis(axis)
@@ -98,7 +98,7 @@ JoyMoveEvent::JoyMoveEvent(uint32 id, JoystickAxis::Enum axis, float pos)
 
 //-----------------------------------//
 
-JoyButtonEvent::JoyButtonEvent(uint32 JoystickId, uint32 Button, JoystickEventType::Enum eventType)
+JoyButtonEvent::JoyButtonEvent(uint32 JoystickId, uint32 Button, JoystickEventType eventType)
 	: JoystickEvent(eventType)
 	, JoystickId(JoystickId)
 	, Button(Button)

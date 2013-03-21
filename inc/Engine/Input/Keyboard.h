@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Engine/Input/Device.h"
 #include "Engine/Input/KeyboardEvents.h"
 
@@ -48,7 +49,7 @@ private:
 	virtual void processEvent( const InputEvent& event );
 
 	// Return this device as a keyboard.
-	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Keyboard)
+	GETTER(Type, const InputDeviceType, InputDeviceType::Keyboard)
 
 	// Handles a key press event.
 	void keyPressed( const KeyEvent& keyEvent );

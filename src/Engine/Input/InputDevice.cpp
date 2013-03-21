@@ -20,7 +20,7 @@ REFLECT_ENUM_END()
 
 //-----------------------------------//
 
-InputEvent::InputEvent( InputDeviceType::Enum type )
+InputEvent::InputEvent( InputDeviceType type )
 	: deviceType( type )
 { }
 
