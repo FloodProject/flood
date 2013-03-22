@@ -3,7 +3,13 @@
   <Dependencies>
     <Addin id = "Core" version = "1.0"/>
   </Dependencies>
-      
+
+  <Extension path = "/Flood/Editor/Client/Menubar">
+    <Menu label="TextAddin">
+      <MenuItem label="New" icon="gtk-new" commandType="TextAddin.Commands.OpenTextPanel" />
+    </Menu>
+  </Extension>
+  
   <Extension path = "/Flood/Editor/Client/StockIcons">
     <StockIcon stockid = "save" resource = "TextAddin.icons.disk.png"/>
   </Extension>

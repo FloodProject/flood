@@ -21,6 +21,7 @@ project "TextAddin"
 	links
 	{
 		"System",
+		"System.Drawing",
 		"EngineManaged",
 		"Editor.Client",
         "Mono.Addins"
