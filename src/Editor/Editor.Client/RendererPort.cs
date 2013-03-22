@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Flood;
+using Flood.GUI;
+using Flood.GUI.Input;
 using Color = Flood.Color;
 using Image = Flood.Image;
 using StringTextureCache = System.Collections.Generic.Dictionary<
@@ -16,73 +18,26 @@ namespace Editor.Client
             public RenderBatch Batch;
             public List<int> Ranges;
         };
-    
-        GeometryBuffer gb;
-        Dictionary<uint, BatchInfo> batches;
-        Dictionary<uint, ResourceHandle<Material>> materials;
-
-        float zcount;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hId">imageHandle</param>
-        /// <returns>Material Handler</returns>
-        ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
-        {
-            var hId = imageHandle.Id;
-            if (!materials.ContainsKey(hId))
-            {
-                var mat = new Material("GwenGui");
-                mat.SetBackfaceCulling(false);
-                mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
-            
-                if (hId==0)
-                {
-                    mat.SetShader("VertexColor");
-                } 
-                else 
-                {
-                    mat.SetShader("TexColor");
-                    mat.SetTexture(0, imageHandle);
-                    mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.Clamp);
-                }
-
-                materials.Add(hId, ResourceHandle<Material>.Create(mat));
-            }
-            return materials[hId];
-        }
-
-        BatchInfo GetCreateBatchInfo(ResourceHandle<Image> imageHandle)
-        {
-            var hId = imageHandle.Id;
-            if (!batches.ContainsKey(hId))
-            {
-                var batch = new RenderBatch();
-                batch.SetGeometryBuffer(gb);
-                batch.SetRenderLayer(RenderLayer.Overlays);
-                batch.SetPrimitiveType(PrimitiveType.Quads);
-
-                var mat = GetCreateMaterial(imageHandle);
-                batch.SetMaterial(mat);
-
-                var bInfo = new BatchInfo {Batch = batch};
-                batches[hId] = bInfo;
-            }
-
-            return batches[hId];
-        }
 
         struct Vertex
         {
-            public Vector3 position;
-            public Vector2 uv;
-            public Color color;
+            public Vector3 Position;
+            public Vector2 UV;
+            public Color Color;
         };
+
+        readonly GeometryBuffer gb;
+        readonly Dictionary<uint, BatchInfo> batches;
+        readonly Dictionary<uint, ResourceHandle<Material>> materials;
+
+        float zcount;
 
         public ManagedGeometryBuffer()
         {
             gb = new GeometryBuffer();
+
+            batches = new Dictionary<uint, BatchInfo>();
+            materials = new Dictionary<uint, ResourceHandle<Material>>();
 
             gb.Declarations.Add(new VertexElement(VertexAttribute.Position, VertexDataType.Float, 3));
             gb.Declarations.Add(new VertexElement(VertexAttribute.TexCoord0, VertexDataType.Float, 2));
@@ -94,46 +49,47 @@ namespace Editor.Client
 
         ~ManagedGeometryBuffer()
         {
-            //Deallocate(gb);
+            //gb.Dispose();
         }
 
         public void AddRectangle(System.Drawing.Rectangle rect, System.Drawing.Color color)
         {
-            //AddRectangle(rect,Vector2.Zero,Vector2.Zero, 0, color);
+            var handle = new ResourceHandle<Image>(ResourceHandle<Image>.Invalid);
+            AddRectangle(rect,Vector2.Zero,Vector2.Zero, handle, color);
         }
 
         public void AddRectangle(Rectangle rect, Vector2 uv1, Vector2 uv2,
             ResourceHandle<Image> imageHandle, System.Drawing.Color color)
         {
-            BatchInfo batchInfo = GetCreateBatchInfo(imageHandle); 
+            var batchInfo = GetCreateBatchInfo(imageHandle); 
             batchInfo.Ranges.Add((int)gb.GetNumVertices());
 
-            int top = Math.Max(rect.Bottom,rect.Top);
-            int bottom = Math.Max(rect.Bottom,rect.Top);
-            int left = rect.Left;
-            int right = rect.Right;
+            var top = Math.Max(rect.Bottom,rect.Top);
+            var bottom = Math.Max(rect.Bottom,rect.Top);
+            var left = rect.Left;
+            var right = rect.Right;
 
             Vertex v1,v2,v3,v4;
 
-            v1.position = new Vector3(left, bottom,zcount);
-            v2.position = new Vector3(right, bottom,zcount);
-            v3.position = new Vector3(right, top,zcount);
-            v4.position = new Vector3(left, top,zcount);
+            v1.Position = new Vector3(left, bottom,zcount);
+            v2.Position = new Vector3(right, bottom,zcount);
+            v3.Position = new Vector3(right, top,zcount);
+            v4.Position = new Vector3(left, top,zcount);
 
             //TODO optimize precision/usage
             zcount += 0.001f;
         
             var c = new Color(color.R/255.0f,color.G/255.0f,color.B/255.0f,color.A/255.0f);
 
-            v1.color = c;
-            v2.color = c;
-            v3.color = c;
-            v4.color = c;
+            v1.Color = c;
+            v2.Color = c;
+            v3.Color = c;
+            v4.Color = c;
 
-            //v1.uv = uv1;
-            //v2.uv = new Vector2(uv2.x, uv1.y);
-            //v3.uv = uv2;
-            //v4.uv = new Vector2(uv1.x, uv2.y);
+            v1.UV = uv1;
+            v2.UV = new Vector2(uv2.X, uv1.Y);
+            v3.UV = uv2;
+            v4.UV = new Vector2(uv1.X, uv2.Y);
         
             // Vertex buffer setup
             //gb.Add((uint8*)&v1,sizeof(Vertex));
@@ -142,32 +98,34 @@ namespace Editor.Client
             //gb.Add((uint8*)&v4,sizeof(Vertex));
         }
 
-    
-        //void Render(RenderBlock rb)
-        //{
-        //    foreach(BatchInfo batch in batches.Values)
-        //    {
-        //        if (batch.Ranges.Count > 0)
-        //        {
-        //            batch.Batch.Range.Start = (ushort) gb.GetNumIndices();
+        public void Render(RenderBlock rb)
+        {
+            foreach (var batch in batches.Values)
+            {
+                if (batch.Ranges.Count > 0)
+                {
+                    RenderBatchRange newRange;
+                    newRange.Start = (ushort)gb.GetNumIndices();
 
-        //            for (var ir = 0; ir < batch.Ranges.Count; ++ir)
-        //            {
-        //                var vertexIndex = (ushort)batch.Ranges[ir];
-        //                gb.AddIndex(vertexIndex++);
-        //                gb.AddIndex(vertexIndex++);
-        //                gb.AddIndex(vertexIndex++);
-        //                gb.AddIndex(vertexIndex);
-        //            }
-        //            batch.Batch.Range.End = (ushort)gb.GetNumIndices();
+                    foreach (var range in batch.Ranges)
+                    {
+                        var vertexIndex = (ushort)range;
+                        gb.AddIndex(vertexIndex++);
+                        gb.AddIndex(vertexIndex++);
+                        gb.AddIndex(vertexIndex++);
+                        gb.AddIndex(vertexIndex);
+                    }
 
-        //            var state = new RenderState(batch.Batch);
-        //            rb.Renderables.push_back(state);
-        //        }
-        //    }
-        //}
+                    newRange.End = (ushort)gb.GetNumIndices();
+                    batch.Batch.Range = newRange;
 
-        void Clear()
+                    var state = new RenderState(batch.Batch);
+                    //rb.Renderables.Add(state);
+                }
+            }
+        }
+
+        public void Clear()
         {
             foreach(var batch in batches.Values)
             {
@@ -179,56 +137,103 @@ namespace Editor.Client
 
             zcount = -100;
         }
+
+        ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
+        {
+            var id = imageHandle.Id;
+
+            if (!materials.ContainsKey(id))
+            {
+                var mat = new Material("GwenGui");
+                mat.SetBackfaceCulling(false);
+                mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
+
+                if (id == 0)
+                {
+                    mat.SetShader("VertexColor");
+                }
+                else
+                {
+                    mat.SetShader("TexColor");
+                    mat.SetTexture(0, imageHandle);
+                    mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.Clamp);
+                }
+
+                materials.Add(id, ResourceHandle<Material>.Create(mat));
+            }
+
+            return materials[id];
+        }
+
+        BatchInfo GetCreateBatchInfo(ResourceHandle<Image> imageHandle)
+        {
+            var id = imageHandle.Id;
+
+            if (!batches.ContainsKey(id))
+            {
+                var batch = new RenderBatch();
+                batch.SetGeometryBuffer(gb);
+                batch.SetRenderLayer(RenderLayer.Overlays);
+                batch.SetPrimitiveType(PrimitiveType.Quads);
+
+                var mat = GetCreateMaterial(imageHandle);
+                batch.SetMaterial(mat);
+
+                var batchInfo = new BatchInfo { Batch = batch };
+                batches[id] = batchInfo;
+            }
+
+            return batches[id];
+        }
     };
 
-#if LALA
     public class TextureUtil
     {
-        public static void LoadTextureInternal(Flood.GUI.Texture t, System.Drawing.Bitmap bmp)
+        public static void LoadTextureInternal(Flood.GUI.Texture tex, System.Drawing.Bitmap bmp)
         {
-            System.Drawing.Imaging.BitmapData data = bmp.LockBits(System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            int bytes = std.abs(data.Stride) * bmp.Height;
-            LoadTextureInternal(t,(uint8*)data.Scan0.ToPointer(), bytes);
+            var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            var bytes = Math.Abs(data.Stride) * bmp.Height;
+            LoadTextureInternal(tex, data.Scan0, bytes);
             bmp.UnlockBits(data);
         }
 
-        public static void LoadTextureInternal(Flood.GUI.Texture t, uint8* data, int size) 
+        public static void LoadTextureInternal(Flood.GUI.Texture tex, IntPtr data, int size) 
         {
-            ImageHandle iHandle = ImageCreate(AllocatorGetHeap(),t.Width,t.Height, PixelFormat.B8G8R8A8);
-        
-            //array to vector
-            std.vector<byte> buffer(size);
-            std.copy(data, data+size, buffer.begin());
+            var handle = Image.Create(Allocator.GetHeap(), (uint)tex.Width, (uint)tex.Height,
+                PixelFormat.B8G8R8A8);
 
-            iHandle.Resolve().setBuffer(buffer);
-            t.RendererData = iHandle.getId();
-            iHandle.addReference(); //hackzito
+            //var image = handle.Resolve();
+            //image.setBuffer(buffer.ToPointer(), size);
+
+            //tex.RendererData = handle.Id;
+            //handle.addReference();
         }
     };
 
     public class TextRenderer
     {
+        static System.Drawing.StringFormat stringFormat;
+        static System.Drawing.Graphics graphics;
+        static StringTextureCache stringCache = new StringTextureCache();
 
-        static System.Drawing.StringFormat m_StringFormat;
-        static System.Drawing.Graphics m_Graphics; // only used for text measurement
-        static StringTextureCache m_StringCache = new StringTextureCache();
-
-        static TextRenderer(){
-            m_StringFormat = new System.Drawing.StringFormat(System.Drawing.StringFormat.GenericTypographic);
-            m_StringFormat.FormatFlags = m_StringFormat.FormatFlags | System.Drawing.StringFormatFlags.MeasureTrailingSpaces;
-            m_Graphics = System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(1024, 1024, System.Drawing.Imaging.PixelFormat.Format32bppArgb));
+        static TextRenderer()
+        {
+            stringFormat = new System.Drawing.StringFormat(System.Drawing.StringFormat.GenericTypographic);
+            stringFormat.FormatFlags = stringFormat.FormatFlags | System.Drawing.StringFormatFlags.MeasureTrailingSpaces;
+            graphics = System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(1024, 1024, System.Drawing.Imaging.PixelFormat.Format32bppArgb));
         }
 
         static bool LoadFont(Flood.GUI.Font font)
         {
             //Debug.Print(String.Format("LoadFont {0}", font.FaceName));
             font.RealSize = font.Size;// * Scale;
-            System.Drawing.Font sysFont = (System.Drawing.Font)font.RendererData;
+            var sysFont = (System.Drawing.Font)font.RendererData;
 
-            if (sysFont != null)
-                delete(sysFont);
+            sysFont = null;
 
-            // apaprently this can't fail @_@
             // "If you attempt to use a font that is not supported, or the font is not installed on the machine that is running the application, the Microsoft Sans Serif font will be substituted."
             sysFont = new System.Drawing.Font(font.FaceName, font.Size);
             font.RendererData = sysFont; 
@@ -242,7 +247,7 @@ namespace Editor.Client
                 return;
 
             //Debug.Print(String.Format("FreeFont {0} - actual free", font.FaceName));
-            System.Drawing.Font sysFont = (System.Drawing.Font)font.RendererData;
+            var sysFont = (System.Drawing.Font)font.RendererData;
             if (sysFont == null)
             //    throw new System.InvalidOperationException("Freeing empty font");
                 return;
@@ -253,7 +258,7 @@ namespace Editor.Client
 
         static  System.Drawing.Font ConvertFont(Flood.GUI.Font font)
         {
-            System.Drawing.Font sysFont = (System.Drawing.Font)font.RendererData;
+            var sysFont = (System.Drawing.Font)font.RendererData;
             if (sysFont == null || Math.Abs(font.RealSize - font.Size /** Scale*/) > 2)
             {
                 FreeFont(font);
@@ -265,47 +270,47 @@ namespace Editor.Client
 
         public static System.Drawing.Point MeasureText(System.Drawing.Font font, System.String text, System.Drawing.StringFormat stringFormat)
         {
-            System.Drawing.SizeF size = m_Graphics.MeasureString(text, font, System.Drawing.Point.Empty, stringFormat);
-            return System.Drawing.Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
+            System.Drawing.SizeF size = graphics.MeasureString(text, font, System.Drawing.Point.Empty, stringFormat);
+            return new System.Drawing.Point((int)Math.Floor(size.Width+0.5), (int)Math.Floor(size.Height+0.5));
         }
 
-        static Flood.GUI.Texture GetTexture(Flood.GUI.Font font, System.String text){
-            System.Tuple<System.String, Flood.GUI.Font> key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
-            if (m_StringCache.ContainsKey(key))
-                return m_StringCache[key];
+        static Flood.GUI.Texture GetTexture(Flood.GUI.Font font, System.String text)
+        {
+            var key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
+            if (stringCache.ContainsKey(key))
+                return stringCache[key];
             return null;
         }
 
-        static void AddTexture(Flood.GUI.Font font, System.String text, Flood.GUI.Texture texture){
-            System.Tuple<System.String, Flood.GUI.Font> key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
-            m_StringCache.Add(key,texture);
+        static void AddTexture(Flood.GUI.Font font, System.String text, Flood.GUI.Texture texture)
+        {
+            var key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
+            stringCache.Add(key,texture);
         }
 
-        public static void ClearCache(){
-            foreach(Flood.GUI.Texture tex in m_StringCache.Values){
-                delete(tex);
-            }
-            m_StringCache.Clear();
+        public static void ClearCache()
+        {
+            stringCache.Clear();
         }
 
         //TODO use scale, remove renderer
         public static Flood.GUI.Texture StringToTexture(System.String text, Flood.GUI.Font font, Flood.GUI.Renderers.Renderer renderer)
         {
-            System.Drawing.Brush brush = System.Drawing.Brushes.White;
-            Flood.GUI.Texture texture = GetTexture(font,text);
-            if(texture != null){ //TODO Check stringFormat
+            var brush = System.Drawing.Brushes.White;
+            var texture = GetTexture(font,text);
+            if(texture != null)
+            {
+                //TODO Check stringFormat
                 return texture;
             }
 
             System.Drawing.Font sysFont = ConvertFont(font);
 
-            System.Drawing.Point size = TextRenderer.MeasureText(sysFont, text, m_StringFormat);
-            texture = new Flood.GUI.Texture(renderer);
-            texture.Width = size.X;
-            texture.Height = size.Y;
+            System.Drawing.Point size = TextRenderer.MeasureText(sysFont, text, stringFormat);
+            texture = new Flood.GUI.Texture(renderer) {Width = size.X, Height = size.Y};
 
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(size.X, size.Y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(bmp);
+            var bmp = new System.Drawing.Bitmap(size.X, size.Y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            var gfx = System.Drawing.Graphics.FromImage(bmp);
 
             // NOTE:    TextRenderingHint.AntiAliasGridFit looks sharper and in most cases better
             //          but it comes with a some problems.
@@ -320,7 +325,7 @@ namespace Editor.Client
             gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             gfx.Clear(System.Drawing.Color.Transparent);
 
-            gfx.DrawString(text, sysFont, brush, System.Drawing.Point.Empty, m_StringFormat); // render text on the bitmap
+            gfx.DrawString(text, sysFont, brush, System.Drawing.Point.Empty, stringFormat); // render text on the bitmap
             TextureUtil.LoadTextureInternal(texture,bmp);
             AddTexture(font,text,texture);
             return texture;
@@ -328,20 +333,20 @@ namespace Editor.Client
 
         public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
         {
-            System.Drawing.Font sysFont = ConvertFont(font);
-            System.Drawing.SizeF size = m_Graphics.MeasureString(text, sysFont, System.Drawing.Point.Empty, m_StringFormat);
-            return System.Drawing.Point((int)floor(size.Width+0.5), (int)floor(size.Height+0.5));
+            var sysFont = ConvertFont(font);
+            var size = graphics.MeasureString(text, sysFont, System.Drawing.Point.Empty, stringFormat);
+            return new System.Drawing.Point((int)Math.Floor(size.Width+0.5), (int)Math.Floor(size.Height+0.5));
         }
-
     };
+
     public class GwenRenderer : Flood.GUI.Renderers.Renderer
     {
-        ManagedGeometryBuffer buffer;
+        readonly ManagedGeometryBuffer buffer;
 
-        System.Drawing.Color m_Color;
-        System.Collections.Generic.Dictionary<System.Tuple<System.String, Flood.GUI.Font>, TextRenderer> m_StringCache;
+        System.Drawing.Color color;
+        Dictionary<System.Tuple<string, Flood.GUI.Font>, TextRenderer> stringCache;
     
-        bool m_ClipEnabled;
+        bool isClipEnabled;
 
         public GwenRenderer()
         {
@@ -349,50 +354,46 @@ namespace Editor.Client
             buffer = new ManagedGeometryBuffer();
         }
 
-        void Render(RenderBlock rb){
+        void Render(RenderBlock rb)
+        {
             buffer.Render(rb);
         }
 
-        void Clear(){
+        void Clear()
+        {
             buffer.Clear();
         }
-
 
         public override void DrawFilledRect(System.Drawing.Rectangle rect) 
         {
             rect = Translate(rect);
-
-            buffer.AddRectangle(rect, m_Color);
+            buffer.AddRectangle(rect, color);
         }
 
         public override System.Drawing.Color DrawColor 
         {
-            get { return m_Color; }
-            set { m_Color = value;}
+            get { return color; }
+            set { color = value;}
         }
-
 
         public override void StartClip()
         {
-            m_ClipEnabled = true;
+            isClipEnabled = true;
         }
 
         public override void EndClip()
         {
-            m_ClipEnabled = false;
+            isClipEnabled = false;
         }
 
-        public override void DrawTexturedRect(Flood.GUI.Texture t, System.Drawing.Rectangle rect, float u1, float v1, float u2, float v2)
+        public override void DrawTexturedRect(Flood.GUI.Texture tex, System.Drawing.Rectangle rect, float u1, float v1, float u2, float v2)
         {
-            if(t.RendererData == null){
+            if(tex.RendererData == null)
                 DrawFilledRect(rect);
-            }
-
-            var hId = (uint)t.RendererData;
 
             rect = Translate(rect);
 
-            if (m_ClipEnabled)
+            if (isClipEnabled)
             {
                 // cpu scissors test
                 if (rect.Y < ClipRegion.Y)
@@ -464,7 +465,9 @@ namespace Editor.Client
                 }
             }
 
-            buffer.AddRectangle(rect,new Vector2(u1,v1),new Vector2(u2,v2), hId, m_Color);
+            var handle = new ResourceHandle<Image> {Id = (uint) tex.RendererData};
+
+            buffer.AddRectangle(rect,new Vector2(u1,v1),new Vector2(u2,v2), handle, color);
         }
 
         public override System.Drawing.Point MeasureText(Flood.GUI.Font font, System.String text) 
@@ -479,22 +482,21 @@ namespace Editor.Client
            DrawTexturedRect(texture, rect,0,0,1,1);
         }
 
-        public override void LoadTexture(Flood.GUI.Texture t)
+        public override void LoadTexture(Flood.GUI.Texture tex)
         {
-            var options = new ResourceLoadOptions(); 
-            options.Name = t.Name;
-            options.AsynchronousLoad = false;
-            uint iHandle = FloodEngine.GetEngine().GetResourceManager().LoadResource(options);
+            var options = new ResourceLoadOptions {Name = tex.Name, AsynchronousLoad = false};
+            var resourceHandle = FloodEngine.GetEngine().GetResourceManager().LoadResource(options);
         
-            if(iHandle == HandleInvalid){
-                t.RendererData = null;
+            if(resourceHandle.Id == ResourceHandle<Resource>.Invalid)
+            {
+                tex.RendererData = null;
                 return;
             }
 
-            Image img = iHandle.Resolve();
-            t.Width =	(int)img.GetWidth();
-            t.Height = (int)img.GetHeight();
-            t.RendererData = iHandle;
+            var image = (Image)resourceHandle.Resolve();
+            tex.Width = (int)image.GetWidth();
+            tex.Height = (int)image.GetHeight();
+            tex.RendererData = resourceHandle;
         }
 
         public override void LoadTextureBitmap(Flood.GUI.Texture t, System.Drawing.Bitmap bitmap)
@@ -502,43 +504,37 @@ namespace Editor.Client
             TextureUtil.LoadTextureInternal(t,bitmap);
         }
 
-        public override void FreeTexture(Flood.GUI.Texture t)
+        public override void FreeTexture(Flood.GUI.Texture tex)
         {
-            if (t.RendererData == null)
+            if (tex.RendererData == null)
                 return;
 
-            ImageHandle iHandle;
-            HandleId hId = (HandleId)t.RendererData;
-            iHandle.setId(hId);
+            var handle = new ResourceHandle<Image> {Id = (uint) tex.RendererData};
+            var image = handle.Resolve();
 
-            Image* img = iHandle.Resolve();
-
-           FloodEngine.GetEngine().GetResourceManager().RemoveResource(img);
+            FloodEngine.GetEngine().GetResourceManager().RemoveResource(image);
         }
 
-        public override System.Drawing.Color PixelColor(Flood.GUI.Texture texture, System.UInt32 x, System.UInt32 y, System.Drawing.Color defaultColor)
+        public override System.Drawing.Color PixelColor(Flood.GUI.Texture texture,
+            uint x, uint y, System.Drawing.Color defaultColor)
         {
-            if(texture.RendererData == null){
+            if(texture.RendererData == null)
                 return defaultColor;
-            }
 
-            ImageHandle iHandle;
-            var hId = (uint)texture.RendererData;
-            iHandle.setId(hId);
+            var handle = new ResourceHandle<Image> {Id = (uint) texture.RendererData};
+            var image = handle.Resolve();
 
-            Image img = iHandle.Resolve();
+            var offset = 4 * (x + y * texture.Width);
+            //std.vector<uint8>& data = img.getBuffer();
 
-            System.Drawing.Color pixel;
-            long offset = 4 * (x + y * texture.Width);
-            std.vector<uint8>& data = img.getBuffer();
-
-            pixel = System.Drawing.Color.FromArgb(data[offset + 3], data[offset + 0], data[offset + 1], data[offset + 2]);
+            //var pixel = System.Drawing.Color.FromArgb(data[offset + 3], data[offset + 0],
+            //    data[offset + 1], data[offset + 2]);
         
             // Retrieving the entire texture for a single pixel read
             // is kind of a waste - maybe cache this pointer in the texture
             // data and then release later on? It's never called during runtime
             // - only during initialization.
-            return pixel;
+            return System.Drawing.Color.Black;
         }
 
     };
@@ -547,10 +543,10 @@ namespace Editor.Client
     {
         InputManager inputManager;
 
-        Flood.GUI.Controls.Canvas m_Canvas;
+        Flood.GUI.Controls.Canvas canvas;
 
-        int m_MouseX;
-        int m_MouseY;
+        int mouseX;
+        int mouseY;
 
         bool m_AltGr;
 
@@ -558,57 +554,57 @@ namespace Editor.Client
         {
             this.inputManager = inputManager;
             
-            m_Canvas = null;
-            m_MouseX = 0;
-            m_MouseY = 0;
+            canvas = null;
+            mouseX = 0;
+            mouseY = 0;
             m_AltGr = false;
 
-            inputManager.getMouse().onMouseMove.Connect(this, GwenInput.ProcessMouseMove);
-            inputManager.getMouse().onMouseDrag.Connect(this, GwenInput.ProcessMouseDrag);
-            inputManager.getMouse().onMouseButtonPress.Connect(this, GwenInput.ProcessMouseButtonPressed);
-            inputManager.getMouse().onMouseButtonRelease.Connect(this, GwenInput.ProcessMouseButtonReleased);
-            inputManager.getMouse().onMouseWheelMove.Connect(this, GwenInput.ProcessMouseWheel);
+            var mouse = inputManager.GetMouse();
+            mouse.MouseMove += ProcessMouseMove;
+            mouse.MouseDrag += ProcessMouseDrag;
+            mouse.MouseButtonPress += ProcessMouseButtonPressed;
+            mouse.MouseButtonRelease += ProcessMouseButtonReleased;
+            mouse.MouseWheelMove += ProcessMouseWheel;
 
-            inputManager.getKeyboard().onKeyPress.Connect(this, GwenInput.ProcessKeyDown);
-            inputManager.getKeyboard().onKeyRelease.Connect(this, GwenInput.ProcessKeyUp);
+            var keyboard = inputManager.GetKeyboard();
+            keyboard.KeyPress += ProcessKeyDown;
+            keyboard.KeyRelease += ProcessKeyUp;
         }
 
         public void Initialize(Flood.GUI.Controls.Canvas c)
         {
-            m_Canvas = c;
+            canvas = c;
         }
 
-        Flood.GUI.Key TranslateKeyCode(Keys key)
+        Key TranslateKeyCode(Keys key)
         {
             switch (key)
             {
-            case Keys.Return: return Flood.GUI.Key.Return;
-            case Keys.Escape: return Flood.GUI.Key.Escape;
-            case Keys.Tab: return Flood.GUI.Key.Tab;
-            case Keys.Space: return Flood.GUI.Key.Space;
-            case Keys.Up: return Flood.GUI.Key.Up;
-            case Keys.Down: return Flood.GUI.Key.Down;
-            case Keys.Left: return Flood.GUI.Key.Left;
-            case Keys.Right: return Flood.GUI.Key.Right;
-            case Keys.Home: return Flood.GUI.Key.Home;
-            case Keys.End: return Flood.GUI.Key.End;
-            case Keys.Delete: return Flood.GUI.Key.Delete;
+            case Keys.Return: return Key.Return;
+            case Keys.Escape: return Key.Escape;
+            case Keys.Tab: return Key.Tab;
+            case Keys.Space: return Key.Space;
+            case Keys.Up: return Key.Up;
+            case Keys.Down: return Key.Down;
+            case Keys.Left: return Key.Left;
+            case Keys.Right: return Key.Right;
+            case Keys.Home: return Key.Home;
+            case Keys.End: return Key.End;
+            case Keys.Delete: return Key.Delete;
             case Keys.LControl:
                 this.m_AltGr = true;
-                return Flood.GUI.Key.Control;
-            case Keys.LAlt: return Flood.GUI.Key.Alt;
-            case Keys.LShift: return Flood.GUI.Key.Shift;
-            case Keys.RControl: return Flood.GUI.Key.Control;
+                return Key.Control;
+            case Keys.LAlt: return Key.Alt;
+            case Keys.LShift: return Key.Shift;
+            case Keys.RControl: return Key.Control;
             case Keys.RAlt: 
-                if (this.m_AltGr)
-                {
-                    this.m_Canvas.Input_Key(Flood.GUI.Key.Control, false);
-                }
-                return Flood.GUI.Key.Alt;
-            case Keys.RShift: return Flood.GUI.Key.Shift;
+                if (m_AltGr)
+                    canvas.Input_Key(Key.Control, false);
+                return Key.Alt;
+            case Keys.RShift: return Key.Shift;
                 
             }
-            return Flood.GUI.Key.Invalid;
+            return Key.Invalid;
         }
 
         static char TranslateChar(Keys key)
@@ -620,65 +616,62 @@ namespace Editor.Client
 
         void ProcessMouseMove(MouseMoveEvent mouseMoveEvent)
         {
-            int dx = mouseMoveEvent.x - m_MouseX;
-            int dy = mouseMoveEvent.y - m_MouseY;
+            var dx = mouseMoveEvent.X - mouseX;
+            var dy = mouseMoveEvent.Y - mouseY;
 
-            m_MouseX = mouseMoveEvent.x;
-            m_MouseY = mouseMoveEvent.y;
+            mouseX = mouseMoveEvent.X;
+            mouseY = mouseMoveEvent.Y;
 
-            m_Canvas.Input_MouseMoved(m_MouseX, m_MouseY, dx, dy);
+            canvas.Input_MouseMoved(mouseX, mouseY, dx, dy);
         }
 
         void ProcessMouseDrag(MouseDragEvent mouseDragEvent)
         {
-            int dx = mouseDragEvent.x - m_MouseX;
-            int dy = mouseDragEvent.y - m_MouseY;
+            int dx = mouseDragEvent.X - mouseX;
+            int dy = mouseDragEvent.Y - mouseY;
 
-            m_MouseX = mouseDragEvent.x;
-            m_MouseY = mouseDragEvent.y;
+            mouseX = mouseDragEvent.X;
+            mouseY = mouseDragEvent.Y;
 
-            m_Canvas.Input_MouseMoved(m_MouseX, m_MouseY, dx, dy);
+            canvas.Input_MouseMoved(mouseX, mouseY, dx, dy);
         }
 
         void ProcessMouseButtonPressed(MouseButtonEvent mouseButtonEvent)
         {
-            m_Canvas.Input_MouseButton((int) mouseButtonEvent.button, true);
+            canvas.Input_MouseButton((int) mouseButtonEvent.Button, true);
         }
 
         void ProcessMouseButtonReleased(MouseButtonEvent mouseButtonEvent)
         {
-            m_Canvas.Input_MouseButton((int) mouseButtonEvent.button, false);
+            canvas.Input_MouseButton((int) mouseButtonEvent.Button, false);
         }
 
         void ProcessMouseWheel(MouseWheelEvent mouseWheelEvent)
         {
-            m_Canvas.Input_MouseWheel(mouseWheelEvent.delta*60);
+            canvas.Input_MouseWheel(mouseWheelEvent.Delta*60);
         }
 
         void ProcessKeyDown(KeyEvent keyEvent)
         {
-            var ch = TranslateChar(keyEvent.keyCode);
+            var ch = TranslateChar(keyEvent.KeyCode);
 
-            if (Flood.GUI.Input.InputHandler.DoSpecialKeys(m_Canvas, ch))
+            if (InputHandler.DoSpecialKeys(canvas, ch))
                 return;
         
             if (ch != ' ')
             {
-                m_Canvas.Input_Character(ch);
+                canvas.Input_Character(ch);
             }
         
-            Flood.GUI.Key iKey = TranslateKeyCode(keyEvent.keyCode);
-
-            m_Canvas.Input_Key(iKey, true);
+            var key = TranslateKeyCode(keyEvent.KeyCode);
+            canvas.Input_Key(key, true);
         }
 
         void ProcessKeyUp(KeyEvent keyEvent)
         {
-            char ch = TranslateChar(keyEvent.keyCode);
-
-            Flood.GUI.Key iKey = TranslateKeyCode(keyEvent.keyCode);
-
-            m_Canvas.Input_Key(iKey, false);
+            var ch = TranslateChar(keyEvent.KeyCode);
+            var key = TranslateKeyCode(keyEvent.KeyCode);
+            canvas.Input_Key(key, false);
         }
     }
 #endif
