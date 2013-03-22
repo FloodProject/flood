@@ -14,11 +14,11 @@ namespace Flood
 {
     enum struct StreamOpenMode;
     enum struct StreamSeekMode;
-    ref class Stream;
     ref class Allocator;
-    ref class MemoryStream;
     ref class FileStream;
+    ref class MemoryStream;
     ref class scoped_ptr;
+    ref class Stream;
 
     /// <summary>
     /// Use these for different kinds of access to the streams.
@@ -40,21 +40,21 @@ namespace Flood
         RelativeEnd = 2
     };
 
-    public delegate bool StreamOpenFunction(Flood::Stream^);
+    public delegate bool StreamOpenFunction(Flood::Stream^ _0);
 
-    public delegate bool StreamCloseFunction(Flood::Stream^);
+    public delegate bool StreamCloseFunction(Flood::Stream^ _0);
 
-    public delegate long long StreamReadFunction(Flood::Stream^ ,System::IntPtr ,long long);
+    public delegate long long StreamReadFunction(Flood::Stream^ _1, System::IntPtr _2, long long _3);
 
-    public delegate long long StreamWriteFunction(Flood::Stream^ ,System::IntPtr ,long long);
+    public delegate long long StreamWriteFunction(Flood::Stream^ _4, System::IntPtr _5, long long _6);
 
-    public delegate long long StreamTellFunction(Flood::Stream^);
+    public delegate long long StreamTellFunction(Flood::Stream^ _7);
 
-    public delegate long long StreamSeekFunction(Flood::Stream^ ,long long ,char);
+    public delegate long long StreamSeekFunction(Flood::Stream^ _8, long long _9, char _10);
 
-    public delegate long long StreamSizeFunction(Flood::Stream^);
+    public delegate long long StreamSizeFunction(Flood::Stream^ _11);
 
-    public delegate void StreamResizeFunction(Flood::Stream^ ,long long size);
+    public delegate void StreamResizeFunction(Flood::Stream^ _12, long long size);
 
     /// <summary>
     /// A stream allows uniform access to data backed by different storage mediums
@@ -67,23 +67,31 @@ namespace Flood
 
         Stream(::Stream* native);
         Stream(System::IntPtr native);
-        property System::String^ Path;
-        property Flood::StreamOpenMode Mode;
+        property System::String^ Path
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+        property Flood::StreamOpenMode Mode
+        {
+            Flood::StreamOpenMode get();
+            void set(Flood::StreamOpenMode);
+        }
         void Destroy();
         bool Close();
         long long GetSize();
         void Resize(long long size);
         long long ReadBuffer(System::IntPtr buffer, long long size);
-        long long ReadString(System::String^ _133);
+        long long ReadString(System::String^ _1);
         long long Write(System::IntPtr buf, unsigned long long size);
-        long long WriteString(System::String^ _138);
+        long long WriteString(System::String^ _1);
         long long GetPosition();
-        long long SetPosition(long long _141, Flood::StreamSeekMode _142);
-        static Flood::Stream^ CreateFromURI(Flood::Allocator^ _123, System::String^ _124, Flood::StreamOpenMode _125);
-        static Flood::Stream^ CreateFromFile(Flood::Allocator^ _143, System::String^ _144, Flood::StreamOpenMode _145);
-        static Flood::MemoryStream^ CreateFromMemory(Flood::Allocator^ _146, unsigned long long size);
-        static void MemoryInit(Flood::MemoryStream^ _147);
-        static void MemorySetRawBuffer(Flood::MemoryStream^ _148, System::IntPtr buffer);
+        long long SetPosition(long long _1, Flood::StreamSeekMode _2);
+        static Flood::Stream^ CreateFromURI(Flood::Allocator^ _0, System::String^ _1, Flood::StreamOpenMode _2);
+        static Flood::Stream^ CreateFromFile(Flood::Allocator^ _0, System::String^ _1, Flood::StreamOpenMode _2);
+        static Flood::MemoryStream^ CreateFromMemory(Flood::Allocator^ _1, unsigned long long size);
+        static void MemoryInit(Flood::MemoryStream^ _0);
+        static void MemorySetRawBuffer(Flood::MemoryStream^ _0, System::IntPtr buffer);
         static Flood::Stream^ CreateWeb(Flood::Allocator^ alloc, System::String^ URL, Flood::StreamOpenMode mode);
     };
 
@@ -92,8 +100,20 @@ namespace Flood
     public:
         MemoryStream(::MemoryStream* native);
         MemoryStream(System::IntPtr native);
-        property System::IntPtr Buffer;
-        property unsigned long long Position;
-        property bool UseRawBuffer;
+        property System::IntPtr Buffer
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
+        property unsigned long long Position
+        {
+            unsigned long long get();
+            void set(unsigned long long);
+        }
+        property bool UseRawBuffer
+        {
+            bool get();
+            void set(bool);
+        }
     };
 }

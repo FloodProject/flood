@@ -12,11 +12,8 @@
 
 namespace Flood
 {
-    value struct ExtensionMetadata;
     ref class Extension;
-    ref class Allocator;
-    ref class Handle;
-    ref class scoped_ptr;
+    value struct ExtensionMetadata;
 
     public value struct ExtensionMetadata
     {

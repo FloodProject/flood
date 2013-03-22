@@ -12,20 +12,20 @@
 
 namespace Flood
 {
+    ref class AudioDevice;
     ref class Engine;
+    ref class InputManager;
+    ref class Log;
+    ref class PageManager;
+    ref class PhysicsManager;
+    ref class RefPtr;
+    ref class RenderDevice;
+    ref class ResourceManager;
     ref class Scene;
+    ref class ScriptManager;
     ref class Stream;
     ref class Subsystem;
-    ref class ResourceManager;
-    ref class RenderDevice;
-    ref class AudioDevice;
-    ref class PhysicsManager;
-    ref class PageManager;
-    ref class InputManager;
-    ref class ScriptManager;
     ref class WindowManager;
-    ref class Log;
-    ref class RefPtr;
 
     /// <summary>
     /// Main engine class. This is a utility class that instantiates all the other
@@ -42,11 +42,6 @@ namespace Flood
         Engine(::Engine* native);
         Engine(System::IntPtr native);
         Engine();
-        property Flood::Log^ Log;
-        property Flood::Stream^ Stream;
-        property Flood::InputManager^ InputManager;
-        property Flood::ResourceManager^ ResourceManager;
-        property Flood::WindowManager^ WindowManager;
         void Init();
         void Update();
         void SetupLogger();

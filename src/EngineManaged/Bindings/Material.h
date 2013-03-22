@@ -16,17 +16,18 @@
 
 namespace Flood
 {
-    enum struct BlendSource;
     enum struct BlendDestination;
+    enum struct BlendSource;
     enum struct DepthCompare;
-    ref class Material;
-    ref class Handle;
-    ref class Allocator;
-    ref class TextureUnit;
-    ref class ShaderMaterial;
     enum struct ResourceGroup;
-    value struct Vector2;
+    ref class Allocator;
+    ref class Handle;
     ref class Image;
+    ref class Material;
+    ref class Resource;
+    ref class ShaderMaterial;
+    ref class TextureUnit;
+    value struct Vector2;
 
     public enum struct BlendSource
     {
@@ -72,20 +73,76 @@ namespace Flood
         Material(System::IntPtr native);
         Material();
         Material(System::String^ name);
-        property System::String^ Name;
-        property Flood::ResourceHandle<Flood::ShaderMaterial^> Shader;
-        property bool CullBackfaces;
-        property Flood::DepthCompare DepthCompare;
-        property bool DepthTest;
-        property bool DepthWrite;
-        property Flood::Vector2 DepthRange;
-        property Flood::Vector2 DepthOffset;
-        property bool AlphaTest;
-        property bool LineSmooth;
-        property float LineWidth;
-        property Flood::BlendSource Source;
-        property Flood::BlendDestination Destination;
-        property bool _isBlendingEnabled;
+        property System::String^ Name
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+        property Flood::ResourceHandle<Flood::ShaderMaterial^> Shader
+        {
+            Flood::ResourceHandle<Flood::ShaderMaterial^> get();
+            void set(Flood::ResourceHandle<Flood::ShaderMaterial^>);
+        }
+        property bool CullBackfaces
+        {
+            bool get();
+            void set(bool);
+        }
+        property Flood::DepthCompare DepthCompare
+        {
+            Flood::DepthCompare get();
+            void set(Flood::DepthCompare);
+        }
+        property bool DepthTest
+        {
+            bool get();
+            void set(bool);
+        }
+        property bool DepthWrite
+        {
+            bool get();
+            void set(bool);
+        }
+        property Flood::Vector2 DepthRange
+        {
+            Flood::Vector2 get();
+            void set(Flood::Vector2);
+        }
+        property Flood::Vector2 DepthOffset
+        {
+            Flood::Vector2 get();
+            void set(Flood::Vector2);
+        }
+        property bool AlphaTest
+        {
+            bool get();
+            void set(bool);
+        }
+        property bool LineSmooth
+        {
+            bool get();
+            void set(bool);
+        }
+        property float LineWidth
+        {
+            float get();
+            void set(float);
+        }
+        property Flood::BlendSource Source
+        {
+            Flood::BlendSource get();
+            void set(Flood::BlendSource);
+        }
+        property Flood::BlendDestination Destination
+        {
+            Flood::BlendDestination get();
+            void set(Flood::BlendDestination);
+        }
+        property bool _isBlendingEnabled
+        {
+            bool get();
+            void set(bool);
+        }
         Flood::ResourceGroup GetResourceGroup();
         System::String^ GetName();
         void SetName(System::String^ v);
@@ -113,12 +170,13 @@ namespace Flood
         Flood::BlendSource GetBlendSource();
         Flood::BlendDestination GetBlendDestination();
         bool IsBlendingEnabled();
-        void SetBlending(Flood::BlendSource _203, Flood::BlendDestination _204);
+        void SetBlending(Flood::BlendSource _0, Flood::BlendDestination _1);
         void SetTexture(unsigned char unit, System::String^ name);
         void SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image);
         Flood::ResourceHandle<Flood::Image^> GetTexture(unsigned char unit);
         Flood::TextureUnit^ GetTextureUnit(unsigned char unit);
         void Init();
-        static Flood::ResourceHandle<Flood::Material^> Create(Flood::Allocator^ _202, System::String^ name);
+        static Flood::ResourceHandle<Flood::Material^> Create(Flood::Allocator^ _1, System::String^ name);
+        static property float DefaultLineWidth;
     };
 }

@@ -31,7 +31,7 @@ Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
-    Name = marshalString<E_UTF8>(native->name);
+    Name = clix::marshalString<clix::E_UTF8>(native->name);
     Stream = gcnew Flood::Stream((::Stream*)native->stream);
     Resource = gcnew Flood::Resource((::Resource*)native->resource);
     Group = (Flood::ResourceGroup)native->group;
@@ -45,7 +45,7 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
     auto __native = (::ResourceLoadOptions*)native.ToPointer();
-    Name = marshalString<E_UTF8>(__native->name);
+    Name = clix::marshalString<clix::E_UTF8>(__native->name);
     Stream = gcnew Flood::Stream((::Stream*)__native->stream);
     Resource = gcnew Flood::Resource((::Resource*)__native->resource);
     Group = (Flood::ResourceGroup)__native->group;
@@ -90,19 +90,39 @@ void Flood::ResourceStream::Reset()
     ((::ResourceStream*)NativePtr)->reset();
 }
 
+Flood::Stream^ Flood::ResourceStream::Stream::get()
+{
+    return gcnew Flood::Stream((::Stream*)((::ResourceStream*)NativePtr)->stream);
+}
+
+void Flood::ResourceStream::Stream::set(Flood::Stream^ value)
+{
+    ((::ResourceStream*)NativePtr)->stream = (::Stream*)value->NativePtr;
+}
+
+Flood::ResourceLoader^ Flood::ResourceStream::Loader::get()
+{
+    return gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
+}
+
+void Flood::ResourceStream::Loader::set(Flood::ResourceLoader^ value)
+{
+    ((::ResourceStream*)NativePtr)->loader = (::ResourceLoader*)value->NativePtr;
+}
+
 Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
-    : Extension(native)
+    : Flood::Extension(native)
 {
 }
 
 Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
-    : Extension(native)
+    : Flood::Extension(native)
 {
     auto __native = (::ResourceLoader*)native.ToPointer();
 }
 
 Flood::ResourceLoader::ResourceLoader()
-    : Extension(nullptr)
+    : Flood::Extension(nullptr)
 {
 }
 
@@ -112,36 +132,46 @@ Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
     return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
-Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _161)
+Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
 {
-    auto arg0 = ::ResourceLoadOptions();
-    arg0.name = marshalString<E_UTF8>(_161.Name);
-    arg0.stream = (::Stream*)_161.Stream->NativePtr;
-    arg0.resource = (::Resource*)_161.Resource->NativePtr;
-    arg0.group = (::ResourceGroup)_161.Group;
-    arg0.isHighPriority = _161.IsHighPriority;
-    arg0.sendLoadEvent = _161.SendLoadEvent;
-    arg0.asynchronousLoad = _161.AsynchronousLoad;
-    arg0.keepStreamOpen = _161.KeepStreamOpen;
-    arg0.option = ::ResourceLoadOption();
+    auto _marshal0 = ::ResourceLoadOptions();
+    _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
+    _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
+    _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)_0.Group;
+    _marshal0.isHighPriority = _0.IsHighPriority;
+    _marshal0.sendLoadEvent = _0.SendLoadEvent;
+    _marshal0.asynchronousLoad = _0.AsynchronousLoad;
+    _marshal0.keepStreamOpen = _0.KeepStreamOpen;
+    auto _marshal1 = ::ResourceLoadOption();
+    _marshal1.key = _0.Option.Key;
+    _marshal1.value = _0.Option.Value;
 
+    _marshal0.option = _marshal1;
+
+    auto arg0 = _marshal0;
     auto ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
     return gcnew Flood::Resource((::Resource*)ret);
 }
 
-bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _162)
+bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
 {
-    auto arg0 = ::ResourceLoadOptions();
-    arg0.name = marshalString<E_UTF8>(_162.Name);
-    arg0.stream = (::Stream*)_162.Stream->NativePtr;
-    arg0.resource = (::Resource*)_162.Resource->NativePtr;
-    arg0.group = (::ResourceGroup)_162.Group;
-    arg0.isHighPriority = _162.IsHighPriority;
-    arg0.sendLoadEvent = _162.SendLoadEvent;
-    arg0.asynchronousLoad = _162.AsynchronousLoad;
-    arg0.keepStreamOpen = _162.KeepStreamOpen;
-    arg0.option = ::ResourceLoadOption();
+    auto _marshal0 = ::ResourceLoadOptions();
+    _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
+    _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
+    _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)_0.Group;
+    _marshal0.isHighPriority = _0.IsHighPriority;
+    _marshal0.sendLoadEvent = _0.SendLoadEvent;
+    _marshal0.asynchronousLoad = _0.AsynchronousLoad;
+    _marshal0.keepStreamOpen = _0.KeepStreamOpen;
+    auto _marshal1 = ::ResourceLoadOption();
+    _marshal1.key = _0.Option.Key;
+    _marshal1.value = _0.Option.Value;
 
+    _marshal0.option = _marshal1;
+
+    auto arg0 = _marshal0;
     auto ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
     return ret;
 }
@@ -149,7 +179,7 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _162)
 System::String^ Flood::ResourceLoader::GetName()
 {
     auto ret = ((::ResourceLoader*)NativePtr)->getName();
-    return marshalString<E_UTF8>(ret);
+    return clix::marshalString<clix::E_UTF8>(ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()

@@ -31,12 +31,13 @@ Flood::WindowManager::WindowManager()
 
 Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings)
 {
-    auto arg0 = ::WindowSettings();
-    arg0.title = marshalString<E_UTF8>(settings.Title);
-    arg0.fullScreen = settings.FullScreen;
-    arg0.handle = settings.Handle.ToPointer();
-    arg0.styles = (::WindowStyles)settings.Styles;
+    auto _marshal0 = ::WindowSettings();
+    _marshal0.title = clix::marshalString<clix::E_UTF8>(settings.Title);
+    _marshal0.fullScreen = settings.FullScreen;
+    _marshal0.handle = settings.Handle.ToPointer();
+    _marshal0.styles = (::WindowStyles)settings.Styles;
 
+    auto arg0 = _marshal0;
     auto ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
     return gcnew Flood::Window((::Window*)ret);
 }

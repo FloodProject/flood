@@ -12,12 +12,12 @@
 
 namespace Flood
 {
-    ref class InputManager;
     ref class InputDevice;
     ref class InputEvent;
+    ref class InputManager;
+    ref class Joystick;
     ref class Keyboard;
     ref class Mouse;
-    ref class Joystick;
     ref class Window;
 
     /// <summary>
@@ -31,7 +31,10 @@ namespace Flood
         InputManager(::InputManager* native);
         InputManager(System::IntPtr native);
         InputManager();
-        property Flood::Window^ Window;
+        void AddDevice(Flood::InputDevice^ device);
+        Flood::Keyboard^ GetKeyboard();
+        Flood::Mouse^ GetMouse();
+        void ProcessEvent(Flood::InputEvent^ event);
         void CreateDefaultDevices();
         Flood::Window^ GetWindow();
         void SetWindow(Flood::Window^ window);

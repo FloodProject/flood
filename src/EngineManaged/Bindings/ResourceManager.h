@@ -12,24 +12,24 @@
 
 namespace Flood
 {
-    ref class ResourceManager;
-    ref class Stream;
     ref class Archive;
-    value struct FileWatchEvent;
-    ref class ResourceTask;
-    ref class ResourceLoader;
-    ref class ResourceEvent;
-    ref class Resource;
-    ref class Handle;
-    ref class Event1;
-    ref class RefPtr;
     ref class Condition;
+    ref class Event1;
+    ref class Handle;
     ref class Mutex;
+    ref class RefPtr;
+    ref class Resource;
+    ref class ResourceEvent;
+    ref class ResourceLoader;
+    ref class ResourceManager;
+    ref class ResourceTask;
+    ref class Stream;
+    value struct FileWatchEvent;
     value struct ResourceLoadOptions;
-    ref class Allocator;
 
     /// <summary>
-    /// Event fired whenever an operation on the resource happens.
+    /// Event fired whenever an operation on the resource happens. This can be
+    /// useful to know when monitoring for changes, for example in editors.
     /// </summary>
     public ref class ResourceEvent
     {
@@ -39,9 +39,21 @@ namespace Flood
         ResourceEvent(::ResourceEvent* native);
         ResourceEvent(System::IntPtr native);
         ResourceEvent();
-        property Flood::Resource^ Resource;
-        property Flood::Resource^ OldResource;
-        property Flood::ResourceHandle<Flood::Resource^> Handle;
+        property Flood::Resource^ Resource
+        {
+            Flood::Resource^ get();
+            void set(Flood::Resource^);
+        }
+        property Flood::Resource^ OldResource
+        {
+            Flood::Resource^ get();
+            void set(Flood::Resource^);
+        }
+        property Flood::ResourceHandle<Flood::Resource^> Handle
+        {
+            Flood::ResourceHandle<Flood::Resource^> get();
+            void set(Flood::ResourceHandle<Flood::Resource^>);
+        }
     };
 
     /// <summary>
@@ -58,8 +70,6 @@ namespace Flood
         ResourceManager(::ResourceManager* native);
         ResourceManager(System::IntPtr native);
         ResourceManager();
-        property bool AsynchronousLoading;
-        property int NumResourcesQueuedLoad;
     private:
         delegate void _ResourcePreparedDelegate(const ::ResourceEvent& _0);
         _ResourcePreparedDelegate^ _ResourcePreparedDelegateInstance;

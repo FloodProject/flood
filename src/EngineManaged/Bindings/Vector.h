@@ -12,10 +12,10 @@
 
 namespace Flood
 {
-    value struct Vector3;
-    value struct Vector4;
     value struct Vector2;
     value struct Vector2i;
+    value struct Vector3;
+    value struct Vector4;
 
     public value struct Vector3
     {
@@ -38,7 +38,7 @@ namespace Flood
         Flood::Vector3 operator*=(float s);
         Flood::Vector3 operator/(float s);
         Flood::Vector3 operator/=(float s);
-        void Zero();
+        void SetZero();
         float Length();
         float LengthSquared();
         float Dot(Flood::Vector3 v);
@@ -48,6 +48,11 @@ namespace Flood
         Flood::Vector3 Lerp(Flood::Vector3 vec, float blend);
         Flood::Vector3 Serp(Flood::Vector3 vec, float t);
         Flood::Vector3 Normalize();
+        static property Flood::Vector3 Zero;
+        static property Flood::Vector3 One;
+        static property Flood::Vector3 UnitX;
+        static property Flood::Vector3 UnitY;
+        static property Flood::Vector3 UnitZ;
     };
 
     public value struct Vector4
@@ -76,7 +81,12 @@ namespace Flood
         Flood::Vector4 operator*=(float s);
         Flood::Vector4 operator/(float s);
         Flood::Vector4 operator/=(float s);
-        void Zero();
+        void SetZero();
+        static property Flood::Vector4 Zero;
+        static property Flood::Vector4 UnitX;
+        static property Flood::Vector4 UnitY;
+        static property Flood::Vector4 UnitZ;
+        static property Flood::Vector4 UnitW;
     };
 
     public value struct Vector2
@@ -96,7 +106,10 @@ namespace Flood
         Flood::Vector2 operator-=(Flood::Vector2 v);
         Flood::Vector2 operator*(float s);
         Flood::Vector2 operator/(int s);
-        void Zero();
+        void SetZero();
+        static property Flood::Vector2 Zero;
+        static property Flood::Vector2 UnitX;
+        static property Flood::Vector2 UnitY;
     };
 
     public value struct Vector2i

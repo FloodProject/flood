@@ -14,15 +14,16 @@
 namespace Flood
 {
     enum struct PixelFormat;
-    ref class Enum;
-    ref class Image;
-    ref class Handle;
-    ref class Allocator;
     enum struct ResourceGroup;
-    value struct Color;
-    ref class Stream;
+    ref class Allocator;
+    ref class Enum;
+    ref class Handle;
+    ref class Image;
     ref class ImageWriter;
     ref class RefPtr;
+    ref class Resource;
+    ref class Stream;
+    value struct Color;
 
     /// <summary>
     /// Possible pixel formats for an image.
@@ -54,9 +55,21 @@ namespace Flood
         Image(System::IntPtr native);
         Image();
         Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        property unsigned int Width;
-        property unsigned int Height;
-        property Flood::PixelFormat Format;
+        property unsigned int Width
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property unsigned int Height
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property Flood::PixelFormat Format
+        {
+            Flood::PixelFormat get();
+            void set(Flood::PixelFormat);
+        }
         unsigned int GetWidth();
         void SetWidth(unsigned int v);
         unsigned int GetHeight();
@@ -68,7 +81,7 @@ namespace Flood
         void SetColor(Flood::Color color);
         void Log();
         void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _188, unsigned int width, unsigned int height, Flood::PixelFormat _189);
+        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2);
     };
 
     public ref class ImageWriter

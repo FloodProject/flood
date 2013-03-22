@@ -8,24 +8,19 @@
 #pragma once
 
 #include <Core/Serialization.h>
-#include "Color.h"
-#include "Quaternion.h"
 #include "ResourceHandle.h"
-#include "Vector.h"
 
 namespace Flood
 {
     enum struct ReflectionWalkType : unsigned char;
-    ref class ReflectionContext;
-    ref class ReflectionHandleContext;
-    ref class Serializer;
     ref class Allocator;
-    ref class ValueContext;
-    ref class Type;
     ref class Enum;
     ref class Field;
     ref class Primitive;
+    ref class ReflectionHandleContext;
+    ref class Serializer;
     ref class Stream;
+    ref class Type;
 
     public enum struct ReflectionWalkType : unsigned char
     {
@@ -36,28 +31,7 @@ namespace Flood
         ElementEnd = 4
     };
 
-    public delegate unsigned int ReflectionDeserializeHandleFn(System::String^);
-
-    public ref class ValueContext
-    {
-    public:
-        property ::ValueContext* NativePtr;
-
-        ValueContext(::ValueContext* native);
-        ValueContext(System::IntPtr native);
-        property bool B;
-        property char I8;
-        property unsigned char U8;
-        property short I16;
-        property unsigned short U16;
-        property int I32;
-        property unsigned int U32;
-        property long long I64;
-        property unsigned long long U64;
-        property float F32;
-        property System::String^ S;
-        property System::String^ Cs;
-    };
+    public delegate unsigned int ReflectionDeserializeHandleFn(System::String^ _1);
 
     public ref class ReflectionHandleContext
     {
@@ -66,27 +40,11 @@ namespace Flood
 
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
-        property Flood::ReflectionDeserializeHandleFn^ Deserialize;
-    };
-
-    public ref class ReflectionContext
-    {
-    public:
-        property ::ReflectionContext* NativePtr;
-
-        ReflectionContext(::ReflectionContext* native);
-        ReflectionContext(System::IntPtr native);
-        ReflectionContext();
-        property bool Loading;
-        property System::IntPtr UserData;
-        property Flood::Type^ Type;
-        property Flood::Primitive^ Primitive;
-        property Flood::Enum^ Enume;
-        property Flood::ValueContext^ ValueContext;
-        property Flood::Field^ Field;
-        property System::IntPtr Address;
-        property System::IntPtr ElementAddress;
-        property unsigned int ArraySize;
+        property Flood::ReflectionDeserializeHandleFn^ Deserialize
+        {
+            Flood::ReflectionDeserializeHandleFn^ get();
+            void set(Flood::ReflectionDeserializeHandleFn^);
+        }
     };
 
     public ref class Serializer
@@ -97,17 +55,16 @@ namespace Flood
         Serializer(::Serializer* native);
         Serializer(System::IntPtr native);
         Serializer();
-        property Flood::Allocator^ Alloc;
-        property Flood::Stream^ Stream;
-        property Flood::ReflectionContext^ SerializeContext;
-        property Flood::ReflectionContext^ DeserializeContext;
+        property Flood::Allocator^ Alloc
+        {
+            Flood::Allocator^ get();
+            void set(Flood::Allocator^);
+        }
+        property Flood::Stream^ Stream
+        {
+            Flood::Stream^ get();
+            void set(Flood::Stream^);
+        }
         void Destroy();
-    };
-
-    public ref class FloodSerialization
-    {
-    public:
-        static void ReflectionWalkComposite(Flood::ReflectionContext^ _100);
-        static void ReflectionWalkCompositeField(Flood::ReflectionContext^ _101);
     };
 }

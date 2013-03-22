@@ -56,11 +56,11 @@ Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
     Tw = __native->tw;
 }
 
-Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3^ _185)
+Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3 _0)
 {
 }
 
-void Flood::Matrix4x4::Identity()
+void Flood::Matrix4x4::SetIdentity()
 {
     auto this0 = (::Matrix4x4*) 0;
     this0->identity();
@@ -83,24 +83,25 @@ Flood::Matrix4x4 Flood::Matrix4x4::Transpose()
 Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto arg0 = ::Matrix4x4();
-    arg0.m11 = m.M11;
-    arg0.m12 = m.M12;
-    arg0.m13 = m.M13;
-    arg0.m14 = m.M14;
-    arg0.m21 = m.M21;
-    arg0.m22 = m.M22;
-    arg0.m23 = m.M23;
-    arg0.m24 = m.M24;
-    arg0.m31 = m.M31;
-    arg0.m32 = m.M32;
-    arg0.m33 = m.M33;
-    arg0.m34 = m.M34;
-    arg0.tx = m.Tx;
-    arg0.ty = m.Ty;
-    arg0.tz = m.Tz;
-    arg0.tw = m.Tw;
+    auto _marshal0 = ::Matrix4x4();
+    _marshal0.m11 = m.M11;
+    _marshal0.m12 = m.M12;
+    _marshal0.m13 = m.M13;
+    _marshal0.m14 = m.M14;
+    _marshal0.m21 = m.M21;
+    _marshal0.m22 = m.M22;
+    _marshal0.m23 = m.M23;
+    _marshal0.m24 = m.M24;
+    _marshal0.m31 = m.M31;
+    _marshal0.m32 = m.M32;
+    _marshal0.m33 = m.M33;
+    _marshal0.m34 = m.M34;
+    _marshal0.tx = m.Tx;
+    _marshal0.ty = m.Ty;
+    _marshal0.tz = m.Tz;
+    _marshal0.tw = m.Tw;
 
+    auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
@@ -108,7 +109,9 @@ Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
 Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto arg0 = ::Vector3();
+    auto _marshal0 = ::Vector3();
+
+    auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Vector3((::Vector3*)&ret);
 }
@@ -116,12 +119,13 @@ Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 Flood::Vector4 Flood::Matrix4x4::operator*(Flood::Vector4 v)
 {
     auto this0 = (::Matrix4x4*) 0;
-    auto arg0 = ::Vector4();
-    arg0.x = v.X;
-    arg0.y = v.Y;
-    arg0.z = v.Z;
-    arg0.w = v.W;
+    auto _marshal0 = ::Vector4();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
+    _marshal0.w = v.W;
 
+    auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Vector4((::Vector4*)&ret);
 }

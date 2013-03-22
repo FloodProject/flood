@@ -13,10 +13,11 @@
 
 namespace Flood
 {
-    ref class ShaderMaterial;
     enum struct ResourceGroup;
     ref class Handle;
     ref class RefPtr;
+    ref class Resource;
+    ref class ShaderMaterial;
 
     /// <summary>
     /// Shaders are used to program the GPU programmable rendering pipeline. It is

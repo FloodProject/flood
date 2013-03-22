@@ -13,19 +13,19 @@
 
 namespace Flood
 {
-    enum struct PrimitiveType : unsigned char;
     enum struct PrimitiveRasterMode : unsigned char;
+    enum struct PrimitiveType : unsigned char;
     enum struct RenderLayer : unsigned char;
-    ref class RenderBatch;
     ref class Allocator;
-    value struct RenderBatchRange;
-    ref class RenderView;
-    ref class RenderState;
     ref class GeometryBuffer;
-    ref class RefPtr;
-    ref class UniformBuffer;
-    ref class Material;
     ref class Handle;
+    ref class Material;
+    ref class RefPtr;
+    ref class RenderBatch;
+    ref class RenderView;
+    ref class UniformBuffer;
+    value struct RenderBatchRange;
+    value struct RenderState;
 
     /// <summary>
     /// Type of primitive of the RenderBatch.
@@ -87,14 +87,46 @@ namespace Flood
         RenderBatch(::RenderBatch* native);
         RenderBatch(System::IntPtr native);
         RenderBatch();
-        property Flood::RenderBatchRange Range;
-        property Flood::RenderLayer Stage;
-        property int Priority;
-        property Flood::PrimitiveType Type;
-        property Flood::PrimitiveRasterMode Mode;
-        property Flood::GeometryBuffer^ Gb;
-        property Flood::UniformBuffer^ Ub;
-        property Flood::ResourceHandle<Flood::Material^> Material;
+        property Flood::RenderBatchRange Range
+        {
+            Flood::RenderBatchRange get();
+            void set(Flood::RenderBatchRange);
+        }
+        property Flood::RenderLayer Stage
+        {
+            Flood::RenderLayer get();
+            void set(Flood::RenderLayer);
+        }
+        property int Priority
+        {
+            int get();
+            void set(int);
+        }
+        property Flood::PrimitiveType Type
+        {
+            Flood::PrimitiveType get();
+            void set(Flood::PrimitiveType);
+        }
+        property Flood::PrimitiveRasterMode Mode
+        {
+            Flood::PrimitiveRasterMode get();
+            void set(Flood::PrimitiveRasterMode);
+        }
+        property Flood::GeometryBuffer^ Gb
+        {
+            Flood::GeometryBuffer^ get();
+            void set(Flood::GeometryBuffer^);
+        }
+        property Flood::UniformBuffer^ Ub
+        {
+            Flood::UniformBuffer^ get();
+            void set(Flood::UniformBuffer^);
+        }
+        property Flood::ResourceHandle<Flood::Material^> Material
+        {
+            Flood::ResourceHandle<Flood::Material^> get();
+            void set(Flood::ResourceHandle<Flood::Material^>);
+        }
         Flood::RenderLayer GetRenderLayer();
         void SetRenderLayer(Flood::RenderLayer v);
         int GetRenderPriority();
@@ -114,6 +146,6 @@ namespace Flood
     public ref class FloodRenderBatch
     {
     public:
-        static Flood::RenderBatch^ RenderBatchCreate(Flood::Allocator^ _206);
+        static Flood::RenderBatch^ RenderBatchCreate(Flood::Allocator^ _0);
     };
 }

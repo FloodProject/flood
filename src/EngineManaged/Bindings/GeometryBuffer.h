@@ -14,12 +14,12 @@
 
 namespace Flood
 {
-    ref class GeometryBuffer;
-    enum struct BufferUsage : unsigned char;
     enum struct BufferAccess : unsigned char;
-    ref class VertexDeclaration;
+    enum struct BufferUsage : unsigned char;
     enum struct VertexAttribute : unsigned char;
+    ref class GeometryBuffer;
     ref class RefPtr;
+    ref class VertexDeclaration;
 
     /// <summary>
     /// Represents a buffer with geometry data. You have to associate the vertex
@@ -33,28 +33,52 @@ namespace Flood
         GeometryBuffer(::GeometryBuffer* native);
         GeometryBuffer(System::IntPtr native);
         GeometryBuffer();
-        GeometryBuffer(Flood::BufferUsage _168, Flood::BufferAccess _169);
-        property Flood::BufferUsage Usage;
-        property Flood::BufferAccess Access;
-        property unsigned char IndexSize;
-        property bool NeedsRebuild;
-        property unsigned int Hash;
-        property Flood::VertexDeclaration^ Declarations;
+        GeometryBuffer(Flood::BufferUsage _0, Flood::BufferAccess _1);
+        property Flood::BufferUsage Usage
+        {
+            Flood::BufferUsage get();
+            void set(Flood::BufferUsage);
+        }
+        property Flood::BufferAccess Access
+        {
+            Flood::BufferAccess get();
+            void set(Flood::BufferAccess);
+        }
+        property unsigned char IndexSize
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+        property bool NeedsRebuild
+        {
+            bool get();
+            void set(bool);
+        }
+        property unsigned int Hash
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property Flood::VertexDeclaration^ Declarations
+        {
+            Flood::VertexDeclaration^ get();
+            void set(Flood::VertexDeclaration^);
+        }
         Flood::BufferUsage GetBufferUsage();
         void SetBufferUsage(Flood::BufferUsage v);
         Flood::BufferAccess GetBufferAccess();
         void SetBufferAccess(Flood::BufferAccess v);
         void ForceRebuild();
         void Clear();
-        void Set(Flood::VertexAttribute _170, System::IntPtr data, unsigned int size);
+        void Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size);
         void Set(System::IntPtr data, unsigned int size);
         void Add(System::IntPtr data, unsigned int size);
         void SetIndex(System::IntPtr data, unsigned int size);
         void AddIndex(System::IntPtr data, unsigned int size);
         void AddIndex(unsigned short index);
         bool IsIndexed();
-        float GetAttribute(Flood::VertexAttribute _171, unsigned int i);
-        char GetAttributeStride(Flood::VertexAttribute _172);
+        System::IntPtr GetAttribute(Flood::VertexAttribute _0, unsigned int i);
+        char GetAttributeStride(Flood::VertexAttribute _0);
         unsigned int GetNumVertices();
         unsigned int GetNumIndices();
     };

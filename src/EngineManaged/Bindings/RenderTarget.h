@@ -12,13 +12,13 @@
 
 namespace Flood
 {
+    ref class Event1;
+    ref class RefPtr;
+    ref class RenderContext;
+    ref class RenderTarget;
     ref class RenderView;
     value struct Settings;
     value struct Vector2i;
-    ref class RenderContext;
-    ref class RenderTarget;
-    ref class Event1;
-    ref class RefPtr;
 
     public value struct Settings
     {
@@ -39,8 +39,6 @@ namespace Flood
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
         RenderTarget();
-        property Flood::RenderContext^ Context;
-        property System::IntPtr UserData;
     private:
         delegate void _TargetResizeDelegate(const ::Settings& _0);
         _TargetResizeDelegate^ _TargetResizeDelegateInstance;

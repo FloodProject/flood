@@ -15,11 +15,12 @@ namespace Flood
 {
     enum struct VertexAttribute : unsigned char;
     enum struct VertexDataType : unsigned char;
-    value struct VertexElementP;
-    value struct VertexElement;
-    ref class VertexDeclaration;
-    ref class VertexBuffer;
+    ref class Buffer;
     ref class RefPtr;
+    ref class VertexBuffer;
+    ref class VertexDeclaration;
+    value struct VertexElement;
+    value struct VertexElementP;
 
     /// <summary>
     /// Attribute of a vertex element.
@@ -66,7 +67,7 @@ namespace Flood
     public:
         VertexElement(::VertexElement* native);
         VertexElement(System::IntPtr native);
-        VertexElement(Flood::VertexAttribute _173, Flood::VertexDataType _174, unsigned char components);
+        VertexElement(Flood::VertexAttribute _0, Flood::VertexDataType _1, unsigned char components);
         char Stride;
         unsigned int Offset;
         unsigned int Size;
@@ -86,12 +87,12 @@ namespace Flood
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
-        void Add(Flood::VertexAttribute _176, int numComponents);
-        void Add(Flood::VertexElement _177);
-        void Add(Flood::VertexElementP _178);
+        void Add(Flood::VertexAttribute _0, int numComponents);
+        void Add(Flood::VertexElement _0);
+        void Add(Flood::VertexElementP _0);
         void Reset();
-        Flood::VertexElement Find(Flood::VertexAttribute _179);
-        unsigned char GetOffset(Flood::VertexAttribute _180);
+        Flood::VertexElement Find(Flood::VertexAttribute _0);
+        unsigned char GetOffset(Flood::VertexAttribute _0);
         unsigned char GetVertexSize();
         void CalculateStrides();
     };
@@ -102,7 +103,11 @@ namespace Flood
         VertexBuffer(::VertexBuffer* native);
         VertexBuffer(System::IntPtr native);
         VertexBuffer();
-        property bool Built;
+        property bool Built
+        {
+            bool get();
+            void set(bool);
+        }
         bool IsBuilt();
         void ForceRebuild();
     };

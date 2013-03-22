@@ -9,6 +9,7 @@
 
 #include <Graphics/RenderView.h>
 #include "Color.h"
+#include "Matrix4x3.h"
 #include "Matrix4x4.h"
 #include "ResourceHandle.h"
 #include "Vector.h"
@@ -17,9 +18,10 @@ namespace Flood
 {
     ref class RenderTarget;
     ref class RenderView;
-    ref class Matrix4x3;
-    value struct Vector2i;
     value struct Color;
+    value struct Matrix4x3;
+    value struct Matrix4x4;
+    value struct Vector2i;
 
     /// <summary>
     /// A view is a region in a render target that can be rendered into. It has an
@@ -33,13 +35,41 @@ namespace Flood
         RenderView(::RenderView* native);
         RenderView(System::IntPtr native);
         RenderView();
-        property Flood::Vector2i Origin;
-        property Flood::Vector2i Size;
-        property Flood::RenderTarget^ Target;
-        property Flood::Color ClearColor;
-        property int DepthPriority;
-        property Flood::Matrix4x4 ProjectionMatrix;
-        property Flood::Matrix4x3^ ViewMatrix;
+        property Flood::Vector2i Origin
+        {
+            Flood::Vector2i get();
+            void set(Flood::Vector2i);
+        }
+        property Flood::Vector2i Size
+        {
+            Flood::Vector2i get();
+            void set(Flood::Vector2i);
+        }
+        property Flood::RenderTarget^ Target
+        {
+            Flood::RenderTarget^ get();
+            void set(Flood::RenderTarget^);
+        }
+        property Flood::Color ClearColor
+        {
+            Flood::Color get();
+            void set(Flood::Color);
+        }
+        property int DepthPriority
+        {
+            int get();
+            void set(int);
+        }
+        property Flood::Matrix4x4 ProjectionMatrix
+        {
+            Flood::Matrix4x4 get();
+            void set(Flood::Matrix4x4);
+        }
+        property Flood::Matrix4x3 ViewMatrix
+        {
+            Flood::Matrix4x3 get();
+            void set(Flood::Matrix4x3);
+        }
         Flood::RenderTarget^ GetRenderTarget();
         void SetRenderTarget(Flood::RenderTarget^ v);
         Flood::Vector2i GetOrigin();

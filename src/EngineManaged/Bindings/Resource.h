@@ -12,11 +12,11 @@
 
 namespace Flood
 {
-    enum struct ResourceStatus;
     enum struct ResourceGroup;
+    enum struct ResourceStatus;
     ref class Enum;
-    ref class Resource;
     ref class Handle;
+    ref class Resource;
     ref class ResourceStream;
 
     /// <summary>
@@ -70,22 +70,34 @@ namespace Flood
         /// <summary>
         /// Path to the resource.
         /// </summary>
-        property System::String^ Path;
+        property System::String^ Path
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
         /// <summary>
         /// Status of the resource.
         /// </summary>
-        property Flood::ResourceStatus Status;
+        property Flood::ResourceStatus Status
+        {
+            Flood::ResourceStatus get();
+            void set(Flood::ResourceStatus);
+        }
         /// <summary>
         /// Resource stream.
         /// </summary>
-        property Flood::ResourceStream^ Stream;
+        property Flood::ResourceStream^ Stream
+        {
+            Flood::ResourceStream^ get();
+            void set(Flood::ResourceStream^);
+        }
         System::String^ GetPath();
         void SetPath(System::String^ v);
         Flood::ResourceStatus GetStatus();
         void SetStatus(Flood::ResourceStatus v);
         bool IsLoaded();
         Flood::ResourceGroup GetResourceGroup();
+        Flood::ResourceHandle<Flood::Resource^> HandleCreate();
         static void HandleDestroy(unsigned int id);
-        static Flood::ResourceHandle<Flood::Resource^> HandleCreate(Flood::Resource^ _120);
     };
 }

@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "IndexBuffer.h"
+#include "Buffer.h"
 #include "GeometryBuffer.h"
 #include "ResourceHandle.h"
 
@@ -15,19 +16,29 @@ using namespace System::Runtime::InteropServices;
 using namespace clix;
 
 Flood::IndexBuffer::IndexBuffer(::IndexBuffer* native)
-    : Buffer(native)
+    : Flood::Buffer(native)
 {
 }
 
 Flood::IndexBuffer::IndexBuffer(System::IntPtr native)
-    : Buffer(native)
+    : Flood::Buffer(native)
 {
     auto __native = (::IndexBuffer*)native.ToPointer();
 }
 
 Flood::IndexBuffer::IndexBuffer()
-    : Buffer(nullptr)
+    : Flood::Buffer(nullptr)
 {
     NativePtr = new ::IndexBuffer();
+}
+
+bool Flood::IndexBuffer::IsBuilt::get()
+{
+    return ((::IndexBuffer*)NativePtr)->isBuilt;
+}
+
+void Flood::IndexBuffer::IsBuilt::set(bool value)
+{
+    ((::IndexBuffer*)NativePtr)->isBuilt = value;
 }
 

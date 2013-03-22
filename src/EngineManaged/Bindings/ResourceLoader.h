@@ -14,15 +14,16 @@
 
 namespace Flood
 {
+    enum struct ResourceGroup;
+    ref class Extension;
+    ref class RefPtr;
+    ref class Resource;
+    ref class ResourceLoader;
+    ref class ResourceStream;
+    ref class Stream;
+    value struct ExtensionMetadata;
     value struct ResourceLoadOption;
     value struct ResourceLoadOptions;
-    ref class Stream;
-    ref class Resource;
-    enum struct ResourceGroup;
-    ref class ResourceStream;
-    ref class ResourceLoader;
-    value struct ExtensionMetadata;
-    ref class RefPtr;
 
     public value struct ResourceLoadOption
     {
@@ -58,8 +59,16 @@ namespace Flood
         ResourceStream(::ResourceStream* native);
         ResourceStream(System::IntPtr native);
         ResourceStream();
-        property Flood::Stream^ Stream;
-        property Flood::ResourceLoader^ Loader;
+        property Flood::Stream^ Stream
+        {
+            Flood::Stream^ get();
+            void set(Flood::Stream^);
+        }
+        property Flood::ResourceLoader^ Loader
+        {
+            Flood::ResourceLoader^ get();
+            void set(Flood::ResourceLoader^);
+        }
         int Decode(System::IntPtr buffer, unsigned int size);
         void Reset();
     };
@@ -77,8 +86,8 @@ namespace Flood
         ResourceLoader(System::IntPtr native);
         ResourceLoader();
         Flood::ExtensionMetadata GetMetadata();
-        Flood::Resource^ Prepare(Flood::ResourceLoadOptions _161);
-        bool Decode(Flood::ResourceLoadOptions _162);
+        Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
+        bool Decode(Flood::ResourceLoadOptions _0);
         System::String^ GetName();
         Flood::ResourceGroup GetResourceGroup();
     };

@@ -31,13 +31,14 @@ Flood::Texture::Texture()
     NativePtr = new ::Texture();
 }
 
-void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _195)
+void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _0)
 {
-    auto arg0 = ::Vector2i();
-    arg0.x = (int32)size.X;
-    arg0.y = (int32)size.Y;
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (int32)size.X;
+    _marshal0.y = (int32)size.Y;
 
-    auto arg1 = (::PixelFormat)_195;
+    auto arg0 = _marshal0;
+    auto arg1 = (::PixelFormat)_0;
     ((::Texture*)NativePtr)->allocate(arg0, arg1);
 }
 
@@ -77,6 +78,86 @@ unsigned int Flood::Texture::GetExpectedSize()
     return ret;
 }
 
+unsigned int Flood::Texture::Id::get()
+{
+    return ((::Texture*)NativePtr)->id;
+}
+
+void Flood::Texture::Id::set(unsigned int value)
+{
+    ((::Texture*)NativePtr)->id = (uint32)value;
+}
+
+Flood::TextureTarget Flood::Texture::Target::get()
+{
+    return (Flood::TextureTarget)((::Texture*)NativePtr)->target;
+}
+
+void Flood::Texture::Target::set(Flood::TextureTarget value)
+{
+    ((::Texture*)NativePtr)->target = (::TextureTarget)value;
+}
+
+bool Flood::Texture::Uploaded::get()
+{
+    return ((::Texture*)NativePtr)->uploaded;
+}
+
+void Flood::Texture::Uploaded::set(bool value)
+{
+    ((::Texture*)NativePtr)->uploaded = value;
+}
+
+unsigned short Flood::Texture::Width::get()
+{
+    return ((::Texture*)NativePtr)->width;
+}
+
+void Flood::Texture::Width::set(unsigned short value)
+{
+    ((::Texture*)NativePtr)->width = (uint16)value;
+}
+
+unsigned short Flood::Texture::Height::get()
+{
+    return ((::Texture*)NativePtr)->height;
+}
+
+void Flood::Texture::Height::set(unsigned short value)
+{
+    ((::Texture*)NativePtr)->height = (uint16)value;
+}
+
+Flood::PixelFormat Flood::Texture::Format::get()
+{
+    return (Flood::PixelFormat)((::Texture*)NativePtr)->format;
+}
+
+void Flood::Texture::Format::set(Flood::PixelFormat value)
+{
+    ((::Texture*)NativePtr)->format = (::PixelFormat)value;
+}
+
+float Flood::Texture::AnisotropicFilter::get()
+{
+    return ((::Texture*)NativePtr)->anisotropicFilter;
+}
+
+void Flood::Texture::AnisotropicFilter::set(float value)
+{
+    ((::Texture*)NativePtr)->anisotropicFilter = value;
+}
+
+Flood::Image^ Flood::Texture::Image::get()
+{
+    return gcnew Flood::Image((::Image*)((::Texture*)NativePtr)->image);
+}
+
+void Flood::Texture::Image::set(Flood::Image^ value)
+{
+    ((::Texture*)NativePtr)->image = (::Image*)value->NativePtr;
+}
+
 Flood::TextureUnit::TextureUnit(::TextureUnit* native)
 {
     NativePtr = native;
@@ -111,21 +192,51 @@ Flood::TextureWrapMode Flood::TextureUnit::GetWrapMode()
     return (Flood::TextureWrapMode)ret;
 }
 
-void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _197)
+void Flood::TextureUnit::SetFilterMode(Flood::TextureFilterMode _0)
 {
-    auto arg0 = (::TextureFilterMode)_197;
+    auto arg0 = (::TextureFilterMode)_0;
     ((::TextureUnit*)NativePtr)->setFilterMode(arg0);
 }
 
-void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _198)
+void Flood::TextureUnit::SetMipMode(Flood::TextureMipMode _0)
 {
-    auto arg0 = (::TextureMipMode)_198;
+    auto arg0 = (::TextureMipMode)_0;
     ((::TextureUnit*)NativePtr)->setMipMode(arg0);
 }
 
-void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _199)
+void Flood::TextureUnit::SetWrapMode(Flood::TextureWrapMode _0)
 {
-    auto arg0 = (::TextureWrapMode)_199;
+    auto arg0 = (::TextureWrapMode)_0;
     ((::TextureUnit*)NativePtr)->setWrapMode(arg0);
+}
+
+unsigned char Flood::TextureUnit::Unit::get()
+{
+    return ((::TextureUnit*)NativePtr)->unit;
+}
+
+void Flood::TextureUnit::Unit::set(unsigned char value)
+{
+    ((::TextureUnit*)NativePtr)->unit = (uint8)value;
+}
+
+Flood::ResourceHandle<Flood::Image^> Flood::TextureUnit::Image::get()
+{
+    return Flood::ResourceHandle<Flood::Image^>(((::TextureUnit*)NativePtr)->image.id);
+}
+
+void Flood::TextureUnit::Image::set(Flood::ResourceHandle<Flood::Image^> value)
+{
+    ((::TextureUnit*)NativePtr)->image = (HandleId)value.Id;
+}
+
+bool Flood::TextureUnit::OverrideModes::get()
+{
+    return ((::TextureUnit*)NativePtr)->overrideModes;
+}
+
+void Flood::TextureUnit::OverrideModes::set(bool value)
+{
+    ((::TextureUnit*)NativePtr)->overrideModes = value;
 }
 

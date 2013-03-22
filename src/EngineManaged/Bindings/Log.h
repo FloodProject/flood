@@ -13,24 +13,12 @@
 namespace Flood
 {
     enum struct LogLevel;
-    ref class Log;
     ref class Allocator;
-    value struct LogEntry;
-    ref class Timer;
-    ref class Mutex;
     ref class Event1;
-    enum struct TypeAttributeKind : unsigned char;
-    enum struct TypeKind : unsigned char;
-    enum struct ReflectionWalkType : unsigned char;
-    enum struct FieldQualifier : unsigned short;
-    enum struct PrimitiveTypeKind : unsigned char;
-    ref class Type;
-    ref class ReflectionDatabase;
-    ref class Field;
-    ref class PrimitiveBuiltins;
-    ref class Enum;
-    ref class ReflectionContext;
-    ref class Primitive;
+    ref class Log;
+    ref class Mutex;
+    ref class Timer;
+    value struct LogEntry;
 
     public enum struct LogLevel
     {
@@ -41,7 +29,7 @@ namespace Flood
         Assert = 4
     };
 
-    public delegate void LogFunction(Flood::LogEntry);
+    public delegate void LogFunction(Flood::LogEntry _2);
 
     public value struct LogEntry
     {
@@ -74,8 +62,8 @@ namespace Flood
             void raise(Flood::LogEntry);
         }
         void Destroy();
-        void AddHandler(Flood::LogFunction^ _4);
-        void RemoveHandler(Flood::LogFunction^ _6);
+        void AddHandler(Flood::LogFunction^ _1);
+        void RemoveHandler(Flood::LogFunction^ _1);
         void Write(Flood::LogEntry entry);
         void SetDefault();
         static Flood::Log^ GetDefault();

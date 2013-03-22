@@ -25,15 +25,6 @@ Flood::Stream::Stream(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::Stream^ Flood::Stream::CreateFromURI(Flood::Allocator^ _123, System::String^ _124, Flood::StreamOpenMode _125)
-{
-    auto arg0 = (::Allocator*)_123->NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_124);
-    auto arg2 = (::StreamOpenMode)_125;
-    auto ret = ::StreamCreateFromURI(arg0, arg1, arg2);
-    return gcnew Flood::Stream((::Stream*)ret);
-}
-
 void Flood::Stream::Destroy()
 {
     auto arg0 = (::Stream*)NativePtr;
@@ -70,10 +61,10 @@ long long Flood::Stream::ReadBuffer(System::IntPtr buffer, long long size)
     return ret;
 }
 
-long long Flood::Stream::ReadString(System::String^ _133)
+long long Flood::Stream::ReadString(System::String^ _1)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_133);
+    auto arg1 = clix::marshalString<clix::E_UTF8>(_1);
     auto ret = ::StreamReadString(arg0, arg1);
     return ret;
 }
@@ -87,10 +78,10 @@ long long Flood::Stream::Write(System::IntPtr buf, unsigned long long size)
     return ret;
 }
 
-long long Flood::Stream::WriteString(System::String^ _138)
+long long Flood::Stream::WriteString(System::String^ _1)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_138);
+    auto arg1 = clix::marshalString<clix::E_UTF8>(_1);
     auto ret = ::StreamWriteString(arg0, arg1);
     return ret;
 }
@@ -102,41 +93,50 @@ long long Flood::Stream::GetPosition()
     return ret;
 }
 
-long long Flood::Stream::SetPosition(long long _141, Flood::StreamSeekMode _142)
+long long Flood::Stream::SetPosition(long long _1, Flood::StreamSeekMode _2)
 {
     auto arg0 = (::Stream*)NativePtr;
-    auto arg1 = (int64)_141;
-    auto arg2 = (::StreamSeekMode)_142;
+    auto arg1 = (int64)_1;
+    auto arg2 = (::StreamSeekMode)_2;
     auto ret = ::StreamSetPosition(arg0, arg1, arg2);
     return ret;
 }
 
-Flood::Stream^ Flood::Stream::CreateFromFile(Flood::Allocator^ _143, System::String^ _144, Flood::StreamOpenMode _145)
+Flood::Stream^ Flood::Stream::CreateFromURI(Flood::Allocator^ _0, System::String^ _1, Flood::StreamOpenMode _2)
 {
-    auto arg0 = (::Allocator*)_143->NativePtr;
-    auto arg1 = marshalString<E_UTF8>(_144);
-    auto arg2 = (::StreamOpenMode)_145;
+    auto arg0 = (::Allocator*)_0->NativePtr;
+    auto arg1 = clix::marshalString<clix::E_UTF8>(_1);
+    auto arg2 = (::StreamOpenMode)_2;
+    auto ret = ::StreamCreateFromURI(arg0, arg1, arg2);
+    return gcnew Flood::Stream((::Stream*)ret);
+}
+
+Flood::Stream^ Flood::Stream::CreateFromFile(Flood::Allocator^ _0, System::String^ _1, Flood::StreamOpenMode _2)
+{
+    auto arg0 = (::Allocator*)_0->NativePtr;
+    auto arg1 = clix::marshalString<clix::E_UTF8>(_1);
+    auto arg2 = (::StreamOpenMode)_2;
     auto ret = ::StreamCreateFromFile(arg0, arg1, arg2);
     return gcnew Flood::Stream((::Stream*)ret);
 }
 
-Flood::MemoryStream^ Flood::Stream::CreateFromMemory(Flood::Allocator^ _146, unsigned long long size)
+Flood::MemoryStream^ Flood::Stream::CreateFromMemory(Flood::Allocator^ _1, unsigned long long size)
 {
-    auto arg0 = (::Allocator*)_146->NativePtr;
+    auto arg0 = (::Allocator*)_1->NativePtr;
     auto arg1 = (uint64)size;
     auto ret = ::StreamCreateFromMemory(arg0, arg1);
     return gcnew Flood::MemoryStream((::MemoryStream*)ret);
 }
 
-void Flood::Stream::MemoryInit(Flood::MemoryStream^ _147)
+void Flood::Stream::MemoryInit(Flood::MemoryStream^ _0)
 {
-    auto arg0 = (::MemoryStream*)_147->NativePtr;
+    auto arg0 = (::MemoryStream*)_0->NativePtr;
     ::StreamMemoryInit(arg0);
 }
 
-void Flood::Stream::MemorySetRawBuffer(Flood::MemoryStream^ _148, System::IntPtr buffer)
+void Flood::Stream::MemorySetRawBuffer(Flood::MemoryStream^ _0, System::IntPtr buffer)
 {
-    auto arg0 = (::MemoryStream*)_148->NativePtr;
+    auto arg0 = (::MemoryStream*)_0->NativePtr;
     auto arg1 = (uint8*)buffer.ToPointer();
     ::StreamMemorySetRawBuffer(arg0, arg1);
 }
@@ -144,20 +144,70 @@ void Flood::Stream::MemorySetRawBuffer(Flood::MemoryStream^ _148, System::IntPtr
 Flood::Stream^ Flood::Stream::CreateWeb(Flood::Allocator^ alloc, System::String^ URL, Flood::StreamOpenMode mode)
 {
     auto arg0 = (::Allocator*)alloc->NativePtr;
-    auto arg1 = marshalString<E_UTF8>(URL);
+    auto arg1 = clix::marshalString<clix::E_UTF8>(URL);
     auto arg2 = (::StreamOpenMode)mode;
     auto ret = ::StreamCreateWeb(arg0, arg1, arg2);
     return gcnew Flood::Stream((::Stream*)ret);
 }
 
+System::String^ Flood::Stream::Path::get()
+{
+    return clix::marshalString<clix::E_UTF8>(((::Stream*)NativePtr)->path);
+}
+
+void Flood::Stream::Path::set(System::String^ value)
+{
+    ((::Stream*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
+}
+
+Flood::StreamOpenMode Flood::Stream::Mode::get()
+{
+    return (Flood::StreamOpenMode)((::Stream*)NativePtr)->mode;
+}
+
+void Flood::Stream::Mode::set(Flood::StreamOpenMode value)
+{
+    ((::Stream*)NativePtr)->mode = (::StreamOpenMode)value;
+}
+
 Flood::MemoryStream::MemoryStream(::MemoryStream* native)
-    : Stream(native)
+    : Flood::Stream(native)
 {
 }
 
 Flood::MemoryStream::MemoryStream(System::IntPtr native)
-    : Stream(native)
+    : Flood::Stream(native)
 {
     auto __native = (::MemoryStream*)native.ToPointer();
+}
+
+System::IntPtr Flood::MemoryStream::Buffer::get()
+{
+    return IntPtr(((::MemoryStream*)NativePtr)->buffer);
+}
+
+void Flood::MemoryStream::Buffer::set(System::IntPtr value)
+{
+    ((::MemoryStream*)NativePtr)->buffer = (uint8*)value.ToPointer();
+}
+
+unsigned long long Flood::MemoryStream::Position::get()
+{
+    return ((::MemoryStream*)NativePtr)->position;
+}
+
+void Flood::MemoryStream::Position::set(unsigned long long value)
+{
+    ((::MemoryStream*)NativePtr)->position = (uint64)value;
+}
+
+bool Flood::MemoryStream::UseRawBuffer::get()
+{
+    return ((::MemoryStream*)NativePtr)->useRawBuffer;
+}
+
+void Flood::MemoryStream::UseRawBuffer::set(bool value)
+{
+    ((::MemoryStream*)NativePtr)->useRawBuffer = value;
 }
 

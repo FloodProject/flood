@@ -12,13 +12,9 @@
 
 namespace Flood
 {
-    value struct Quaternion;
     value struct EulerAngles;
+    value struct Quaternion;
     value struct Vector3;
-    ref class Primitive;
-    ref class scoped_ptr;
-    ref class Mutex;
-    ref class Condition;
 
     public value struct Quaternion
     {
@@ -30,7 +26,7 @@ namespace Flood
         Quaternion(Flood::EulerAngles angles);
         bool operator==(Flood::Quaternion q);
         bool operator!=(Flood::Quaternion q);
-        void Identity();
+        void SetIdentity();
         Flood::Quaternion Conjugate(Flood::Quaternion q);
         Flood::Quaternion operator*(Flood::Quaternion a);
         Flood::Quaternion operator*=(Flood::Quaternion a);
@@ -46,5 +42,6 @@ namespace Flood
         float Dot(Flood::Quaternion a);
         Flood::EulerAngles GetEulerAngles();
         Flood::Quaternion Slerp(Flood::Quaternion q, float t);
+        static property Flood::Quaternion Identity;
     };
 }

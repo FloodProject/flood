@@ -12,19 +12,19 @@
 
 namespace Flood
 {
-    ref class RenderCapabilities;
-    ref class RenderDevice;
-    ref class RenderTarget;
-    ref class RenderBackend;
     ref class BufferManager;
     ref class ProgramManager;
+    ref class RefPtr;
+    ref class RenderBackend;
+    ref class RenderBuffer;
+    ref class RenderCapabilities;
+    ref class RenderContext;
+    ref class RenderDevice;
+    ref class RenderTarget;
     ref class TextureManager;
     value struct Color;
-    ref class RenderBuffer;
-    value struct Settings;
     value struct RenderContextSettings;
-    ref class RenderContext;
-    ref class RefPtr;
+    value struct Settings;
 
     public value struct RenderContextSettings
     {
@@ -48,8 +48,16 @@ namespace Flood
         RenderContext(::RenderContext* native);
         RenderContext(System::IntPtr native);
         RenderContext();
-        property bool InitDone;
-        property Flood::RenderTarget^ CurrentTarget;
+        property bool InitDone
+        {
+            bool get();
+            void set(bool);
+        }
+        property Flood::RenderTarget^ CurrentTarget
+        {
+            Flood::RenderTarget^ get();
+            void set(Flood::RenderTarget^);
+        }
         void MakeCurrent(Flood::RenderTarget^ target);
         void SetTarget(Flood::RenderTarget^ target);
         void Init();

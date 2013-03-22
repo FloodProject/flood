@@ -7,6 +7,9 @@
 
 #include "_Marshal.h"
 #include "InputManager.h"
+#include "Device.h"
+#include "Keyboard.h"
+#include "Mouse.h"
 #include "ResourceHandle.h"
 #include "Window.h"
 
@@ -28,6 +31,30 @@ Flood::InputManager::InputManager(System::IntPtr native)
 Flood::InputManager::InputManager()
 {
     NativePtr = new ::InputManager();
+}
+
+void Flood::InputManager::AddDevice(Flood::InputDevice^ device)
+{
+    auto arg0 = (::InputDevice*)device->NativePtr;
+    ((::InputManager*)NativePtr)->addDevice(arg0);
+}
+
+Flood::Keyboard^ Flood::InputManager::GetKeyboard()
+{
+    auto ret = ((::InputManager*)NativePtr)->getKeyboard();
+    return gcnew Flood::Keyboard((::Keyboard*)ret);
+}
+
+Flood::Mouse^ Flood::InputManager::GetMouse()
+{
+    auto ret = ((::InputManager*)NativePtr)->getMouse();
+    return gcnew Flood::Mouse((::Mouse*)ret);
+}
+
+void Flood::InputManager::ProcessEvent(Flood::InputEvent^ event)
+{
+    auto &arg0 = *(::InputEvent*)event->NativePtr;
+    ((::InputManager*)NativePtr)->processEvent(arg0);
 }
 
 void Flood::InputManager::CreateDefaultDevices()

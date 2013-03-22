@@ -73,3 +73,43 @@ void Flood::Buffer::SetGeometryBuffer(Flood::GeometryBuffer^ v)
     ((::Buffer*)NativePtr)->setGeometryBuffer(arg0);
 }
 
+unsigned int Flood::Buffer::Id::get()
+{
+    return ((::Buffer*)NativePtr)->id;
+}
+
+void Flood::Buffer::Id::set(unsigned int value)
+{
+    ((::Buffer*)NativePtr)->id = (BufferId)(uint32)value;
+}
+
+Flood::BufferUsage Flood::Buffer::Usage::get()
+{
+    return (Flood::BufferUsage)((::Buffer*)NativePtr)->usage;
+}
+
+void Flood::Buffer::Usage::set(Flood::BufferUsage value)
+{
+    ((::Buffer*)NativePtr)->usage = (::BufferUsage)value;
+}
+
+Flood::BufferAccess Flood::Buffer::Access::get()
+{
+    return (Flood::BufferAccess)((::Buffer*)NativePtr)->access;
+}
+
+void Flood::Buffer::Access::set(Flood::BufferAccess value)
+{
+    ((::Buffer*)NativePtr)->access = (::BufferAccess)value;
+}
+
+Flood::GeometryBuffer^ Flood::Buffer::Gb::get()
+{
+    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)((::Buffer*)NativePtr)->gb);
+}
+
+void Flood::Buffer::Gb::set(Flood::GeometryBuffer^ value)
+{
+    ((::Buffer*)NativePtr)->gb = (::GeometryBuffer*)value->NativePtr;
+}
+

@@ -15,17 +15,6 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
 
-Flood::ValueContext::ValueContext(::ValueContext* native)
-{
-    NativePtr = native;
-}
-
-Flood::ValueContext::ValueContext(System::IntPtr native)
-{
-    auto __native = (::ValueContext*)native.ToPointer();
-    NativePtr = __native;
-}
-
 Flood::ReflectionHandleContext::ReflectionHandleContext(::ReflectionHandleContext* native)
 {
     NativePtr = native;
@@ -37,20 +26,14 @@ Flood::ReflectionHandleContext::ReflectionHandleContext(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::ReflectionContext::ReflectionContext(::ReflectionContext* native)
+Flood::ReflectionDeserializeHandleFn^ Flood::ReflectionHandleContext::Deserialize::get()
 {
-    NativePtr = native;
+    return safe_cast<Flood::ReflectionDeserializeHandleFn^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::ReflectionHandleContext*)NativePtr)->deserialize), Flood::ReflectionDeserializeHandleFn::typeid));
 }
 
-Flood::ReflectionContext::ReflectionContext(System::IntPtr native)
+void Flood::ReflectionHandleContext::Deserialize::set(Flood::ReflectionDeserializeHandleFn^ value)
 {
-    auto __native = (::ReflectionContext*)native.ToPointer();
-    NativePtr = __native;
-}
-
-Flood::ReflectionContext::ReflectionContext()
-{
-    NativePtr = new ::ReflectionContext();
+    ((::ReflectionHandleContext*)NativePtr)->deserialize = static_cast<::ReflectionDeserializeHandleFn>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
 }
 
 Flood::Serializer::Serializer(::Serializer* native)
@@ -75,15 +58,23 @@ void Flood::Serializer::Destroy()
     ::SerializerDestroy(arg0);
 }
 
-void Flood::FloodSerialization::ReflectionWalkComposite(Flood::ReflectionContext^ _100)
+Flood::Allocator^ Flood::Serializer::Alloc::get()
 {
-    auto arg0 = (::ReflectionContext*)_100->NativePtr;
-    ::ReflectionWalkComposite(arg0);
+    return gcnew Flood::Allocator((::Allocator*)((::Serializer*)NativePtr)->alloc);
 }
 
-void Flood::FloodSerialization::ReflectionWalkCompositeField(Flood::ReflectionContext^ _101)
+void Flood::Serializer::Alloc::set(Flood::Allocator^ value)
 {
-    auto arg0 = (::ReflectionContext*)_101->NativePtr;
-    ::ReflectionWalkCompositeField(arg0);
+    ((::Serializer*)NativePtr)->alloc = (::Allocator*)value->NativePtr;
+}
+
+Flood::Stream^ Flood::Serializer::Stream::get()
+{
+    return gcnew Flood::Stream((::Stream*)((::Serializer*)NativePtr)->stream);
+}
+
+void Flood::Serializer::Stream::set(Flood::Stream^ value)
+{
+    ((::Serializer*)NativePtr)->stream = (::Stream*)value->NativePtr;
 }
 

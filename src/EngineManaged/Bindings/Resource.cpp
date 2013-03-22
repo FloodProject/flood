@@ -28,12 +28,12 @@ Flood::Resource::Resource(System::IntPtr native)
 System::String^ Flood::Resource::GetPath()
 {
     auto ret = ((::Resource*)NativePtr)->getPath();
-    return marshalString<E_UTF8>(ret);
+    return clix::marshalString<clix::E_UTF8>(ret);
 }
 
 void Flood::Resource::SetPath(System::String^ v)
 {
-    auto arg0 = marshalString<E_UTF8>(v);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
     ((::Resource*)NativePtr)->setPath(arg0);
 }
 
@@ -61,16 +61,46 @@ Flood::ResourceGroup Flood::Resource::GetResourceGroup()
     return (Flood::ResourceGroup)ret;
 }
 
+Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate()
+{
+    auto arg0 = (::Resource*)NativePtr;
+    auto ret = ::ResourceHandleCreate(arg0);
+    return Flood::ResourceHandle<Flood::Resource^>(ret.id);
+}
+
 void Flood::Resource::HandleDestroy(unsigned int id)
 {
     auto arg0 = (HandleId)(uint32)id;
     ::ResourceHandleDestroy(arg0);
 }
 
-Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate(Flood::Resource^ _120)
+System::String^ Flood::Resource::Path::get()
 {
-    auto arg0 = (::Resource*)_120->NativePtr;
-    auto ret = ::ResourceHandleCreate(arg0);
-    return Flood::ResourceHandle<Flood::Resource^>(ret.id);
+    return clix::marshalString<clix::E_UTF8>(((::Resource*)NativePtr)->path);
+}
+
+void Flood::Resource::Path::set(System::String^ value)
+{
+    ((::Resource*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
+}
+
+Flood::ResourceStatus Flood::Resource::Status::get()
+{
+    return (Flood::ResourceStatus)((::Resource*)NativePtr)->status;
+}
+
+void Flood::Resource::Status::set(Flood::ResourceStatus value)
+{
+    ((::Resource*)NativePtr)->status = (::ResourceStatus)value;
+}
+
+Flood::ResourceStream^ Flood::Resource::Stream::get()
+{
+    return gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);
+}
+
+void Flood::Resource::Stream::set(Flood::ResourceStream^ value)
+{
+    ((::Resource*)NativePtr)->stream = (::ResourceStream*)value->NativePtr;
 }
 

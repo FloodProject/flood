@@ -13,25 +13,15 @@
 namespace Flood
 {
     ref class Allocator;
-    ref class PoolAllocator;
     ref class BumpAllocator;
     ref class HeapAllocator;
-    ref class RefPtr;
-    enum struct ThreadPriority;
-    enum struct TaskState;
-    ref class Thread;
-    ref class Mutex;
-    ref class Condition;
-    ref class Task;
-    ref class TaskEvent;
-    ref class Event1;
-    ref class scoped_ptr;
+    ref class PoolAllocator;
 
-    public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ ,int size ,int align);
+    public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ _0, int size, int align);
 
-    public delegate void MemoryFreeFunction(Flood::Allocator^ ,System::IntPtr object);
+    public delegate void MemoryFreeFunction(Flood::Allocator^ _1, System::IntPtr object);
 
-    public delegate void MemoryResetFunction(Flood::Allocator^);
+    public delegate void MemoryResetFunction(Flood::Allocator^ _2);
 
     /// <summary>
     /// Interface for a custom memory allocator.
@@ -43,10 +33,26 @@ namespace Flood
 
         Allocator(::Allocator* native);
         Allocator(System::IntPtr native);
-        property Flood::MemoryAllocateFunction^ Allocate;
-        property Flood::MemoryFreeFunction^ Deallocate;
-        property Flood::MemoryResetFunction^ Reset;
-        property System::String^ Group;
+        property Flood::MemoryAllocateFunction^ Allocate
+        {
+            Flood::MemoryAllocateFunction^ get();
+            void set(Flood::MemoryAllocateFunction^);
+        }
+        property Flood::MemoryFreeFunction^ Deallocate
+        {
+            Flood::MemoryFreeFunction^ get();
+            void set(Flood::MemoryFreeFunction^);
+        }
+        property Flood::MemoryResetFunction^ Reset
+        {
+            Flood::MemoryResetFunction^ get();
+            void set(Flood::MemoryResetFunction^);
+        }
+        property System::String^ Group
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
         void Destroy();
         void ResetMemory();
         void SetGroup(System::String^ group);
@@ -56,7 +62,7 @@ namespace Flood
         Flood::Allocator^ CreateStack();
         static Flood::Allocator^ GetHeap();
         static Flood::Allocator^ GetStack();
-        static Flood::Allocator^ GetObject(System::IntPtr _37);
+        static Flood::Allocator^ GetObject(System::IntPtr _0);
         static void DumpInfo();
     };
 
@@ -70,7 +76,11 @@ namespace Flood
     public:
         PoolAllocator(::PoolAllocator* native);
         PoolAllocator(System::IntPtr native);
-        property System::IntPtr Current;
+        property System::IntPtr Current
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
     };
 
     /// <summary>
@@ -83,9 +93,21 @@ namespace Flood
     public:
         BumpAllocator(::BumpAllocator* native);
         BumpAllocator(System::IntPtr native);
-        property System::IntPtr Start;
-        property System::IntPtr Current;
-        property unsigned int Size;
+        property System::IntPtr Start
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
+        property System::IntPtr Current
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
+        property unsigned int Size
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
     };
 
     /// <summary>
@@ -98,6 +120,10 @@ namespace Flood
     public:
         HeapAllocator(::HeapAllocator* native);
         HeapAllocator(System::IntPtr native);
-        property System::IntPtr Space;
+        property System::IntPtr Space
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
     };
 }

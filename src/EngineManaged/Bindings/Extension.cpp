@@ -7,7 +7,6 @@
 
 #include "_Marshal.h"
 #include "Extension.h"
-#include "Memory.h"
 #include "ResourceHandle.h"
 
 using namespace System;

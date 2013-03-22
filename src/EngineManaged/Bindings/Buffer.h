@@ -12,10 +12,10 @@
 
 namespace Flood
 {
-    enum struct BufferUsage : unsigned char;
     enum struct BufferAccess : unsigned char;
-    ref class GeometryBuffer;
+    enum struct BufferUsage : unsigned char;
     ref class Buffer;
+    ref class GeometryBuffer;
     ref class RefPtr;
 
     /// <summary>
@@ -55,10 +55,26 @@ namespace Flood
         Buffer(System::IntPtr native);
         Buffer();
         Buffer(Flood::BufferUsage usage, Flood::BufferAccess access);
-        property unsigned int Id;
-        property Flood::BufferUsage Usage;
-        property Flood::BufferAccess Access;
-        property Flood::GeometryBuffer^ Gb;
+        property unsigned int Id
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property Flood::BufferUsage Usage
+        {
+            Flood::BufferUsage get();
+            void set(Flood::BufferUsage);
+        }
+        property Flood::BufferAccess Access
+        {
+            Flood::BufferAccess get();
+            void set(Flood::BufferAccess);
+        }
+        property Flood::GeometryBuffer^ Gb
+        {
+            Flood::GeometryBuffer^ get();
+            void set(Flood::GeometryBuffer^);
+        }
         Flood::BufferUsage GetBufferUsage();
         void SetBufferUsage(Flood::BufferUsage v);
         Flood::BufferAccess GetBufferAccess();

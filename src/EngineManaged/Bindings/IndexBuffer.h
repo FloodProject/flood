@@ -13,6 +13,7 @@
 
 namespace Flood
 {
+    ref class Buffer;
     ref class GeometryBuffer;
     ref class IndexBuffer;
     ref class RefPtr;
@@ -23,6 +24,10 @@ namespace Flood
         IndexBuffer(::IndexBuffer* native);
         IndexBuffer(System::IntPtr native);
         IndexBuffer();
-        property bool IsBuilt;
+        property bool IsBuilt
+        {
+            bool get();
+            void set(bool);
+        }
     };
 }

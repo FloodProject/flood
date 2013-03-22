@@ -80,40 +80,45 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Vector3 vec)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
-    auto arg1 = ::Vector3();
+    auto _marshal1 = ::Vector3();
+
+    auto arg1 = _marshal1;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }
 
-void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Matrix4x3^ _186)
+void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Matrix4x3 _0)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
-    auto &arg1 = *(::Matrix4x3*)_186->NativePtr;
+    auto _marshal1 = ::Matrix4x3();
+
+    auto arg1 = _marshal1;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }
 
-void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Matrix4x4 _187)
+void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Matrix4x4 _0)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
-    auto arg1 = ::Matrix4x4();
-    arg1.m11 = _187.M11;
-    arg1.m12 = _187.M12;
-    arg1.m13 = _187.M13;
-    arg1.m14 = _187.M14;
-    arg1.m21 = _187.M21;
-    arg1.m22 = _187.M22;
-    arg1.m23 = _187.M23;
-    arg1.m24 = _187.M24;
-    arg1.m31 = _187.M31;
-    arg1.m32 = _187.M32;
-    arg1.m33 = _187.M33;
-    arg1.m34 = _187.M34;
-    arg1.tx = _187.Tx;
-    arg1.ty = _187.Ty;
-    arg1.tz = _187.Tz;
-    arg1.tw = _187.Tw;
+    auto _marshal1 = ::Matrix4x4();
+    _marshal1.m11 = _0.M11;
+    _marshal1.m12 = _0.M12;
+    _marshal1.m13 = _0.M13;
+    _marshal1.m14 = _0.M14;
+    _marshal1.m21 = _0.M21;
+    _marshal1.m22 = _0.M22;
+    _marshal1.m23 = _0.M23;
+    _marshal1.m24 = _0.M24;
+    _marshal1.m31 = _0.M31;
+    _marshal1.m32 = _0.M32;
+    _marshal1.m33 = _0.M33;
+    _marshal1.m34 = _0.M34;
+    _marshal1.tx = _0.Tx;
+    _marshal1.ty = _0.Ty;
+    _marshal1.tz = _0.Tz;
+    _marshal1.tw = _0.Tw;
 
+    auto arg1 = _marshal1;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }
 

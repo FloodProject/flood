@@ -13,17 +13,17 @@
 
 namespace Flood
 {
+    enum struct PixelFormat;
     enum struct TextureFilterMode;
     enum struct TextureMipMode;
-    enum struct TextureWrapMode;
     enum struct TextureTarget;
-    ref class Texture;
-    enum struct PixelFormat;
-    ref class Image;
-    value struct Vector2i;
-    ref class TextureUnit;
+    enum struct TextureWrapMode;
     ref class Handle;
+    ref class Image;
     ref class RefPtr;
+    ref class Texture;
+    ref class TextureUnit;
+    value struct Vector2i;
 
     public enum struct TextureFilterMode
     {
@@ -65,15 +65,47 @@ namespace Flood
         Texture(::Texture* native);
         Texture(System::IntPtr native);
         Texture();
-        property unsigned int Id;
-        property Flood::TextureTarget Target;
-        property bool Uploaded;
-        property unsigned short Width;
-        property unsigned short Height;
-        property Flood::PixelFormat Format;
-        property float AnisotropicFilter;
-        property Flood::Image^ Image;
-        void Alloc(Flood::Vector2i size, Flood::PixelFormat _195);
+        property unsigned int Id
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property Flood::TextureTarget Target
+        {
+            Flood::TextureTarget get();
+            void set(Flood::TextureTarget);
+        }
+        property bool Uploaded
+        {
+            bool get();
+            void set(bool);
+        }
+        property unsigned short Width
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+        property unsigned short Height
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+        property Flood::PixelFormat Format
+        {
+            Flood::PixelFormat get();
+            void set(Flood::PixelFormat);
+        }
+        property float AnisotropicFilter
+        {
+            float get();
+            void set(float);
+        }
+        property Flood::Image^ Image
+        {
+            Flood::Image^ get();
+            void set(Flood::Image^);
+        }
+        void Alloc(Flood::Vector2i size, Flood::PixelFormat _0);
         unsigned int GetId();
         Flood::PixelFormat GetPixelFormat();
         Flood::Image^ GetImage();
@@ -90,17 +122,26 @@ namespace Flood
         TextureUnit(::TextureUnit* native);
         TextureUnit(System::IntPtr native);
         TextureUnit();
-        property unsigned char Unit;
-        property Flood::ResourceHandle<Flood::Image^> Image;
-        property bool OverrideModes;
-        property Flood::TextureFilterMode Filter;
-        property Flood::TextureMipMode Mip;
-        property Flood::TextureWrapMode Wrap;
+        property unsigned char Unit
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+        property Flood::ResourceHandle<Flood::Image^> Image
+        {
+            Flood::ResourceHandle<Flood::Image^> get();
+            void set(Flood::ResourceHandle<Flood::Image^>);
+        }
+        property bool OverrideModes
+        {
+            bool get();
+            void set(bool);
+        }
         Flood::TextureFilterMode GetFilterMode();
         Flood::TextureMipMode GetMipMode();
         Flood::TextureWrapMode GetWrapMode();
-        void SetFilterMode(Flood::TextureFilterMode _197);
-        void SetMipMode(Flood::TextureMipMode _198);
-        void SetWrapMode(Flood::TextureWrapMode _199);
+        void SetFilterMode(Flood::TextureFilterMode _0);
+        void SetMipMode(Flood::TextureMipMode _0);
+        void SetWrapMode(Flood::TextureWrapMode _0);
     };
 }

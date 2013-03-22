@@ -14,16 +14,17 @@
 namespace Flood
 {
     enum struct WindowStyles;
-    value struct WindowSettings;
-    ref class Window;
     ref class Event0;
     ref class Event1;
-    ref class RenderContext;
-    ref class RefPtr;
-    value struct RenderContextSettings;
-    value struct Vector2i;
     ref class InputManager;
+    ref class RefPtr;
+    ref class RenderContext;
+    ref class RenderTarget;
+    ref class Window;
+    value struct RenderContextSettings;
     value struct Settings;
+    value struct Vector2i;
+    value struct WindowSettings;
 
     [System::Flags]
     public enum struct WindowStyles
@@ -58,8 +59,6 @@ namespace Flood
         Window(::Window* native);
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
-        property Flood::WindowSettings Settings;
-        property Flood::RenderContext^ RenderContext;
     private:
         delegate void _WindowCloseDelegate();
         _WindowCloseDelegate^ _WindowCloseDelegateInstance;
@@ -84,7 +83,7 @@ namespace Flood
             void remove(System::Action<bool>^ evt);
             void raise(bool);
         }
-        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _212);
+        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
         void Update();
         void MakeCurrent();
         void Show(bool visible);

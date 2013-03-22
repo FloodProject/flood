@@ -24,25 +24,6 @@ Flood::Allocator::Allocator(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::Allocator^ Flood::Allocator::GetHeap()
-{
-    auto ret = ::AllocatorGetHeap();
-    return gcnew Flood::Allocator((::Allocator*)ret);
-}
-
-Flood::Allocator^ Flood::Allocator::GetStack()
-{
-    auto ret = ::AllocatorGetStack();
-    return gcnew Flood::Allocator((::Allocator*)ret);
-}
-
-Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _37)
-{
-    auto arg0 = _37.ToPointer();
-    auto ret = ::AllocatorGetObject(arg0);
-    return gcnew Flood::Allocator((::Allocator*)ret);
-}
-
 void Flood::Allocator::Destroy()
 {
     auto arg0 = (::Allocator*)NativePtr;
@@ -61,11 +42,6 @@ void Flood::Allocator::SetGroup(System::String^ group)
     auto _arg1 = clix::marshalString<clix::E_UTF8>(group);
     auto arg1 = _arg1.c_str();
     ::AllocatorSetGroup(arg0, arg1);
-}
-
-void Flood::Allocator::DumpInfo()
-{
-    ::AllocatorDumpInfo();
 }
 
 Flood::Allocator^ Flood::Allocator::CreatePool(int size)
@@ -98,36 +74,151 @@ Flood::Allocator^ Flood::Allocator::CreateStack()
     return gcnew Flood::Allocator((::Allocator*)ret);
 }
 
+Flood::Allocator^ Flood::Allocator::GetHeap()
+{
+    auto ret = ::AllocatorGetHeap();
+    return gcnew Flood::Allocator((::Allocator*)ret);
+}
+
+Flood::Allocator^ Flood::Allocator::GetStack()
+{
+    auto ret = ::AllocatorGetStack();
+    return gcnew Flood::Allocator((::Allocator*)ret);
+}
+
+Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _0)
+{
+    auto arg0 = _0.ToPointer();
+    auto ret = ::AllocatorGetObject(arg0);
+    return gcnew Flood::Allocator((::Allocator*)ret);
+}
+
+void Flood::Allocator::DumpInfo()
+{
+    ::AllocatorDumpInfo();
+}
+
+Flood::MemoryAllocateFunction^ Flood::Allocator::Allocate::get()
+{
+    return safe_cast<Flood::MemoryAllocateFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->allocate), Flood::MemoryAllocateFunction::typeid));
+}
+
+void Flood::Allocator::Allocate::set(Flood::MemoryAllocateFunction^ value)
+{
+    ((::Allocator*)NativePtr)->allocate = static_cast<::MemoryAllocateFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
+}
+
+Flood::MemoryFreeFunction^ Flood::Allocator::Deallocate::get()
+{
+    return safe_cast<Flood::MemoryFreeFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->deallocate), Flood::MemoryFreeFunction::typeid));
+}
+
+void Flood::Allocator::Deallocate::set(Flood::MemoryFreeFunction^ value)
+{
+    ((::Allocator*)NativePtr)->deallocate = static_cast<::MemoryFreeFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
+}
+
+Flood::MemoryResetFunction^ Flood::Allocator::Reset::get()
+{
+    return safe_cast<Flood::MemoryResetFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->reset), Flood::MemoryResetFunction::typeid));
+}
+
+void Flood::Allocator::Reset::set(Flood::MemoryResetFunction^ value)
+{
+    ((::Allocator*)NativePtr)->reset = static_cast<::MemoryResetFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
+}
+
+System::String^ Flood::Allocator::Group::get()
+{
+    return clix::marshalString<clix::E_UTF8>(((::Allocator*)NativePtr)->group);
+}
+
+void Flood::Allocator::Group::set(System::String^ value)
+{
+    auto _value = clix::marshalString<clix::E_UTF8>(value);
+    ((::Allocator*)NativePtr)->group = _value.c_str();
+}
+
 Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
 }
 
 Flood::PoolAllocator::PoolAllocator(System::IntPtr native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
     auto __native = (::PoolAllocator*)native.ToPointer();
 }
 
+System::IntPtr Flood::PoolAllocator::Current::get()
+{
+    return IntPtr(((::PoolAllocator*)NativePtr)->current);
+}
+
+void Flood::PoolAllocator::Current::set(System::IntPtr value)
+{
+    ((::PoolAllocator*)NativePtr)->current = (uint8*)value.ToPointer();
+}
+
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
 }
 
 Flood::BumpAllocator::BumpAllocator(System::IntPtr native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
     auto __native = (::BumpAllocator*)native.ToPointer();
 }
 
+System::IntPtr Flood::BumpAllocator::Start::get()
+{
+    return IntPtr(((::BumpAllocator*)NativePtr)->start);
+}
+
+void Flood::BumpAllocator::Start::set(System::IntPtr value)
+{
+    ((::BumpAllocator*)NativePtr)->start = (uint8*)value.ToPointer();
+}
+
+System::IntPtr Flood::BumpAllocator::Current::get()
+{
+    return IntPtr(((::BumpAllocator*)NativePtr)->current);
+}
+
+void Flood::BumpAllocator::Current::set(System::IntPtr value)
+{
+    ((::BumpAllocator*)NativePtr)->current = (uint8*)value.ToPointer();
+}
+
+unsigned int Flood::BumpAllocator::Size::get()
+{
+    return ((::BumpAllocator*)NativePtr)->size;
+}
+
+void Flood::BumpAllocator::Size::set(unsigned int value)
+{
+    ((::BumpAllocator*)NativePtr)->size = (uint32)value;
+}
+
 Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
 }
 
 Flood::HeapAllocator::HeapAllocator(System::IntPtr native)
-    : Allocator(native)
+    : Flood::Allocator(native)
 {
     auto __native = (::HeapAllocator*)native.ToPointer();
+}
+
+System::IntPtr Flood::HeapAllocator::Space::get()
+{
+    return IntPtr(((::HeapAllocator*)NativePtr)->space);
+}
+
+void Flood::HeapAllocator::Space::set(System::IntPtr value)
+{
+    ((::HeapAllocator*)NativePtr)->space = value.ToPointer();
 }
 

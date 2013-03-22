@@ -13,13 +13,13 @@
 namespace Flood
 {
     enum struct UniformDataType : unsigned char;
-    value struct UniformBufferElement;
-    ref class UniformBuffer;
-    value struct Vector3;
-    value struct Color;
-    ref class Matrix4x3;
-    value struct Matrix4x4;
     ref class RefPtr;
+    ref class UniformBuffer;
+    value struct Color;
+    value struct Matrix4x3;
+    value struct Matrix4x4;
+    value struct UniformBufferElement;
+    value struct Vector3;
 
     public enum struct UniformDataType : unsigned char
     {
@@ -69,7 +69,7 @@ namespace Flood
         void SetUniform(System::String^ slot, int data);
         void SetUniform(System::String^ slot, float value);
         void SetUniform(System::String^ slot, Flood::Vector3 vec);
-        void SetUniform(System::String^ slot, Flood::Matrix4x3^ _186);
-        void SetUniform(System::String^ slot, Flood::Matrix4x4 _187);
+        void SetUniform(System::String^ slot, Flood::Matrix4x3 _0);
+        void SetUniform(System::String^ slot, Flood::Matrix4x4 _0);
     };
 }

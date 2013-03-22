@@ -9,7 +9,6 @@
 #include "Log.h"
 #include "Memory.h"
 #include "ResourceHandle.h"
-#include "Serialization.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -18,7 +17,7 @@ using namespace clix;
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
     Time = native->time;
-    Message = marshalString<E_UTF8>(native->message);
+    Message = clix::marshalString<clix::E_UTF8>(native->message);
     Level = (Flood::LogLevel)native->level;
 }
 
@@ -26,7 +25,7 @@ Flood::LogEntry::LogEntry(System::IntPtr native)
 {
     auto __native = (::LogEntry*)native.ToPointer();
     Time = __native->time;
-    Message = marshalString<E_UTF8>(__native->message);
+    Message = clix::marshalString<clix::E_UTF8>(__native->message);
     Level = (Flood::LogLevel)__native->level;
 }
 
@@ -52,41 +51,42 @@ void Flood::Log::Destroy()
     ::LogDestroy(arg0);
 }
 
-void Flood::Log::AddHandler(Flood::LogFunction^ _4)
+void Flood::Log::AddHandler(Flood::LogFunction^ _1)
 {
     auto arg0 = (::Log*)NativePtr;
-    auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_4).ToPointer());
+    auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_1).ToPointer());
     ::LogAddHandler(arg0, arg1);
 }
 
-void Flood::Log::RemoveHandler(Flood::LogFunction^ _6)
+void Flood::Log::RemoveHandler(Flood::LogFunction^ _1)
 {
     auto arg0 = (::Log*)NativePtr;
-    auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_6).ToPointer());
+    auto arg1 = static_cast<::LogFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(_1).ToPointer());
     ::LogRemoveHandler(arg0, arg1);
 }
 
 void Flood::Log::Write(Flood::LogEntry entry)
 {
     auto arg0 = (::Log*)NativePtr;
-    auto arg1 = ::LogEntry();
-    arg1.time = entry.Time;
-    arg1.message = marshalString<E_UTF8>(entry.Message);
-    arg1.level = (::LogLevel)entry.Level;
+    auto _marshal1 = ::LogEntry();
+    _marshal1.time = entry.Time;
+    _marshal1.message = clix::marshalString<clix::E_UTF8>(entry.Message);
+    _marshal1.level = (::LogLevel)entry.Level;
 
+    auto arg1 = _marshal1;
     ::LogWrite(arg0, &arg1);
-}
-
-Flood::Log^ Flood::Log::GetDefault()
-{
-    auto ret = ::LogGetDefault();
-    return gcnew Flood::Log((::Log*)ret);
 }
 
 void Flood::Log::SetDefault()
 {
     auto arg0 = (::Log*)NativePtr;
     ::LogSetDefault(arg0);
+}
+
+Flood::Log^ Flood::Log::GetDefault()
+{
+    auto ret = ::LogGetDefault();
+    return gcnew Flood::Log((::Log*)ret);
 }
 
 void Flood::Log::Info(System::String^ msg)

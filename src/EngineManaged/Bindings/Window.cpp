@@ -19,7 +19,7 @@ using namespace clix;
 
 Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
-    Title = marshalString<E_UTF8>(native->title);
+    Title = clix::marshalString<clix::E_UTF8>(native->title);
     FullScreen = native->fullScreen;
     Handle = IntPtr(native->handle);
     Styles = (Flood::WindowStyles)native->styles;
@@ -28,7 +28,7 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 Flood::WindowSettings::WindowSettings(System::IntPtr native)
 {
     auto __native = (::WindowSettings*)native.ToPointer();
-    Title = marshalString<E_UTF8>(__native->title);
+    Title = clix::marshalString<clix::E_UTF8>(__native->title);
     FullScreen = __native->fullScreen;
     Handle = IntPtr(__native->handle);
     Styles = (Flood::WindowStyles)__native->styles;
@@ -39,29 +39,30 @@ Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short heigh
 }
 
 Flood::Window::Window(::Window* native)
-    : RenderTarget(native)
+    : Flood::RenderTarget(native)
 {
 }
 
 Flood::Window::Window(System::IntPtr native)
-    : RenderTarget(native)
+    : Flood::RenderTarget(native)
 {
     auto __native = (::Window*)native.ToPointer();
 }
 
 Flood::Window::Window(Flood::WindowSettings settings)
-    : RenderTarget(nullptr)
+    : Flood::RenderTarget(nullptr)
 {
 }
 
-Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _212)
+Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _0)
 {
-    auto arg0 = ::RenderContextSettings();
-    arg0.bitsPerPixel = (uint16)_212.BitsPerPixel;
-    arg0.depthBits = (uint16)_212.DepthBits;
-    arg0.stencilBits = (uint16)_212.StencilBits;
-    arg0.antialiasLevel = (uint16)_212.AntialiasLevel;
+    auto _marshal0 = ::RenderContextSettings();
+    _marshal0.bitsPerPixel = (uint16)_0.BitsPerPixel;
+    _marshal0.depthBits = (uint16)_0.DepthBits;
+    _marshal0.stencilBits = (uint16)_0.StencilBits;
+    _marshal0.antialiasLevel = (uint16)_0.AntialiasLevel;
 
+    auto arg0 = _marshal0;
     auto ret = ((::Window*)NativePtr)->createContext(arg0);
     return gcnew Flood::RenderContext((::RenderContext*)ret);
 }
@@ -89,7 +90,7 @@ bool Flood::Window::PumpEvents()
 
 void Flood::Window::SetTitle(System::String^ title)
 {
-    auto arg0 = marshalString<E_UTF8>(title);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(title);
     ((::Window*)NativePtr)->setTitle(arg0);
 }
 

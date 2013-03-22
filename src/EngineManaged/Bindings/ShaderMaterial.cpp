@@ -15,12 +15,12 @@ using namespace System::Runtime::InteropServices;
 using namespace clix;
 
 Flood::ShaderMaterial::ShaderMaterial(::ShaderMaterial* native)
-    : Resource(native)
+    : Flood::Resource(native)
 {
 }
 
 Flood::ShaderMaterial::ShaderMaterial(System::IntPtr native)
-    : Resource(native)
+    : Flood::Resource(native)
 {
     auto __native = (::ShaderMaterial*)native.ToPointer();
 }

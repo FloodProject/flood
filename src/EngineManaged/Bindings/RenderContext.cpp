@@ -77,3 +77,23 @@ Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
     return Flood::Color((::Color*)&ret);
 }
 
+bool Flood::RenderContext::InitDone::get()
+{
+    return ((::RenderContext*)NativePtr)->initDone;
+}
+
+void Flood::RenderContext::InitDone::set(bool value)
+{
+    ((::RenderContext*)NativePtr)->initDone = value;
+}
+
+Flood::RenderTarget^ Flood::RenderContext::CurrentTarget::get()
+{
+    return gcnew Flood::RenderTarget((::RenderTarget*)((::RenderContext*)NativePtr)->currentTarget);
+}
+
+void Flood::RenderContext::CurrentTarget::set(Flood::RenderTarget^ value)
+{
+    ((::RenderContext*)NativePtr)->currentTarget = (::RenderTarget*)value->NativePtr;
+}
+

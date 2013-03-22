@@ -28,8 +28,8 @@ namespace Flood
         float X;
         float Y;
         float Z;
-        Flood::EulerAngles operator+=(Flood::EulerAngles _86);
-        Flood::EulerAngles operator+=(Flood::Vector3 _87);
+        Flood::EulerAngles operator+=(Flood::EulerAngles _0);
+        Flood::EulerAngles operator+=(Flood::Vector3 _0);
         void Rotate(float x, float y, float z);
         void Identity();
     };
