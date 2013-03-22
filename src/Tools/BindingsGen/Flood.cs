@@ -58,6 +58,8 @@ namespace Flood
             lib.IgnoreFunctionWithName("ReflectionSetHandleContext");
             lib.IgnoreFunctionWithName("SerializerCreateJSON");
             lib.IgnoreFunctionWithName("SerializerCreateBinary");
+            lib.IgnoreClassWithName("ReflectionContext");
+            lib.IgnoreClassWithName("ValueContext");
 
             lib.SetClassAsValueType("ExtensionMetadata");
 
@@ -73,6 +75,7 @@ namespace Flood
             lib.SetClassAsValueType("EulerAngles");
             lib.SetClassAsValueType("QuaternionP");
             lib.SetClassAsValueType("Quaternion");
+            lib.SetClassAsValueType("Matrix4x3");
             lib.SetClassAsValueType("Matrix4x4");
 
             lib.IgnoreClassWithName("ColorP");
@@ -80,6 +83,8 @@ namespace Flood
             lib.IgnoreClassWithName("Vector3P");
             lib.IgnoreClassWithName("QuaternionP");
 
+            lib.SetNameOfClassMethod("Matrix4x3", "identity", "setIdentity");
+            lib.SetNameOfClassMethod("Matrix4x4", "identity", "setIdentity");
             lib.SetNameOfClassMethod("Quaternion", "identity", "setIdentity");
             lib.SetNameOfClassMethod("Vector2", "zero", "setZero");
             lib.SetNameOfClassMethod("Vector3", "zero", "setZero");
@@ -143,11 +148,11 @@ namespace Flood
                     "Graphics/RenderContext.h",
                     "Graphics/RenderDevice.h",
                     "Graphics/RenderBatch.h",
+                    "Graphics/RenderQueue.h",
                     "Graphics/RenderTarget.h",
                     "Graphics/RenderView.h",
                     "Graphics/Texture.h",
                     "Engine/Engine.h",
-
                     "Engine/Window/Window.h",
                     "Engine/Window/WindowManager.h",
                     "Engine/Input/InputManager.h",
