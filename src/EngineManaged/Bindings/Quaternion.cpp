@@ -17,11 +17,19 @@ using namespace clix;
 
 Flood::Quaternion::Quaternion(::Quaternion* native)
 {
+    X = native->x;
+    Y = native->y;
+    Z = native->z;
+    W = native->w;
 }
 
 Flood::Quaternion::Quaternion(System::IntPtr native)
 {
     auto __native = (::Quaternion*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
+    Z = __native->z;
+    W = __native->w;
 }
 
 Flood::Quaternion::Quaternion(float u)
@@ -40,6 +48,10 @@ bool Flood::Quaternion::operator==(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = q.X;
+    _marshal0.y = q.Y;
+    _marshal0.z = q.Z;
+    _marshal0.w = q.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator==(arg0);
@@ -50,6 +62,10 @@ bool Flood::Quaternion::operator!=(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = q.X;
+    _marshal0.y = q.Y;
+    _marshal0.z = q.Z;
+    _marshal0.w = q.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator!=(arg0);
@@ -66,6 +82,10 @@ Flood::Quaternion Flood::Quaternion::Conjugate(Flood::Quaternion q)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = q.X;
+    _marshal0.y = q.Y;
+    _marshal0.z = q.Z;
+    _marshal0.w = q.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->conjugate(arg0);
@@ -76,6 +96,10 @@ Flood::Quaternion Flood::Quaternion::operator*(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = a.X;
+    _marshal0.y = a.Y;
+    _marshal0.z = a.Z;
+    _marshal0.w = a.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
@@ -86,6 +110,10 @@ Flood::Quaternion Flood::Quaternion::operator*=(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = a.X;
+    _marshal0.y = a.Y;
+    _marshal0.z = a.Z;
+    _marshal0.w = a.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator*=(arg0);
@@ -127,6 +155,9 @@ void Flood::Quaternion::SetToRotateAboutAxis(Flood::Vector3 axis, float theta)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = axis.X;
+    _marshal0.y = axis.Y;
+    _marshal0.z = axis.Z;
 
     auto arg0 = _marshal0;
     this0->setToRotateAboutAxis(arg0, theta);
@@ -157,6 +188,10 @@ float Flood::Quaternion::Dot(Flood::Quaternion a)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = a.X;
+    _marshal0.y = a.Y;
+    _marshal0.z = a.Z;
+    _marshal0.w = a.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->dot(arg0);
@@ -174,6 +209,10 @@ Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
 {
     auto this0 = (::Quaternion*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = q.X;
+    _marshal0.y = q.Y;
+    _marshal0.z = q.Z;
+    _marshal0.w = q.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->slerp(arg0, t);

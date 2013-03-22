@@ -80,6 +80,9 @@ Flood::Vector3 Flood::Matrix4x3::operator*(Flood::Vector3 p)
 {
     auto this0 = (::Matrix4x3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = p.X;
+    _marshal0.y = p.Y;
+    _marshal0.z = p.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
@@ -149,6 +152,9 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateTranslation(Flood::Vector3 translate)
 {
     auto this0 = (::Matrix4x3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = translate.X;
+    _marshal0.y = translate.Y;
+    _marshal0.z = translate.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->createTranslation(arg0);
@@ -172,6 +178,9 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateScale(Flood::Vector3 scale)
 {
     auto this0 = (::Matrix4x3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = scale.X;
+    _marshal0.y = scale.Y;
+    _marshal0.z = scale.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->createScale(arg0);
@@ -182,6 +191,10 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateFromQuaternion(Flood::Quaternion q)
 {
     auto this0 = (::Matrix4x3*) 0;
     auto _marshal0 = ::Quaternion();
+    _marshal0.x = q.X;
+    _marshal0.y = q.Y;
+    _marshal0.z = q.Z;
+    _marshal0.w = q.W;
 
     auto arg0 = _marshal0;
     auto ret = this0->createFromQuaternion(arg0);

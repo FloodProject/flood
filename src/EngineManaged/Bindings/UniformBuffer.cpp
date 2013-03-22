@@ -81,6 +81,9 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Vector3 vec)
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
     auto _marshal1 = ::Vector3();
+    _marshal1.x = vec.X;
+    _marshal1.y = vec.Y;
+    _marshal1.z = vec.Z;
 
     auto arg1 = _marshal1;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);

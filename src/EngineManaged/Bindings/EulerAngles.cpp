@@ -50,6 +50,9 @@ Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _0)
 {
     auto this0 = (::EulerAngles*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = _0.X;
+    _marshal0.y = _0.Y;
+    _marshal0.z = _0.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator+=(arg0);

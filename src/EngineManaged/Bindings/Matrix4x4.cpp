@@ -110,6 +110,9 @@ Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 {
     auto this0 = (::Matrix4x4*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);

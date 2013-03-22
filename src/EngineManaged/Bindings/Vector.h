@@ -24,6 +24,9 @@ namespace Flood
         Vector3(System::IntPtr native);
         Vector3(float v);
         Vector3(float a, float b, float c);
+        float X;
+        float Y;
+        float Z;
         bool operator==(Flood::Vector3 v);
         bool operator!=(Flood::Vector3 v);
         bool operator<(Flood::Vector3 rhs);
@@ -95,6 +98,8 @@ namespace Flood
         Vector2(::Vector2* native);
         Vector2(System::IntPtr native);
         Vector2(float x, float y);
+        float X;
+        float Y;
         bool operator==(Flood::Vector2 v);
         bool operator!=(Flood::Vector2 v);
         bool operator<(Flood::Vector2 rhs);

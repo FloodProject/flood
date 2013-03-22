@@ -15,11 +15,17 @@ using namespace clix;
 
 Flood::Vector3::Vector3(::Vector3* native)
 {
+    X = native->x;
+    Y = native->y;
+    Z = native->z;
 }
 
 Flood::Vector3::Vector3(System::IntPtr native)
 {
     auto __native = (::Vector3*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
+    Z = __native->z;
 }
 
 Flood::Vector3::Vector3(float v)
@@ -34,6 +40,9 @@ bool Flood::Vector3::operator==(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator==(arg0);
@@ -44,6 +53,9 @@ bool Flood::Vector3::operator!=(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator!=(arg0);
@@ -54,6 +66,9 @@ bool Flood::Vector3::operator<(Flood::Vector3 rhs)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = rhs.X;
+    _marshal0.y = rhs.Y;
+    _marshal0.z = rhs.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator<(arg0);
@@ -64,6 +79,9 @@ bool Flood::Vector3::operator>(Flood::Vector3 rhs)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = rhs.X;
+    _marshal0.y = rhs.Y;
+    _marshal0.z = rhs.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator>(arg0);
@@ -74,6 +92,9 @@ Flood::Vector3 Flood::Vector3::operator+(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator+(arg0);
@@ -84,6 +105,9 @@ Flood::Vector3 Flood::Vector3::operator+=(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator+=(arg0);
@@ -101,6 +125,9 @@ Flood::Vector3 Flood::Vector3::operator-(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator-(arg0);
@@ -111,6 +138,9 @@ Flood::Vector3 Flood::Vector3::operator-=(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator-=(arg0);
@@ -128,6 +158,9 @@ Flood::Vector3 Flood::Vector3::operator*(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
@@ -179,6 +212,9 @@ float Flood::Vector3::Dot(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->dot(arg0);
@@ -189,6 +225,9 @@ Flood::Vector3 Flood::Vector3::Cross(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->cross(arg0);
@@ -199,6 +238,9 @@ float Flood::Vector3::Distance(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->distance(arg0);
@@ -209,6 +251,9 @@ Flood::Vector3 Flood::Vector3::Project(Flood::Vector3 v)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
+    _marshal0.z = v.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->project(arg0);
@@ -219,6 +264,9 @@ Flood::Vector3 Flood::Vector3::Lerp(Flood::Vector3 vec, float blend)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = vec.X;
+    _marshal0.y = vec.Y;
+    _marshal0.z = vec.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->lerp(arg0, blend);
@@ -229,6 +277,9 @@ Flood::Vector3 Flood::Vector3::Serp(Flood::Vector3 vec, float t)
 {
     auto this0 = (::Vector3*) 0;
     auto _marshal0 = ::Vector3();
+    _marshal0.x = vec.X;
+    _marshal0.y = vec.Y;
+    _marshal0.z = vec.Z;
 
     auto arg0 = _marshal0;
     auto ret = this0->serp(arg0, t);
@@ -440,11 +491,15 @@ void Flood::Vector4::SetZero()
 
 Flood::Vector2::Vector2(::Vector2* native)
 {
+    X = native->x;
+    Y = native->y;
 }
 
 Flood::Vector2::Vector2(System::IntPtr native)
 {
     auto __native = (::Vector2*)native.ToPointer();
+    X = __native->x;
+    Y = __native->y;
 }
 
 Flood::Vector2::Vector2(float x, float y)
@@ -455,6 +510,8 @@ bool Flood::Vector2::operator==(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator==(arg0);
@@ -465,6 +522,8 @@ bool Flood::Vector2::operator!=(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator!=(arg0);
@@ -475,6 +534,8 @@ bool Flood::Vector2::operator<(Flood::Vector2 rhs)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = rhs.X;
+    _marshal0.y = rhs.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator<(arg0);
@@ -485,6 +546,8 @@ bool Flood::Vector2::operator>(Flood::Vector2 rhs)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = rhs.X;
+    _marshal0.y = rhs.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator>(arg0);
@@ -495,6 +558,8 @@ Flood::Vector2 Flood::Vector2::operator+(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator+(arg0);
@@ -505,6 +570,8 @@ Flood::Vector2 Flood::Vector2::operator+=(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator+=(arg0);
@@ -522,6 +589,8 @@ Flood::Vector2 Flood::Vector2::operator-(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator-(arg0);
@@ -532,6 +601,8 @@ Flood::Vector2 Flood::Vector2::operator-=(Flood::Vector2 v)
 {
     auto this0 = (::Vector2*) 0;
     auto _marshal0 = ::Vector2();
+    _marshal0.x = v.X;
+    _marshal0.y = v.Y;
 
     auto arg0 = _marshal0;
     auto ret = this0->operator-=(arg0);

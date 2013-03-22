@@ -78,6 +78,10 @@ namespace Flood
             lib.SetClassAsValueType("Matrix4x3");
             lib.SetClassAsValueType("Matrix4x4");
 
+            lib.CopyClassFields("Vector2P", "Vector2");
+            lib.CopyClassFields("Vector3P", "Vector3");
+            lib.CopyClassFields("QuaternionP", "Quaternion");
+
             lib.IgnoreClassWithName("ColorP");
             lib.IgnoreClassWithName("Vector2P");
             lib.IgnoreClassWithName("Vector3P");

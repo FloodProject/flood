@@ -24,6 +24,10 @@ namespace Flood
         Quaternion(float u);
         Quaternion(float a, float b, float c, float d);
         Quaternion(Flood::EulerAngles angles);
+        float X;
+        float Y;
+        float Z;
+        float W;
         bool operator==(Flood::Quaternion q);
         bool operator!=(Flood::Quaternion q);
         void SetIdentity();
