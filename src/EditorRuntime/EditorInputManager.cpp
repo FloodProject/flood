@@ -210,7 +210,7 @@ static Keys ConvertFromWxKey( int keyCode )
 	default:
 		LogWarn( "Could not map wxWidgets keycode: Invalid keycode" );
 		return Keys::Escape;
-	}	
+	}
 }
 
 //-----------------------------------//
