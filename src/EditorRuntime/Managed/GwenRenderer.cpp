@@ -2,6 +2,8 @@
 #include "Editor/API.h"
 #include "Graphics/GeometryBuffer.h"
 #include "Engine/Geometry/Quad.h"
+#include "Engine/Resources/TrueTypeFont.h"
+#include "Engine/Texture/TextureAtlas.h"
 #include "CLIInterop.h"
 #include <vcclr.h>
 
@@ -92,10 +94,10 @@ public:
 
 	void addRectangle(System::Drawing::Rectangle rect, System::Drawing::Color color)
 	{
-		addRectangle(rect,Vector2::Zero,Vector2::Zero, 0, color);
+		addRectangle(rect,Vector2::Zero,Vector2::Zero,Vector2::Zero,Vector2::Zero, 0, color);
 	}
 
-	void addRectangle(System::Drawing::Rectangle rect, Vector2 uv1, Vector2 uv2, ImageHandle imageHandle, System::Drawing::Color color)
+	void addRectangle(System::Drawing::Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV, ImageHandle imageHandle, System::Drawing::Color color)
 	{
 		BatchInfo& batchInfo = GetCreateBatchInfo(imageHandle); 
 		batchInfo.ranges.push_back(gb->getNumVertices());
@@ -122,10 +124,10 @@ public:
 		v3.color = c;
 		v4.color = c;
 
-		v1.uv = uv1;
-		v2.uv = Vector2(uv2.x, uv1.y);
-		v3.uv = uv2;
-		v4.uv = Vector2(uv1.x, uv2.y);
+		v1.uv = topLeftUV;
+		v2.uv = topRightUV;
+		v3.uv = bottomRightUV;
+		v4.uv = bottomLeftUV;;
 		
 		// Vertex buffer setup
 		gb->add((uint8*)&v1,sizeof(Vertex));
@@ -196,19 +198,89 @@ public:
 	}
 };
 
+ref class TextRenderer;
+
+public ref class GwenRenderer : Flood::GUI::Renderers::Renderer {
+		
+	ManagedGeometryBuffer* buffer;
+
+	System::Drawing::Color m_Color;
+	System::Collections::Generic::Dictionary<System::Tuple<System::String^, Flood::GUI::Font^>^, TextRenderer^>^ m_StringCache;
+	
+	bool m_ClipEnabled;
+
+public:
+	GwenRenderer() : Flood::GUI::Renderers::Renderer()
+	{
+		
+		buffer = AllocateHeap(ManagedGeometryBuffer);
+	}
+
+	void Render(RenderBlock& rb){
+		buffer->Render(rb);
+	}
+
+	void Clear(){
+		buffer->Clear();
+	}
+	
+
+	virtual void DrawFilledRect(System::Drawing::Rectangle rect) override
+	{
+		rect = Translate(rect);
+
+		buffer->addRectangle(rect, m_Color);
+	}
+	
+	property virtual System::Drawing::Color DrawColor 
+	{
+		System::Drawing::Color get() override { return m_Color; }
+		void set (System::Drawing::Color value) override  { m_Color = value;}
+	}
+
+	virtual void StartClip() override;
+
+	virtual void EndClip() override;
+
+	virtual void DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, float u1, float u2, float v1, float v2) override;
+
+    void DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV);
+
+	virtual System::Drawing::Point MeasureText(Flood::GUI::Font^ font, System::String^ text) override;
+
+	virtual void RenderText(Flood::GUI::Font^ font, System::Drawing::Point position, System::String^ text) override;
+	
+	virtual void LoadTexture(Flood::GUI::Texture^ t) override;
+
+	virtual void LoadTextureBitmap(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bitmap) override;
+
+	virtual void FreeTexture(Flood::GUI::Texture^ t) override;
+
+	virtual System::Drawing::Color PixelColor(Flood::GUI::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override;
+	
+};
+
 public ref class TextRenderer
 {
 	typedef System::Collections::Generic::Dictionary<System::Tuple<System::String^, Flood::GUI::Font^>^, Flood::GUI::Texture^> StringTextureCache;
+    
+    static ::TextureAtlas* textureAtlas;
+    static ::TrueTypeFont* font;
 
 	static System::Drawing::StringFormat^ m_StringFormat;
 	static System::Drawing::Graphics^ m_Graphics; // only used for text measurement
 	static StringTextureCache^ m_StringCache = gcnew StringTextureCache();
 
+    static Flood::GUI::Font^ tmpFont;
+
 	static TextRenderer(){
 		m_StringFormat = gcnew System::Drawing::StringFormat(System::Drawing::StringFormat::GenericTypographic);
 		m_StringFormat->FormatFlags = m_StringFormat->FormatFlags | System::Drawing::StringFormatFlags::MeasureTrailingSpaces;
 		m_Graphics = System::Drawing::Graphics::FromImage(gcnew System::Drawing::Bitmap(1024, 1024, System::Drawing::Imaging::PixelFormat::Format32bppArgb));
-	}
+	
+        textureAtlas = new ::TextureAtlas(512);
+        font = new ::TrueTypeFont("");
+    }
 
 	static bool LoadFont(Flood::GUI::Font^ font)
 	{
@@ -223,6 +295,9 @@ public ref class TextRenderer
 		// "If you attempt to use a font that is not supported, or the font is not installed on the machine that is running the application, the Microsoft Sans Serif font will be substituted."
 		sysFont = gcnew System::Drawing::Font(font->FaceName, font->Size);
 		font->RendererData = sysFont; 
+
+        tmpFont = font;
+
 		return true;
 	}
 
@@ -315,9 +390,83 @@ public:
 
 		gfx->DrawString(text, sysFont, brush, System::Drawing::Point::Empty, m_StringFormat); // render text on the bitmap
 		TextureUtil::LoadTextureInternal(texture,bmp);
-		AddTexture(font,text,texture);
+        AddTexture(font,text,texture);
+
 		return texture;
 	}
+
+    static void DrawText(GwenRenderer^ renderer, System::Drawing::Point position, System::String^ text)
+    {
+        for(int i = 0; i < text->Length; i++)
+        {
+            char c = text[i];
+            Glyph glyph;
+            bool foundGlyph = TextRenderer::font->getGlyph(c,glyph);
+            if(!foundGlyph)
+                printf("glyph not Found\n");;
+
+            if (glyph.image != HandleInvalid)
+            {
+                SubTexture subTexture;
+                bool subTextureFound = TextRenderer::textureAtlas->getImageSubTexture(glyph.image,subTexture);
+                if(!subTextureFound){
+                    TextRenderer::textureAtlas->addImage(glyph.image);
+                    subTextureFound = TextRenderer::textureAtlas->getImageSubTexture(glyph.image,subTexture);
+                    if(!subTextureFound){
+                        printf("subTexture not Found\n");
+                        return;
+                    }
+                }
+
+                ImageHandle atlasImageHandle = TextRenderer::textureAtlas->getAtlasImageHandle();
+                Image* atlasImage = atlasImageHandle.Resolve();
+
+                Flood::GUI::Texture^ texture = gcnew Flood::GUI::Texture(renderer);
+                texture->Width = atlasImage->getWidth();
+                texture->Height = atlasImage->getHeight();
+                texture->RendererData = atlasImageHandle.getId();
+
+                Image* glyphImage = glyph.image.Resolve();
+
+                System::Drawing::Rectangle renderRect = System::Drawing::Rectangle(position.X, position.Y + glyph.baseLineOffset, glyphImage->getWidth(), glyphImage->getHeight());
+
+                Vector2 topLeftUV, topRightUV, bottomLeftUV, bottomRightUV;
+
+                Rect& rect = subTexture.rect;
+            
+                float width = atlasImage->getWidth();
+                float height = atlasImage->getHeight();
+                float u1 = rect.x/width;
+                float v1 = rect.y/height;
+                float u2 = (rect.x+rect.width)/width;
+                float v2 = (rect.y+rect.height)/height;
+
+                if(!subTexture.isRotated)
+                {
+                    topLeftUV = Vector2(u1,v1);
+                    topRightUV = Vector2(u2,v1);
+                    bottomLeftUV = Vector2(u1,v2);
+                    bottomRightUV = Vector2(u2,v2);
+                }
+                else
+                {
+                    topLeftUV = Vector2(u1,v2);
+                    topRightUV = Vector2(u1,v1);
+                    bottomLeftUV = Vector2(u2,v2);
+                    bottomRightUV = Vector2(u2,v1);
+                }
+
+                renderer->DrawTexturedRect(texture,renderRect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV);
+                delete texture;
+            }
+
+            if (i < text->Length-1){
+                Vector2i kern = TextRenderer::font->getKerning(text[i],text[i+1]);
+                position.X += glyph.advance + kern.x;
+                position.Y += kern.y;
+            }
+        }
+    }
 
 	static System::Drawing::Point MeasureText(System::String^ text, Flood::GUI::Font^ font)
 	{
@@ -328,58 +477,19 @@ public:
 
 };
 
-public ref class GwenRenderer : Flood::GUI::Renderers::Renderer {
-		
-	ManagedGeometryBuffer* buffer;
-
-	System::Drawing::Color m_Color;
-	System::Collections::Generic::Dictionary<System::Tuple<System::String^, Flood::GUI::Font^>^, TextRenderer^>^ m_StringCache;
-	
-	bool m_ClipEnabled;
-
-public:
-	GwenRenderer() : Flood::GUI::Renderers::Renderer()
-	{
-		
-		buffer = AllocateHeap(ManagedGeometryBuffer);
-	}
-
-	void Render(RenderBlock& rb){
-		buffer->Render(rb);
-	}
-
-	void Clear(){
-		buffer->Clear();
-	}
-	
-
-	virtual void DrawFilledRect(System::Drawing::Rectangle rect) override
-	{
-		rect = Translate(rect);
-
-		buffer->addRectangle(rect, m_Color);
-	}
-	
-	property virtual System::Drawing::Color DrawColor 
-	{
-		System::Drawing::Color get() override { return m_Color; }
-		void set (System::Drawing::Color value) override  { m_Color = value;}
-	}
-
-
-	virtual void StartClip() override
+	void GwenRenderer::StartClip()
 	{
 		m_ClipEnabled = true;
 	}
 
-	virtual void EndClip() override
+	void GwenRenderer::EndClip()
 	{
 		m_ClipEnabled = false;
 	}
 
-	virtual void DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2) override
+	void GwenRenderer::DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, float u1, float v1, float u2, float v2)
 	{
-		if(t->RendererData == nullptr){
+        if(t->RendererData == nullptr){
 			DrawFilledRect(rect);
 		}
 
@@ -389,7 +499,7 @@ public:
 
 		rect = Translate(rect);
 
-		if (m_ClipEnabled)
+        if (m_ClipEnabled)
 		{
 			// cpu scissors test
 			if (rect.Y < ClipRegion.Y)
@@ -461,21 +571,38 @@ public:
 			}
 		}
 
-		buffer->addRectangle(rect,Vector2(u1,v1), Vector2(u2,v2), iHandle, m_Color);
+		buffer->addRectangle(rect, Vector2(u1,v1), Vector2(u2,v1),Vector2(u1,v2),Vector2(u2,v2), iHandle, m_Color);
 	}
 
-	virtual System::Drawing::Point MeasureText(Flood::GUI::Font^ font, System::String^ text) override
+    void GwenRenderer::DrawTexturedRect(Flood::GUI::Texture^ t, System::Drawing::Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
+	{
+		if(t->RendererData == nullptr){
+			DrawFilledRect(rect);
+		}
+
+		ImageHandle iHandle;
+		HandleId hId = (HandleId)t->RendererData;
+		iHandle.setId(hId);
+
+		rect = Translate(rect);
+
+		buffer->addRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, iHandle, m_Color);
+	}
+
+	System::Drawing::Point GwenRenderer::MeasureText(Flood::GUI::Font^ font, System::String^ text)
 	{
 		return TextRenderer::MeasureText(text,font);
 	}
 
-	virtual void RenderText(Flood::GUI::Font^ font, System::Drawing::Point position, System::String^ text) override
+	void GwenRenderer::RenderText(Flood::GUI::Font^ font, System::Drawing::Point position, System::String^ text)
 	{
-	   Flood::GUI::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
-	   DrawTexturedRect(texture, System::Drawing::Rectangle(position.X, position.Y, texture->Width, texture->Height),0,0,1,1);
-	}
+	   //Flood::GUI::Texture^ texture = TextRenderer::StringToTexture(text, font, this); // renders string on the texture
+	   //DrawTexturedRect(texture, System::Drawing::Rectangle(position.X, position.Y, texture->Width, texture->Height),0,0,1,1);
 	
-	virtual void LoadTexture(Flood::GUI::Texture^ t) override
+       TextRenderer::DrawText(this,position,text);
+    }
+	
+	void GwenRenderer::LoadTexture(Flood::GUI::Texture^ t)
 	{
 		ResourceLoadOptions options; 
 		options.name = clix::marshalString<clix::E_UTF8>(t->Name);
@@ -493,12 +620,12 @@ public:
 		t->RendererData = iHandle.getId();
 	}
 
-	virtual void LoadTextureBitmap(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bitmap) override
+	void GwenRenderer::LoadTextureBitmap(Flood::GUI::Texture^ t, System::Drawing::Bitmap^ bitmap)
 	{
 		TextureUtil::LoadTextureInternal(t,bitmap);
 	}
 
-	virtual void FreeTexture(Flood::GUI::Texture^ t) override
+	void GwenRenderer::FreeTexture(Flood::GUI::Texture^ t)
 	{
 		if (t->RendererData == nullptr)
 			return;
@@ -512,7 +639,7 @@ public:
 		GetResourceManager()->removeResource(img);
 	}
 
-	virtual System::Drawing::Color PixelColor(Flood::GUI::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor) override
+	System::Drawing::Color GwenRenderer::PixelColor(Flood::GUI::Texture^ texture, System::UInt32 x, System::UInt32 y, System::Drawing::Color defaultColor)
 	{
 		if(texture->RendererData == nullptr){
 			return defaultColor;
@@ -536,7 +663,7 @@ public:
 		// - only during initialization.
 		return pixel;
 	}
-};
+
 
 class GwenInput
 {
