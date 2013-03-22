@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Editor.Client.Extensions;
 using Flood.GUI;
 using Flood.GUI.Controls;
@@ -48,14 +45,14 @@ namespace Editor.Client.GUI.Controls
                 var menuItem = menuChild as MenuItemNode;
                 if(menuItem != null)
                 {
-                    menuControl.Menu.AddItem(menuItem.Label);
+                    var mControl = menuControl.Menu.AddItem(menuItem.Label);
+                    mControl.Clicked += control => menuItem.RunCommand(); 
                     continue;
                 } 
 
                 var submenu = menuChild as SubmenuNode;
                 if (submenu != null)
                 {
-                    //menuControl.
                     //BuildSubmenu(submenu);
                     continue;
                 } 
@@ -65,8 +62,6 @@ namespace Editor.Client.GUI.Controls
                      menuControl.Menu.AddDivider();
                     continue;
                 }
-
-               
 
                 throw new NotImplementedException();
             }
