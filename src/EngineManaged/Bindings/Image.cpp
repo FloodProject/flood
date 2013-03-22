@@ -12,6 +12,7 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "Stream.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -85,6 +86,36 @@ bool Flood::Image::IsCompressed()
     return ret;
 }
 
+void Flood::Image::SetBuffer(System::IntPtr data, unsigned int size)
+{
+    auto arg0 = (uint8*)data.ToPointer();
+    auto arg1 = (uint)(uint32)size;
+    ((::Image*)NativePtr)->setBuffer(arg0, arg1);
+}
+
+void Flood::Image::SetBuffer(Flood::Image^ image, Flood::Vector2i offset)
+{
+    auto arg0 = (::Image*)image->NativePtr;
+    auto _marshal1 = ::Vector2i();
+    _marshal1.x = (int32)offset.X;
+    _marshal1.y = (int32)offset.Y;
+
+    auto arg1 = _marshal1;
+    ((::Image*)NativePtr)->setBuffer(arg0, arg1);
+}
+
+unsigned int Flood::Image::GetPixelSize()
+{
+    auto ret = ((::Image*)NativePtr)->getPixelSize();
+    return ret;
+}
+
+unsigned int Flood::Image::GetSize()
+{
+    auto ret = ((::Image*)NativePtr)->getSize();
+    return ret;
+}
+
 Flood::ResourceGroup Flood::Image::GetResourceGroup()
 {
     auto ret = ((::Image*)NativePtr)->getResourceGroup();
@@ -112,6 +143,12 @@ void Flood::Image::Create(unsigned int width, unsigned int height, Flood::PixelF
     ((::Image*)NativePtr)->create(arg0, arg1, arg2);
 }
 
+unsigned int Flood::Image::GetTimestamp()
+{
+    auto ret = ((::Image*)NativePtr)->getTimestamp();
+    return ret;
+}
+
 Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2)
 {
     auto arg0 = (::Allocator*)_1->NativePtr;
@@ -120,36 +157,6 @@ Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _1, 
     auto arg3 = (::PixelFormat)_2;
     auto ret = ::ImageCreate(arg0, arg1, arg2, arg3);
     return Flood::ResourceHandle<Flood::Image^>(ret.id);
-}
-
-unsigned int Flood::Image::Width::get()
-{
-    return ((::Image*)NativePtr)->width;
-}
-
-void Flood::Image::Width::set(unsigned int value)
-{
-    ((::Image*)NativePtr)->width = (uint32)value;
-}
-
-unsigned int Flood::Image::Height::get()
-{
-    return ((::Image*)NativePtr)->height;
-}
-
-void Flood::Image::Height::set(unsigned int value)
-{
-    ((::Image*)NativePtr)->height = (uint32)value;
-}
-
-Flood::PixelFormat Flood::Image::Format::get()
-{
-    return (Flood::PixelFormat)((::Image*)NativePtr)->format;
-}
-
-void Flood::Image::Format::set(Flood::PixelFormat value)
-{
-    ((::Image*)NativePtr)->format = (::PixelFormat)value;
 }
 
 Flood::ImageWriter::ImageWriter(::ImageWriter* native)

@@ -78,6 +78,17 @@ unsigned int Flood::Texture::GetExpectedSize()
     return ret;
 }
 
+bool Flood::Texture::IsUploaded()
+{
+    auto ret = ((::Texture*)NativePtr)->isUploaded();
+    return ret;
+}
+
+void Flood::Texture::SetUploaded()
+{
+    ((::Texture*)NativePtr)->setUploaded();
+}
+
 unsigned int Flood::Texture::Id::get()
 {
     return ((::Texture*)NativePtr)->id;
@@ -96,16 +107,6 @@ Flood::TextureTarget Flood::Texture::Target::get()
 void Flood::Texture::Target::set(Flood::TextureTarget value)
 {
     ((::Texture*)NativePtr)->target = (::TextureTarget)value;
-}
-
-bool Flood::Texture::Uploaded::get()
-{
-    return ((::Texture*)NativePtr)->uploaded;
-}
-
-void Flood::Texture::Uploaded::set(bool value)
-{
-    ((::Texture*)NativePtr)->uploaded = value;
 }
 
 unsigned short Flood::Texture::Width::get()

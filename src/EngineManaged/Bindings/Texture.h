@@ -75,11 +75,6 @@ namespace Flood
             Flood::TextureTarget get();
             void set(Flood::TextureTarget);
         }
-        property bool Uploaded
-        {
-            bool get();
-            void set(bool);
-        }
         property unsigned short Width
         {
             unsigned short get();
@@ -112,6 +107,8 @@ namespace Flood
         void SetImage(Flood::Image^ image);
         Flood::Image^ ReadImage();
         unsigned int GetExpectedSize();
+        bool IsUploaded();
+        void SetUploaded();
     };
 
     public ref class TextureUnit

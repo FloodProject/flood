@@ -24,6 +24,7 @@ namespace Flood
     ref class Resource;
     ref class Stream;
     value struct Color;
+    value struct Vector2i;
 
     /// <summary>
     /// Possible pixel formats for an image.
@@ -55,21 +56,6 @@ namespace Flood
         Image(System::IntPtr native);
         Image();
         Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        property unsigned int Width
-        {
-            unsigned int get();
-            void set(unsigned int);
-        }
-        property unsigned int Height
-        {
-            unsigned int get();
-            void set(unsigned int);
-        }
-        property Flood::PixelFormat Format
-        {
-            Flood::PixelFormat get();
-            void set(Flood::PixelFormat);
-        }
         unsigned int GetWidth();
         void SetWidth(unsigned int v);
         unsigned int GetHeight();
@@ -77,10 +63,15 @@ namespace Flood
         Flood::PixelFormat GetPixelFormat();
         void SetPixelFormat(Flood::PixelFormat v);
         bool IsCompressed();
+        void SetBuffer(System::IntPtr data, unsigned int size);
+        void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
+        unsigned int GetPixelSize();
+        unsigned int GetSize();
         Flood::ResourceGroup GetResourceGroup();
         void SetColor(Flood::Color color);
         void Log();
         void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
+        unsigned int GetTimestamp();
         static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2);
     };
 
