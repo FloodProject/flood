@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Editor.Client.Commands;
-using Flood.GUI;
 using Flood.GUI.Controls;
 using Mono.Addins;
 
@@ -16,12 +11,12 @@ namespace Editor.Client.Extensions
     }
 
     public class ToolButtonNode: ToolNode
-	{
-		[NodeAttribute]
-		string icon;
-		
-		[NodeAttribute]
-		string commandType;
+    {
+        [NodeAttribute]
+        string icon;
+        
+        [NodeAttribute]
+        string commandType;
 
         public override Control CreateControl(Control parent)
         {
@@ -39,19 +34,19 @@ namespace Editor.Client.Extensions
         }
 
         void OnClicked()
-		{
-			ICommand command = (ICommand) Addin.CreateInstance (commandType);
-			command.Run ();
-		}
-	}
+        {
+            ICommand command = (ICommand) Addin.CreateInstance (commandType);
+            command.Run ();
+        }
+    }
 
     public class ToolSeparatorNode: ToolNode
-	{
+    {
 
         public override Control CreateControl(Control parent)
         {
             throw new NotImplementedException();
         }
 
-	}
+    }
 }
