@@ -674,5 +674,4 @@ namespace Editor.Client
             canvas.Input_Key(key, false);
         }
     }
-#endif
 }
