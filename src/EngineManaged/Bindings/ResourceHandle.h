@@ -27,6 +27,8 @@ namespace Flood
         {
         }
 
+        T Resolve();
+
 #if RESOURCE_HANDLE_REF_CLASS
         ResourceHandle() : Id(Invalid)
         {
