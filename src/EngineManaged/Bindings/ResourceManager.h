@@ -142,6 +142,10 @@ namespace Flood
         Flood::ResourceLoader^ FindLoader(System::String^ extension);
         bool GetAsynchronousLoading();
         void SetAsynchronousLoading(bool v);
+        generic<typename T> where T : Flood::Resource
+        Flood::ResourceHandle<T> getResource(System::String^ name);
+        generic<typename T> where T : Flood::Resource
+        Flood::ResourceHandle<T> loadResource(System::String^ name);
     };
 
     public ref class FloodResourceManager

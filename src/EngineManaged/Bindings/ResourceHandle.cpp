@@ -8,14 +8,14 @@
 #include "ResourceHandle.h"
 #include "Resource.h"
 
-generic<typename T> where T : Flood::Resource
+generic<typename T>
 Flood::ResourceHandle<T> Flood::ResourceHandle<T>::Create(T resource)
 {
     auto handle = ResourceHandleCreate(resource->NativePtr);
     return Flood::ResourceHandle<T>(handle.getId());
 }
 
-generic<typename T> where T : Flood::Resource
+generic<typename T>
 T Flood::ResourceHandle<T>::Resolve()
 {
     auto resource = ResourceHandleFind(Id);

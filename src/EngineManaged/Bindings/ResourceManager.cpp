@@ -311,6 +311,22 @@ void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoad
     ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
 }
 
+generic<typename T>
+Flood::ResourceHandle<T> Flood::ResourceManager::getResource(System::String^ name)
+{
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto ret = ((::ResourceManager*)NativePtr)->getResource<::Resource>(arg0);
+    return Flood::ResourceHandle<T>(ret.id);
+}
+
+generic<typename T>
+Flood::ResourceHandle<T> Flood::ResourceManager::loadResource(System::String^ name)
+{
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto ret = ((::ResourceManager*)NativePtr)->loadResource<::Resource>(arg0);
+    return Flood::ResourceHandle<T>(ret.id);
+}
+
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
 {
     auto ret = ::GetResourceManager();
