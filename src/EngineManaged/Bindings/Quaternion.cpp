@@ -34,14 +34,33 @@ Flood::Quaternion::Quaternion(System::IntPtr native)
 
 Flood::Quaternion::Quaternion(float u)
 {
+    auto _native = ::Quaternion(u);
+    this->X = _native.x;
+    this->Y = _native.y;
+    this->Z = _native.z;
+    this->W = _native.w;
 }
 
 Flood::Quaternion::Quaternion(float a, float b, float c, float d)
 {
+    auto _native = ::Quaternion(a, b, c, d);
+    this->X = _native.x;
+    this->Y = _native.y;
+    this->Z = _native.z;
+    this->W = _native.w;
 }
 
 Flood::Quaternion::Quaternion(Flood::EulerAngles angles)
 {
+    auto _marshal0 = ::EulerAngles();
+    _marshal0.x = angles.X;
+    _marshal0.y = angles.Y;
+    _marshal0.z = angles.Z;
+    auto _native = ::Quaternion(_marshal0);
+    this->X = _native.x;
+    this->Y = _native.y;
+    this->Z = _native.z;
+    this->W = _native.w;
 }
 
 bool Flood::Quaternion::operator==(Flood::Quaternion q)
@@ -52,7 +71,6 @@ bool Flood::Quaternion::operator==(Flood::Quaternion q)
     _marshal0.y = q.Y;
     _marshal0.z = q.Z;
     _marshal0.w = q.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator==(arg0);
     return ret;
@@ -66,7 +84,6 @@ bool Flood::Quaternion::operator!=(Flood::Quaternion q)
     _marshal0.y = q.Y;
     _marshal0.z = q.Z;
     _marshal0.w = q.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator!=(arg0);
     return ret;
@@ -86,7 +103,6 @@ Flood::Quaternion Flood::Quaternion::Conjugate(Flood::Quaternion q)
     _marshal0.y = q.Y;
     _marshal0.z = q.Z;
     _marshal0.w = q.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->conjugate(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
@@ -100,7 +116,6 @@ Flood::Quaternion Flood::Quaternion::operator*(Flood::Quaternion a)
     _marshal0.y = a.Y;
     _marshal0.z = a.Z;
     _marshal0.w = a.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
@@ -114,7 +129,6 @@ Flood::Quaternion Flood::Quaternion::operator*=(Flood::Quaternion a)
     _marshal0.y = a.Y;
     _marshal0.z = a.Z;
     _marshal0.w = a.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*=(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
@@ -158,7 +172,6 @@ void Flood::Quaternion::SetToRotateAboutAxis(Flood::Vector3 axis, float theta)
     _marshal0.x = axis.X;
     _marshal0.y = axis.Y;
     _marshal0.z = axis.Z;
-
     auto arg0 = _marshal0;
     this0->setToRotateAboutAxis(arg0, theta);
 }
@@ -192,7 +205,6 @@ float Flood::Quaternion::Dot(Flood::Quaternion a)
     _marshal0.y = a.Y;
     _marshal0.z = a.Z;
     _marshal0.w = a.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->dot(arg0);
     return ret;
@@ -213,7 +225,6 @@ Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
     _marshal0.y = q.Y;
     _marshal0.z = q.Z;
     _marshal0.w = q.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->slerp(arg0, t);
     return Flood::Quaternion((::Quaternion*)&ret);

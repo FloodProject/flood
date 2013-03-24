@@ -58,6 +58,7 @@ namespace Flood
         Flood::Settings GetSettings();
         Flood::RenderContext^ GetContext();
         void SetContext(Flood::RenderContext^ context);
+        System::Collections::Generic::List<Flood::RenderView^>^ GetViews();
         System::IntPtr GetUserData();
         void SetUserData(System::IntPtr v);
     };

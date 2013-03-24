@@ -147,6 +147,11 @@ unsigned int Flood::GeometryBuffer::GetNumIndices()
     return ret;
 }
 
+void Flood::GeometryBuffer::ClearIndexes()
+{
+    ((::GeometryBuffer*)NativePtr)->clearIndexes();
+}
+
 Flood::BufferUsage Flood::GeometryBuffer::Usage::get()
 {
     return (Flood::BufferUsage)((::GeometryBuffer*)NativePtr)->usage;
@@ -165,6 +170,50 @@ Flood::BufferAccess Flood::GeometryBuffer::Access::get()
 void Flood::GeometryBuffer::Access::set(Flood::BufferAccess value)
 {
     ((::GeometryBuffer*)NativePtr)->access = (::BufferAccess)value;
+}
+
+System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::Data::get()
+{
+    auto _tmpData = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : ((::GeometryBuffer*)NativePtr)->data)
+    {
+        auto _marshalElement = _element;
+        _tmpData->Add(_marshalElement);
+    }
+    return _tmpData;
+}
+
+void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigned char>^ value)
+{
+    auto _tmpvalue = std::vector<::uint8>();
+    for each(unsigned char _element in value)
+    {
+        auto _marshalElement = (uint8)_element;
+        _tmpvalue.push_back(_marshalElement);
+    }
+    ((::GeometryBuffer*)NativePtr)->data = _tmpvalue;
+}
+
+System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::IndexData::get()
+{
+    auto _tmpIndexData = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : ((::GeometryBuffer*)NativePtr)->indexData)
+    {
+        auto _marshalElement = _element;
+        _tmpIndexData->Add(_marshalElement);
+    }
+    return _tmpIndexData;
+}
+
+void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<unsigned char>^ value)
+{
+    auto _tmpvalue = std::vector<::uint8>();
+    for each(unsigned char _element in value)
+    {
+        auto _marshalElement = (uint8)_element;
+        _tmpvalue.push_back(_marshalElement);
+    }
+    ((::GeometryBuffer*)NativePtr)->indexData = _tmpvalue;
 }
 
 unsigned char Flood::GeometryBuffer::IndexSize::get()

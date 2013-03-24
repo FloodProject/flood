@@ -85,10 +85,16 @@ namespace Flood
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
         ResourceLoader();
+        property System::Collections::Generic::List<System::String^>^ Extensions
+        {
+            System::Collections::Generic::List<System::String^>^ get();
+            void set(System::Collections::Generic::List<System::String^>^);
+        }
         Flood::ExtensionMetadata GetMetadata();
         Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
         bool Decode(Flood::ResourceLoadOptions _0);
         System::String^ GetName();
         Flood::ResourceGroup GetResourceGroup();
+        System::Collections::Generic::List<System::String^>^ GetExtensions();
     };
 }

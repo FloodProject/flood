@@ -39,6 +39,18 @@ void Flood::InputManager::AddDevice(Flood::InputDevice^ device)
     ((::InputManager*)NativePtr)->addDevice(arg0);
 }
 
+System::Collections::Generic::List<Flood::InputDevice^>^ Flood::InputManager::GetDevices()
+{
+    auto ret = ((::InputManager*)NativePtr)->getDevices();
+    auto _tmpret = gcnew System::Collections::Generic::List<Flood::InputDevice^>();
+    for(auto _element : ret)
+    {
+        auto _marshalElement = gcnew Flood::InputDevice((::InputDevice*)_element);
+        _tmpret->Add(_marshalElement);
+    }
+    return _tmpret;
+}
+
 Flood::Keyboard^ Flood::InputManager::GetKeyboard()
 {
     auto ret = ((::InputManager*)NativePtr)->getKeyboard();

@@ -62,6 +62,8 @@ namespace Flood
         void SetHeight(unsigned int v);
         Flood::PixelFormat GetPixelFormat();
         void SetPixelFormat(Flood::PixelFormat v);
+        System::Collections::Generic::List<unsigned char>^ GetBuffer();
+        void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
         bool IsCompressed();
         void SetBuffer(System::IntPtr data, unsigned int size);
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);

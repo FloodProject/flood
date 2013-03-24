@@ -44,6 +44,16 @@ namespace Flood
             Flood::BufferAccess get();
             void set(Flood::BufferAccess);
         }
+        property System::Collections::Generic::List<unsigned char>^ Data
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+            void set(System::Collections::Generic::List<unsigned char>^);
+        }
+        property System::Collections::Generic::List<unsigned char>^ IndexData
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+            void set(System::Collections::Generic::List<unsigned char>^);
+        }
         property unsigned char IndexSize
         {
             unsigned char get();
@@ -81,5 +91,6 @@ namespace Flood
         char GetAttributeStride(Flood::VertexAttribute _0);
         unsigned int GetNumVertices();
         unsigned int GetNumIndices();
+        void ClearIndexes();
     };
 }

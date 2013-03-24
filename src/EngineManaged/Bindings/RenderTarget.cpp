@@ -31,6 +31,9 @@ Flood::Settings::Settings(System::IntPtr native)
 
 Flood::Settings::Settings(unsigned short width, unsigned short height)
 {
+    auto _native = ::Settings((uint16)width, (uint16)height);
+    this->Width = _native.width;
+    this->Height = _native.height;
 }
 
 Flood::Vector2i Flood::Settings::GetSize()
@@ -92,6 +95,18 @@ void Flood::RenderTarget::SetContext(Flood::RenderContext^ context)
 {
     auto arg0 = (::RenderContext*)context->NativePtr;
     ((::RenderTarget*)NativePtr)->setContext(arg0);
+}
+
+System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::GetViews()
+{
+    auto ret = ((::RenderTarget*)NativePtr)->getViews();
+    auto _tmpret = gcnew System::Collections::Generic::List<Flood::RenderView^>();
+    for(auto _element : ret)
+    {
+        auto _marshalElement = gcnew Flood::RenderView((::RenderView*)_element);
+        _tmpret->Add(_marshalElement);
+    }
+    return _tmpret;
 }
 
 System::IntPtr Flood::RenderTarget::GetUserData()

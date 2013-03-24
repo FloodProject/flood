@@ -96,8 +96,10 @@ Flood::ResourceHandle<Flood::Resource^> Flood::ResourceManager::LoadResource(Flo
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-    _marshal0.stream = (::Stream*)options.Stream->NativePtr;
-    _marshal0.resource = (::Resource*)options.Resource->NativePtr;
+    if (options.Stream != nullptr)
+        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
+    if (options.Resource != nullptr)
+        _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
     _marshal0.isHighPriority = options.IsHighPriority;
     _marshal0.sendLoadEvent = options.SendLoadEvent;
@@ -106,9 +108,7 @@ Flood::ResourceHandle<Flood::Resource^> Flood::ResourceManager::LoadResource(Flo
     auto _marshal1 = ::ResourceLoadOption();
     _marshal1.key = options.Option.Key;
     _marshal1.value = options.Option.Value;
-
     _marshal0.option = _marshal1;
-
     auto arg0 = _marshal0;
     auto ret = ((::ResourceManager*)NativePtr)->loadResource(arg0);
     return Flood::ResourceHandle<Flood::Resource^>(ret.id);
@@ -118,8 +118,10 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-    _marshal0.stream = (::Stream*)options.Stream->NativePtr;
-    _marshal0.resource = (::Resource*)options.Resource->NativePtr;
+    if (options.Stream != nullptr)
+        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
+    if (options.Resource != nullptr)
+        _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
     _marshal0.isHighPriority = options.IsHighPriority;
     _marshal0.sendLoadEvent = options.SendLoadEvent;
@@ -128,9 +130,7 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
     auto _marshal1 = ::ResourceLoadOption();
     _marshal1.key = options.Option.Key;
     _marshal1.value = options.Option.Value;
-
     _marshal0.option = _marshal1;
-
     auto arg0 = _marshal0;
     auto ret = ((::ResourceManager*)NativePtr)->findResource(arg0);
     return ret;
@@ -312,7 +312,7 @@ void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoad
 }
 
 generic<typename T>
-Flood::ResourceHandle<T> Flood::ResourceManager::getResource(System::String^ name)
+Flood::ResourceHandle<T> Flood::ResourceManager::GetResource(System::String^ name)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     auto ret = ((::ResourceManager*)NativePtr)->getResource<::Resource>(arg0);
@@ -320,7 +320,7 @@ Flood::ResourceHandle<T> Flood::ResourceManager::getResource(System::String^ nam
 }
 
 generic<typename T>
-Flood::ResourceHandle<T> Flood::ResourceManager::loadResource(System::String^ name)
+Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(System::String^ name)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     auto ret = ((::ResourceManager*)NativePtr)->loadResource<::Resource>(arg0);

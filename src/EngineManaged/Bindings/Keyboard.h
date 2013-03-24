@@ -69,5 +69,6 @@ namespace Flood
         }
         bool IsKeyPressed(Flood::Keys keyCode);
         void ResetKeys();
+        System::Collections::Generic::List<bool>^ GetKeyState();
     };
 }

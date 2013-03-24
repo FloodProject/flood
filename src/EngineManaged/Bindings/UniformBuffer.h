@@ -68,8 +68,11 @@ namespace Flood
         void RemoveUniform(System::String^ slot);
         void SetUniform(System::String^ slot, int data);
         void SetUniform(System::String^ slot, float value);
+        void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Vector3>^ vec);
+        void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Color>^ vec);
         void SetUniform(System::String^ slot, Flood::Vector3 vec);
         void SetUniform(System::String^ slot, Flood::Matrix4x3 _0);
         void SetUniform(System::String^ slot, Flood::Matrix4x4 _0);
+        void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Matrix4x4>^ vec);
     };
 }

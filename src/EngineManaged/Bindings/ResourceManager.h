@@ -143,9 +143,9 @@ namespace Flood
         bool GetAsynchronousLoading();
         void SetAsynchronousLoading(bool v);
         generic<typename T> where T : Flood::Resource
-        Flood::ResourceHandle<T> getResource(System::String^ name);
+        Flood::ResourceHandle<T> GetResource(System::String^ name);
         generic<typename T> where T : Flood::Resource
-        Flood::ResourceHandle<T> loadResource(System::String^ name);
+        Flood::ResourceHandle<T> LoadResource(System::String^ name);
     };
 
     public ref class FloodResourceManager

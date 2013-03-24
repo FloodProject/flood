@@ -25,9 +25,12 @@ namespace Flood
 
         ResourceHandle(uint32 handleId) : Id(handleId)
         {
+            AddReference();
         }
 
         T Resolve();
+        void AddReference();
+        void RemoveReference();
 
 #if RESOURCE_HANDLE_REF_CLASS
         ResourceHandle() : Id(Invalid)

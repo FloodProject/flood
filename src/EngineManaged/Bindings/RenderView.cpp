@@ -57,7 +57,6 @@ void Flood::RenderView::SetOrigin(Flood::Vector2i v)
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (int32)v.X;
     _marshal0.y = (int32)v.Y;
-
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setOrigin(arg0);
 }
@@ -73,7 +72,6 @@ void Flood::RenderView::SetSize(Flood::Vector2i v)
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (int32)v.X;
     _marshal0.y = (int32)v.Y;
-
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setSize(arg0);
 }
@@ -87,7 +85,6 @@ Flood::Color Flood::RenderView::GetClearColor()
 void Flood::RenderView::SetClearColor(Flood::Color v)
 {
     auto _marshal0 = ::Color();
-
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setClearColor(arg0);
 }
@@ -131,7 +128,6 @@ void Flood::RenderView::Origin::set(Flood::Vector2i value)
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (int32)value.X;
     _marshal0.y = (int32)value.Y;
-
     ((::RenderView*)NativePtr)->origin = _marshal0;
 }
 
@@ -145,7 +141,6 @@ void Flood::RenderView::Size::set(Flood::Vector2i value)
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (int32)value.X;
     _marshal0.y = (int32)value.Y;
-
     ((::RenderView*)NativePtr)->size = _marshal0;
 }
 
@@ -167,7 +162,6 @@ Flood::Color Flood::RenderView::ClearColor::get()
 void Flood::RenderView::ClearColor::set(Flood::Color value)
 {
     auto _marshal0 = ::Color();
-
     ((::RenderView*)NativePtr)->clearColor = _marshal0;
 }
 
@@ -205,7 +199,6 @@ void Flood::RenderView::ProjectionMatrix::set(Flood::Matrix4x4 value)
     _marshal0.ty = value.Ty;
     _marshal0.tz = value.Tz;
     _marshal0.tw = value.Tw;
-
     ((::RenderView*)NativePtr)->projectionMatrix = _marshal0;
 }
 
@@ -229,7 +222,6 @@ void Flood::RenderView::ViewMatrix::set(Flood::Matrix4x3 value)
     _marshal0.tx = value.Tx;
     _marshal0.ty = value.Ty;
     _marshal0.tz = value.Tz;
-
     ((::RenderView*)NativePtr)->viewMatrix = _marshal0;
 }
 

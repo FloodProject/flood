@@ -52,6 +52,20 @@ void Flood::Stream::Resize(long long size)
     ::StreamResize(arg0, arg1);
 }
 
+long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^ data)
+{
+    auto arg0 = (::Stream*)NativePtr;
+    auto _tmpdata = std::vector<::uint8>();
+    for each(unsigned char _element in data)
+    {
+        auto _marshalElement = (uint8)_element;
+        _tmpdata.push_back(_marshalElement);
+    }
+    auto arg1 = _tmpdata;
+    auto ret = ::StreamRead(arg0, arg1);
+    return ret;
+}
+
 long long Flood::Stream::ReadBuffer(System::IntPtr buffer, long long size)
 {
     auto arg0 = (::Stream*)NativePtr;
@@ -66,6 +80,20 @@ long long Flood::Stream::ReadString(System::String^ _1)
     auto arg0 = (::Stream*)NativePtr;
     auto arg1 = clix::marshalString<clix::E_UTF8>(_1);
     auto ret = ::StreamReadString(arg0, arg1);
+    return ret;
+}
+
+long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::String^>^ _1)
+{
+    auto arg0 = (::Stream*)NativePtr;
+    auto _tmp_1 = std::vector<::String>();
+    for each(System::String^ _element in _1)
+    {
+        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
+        _tmp_1.push_back(_marshalElement);
+    }
+    auto arg1 = _tmp_1;
+    auto ret = ::StreamReadLines(arg0, arg1);
     return ret;
 }
 
@@ -179,6 +207,28 @@ Flood::MemoryStream::MemoryStream(System::IntPtr native)
     : Flood::Stream(native)
 {
     auto __native = (::MemoryStream*)native.ToPointer();
+}
+
+System::Collections::Generic::List<unsigned char>^ Flood::MemoryStream::Data::get()
+{
+    auto _tmpData = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : ((::MemoryStream*)NativePtr)->data)
+    {
+        auto _marshalElement = _element;
+        _tmpData->Add(_marshalElement);
+    }
+    return _tmpData;
+}
+
+void Flood::MemoryStream::Data::set(System::Collections::Generic::List<unsigned char>^ value)
+{
+    auto _tmpvalue = std::vector<::uint8>();
+    for each(unsigned char _element in value)
+    {
+        auto _marshalElement = (uint8)_element;
+        _tmpvalue.push_back(_marshalElement);
+    }
+    ((::MemoryStream*)NativePtr)->data = _tmpvalue;
 }
 
 System::IntPtr Flood::MemoryStream::Buffer::get()

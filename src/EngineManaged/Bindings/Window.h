@@ -40,12 +40,12 @@ namespace Flood
         WindowSettings(::WindowSettings* native);
         WindowSettings(System::IntPtr native);
         WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen);
+        unsigned short Width;
+        unsigned short Height;
         System::String^ Title;
         bool FullScreen;
         System::IntPtr Handle;
         Flood::WindowStyles Styles;
-        unsigned short Width;
-        unsigned short Height;
     };
 
     /// <summary>

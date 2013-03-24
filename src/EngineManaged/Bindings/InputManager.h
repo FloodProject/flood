@@ -32,6 +32,7 @@ namespace Flood
         InputManager(System::IntPtr native);
         InputManager();
         void AddDevice(Flood::InputDevice^ device);
+        System::Collections::Generic::List<Flood::InputDevice^>^ GetDevices();
         Flood::Keyboard^ GetKeyboard();
         Flood::Mouse^ GetMouse();
         void ProcessEvent(Flood::InputEvent^ event);

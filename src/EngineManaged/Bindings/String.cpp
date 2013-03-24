@@ -26,6 +26,9 @@ Flood::StringHash::StringHash(System::IntPtr native)
 
 Flood::StringHash::StringHash(System::String^ str, unsigned int size)
 {
+    auto _str = clix::marshalString<clix::E_UTF8>(str);
+    auto _native = ::StringHash(_str.c_str(), (size_t)size);
+    this->Hash = _native.hash;
 }
 
 Flood::StringHash Flood::FloodString::HashString(System::String^ _0)
@@ -49,6 +52,19 @@ System::String^ Flood::FloodString::StringFormat(System::String^ s)
     auto arg0 = _arg0.c_str();
     auto ret = ::StringFormat(arg0);
     return clix::marshalString<clix::E_UTF8>(ret);
+}
+
+void Flood::FloodString::StringSplit(System::String^ s, char delim, System::Collections::Generic::List<System::String^>^ elems)
+{
+    auto arg0 = clix::marshalString<clix::E_UTF8>(s);
+    auto _tmpelems = std::vector<::String>();
+    for each(System::String^ _element in elems)
+    {
+        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
+        _tmpelems.push_back(_marshalElement);
+    }
+    auto arg2 = _tmpelems;
+    ::StringSplit(arg0, delim, arg2);
 }
 
 System::String^ Flood::FloodString::StringFromWideString(System::String^ ws)

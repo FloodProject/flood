@@ -19,6 +19,8 @@ using namespace clix;
 
 Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
+    Width = native->width;
+    Height = native->height;
     Title = clix::marshalString<clix::E_UTF8>(native->title);
     FullScreen = native->fullScreen;
     Handle = IntPtr(native->handle);
@@ -28,6 +30,8 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 Flood::WindowSettings::WindowSettings(System::IntPtr native)
 {
     auto __native = (::WindowSettings*)native.ToPointer();
+    Width = __native->width;
+    Height = __native->height;
     Title = clix::marshalString<clix::E_UTF8>(__native->title);
     FullScreen = __native->fullScreen;
     Handle = IntPtr(__native->handle);
@@ -36,6 +40,13 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen)
 {
+    auto _native = ::WindowSettings((uint16)width, (uint16)height, clix::marshalString<clix::E_UTF8>(title), fullscreen);
+    this->Width = _native.width;
+    this->Height = _native.height;
+    this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
+    this->FullScreen = _native.fullScreen;
+    this->Handle = IntPtr(_native.handle);
+    this->Styles = (Flood::WindowStyles)_native.styles;
 }
 
 Flood::Window::Window(::Window* native)
@@ -61,7 +72,6 @@ Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings 
     _marshal0.depthBits = (uint16)_0.DepthBits;
     _marshal0.stencilBits = (uint16)_0.StencilBits;
     _marshal0.antialiasLevel = (uint16)_0.AntialiasLevel;
-
     auto arg0 = _marshal0;
     auto ret = ((::Window*)NativePtr)->createContext(arg0);
     return gcnew Flood::RenderContext((::RenderContext*)ret);

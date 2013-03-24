@@ -83,7 +83,6 @@ Flood::Vector3 Flood::Matrix4x3::operator*(Flood::Vector3 p)
     _marshal0.x = p.X;
     _marshal0.y = p.Y;
     _marshal0.z = p.Z;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Vector3((::Vector3*)&ret);
@@ -105,7 +104,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::operator*(Flood::Matrix4x3 m)
     _marshal0.tx = m.Tx;
     _marshal0.ty = m.Ty;
     _marshal0.tz = m.Tz;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
@@ -127,7 +125,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::Lerp(Flood::Matrix4x3 a, Flood::Matrix4x3 b, 
     _marshal0.tx = a.Tx;
     _marshal0.ty = a.Ty;
     _marshal0.tz = a.Tz;
-
     auto arg0 = _marshal0;
     auto _marshal1 = ::Matrix4x3();
     _marshal1.m11 = b.M11;
@@ -142,7 +139,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::Lerp(Flood::Matrix4x3 a, Flood::Matrix4x3 b, 
     _marshal1.tx = b.Tx;
     _marshal1.ty = b.Ty;
     _marshal1.tz = b.Tz;
-
     auto arg1 = _marshal1;
     auto ret = this0->lerp(arg0, arg1, t);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
@@ -155,7 +151,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateTranslation(Flood::Vector3 translate)
     _marshal0.x = translate.X;
     _marshal0.y = translate.Y;
     _marshal0.z = translate.Z;
-
     auto arg0 = _marshal0;
     auto ret = this0->createTranslation(arg0);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
@@ -168,7 +163,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateRotation(Flood::EulerAngles angles)
     _marshal0.x = angles.X;
     _marshal0.y = angles.Y;
     _marshal0.z = angles.Z;
-
     auto arg0 = _marshal0;
     auto ret = this0->createRotation(arg0);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
@@ -181,7 +175,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateScale(Flood::Vector3 scale)
     _marshal0.x = scale.X;
     _marshal0.y = scale.Y;
     _marshal0.z = scale.Z;
-
     auto arg0 = _marshal0;
     auto ret = this0->createScale(arg0);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
@@ -195,7 +188,6 @@ Flood::Matrix4x3 Flood::Matrix4x3::CreateFromQuaternion(Flood::Quaternion q)
     _marshal0.y = q.Y;
     _marshal0.z = q.Z;
     _marshal0.w = q.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->createFromQuaternion(arg0);
     return Flood::Matrix4x3((::Matrix4x3*)&ret);

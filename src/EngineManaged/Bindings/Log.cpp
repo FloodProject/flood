@@ -72,7 +72,6 @@ void Flood::Log::Write(Flood::LogEntry entry)
     _marshal1.time = entry.Time;
     _marshal1.message = clix::marshalString<clix::E_UTF8>(entry.Message);
     _marshal1.level = (::LogLevel)entry.Level;
-
     auto arg1 = _marshal1;
     ::LogWrite(arg0, &arg1);
 }

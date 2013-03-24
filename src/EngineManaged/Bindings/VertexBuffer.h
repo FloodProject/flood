@@ -68,12 +68,12 @@ namespace Flood
         VertexElement(::VertexElement* native);
         VertexElement(System::IntPtr native);
         VertexElement(Flood::VertexAttribute _0, Flood::VertexDataType _1, unsigned char components);
-        char Stride;
-        unsigned int Offset;
-        unsigned int Size;
         Flood::VertexAttribute Attribute;
         Flood::VertexDataType Type;
         unsigned char Components;
+        char Stride;
+        unsigned int Offset;
+        unsigned int Size;
         unsigned char GetSize();
     };
 
@@ -87,6 +87,11 @@ namespace Flood
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
+        property System::Collections::Generic::List<Flood::VertexElement>^ Decls
+        {
+            System::Collections::Generic::List<Flood::VertexElement>^ get();
+            void set(System::Collections::Generic::List<Flood::VertexElement>^);
+        }
         void Add(Flood::VertexAttribute _0, int numComponents);
         void Add(Flood::VertexElement _0);
         void Add(Flood::VertexElementP _0);

@@ -124,7 +124,6 @@ void Flood::Material::SetDepthRange(Flood::Vector2 v)
     auto _marshal0 = ::Vector2();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
-
     auto arg0 = _marshal0;
     ((::Material*)NativePtr)->setDepthRange(arg0);
 }
@@ -140,7 +139,6 @@ void Flood::Material::SetDepthOffset(Flood::Vector2 v)
     auto _marshal0 = ::Vector2();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
-
     auto arg0 = _marshal0;
     ((::Material*)NativePtr)->setDepthOffset(arg0);
 }
@@ -325,7 +323,6 @@ void Flood::Material::DepthRange::set(Flood::Vector2 value)
     auto _marshal0 = ::Vector2();
     _marshal0.x = value.X;
     _marshal0.y = value.Y;
-
     ((::Material*)NativePtr)->depthRange = _marshal0;
 }
 
@@ -339,7 +336,6 @@ void Flood::Material::DepthOffset::set(Flood::Vector2 value)
     auto _marshal0 = ::Vector2();
     _marshal0.x = value.X;
     _marshal0.y = value.Y;
-
     ((::Material*)NativePtr)->depthOffset = _marshal0;
 }
 

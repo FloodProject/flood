@@ -26,7 +26,7 @@ Flood::Image::Image(::Image* native)
 Flood::Image::Image(System::IntPtr native)
     : Flood::Resource(native)
 {
-    auto __native = (::Image*)native.ToPointer();
+    //auto __native = (::Image*)((::ReferenceCounted*)native.ToPointer());
 }
 
 Flood::Image::Image()
@@ -80,6 +80,30 @@ void Flood::Image::SetPixelFormat(Flood::PixelFormat v)
     ((::Image*)NativePtr)->setPixelFormat(arg0);
 }
 
+System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer()
+{
+    auto ret = ((::Image*)NativePtr)->getBuffer();
+    auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : ret)
+    {
+        auto _marshalElement = _element;
+        _tmpret->Add(_marshalElement);
+    }
+    return _tmpret;
+}
+
+void Flood::Image::SetBuffer(System::Collections::Generic::List<unsigned char>^ v)
+{
+    auto _tmpv = std::vector<::byte>();
+    for each(unsigned char _element in v)
+    {
+        auto _marshalElement = (byte)(uint8)_element;
+        _tmpv.push_back(_marshalElement);
+    }
+    auto arg0 = _tmpv;
+    ((::Image*)NativePtr)->setBuffer(arg0);
+}
+
 bool Flood::Image::IsCompressed()
 {
     auto ret = ((::Image*)NativePtr)->isCompressed();
@@ -99,7 +123,6 @@ void Flood::Image::SetBuffer(Flood::Image^ image, Flood::Vector2i offset)
     auto _marshal1 = ::Vector2i();
     _marshal1.x = (int32)offset.X;
     _marshal1.y = (int32)offset.Y;
-
     auto arg1 = _marshal1;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
@@ -125,7 +148,6 @@ Flood::ResourceGroup Flood::Image::GetResourceGroup()
 void Flood::Image::SetColor(Flood::Color color)
 {
     auto _marshal0 = ::Color();
-
     auto arg0 = _marshal0;
     ((::Image*)NativePtr)->setColor(arg0);
 }

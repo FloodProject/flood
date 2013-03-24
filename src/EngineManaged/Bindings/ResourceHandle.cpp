@@ -18,10 +18,25 @@ Flood::ResourceHandle<T> Flood::ResourceHandle<T>::Create(T resource)
 generic<typename T>
 T Flood::ResourceHandle<T>::Resolve()
 {
-    auto resource = ResourceHandleFind(Id);
+    auto resource = (::Resource*)ResourceHandleFind(Id);
 
-    auto instance = System::Activator::CreateInstance<T>();
-    instance->NativePtr = (::Resource*)resource;
-
-    return instance;
+    auto ctor = T::typeid->GetConstructor(gcnew cli::array<System::Type^>{System::IntPtr::typeid});
+    return (T) ctor->Invoke(gcnew cli::array<System::Object^>{System::IntPtr(resource)});
 }
+
+generic<typename T>
+void Flood::ResourceHandle<T>::AddReference()
+{
+    auto resource = ResourceHandleFind(Id);
+    if (resource)
+        resource->addReference();
+}
+
+generic<typename T>
+void Flood::ResourceHandle<T>::RemoveReference()
+{
+    auto resource = ResourceHandleFind(Id);
+    if (resource)
+        resource->releaseReference();
+}
+

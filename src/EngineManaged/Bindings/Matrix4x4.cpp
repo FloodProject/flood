@@ -58,6 +58,24 @@ Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
 
 Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3 _0)
 {
+    auto _marshal0 = ::Matrix4x3();
+    auto _native = ::Matrix4x4(_marshal0);
+    this->M11 = _native.m11;
+    this->M12 = _native.m12;
+    this->M13 = _native.m13;
+    this->M14 = _native.m14;
+    this->M21 = _native.m21;
+    this->M22 = _native.m22;
+    this->M23 = _native.m23;
+    this->M24 = _native.m24;
+    this->M31 = _native.m31;
+    this->M32 = _native.m32;
+    this->M33 = _native.m33;
+    this->M34 = _native.m34;
+    this->Tx = _native.tx;
+    this->Ty = _native.ty;
+    this->Tz = _native.tz;
+    this->Tw = _native.tw;
 }
 
 void Flood::Matrix4x4::SetIdentity()
@@ -100,7 +118,6 @@ Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
     _marshal0.ty = m.Ty;
     _marshal0.tz = m.Tz;
     _marshal0.tw = m.Tw;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
@@ -113,7 +130,6 @@ Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Vector3((::Vector3*)&ret);
@@ -127,7 +143,6 @@ Flood::Vector4 Flood::Matrix4x4::operator*(Flood::Vector4 v)
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
     _marshal0.w = v.W;
-
     auto arg0 = _marshal0;
     auto ret = this0->operator*(arg0);
     return Flood::Vector4((::Vector4*)&ret);

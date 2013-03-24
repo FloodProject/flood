@@ -81,8 +81,10 @@ namespace Flood
         bool Close();
         long long GetSize();
         void Resize(long long size);
+        long long Read(System::Collections::Generic::List<unsigned char>^ data);
         long long ReadBuffer(System::IntPtr buffer, long long size);
         long long ReadString(System::String^ _1);
+        long long ReadLines(System::Collections::Generic::List<System::String^>^ _1);
         long long Write(System::IntPtr buf, unsigned long long size);
         long long WriteString(System::String^ _1);
         long long GetPosition();
@@ -100,6 +102,11 @@ namespace Flood
     public:
         MemoryStream(::MemoryStream* native);
         MemoryStream(System::IntPtr native);
+        property System::Collections::Generic::List<unsigned char>^ Data
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+            void set(System::Collections::Generic::List<unsigned char>^);
+        }
         property System::IntPtr Buffer
         {
             System::IntPtr get();

@@ -17,12 +17,12 @@ namespace Flood
     ref class Light;
     ref class Material;
     ref class RenderBatch;
+    ref class RenderBlock;
     ref class Texture;
     ref class Transform;
     value struct LightState;
     value struct Matrix4x3;
     value struct Matrix4x4;
-    value struct RenderBlock;
     value struct RenderState;
 
     /// <summary>
@@ -56,10 +56,23 @@ namespace Flood
         Flood::Matrix4x4 Projection;
     };
 
-    public value struct RenderBlock
+    public ref class RenderBlock
     {
     public:
+        property ::RenderBlock* NativePtr;
+
         RenderBlock(::RenderBlock* native);
         RenderBlock(System::IntPtr native);
+        property System::Collections::Generic::List<Flood::RenderState>^ Renderables
+        {
+            System::Collections::Generic::List<Flood::RenderState>^ get();
+            void set(System::Collections::Generic::List<Flood::RenderState>^);
+        }
+        property System::Collections::Generic::List<Flood::LightState>^ Lights
+        {
+            System::Collections::Generic::List<Flood::LightState>^ get();
+            void set(System::Collections::Generic::List<Flood::LightState>^);
+        }
+        void AddState(Flood::RenderState renderState);
     };
 }

@@ -27,6 +27,11 @@ namespace Flood
         WindowManager(::WindowManager* native);
         WindowManager(System::IntPtr native);
         WindowManager();
+        property System::Collections::Generic::List<Flood::Window^>^ Windows
+        {
+            System::Collections::Generic::List<Flood::Window^>^ get();
+            void set(System::Collections::Generic::List<Flood::Window^>^);
+        }
         Flood::Window^ CreateWindow(Flood::WindowSettings settings);
         void DestroyWindows();
     };

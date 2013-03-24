@@ -142,7 +142,6 @@ void Flood::RenderBatch::Range::set(Flood::RenderBatchRange value)
     auto _marshal0 = ::RenderBatchRange();
     _marshal0.start = (RenderIndexOffset)(uint16)value.Start;
     _marshal0.end = (RenderIndexOffset)(uint16)value.End;
-
     ((::RenderBatch*)NativePtr)->range = _marshal0;
 }
 

@@ -30,6 +30,7 @@ namespace Flood
         static Flood::StringHash HashString(System::String^ _0);
         static int StringCompareInsensitive(System::String^ s1, System::String^ s2);
         static System::String^ StringFormat(System::String^ s);
+        static void StringSplit(System::String^ s, char delim, System::Collections::Generic::List<System::String^>^ elems);
         static System::String^ StringFromWideString(System::String^ ws);
         static System::String^ StringToWideString(System::String^ s);
         static System::String^ StringToLowerCase(System::String^ s);
