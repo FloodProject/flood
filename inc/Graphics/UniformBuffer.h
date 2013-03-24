@@ -73,9 +73,6 @@ public:
 	// Adds a named float uniform to the program.
 	void setUniform( const char* slot, float value );
 
-	// Adds a named float array uniform to the program.
-	void setUniform( const char* slot, const std::vector<float> vec );
-
 	// Adds a named Vector3 array uniform to the program.
 	void setUniform( const char* slot, const std::vector<Vector3>& vec );
 
