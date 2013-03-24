@@ -274,6 +274,11 @@ uint32 GeometryBuffer::getNumIndices() const
 	return numIndices;
 }
 
+void GeometryBuffer::clearIndexes()
+{
+    indexData.clear();
+}
+
 //-----------------------------------//
 
 float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const

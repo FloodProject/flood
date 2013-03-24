@@ -73,6 +73,8 @@ struct API_GRAPHICS RenderBlock
 {
 	RenderQueue renderables;
 	LightQueue lights;
+
+    void addState(RenderState renderState);
 };
 
 //-----------------------------------//

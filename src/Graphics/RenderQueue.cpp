@@ -38,4 +38,9 @@ RenderState::RenderState(const RenderState& rhs)
 
 //-----------------------------------//
 
+void RenderBlock::addState(RenderState renderState)
+{
+    renderables.push_back(renderState);
+}
+
 NAMESPACE_GRAPHICS_END

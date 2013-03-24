@@ -75,6 +75,9 @@ public:
 	// Gets the number of indices in the buffer.
 	uint32 getNumIndices() const;
 
+    // Clears index data buffer.
+	void clearIndexes();
+
 	template<typename T>
 	void set(VertexAttribute attr, const std::vector<T>& data)
 	{
