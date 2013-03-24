@@ -21,7 +21,7 @@ NAMESPACE_CORE_BEGIN
 typedef std::string String;
 typedef std::wstring StringWide;
 
-struct StringHash
+struct API_CORE StringHash
 {
 	StringHash();
 	StringHash(const char* str, size_t size);
