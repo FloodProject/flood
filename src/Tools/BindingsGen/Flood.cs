@@ -109,7 +109,6 @@ namespace Flood
             lib.SetClassAsValueType("VertexElementP");
             lib.SetClassAsValueType("VertexElement");
             lib.SetClassAsValueType("UniformBufferElement");
-            lib.SetClassAsValueType("RenderBlock");
             lib.SetClassAsValueType("RenderState");
             lib.SetClassAsValueType("LightState");
 
@@ -132,6 +131,7 @@ namespace Flood
             options.OutputDir = @"../../../../src/EngineManaged/Bindings";
             options.IncludeDirs.Add(@"../../../../inc");
             options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
+            options.WriteOnlyWhenChanged = true;
 
             SetupHeaders(options.Headers);
         }
@@ -284,7 +284,7 @@ namespace Flood
     [TypeMap("RefPtr")]
     public class RefPtrMap : TypeMap
     {
-        public override string CLISignature()
+        public override string CLISignature(TypePrinterContext ctx)
         {
             var type = Type as TemplateSpecializationType;
             return string.Format("{0}", type.Arguments[0].Type);
@@ -338,7 +338,7 @@ namespace Flood
     [TypeMap("Delegate4")]
     public class EventMap : TypeMap
     {
-        public override string CLISignature()
+        public override string CLISignature(TypePrinterContext ctx)
         {
             var type = Type as TemplateSpecializationType;
             var args = type.Arguments.Select(arg => arg.Type.ToString()).
@@ -361,7 +361,7 @@ namespace Flood
     [TypeMap("ResourceHandle")]
     public class HandleMap : TypeMap
     {
-        public override string CLISignature()
+        public override string CLISignature(TypePrinterContext ctx)
         {
             var type = Type.Desugar() as TemplateSpecializationType;
             return string.Format("{0}::ResourceHandle<{1}>", "Flood",
@@ -375,7 +375,7 @@ namespace Flood
 
         public override void CLIMarshalToManaged(MarshalContext ctx)
         {
-            ctx.Return.Write("{0}({1}.id)", CLISignature(), ctx.ReturnVarName);
+            ctx.Return.Write("{0}({1}.id)", CLISignature(null), ctx.ReturnVarName);
         }
     }
     #endregion
