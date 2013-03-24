@@ -53,6 +53,7 @@ Image::Image()
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
+    , timestamp(1)
 { }
 
 //-----------------------------------//
@@ -61,6 +62,7 @@ Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
+    , timestamp(1)
 {
 	create(_width, _height, _format);
 }
