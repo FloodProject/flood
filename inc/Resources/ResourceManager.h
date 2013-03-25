@@ -150,12 +150,19 @@ public:
 		return HandleCast<T>(res);
 	}
 
+	// Creates a new resource and returns the specific resource type.
+	template <typename T>
+	RESOURCE_HANDLE_TYPE(T) loadResource(ResourceLoadOptions& options)
+	{
+		ResourceHandle res = loadResource(options);
+		return HandleCast<T>(res);
+	}
+
 	template <typename T>
 	RESOURCE_HANDLE_TYPE(T) createResource()
 	{
 		ResourceHandle res = ResourceHandleCreate(AllocateHeap(T));
 		return HandleCast<T>(res);
-		
 	}
 
 	// These events are sent when their correspending actions happen.
