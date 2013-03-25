@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Editor.Client;
 using Flood;
 using Flood.GUI;
 using Flood.GUI.Input;
@@ -61,25 +62,25 @@ namespace Editor.Client
         public void AddRectangle(Rectangle rect, Vector2 uv1, Vector2 uv2,
             ResourceHandle<Image> imageHandle, System.Drawing.Color color)
         {
-            var batchInfo = GetCreateBatchInfo(imageHandle); 
-            batchInfo.Ranges.Add((int)gb.GetNumVertices());
+            var batchInfo = GetCreateBatchInfo(imageHandle);
+            batchInfo.Ranges.Add((int) gb.GetNumVertices());
 
-            var top = Math.Max(rect.Bottom,rect.Top);
-            var bottom = Math.Max(rect.Bottom,rect.Top);
+            var top = Math.Max(rect.Bottom, rect.Top);
+            var bottom = Math.Max(rect.Bottom, rect.Top);
             var left = rect.Left;
             var right = rect.Right;
 
-            Vertex v1,v2,v3,v4;
+            Vertex v1, v2, v3, v4;
 
-            v1.Position = new Vector3(left, bottom,zcount);
-            v2.Position = new Vector3(right, bottom,zcount);
-            v3.Position = new Vector3(right, top,zcount);
-            v4.Position = new Vector3(left, top,zcount);
+            v1.Position = new Vector3(left, bottom, zcount);
+            v2.Position = new Vector3(right, bottom, zcount);
+            v3.Position = new Vector3(right, top, zcount);
+            v4.Position = new Vector3(left, top, zcount);
 
             //TODO optimize precision/usage
             zcount += 0.001f;
-        
-            var c = new Color(color.R/255.0f,color.G/255.0f,color.B/255.0f,color.A/255.0f);
+
+            var c = new Color(color.R/255.0f, color.G/255.0f, color.B/255.0f, color.A/255.0f);
 
             v1.Color = c;
             v2.Color = c;
@@ -90,12 +91,15 @@ namespace Editor.Client
             v2.UV = new Vector2(uv2.X, uv1.Y);
             v3.UV = uv2;
             v4.UV = new Vector2(uv1.X, uv2.Y);
-        
-            // Vertex buffer setup
-            //gb.Add((uint8*)&v1,sizeof(Vertex));
-            //gb.Add((uint8*)&v2,sizeof(Vertex));
-            //gb.Add((uint8*)&v3,sizeof(Vertex));
-            //gb.Add((uint8*)&v4,sizeof(Vertex));
+
+            //Vertex buffer setup
+            unsafe
+            {
+                gb.Add(new IntPtr(&v1), (uint) sizeof (Vertex));
+                gb.Add(new IntPtr(&v2), (uint) sizeof (Vertex));
+                gb.Add(new IntPtr(&v3), (uint) sizeof (Vertex));
+                gb.Add(new IntPtr(&v4), (uint) sizeof (Vertex));
+            }
         }
 
         public void Render(RenderBlock rb)
@@ -120,7 +124,7 @@ namespace Editor.Client
                     batch.Batch.Range = newRange;
 
                     var state = new RenderState(batch.Batch);
-                    //rb.Renderables.Add(state);
+                    rb.AddState(state);
                 }
             }
         }
@@ -133,7 +137,7 @@ namespace Editor.Client
             }
 
             gb.Clear();
-            //gb.ClearIndexes();
+            gb.ClearIndexes();
 
             zcount = -100;
         }
@@ -179,12 +183,12 @@ namespace Editor.Client
                 var mat = GetCreateMaterial(imageHandle);
                 batch.SetMaterial(mat);
 
-                var batchInfo = new BatchInfo { Batch = batch };
+                var batchInfo = new BatchInfo {Batch = batch, Ranges = new List<int>()};
                 batches[id] = batchInfo;
             }
 
             return batches[id];
-        }
+        } 
     };
 
     public class TextureUtil
@@ -195,21 +199,20 @@ namespace Editor.Client
                 System.Drawing.Imaging.ImageLockMode.ReadOnly,
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            var bytes = Math.Abs(data.Stride) * bmp.Height;
+            var bytes = (uint)(Math.Abs(data.Stride) * bmp.Height);
             LoadTextureInternal(tex, data.Scan0, bytes);
             bmp.UnlockBits(data);
         }
 
-        public static void LoadTextureInternal(Flood.GUI.Texture tex, IntPtr data, int size) 
+        public static void LoadTextureInternal(Flood.GUI.Texture tex, IntPtr data, uint size) 
         {
             var handle = Image.Create(Allocator.GetHeap(), (uint)tex.Width, (uint)tex.Height,
                 PixelFormat.B8G8R8A8);
 
-            //var image = handle.Resolve();
-            //image.setBuffer(buffer.ToPointer(), size);
+            var image = handle.Resolve();
+            image.SetBuffer(data, size);
 
-            //tex.RendererData = handle.Id;
-            //handle.addReference();
+            tex.RendererData = handle;
         }
     };
 
@@ -354,12 +357,12 @@ namespace Editor.Client
             buffer = new ManagedGeometryBuffer();
         }
 
-        void Render(RenderBlock rb)
+        public void Render(RenderBlock rb)
         {
             buffer.Render(rb);
         }
 
-        void Clear()
+        public void Clear()
         {
             buffer.Clear();
         }
@@ -465,7 +468,7 @@ namespace Editor.Client
                 }
             }
 
-            var handle = new ResourceHandle<Image> {Id = (uint) tex.RendererData};
+            var handle = (ResourceHandle<Image>) tex.RendererData;
 
             buffer.AddRectangle(rect,new Vector2(u1,v1),new Vector2(u2,v2), handle, color);
         }
@@ -485,7 +488,7 @@ namespace Editor.Client
         public override void LoadTexture(Flood.GUI.Texture tex)
         {
             var options = new ResourceLoadOptions {Name = tex.Name, AsynchronousLoad = false};
-            var resourceHandle = FloodEngine.GetEngine().GetResourceManager().LoadResource(options);
+            var resourceHandle = FloodEngine.GetEngine().GetResourceManager().LoadResource<Image>(tex.Name);
         
             if(resourceHandle.Id == ResourceHandle<Resource>.Invalid)
             {
@@ -493,7 +496,7 @@ namespace Editor.Client
                 return;
             }
 
-            var image = (Image)resourceHandle.Resolve();
+            var image = resourceHandle.Resolve();
             tex.Width = (int)image.GetWidth();
             tex.Height = (int)image.GetHeight();
             tex.RendererData = resourceHandle;
@@ -509,7 +512,7 @@ namespace Editor.Client
             if (tex.RendererData == null)
                 return;
 
-            var handle = new ResourceHandle<Image> {Id = (uint) tex.RendererData};
+            var handle = (ResourceHandle<Image>) tex.RendererData;
             var image = handle.Resolve();
 
             FloodEngine.GetEngine().GetResourceManager().RemoveResource(image);
@@ -521,7 +524,7 @@ namespace Editor.Client
             if(texture.RendererData == null)
                 return defaultColor;
 
-            var handle = new ResourceHandle<Image> {Id = (uint) texture.RendererData};
+            var handle = (ResourceHandle<Image>) texture.RendererData;
             var image = handle.Resolve();
 
             var offset = 4 * (x + y * texture.Width);
@@ -539,7 +542,7 @@ namespace Editor.Client
 
     };
 
-    class GwenInput
+    public class GwenInput
     {
         InputManager inputManager;
 
@@ -674,4 +677,42 @@ namespace Editor.Client
             canvas.Input_Key(key, false);
         }
     }
+
+    public class NativeGUI {
+
+        public readonly Flood.Editor.Editor Editor;
+        GwenRenderer renderer;
+        GwenInput input;
+
+        public NativeGUI(IntPtr inputManagerPtr){
+            var inputManager = new InputManager(inputManagerPtr);
+            renderer = new GwenRenderer();
+            Editor = new Flood.Editor.Editor(renderer,"DefaultSkin.png");
+
+            input = new GwenInput(inputManager);
+            input.Initialize(Editor.MainWindow.Canvas);
+        }
+
+        ~NativeGUI()
+        {
+            System.Diagnostics.Debugger.Break();
+        }
+
+        public void Close() {
+            TextRenderer.ClearCache();
+            Editor.Dispose();
+        }
+
+        public void Render(RenderBlock rb){
+            renderer.Clear();
+            Editor.MainWindow.Render();
+            renderer.Render(rb);
+        }
+
+        public void SetSize(int x, int y){
+            Editor.MainWindow.Canvas.SetSize(x, y);
+        }
+    };
 }
+
+
