@@ -133,7 +133,6 @@ namespace Flood
             options.IncludeDirs.Add(@"../../../../inc");
             options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
             options.WriteOnlyWhenChanged = true;
-            options.GenerateFunctionTemplates = true;
 
             SetupHeaders(options.Headers);
         }
