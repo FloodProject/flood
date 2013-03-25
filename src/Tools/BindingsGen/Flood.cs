@@ -112,6 +112,7 @@ namespace Flood
             lib.SetClassAsValueType("UniformBufferElement");
             lib.SetClassAsValueType("RenderState");
             lib.SetClassAsValueType("LightState");
+            lib.IgnoreHeadersWithName("MaxRectsBinPack.h");
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
@@ -163,6 +164,8 @@ namespace Flood
                     "Engine/Input/InputManager.h",
                     "Engine/Input/Keyboard.h",
                     "Engine/Input/Mouse.h",
+                    "Engine/Resources/TrueTypeFont.h",
+                    "Engine/Texture/TextureAtlas.h"
                 };
 
             headers.AddRange(sources);
