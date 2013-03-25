@@ -6,8 +6,6 @@ using Flood.Server;
 
 namespace Flood.Editor.Server
 {
-
-
     public class ProjectManager : IProjectManager
     {
         private readonly Dictionary<Guid, Project> _projects;
@@ -146,7 +144,7 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        public IDictionary<Guid, Project> Projects
+        public Dictionary<Guid, Project> Projects
         {
             get { return _projects; }
         }
