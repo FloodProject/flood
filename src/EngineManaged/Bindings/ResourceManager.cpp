@@ -327,6 +327,29 @@ Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(System::String^ na
     return Flood::ResourceHandle<T>(ret.id);
 }
 
+generic<typename T>
+Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
+{
+    auto _marshal0 = ::ResourceLoadOptions();
+    _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
+    if (options.Stream != nullptr)
+        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
+    if (options.Resource != nullptr)
+        _marshal0.resource = (::Resource*)options.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)options.Group;
+    _marshal0.isHighPriority = options.IsHighPriority;
+    _marshal0.sendLoadEvent = options.SendLoadEvent;
+    _marshal0.asynchronousLoad = options.AsynchronousLoad;
+    _marshal0.keepStreamOpen = options.KeepStreamOpen;
+    auto _marshal1 = ::ResourceLoadOption();
+    _marshal1.key = options.Option.Key;
+    _marshal1.value = options.Option.Value;
+    _marshal0.option = _marshal1;
+    auto arg0 = _marshal0;
+    auto ret = ((::ResourceManager*)NativePtr)->loadResource<::Resource>(arg0);
+    return Flood::ResourceHandle<T>(ret.id);
+}
+
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
 {
     auto ret = ::GetResourceManager();

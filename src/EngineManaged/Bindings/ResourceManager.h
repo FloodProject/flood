@@ -146,6 +146,8 @@ namespace Flood
         Flood::ResourceHandle<T> GetResource(System::String^ name);
         generic<typename T> where T : Flood::Resource
         Flood::ResourceHandle<T> LoadResource(System::String^ name);
+        generic<typename T> where T : Flood::Resource
+        Flood::ResourceHandle<T> LoadResource(Flood::ResourceLoadOptions options);
     };
 
     public ref class FloodResourceManager
