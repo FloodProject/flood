@@ -78,6 +78,7 @@ namespace Flood
             lib.SetClassAsValueType("Matrix4x3");
             lib.SetClassAsValueType("Matrix4x4");
 
+            lib.CopyClassFields("ColorP", "Color");
             lib.CopyClassFields("Vector2P", "Vector2");
             lib.CopyClassFields("Vector3P", "Vector3");
             lib.CopyClassFields("QuaternionP", "Quaternion");
@@ -132,6 +133,7 @@ namespace Flood
             options.IncludeDirs.Add(@"../../../../inc");
             options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
             options.WriteOnlyWhenChanged = true;
+            options.GenerateFunctionTemplates = true;
 
             SetupHeaders(options.Headers);
         }
