@@ -22,6 +22,10 @@ namespace Flood
         Color(System::IntPtr native);
         Color(float r, float g, float b, float a);
         Color(int r, int g, int b, int a);
+        float R;
+        float G;
+        float B;
+        float A;
         bool operator==(Flood::Color v);
         bool NearEqual(Flood::Color a, float tolerance);
         Flood::Color operator*(float s);

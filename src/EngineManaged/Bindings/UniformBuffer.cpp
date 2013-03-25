@@ -102,6 +102,10 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
     for each(Flood::Color _element in vec)
     {
         auto _marshal0 = ::Color();
+        _marshal0.r = _element.R;
+        _marshal0.g = _element.G;
+        _marshal0.b = _element.B;
+        _marshal0.a = _element.A;
         auto _marshalElement = _marshal0;
         _tmpvec.push_back(_marshalElement);
     }

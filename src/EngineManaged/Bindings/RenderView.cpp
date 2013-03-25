@@ -85,6 +85,10 @@ Flood::Color Flood::RenderView::GetClearColor()
 void Flood::RenderView::SetClearColor(Flood::Color v)
 {
     auto _marshal0 = ::Color();
+    _marshal0.r = v.R;
+    _marshal0.g = v.G;
+    _marshal0.b = v.B;
+    _marshal0.a = v.A;
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setClearColor(arg0);
 }
@@ -162,6 +166,10 @@ Flood::Color Flood::RenderView::ClearColor::get()
 void Flood::RenderView::ClearColor::set(Flood::Color value)
 {
     auto _marshal0 = ::Color();
+    _marshal0.r = value.R;
+    _marshal0.g = value.G;
+    _marshal0.b = value.B;
+    _marshal0.a = value.A;
     ((::RenderView*)NativePtr)->clearColor = _marshal0;
 }
 
