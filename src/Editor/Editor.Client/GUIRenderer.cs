@@ -45,7 +45,7 @@ namespace Editor.Client
             gb.Declarations.Add(new VertexElement(VertexAttribute.Color, VertexDataType.Float, 4));
             gb.Declarations.CalculateStrides();
 
-            zcount = -100;
+            zcount = -99;
         }
 
         ~ManagedGeometryBuffer()
@@ -66,7 +66,7 @@ namespace Editor.Client
             batchInfo.Ranges.Add((int) gb.GetNumVertices());
 
             var top = Math.Max(rect.Bottom, rect.Top);
-            var bottom = Math.Max(rect.Bottom, rect.Top);
+            var bottom = Math.Min(rect.Bottom, rect.Top);
             var left = rect.Left;
             var right = rect.Right;
 
@@ -139,7 +139,7 @@ namespace Editor.Client
             gb.Clear();
             gb.ClearIndexes();
 
-            zcount = -100;
+            zcount = -99;
         }
 
         ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
@@ -487,8 +487,9 @@ namespace Editor.Client
 
         public override void LoadTexture(Flood.GUI.Texture tex)
         {
+            var resMan = FloodEngine.GetEngine().GetResourceManager();
             var options = new ResourceLoadOptions {Name = tex.Name, AsynchronousLoad = false};
-            var resourceHandle = FloodEngine.GetEngine().GetResourceManager().LoadResource<Image>(tex.Name);
+            var resourceHandle = resMan.LoadResource<Image>(options);
         
             if(resourceHandle.Id == ResourceHandle<Resource>.Invalid)
             {
