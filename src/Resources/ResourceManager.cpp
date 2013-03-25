@@ -50,12 +50,34 @@ ReferenceCounted* ResourceHandleFind(HandleId id)
 	return res;
 }
 
+static const char* GetResourceGroupString(ResourceGroup group)
+{
+    switch(group)
+    {
+    case ResourceGroup::General: return "General";
+    case ResourceGroup::Images: return "Images";
+    case ResourceGroup::Meshes: return "Meshes";
+    case ResourceGroup::Fonts: return "Fonts";
+    case ResourceGroup::Shaders: return "Shaders";
+    case ResourceGroup::Audio: return "Audio";
+    case ResourceGroup::Scripts: return "Scripts";
+    case ResourceGroup::Scenes: return "Scenes";
+    case ResourceGroup::Materials: return "Materials";
+    case ResourceGroup::Particles: return "Particles";
+    }
+
+    assert(0 && "Unreachable");
+    return nullptr;
+}
+
 ResourceHandle ResourceHandleCreate(Resource* res)
 {
 	if( !gs_ResourceHandleManager ) return HandleInvalid;
 	
 	HandleId handle = HandleCreate(gs_ResourceHandleManager, res);
-	LogDebug("ResourceHandleCreate: %lu %s", handle, res->getPath().c_str());
+    LogDebug("ResourceHandleCreate: %s %lu %s",
+        GetResourceGroupString(res->getResourceGroup()), handle,
+        res->getPath().c_str());
 	
 	return handle;
 }
