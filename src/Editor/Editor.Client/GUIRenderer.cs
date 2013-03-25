@@ -528,17 +528,17 @@ namespace Editor.Client
             var handle = (ResourceHandle<Image>) texture.RendererData;
             var image = handle.Resolve();
 
-            var offset = 4 * (x + y * texture.Width);
-            //std.vector<uint8>& data = img.getBuffer();
+            int offset = (int)(4 * (x + y * texture.Width));
+            var data = image.GetBuffer();
 
-            //var pixel = System.Drawing.Color.FromArgb(data[offset + 3], data[offset + 0],
-            //    data[offset + 1], data[offset + 2]);
+            var pixel = System.Drawing.Color.FromArgb(data[offset + 3], data[offset + 0],
+                data[offset + 1], data[offset + 2]);
         
             // Retrieving the entire texture for a single pixel read
             // is kind of a waste - maybe cache this pointer in the texture
             // data and then release later on? It's never called during runtime
             // - only during initialization.
-            return System.Drawing.Color.Black;
+            return pixel;
         }
 
     };
