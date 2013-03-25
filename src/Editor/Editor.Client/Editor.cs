@@ -10,7 +10,7 @@ namespace Flood.Editor
     public sealed class Editor : IDisposable
     {
         public MainWindow MainWindow { get; private set; }
-        public Window PaneWindow;
+        public Window PaneWindow  { get; private set; }
 
         public Editor(Renderer renderer, string textureName)
         {

@@ -11,7 +11,7 @@ namespace Editor.Client.Gui
         /// <summary>
         /// Native GUI window.
         /// </summary>
-        public Window NativeWindow;
+        public Window NativeWindow  { get; set; }
 
         /// <summary>
         /// Renderer of the GUI.
