@@ -74,7 +74,7 @@ void Flood::RenderBatch::SetRenderPriority(int v)
 
 Flood::GeometryBuffer^ Flood::RenderBatch::GetGeometryBuffer()
 {
-    auto ret = ((::RenderBatch*)NativePtr)->getGeometryBuffer();
+    auto &ret = ((::RenderBatch*)NativePtr)->getGeometryBuffer();
     return gcnew Flood::GeometryBuffer((::GeometryBuffer*)ret.get());
 }
 
@@ -86,7 +86,7 @@ void Flood::RenderBatch::SetGeometryBuffer(Flood::GeometryBuffer^ v)
 
 Flood::UniformBuffer^ Flood::RenderBatch::GetUniformBuffer()
 {
-    auto ret = ((::RenderBatch*)NativePtr)->getUniformBuffer();
+    auto &ret = ((::RenderBatch*)NativePtr)->getUniformBuffer();
     return gcnew Flood::UniformBuffer((::UniformBuffer*)ret.get());
 }
 
@@ -98,7 +98,7 @@ void Flood::RenderBatch::SetUniformBuffer(Flood::UniformBuffer^ v)
 
 Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::GetMaterial()
 {
-    auto ret = ((::RenderBatch*)NativePtr)->getMaterial();
+    auto &ret = ((::RenderBatch*)NativePtr)->getMaterial();
     return Flood::ResourceHandle<Flood::Material^>(ret.id);
 }
 

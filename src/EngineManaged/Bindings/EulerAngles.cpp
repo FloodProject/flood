@@ -45,7 +45,7 @@ Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::EulerAngles _0)
     _marshal0.y = _0.Y;
     _marshal0.z = _0.Z;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 
@@ -57,7 +57,7 @@ Flood::EulerAngles Flood::EulerAngles::operator+=(Flood::Vector3 _0)
     _marshal0.y = _0.Y;
     _marshal0.z = _0.Z;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 

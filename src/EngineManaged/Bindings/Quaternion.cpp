@@ -130,7 +130,7 @@ Flood::Quaternion Flood::Quaternion::operator*=(Flood::Quaternion a)
     _marshal0.z = a.Z;
     _marshal0.w = a.W;
     auto arg0 = _marshal0;
-    auto ret = this0->operator*=(arg0);
+    auto &ret = this0->operator*=(arg0);
     return Flood::Quaternion((::Quaternion*)&ret);
 }
 

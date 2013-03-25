@@ -51,7 +51,7 @@ Flood::ResourceGroup Flood::Material::GetResourceGroup()
 
 System::String^ Flood::Material::GetName()
 {
-    auto ret = ((::Material*)NativePtr)->getName();
+    auto &ret = ((::Material*)NativePtr)->getName();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
@@ -63,7 +63,7 @@ void Flood::Material::SetName(System::String^ v)
 
 Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::GetShader()
 {
-    auto ret = ((::Material*)NativePtr)->getShader();
+    auto &ret = ((::Material*)NativePtr)->getShader();
     return Flood::ResourceHandle<Flood::ShaderMaterial^>(ret.id);
 }
 
@@ -236,7 +236,7 @@ Flood::ResourceHandle<Flood::Image^> Flood::Material::GetTexture(unsigned char u
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
     auto arg0 = (uint8)unit;
-    auto ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
+    auto &ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
     return gcnew Flood::TextureUnit((::TextureUnit*)&ret);
 }
 

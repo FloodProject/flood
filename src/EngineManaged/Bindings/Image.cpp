@@ -26,7 +26,7 @@ Flood::Image::Image(::Image* native)
 Flood::Image::Image(System::IntPtr native)
     : Flood::Resource(native)
 {
-    //auto __native = (::Image*)((::ReferenceCounted*)native.ToPointer());
+    auto __native = (::Image*)native.ToPointer();
 }
 
 Flood::Image::Image()
@@ -82,7 +82,7 @@ void Flood::Image::SetPixelFormat(Flood::PixelFormat v)
 
 System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer()
 {
-    auto ret = ((::Image*)NativePtr)->getBuffer();
+    auto &ret = ((::Image*)NativePtr)->getBuffer();
     auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
     for(auto _element : ret)
     {

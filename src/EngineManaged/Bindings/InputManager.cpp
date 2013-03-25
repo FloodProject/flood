@@ -41,7 +41,7 @@ void Flood::InputManager::AddDevice(Flood::InputDevice^ device)
 
 System::Collections::Generic::List<Flood::InputDevice^>^ Flood::InputManager::GetDevices()
 {
-    auto ret = ((::InputManager*)NativePtr)->getDevices();
+    auto &ret = ((::InputManager*)NativePtr)->getDevices();
     auto _tmpret = gcnew System::Collections::Generic::List<Flood::InputDevice^>();
     for(auto _element : ret)
     {

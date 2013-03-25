@@ -27,7 +27,7 @@ Flood::Resource::Resource(System::IntPtr native)
 
 System::String^ Flood::Resource::GetPath()
 {
-    auto ret = ((::Resource*)NativePtr)->getPath();
+    auto &ret = ((::Resource*)NativePtr)->getPath();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 

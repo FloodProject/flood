@@ -137,7 +137,7 @@ void Flood::Mouse::ProcessEvent(Flood::InputEvent^ event)
 
 Flood::MouseInfo^ Flood::Mouse::GetMouseInfo()
 {
-    auto ret = ((::Mouse*)NativePtr)->getMouseInfo();
+    auto &ret = ((::Mouse*)NativePtr)->getMouseInfo();
     return gcnew Flood::MouseInfo((::MouseInfo*)&ret);
 }
 

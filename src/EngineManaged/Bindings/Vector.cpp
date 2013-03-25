@@ -112,7 +112,7 @@ Flood::Vector3 Flood::Vector3::operator+=(Flood::Vector3 v)
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::Vector3((::Vector3*)&ret);
 }
 
@@ -143,7 +143,7 @@ Flood::Vector3 Flood::Vector3::operator-=(Flood::Vector3 v)
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
-    auto ret = this0->operator-=(arg0);
+    auto &ret = this0->operator-=(arg0);
     return Flood::Vector3((::Vector3*)&ret);
 }
 
@@ -169,7 +169,7 @@ Flood::Vector3 Flood::Vector3::operator*(Flood::Vector3 v)
 Flood::Vector3 Flood::Vector3::operator*=(float s)
 {
     auto this0 = (::Vector3*) 0;
-    auto ret = this0->operator*=(s);
+    auto &ret = this0->operator*=(s);
     return Flood::Vector3((::Vector3*)&ret);
 }
 
@@ -183,7 +183,7 @@ Flood::Vector3 Flood::Vector3::operator/(float s)
 Flood::Vector3 Flood::Vector3::operator/=(float s)
 {
     auto this0 = (::Vector3*) 0;
-    auto ret = this0->operator/=(s);
+    auto &ret = this0->operator/=(s);
     return Flood::Vector3((::Vector3*)&ret);
 }
 
@@ -408,7 +408,7 @@ Flood::Vector4 Flood::Vector4::operator+=(Flood::Vector4 v)
     _marshal0.z = v.Z;
     _marshal0.w = v.W;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::Vector4((::Vector4*)&ret);
 }
 
@@ -441,7 +441,7 @@ Flood::Vector4 Flood::Vector4::operator-=(Flood::Vector4 v)
     _marshal0.z = v.Z;
     _marshal0.w = v.W;
     auto arg0 = _marshal0;
-    auto ret = this0->operator-=(arg0);
+    auto &ret = this0->operator-=(arg0);
     return Flood::Vector4((::Vector4*)&ret);
 }
 
@@ -468,7 +468,7 @@ Flood::Vector4 Flood::Vector4::operator*(Flood::Vector4 v)
 Flood::Vector4 Flood::Vector4::operator*=(float s)
 {
     auto this0 = (::Vector4*) 0;
-    auto ret = this0->operator*=(s);
+    auto &ret = this0->operator*=(s);
     return Flood::Vector4((::Vector4*)&ret);
 }
 
@@ -482,7 +482,7 @@ Flood::Vector4 Flood::Vector4::operator/(float s)
 Flood::Vector4 Flood::Vector4::operator/=(float s)
 {
     auto this0 = (::Vector4*) 0;
-    auto ret = this0->operator/=(s);
+    auto &ret = this0->operator/=(s);
     return Flood::Vector4((::Vector4*)&ret);
 }
 
@@ -574,7 +574,7 @@ Flood::Vector2 Flood::Vector2::operator+=(Flood::Vector2 v)
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::Vector2((::Vector2*)&ret);
 }
 
@@ -603,7 +603,7 @@ Flood::Vector2 Flood::Vector2::operator-=(Flood::Vector2 v)
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     auto arg0 = _marshal0;
-    auto ret = this0->operator-=(arg0);
+    auto &ret = this0->operator-=(arg0);
     return Flood::Vector2((::Vector2*)&ret);
 }
 
@@ -709,7 +709,7 @@ Flood::Vector2i Flood::Vector2i::operator+=(Flood::Vector2i v)
     _marshal0.x = (int32)v.X;
     _marshal0.y = (int32)v.Y;
     auto arg0 = _marshal0;
-    auto ret = this0->operator+=(arg0);
+    auto &ret = this0->operator+=(arg0);
     return Flood::Vector2i((::Vector2i*)&ret);
 }
 
@@ -738,7 +738,7 @@ Flood::Vector2i Flood::Vector2i::operator-=(Flood::Vector2i v)
     _marshal0.x = (int32)v.X;
     _marshal0.y = (int32)v.Y;
     auto arg0 = _marshal0;
-    auto ret = this0->operator-=(arg0);
+    auto &ret = this0->operator-=(arg0);
     return Flood::Vector2i((::Vector2i*)&ret);
 }
 

@@ -46,7 +46,7 @@ void Flood::Keyboard::ResetKeys()
 
 System::Collections::Generic::List<bool>^ Flood::Keyboard::GetKeyState()
 {
-    auto ret = ((::Keyboard*)NativePtr)->getKeyState();
+    auto &ret = ((::Keyboard*)NativePtr)->getKeyState();
     auto _tmpret = gcnew System::Collections::Generic::List<bool>();
     for(auto _element : ret)
     {

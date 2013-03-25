@@ -190,7 +190,7 @@ Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()
 
 System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::GetExtensions()
 {
-    auto ret = ((::ResourceLoader*)NativePtr)->getExtensions();
+    auto &ret = ((::ResourceLoader*)NativePtr)->getExtensions();
     auto _tmpret = gcnew System::Collections::Generic::List<System::String^>();
     for(auto _element : ret)
     {

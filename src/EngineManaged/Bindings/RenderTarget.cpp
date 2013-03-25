@@ -81,7 +81,7 @@ void Flood::RenderTarget::Update()
 
 Flood::Settings Flood::RenderTarget::GetSettings()
 {
-    auto ret = ((::RenderTarget*)NativePtr)->getSettings();
+    auto &ret = ((::RenderTarget*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 
@@ -99,7 +99,7 @@ void Flood::RenderTarget::SetContext(Flood::RenderContext^ context)
 
 System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::GetViews()
 {
-    auto ret = ((::RenderTarget*)NativePtr)->getViews();
+    auto &ret = ((::RenderTarget*)NativePtr)->getViews();
     auto _tmpret = gcnew System::Collections::Generic::List<Flood::RenderView^>();
     for(auto _element : ret)
     {

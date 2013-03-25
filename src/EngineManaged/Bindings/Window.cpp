@@ -145,7 +145,7 @@ Flood::InputManager^ Flood::Window::GetInput()
 
 Flood::Settings Flood::Window::GetSettings()
 {
-    auto ret = ((::Window*)NativePtr)->getSettings();
+    auto &ret = ((::Window*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 
