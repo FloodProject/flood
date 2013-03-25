@@ -642,7 +642,7 @@ namespace Editor.Client
 
     };
 
-    public class GwenInput
+    public sealed class GwenInput : IDisposable
     {
         InputManager inputManager;
 
@@ -672,6 +672,29 @@ namespace Editor.Client
             var keyboard = inputManager.GetKeyboard();
             keyboard.KeyPress += ProcessKeyDown;
             keyboard.KeyRelease += ProcessKeyUp;
+        }
+
+        ~GwenInput()
+        {
+            
+        }
+
+        public void Dispose()
+        {
+            Log.Info("Disposing GwenInput");
+
+            var mouse = inputManager.GetMouse();
+            mouse.MouseMove -= ProcessMouseMove;
+            mouse.MouseDrag -= ProcessMouseDrag;
+            mouse.MouseButtonPress -= ProcessMouseButtonPressed;
+            mouse.MouseButtonRelease -= ProcessMouseButtonReleased;
+            mouse.MouseWheelMove -= ProcessMouseWheel;
+
+            var keyboard = inputManager.GetKeyboard();
+            keyboard.KeyPress -= ProcessKeyDown;
+            keyboard.KeyRelease -= ProcessKeyUp;
+
+            GC.SuppressFinalize(this);
         }
 
         public void Initialize(Flood.GUI.Controls.Canvas c)
