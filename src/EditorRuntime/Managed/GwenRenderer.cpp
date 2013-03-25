@@ -11,12 +11,11 @@
 using namespace Flood::GUI; 
 using namespace System::Collections::Generic;
 
-
 static gcroot<Editor::Client::NativeGUI^> gs_GUIInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager)
 {
-    gs_GUIInstance = gcnew Editor::Client::NativeGUI(System::IntPtr(inputManager));
+	gs_GUIInstance = gcnew Editor::Client::NativeGUI(System::IntPtr(inputManager));
 }
 
 void UpdateGUI()
@@ -38,7 +37,7 @@ void CloseGUI()
 
 void RenderGUI(RenderBlock& rb)
 {
-    auto renderBlock = gcnew Flood::RenderBlock(System::IntPtr(&rb));
+	auto renderBlock = gcnew Flood::RenderBlock(System::IntPtr(&rb));
 	gs_GUIInstance->Render(renderBlock);
 }
 
