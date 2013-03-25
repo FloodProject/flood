@@ -678,13 +678,14 @@ namespace Editor.Client
         }
     }
 
-    public class NativeGUI {
-
+    public class NativeGUI
+    {
         public readonly Flood.Editor.Editor Editor;
         GwenRenderer renderer;
         GwenInput input;
 
-        public NativeGUI(IntPtr inputManagerPtr){
+        public NativeGUI(IntPtr inputManagerPtr)
+        {
             var inputManager = new InputManager(inputManagerPtr);
             renderer = new GwenRenderer();
             Editor = new Flood.Editor.Editor(renderer,"DefaultSkin.png");
@@ -698,18 +699,21 @@ namespace Editor.Client
             System.Diagnostics.Debugger.Break();
         }
 
-        public void Close() {
+        public void Close()
+        {
             TextRenderer.ClearCache();
             Editor.Dispose();
         }
 
-        public void Render(RenderBlock rb){
+        public void Render(RenderBlock rb)
+        {
             renderer.Clear();
             Editor.MainWindow.Render();
             renderer.Render(rb);
         }
 
-        public void SetSize(int x, int y){
+        public void SetSize(int x, int y)
+        {
             Editor.MainWindow.Canvas.SetSize(x, y);
         }
     };
