@@ -6,6 +6,7 @@ project "Editor.Client"
 	kind "SharedLib"
 	language "C#"
 	location "."
+	flags { "Unsafe" }
 	
 	SetupAddinResources()
 	
