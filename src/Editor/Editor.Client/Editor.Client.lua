@@ -5,11 +5,10 @@ project "Editor.Client"
 
 	kind "SharedLib"
 	language "C#"
-	
 	location "."
 	
-    SetupAddinResources()
-    
+	SetupAddinResources()
+	
 	files
 	{
 		"Editor.Client.lua",
@@ -25,5 +24,5 @@ project "Editor.Client"
 		"Editor.Shared",
 		"Editor.Server",
 		"ServerManaged",
-        "Mono.Addins"
+		"Mono.Addins"
 	}
