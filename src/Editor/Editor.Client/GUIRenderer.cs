@@ -220,135 +220,37 @@ namespace Flood.Editor.Client
 
     public class TextRenderer
     {
-        static Flood.TextureAtlas textureAtlas;
-        static Flood.TrueTypeFont font;
-
-        static System.Drawing.StringFormat stringFormat;
-        static System.Drawing.Graphics graphics;
-        static StringTextureCache stringCache = new StringTextureCache();
+        static readonly Flood.TextureAtlas textureAtlas;
 
         static TextRenderer()
         {
             textureAtlas = new TextureAtlas(512);
-            font = new TrueTypeFont("");
-
-            stringFormat = new System.Drawing.StringFormat(System.Drawing.StringFormat.GenericTypographic);
-            stringFormat.FormatFlags = stringFormat.FormatFlags | System.Drawing.StringFormatFlags.MeasureTrailingSpaces;
-            graphics = System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(1024, 1024, System.Drawing.Imaging.PixelFormat.Format32bppArgb));
         }
 
-        static bool LoadFont(Flood.GUI.Font font)
+        static Flood.Font GetOrLoadFont(Flood.GUI.Font font)
         {
-            //Debug.Print(String.Format("LoadFont {0}", font.FaceName));
-            font.RealSize = font.Size;// * Scale;
-            var sysFont = (System.Drawing.Font)font.RendererData;
+            var ttfont = font.RendererData as Flood.Font;
+            if(ttfont != null)
+                return ttfont;
 
-            sysFont = null;
-
-            // "If you attempt to use a font that is not supported, or the font is not installed on the machine that is running the application, the Microsoft Sans Serif font will be substituted."
-            sysFont = new System.Drawing.Font(font.FaceName, font.Size);
-            font.RendererData = sysFont; 
-            return true;
-       }
-
-       static void FreeFont(Flood.GUI.Font font)
-       {
-            //Debug.Print(String.Format("FreeFont {0}", font.FaceName));
-            if (font.RendererData == null)
-                return;
-
-            //Debug.Print(String.Format("FreeFont {0} - actual free", font.FaceName));
-            var sysFont = (System.Drawing.Font)font.RendererData;
-            if (sysFont == null)
-            //    throw new System.InvalidOperationException("Freeing empty font");
-                return;
-
-            //sysFont.Dispose();
-            font.RendererData = null;
+            ttfont = new TrueTypeFont("");
+            font.RendererData = ttfont; 
+            return ttfont;
         }
 
-        static  System.Drawing.Font ConvertFont(Flood.GUI.Font font)
+        public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
         {
-            var sysFont = (System.Drawing.Font)font.RendererData;
-            if (sysFont == null || Math.Abs(font.RealSize - font.Size /** Scale*/) > 2)
-            {
-                FreeFont(font);
-                LoadFont(font);
-                sysFont = (System.Drawing.Font)font.RendererData;
-            }
-            return sysFont;
+            return new System.Drawing.Point(10, 10);
         }
 
-        public static System.Drawing.Point MeasureText(System.Drawing.Font font, System.String text, System.Drawing.StringFormat stringFormat)
+        public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Point position, String text)
         {
-            System.Drawing.SizeF size = graphics.MeasureString(text, font, System.Drawing.Point.Empty, stringFormat);
-            return new System.Drawing.Point((int)Math.Floor(size.Width+0.5), (int)Math.Floor(size.Height+0.5));
-        }
-
-        static Flood.GUI.Texture GetTexture(Flood.GUI.Font font, System.String text)
-        {
-            var key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
-            if (stringCache.ContainsKey(key))
-                return stringCache[key];
-            return null;
-        }
-
-        static void AddTexture(Flood.GUI.Font font, System.String text, Flood.GUI.Texture texture)
-        {
-            var key = new System.Tuple<System.String, Flood.GUI.Font>(text, font);
-            stringCache.Add(key,texture);
-        }
-
-        public static void ClearCache()
-        {
-            stringCache.Clear();
-        }
-
-        //TODO use scale, remove renderer
-        public static Flood.GUI.Texture StringToTexture(System.String text, Flood.GUI.Font font, Flood.GUI.Renderers.Renderer renderer)
-        {
-            var brush = System.Drawing.Brushes.White;
-            var texture = GetTexture(font,text);
-            if(texture != null)
-            {
-                //TODO Check stringFormat
-                return texture;
-            }
-
-            System.Drawing.Font sysFont = ConvertFont(font);
-
-            System.Drawing.Point size = TextRenderer.MeasureText(sysFont, text, stringFormat);
-            texture = new Flood.GUI.Texture(renderer) {Width = size.X, Height = size.Y};
-
-            var bmp = new System.Drawing.Bitmap(size.X, size.Y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            var gfx = System.Drawing.Graphics.FromImage(bmp);
-
-            // NOTE:    TextRenderingHint.AntiAliasGridFit looks sharper and in most cases better
-            //          but it comes with a some problems.
-            //
-            //          1.  Graphic.MeasureString and format.MeasureCharacterRanges 
-            //              seem to return wrong values because of this.
-            //
-            //          2.  While typing the kerning changes in random places in the sentence.
-            // 
-            //          Until 1st problem is fixed we should use TextRenderingHint.AntiAlias...  :-(
-
-            gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            gfx.Clear(System.Drawing.Color.Transparent);
-
-            gfx.DrawString(text, sysFont, brush, System.Drawing.Point.Empty, stringFormat); // render text on the bitmap
-            TextureUtil.LoadTextureInternal(texture,bmp);
-            AddTexture(font,text,texture);
-            return texture;
-        }
-
-        public static void DrawText(GwenRenderer renderer, Point position, String text)
-        {
+            var ttfont = GetOrLoadFont(font);
             for(var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
                 Glyph glyph;
-                bool foundGlyph = font.GetGlyph(c, out glyph);
+                var foundGlyph = ttfont.GetGlyph(c, out glyph);
                 if(!foundGlyph)
                 {
                     Log.Warn("Glyph not found for character "+c);
@@ -358,7 +260,7 @@ namespace Flood.Editor.Client
                 if (glyph.Image.Id != ResourceHandle<Resource>.Invalid)
                 {
                     SubTexture subTexture;
-                    bool subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                    var subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
                     if(!subTextureFound){
                         textureAtlas.AddImage(glyph.Image);
                         subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
@@ -413,18 +315,11 @@ namespace Flood.Editor.Client
                 }
 
                 if (i < text.Length-1){
-                    Vector2i kern = font.GetKerning(text[i],text[i+1]);
+                    Vector2i kern = ttfont.GetKerning(text[i],text[i+1]);
                     position.X += (int)(glyph.Advance + kern.X + 0.5);
                     position.Y += kern.Y;
                 }
             }
-        }
-
-        public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
-        {
-            var sysFont = ConvertFont(font);
-            var size = graphics.MeasureString(text, sysFont, System.Drawing.Point.Empty, stringFormat);
-            return new System.Drawing.Point((int)Math.Floor(size.Width+0.5), (int)Math.Floor(size.Height+0.5));
         }
     };
 
@@ -584,10 +479,7 @@ namespace Flood.Editor.Client
 
         public override void RenderText(Flood.GUI.Font font, System.Drawing.Point position, System.String text)
         {
-           //Flood.GUI.Texture texture = TextRenderer.StringToTexture(text, font, this); // renders string on the texture
-           //var rect = new System.Drawing.Rectangle(position.X, position.Y, texture.Width, texture.Height);
-           //DrawTexturedRect(texture, rect,0,0,1,1);
-           TextRenderer.DrawText(this, position, text);
+           TextRenderer.DrawText(this, font, position, text);
         }
 
         public override void LoadTexture(Flood.GUI.Texture tex)
