@@ -8,19 +8,21 @@ namespace Flood.Editor.Server
 {
     public class ProjectManager : IProjectManager
     {
-        private readonly Dictionary<Guid, Project> _projects;
-        readonly IDatabaseManager database;
-        private Timer _timer;
-        private bool _databaseModified;
-        private const int TimerInterval = 5000;
+        const int TimerInterval = 5000;
 
+        readonly Dictionary<Guid, Project> projects;
+        readonly IDatabaseManager database;
+
+        Timer timer;
+        bool databaseModified;
 
         public ProjectManager(IDatabaseManager db)
         {
             projects = new Dictionary<Guid, Project>();
             database = db;
+            databaseModified = false;
+
             LoadProjectsFromDatabase();
-            _databaseModified = false;
             StartTimer();
         }
 
@@ -54,15 +56,16 @@ namespace Flood.Editor.Server
             {
             }
         }
+
         /// <summary>
         /// Start timer function
         /// </summary>
         private void StartTimer()
         {
-            _timer = new Timer(TimerInterval);
-            _timer.Elapsed += new ElapsedEventHandler(TimerEvent);
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
+            timer = new Timer(TimerInterval);
+            timer.Elapsed += new ElapsedEventHandler(TimerEvent);
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace Flood.Editor.Server
             database.StartSession();
             List<Project> projs = database.LoadAll<Project>();
             foreach (var project in projs)
-                _projects.Add(project.Id, project);
+                projects.Add(project.Id, project);
         }
 
         /// <summary>
@@ -81,12 +84,12 @@ namespace Flood.Editor.Server
         /// </summary>
         public bool AddUserToProject(Guid projectId, ProjectUser user)
         {
-            if (!_projects.ContainsKey(projectId))
+            if (!projects.ContainsKey(projectId))
                 return false;
             
-            bool ret = _projects[projectId].AddUser(user);
+            bool ret = projects[projectId].AddUser(user);
             if(ret)
-                UpdateDatabase(_projects[projectId]);
+                UpdateDatabase(projects[projectId]);
             
             return ret;
         }
@@ -96,49 +99,52 @@ namespace Flood.Editor.Server
         /// </summary>
         public bool RemoveUserFromProject(Guid projectId, ProjectUser user)
         {
-            if (!_projects.ContainsKey(projectId))
+            if (!projects.ContainsKey(projectId))
                 return false;
-            bool ret = _projects[projectId].RemoveUser(user);
+            bool ret = projects[projectId].RemoveUser(user);
             if (ret)
-                UpdateDatabase(_projects[projectId]);
+                UpdateDatabase(projects[projectId]);
 
             return ret;
         }
 
         /// <summary>
-        /// Modifies user permissions 
+        /// Modifies user permissions.
         /// </summary>
         /// <remarks /> New permissions are passed insed the ProjectUser
         public bool ModifyUserPermissions(Guid projectId, ProjectUser user)
         {
-            if (!_projects.ContainsKey(projectId))
+            if (!projects.ContainsKey(projectId))
                 return false;
-            bool ret = _projects[projectId].ModifyUser(user);
+
+            var ret = projects[projectId].ModifyUser(user);
+
             if (ret)
-                UpdateDatabase(_projects[projectId]);
+                UpdateDatabase(projects[projectId]);
 
             return ret;
  
         }
 
         /// <summary>
-        /// Returns all project users 
+        /// Returns all project users.
         /// </summary>
         public ICollection<ProjectUser> GetUsers(Guid projectId)
         {
-            if (!_projects.ContainsKey(projectId))
+            if (!projects.ContainsKey(projectId))
                 return null;
-            return _projects[projectId].GetUsers();
+
+            return projects[projectId].GetUsers();
         }
 
         /// <summary>
-        /// Returns project 
+        /// Returns project.
         /// </summary>
         public Project GetProject(Guid projectId)
         {
-            if (!_projects.ContainsKey(projectId))
+            if (!projects.ContainsKey(projectId))
                 return null;
-            return _projects[projectId];
+            return projects[projectId];
         }
 
         /// <summary>
@@ -146,7 +152,7 @@ namespace Flood.Editor.Server
         /// </summary>
         public Dictionary<Guid, Project> Projects
         {
-            get { return _projects; }
+            get { return projects; }
         }
 
         /// <summary>
@@ -168,7 +174,7 @@ namespace Flood.Editor.Server
             if (project == null)
                 return;
 
-            _projects.Add(project.Id, project);
+            projects.Add(project.Id, project);
             ProjectAdded(this, project);
             UpdateDatabase(project);
         }
@@ -180,8 +186,8 @@ namespace Flood.Editor.Server
         /// <returns>True if the project was removed, false otherwise.</returns>
         public bool RemoveProject(Guid id)
         {
-            var project = _projects[id];
-            var didRemove = _projects.Remove(id);
+            var project = projects[id];
+            var didRemove = projects.Remove(id);
 
             if (didRemove)
             {
