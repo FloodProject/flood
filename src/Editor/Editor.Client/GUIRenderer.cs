@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Editor.Client;
 using Flood;
 using Flood.GUI;
 using Flood.GUI.Input;
+
 using Color = Flood.Color;
 using Image = Flood.Image;
 using StringTextureCache = System.Collections.Generic.Dictionary<
@@ -56,10 +56,11 @@ namespace Editor.Client
         public void AddRectangle(System.Drawing.Rectangle rect, System.Drawing.Color color)
         {
             var handle = new ResourceHandle<Image>(ResourceHandle<Image>.Invalid);
-            AddRectangle(rect,Vector2.Zero,Vector2.Zero, handle, color);
+            AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, handle, color);
         }
 
-        public void AddRectangle(Rectangle rect, Vector2 uv1, Vector2 uv2,
+        public void AddRectangle(Rectangle rect, 
+            Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV,
             ResourceHandle<Image> imageHandle, System.Drawing.Color color)
         {
             var batchInfo = GetCreateBatchInfo(imageHandle);
@@ -87,10 +88,10 @@ namespace Editor.Client
             v3.Color = c;
             v4.Color = c;
 
-            v1.UV = uv1;
-            v2.UV = new Vector2(uv2.X, uv1.Y);
-            v3.UV = uv2;
-            v4.UV = new Vector2(uv1.X, uv2.Y);
+            v1.UV = topLeftUV;
+		    v2.UV = topRightUV;
+		    v3.UV = bottomRightUV;
+		    v4.UV = bottomLeftUV;
 
             //Vertex buffer setup
             unsafe
@@ -218,12 +219,18 @@ namespace Editor.Client
 
     public class TextRenderer
     {
+        static Flood.TextureAtlas textureAtlas;
+        static Flood.TrueTypeFont font;
+
         static System.Drawing.StringFormat stringFormat;
         static System.Drawing.Graphics graphics;
         static StringTextureCache stringCache = new StringTextureCache();
 
         static TextRenderer()
         {
+            textureAtlas = new TextureAtlas(512);
+            font = new TrueTypeFont("");
+
             stringFormat = new System.Drawing.StringFormat(System.Drawing.StringFormat.GenericTypographic);
             stringFormat.FormatFlags = stringFormat.FormatFlags | System.Drawing.StringFormatFlags.MeasureTrailingSpaces;
             graphics = System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(1024, 1024, System.Drawing.Imaging.PixelFormat.Format32bppArgb));
@@ -332,6 +339,84 @@ namespace Editor.Client
             TextureUtil.LoadTextureInternal(texture,bmp);
             AddTexture(font,text,texture);
             return texture;
+        }
+
+        public static void DrawText(GwenRenderer renderer, Point position, String text)
+        {
+            for(var i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                Glyph glyph;
+                bool foundGlyph = font.GetGlyph(c, out glyph);
+                if(!foundGlyph)
+                {
+                    Log.Warn("Glyph not found for character "+c);
+                    continue;
+                }
+
+                if (glyph.Image.Id != ResourceHandle<Resource>.Invalid)
+                {
+                    SubTexture subTexture;
+                    bool subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                    if(!subTextureFound){
+                        textureAtlas.AddImage(glyph.Image);
+                        subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                        if(!subTextureFound)
+                        {
+                            Log.Warn("subTexture not Found\n");
+                            continue;
+                        }
+                    }
+
+                    var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
+                    Image atlasImage = atlasImageHandle.Resolve();
+
+                    var texture = new Flood.GUI.Texture(renderer);
+                    texture.Width = (int) atlasImage.GetWidth();
+                    texture.Height = (int) atlasImage.GetHeight();
+                    texture.RendererData = atlasImageHandle;
+
+                    Image glyphImage = glyph.Image.Resolve();
+
+                    var renderRect = new System.Drawing.Rectangle(position.X, position.Y + glyph.BaseLineOffset, 
+                        (int)glyphImage.GetWidth(), (int)glyphImage.GetHeight());
+
+                    Vector2 topLeftUV, topRightUV, bottomLeftUV, bottomRightUV;
+
+                    var rect = subTexture.Rect;
+            
+                    float width = atlasImage.GetWidth();
+                    float height = atlasImage.GetHeight();
+                    float u1 = rect.X/width;
+                    float v1 = rect.Y/height;
+                    float u2 = (rect.X+rect.Width)/width;
+                    float v2 = (rect.Y+rect.Height)/height;
+
+                    if(!subTexture.IsRotated)
+                    {
+                        topLeftUV = new Vector2(u1,v1);
+                        topRightUV = new Vector2(u2,v1);
+                        bottomLeftUV = new Vector2(u1,v2);
+                        bottomRightUV = new Vector2(u2,v2);
+                    }
+                    else
+                    {
+                        topLeftUV = new Vector2(u1,v2);
+                        topRightUV = new Vector2(u1,v1);
+                        bottomLeftUV = new Vector2(u2,v2);
+                        bottomRightUV = new Vector2(u2,v1);
+                    }
+
+                    renderer.DrawTexturedRect(texture,renderRect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV);
+                    texture.Dispose();
+                }
+
+                if (i < text.Length-1){
+                    Vector2i kern = font.GetKerning(text[i],text[i+1]);
+                    position.X += (int)(glyph.Advance + kern.X + 0.5);
+                    position.Y += kern.Y;
+                }
+            }
         }
 
         public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
@@ -470,8 +555,21 @@ namespace Editor.Client
 
             var handle = (ResourceHandle<Image>) tex.RendererData;
 
-            buffer.AddRectangle(rect,new Vector2(u1,v1),new Vector2(u2,v2), handle, color);
+            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u1,v2), new Vector2(u2,v2), handle, color);
         }
+
+        public void DrawTexturedRect(Flood.GUI.Texture t, System.Drawing.Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
+	    {
+		    if(t.RendererData == null){
+			    DrawFilledRect(rect);
+		    }
+
+		    var handle = (ResourceHandle<Image>) t.RendererData;
+
+		    rect = Translate(rect);
+
+		    buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, handle, color);
+	    }
 
         public override System.Drawing.Point MeasureText(Flood.GUI.Font font, System.String text) 
         {
@@ -480,9 +578,10 @@ namespace Editor.Client
 
         public override void RenderText(Flood.GUI.Font font, System.Drawing.Point position, System.String text)
         {
-           Flood.GUI.Texture texture = TextRenderer.StringToTexture(text, font, this); // renders string on the texture
-           var rect = new System.Drawing.Rectangle(position.X, position.Y, texture.Width, texture.Height);
-           DrawTexturedRect(texture, rect,0,0,1,1);
+           //Flood.GUI.Texture texture = TextRenderer.StringToTexture(text, font, this); // renders string on the texture
+           //var rect = new System.Drawing.Rectangle(position.X, position.Y, texture.Width, texture.Height);
+           //DrawTexturedRect(texture, rect,0,0,1,1);
+           TextRenderer.DrawText(this, position, text);
         }
 
         public override void LoadTexture(Flood.GUI.Texture tex)
