@@ -10,15 +10,16 @@
 #include <Engine/Resources/Font.h>
 #include "Resource.h"
 #include "ResourceHandle.h"
+#include "Image.h"
 
 namespace Flood
 {
     enum struct ResourceGroup;
     ref class Font;
-    ref class Glyph;
     ref class Handle;
     ref class Image;
     ref class Resource;
+    value struct Glyph;
     value struct Vector2i;
 
     /// <summary>
@@ -26,28 +27,14 @@ namespace Flood
     /// structure stores more specifically information related to its position and
     /// size in the texture font file.
     /// </summary>
-    public ref class Glyph
+    public value struct Glyph
     {
     public:
-        property ::Glyph* NativePtr;
-
         Glyph(::Glyph* native);
         Glyph(System::IntPtr native);
-        property int BaseLineOffset
-        {
-            int get();
-            void set(int);
-        }
-        property float Advance
-        {
-            float get();
-            void set(float);
-        }
-        property Flood::ResourceHandle<Flood::Image^> Image
-        {
-            Flood::ResourceHandle<Flood::Image^> get();
-            void set(Flood::ResourceHandle<Flood::Image^>);
-        }
+        int BaseLineOffset;
+        float Advance;
+        Flood::ResourceHandle<Flood::Image^> Image;
     };
 
     /// <summary>
@@ -75,7 +62,7 @@ namespace Flood
             int get();
             void set(int);
         }
-        bool GetGlyph(int codepoint, Flood::Glyph^ glyph);
+        bool GetGlyph(int codepoint, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
         Flood::Vector2i GetKerning(int codepoint1, int codepoint2);
         System::String^ GetName();
         void SetName(System::String^ v);

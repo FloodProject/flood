@@ -15,54 +15,17 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace clix;
 
-Flood::CompareHandle::CompareHandle(::CompareHandle* native)
-{
-    NativePtr = native;
-}
-
-Flood::CompareHandle::CompareHandle(System::IntPtr native)
-{
-    auto __native = (::CompareHandle*)native.ToPointer();
-    NativePtr = __native;
-}
-
-bool Flood::CompareHandle::operator()(Flood::ResourceHandle<Flood::Image^> h1, Flood::ResourceHandle<Flood::Image^> h2)
-{
-    auto arg0 = (HandleId)h1.Id;
-    auto arg1 = (HandleId)h2.Id;
-    auto ret = ((::CompareHandle*)NativePtr)->operator()(arg0, arg1);
-    return ret;
-}
-
 Flood::SubTexture::SubTexture(::SubTexture* native)
 {
-    NativePtr = native;
+    Rect = Flood::Rect((::Rect*)&native->rect);
+    IsRotated = native->isRotated;
 }
 
 Flood::SubTexture::SubTexture(System::IntPtr native)
 {
     auto __native = (::SubTexture*)native.ToPointer();
-    NativePtr = __native;
-}
-
-Flood::Rect^ Flood::SubTexture::Rect::get()
-{
-    return gcnew Flood::Rect((::Rect*)&((::SubTexture*)NativePtr)->rect);
-}
-
-void Flood::SubTexture::Rect::set(Flood::Rect^ value)
-{
-    ((::SubTexture*)NativePtr)->rect = *(::Rect*)value->NativePtr;
-}
-
-bool Flood::SubTexture::IsRotated::get()
-{
-    return ((::SubTexture*)NativePtr)->isRotated;
-}
-
-void Flood::SubTexture::IsRotated::set(bool value)
-{
-    ((::SubTexture*)NativePtr)->isRotated = value;
+    Rect = Flood::Rect((::Rect*)&__native->rect);
+    IsRotated = __native->isRotated;
 }
 
 Flood::TextureAtlas::TextureAtlas(::TextureAtlas* native)
@@ -89,11 +52,12 @@ bool Flood::TextureAtlas::AddImage(Flood::ResourceHandle<Flood::Image^> imageHan
     return ret;
 }
 
-bool Flood::TextureAtlas::GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, Flood::SubTexture^ subTexture)
+bool Flood::TextureAtlas::GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture)
 {
     auto arg0 = (HandleId)imageHandle.Id;
-    auto &arg1 = *(::SubTexture*)subTexture->NativePtr;
+    ::SubTexture arg1;
     auto ret = ((::TextureAtlas*)NativePtr)->getImageSubTexture(arg0, arg1);
+    subTexture = Flood::SubTexture((::SubTexture*)&arg1);
     return ret;
 }
 

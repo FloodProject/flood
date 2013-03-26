@@ -113,6 +113,13 @@ namespace Flood
             lib.SetClassAsValueType("RenderState");
             lib.SetClassAsValueType("LightState");
             lib.IgnoreHeadersWithName("MaxRectsBinPack.h");
+            lib.IgnoreClassWithName("CompareHandle");
+            lib.SetClassAsValueType("Glyph");
+            lib.SetClassAsValueType("Rect");
+            lib.SetClassAsValueType("RectSize");
+            lib.SetClassAsValueType("SubTexture");
+            lib.SetMethodParameterUsage("TextureAtlas", "getImageSubTexture", 2, ParameterUsage.Out);
+            lib.SetMethodParameterUsage("Font", "getGlyph", 2, ParameterUsage.Out);
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");

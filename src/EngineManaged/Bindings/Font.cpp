@@ -18,43 +18,17 @@ using namespace clix;
 
 Flood::Glyph::Glyph(::Glyph* native)
 {
-    NativePtr = native;
+    BaseLineOffset = native->baseLineOffset;
+    Advance = native->advance;
+    Image = Flood::ResourceHandle<Flood::Image^>(native->image.id);
 }
 
 Flood::Glyph::Glyph(System::IntPtr native)
 {
     auto __native = (::Glyph*)native.ToPointer();
-    NativePtr = __native;
-}
-
-int Flood::Glyph::BaseLineOffset::get()
-{
-    return ((::Glyph*)NativePtr)->baseLineOffset;
-}
-
-void Flood::Glyph::BaseLineOffset::set(int value)
-{
-    ((::Glyph*)NativePtr)->baseLineOffset = value;
-}
-
-float Flood::Glyph::Advance::get()
-{
-    return ((::Glyph*)NativePtr)->advance;
-}
-
-void Flood::Glyph::Advance::set(float value)
-{
-    ((::Glyph*)NativePtr)->advance = value;
-}
-
-Flood::ResourceHandle<Flood::Image^> Flood::Glyph::Image::get()
-{
-    return Flood::ResourceHandle<Flood::Image^>(((::Glyph*)NativePtr)->image.id);
-}
-
-void Flood::Glyph::Image::set(Flood::ResourceHandle<Flood::Image^> value)
-{
-    ((::Glyph*)NativePtr)->image = (HandleId)value.Id;
+    BaseLineOffset = __native->baseLineOffset;
+    Advance = __native->advance;
+    Image = Flood::ResourceHandle<Flood::Image^>(__native->image.id);
 }
 
 Flood::Font::Font(::Font* native)
@@ -68,10 +42,11 @@ Flood::Font::Font(System::IntPtr native)
     auto __native = (::Font*)native.ToPointer();
 }
 
-bool Flood::Font::GetGlyph(int codepoint, Flood::Glyph^ glyph)
+bool Flood::Font::GetGlyph(int codepoint, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
-    auto &arg1 = *(::Glyph*)glyph->NativePtr;
+    ::Glyph arg1;
     auto ret = ((::Font*)NativePtr)->getGlyph(codepoint, arg1);
+    glyph = Flood::Glyph((::Glyph*)&arg1);
     return ret;
 }
 

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Resources/Resource.h"
 #include "Graphics/Resources/Image.h"
 #include "Core/Math/Vector.h"

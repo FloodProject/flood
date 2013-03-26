@@ -84,7 +84,7 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
         if (atlasSize >= atlasMaxSize)
             return false;
 
-        atlasSize = min(atlasSize*2, atlasMaxSize);
+        atlasSize = std::min(atlasSize*2, atlasMaxSize);
         resizeAtlas(atlasSize);
 
         return addImage(newImageHandle);
