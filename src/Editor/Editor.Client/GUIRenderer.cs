@@ -433,13 +433,12 @@ namespace Flood.Editor.Client
         readonly ManagedGeometryBuffer buffer;
 
         System.Drawing.Color color;
-        Dictionary<System.Tuple<string, Flood.GUI.Font>, TextRenderer> stringCache;
+        Dictionary<Tuple<string, Flood.GUI.Font>, TextRenderer> stringCache;
     
         bool isClipEnabled;
 
         public GwenRenderer()
         {
-        
             buffer = new ManagedGeometryBuffer();
         }
 
@@ -560,17 +559,17 @@ namespace Flood.Editor.Client
         }
 
         public void DrawTexturedRect(Flood.GUI.Texture t, System.Drawing.Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
-	    {
-		    if(t.RendererData == null){
-			    DrawFilledRect(rect);
-		    }
+        {
+            if(t.RendererData == null){
+                DrawFilledRect(rect);
+            }
 
-		    var handle = (ResourceHandle<Image>) t.RendererData;
+            var handle = (ResourceHandle<Image>) t.RendererData;
 
-		    rect = Translate(rect);
+            rect = Translate(rect);
 
-		    buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, handle, color);
-	    }
+            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, handle, color);
+        }
 
         public override System.Drawing.Point MeasureText(Flood.GUI.Font font, System.String text) 
         {

@@ -11,7 +11,6 @@ using Mono.Addins;
 
 namespace Flood.Editor.Client
 {
-
     public static class IconManager
     {
         static readonly Dictionary<int,StockIconCodon> IconStock = new Dictionary<int,StockIconCodon>();

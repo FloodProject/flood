@@ -1,5 +1,4 @@
 ﻿using System;
-using Flood;
 using Flood.GUI.Controls;
 using Flood.GUI.Renderers;
 using Flood.GUI.Skins;
@@ -21,9 +20,9 @@ namespace Flood.Editor.Client.Gui
         /// <summary>
         /// Skin of the GUI.
         /// </summary>
-        public Skin Skin  { get; private set; }
+        public Skin Skin { get; private set; }
 
-        public Canvas Canvas  { get; private set; }
+        public Canvas Canvas { get; private set; }
 
         public void Dispose()
         {
