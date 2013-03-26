@@ -13,7 +13,6 @@ namespace Flood.Editor.Shared
 
     public interface IProject
     {
-
         /// <summary>
         /// Id of the project.
         /// </summary>
@@ -66,15 +65,11 @@ namespace Flood.Editor.Shared
         /// </summary>
         /// <returns>True if the user was modified, false otherwise.</returns>
         bool ModifyUser(ProjectUser user);
-
-
     }
-
 
     [Message]
     public class Project : IProject
     {
-
         /// <summary>
         /// Id of the project.
         /// </summary>
@@ -130,6 +125,7 @@ namespace Flood.Editor.Shared
         {
             if (Users.ContainsKey(user.Id))
                 return false;
+
             Users[user.Id] = user;
             return true;
         }
@@ -140,9 +136,9 @@ namespace Flood.Editor.Shared
         /// <returns>True if the user was modified, false otherwise.</returns>
         public bool ModifyUser(ProjectUser user)
         {
-
             if (!Users.ContainsKey(user.Id))
                 return false;
+
             Users[user.Id] = user;
             return true;
         }
@@ -156,7 +152,7 @@ namespace Flood.Editor.Shared
             return Users.Remove(user.Id);
         }
 
-        public Project(ProjectType type, string name, Guid id, Owner founder)
+        public Project(ProjectType type, string name, Guid id, ProjectUser founder)
         {
             Type = type;
             Name = name;

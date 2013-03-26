@@ -1,5 +1,5 @@
 ﻿
-namespace ServerManaged
+namespace Flood.Server
 {
     class UserManager
     {

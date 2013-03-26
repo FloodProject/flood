@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Flood.RPC.Metadata;
 
 namespace Flood.Editor.Shared
@@ -25,7 +22,6 @@ namespace Flood.Editor.Shared
         [Id(4)]
         public Dictionary<UserType, bool> AddRemoveUsers { get; set; }
 
-
         public Permissions()
         {
             EditPermissions = new Dictionary<UserType, bool>();
@@ -36,7 +32,6 @@ namespace Flood.Editor.Shared
                 EditPermissions[usertype] = false;
                 AddRemoveUsers[usertype] = false;
             }
-
         }
 
         public void AllPermissions()
@@ -44,6 +39,7 @@ namespace Flood.Editor.Shared
             WriteFiles = true;
             AddRemoveFiles = true;
             ReadFiles = true;
+
             foreach (UserType usertype in Enum.GetValues(typeof(UserType)))
             {
                 EditPermissions[usertype] = true;
@@ -56,6 +52,7 @@ namespace Flood.Editor.Shared
             WriteFiles = false;
             AddRemoveFiles = false;
             ReadFiles = false;
+
             foreach (UserType usertype in Enum.GetValues(typeof(UserType)))
             {
                 EditPermissions[usertype] = false;
@@ -68,6 +65,7 @@ namespace Flood.Editor.Shared
             WriteFiles = false;
             AddRemoveFiles = false;
             ReadFiles = true;
+
             foreach (UserType usertype in Enum.GetValues(typeof(UserType)))
             {
                 EditPermissions[usertype] = false;
@@ -80,6 +78,7 @@ namespace Flood.Editor.Shared
             WriteFiles = true;
             AddRemoveFiles = true;
             ReadFiles = true;
+
             foreach (UserType usertype in Enum.GetValues(typeof(UserType)))
             {
                 EditPermissions[usertype] = true;
@@ -95,6 +94,7 @@ namespace Flood.Editor.Shared
             WriteFiles = true;
             AddRemoveFiles = true;
             ReadFiles = true;
+
             foreach (UserType usertype in Enum.GetValues(typeof(UserType)))
             {
                 EditPermissions[usertype] = false;

@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 using Raven.Client;
 using Raven.Client.Embedded;
 
-
 namespace Flood.Server
 {
-
-
     public class RavenDatabaseManager : IDatabaseManager
     {
         /// <summary>

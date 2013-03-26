@@ -10,10 +10,7 @@ namespace Flood.Editor.Tests
         {
             Assert.That(2, Is.EqualTo(2));
         }
-
-
     }
-
 
     [TestFixture]
     public class ProjectManagerTests
@@ -23,7 +20,5 @@ namespace Flood.Editor.Tests
         {
             Assert.That(2, Is.EqualTo(2));
         }
-
-
     }
 }
