@@ -17,7 +17,7 @@ namespace Flood.Editor
 
         public void CreateBuiltinServer()
         {
-            Console.WriteLine("Initializing the built-in editor server...");
+            Log.Info("Initializing the built-in editor server...");
 
             serverCreatedEvent = new ManualResetEventSlim();
             Server = new EditorServer();
