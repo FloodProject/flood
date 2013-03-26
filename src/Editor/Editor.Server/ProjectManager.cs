@@ -9,15 +9,16 @@ namespace Flood.Editor.Server
     public class ProjectManager : IProjectManager
     {
         private readonly Dictionary<Guid, Project> _projects;
-        private readonly EditorServer _server;
+        readonly IDatabaseManager database;
         private Timer _timer;
         private bool _databaseModified;
         private const int TimerInterval = 5000;
 
-        public ProjectManager(EditorServer server)
+
+        public ProjectManager(IDatabaseManager db)
         {
-            _projects = new Dictionary<Guid, Project>();
-            _server = server;
+            projects = new Dictionary<Guid, Project>();
+            database = db;
             LoadProjectsFromDatabase();
             _databaseModified = false;
             StartTimer();
@@ -30,15 +31,14 @@ namespace Flood.Editor.Server
         {
             try
             {
-                if (_databaseModified)
-                    _server.Database.SaveChanges();
-                _databaseModified = false;
+                if (databaseModified)
+                    database.SaveChanges();
+                databaseModified = false;
             }
             catch(SessionNotOpenException sessionNotOpenException)
             {
             }
         }
-
 
         /// <summary>
         /// Store modified project in the database
@@ -47,8 +47,8 @@ namespace Flood.Editor.Server
         {
             try
             {
-                _server.Database.Store(proj, proj.Id);
-                _databaseModified = true;
+                database.Store(proj, proj.Id);
+                databaseModified = true;
             }
             catch (SessionNotOpenException sessionNotOpenException)
             {
@@ -70,8 +70,8 @@ namespace Flood.Editor.Server
         /// </summary>
         private void LoadProjectsFromDatabase()
         {
-            _server.Database.StartSession();
-            List<Project> projs = _server.Database.LoadAll<Project>();
+            database.StartSession();
+            List<Project> projs = database.LoadAll<Project>();
             foreach (var project in projs)
                 _projects.Add(project.Id, project);
         }
@@ -185,8 +185,8 @@ namespace Flood.Editor.Server
 
             if (didRemove)
             {
-                _server.Database.Delete<Project>(id);
-                _databaseModified = true;
+                database.Delete<Project>(id);
+                databaseModified = true;
                 ProjectRemoved(this, project);
             }
 

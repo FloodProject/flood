@@ -1,7 +1,7 @@
 using System;
 using Flood.RPC.Server;
 using Flood.RPC.Transport;
-using Flood.Server;
+
 namespace Flood.Editor.Server
 {
     /// <summary>
@@ -13,7 +13,7 @@ namespace Flood.Editor.Server
 
         public EditorServer()
         {
-            var handler = new ProjectManager(this);
+            var handler = new ProjectManager(Database);
             var processor = new IProjectManagerImpl.Processor(handler);
 
             Socket = new TServerSocket(Settings.RPCPort);

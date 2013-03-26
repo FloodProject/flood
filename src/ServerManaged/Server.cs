@@ -13,13 +13,10 @@ namespace Flood.Server
 
         protected Server()
         {
-        }
-
-        public void Init()
-        {
-            //init db
 #if RAVENDBSET
             Database = new RavenDatabaseManager();
+#else
+            Database = new NullDatabaseManager();
 #endif
         }
 
