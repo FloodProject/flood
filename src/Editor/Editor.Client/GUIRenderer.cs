@@ -812,7 +812,7 @@ namespace Flood.Editor.Client
         {
             var inputManager = new InputManager(inputManagerPtr);
             renderer = new GwenRenderer();
-            Editor = new Flood.Editor.Editor(renderer,"DefaultSkin.png");
+            Editor = new Editor();
 
             input = new GwenInput(inputManager);
             input.Initialize(Editor.MainWindow.Canvas);

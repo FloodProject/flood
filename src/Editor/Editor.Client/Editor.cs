@@ -10,20 +10,27 @@ namespace Flood.Editor
 {
     public sealed class Editor : IDisposable
     {
+        public GwenRenderer GuiRenderer { get; private set; }
         public MainWindow MainWindow { get; private set; }
         public Window PaneWindow  { get; private set; }
 
-        public Editor(Renderer renderer, string textureName)
+        public Editor()
         {
             InitializeAddins();
-
-            MainWindow = new MainWindow();
-            MainWindow.Init(renderer, textureName);
+            InitializeGui();
         }
 
         public void Dispose()
         {
             MainWindow.Dispose();
+        }
+
+        private void InitializeGui()
+        {
+            GuiRenderer = new GwenRenderer();
+
+            MainWindow = new MainWindow();
+            MainWindow.Init(GuiRenderer, "DefaultSkin.png");
         }
 
         public void Update()
