@@ -16,38 +16,37 @@ using namespace Flood::GUI;
 using namespace Flood::Editor::Client;
 using namespace System::Collections::Generic;
 
-static gcroot<NativeGUI^> gs_GUIInstance = nullptr;
+static gcroot<Editor^> gs_EditorInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager)
 {
-	gs_GUIInstance = gcnew NativeGUI(System::IntPtr(inputManager));
+    gs_EditorInstance = gcnew Editor();
 }
 
 void UpdateGUI()
 {
-	gs_GUIInstance->Editor->Update();
+    gs_EditorInstance->Update();
 }
 
 void ResizeGUI(int x, int y)
 {
-	gs_GUIInstance->SetSize(x, y);
+    gs_EditorInstance->SetSize(x, y);
 }
 
 void CloseGUI()
 {
-	gs_GUIInstance->Close();
-	delete(gs_GUIInstance);
-	gs_GUIInstance = nullptr; 
+    delete(gs_EditorInstance);
+    gs_EditorInstance = nullptr;
 }
 
 void RenderGUI(RenderBlock& rb)
 {
-	auto renderBlock = gcnew Flood::RenderBlock(System::IntPtr(&rb));
-	gs_GUIInstance->Render(renderBlock);
+    auto renderBlock = gcnew Flood::RenderBlock(System::IntPtr(&rb));
+    gs_EditorInstance->Render(renderBlock);
 }
 
 void SetMainWindow(Window* window)
 {
-	auto NativeWindow = gcnew Flood::Window(System::IntPtr(window));
-	gs_GUIInstance->Editor->MainWindow->NativeWindow = NativeWindow;
+    auto NativeWindow = gcnew Flood::Window(System::IntPtr(window));
+    gs_EditorInstance->MainWindow->NativeWindow = NativeWindow;
 }

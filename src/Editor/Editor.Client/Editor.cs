@@ -1,21 +1,25 @@
-﻿using System.IO;
-using System.Reflection;
-using Flood.Editor.Client;
-using Flood.Editor.Client.Gui;
-using Flood.GUI.Renderers;
-using System;
+﻿using Flood.Editor.Client.Gui;
 using Mono.Addins;
+using System;
+using System.IO;
+using System.Reflection;
 
-namespace Flood.Editor
+namespace Flood.Editor.Client
 {
     public sealed class Editor : IDisposable
     {
-        public GwenRenderer GuiRenderer { get; private set; }
         public MainWindow MainWindow { get; private set; }
         public Window PaneWindow  { get; private set; }
 
+        public GwenRenderer GuiRenderer { get; private set; }
+        public GwenInput GuiInput { get; private set; }
+
+        public Engine Engine { get; private set; }
+
         public Editor()
         {
+            Engine = FloodEngine.GetEngine();
+
             InitializeAddins();
             InitializeGui();
         }
@@ -23,6 +27,7 @@ namespace Flood.Editor
         public void Dispose()
         {
             MainWindow.Dispose();
+            GuiRenderer.Dispose();
         }
 
         private void InitializeGui()
@@ -31,6 +36,16 @@ namespace Flood.Editor
 
             MainWindow = new MainWindow();
             MainWindow.Init(GuiRenderer, "DefaultSkin.png");
+
+            GuiInput = new GwenInput(Engine.GetInputManager());
+            GuiInput.Initialize(MainWindow.Canvas);
+        }
+
+        public void Render(RenderBlock rb)
+        {
+            GuiRenderer.Clear();
+            MainWindow.Render();
+            GuiRenderer.Render(rb);
         }
 
         public void Update()
@@ -56,8 +71,8 @@ namespace Flood.Editor
             var libdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             //var addinsPath = Path.Combine(libdir,"Addins");
 
-            AddinManager.Initialize (libdir,libdir);
-            AddinManager.Registry.Update (null);
+            AddinManager.Initialize(libdir, libdir);
+            AddinManager.Registry.Update(null);
             AddinManager.ExtensionChanged += OnExtensionChange;
         }
 

@@ -442,6 +442,12 @@ namespace Flood.Editor.Client
             buffer = new ManagedGeometryBuffer();
         }
 
+        public override void Dispose()
+        {
+            TextRenderer.ClearCache();
+            base.Dispose();
+        }
+
         public void Render(RenderBlock rb)
         {
             buffer.Render(rb);
@@ -800,49 +806,6 @@ namespace Flood.Editor.Client
             canvas.Input_Key(key, false);
         }
     }
-
-    public class NativeGUI
-    {
-        public readonly Flood.Editor.Editor Editor;
-        GwenRenderer renderer;
-        GwenInput input;
-
-        public NativeGUI(IntPtr inputManagerPtr)
-        {
-            var inputManager = new InputManager(inputManagerPtr);
-            renderer = new GwenRenderer();
-            Editor = new Editor();
-
-            input = new GwenInput(inputManager);
-            input.Initialize(Editor.MainWindow.Canvas);
-        }
-
-        ~NativeGUI()
-        {
-            System.Diagnostics.Debugger.Break();
-        }
-
-        public void Close()
-        {
-            TextRenderer.ClearCache();
-            Editor.Dispose();
-        }
-
-        public void Render(RenderBlock rb)
-        {
-            renderer.Clear();
-            Editor.MainWindow.Render();
-            renderer.Render(rb);
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-
-        public void SetSize(int x, int y)
-        {
-            Editor.MainWindow.Canvas.SetSize(x, y);
-        }
-    };
 }
 
 
