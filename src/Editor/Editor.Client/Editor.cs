@@ -37,32 +37,14 @@ namespace Flood.Editor
         {
             if (PaneWindow == null)
             {
-                CreatePaneWindow();
-                MainWindow.NativeWindow.MakeCurrent();
+                //CreatePaneWindow();
+                //MainWindow.NativeWindow.MakeCurrent();
             }
         }
 
-        private void CreatePaneWindow()
+        public void SetSize(int x, int y)
         {
-            var engine = FloodEngine.GetEngine();
-            var windowManager = engine.GetWindowManager();
-
-            var settings = new WindowSettings
-                {
-                    Width = 640,
-                    Height = 480,
-                    Title = "Pane",
-                    Styles = WindowStyles.TopLevel
-                };
-
-            PaneWindow = windowManager.CreateWindow(settings);
-            PaneWindow.WindowClose += () => Log.Info("Window closed!");
-            PaneWindow.WindowFocusChange += hasFocus => Log.Info("Window focus: " + hasFocus);
-            PaneWindow.TargetResize += s => Log.Info("Size: " + s.Width);
-            PaneWindow.Show(visible: true);
-
-            PaneWindow.SetContext(MainWindow.NativeWindow.GetContext());
-            PaneWindow.MakeCurrent();
+            MainWindow.Canvas.SetSize(x, y);
         }
 
         private void InitializeAddins()
