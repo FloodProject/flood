@@ -1,7 +1,7 @@
 ﻿using Flood.GUI.Controls;
 using Mono.Addins;
 
-namespace Editor.Client.GUI
+namespace Flood.Editor.Client.GUI
 {
     /// <summary>
     /// 

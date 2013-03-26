@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Flood;
 using Flood.GUI;
+using Flood.GUI.Controls;
 using Flood.GUI.Input;
 
 using Color = Flood.Color;
@@ -10,7 +11,7 @@ using Image = Flood.Image;
 using StringTextureCache = System.Collections.Generic.Dictionary<
     System.Tuple<System.String, Flood.GUI.Font>, Flood.GUI.Texture>;
 
-namespace Editor.Client
+namespace Flood.Editor.Client
 {
     class ManagedGeometryBuffer
     {
@@ -644,7 +645,9 @@ namespace Editor.Client
 
     public sealed class GwenInput : IDisposable
     {
-        InputManager inputManager;
+        readonly InputManager inputManager;
+        readonly Mouse mouse;
+        readonly Keyboard keyboard;
 
         Flood.GUI.Controls.Canvas canvas;
 
@@ -662,14 +665,14 @@ namespace Editor.Client
             mouseY = 0;
             m_AltGr = false;
 
-            var mouse = inputManager.GetMouse();
+            mouse = inputManager.GetMouse();
             mouse.MouseMove += ProcessMouseMove;
             mouse.MouseDrag += ProcessMouseDrag;
             mouse.MouseButtonPress += ProcessMouseButtonPressed;
             mouse.MouseButtonRelease += ProcessMouseButtonReleased;
             mouse.MouseWheelMove += ProcessMouseWheel;
 
-            var keyboard = inputManager.GetKeyboard();
+            keyboard = inputManager.GetKeyboard();
             keyboard.KeyPress += ProcessKeyDown;
             keyboard.KeyRelease += ProcessKeyUp;
         }
@@ -683,21 +686,19 @@ namespace Editor.Client
         {
             Log.Info("Disposing GwenInput");
 
-            var mouse = inputManager.GetMouse();
             mouse.MouseMove -= ProcessMouseMove;
             mouse.MouseDrag -= ProcessMouseDrag;
             mouse.MouseButtonPress -= ProcessMouseButtonPressed;
             mouse.MouseButtonRelease -= ProcessMouseButtonReleased;
             mouse.MouseWheelMove -= ProcessMouseWheel;
 
-            var keyboard = inputManager.GetKeyboard();
             keyboard.KeyPress -= ProcessKeyDown;
             keyboard.KeyRelease -= ProcessKeyUp;
 
             GC.SuppressFinalize(this);
         }
 
-        public void Initialize(Flood.GUI.Controls.Canvas c)
+        public void Initialize(Canvas c)
         {
             canvas = c;
         }
@@ -833,6 +834,9 @@ namespace Editor.Client
             renderer.Clear();
             Editor.MainWindow.Render();
             renderer.Render(rb);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         public void SetSize(int x, int y)

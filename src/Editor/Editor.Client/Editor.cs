@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using Editor.Client.Gui;
+using Flood.Editor.Client.Gui;
 using Flood.GUI.Renderers;
 using System;
 using Mono.Addins;

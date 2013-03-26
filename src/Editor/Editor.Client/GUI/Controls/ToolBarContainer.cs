@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Flood.GUI;
 using Flood.GUI.Controls;
 
-namespace Editor.Client.GUI.Controls
+namespace Flood.Editor.Client.GUI.Controls
 {
     /// <summary>
     /// Container that can have toolbars assigned to its outer bounds.

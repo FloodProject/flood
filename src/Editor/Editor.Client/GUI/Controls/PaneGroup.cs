@@ -2,7 +2,7 @@
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
-namespace Editor.Client.GUI
+namespace Flood.Editor.Client.GUI
 {
     /// <summary>
     /// Display a group of panes that share the same boundaries.

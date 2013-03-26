@@ -1,8 +1,8 @@
-﻿using Editor.Client.GUI;
-using Editor.Client.GUI.Controls;
+﻿using Flood.Editor.Client.GUI;
+using Flood.Editor.Client.GUI.Controls;
 using Flood.GUI.Controls;
 
-namespace Editor.Client
+namespace Flood.Editor.Client
 {
     public static class PaneManager
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Editor.Client.Commands;
+using Flood.Editor.Client.Commands;
 using Mono.Addins;
 
-namespace Editor.Client.Extensions
+namespace Flood.Editor.Client.Extensions
 {
     public class MenuItemNode: ExtensionNode
     {

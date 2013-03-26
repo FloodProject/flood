@@ -27,7 +27,7 @@ using System.Collections;
 using System.ComponentModel;
 using Mono.Addins;
 
-namespace Editor.Client.Extensions
+namespace Flood.Editor.Client.Extensions
 {
 
     public enum IconSize

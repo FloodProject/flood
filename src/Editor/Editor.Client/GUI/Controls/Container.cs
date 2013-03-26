@@ -3,7 +3,7 @@ using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
-namespace Editor.Client.GUI
+namespace Flood.Editor.Client.GUI
 {
     /// <summary>
     /// Display multiple PaneGroups side by side in an axis.

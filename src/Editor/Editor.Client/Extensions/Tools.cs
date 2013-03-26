@@ -1,9 +1,9 @@
 ﻿using System;
-using Editor.Client.Commands;
+using Flood.Editor.Client.Commands;
 using Flood.GUI.Controls;
 using Mono.Addins;
 
-namespace Editor.Client.Extensions
+namespace Flood.Editor.Client.Extensions
 {
     public abstract class ToolNode : ExtensionNode
     {

@@ -6,16 +6,16 @@
 #using "Editor.Client.dll"
 #using "EngineManaged.dll"
 #using "EngineBindings.dll"
-#using <System.Drawing.dll>
 
-using namespace Flood::GUI; 
+using namespace Flood::GUI;
+using namespace Flood::Editor::Client;
 using namespace System::Collections::Generic;
 
-static gcroot<Editor::Client::NativeGUI^> gs_GUIInstance = nullptr;
+static gcroot<NativeGUI^> gs_GUIInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager)
 {
-	gs_GUIInstance = gcnew Editor::Client::NativeGUI(System::IntPtr(inputManager));
+	gs_GUIInstance = gcnew NativeGUI(System::IntPtr(inputManager));
 }
 
 void UpdateGUI()

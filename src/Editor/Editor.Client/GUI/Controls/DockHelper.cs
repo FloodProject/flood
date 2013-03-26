@@ -3,7 +3,7 @@ using System.Drawing;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
-namespace Editor.Client.GUI.Controls
+namespace Flood.Editor.Client.GUI.Controls
 {
     class DockHelper : Control
     {
@@ -31,7 +31,7 @@ namespace Editor.Client.GUI.Controls
 
             protected override void Render(Flood.GUI.Skins.Skin skin)
             {
-                skin.Renderer.DrawColor = Color.Fuchsia;
+                skin.Renderer.DrawColor = System.Drawing.Color.Fuchsia;
                 Rectangle testRect = new Rectangle(0, 0, 20, 20);
                 skin.Renderer.DrawFilledRect(testRect);
                 base.Render(skin);

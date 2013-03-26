@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Editor.Client.Extensions;
+using Flood.Editor.Client.Extensions;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Mono.Addins;
 
-namespace Editor.Client.GUI.Controls
+namespace Flood.Editor.Client.GUI.Controls
 {
     public class MenuBar : Control
     {

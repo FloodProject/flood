@@ -4,7 +4,7 @@ using Flood.GUI.Controls;
 using Flood.GUI.Renderers;
 using Flood.GUI.Skins;
 
-namespace Editor.Client.Gui
+namespace Flood.Editor.Client.Gui
 {
     public abstract class GuiWindow : IDisposable
     {

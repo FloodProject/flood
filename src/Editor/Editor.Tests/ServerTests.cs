@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Editor.Tests
+namespace Flood.Editor.Tests
 {
     [TestFixture]
     public class ServerTests

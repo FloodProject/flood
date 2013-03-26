@@ -1,6 +1,6 @@
 ﻿using Mono.Addins;
 
-namespace Editor.Client.Commands
+namespace Flood.Editor.Client.Commands
 {
     [TypeExtensionPoint]
     public interface ICommand

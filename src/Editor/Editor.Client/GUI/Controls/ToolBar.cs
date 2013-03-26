@@ -4,13 +4,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Editor.Client.Extensions;
+using Flood.Editor.Client.Extensions;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Skins;
 using Mono.Addins;
 
-namespace Editor.Client.GUI.Controls
+namespace Flood.Editor.Client.GUI.Controls
 {
     class ToolBar : Control
     {

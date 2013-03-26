@@ -1,8 +1,8 @@
-﻿using Editor.Client.GUI;
-using Editor.Client.GUI.Controls;
+﻿using Flood.Editor.Client.GUI;
+using Flood.Editor.Client.GUI.Controls;
 using Flood.GUI;
 
-namespace Editor.Client.Gui
+namespace Flood.Editor.Client.Gui
 {
     /// <summary>
     /// Window composed by a MenuBar a Container.

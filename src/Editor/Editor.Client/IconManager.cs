@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Editor.Client.Extensions;
+using Flood.Editor.Client.Extensions;
 using Flood.GUI;
 using Mono.Addins;
 
-namespace Editor.Client
+namespace Flood.Editor.Client
 {
 
     public static class IconManager
@@ -69,7 +69,7 @@ namespace Editor.Client
 
             if (!string.IsNullOrEmpty (iconCodon.Resource) || !string.IsNullOrEmpty (iconCodon.File)) {
                 Bitmap bitmap;
-                Stream stream;
+                System.IO.Stream stream;
                 if (iconCodon.Resource != null)
                     stream = iconCodon.Addin.GetResource (iconCodon.Resource);
                 else
@@ -79,7 +79,7 @@ namespace Editor.Client
                         throw new Exception(string.Format("Did not find resource '{0}' in addin '{1}' for icon '{2}'", 
                                                     iconCodon.Resource, iconCodon.Addin.Id, iconCodon.StockId));
                     }
-                    bitmap = (Bitmap) Image.FromStream(stream);
+                    bitmap = (Bitmap) System.Drawing.Image.FromStream(stream);
                 }
                 
 

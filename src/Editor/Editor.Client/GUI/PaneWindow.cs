@@ -1,7 +1,7 @@
 ﻿using System;
-using Editor.Client.GUI;
+using Flood.Editor.Client.GUI;
 
-namespace Editor.Client.Gui
+namespace Flood.Editor.Client.Gui
 {
     /// <summary>
     /// Window composed exclusively by a Container.
