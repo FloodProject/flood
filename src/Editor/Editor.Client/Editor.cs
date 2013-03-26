@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using Flood.Editor.Client;
 using Flood.Editor.Client.Gui;
 using Flood.GUI.Renderers;
 using System;
@@ -73,24 +74,22 @@ namespace Flood.Editor
 
         static void OnLoadError (object s, AddinErrorEventArgs args)
         {
-            Console.WriteLine ("Add-in error: " + args.Message);
-            Console.WriteLine (args.AddinId);
-            Console.WriteLine (args.Exception);
+            Log.Error("Error loading add-in: " + args.Message);
         }
 
         static void OnLoad (object s, AddinEventArgs args)
         {
-            Console.WriteLine ("Add-in loaded: " + args.AddinId);
+            Log.Info("Add-in loaded: " + args.AddinId);
         }
 
         static void OnUnload (object s, AddinEventArgs args)
         {
-            Console.WriteLine ("Add-in unloaded: " + args.AddinId);
+            Log.Info("Add-in unloaded: " + args.AddinId);
         }
 
         static void OnExtensionChange (object s, ExtensionEventArgs args)
         {
-            Console.WriteLine ("Extension changed: " + args.Path);
+            Log.Info("Extension changed: " + args.Path);
         }
     }
 }
