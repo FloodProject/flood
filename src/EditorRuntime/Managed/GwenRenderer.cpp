@@ -6,7 +6,6 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "CLIInterop.h"
 #include <vcclr.h>
 
 #using "Editor.Client.dll"
