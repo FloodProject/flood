@@ -18,6 +18,7 @@ namespace Editor.Client
                 FocusedPaneGroup = new PaneGroup(FocusedContainer);
                 FocusedContainer.InsertPanel(FocusedPaneGroup);
             }
+
             FocusedPaneGroup.AddPane(pane);
         }
 
@@ -32,6 +33,7 @@ namespace Editor.Client
                 dockHelper.Parent = paneGroup;
                 dockHelper.Invalidate();
             }
+
             dockHelper.IsHidden = false;
         }
 
@@ -43,10 +45,7 @@ namespace Editor.Client
         private static Container GetParentContainer(Control control)
         {
             var container = control as Container;
-            if(container != null)
-                return container;
-
-            return GetParentContainer(control.Parent);
+            return container ?? GetParentContainer(control.Parent);
         }
 
         /// <summary>
@@ -71,14 +70,15 @@ namespace Editor.Client
         internal static void MovePaneHorizontally(TabButton pane, PaneGroup targetPaneGroup, uint depth, bool moveRigth)
         {
             var container = GetParentContainer(targetPaneGroup);
+
             if (!container.IsHorizontal)
             {
-                var childContainer = new Container(container);
-                childContainer.IsHorizontal = true;
+                var childContainer = new Container(container) {IsHorizontal = true};
                 container.ReplacePanel(targetPaneGroup,childContainer,false);
                 childContainer.InsertPanel(targetPaneGroup);
                 container = childContainer;
             }
+
             var paneGroup = new PaneGroup(container);
             paneGroup.AddPage(pane);
             container.InsertPanel(paneGroup,targetPaneGroup,!moveRigth);
@@ -97,14 +97,15 @@ namespace Editor.Client
         internal static void MovePaneVertically(TabButton pane, PaneGroup targetPaneGroup, uint depth, bool moveUp)
         {
             var container = GetParentContainer(targetPaneGroup);
+
             if (container.IsHorizontal)
             {
-                var childContainer = new Container(container);
-                childContainer.IsHorizontal = false;
+                var childContainer = new Container(container) {IsHorizontal = false};
                 container.ReplacePanel(targetPaneGroup,childContainer,false);
                 childContainer.InsertPanel(targetPaneGroup);
                 container = childContainer;
             }
+
             var paneGroup = new PaneGroup(container);
             container.InsertPanel(paneGroup,targetPaneGroup,moveUp);
             paneGroup.AddPage(pane);
