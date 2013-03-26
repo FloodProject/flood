@@ -240,7 +240,27 @@ namespace Flood.Editor.Client
 
         public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
         {
-            return new System.Drawing.Point(10, 10);
+            var ret = new Point(0,font.Size);
+
+            var ttfont = GetOrLoadFont(font);
+            for(var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+                Glyph glyph;
+                var foundGlyph = ttfont.GetGlyph(c, out glyph);
+                if (!foundGlyph)
+                {
+                    Log.Warn("Glyph not found for character " + c);
+                    continue;
+                }
+
+                var kernX = 0;
+                if(i < text.Length - 1) 
+                    kernX = ttfont.GetKerning(text[i], text[i + 1]).X;
+                ret.X += (int) (glyph.Advance + kernX + 0.5);
+            }
+
+            return ret;
         }
 
         public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Point position, String text)
