@@ -34,15 +34,15 @@
 
   <!-- MENUS -->
   <ExtensionNodeSet id="Flood.Editor.Client.MenuNodeSet">
-    <ExtensionNode name="MenuItem" type="Editor.Client.Extensions.MenuItemNode" />
-    <ExtensionNode name="MenuSeparator" type="Editor.Client.Extensions.MenuSeparatorNode" />
-    <ExtensionNode name="Menu" type="Editor.Client.Extensions.SubmenuNode">
+    <ExtensionNode name="MenuItem" type="Flood.Editor.Client.Extensions.MenuItemNode" />
+    <ExtensionNode name="MenuSeparator" type="Flood.Editor.Client.Extensions.MenuSeparatorNode" />
+    <ExtensionNode name="Menu" type="Flood.Editor.Client.Extensions.SubmenuNode">
       <ExtensionNodeSet id="Flood.Editor.Client.MenuNodeSet" />
     </ExtensionNode>
   </ExtensionNodeSet>
 
   <ExtensionNodeSet id="Flood.Editor.Client.SubmenuNodeSet">
-   <ExtensionNode name="Menu" type="Editor.Client.Extensions.SubmenuNode">
+   <ExtensionNode name="Menu" type="Flood.Editor.Client.Extensions.SubmenuNode">
       <ExtensionNodeSet id="Flood.Editor.Client.MenuNodeSet" />
     </ExtensionNode>
   </ExtensionNodeSet>
