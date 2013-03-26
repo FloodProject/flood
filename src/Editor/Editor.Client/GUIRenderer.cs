@@ -89,9 +89,9 @@ namespace Editor.Client
             v4.Color = c;
 
             v1.UV = topLeftUV;
-		    v2.UV = topRightUV;
-		    v3.UV = bottomRightUV;
-		    v4.UV = bottomLeftUV;
+            v2.UV = topRightUV;
+            v3.UV = bottomRightUV;
+            v4.UV = bottomLeftUV;
 
             //Vertex buffer setup
             unsafe
