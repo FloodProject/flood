@@ -16,12 +16,17 @@ namespace Flood.Editor.Client
 
         public Engine Engine { get; private set; }
 
+        public ServerManager ServerManager { get; private set; }
+
         public Editor()
         {
             Engine = FloodEngine.GetEngine();
 
             InitializeAddins();
             InitializeGui();
+
+            ServerManager = new ServerManager();
+            ServerManager.CreateBuiltinServer();
         }
 
         public void Dispose()
