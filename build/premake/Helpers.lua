@@ -192,7 +192,7 @@ function deps(dep)
 			deps(lib)
 		else
 			SetupLibPaths(lib)
-            links {lib}
+			links {lib}
 		end
 	end
 end

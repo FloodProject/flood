@@ -68,7 +68,7 @@ solution "Flood"
     
     group "Editor Addins"
         print("Searching for addins...")
-        IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))    
+        IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))
         
 	group "Tests"
 
