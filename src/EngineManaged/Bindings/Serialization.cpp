@@ -9,7 +9,6 @@
 #include "Serialization.h"
 #include "Memory.h"
 #include "ResourceHandle.h"
-#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -34,47 +33,5 @@ Flood::ReflectionDeserializeHandleFn^ Flood::ReflectionHandleContext::Deserializ
 void Flood::ReflectionHandleContext::Deserialize::set(Flood::ReflectionDeserializeHandleFn^ value)
 {
     ((::ReflectionHandleContext*)NativePtr)->deserialize = static_cast<::ReflectionDeserializeHandleFn>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
-}
-
-Flood::Serializer::Serializer(::Serializer* native)
-{
-    NativePtr = native;
-}
-
-Flood::Serializer::Serializer(System::IntPtr native)
-{
-    auto __native = (::Serializer*)native.ToPointer();
-    NativePtr = __native;
-}
-
-Flood::Serializer::Serializer()
-{
-    NativePtr = new ::Serializer();
-}
-
-void Flood::Serializer::Destroy()
-{
-    auto arg0 = (::Serializer*)NativePtr;
-    ::SerializerDestroy(arg0);
-}
-
-Flood::Allocator^ Flood::Serializer::Alloc::get()
-{
-    return gcnew Flood::Allocator((::Allocator*)((::Serializer*)NativePtr)->alloc);
-}
-
-void Flood::Serializer::Alloc::set(Flood::Allocator^ value)
-{
-    ((::Serializer*)NativePtr)->alloc = (::Allocator*)value->NativePtr;
-}
-
-Flood::Stream^ Flood::Serializer::Stream::get()
-{
-    return gcnew Flood::Stream((::Stream*)((::Serializer*)NativePtr)->stream);
-}
-
-void Flood::Serializer::Stream::set(Flood::Stream^ value)
-{
-    ((::Serializer*)NativePtr)->stream = (::Stream*)value->NativePtr;
 }
 

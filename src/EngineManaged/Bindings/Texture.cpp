@@ -108,24 +108,24 @@ void Flood::Texture::Target::set(Flood::TextureTarget value)
     ((::Texture*)NativePtr)->target = (::TextureTarget)value;
 }
 
-unsigned short Flood::Texture::Width::get()
+unsigned int Flood::Texture::Width::get()
 {
     return ((::Texture*)NativePtr)->width;
 }
 
-void Flood::Texture::Width::set(unsigned short value)
+void Flood::Texture::Width::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->width = (uint16)value;
+    ((::Texture*)NativePtr)->width = (uint32)value;
 }
 
-unsigned short Flood::Texture::Height::get()
+unsigned int Flood::Texture::Height::get()
 {
     return ((::Texture*)NativePtr)->height;
 }
 
-void Flood::Texture::Height::set(unsigned short value)
+void Flood::Texture::Height::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->height = (uint16)value;
+    ((::Texture*)NativePtr)->height = (uint32)value;
 }
 
 Flood::PixelFormat Flood::Texture::Format::get()
@@ -146,16 +146,6 @@ float Flood::Texture::AnisotropicFilter::get()
 void Flood::Texture::AnisotropicFilter::set(float value)
 {
     ((::Texture*)NativePtr)->anisotropicFilter = value;
-}
-
-Flood::ResourceHandle<Flood::Image^> Flood::Texture::Image::get()
-{
-    return Flood::ResourceHandle<Flood::Image^>(((::Texture*)NativePtr)->image.id);
-}
-
-void Flood::Texture::Image::set(Flood::ResourceHandle<Flood::Image^> value)
-{
-    ((::Texture*)NativePtr)->image = (HandleId)value.Id;
 }
 
 Flood::TextureUnit::TextureUnit(::TextureUnit* native)

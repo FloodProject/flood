@@ -11,7 +11,6 @@
 #include "Log.h"
 #include "ResourceHandle.h"
 #include "ResourceManager.h"
-#include "Stream.h"
 #include "WindowManager.h"
 
 using namespace System;

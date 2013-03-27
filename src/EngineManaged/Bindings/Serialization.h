@@ -18,8 +18,6 @@ namespace Flood
     ref class Field;
     ref class Primitive;
     ref class ReflectionHandleContext;
-    ref class Serializer;
-    ref class Stream;
     ref class Type;
 
     public enum struct ReflectionWalkType : unsigned char
@@ -47,24 +45,4 @@ namespace Flood
         }
     };
 
-    public ref class Serializer
-    {
-    public:
-        property ::Serializer* NativePtr;
-
-        Serializer(::Serializer* native);
-        Serializer(System::IntPtr native);
-        Serializer();
-        property Flood::Allocator^ Alloc
-        {
-            Flood::Allocator^ get();
-            void set(Flood::Allocator^);
-        }
-        property Flood::Stream^ Stream
-        {
-            Flood::Stream^ get();
-            void set(Flood::Stream^);
-        }
-        void Destroy();
-    };
 }

@@ -20,7 +20,6 @@ namespace Flood
     ref class Resource;
     ref class ResourceLoader;
     ref class ResourceStream;
-    ref class Stream;
     value struct ExtensionMetadata;
     value struct ResourceLoadOption;
     value struct ResourceLoadOptions;
@@ -40,7 +39,6 @@ namespace Flood
         ResourceLoadOptions(::ResourceLoadOptions* native);
         ResourceLoadOptions(System::IntPtr native);
         System::String^ Name;
-        Flood::Stream^ Stream;
         Flood::Resource^ Resource;
         Flood::ResourceGroup Group;
         bool IsHighPriority;
@@ -59,11 +57,6 @@ namespace Flood
         ResourceStream(::ResourceStream* native);
         ResourceStream(System::IntPtr native);
         ResourceStream();
-        property Flood::Stream^ Stream
-        {
-            Flood::Stream^ get();
-            void set(Flood::Stream^);
-        }
         property Flood::ResourceLoader^ Loader
         {
             Flood::ResourceLoader^ get();

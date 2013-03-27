@@ -46,6 +46,9 @@ namespace Flood
         float Dot(Flood::Quaternion a);
         Flood::EulerAngles GetEulerAngles();
         Flood::Quaternion Slerp(Flood::Quaternion q, float t);
-        static property Flood::Quaternion Identity;
+        static property Flood::Quaternion Identity
+        {
+            Flood::Quaternion get();
+        }
     };
 }

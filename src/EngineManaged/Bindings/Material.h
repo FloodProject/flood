@@ -177,6 +177,10 @@ namespace Flood
         Flood::TextureUnit^ GetTextureUnit(unsigned char unit);
         void Init();
         static Flood::ResourceHandle<Flood::Material^> Create(Flood::Allocator^ _1, System::String^ name);
-        static property float DefaultLineWidth;
+        static property float DefaultLineWidth
+        {
+            float get();
+            void set(float);
+        }
     };
 }

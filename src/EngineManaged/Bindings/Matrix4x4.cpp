@@ -162,3 +162,8 @@ Flood::Matrix4x4 Flood::Matrix4x4::CreateOrthographic(float left, float right, f
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 
+Flood::Matrix4x4 Flood::Matrix4x4::Identity::get()
+{
+    return Flood::Matrix4x4((::Matrix4x4*)&::Matrix4x4::Identity);
+}
+

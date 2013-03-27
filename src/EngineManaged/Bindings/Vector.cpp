@@ -286,6 +286,31 @@ Flood::Vector3 Flood::Vector3::Normalize()
     return Flood::Vector3((::Vector3*)&ret);
 }
 
+Flood::Vector3 Flood::Vector3::Zero::get()
+{
+    return Flood::Vector3((::Vector3*)&::Vector3::Zero);
+}
+
+Flood::Vector3 Flood::Vector3::One::get()
+{
+    return Flood::Vector3((::Vector3*)&::Vector3::One);
+}
+
+Flood::Vector3 Flood::Vector3::UnitX::get()
+{
+    return Flood::Vector3((::Vector3*)&::Vector3::UnitX);
+}
+
+Flood::Vector3 Flood::Vector3::UnitY::get()
+{
+    return Flood::Vector3((::Vector3*)&::Vector3::UnitY);
+}
+
+Flood::Vector3 Flood::Vector3::UnitZ::get()
+{
+    return Flood::Vector3((::Vector3*)&::Vector3::UnitZ);
+}
+
 Flood::Vector4::Vector4(::Vector4* native)
 {
     X = native->x;
@@ -492,6 +517,31 @@ void Flood::Vector4::SetZero()
     this0->zero();
 }
 
+Flood::Vector4 Flood::Vector4::Zero::get()
+{
+    return Flood::Vector4((::Vector4*)&::Vector4::Zero);
+}
+
+Flood::Vector4 Flood::Vector4::UnitX::get()
+{
+    return Flood::Vector4((::Vector4*)&::Vector4::UnitX);
+}
+
+Flood::Vector4 Flood::Vector4::UnitY::get()
+{
+    return Flood::Vector4((::Vector4*)&::Vector4::UnitY);
+}
+
+Flood::Vector4 Flood::Vector4::UnitZ::get()
+{
+    return Flood::Vector4((::Vector4*)&::Vector4::UnitZ);
+}
+
+Flood::Vector4 Flood::Vector4::UnitW::get()
+{
+    return Flood::Vector4((::Vector4*)&::Vector4::UnitW);
+}
+
 Flood::Vector2::Vector2(::Vector2* native)
 {
     X = native->x;
@@ -625,6 +675,21 @@ void Flood::Vector2::SetZero()
 {
     auto this0 = (::Vector2*) 0;
     this0->zero();
+}
+
+Flood::Vector2 Flood::Vector2::Zero::get()
+{
+    return Flood::Vector2((::Vector2*)&::Vector2::Zero);
+}
+
+Flood::Vector2 Flood::Vector2::UnitX::get()
+{
+    return Flood::Vector2((::Vector2*)&::Vector2::UnitX);
+}
+
+Flood::Vector2 Flood::Vector2::UnitY::get()
+{
+    return Flood::Vector2((::Vector2*)&::Vector2::UnitY);
 }
 
 Flood::Vector2i::Vector2i(::Vector2i* native)

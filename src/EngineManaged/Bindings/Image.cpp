@@ -11,7 +11,6 @@
 #include "Memory.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
-#include "Stream.h"
 #include "Vector.h"
 
 using namespace System;
@@ -148,10 +147,10 @@ Flood::ResourceGroup Flood::Image::GetResourceGroup()
 void Flood::Image::SetColor(Flood::Color color)
 {
     auto _marshal0 = ::Color();
-    _marshal0.r = color.R;
-    _marshal0.g = color.G;
-    _marshal0.b = color.B;
-    _marshal0.a = color.A;
+    _marshal0.r = (byte)(uint8)color.R;
+    _marshal0.g = (byte)(uint8)color.G;
+    _marshal0.b = (byte)(uint8)color.B;
+    _marshal0.a = (byte)(uint8)color.A;
     auto arg0 = _marshal0;
     ((::Image*)NativePtr)->setColor(arg0);
 }
@@ -194,13 +193,6 @@ Flood::ImageWriter::ImageWriter(System::IntPtr native)
 {
     auto __native = (::ImageWriter*)native.ToPointer();
     NativePtr = __native;
-}
-
-void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
-{
-    auto arg0 = (::Image*)image->NativePtr;
-    auto arg1 = (::Stream*)stream->NativePtr;
-    ((::ImageWriter*)NativePtr)->save(arg0, arg1);
 }
 
 bool Flood::ImageWriter::Convert(Flood::Image^ image)

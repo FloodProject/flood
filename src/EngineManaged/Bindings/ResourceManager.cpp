@@ -10,7 +10,6 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "ResourceLoader.h"
-#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -96,8 +95,6 @@ Flood::ResourceHandle<Flood::Resource^> Flood::ResourceManager::LoadResource(Flo
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-    if (options.Stream != nullptr)
-        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
     if (options.Resource != nullptr)
         _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
@@ -118,8 +115,6 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-    if (options.Stream != nullptr)
-        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
     if (options.Resource != nullptr)
         _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
@@ -332,8 +327,7 @@ Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(Flood::ResourceLoa
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-    if (options.Stream != nullptr)
-        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
+
     if (options.Resource != nullptr)
         _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;

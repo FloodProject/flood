@@ -23,7 +23,6 @@ namespace Flood
     ref class ResourceManager;
     ref class Scene;
     ref class ScriptManager;
-    ref class Stream;
     ref class Subsystem;
     ref class WindowManager;
 

@@ -214,3 +214,8 @@ Flood::Matrix4x3 Flood::Matrix4x3::RotateZ(float ang)
     return Flood::Matrix4x3((::Matrix4x3*)&ret);
 }
 
+Flood::Matrix4x3 Flood::Matrix4x3::Identity::get()
+{
+    return Flood::Matrix4x3((::Matrix4x3*)&::Matrix4x3::Identity);
+}
+

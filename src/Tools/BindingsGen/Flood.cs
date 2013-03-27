@@ -63,6 +63,11 @@ namespace Flood
 
             lib.SetClassAsValueType("ExtensionMetadata");
 
+            lib.IgnoreClassWithName("Stream");
+            lib.IgnoreClassWithName("MemoryStream");
+            lib.IgnoreClassWithName("Serializer");
+            lib.IgnoreClassWithName("Thread");
+
             // Math
             lib.SetClassAsValueType("ColorP");
             lib.SetClassAsValueType("Color");

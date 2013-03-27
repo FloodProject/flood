@@ -22,7 +22,6 @@ namespace Flood
     ref class ImageWriter;
     ref class RefPtr;
     ref class Resource;
-    ref class Stream;
     value struct Color;
     value struct Vector2i;
 
@@ -84,7 +83,6 @@ namespace Flood
 
         ImageWriter(::ImageWriter* native);
         ImageWriter(System::IntPtr native);
-        void Save(Flood::Image^ image, Flood::Stream^ stream);
         bool Convert(Flood::Image^ image);
     };
 }

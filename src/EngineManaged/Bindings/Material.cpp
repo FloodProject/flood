@@ -399,3 +399,13 @@ void Flood::Material::_isBlendingEnabled::set(bool value)
     ((::Material*)NativePtr)->_isBlendingEnabled = value;
 }
 
+float Flood::Material::DefaultLineWidth::get()
+{
+    return ::Material::DefaultLineWidth;
+}
+
+void Flood::Material::DefaultLineWidth::set(float value)
+{
+    ::Material::DefaultLineWidth = value;
+}
+

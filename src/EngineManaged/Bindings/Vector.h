@@ -51,11 +51,26 @@ namespace Flood
         Flood::Vector3 Lerp(Flood::Vector3 vec, float blend);
         Flood::Vector3 Serp(Flood::Vector3 vec, float t);
         Flood::Vector3 Normalize();
-        static property Flood::Vector3 Zero;
-        static property Flood::Vector3 One;
-        static property Flood::Vector3 UnitX;
-        static property Flood::Vector3 UnitY;
-        static property Flood::Vector3 UnitZ;
+        static property Flood::Vector3 Zero
+        {
+            Flood::Vector3 get();
+        }
+        static property Flood::Vector3 One
+        {
+            Flood::Vector3 get();
+        }
+        static property Flood::Vector3 UnitX
+        {
+            Flood::Vector3 get();
+        }
+        static property Flood::Vector3 UnitY
+        {
+            Flood::Vector3 get();
+        }
+        static property Flood::Vector3 UnitZ
+        {
+            Flood::Vector3 get();
+        }
     };
 
     public value struct Vector4
@@ -85,11 +100,26 @@ namespace Flood
         Flood::Vector4 operator/(float s);
         Flood::Vector4 operator/=(float s);
         void SetZero();
-        static property Flood::Vector4 Zero;
-        static property Flood::Vector4 UnitX;
-        static property Flood::Vector4 UnitY;
-        static property Flood::Vector4 UnitZ;
-        static property Flood::Vector4 UnitW;
+        static property Flood::Vector4 Zero
+        {
+            Flood::Vector4 get();
+        }
+        static property Flood::Vector4 UnitX
+        {
+            Flood::Vector4 get();
+        }
+        static property Flood::Vector4 UnitY
+        {
+            Flood::Vector4 get();
+        }
+        static property Flood::Vector4 UnitZ
+        {
+            Flood::Vector4 get();
+        }
+        static property Flood::Vector4 UnitW
+        {
+            Flood::Vector4 get();
+        }
     };
 
     public value struct Vector2
@@ -112,9 +142,18 @@ namespace Flood
         Flood::Vector2 operator*(float s);
         Flood::Vector2 operator/(int s);
         void SetZero();
-        static property Flood::Vector2 Zero;
-        static property Flood::Vector2 UnitX;
-        static property Flood::Vector2 UnitY;
+        static property Flood::Vector2 Zero
+        {
+            Flood::Vector2 get();
+        }
+        static property Flood::Vector2 UnitX
+        {
+            Flood::Vector2 get();
+        }
+        static property Flood::Vector2 UnitY
+        {
+            Flood::Vector2 get();
+        }
     };
 
     public value struct Vector2i

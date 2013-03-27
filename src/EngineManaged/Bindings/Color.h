@@ -20,23 +20,49 @@ namespace Flood
     public:
         Color(::Color* native);
         Color(System::IntPtr native);
-        Color(float r, float g, float b, float a);
-        Color(int r, int g, int b, int a);
-        float R;
-        float G;
-        float B;
-        float A;
+        Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+        unsigned char R;
+        unsigned char G;
+        unsigned char B;
+        unsigned char A;
         bool operator==(Flood::Color v);
         bool NearEqual(Flood::Color a, float tolerance);
         Flood::Color operator*(float s);
-        static property Flood::Color White;
-        static property Flood::Color Black;
-        static property Flood::Color LightGrey;
-        static property Flood::Color Red;
-        static property Flood::Color Green;
-        static property Flood::Color Blue;
-        static property Flood::Color NavyBlue;
-        static property Flood::Color SkyBlue;
-        static property Flood::Color Yellow;
+        static property Flood::Color White
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color Black
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color LightGrey
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color Red
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color Green
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color Blue
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color NavyBlue
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color SkyBlue
+        {
+            Flood::Color get();
+        }
+        static property Flood::Color Yellow
+        {
+            Flood::Color get();
+        }
     };
 }

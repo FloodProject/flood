@@ -65,6 +65,7 @@ namespace Flood
         Texture(::Texture* native);
         Texture(System::IntPtr native);
         Texture();
+        ~Texture(){}
         property unsigned int Id
         {
             unsigned int get();
@@ -75,15 +76,15 @@ namespace Flood
             Flood::TextureTarget get();
             void set(Flood::TextureTarget);
         }
-        property unsigned short Width
+        property unsigned int Width
         {
-            unsigned short get();
-            void set(unsigned short);
+            unsigned int get();
+            void set(unsigned int);
         }
-        property unsigned short Height
+        property unsigned int Height
         {
-            unsigned short get();
-            void set(unsigned short);
+            unsigned int get();
+            void set(unsigned int);
         }
         property Flood::PixelFormat Format
         {
@@ -94,11 +95,6 @@ namespace Flood
         {
             float get();
             void set(float);
-        }
-        property Flood::ResourceHandle<Flood::Image^> Image
-        {
-            Flood::ResourceHandle<Flood::Image^> get();
-            void set(Flood::ResourceHandle<Flood::Image^>);
         }
         void Alloc(Flood::Vector2i size, Flood::PixelFormat _0);
         unsigned int GetId();

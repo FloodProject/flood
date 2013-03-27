@@ -41,6 +41,5 @@ namespace Flood
         bool AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle);
         bool GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture);
         Flood::ResourceHandle<Flood::Image^> GetAtlasImageHandle();
-        static property unsigned int DefaultSize;
     };
 }

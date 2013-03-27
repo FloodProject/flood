@@ -54,6 +54,9 @@ namespace Flood
         Flood::Vector4 operator*(Flood::Vector4 v);
         Flood::Matrix4x4 CreatePerspective(float FOV, float aspectRatio, float nearPlane, float farPlane);
         Flood::Matrix4x4 CreateOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-        static property Flood::Matrix4x4 Identity;
+        static property Flood::Matrix4x4 Identity
+        {
+            Flood::Matrix4x4 get();
+        }
     };
 }

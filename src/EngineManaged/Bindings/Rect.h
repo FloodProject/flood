@@ -7,40 +7,23 @@
 
 #pragma once
 
-#include <Engine/RectangleBinPack/Rect.h>
+#include <Core/Math/Rect.h>
 #include "ResourceHandle.h"
 
 namespace Flood
 {
     value struct Rect;
-    value struct RectSize;
-
-    public value struct RectSize
-    {
-    public:
-        RectSize(::RectSize* native);
-        RectSize(System::IntPtr native);
-        int Width;
-        int Height;
-    };
 
     public value struct Rect
     {
     public:
         Rect(::Rect* native);
         Rect(System::IntPtr native);
+        Rect(int x, int y, int width, int height);
         int X;
         int Y;
         int Width;
         int Height;
-    };
-
-    public ref class FloodRect
-    {
-    public:
-        /// <summary>
-        /// Returns true if a is contained in b.
-        /// </summary>
-        static bool IsContainedIn(Flood::Rect a, Flood::Rect b);
+        bool IsContainedIn(Flood::Rect rect);
     };
 }

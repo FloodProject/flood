@@ -10,7 +10,6 @@
 #include "Extension.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
-#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -32,7 +31,6 @@ Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
     Name = clix::marshalString<clix::E_UTF8>(native->name);
-    Stream = gcnew Flood::Stream((::Stream*)native->stream);
     Resource = gcnew Flood::Resource((::Resource*)native->resource);
     Group = (Flood::ResourceGroup)native->group;
     IsHighPriority = native->isHighPriority;
@@ -46,7 +44,6 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
     auto __native = (::ResourceLoadOptions*)native.ToPointer();
     Name = clix::marshalString<clix::E_UTF8>(__native->name);
-    Stream = gcnew Flood::Stream((::Stream*)__native->stream);
     Resource = gcnew Flood::Resource((::Resource*)__native->resource);
     Group = (Flood::ResourceGroup)__native->group;
     IsHighPriority = __native->isHighPriority;
@@ -90,16 +87,6 @@ void Flood::ResourceStream::Reset()
     ((::ResourceStream*)NativePtr)->reset();
 }
 
-Flood::Stream^ Flood::ResourceStream::Stream::get()
-{
-    return gcnew Flood::Stream((::Stream*)((::ResourceStream*)NativePtr)->stream);
-}
-
-void Flood::ResourceStream::Stream::set(Flood::Stream^ value)
-{
-    ((::ResourceStream*)NativePtr)->stream = (::Stream*)value->NativePtr;
-}
-
 Flood::ResourceLoader^ Flood::ResourceStream::Loader::get()
 {
     return gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
@@ -136,8 +123,6 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
-    if (_0.Stream != nullptr)
-        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
     if (_0.Resource != nullptr)
         _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)_0.Group;
@@ -158,8 +143,6 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
-    if (_0.Stream != nullptr)
-        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
     if (_0.Resource != nullptr)
         _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)_0.Group;

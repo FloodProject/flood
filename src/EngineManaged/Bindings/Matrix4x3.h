@@ -52,6 +52,9 @@ namespace Flood
         Flood::Matrix4x3 RotateX(float ang);
         Flood::Matrix4x3 RotateY(float ang);
         Flood::Matrix4x3 RotateZ(float ang);
-        static property Flood::Matrix4x3 Identity;
+        static property Flood::Matrix4x3 Identity
+        {
+            Flood::Matrix4x3 get();
+        }
     };
 }

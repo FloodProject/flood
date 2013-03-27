@@ -230,3 +230,8 @@ Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
     return Flood::Quaternion((::Quaternion*)&ret);
 }
 
+Flood::Quaternion Flood::Quaternion::Identity::get()
+{
+    return Flood::Quaternion((::Quaternion*)&::Quaternion::Identity);
+}
+
