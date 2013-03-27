@@ -96,6 +96,18 @@ public:
 	}
 #endif
 
+	T& operator*() const
+	{
+		T* px = Resolve();
+		return *px;
+	}
+
+	T* operator->() const
+	{
+		T* px = Resolve();
+		return px;
+	}
+
 	void addReference()
 	{
 		if(id == HandleInvalid) return;
