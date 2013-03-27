@@ -9,6 +9,14 @@ project "EngineBindings"
 	
 	SetupNativeProjects()
 
+	defines
+	{
+		Core.defines,
+		Resources.defines,
+		Graphics.defines,
+		Engine.defines,
+	}
+
 	files
 	{
 		"EngineBindings.lua",
