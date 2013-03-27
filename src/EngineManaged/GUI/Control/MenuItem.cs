@@ -184,7 +184,7 @@ namespace Flood.GUI.Controls
             m_Menu.IsHidden = false;
             m_Menu.BringToFront();
 
-            Point p = LocalPosToCanvas(Point.Empty);
+            var p = LocalPosToCanvas(new Vector2i(0,0));
 
             // Strip menus open downwards
             if (m_OnStrip)

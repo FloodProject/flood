@@ -217,7 +217,9 @@ namespace Flood.GUI.Controls
                 m_Image = new ImagePanel(this);
             }
 
-            m_Image.ImageName = textureName;
+            //m_Image.Texture.Image = new Image();
+            throw new NotImplementedException();
+
             m_Image.SizeToContents( );
             m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);
             m_CenterImage = center;
@@ -230,7 +232,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="image">Image bitmap.</param>
         /// <param name="center">Determines whether the image should be centered.</param>
-        public virtual void SetImage(Bitmap image, bool center = false)
+        public virtual void SetImage(ResourceHandle<Image> imageHandle, bool center = false)
         {
             
             if (m_Image == null)
@@ -238,7 +240,7 @@ namespace Flood.GUI.Controls
                 m_Image = new ImagePanel(this);
             }
 
-            m_Image.Texture.LoadBitmap(image);
+            m_Image.Texture.SetImage(imageHandle);
 
             m_Image.SizeToContents( );
             m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);

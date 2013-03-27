@@ -36,7 +36,7 @@ namespace Flood.GUI.Skins.Texturing
         void DrawRect(Renderers.Renderer render, int i, int x, int y, int w, int h)
         {
             render.DrawTexturedRect(m_Texture,
-                                    new Rectangle(x, y, w, h),
+                                    new Rect(x, y, w, h),
                                     m_Rects[i].uv[0], m_Rects[i].uv[1], m_Rects[i].uv[2], m_Rects[i].uv[3]);
         }
 
@@ -87,12 +87,12 @@ namespace Flood.GUI.Skins.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderers.Renderer render, Rectangle r)
+        public void Draw(Renderers.Renderer render, Rect r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
+        public void Draw(Renderers.Renderer render, Rect r, Color col)
         {
             if (m_Texture == null)
                 return;

@@ -284,8 +284,8 @@ namespace Flood.GUI.Skins
         public TexturedSkin(Renderers.Renderer renderer, String textureName)
             : base(renderer)
         {
-            m_Texture = new Texture(Renderer);
-            m_Texture.Load(textureName);
+            m_Texture = new Texture();
+            m_Texture.LoadImage(textureName);
 
             InitializeColors();
             InitializeTextures();
@@ -524,7 +524,7 @@ namespace Flood.GUI.Skins
                 Textures.Menu.Hover.Draw(Renderer, control.RenderBounds);
 
             if (isChecked)
-                Textures.Menu.Check.Draw(Renderer, new Rectangle(control.RenderBounds.X + 4, control.RenderBounds.Y + 3, 15, 15));
+                Textures.Menu.Check.Draw(Renderer, new Rect(control.RenderBounds.X + 4, control.RenderBounds.Y + 3, 15, 15));
         }
 
         public override void DrawMenuStrip(Controls.Control control)
@@ -545,7 +545,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawShadow(Controls.Control control)
         {
-            Rectangle r = control.RenderBounds;
+            Rect r = control.RenderBounds;
             r.X -= 4;
             r.Y -= 4;
             r.Width += 10;
@@ -591,31 +591,31 @@ namespace Flood.GUI.Skins
 
         public override void DrawGroupBox(Controls.Control control, int textStart, int textHeight, int textWidth)
         {
-            Rectangle rect = control.RenderBounds;
+            Rect rect = control.RenderBounds;
 
             rect.Y += (int)(textHeight * 0.5f);
             rect.Height -= (int)(textHeight * 0.5f);
 
-            Color m_colDarker = Color.FromArgb(50, 0, 50, 60);
-            Color m_colLighter = Color.FromArgb(150, 255, 255, 255);
+            Color m_colDarker = new Color(0, 50, 60, 50);
+            Color m_colLighter = new Color(255, 255, 255, 150);
 
             Renderer.DrawColor = m_colLighter;
 
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, textStart - 3, 1));
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y + 1, rect.Width - textStart + textWidth - 2, 1));
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, textStart - 3, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y + 1, rect.Width - textStart + textWidth - 2, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
 
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, 1, rect.Height));
-            Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, 1, rect.Height));
+            Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
 
             Renderer.DrawColor = m_colDarker;
 
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, textStart - 3, 1));
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y, rect.Width - textStart - textWidth - 2, 1));
-            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y, textStart - 3, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y, rect.Width - textStart - textWidth - 2, 1));
+            Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
 
-            Renderer.DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 1));
-            Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
         }
 
         public override void DrawTextBox(Controls.Control control)
@@ -666,22 +666,22 @@ namespace Flood.GUI.Skins
         {
             if (dir == Pos.Top)
             {
-                Textures.Tab.Top.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, 0, 0, 8)));
+                Textures.Tab.Top.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, 0, 0, 8)));
                 return;
             }
             if (dir == Pos.Left)
             {
-                Textures.Tab.Left.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, 0, 8, 0)));
+                Textures.Tab.Left.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, 0, 8, 0)));
                 return;
             }
             if (dir == Pos.Bottom)
             {
-                Textures.Tab.Bottom.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, -8, 0, 8)));
+                Textures.Tab.Bottom.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, -8, 0, 8)));
                 return;
             }
             if (dir == Pos.Right)
             {
-                Textures.Tab.Right.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(-8, 0, 8, 0)));
+                Textures.Tab.Right.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(-8, 0, 8, 0)));
                 return;
             }
         }
@@ -706,8 +706,8 @@ namespace Flood.GUI.Skins
 
         public override void DrawHighlight(Controls.Control control)
         {
-            Rectangle rect = control.RenderBounds;
-            Renderer.DrawColor = Color.FromArgb(255, 255, 100, 255);
+            Rect rect = control.RenderBounds;
+            Renderer.DrawColor = new Color(255, 100, 255, 255);
             Renderer.DrawFilledRect(rect);
         }
 
@@ -768,7 +768,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawProgressBar(Controls.Control control, bool horizontal, float progress)
         {
-            Rectangle rect = control.RenderBounds;
+            Rect rect = control.RenderBounds;
 
             if (horizontal)
             {
@@ -818,7 +818,7 @@ namespace Flood.GUI.Skins
             Textures.Input.ListBox.OddLine.Draw(Renderer, control.RenderBounds);
         }
 
-        public void DrawSliderNotchesH(Rectangle rect, int numNotches, float dist)
+        public void DrawSliderNotchesH(Rect rect, int numNotches, float dist)
         {
             if (numNotches == 0) return;
 
@@ -827,7 +827,7 @@ namespace Flood.GUI.Skins
                 Renderer.DrawFilledRect(Util.FloatRect(rect.X + iSpacing * i, rect.Y + dist - 2, 1, 5));
         }
 
-        public void DrawSliderNotchesV(Rectangle rect, int numNotches, float dist)
+        public void DrawSliderNotchesV(Rect rect, int numNotches, float dist)
         {
             if (numNotches == 0) return;
 
@@ -838,8 +838,8 @@ namespace Flood.GUI.Skins
 
         public override void DrawSlider(Controls.Control control, bool horizontal, int numNotches, int barSize)
         {
-            Rectangle rect = control.RenderBounds;
-            Renderer.DrawColor = Color.FromArgb(100, 0, 0, 0);
+            Rect rect = control.RenderBounds;
+            Renderer.DrawColor = new Color(0, 0, 0, 100);
 
             if (horizontal)
             {
@@ -883,9 +883,9 @@ namespace Flood.GUI.Skins
             Textures.Input.ComboBox.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawKeyboardHighlight(Controls.Control control, Rectangle r, int offset)
+        public override void DrawKeyboardHighlight(Controls.Control control, Rect r, int offset)
         {
-            Rectangle rect = r;
+            Rect rect = r;
 
             rect.X += offset;
             rect.Y += offset;
@@ -1024,7 +1024,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawTreeButton(Controls.Control control, bool open)
         {
-            Rectangle rect = control.RenderBounds;
+            Rect rect = control.RenderBounds;
 
             if (open)
                 Textures.Tree.Minus.Draw(Renderer, rect);
@@ -1041,7 +1041,7 @@ namespace Flood.GUI.Skins
         {
             if (selected)
             {
-                Textures.Selection.Draw(Renderer, new Rectangle(17, 0, labelWidth + 2, labelHeight - 1));
+                Textures.Selection.Draw(Renderer, new Rect(17, 0, labelWidth + 2, labelHeight - 1));
             }
 
             base.DrawTreeNode(ctrl, open, selected, labelHeight, labelWidth, halfWay, lastBranch, isRoot);
@@ -1049,14 +1049,14 @@ namespace Flood.GUI.Skins
 
         public override void DrawColorDisplay(Controls.Control control, Color color)
         {
-            Rectangle rect = control.RenderBounds;
+            Rect rect = control.RenderBounds;
 
             if (color.A != 255)
             {
-                Renderer.DrawColor = Color.FromArgb(255, 255, 255, 255);
+                Renderer.DrawColor = new Color(255, 255, 255, 255);
                 Renderer.DrawFilledRect(rect);
 
-                Renderer.DrawColor = Color.FromArgb(128, 128, 128, 128);
+                Renderer.DrawColor = new Color(128, 128, 128, 128);
 
                 Renderer.DrawFilledRect(Util.FloatRect(0, 0, rect.Width * 0.5f, rect.Height * 0.5f));
                 Renderer.DrawFilledRect(Util.FloatRect(rect.Width * 0.5f, rect.Height * 0.5f, rect.Width * 0.5f, rect.Height * 0.5f));
@@ -1073,15 +1073,15 @@ namespace Flood.GUI.Skins
         {
             if (!control.ShouldDrawBackground)
                 return;
-            Rectangle rect = control.RenderBounds;
+            Rect rect = control.RenderBounds;
             Renderer.DrawColor = Colors.ModalBackground;
             Renderer.DrawFilledRect(rect);
         }
 
         public override void DrawMenuDivider(Controls.Control control)
         {
-            Rectangle rect = control.RenderBounds;
-            Renderer.DrawColor = Color.FromArgb(100, 0, 0, 0);
+            Rect rect = control.RenderBounds;
+            Renderer.DrawColor = new Color(0, 0, 0, 100);
             Renderer.DrawFilledRect(rect);
         }
 

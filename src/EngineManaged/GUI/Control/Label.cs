@@ -111,7 +111,7 @@ namespace Flood.GUI.Controls
         /// <returns></returns>
         protected int GetClosestCharacter(int x, int y)
         { 
-            return m_Text.GetClosestCharacter(m_Text.CanvasPosToLocal(new Point(x, y))); 
+            return m_Text.GetClosestCharacter(m_Text.CanvasPosToLocal(new Vector2i(x, y))); 
         }
 
         /// <summary>
@@ -194,10 +194,10 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="index">Character index.</param>
         /// <returns>Character coordinates (local).</returns>
-        public virtual Point GetCharacterPosition(int index)
+        public virtual Vector2i GetCharacterPosition(int index)
         {
-            Point p = m_Text.GetCharacterPosition(index);
-            return new Point(p.X + m_Text.X, p.Y + m_Text.Y);
+            var p = m_Text.GetCharacterPosition(index);
+            return new Vector2i(p.X + m_Text.X, p.Y + m_Text.Y);
         }
 
         /// <summary>

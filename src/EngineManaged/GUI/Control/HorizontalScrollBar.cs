@@ -144,7 +144,7 @@ namespace Flood.GUI.Controls
             }
             else
             {
-                Point clickPos = CanvasPosToLocal(new Point(x, y));
+                var clickPos = CanvasPosToLocal(new Vector2i(x, y));
                 if (clickPos.X < m_Bar.X)
                     NudgeLeft(this);
                 else

@@ -113,7 +113,7 @@ namespace Flood.GUI.Skins
         public virtual void DrawSliderButton(Controls.Control control, bool depressed, bool horizontal) { }
         public virtual void DrawComboBox(Controls.Control control, bool down, bool isMenuOpen) { }
         public virtual void DrawComboBoxArrow(Controls.Control control, bool hovered, bool depressed, bool open, bool disabled) { }
-        public virtual void DrawKeyboardHighlight(Controls.Control control, Rectangle rect, int offset) { }
+        public virtual void DrawKeyboardHighlight(Controls.Control control, Rect rect, int offset) { }
         public virtual void DrawToolTip(Controls.Control control) { }
         public virtual void DrawNumericUpDownButton(Controls.Control control, bool depressed, bool up) { }
         public virtual void DrawTreeButton(Controls.Control control, bool open) { }
@@ -122,15 +122,15 @@ namespace Flood.GUI.Skins
         public virtual void DrawDebugOutlines(Controls.Control control)
         {
             m_Renderer.DrawColor = control.PaddingOutlineColor;
-            Rectangle inner = new Rectangle(control.Bounds.Left + control.Padding.Left,
-                                            control.Bounds.Top + control.Padding.Top,
+            var inner = new Rect(control.Bounds.GetLeft() + control.Padding.Left,
+                                            control.Bounds.GetTop() + control.Padding.Top,
                                             control.Bounds.Width - control.Padding.Right - control.Padding.Left,
                                             control.Bounds.Height - control.Padding.Bottom - control.Padding.Top);
             m_Renderer.DrawLinedRect(inner);
 
             m_Renderer.DrawColor = control.MarginOutlineColor;
-            Rectangle outer = new Rectangle(control.Bounds.Left - control.Margin.Left,
-                                            control.Bounds.Top - control.Margin.Top,
+            var outer = new Rect(control.Bounds.GetLeft() - control.Margin.Left,
+                                            control.Bounds.GetTop() - control.Margin.Top,
                                             control.Bounds.Width + control.Margin.Right + control.Margin.Left,
                                             control.Bounds.Height + control.Margin.Bottom + control.Margin.Top);
             m_Renderer.DrawLinedRect(outer);
@@ -144,16 +144,16 @@ namespace Flood.GUI.Skins
             Renderer.DrawColor = Colors.Tree.Lines;
 
             if (!isRoot)
-                Renderer.DrawFilledRect(new Rectangle(8, halfWay, 16 - 9, 1));
+                Renderer.DrawFilledRect(new Rect(8, halfWay, 16 - 9, 1));
 
             if (!open) return;
 
-            Renderer.DrawFilledRect(new Rectangle(14 + 7, labelHeight + 1, 1, lastBranch + halfWay - labelHeight));
+            Renderer.DrawFilledRect(new Rect(14 + 7, labelHeight + 1, 1, lastBranch + halfWay - labelHeight));
         }
 
         public virtual void DrawPropertyRow(Controls.Control control, int iWidth, bool bBeingEdited, bool hovered)
         {
-            Rectangle rect = control.RenderBounds;
+            var rect = control.RenderBounds;
 
             if (bBeingEdited)
                 m_Renderer.DrawColor = Colors.Properties.Column_Selected;
@@ -162,7 +162,7 @@ namespace Flood.GUI.Skins
             else
                 m_Renderer.DrawColor = Colors.Properties.Column_Normal;
 
-            m_Renderer.DrawFilledRect(new Rectangle(0, rect.Y, iWidth, rect.Height));
+            m_Renderer.DrawFilledRect(new Rect(0, rect.Y, iWidth, rect.Height));
 
             if (bBeingEdited)
                 m_Renderer.DrawColor = Colors.Properties.Line_Selected;
@@ -171,7 +171,7 @@ namespace Flood.GUI.Skins
             else
                 m_Renderer.DrawColor = Colors.Properties.Line_Normal;
 
-            m_Renderer.DrawFilledRect(new Rectangle(iWidth, rect.Y, 1, rect.Height));
+            m_Renderer.DrawFilledRect(new Rect(iWidth, rect.Y, 1, rect.Height));
 
             rect.Y += rect.Height - 1;
             rect.Height = 1;
@@ -187,12 +187,12 @@ namespace Flood.GUI.Skins
 
         public virtual void DrawPropertyTreeNode(Controls.Control control, int BorderLeft, int BorderTop)
         {
-            Rectangle rect = control.RenderBounds;
+            var rect = control.RenderBounds;
 
             m_Renderer.DrawColor = Colors.Properties.Border;
 
-            m_Renderer.DrawFilledRect(new Rectangle(rect.X, rect.Y, BorderLeft, rect.Height));
-            m_Renderer.DrawFilledRect(new Rectangle(rect.X + BorderLeft, rect.Y, rect.Width - BorderLeft, BorderTop));
+            m_Renderer.DrawFilledRect(new Rect(rect.X, rect.Y, BorderLeft, rect.Height));
+            m_Renderer.DrawFilledRect(new Rect(rect.X + BorderLeft, rect.Y, rect.Width - BorderLeft, BorderTop));
         }
 #endregion
 
@@ -205,7 +205,7 @@ namespace Flood.GUI.Skins
         good cross platform solution.
         */
         
-        public virtual void DrawArrowDown(Rectangle rect)
+        public virtual void DrawArrowDown(Rect rect)
         {
             float x = (rect.Width / 5.0f);
             float y = (rect.Height / 5.0f);
@@ -217,7 +217,7 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + x * 4.0f, rect.Y + y * 1.0f, x, y * 1.0f));
         }
 
-        public virtual void DrawArrowUp(Rectangle rect)
+        public virtual void DrawArrowUp(Rect rect)
         {
             float x = (rect.Width / 5.0f);
             float y = (rect.Height / 5.0f);
@@ -229,7 +229,7 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + x * 4.0f, rect.Y + y * 3.0f, x, y * 1.0f));
         }
 
-        public virtual void DrawArrowLeft(Rectangle rect)
+        public virtual void DrawArrowLeft(Rect rect)
         {
             float x = (rect.Width / 5.0f);
             float y = (rect.Height / 5.0f);
@@ -241,7 +241,7 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + x * 3.0f, rect.Y + y * 4.0f, x * 1.0f, y));
         }
 
-        public virtual void DrawArrowRight(Rectangle rect)
+        public virtual void DrawArrowRight(Rect rect)
         {
             float x = (rect.Width / 5.0f);
             float y = (rect.Height / 5.0f);
@@ -253,7 +253,7 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + x * 1.0f, rect.Y + y * 4.0f, x * 1.0f, y));
         }
 
-        public virtual void DrawCheck(Rectangle rect)
+        public virtual void DrawCheck(Rect rect)
         {
             float x = (rect.Width / 5.0f);
             float y = (rect.Height / 5.0f);

@@ -14,7 +14,7 @@ namespace Flood.GUI.Input
     {
         private static readonly KeyData m_KeyData = new KeyData();
         private static readonly float[] m_LastClickTime = new float[MaxMouseButtons];
-        private static Point m_LastClickPos;
+        private static Vector2i m_LastClickPos;
 
         /// <summary>
         /// Control currently hovered by mouse.
@@ -64,7 +64,7 @@ namespace Flood.GUI.Input
         /// <summary>
         /// Current mouse position.
         /// </summary>
-        public static Point MousePosition; // not property to allow modification of Point fields
+        public static Vector2i MousePosition; // not property to allow modification of Point fields
 
         /// <summary>
         /// Indicates whether the shift key is down.

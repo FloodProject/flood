@@ -70,7 +70,7 @@ namespace Flood.GUI.Controls
         {
             IsHidden = false;
             BringToFront();
-            Point mouse = Input.InputHandler.MousePosition;
+            var mouse = Input.InputHandler.MousePosition;
             SetPosition(mouse.X, mouse.Y);
         }
 

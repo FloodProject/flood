@@ -229,7 +229,7 @@ namespace Flood.GUI.Controls
 
         private void HandleOverflow()
         {
-            Point TabsSize = m_TabStrip.GetChildrenSize();
+            var TabsSize = m_TabStrip.GetChildrenSize();
 
             // Only enable the scrollers if the tabs are at the top.
             // This is a limitation we should explore.

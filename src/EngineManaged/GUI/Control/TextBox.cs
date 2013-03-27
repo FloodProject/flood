@@ -14,8 +14,8 @@ namespace Flood.GUI.Controls
         private int m_CursorPos;
         private int m_CursorEnd;
 
-        private Rectangle m_SelectionBounds;
-        private Rectangle m_CaretBounds;
+        private Rect m_SelectionBounds;
+        private Rect m_CaretBounds;
 
         private float m_LastInputTime;
 
@@ -99,7 +99,7 @@ namespace Flood.GUI.Controls
             m_CursorEnd = 0;
             m_SelectAll = false;
 
-            TextColor = Color.FromArgb(255, 50, 50, 50); // TODO: From Skin
+            TextColor = new Color(50, 50, 50, 255); // TODO: From Skin
 
             IsTabable = true;
 
@@ -194,7 +194,7 @@ namespace Flood.GUI.Controls
             // Draw selection.. if selected..
             if (m_CursorPos != m_CursorEnd)
             {
-                skin.Renderer.DrawColor = Color.FromArgb(200, 50, 170, 255);
+                skin.Renderer.DrawColor = new Color(50, 170, 255, 200);
                 skin.Renderer.DrawFilledRect(m_SelectionBounds);
             }
 
@@ -214,8 +214,8 @@ namespace Flood.GUI.Controls
 
             MakeCaretVisible();
 
-            Point pA = GetCharacterPosition(m_CursorPos);
-            Point pB = GetCharacterPosition(m_CursorEnd);
+            var pA = GetCharacterPosition(m_CursorPos);
+            var pB = GetCharacterPosition(m_CursorEnd);
 
             m_SelectionBounds.X = Math.Min(pA.X, pB.X);
             m_SelectionBounds.Y = TextY - 1;

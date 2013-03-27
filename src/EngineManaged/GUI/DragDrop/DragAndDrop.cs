@@ -18,7 +18,7 @@ namespace Flood.GUI.DragDrop
 
         private static Controls.Control m_LastPressedControl;
         private static Controls.Control m_NewHoveredControl;
-        private static Point m_LastPressedPos;
+        private static Vector2i m_LastPressedPos;
         private static int m_MouseX;
         private static int m_MouseY;
 
@@ -171,7 +171,7 @@ namespace Flood.GUI.DragDrop
             // Store the last clicked on control. Don't do anything yet, 
             // we'll check it in OnMouseMoved, and if it moves further than
             // x pixels with the mouse down, we'll start to drag.
-            m_LastPressedPos = new Point(x, y);
+            m_LastPressedPos = new Vector2i(x, y);
             m_LastPressedControl = hoveredControl;
 
             return false;
@@ -212,9 +212,9 @@ namespace Flood.GUI.DragDrop
             if (CurrentPackage.DrawControl == null) 
                 return;
 
-            Point old = skin.Renderer.RenderOffset;
+            var old = skin.Renderer.RenderOffset;
 
-            skin.Renderer.AddRenderOffset(new Rectangle(
+            skin.Renderer.AddRenderOffset(new Rect(
                 m_MouseX - SourceControl.X - CurrentPackage.HoldOffset.X,
                 m_MouseY - SourceControl.Y - CurrentPackage.HoldOffset.Y, 0, 0));
             CurrentPackage.DrawControl.DoRender(skin);

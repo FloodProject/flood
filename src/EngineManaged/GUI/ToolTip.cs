@@ -53,11 +53,11 @@ namespace Flood.GUI
 
             Renderers.Renderer render = skin.Renderer;
 
-            Point oldRenderOffset = render.RenderOffset;
-            Point mousePos = Input.InputHandler.MousePosition;
-            Rectangle bounds = g_ToolTip.ToolTip.Bounds;
+            var oldRenderOffset = render.RenderOffset;
+            var mousePos = Input.InputHandler.MousePosition;
+            var bounds = g_ToolTip.ToolTip.Bounds;
 
-            Rectangle offset = Util.FloatRect(mousePos.X - bounds.Width*0.5f, mousePos.Y - bounds.Height - 10,
+            var offset = Util.FloatRect(mousePos.X - bounds.Width*0.5f, mousePos.Y - bounds.Height - 10,
                                                  bounds.Width, bounds.Height);
             offset = Util.ClampRectToRect(offset, g_ToolTip.GetCanvas().Bounds);
 

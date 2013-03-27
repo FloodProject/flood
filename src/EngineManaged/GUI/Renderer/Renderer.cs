@@ -10,8 +10,8 @@ namespace Flood.GUI.Renderers
     public class Renderer : IDisposable
     {
         //public Random rnd;
-        private Point m_RenderOffset;
-        private Rectangle m_ClipRegion;
+        private Vector2i m_RenderOffset;
+        private Rect m_ClipRegion;
         //protected ICacheToTexture m_RTT;
 
         public float Scale { get; set; }
@@ -22,7 +22,7 @@ namespace Flood.GUI.Renderers
         protected Renderer()
         {
             //rnd = new Random();
-            m_RenderOffset = Point.Empty;
+            m_RenderOffset = new Vector2i(0,0);
             Scale = 1.0f;
             if (CTT != null)
                 CTT.Initialize();
@@ -67,12 +67,12 @@ namespace Flood.GUI.Renderers
         /// <summary>
         /// Rendering offset. No need to touch it usually.
         /// </summary>
-        public Point RenderOffset { get { return m_RenderOffset; } set { m_RenderOffset = value; } }
+        public Vector2i RenderOffset { get { return m_RenderOffset; } set { m_RenderOffset = value; } }
 
         /// <summary>
         /// Clipping rectangle.
         /// </summary>
-        public Rectangle ClipRegion { get { return m_ClipRegion; } set { m_ClipRegion = value; } }
+        public Rect ClipRegion { get { return m_ClipRegion; } set { m_ClipRegion = value; } }
 
         /// <summary>
         /// Indicates whether the clip region is visible.
@@ -102,7 +102,7 @@ namespace Flood.GUI.Renderers
         /// Draws a solid filled rectangle.
         /// </summary>
         /// <param name="rect"></param>
-        public virtual void DrawFilledRect(Rectangle rect)
+        public virtual void DrawFilledRect(Rect rect)
         {}
 
         /// <summary>
@@ -118,28 +118,6 @@ namespace Flood.GUI.Renderers
         {}
 
         /// <summary>
-        /// Loads the specified texture.
-        /// </summary>
-        /// <param name="t"></param>
-        public virtual void LoadTexture(Texture t)
-        {}
-
-        /// <summary>
-        /// Initializes texture from image file data.
-        /// </summary>
-        /// <param name="t">Texture to initialize.</param>
-        /// <param name="data">Image bitmap.</param>
-        public virtual void LoadTextureBitmap(Texture t, Bitmap data)
-        {}
-
-        /// <summary>
-        /// Frees the specified texture.
-        /// </summary>
-        /// <param name="t">Texture to free.</param>
-        public virtual void FreeTexture(Texture t)
-        {}
-
-        /// <summary>
         /// Draws textured rectangle.
         /// </summary>
         /// <param name="t">Texture to use.</param>
@@ -148,14 +126,14 @@ namespace Flood.GUI.Renderers
         /// <param name="v1">Texture coordinate v1.</param>
         /// <param name="u2">Texture coordinate u2.</param>
         /// <param name="v2">Texture coordinate v2.</param>
-        public virtual void DrawTexturedRect(Texture t, Rectangle targetRect, float u1=0, float v1=0, float u2=1, float v2=1)
+        public virtual void DrawTexturedRect(Texture t, Rect targetRect, float u1=0, float v1=0, float u2=1, float v2=1)
         {}
 
         /// <summary>
         /// Draws "missing image" default texture.
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
-        public virtual void DrawMissingImage(Rectangle rect)
+        public virtual void DrawMissingImage(Rect rect)
         {
             //DrawColor = Color.FromArgb(255, rnd.Next(0,255), rnd.Next(0,255), rnd.Next(0, 255));
             DrawColor = Color.Red;
@@ -190,10 +168,9 @@ namespace Flood.GUI.Renderers
         /// <param name="font">Font to use.</param>
         /// <param name="text">Text to measure.</param>
         /// <returns>Width and height of the rendered text.</returns>
-        public virtual Point MeasureText(Font font, String text)
+        public virtual Vector2i MeasureText(Font font, String text)
         {
-            Point p = new Point((int)(font.Size * Scale * text.Length * 0.4f), (int)(font.Size * Scale));
-
+            var p = new Vector2i((int)(font.Size * Scale * text.Length * 0.4f), (int)(font.Size * Scale));
             return p;
         }
 
@@ -203,7 +180,7 @@ namespace Flood.GUI.Renderers
         /// <param name="font">Font to use.</param>
         /// <param name="position">Top-left corner of the text.</param>
         /// <param name="text">Text to render.</param>
-        public virtual void RenderText(Font font, Point position, String text)
+        public virtual void RenderText(Font font, Vector2i position, String text)
         {
             float size = font.Size * Scale;
 
@@ -214,7 +191,7 @@ namespace Flood.GUI.Renderers
                 if ( chr == ' ' ) 
                     continue;
 
-                Rectangle r = Util.FloatRect(position.X + i * size * 0.4f, position.Y, size * 0.4f - 1, size);
+                Rect r = Util.FloatRect(position.X + i * size * 0.4f, position.Y, size * 0.4f - 1, size);
 
                 /*
                     This isn't important, it's just me messing around changing the
@@ -259,13 +236,13 @@ namespace Flood.GUI.Renderers
         /// Draws a lined rectangle. Used for keyboard focus overlay.
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
-        public virtual void DrawLinedRect(Rectangle rect)
+        public virtual void DrawLinedRect(Rect rect)
         {
-            DrawFilledRect(new Rectangle(rect.X, rect.Y, rect.Width, 1));
-            DrawFilledRect(new Rectangle(rect.X, rect.Y + rect.Height - 1, rect.Width, 1));
+            DrawFilledRect(new Rect(rect.X, rect.Y, rect.Width, 1));
+            DrawFilledRect(new Rect(rect.X, rect.Y + rect.Height - 1, rect.Width, 1));
 
-            DrawFilledRect(new Rectangle(rect.X, rect.Y, 1, rect.Height));
-            DrawFilledRect(new Rectangle(rect.X + rect.Width - 1, rect.Y, 1, rect.Height));
+            DrawFilledRect(new Rect(rect.X, rect.Y, 1, rect.Height));
+            DrawFilledRect(new Rect(rect.X + rect.Width - 1, rect.Y, 1, rect.Height));
         }
 
         /// <summary>
@@ -276,7 +253,7 @@ namespace Flood.GUI.Renderers
         public virtual void DrawPixel(int x, int y)
         {
             // [omeg] amazing ;)
-            DrawFilledRect(new Rectangle(x, y, 1, 1));
+            DrawFilledRect(new Rect(x, y, 1, 1));
         }
 
         /// <summary>
@@ -309,7 +286,7 @@ namespace Flood.GUI.Renderers
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
         /// <param name="slight"></param>
-        public virtual void DrawShavedCornerRect(Rectangle rect, bool slight = false)
+        public virtual void DrawShavedCornerRect(Rect rect, bool slight = false)
         {
             // Draw INSIDE the w/h.
             rect.Width -= 1;
@@ -317,11 +294,11 @@ namespace Flood.GUI.Renderers
 
             if (slight)
             {
-                DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, rect.Width - 1, 1));
-                DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + rect.Height, rect.Width - 1, 1));
+                DrawFilledRect(new Rect(rect.X + 1, rect.Y, rect.Width - 1, 1));
+                DrawFilledRect(new Rect(rect.X + 1, rect.Y + rect.Height, rect.Width - 1, 1));
 
-                DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 1));
-                DrawFilledRect(new Rectangle(rect.X + rect.Width, rect.Y + 1, 1, rect.Height - 1));
+                DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 1));
+                DrawFilledRect(new Rect(rect.X + rect.Width, rect.Y + 1, 1, rect.Height - 1));
                 return;
             }
 
@@ -331,11 +308,11 @@ namespace Flood.GUI.Renderers
             DrawPixel(rect.X + 1, rect.Y + rect.Height - 1);
             DrawPixel(rect.X + rect.Width - 1, rect.Y + rect.Height - 1);
 
-            DrawFilledRect(new Rectangle(rect.X + 2, rect.Y, rect.Width - 3, 1));
-            DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + rect.Height, rect.Width - 3, 1));
+            DrawFilledRect(new Rect(rect.X + 2, rect.Y, rect.Width - 3, 1));
+            DrawFilledRect(new Rect(rect.X + 2, rect.Y + rect.Height, rect.Width - 3, 1));
 
-            DrawFilledRect(new Rectangle(rect.X, rect.Y + 2, 1, rect.Height - 3));
-            DrawFilledRect(new Rectangle(rect.X + rect.Width, rect.Y + 2, 1, rect.Height - 3));
+            DrawFilledRect(new Rect(rect.X, rect.Y + 2, 1, rect.Height - 3));
+            DrawFilledRect(new Rect(rect.X + rect.Width, rect.Y + 2, 1, rect.Height - 3));
         }
 
         private int TranslateX(int x)
@@ -367,42 +344,42 @@ namespace Flood.GUI.Renderers
         /// <summary>
         /// Translates a panel's local drawing coordinate into view space, taking offsets into account.
         /// </summary>
-        public Point Translate(Point p)
+        public Vector2i Translate(Vector2i p)
         {
             int x = p.X;
             int y = p.Y;
             Translate(ref x, ref y);
-            return new Point(x, y);
+            return new Vector2i(x, y);
         }
 
         /// <summary>
         /// Translates a panel's local drawing coordinate into view space, taking offsets into account.
         /// </summary>
-        public Rectangle Translate(Rectangle rect)
+        public Rect Translate(Rect rect)
         {
-            return new Rectangle(TranslateX(rect.X), TranslateY(rect.Y), Util.Ceil(rect.Width * Scale), Util.Ceil(rect.Height * Scale));
+            return new Rect(TranslateX(rect.X), TranslateY(rect.Y), Util.Ceil(rect.Width * Scale), Util.Ceil(rect.Height * Scale));
         }
 
         /// <summary>
         /// Adds a point to the render offset.
         /// </summary>
         /// <param name="offset">Point to add.</param>
-        public void AddRenderOffset(Rectangle offset)
+        public void AddRenderOffset(Rect offset)
         {
-            m_RenderOffset = new Point(m_RenderOffset.X + offset.X, m_RenderOffset.Y + offset.Y);
+            m_RenderOffset = new Vector2i(m_RenderOffset.X + offset.X, m_RenderOffset.Y + offset.Y);
         }
 
         /// <summary>
         /// Adds a rectangle to the clipping region.
         /// </summary>
         /// <param name="rect">Rectangle to add.</param>
-        public void AddClipRegion(Rectangle rect)
+        public void AddClipRegion(Rect rect)
         {
 
             rect.X = m_RenderOffset.X;
             rect.Y = m_RenderOffset.Y;
 
-            Rectangle r = rect;
+            Rect r = rect;
             if (rect.X < m_ClipRegion.X)
             {
                 r.Width -= (m_ClipRegion.X - r.X);
@@ -415,14 +392,14 @@ namespace Flood.GUI.Renderers
                 r.Y = m_ClipRegion.Y;
             }
 
-            if (rect.Right > m_ClipRegion.Right)
+            if (rect.GetRight() > m_ClipRegion.GetRight())
             {
-                r.Width = m_ClipRegion.Right - r.X;
+                r.Width = m_ClipRegion.GetRight() - r.X;
             }
 
-            if (rect.Bottom > m_ClipRegion.Bottom)
+            if (rect.GetBottom() > m_ClipRegion.GetBottom())
             {
-                r.Height = m_ClipRegion.Bottom - r.Y;
+                r.Height = m_ClipRegion.GetBottom() - r.Y;
             }
 
             m_ClipRegion = r;

@@ -9,7 +9,7 @@ namespace Flood.GUI.Controls
     /// </summary>
     public class ColorLerpBox : Control
     {
-        private Point m_CursorPos;
+        private Vector2i m_CursorPos;
         private bool m_Depressed;
         private float m_Hue;
         private Texture m_Texture;
@@ -25,7 +25,7 @@ namespace Flood.GUI.Controls
         /// <param name="parent">Parent control.</param>
         public ColorLerpBox(Control parent) : base(parent)
         {
-            SetColor(Color.FromArgb(255, 255, 128, 0));
+            SetColor(new Color(0, 255, 255, 128));
             SetSize(128, 128);
             MouseInputEnabled = true;
             m_Depressed = false;
@@ -93,7 +93,7 @@ namespace Flood.GUI.Controls
         {
             if (m_Depressed)
             {
-                m_CursorPos = CanvasPosToLocal(new Point(x, y));
+                m_CursorPos = CanvasPosToLocal(new Vector2i(x, y));
                 //Do we have clamp?
                 if (m_CursorPos.X < 0)
                     m_CursorPos.X = 0;
@@ -164,7 +164,8 @@ namespace Flood.GUI.Controls
         {
             if (m_Texture == null)
             {
-               var bitmap = new Bitmap(Width, Height);
+                throw new NotImplementedException();
+               /*var bitmap = new Bitmap(Width, Height);
 
                 for (int y = 0; y < Height; y++)
                 {
@@ -176,7 +177,7 @@ namespace Flood.GUI.Controls
                 }
 
                 m_Texture = new Texture(skin.Renderer);
-                m_Texture.LoadBitmap(bitmap);
+                m_Texture.LoadBitmap(bitmap);*/
             }
 
             skin.Renderer.DrawColor = Color.White;
@@ -192,7 +193,7 @@ namespace Flood.GUI.Controls
             else
                 skin.Renderer.DrawColor = Color.Black;
 
-            Rectangle testRect = new Rectangle(m_CursorPos.X - 3, m_CursorPos.Y - 3, 6, 6);
+            Rect testRect = new Rect(m_CursorPos.X - 3, m_CursorPos.Y - 3, 6, 6);
 
             skin.Renderer.DrawShavedCornerRect(testRect);
 

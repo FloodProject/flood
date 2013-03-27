@@ -131,7 +131,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="oldChildBounds"></param>
         /// <param name="child"></param>
-        protected override void OnChildBoundsChanged(System.Drawing.Rectangle oldChildBounds, Control child)
+        protected override void OnChildBoundsChanged(Rect oldChildBounds, Control child)
         {
             UpdateScrollBars();
         }

@@ -11,7 +11,7 @@ namespace Flood.GUI.ControlInternal
     public class Dragger : Control
     {
         protected bool m_Held;
-        protected Point m_HoldPos;
+        protected Vector2i m_HoldPos;
         protected Control m_Target;
 
         internal Control Target { get { return m_Target; } set { m_Target = value; } }
@@ -49,7 +49,7 @@ namespace Flood.GUI.ControlInternal
             if (down)
             {
                 m_Held = true;
-                m_HoldPos = m_Target.CanvasPosToLocal(new Point(x, y));
+                m_HoldPos = m_Target.CanvasPosToLocal(new Vector2i(x, y));
                 InputHandler.MouseFocus = this;
             }
             else
@@ -72,7 +72,7 @@ namespace Flood.GUI.ControlInternal
             if (null == m_Target) return;
             if (!m_Held) return;
 
-            Point p = new Point(x - m_HoldPos.X, y - m_HoldPos.Y);
+            var p = new Vector2i(x - m_HoldPos.X, y - m_HoldPos.Y);
 
             // Translate to parent
             if (m_Target.Parent != null)

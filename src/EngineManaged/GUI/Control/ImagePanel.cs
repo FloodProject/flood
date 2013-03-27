@@ -20,7 +20,7 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             m_uv = new float[4];
-            m_Texture = new Texture(Skin.Renderer);
+            m_Texture = new Texture();
             SetUV(0, 0, 1, 1);
             MouseInputEnabled = false;
             m_DrawColor = Color.White;
@@ -49,13 +49,10 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Texture name.
         /// </summary>
-        public String ImageName
+        public Texture Texture
         {
-            get { return m_Texture.Name; }
-            set { m_Texture.Load(value); }
+            get { return m_Texture; }
         }
-
-        internal Texture Texture { get { return m_Texture; } }
 
         /// <summary>
         /// Renders the control using specified skin.
@@ -73,7 +70,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         public virtual void SizeToContents()
         {
-            SetSize(m_Texture.Width, m_Texture.Height);
+            SetSize((int)m_Texture.Width, (int)m_Texture.Height);
         }
     }
 }

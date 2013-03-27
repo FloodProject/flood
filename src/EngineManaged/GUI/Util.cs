@@ -24,9 +24,9 @@ namespace Flood.GUI
             return (int)Math.Ceiling(x);
         }
 
-        public static Rectangle FloatRect(float x, float y, float w, float h)
+        public static Rect FloatRect(float x, float y, float w, float h)
         {
-            return new Rectangle((int)x, (int)y, (int)w, (int)h);
+            return new Rect((int)x, (int)y, (int)w, (int)h);
         }
 
         public static int Clamp(int x, int min, int max)
@@ -47,7 +47,7 @@ namespace Flood.GUI
             return x;
         }
 
-        public static Rectangle ClampRectToRect(Rectangle inside, Rectangle outside, bool clampSize = false)
+        public static Rect ClampRectToRect(Rect inside, Rect outside, bool clampSize = false)
         {
             if (inside.X < outside.X)
                 inside.X = outside.X;
@@ -55,19 +55,19 @@ namespace Flood.GUI
             if (inside.Y < outside.Y)
                 inside.Y = outside.Y;
 
-            if (inside.Right > outside.Right)
+            if (inside.GetRight() > outside.GetRight())
             {
                 if (clampSize)
                     inside.Width = outside.Width;
                 else
-                    inside.X = outside.Right - inside.Width;
+                    inside.X = outside.GetRight() - inside.Width;
             }
-            if (inside.Bottom > outside.Bottom)
+            if (inside.GetBottom() > outside.GetBottom())
             {
                 if (clampSize)
                     inside.Height = outside.Height;
                 else
-                    inside.Y = outside.Bottom - inside.Height;
+                    inside.Y = outside.GetBottom() - inside.Height;
             }
 
             return inside;
@@ -76,7 +76,9 @@ namespace Flood.GUI
         // from http://stackoverflow.com/questions/359612/how-to-change-rgb-color-to-hsv
         public static HSV ToHSV(this Color color)
         {
-            HSV hsv = new HSV();
+            throw new NotImplementedException();
+
+            /*HSV hsv = new HSV();
             int max = Math.Max(color.R, Math.Max(color.G, color.B));
             int min = Math.Min(color.R, Math.Min(color.G, color.B));
 
@@ -84,7 +86,7 @@ namespace Flood.GUI
             hsv.s = (max == 0) ? 0 : 1f - (1f * min / max);
             hsv.v = max / 255f;
 
-            return hsv;
+            return hsv;*/
         }
 
         public static Color HSVToColor(float h, float s, float v)
@@ -93,43 +95,57 @@ namespace Flood.GUI
             float f = h / 60 - (float)Math.Floor(h / 60);
 
             v = v * 255;
-            int va = Convert.ToInt32(v);
-            int p = Convert.ToInt32(v * (1 - s));
-            int q = Convert.ToInt32(v * (1 - f * s));
-            int t = Convert.ToInt32(v * (1 - (1 - f) * s));
+            var va = Convert.ToByte(v);
+            var p = Convert.ToByte(v * (1 - s));
+            var q = Convert.ToByte(v * (1 - f * s));
+            var t = Convert.ToByte(v * (1 - (1 - f) * s));
 
             if (hi == 0)
-                return Color.FromArgb(255, va, t, p);
+                return new Color(va, t, p, 255);
             if (hi == 1)
-                return Color.FromArgb(255, q, va, p);
+                return new Color(q, va, p, 255);
             if (hi == 2)
-                return Color.FromArgb(255, p, va, t);
+                return new Color(p, va, t, 255);
             if (hi == 3)
-                return Color.FromArgb(255, p, q, va);
+                return new Color(p, q, va, 255);
             if (hi == 4)
-                return Color.FromArgb(255, t, p, va);
-            return Color.FromArgb(255, va, p, q);
+                return new Color(t, p, va, 255);
+            return new Color(va, p, q, 255);
         }
 
         // can't create extension operators
         public static Color Subtract(this Color color, Color other)
         {
-            return Color.FromArgb(color.A - other.A, color.R - other.R, color.G - other.G, color.B - other.B);
+            var nR = (byte)Math.Max(0, color.R - other.R);
+            var nG = (byte)Math.Max(0, color.G - other.G);
+            var nB = (byte)Math.Max(0, color.B - other.B);
+            var nA = (byte)Math.Max(0, color.A - other.A);
+            return new Color(nR, nG, nB, nA);
         }
 
         public static Color Add(this Color color, Color other)
         {
-            return Color.FromArgb(color.A + other.A, color.R + other.R, color.G + other.G, color.B + other.B);
+            var nR = (byte)Math.Min(255, color.R + other.R);
+            var nG = (byte)Math.Min(255, color.G + other.G);
+            var nB = (byte)Math.Min(255, color.B + other.B);
+            var nA = (byte)Math.Min(255, color.A + other.A);
+            return new Color(nR, nG, nB, nA);
         }
 
         public static Color Multiply(this Color color, float amount)
         {
-            return Color.FromArgb(color.A, (int)(color.R * amount), (int)(color.G * amount), (int)(color.B * amount));
+            if(amount < 0)
+                throw new ArgumentException("amount must be positive");
+
+            var nR = (byte)Math.Min(255, color.R * amount);
+            var nG = (byte)Math.Min(255, color.G * amount);
+            var nB = (byte)Math.Min(255, color.B * amount);
+            return new Color(nR, nG, nB, color.A);
         }
 
-        public static Rectangle Add(this Rectangle r, Rectangle other)
+        public static Rect Add(this Rect r, Rect other)
         {
-            return new Rectangle(r.X + other.X, r.Y + other.Y, r.Width + other.Width, r.Height + other.Height);
+            return new Rect(r.X + other.X, r.Y + other.Y, r.Width + other.Width, r.Height + other.Height);
         }
 
         /// <summary>

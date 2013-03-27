@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Flood.GUI.Controls;
 
 namespace Flood.GUI.DragDrop
@@ -10,6 +9,6 @@ namespace Flood.GUI.DragDrop
         public object UserData;
         public bool IsDraggable;
         public Control DrawControl;
-        public Point HoldOffset;
+        public Vector2i HoldOffset;
     }
 }

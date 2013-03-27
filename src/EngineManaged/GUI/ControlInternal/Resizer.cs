@@ -43,14 +43,14 @@ namespace Flood.GUI.ControlInternal
             if (null == m_Target) return;
             if (!m_Held) return;
 
-            Rectangle oldBounds = m_Target.Bounds;
-            Rectangle bounds = m_Target.Bounds;
+            Rect oldBounds = m_Target.Bounds;
+            Rect bounds = m_Target.Bounds;
 
-            Point min = m_Target.MinimumSize;
+            Vector2i min = m_Target.MinimumSize;
 
-            Point pCursorPos = m_Target.CanvasPosToLocal(new Point(x, y));
+            Vector2i pCursorPos = m_Target.CanvasPosToLocal(new Vector2i(x, y));
 
-            Point delta = m_Target.LocalPosToCanvas(m_HoldPos);
+            Vector2i delta = m_Target.LocalPosToCanvas(m_HoldPos);
             delta.X -= x;
             delta.Y -= y;
 

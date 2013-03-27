@@ -115,7 +115,7 @@ namespace Flood.GUI.Controls
             RecurseLayout(Skin);
 
             render.ClipRegion = Bounds;
-            render.RenderOffset = Point.Empty;
+            render.RenderOffset = new Vector2i(0,0);
             render.Scale = Scale;
 
             if (ShouldDrawBackground)
@@ -150,7 +150,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected override void OnBoundsChanged(Rectangle oldBounds)
+        protected override void OnBoundsChanged(Rect oldBounds)
         {
             base.OnBoundsChanged(oldBounds);
             InvalidateChildren(true);

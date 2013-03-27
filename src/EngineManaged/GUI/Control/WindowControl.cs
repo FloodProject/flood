@@ -83,7 +83,7 @@ namespace Flood.GUI.Controls
             BringToFront();
             IsTabable = false;
             Focus();
-            MinimumSize = new Point(100, 40);
+            MinimumSize = new Vector2i(100, 40);
             ClampMovement = true;
             KeyboardInputEnabled = false;
 

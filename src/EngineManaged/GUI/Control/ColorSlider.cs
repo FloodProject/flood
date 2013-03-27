@@ -50,34 +50,35 @@ namespace Flood.GUI.Controls
 
             if (m_Texture == null)
             {
-                var bitmap = new Bitmap(Width, Height);
+                throw new NotImplementedException();
+                /*var bitmap = new Bitmap(Width, Height);
 
                 for (int y = 0; y < Height; y++)
                 {
                     Color c = GetColorAtHeight(y);
                     for (int x = 0; x < Width; x++)
                     {
-                        bitmap.SetPixel(x,y,Color.FromArgb(c.A,c.R,c.G,c.B));
+                        bitmap.SetPixel(x,y, new Color(c.R,c.G,c.B,c.A));
                     }
                 }
 
                 m_Texture = new Texture(skin.Renderer);
-                m_Texture.LoadBitmap(bitmap);
+                m_Texture.LoadBitmap(bitmap);*/
             }
 
             skin.Renderer.DrawColor = Color.White;
-            skin.Renderer.DrawTexturedRect(m_Texture, new Rectangle(5, 0, Width-10, Height));
+            skin.Renderer.DrawTexturedRect(m_Texture, new Rect(5, 0, Width-10, Height));
             
             int drawHeight = m_SelectedDist - 3;
 
             //Draw our selectors
             skin.Renderer.DrawColor = Color.Black;
-            skin.Renderer.DrawFilledRect(new Rectangle(0, drawHeight + 2, Width, 1));
-            skin.Renderer.DrawFilledRect(new Rectangle(0, drawHeight, 5, 5));
-            skin.Renderer.DrawFilledRect(new Rectangle(Width - 5, drawHeight, 5, 5));
+            skin.Renderer.DrawFilledRect(new Rect(0, drawHeight + 2, Width, 1));
+            skin.Renderer.DrawFilledRect(new Rect(0, drawHeight, 5, 5));
+            skin.Renderer.DrawFilledRect(new Rect(Width - 5, drawHeight, 5, 5));
             skin.Renderer.DrawColor = Color.White;
-            skin.Renderer.DrawFilledRect(new Rectangle(1, drawHeight + 1, 3, 3));
-            skin.Renderer.DrawFilledRect(new Rectangle(Width - 4, drawHeight + 1, 3, 3));
+            skin.Renderer.DrawFilledRect(new Rect(1, drawHeight + 1, 3, 3));
+            skin.Renderer.DrawFilledRect(new Rect(Width - 4, drawHeight + 1, 3, 3));
 
             base.Render(skin);
         }
@@ -110,7 +111,7 @@ namespace Flood.GUI.Controls
         {
             if (m_Depressed)
             {
-                Point cursorPos = CanvasPosToLocal(new Point(x, y));
+                var cursorPos = CanvasPosToLocal(new Vector2i(x, y));
 
                 if (cursorPos.Y < 0)
                     cursorPos.Y = 0;

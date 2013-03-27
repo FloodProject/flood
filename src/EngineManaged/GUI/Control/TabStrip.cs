@@ -58,7 +58,7 @@ namespace Flood.GUI.Controls
 
         public override bool DragAndDrop_HandleDrop(Package p, int x, int y)
         {
-            Point LocalPos = CanvasPosToLocal(new Point(x, y));
+            Vector2i LocalPos = CanvasPosToLocal(new Vector2i(x, y));
 
             TabButton button = DragAndDrop.SourceControl as TabButton;
             TabControl tabControl = Parent as TabControl;
@@ -74,7 +74,7 @@ namespace Flood.GUI.Controls
             Control droppedOn = GetControlAt(LocalPos.X, LocalPos.Y);
             if (droppedOn != null && droppedOn != this)
             {
-                Point dropPos = droppedOn.CanvasPosToLocal(new Point(x, y));
+                Vector2i dropPos = droppedOn.CanvasPosToLocal(new Vector2i(x, y));
                 DragAndDrop.SourceControl.BringNextToControl(droppedOn, dropPos.X > droppedOn.Width/2);
             }
             else
@@ -101,7 +101,7 @@ namespace Flood.GUI.Controls
         /// <param name="skin">Skin to use.</param>
         protected override void Layout(Skins.Skin skin)
         {
-            Point largestTab = new Point(5, 5);
+            Vector2i largestTab = new Vector2i(5, 5);
 
             int num = 0;
             foreach (var child in Children)
@@ -178,13 +178,13 @@ namespace Flood.GUI.Controls
 
         public override void DragAndDrop_Hover(Package p, int x, int y)
         {
-            Point localPos = CanvasPosToLocal(new Point(x, y));
+            Vector2i localPos = CanvasPosToLocal(new Vector2i(x, y));
 
             Control droppedOn = GetControlAt(localPos.X, localPos.Y);
             if (droppedOn != null && droppedOn != this)
             {
-                Point dropPos = droppedOn.CanvasPosToLocal(new Point(x, y));
-                m_TabDragControl.SetBounds(new Rectangle(0, 0, 3, Height));
+                Vector2i dropPos = droppedOn.CanvasPosToLocal(new Vector2i(x, y));
+                m_TabDragControl.SetBounds(new Rect(0, 0, 3, Height));
                 m_TabDragControl.BringToFront();
                 m_TabDragControl.SetPosition(droppedOn.X - 1, 0);
 

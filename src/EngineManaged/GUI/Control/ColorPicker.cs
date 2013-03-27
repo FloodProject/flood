@@ -20,22 +20,22 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Red value of the selected color.
         /// </summary>
-        public int R { get { return m_Color.R; } set { m_Color = Color.FromArgb(m_Color.A, value, m_Color.G, m_Color.B); } }
+        public byte R { get { return m_Color.R; } set { m_Color = new Color(value, m_Color.G, m_Color.B, m_Color.A); } }
 
         /// <summary>
         /// Green value of the selected color.
         /// </summary>
-        public int G { get { return m_Color.G; } set { m_Color = Color.FromArgb(m_Color.A, m_Color.R, value, m_Color.B); } }
+        public byte G { get { return m_Color.G; } set { m_Color = new Color(m_Color.R, value, m_Color.B, m_Color.A); } }
 
         /// <summary>
         /// Blue value of the selected color.
         /// </summary>
-        public int B { get { return m_Color.B; } set { m_Color = Color.FromArgb(m_Color.A, m_Color.R, m_Color.G, value); } }
+        public byte B { get { return m_Color.B; } set { m_Color = new Color(m_Color.R, m_Color.G, value, m_Color.A); } }
 
         /// <summary>
         /// Alpha value of the selected color.
         /// </summary>
-        public int A { get { return m_Color.A; } set { m_Color = Color.FromArgb(value, m_Color.R, m_Color.G, m_Color.B); } }
+        public byte A { get { return m_Color.A; } set { m_Color = new Color(m_Color.R, m_Color.G, m_Color.B, value); } }
 
         /// <summary>
         /// Invoked when the selected color has been changed.
@@ -52,7 +52,7 @@ namespace Flood.GUI.Controls
 
             SetSize(256, 150);
             CreateControls();
-            SelectedColor = Color.FromArgb(255, 50, 60, 70);
+            SelectedColor = new Color(50, 60, 70, 255);
         }
 
         private void CreateColorControl(String name, int y)
@@ -93,8 +93,7 @@ namespace Flood.GUI.Controls
             if (box.Text == string.Empty)
                 return;
 
-            int textValue = (int) box.Value;
-            if (textValue < 0) textValue = 0;
+            var textValue = (byte) box.Value;
             if (textValue > 255) textValue = 255;
 
             if (box.Name.Contains("Red"))
@@ -150,10 +149,10 @@ namespace Flood.GUI.Controls
 
         private void UpdateControls()
         {	//This is a little weird, but whatever for now
-            UpdateColorControls("Red", Color.FromArgb(255, SelectedColor.R, 0, 0), SelectedColor.R);
-            UpdateColorControls("Green", Color.FromArgb(255, 0, SelectedColor.G, 0), SelectedColor.G);
-            UpdateColorControls("Blue", Color.FromArgb(255, 0, 0, SelectedColor.B), SelectedColor.B);
-            UpdateColorControls("Alpha", Color.FromArgb(SelectedColor.A, 255, 255, 255), SelectedColor.A);
+            UpdateColorControls("Red", new Color(SelectedColor.R, 0, 0, 255), SelectedColor.R);
+            UpdateColorControls("Green", new Color(0, SelectedColor.G, 0, 255), SelectedColor.G);
+            UpdateColorControls("Blue", new Color(0, 0, SelectedColor.B, 255), SelectedColor.B);
+            UpdateColorControls("Alpha", new Color(255, 255, 255, SelectedColor.A), SelectedColor.A);
 
             ColorDisplay disp = FindChildByName("Result", true) as ColorDisplay;
             disp.Color = SelectedColor;
@@ -173,7 +172,7 @@ namespace Flood.GUI.Controls
 
             HorizontalSlider slider = control as HorizontalSlider;
             if (slider != null)
-                SetColorByName(GetColorFromName(slider.Name), (int)slider.Value);
+                SetColorByName(GetColorFromName(slider.Name), (byte)slider.Value);
 
             UpdateControls();
             //SetColor( EngineManaged::GUI::Color( redSlider->GetValue(), greenSlider->GetValue(), blueSlider->GetValue(), alphaSlider->GetValue() ) );
@@ -223,7 +222,7 @@ namespace Flood.GUI.Controls
             return String.Empty;
         }
 
-        private void SetColorByName(String colorName, int colorValue)
+        private void SetColorByName(String colorName, byte colorValue)
         {
             if (colorName == "Red")
                 R = colorValue;

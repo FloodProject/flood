@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Drawing;
 using System.Windows.Forms;
 using Flood.GUI.Anim;
 using Flood.GUI.DragDrop;
@@ -42,9 +40,9 @@ namespace Flood.GUI.Controls
 
         private Skins.Skin m_Skin;
 
-        private Rectangle m_Bounds;
-        private Rectangle m_RenderBounds;
-        private Rectangle m_InnerBounds;
+        private Rect m_Bounds;
+        private Rect m_RenderBounds;
+        private Rect m_InnerBounds;
         private Padding m_Padding;
         private Margin m_Margin;
 
@@ -322,30 +320,30 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Control's size and position relative to the parent.
         /// </summary>
-        public Rectangle Bounds { get { return m_Bounds; } }
+        public Rect Bounds { get { return m_Bounds; } }
         
         /// <summary>
         /// Bounds for the renderer.
         /// </summary>
-        public Rectangle RenderBounds { get { return m_RenderBounds; } }
+        public Rect RenderBounds { get { return m_RenderBounds; } }
 
         /// <summary>
         /// Bounds adjusted by padding.
         /// </summary>
-        public Rectangle InnerBounds { get { return m_InnerBounds; } }
+        public Rect InnerBounds { get { return m_InnerBounds; } }
 
         /// <summary>
         /// Size restriction.
         /// </summary>
-        public Point MinimumSize { get { return m_MinimumSize; } set { m_MinimumSize = value; } }
+        public Vector2i MinimumSize { get { return m_MinimumSize; } set { m_MinimumSize = value; } }
 
         /// <summary>
         /// Size restriction.
         /// </summary>
-        public Point MaximumSize { get { return m_MaximumSize; } set { m_MaximumSize = value; } }
+        public Vector2i MaximumSize { get { return m_MaximumSize; } set { m_MaximumSize = value; } }
 
-        private Point m_MinimumSize = new Point(1, 1);
-        private Point m_MaximumSize = new Point(MaxCoord, MaxCoord);
+        private Vector2i m_MinimumSize = new Vector2i(1, 1);
+        private Vector2i m_MaximumSize = new Vector2i(MaxCoord, MaxCoord);
 
         /// <summary>
         /// Determines whether hover should be drawn during rendering.
@@ -386,8 +384,8 @@ namespace Flood.GUI.Controls
 
         public int Width { get { return m_Bounds.Width; } set { SetSize(value, Height); } }
         public int Height { get { return m_Bounds.Height; } set { SetSize(Width, value); } }
-        public int Bottom { get { return m_Bounds.Bottom + m_Margin.Bottom; } }
-        public int Right { get { return m_Bounds.Right + m_Margin.Right; } }
+        public int Bottom { get { return m_Bounds.GetBottom() + m_Margin.Bottom; } }
+        public int Right { get { return m_Bounds.GetRight() + m_Margin.Right; } }
 
         /// <summary>
         /// Determines whether margin, padding and bounds outlines for the control will be drawn. Applied recursively to all children.
@@ -423,7 +421,7 @@ namespace Flood.GUI.Controls
             Parent = parent;
 
             m_Hidden = false;
-            m_Bounds = new Rectangle(0, 0, 10, 10);
+            m_Bounds = new Rect(0, 0, 10, 10);
             m_Padding = Padding.Zero;
             m_Margin = Margin.Zero;
 
@@ -868,7 +866,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="bounds">New bounds.</param>
         /// <returns>True if bounds changed.</returns>
-        public virtual bool SetBounds(Rectangle bounds)
+        public virtual bool SetBounds(Rect bounds)
         {
             return SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
         }
@@ -906,7 +904,7 @@ namespace Flood.GUI.Controls
                 m_Bounds.Height == height)
                 return false;
 
-            Rectangle oldBounds = Bounds;
+            Rect oldBounds = Bounds;
 
             m_Bounds.X = x;
             m_Bounds.Y = y;
@@ -953,7 +951,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected virtual void OnBoundsChanged(Rectangle oldBounds)
+        protected virtual void OnBoundsChanged(Rect oldBounds)
         {
             //Anything that needs to update on size changes
             //Iterate my children and tell them I've changed
@@ -985,7 +983,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Handler invoked when control children's bounds change.
         /// </summary>
-        protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Control child)
+        protected virtual void OnChildBoundsChanged(Rect oldChildBounds, Control child)
         {
 
         }
@@ -1011,8 +1009,8 @@ namespace Flood.GUI.Controls
             if (cache == null)
                 return;
 
-            Point oldRenderOffset = render.RenderOffset;
-            Rectangle oldRegion = render.ClipRegion;
+            Vector2i oldRenderOffset = render.RenderOffset;
+            Rect oldRegion = render.ClipRegion;
 
             if (this != master)
             {
@@ -1021,8 +1019,8 @@ namespace Flood.GUI.Controls
             }
             else
             {
-                render.RenderOffset = Point.Empty;
-                render.ClipRegion = new Rectangle(0, 0, Width, Height);
+                render.RenderOffset = new Vector2i(0,0);
+                render.ClipRegion = new Rect(0, 0, Width, Height);
             }
 
             if (m_CacheTextureDirty && render.ClipRegionVisible)
@@ -1100,16 +1098,16 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         /// <param name="clipRect">Clipping rectangle.</param>
-        protected virtual void RenderRecursive(Skins.Skin skin, Rectangle clipRect)
+        protected virtual void RenderRecursive(Skins.Skin skin, Rect clipRect)
         {
             Renderers.Renderer render = skin.Renderer;
-            Point oldRenderOffset = render.RenderOffset;
+            Vector2i oldRenderOffset = render.RenderOffset;
 
             render.AddRenderOffset(clipRect);
 
             RenderUnder(skin);
 
-            Rectangle oldRegion = render.ClipRegion;
+            Rect oldRegion = render.ClipRegion;
 
             if (ShouldClip)
             {
@@ -1439,7 +1437,7 @@ namespace Flood.GUI.Controls
                 Layout(skin);
             }
 
-            Rectangle bounds = RenderBounds;
+            Rect bounds = RenderBounds;
 
             // Adjust bounds for padding
             bounds.X += m_Padding.Left;
@@ -1557,7 +1555,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="pnt">Local coordinates.</param>
         /// <returns>Canvas coordinates.</returns>
-        public virtual Point LocalPosToCanvas(Point pnt)
+        public virtual Vector2i LocalPosToCanvas(Vector2i pnt)
         {
             if (m_Parent != null)
             {
@@ -1573,7 +1571,7 @@ namespace Flood.GUI.Controls
                     y += m_Parent.m_InnerPanel.Y;
                 }
 
-                return m_Parent.LocalPosToCanvas(new Point(x, y));
+                return m_Parent.LocalPosToCanvas(new Vector2i(x, y));
             }
 
             return pnt;
@@ -1584,7 +1582,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="pnt">Canvas coordinates.</param>
         /// <returns>Local coordinates.</returns>
-        public virtual Point CanvasPosToLocal(Point pnt)
+        public virtual Vector2i CanvasPosToLocal(Vector2i pnt)
         {
             if (m_Parent != null)
             {
@@ -1601,7 +1599,7 @@ namespace Flood.GUI.Controls
                 }
 
 
-                return m_Parent.CanvasPosToLocal(new Point(x, y));
+                return m_Parent.CanvasPosToLocal(new Vector2i(x, y));
             }
 
             return pnt;
@@ -1678,7 +1676,7 @@ namespace Flood.GUI.Controls
         // giver
         public virtual void DragAndDrop_StartDragging(Package package, int x, int y)
         {
-            package.HoldOffset = CanvasPosToLocal(new Point(x, y));
+            package.HoldOffset = CanvasPosToLocal(new Vector2i(x, y));
             package.DrawControl = this;
         }
 
@@ -1726,7 +1724,7 @@ namespace Flood.GUI.Controls
         /// <returns>True if bounds changed.</returns>
         public virtual bool SizeToChildren(bool width = true, bool height = true)
         {
-            Point size = GetChildrenSize();
+            var size = GetChildrenSize();
             size.X += Padding.Right;
             size.Y += Padding.Bottom;
             return SetSize(width ? size.X : Width, height ? size.Y : Height);
@@ -1738,9 +1736,9 @@ namespace Flood.GUI.Controls
         /// <remarks>Default implementation returns maximum size of children since the layout is unknown.
         /// Implement this in derived compound controls to properly return their size.</remarks>
         /// <returns></returns>
-        public virtual Point GetChildrenSize()
+        public virtual Vector2i GetChildrenSize()
         {
-            Point size = Point.Empty;
+            var size = new Vector2i(0,0);
 
             foreach (Control child in m_Children)
             {

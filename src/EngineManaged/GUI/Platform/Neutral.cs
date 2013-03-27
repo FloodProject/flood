@@ -29,7 +29,7 @@ namespace Flood.GUI.Platform
         {
             // code from http://forums.getpaint.net/index.php?/topic/13712-trouble-accessing-the-clipboard/page__view__findpost__p__226140
             String ret = String.Empty;
-            Thread staThread = new Thread(
+            var staThread = new System.Threading.Thread(
                 () =>
                 {
                     try
@@ -58,7 +58,7 @@ namespace Flood.GUI.Platform
         public static bool SetClipboardText(String text)
         {
             bool ret = false;
-            Thread staThread = new Thread(
+            var staThread = new System.Threading.Thread(
                 () =>
                 {
                     try

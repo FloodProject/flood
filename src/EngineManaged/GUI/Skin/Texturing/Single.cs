@@ -31,12 +31,12 @@ namespace Flood.GUI.Skins.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderers.Renderer render, Rectangle r)
+        public void Draw(Renderers.Renderer render, Rect r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
+        public void Draw(Renderers.Renderer render, Rect r, Color col)
         {
             if (m_Texture == null)
                 return;
@@ -45,7 +45,7 @@ namespace Flood.GUI.Skins.Texturing
             render.DrawTexturedRect(m_Texture, r, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
         }
 
-        public void DrawCenter(Renderers.Renderer render, Rectangle r)
+        public void DrawCenter(Renderers.Renderer render, Rect r)
         {
             if (m_Texture == null)
                 return;
@@ -53,7 +53,7 @@ namespace Flood.GUI.Skins.Texturing
             DrawCenter(render, r, Color.White);
         }
 
-        public void DrawCenter(Renderers.Renderer render, Rectangle r, Color col)
+        public void DrawCenter(Renderers.Renderer render, Rect r, Color col)
         {
             r.X += (int)((r.Width - m_Width) * 0.5);
             r.Y += (int)((r.Height - m_Height) * 0.5);

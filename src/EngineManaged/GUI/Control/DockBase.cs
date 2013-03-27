@@ -21,7 +21,7 @@ namespace Flood.GUI.Controls
 
         private bool m_DrawHover;
         private bool m_DropFar;
-        private Rectangle m_HoverRect;
+        private Rect m_HoverRect;
 
         // todo: dock events?
 
@@ -213,7 +213,7 @@ namespace Flood.GUI.Controls
 
         public override bool DragAndDrop_HandleDrop(Package p, int x, int y)
         {
-            Point pos = CanvasPosToLocal(new Point(x, y));
+            Vector2i pos = CanvasPosToLocal(new Vector2i(x, y));
             Pos dir = GetDroppedTabDirection(pos.X, pos.Y);
 
             DockedTabControl addTo = m_DockedTabControl;
@@ -340,14 +340,14 @@ namespace Flood.GUI.Controls
 
         public override void DragAndDrop_Hover(Package p, int x, int y)
         {
-            Point pos = CanvasPosToLocal(new Point(x, y));
+            Vector2i pos = CanvasPosToLocal(new Vector2i(x, y));
             Pos dir = GetDroppedTabDirection(pos.X, pos.Y);
 
             if (dir == Pos.Fill)
             {
                 if (null == m_DockedTabControl)
                 {
-                    m_HoverRect = Rectangle.Empty;
+                    m_HoverRect = new Rect(0,0,0,0);
                     return;
                 }
 
@@ -424,16 +424,16 @@ namespace Flood.GUI.Controls
                 return;
 
             Renderers.Renderer render = skin.Renderer;
-            render.DrawColor = Color.FromArgb(20, 255, 200, 255);
+            render.DrawColor = new Color(255, 200, 255, 20);
             render.DrawFilledRect(RenderBounds);
 
             if (m_HoverRect.Width == 0)
                 return;
 
-            render.DrawColor = Color.FromArgb(100, 255, 200, 255);
+            render.DrawColor = new Color(255, 200, 255, 100);
             render.DrawFilledRect(m_HoverRect);
 
-            render.DrawColor = Color.FromArgb(200, 255, 200, 255);
+            render.DrawColor = new Color(255, 200, 255, 200);
             render.DrawLinedRect(m_HoverRect);
         }
     }

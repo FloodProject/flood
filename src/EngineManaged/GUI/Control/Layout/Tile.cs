@@ -9,7 +9,7 @@ namespace Flood.GUI.Controls.Layout
     public class Tile : Control
     {
 
-        Point   m_TileSize;
+        Vector2i   m_TileSize;
 
         public Tile ( Control parent)
             : base(parent)
@@ -21,7 +21,7 @@ namespace Flood.GUI.Controls.Layout
         protected override void PostLayout(Skins.Skin skin)
         {
             var  bounds = InnerBounds;
-            var pos = new Point( bounds.X, bounds.Y );
+            var pos = new Vector2i( bounds.X, bounds.Y );
 
             foreach (var pChild in Children){
                 if ( pChild.Dock != Pos.None ) continue;
@@ -40,7 +40,7 @@ namespace Flood.GUI.Controls.Layout
 
         public void SetTileSize( int x, int y )
         {
-            m_TileSize = new Point( x, y );
+            m_TileSize = new Vector2i( x, y );
         }
 
     }

@@ -79,7 +79,7 @@ namespace Flood.GUI.ControlInternal
             m_String = string.Empty;
             TextColor = Skin.Colors.Label.Default;
             MouseInputEnabled = false;
-            TextColorOverride = Color.FromArgb(0, 255, 255, 255); // A==0, override disabled
+            TextColorOverride = new Color(255, 255, 255, 0); // A==0, override disabled
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Flood.GUI.ControlInternal
             else
                 skin.Renderer.DrawColor = TextColorOverride;
 
-            skin.Renderer.RenderText(Font, Point.Empty, TextOverride ?? String);
+            skin.Renderer.RenderText(Font, new Vector2i(0,0), TextOverride ?? String);
 
             #if DEBUG_TEXT_MEASURE
             {
@@ -149,7 +149,7 @@ namespace Flood.GUI.ControlInternal
                 throw new InvalidOperationException("Text.SizeToContents() - No Font!!\n");
             }
 
-            Point p = new Point(1, Font.Size);
+            var p = new Vector2i(1, Font.Size);
 
             if (Length > 0)
             {
@@ -169,15 +169,15 @@ namespace Flood.GUI.ControlInternal
         /// </summary>
         /// <param name="index">Character index.</param>
         /// <returns>Character position in local coordinates.</returns>
-        public Point GetCharacterPosition(int index)
+        public Vector2i GetCharacterPosition(int index)
         {
             if (Length == 0 || index == 0)
             {
-                return new Point(0, 0);
+                return new Vector2i(0, 0);
             }
 
             String sub = (TextOverride ?? String).Substring(0, index);
-            Point p = Skin.Renderer.MeasureText(Font, sub);
+            var p = Skin.Renderer.MeasureText(Font, sub);
 
             return p;
         }
@@ -187,14 +187,14 @@ namespace Flood.GUI.ControlInternal
         /// </summary>
         /// <param name="p">Point.</param>
         /// <returns>Character index.</returns>
-        public int GetClosestCharacter(Point p)
+        public int GetClosestCharacter(Vector2i p)
         {
             int distance = MaxCoord;
             int c = 0;
 
             for (int i = 0; i < String.Length + 1; i++)
             {
-                Point cp = GetCharacterPosition(i);
+                var cp = GetCharacterPosition(i);
                 int dist = Math.Abs(cp.X - p.X); // TODO: handle multiline
 
                 if (dist > distance) 

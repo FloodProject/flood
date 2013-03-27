@@ -30,7 +30,7 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             m_Resizer = new Resizer[10];
-            MinimumSize = new Point(5, 5);
+            MinimumSize = new Vector2i(5, 5);
             m_ClampMovement = false;
 
             m_Resizer[2] = new Resizer(this);
@@ -139,7 +139,7 @@ namespace Flood.GUI.Controls
         /// </returns>
         public override bool SetBounds(int x, int y, int width, int height)
         {
-            Point minSize = MinimumSize;
+            var minSize = MinimumSize;
             // Clamp Minimum Size
             if (width < minSize.X) width = minSize.X;
             if (height < minSize.Y) height = minSize.Y;

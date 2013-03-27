@@ -19,7 +19,7 @@ namespace Flood.GUI.ControlInternal
         public ColorDisplay(Control parent) : base(parent)
         {
             SetSize(32, 32);
-            m_Color = Color.FromArgb(255, 255, 0, 0);
+            m_Color = new Color(255, 0, 0, 255);
             //m_DrawCheckers = true;
         }
 
@@ -37,9 +37,9 @@ namespace Flood.GUI.ControlInternal
         /// </summary>
         public Color Color { get { return m_Color; } set { m_Color = value; } }
         //public bool DrawCheckers { get { return m_DrawCheckers; } set { m_DrawCheckers = value; } }
-        public int R { get { return m_Color.R; } set { m_Color = Color.FromArgb(m_Color.A, value, m_Color.G, m_Color.B); } }
-        public int G { get { return m_Color.G; } set { m_Color = Color.FromArgb(m_Color.A, m_Color.R, value, m_Color.B); } }
-        public int B { get { return m_Color.B; } set { m_Color = Color.FromArgb(m_Color.A, m_Color.R, m_Color.G, value); } }
-        public int A { get { return m_Color.A; } set { m_Color = Color.FromArgb(value, m_Color.R, m_Color.G, m_Color.B); } }
+        public byte R { get { return m_Color.R; } set { m_Color = new Color(value, m_Color.G, m_Color.B, m_Color.A); } }
+        public byte G { get { return m_Color.G; } set { m_Color = new Color(m_Color.R, value, m_Color.B, m_Color.A); } }
+        public byte B { get { return m_Color.B; } set { m_Color = new Color(m_Color.R, m_Color.G, value, m_Color.A); } }
+        public byte A { get { return m_Color.A; } set { m_Color = new Color( m_Color.R, m_Color.G, m_Color.B, value); } }
     }
 }

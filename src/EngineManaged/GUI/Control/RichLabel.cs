@@ -96,7 +96,7 @@ namespace Flood.GUI.Controls
             String leftOver;
 
             // Does the whole word fit in?
-            Point stringSize = Skin.Renderer.MeasureText(font, text);
+            var stringSize = Skin.Renderer.MeasureText(font, text);
             if (spaceLeft > stringSize.X)
             {
                 CreateLabel(text, block, ref x, ref y, ref lineHeight, true);
@@ -104,7 +104,7 @@ namespace Flood.GUI.Controls
             }
 
             // If the first word is bigger than the line, just give up.
-            Point wordSize = Skin.Renderer.MeasureText(font, spaced[0]);
+            var wordSize = Skin.Renderer.MeasureText(font, spaced[0]);
             if (wordSize.X >= spaceLeft)
             {
                 CreateLabel(spaced[0], block, ref x, ref y, ref lineHeight, true);
@@ -147,7 +147,7 @@ namespace Flood.GUI.Controls
                 font = block.Font;
 
             // This string is too long for us, split it up.
-            Point p = Skin.Renderer.MeasureText(font, text);
+            var p = Skin.Renderer.MeasureText(font, text);
 
             if (lineHeight == -1)
             {
@@ -223,7 +223,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected override void OnBoundsChanged(Rectangle oldBounds)
+        protected override void OnBoundsChanged(Rect oldBounds)
         {
             base.OnBoundsChanged(oldBounds);
             Rebuild();

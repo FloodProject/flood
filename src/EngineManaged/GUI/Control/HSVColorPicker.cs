@@ -116,27 +116,26 @@ namespace Flood.GUI.Controls
 
             if (box.Text == String.Empty) return;
 
-            int textValue = (int)box.Value;
-            if (textValue < 0) textValue = 0;
+            var textValue = (byte)box.Value;
             if (textValue > 255) textValue = 255;
 
             Color newColor = SelectedColor;
 
             if (box.Name.Contains("Red"))
             {
-                newColor = Color.FromArgb(SelectedColor.A, textValue, SelectedColor.G, SelectedColor.B);
+                newColor = new Color(textValue, SelectedColor.G, SelectedColor.B, SelectedColor.A);
             }
             else if (box.Name.Contains("Green"))
             {
-                newColor = Color.FromArgb(SelectedColor.A, SelectedColor.R, textValue, SelectedColor.B);
+                newColor = new Color(SelectedColor.R, textValue, SelectedColor.B, SelectedColor.A);
             }
             else if (box.Name.Contains("Blue"))
             {
-                newColor = Color.FromArgb(SelectedColor.A, SelectedColor.R, SelectedColor.G, textValue);
+                newColor = new Color(SelectedColor.R, SelectedColor.G, textValue, SelectedColor.A);
             }
             else if (box.Name.Contains("Alpha"))
             {
-                newColor = Color.FromArgb(textValue, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+                newColor = new Color(SelectedColor.R, SelectedColor.G, SelectedColor.B, textValue);
             }
 
             SetColor(newColor);
