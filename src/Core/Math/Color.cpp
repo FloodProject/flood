@@ -8,29 +8,28 @@
 #include "Core/API.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Helpers.h"
+#include <algorithm>
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Color::Color(float r, float g, float b, float a)
+Color::Color()
+{
+	this->r = 0;
+	this->g = 0;
+	this->b = 0;
+	this->a = 255;
+}
+
+//-----------------------------------//
+
+Color::Color(byte r, byte g, byte b, byte a)
 {
 	this->r = r;
 	this->g = g;
 	this->b = b;
 	this->a = a;
-}
-
-//-----------------------------------//
-
-#define D255(P) (P/255.0f)
-
-Color::Color(int r, int g, int b, int a)
-{
-	this->r = D255(r);
-	this->g = D255(g);
-	this->b = D255(b);
-	this->a = D255(a);
 }
 
 //-----------------------------------//
@@ -57,16 +56,19 @@ bool Color::operator == (const Color& c) const
 
 bool Color::nearEqual(const Color& a, float tolerance)
 {
-	return (fabs(a.r - r) < tolerance)
-		&& (fabs(a.g - g) < tolerance)
-		&& (fabs(a.b - b) < tolerance);
+	return (abs(a.r - r) < tolerance)
+		&& (abs(a.g - g) < tolerance)
+		&& (abs(a.b - b) < tolerance);
 }
 
 //-----------------------------------//
 
 Color Color::operator * (float s) const
 {
-	return Color(r*s, g*s, b*s, a); 
+	byte nr = (byte)std::min(255.0f,r*s);
+	byte ng = (byte)std::min(255.0f,g*s);
+	byte nb = (byte)std::min(255.0f,b*s);
+	return Color(nr, ng, nb, a); 
 }
 
 //-----------------------------------//
@@ -78,15 +80,15 @@ Color::operator Vector3 () const
 
 //-----------------------------------//
 
-const API_CORE Color Color::White(1.0f, 1.0f, 1.0f);
-const API_CORE Color Color::Black(0.0f, 0.0f, 0.0f);
-const API_CORE Color Color::LightGrey(0.7f, 0.7f, 0.7f);
-const API_CORE Color Color::Red(1.0f, 0.0f, 0.0f);
-const API_CORE Color Color::Green(0.0f, 1.0f, 0.0f);
-const API_CORE Color Color::Blue(0.0f, 0.0f, 1.0f);
-const API_CORE Color Color::NavyBlue(0.0f, 0.0f, 0.5f);
-const API_CORE Color Color::SkyBlue(0.5f, 0.7f, 1.0f);
-const API_CORE Color Color::Yellow(1.0f, 1.0f, 0.0f);
+const API_CORE Color Color::White(255, 255, 255);
+const API_CORE Color Color::Black(0, 0, 0);
+const API_CORE Color Color::LightGrey(178, 178, 178);
+const API_CORE Color Color::Red(255, 0, 0);
+const API_CORE Color Color::Green(0, 255, 0);
+const API_CORE Color Color::Blue(0, 0, 255);
+const API_CORE Color Color::NavyBlue(0, 0, 127);
+const API_CORE Color Color::SkyBlue(127, 178, 255);
+const API_CORE Color Color::Yellow(255, 255, 0);
 
 //-----------------------------------//
 

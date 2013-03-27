@@ -47,16 +47,10 @@ static Vector3 ConvertValueToVector3( json_t* value )
 
 static Color ConvertValueToColor( json_t* value )
 {
-	double r, g, b, a;
-	json_unpack(value, "[f,f,f,f]", &r, &g, &b, &a);
+	int r, g, b, a;
+	json_unpack(value, "[i,i,i,i]", &r, &g, &b, &a);
 
-	Color c;
-	c.r = float(r);
-	c.g = float(g);
-	c.b = float(b);
-	c.a = float(a);
-
-	return c;
+	return Color(byte(r), byte(g), byte(b), byte(a));
 }
 
 //-----------------------------------//
@@ -295,7 +289,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType w
 	case PrimitiveTypeKind::Color:
 	{
 		ColorP& c = vc.c;
-		value = json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
+		value = json_pack("[i,i,i,i]", c.r, c.g, c.b, c.a);
 		break;
 	}
 	case PrimitiveTypeKind::Vector3:

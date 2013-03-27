@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include "Core/Math/Vector.h"
 
 NAMESPACE_CORE_BEGIN
@@ -19,14 +20,14 @@ NAMESPACE_CORE_BEGIN
 
 struct API_CORE ColorP
 {
-	float r, g, b, a;
+	byte r, g, b, a;
 };
 
 struct API_CORE Color : public ColorP
 {
 	// Constructors
-	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
-	Color(int r, int g, int b, int a = 255);
+    Color();
+	Color(byte r, byte g, byte b, byte a = 255);
 	Color(const Color& c);
 
 	// Equality.
