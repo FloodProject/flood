@@ -70,13 +70,10 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
 
 bool TextureAtlas::addImage(const ImageHandle& newImageHandle) 
 {
-    printf("%i\n",newImageHandle.id);
-
     if(imageSubTextures.find( newImageHandle ) != imageSubTextures.end())
         return true;
 
     Image* newImage = newImageHandle.Resolve();
-    
 
     Rect newRect = rectanglePacker.Insert(newImage->getWidth(), newImage->getHeight(), gs_heuristic);
 
