@@ -84,6 +84,8 @@ uint32 Image::getPixelSize()
     default:
         assert(false);
     }
+
+    return 0;
 }
 
 //-----------------------------------//
