@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "Rect.h"
+#include "Core/Math/Rect.h"
 
 /** MaxRectsBinPack implements the MAXRECTS data structure and different bin packing algorithms that 
 	use this structure. */
@@ -40,7 +40,7 @@ public:
 	/// @param rects The list of rectangles to insert. This vector will be destroyed in the process.
 	/// @param dst [out] This list will contain the packed rectangles. The indices will not correspond to that of rects.
 	/// @param method The rectangle placement rule to use when packing.
-	void Insert(std::vector<RectSize> &rects, std::vector<Rect> &dst, FreeRectChoiceHeuristic method);
+	void Insert(std::vector<Vector2i> &rects, std::vector<Rect> &dst, FreeRectChoiceHeuristic method);
 
 	/// Inserts a single rectangle into the bin, possibly rotated.
 	Rect Insert(int width, int height, FreeRectChoiceHeuristic method);

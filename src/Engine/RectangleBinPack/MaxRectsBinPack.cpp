@@ -5,13 +5,6 @@
 
 	This work is released to Public Domain, do whatever you want with it.
 */
-#include <utility>
-#include <iostream>
-#include <limits>
-
-#include <cassert>
-#include <cstring>
-#include <cmath>
 
 #include "Engine/API.h"
 #include "Engine/RectangleBinPack/MaxRectsBinPack.h"
@@ -80,22 +73,22 @@ Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic meth
 	return newNode;
 }
 
-void MaxRectsBinPack::Insert(std::vector<RectSize> &rects, std::vector<Rect> &dst, FreeRectChoiceHeuristic method)
+void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect> &dst, FreeRectChoiceHeuristic method)
 {
 	dst.clear();
 
-	while(rects.size() > 0)
+	while(rectSizes.size() > 0)
 	{
 		int bestScore1 = std::numeric_limits<int>::max();
 		int bestScore2 = std::numeric_limits<int>::max();
 		int bestRectIndex = -1;
 		Rect bestNode;
 
-		for(size_t i = 0; i < rects.size(); ++i)
+		for(size_t i = 0; i < rectSizes.size(); ++i)
 		{
 			int score1;
 			int score2;
-			Rect newNode = ScoreRect(rects[i].width, rects[i].height, method, score1, score2);
+			Rect newNode = ScoreRect(rectSizes[i].x, rectSizes[i].y, method, score1, score2);
 
 			if (score1 < bestScore1 || (score1 == bestScore1 && score2 < bestScore2))
 			{
@@ -110,7 +103,7 @@ void MaxRectsBinPack::Insert(std::vector<RectSize> &rects, std::vector<Rect> &ds
 			return;
 
 		PlaceRect(bestNode);
-		rects.erase(rects.begin() + bestRectIndex);
+		rectSizes.erase(rectSizes.begin() + bestRectIndex);
 	}
 }
 
@@ -499,13 +492,13 @@ void MaxRectsBinPack::PruneFreeList()
 	for(size_t i = 0; i < freeRectangles.size(); ++i)
 		for(size_t j = i+1; j < freeRectangles.size(); ++j)
 		{
-			if (IsContainedIn(freeRectangles[i], freeRectangles[j]))
+			if (freeRectangles[i].isContainedIn(freeRectangles[j]))
 			{
 				freeRectangles.erase(freeRectangles.begin()+i);
 				--i;
 				break;
 			}
-			if (IsContainedIn(freeRectangles[j], freeRectangles[i]))
+			if (freeRectangles[j].isContainedIn(freeRectangles[i]))
 			{
 				freeRectangles.erase(freeRectangles.begin()+j);
 				--j;

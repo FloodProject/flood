@@ -8,7 +8,7 @@
 #include "Engine/API.h"
 #include "Engine/Resources/TrueTypeFont.h"
 
-#include "Engine/RectangleBinPack/Rect.h"
+#include "Core/Math/Rect.h"
 #include "Engine/Texture/TextureAtlas.h"
 #include "stb_truetype.h"
 

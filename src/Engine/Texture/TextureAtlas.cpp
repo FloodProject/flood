@@ -111,16 +111,16 @@ void TextureAtlas::resizeAtlas(uint newSize)
 {
     rectanglePacker.Init(newSize,newSize);
 
-    std::vector<RectSize> rectSizes;
+    std::vector<Vector2i> rectSizes;
     std::vector<Rect> newRects;
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
     std::map<ImageHandle, SubTexture>::iterator iter;
     for (iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter) {
-        RectSize rectSize;
-        rectSize.width = iter->second.rect.width;
-        rectSize.height = iter->second.rect.height;
+        Vector2i rectSize;
+        rectSize.x = iter->second.rect.width;
+        rectSize.y = iter->second.rect.height;
         rectSizes.push_back(rectSize);
     }
 
