@@ -60,7 +60,7 @@ TexturePtr TextureManager::getTexture( const String& name )
 {
 	ResourceManager* res = GetResourceManager();
 	ImageHandle handle = res->loadResource<Image>(name);
-	return getTexture(handle.Resolve());
+	return getTexture(handle);
 }
 
 //-----------------------------------//

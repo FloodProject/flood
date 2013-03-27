@@ -170,11 +170,9 @@ void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 	for( it = units.begin(); it != units.end(); it++ )
 	{
 		const TextureUnit& unit = it->second;
-		
 		const ImageHandle& handle = unit.image;
-		Image* image = handle.Resolve();
 
-		Texture* texture = activeContext->textureManager->getTexture(image).get();
+		Texture* texture = activeContext->textureManager->getTexture(handle).get();
 		if( !texture ) continue;
 
 		if( !texture->isUploaded() )
@@ -213,7 +211,7 @@ void RenderDevice::unbindTextureUnits(Material* material)
 		const TextureUnit& unit = it->second;
 		const ImageHandle& handle = unit.image;
 
-		Texture* texture = textureManager->getTexture(handle.Resolve()).get();
+		Texture* texture = textureManager->getTexture(handle).get();
 		if( !texture ) continue;
 
 		renderBackend->setupTextureUnit(texture, unit);
