@@ -227,8 +227,12 @@ void BindGenericVertexBufferDeclarations(VertexBuffer* vb)
 		CheckLastErrorGL("Error enabling vertex attribute array");
 
 		GLenum type = ConvertBufferTypeGL(decl.type);
-		
-		glVertexAttribPointer(index, decl.components, type, GL_FALSE,
+
+		//TODO let user decide this
+		bool normalized = decl.type == VertexDataType::Byte 
+			&& decl.attribute == VertexAttribute::Color;
+
+		glVertexAttribPointer(index, decl.components, type, normalized,
 			decl.stride, (void*) decl.offset );
 
 		CheckLastErrorGL("Error binding pointers to buffer");
