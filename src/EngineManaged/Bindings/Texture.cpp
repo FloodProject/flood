@@ -53,15 +53,15 @@ Flood::PixelFormat Flood::Texture::GetPixelFormat()
     return (Flood::PixelFormat)ret;
 }
 
-Flood::Image^ Flood::Texture::GetImage()
+Flood::ResourceHandle<Flood::Image^> Flood::Texture::GetImage()
 {
-    auto ret = ((::Texture*)NativePtr)->getImage();
-    return gcnew Flood::Image((::Image*)ret);
+    auto &ret = ((::Texture*)NativePtr)->getImage();
+    return Flood::ResourceHandle<Flood::Image^>(ret.id);
 }
 
-void Flood::Texture::SetImage(Flood::Image^ image)
+void Flood::Texture::SetImage(Flood::ResourceHandle<Flood::Image^> image)
 {
-    auto arg0 = (::Image*)image->NativePtr;
+    auto arg0 = (HandleId)image.Id;
     ((::Texture*)NativePtr)->setImage(arg0);
 }
 
@@ -148,14 +148,14 @@ void Flood::Texture::AnisotropicFilter::set(float value)
     ((::Texture*)NativePtr)->anisotropicFilter = value;
 }
 
-Flood::Image^ Flood::Texture::Image::get()
+Flood::ResourceHandle<Flood::Image^> Flood::Texture::Image::get()
 {
-    return gcnew Flood::Image((::Image*)((::Texture*)NativePtr)->image);
+    return Flood::ResourceHandle<Flood::Image^>(((::Texture*)NativePtr)->image.id);
 }
 
-void Flood::Texture::Image::set(Flood::Image^ value)
+void Flood::Texture::Image::set(Flood::ResourceHandle<Flood::Image^> value)
 {
-    ((::Texture*)NativePtr)->image = (::Image*)value->NativePtr;
+    ((::Texture*)NativePtr)->image = (HandleId)value.Id;
 }
 
 Flood::TextureUnit::TextureUnit(::TextureUnit* native)

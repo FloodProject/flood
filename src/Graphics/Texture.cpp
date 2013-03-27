@@ -16,7 +16,6 @@ Texture::Texture()
     : id(0)
     , uploaded(false)
     , uploadedImageTimestamp(0)
-    , image(nullptr)
     , anisotropicFilter(1.0f)
     , target(TextureTarget::Target2D)
 {
@@ -40,11 +39,19 @@ void Texture::allocate(const Vector2i& size, PixelFormat pixelFormat)
 
 //-----------------------------------//
 
-void Texture::setImage( Image* image )
+void Texture::setImage( const ImageHandle& imageHandle )
 {
-	assert( image != nullptr );
+	this->image = imageHandle;
 
-	this->image = image;
+    Image* image = imageHandle.Resolve();
+
+    if (!image)
+    {
+        width = 0;
+        height = 0;
+        format = PixelFormat::Unknown;
+        uploaded = false;
+    }
 
 	width = (uint16) image->getWidth();
 	height = (uint16) image->getHeight();

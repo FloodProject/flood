@@ -89,26 +89,32 @@ TexturePtr TextureManager::getTexture( Image* image )
 		return texture;
 	}
 
-	// Create a new texture from image.
-	else
-	{
-		Texture* texture = backend->createTexture();
-		texture->setImage(image);
+	return nullptr;
+}
 
-		textures[image] = texture;
+//-----------------------------------//
 
-		//if( image->isLoaded() )
-		//	texture->setImage(image);
+TexturePtr TextureManager::getTexture( const ImageHandle& imageHandle )
+{
+	Image* image = imageHandle.Resolve();
 
+	if (TexturePtr texture = getTexture(image))
 		return texture;
-	}
+
+	// Create a new texture from image.
+	Texture* texture = backend->createTexture();
+	texture->setImage(imageHandle);
+
+	textures[image] = texture;
+
+	return texture;
 }
 
 //-----------------------------------//
 
 void TextureManager::onLoaded( const ResourceEvent& event )
 {
-	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	ImageHandle handleImage = HandleCast<Image>(event.handle);
 	Image* image = handleImage.Resolve();
 
 	if( image->getResourceGroup() != ResourceGroup::Images )
@@ -118,7 +124,7 @@ void TextureManager::onLoaded( const ResourceEvent& event )
 		return;
 
 	Texture* texture = textures[image].get();
-	texture->setImage(image);
+	texture->setImage(handleImage);
 
 	backend->uploadTexture(texture);
 }
@@ -127,7 +133,7 @@ void TextureManager::onLoaded( const ResourceEvent& event )
 
 void TextureManager::onUnloaded( const ResourceEvent& event )
 {
-	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	ImageHandle handleImage = HandleCast<Image>(event.handle);
 	Image* image = handleImage.Resolve();
 
 	if( image->getResourceGroup() != ResourceGroup::Images )
@@ -145,7 +151,7 @@ void TextureManager::onUnloaded( const ResourceEvent& event )
 
 void TextureManager::onReloaded( const ResourceEvent& event )
 {
-	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	ImageHandle handleImage = HandleCast<Image>(event.handle);
 	Image* newImage = handleImage.Resolve();
 
 	if( newImage->getResourceGroup() != ResourceGroup::Images )
@@ -159,23 +165,10 @@ void TextureManager::onReloaded( const ResourceEvent& event )
 	LogDebug( "Reloading texture '%s'", newImage->getPath().c_str() );
 
 	Texture* texture = textures[oldImage].get();
-	texture->setImage(newImage);
+	texture->setImage(handleImage);
 
 	textures.erase(oldImage);
 	textures[newImage] = texture;
-
-	//switchImage( oldImage, newImage );
-}
-
-//-----------------------------------//
-
-void TextureManager::switchImage( const ImagePtr& curr, const ImagePtr& new_ )
-{
-	Texture* texture = textures[curr.get()].get();
-	texture->setImage(new_.get());
-	
-	textures.erase(curr.get());
-	textures[new_.get()] = texture;
 }
 
 //-----------------------------------//

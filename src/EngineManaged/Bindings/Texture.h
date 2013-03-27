@@ -95,16 +95,16 @@ namespace Flood
             float get();
             void set(float);
         }
-        property Flood::Image^ Image
+        property Flood::ResourceHandle<Flood::Image^> Image
         {
-            Flood::Image^ get();
-            void set(Flood::Image^);
+            Flood::ResourceHandle<Flood::Image^> get();
+            void set(Flood::ResourceHandle<Flood::Image^>);
         }
         void Alloc(Flood::Vector2i size, Flood::PixelFormat _0);
         unsigned int GetId();
         Flood::PixelFormat GetPixelFormat();
-        Flood::Image^ GetImage();
-        void SetImage(Flood::Image^ image);
+        Flood::ResourceHandle<Flood::Image^> GetImage();
+        void SetImage(Flood::ResourceHandle<Flood::Image^> image);
         Flood::Image^ ReadImage();
         unsigned int GetExpectedSize();
         bool IsUploaded();

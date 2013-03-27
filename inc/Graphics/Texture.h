@@ -67,10 +67,10 @@ public:
 	GETTER(PixelFormat, PixelFormat, format)
 
 	// Gets the associated image.
-	GETTER(Image, const Image*, image)
+	GETTER(Image, const ImageHandle&, image)
 
 	// Sets the associated image.
-	void setImage( Image* image );
+	void setImage( const ImageHandle& image );
 
 	// Reads the texture as an image.
 	Image* readImage() const;
@@ -90,7 +90,7 @@ public:
 	PixelFormat format;
 	float anisotropicFilter;
 	
-	Image* image;
+	ImageHandle image;
 
 private:
 

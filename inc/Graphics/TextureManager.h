@@ -42,6 +42,9 @@ public:
 	// Gets a texture given an image.
 	TexturePtr getTexture( Image* );
 
+	// Gets a texture given an image handle.
+	TexturePtr getTexture( const ImageHandle& handle );
+
 	// Removes the texture backed by the image.
 	void removeTexture( Image* );
 
@@ -61,9 +64,6 @@ protected:
 
 	// Reloads a texture when the image file changes.
 	void onReloaded( const ResourceEvent& event );
-
-	// Switches the image of the texture backed by the first image.
-	void switchImage( const ImagePtr&, const ImagePtr& );
 
 	// Maps the identifiers to the textures.
 	typedef std::map< Image*, TexturePtr > TextureMap;
