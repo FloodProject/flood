@@ -45,19 +45,19 @@ void Texture::setImage( const ImageHandle& imageHandle )
 
     Image* image = imageHandle.Resolve();
 
+    uploaded = false;
+
     if (!image)
     {
         width = 0;
         height = 0;
         format = PixelFormat::Unknown;
-        uploaded = false;
+        return;
     }
 
 	width = (uint16) image->getWidth();
 	height = (uint16) image->getHeight();
 	format = image->getPixelFormat();
-
-    uploaded = false;
 }
 
 //-----------------------------------//
