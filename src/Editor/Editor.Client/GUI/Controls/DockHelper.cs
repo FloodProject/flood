@@ -31,8 +31,8 @@ namespace Flood.Editor.Client.GUI.Controls
 
             protected override void Render(Flood.GUI.Skins.Skin skin)
             {
-                skin.Renderer.DrawColor = System.Drawing.Color.Fuchsia;
-                Rectangle testRect = new Rectangle(0, 0, 20, 20);
+                skin.Renderer.DrawColor = Color.Red;
+                var testRect = new Rect(0, 0, 20, 20);
                 skin.Renderer.DrawFilledRect(testRect);
                 base.Render(skin);
             }

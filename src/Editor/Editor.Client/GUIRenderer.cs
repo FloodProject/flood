@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using Flood;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
-
-using Color = Flood.Color;
-using Image = Flood.Image;
-using StringTextureCache = System.Collections.Generic.Dictionary<
-    System.Tuple<System.String, Flood.GUI.Font>, Flood.GUI.Texture>;
 
 namespace Flood.Editor.Client
 {
@@ -43,7 +36,7 @@ namespace Flood.Editor.Client
 
             gb.Declarations.Add(new VertexElement(VertexAttribute.Position, VertexDataType.Float, 3));
             gb.Declarations.Add(new VertexElement(VertexAttribute.TexCoord0, VertexDataType.Float, 2));
-            gb.Declarations.Add(new VertexElement(VertexAttribute.Color, VertexDataType.Float, 4));
+            gb.Declarations.Add(new VertexElement(VertexAttribute.Color, VertexDataType.Byte, 4));
             gb.Declarations.CalculateStrides();
 
             zcount = -99;
@@ -54,23 +47,23 @@ namespace Flood.Editor.Client
             //gb.Dispose();
         }
 
-        public void AddRectangle(System.Drawing.Rectangle rect, System.Drawing.Color color)
+        public void AddRectangle(Rect rect, Color color)
         {
-            var handle = new ResourceHandle<Image>(ResourceHandle<Image>.Invalid);
-            AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, handle, color);
+            AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, new Texture(), color);
         }
 
-        public void AddRectangle(Rectangle rect, 
+        public void AddRectangle(Rect rect, 
             Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV,
-            ResourceHandle<Image> imageHandle, System.Drawing.Color color)
+            Texture texture, Color color)
         {
-            var batchInfo = GetCreateBatchInfo(imageHandle);
+
+            var batchInfo = GetCreateBatchInfo(texture.GetImage());
             batchInfo.Ranges.Add((int) gb.GetNumVertices());
 
-            var top = Math.Max(rect.Bottom, rect.Top);
-            var bottom = Math.Min(rect.Bottom, rect.Top);
-            var left = rect.Left;
-            var right = rect.Right;
+            var top = Math.Max(rect.GetBottom(), rect.GetTop());
+            var bottom = Math.Min(rect.GetBottom(), rect.GetTop());
+            var left = rect.GetLeft();
+            var right = rect.GetRight();
 
             Vertex v1, v2, v3, v4;
 
@@ -82,12 +75,10 @@ namespace Flood.Editor.Client
             //TODO optimize precision/usage
             zcount += 0.001f;
 
-            var c = new Color(color.R/255.0f, color.G/255.0f, color.B/255.0f, color.A/255.0f);
-
-            v1.Color = c;
-            v2.Color = c;
-            v3.Color = c;
-            v4.Color = c;
+            v1.Color = color;
+            v2.Color = color;
+            v3.Color = color;
+            v4.Color = color;
 
             v1.UV = topLeftUV;
             v2.UV = topRightUV;
@@ -193,30 +184,6 @@ namespace Flood.Editor.Client
         } 
     };
 
-    public class TextureUtil
-    {
-        public static void LoadTextureInternal(Flood.GUI.Texture tex, System.Drawing.Bitmap bmp)
-        {
-            var data = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            var bytes = (uint)(Math.Abs(data.Stride) * bmp.Height);
-            LoadTextureInternal(tex, data.Scan0, bytes);
-            bmp.UnlockBits(data);
-        }
-
-        public static void LoadTextureInternal(Flood.GUI.Texture tex, IntPtr data, uint size) 
-        {
-            var handle = Image.Create(Allocator.GetHeap(), (uint)tex.Width, (uint)tex.Height,
-                PixelFormat.B8G8R8A8);
-
-            var image = handle.Resolve();
-            image.SetBuffer(data, size);
-
-            tex.RendererData = handle;
-        }
-    };
 
     public class TextRenderer
     {
@@ -238,9 +205,9 @@ namespace Flood.Editor.Client
             return ttfont;
         }
 
-        public static System.Drawing.Point MeasureText(System.String text, Flood.GUI.Font font)
+        public static Vector2i MeasureText(System.String text, Flood.GUI.Font font)
         {
-            var ret = new Point(0,font.Size);
+            var ret = new Vector2i(0,font.Size);
 
             var ttfont = GetOrLoadFont(font);
             for(var i = 0; i < text.Length; i++)
@@ -263,7 +230,7 @@ namespace Flood.Editor.Client
             return ret;
         }
 
-        public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Point position, String text)
+        public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Vector2i position, String text)
         {
             var ttfont = GetOrLoadFont(font);
             for(var i = 0; i < text.Length; i++)
@@ -294,14 +261,12 @@ namespace Flood.Editor.Client
                     var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
                     Image atlasImage = atlasImageHandle.Resolve();
 
-                    var texture = new Flood.GUI.Texture(renderer);
-                    texture.Width = (int) atlasImage.GetWidth();
-                    texture.Height = (int) atlasImage.GetHeight();
-                    texture.RendererData = atlasImageHandle;
+                    var texture = new Texture();
+                    texture.SetImage(atlasImageHandle);
 
                     Image glyphImage = glyph.Image.Resolve();
 
-                    var renderRect = new System.Drawing.Rectangle(position.X, position.Y + glyph.BaseLineOffset, 
+                    var renderRect = new Rect(position.X, position.Y + glyph.BaseLineOffset, 
                         (int)glyphImage.GetWidth(), (int)glyphImage.GetHeight());
 
                     Vector2 topLeftUV, topRightUV, bottomLeftUV, bottomRightUV;
@@ -347,20 +312,15 @@ namespace Flood.Editor.Client
     {
         readonly ManagedGeometryBuffer buffer;
 
-        System.Drawing.Color color;
+        Color color;
         Dictionary<Tuple<string, Flood.GUI.Font>, TextRenderer> stringCache;
     
         bool isClipEnabled;
 
         public GwenRenderer()
         {
+        
             buffer = new ManagedGeometryBuffer();
-        }
-
-        public override void Dispose()
-        {
-            TextRenderer.ClearCache();
-            base.Dispose();
         }
 
         public void Render(RenderBlock rb)
@@ -373,13 +333,13 @@ namespace Flood.Editor.Client
             buffer.Clear();
         }
 
-        public override void DrawFilledRect(System.Drawing.Rectangle rect) 
+        public override void DrawFilledRect(Rect rect) 
         {
             rect = Translate(rect);
             buffer.AddRectangle(rect, color);
         }
 
-        public override System.Drawing.Color DrawColor 
+        public override Color DrawColor 
         {
             get { return color; }
             set { color = value;}
@@ -395,11 +355,8 @@ namespace Flood.Editor.Client
             isClipEnabled = false;
         }
 
-        public override void DrawTexturedRect(Flood.GUI.Texture tex, System.Drawing.Rectangle rect, float u1, float v1, float u2, float v2)
+        public override void DrawTexturedRect(Texture tex, Rect rect, float u1, float v1, float u2, float v2)
         {
-            if(tex.RendererData == null)
-                DrawFilledRect(rect);
-
             rect = Translate(rect);
 
             if (isClipEnabled)
@@ -474,87 +431,38 @@ namespace Flood.Editor.Client
                 }
             }
 
-            var handle = (ResourceHandle<Image>) tex.RendererData;
-
-            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u1,v2), new Vector2(u2,v2), handle, color);
+            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u1,v2), new Vector2(u2,v2), tex, color);
         }
 
-        public void DrawTexturedRect(Flood.GUI.Texture t, System.Drawing.Rectangle rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
+        public void DrawTexturedRect(Texture t, Rect rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
         {
-            if(t.RendererData == null){
-                DrawFilledRect(rect);
-            }
-
-            var handle = (ResourceHandle<Image>) t.RendererData;
-
             rect = Translate(rect);
 
-            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, handle, color);
+            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, t, color);
         }
 
-        public override System.Drawing.Point MeasureText(Flood.GUI.Font font, System.String text) 
+        public override Vector2i MeasureText(Flood.GUI.Font font, string text) 
         {
             return TextRenderer.MeasureText(text,font);
         }
 
-        public override void RenderText(Flood.GUI.Font font, System.Drawing.Point position, System.String text)
+        public override void RenderText(Flood.GUI.Font font, Vector2i position, string text)
         {
            TextRenderer.DrawText(this, font, position, text);
         }
 
-        public override void LoadTexture(Flood.GUI.Texture tex)
+        public override Color PixelColor(Texture texture, uint x, uint y, Color defaultColor)
         {
-            var resMan = FloodEngine.GetEngine().GetResourceManager();
-            var options = new ResourceLoadOptions {Name = tex.Name, AsynchronousLoad = false};
-            var resourceHandle = resMan.LoadResource<Image>(options);
-        
-            if(resourceHandle.Id == ResourceHandle<Resource>.Invalid)
-            {
-                tex.RendererData = null;
-                return;
-            }
-
-            var image = resourceHandle.Resolve();
-            tex.Width = (int)image.GetWidth();
-            tex.Height = (int)image.GetHeight();
-            tex.RendererData = resourceHandle;
-        }
-
-        public override void LoadTextureBitmap(Flood.GUI.Texture t, System.Drawing.Bitmap bitmap)
-        {
-            TextureUtil.LoadTextureInternal(t,bitmap);
-        }
-
-        public override void FreeTexture(Flood.GUI.Texture tex)
-        {
-            if (tex.RendererData == null)
-                return;
-
-            var handle = (ResourceHandle<Image>) tex.RendererData;
-            var image = handle.Resolve();
-
-            FloodEngine.GetEngine().GetResourceManager().RemoveResource(image);
-        }
-
-        public override System.Drawing.Color PixelColor(Flood.GUI.Texture texture,
-            uint x, uint y, System.Drawing.Color defaultColor)
-        {
-            if(texture.RendererData == null)
+            var image = texture.GetImage().Resolve();
+            if(image == null)
                 return defaultColor;
 
-            var handle = (ResourceHandle<Image>) texture.RendererData;
-            var image = handle.Resolve();
-
-            int offset = (int)(4 * (x + y * texture.Width));
+            var offset = (int)(4 * (x + y * texture.Width));
             var data = image.GetBuffer();
 
-            var pixel = System.Drawing.Color.FromArgb(data[offset + 3], data[offset + 0],
-                data[offset + 1], data[offset + 2]);
+            var pixel = new Color(data[offset + 0],
+                data[offset + 1], data[offset + 2], data[offset + 3]);
         
-            // Retrieving the entire texture for a single pixel read
-            // is kind of a waste - maybe cache this pointer in the texture
-            // data and then release later on? It's never called during runtime
-            // - only during initialization.
             return pixel;
         }
 
@@ -719,5 +627,3 @@ namespace Flood.Editor.Client
         }
     }
 }
-
-

@@ -25,7 +25,8 @@ namespace Flood.Editor.Client.Extensions
             btn.ShouldDrawBackground = false;
 
             var iBuffer = IconManager.GetIconData(icon, IconSize.Invalid);
-            btn.SetImage(iBuffer,true);
+            //btn.SetImage(iBuffer.,true);
+            throw new NotImplementedException();
             btn.SetSize(20, 20);
 
             btn.Clicked += c => OnClicked();

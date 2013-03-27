@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Flood.Editor.Client.Extensions;
-using Flood.GUI;
 using Mono.Addins;
 
 namespace Flood.Editor.Client
@@ -14,7 +9,7 @@ namespace Flood.Editor.Client
     public static class IconManager
     {
         static readonly Dictionary<int,StockIconCodon> IconStock = new Dictionary<int,StockIconCodon>();
-        static readonly Dictionary<int,Bitmap> IconData = new Dictionary<int,Bitmap>();
+        static readonly Dictionary<int,Flood.Image> IconData = new Dictionary<int,Flood.Image>();
 
         static IconManager()
         {
@@ -55,7 +50,7 @@ namespace Flood.Editor.Client
                 IconStock.Remove(hash);
         }
 
-        public static Bitmap GetIconData(string iconId, IconSize iconSize)
+        public static Flood.Image GetIconData(string iconId, IconSize iconSize)
         {
             var hash = StockIconCodon.ComputeHashCode(iconId, iconSize);
             if (IconData.ContainsKey(hash))
@@ -67,8 +62,8 @@ namespace Flood.Editor.Client
             var iconCodon = IconStock[hash];
 
             if (!string.IsNullOrEmpty (iconCodon.Resource) || !string.IsNullOrEmpty (iconCodon.File)) {
-                Bitmap bitmap;
-                System.IO.Stream stream;
+                Flood.Image bitmap;
+                Stream stream;
                 if (iconCodon.Resource != null)
                     stream = iconCodon.Addin.GetResource (iconCodon.Resource);
                 else
@@ -78,7 +73,11 @@ namespace Flood.Editor.Client
                         throw new Exception(string.Format("Did not find resource '{0}' in addin '{1}' for icon '{2}'", 
                                                     iconCodon.Resource, iconCodon.Addin.Id, iconCodon.StockId));
                     }
-                    bitmap = (Bitmap) System.Drawing.Image.FromStream(stream);
+                    //bitmap = (Flood.Image) Image.FromStream(stream);
+                    //var imageH = Image.Create(Allocator.GetHeap(), 0, 0, PixelFormat.Unknown);
+                    //var image = imageH.Resolve();
+                    //FloodResourceManager.GetResourceManager().LoadResource<>()
+                    throw new NotImplementedException();
                 }
                 
 
