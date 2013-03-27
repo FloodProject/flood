@@ -8,10 +8,6 @@ project "EngineBindings"
 	flags { "Managed" }
 	
 	SetupNativeProjects()
-	
-	local c = configuration "Debug"
-		targetsuffix ""
-	configuration(c)
 
 	files
 	{
@@ -19,11 +15,6 @@ project "EngineBindings"
 		"**.h",
 		"**.cpp",
 	}
-
-	--vpaths
-	--{
-	--	["*"] = { "../src/EngineManaged/" },
-	--}
 
 	links
 	{
