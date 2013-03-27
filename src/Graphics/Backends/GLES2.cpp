@@ -544,8 +544,11 @@ void RenderBackendGLES2::undoTextureUnit(Texture* texture, const TextureUnit& un
 
 void RenderBackendGLES2::uploadTexture(Texture* tex)
 {
-	bool hasData = tex->image && !tex->image->getBuffer().empty();
-	uint8* data = hasData ? tex->image->getBuffer().data() : nullptr;
+	const ImageHandle& imageHandle = tex->getImage();
+	Image* image = imageHandle.Resolve();
+
+	bool hasData = imageHandle && !image->getBuffer().empty();
+	uint8* data = hasData ? image->getBuffer().data() : nullptr;
 
 	bindTexture(tex);
 

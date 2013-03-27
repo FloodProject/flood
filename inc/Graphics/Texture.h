@@ -85,15 +85,14 @@ public:
 	uint32 id;
 	TextureTarget target;
 	
-	uint16 width;
-	uint16 height;
+	uint32 width;
+	uint32 height;
 	PixelFormat format;
 	float anisotropicFilter;
-	
-	ImageHandle image;
 
 private:
 
+    ImageHandle image;
     bool uploaded;
     uint32 uploadedImageTimestamp;
 
