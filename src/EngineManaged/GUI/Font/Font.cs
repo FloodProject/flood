@@ -10,7 +10,7 @@ namespace Flood.GUI
         /// <summary>
         /// Font face name. Exact meaning depends on renderer.
         /// </summary>
-        public String FaceName { get; set; }
+        public String FaceName { get; private set; }
 
         /// <summary>
         /// Font size.
@@ -28,38 +28,25 @@ namespace Flood.GUI
         /// <summary>
         /// This should be set by the renderer if it tries to use a font where it's null.
         /// </summary>
-        public object RendererData { get; set; }
+        public ResourceHandle<Flood.Font> EngineFont { get; set; }
 
         /// <summary>
         /// This is the real font size, after it's been scaled by Renderer.Scale()
         /// </summary>
         public float RealSize { get; set; }
 
-        private readonly Renderers.Renderer m_Renderer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Font"/> class.
         /// </summary>
-        public Font(Renderers.Renderer renderer)
-            : this(renderer, "Arial", 10)
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Font"/> class.
-        /// </summary>
-        /// <param name="renderer">Renderer to use.</param>
         /// <param name="faceName">Face name.</param>
         /// <param name="size">Font size.</param>
-        public Font(Renderers.Renderer renderer, String faceName, int size = 10)
+        public Font(String faceName, int size = 10)
         {
-            m_Renderer = renderer;
+            var ttf = (faceName.EndsWith(".ttf")) ? faceName : faceName + ".ttf";
+            EngineFont = FloodResourceManager.GetResourceManager().LoadResource<Flood.Font>(ttf);
             FaceName = faceName;
             Size = size;
             Smooth = false;
-            //Bold = false;
-            //DropShadow = false;
         }
 
         /// <summary>
@@ -67,7 +54,6 @@ namespace Flood.GUI
         /// </summary>
         public void Dispose()
         {
-            m_Renderer.FreeFont(this);
             GC.SuppressFinalize(this);
         }
         
@@ -79,20 +65,5 @@ namespace Flood.GUI
         }
 #endif
 
-        /// <summary>
-        /// Duplicates font data (except renderer data which must be reinitialized).
-        /// </summary>
-        /// <returns></returns>
-        public Font Copy()
-        {
-            Font f = new Font(m_Renderer, FaceName);
-            f.Size = Size;
-            f.RealSize = RealSize;
-            f.RendererData = null; // must be reinitialized
-            //f.Bold = Bold;
-            //f.DropShadow = DropShadow;
-
-            return f;
-        }
     }
 }
