@@ -9,30 +9,20 @@
 #include "Engine/Resources/TrueTypeFont.h"
 
 #include "Core/Math/Rect.h"
-#include "Engine/Texture/TextureAtlas.h"
-#include "stb_truetype.h"
+#include <stb_truetype.h>
 
 NAMESPACE_ENGINE_BEGIN
 
-struct TrueTypeFont::FontInfo {
+struct TrueTypeFont::FontInfo
+{
     stbtt_fontinfo font;
 };
 
 //-----------------------------------//
 
-TrueTypeFont::TrueTypeFont(const String& fontName)
+TrueTypeFont::TrueTypeFont()
 {
     fontInfo = AllocateThis(FontInfo);
-    fread(ttf_buffer, 1, 1<<25, fopen("c:/windows/fonts/arial.ttf", "rb"));
-    stbtt_InitFont(&fontInfo->font, ttf_buffer, 0);
-
-    lineHeigth = 15;
-    scale = stbtt_ScaleForPixelHeight(&fontInfo->font, lineHeigth);
-
-    int ascent;
-    stbtt_GetFontVMetrics(&fontInfo->font, &ascent,0,0);
-    baseLine = ascent * scale;
-
 }
 
 //-----------------------------------//
@@ -44,10 +34,23 @@ TrueTypeFont::~TrueTypeFont()
 
 //-----------------------------------//
 
-bool TrueTypeFont::createGlyph(int codepoint, Glyph& glyph) const
+void TrueTypeFont::init()
+{
+    stbtt_InitFont(&fontInfo->font, data.data(), 0);
+}
+
+//-----------------------------------//
+
+bool TrueTypeFont::createGlyph(int codepoint, int fontSize, Glyph& glyph) const
 {
     int width,height;
     byte* pixelBuffer;
+
+    float scale = stbtt_ScaleForPixelHeight(&fontInfo->font,(float) fontSize);
+
+    int ascent;
+    stbtt_GetFontVMetrics(&fontInfo->font, &ascent,0,0);
+    float baseLine = ascent * scale;
 
     pixelBuffer = stbtt_GetCodepointBitmap(&fontInfo->font, 0, scale, codepoint, &width, &height, 0,0);
 
@@ -72,10 +75,11 @@ bool TrueTypeFont::createGlyph(int codepoint, Glyph& glyph) const
     return true;
 }
 
-Vector2i TrueTypeFont::getKerning(int codepoint1, int codepoint2) const
+Vector2 TrueTypeFont::getKerning(int codepoint1, int codepoint2, int fontSize) const
 {
+    float scale = stbtt_ScaleForPixelHeight(&fontInfo->font, (float)fontSize);
     float x = scale*stbtt_GetCodepointKernAdvance(&fontInfo->font, codepoint1,codepoint2);
-    return Vector2i(x,0);
+    return Vector2(x,0);
 }
 
 NAMESPACE_ENGINE_END

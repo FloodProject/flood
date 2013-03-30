@@ -24,11 +24,10 @@ NAMESPACE_ENGINE_BEGIN
 
 struct Glyph
 {
-    int baseLineOffset;
+    float baseLineOffset;
     float advance;
     ImageHandle image;
 };
-
 
 //-----------------------------------//
 
@@ -52,34 +51,22 @@ class API_ENGINE Font : public Resource
 
 public:
 
-	bool getGlyph(int codepoint, Glyph& glyph);
+	virtual bool createGlyph(int codepoint, int size,  Glyph& glyph) const = 0;
 
-    virtual Vector2i getKerning(int codepoint1, int codepoint2)  const = 0;
+	virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const = 0;
 
 	// Gets/sets the font name.
 	ACCESSOR(Name, const String&, name)
-
-	// Gets/sets the font size.
-	ACCESSOR(Size, int, size)
 
 	// Gets the resource group of the font.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Fonts)
 
 	// Font name.
 	String name;
-	
-	// Font size.
-	int size;
 
 protected:
 
 	Font();
-
-    virtual bool createGlyph(int codepoint,  Glyph& glyph) const = 0;
-
-private:
-
-    std::map<int, Glyph> glyphs;
 };
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Font );

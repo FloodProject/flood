@@ -24,25 +24,22 @@ class  API_ENGINE TrueTypeFont : public Font
 {
 public:
 
-    TrueTypeFont(const String& font);
+    TrueTypeFont();
     ~TrueTypeFont();
 
-    virtual Vector2i getKerning(int codepoint1, int codepoint2)  const OVERRIDE;
+    void init();
+
+    virtual bool createGlyph(int codepoint, int size, Glyph& glyph) const OVERRIDE;
+
+    virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const OVERRIDE;
+
+    std::vector<byte> data;
 
 private:
-
-    virtual bool createGlyph(int codepoint,  Glyph& glyph) const OVERRIDE;
-
-    unsigned char ttf_buffer[1<<25];
 
     struct FontInfo; 
     FontInfo* fontInfo;
 
-    float scale;
-    int lineHeigth;
-    int baseLine;
-
-    mutable std::map<int, Glyph> glyphs;
 };
 
 //-----------------------------------//

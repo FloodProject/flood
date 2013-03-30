@@ -18,25 +18,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Font::Font()
-	: size(0)
 { }
-
-//-----------------------------------//
-
-bool Font::getGlyph(int codepoint, Glyph& glyph)
-{
-    if (glyphs.find(codepoint) == glyphs.end())
-    {
-        Glyph newGlyph;
-        if (!createGlyph(codepoint, newGlyph))
-            return false;
-
-        glyphs[codepoint] = newGlyph;
-    }
-
-    glyph = glyphs[codepoint];
-    return true;
-}
 
 //-----------------------------------//
 
