@@ -48,17 +48,17 @@ namespace Flood.Editor.Client.GUI.Controls
         {
             var bSize = 30;
 
-            addUp = new DockButton(this,AddUp,"up");
-            addLeft = new DockButton(this,AddLeft,"left");
-            addDown = new DockButton(this,AddDown,"down");
-            addRigth = new DockButton(this,AddRigth,"rigth");
-            addCenter = new DockButton(this,AddCenter,"center");
+            addUp = new DockButton(this, AddUp, "up");
+            addLeft = new DockButton(this, AddLeft, "left");
+            addDown = new DockButton(this, AddDown, "down");
+            addRigth = new DockButton(this, AddRigth, "rigth");
+            addCenter = new DockButton(this, AddCenter, "center");
 
-            addUp.SetPosition(bSize,0);
-            addLeft.SetPosition(0,bSize);
-            addDown.SetPosition(bSize,2*bSize);
-            addRigth.SetPosition(2*bSize,bSize);
-            addCenter.SetPosition(bSize,bSize);
+            addUp.SetPosition(bSize, 0);
+            addLeft.SetPosition(0, bSize);
+            addDown.SetPosition(bSize, 2 * bSize);
+            addRigth.SetPosition(2 * bSize, bSize);
+            addCenter.SetPosition(bSize, bSize);
 
             SizeToChildren();
         }
@@ -95,31 +95,31 @@ namespace Flood.Editor.Client.GUI.Controls
         {
             Console.WriteLine("AddUp");
 
-            PaneManager.MovePaneVertically(DraggedPane,PaneGroup,0,true);
+            PaneManager.MovePaneVertically(DraggedPane, PaneGroup, 0, true);
             return false;
         }
 
         private bool AddLeft(Package p)
         {
-            PaneManager.MovePaneHorizontally(DraggedPane,PaneGroup,0,false);
+            PaneManager.MovePaneHorizontally(DraggedPane, PaneGroup, 0, false);
             return false;
         }
 
         private bool AddDown(Package p)
         {
-            PaneManager.MovePaneVertically(DraggedPane,PaneGroup,0,false);
+            PaneManager.MovePaneVertically(DraggedPane, PaneGroup, 0, false);
             return false;
         }
 
         private bool AddRigth(Package p)
         {
-            PaneManager.MovePaneHorizontally(DraggedPane,PaneGroup,0,true);
+            PaneManager.MovePaneHorizontally(DraggedPane, PaneGroup, 0, true);
             return false;
         }
 
         private bool AddCenter(Package p)
         {
-            PaneManager.MovePane(DraggedPane,PaneGroup);
+            PaneManager.MovePane(DraggedPane, PaneGroup);
             return false;
         }
 
@@ -127,8 +127,8 @@ namespace Flood.Editor.Client.GUI.Controls
         {
             base.Layout(skin);
             SetPosition(
-                (Parent.Bounds.Width-Bounds.Width)/2,
-                Parent.Bounds.Height/2-Bounds.Height);
+                (Parent.Bounds.Width - Bounds.Width) / 2,
+                Parent.Bounds.Height / 2 - Bounds.Height);
         }
 
         public override void Think()

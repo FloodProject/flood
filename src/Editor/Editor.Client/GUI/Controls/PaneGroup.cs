@@ -14,7 +14,7 @@ namespace Flood.Editor.Client.GUI
 
         public PaneGroup(Control parent) : base(parent)
         {
-            if(PaneManager.FocusedPaneGroup==null)
+            if(PaneManager.FocusedPaneGroup == null)
                 PaneManager.FocusedPaneGroup = this;
 
             AllowReorder = true;
