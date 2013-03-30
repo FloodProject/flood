@@ -21,7 +21,7 @@ namespace Flood.Editor.Client.GUI.Controls
         public ToolBarContainer(Control parent, string extensionPoint) : base(parent)
         {
             this.extensionPoint = extensionPoint;
-            topToolbar = new ToolBar(this,extensionPoint);
+            topToolbar = new ToolBar(this, extensionPoint);
             topToolbar.Dock = Pos.Top;
             container = new Container(this);
             container.Dock = Pos.Fill;
