@@ -20,7 +20,7 @@ namespace Flood
     ref class Image;
     ref class Resource;
     value struct Glyph;
-    value struct Vector2i;
+    value struct Vector2;
 
     /// <summary>
     /// A glyph is the information about a character/symbol in a font file. This
@@ -32,7 +32,7 @@ namespace Flood
     public:
         Glyph(::Glyph* native);
         Glyph(System::IntPtr native);
-        int BaseLineOffset;
+        float BaseLineOffset;
         float Advance;
         Flood::ResourceHandle<Flood::Image^> Image;
     };
@@ -57,17 +57,10 @@ namespace Flood
             System::String^ get();
             void set(System::String^);
         }
-        property int Size
-        {
-            int get();
-            void set(int);
-        }
-        bool GetGlyph(int codepoint, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
-        Flood::Vector2i GetKerning(int codepoint1, int codepoint2);
+        bool CreateGlyph(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
+        Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
         System::String^ GetName();
         void SetName(System::String^ v);
-        int GetSize();
-        void SetSize(int v);
         Flood::ResourceGroup GetResourceGroup();
     };
 }

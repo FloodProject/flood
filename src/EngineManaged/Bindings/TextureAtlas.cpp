@@ -10,6 +10,7 @@
 #include "Image.h"
 #include "Rect.h"
 #include "ResourceHandle.h"
+#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -17,15 +18,21 @@ using namespace clix;
 
 Flood::SubTexture::SubTexture(::SubTexture* native)
 {
-    Rect = Flood::Rect((::Rect*)&native->rect);
-    IsRotated = native->isRotated;
+    LeftTopUV = Flood::Vector2((::Vector2*)&native->leftTopUV);
+    RightTopUV = Flood::Vector2((::Vector2*)&native->rightTopUV);
+    RightBottomUV = Flood::Vector2((::Vector2*)&native->rightBottomUV);
+    LeftBottomUV = Flood::Vector2((::Vector2*)&native->leftBottomUV);
+    Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)native->atlas);
 }
 
 Flood::SubTexture::SubTexture(System::IntPtr native)
 {
     auto __native = (::SubTexture*)native.ToPointer();
-    Rect = Flood::Rect((::Rect*)&__native->rect);
-    IsRotated = __native->isRotated;
+    LeftTopUV = Flood::Vector2((::Vector2*)&__native->leftTopUV);
+    RightTopUV = Flood::Vector2((::Vector2*)&__native->rightTopUV);
+    RightBottomUV = Flood::Vector2((::Vector2*)&__native->rightBottomUV);
+    LeftBottomUV = Flood::Vector2((::Vector2*)&__native->leftBottomUV);
+    Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)__native->atlas);
 }
 
 Flood::TextureAtlas::TextureAtlas(::TextureAtlas* native)

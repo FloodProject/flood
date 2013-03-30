@@ -42,18 +42,18 @@ Flood::Font::Font(System::IntPtr native)
     auto __native = (::Font*)native.ToPointer();
 }
 
-bool Flood::Font::GetGlyph(int codepoint, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
+bool Flood::Font::CreateGlyph(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
-    ::Glyph arg1;
-    auto ret = ((::Font*)NativePtr)->getGlyph(codepoint, arg1);
-    glyph = Flood::Glyph((::Glyph*)&arg1);
+    ::Glyph arg2;
+    auto ret = ((::Font*)NativePtr)->createGlyph(codepoint, size, arg2);
+    glyph = Flood::Glyph((::Glyph*)&arg2);
     return ret;
 }
 
-Flood::Vector2i Flood::Font::GetKerning(int codepoint1, int codepoint2)
+Flood::Vector2 Flood::Font::GetKerning(int codepoint1, int codepoint2, int fontSize)
 {
-    auto ret = ((::Font*)NativePtr)->getKerning(codepoint1, codepoint2);
-    return Flood::Vector2i((::Vector2i*)&ret);
+    auto ret = ((::Font*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
+    return Flood::Vector2((::Vector2*)&ret);
 }
 
 System::String^ Flood::Font::GetName()
@@ -66,17 +66,6 @@ void Flood::Font::SetName(System::String^ v)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(v);
     ((::Font*)NativePtr)->setName(arg0);
-}
-
-int Flood::Font::GetSize()
-{
-    auto ret = ((::Font*)NativePtr)->getSize();
-    return ret;
-}
-
-void Flood::Font::SetSize(int v)
-{
-    ((::Font*)NativePtr)->setSize(v);
 }
 
 Flood::ResourceGroup Flood::Font::GetResourceGroup()
@@ -93,15 +82,5 @@ System::String^ Flood::Font::Name::get()
 void Flood::Font::Name::set(System::String^ value)
 {
     ((::Font*)NativePtr)->name = clix::marshalString<clix::E_UTF8>(value);
-}
-
-int Flood::Font::Size::get()
-{
-    return ((::Font*)NativePtr)->size;
-}
-
-void Flood::Font::Size::set(int value)
-{
-    ((::Font*)NativePtr)->size = value;
 }
 

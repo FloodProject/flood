@@ -26,16 +26,53 @@ Flood::TrueTypeFont::TrueTypeFont(System::IntPtr native)
     auto __native = (::TrueTypeFont*)native.ToPointer();
 }
 
-Flood::TrueTypeFont::TrueTypeFont(System::String^ font)
+Flood::TrueTypeFont::TrueTypeFont()
     : Flood::Font(nullptr)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(font);
-    NativePtr = new ::TrueTypeFont(arg0);
+    NativePtr = new ::TrueTypeFont();
 }
 
-Flood::Vector2i Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2)
+void Flood::TrueTypeFont::Init()
 {
-    auto ret = ((::TrueTypeFont*)NativePtr)->getKerning(codepoint1, codepoint2);
-    return Flood::Vector2i((::Vector2i*)&ret);
+    ((::TrueTypeFont*)NativePtr)->init();
+}
+
+bool Flood::TrueTypeFont::CreateGlyph(int codepoint, int size, Flood::Glyph glyph)
+{
+    auto _marshal2 = ::Glyph();
+    _marshal2.baseLineOffset = glyph.BaseLineOffset;
+    _marshal2.advance = glyph.Advance;
+    _marshal2.image = (HandleId)glyph.Image.Id;
+    auto arg2 = _marshal2;
+    auto ret = ((::TrueTypeFont*)NativePtr)->createGlyph(codepoint, size, arg2);
+    return ret;
+}
+
+Flood::Vector2 Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2, int fontSize)
+{
+    auto ret = ((::TrueTypeFont*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
+    return Flood::Vector2((::Vector2*)&ret);
+}
+
+System::Collections::Generic::List<unsigned char>^ Flood::TrueTypeFont::Data::get()
+{
+    auto _tmpData = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : ((::TrueTypeFont*)NativePtr)->data)
+    {
+        auto _marshalElement = _element;
+        _tmpData->Add(_marshalElement);
+    }
+    return _tmpData;
+}
+
+void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned char>^ value)
+{
+    auto _tmpvalue = std::vector<::byte>();
+    for each(unsigned char _element in value)
+    {
+        auto _marshalElement = (byte)(uint8)_element;
+        _tmpvalue.push_back(_marshalElement);
+    }
+    ((::TrueTypeFont*)NativePtr)->data = _tmpvalue;
 }
 

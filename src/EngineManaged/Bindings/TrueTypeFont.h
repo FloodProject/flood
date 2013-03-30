@@ -17,7 +17,7 @@ namespace Flood
     ref class FontInfo;
     ref class TrueTypeFont;
     value struct Glyph;
-    value struct Vector2i;
+    value struct Vector2;
 
     /// <summary>
     /// Represents a TrueType font resource. Loads a TTF font using the
@@ -29,7 +29,14 @@ namespace Flood
     public:
         TrueTypeFont(::TrueTypeFont* native);
         TrueTypeFont(System::IntPtr native);
-        TrueTypeFont(System::String^ font);
-        Flood::Vector2i GetKerning(int codepoint1, int codepoint2);
+        TrueTypeFont();
+        property System::Collections::Generic::List<unsigned char>^ Data
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+            void set(System::Collections::Generic::List<unsigned char>^);
+        }
+        void Init();
+        bool CreateGlyph(int codepoint, int size, Flood::Glyph glyph);
+        Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
     };
 }

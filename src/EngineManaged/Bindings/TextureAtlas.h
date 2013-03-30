@@ -8,8 +8,8 @@
 #pragma once
 
 #include <Engine/Texture/TextureAtlas.h>
-#include "Rect.h"
 #include "ResourceHandle.h"
+#include "Vector.h"
 #include "Image.h"
 
 namespace Flood
@@ -20,14 +20,18 @@ namespace Flood
     ref class TextureAtlas;
     value struct Rect;
     value struct SubTexture;
+    value struct Vector2;
 
     public value struct SubTexture
     {
     public:
         SubTexture(::SubTexture* native);
         SubTexture(System::IntPtr native);
-        Flood::Rect Rect;
-        bool IsRotated;
+        Flood::Vector2 LeftTopUV;
+        Flood::Vector2 RightTopUV;
+        Flood::Vector2 RightBottomUV;
+        Flood::Vector2 LeftBottomUV;
+        Flood::TextureAtlas^ Atlas;
     };
 
     public ref class TextureAtlas
