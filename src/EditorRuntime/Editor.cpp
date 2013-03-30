@@ -52,7 +52,7 @@ bool EditorApp::OnInit()
 
 //-----------------------------------//
 
-static EditorFrame* gs_EditorInstance = nullptr;;
+static EditorFrame* gs_EditorInstance = nullptr;
 EditorFrame& GetEditor() { return *gs_EditorInstance; }
 
 EditorFrame::EditorFrame(const wxString& title)
