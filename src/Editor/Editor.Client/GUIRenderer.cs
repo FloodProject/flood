@@ -53,7 +53,7 @@ namespace Flood.Editor.Client
         }
 
         public void AddRectangle(Rect rect, 
-            Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV,
+            Vector2 topLeftUV, Vector2 topRightUV,Vector2 bottomRightUV, Vector2 bottomLeftUV,
             Texture texture, Color color)
         {
 
@@ -188,42 +188,38 @@ namespace Flood.Editor.Client
     public class TextRenderer
     {
         static readonly Flood.TextureAtlas textureAtlas;
+        static readonly GlyphCache glyphCache;
 
         static TextRenderer()
         {
             textureAtlas = new TextureAtlas(512);
-        }
-
-        static Flood.Font GetOrLoadFont(Flood.GUI.Font font)
-        {
-            var ttfont = font.RendererData as Flood.Font;
-            if(ttfont != null)
-                return ttfont;
-
-            ttfont = new TrueTypeFont("");
-            font.RendererData = ttfont; 
-            return ttfont;
+            glyphCache = new GlyphCache();
         }
 
         public static Vector2i MeasureText(System.String text, Flood.GUI.Font font)
         {
             var ret = new Vector2i(0,font.Size);
 
-            var ttfont = GetOrLoadFont(font);
+            var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
+
                 Glyph glyph;
-                var foundGlyph = ttfont.GetGlyph(c, out glyph);
-                if (!foundGlyph)
+                SubTexture subTexture;
+                if(!glyphCache.TryGetGlyph(font, c, out glyph, out subTexture))
                 {
-                    Log.Warn("Glyph not found for character " + c);
-                    continue;
+                    var foundGlyph = ttfont.CreateGlyph(c, font.Size, out glyph);
+                    if (!foundGlyph)
+                    {
+                        Log.Warn("Glyph not found for character " + c);
+                        continue;
+                    }
                 }
 
                 var kernX = 0;
                 if(i < text.Length - 1) 
-                    kernX = ttfont.GetKerning(text[i], text[i + 1]).X;
+                    kernX = (int)ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
                 ret.X += (int) (glyph.Advance + kernX + 0.5);
             }
 
@@ -232,77 +228,61 @@ namespace Flood.Editor.Client
 
         public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Vector2i position, String text)
         {
-            var ttfont = GetOrLoadFont(font);
+            var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
                 Glyph glyph;
-                var foundGlyph = ttfont.GetGlyph(c, out glyph);
-                if(!foundGlyph)
-                {
-                    Log.Warn("Glyph not found for character "+c);
-                    continue;
-                }
+                SubTexture subTexture;
 
-                if (glyph.Image.Id != ResourceHandle<Resource>.Invalid)
+                if(!glyphCache.TryGetGlyph(font, c, out glyph, out subTexture))
                 {
-                    SubTexture subTexture;
-                    var subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
-                    if(!subTextureFound){
-                        textureAtlas.AddImage(glyph.Image);
-                        subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
-                        if(!subTextureFound)
+                    var foundGlyph = ttfont.CreateGlyph(c, font.Size, out glyph);
+                    if (!foundGlyph)
+                    {
+                        Log.Warn("Glyph not found for character " + c);
+                        continue;
+                    }
+
+                    if (glyph.Image.Id != ResourceHandle<Resource>.Invalid)
+                    {
+
+                        var subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                        if (!subTextureFound)
                         {
-                            Log.Warn("subTexture not Found\n");
-                            continue;
+                            textureAtlas.AddImage(glyph.Image);
+                            subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                            if (subTextureFound)
+                            {
+                                glyphCache.AddGlyph(font, c, glyph, subTexture);
+                            }
+                            else
+                            {
+                                Log.Warn("subTexture not Found\n");
+                                continue;
+                            }
                         }
                     }
-
-                    var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
-                    Image atlasImage = atlasImageHandle.Resolve();
-
-                    var texture = new Texture();
-                    texture.SetImage(atlasImageHandle);
-
-                    Image glyphImage = glyph.Image.Resolve();
-
-                    var renderRect = new Rect(position.X, position.Y + glyph.BaseLineOffset, 
-                        (int)glyphImage.GetWidth(), (int)glyphImage.GetHeight());
-
-                    Vector2 topLeftUV, topRightUV, bottomLeftUV, bottomRightUV;
-
-                    var rect = subTexture.Rect;
-            
-                    float width = atlasImage.GetWidth();
-                    float height = atlasImage.GetHeight();
-                    float u1 = rect.X/width;
-                    float v1 = rect.Y/height;
-                    float u2 = (rect.X+rect.Width)/width;
-                    float v2 = (rect.Y+rect.Height)/height;
-
-                    if(!subTexture.IsRotated)
-                    {
-                        topLeftUV = new Vector2(u1,v1);
-                        topRightUV = new Vector2(u2,v1);
-                        bottomLeftUV = new Vector2(u1,v2);
-                        bottomRightUV = new Vector2(u2,v2);
-                    }
-                    else
-                    {
-                        topLeftUV = new Vector2(u1,v2);
-                        topRightUV = new Vector2(u1,v1);
-                        bottomLeftUV = new Vector2(u2,v2);
-                        bottomRightUV = new Vector2(u2,v1);
-                    }
-
-                    renderer.DrawTexturedRect(texture,renderRect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV);
-                    texture.Dispose();
                 }
 
+                var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
+                Image atlasImage = atlasImageHandle.Resolve();
+
+                var texture = new Texture();
+                texture.SetImage(atlasImageHandle);
+
+                Image glyphImage = glyph.Image.Resolve();
+
+                var renderRect = new Rect(position.X, (int)(position.Y + glyph.BaseLineOffset), 
+                    (int)glyphImage.GetWidth(), (int)glyphImage.GetHeight());
+
+                renderer.DrawTexturedRect(texture,renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV);
+                texture.Dispose();
+
                 if (i < text.Length-1){
-                    Vector2i kern = ttfont.GetKerning(text[i],text[i+1]);
+                    var kern = ttfont.GetKerning(text[i],text[i+1], font.Size);
                     position.X += (int)(glyph.Advance + kern.X + 0.5);
-                    position.Y += kern.Y;
+                    position.Y += (int) kern.Y;
                 }
             }
         }
@@ -431,14 +411,14 @@ namespace Flood.Editor.Client
                 }
             }
 
-            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u1,v2), new Vector2(u2,v2), tex, color);
+            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), tex, color);
         }
 
-        public void DrawTexturedRect(Texture t, Rect rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomLeftUV,Vector2 bottomRightUV)
+        public void DrawTexturedRect(Texture t, Rect rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
         {
             rect = Translate(rect);
 
-            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomLeftUV,bottomRightUV, t, color);
+            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, t, color);
         }
 
         public override Vector2i MeasureText(Flood.GUI.Font font, string text) 
