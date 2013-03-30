@@ -119,8 +119,10 @@ void TextureAtlas::resizeAtlas(uint newSize)
     std::map<ImageHandle, SubTexture>::iterator iter;
     for (iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter) {
         Vector2i rectSize;
-        rectSize.x = iter->second.rect.width;
-        rectSize.y = iter->second.rect.height;
+        int width = (iter->second.rightBottomUV.x - iter->second.leftTopUV.x)*width;
+        int height = (iter->second.rightBottomUV.y - iter->second.leftTopUV.y)*height;
+        rectSize.x = width;
+        rectSize.y = height;
         rectSizes.push_back(rectSize);
     }
 
@@ -173,9 +175,28 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
     }
 
     SubTexture subTexture;
-    subTexture.rect = newRect;
-    subTexture.isRotated = wasRotated;
-    
+    subTexture.atlas = this;
+
+    float bottom = (float)(newRect.y+newRect.height)/atlasSize;
+    float top = (float)newRect.y/atlasSize;
+    float right = (float)(newRect.x+newRect.width)/atlasSize;
+    float left = (float)newRect.x/atlasSize;
+
+    if(!wasRotated)
+    {
+        subTexture.leftTopUV = Vector2(left,top);
+        subTexture.rightTopUV = Vector2(right,top);
+        subTexture.rightBottomUV = Vector2(right,bottom);
+        subTexture.leftBottomUV = Vector2(left,bottom);
+    } 
+    else 
+    {
+        subTexture.rightTopUV = Vector2(left,top);
+        subTexture.rightBottomUV = Vector2(right,top);
+        subTexture.leftBottomUV = Vector2(right,bottom);
+        subTexture.leftTopUV = Vector2(left,bottom);
+    }
+
     imageSubTextures[newImageHandle] = subTexture;
 }
 

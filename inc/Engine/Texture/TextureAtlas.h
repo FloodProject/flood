@@ -13,9 +13,15 @@
 
 NAMESPACE_ENGINE_BEGIN
 
-struct SubTexture{
-    Rect rect;
-    bool isRotated;
+class TextureAtlas;
+
+struct SubTexture
+{
+    Vector2 leftTopUV;
+    Vector2 rightTopUV;
+    Vector2 rightBottomUV;
+    Vector2 leftBottomUV;
+    TextureAtlas* atlas;
 };
 
 
