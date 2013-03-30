@@ -41,28 +41,13 @@ void TrueTypeFont::init()
 
 //-----------------------------------//
 
-bool TrueTypeFont::createGlyph(int codepoint, int fontSize, Glyph& glyph) const
+bool TrueTypeFont::getGlyphInfo(int codepoint, int fontSize, Glyph& glyph) const
 {
-    int width,height;
-    byte* pixelBuffer;
-
     float scale = stbtt_ScaleForPixelHeight(&fontInfo->font,(float) fontSize);
 
     int ascent;
     stbtt_GetFontVMetrics(&fontInfo->font, &ascent,0,0);
     float baseLine = ascent * scale;
-
-    pixelBuffer = stbtt_GetCodepointBitmap(&fontInfo->font, 0, scale, codepoint, &width, &height, 0,0);
-
-    if (width == 0 || height == 0)
-    {
-        glyph.image = HandleInvalid;
-    } 
-    else 
-    {
-        glyph.image = ImageCreate(AllocatorGetHeap(), width, height,PixelFormat::Depth);
-        glyph.image.Resolve()->setBuffer(pixelBuffer, width*height);
-    }
 
     int x0,x1,y0,y1;
     stbtt_GetCodepointBitmapBoxSubpixel(&fontInfo->font, codepoint, scale,scale,0,0, &x0,&y0,&x1,&y1);
@@ -72,7 +57,31 @@ bool TrueTypeFont::createGlyph(int codepoint, int fontSize, Glyph& glyph) const
     stbtt_GetCodepointHMetrics(&fontInfo->font, codepoint, &advance, 0);
     glyph.advance = advance*scale;
 
+    glyph.width = x1-x0;
+    glyph.height = y1-y0;
+
     return true;
+}
+
+ImageHandle TrueTypeFont::createGlyphImage(int codepoint, int fontSize) const
+{
+    float scale = stbtt_ScaleForPixelHeight(&fontInfo->font,(float) fontSize);
+
+    int width,height;
+    byte* pixelBuffer;
+
+    pixelBuffer = stbtt_GetCodepointBitmap(&fontInfo->font, 0, scale, codepoint, &width, &height, 0,0);
+
+    if (width == 0 || height == 0)
+    {
+        return HandleInvalid;
+    } 
+    else 
+    {
+        auto image = ImageCreate(AllocatorGetHeap(), width, height,PixelFormat::Depth);
+        image.Resolve()->setBuffer(pixelBuffer, width*height);
+        return image;
+    }
 }
 
 Vector2 TrueTypeFont::getKerning(int codepoint1, int codepoint2, int fontSize) const

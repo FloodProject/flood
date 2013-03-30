@@ -15,6 +15,8 @@ namespace Flood
 {
     ref class Font;
     ref class FontInfo;
+    ref class Handle;
+    ref class Image;
     ref class TrueTypeFont;
     value struct Glyph;
     value struct Vector2;
@@ -36,7 +38,8 @@ namespace Flood
             void set(System::Collections::Generic::List<unsigned char>^);
         }
         void Init();
-        bool CreateGlyph(int codepoint, int size, Flood::Glyph glyph);
+        bool GetGlyphInfo(int codepoint, int size, Flood::Glyph glyph);
+        Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size);
         Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
     };
 }

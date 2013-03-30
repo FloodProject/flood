@@ -206,15 +206,11 @@ namespace Flood.Editor.Client
                 var c = text[i];
 
                 Glyph glyph;
-                SubTexture subTexture;
-                if(!glyphCache.TryGetGlyph(font, c, out glyph, out subTexture))
+                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
+                if (!foundGlyph)
                 {
-                    var foundGlyph = ttfont.CreateGlyph(c, font.Size, out glyph);
-                    if (!foundGlyph)
-                    {
-                        Log.Warn("Glyph not found for character " + c);
-                        continue;
-                    }
+                    Log.Warn("Glyph not found for character " + c);
+                    continue;
                 }
 
                 var kernX = 0;
@@ -232,29 +228,34 @@ namespace Flood.Editor.Client
             for(var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
+
                 Glyph glyph;
-                SubTexture subTexture;
-
-                if(!glyphCache.TryGetGlyph(font, c, out glyph, out subTexture))
+                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
+                if (!foundGlyph)
                 {
-                    var foundGlyph = ttfont.CreateGlyph(c, font.Size, out glyph);
-                    if (!foundGlyph)
+                    Log.Warn("Glyph not found for character " + c);
+                    continue;
+                }
+
+                bool drawSubtexture = true;
+                SubTexture subTexture;
+                if(!glyphCache.TryGetGlyph(font, c, out subTexture))
+                {
+                    var imageHandle = ttfont.CreateGlyphImage(c, font.Size);
+                    if (imageHandle.Id == ResourceHandle<Resource>.Invalid)
                     {
-                        Log.Warn("Glyph not found for character " + c);
-                        continue;
+                        drawSubtexture = false;
                     }
-
-                    if (glyph.Image.Id != ResourceHandle<Resource>.Invalid)
+                    else
                     {
-
-                        var subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                        var subTextureFound = textureAtlas.GetImageSubTexture(imageHandle, out subTexture);
                         if (!subTextureFound)
                         {
-                            textureAtlas.AddImage(glyph.Image);
-                            subTextureFound = textureAtlas.GetImageSubTexture(glyph.Image, out subTexture);
+                            textureAtlas.AddImage(imageHandle);
+                            subTextureFound = textureAtlas.GetImageSubTexture(imageHandle, out subTexture);
                             if (subTextureFound)
                             {
-                                glyphCache.AddGlyph(font, c, glyph, subTexture);
+                                glyphCache.AddGlyph(font, c, subTexture);
                             }
                             else
                             {
@@ -265,19 +266,20 @@ namespace Flood.Editor.Client
                     }
                 }
 
-                var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
-                Image atlasImage = atlasImageHandle.Resolve();
+                if (drawSubtexture)
+                {
+                    var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
+                    Image atlasImage = atlasImageHandle.Resolve();
 
-                var texture = new Texture();
-                texture.SetImage(atlasImageHandle);
+                    var texture = new Texture();
+                    texture.SetImage(atlasImageHandle);
 
-                Image glyphImage = glyph.Image.Resolve();
+                    var renderRect = new Rect(position.X, (int)(position.Y + glyph.BaseLineOffset), 
+                        (int)glyph.Width, (int)glyph.Height);
 
-                var renderRect = new Rect(position.X, (int)(position.Y + glyph.BaseLineOffset), 
-                    (int)glyphImage.GetWidth(), (int)glyphImage.GetHeight());
-
-                renderer.DrawTexturedRect(texture,renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV);
-                texture.Dispose();
+                    renderer.DrawTexturedRect(texture,renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV);
+                    texture.Dispose();
+                }
 
                 if (i < text.Length-1){
                     var kern = ttfont.GetKerning(text[i],text[i+1], font.Size);

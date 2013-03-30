@@ -20,7 +20,8 @@ Flood::Glyph::Glyph(::Glyph* native)
 {
     BaseLineOffset = native->baseLineOffset;
     Advance = native->advance;
-    Image = Flood::ResourceHandle<Flood::Image^>(native->image.id);
+    Width = native->width;
+    Height = native->height;
 }
 
 Flood::Glyph::Glyph(System::IntPtr native)
@@ -28,7 +29,8 @@ Flood::Glyph::Glyph(System::IntPtr native)
     auto __native = (::Glyph*)native.ToPointer();
     BaseLineOffset = __native->baseLineOffset;
     Advance = __native->advance;
-    Image = Flood::ResourceHandle<Flood::Image^>(__native->image.id);
+    Width = __native->width;
+    Height = __native->height;
 }
 
 Flood::Font::Font(::Font* native)
@@ -42,12 +44,18 @@ Flood::Font::Font(System::IntPtr native)
     auto __native = (::Font*)native.ToPointer();
 }
 
-bool Flood::Font::CreateGlyph(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
+bool Flood::Font::GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
     ::Glyph arg2;
-    auto ret = ((::Font*)NativePtr)->createGlyph(codepoint, size, arg2);
+    auto ret = ((::Font*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
     glyph = Flood::Glyph((::Glyph*)&arg2);
     return ret;
+}
+
+Flood::ResourceHandle<Flood::Image^> Flood::Font::CreateGlyphImage(int codepoint, int size)
+{
+    auto ret = ((::Font*)NativePtr)->createGlyphImage(codepoint, size);
+    return Flood::ResourceHandle<Flood::Image^>(ret.id);
 }
 
 Flood::Vector2 Flood::Font::GetKerning(int codepoint1, int codepoint2, int fontSize)

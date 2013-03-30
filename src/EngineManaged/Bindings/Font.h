@@ -34,7 +34,8 @@ namespace Flood
         Glyph(System::IntPtr native);
         float BaseLineOffset;
         float Advance;
-        Flood::ResourceHandle<Flood::Image^> Image;
+        float Width;
+        float Height;
     };
 
     /// <summary>
@@ -57,7 +58,8 @@ namespace Flood
             System::String^ get();
             void set(System::String^);
         }
-        bool CreateGlyph(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
+        bool GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
+        Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size);
         Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
         System::String^ GetName();
         void SetName(System::String^ v);

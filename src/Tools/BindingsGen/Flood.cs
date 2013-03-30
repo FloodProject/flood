@@ -124,7 +124,7 @@ namespace Flood
             lib.SetClassAsValueType("RectSize");
             lib.SetClassAsValueType("SubTexture");
             lib.SetMethodParameterUsage("TextureAtlas", "getImageSubTexture", 2, ParameterUsage.Out);
-            lib.SetMethodParameterUsage("Font", "createGlyph", 3, ParameterUsage.Out);
+            lib.SetMethodParameterUsage("Font", "getGlyphInfo", 3, ParameterUsage.Out);
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");

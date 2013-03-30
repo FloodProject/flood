@@ -26,7 +26,8 @@ struct Glyph
 {
     float baseLineOffset;
     float advance;
-    ImageHandle image;
+    float width;
+    float height;
 };
 
 //-----------------------------------//
@@ -51,7 +52,8 @@ class API_ENGINE Font : public Resource
 
 public:
 
-	virtual bool createGlyph(int codepoint, int size,  Glyph& glyph) const = 0;
+	virtual bool getGlyphInfo(int codepoint, int size,  Glyph& glyph) const = 0;
+	virtual ImageHandle createGlyphImage(int codepoint, int size) const = 0;
 
 	virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const = 0;
 
