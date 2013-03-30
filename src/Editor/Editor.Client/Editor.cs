@@ -40,7 +40,7 @@ namespace Flood.Editor.Client
             GuiRenderer = new GwenRenderer();
 
             MainWindow = new MainWindow();
-            MainWindow.Init(GuiRenderer, "DefaultSkin.png");
+            MainWindow.Init(GuiRenderer, "DefaultSkin.png",new Flood.GUI.Font("Vera.ttf",16));
 
             GuiInput = new GwenInput(Engine.GetInputManager());
             GuiInput.Initialize(MainWindow.Canvas);

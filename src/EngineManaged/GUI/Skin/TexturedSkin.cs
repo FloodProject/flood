@@ -281,8 +281,9 @@ namespace Flood.GUI.Skins
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
         /// <param name="textureName">Name of the skin texture map.</param>
-        public TexturedSkin(Renderers.Renderer renderer, String textureName)
-            : base(renderer)
+        /// <param name="defaultFont"> </param>
+        public TexturedSkin(Renderers.Renderer renderer, String textureName, Font defaultFont) 
+            : base(renderer, defaultFont)
         {
             m_Texture = new Texture();
             m_Texture.LoadImage(textureName);

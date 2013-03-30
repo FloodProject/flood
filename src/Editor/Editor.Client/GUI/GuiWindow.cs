@@ -39,10 +39,10 @@ namespace Flood.Editor.Client.Gui
             Renderer.Dispose();
         }
 
-        public void Init(Renderer renderer, string textureName)
+        public void Init(Renderer renderer, string textureName, Flood.GUI.Font defaultFont)
         {
             Renderer = renderer;
-            Skin = new TexturedSkin(renderer, textureName);
+            Skin = new TexturedSkin(renderer, textureName, defaultFont);
             Canvas = new Canvas(Skin);
 
             Init();

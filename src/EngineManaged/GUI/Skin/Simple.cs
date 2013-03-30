@@ -24,7 +24,7 @@ namespace Flood.GUI.Skins
         private readonly Color m_colToolTipBorder;
         private readonly Color m_colModal;
 
-        public Simple(Renderers.Renderer renderer) : base(renderer)
+        public Simple(Renderers.Renderer renderer, Font defaultFont) : base(renderer,defaultFont)
         {
             m_colBorderColor = new Color(80, 80, 80, 255);
             //m_colBG = new Color( 248, 248, 248);

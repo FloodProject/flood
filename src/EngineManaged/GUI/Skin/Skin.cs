@@ -38,9 +38,9 @@ namespace Flood.GUI.Skins
         /// Initializes a new instance of the <see cref="Skin"/> class.
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
-        protected Skin(Renderers.Renderer renderer)
+        protected Skin(Renderers.Renderer renderer, Font defaultFont)
         {
-            m_DefaultFont = new Font(renderer);
+            m_DefaultFont = defaultFont;
             m_Renderer = renderer;
         }
 
@@ -81,8 +81,7 @@ namespace Flood.GUI.Skins
         /// <param name="size">Font size.</param>
         public virtual void SetDefaultFont(String faceName, int size = 10)
         {
-            m_DefaultFont.FaceName = faceName;
-            m_DefaultFont.Size = size;
+            m_DefaultFont = new Font(faceName, size);
         }
 
         #region UI elements
