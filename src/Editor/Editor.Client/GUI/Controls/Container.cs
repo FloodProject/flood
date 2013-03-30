@@ -13,7 +13,7 @@ namespace Flood.Editor.Client.GUI
 
         public Container(Control parent) : base(parent)
         {
-            if (PaneManager.FocusedContainer==null)
+            if (PaneManager.FocusedContainer == null)
                 PaneManager.FocusedContainer = this;
         }
 
@@ -88,17 +88,17 @@ namespace Flood.Editor.Client.GUI
                 for (var childPIndex = childContainer.Panels.Count - 1; childPIndex > 0  ; childPIndex--)
                 {
                     var childPanel = childContainer.Panels[childPIndex];
-                    parentContainer.InsertPanel(childPanel,childContainer,false);
+                    parentContainer.InsertPanel(childPanel, childContainer, false);
                     
                     var childPanelSize = (childContainer.IsHorizontal)? childPanel.Width : childPanel.Height;
                     
                     var rightRPos = 1.0f;
                     if(parentContainer.Splitters.Count > parentPIndex + 1)
-                        rightRPos = parentContainer.Splitters[parentPIndex+1].RelativePosition;
+                        rightRPos = parentContainer.Splitters[parentPIndex + 1].RelativePosition;
 
-                    var right = rightRPos*parentContainerSize;
+                    var right = rightRPos * parentContainerSize;
                     var leftSplitter = parentContainer.Splitters[parentPIndex];
-                    leftSplitter.RelativePosition = (right - childPanelSize)/parentContainerSize;
+                    leftSplitter.RelativePosition = (right - childPanelSize) / parentContainerSize;
                 }
 
                 ReplaceContainerByPaneGroup(childContainer);
