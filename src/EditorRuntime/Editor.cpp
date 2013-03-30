@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* Flood Project © (2008-201x)
+* Flood Project ï¿½ (2008-201x)
 * Licensed under the simplified BSD license. All rights reserved.
 *
 ************************************************************************/
@@ -52,7 +52,7 @@ bool EditorApp::OnInit()
 
 //-----------------------------------//
 
-static EditorFrame* gs_EditorInstance = nullptr;;
+static EditorFrame* gs_EditorInstance = nullptr;
 EditorFrame& GetEditor() { return *gs_EditorInstance; }
 
 EditorFrame::EditorFrame(const wxString& title)
