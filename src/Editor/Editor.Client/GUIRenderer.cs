@@ -49,15 +49,16 @@ namespace Flood.Editor.Client
 
         public void AddRectangle(Rect rect, Color color)
         {
-            AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, new Texture(), color);
+            var imageHandle = new ResourceHandle<Image>(0);
+            AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, imageHandle, color);
         }
 
         public void AddRectangle(Rect rect, 
             Vector2 topLeftUV, Vector2 topRightUV,Vector2 bottomRightUV, Vector2 bottomLeftUV,
-            Texture texture, Color color)
+            ResourceHandle<Image> imageHandle, Color color)
         {
 
-            var batchInfo = GetCreateBatchInfo(texture.GetImage());
+            var batchInfo = GetCreateBatchInfo(imageHandle);
             batchInfo.Ranges.Add((int) gb.GetNumVertices());
 
             var top = Math.Max(rect.GetBottom(), rect.GetTop());
@@ -413,14 +414,14 @@ namespace Flood.Editor.Client
                 }
             }
 
-            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), tex, color);
+            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), tex.GetImage(), color);
         }
 
         public void DrawTexturedRect(Texture t, Rect rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
         {
             rect = Translate(rect);
 
-            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, t, color);
+            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, t.GetImage(), color);
         }
 
         public override Vector2i MeasureText(Flood.GUI.Font font, string text) 
