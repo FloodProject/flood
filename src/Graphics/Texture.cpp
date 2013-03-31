@@ -32,8 +32,8 @@ Texture::~Texture()
 
 void Texture::allocate(const Vector2i& size, PixelFormat pixelFormat)
 {
-	width = (uint16) size.x;
-	height = (uint16) size.y;
+	width = (size.x >= 0) ? size.x : 0;
+	height = (size.y >= 0) ? size.y : 0;
 	format = pixelFormat;
 }
 
@@ -55,8 +55,8 @@ void Texture::setImage( const ImageHandle& imageHandle )
         return;
     }
 
-	width = (uint16) image->getWidth();
-	height = (uint16) image->getHeight();
+	width = image->getWidth();
+	height = image->getHeight();
 	format = image->getPixelFormat();
 }
 
@@ -70,9 +70,9 @@ Image* Texture::readImage() const
 
 //-----------------------------------//
 
-uint Texture::getExpectedSize() const
+int32 Texture::getExpectedSize() const
 {
-	uint size = width * height;
+	int32 size = width * height;
 
 	switch( format )
 	{

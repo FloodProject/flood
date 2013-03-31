@@ -58,13 +58,13 @@ class API_GRAPHICS Image : public Resource
 public:
 
 	Image();
-	Image(uint32 width, uint32 height, PixelFormat format);
+	Image(int32 width, int32 height, PixelFormat format);
 
 	// Gets/sets the width of the image.
-	ACCESSOR(Width, uint32, width)
+	ACCESSOR(Width, int32, width)
 	
 	// Gets/sets the height of the image.
-	ACCESSOR(Height, uint32, height)
+	ACCESSOR(Height, int32, height)
 
 	// Gets/sets the pixel format of the image.
 	ACCESSOR(PixelFormat, PixelFormat, format)
@@ -79,16 +79,16 @@ public:
 	std::vector<uint8>& getBuffer() { return buffer; }
 
     // Sets the buffer containing the image data.
-	void setBuffer(byte* data, uint size);
+	void setBuffer(byte* data, int32 size);
 
     // Copies an image to the buffer containing the image data.
 	void setBuffer(Image* image, Vector2i offset  = Vector2i(0,0));
 
     // Gets the number of bytes per pixel.
-	uint32 getPixelSize();
+	int32 getPixelSize();
 
     // Gets the buffer number of bytes.
-	uint32 getSize();
+	int32 getSize();
 
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
@@ -100,7 +100,7 @@ public:
 	void log() const;
 
 	// Creates the image with the given details.
-	void create(uint32 width, uint32 height, PixelFormat format);
+	void create(int32 width, int32 height, PixelFormat format);
 
     // Image timestamp, incremented each time the image is modified.
     GETTER(Timestamp, uint32, timestamp)
@@ -110,10 +110,10 @@ private:
 	uint32 timestamp;
 
     // Image width.
-	uint32 width;
+	int32 width;
 
 	// Image height.
-	uint32 height;
+	int32 height;
 
 	// Pixel format.
 	PixelFormat format;
@@ -126,7 +126,7 @@ private:
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Image );
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Image );
 
-API_GRAPHICS ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat);
+API_GRAPHICS ImageHandle ImageCreate(Allocator*, int32 width, int32 height, PixelFormat);
 
 struct Stream;
 

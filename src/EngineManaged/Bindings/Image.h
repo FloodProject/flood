@@ -54,26 +54,27 @@ namespace Flood
         Image(::Image* native);
         Image(System::IntPtr native);
         Image();
-        Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        unsigned int GetWidth();
-        void SetWidth(unsigned int v);
-        unsigned int GetHeight();
-        void SetHeight(unsigned int v);
+        Image(int width, int height, Flood::PixelFormat format);
+        int GetWidth();
+        void SetWidth(int v);
+        int GetHeight();
+        void SetHeight(int v);
         Flood::PixelFormat GetPixelFormat();
         void SetPixelFormat(Flood::PixelFormat v);
         System::Collections::Generic::List<unsigned char>^ GetBuffer();
         void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
         bool IsCompressed();
-        void SetBuffer(System::IntPtr data, unsigned int size);
+        System::Collections::Generic::List<unsigned char>^ GetBuffer();
+        void SetBuffer(System::IntPtr data, int size);
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
-        unsigned int GetPixelSize();
-        unsigned int GetSize();
+        int GetPixelSize();
+        int GetSize();
         Flood::ResourceGroup GetResourceGroup();
         void SetColor(Flood::Color color);
         void Log();
-        void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
+        void Create(int width, int height, Flood::PixelFormat format);
         unsigned int GetTimestamp();
-        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2);
+        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _1, int width, int height, Flood::PixelFormat _2);
     };
 
     public ref class ImageWriter
