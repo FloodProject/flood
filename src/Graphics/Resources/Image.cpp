@@ -58,11 +58,7 @@ Image::Image()
 
 //-----------------------------------//
 
-<<<<<<< HEAD
 Image::Image(int32 _width, int32 _height, PixelFormat _format)
-=======
-Image::Image(int _width, int _height, PixelFormat _format)
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
@@ -73,11 +69,7 @@ Image::Image(int _width, int _height, PixelFormat _format)
 
 //-----------------------------------//
 
-<<<<<<< HEAD
 int32 Image::getPixelSize()
-=======
-int Image::getPixelSize()
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 {
     switch(format)
     {
@@ -98,22 +90,14 @@ int Image::getPixelSize()
 
 //-----------------------------------//
 
-<<<<<<< HEAD
 int32 Image::getSize()
-=======
-int Image::getSize()
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 {
     return width * height * getPixelSize();
 }
 
 //-----------------------------------//
 
-<<<<<<< HEAD
 void Image::create(int32 _width, int32 _height, PixelFormat _format)
-=======
-void Image::create(int _width, int _height, PixelFormat _format)
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 {
 	this->width  = (_width >= 0) ? _width : 0;
 	this->height = (_height >= 0) ? _height : 0;
@@ -124,15 +108,9 @@ void Image::create(int _width, int _height, PixelFormat _format)
 
 //-----------------------------------//
 
-<<<<<<< HEAD
 void Image::setBuffer(byte* data, int32 size)
 {
     int32 expectedSize = getSize();
-=======
-void Image::setBuffer(byte* data, int size)
-{
-    int expectedSize = getSize();
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
     assert(size == expectedSize);
 
     if(buffer.size() != expectedSize)
@@ -151,19 +129,11 @@ void Image::setBuffer(Image* image, Vector2i offset)
     assert(offset.y + image->height <= height);
     assert(image->format == this->format);
 
-<<<<<<< HEAD
     int32 expectedSize = getSize();
     if (buffer.size() != expectedSize)
         buffer.resize(expectedSize);
 
     int32 pixelSize = getPixelSize();
-=======
-    int expectedSize = getSize();
-    if (buffer.size() != expectedSize)
-        buffer.resize(expectedSize);
-
-    int pixelSize = getPixelSize();
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
     auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
     auto origData = image->buffer.data();
     for (int i = 0; i < image->height; ++i)

@@ -37,13 +37,8 @@ Flood::Image::Image()
 Flood::Image::Image(int width, int height, Flood::PixelFormat format)
     : Flood::Resource(nullptr)
 {
-<<<<<<< HEAD
     auto arg0 = (int32)width;
     auto arg1 = (int32)height;
-=======
-    auto arg0 = width;
-    auto arg1 = height;
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
     auto arg2 = (::PixelFormat)format;
     NativePtr = new ::Image(arg0, arg1, arg2);
 }
@@ -114,7 +109,6 @@ bool Flood::Image::IsCompressed()
     return ret;
 }
 
-<<<<<<< HEAD
 System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer()
 {
     auto &ret = ((::Image*)NativePtr)->getBuffer();
@@ -131,12 +125,6 @@ void Flood::Image::SetBuffer(System::IntPtr data, int size)
 {
     auto arg0 = (uint8*)data.ToPointer();
     auto arg1 = (int32)size;
-=======
-void Flood::Image::SetBuffer(System::IntPtr data, int size)
-{
-    auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = size;
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
 
@@ -186,13 +174,8 @@ void Flood::Image::Log()
 
 void Flood::Image::Create(int width, int height, Flood::PixelFormat format)
 {
-<<<<<<< HEAD
     auto arg0 = (int32)width;
     auto arg1 = (int32)height;
-=======
-    auto arg0 = width;
-    auto arg1 = height;
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
     auto arg2 = (::PixelFormat)format;
     ((::Image*)NativePtr)->create(arg0, arg1, arg2);
 }
@@ -206,13 +189,10 @@ unsigned int Flood::Image::GetTimestamp()
 Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _1, int width, int height, Flood::PixelFormat _2)
 {
     auto arg0 = (::Allocator*)_1->NativePtr;
-<<<<<<< HEAD
-=======
-    auto arg1 = width;
-    auto arg2 = height;
->>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
+    auto arg1 = (int32)width;
+    auto arg2 = (int32)height;
     auto arg3 = (::PixelFormat)_2;
-    auto ret = ::ImageCreate(arg0, width, height, arg3);
+    auto ret = ::ImageCreate(arg0, arg1, arg2, arg3);
     return Flood::ResourceHandle<Flood::Image^>(ret.id);
 }
 
