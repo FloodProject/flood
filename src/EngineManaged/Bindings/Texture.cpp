@@ -71,7 +71,7 @@ Flood::Image^ Flood::Texture::ReadImage()
     return gcnew Flood::Image((::Image*)ret);
 }
 
-unsigned int Flood::Texture::GetExpectedSize()
+int Flood::Texture::GetExpectedSize()
 {
     auto ret = ((::Texture*)NativePtr)->getExpectedSize();
     return ret;
@@ -108,24 +108,24 @@ void Flood::Texture::Target::set(Flood::TextureTarget value)
     ((::Texture*)NativePtr)->target = (::TextureTarget)value;
 }
 
-unsigned int Flood::Texture::Width::get()
+int Flood::Texture::Width::get()
 {
     return ((::Texture*)NativePtr)->width;
 }
 
-void Flood::Texture::Width::set(unsigned int value)
+void Flood::Texture::Width::set(int value)
 {
-    ((::Texture*)NativePtr)->width = (uint32)value;
+    ((::Texture*)NativePtr)->width = value;
 }
 
-unsigned int Flood::Texture::Height::get()
+int Flood::Texture::Height::get()
 {
     return ((::Texture*)NativePtr)->height;
 }
 
-void Flood::Texture::Height::set(unsigned int value)
+void Flood::Texture::Height::set(int value)
 {
-    ((::Texture*)NativePtr)->height = (uint32)value;
+    ((::Texture*)NativePtr)->height = value;
 }
 
 Flood::PixelFormat Flood::Texture::Format::get()

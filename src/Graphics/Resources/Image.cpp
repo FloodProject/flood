@@ -58,7 +58,7 @@ Image::Image()
 
 //-----------------------------------//
 
-Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
+Image::Image(int _width, int _height, PixelFormat _format)
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
@@ -69,7 +69,7 @@ Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
 
 //-----------------------------------//
 
-uint32 Image::getPixelSize()
+int Image::getPixelSize()
 {
     switch(format)
     {
@@ -90,17 +90,17 @@ uint32 Image::getPixelSize()
 
 //-----------------------------------//
 
-uint32 Image::getSize()
+int Image::getSize()
 {
-    return width*height*getPixelSize();
+    return width * height * getPixelSize();
 }
 
 //-----------------------------------//
 
-void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
+void Image::create(int _width, int _height, PixelFormat _format)
 {
-	this->width  = _width;
-	this->height = _height;
+	this->width  = (_width >= 0) ? _width : 0;
+	this->height = (_height >= 0) ? _height : 0;
 	this->format = _format;
 
     buffer.resize(getSize());
@@ -108,9 +108,9 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 
 //-----------------------------------//
 
-void Image::setBuffer(byte* data, uint size)
+void Image::setBuffer(byte* data, int size)
 {
-    uint32 expectedSize = getSize();
+    int expectedSize = getSize();
     assert(size == expectedSize);
 
     if(buffer.size() != expectedSize)
@@ -129,11 +129,11 @@ void Image::setBuffer(Image* image, Vector2i offset)
     assert(offset.y + image->height <= height);
     assert(image->format == this->format);
 
-    uint32 expectedSize = getSize();
+    int expectedSize = getSize();
     if (buffer.size() != expectedSize)
         buffer.resize(expectedSize);
 
-    uint32 pixelSize = getPixelSize();
+    int pixelSize = getPixelSize();
     auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
     auto origData = image->buffer.data();
     for (int i = 0; i < image->height; ++i)
