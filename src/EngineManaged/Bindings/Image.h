@@ -64,6 +64,7 @@ namespace Flood
         System::Collections::Generic::List<unsigned char>^ GetBuffer();
         void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
         bool IsCompressed();
+        System::Collections::Generic::List<unsigned char>^ GetBuffer();
         void SetBuffer(System::IntPtr data, int size);
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
         int GetPixelSize();

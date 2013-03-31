@@ -39,7 +39,7 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-ImageHandle ImageCreate(Allocator* alloc, uint32 width, uint32 height, PixelFormat format)
+ImageHandle ImageCreate(Allocator* alloc, int32 width, int32 height, PixelFormat format)
 {
 	Image* image = Allocate(alloc, Image);
 	image->create(width, height, format);
@@ -58,7 +58,7 @@ Image::Image()
 
 //-----------------------------------//
 
-Image::Image(int _width, int _height, PixelFormat _format)
+Image::Image(int32 _width, int32 _height, PixelFormat _format)
 	: width(0)
 	, height(0)
 	, format(PixelFormat::Unknown)
@@ -69,7 +69,7 @@ Image::Image(int _width, int _height, PixelFormat _format)
 
 //-----------------------------------//
 
-int Image::getPixelSize()
+int32 Image::getPixelSize()
 {
     switch(format)
     {
@@ -90,14 +90,14 @@ int Image::getPixelSize()
 
 //-----------------------------------//
 
-int Image::getSize()
+int32 Image::getSize()
 {
     return width * height * getPixelSize();
 }
 
 //-----------------------------------//
 
-void Image::create(int _width, int _height, PixelFormat _format)
+void Image::create(int32 _width, int32 _height, PixelFormat _format)
 {
 	this->width  = (_width >= 0) ? _width : 0;
 	this->height = (_height >= 0) ? _height : 0;
@@ -108,9 +108,9 @@ void Image::create(int _width, int _height, PixelFormat _format)
 
 //-----------------------------------//
 
-void Image::setBuffer(byte* data, int size)
+void Image::setBuffer(byte* data, int32 size)
 {
-    int expectedSize = getSize();
+    int32 expectedSize = getSize();
     assert(size == expectedSize);
 
     if(buffer.size() != expectedSize)
@@ -129,11 +129,11 @@ void Image::setBuffer(Image* image, Vector2i offset)
     assert(offset.y + image->height <= height);
     assert(image->format == this->format);
 
-    int expectedSize = getSize();
+    int32 expectedSize = getSize();
     if (buffer.size() != expectedSize)
         buffer.resize(expectedSize);
 
-    int pixelSize = getPixelSize();
+    int32 pixelSize = getPixelSize();
     auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
     auto origData = image->buffer.data();
     for (int i = 0; i < image->height; ++i)

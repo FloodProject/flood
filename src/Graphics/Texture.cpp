@@ -70,9 +70,9 @@ Image* Texture::readImage() const
 
 //-----------------------------------//
 
-int Texture::getExpectedSize() const
+int32 Texture::getExpectedSize() const
 {
-	int size = width * height;
+	int32 size = width * height;
 
 	switch( format )
 	{

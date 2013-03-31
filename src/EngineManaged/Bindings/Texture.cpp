@@ -115,7 +115,7 @@ int Flood::Texture::Width::get()
 
 void Flood::Texture::Width::set(int value)
 {
-    ((::Texture*)NativePtr)->width = value;
+    ((::Texture*)NativePtr)->width = (int32)value;
 }
 
 int Flood::Texture::Height::get()
@@ -125,7 +125,7 @@ int Flood::Texture::Height::get()
 
 void Flood::Texture::Height::set(int value)
 {
-    ((::Texture*)NativePtr)->height = value;
+    ((::Texture*)NativePtr)->height = (int32)value;
 }
 
 Flood::PixelFormat Flood::Texture::Format::get()

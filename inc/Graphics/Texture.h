@@ -76,7 +76,7 @@ public:
 	Image* readImage() const;
 
 	// Gets the expected size of the image.
-	int getExpectedSize() const;
+	int32 getExpectedSize() const;
 
     bool isUploaded() const;
 
@@ -85,8 +85,8 @@ public:
 	uint32 id;
 	TextureTarget target;
 	
-	int width;
-	int height;
+	int32 width;
+	int32 height;
 	PixelFormat format;
 	float anisotropicFilter;
 
