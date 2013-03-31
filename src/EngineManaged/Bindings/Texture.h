@@ -76,15 +76,15 @@ namespace Flood
             Flood::TextureTarget get();
             void set(Flood::TextureTarget);
         }
-        property unsigned int Width
+        property int Width
         {
-            unsigned int get();
-            void set(unsigned int);
+            int get();
+            void set(int);
         }
-        property unsigned int Height
+        property int Height
         {
-            unsigned int get();
-            void set(unsigned int);
+            int get();
+            void set(int);
         }
         property Flood::PixelFormat Format
         {
@@ -102,7 +102,7 @@ namespace Flood
         Flood::ResourceHandle<Flood::Image^> GetImage();
         void SetImage(Flood::ResourceHandle<Flood::Image^> image);
         Flood::Image^ ReadImage();
-        unsigned int GetExpectedSize();
+        int GetExpectedSize();
         bool IsUploaded();
         void SetUploaded();
     };
