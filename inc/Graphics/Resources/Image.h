@@ -58,6 +58,7 @@ class API_GRAPHICS Image : public Resource
 public:
 
 	Image();
+<<<<<<< HEAD
 	Image(int32 width, int32 height, PixelFormat format);
 
 	// Gets/sets the width of the image.
@@ -65,6 +66,15 @@ public:
 	
 	// Gets/sets the height of the image.
 	ACCESSOR(Height, int32, height)
+=======
+	Image(int width, int height, PixelFormat format);
+
+	// Gets/sets the width of the image.
+	ACCESSOR(Width, int, width)
+	
+	// Gets/sets the height of the image.
+	ACCESSOR(Height, int, height)
+>>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 
 	// Gets/sets the pixel format of the image.
 	ACCESSOR(PixelFormat, PixelFormat, format)
@@ -79,16 +89,27 @@ public:
 	std::vector<uint8>& getBuffer() { return buffer; }
 
     // Sets the buffer containing the image data.
+<<<<<<< HEAD
 	void setBuffer(byte* data, int32 size);
+=======
+	void setBuffer(byte* data, int size);
+>>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 
     // Copies an image to the buffer containing the image data.
 	void setBuffer(Image* image, Vector2i offset  = Vector2i(0,0));
 
     // Gets the number of bytes per pixel.
+<<<<<<< HEAD
 	int32 getPixelSize();
 
     // Gets the buffer number of bytes.
 	int32 getSize();
+=======
+	int getPixelSize();
+
+    // Gets the buffer number of bytes.
+	int getSize();
+>>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Images)
@@ -100,7 +121,11 @@ public:
 	void log() const;
 
 	// Creates the image with the given details.
+<<<<<<< HEAD
 	void create(int32 width, int32 height, PixelFormat format);
+=======
+	void create(int width, int height, PixelFormat format);
+>>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 
     // Image timestamp, incremented each time the image is modified.
     GETTER(Timestamp, uint32, timestamp)
@@ -110,10 +135,17 @@ private:
 	uint32 timestamp;
 
     // Image width.
+<<<<<<< HEAD
 	int32 width;
 
 	// Image height.
 	int32 height;
+=======
+	int width;
+
+	// Image height.
+	int height;
+>>>>>>> 15cb56c21ae8cc1ccee88b8e378337026546d87a
 
 	// Pixel format.
 	PixelFormat format;
