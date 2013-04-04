@@ -122,6 +122,12 @@ Flood::Mouse::Mouse(System::IntPtr native)
     auto __native = (::Mouse*)native.ToPointer();
 }
 
+Flood::Mouse::Mouse()
+    : Flood::InputDevice(nullptr)
+{
+    NativePtr = new ::Mouse();
+}
+
 bool Flood::Mouse::IsButtonPressed(Flood::MouseButton button)
 {
     auto arg0 = (::MouseButton)button;

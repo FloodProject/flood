@@ -85,6 +85,7 @@ namespace Flood
     public:
         Mouse(::Mouse* native);
         Mouse(System::IntPtr native);
+        Mouse();
     private:
         delegate void _MouseMoveDelegate(const ::MouseMoveEvent& _0);
         _MouseMoveDelegate^ _MouseMoveDelegateInstance;

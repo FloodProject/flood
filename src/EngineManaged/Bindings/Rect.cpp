@@ -41,14 +41,22 @@ Flood::Rect::Rect(int x, int y, int width, int height)
 
 bool Flood::Rect::IsContainedIn(Flood::Rect rect)
 {
-    auto this0 = (::Rect*) 0;
+    auto _this0 = ::Rect();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.width = (*this).Width;
+    _this0.height = (*this).Height;
     auto _marshal0 = ::Rect();
     _marshal0.x = rect.X;
     _marshal0.y = rect.Y;
     _marshal0.width = rect.Width;
     _marshal0.height = rect.Height;
     auto arg0 = _marshal0;
-    auto ret = this0->isContainedIn(arg0);
+    auto ret = _this0.isContainedIn(arg0);
+    X = _this0.x;
+    Y = _this0.y;
+    Width = _this0.width;
+    Height = _this0.height;
     return ret;
 }
 

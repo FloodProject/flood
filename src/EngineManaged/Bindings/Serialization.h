@@ -38,6 +38,7 @@ namespace Flood
 
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
+        ReflectionHandleContext();
         property Flood::ReflectionDeserializeHandleFn^ Deserialize
         {
             Flood::ReflectionDeserializeHandleFn^ get();

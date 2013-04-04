@@ -87,6 +87,7 @@ namespace Flood
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
+        VertexDeclaration();
         property System::Collections::Generic::List<Flood::VertexElement>^ Decls
         {
             System::Collections::Generic::List<Flood::VertexElement>^ get();

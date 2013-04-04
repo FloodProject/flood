@@ -38,8 +38,12 @@ Flood::Settings::Settings(unsigned short width, unsigned short height)
 
 Flood::Vector2i Flood::Settings::GetSize()
 {
-    auto this0 = (::Settings*) 0;
-    auto ret = this0->getSize();
+    auto _this0 = ::Settings();
+    _this0.width = (uint16)(*this).Width;
+    _this0.height = (uint16)(*this).Height;
+    auto ret = _this0.getSize();
+    Width = _this0.width;
+    Height = _this0.height;
     return Flood::Vector2i((::Vector2i*)&ret);
 }
 

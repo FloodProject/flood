@@ -94,13 +94,3 @@ void Flood::Resource::Status::set(Flood::ResourceStatus value)
     ((::Resource*)NativePtr)->status = (::ResourceStatus)value;
 }
 
-Flood::ResourceStream^ Flood::Resource::Stream::get()
-{
-    return gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);
-}
-
-void Flood::Resource::Stream::set(Flood::ResourceStream^ value)
-{
-    ((::Resource*)NativePtr)->stream = (::ResourceStream*)value->NativePtr;
-}
-

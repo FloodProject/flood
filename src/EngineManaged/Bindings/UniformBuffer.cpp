@@ -45,6 +45,11 @@ Flood::UniformBuffer::UniformBuffer(System::IntPtr native)
     NativePtr = __native;
 }
 
+Flood::UniformBuffer::UniformBuffer()
+{
+    NativePtr = new ::UniformBuffer();
+}
+
 Flood::UniformBufferElement Flood::UniformBuffer::GetElement(System::String^ name, unsigned int size)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(name);

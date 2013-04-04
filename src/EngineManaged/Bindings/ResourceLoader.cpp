@@ -55,8 +55,28 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 
 void Flood::ResourceLoadOptions::AddOption(int key, int value)
 {
-    auto this0 = (::ResourceLoadOptions*) 0;
-    this0->addOption(key, value);
+    auto _this0 = ::ResourceLoadOptions();
+    _this0.name = clix::marshalString<clix::E_UTF8>((*this).Name);
+    if ((*this).Resource != nullptr)
+        _this0.resource = (::Resource*)(*this).Resource->NativePtr;
+    _this0.group = (::ResourceGroup)(*this).Group;
+    _this0.isHighPriority = (*this).IsHighPriority;
+    _this0.sendLoadEvent = (*this).SendLoadEvent;
+    _this0.asynchronousLoad = (*this).AsynchronousLoad;
+    _this0.keepStreamOpen = (*this).KeepStreamOpen;
+    auto _marshal0 = ::ResourceLoadOption();
+    _marshal0.key = (*this).Option.Key;
+    _marshal0.value = (*this).Option.Value;
+    _this0.option = _marshal0;
+    _this0.addOption(key, value);
+    Name = clix::marshalString<clix::E_UTF8>(_this0.name);
+    Resource = gcnew Flood::Resource((::Resource*)_this0.resource);
+    Group = (Flood::ResourceGroup)_this0.group;
+    IsHighPriority = _this0.isHighPriority;
+    SendLoadEvent = _this0.sendLoadEvent;
+    AsynchronousLoad = _this0.asynchronousLoad;
+    KeepStreamOpen = _this0.keepStreamOpen;
+    Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&_this0.option);
 }
 
 Flood::ResourceStream::ResourceStream(::ResourceStream* native)

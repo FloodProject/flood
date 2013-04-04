@@ -83,14 +83,6 @@ namespace Flood
             Flood::ResourceStatus get();
             void set(Flood::ResourceStatus);
         }
-        /// <summary>
-        /// Resource stream.
-        /// </summary>
-        property Flood::ResourceStream^ Stream
-        {
-            Flood::ResourceStream^ get();
-            void set(Flood::ResourceStream^);
-        }
         System::String^ GetPath();
         void SetPath(System::String^ v);
         Flood::ResourceStatus GetStatus();

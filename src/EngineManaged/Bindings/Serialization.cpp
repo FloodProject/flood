@@ -25,6 +25,11 @@ Flood::ReflectionHandleContext::ReflectionHandleContext(System::IntPtr native)
     NativePtr = __native;
 }
 
+Flood::ReflectionHandleContext::ReflectionHandleContext()
+{
+    NativePtr = new ::ReflectionHandleContext();
+}
+
 Flood::ReflectionDeserializeHandleFn^ Flood::ReflectionHandleContext::Deserialize::get()
 {
     return safe_cast<Flood::ReflectionDeserializeHandleFn^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::ReflectionHandleContext*)NativePtr)->deserialize), Flood::ReflectionDeserializeHandleFn::typeid));

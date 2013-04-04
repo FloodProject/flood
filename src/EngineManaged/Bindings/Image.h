@@ -83,6 +83,7 @@ namespace Flood
 
         ImageWriter(::ImageWriter* native);
         ImageWriter(System::IntPtr native);
+        ImageWriter();
         bool Convert(Flood::Image^ image);
     };
 }

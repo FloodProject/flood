@@ -63,6 +63,7 @@ namespace Flood
 
         RenderBlock(::RenderBlock* native);
         RenderBlock(System::IntPtr native);
+        RenderBlock();
         property System::Collections::Generic::List<Flood::RenderState>^ Renderables
         {
             System::Collections::Generic::List<Flood::RenderState>^ get();

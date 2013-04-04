@@ -80,27 +80,139 @@ Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3 _0)
 
 void Flood::Matrix4x4::SetIdentity()
 {
-    auto this0 = (::Matrix4x4*) 0;
-    this0->identity();
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
+    _this0.identity();
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::Inverse()
 {
-    auto this0 = (::Matrix4x4*) 0;
-    auto ret = this0->inverse();
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
+    auto ret = _this0.inverse();
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::Transpose()
 {
-    auto this0 = (::Matrix4x4*) 0;
-    auto ret = this0->transpose();
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
+    auto ret = _this0.transpose();
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
 {
-    auto this0 = (::Matrix4x4*) 0;
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
     auto _marshal0 = ::Matrix4x4();
     _marshal0.m11 = m.M11;
     _marshal0.m12 = m.M12;
@@ -119,46 +231,190 @@ Flood::Matrix4x4 Flood::Matrix4x4::operator*(Flood::Matrix4x4 m)
     _marshal0.tz = m.Tz;
     _marshal0.tw = m.Tw;
     auto arg0 = _marshal0;
-    auto ret = this0->operator*(arg0);
+    auto ret = _this0.operator*(arg0);
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 
 Flood::Vector3 Flood::Matrix4x4::operator*(Flood::Vector3 v)
 {
-    auto this0 = (::Matrix4x4*) 0;
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
     auto _marshal0 = ::Vector3();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
-    auto ret = this0->operator*(arg0);
+    auto ret = _this0.operator*(arg0);
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Vector3((::Vector3*)&ret);
 }
 
 Flood::Vector4 Flood::Matrix4x4::operator*(Flood::Vector4 v)
 {
-    auto this0 = (::Matrix4x4*) 0;
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
     auto _marshal0 = ::Vector4();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
     _marshal0.w = v.W;
     auto arg0 = _marshal0;
-    auto ret = this0->operator*(arg0);
+    auto ret = _this0.operator*(arg0);
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Vector4((::Vector4*)&ret);
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::CreatePerspective(float FOV, float aspectRatio, float nearPlane, float farPlane)
 {
-    auto this0 = (::Matrix4x4*) 0;
-    auto ret = this0->createPerspective(FOV, aspectRatio, nearPlane, farPlane);
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
+    auto ret = _this0.createPerspective(FOV, aspectRatio, nearPlane, farPlane);
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::CreateOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
-    auto this0 = (::Matrix4x4*) 0;
-    auto ret = this0->createOrthographic(left, right, bottom, top, nearPlane, farPlane);
+    auto _this0 = ::Matrix4x4();
+    _this0.m11 = (*this).M11;
+    _this0.m12 = (*this).M12;
+    _this0.m13 = (*this).M13;
+    _this0.m14 = (*this).M14;
+    _this0.m21 = (*this).M21;
+    _this0.m22 = (*this).M22;
+    _this0.m23 = (*this).M23;
+    _this0.m24 = (*this).M24;
+    _this0.m31 = (*this).M31;
+    _this0.m32 = (*this).M32;
+    _this0.m33 = (*this).M33;
+    _this0.m34 = (*this).M34;
+    _this0.tx = (*this).Tx;
+    _this0.ty = (*this).Ty;
+    _this0.tz = (*this).Tz;
+    _this0.tw = (*this).Tw;
+    auto ret = _this0.createOrthographic(left, right, bottom, top, nearPlane, farPlane);
+    M11 = _this0.m11;
+    M12 = _this0.m12;
+    M13 = _this0.m13;
+    M14 = _this0.m14;
+    M21 = _this0.m21;
+    M22 = _this0.m22;
+    M23 = _this0.m23;
+    M24 = _this0.m24;
+    M31 = _this0.m31;
+    M32 = _this0.m32;
+    M33 = _this0.m33;
+    M34 = _this0.m34;
+    Tx = _this0.tx;
+    Ty = _this0.ty;
+    Tz = _this0.tz;
+    Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&ret);
 }
 

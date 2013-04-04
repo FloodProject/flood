@@ -68,6 +68,11 @@ Flood::RenderBlock::RenderBlock(System::IntPtr native)
     NativePtr = __native;
 }
 
+Flood::RenderBlock::RenderBlock()
+{
+    NativePtr = new ::RenderBlock();
+}
+
 void Flood::RenderBlock::AddState(Flood::RenderState renderState)
 {
     auto _marshal0 = ::RenderState();

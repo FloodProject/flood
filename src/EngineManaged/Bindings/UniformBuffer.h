@@ -64,6 +64,7 @@ namespace Flood
 
         UniformBuffer(::UniformBuffer* native);
         UniformBuffer(System::IntPtr native);
+        UniformBuffer();
         Flood::UniformBufferElement GetElement(System::String^ name, unsigned int size);
         void RemoveUniform(System::String^ slot);
         void SetUniform(System::String^ slot, int data);

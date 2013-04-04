@@ -33,6 +33,7 @@ namespace Flood
 
         Allocator(::Allocator* native);
         Allocator(System::IntPtr native);
+        Allocator();
         property Flood::MemoryAllocateFunction^ Allocate
         {
             Flood::MemoryAllocateFunction^ get();
@@ -76,6 +77,7 @@ namespace Flood
     public:
         PoolAllocator(::PoolAllocator* native);
         PoolAllocator(System::IntPtr native);
+        PoolAllocator();
         property System::IntPtr Current
         {
             System::IntPtr get();
@@ -93,6 +95,7 @@ namespace Flood
     public:
         BumpAllocator(::BumpAllocator* native);
         BumpAllocator(System::IntPtr native);
+        BumpAllocator();
         property System::IntPtr Start
         {
             System::IntPtr get();
@@ -120,6 +123,7 @@ namespace Flood
     public:
         HeapAllocator(::HeapAllocator* native);
         HeapAllocator(System::IntPtr native);
+        HeapAllocator();
         property System::IntPtr Space
         {
             System::IntPtr get();

@@ -63,8 +63,20 @@ Flood::VertexElement::VertexElement(Flood::VertexAttribute _0, Flood::VertexData
 
 unsigned char Flood::VertexElement::GetSize()
 {
-    auto this0 = (::VertexElement*) 0;
-    auto ret = this0->getSize();
+    auto _this0 = ::VertexElement();
+    _this0.attribute = (::VertexAttribute)(*this).Attribute;
+    _this0.type = (::VertexDataType)(*this).Type;
+    _this0.components = (uint8)(*this).Components;
+    _this0.stride = (int8)(*this).Stride;
+    _this0.offset = (uint32)(*this).Offset;
+    _this0.size = (uint32)(*this).Size;
+    auto ret = _this0.getSize();
+    Attribute = (Flood::VertexAttribute)_this0.attribute;
+    Type = (Flood::VertexDataType)_this0.type;
+    Components = _this0.components;
+    Stride = _this0.stride;
+    Offset = _this0.offset;
+    Size = _this0.size;
     return ret;
 }
 
@@ -77,6 +89,11 @@ Flood::VertexDeclaration::VertexDeclaration(System::IntPtr native)
 {
     auto __native = (::VertexDeclaration*)native.ToPointer();
     NativePtr = __native;
+}
+
+Flood::VertexDeclaration::VertexDeclaration()
+{
+    NativePtr = new ::VertexDeclaration();
 }
 
 void Flood::VertexDeclaration::Add(Flood::VertexAttribute _0, int numComponents)
