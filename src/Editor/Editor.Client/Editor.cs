@@ -9,7 +9,7 @@ namespace Flood.Editor.Client
     public sealed class Editor : IDisposable
     {
         public MainWindow MainWindow { get; private set; }
-        public Window PaneWindow  { get; private set; }
+        public Window PaneWindow { get; private set; }
 
         public GwenRenderer GuiRenderer { get; private set; }
         public GwenInput GuiInput { get; private set; }
@@ -35,7 +35,7 @@ namespace Flood.Editor.Client
             GuiRenderer.Dispose();
         }
 
-        private void InitializeGui()
+        void InitializeGui()
         {
             GuiRenderer = new GwenRenderer();
 

@@ -5,7 +5,7 @@ project "EngineManaged"
 
 	kind "SharedLib"
 	language "C#"
-	
+	flags { "Unsafe" }
 	location "."
 	
 	files
@@ -14,7 +14,8 @@ project "EngineManaged"
 		"**.cs",
 	}
 	
-	links {
+	links
+	{
 		"EngineBindings",
 		"System",
 		"System.Web",

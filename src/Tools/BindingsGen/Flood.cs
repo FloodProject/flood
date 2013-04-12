@@ -4,6 +4,7 @@ using System.Linq;
 using Cxxi;
 using Cxxi.Generators;
 using Cxxi.Generators.CLI;
+using Cxxi.Generators.CSharp;
 using Cxxi.Passes;
 using Cxxi.Types;
 
@@ -49,7 +50,7 @@ namespace Flood
             lib.SetNameOfFunction("AllocatorReset", "AllocatorResetMemory");
 
             lib.IgnoreClassWithName("StreamFuncs");
-            lib.SetClassAsOpaque("FileStream");
+            lib.IgnoreClassWithName("FileStream");
             lib.SetClassAsValueType("FileWatchEvent");
 
             lib.IgnoreFunctionWithPattern(".+GetType");
@@ -118,6 +119,7 @@ namespace Flood
             lib.SetClassAsValueType("RenderState");
             lib.SetClassAsValueType("LightState");
             lib.IgnoreHeadersWithName("MaxRectsBinPack.h");
+            lib.IgnoreClassWithName("MaxRectsBinPack");
             lib.IgnoreClassWithName("CompareHandle");
             lib.SetClassAsValueType("Glyph");
             lib.SetClassAsValueType("Rectangle");
@@ -142,25 +144,40 @@ namespace Flood
             options.OutputInteropIncludes = false;
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
-            options.OutputDir = @"../../../../src/EngineManaged/Bindings";
+            options.GeneratorKind = LanguageGeneratorKind.CSharp;
+            options.OutputDir = @"../../../../src/EngineManaged/BindingsCSharp";
             options.IncludeDirs.Add(@"../../../../inc");
-            options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
+            options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
             options.WriteOnlyWhenChanged = true;
 
+            SetupLibraries(options.Libraries);
             SetupHeaders(options.Headers);
+        }
+
+        public void SetupLibraries(List<string> libraries)
+        {
+            libraries.AddRange(new string[]
+                {
+                    "Core.lib",
+                    "Resources.lib",
+                    "Graphics.lib",
+                    "Engine.lib"
+                });
         }
 
         public void SetupHeaders(List<string> headers)
         {
-            var sources = new string[]
+           headers.AddRange(new string[]
                 {
                     "Core/Log.h",
                     "Core/Extension.h",
                     "Core/Reflection.h",
                     "Core/Serialization.h",
+                    "Core/Math/Color.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
+                    "Graphics/Resources/Image.h",
                     "Graphics/Graphics.h",
                     "Graphics/GeometryBuffer.h",
                     "Graphics/RenderContext.h",
@@ -178,9 +195,7 @@ namespace Flood
                     "Engine/Input/Mouse.h",
                     "Engine/Resources/TrueTypeFont.h",
                     "Engine/Texture/TextureAtlas.h"
-                };
-
-            headers.AddRange(sources);
+                });
         }
 
         public void SetupPasses(Driver driver, PassBuilder builder)
@@ -300,7 +315,7 @@ namespace Flood
     [TypeMap("RefPtr")]
     public class RefPtrMap : TypeMap
     {
-        public override string CLISignature(TypePrinterContext ctx)
+        public override string CLISignature(CLITypePrinterContext ctx)
         {
             var type = Type as TemplateSpecializationType;
             return string.Format("{0}", type.Arguments[0].Type);
@@ -327,7 +342,25 @@ namespace Flood
                 return;
 
             var instance = string.Format("{0}.get()", ctx.ReturnVarName);
-            ctx.MarshalToManaged.WriteClassInstance(@class, instance);
+
+            var cliMarshal = ctx.MarshalToManaged as CLIMarshalNativeToManagedPrinter;
+            cliMarshal.WriteClassInstance(@class, instance);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("{0}", type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("{0}.Instance", ctx.Parameter.Name);
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("new IntPtr(&{0})", ctx.ReturnVarName);
         }
     }
 
@@ -354,7 +387,7 @@ namespace Flood
     [TypeMap("Delegate4")]
     public class EventMap : TypeMap
     {
-        public override string CLISignature(TypePrinterContext ctx)
+        public override string CLISignature(CLITypePrinterContext ctx)
         {
             var type = Type as TemplateSpecializationType;
             var args = type.Arguments.Select(arg => arg.Type.ToString()).
@@ -370,6 +403,20 @@ namespace Flood
             return output;
         }
 
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            var args = type.Arguments.Select(arg => arg.Type.ToString()).
+                ToList();
+
+            var output = "System.Action";
+
+            if (args.Count > 0)
+                output += string.Format("<{0}>", string.Join(", ", args));
+
+            return output;
+        }
+
         public override bool IsIgnored { get { return true; } }
     }
 
@@ -377,10 +424,10 @@ namespace Flood
     [TypeMap("ResourceHandle")]
     public class HandleMap : TypeMap
     {
-        public override string CLISignature(TypePrinterContext ctx)
+        public override string CLISignature(CLITypePrinterContext ctx)
         {
             var type = Type.Desugar() as TemplateSpecializationType;
-            return string.Format("{0}::ResourceHandle<{1}>", "Flood",
+            return string.Format("Flood::ResourceHandle<{0}>",
                 type.Arguments[0].Type);
         }
 
@@ -392,6 +439,23 @@ namespace Flood
         public override void CLIMarshalToManaged(MarshalContext ctx)
         {
             ctx.Return.Write("{0}({1}.id)", CLISignature(null), ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type.Desugar() as TemplateSpecializationType;
+            return string.Format("Flood.ResourceHandle<{0}>",
+                type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("{0}.Id", ctx.Parameter.Name);
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("{0}.id", ctx.ReturnVarName);
         }
     }
     #endregion
