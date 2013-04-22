@@ -5,31 +5,33 @@ project "TextAddin"
 
     SetupAddin()
 
-	kind "SharedLib"
-	language "C#"
-	
-	location "."
-	
-	files
-	{
-		"premake4.lua",
-		"**.cs",
-		"**.addin.xml",
+    kind "SharedLib"
+    language "C#"
+    
+    location "."
+    
+    files
+    {
+        "premake4.lua",
+        "**.cs",
+        "**.addin.xml",
         path.join("icons","*.png")
-	}
-	
-	links
-	{
-		"System",
-		"System.Drawing",
-		"EngineManaged",
-		"Editor.Client",
+    }
+    
+    links
+    {
+        "System",
+        "System.Drawing",
+        "EngineBindings",
+        "EngineManaged",
+        "Editor.Client",
         "Mono.Addins"
-	}
+    }
     
     linksnotcopied
     {
+        "EngineBindings",
         "EngineManaged",
-		"Editor.Client",
+        "Editor.Client",
         "Mono.Addins"
     }
