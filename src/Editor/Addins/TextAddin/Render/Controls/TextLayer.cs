@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Flood;
 using System;
+using Flood.Editor.Client;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
@@ -24,11 +25,18 @@ namespace TextAddin.Render
             }
         }
 
-        public Vector2 SnapPositionToText(Vector2 pos)
+        public Vector2 GetTextLocationPosition(TextLocation textLocation)
         {
-            var documentLine = heightTree.GetLineByVisualPosition(pos.Y);
+            var documentLine = heightTree.GetLineByNumber(textLocation.Line);
             var line = lines[documentLine];
-            return line.SnapPositionToText(pos);
+            return line.GetColumnBegining(textLocation.Column);
+        }
+
+        public TextLocation GetTextLocation(Vector2 position)
+        {
+            var documentLine = heightTree.GetLineByVisualPosition(position.Y);
+            var line = lines[documentLine];
+            return line.GetTextLocation(position.X);
         }
 
     }

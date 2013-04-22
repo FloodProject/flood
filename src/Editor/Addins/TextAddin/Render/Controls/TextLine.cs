@@ -42,16 +42,25 @@ namespace TextAddin.Render
             SizeToChildren();
         }
 
-        public Vector2 SnapPositionToText(Vector2 pos)
+        public Vector2 GetColumnBegining(int column)
+        {
+            var text = TextLayer.TextView.TextDocument.GetText(DocumentLine.Offset, DocumentLine.Length);
+            var size = TextRenderer.MeasureText(text.Substring(0,column-1),Skin.DefaultFont);
+
+            return new Vector2(Bounds.X+size.X,Bounds.Y);
+        }
+
+        public TextLocation GetTextLocation(float x)
         {
             var text = TextLayer.TextView.TextDocument.GetText(DocumentLine.Offset, DocumentLine.Length);
 
             int index;
-            TextRenderer.GetPositionTextIndex(text, Skin.DefaultFont, pos.X, out index);
+            TextRenderer.GetPositionTextIndex(text, Skin.DefaultFont, x, out index);
 
-            var size = TextRenderer.MeasureText(text.Substring(0,index),Skin.DefaultFont);
+            Console.WriteLine(index);
 
-            return new Vector2(Bounds.X+size.X,Bounds.Y);
+            //Line and Column indexes start at 1
+            return new TextLocation(DocumentLine.LineNumber,index+1);
         }
     }
 }
