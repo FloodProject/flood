@@ -199,7 +199,33 @@ namespace Flood.Editor.Client
 
         public static Vector2i MeasureText(System.String text, Flood.GUI.Font font)
         {
-            var ret = new Vector2i(0,font.Size);
+            float curX = 0;
+            var ttfont = font.EngineFont.Resolve();
+            for(var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+
+                Glyph glyph;
+                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
+                if (!foundGlyph)
+                {
+                    Log.Warn("Glyph not found for character " + c);
+                    continue;
+                }
+
+                curX += glyph.Advance;
+                if(i < text.Length - 1) 
+                    curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
+
+                curX = (int) (curX + 0.5);
+            }
+
+            return new Vector2i((int)(curX+0.5),font.Size);;
+        }
+
+        public static bool GetPositionTextIndex(string text, Flood.GUI.Font font, float x, out int index)
+        {
+            float curX = 0;
 
             var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
@@ -214,13 +240,21 @@ namespace Flood.Editor.Client
                     continue;
                 }
 
-                var kernX = 0;
+                curX += glyph.Advance;
                 if(i < text.Length - 1) 
-                    kernX = (int)ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
-                ret.X += (int) (glyph.Advance + kernX + 0.5);
+                   curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
+
+                curX = (int) (curX + 0.5);
+
+                if(curX >= x)
+                {
+                    index = i;
+                    return true;
+                }
             }
 
-            return ret;
+            index = 0;
+            return false;
         }
 
         public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Vector2i position, String text)
@@ -526,6 +560,7 @@ namespace Flood.Editor.Client
             case Keys.Home: return Key.Home;
             case Keys.End: return Key.End;
             case Keys.Delete: return Key.Delete;
+            case Keys.Back: return Key.Backspace;
             case Keys.LControl:
                 this.m_AltGr = true;
                 return Key.Control;
