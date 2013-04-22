@@ -252,11 +252,9 @@ namespace Flood.GUI.Controls
         /// Handles keyboard events. Called from Input subsystems.
         /// </summary>
         /// <returns>True if handled.</returns>
-        public bool Input_Key(Key key, bool down)
+        public bool Input_Key(Keys key, bool down)
         {
             if (IsHidden) return false;
-            if (key <= Key.Invalid) return false;
-            if (key >= Key.Count) return false;
 
             return InputHandler.OnKeyEvent(this, key, down);
         }

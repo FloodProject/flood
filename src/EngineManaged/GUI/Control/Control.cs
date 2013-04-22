@@ -1839,23 +1839,23 @@ namespace Flood.GUI.Controls
         /// <param name="key">Key pressed.</param>
         /// <param name="down">Indicates whether the key was pressed or released.</param>
         /// <returns>True if handled.</returns>
-        protected virtual bool OnKeyPressed(Key key, bool down = true)
+        protected virtual bool OnKeyPressed(Keys key, bool down = true)
         {
             bool handled = false;
             switch (key)
             {
-                case Key.Tab: handled = OnKeyTab(down); break;
-                case Key.Space: handled = OnKeySpace(down); break;
-                case Key.Home: handled = OnKeyHome(down); break;
-                case Key.End: handled = OnKeyEnd(down); break;
-                case Key.Return: handled = OnKeyReturn(down); break;
-                case Key.Backspace: handled = OnKeyBackspace(down); break;
-                case Key.Delete: handled = OnKeyDelete(down); break;
-                case Key.Right: handled = OnKeyRight(down); break;
-                case Key.Left: handled = OnKeyLeft(down); break;
-                case Key.Up: handled = OnKeyUp(down); break;
-                case Key.Down: handled = OnKeyDown(down); break;
-                case Key.Escape: handled = OnKeyEscape(down); break;
+                case Keys.Tab: handled = OnKeyTab(down); break;
+                case Keys.Space: handled = OnKeySpace(down); break;
+                case Keys.Home: handled = OnKeyHome(down); break;
+                case Keys.End: handled = OnKeyEnd(down); break;
+                case Keys.Return: handled = OnKeyReturn(down); break;
+                case Keys.Back: handled = OnKeyBackspace(down); break;
+                case Keys.Delete: handled = OnKeyDelete(down); break;
+                case Keys.Right: handled = OnKeyRight(down); break;
+                case Keys.Left: handled = OnKeyLeft(down); break;
+                case Keys.Up: handled = OnKeyUp(down); break;
+                case Keys.Down: handled = OnKeyDown(down); break;
+                case Keys.Escape: handled = OnKeyEscape(down); break;
                 default: break;
             }
 
@@ -1868,7 +1868,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Invokes key press event (used by input system).
         /// </summary>
-        internal bool InputKeyPressed(Key key, bool down = true)
+        internal bool InputKeyPressed(Keys key, bool down = true)
         {
             return OnKeyPressed(key, down);
         }
@@ -1878,7 +1878,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="key">Key pressed.</param>
         /// <returns>True if handled.</returns>
-        protected virtual bool OnKeyReleaseed(Key key)
+        protected virtual bool OnKeyReleaseed(Keys key)
         {
             return OnKeyPressed(key, false);
         }

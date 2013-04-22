@@ -69,19 +69,19 @@ namespace Flood.GUI.Input
         /// <summary>
         /// Indicates whether the shift key is down.
         /// </summary>
-        public static bool IsShiftDown { get { return IsKeyDown(Key.Shift); } }
+        public static bool IsShiftDown { get { return IsKeyDown(Keys.LShift) || IsKeyDown(Keys.RShift); } }
 
         /// <summary>
         /// Indicates whether the control key is down.
         /// </summary>
-        public static bool IsControlDown { get { return IsKeyDown(Key.Control); } }
+        public static bool IsControlDown { get { return IsKeyDown(Keys.LControl) || IsKeyDown(Keys.RControl); } }
 
         /// <summary>
         /// Checks if the given key is pressed.
         /// </summary>
         /// <param name="key">Key to check.</param>
         /// <returns>True if the key is down.</returns>
-        public static bool IsKeyDown(Key key)
+        public static bool IsKeyDown(Keys key)
         {
             return m_KeyData.KeyState[(int)key];
         }
@@ -196,21 +196,21 @@ namespace Flood.GUI.Input
             //
             // Simulate Key-Repeats
             //
-            for (int i = 0; i < (int)Key.Count; i++)
+            for (var iKey = 0; iKey < (int)Keys.MAX; iKey++)
             {
-                if (m_KeyData.KeyState[i] && m_KeyData.Target != KeyboardFocus)
+                if (m_KeyData.KeyState[iKey] && m_KeyData.Target != KeyboardFocus)
                 {
-                    m_KeyData.KeyState[i] = false;
+                    m_KeyData.KeyState[iKey] = false;
                     continue;
                 }
 
-                if (m_KeyData.KeyState[i] && time > m_KeyData.NextRepeat[i])
+                if (m_KeyData.KeyState[iKey] && time > m_KeyData.NextRepeat[iKey])
                 {
-                    m_KeyData.NextRepeat[i] = Platform.Neutral.GetTimeInSeconds() + KeyRepeatRate;
+                    m_KeyData.NextRepeat[iKey] = Platform.Neutral.GetTimeInSeconds() + KeyRepeatRate;
 
                     if (KeyboardFocus != null)
                     {
-                        KeyboardFocus.InputKeyPressed((Key)i);
+                        KeyboardFocus.InputKeyPressed((Keys)iKey);
                     }
                 }
             }
@@ -320,13 +320,13 @@ namespace Flood.GUI.Input
         /// <param name="key">Key.</param>
         /// <param name="down">True if the key is down.</param>
         /// <returns>True if handled.</returns>
-        public static bool OnKeyEvent(Control canvas, Key key, bool down)
+        public static bool OnKeyEvent(Control canvas, Keys key, bool down)
         {
             if (null == KeyboardFocus) return false;
             if (KeyboardFocus.GetCanvas() != canvas) return false;
             if (!KeyboardFocus.IsVisible) return false;
 
-            int iKey = (int)key;
+            var iKey = (int) key;
             if (down)
             {
                 if (!m_KeyData.KeyState[iKey])

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Flood.GUI.Controls;
 
 namespace Flood.GUI.Input
@@ -8,7 +9,7 @@ namespace Flood.GUI.Input
     /// </summary>
     public class KeyData
     {
-        public readonly bool[] KeyState;
+        public readonly bool [] KeyState;
         public readonly float [] NextRepeat;
         public Control Target;
         public bool LeftMouseDown;
@@ -16,8 +17,8 @@ namespace Flood.GUI.Input
 
         public KeyData()
         {
-            KeyState = new bool[(int)Key.Count];
-            NextRepeat = new float[(int)Key.Count];
+            KeyState = new bool[(int)Keys.MAX];
+            NextRepeat = new float[(int)Keys.MAX];
             // everything is initialized to 0 by default
         }
     }

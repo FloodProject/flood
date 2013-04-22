@@ -545,38 +545,6 @@ namespace Flood.Editor.Client
             canvas = c;
         }
 
-        Key TranslateKeyCode(Keys key)
-        {
-            switch (key)
-            {
-            case Keys.Return: return Key.Return;
-            case Keys.Escape: return Key.Escape;
-            case Keys.Tab: return Key.Tab;
-            case Keys.Space: return Key.Space;
-            case Keys.Up: return Key.Up;
-            case Keys.Down: return Key.Down;
-            case Keys.Left: return Key.Left;
-            case Keys.Right: return Key.Right;
-            case Keys.Home: return Key.Home;
-            case Keys.End: return Key.End;
-            case Keys.Delete: return Key.Delete;
-            case Keys.Back: return Key.Backspace;
-            case Keys.LControl:
-                this.m_AltGr = true;
-                return Key.Control;
-            case Keys.LAlt: return Key.Alt;
-            case Keys.LShift: return Key.Shift;
-            case Keys.RControl: return Key.Control;
-            case Keys.RAlt: 
-                if (m_AltGr)
-                    canvas.Input_Key(Key.Control, false);
-                return Key.Alt;
-            case Keys.RShift: return Key.Shift;
-                
-            }
-            return Key.Invalid;
-        }
-
         static char TranslateChar(Keys key)
         {
             if (key >= Keys.A && key <= Keys.Z)
@@ -633,15 +601,12 @@ namespace Flood.Editor.Client
                 canvas.Input_Character(ch);
             }
         
-            var key = TranslateKeyCode(keyEvent.KeyCode);
-            canvas.Input_Key(key, true);
+            canvas.Input_Key(keyEvent.KeyCode, true);
         }
 
         void ProcessKeyUp(KeyEvent keyEvent)
         {
-            var ch = TranslateChar(keyEvent.KeyCode);
-            var key = TranslateKeyCode(keyEvent.KeyCode);
-            canvas.Input_Key(key, false);
+            canvas.Input_Key(keyEvent.KeyCode, false);
         }
     }
 }
