@@ -160,10 +160,24 @@ function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
 end
 
-function SetupAddin()
+addins = {}
+addinsDepenciesUsed = false
+
+function SetupAddin(addinName)
+    if addinsDepenciesUsed then
+		print("WARNING: Dependencies have been already used!")
+    end
+    
+    table.insert(addins, addinName)
+    
     targetdir (addindir)
     
     SetupAddinResources()
+end
+
+function SetupAddinsAsDependencies()
+    dependson (addins)
+    addinsDepenciesUsed = true
 end
 
 function SetupAddinResources()

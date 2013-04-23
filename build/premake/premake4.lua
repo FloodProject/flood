@@ -58,6 +58,10 @@ solution "Flood"
 		dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
 		dofile( srcdir .. "/ServerManaged/ServerManaged.lua")
 		
+    group "Editor Addins"
+        print("Searching for addins...")
+        IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))   
+        
 	group "Editor"
 	
 		dofile( srcdir .. "/Editor/Editor.Client/Editor.Client.lua")
@@ -65,10 +69,6 @@ solution "Flood"
 		dofile( srcdir .. "/Editor/Editor.Shared/Editor.Shared.lua")
 		dofile( srcdir .. "/Editor/Editor.Server/Editor.Server.lua")
 		dofile( srcdir .. "/Editor/Editor.Tests/Editor.Tests.lua")
-    
-    group "Editor Addins"
-        print("Searching for addins...")
-        IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))
         
 	group "Tests"
 

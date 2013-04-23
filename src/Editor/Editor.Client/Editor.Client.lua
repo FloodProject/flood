@@ -8,6 +8,7 @@ project "Editor.Client"
 	location "."
 	flags { "Unsafe" }
 	
+	SetupAddinsAsDependencies()
 	SetupAddinResources()
 	
 	files

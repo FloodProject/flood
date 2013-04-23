@@ -3,7 +3,7 @@ EditorClient.name = "TextAddin"
 
 project "TextAddin"
 
-    SetupAddin()
+    SetupAddin("TextAddin")
 
     kind "SharedLib"
     language "C#"
