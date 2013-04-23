@@ -673,7 +673,7 @@ namespace Flood.GUI.Controls
             {
                 ++idx;
 
-                if (idx == m_ActualParent.m_Children.Count - 1)
+                if (idx == m_ActualParent.m_Children.Count)
                 {
                     BringToFront();
                     return;
