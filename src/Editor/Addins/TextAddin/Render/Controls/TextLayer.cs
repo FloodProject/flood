@@ -60,7 +60,7 @@ namespace TextAddin.Render
         public void BeforeRemoveLine(DocumentLine documentLine)
         {
             var line = lines[documentLine];
-            RemoveChild(line,false);
+            RemoveChild(line,true);
             lines.Remove(documentLine);
         }
 
@@ -70,7 +70,7 @@ namespace TextAddin.Render
 
         public void LineInserted(DocumentLine insertionPos, DocumentLine newDocLine)
         {
-            var prevLine = lines[insertionPos];;
+            var prevLine = lines[insertionPos];
             var line = new TextLine(this, newDocLine);
             line.BringNextToControl(prevLine,true);
             lines.Add(newDocLine,line);
