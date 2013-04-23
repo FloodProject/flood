@@ -7,70 +7,125 @@ namespace TextAddin.Render.Controls
 {
     class CarretLayer : Layer
     {
-        class Carret : Control
-        {
-            public int LineHeight { get; set; }
 
-            public Carret(Control parent) : base(parent)
-            {
-                LineHeight = Skin.DefaultFont.Size;
-                MouseInputEnabled = false;
-            }
-
-            protected override void Render(Flood.GUI.Skins.Skin skin)
-            {
-                if (DateTime.Now.Millisecond < 500) 
-                    return;
-
-                skin.Renderer.DrawColor = new Color(0,0,0,255);
-                skin.Renderer.DrawFilledRect(new Rect(0,0,1,LineHeight));
-            }
-        }
-
-        private Carret carret;
-
-        private TextLocation location;
-        public TextLocation Location
-        {
-            get { return location; }
-            private set
-            {
-                location = value;
-                var charPos = TextView.TextLayer.GetTextLocationPosition(location);
-                carret.SetPosition(charPos.X,charPos.Y);
-            }
-        }
+        private DocumentLine line;
+        private int column;
+        private int oldColumn;
 
         public CarretLayer(TextView parent) : base(parent)
         {
-            carret = new Carret(parent);
-
             KeyboardInputEnabled = true;
-            Location = new TextLocation(1,1);
+
+            line = TextView.TextDocument.GetLineByNumber(1);
+            column = 1;
+
+            line.Deleted += (sender, args) => UpdateCarretOffset(0);
         }
 
+        protected override void Render(Flood.GUI.Skins.Skin skin)
+        {
+            if (DateTime.Now.Millisecond < 500) 
+                return;
 
-        private bool mouseDown = false;
+            var location = new TextLocation(line.LineNumber,column);
+            var charPos = TextView.TextLayer.GetTextLocationPosition(location);
+
+            var lineHeight = Skin.DefaultFont.Size;
+
+            skin.Renderer.DrawColor = new Color(0,0,0,255);
+            skin.Renderer.DrawFilledRect(new Rect((int)charPos.X,(int)charPos.Y,1,lineHeight));
+        }
 
         private void SnapCarretToPosition(int x, int y)
         {
             var localPosToCanvas = CanvasPosToLocal(new Vector2i(x, y));
-            Location = TextView.TextLayer.GetTextLocation(localPosToCanvas);
+            var location = TextView.TextLayer.GetTextLocation(localPosToCanvas);
+            line = TextView.TextDocument.GetLineByNumber(location.Line);
+            column = location.Column;
+            oldColumn = 0;
         }
 
         protected void InsertText(string text)
         {
-            var offset = TextView.TextDocument.GetOffset(Location);
-            TextView.TextDocument.Insert(offset, text);
+            var carretOffset = TextView.TextDocument.GetOffset(line.LineNumber,column);
+            TextView.TextDocument.Insert(carretOffset, text);
+
+            oldColumn = 0;
         }
 
         protected void RemoveText(int offset,int length)
         {
-            var carretOffset = TextView.TextDocument.GetOffset(Location);
+            var carretOffset = TextView.TextDocument.GetOffset(line.LineNumber, column);
             TextView.TextDocument.Remove(carretOffset+offset, length);
+
+            oldColumn = 0;
+        }
+
+
+        private void UpdateCarretOffset(int dOffset)
+        {
+            line = TextView.TextDocument.GetLineByNumber(line.LineNumber);
+
+            var offset = line.Offset + column;
+            var maxOffset = TextView.TextDocument.TextLength;
+            while (offset + dOffset > line.EndOffset || offset + dOffset < line.Offset)
+            {
+                UpdateCarretLine(Math.Sign(dOffset));
+                var oldOffset = offset;
+                offset = line.Offset + column;
+                dOffset -= offset - oldOffset;
+
+                if(offset + dOffset < 1 || offset + dOffset > maxOffset)
+                    break;
+            }
+            
+            offset += dOffset;
+            offset = Math.Max(1, offset);
+            offset = Math.Min(offset, maxOffset);
+            
+            column = Math.Max(1,offset - line.Offset);
+            oldColumn = 0;
+        }
+
+        private void UpdateCarretLine(int lineOffset)
+        {
+            var i = Math.Abs(lineOffset);
+            var lineNum = line.LineNumber;
+            var maxLineNum = TextView.TextDocument.LineCount;
+            while (i > 0)
+            {
+                lineNum += Math.Sign(lineOffset);
+
+                if(lineNum < 1 || lineNum > maxLineNum)
+                    break;
+
+                if (!TextView.TextLayer.GetIsCollapsed(lineNum))
+                    i--;
+            }
+
+            if(oldColumn == 0)
+                oldColumn = column;
+
+            if (lineNum < 1)
+            {
+                line = TextView.TextDocument.GetLineByNumber(1);;
+                column = 1;
+            }
+            else if (lineNum > maxLineNum)
+            {
+                line = TextView.TextDocument.GetLineByNumber(maxLineNum);
+                column = line.Length;
+            }
+            else
+            {
+                line = TextView.TextDocument.GetLineByNumber(lineNum);
+                column = Math.Min(oldColumn, line.Length);
+            }
         }
 
         #region Input
+
+        private bool mouseDown = false;
 
         protected override void OnMouseClickedLeft(int x, int y, bool down)
         {
@@ -87,7 +142,7 @@ namespace TextAddin.Render.Controls
         protected override bool OnChar(char chr)
         {
             InsertText(""+chr);
-            Location = new TextLocation(Location.Line, Location.Column+1);
+            UpdateCarretOffset(1);
             return true;
         }
 
@@ -97,7 +152,7 @@ namespace TextAddin.Render.Controls
                 return false;
 
             RemoveText(-1, 1);
-            Location = new TextLocation(Location.Line, Location.Column-1);
+            UpdateCarretOffset(-1);
 
             return true;
         }
@@ -106,7 +161,7 @@ namespace TextAddin.Render.Controls
         {
             if(!down)
                 return false;
-
+            
             RemoveText(0, 1);
             return true;
         }
@@ -116,7 +171,7 @@ namespace TextAddin.Render.Controls
             if(!down)
                 return false;
 
-            Location = new TextLocation(Location.Line, Location.Column-1);
+            UpdateCarretOffset(-1);
             return true;
         }
 
@@ -125,7 +180,25 @@ namespace TextAddin.Render.Controls
             if(!down)
                 return false;
 
-            Location = new TextLocation(Location.Line, Location.Column+1);
+            UpdateCarretOffset(1);
+            return true;
+        }
+
+        protected override bool OnKeyUp(bool down)
+        {
+            if(!down)
+                return false;
+
+            UpdateCarretLine(-1);
+            return true;
+        }
+
+        protected override bool OnKeyDown(bool down)
+        {
+            if(!down)
+                return false;
+
+            UpdateCarretLine(1);
             return true;
         }
 

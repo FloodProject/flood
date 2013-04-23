@@ -37,6 +37,11 @@ namespace TextAddin.Render
             return line.GetTextLocation(position.X);
         }
 
+        public bool GetIsCollapsed(int lineNumber)
+        {
+            return heightTree.GetIsCollapsed(lineNumber);
+        }
+
         protected override void Layout(Flood.GUI.Skins.Skin skin)
         {
             double y = 0;
