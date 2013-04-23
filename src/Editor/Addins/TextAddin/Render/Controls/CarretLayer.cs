@@ -54,7 +54,8 @@ namespace TextAddin.Render.Controls
 
         private void SnapCarretToPosition(int x, int y)
         {
-            Location = TextView.TextLayer.GetTextLocation(new Vector2(x, y));
+            var localPosToCanvas = CanvasPosToLocal(new Vector2i(x, y));
+            Location = TextView.TextLayer.GetTextLocation(localPosToCanvas);
         }
 
         protected void InsertText(string text)
@@ -74,7 +75,6 @@ namespace TextAddin.Render.Controls
         protected override void OnMouseClickedLeft(int x, int y, bool down)
         {
             mouseDown = down;
-            Console.WriteLine("Down");
             SnapCarretToPosition(x, y);
         }
 
@@ -126,6 +126,15 @@ namespace TextAddin.Render.Controls
                 return false;
 
             Location = new TextLocation(Location.Line, Location.Column+1);
+            return true;
+        }
+
+        protected override bool OnKeyReturn(bool down)
+        {
+            if(!down)
+                return false;
+
+            InsertText("\n");
             return true;
         }
 
