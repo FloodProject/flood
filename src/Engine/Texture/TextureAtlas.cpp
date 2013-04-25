@@ -161,11 +161,15 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
 
          int newImageSize = newImage->getSize();
          std::vector<byte>& buffer = tmpImage.getBuffer();
-         buffer.resize(newImageSize*4,0);
+         buffer.resize(newImageSize*4);
 
          for (int i = 0; i < newImageSize; i++)
          {
-             buffer[i*4+3] = newImage->getBuffer()[i]; //A
+             int p = i*4;
+             buffer[p+0] = 255; //R
+             buffer[p+1] = 255; //G
+             buffer[p+2] = 255; //B
+             buffer[p+3] = newImage->getBuffer()[i]; //A
          }
 
          if (wasRotated)
