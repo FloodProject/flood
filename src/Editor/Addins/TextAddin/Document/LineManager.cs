@@ -1,13 +1,13 @@
 ﻿// Copyright (c) AlphaSierraPapa for the SharpDevelop Team (for details please see \doc\copyright.txt)
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 
-using ICSharpCode.AvalonEdit.Utils;
+using TextAddin.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Creates/Deletes lines when text is inserted/removed.

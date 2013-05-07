@@ -3,9 +3,9 @@
 
 using System;
 using System.Diagnostics;
-using ICSharpCode.AvalonEdit.Utils;
+using TextAddin.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// This class stacks the last x operations from the undostack and makes

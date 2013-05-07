@@ -3,7 +3,7 @@
 
 using System;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Allows for low-level line tracking.

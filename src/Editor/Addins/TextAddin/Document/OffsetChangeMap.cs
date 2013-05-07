@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using TextAddin.Utils;
 
-using ICSharpCode.AvalonEdit.Utils;
-
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Contains predefined offset change mapping types.

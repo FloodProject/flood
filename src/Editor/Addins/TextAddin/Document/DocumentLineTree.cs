@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	using LineNode = DocumentLine;
 	

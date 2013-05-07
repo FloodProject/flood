@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Xml;
+
 //using System.Windows.Media;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace TextAddin.Utils
 {
 	static class ExtensionMethods
 	{
@@ -85,12 +87,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 		#endregion
 		
 		#region XML reading
-		/*/// <summary>
+		/// <summary>
 		/// Gets the value of the attribute, or null if the attribute does not exist.
 		/// </summary>
 		public static string GetAttributeOrNull(this XmlElement element, string attributeName)
 		{
-			XmlAttribute attr = element.GetAttributeNode(attributeName);
+			var attr = element.GetAttributeNode(attributeName);
 			return attr != null ? attr.Value : null;
 		}
 		
@@ -99,7 +101,7 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// </summary>
 		public static bool? GetBoolAttribute(this XmlElement element, string attributeName)
 		{
-			XmlAttribute attr = element.GetAttributeNode(attributeName);
+			var attr = element.GetAttributeNode(attributeName);
 			return attr != null ? (bool?)XmlConvert.ToBoolean(attr.Value) : null;
 		}
 		
@@ -108,12 +110,12 @@ namespace ICSharpCode.AvalonEdit.Utils
 		/// </summary>
 		public static bool? GetBoolAttribute(this XmlReader reader, string attributeName)
 		{
-			string attributeValue = reader.GetAttribute(attributeName);
+			var attributeValue = reader.GetAttribute(attributeName);
 			if (attributeValue == null)
 				return null;
-			else
-				return XmlConvert.ToBoolean(attributeValue);
-		}*/
+			
+			return XmlConvert.ToBoolean(attributeValue);
+		}
 		#endregion
 		
 		#region DPI independence

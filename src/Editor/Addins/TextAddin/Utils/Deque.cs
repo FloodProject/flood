@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace TextAddin.Utils
 {
 	/// <summary>
 	/// Double-ended queue.

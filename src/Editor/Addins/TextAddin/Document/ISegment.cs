@@ -3,10 +3,10 @@
 
 using System;
 using System.Diagnostics;
-using ICSharpCode.AvalonEdit.Utils;
 using System.Globalization;
+using TextAddin.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// An (Offset,Length)-pair.

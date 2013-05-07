@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// A line/column position.

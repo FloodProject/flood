@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Describes a change to a TextDocument.

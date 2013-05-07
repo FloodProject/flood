@@ -5,7 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace TextAddin.Utils
 {
 	/// <summary>
 	/// Wrapper around Win32 functions.

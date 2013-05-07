@@ -1,11 +1,10 @@
 ﻿// Copyright (c) AlphaSierraPapa for the SharpDevelop Team (for details please see \doc\copyright.txt)
 // This code is distributed under the GNU LGPL (for details please see \doc\license.txt)
 
-using System;
-using System.ComponentModel;
-using ICSharpCode.AvalonEdit.Document;
+using TextAddin.Document;
+using TextAddin.Rendering;
 
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace TextAddin.Rendering
 {
 	/// <summary>
 	/// Represents a collapsed line section.

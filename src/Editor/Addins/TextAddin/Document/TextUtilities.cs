@@ -4,8 +4,9 @@
 using System;
 using System.Globalization;
 using System.Windows.Documents;
+using TextAddin;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Specifies the mode for getting the next caret position.

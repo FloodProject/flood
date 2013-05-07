@@ -2,8 +2,9 @@
 using Flood.Editor.Client;
 using Flood.Editor.Client.Commands;
 using Flood.Editor.Client.GUI;
-using ICSharpCode.AvalonEdit.Document;
-using TextAddin.Render;
+using TextAddin.Document;
+using TextAddin.Highlighting;
+using TextAddin.Controls;
 
 namespace TextAddin.Commands
 {
@@ -13,8 +14,9 @@ namespace TextAddin.Commands
         public override Flood.GUI.Controls.Control CreateControl(Flood.GUI.Controls.Control parent)
         {
             var doc = new TextDocument();
-            doc.Insert(0,"uiofyufghjfjhfj");
-            return new TextView(parent,doc);
+            doc.Insert(0,"using System;");
+            var textView = new TextView(parent,doc);
+            return textView;
         }
     }
 

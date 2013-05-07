@@ -5,11 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using TextAddin.Utils;
+using TextAddin.Document;
 
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Utils;
-
-namespace ICSharpCode.AvalonEdit.Rendering
+namespace TextAddin.Rendering
 {
 	/// <summary>
 	/// Red-black tree similar to DocumentLineTree, augmented with collapsing and height data.

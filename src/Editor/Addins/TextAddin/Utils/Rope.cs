@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace ICSharpCode.AvalonEdit.Utils
+namespace TextAddin.Utils
 {
 	/// <summary>
 	/// A kind of List&lt;T&gt;, but more efficient for random insertions/removal.

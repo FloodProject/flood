@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// Represents a line inside a <see cref="TextDocument"/>.

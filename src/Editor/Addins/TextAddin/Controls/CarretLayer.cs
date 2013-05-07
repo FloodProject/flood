@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Globalization;
 using Flood;
-using Flood.GUI.Controls;
-using ICSharpCode.AvalonEdit.Document;
+using TextAddin.Document;
 
-namespace TextAddin.Render.Controls
+namespace TextAddin.Controls
 {
 
-    class CarretLayer : Layer
+    public class CarretLayer : Layer
     {
 
         private TextAnchor textAnchor;
         private int oldColumn;
+
+        private TextDocument Document { 
+            get { return TextView.TextLayer.Document; }
+        }
 
         public CarretLayer(TextView parent) : base(parent)
         {
@@ -21,25 +25,25 @@ namespace TextAddin.Render.Controls
 
         private void SetTextAnchor(int line, int column)
         {
-            SetTextAnchor(TextView.TextDocument.GetOffset(line,column));
+            SetTextAnchor(Document.GetOffset(line,column));
         }
 
         private void SetTextAnchor(TextLocation textLocation)
         {
-            SetTextAnchor(TextView.TextDocument.GetOffset(textLocation));
+            SetTextAnchor(Document.GetOffset(textLocation));
         }
 
         private void SetTextAnchor(int offset)
         {
             if(textAnchor != null)
                 textAnchor.Deleted -= OnAnchorDeleted;
-            textAnchor = TextView.TextDocument.CreateAnchor(offset);
+            textAnchor = Document.CreateAnchor(offset);
             textAnchor.Deleted += OnAnchorDeleted;
         }
 
         private void OnAnchorDeleted(object obj, EventArgs args)
         {
-            var line = TextView.TextDocument.GetLineByNumber(textAnchor.Line);
+            var line = Document.GetLineByNumber(textAnchor.Line);
             SetTextAnchor(line.LineNumber,1);
         }
 
@@ -67,7 +71,7 @@ namespace TextAddin.Render.Controls
 
         protected void InsertText(string text)
         {
-            TextView.TextDocument.Insert(textAnchor.Offset, text);
+            Document.Insert(textAnchor.Offset, text);
 
             oldColumn = 0;
         }
@@ -76,12 +80,12 @@ namespace TextAddin.Render.Controls
         {
             offset = textAnchor.Offset + offset;
             offset = Math.Max(0, offset);
-            offset = Math.Min(offset, TextView.TextDocument.TextLength);
+            offset = Math.Min(offset, Document.TextLength);
             
-            var maxLength = TextView.TextDocument.TextLength - offset;
+            var maxLength = Document.TextLength - offset;
             length = Math.Min(length, maxLength);
 
-            TextView.TextDocument.Remove(offset, length);
+            Document.Remove(offset, length);
 
             oldColumn = 0;
         }
@@ -89,8 +93,8 @@ namespace TextAddin.Render.Controls
 
         private void UpdateCarretOffset(int dOffset)
         {
-            var line = TextView.TextDocument.GetLineByNumber(textAnchor.Line);
-            var maxOffset = TextView.TextDocument.TextLength;
+            var line = Document.GetLineByNumber(textAnchor.Line);
+            var maxOffset = Document.TextLength;
             var sign = Math.Sign(dOffset);
             while (textAnchor.Offset + dOffset > line.EndOffset || textAnchor.Offset + dOffset < line.Offset)
             {
@@ -99,7 +103,7 @@ namespace TextAddin.Render.Controls
 
                 var oldOffset = textAnchor.Offset;
                 UpdateCarretLine(sign);
-                line = TextView.TextDocument.GetLineByNumber(textAnchor.Line);
+                line = Document.GetLineByNumber(textAnchor.Line);
                 
                 if(sign < 0)
                     SetTextAnchor(line.EndOffset);
@@ -122,7 +126,7 @@ namespace TextAddin.Render.Controls
 
             var i = Math.Abs(lineOffset);
             var lineNum = textAnchor.Line;
-            var maxLineNum = TextView.TextDocument.LineCount;
+            var maxLineNum = Document.LineCount;
             while (i > 0)
             {
                 lineNum += Math.Sign(lineOffset);
@@ -145,12 +149,12 @@ namespace TextAddin.Render.Controls
             else if (lineNum > maxLineNum)
             {
                 lineNum = maxLineNum;
-                var line = TextView.TextDocument.GetLineByNumber(lineNum);
+                var line = Document.GetLineByNumber(lineNum);
                 column = line.Length+1;
             }
             else
             {
-                var line = TextView.TextDocument.GetLineByNumber(lineNum);
+                var line = Document.GetLineByNumber(lineNum);
                 column = Math.Min(oldColumn, line.Length+1);
             }
 
@@ -175,8 +179,13 @@ namespace TextAddin.Render.Controls
  
         protected override bool OnChar(char chr)
         {
-            InsertText(""+chr);
-            UpdateCarretOffset(1);
+            InsertText(chr.ToString(CultureInfo.InvariantCulture));
+            return true;
+        }
+
+        protected override bool OnKeySpace(bool down)
+        {
+            InsertText(" ");
             return true;
         }
 

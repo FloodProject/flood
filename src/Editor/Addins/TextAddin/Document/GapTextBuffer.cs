@@ -5,9 +5,9 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-using ICSharpCode.AvalonEdit.Utils;
+using TextAddin.Utils;
 
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/*
 	/// <summary>

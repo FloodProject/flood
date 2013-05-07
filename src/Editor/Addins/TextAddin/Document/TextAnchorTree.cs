@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using TextAddin.Utils;
 
-using ICSharpCode.AvalonEdit.Utils;
-
-namespace ICSharpCode.AvalonEdit.Document
+namespace TextAddin.Document
 {
 	/// <summary>
 	/// A tree of TextAnchorNodes.
