@@ -27,6 +27,9 @@ public:
 	// Processes a wxWidgets keyboard input event.
 	void processKeyEvent( const wxKeyEvent&, bool keyDown );
 
+	// Processes a wxWidgets char keyboard input event.
+	void processCharEvent( const wxKeyEvent& );
+
 	// Processes a wxWidgets mouse input event.
 	void processMouseEvent( const wxMouseEvent& );
 

@@ -35,6 +35,15 @@ void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool isKeyDow
 
 //-----------------------------------//
 
+void EditorInputManager::processCharEvent( const wxKeyEvent& event)
+{
+	KeyEvent ke = KeyboardEventType::KeyText;
+	ke.unicode = event.GetUnicodeKey();
+	input->processEvent( ke );
+}
+
+//-----------------------------------//
+
 static MouseButton ConvertFromWxMouseButton( const wxMouseEvent& event );
 static MouseEventType ConvertFromWxMouseType( const wxMouseEvent& event );
 

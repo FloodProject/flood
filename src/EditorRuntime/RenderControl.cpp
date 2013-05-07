@@ -66,6 +66,7 @@ BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
 	EVT_KILL_FOCUS(RenderControl::OnFocusKill)
 	EVT_KEY_DOWN(RenderControl::OnKeyDown)
 	EVT_KEY_UP(RenderControl::OnKeyUp)
+	EVT_CHAR(RenderControl::OnChar)
 	EVT_MOUSE_EVENTS(RenderControl::OnMouseEvent)
 	EVT_MOUSE_CAPTURE_LOST(RenderControl::OnMouseCaptureLost)
 END_EVENT_TABLE()
@@ -196,6 +197,7 @@ void RenderControl::OnFocusKill(wxFocusEvent& event)
 void RenderControl::OnKeyDown(wxKeyEvent& event)
 {
 	input->processKeyEvent( event, true );
+	event.Skip();
 }
 
 //-----------------------------------//
@@ -203,6 +205,13 @@ void RenderControl::OnKeyDown(wxKeyEvent& event)
 void RenderControl::OnKeyUp(wxKeyEvent& event)
 {
 	input->processKeyEvent( event, false );
+}
+
+//-----------------------------------//
+
+void RenderControl::OnChar(wxKeyEvent& event)
+{
+	input->processCharEvent( event );
 }
 
 //-----------------------------------//
