@@ -491,7 +491,7 @@ namespace Flood.Editor.Client
         readonly Mouse mouse;
         readonly Keyboard keyboard;
 
-        Flood.GUI.Controls.Canvas canvas;
+        Canvas canvas;
 
         int mouseX;
         int mouseY;
@@ -517,6 +517,7 @@ namespace Flood.Editor.Client
             keyboard = inputManager.GetKeyboard();
             keyboard.KeyPress += ProcessKeyDown;
             keyboard.KeyRelease += ProcessKeyUp;
+            keyboard.KeyText += ProcessText;
         }
 
         ~GwenInput()
@@ -536,6 +537,7 @@ namespace Flood.Editor.Client
 
             keyboard.KeyPress -= ProcessKeyDown;
             keyboard.KeyRelease -= ProcessKeyUp;
+            keyboard.KeyText -= ProcessText;
 
             GC.SuppressFinalize(this);
         }
@@ -596,17 +598,18 @@ namespace Flood.Editor.Client
             if (InputHandler.DoSpecialKeys(canvas, ch))
                 return;
         
-            if (ch != ' ')
-            {
-                canvas.Input_Character(ch);
-            }
-        
             canvas.Input_Key(keyEvent.KeyCode, true);
         }
 
         void ProcessKeyUp(KeyEvent keyEvent)
         {
             canvas.Input_Key(keyEvent.KeyCode, false);
+        }
+
+        void ProcessText(KeyEvent keyEvent)
+        {
+            var ch =  (char)keyEvent.Unicode;
+            canvas.Input_Character(ch);
         }
     }
 }
