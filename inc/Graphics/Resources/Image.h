@@ -105,6 +105,9 @@ public:
     // Image timestamp, incremented each time the image is modified.
     GETTER(Timestamp, uint32, timestamp)
 
+    // Set image as modified, by incrementing its timestamp.
+    void SetModified();
+
 private:
 
 	uint32 timestamp;

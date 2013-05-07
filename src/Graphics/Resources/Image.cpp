@@ -181,6 +181,11 @@ void Image::setColor( const Color& color )
     timestamp++;
 }
 
+void Image::SetModified()
+{
+    timestamp++;
+}
+
 //-----------------------------------//
 
 void Image::log() const

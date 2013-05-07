@@ -66,6 +66,8 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
             }
         }
     }
+
+    dstImage->SetModified();
 }
 
 bool TextureAtlas::addImage(const ImageHandle& newImageHandle) 
