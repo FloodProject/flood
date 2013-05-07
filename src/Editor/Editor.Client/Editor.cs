@@ -55,11 +55,7 @@ namespace Flood.Editor.Client
 
         public void Update()
         {
-            if (PaneWindow == null)
-            {
-                //CreatePaneWindow();
-                //MainWindow.NativeWindow.MakeCurrent();
-            }
+            
         }
 
         public void SetSize(int x, int y)
