@@ -10,6 +10,11 @@ project "TextAddin"
     
     location "."
     
+    EmbedFiles {
+        "**.xshd",
+        "**.xsd"
+    }
+
     files
     {
         "premake4.lua",
@@ -21,7 +26,7 @@ project "TextAddin"
     links
     {
         "System",
-        "System.Drawing",
+        "System.XML",
         "EngineBindings",
         "EngineManaged",
         "Editor.Client",

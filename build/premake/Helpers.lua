@@ -161,10 +161,10 @@ function SetupManagedDependencyProject()
 end
 
 addins = {}
-addinsDepenciesUsed = false
+addinsDepedenciesUsed = false
 
 function SetupAddin(addinName)
-    if addinsDepenciesUsed then
+    if addinsDepedenciesUsed then
 		print("WARNING: Dependencies have been already used!")
     end
     
@@ -177,7 +177,7 @@ end
 
 function SetupAddinsAsDependencies()
     dependson (addins)
-    addinsDepenciesUsed = true
+    addinsDepedenciesUsed = true
 end
 
 function SetupAddinResources()
@@ -187,6 +187,10 @@ function SetupAddinResources()
         path.join("icons","**.png")
     }
     
+    EmbedFiles(resources)
+end
+
+function EmbedFiles(resources)
     files (resources)
 
     local c = configuration (resources[1])
