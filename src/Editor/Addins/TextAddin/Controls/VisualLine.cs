@@ -37,7 +37,18 @@ namespace TextAddin.Controls
 
             Init();
 
-            documentLine.TextChanged += (sender, args) => Init();
+            documentLine.TextChanged += OnTextChanged;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            DocumentLine.TextChanged -= OnTextChanged;
+        }
+
+        private void OnTextChanged(object sender, EventArgs eventArgs)
+        {
+            Init();
         }
 
         private void Init()
