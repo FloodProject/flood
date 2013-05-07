@@ -459,6 +459,8 @@ namespace Flood.GUI.Controls
 #endif
             }
 
+            Parent = null;
+
             if (InputHandler.HoveredControl == this)
                 InputHandler.HoveredControl = null;
             if (InputHandler.KeyboardFocus == this)
@@ -470,8 +472,8 @@ namespace Flood.GUI.Controls
             GUI.ToolTip.ControlDeleted(this);
             Animation.Cancel(this);
 
-            foreach (Control child in m_Children)
-                child.Dispose();
+            for(var i = m_Children.Count - 1; i >= 0; i--)
+                m_Children[i].Dispose();
 
             m_Children.Clear();
 
