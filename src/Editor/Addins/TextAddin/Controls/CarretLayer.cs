@@ -183,12 +183,6 @@ namespace TextAddin.Controls
             return true;
         }
 
-        protected override bool OnKeySpace(bool down)
-        {
-            InsertText(" ");
-            return true;
-        }
-
         protected override bool OnKeyBackspace(bool down)
         {
             if(!down)
