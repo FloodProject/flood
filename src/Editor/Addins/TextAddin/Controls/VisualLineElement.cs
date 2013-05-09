@@ -37,7 +37,7 @@ namespace TextAddin.Controls
         {
             Text = ((VisualLine)Parent).TextLayer.Document.GetText(Offset, Length);
             var size = TextRenderer.MeasureText(Text, Skin.DefaultFont);
-            SetSize(size.X, size.Y);
+            SetSize((int)(size.X+0.5), (int)(size.Y+0.5));
             Invalidate();
             InvalidateParent();
         }

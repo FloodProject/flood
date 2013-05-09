@@ -149,7 +149,7 @@ namespace Flood.GUI.ControlInternal
                 throw new InvalidOperationException("Text.SizeToContents() - No Font!!\n");
             }
 
-            var p = new Vector2i(1, Font.Size);
+            var p = new Vector2(1, Font.Size);
 
             if (Length > 0)
             {
@@ -159,7 +159,7 @@ namespace Flood.GUI.ControlInternal
             if (p.X == Width && p.Y == Height)
                 return;
 
-            SetSize(p.X, p.Y);
+            SetSize((int)(p.X+0.5), (int)(p.Y+0.5));
             Invalidate();
             InvalidateParent();
         }
@@ -169,11 +169,11 @@ namespace Flood.GUI.ControlInternal
         /// </summary>
         /// <param name="index">Character index.</param>
         /// <returns>Character position in local coordinates.</returns>
-        public Vector2i GetCharacterPosition(int index)
+        public Vector2 GetCharacterPosition(int index)
         {
             if (Length == 0 || index == 0)
             {
-                return new Vector2i(0, 0);
+                return new Vector2(0, 0);
             }
 
             String sub = (TextOverride ?? String).Substring(0, index);
@@ -189,13 +189,13 @@ namespace Flood.GUI.ControlInternal
         /// <returns>Character index.</returns>
         public int GetClosestCharacter(Vector2i p)
         {
-            int distance = MaxCoord;
+            float distance = MaxCoord;
             int c = 0;
 
             for (int i = 0; i < String.Length + 1; i++)
             {
                 var cp = GetCharacterPosition(i);
-                int dist = Math.Abs(cp.X - p.X); // TODO: handle multiline
+                var dist = Math.Abs(cp.X - p.X); // TODO: handle multiline
 
                 if (dist > distance) 
                     continue;

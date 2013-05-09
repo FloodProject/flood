@@ -42,7 +42,12 @@ namespace Flood.Editor.Client.Gui
         public void Init(Renderer renderer, string textureName, Flood.GUI.Font defaultFont)
         {
             Renderer = renderer;
-            Skin = new TexturedSkin(renderer, textureName, defaultFont);
+
+            var resMan = FloodEngine.GetEngine().GetResourceManager();
+            var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
+            var imageHandle = resMan.LoadResource<Image>(options);
+
+            Skin = new TexturedSkin(renderer, imageHandle, defaultFont);
             Canvas = new Canvas(Skin);
 
             Init();

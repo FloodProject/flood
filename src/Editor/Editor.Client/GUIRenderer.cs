@@ -1,80 +1,142 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
 
 namespace Flood.Editor.Client
 {
-    class ManagedGeometryBuffer
+    class ZCounter
     {
-        struct BatchInfo
+        float zcount;
+        
+        public void Reset()
         {
-            public RenderBatch Batch;
-            public List<int> Ranges;
-        };
+            zcount = -99;
+        }
 
+        public void Increment()
+        {
+            zcount += 0.001f;
+        }
+
+        public float Value
+        {
+            get { return zcount; }
+        }
+    }
+
+    class GUIGeometryBuffer : ManagedGeometryBuffer
+    {
         struct Vertex
         {
             public Vector3 Position;
             public Vector2 UV;
             public Color Color;
+            public float shift;
         };
 
-        readonly GeometryBuffer gb;
-        readonly Dictionary<uint, BatchInfo> batches;
-        readonly Dictionary<uint, ResourceHandle<Material>> materials;
+        private ZCounter zCounter;
 
-        float zcount;
-
-        public ManagedGeometryBuffer()
+        public GUIGeometryBuffer(ZCounter zCounter)
         {
-            gb = new GeometryBuffer();
+            this.zCounter = zCounter;
+        }
 
-            batches = new Dictionary<uint, BatchInfo>();
-            materials = new Dictionary<uint, ResourceHandle<Material>>();
-
+        protected override GeometryBuffer CreateGeometryBuffer()
+        {
+            var gb = new GeometryBuffer();
             gb.Declarations.Add(new VertexElement(VertexAttribute.Position, VertexDataType.Float, 3));
             gb.Declarations.Add(new VertexElement(VertexAttribute.TexCoord0, VertexDataType.Float, 2));
             gb.Declarations.Add(new VertexElement(VertexAttribute.Color, VertexDataType.Byte, 4));
+            gb.Declarations.Add(new VertexElement(VertexAttribute.Normal, VertexDataType.Float, 1));
             gb.Declarations.CalculateStrides();
-
-            zcount = -99;
+            return gb;
         }
 
-        ~ManagedGeometryBuffer()
+        protected override ResourceHandle<Material> CreateMaterial(ResourceHandle<Image> imageHandle)
         {
-            //gb.Dispose();
+            var materialHandle = Material.Create(Allocator.GetHeap(), "GwenGui");
+            var mat = materialHandle.Resolve();
+            mat.SetBackfaceCulling(false);
+            mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
+
+            if (imageHandle.Id == ResourceHandle<Image>.Invalid)
+            {
+                mat.SetShader("VertexColor");
+            }
+            else
+            {
+                mat.SetShader("TexColor");
+                mat.SetTexture(0, imageHandle);
+                mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.Clamp);
+            }
+
+            return materialHandle;
         }
 
-        public void AddRectangle(Rect rect, Color color)
+        public void AddRectangle(RectangleF rect, Color color)
         {
-            var imageHandle = new ResourceHandle<Image>(0);
+            ResourceHandle<Image> imageHandle;
+            imageHandle.Id = ResourceHandle<Image>.Invalid;
+
             AddRectangle(rect,Vector2.Zero,Vector2.Zero,Vector2.Zero,Vector2.Zero, imageHandle, color);
         }
 
-        public void AddRectangle(Rect rect, 
-            Vector2 topLeftUV, Vector2 topRightUV,Vector2 bottomRightUV, Vector2 bottomLeftUV,
+        public void AddRectangle(RectangleF rect, 
+            Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV,
             ResourceHandle<Image> imageHandle, Color color)
         {
+            Vertex v1, v2, v3, v4;
 
-            var batchInfo = GetCreateBatchInfo(imageHandle);
-            batchInfo.Ranges.Add((int) gb.GetNumVertices());
+            InitVetexes(out v1, out v2, out v3, out v4,
+                        rect, color,
+                        topLeftUV, topRightUV, bottomRightUV, bottomLeftUV);
+
+             unsafe
+             {
+                 AddQuad(new IntPtr(&v1),new IntPtr(&v2),new IntPtr(&v3),new IntPtr(&v4), (uint)sizeof(Vertex), imageHandle);
+             }
+        }
+
+        public void AddRectangle(RectangleF rect, 
+            Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV,
+            ResourceHandle<Material> materialHandle, Color color)
+        {
+            Vertex v1, v2, v3, v4;
+
+            InitVetexes(out v1, out v2, out v3, out v4,
+                        rect, color,
+                        topLeftUV, topRightUV, bottomRightUV, bottomLeftUV);
+
+             unsafe
+             {
+                 AddQuad(new IntPtr(&v1),new IntPtr(&v2),new IntPtr(&v3),new IntPtr(&v4), (uint)sizeof(Vertex), materialHandle);
+             }
+        }
+
+        private void InitVetexes(out Vertex v1, out Vertex v2, out Vertex v3, out Vertex v4,
+            RectangleF rect , Color color,
+            Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
+        {
 
             var top = Math.Max(rect.GetBottom(), rect.GetTop());
             var bottom = Math.Min(rect.GetBottom(), rect.GetTop());
             var left = rect.GetLeft();
             var right = rect.GetRight();
 
-            Vertex v1, v2, v3, v4;
+            v1.Position = new Vector3(left, bottom, zCounter.Value);
+            v2.Position = new Vector3(right, bottom, zCounter.Value);
+            v3.Position = new Vector3(right, top, zCounter.Value);
+            v4.Position = new Vector3(left, top, zCounter.Value);
 
-            v1.Position = new Vector3(left, bottom, zcount);
-            v2.Position = new Vector3(right, bottom, zcount);
-            v3.Position = new Vector3(right, top, zcount);
-            v4.Position = new Vector3(left, top, zcount);
+            zCounter.Increment();
 
-            //TODO optimize precision/usage
-            zcount += 0.001f;
+            v1.shift = left  - ((int)left);
+            v2.shift = right - ((int)right);
+            v3.shift = right - ((int)right);
+            v4.shift = left  - ((int)left);
 
             v1.Color = color;
             v2.Color = color;
@@ -85,15 +147,47 @@ namespace Flood.Editor.Client
             v2.UV = topRightUV;
             v3.UV = bottomRightUV;
             v4.UV = bottomLeftUV;
+        }
+    }
 
-            //Vertex buffer setup
-            unsafe
-            {
-                gb.Add(new IntPtr(&v1), (uint) sizeof (Vertex));
-                gb.Add(new IntPtr(&v2), (uint) sizeof (Vertex));
-                gb.Add(new IntPtr(&v3), (uint) sizeof (Vertex));
-                gb.Add(new IntPtr(&v4), (uint) sizeof (Vertex));
-            }
+    abstract class ManagedGeometryBuffer
+    {
+        struct BatchInfo
+        {
+            public RenderBatch Batch;
+            public List<int> Ranges;
+        };
+
+        readonly GeometryBuffer gb;
+        readonly Dictionary<uint, BatchInfo> batches;
+        readonly Dictionary<uint, ResourceHandle<Material>> materials;
+
+        protected ManagedGeometryBuffer()
+        {
+            gb = CreateGeometryBuffer();
+
+            batches = new Dictionary<uint, BatchInfo>();
+            materials = new Dictionary<uint, ResourceHandle<Material>>();
+        }
+
+        protected abstract GeometryBuffer CreateGeometryBuffer();
+        protected abstract ResourceHandle<Material> CreateMaterial(ResourceHandle<Image> imageHandle);
+
+        protected void AddQuad(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr v4, uint structSize, ResourceHandle<Image> imageHandle)
+        {
+            var materialHandle = GetCreateMaterial(imageHandle);
+            AddQuad(v1, v2, v3, v4, structSize, materialHandle);
+        }
+
+        protected void AddQuad(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr v4, uint structSize, ResourceHandle<Material> materialHandle)
+        {
+            var batchInfo = GetCreateBatchInfo(materialHandle);
+            batchInfo.Ranges.Add((int) gb.GetNumVertices());
+
+            gb.Add(v1, structSize);
+            gb.Add(v2, structSize);
+            gb.Add(v3, structSize);
+            gb.Add(v4, structSize);
         }
 
         public void Render(RenderBlock rb)
@@ -132,8 +226,6 @@ namespace Flood.Editor.Client
 
             gb.Clear();
             gb.ClearIndexes();
-
-            zcount = -99;
         }
 
         ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
@@ -142,47 +234,31 @@ namespace Flood.Editor.Client
 
             if (!materials.ContainsKey(id))
             {
-                var mat = new Material("GwenGui");
-                mat.SetBackfaceCulling(false);
-                mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
+                var materialHandle = CreateMaterial(imageHandle);
 
-                if (id == 0)
-                {
-                    mat.SetShader("VertexColor");
-                }
-                else
-                {
-                    mat.SetShader("TexColor");
-                    mat.SetTexture(0, imageHandle);
-                    mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.Clamp);
-                }
-
-                materials.Add(id, ResourceHandle<Material>.Create(mat));
+                materials.Add(id, materialHandle);
             }
 
             return materials[id];
         }
 
-        BatchInfo GetCreateBatchInfo(ResourceHandle<Image> imageHandle)
+        BatchInfo GetCreateBatchInfo(ResourceHandle<Material> materialHandle)
         {
-            var id = imageHandle.Id;
-
-            if (!batches.ContainsKey(id))
+            if (!batches.ContainsKey(materialHandle.Id))
             {
                 var batch = new RenderBatch();
                 batch.SetGeometryBuffer(gb);
                 batch.SetRenderLayer(RenderLayer.Overlays);
                 batch.SetPrimitiveType(PrimitiveType.Quads);
-
-                var mat = GetCreateMaterial(imageHandle);
-                batch.SetMaterial(mat);
+                batch.SetMaterial(materialHandle);
 
                 var batchInfo = new BatchInfo {Batch = batch, Ranges = new List<int>()};
-                batches[id] = batchInfo;
+                batches[materialHandle.Id] = batchInfo;
             }
 
-            return batches[id];
-        } 
+            return batches[materialHandle.Id];
+        }
+
     };
 
 
@@ -191,13 +267,23 @@ namespace Flood.Editor.Client
         static readonly Flood.TextureAtlas textureAtlas;
         static readonly GlyphCache glyphCache;
 
+        private static readonly ResourceHandle<Material> textMaterial; 
+
         static TextRenderer()
         {
-            textureAtlas = new TextureAtlas(512);
+            textureAtlas = new TextureAtlas(512,PixelFormat.R8G8B8);
             glyphCache = new GlyphCache();
+
+            textMaterial = Material.Create(Allocator.GetHeap(), "TextMaterial");
+            var mat = textMaterial.Resolve();
+            mat.SetBackfaceCulling(false);
+            mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
+            mat.SetShader("Text");
+            mat.SetTexture(0, textureAtlas.GetAtlasImageHandle());
+            mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.ClampToEdge);
         }
 
-        public static Vector2i MeasureText(System.String text, Flood.GUI.Font font)
+        public static Vector2 MeasureText(System.String text, Flood.GUI.Font font)
         {
             float curX = 0;
             var ttfont = font.EngineFont.Resolve();
@@ -217,10 +303,9 @@ namespace Flood.Editor.Client
                 if(i < text.Length - 1) 
                     curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
 
-                curX = (int) (curX + 0.5);
             }
 
-            return new Vector2i((int)(curX+0.5),font.Size);;
+            return new Vector2(curX,font.Size);;
         }
 
         public static bool GetPositionTextIndex(string text, Flood.GUI.Font font, float x, out int index)
@@ -244,8 +329,6 @@ namespace Flood.Editor.Client
                 if(i < text.Length - 1) 
                    curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
 
-                curX = (int) (curX + 0.5);
-
                 if(curX >= x)
                 {
                     index = i;
@@ -257,7 +340,7 @@ namespace Flood.Editor.Client
             return false;
         }
 
-        public static void DrawText(GwenRenderer renderer, Flood.GUI.Font font, Vector2i position, String text)
+        internal static void DrawText(GUIGeometryBuffer geometryBuffer, Flood.GUI.Font font, Vector2 position, String text, Color color)
         {
             var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
@@ -303,23 +386,20 @@ namespace Flood.Editor.Client
 
                 if (drawSubtexture)
                 {
-                    var atlasImageHandle = textureAtlas.GetAtlasImageHandle();
-                    Image atlasImage = atlasImageHandle.Resolve();
 
-                    var texture = new Texture();
-                    texture.SetImage(atlasImageHandle);
+                    var renderRect = new RectangleF(
+                        position.X + glyph.XOffset, 
+                        position.Y + glyph.BaseLineOffset, 
+                        glyph.Width,
+                        glyph.Height);
 
-                    var renderRect = new Rect(position.X, (int)(position.Y + glyph.BaseLineOffset), 
-                        (int)glyph.Width, (int)glyph.Height);
-
-                    renderer.DrawTexturedRect(texture,renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV);
-                    texture.Dispose();
+                    geometryBuffer.AddRectangle(renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV,textMaterial,color);
                 }
 
                 if (i < text.Length-1){
-                    var kern = ttfont.GetKerning(text[i],text[i+1], font.Size);
-                    position.X += (int)(glyph.Advance + kern.X + 0.5);
-                    position.Y += (int) kern.Y;
+                    var kern = ttfont.GetKerning(text[i], text[i+1], font.Size);
+                    position.X += glyph.Advance + kern.X;
+                    position.Y += kern.Y;
                 }
             }
         }
@@ -327,154 +407,64 @@ namespace Flood.Editor.Client
 
     public class GwenRenderer : Flood.GUI.Renderers.Renderer
     {
-        readonly ManagedGeometryBuffer buffer;
-
-        Color color;
-        Dictionary<Tuple<string, Flood.GUI.Font>, TextRenderer> stringCache;
-    
-        bool isClipEnabled;
+        private readonly ZCounter zCounter;
+        private readonly GUIGeometryBuffer _guiBuffer;
 
         public GwenRenderer()
         {
-        
-            buffer = new ManagedGeometryBuffer();
+            zCounter = new ZCounter();
+            _guiBuffer = new GUIGeometryBuffer(zCounter);
         }
 
         public void Render(RenderBlock rb)
         {
-            buffer.Render(rb);
+            _guiBuffer.Render(rb);
         }
 
         public void Clear()
         {
-            buffer.Clear();
+            _guiBuffer.Clear();
+            zCounter.Reset();
         }
 
-        public override void DrawFilledRect(Rect rect) 
+        public override void DrawFilledRect(Rectangle rect) 
         {
             rect = Translate(rect);
-            buffer.AddRectangle(rect, color);
+            _guiBuffer.AddRectangle(new RectangleF(rect.X,rect.Y,rect.Width,rect.Height), DrawColor);
         }
 
-        public override Color DrawColor 
-        {
-            get { return color; }
-            set { color = value;}
-        }
+        public override Color DrawColor { get; set; }
 
-        public override void StartClip()
-        {
-            isClipEnabled = true;
-        }
-
-        public override void EndClip()
-        {
-            isClipEnabled = false;
-        }
-
-        public override void DrawTexturedRect(Texture tex, Rect rect, float u1, float v1, float u2, float v2)
+        public override void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1, float v1, float u2, float v2)
         {
             rect = Translate(rect);
-
-            if (isClipEnabled)
-            {
-                // cpu scissors test
-                if (rect.Y < ClipRegion.Y)
-                {
-                    int oldHeight = rect.Height;
-                    int delta = ClipRegion.Y - rect.Y;
-                    rect.Y = ClipRegion.Y;
-                    rect.Height -= delta;
-
-                    if (rect.Height <= 0)
-                    {
-                        return;
-                    }
-
-                    float dv = (float)delta / (float)oldHeight;
-
-                    v1 += dv * (v2 - v1);
-                }
-
-                if ((rect.Y + rect.Height) > (ClipRegion.Y + ClipRegion.Height))
-                {
-                    int oldHeight = rect.Height;
-                    int delta = (rect.Y + rect.Height) - (ClipRegion.Y + ClipRegion.Height);
-
-                    rect.Height -= delta;
-
-                    if (rect.Height <= 0)
-                    {
-                        return;
-                    }
-
-                    float dv = (float)delta / (float)oldHeight;
-
-                    v2 -= dv * (v2 - v1);
-                }
-
-                if (rect.X < ClipRegion.X)
-                {
-                    int oldWidth = rect.Width;
-                    int delta = ClipRegion.X - rect.X;
-                    rect.X = ClipRegion.X;
-                    rect.Width -= delta;
-
-                    if (rect.Width <= 0)
-                    {
-                        return;
-                    }
-
-                    float du = (float)delta / (float)oldWidth;
-
-                    u1 += du * (u2 - u1);
-                }
-
-                if ((rect.X + rect.Width) > (ClipRegion.X + ClipRegion.Width))
-                {
-                    int oldWidth = rect.Width;
-                    int delta = (rect.X + rect.Width) - (ClipRegion.X + ClipRegion.Width);
-
-                    rect.Width -= delta;
-
-                    if (rect.Width <= 0)
-                    {
-                        return;
-                    }
-
-                    float du = (float)delta / (float)oldWidth;
-
-                    u2 -= du * (u2 - u1);
-                }
-            }
-
-            buffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), tex.GetImage(), color);
+            _guiBuffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), imageHandle, DrawColor);
         }
 
-        public void DrawTexturedRect(Texture t, Rect rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
+        public void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
         {
             rect = Translate(rect);
-
-            buffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, t.GetImage(), color);
+            _guiBuffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, imageHandle, DrawColor);
         }
 
-        public override Vector2i MeasureText(Flood.GUI.Font font, string text) 
+        public override Vector2 MeasureText(Flood.GUI.Font font, string text) 
         {
             return TextRenderer.MeasureText(text,font);
         }
 
         public override void RenderText(Flood.GUI.Font font, Vector2i position, string text)
         {
-           TextRenderer.DrawText(this, font, position, text);
+            position = Translate(position);
+            TextRenderer.DrawText(_guiBuffer, font, new Vector2(position.X,position.Y), text, DrawColor);
         }
 
-        public override Color PixelColor(Texture texture, uint x, uint y, Color defaultColor)
+        public override Color PixelColor(ResourceHandle<Image> imageHandle, uint x, uint y, Color defaultColor)
         {
-            var image = texture.GetImage().Resolve();
-            if(image == null)
+            var image = imageHandle.Resolve();
+            if(image == null || image.GetWidth() == 0)
                 return defaultColor;
 
-            var offset = (int)(4 * (x + y * texture.Width));
+            var offset = (int)(4 * (x + y * image.GetWidth()));
             var data = image.GetBuffer();
 
             var pixel = new Color(data[offset + 0],

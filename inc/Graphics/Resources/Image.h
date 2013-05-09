@@ -78,16 +78,19 @@ public:
 	// Gets the buffer containing the image data.
 	std::vector<uint8>& getBuffer() { return buffer; }
 
-    // Sets the buffer containing the image data.
-	void setBuffer(byte* data, uint size);
+	// Sets the buffer containing the image data.
+	void setBuffer(byte* data);
 
-    // Copies an image to the buffer containing the image data.
+	// Sets the buffer containing the image data.
+	void setBuffer(byte* data, uint stride);
+
+	// Copies an image to the buffer containing the image data.
 	void setBuffer(Image* image, Vector2i offset  = Vector2i(0,0));
 
-    // Gets the number of bytes per pixel.
+	// Gets the number of bytes per pixel.
 	uint32 getPixelSize();
 
-    // Gets the buffer number of bytes.
+	// Gets the buffer number of bytes.
 	uint32 getSize();
 
 	// Return the proper resource group for this resource.
@@ -102,17 +105,17 @@ public:
 	// Creates the image with the given details.
 	void create(uint32 width, uint32 height, PixelFormat format);
 
-    // Image timestamp, incremented each time the image is modified.
-    GETTER(Timestamp, uint32, timestamp)
+	// Image timestamp, incremented each time the image is modified.
+	GETTER(Timestamp, uint32, timestamp)
 
-    // Set image as modified, by incrementing its timestamp.
-    void SetModified();
+	// Set image as modified, by incrementing its timestamp.
+	void SetModified();
 
 private:
 
 	uint32 timestamp;
 
-    // Image width.
+	// Image width.
 	uint32 width;
 
 	// Image height.

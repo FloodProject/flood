@@ -8,7 +8,7 @@
 #include "Engine/API.h"
 #include "Engine/Resources/TrueTypeFont.h"
 
-#include "Core/Math/Rect.h"
+#include "Core/Math/Rectangle.h"
 #include <stb_truetype.h>
 
 NAMESPACE_ENGINE_BEGIN
@@ -79,7 +79,7 @@ ImageHandle TrueTypeFont::createGlyphImage(int codepoint, int fontSize) const
     else 
     {
         auto image = ImageCreate(AllocatorGetHeap(), width, height,PixelFormat::Depth);
-        image.Resolve()->setBuffer(pixelBuffer, width*height);
+        image.Resolve()->setBuffer(pixelBuffer);
         return image;
     }
 }

@@ -32,6 +32,7 @@ namespace Flood
     public:
         Glyph(::Glyph* native);
         Glyph(System::IntPtr native);
+        float XOffset;
         float BaseLineOffset;
         float Advance;
         float Width;

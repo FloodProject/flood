@@ -18,6 +18,7 @@ using namespace clix;
 
 Flood::Glyph::Glyph(::Glyph* native)
 {
+    XOffset = native->xOffset;
     BaseLineOffset = native->baseLineOffset;
     Advance = native->advance;
     Width = native->width;
@@ -27,6 +28,7 @@ Flood::Glyph::Glyph(::Glyph* native)
 Flood::Glyph::Glyph(System::IntPtr native)
 {
     auto __native = (::Glyph*)native.ToPointer();
+    XOffset = __native->xOffset;
     BaseLineOffset = __native->baseLineOffset;
     Advance = __native->advance;
     Width = __native->width;

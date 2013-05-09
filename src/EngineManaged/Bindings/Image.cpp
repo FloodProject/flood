@@ -109,10 +109,16 @@ bool Flood::Image::IsCompressed()
     return ret;
 }
 
-void Flood::Image::SetBuffer(System::IntPtr data, unsigned int size)
+void Flood::Image::SetBuffer(System::IntPtr data)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint)(uint32)size;
+    ((::Image*)NativePtr)->setBuffer(arg0);
+}
+
+void Flood::Image::SetBuffer(System::IntPtr data, unsigned int stride)
+{
+    auto arg0 = (uint8*)data.ToPointer();
+    auto arg1 = (uint)(uint32)stride;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
 
@@ -172,6 +178,11 @@ unsigned int Flood::Image::GetTimestamp()
 {
     auto ret = ((::Image*)NativePtr)->getTimestamp();
     return ret;
+}
+
+void Flood::Image::SetModified()
+{
+    ((::Image*)NativePtr)->SetModified();
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2)

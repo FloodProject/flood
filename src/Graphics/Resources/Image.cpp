@@ -108,15 +108,33 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 
 //-----------------------------------//
 
-void Image::setBuffer(byte* data, uint size)
+void Image::setBuffer(byte* data)
 {
-    uint32 expectedSize = getSize();
-    assert(size == expectedSize);
+    uint32 size = getSize();
 
-    if(buffer.size() != expectedSize)
-        buffer.resize(expectedSize);
+    if(buffer.size() != size)
+        buffer.resize(size);
 
     memcpy(buffer.data(), data, size * sizeof(byte));
+
+    timestamp++;
+}
+
+//-----------------------------------//
+
+void Image::setBuffer(byte* data, uint stride)
+{
+    assert(stride >= width*getPixelSize());
+
+    uint32 size = getSize();
+
+    if(buffer.size() != size)
+        buffer.resize(size);
+
+    for(int i=0; i<height; ++i)
+        memcpy( buffer.data() + i*width*getPixelSize(), 
+                data + i*stride,
+                width*getPixelSize()*sizeof(byte));
 
     timestamp++;
 }

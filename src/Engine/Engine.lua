@@ -58,6 +58,7 @@ project "Engine"
 		"stb_image",
 		Graphics.deps,
         "stb_truetype",
+        "FreeType",
         --"LodePNG",
 	}
 

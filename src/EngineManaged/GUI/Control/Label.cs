@@ -194,10 +194,10 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="index">Character index.</param>
         /// <returns>Character coordinates (local).</returns>
-        public virtual Vector2i GetCharacterPosition(int index)
+        public virtual Vector2 GetCharacterPosition(int index)
         {
             var p = m_Text.GetCharacterPosition(index);
-            return new Vector2i(p.X + m_Text.X, p.Y + m_Text.Y);
+            return new Vector2(p.X + m_Text.X, p.Y + m_Text.Y);
         }
 
         /// <summary>
