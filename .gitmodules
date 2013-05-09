@@ -11,3 +11,6 @@
 [submodule "deps/Mono.Addins"]
 	path = deps/Mono.Addins
 	url = git@github.com:FloodProject/Mono.Addins.git
+[submodule "deps/FreeType"]
+	path = deps/FreeType
+	url = git@github.com:FloodProject/FreeType.git
