@@ -200,7 +200,7 @@ Mutex* MutexCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-API_CORE void MutexInit(Mutex* mutex)
+void MutexInit(Mutex* mutex)
 {
 	if (!mutex) return;
 
