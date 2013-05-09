@@ -12,7 +12,7 @@ namespace Flood.GUI.Controls
         private Vector2i m_CursorPos;
         private bool m_Depressed;
         private float m_Hue;
-        private Texture m_Texture;
+        private ResourceHandle<Image> imageHandle;
 
         /// <summary>
         /// Invoked when the selected color has been changed.
@@ -38,8 +38,8 @@ namespace Flood.GUI.Controls
         /// </summary>
         public override void Dispose()
         {
-            if (m_Texture != null)
-                m_Texture.Dispose();
+           // if (m_Texture != null)
+            //    m_Texture.Dispose();
             base.Dispose();
         }
 
@@ -148,11 +148,11 @@ namespace Flood.GUI.Controls
         /// </summary>
         public override void Invalidate()
         {
-            if (m_Texture != null)
-            {
-                m_Texture.Dispose();
-                m_Texture = null;
-            }
+            //if (m_Texture != null)
+            //{
+            //    m_Texture.Dispose();
+            //    m_Texture = null;
+            //}
             base.Invalidate();
         }
 
@@ -162,7 +162,7 @@ namespace Flood.GUI.Controls
         /// <param name="skin">Skin to use.</param>
         protected override void Render(Skins.Skin skin)
         {
-            if (m_Texture == null)
+            if (imageHandle.Id == ResourceHandle<Image>.Invalid)
             {
                 throw new NotImplementedException();
                /*var bitmap = new Bitmap(Width, Height);
@@ -176,12 +176,12 @@ namespace Flood.GUI.Controls
                     }
                 }
 
-                m_Texture = new Texture(skin.Renderer);
+                m_Texture = new MaterialHandle(skin.Renderer);
                 m_Texture.LoadBitmap(bitmap);*/
             }
 
             skin.Renderer.DrawColor = Color.White;
-            skin.Renderer.DrawTexturedRect(m_Texture, RenderBounds);
+            skin.Renderer.DrawTexturedRect(imageHandle, RenderBounds);
 
 
             skin.Renderer.DrawColor = Color.Black;
@@ -193,7 +193,7 @@ namespace Flood.GUI.Controls
             else
                 skin.Renderer.DrawColor = Color.Black;
 
-            Rect testRect = new Rect(m_CursorPos.X - 3, m_CursorPos.Y - 3, 6, 6);
+            Rectangle testRect = new Rectangle(m_CursorPos.X - 3, m_CursorPos.Y - 3, 6, 6);
 
             skin.Renderer.DrawShavedCornerRect(testRect);
 

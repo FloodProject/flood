@@ -12,7 +12,7 @@ namespace Flood.GUI.Skins.Texturing
     /// </summary>
     public struct Bordered
     {
-        private Texture m_Texture;
+        private ResourceHandle<Image> imageHandle;
 
         private readonly SubRect[] m_Rects;
 
@@ -21,7 +21,7 @@ namespace Flood.GUI.Skins.Texturing
         private float m_Width;
         private float m_Height;
 
-        public Bordered(Texture texture, float x, float y, float w, float h, Margin inMargin, float drawMarginScale = 1.0f)
+        public Bordered(ResourceHandle<Image> imageHandle, float x, float y, float w, float h, Margin inMargin, float drawMarginScale = 1.0f)
             : this()
         {
             m_Rects = new SubRect[9];
@@ -30,20 +30,20 @@ namespace Flood.GUI.Skins.Texturing
                 m_Rects[i].uv = new float[4];
             }
 
-            Init(texture, x, y, w, h, inMargin, drawMarginScale);
+            Init(imageHandle, x, y, w, h, inMargin, drawMarginScale);
         }
 
         void DrawRect(Renderers.Renderer render, int i, int x, int y, int w, int h)
         {
-            render.DrawTexturedRect(m_Texture,
-                                    new Rect(x, y, w, h),
+            render.DrawTexturedRect(imageHandle,
+                                    new Rectangle(x, y, w, h),
                                     m_Rects[i].uv[0], m_Rects[i].uv[1], m_Rects[i].uv[2], m_Rects[i].uv[3]);
         }
 
         void SetRect(int num, float x, float y, float w, float h)
         {
-            float texw = m_Texture.Width;
-            float texh = m_Texture.Height;
+            float texw = imageHandle.Resolve().GetWidth();
+            float texh = imageHandle.Resolve().GetHeight();
 
             //x -= 1.0f;
             //y -= 1.0f;
@@ -54,13 +54,13 @@ namespace Flood.GUI.Skins.Texturing
             m_Rects[num].uv[2] = (x + w) / texw;
             m_Rects[num].uv[3] = (y + h) / texh;
 
-            //	rects[num].uv[0] += 1.0f / m_Texture->width;
-            //	rects[num].uv[1] += 1.0f / m_Texture->width;
+            //	rects[num].uv[0] += 1.0f / material->width;
+            //	rects[num].uv[1] += 1.0f / material->width;
         }
 
-        private void Init(Texture texture, float x, float y, float w, float h, Margin inMargin, float drawMarginScale = 1.0f)
+        private void Init(ResourceHandle<Image> imageHandle, float x, float y, float w, float h, Margin inMargin, float drawMarginScale = 1.0f)
         {
-            m_Texture = texture;
+            this.imageHandle = imageHandle;
 
             m_Margin = inMargin;
 
@@ -87,21 +87,18 @@ namespace Flood.GUI.Skins.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderers.Renderer render, Rect r)
+        public void Draw(Renderers.Renderer render, Rectangle r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderers.Renderer render, Rect r, Color col)
+        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
         {
-            if (m_Texture == null)
-                return;
-
             render.DrawColor = col;
 
             if (r.Width < m_Width && r.Height < m_Height)
             {
-                render.DrawTexturedRect(m_Texture, r, m_Rects[0].uv[0], m_Rects[0].uv[1], m_Rects[8].uv[2], m_Rects[8].uv[3]);
+                render.DrawTexturedRect(imageHandle, r, m_Rects[0].uv[0], m_Rects[0].uv[1], m_Rects[8].uv[2], m_Rects[8].uv[3]);
                 return;
             }
 

@@ -8,7 +8,7 @@ namespace Flood.GUI.Controls
     /// </summary>
     public class ImagePanel : Control
     {
-        private readonly Texture m_Texture;
+        private ResourceHandle<Image> imageHandle;
         private readonly float[] m_uv;
         private Color m_DrawColor;
 
@@ -20,7 +20,6 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             m_uv = new float[4];
-            m_Texture = new Texture();
             SetUV(0, 0, 1, 1);
             MouseInputEnabled = false;
             m_DrawColor = Color.White;
@@ -31,7 +30,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         public override void Dispose()
         {
-            m_Texture.Dispose();
+            //imageHandle.Resolve().Dispose();
             base.Dispose();
         }
 
@@ -47,14 +46,6 @@ namespace Flood.GUI.Controls
         }
 
         /// <summary>
-        /// Texture name.
-        /// </summary>
-        public Texture Texture
-        {
-            get { return m_Texture; }
-        }
-
-        /// <summary>
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
@@ -62,7 +53,7 @@ namespace Flood.GUI.Controls
         {
             base.Render(skin);
             skin.Renderer.DrawColor = m_DrawColor;
-            skin.Renderer.DrawTexturedRect(m_Texture, RenderBounds, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
+            skin.Renderer.DrawTexturedRect(imageHandle, RenderBounds, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
         }
 
         /// <summary>
@@ -70,7 +61,19 @@ namespace Flood.GUI.Controls
         /// </summary>
         public virtual void SizeToContents()
         {
-            SetSize((int)m_Texture.Width, (int)m_Texture.Height);
+            if(imageHandle.Id == ResourceHandle<Image>.Invalid)
+                return;
+
+            float texw = imageHandle.Resolve().GetWidth();
+            float texh = imageHandle.Resolve().GetHeight();
+
+            SetSize((int)texw, (int)texh);
+        }
+
+        public void SetImage(ResourceHandle<Image> imageHandle)
+        {
+            this.imageHandle = imageHandle;
+            SizeToContents();
         }
     }
 }

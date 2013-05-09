@@ -240,7 +240,7 @@ namespace Flood.GUI.Controls
                 m_Image = new ImagePanel(this);
             }
 
-            m_Image.Texture.SetImage(imageHandle);
+            m_Image.SetImage(imageHandle);
 
             m_Image.SizeToContents( );
             m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);

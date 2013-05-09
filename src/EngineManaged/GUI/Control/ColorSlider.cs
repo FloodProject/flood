@@ -11,7 +11,7 @@ namespace Flood.GUI.Controls
     {
         private int m_SelectedDist;
         private bool m_Depressed;
-        private Texture m_Texture;
+        private ResourceHandle<Image> imageHandle;
 
         /// <summary>
         /// Invoked when the selected color has been changed.
@@ -35,8 +35,6 @@ namespace Flood.GUI.Controls
         /// </summary>
         public override void Dispose()
         {
-            if (m_Texture != null)
-                m_Texture.Dispose();
             base.Dispose();
         }
 
@@ -48,7 +46,7 @@ namespace Flood.GUI.Controls
         {
             //Is there any way to move this into skin? Not for now, no idea how we'll "actually" render these
 
-            if (m_Texture == null)
+            if (imageHandle.Id == ResourceHandle<Image>.Invalid)
             {
                 throw new NotImplementedException();
                 /*var bitmap = new Bitmap(Width, Height);
@@ -62,23 +60,23 @@ namespace Flood.GUI.Controls
                     }
                 }
 
-                m_Texture = new Texture(skin.Renderer);
-                m_Texture.LoadBitmap(bitmap);*/
+                imageHandle = new MaterialHandle(skin.Renderer);
+                imageHandle.LoadBitmap(bitmap);*/
             }
 
             skin.Renderer.DrawColor = Color.White;
-            skin.Renderer.DrawTexturedRect(m_Texture, new Rect(5, 0, Width-10, Height));
+            skin.Renderer.DrawTexturedRect(imageHandle, new Rectangle(5, 0, Width-10, Height));
             
             int drawHeight = m_SelectedDist - 3;
 
             //Draw our selectors
             skin.Renderer.DrawColor = Color.Black;
-            skin.Renderer.DrawFilledRect(new Rect(0, drawHeight + 2, Width, 1));
-            skin.Renderer.DrawFilledRect(new Rect(0, drawHeight, 5, 5));
-            skin.Renderer.DrawFilledRect(new Rect(Width - 5, drawHeight, 5, 5));
+            skin.Renderer.DrawFilledRect(new Rectangle(0, drawHeight + 2, Width, 1));
+            skin.Renderer.DrawFilledRect(new Rectangle(0, drawHeight, 5, 5));
+            skin.Renderer.DrawFilledRect(new Rectangle(Width - 5, drawHeight, 5, 5));
             skin.Renderer.DrawColor = Color.White;
-            skin.Renderer.DrawFilledRect(new Rect(1, drawHeight + 1, 3, 3));
-            skin.Renderer.DrawFilledRect(new Rect(Width - 4, drawHeight + 1, 3, 3));
+            skin.Renderer.DrawFilledRect(new Rectangle(1, drawHeight + 1, 3, 3));
+            skin.Renderer.DrawFilledRect(new Rectangle(Width - 4, drawHeight + 1, 3, 3));
 
             base.Render(skin);
         }

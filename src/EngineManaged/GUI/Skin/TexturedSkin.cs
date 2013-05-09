@@ -274,19 +274,18 @@ namespace Flood.GUI.Skins
     {
         protected SkinTextures Textures;
 
-        private readonly Texture m_Texture;
+        private readonly ResourceHandle<Image> imageHandle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TexturedSkin"/> class.
         /// </summary>
         /// <param name="renderer">Renderer to use.</param>
-        /// <param name="textureName">Name of the skin texture map.</param>
+        /// <param name="imageHandle">Name of the skin texture map.</param>
         /// <param name="defaultFont"> </param>
-        public TexturedSkin(Renderers.Renderer renderer, String textureName, Font defaultFont) 
+        public TexturedSkin(Renderers.Renderer renderer, ResourceHandle<Image> imageHandle, Font defaultFont) 
             : base(renderer, defaultFont)
         {
-            m_Texture = new Texture();
-            m_Texture.LoadImage(textureName);
+            this.imageHandle = imageHandle;
 
             InitializeColors();
             InitializeTextures();
@@ -297,199 +296,199 @@ namespace Flood.GUI.Skins
         /// </summary>
         public override void Dispose()
         {
-            m_Texture.Dispose();
+            //imageHandle.Dispose();
             base.Dispose();
         }
 
         #region Initialization
         private void InitializeColors()
         {
-            Colors.Window.TitleActive   = Renderer.PixelColor(m_Texture, 4 + 8*0, 508, Color.Red);
-            Colors.Window.TitleInactive = Renderer.PixelColor(m_Texture, 4 + 8*1, 508, Color.Yellow);
+            Colors.Window.TitleActive   = Renderer.PixelColor(imageHandle, 4 + 8*0, 508, Color.Red);
+            Colors.Window.TitleInactive = Renderer.PixelColor(imageHandle, 4 + 8*1, 508, Color.Yellow);
 
-            Colors.Button.Normal   = Renderer.PixelColor(m_Texture, 4 + 8*2, 508, Color.Yellow);
-            Colors.Button.Hover    = Renderer.PixelColor(m_Texture, 4 + 8*3, 508, Color.Yellow);
-            Colors.Button.Down     = Renderer.PixelColor(m_Texture, 4 + 8*2, 500, Color.Yellow);
-            Colors.Button.Disabled = Renderer.PixelColor(m_Texture, 4 + 8*3, 500, Color.Yellow);
+            Colors.Button.Normal   = Renderer.PixelColor(imageHandle, 4 + 8*2, 508, Color.Yellow);
+            Colors.Button.Hover    = Renderer.PixelColor(imageHandle, 4 + 8*3, 508, Color.Yellow);
+            Colors.Button.Down     = Renderer.PixelColor(imageHandle, 4 + 8*2, 500, Color.Yellow);
+            Colors.Button.Disabled = Renderer.PixelColor(imageHandle, 4 + 8*3, 500, Color.Yellow);
 
-            Colors.Tab.Active.Normal     = Renderer.PixelColor(m_Texture, 4 + 8*4, 508, Color.Yellow);
-            Colors.Tab.Active.Hover      = Renderer.PixelColor(m_Texture, 4 + 8*5, 508, Color.Yellow);
-            Colors.Tab.Active.Down       = Renderer.PixelColor(m_Texture, 4 + 8*4, 500, Color.Yellow);
-            Colors.Tab.Active.Disabled   = Renderer.PixelColor(m_Texture, 4 + 8*5, 500, Color.Yellow);
-            Colors.Tab.Inactive.Normal   = Renderer.PixelColor(m_Texture, 4 + 8*6, 508, Color.Yellow);
-            Colors.Tab.Inactive.Hover    = Renderer.PixelColor(m_Texture, 4 + 8*7, 508, Color.Yellow);
-            Colors.Tab.Inactive.Down     = Renderer.PixelColor(m_Texture, 4 + 8*6, 500, Color.Yellow);
-            Colors.Tab.Inactive.Disabled = Renderer.PixelColor(m_Texture, 4 + 8*7, 500, Color.Yellow);
+            Colors.Tab.Active.Normal     = Renderer.PixelColor(imageHandle, 4 + 8*4, 508, Color.Yellow);
+            Colors.Tab.Active.Hover      = Renderer.PixelColor(imageHandle, 4 + 8*5, 508, Color.Yellow);
+            Colors.Tab.Active.Down       = Renderer.PixelColor(imageHandle, 4 + 8*4, 500, Color.Yellow);
+            Colors.Tab.Active.Disabled   = Renderer.PixelColor(imageHandle, 4 + 8*5, 500, Color.Yellow);
+            Colors.Tab.Inactive.Normal   = Renderer.PixelColor(imageHandle, 4 + 8*6, 508, Color.Yellow);
+            Colors.Tab.Inactive.Hover    = Renderer.PixelColor(imageHandle, 4 + 8*7, 508, Color.Yellow);
+            Colors.Tab.Inactive.Down     = Renderer.PixelColor(imageHandle, 4 + 8*6, 500, Color.Yellow);
+            Colors.Tab.Inactive.Disabled = Renderer.PixelColor(imageHandle, 4 + 8*7, 500, Color.Yellow);
 
-            Colors.Label.Default   = Renderer.PixelColor(m_Texture, 4 + 8*8, 508, Color.Yellow);
-            Colors.Label.Bright    = Renderer.PixelColor(m_Texture, 4 + 8*9, 508, Color.Yellow);
-            Colors.Label.Dark      = Renderer.PixelColor(m_Texture, 4 + 8*8, 500, Color.Yellow);
-            Colors.Label.Highlight = Renderer.PixelColor(m_Texture, 4 + 8*9, 500, Color.Yellow);
+            Colors.Label.Default   = Renderer.PixelColor(imageHandle, 4 + 8*8, 508, Color.Yellow);
+            Colors.Label.Bright    = Renderer.PixelColor(imageHandle, 4 + 8*9, 508, Color.Yellow);
+            Colors.Label.Dark      = Renderer.PixelColor(imageHandle, 4 + 8*8, 500, Color.Yellow);
+            Colors.Label.Highlight = Renderer.PixelColor(imageHandle, 4 + 8*9, 500, Color.Yellow);
 
-            Colors.Tree.Lines    = Renderer.PixelColor(m_Texture, 4 + 8*10, 508, Color.Yellow);
-            Colors.Tree.Normal   = Renderer.PixelColor(m_Texture, 4 + 8*11, 508, Color.Yellow);
-            Colors.Tree.Hover    = Renderer.PixelColor(m_Texture, 4 + 8*10, 500, Color.Yellow);
-            Colors.Tree.Selected = Renderer.PixelColor(m_Texture, 4 + 8*11, 500, Color.Yellow);
+            Colors.Tree.Lines    = Renderer.PixelColor(imageHandle, 4 + 8*10, 508, Color.Yellow);
+            Colors.Tree.Normal   = Renderer.PixelColor(imageHandle, 4 + 8*11, 508, Color.Yellow);
+            Colors.Tree.Hover    = Renderer.PixelColor(imageHandle, 4 + 8*10, 500, Color.Yellow);
+            Colors.Tree.Selected = Renderer.PixelColor(imageHandle, 4 + 8*11, 500, Color.Yellow);
 
-            Colors.Properties.Line_Normal     = Renderer.PixelColor(m_Texture, 4 + 8*12, 508, Color.Yellow);
-            Colors.Properties.Line_Selected   = Renderer.PixelColor(m_Texture, 4 + 8*13, 508, Color.Yellow);
-            Colors.Properties.Line_Hover      = Renderer.PixelColor(m_Texture, 4 + 8*12, 500, Color.Yellow);
-            Colors.Properties.Title           = Renderer.PixelColor(m_Texture, 4 + 8*13, 500, Color.Yellow);
-            Colors.Properties.Column_Normal   = Renderer.PixelColor(m_Texture, 4 + 8*14, 508, Color.Yellow);
-            Colors.Properties.Column_Selected = Renderer.PixelColor(m_Texture, 4 + 8*15, 508, Color.Yellow);
-            Colors.Properties.Column_Hover    = Renderer.PixelColor(m_Texture, 4 + 8*14, 500, Color.Yellow);
-            Colors.Properties.Border          = Renderer.PixelColor(m_Texture, 4 + 8*15, 500, Color.Yellow);
-            Colors.Properties.Label_Normal    = Renderer.PixelColor(m_Texture, 4 + 8*16, 508, Color.Yellow);
-            Colors.Properties.Label_Selected  = Renderer.PixelColor(m_Texture, 4 + 8*17, 508, Color.Yellow);
-            Colors.Properties.Label_Hover     = Renderer.PixelColor(m_Texture, 4 + 8*16, 500, Color.Yellow);
+            Colors.Properties.Line_Normal     = Renderer.PixelColor(imageHandle, 4 + 8*12, 508, Color.Yellow);
+            Colors.Properties.Line_Selected   = Renderer.PixelColor(imageHandle, 4 + 8*13, 508, Color.Yellow);
+            Colors.Properties.Line_Hover      = Renderer.PixelColor(imageHandle, 4 + 8*12, 500, Color.Yellow);
+            Colors.Properties.Title           = Renderer.PixelColor(imageHandle, 4 + 8*13, 500, Color.Yellow);
+            Colors.Properties.Column_Normal   = Renderer.PixelColor(imageHandle, 4 + 8*14, 508, Color.Yellow);
+            Colors.Properties.Column_Selected = Renderer.PixelColor(imageHandle, 4 + 8*15, 508, Color.Yellow);
+            Colors.Properties.Column_Hover    = Renderer.PixelColor(imageHandle, 4 + 8*14, 500, Color.Yellow);
+            Colors.Properties.Border          = Renderer.PixelColor(imageHandle, 4 + 8*15, 500, Color.Yellow);
+            Colors.Properties.Label_Normal    = Renderer.PixelColor(imageHandle, 4 + 8*16, 508, Color.Yellow);
+            Colors.Properties.Label_Selected  = Renderer.PixelColor(imageHandle, 4 + 8*17, 508, Color.Yellow);
+            Colors.Properties.Label_Hover     = Renderer.PixelColor(imageHandle, 4 + 8*16, 500, Color.Yellow);
 
-            Colors.ModalBackground = Renderer.PixelColor(m_Texture, 4 + 8*18, 508, Color.Yellow);
+            Colors.ModalBackground = Renderer.PixelColor(imageHandle, 4 + 8*18, 508, Color.Yellow);
             
-            Colors.TooltipText = Renderer.PixelColor(m_Texture, 4 + 8*19, 508, Color.Yellow);
+            Colors.TooltipText = Renderer.PixelColor(imageHandle, 4 + 8*19, 508, Color.Yellow);
 
-            Colors.Category.Header                  = Renderer.PixelColor(m_Texture, 4 + 8*18, 500, Color.Yellow);
-            Colors.Category.Header_Closed           = Renderer.PixelColor(m_Texture, 4 + 8*19, 500, Color.Yellow);
-            Colors.Category.Line.Text               = Renderer.PixelColor(m_Texture, 4 + 8*20, 508, Color.Yellow);
-            Colors.Category.Line.Text_Hover         = Renderer.PixelColor(m_Texture, 4 + 8*21, 508, Color.Yellow);
-            Colors.Category.Line.Text_Selected      = Renderer.PixelColor(m_Texture, 4 + 8*20, 500, Color.Yellow);
-            Colors.Category.Line.Button             = Renderer.PixelColor(m_Texture, 4 + 8*21, 500, Color.Yellow);
-            Colors.Category.Line.Button_Hover       = Renderer.PixelColor(m_Texture, 4 + 8*22, 508, Color.Yellow);
-            Colors.Category.Line.Button_Selected    = Renderer.PixelColor(m_Texture, 4 + 8*23, 508, Color.Yellow);
-            Colors.Category.LineAlt.Text            = Renderer.PixelColor(m_Texture, 4 + 8*22, 500, Color.Yellow);
-            Colors.Category.LineAlt.Text_Hover      = Renderer.PixelColor(m_Texture, 4 + 8*23, 500, Color.Yellow);
-            Colors.Category.LineAlt.Text_Selected   = Renderer.PixelColor(m_Texture, 4 + 8*24, 508, Color.Yellow);
-            Colors.Category.LineAlt.Button          = Renderer.PixelColor(m_Texture, 4 + 8*25, 508, Color.Yellow);
-            Colors.Category.LineAlt.Button_Hover    = Renderer.PixelColor(m_Texture, 4 + 8*24, 500, Color.Yellow);
-            Colors.Category.LineAlt.Button_Selected = Renderer.PixelColor(m_Texture, 4 + 8*25, 500, Color.Yellow);
+            Colors.Category.Header                  = Renderer.PixelColor(imageHandle, 4 + 8*18, 500, Color.Yellow);
+            Colors.Category.Header_Closed           = Renderer.PixelColor(imageHandle, 4 + 8*19, 500, Color.Yellow);
+            Colors.Category.Line.Text               = Renderer.PixelColor(imageHandle, 4 + 8*20, 508, Color.Yellow);
+            Colors.Category.Line.Text_Hover         = Renderer.PixelColor(imageHandle, 4 + 8*21, 508, Color.Yellow);
+            Colors.Category.Line.Text_Selected      = Renderer.PixelColor(imageHandle, 4 + 8*20, 500, Color.Yellow);
+            Colors.Category.Line.Button             = Renderer.PixelColor(imageHandle, 4 + 8*21, 500, Color.Yellow);
+            Colors.Category.Line.Button_Hover       = Renderer.PixelColor(imageHandle, 4 + 8*22, 508, Color.Yellow);
+            Colors.Category.Line.Button_Selected    = Renderer.PixelColor(imageHandle, 4 + 8*23, 508, Color.Yellow);
+            Colors.Category.LineAlt.Text            = Renderer.PixelColor(imageHandle, 4 + 8*22, 500, Color.Yellow);
+            Colors.Category.LineAlt.Text_Hover      = Renderer.PixelColor(imageHandle, 4 + 8*23, 500, Color.Yellow);
+            Colors.Category.LineAlt.Text_Selected   = Renderer.PixelColor(imageHandle, 4 + 8*24, 508, Color.Yellow);
+            Colors.Category.LineAlt.Button          = Renderer.PixelColor(imageHandle, 4 + 8*25, 508, Color.Yellow);
+            Colors.Category.LineAlt.Button_Hover    = Renderer.PixelColor(imageHandle, 4 + 8*24, 500, Color.Yellow);
+            Colors.Category.LineAlt.Button_Selected = Renderer.PixelColor(imageHandle, 4 + 8*25, 500, Color.Yellow);
         }
 
         private void InitializeTextures()
         {
-            Textures.Shadow    = new Bordered(m_Texture, 448, 0, 31, 31, Margin.Eight);
-            Textures.Tooltip   = new Bordered(m_Texture, 128, 320, 127, 31, Margin.Eight);
-            Textures.StatusBar = new Bordered(m_Texture, 128, 288, 127, 31, Margin.Eight);
-            Textures.Selection = new Bordered(m_Texture, 384, 32, 31, 31, Margin.Four);
+            Textures.Shadow    = new Bordered(imageHandle, 448, 0, 31, 31, Margin.Eight);
+            Textures.Tooltip   = new Bordered(imageHandle, 128, 320, 127, 31, Margin.Eight);
+            Textures.StatusBar = new Bordered(imageHandle, 128, 288, 127, 31, Margin.Eight);
+            Textures.Selection = new Bordered(imageHandle, 384, 32, 31, 31, Margin.Four);
 
-            Textures.Panel.Normal    = new Bordered(m_Texture, 256, 0, 63, 63, new Margin(16, 16, 16, 16));
-            Textures.Panel.Bright    = new Bordered(m_Texture, 256 + 64, 0, 63, 63, new Margin(16, 16, 16, 16));
-            Textures.Panel.Dark      = new Bordered(m_Texture, 256, 64, 63, 63, new Margin(16, 16, 16, 16));
-            Textures.Panel.Highlight = new Bordered(m_Texture, 256 + 64, 64, 63, 63, new Margin(16, 16, 16, 16));
+            Textures.Panel.Normal    = new Bordered(imageHandle, 256, 0, 63, 63, new Margin(16, 16, 16, 16));
+            Textures.Panel.Bright    = new Bordered(imageHandle, 256 + 64, 0, 63, 63, new Margin(16, 16, 16, 16));
+            Textures.Panel.Dark      = new Bordered(imageHandle, 256, 64, 63, 63, new Margin(16, 16, 16, 16));
+            Textures.Panel.Highlight = new Bordered(imageHandle, 256 + 64, 64, 63, 63, new Margin(16, 16, 16, 16));
 
-            Textures.Window.Normal   = new Bordered(m_Texture, 0, 0, 127, 127, new Margin(8, 32, 8, 8));
-            Textures.Window.Inactive = new Bordered(m_Texture, 128, 0, 127, 127, new Margin(8, 32, 8, 8));
+            Textures.Window.Normal   = new Bordered(imageHandle, 0, 0, 127, 127, new Margin(8, 32, 8, 8));
+            Textures.Window.Inactive = new Bordered(imageHandle, 128, 0, 127, 127, new Margin(8, 32, 8, 8));
 
-            Textures.CheckBox.Active.Checked  = new Texturing.Single(m_Texture, 448, 32, 15, 15);
-            Textures.CheckBox.Active.Normal   = new Texturing.Single(m_Texture, 464, 32, 15, 15);
-            Textures.CheckBox.Disabled.Normal = new Texturing.Single(m_Texture, 448, 48, 15, 15);
-            Textures.CheckBox.Disabled.Normal = new Texturing.Single(m_Texture, 464, 48, 15, 15);
+            Textures.CheckBox.Active.Checked  = new Texturing.Single(imageHandle, 448, 32, 15, 15);
+            Textures.CheckBox.Active.Normal   = new Texturing.Single(imageHandle, 464, 32, 15, 15);
+            Textures.CheckBox.Disabled.Normal = new Texturing.Single(imageHandle, 448, 48, 15, 15);
+            Textures.CheckBox.Disabled.Normal = new Texturing.Single(imageHandle, 464, 48, 15, 15);
 
-            Textures.RadioButton.Active.Checked  = new Texturing.Single(m_Texture, 448, 64, 15, 15);
-            Textures.RadioButton.Active.Normal   = new Texturing.Single(m_Texture, 464, 64, 15, 15);
-            Textures.RadioButton.Disabled.Normal = new Texturing.Single(m_Texture, 448, 80, 15, 15);
-            Textures.RadioButton.Disabled.Normal = new Texturing.Single(m_Texture, 464, 80, 15, 15);
+            Textures.RadioButton.Active.Checked  = new Texturing.Single(imageHandle, 448, 64, 15, 15);
+            Textures.RadioButton.Active.Normal   = new Texturing.Single(imageHandle, 464, 64, 15, 15);
+            Textures.RadioButton.Disabled.Normal = new Texturing.Single(imageHandle, 448, 80, 15, 15);
+            Textures.RadioButton.Disabled.Normal = new Texturing.Single(imageHandle, 464, 80, 15, 15);
 
-            Textures.TextBox.Normal   = new Bordered(m_Texture, 0, 150, 127, 21, Margin.Four);
-            Textures.TextBox.Focus    = new Bordered(m_Texture, 0, 172, 127, 21, Margin.Four);
-            Textures.TextBox.Disabled = new Bordered(m_Texture, 0, 193, 127, 21, Margin.Four);
+            Textures.TextBox.Normal   = new Bordered(imageHandle, 0, 150, 127, 21, Margin.Four);
+            Textures.TextBox.Focus    = new Bordered(imageHandle, 0, 172, 127, 21, Margin.Four);
+            Textures.TextBox.Disabled = new Bordered(imageHandle, 0, 193, 127, 21, Margin.Four);
 
-            Textures.Menu.Strip                = new Bordered(m_Texture, 0, 128, 127, 21, Margin.One);
-            Textures.Menu.BackgroundWithMargin = new Bordered(m_Texture, 128, 128, 127, 63, new Margin(24, 8, 8, 8));
-            Textures.Menu.Background           = new Bordered(m_Texture, 128, 192, 127, 63, Margin.Eight);
-            Textures.Menu.Hover                = new Bordered(m_Texture, 128, 256, 127, 31, Margin.Eight);
-            Textures.Menu.RightArrow           = new Texturing.Single(m_Texture, 464, 112, 15, 15);
-            Textures.Menu.Check                = new Texturing.Single(m_Texture, 448, 112, 15, 15);
+            Textures.Menu.Strip                = new Bordered(imageHandle, 0, 128, 127, 21, Margin.One);
+            Textures.Menu.BackgroundWithMargin = new Bordered(imageHandle, 128, 128, 127, 63, new Margin(24, 8, 8, 8));
+            Textures.Menu.Background           = new Bordered(imageHandle, 128, 192, 127, 63, Margin.Eight);
+            Textures.Menu.Hover                = new Bordered(imageHandle, 128, 256, 127, 31, Margin.Eight);
+            Textures.Menu.RightArrow           = new Texturing.Single(imageHandle, 464, 112, 15, 15);
+            Textures.Menu.Check                = new Texturing.Single(imageHandle, 448, 112, 15, 15);
 
-            Textures.Tab.Control         = new Bordered(m_Texture, 0, 256, 127, 127, Margin.Eight);
-            Textures.Tab.Bottom.Active   = new Bordered(m_Texture, 0, 416, 63, 31, Margin.Eight);
-            Textures.Tab.Bottom.Inactive = new Bordered(m_Texture, 0 + 128, 416, 63, 31, Margin.Eight);
-            Textures.Tab.Top.Active      = new Bordered(m_Texture, 0, 384, 63, 31, Margin.Eight);
-            Textures.Tab.Top.Inactive    = new Bordered(m_Texture, 0 + 128, 384, 63, 31, Margin.Eight);
-            Textures.Tab.Left.Active     = new Bordered(m_Texture, 64, 384, 31, 63, Margin.Eight);
-            Textures.Tab.Left.Inactive   = new Bordered(m_Texture, 64 + 128, 384, 31, 63, Margin.Eight);
-            Textures.Tab.Right.Active    = new Bordered(m_Texture, 96, 384, 31, 63, Margin.Eight);
-            Textures.Tab.Right.Inactive  = new Bordered(m_Texture, 96 + 128, 384, 31, 63, Margin.Eight);
-            Textures.Tab.HeaderBar       = new Bordered(m_Texture, 128, 352, 127, 31, Margin.Four);
+            Textures.Tab.Control         = new Bordered(imageHandle, 0, 256, 127, 127, Margin.Eight);
+            Textures.Tab.Bottom.Active   = new Bordered(imageHandle, 0, 416, 63, 31, Margin.Eight);
+            Textures.Tab.Bottom.Inactive = new Bordered(imageHandle, 0 + 128, 416, 63, 31, Margin.Eight);
+            Textures.Tab.Top.Active      = new Bordered(imageHandle, 0, 384, 63, 31, Margin.Eight);
+            Textures.Tab.Top.Inactive    = new Bordered(imageHandle, 0 + 128, 384, 63, 31, Margin.Eight);
+            Textures.Tab.Left.Active     = new Bordered(imageHandle, 64, 384, 31, 63, Margin.Eight);
+            Textures.Tab.Left.Inactive   = new Bordered(imageHandle, 64 + 128, 384, 31, 63, Margin.Eight);
+            Textures.Tab.Right.Active    = new Bordered(imageHandle, 96, 384, 31, 63, Margin.Eight);
+            Textures.Tab.Right.Inactive  = new Bordered(imageHandle, 96 + 128, 384, 31, 63, Margin.Eight);
+            Textures.Tab.HeaderBar       = new Bordered(imageHandle, 128, 352, 127, 31, Margin.Four);
 
-            Textures.Window.Close       = new Texturing.Single(m_Texture, 0, 224, 24, 24);
-            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 32, 224, 24, 24);
-            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 64, 224, 24, 24);
-            Textures.Window.Close_Hover = new Texturing.Single(m_Texture, 96, 224, 24, 24);
+            Textures.Window.Close       = new Texturing.Single(imageHandle, 0, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(imageHandle, 32, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(imageHandle, 64, 224, 24, 24);
+            Textures.Window.Close_Hover = new Texturing.Single(imageHandle, 96, 224, 24, 24);
 
-            Textures.Scroller.TrackV           = new Bordered(m_Texture, 384, 208, 15, 127, Margin.Four);
-            Textures.Scroller.ButtonV_Normal   = new Bordered(m_Texture, 384 + 16, 208, 15, 127, Margin.Four);
-            Textures.Scroller.ButtonV_Hover    = new Bordered(m_Texture, 384 + 32, 208, 15, 127, Margin.Four);
-            Textures.Scroller.ButtonV_Down     = new Bordered(m_Texture, 384 + 48, 208, 15, 127, Margin.Four);
-            Textures.Scroller.ButtonV_Disabled = new Bordered(m_Texture, 384 + 64, 208, 15, 127, Margin.Four);
-            Textures.Scroller.TrackH           = new Bordered(m_Texture, 384, 128, 127, 15, Margin.Four);
-            Textures.Scroller.ButtonH_Normal   = new Bordered(m_Texture, 384, 128 + 16, 127, 15, Margin.Four);
-            Textures.Scroller.ButtonH_Hover    = new Bordered(m_Texture, 384, 128 + 32, 127, 15, Margin.Four);
-            Textures.Scroller.ButtonH_Down     = new Bordered(m_Texture, 384, 128 + 48, 127, 15, Margin.Four);
-            Textures.Scroller.ButtonH_Disabled = new Bordered(m_Texture, 384, 128 + 64, 127, 15, Margin.Four);
+            Textures.Scroller.TrackV           = new Bordered(imageHandle, 384, 208, 15, 127, Margin.Four);
+            Textures.Scroller.ButtonV_Normal   = new Bordered(imageHandle, 384 + 16, 208, 15, 127, Margin.Four);
+            Textures.Scroller.ButtonV_Hover    = new Bordered(imageHandle, 384 + 32, 208, 15, 127, Margin.Four);
+            Textures.Scroller.ButtonV_Down     = new Bordered(imageHandle, 384 + 48, 208, 15, 127, Margin.Four);
+            Textures.Scroller.ButtonV_Disabled = new Bordered(imageHandle, 384 + 64, 208, 15, 127, Margin.Four);
+            Textures.Scroller.TrackH           = new Bordered(imageHandle, 384, 128, 127, 15, Margin.Four);
+            Textures.Scroller.ButtonH_Normal   = new Bordered(imageHandle, 384, 128 + 16, 127, 15, Margin.Four);
+            Textures.Scroller.ButtonH_Hover    = new Bordered(imageHandle, 384, 128 + 32, 127, 15, Margin.Four);
+            Textures.Scroller.ButtonH_Down     = new Bordered(imageHandle, 384, 128 + 48, 127, 15, Margin.Four);
+            Textures.Scroller.ButtonH_Disabled = new Bordered(imageHandle, 384, 128 + 64, 127, 15, Margin.Four);
 
             Textures.Scroller.Button.Normal   = new Bordered[4];
             Textures.Scroller.Button.Disabled = new Bordered[4];
             Textures.Scroller.Button.Hover    = new Bordered[4];
             Textures.Scroller.Button.Down     = new Bordered[4];
 
-            Textures.Tree.Background = new Bordered(m_Texture, 256, 128, 127, 127, new Margin(16, 16, 16, 16));
-            Textures.Tree.Plus       = new Texturing.Single(m_Texture, 448, 96, 15, 15);
-            Textures.Tree.Minus      = new Texturing.Single(m_Texture, 464, 96, 15, 15);
+            Textures.Tree.Background = new Bordered(imageHandle, 256, 128, 127, 127, new Margin(16, 16, 16, 16));
+            Textures.Tree.Plus       = new Texturing.Single(imageHandle, 448, 96, 15, 15);
+            Textures.Tree.Minus      = new Texturing.Single(imageHandle, 464, 96, 15, 15);
 
-            Textures.Input.Button.Normal   = new Bordered(m_Texture, 480, 0, 31, 31, Margin.Eight);
-            Textures.Input.Button.Hovered  = new Bordered(m_Texture, 480, 32, 31, 31, Margin.Eight);
-            Textures.Input.Button.Disabled = new Bordered(m_Texture, 480, 64, 31, 31, Margin.Eight);
-            Textures.Input.Button.Pressed  = new Bordered(m_Texture, 480, 96, 31, 31, Margin.Eight);
+            Textures.Input.Button.Normal   = new Bordered(imageHandle, 480, 0, 31, 31, Margin.Eight);
+            Textures.Input.Button.Hovered  = new Bordered(imageHandle, 480, 32, 31, 31, Margin.Eight);
+            Textures.Input.Button.Disabled = new Bordered(imageHandle, 480, 64, 31, 31, Margin.Eight);
+            Textures.Input.Button.Pressed  = new Bordered(imageHandle, 480, 96, 31, 31, Margin.Eight);
 
             for (int i = 0; i < 4; i++)
             {
-                Textures.Scroller.Button.Normal[i]   = new Bordered(m_Texture, 464 + 0, 208 + i * 16, 15, 15, Margin.Two);
-                Textures.Scroller.Button.Hover[i]    = new Bordered(m_Texture, 480, 208 + i * 16, 15, 15, Margin.Two);
-                Textures.Scroller.Button.Down[i]     = new Bordered(m_Texture, 464, 272 + i * 16, 15, 15, Margin.Two);
-                Textures.Scroller.Button.Disabled[i] = new Bordered(m_Texture, 480 + 48, 272 + i * 16, 15, 15, Margin.Two);
+                Textures.Scroller.Button.Normal[i]   = new Bordered(imageHandle, 464 + 0, 208 + i * 16, 15, 15, Margin.Two);
+                Textures.Scroller.Button.Hover[i]    = new Bordered(imageHandle, 480, 208 + i * 16, 15, 15, Margin.Two);
+                Textures.Scroller.Button.Down[i]     = new Bordered(imageHandle, 464, 272 + i * 16, 15, 15, Margin.Two);
+                Textures.Scroller.Button.Disabled[i] = new Bordered(imageHandle, 480 + 48, 272 + i * 16, 15, 15, Margin.Two);
             }
 
-            Textures.Input.ListBox.Background       = new Bordered(m_Texture, 256, 256, 63, 127, Margin.Eight);
-            Textures.Input.ListBox.Hovered          = new Bordered(m_Texture, 320, 320, 31, 31, Margin.Eight);
-            Textures.Input.ListBox.EvenLine         = new Bordered(m_Texture, 352, 256, 31, 31, Margin.Eight);
-            Textures.Input.ListBox.OddLine          = new Bordered(m_Texture, 352, 288, 31, 31, Margin.Eight);
-            Textures.Input.ListBox.EvenLineSelected = new Bordered(m_Texture, 320, 270, 31, 31, Margin.Eight);
-            Textures.Input.ListBox.OddLineSelected  = new Bordered(m_Texture, 320, 288, 31, 31, Margin.Eight);
+            Textures.Input.ListBox.Background       = new Bordered(imageHandle, 256, 256, 63, 127, Margin.Eight);
+            Textures.Input.ListBox.Hovered          = new Bordered(imageHandle, 320, 320, 31, 31, Margin.Eight);
+            Textures.Input.ListBox.EvenLine         = new Bordered(imageHandle, 352, 256, 31, 31, Margin.Eight);
+            Textures.Input.ListBox.OddLine          = new Bordered(imageHandle, 352, 288, 31, 31, Margin.Eight);
+            Textures.Input.ListBox.EvenLineSelected = new Bordered(imageHandle, 320, 270, 31, 31, Margin.Eight);
+            Textures.Input.ListBox.OddLineSelected  = new Bordered(imageHandle, 320, 288, 31, 31, Margin.Eight);
 
-            Textures.Input.ComboBox.Normal   = new Bordered(m_Texture, 384, 336, 127, 31, new Margin(8, 8, 32, 8));
-            Textures.Input.ComboBox.Hover    = new Bordered(m_Texture, 384, 336 + 32, 127, 31, new Margin(8, 8, 32, 8));
-            Textures.Input.ComboBox.Down     = new Bordered(m_Texture, 384, 336 + 64, 127, 31, new Margin(8, 8, 32, 8));
-            Textures.Input.ComboBox.Disabled = new Bordered(m_Texture, 384, 336 + 96, 127, 31, new Margin(8, 8, 32, 8));
+            Textures.Input.ComboBox.Normal   = new Bordered(imageHandle, 384, 336, 127, 31, new Margin(8, 8, 32, 8));
+            Textures.Input.ComboBox.Hover    = new Bordered(imageHandle, 384, 336 + 32, 127, 31, new Margin(8, 8, 32, 8));
+            Textures.Input.ComboBox.Down     = new Bordered(imageHandle, 384, 336 + 64, 127, 31, new Margin(8, 8, 32, 8));
+            Textures.Input.ComboBox.Disabled = new Bordered(imageHandle, 384, 336 + 96, 127, 31, new Margin(8, 8, 32, 8));
 
-            Textures.Input.ComboBox.Button.Normal   = new Texturing.Single(m_Texture, 496, 272, 15, 15);
-            Textures.Input.ComboBox.Button.Hover    = new Texturing.Single(m_Texture, 496, 272 + 16, 15, 15);
-            Textures.Input.ComboBox.Button.Down     = new Texturing.Single(m_Texture, 496, 272 + 32, 15, 15);
-            Textures.Input.ComboBox.Button.Disabled = new Texturing.Single(m_Texture, 496, 272 + 48, 15, 15);
+            Textures.Input.ComboBox.Button.Normal   = new Texturing.Single(imageHandle, 496, 272, 15, 15);
+            Textures.Input.ComboBox.Button.Hover    = new Texturing.Single(imageHandle, 496, 272 + 16, 15, 15);
+            Textures.Input.ComboBox.Button.Down     = new Texturing.Single(imageHandle, 496, 272 + 32, 15, 15);
+            Textures.Input.ComboBox.Button.Disabled = new Texturing.Single(imageHandle, 496, 272 + 48, 15, 15);
 
-            Textures.Input.UpDown.Up.Normal     = new Texturing.Single(m_Texture, 384, 112, 7, 7);
-            Textures.Input.UpDown.Up.Hover      = new Texturing.Single(m_Texture, 384 + 8, 112, 7, 7);
-            Textures.Input.UpDown.Up.Down       = new Texturing.Single(m_Texture, 384 + 16, 112, 7, 7);
-            Textures.Input.UpDown.Up.Disabled   = new Texturing.Single(m_Texture, 384 + 24, 112, 7, 7);
-            Textures.Input.UpDown.Down.Normal   = new Texturing.Single(m_Texture, 384, 120, 7, 7);
-            Textures.Input.UpDown.Down.Hover    = new Texturing.Single(m_Texture, 384 + 8, 120, 7, 7);
-            Textures.Input.UpDown.Down.Down     = new Texturing.Single(m_Texture, 384 + 16, 120, 7, 7);
-            Textures.Input.UpDown.Down.Disabled = new Texturing.Single(m_Texture, 384 + 24, 120, 7, 7);
+            Textures.Input.UpDown.Up.Normal     = new Texturing.Single(imageHandle, 384, 112, 7, 7);
+            Textures.Input.UpDown.Up.Hover      = new Texturing.Single(imageHandle, 384 + 8, 112, 7, 7);
+            Textures.Input.UpDown.Up.Down       = new Texturing.Single(imageHandle, 384 + 16, 112, 7, 7);
+            Textures.Input.UpDown.Up.Disabled   = new Texturing.Single(imageHandle, 384 + 24, 112, 7, 7);
+            Textures.Input.UpDown.Down.Normal   = new Texturing.Single(imageHandle, 384, 120, 7, 7);
+            Textures.Input.UpDown.Down.Hover    = new Texturing.Single(imageHandle, 384 + 8, 120, 7, 7);
+            Textures.Input.UpDown.Down.Down     = new Texturing.Single(imageHandle, 384 + 16, 120, 7, 7);
+            Textures.Input.UpDown.Down.Disabled = new Texturing.Single(imageHandle, 384 + 24, 120, 7, 7);
 
-            Textures.ProgressBar.Back  = new Bordered(m_Texture, 384, 0, 31, 31, Margin.Eight);
-            Textures.ProgressBar.Front = new Bordered(m_Texture, 384 + 32, 0, 31, 31, Margin.Eight);
+            Textures.ProgressBar.Back  = new Bordered(imageHandle, 384, 0, 31, 31, Margin.Eight);
+            Textures.ProgressBar.Front = new Bordered(imageHandle, 384 + 32, 0, 31, 31, Margin.Eight);
 
-            Textures.Input.Slider.H.Normal   = new Texturing.Single(m_Texture, 416, 32, 15, 15);
-            Textures.Input.Slider.H.Hover    = new Texturing.Single(m_Texture, 416, 32 + 16, 15, 15);
-            Textures.Input.Slider.H.Down     = new Texturing.Single(m_Texture, 416, 32 + 32, 15, 15);
-            Textures.Input.Slider.H.Disabled = new Texturing.Single(m_Texture, 416, 32 + 48, 15, 15);
+            Textures.Input.Slider.H.Normal   = new Texturing.Single(imageHandle, 416, 32, 15, 15);
+            Textures.Input.Slider.H.Hover    = new Texturing.Single(imageHandle, 416, 32 + 16, 15, 15);
+            Textures.Input.Slider.H.Down     = new Texturing.Single(imageHandle, 416, 32 + 32, 15, 15);
+            Textures.Input.Slider.H.Disabled = new Texturing.Single(imageHandle, 416, 32 + 48, 15, 15);
 
-            Textures.Input.Slider.V.Normal   = new Texturing.Single(m_Texture, 416 + 16, 32, 15, 15);
-            Textures.Input.Slider.V.Hover    = new Texturing.Single(m_Texture, 416 + 16, 32 + 16, 15, 15);
-            Textures.Input.Slider.V.Down     = new Texturing.Single(m_Texture, 416 + 16, 32 + 32, 15, 15);
-            Textures.Input.Slider.V.Disabled = new Texturing.Single(m_Texture, 416 + 16, 32 + 48, 15, 15);
+            Textures.Input.Slider.V.Normal   = new Texturing.Single(imageHandle, 416 + 16, 32, 15, 15);
+            Textures.Input.Slider.V.Hover    = new Texturing.Single(imageHandle, 416 + 16, 32 + 16, 15, 15);
+            Textures.Input.Slider.V.Down     = new Texturing.Single(imageHandle, 416 + 16, 32 + 32, 15, 15);
+            Textures.Input.Slider.V.Disabled = new Texturing.Single(imageHandle, 416 + 16, 32 + 48, 15, 15);
 
-            Textures.CategoryList.Outer  = new Bordered(m_Texture, 256, 384, 63, 63, Margin.Eight);
-            Textures.CategoryList.Inner  = new Bordered(m_Texture, 256 + 64, 384, 63, 63, new Margin(8, 21, 8, 8));
-            Textures.CategoryList.Header = new Bordered(m_Texture, 320, 352, 63, 31, Margin.Eight);
+            Textures.CategoryList.Outer  = new Bordered(imageHandle, 256, 384, 63, 63, Margin.Eight);
+            Textures.CategoryList.Inner  = new Bordered(imageHandle, 256 + 64, 384, 63, 63, new Margin(8, 21, 8, 8));
+            Textures.CategoryList.Header = new Bordered(imageHandle, 320, 352, 63, 31, Margin.Eight);
         }
         #endregion
 
@@ -525,7 +524,7 @@ namespace Flood.GUI.Skins
                 Textures.Menu.Hover.Draw(Renderer, control.RenderBounds);
 
             if (isChecked)
-                Textures.Menu.Check.Draw(Renderer, new Rect(control.RenderBounds.X + 4, control.RenderBounds.Y + 3, 15, 15));
+                Textures.Menu.Check.Draw(Renderer, new Rectangle(control.RenderBounds.X + 4, control.RenderBounds.Y + 3, 15, 15));
         }
 
         public override void DrawMenuStrip(Controls.Control control)
@@ -546,7 +545,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawShadow(Controls.Control control)
         {
-            Rect r = control.RenderBounds;
+            Rectangle r = control.RenderBounds;
             r.X -= 4;
             r.Y -= 4;
             r.Width += 10;
@@ -592,7 +591,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawGroupBox(Controls.Control control, int textStart, int textHeight, int textWidth)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             rect.Y += (int)(textHeight * 0.5f);
             rect.Height -= (int)(textHeight * 0.5f);
@@ -602,21 +601,21 @@ namespace Flood.GUI.Skins
 
             Renderer.DrawColor = m_colLighter;
 
-            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, textStart - 3, 1));
-            Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y + 1, rect.Width - textStart + textWidth - 2, 1));
-            Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, textStart - 3, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y + 1, rect.Width - textStart + textWidth - 2, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
 
-            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, 1, rect.Height));
-            Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, 1, rect.Height));
+            Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
 
             Renderer.DrawColor = m_colDarker;
 
-            Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y, textStart - 3, 1));
-            Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y, rect.Width - textStart - textWidth - 2, 1));
-            Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, textStart - 3, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y, rect.Width - textStart - textWidth - 2, 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.X + rect.Width - 2, 1));
 
-            Renderer.DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 1));
-            Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 1));
+            Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
         }
 
         public override void DrawTextBox(Controls.Control control)
@@ -667,22 +666,22 @@ namespace Flood.GUI.Skins
         {
             if (dir == Pos.Top)
             {
-                Textures.Tab.Top.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, 0, 0, 8)));
+                Textures.Tab.Top.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, 0, 0, 8)));
                 return;
             }
             if (dir == Pos.Left)
             {
-                Textures.Tab.Left.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, 0, 8, 0)));
+                Textures.Tab.Left.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, 0, 8, 0)));
                 return;
             }
             if (dir == Pos.Bottom)
             {
-                Textures.Tab.Bottom.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(0, -8, 0, 8)));
+                Textures.Tab.Bottom.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(0, -8, 0, 8)));
                 return;
             }
             if (dir == Pos.Right)
             {
-                Textures.Tab.Right.Active.Draw(Renderer, control.RenderBounds.Add(new Rect(-8, 0, 8, 0)));
+                Textures.Tab.Right.Active.Draw(Renderer, control.RenderBounds.Add(new Rectangle(-8, 0, 8, 0)));
                 return;
             }
         }
@@ -707,7 +706,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawHighlight(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = new Color(255, 100, 255, 255);
             Renderer.DrawFilledRect(rect);
         }
@@ -769,7 +768,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawProgressBar(Controls.Control control, bool horizontal, float progress)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             if (horizontal)
             {
@@ -819,7 +818,7 @@ namespace Flood.GUI.Skins
             Textures.Input.ListBox.OddLine.Draw(Renderer, control.RenderBounds);
         }
 
-        public void DrawSliderNotchesH(Rect rect, int numNotches, float dist)
+        public void DrawSliderNotchesH(Rectangle rect, int numNotches, float dist)
         {
             if (numNotches == 0) return;
 
@@ -828,7 +827,7 @@ namespace Flood.GUI.Skins
                 Renderer.DrawFilledRect(Util.FloatRect(rect.X + iSpacing * i, rect.Y + dist - 2, 1, 5));
         }
 
-        public void DrawSliderNotchesV(Rect rect, int numNotches, float dist)
+        public void DrawSliderNotchesV(Rectangle rect, int numNotches, float dist)
         {
             if (numNotches == 0) return;
 
@@ -839,7 +838,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawSlider(Controls.Control control, bool horizontal, int numNotches, int barSize)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = new Color(0, 0, 0, 100);
 
             if (horizontal)
@@ -884,9 +883,9 @@ namespace Flood.GUI.Skins
             Textures.Input.ComboBox.Normal.Draw(Renderer, control.RenderBounds);
         }
 
-        public override void DrawKeyboardHighlight(Controls.Control control, Rect r, int offset)
+        public override void DrawKeyboardHighlight(Controls.Control control, Rectangle r, int offset)
         {
-            Rect rect = r;
+            Rectangle rect = r;
 
             rect.X += offset;
             rect.Y += offset;
@@ -1025,7 +1024,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawTreeButton(Controls.Control control, bool open)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             if (open)
                 Textures.Tree.Minus.Draw(Renderer, rect);
@@ -1042,7 +1041,7 @@ namespace Flood.GUI.Skins
         {
             if (selected)
             {
-                Textures.Selection.Draw(Renderer, new Rect(17, 0, labelWidth + 2, labelHeight - 1));
+                Textures.Selection.Draw(Renderer, new Rectangle(17, 0, labelWidth + 2, labelHeight - 1));
             }
 
             base.DrawTreeNode(ctrl, open, selected, labelHeight, labelWidth, halfWay, lastBranch, isRoot);
@@ -1050,7 +1049,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawColorDisplay(Controls.Control control, Color color)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             if (color.A != 255)
             {
@@ -1074,14 +1073,14 @@ namespace Flood.GUI.Skins
         {
             if (!control.ShouldDrawBackground)
                 return;
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = Colors.ModalBackground;
             Renderer.DrawFilledRect(rect);
         }
 
         public override void DrawMenuDivider(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = new Color(0, 0, 0, 100);
             Renderer.DrawFilledRect(rect);
         }

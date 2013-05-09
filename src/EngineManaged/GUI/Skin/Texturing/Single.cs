@@ -8,17 +8,17 @@ namespace Flood.GUI.Skins.Texturing
     /// </summary>
     public struct Single
     {
-        private readonly Texture m_Texture;
+        private readonly ResourceHandle<Image> _imageHandle;
         private readonly float[] m_uv;
         private readonly int m_Width;
         private readonly int m_Height;
 
-        public Single(Texture texture, float x, float y, float w, float h )
+        public Single(ResourceHandle<Image> imageHandle, float x, float y, float w, float h )
         {
-            m_Texture = texture;
+            this._imageHandle = imageHandle;
 
-            float texw = m_Texture.Width;
-            float texh = m_Texture.Height;
+            float texw = imageHandle.Resolve().GetWidth();
+            float texh = imageHandle.Resolve().GetHeight();
 
             m_uv = new float[4];
             m_uv[0] = x / texw;
@@ -31,29 +31,23 @@ namespace Flood.GUI.Skins.Texturing
         }
 
         // can't have this as default param
-        public void Draw(Renderers.Renderer render, Rect r)
+        public void Draw(Renderers.Renderer render, Rectangle r)
         {
             Draw(render, r, Color.White);
         }
 
-        public void Draw(Renderers.Renderer render, Rect r, Color col)
+        public void Draw(Renderers.Renderer render, Rectangle r, Color col)
         {
-            if (m_Texture == null)
-                return;
-
             render.DrawColor = col;
-            render.DrawTexturedRect(m_Texture, r, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
+            render.DrawTexturedRect(_imageHandle, r, m_uv[0], m_uv[1], m_uv[2], m_uv[3]);
         }
 
-        public void DrawCenter(Renderers.Renderer render, Rect r)
+        public void DrawCenter(Renderers.Renderer render, Rectangle r)
         {
-            if (m_Texture == null)
-                return;
-
             DrawCenter(render, r, Color.White);
         }
 
-        public void DrawCenter(Renderers.Renderer render, Rect r, Color col)
+        public void DrawCenter(Renderers.Renderer render, Rectangle r, Color col)
         {
             r.X += (int)((r.Width - m_Width) * 0.5);
             r.Y += (int)((r.Height - m_Height) * 0.5);

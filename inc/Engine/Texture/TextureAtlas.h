@@ -33,7 +33,7 @@ class API_ENGINE TextureAtlas
 {
 public:
 
-    TextureAtlas(uint maxSize);
+    TextureAtlas(uint maxSize, PixelFormat pixelFormat);
 
     bool addImage(const ImageHandle& imageHandle);
 
@@ -45,7 +45,7 @@ private:
 
     void resizeAtlas(uint newSize);
 
-    void addImage(ImageHandle newImageHandle, Rect newRect);
+    void addImage(ImageHandle newImageHandle, Rectangle newRect);
 
     static const uint DefaultSize = 512;
     
