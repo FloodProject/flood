@@ -24,6 +24,7 @@ NAMESPACE_ENGINE_BEGIN
 
 struct Glyph
 {
+    float xOffset;
     float baseLineOffset;
     float advance;
     float width;
