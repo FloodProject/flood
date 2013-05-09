@@ -58,7 +58,7 @@ namespace TextAddin.Controls
             var lineHeight = Skin.DefaultFont.Size;
 
             skin.Renderer.DrawColor = new Color(0,0,0,255);
-            skin.Renderer.DrawFilledRect(new Rect((int)charPos.X,(int)charPos.Y,1,lineHeight));
+            skin.Renderer.DrawFilledRect(new Rectangle((int)charPos.X,(int)charPos.Y,1,lineHeight));
         }
 
         private void SnapCarretToPosition(int x, int y)

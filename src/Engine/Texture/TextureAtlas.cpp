@@ -17,12 +17,12 @@ NAMESPACE_ENGINE_BEGIN
 static const MaxRectsBinPack::FreeRectChoiceHeuristic gs_heuristic = 
              MaxRectsBinPack::FreeRectChoiceHeuristic::RectBestAreaFit;
 
-TextureAtlas::TextureAtlas(uint maxSize)
+TextureAtlas::TextureAtlas(uint maxSize, PixelFormat pixelFormat)
 {
     atlasMaxSize = maxSize;
     atlasSize = std::min(maxSize, DefaultSize);
     rectanglePacker.Init(atlasSize,atlasSize);
-    atlasImageHandle = ImageCreate(AllocatorGetHeap(),atlasSize,atlasSize,PixelFormat::R8G8B8A8);
+    atlasImageHandle = ImageCreate(AllocatorGetHeap(),atlasSize,atlasSize,pixelFormat);
 }
 
 static const int RBLOCK = 96;
@@ -77,7 +77,7 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
 
     Image* newImage = newImageHandle.Resolve();
 
-    Rect newRect = rectanglePacker.Insert(newImage->getWidth(), newImage->getHeight(), gs_heuristic);
+    Rectangle newRect = rectanglePacker.Insert(newImage->getWidth()+1, newImage->getHeight()+1, gs_heuristic);
 
     if (newRect.height == 0 || newRect.width == 0){
         if (atlasSize >= atlasMaxSize)
@@ -88,6 +88,9 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
 
         return addImage(newImageHandle);
     }
+
+    newRect.width--;
+    newRect.height--;
 
     addImage(newImageHandle,newRect);
 
@@ -114,7 +117,7 @@ void TextureAtlas::resizeAtlas(uint newSize)
     rectanglePacker.Init(newSize,newSize);
 
     std::vector<Vector2i> rectSizes;
-    std::vector<Rect> newRects;
+    std::vector<Rectangle> newRects;
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
@@ -123,8 +126,10 @@ void TextureAtlas::resizeAtlas(uint newSize)
         Vector2i rectSize;
         int width = (iter->second.rightBottomUV.x - iter->second.leftTopUV.x)*width;
         int height = (iter->second.rightBottomUV.y - iter->second.leftTopUV.y)*height;
-        rectSize.x = width;
-        rectSize.y = height;
+        
+        rectSize.x = width+1;
+        rectSize.y = height+1;
+
         rectSizes.push_back(rectSize);
     }
 
@@ -136,13 +141,16 @@ void TextureAtlas::resizeAtlas(uint newSize)
     for (i = 0, iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter, ++i) 
     {
         ImageHandle newImageHandle = iter->first;
-        Rect newRect = newRects[i];
+        Rectangle newRect = newRects[i];
+
+        newRect.width--;
+        newRect.height--;
 
         addImage(newImageHandle, newRect);
     }
 }
 
-void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
+void TextureAtlas::addImage(ImageHandle newImageHandle, Rectangle newRect)
 {
     Image* newImage = newImageHandle.Resolve();
 
@@ -150,35 +158,13 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
                       newImage->getHeight() == newRect.width;
 
     Image* atlasImage = atlasImageHandle.Resolve();
-    if (newImage->getPixelFormat() == atlasImage->getPixelFormat())
-    {
+
+    assert(newImage->getPixelFormat() == atlasImage->getPixelFormat());
+
+    if (wasRotated)
+        RotateImage(newImage,atlasImage,Vector2i(newRect.x,newRect.y));
+    else
         atlasImage->setBuffer(newImage,Vector2i(newRect.x,newRect.y));
-    } 
-    else 
-    {
-         assert(newImage->getPixelFormat() == PixelFormat::Depth &&
-                atlasImage->getPixelFormat() == PixelFormat::R8G8B8A8);
-
-         Image tmpImage(newImage->getWidth(),newImage->getHeight(),PixelFormat::R8G8B8A8);
-
-         int newImageSize = newImage->getSize();
-         std::vector<byte>& buffer = tmpImage.getBuffer();
-         buffer.resize(newImageSize*4);
-
-         for (int i = 0; i < newImageSize; i++)
-         {
-             int p = i*4;
-             buffer[p+0] = 255; //R
-             buffer[p+1] = 255; //G
-             buffer[p+2] = 255; //B
-             buffer[p+3] = newImage->getBuffer()[i]; //A
-         }
-
-         if (wasRotated)
-            RotateImage(&tmpImage,atlasImage,Vector2i(newRect.x,newRect.y));
-         else
-            atlasImage->setBuffer(&tmpImage,Vector2i(newRect.x,newRect.y));
-    }
 
     SubTexture subTexture;
     subTexture.atlas = this;

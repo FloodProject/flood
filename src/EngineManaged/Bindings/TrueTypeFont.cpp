@@ -41,6 +41,7 @@ void Flood::TrueTypeFont::Init()
 bool Flood::TrueTypeFont::GetGlyphInfo(int codepoint, int size, Flood::Glyph glyph)
 {
     auto _marshal2 = ::Glyph();
+    _marshal2.xOffset = glyph.XOffset;
     _marshal2.baseLineOffset = glyph.BaseLineOffset;
     _marshal2.advance = glyph.Advance;
     _marshal2.width = glyph.Width;

@@ -184,7 +184,7 @@ namespace Flood.GUI.Controls
             if (droppedOn != null && droppedOn != this)
             {
                 Vector2i dropPos = droppedOn.CanvasPosToLocal(new Vector2i(x, y));
-                m_TabDragControl.SetBounds(new Rect(0, 0, 3, Height));
+                m_TabDragControl.SetBounds(new Rectangle(0, 0, 3, Height));
                 m_TabDragControl.BringToFront();
                 m_TabDragControl.SetPosition(droppedOn.X - 1, 0);
 

@@ -40,9 +40,9 @@ namespace Flood.GUI.Controls
 
         private Skins.Skin m_Skin;
 
-        private Rect m_Bounds;
-        private Rect m_RenderBounds;
-        private Rect m_InnerBounds;
+        private Rectangle m_Bounds;
+        private Rectangle m_RenderBounds;
+        private Rectangle m_InnerBounds;
         private Padding m_Padding;
         private Margin m_Margin;
 
@@ -320,17 +320,17 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Control's size and position relative to the parent.
         /// </summary>
-        public Rect Bounds { get { return m_Bounds; } }
+        public Rectangle Bounds { get { return m_Bounds; } }
         
         /// <summary>
         /// Bounds for the renderer.
         /// </summary>
-        public Rect RenderBounds { get { return m_RenderBounds; } }
+        public Rectangle RenderBounds { get { return m_RenderBounds; } }
 
         /// <summary>
         /// Bounds adjusted by padding.
         /// </summary>
-        public Rect InnerBounds { get { return m_InnerBounds; } }
+        public Rectangle InnerBounds { get { return m_InnerBounds; } }
 
         /// <summary>
         /// Size restriction.
@@ -421,7 +421,7 @@ namespace Flood.GUI.Controls
             Parent = parent;
 
             m_Hidden = false;
-            m_Bounds = new Rect(0, 0, 10, 10);
+            m_Bounds = new Rectangle(0, 0, 10, 10);
             m_Padding = Padding.Zero;
             m_Margin = Margin.Zero;
 
@@ -868,7 +868,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="bounds">New bounds.</param>
         /// <returns>True if bounds changed.</returns>
-        public virtual bool SetBounds(Rect bounds)
+        public virtual bool SetBounds(Rectangle bounds)
         {
             return SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
         }
@@ -906,7 +906,7 @@ namespace Flood.GUI.Controls
                 m_Bounds.Height == height)
                 return false;
 
-            Rect oldBounds = Bounds;
+            Rectangle oldBounds = Bounds;
 
             m_Bounds.X = x;
             m_Bounds.Y = y;
@@ -953,7 +953,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected virtual void OnBoundsChanged(Rect oldBounds)
+        protected virtual void OnBoundsChanged(Rectangle oldBounds)
         {
             //Anything that needs to update on size changes
             //Iterate my children and tell them I've changed
@@ -985,7 +985,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Handler invoked when control children's bounds change.
         /// </summary>
-        protected virtual void OnChildBoundsChanged(Rect oldChildBounds, Control child)
+        protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Control child)
         {
 
         }
@@ -1012,7 +1012,7 @@ namespace Flood.GUI.Controls
                 return;
 
             Vector2i oldRenderOffset = render.RenderOffset;
-            Rect oldRegion = render.ClipRegion;
+            Rectangle oldRegion = render.ClipRegion;
 
             if (this != master)
             {
@@ -1022,7 +1022,7 @@ namespace Flood.GUI.Controls
             else
             {
                 render.RenderOffset = new Vector2i(0,0);
-                render.ClipRegion = new Rect(0, 0, Width, Height);
+                render.ClipRegion = new Rectangle(0, 0, Width, Height);
             }
 
             if (m_CacheTextureDirty && render.ClipRegionVisible)
@@ -1100,7 +1100,7 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         /// <param name="clipRect">Clipping rectangle.</param>
-        protected virtual void RenderRecursive(Skins.Skin skin, Rect clipRect)
+        protected virtual void RenderRecursive(Skins.Skin skin, Rectangle clipRect)
         {
             Renderers.Renderer render = skin.Renderer;
             Vector2i oldRenderOffset = render.RenderOffset;
@@ -1109,7 +1109,7 @@ namespace Flood.GUI.Controls
 
             RenderUnder(skin);
 
-            Rect oldRegion = render.ClipRegion;
+            Rectangle oldRegion = render.ClipRegion;
 
             if (ShouldClip)
             {
@@ -1439,7 +1439,7 @@ namespace Flood.GUI.Controls
                 Layout(skin);
             }
 
-            Rect bounds = RenderBounds;
+            Rectangle bounds = RenderBounds;
 
             // Adjust bounds for padding
             bounds.X += m_Padding.Left;

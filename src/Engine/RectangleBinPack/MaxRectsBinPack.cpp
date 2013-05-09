@@ -27,7 +27,7 @@ void MaxRectsBinPack::Init(int width, int height)
 	binWidth = width;
 	binHeight = height;
 
-	Rect n;
+	Rectangle n;
 	n.x = 0;
 	n.y = 0;
 	n.width = width;
@@ -39,9 +39,9 @@ void MaxRectsBinPack::Init(int width, int height)
 	freeRectangles.push_back(n);
 }
 
-Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic method)
+Rectangle MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic method)
 {
-	Rect newNode;
+	Rectangle newNode;
 	int score1; // Unused in this function. We don't need to know the score after finding the position.
 	int score2;
 	switch(method)
@@ -73,7 +73,7 @@ Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic meth
 	return newNode;
 }
 
-void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect> &dst, FreeRectChoiceHeuristic method)
+void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rectangle> &dst, FreeRectChoiceHeuristic method)
 {
 	dst.clear();
 
@@ -82,13 +82,13 @@ void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect>
 		int bestScore1 = std::numeric_limits<int>::max();
 		int bestScore2 = std::numeric_limits<int>::max();
 		int bestRectIndex = -1;
-		Rect bestNode;
+		Rectangle bestNode;
 
 		for(size_t i = 0; i < rectSizes.size(); ++i)
 		{
 			int score1;
 			int score2;
-			Rect newNode = ScoreRect(rectSizes[i].x, rectSizes[i].y, method, score1, score2);
+			Rectangle newNode = ScoreRect(rectSizes[i].x, rectSizes[i].y, method, score1, score2);
 
 			if (score1 < bestScore1 || (score1 == bestScore1 && score2 < bestScore2))
 			{
@@ -107,7 +107,7 @@ void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect>
 	}
 }
 
-void MaxRectsBinPack::PlaceRect(const Rect &node)
+void MaxRectsBinPack::PlaceRect(const Rectangle &node)
 {
 	size_t numRectanglesToProcess = freeRectangles.size();
 	for(size_t i = 0; i < numRectanglesToProcess; ++i)
@@ -126,9 +126,9 @@ void MaxRectsBinPack::PlaceRect(const Rect &node)
 	//		dst.push_back(bestNode); ///\todo Refactor so that this compiles.
 }
 
-Rect MaxRectsBinPack::ScoreRect(int width, int height, FreeRectChoiceHeuristic method, int &score1, int &score2) const
+Rectangle MaxRectsBinPack::ScoreRect(int width, int height, FreeRectChoiceHeuristic method, int &score1, int &score2) const
 {
-	Rect newNode;
+	Rectangle newNode;
 	score1 = std::numeric_limits<int>::max();
 	score2 = std::numeric_limits<int>::max();
 	switch(method)
@@ -162,10 +162,10 @@ float MaxRectsBinPack::Occupancy() const
 	return (float)usedSurfaceArea / (binWidth * binHeight);
 }
 
-Rect MaxRectsBinPack::FindPositionForNewNodeBottomLeft(int width, int height, int &bestY, int &bestX) const
+Rectangle MaxRectsBinPack::FindPositionForNewNodeBottomLeft(int width, int height, int &bestY, int &bestX) const
 {
-	Rect bestNode;
-	memset(&bestNode, 0, sizeof(Rect));
+	Rectangle bestNode;
+	memset(&bestNode, 0, sizeof(Rectangle));
 
 	bestY = std::numeric_limits<int>::max();
 
@@ -202,11 +202,11 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBottomLeft(int width, int height, in
 	return bestNode;
 }
 
-Rect MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(int width, int height, 
+Rectangle MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(int width, int height, 
 	int &bestShortSideFit, int &bestLongSideFit) const
 {
-	Rect bestNode;
-	memset(&bestNode, 0, sizeof(Rect));
+	Rectangle bestNode;
+	memset(&bestNode, 0, sizeof(Rectangle));
 
 	bestShortSideFit = std::numeric_limits<int>::max();
 
@@ -252,11 +252,11 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(int width, int heig
 	return bestNode;
 }
 
-Rect MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(int width, int height, 
+Rectangle MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(int width, int height, 
 	int &bestShortSideFit, int &bestLongSideFit) const
 {
-	Rect bestNode;
-	memset(&bestNode, 0, sizeof(Rect));
+	Rectangle bestNode;
+	memset(&bestNode, 0, sizeof(Rectangle));
 
 	bestLongSideFit = std::numeric_limits<int>::max();
 
@@ -302,11 +302,11 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(int width, int heigh
 	return bestNode;
 }
 
-Rect MaxRectsBinPack::FindPositionForNewNodeBestAreaFit(int width, int height, 
+Rectangle MaxRectsBinPack::FindPositionForNewNodeBestAreaFit(int width, int height, 
 	int &bestAreaFit, int &bestShortSideFit) const
 {
-	Rect bestNode;
-	memset(&bestNode, 0, sizeof(Rect));
+	Rectangle bestNode;
+	memset(&bestNode, 0, sizeof(Rectangle));
 
 	bestAreaFit = std::numeric_limits<int>::max();
 
@@ -379,10 +379,10 @@ int MaxRectsBinPack::ContactPointScoreNode(int x, int y, int width, int height) 
 	return score;
 }
 
-Rect MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int height, int &bestContactScore) const
+Rectangle MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int height, int &bestContactScore) const
 {
-	Rect bestNode;
-	memset(&bestNode, 0, sizeof(Rect));
+	Rectangle bestNode;
+	memset(&bestNode, 0, sizeof(Rectangle));
 
 	bestContactScore = -1;
 
@@ -417,7 +417,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int height, 
 	return bestNode;
 }
 
-bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
+bool MaxRectsBinPack::SplitFreeNode(Rectangle freeNode, const Rectangle &usedNode)
 {
 	// Test with SAT if the rectangles even intersect.
 	if (usedNode.x >= freeNode.x + freeNode.width || usedNode.x + usedNode.width <= freeNode.x ||
@@ -429,7 +429,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		// New node at the top side of the used node.
 		if (usedNode.y > freeNode.y && usedNode.y < freeNode.y + freeNode.height)
 		{
-			Rect newNode = freeNode;
+			Rectangle newNode = freeNode;
 			newNode.height = usedNode.y - newNode.y;
 			freeRectangles.push_back(newNode);
 		}
@@ -437,7 +437,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		// New node at the bottom side of the used node.
 		if (usedNode.y + usedNode.height < freeNode.y + freeNode.height)
 		{
-			Rect newNode = freeNode;
+			Rectangle newNode = freeNode;
 			newNode.y = usedNode.y + usedNode.height;
 			newNode.height = freeNode.y + freeNode.height - (usedNode.y + usedNode.height);
 			freeRectangles.push_back(newNode);
@@ -449,7 +449,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		// New node at the left side of the used node.
 		if (usedNode.x > freeNode.x && usedNode.x < freeNode.x + freeNode.width)
 		{
-			Rect newNode = freeNode;
+			Rectangle newNode = freeNode;
 			newNode.width = usedNode.x - newNode.x;
 			freeRectangles.push_back(newNode);
 		}
@@ -457,7 +457,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		// New node at the right side of the used node.
 		if (usedNode.x + usedNode.width < freeNode.x + freeNode.width)
 		{
-			Rect newNode = freeNode;
+			Rectangle newNode = freeNode;
 			newNode.x = usedNode.x + usedNode.width;
 			newNode.width = freeNode.x + freeNode.width - (usedNode.x + usedNode.width);
 			freeRectangles.push_back(newNode);

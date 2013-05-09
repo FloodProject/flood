@@ -119,13 +119,13 @@ namespace TextAddin.Utils
 		#endregion
 		
 		#region DPI independence
-		/*public static Rect TransformToDevice(this Rect rect, Visual visual)
+		/*public static RectangleF TransformToDevice(this RectangleF rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformToDevice;
 			return Rect.Transform(rect, matrix);
 		}
 		
-		public static Rect TransformFromDevice(this Rect rect, Visual visual)
+		public static RectangleF TransformFromDevice(this RectangleF rect, Visual visual)
 		{
 			Matrix matrix = PresentationSource.FromVisual(visual).CompositionTarget.TransformFromDevice;
 			return Rect.Transform(rect, matrix);
@@ -172,9 +172,9 @@ namespace TextAddin.Utils
 			return new Size(s.Width, s.Height);
 		}
 		
-		public static Rect ToWpf(this System.Drawing.Rectangle rect)
+		public static RectangleF ToWpf(this System.Drawing.Rectangle rect)
 		{
-			return new Rect(rect.Location.ToWpf(), rect.Size.ToWpf());
+			return new RectangleF(rect.Location.ToWpf(), rect.Size.ToWpf());
 		}*/
 		#endregion
 		

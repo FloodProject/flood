@@ -43,8 +43,8 @@ namespace Flood.GUI.ControlInternal
             if (null == m_Target) return;
             if (!m_Held) return;
 
-            Rect oldBounds = m_Target.Bounds;
-            Rect bounds = m_Target.Bounds;
+            Rectangle oldBounds = m_Target.Bounds;
+            Rectangle bounds = m_Target.Bounds;
 
             Vector2i min = m_Target.MinimumSize;
 

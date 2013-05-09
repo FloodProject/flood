@@ -24,9 +24,9 @@ namespace Flood.GUI
             return (int)Math.Ceiling(x);
         }
 
-        public static Rect FloatRect(float x, float y, float w, float h)
+        public static Rectangle FloatRect(float x, float y, float w, float h)
         {
-            return new Rect((int)x, (int)y, (int)w, (int)h);
+            return new Rectangle((int)x, (int)y, (int)w, (int)h);
         }
 
         public static int Clamp(int x, int min, int max)
@@ -47,7 +47,7 @@ namespace Flood.GUI
             return x;
         }
 
-        public static Rect ClampRectToRect(Rect inside, Rect outside, bool clampSize = false)
+        public static Rectangle ClampRectToRect(Rectangle inside, Rectangle outside, bool clampSize = false)
         {
             if (inside.X < outside.X)
                 inside.X = outside.X;
@@ -143,9 +143,9 @@ namespace Flood.GUI
             return new Color(nR, nG, nB, color.A);
         }
 
-        public static Rect Add(this Rect r, Rect other)
+        public static Rectangle Add(this Rectangle r, Rectangle other)
         {
-            return new Rect(r.X + other.X, r.Y + other.Y, r.Width + other.Width, r.Height + other.Height);
+            return new Rectangle(r.X + other.X, r.Y + other.Y, r.Width + other.Width, r.Height + other.Height);
         }
 
         /// <summary>

@@ -176,7 +176,7 @@ namespace Flood.GUI.Controls
 
             var p = LocalPosToCanvas(new Vector2i(0,0));
 
-            m_Menu.SetBounds(new Rect(p.X, p.Y + Height, Width, m_Menu.Height));
+            m_Menu.SetBounds(new Rectangle(p.X, p.Y + Height, Width, m_Menu.Height));
         }
 
         /// <summary>

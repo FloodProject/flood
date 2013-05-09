@@ -66,7 +66,7 @@ namespace Flood.GUI.Controls
         protected Slider(Control parent)
             : base(parent)
         {
-            SetBounds(new Rect(0, 0, 32, 128));
+            SetBounds(new Rectangle(0, 0, 32, 128));
 
             m_SliderBar = new SliderBar(this);
             m_SliderBar.Dragged += OnMoved;

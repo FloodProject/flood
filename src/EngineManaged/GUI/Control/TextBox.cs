@@ -14,8 +14,8 @@ namespace Flood.GUI.Controls
         private int m_CursorPos;
         private int m_CursorEnd;
 
-        private Rect m_SelectionBounds;
-        private Rect m_CaretBounds;
+        private Rectangle m_SelectionBounds;
+        private Rectangle m_CaretBounds;
 
         private float m_LastInputTime;
 
@@ -217,12 +217,12 @@ namespace Flood.GUI.Controls
             var pA = GetCharacterPosition(m_CursorPos);
             var pB = GetCharacterPosition(m_CursorEnd);
 
-            m_SelectionBounds.X = Math.Min(pA.X, pB.X);
+            m_SelectionBounds.X = (int) Math.Min(pA.X, pB.X);
             m_SelectionBounds.Y = TextY - 1;
-            m_SelectionBounds.Width = Math.Max(pA.X, pB.X) - m_SelectionBounds.X;
+            m_SelectionBounds.Width = (int) (Math.Max(pA.X, pB.X) - m_SelectionBounds.X + 0.5);
             m_SelectionBounds.Height = TextHeight + 2;
 
-            m_CaretBounds.X = pA.X;
+            m_CaretBounds.X = (int) pA.X;
             m_CaretBounds.Y = TextY - 1;
             m_CaretBounds.Width = 1;
             m_CaretBounds.Height = TextHeight + 2;
@@ -561,7 +561,7 @@ namespace Flood.GUI.Controls
 
         protected virtual void MakeCaretVisible()
         {
-            int caretPos = GetCharacterPosition(m_CursorPos).X - TextX;
+            int caretPos = (int) GetCharacterPosition(m_CursorPos).X - TextX;
 
             // If the caret is already in a semi-good position, leave it.
             {

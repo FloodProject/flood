@@ -21,7 +21,7 @@ namespace Flood.GUI.Controls
 
         private bool m_DrawHover;
         private bool m_DropFar;
-        private Rect m_HoverRect;
+        private Rectangle m_HoverRect;
 
         // todo: dock events?
 
@@ -347,7 +347,7 @@ namespace Flood.GUI.Controls
             {
                 if (null == m_DockedTabControl)
                 {
-                    m_HoverRect = new Rect(0,0,0,0);
+                    m_HoverRect = new Rectangle(0,0,0,0);
                     return;
                 }
 

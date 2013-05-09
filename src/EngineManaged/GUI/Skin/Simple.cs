@@ -59,7 +59,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawMenuItem(Controls.Control control, bool submenuOpen, bool isChecked)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             if (submenuOpen || control.IsHovered)
             {
                 m_Renderer.DrawColor = m_colHighlightBG;
@@ -73,7 +73,7 @@ namespace Flood.GUI.Skins
             {
                 m_Renderer.DrawColor = new Color(0, 0, 0, 255);
 
-                Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+                Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
                 DrawCheck(r);
             }
         }
@@ -84,7 +84,7 @@ namespace Flood.GUI.Skins
             int h = control.Height;
 
             m_Renderer.DrawColor = new Color(246, 248, 252, 255);
-            m_Renderer.DrawFilledRect(new Rect(0, 0, w, h));
+            m_Renderer.DrawFilledRect(new Rectangle(0, 0, w, h));
 
             m_Renderer.DrawColor = new Color(218, 224, 241, 150);
 
@@ -98,16 +98,16 @@ namespace Flood.GUI.Skins
             int h = control.Height;
 
             m_Renderer.DrawColor = m_colControlBright;
-            m_Renderer.DrawFilledRect(new Rect(0, 0, w, h));
+            m_Renderer.DrawFilledRect(new Rectangle(0, 0, w, h));
 
             if (!paddingDisabled)
             {
                 m_Renderer.DrawColor = m_colControl;
-                m_Renderer.DrawFilledRect(new Rect(1, 0, 22, h));
+                m_Renderer.DrawFilledRect(new Rectangle(1, 0, 22, h));
             }
 
             m_Renderer.DrawColor = m_colControlOutlineNormal;
-            m_Renderer.DrawLinedRect(new Rect(0, 0, w, h));
+            m_Renderer.DrawLinedRect(new Rectangle(0, 0, w, h));
         }
 
         public override void DrawShadow(Controls.Control control)
@@ -120,11 +120,11 @@ namespace Flood.GUI.Skins
 
             m_Renderer.DrawColor = new Color(0, 0, 0, 10);
 
-            m_Renderer.DrawFilledRect(new Rect(x, y, w, h));
+            m_Renderer.DrawFilledRect(new Rectangle(x, y, w, h));
             x += 2;
-            m_Renderer.DrawFilledRect(new Rect(x, y, w, h));
+            m_Renderer.DrawFilledRect(new Rectangle(x, y, w, h));
             y += 2;
-            m_Renderer.DrawFilledRect(new Rect(x, y, w, h));
+            m_Renderer.DrawFilledRect(new Rectangle(x, y, w, h));
         }
 
         public virtual void DrawButton(int w, int h, bool depressed, bool bHovered, bool bSquared = false)
@@ -133,7 +133,7 @@ namespace Flood.GUI.Skins
             else if (bHovered) m_Renderer.DrawColor = m_colControlBright;
             else m_Renderer.DrawColor = m_colControl;
 
-            m_Renderer.DrawFilledRect(new Rect(1, 1, w - 2, h - 2));
+            m_Renderer.DrawFilledRect(new Rectangle(1, 1, w - 2, h - 2));
             
             if (depressed) m_Renderer.DrawColor = m_colControlDark;
             else if (bHovered) m_Renderer.DrawColor = m_colControl;
@@ -149,22 +149,22 @@ namespace Flood.GUI.Skins
             {
                 m_Renderer.DrawColor = m_colControlDarker;
             }
-            m_Renderer.DrawShavedCornerRect(new Rect(1, 1, w - 2, h - 2), bSquared);
+            m_Renderer.DrawShavedCornerRect(new Rectangle(1, 1, w - 2, h - 2), bSquared);
 
             // Border
             m_Renderer.DrawColor = m_colControlOutlineNormal;
-            m_Renderer.DrawShavedCornerRect(new Rect(0, 0, w, h), bSquared);
+            m_Renderer.DrawShavedCornerRect(new Rectangle(0, 0, w, h), bSquared);
         }
 
         public override void DrawRadioButton(Controls.Control control, bool selected, bool depressed)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             // Inside colour
             if (control.IsHovered) m_Renderer.DrawColor = new Color(220, 242, 254, 255);
             else m_Renderer.DrawColor = m_colControlBright;
 
-            m_Renderer.DrawFilledRect(new Rect(1, 1, rect.Width - 2, rect.Height - 2));
+            m_Renderer.DrawFilledRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2));
 
             // Border
             if (control.IsHovered) m_Renderer.DrawColor = new Color(85, 130, 164, 255);
@@ -173,27 +173,27 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawShavedCornerRect(rect);
 
             m_Renderer.DrawColor = new Color(0, 50, 60, 15);
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + 2, rect.Y + 2, rect.Width * 0.3f, rect.Height - 4));
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height * 0.3f));
 
             if (control.IsHovered) m_Renderer.DrawColor = new Color(121, 198, 249, 255);
             else m_Renderer.DrawColor = new Color(0, 50, 60, 50);
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 3, 1, rect.Height - 5));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 3, rect.Y + 2, rect.Width - 5, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 3, 1, rect.Height - 5));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 3, rect.Y + 2, rect.Width - 5, 1));
 
 
             if (selected)
             {
                 m_Renderer.DrawColor = new Color(40, 230, 30, 255);
-                m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
+                m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
             }
         }
 
         public override void DrawCheckBox(Controls.Control control, bool selected, bool depressed)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             // Inside colour
             if (control.IsHovered) m_Renderer.DrawColor = new Color(220, 242, 254, 255);
@@ -208,33 +208,33 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawLinedRect(rect);
 
             m_Renderer.DrawColor = new Color(0, 50, 60, 15);
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height - 4));
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + 2, rect.Y + 2, rect.Width * 0.3f, rect.Height - 4));
             m_Renderer.DrawFilledRect(Util.FloatRect(rect.X + 2, rect.Y + 2, rect.Width - 4, rect.Height * 0.3f));
 
             if (control.IsHovered) m_Renderer.DrawColor = new Color(121, 198, 249, 255);
             else m_Renderer.DrawColor = new Color(0, 50, 60, 50);
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 2, 1, rect.Height - 4));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + 2, rect.Width - 4, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 2, 1, rect.Height - 4));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + 2, rect.Width - 4, 1));
 
             if (depressed)
             {
                 m_Renderer.DrawColor = new Color(100, 100, 100, 255);
-                Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+                Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
                 DrawCheck(r);
             }
             else if (selected)
             {
                 m_Renderer.DrawColor = new Color(0, 0, 0, 255);
-                Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+                Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
                 DrawCheck(r);
             }
         }
 
         public override void DrawGroupBox(Controls.Control control, int textStart, int textHeight, int textWidth)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             rect.Y += (int)(textHeight * 0.5f);
             rect.Height -= (int)(textHeight * 0.5f);
@@ -244,41 +244,41 @@ namespace Flood.GUI.Skins
 
             m_Renderer.DrawColor = m_colLighter;
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, textStart - 3, 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y + 1,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, textStart - 3, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y + 1,
                                                   rect.Width - textStart + textWidth - 2, 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, 1, rect.Height));
-            m_Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, 1, rect.Height));
+            m_Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 2, rect.Y + 1, 1, rect.Height - 1));
 
             m_Renderer.DrawColor = m_colDarker;
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y, textStart - 3, 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1 + textStart + textWidth, rect.Y,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, textStart - 3, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1 + textStart + textWidth, rect.Y,
                                                   rect.Width - textStart - textWidth - 2, 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 1));
-            m_Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 1));
+            m_Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 1));
         }
 
         public override void DrawTextBox(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             bool bHasFocus = control.HasFocus;
 
             // Box inside
             m_Renderer.DrawColor = new Color(255, 255, 255, 255);
-            m_Renderer.DrawFilledRect(new Rect(1, 1, rect.Width - 2, rect.Height - 2));
+            m_Renderer.DrawFilledRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2));
 
             m_Renderer.DrawColor = m_colControlOutlineLight;
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y, rect.Width - 2, 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 2));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, rect.Width - 2, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 2));
 
             m_Renderer.DrawColor = m_colControlOutlineLighter;
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
-            m_Renderer.DrawFilledRect(new Rect((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 2));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, (rect.Y + rect.Height) - 1, rect.Width - 2, 1));
+            m_Renderer.DrawFilledRect(new Rectangle((rect.X + rect.Width) - 1, rect.Y + 1, 1, rect.Height - 2));
 
             if (bHasFocus)
             {
@@ -289,13 +289,13 @@ namespace Flood.GUI.Skins
 
         public override void DrawTabButton(Controls.Control control, bool active, Pos dir)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             bool bHovered = control.IsHovered;
 
             if (bHovered) m_Renderer.DrawColor = m_colControlBright;
             else m_Renderer.DrawColor = m_colControl;
 
-            m_Renderer.DrawFilledRect(new Rect(1, 1, rect.Width - 2, rect.Height - 1));
+            m_Renderer.DrawFilledRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 1));
 
             if (bHovered) m_Renderer.DrawColor = m_colControl;
             else m_Renderer.DrawColor = m_colControlDark;
@@ -303,16 +303,16 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawFilledRect(Util.FloatRect(1, rect.Height*0.5f, rect.Width - 2, rect.Height*0.5f - 1));
 
             m_Renderer.DrawColor = m_colControlBright;
-            m_Renderer.DrawShavedCornerRect(new Rect(1, 1, rect.Width - 2, rect.Height));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(1, 1, rect.Width - 2, rect.Height));
 
             m_Renderer.DrawColor = m_colBorderColor;
 
-            m_Renderer.DrawShavedCornerRect(new Rect(0, 0, rect.Width, rect.Height));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(0, 0, rect.Width, rect.Height));
         }
 
         public override void DrawTabControl(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             m_Renderer.DrawColor = m_colControl;
             m_Renderer.DrawFilledRect(rect);
@@ -326,7 +326,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawWindow(Controls.Control control, int topHeight, bool inFocus)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             // Titlebar
             if (inFocus)
@@ -336,35 +336,35 @@ namespace Flood.GUI.Skins
                                                     (int)(232 * 0.70f), 230);
 
             int iBorderSize = 5;
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + 1, rect.Width - 2, topHeight - 1));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + topHeight - 1, iBorderSize,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + 1, rect.Width - 2, topHeight - 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + topHeight - 1, iBorderSize,
                                                   rect.Height - 2 - topHeight));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + rect.Width - iBorderSize, rect.Y + topHeight - 1, iBorderSize,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + rect.Width - iBorderSize, rect.Y + topHeight - 1, iBorderSize,
                                                   rect.Height - 2 - topHeight));
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 1, rect.Y + rect.Height - iBorderSize, rect.Width - 2,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + rect.Height - iBorderSize, rect.Width - 2,
                                                   iBorderSize));
 
             // Main inner
             m_Renderer.DrawColor = new Color(m_colControlDark.R, m_colControlDark.G, m_colControlDark.B, 230);
-            m_Renderer.DrawFilledRect(new Rect(rect.X + iBorderSize + 1, rect.Y + topHeight,
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + iBorderSize + 1, rect.Y + topHeight,
                                                   rect.Width - iBorderSize * 2 - 2,
                                                   rect.Height - topHeight - iBorderSize - 1));
 
             // Light inner border
             m_Renderer.DrawColor = new Color(255, 255, 255, 100);
-            m_Renderer.DrawShavedCornerRect(new Rect(rect.X + 1, rect.Y + 1, rect.Width - 2, rect.Height - 2));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(rect.X + 1, rect.Y + 1, rect.Width - 2, rect.Height - 2));
 
             // Dark line between titlebar and main
             m_Renderer.DrawColor = m_colBorderColor;
 
             // Inside border
             m_Renderer.DrawColor = m_colControlOutlineNormal;
-            m_Renderer.DrawLinedRect(new Rect(rect.X + iBorderSize, rect.Y + topHeight - 1, rect.Width - 10,
+            m_Renderer.DrawLinedRect(new Rectangle(rect.X + iBorderSize, rect.Y + topHeight - 1, rect.Width - 10,
                                                  rect.Height - topHeight - (iBorderSize - 1)));
 
             // Dark outer border
             m_Renderer.DrawColor = m_colBorderColor;
-            m_Renderer.DrawShavedCornerRect(new Rect(rect.X, rect.Y, rect.Width, rect.Height));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(rect.X, rect.Y, rect.Width, rect.Height));
         }
 
         public override void DrawWindowCloseButton(Controls.Control control, bool depressed, bool hovered, bool disabled)
@@ -375,14 +375,14 @@ namespace Flood.GUI.Skins
 
         public override void DrawHighlight(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             m_Renderer.DrawColor = new Color(255, 100, 255, 255);
             m_Renderer.DrawFilledRect(rect);
         }
 
         public override void DrawScrollBar(Controls.Control control, bool horizontal, bool depressed)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             if (depressed)
                 m_Renderer.DrawColor = m_colControlDarker;
             else
@@ -398,7 +398,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawTabTitleBar(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             m_Renderer.DrawColor = new Color(177, 193, 214, 255);
             m_Renderer.DrawFilledRect(rect);
@@ -410,14 +410,14 @@ namespace Flood.GUI.Skins
 
         public override void DrawProgressBar(Controls.Control control, bool horizontal, float progress)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Color FillColour = new Color(0, 211, 40, 255);
 
             if (horizontal)
             {
                 //Background
                 m_Renderer.DrawColor = m_colControlDark;
-                m_Renderer.DrawFilledRect(new Rect(1, 1, rect.Width - 2, rect.Height - 2));
+                m_Renderer.DrawFilledRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2));
 
                 //Right half
                 m_Renderer.DrawColor = FillColour;
@@ -430,7 +430,7 @@ namespace Flood.GUI.Skins
             {
                 //Background 
                 m_Renderer.DrawColor = m_colControlDark;
-                m_Renderer.DrawFilledRect(new Rect(1, 1, rect.Width - 2, rect.Height - 2));
+                m_Renderer.DrawFilledRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2));
 
                 //Top half
                 m_Renderer.DrawColor = FillColour;
@@ -442,10 +442,10 @@ namespace Flood.GUI.Skins
             }
 
             m_Renderer.DrawColor = new Color(255, 255, 255, 150);
-            m_Renderer.DrawShavedCornerRect(new Rect(1, 1, rect.Width - 2, rect.Height - 2));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(1, 1, rect.Width - 2, rect.Height - 2));
 
             m_Renderer.DrawColor = new Color( 255, 255, 255, 70);
-            m_Renderer.DrawShavedCornerRect(new Rect(2, 2, rect.Width - 4, rect.Height - 4));
+            m_Renderer.DrawShavedCornerRect(new Rectangle(2, 2, rect.Width - 4, rect.Height - 4));
 
             m_Renderer.DrawColor = m_colBorderColor;
             m_Renderer.DrawShavedCornerRect(rect);
@@ -453,7 +453,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawListBox(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             m_Renderer.DrawColor = m_colControlBright;
             m_Renderer.DrawFilledRect(rect);
@@ -464,7 +464,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawListBoxLine(Controls.Control control, bool selected, bool even)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             if (selected)
             {
@@ -480,8 +480,8 @@ namespace Flood.GUI.Skins
 
         public override void DrawSlider(Controls.Control control, bool horizontal, int numNotches, int barSize)
         {
-            Rect rect = control.RenderBounds;
-            Rect notchRect = rect;
+            Rectangle rect = control.RenderBounds;
+            Rectangle notchRect = rect;
 
             if (horizontal)
             {
@@ -506,9 +506,9 @@ namespace Flood.GUI.Skins
             DrawTextBox(control);
         }
 
-        public override void DrawKeyboardHighlight(Controls.Control control, Rect r, int iOffset)
+        public override void DrawKeyboardHighlight(Controls.Control control, Rectangle r, int iOffset)
         {
-            Rect rect = r;
+            Rectangle rect = r;
 
             rect.X += iOffset;
             rect.Y += iOffset;
@@ -539,7 +539,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawToolTip(Controls.Control control)
         {
-            Rect rct = control.RenderBounds;
+            Rectangle rct = control.RenderBounds;
             rct.X -= 3;
             rct.Y -= 3;
             rct.Width += 6;
@@ -558,7 +558,7 @@ namespace Flood.GUI.Skins
 
             m_Renderer.DrawColor = new Color(0, 0, 0, 240);
 
-            Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+            Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
 
             if (direction == Pos.Top) DrawArrowUp(r);
             else if (direction == Pos.Bottom) DrawArrowDown(r);
@@ -572,7 +572,7 @@ namespace Flood.GUI.Skins
 
             m_Renderer.DrawColor = new Color(0, 0, 0, 240);
 
-            Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+            Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
             DrawArrowDown(r);
         }
 
@@ -582,7 +582,7 @@ namespace Flood.GUI.Skins
 
             m_Renderer.DrawColor = new Color(0, 0, 0, 240);
 
-            Rect r = new Rect(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
+            Rectangle r = new Rectangle(control.Width / 2 - 2, control.Height / 2 - 2, 5, 5);
 
             if (up) DrawArrowUp(r);
             else DrawArrowDown(r);
@@ -590,7 +590,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawTreeButton(Controls.Control control, bool open)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             rect.X += 2;
             rect.Y += 2;
             rect.Width -= 4;
@@ -605,14 +605,14 @@ namespace Flood.GUI.Skins
             m_Renderer.DrawColor = m_colBorderColor;
 
             if (!open) // ! because the button shows intention, not the current state
-                m_Renderer.DrawFilledRect(new Rect(rect.X + rect.Width / 2, rect.Y + 2, 1, rect.Height - 4));
+                m_Renderer.DrawFilledRect(new Rectangle(rect.X + rect.Width / 2, rect.Y + 2, 1, rect.Height - 4));
 
-            m_Renderer.DrawFilledRect(new Rect(rect.X + 2, rect.Y + rect.Height / 2, rect.Width - 4, 1));
+            m_Renderer.DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + rect.Height / 2, rect.Width - 4, 1));
         }
 
         public override void DrawTreeControl(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             m_Renderer.DrawColor = m_colControlBright;
             m_Renderer.DrawFilledRect(rect);
@@ -626,9 +626,9 @@ namespace Flood.GUI.Skins
             if (selected)
             {
                 Renderer.DrawColor = new Color(0, 150, 255, 100);
-                Renderer.DrawFilledRect(new Rect(17, 0, labelWidth + 2, labelHeight - 1));
+                Renderer.DrawFilledRect(new Rectangle(17, 0, labelWidth + 2, labelHeight - 1));
                 Renderer.DrawColor = new Color(0, 150, 255, 200);
-                Renderer.DrawLinedRect(new Rect(17, 0, labelWidth + 2, labelHeight - 1));
+                Renderer.DrawLinedRect(new Rectangle(17, 0, labelWidth + 2, labelHeight - 1));
             }
 
             base.DrawTreeNode(ctrl, open, selected, labelHeight, labelWidth, halfWay, lastBranch, isRoot);
@@ -641,7 +641,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawColorDisplay(Controls.Control control, Color color)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
 
             if (color.A != 255)
             {
@@ -666,7 +666,7 @@ namespace Flood.GUI.Skins
         {
             if (control.ShouldDrawBackground)
             {
-                Rect rect = control.RenderBounds;
+                Rectangle rect = control.RenderBounds;
                 Renderer.DrawColor = m_colModal;
                 Renderer.DrawFilledRect(rect);
             }
@@ -674,7 +674,7 @@ namespace Flood.GUI.Skins
 
         public override void DrawMenuDivider(Controls.Control control)
         {
-            Rect rect = control.RenderBounds;
+            Rectangle rect = control.RenderBounds;
             Renderer.DrawColor = m_colBGDark;
             Renderer.DrawFilledRect(rect);
             Renderer.DrawColor = m_colControlDarker;

@@ -214,7 +214,7 @@ namespace Flood.GUI.DragDrop
 
             var old = skin.Renderer.RenderOffset;
 
-            skin.Renderer.AddRenderOffset(new Rect(
+            skin.Renderer.AddRenderOffset(new Rectangle(
                 m_MouseX - SourceControl.X - CurrentPackage.HoldOffset.X,
                 m_MouseY - SourceControl.Y - CurrentPackage.HoldOffset.Y, 0, 0));
             CurrentPackage.DrawControl.DoRender(skin);

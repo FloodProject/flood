@@ -151,7 +151,7 @@ namespace Flood.GUI.Controls
 
             if (lineHeight == -1)
             {
-                lineHeight = p.Y;
+                lineHeight = (int)(p.Y + 0.5);
             }
 
             if (!noSplit)
@@ -223,7 +223,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected override void OnBoundsChanged(Rect oldBounds)
+        protected override void OnBoundsChanged(Rectangle oldBounds)
         {
             base.OnBoundsChanged(oldBounds);
             Rebuild();

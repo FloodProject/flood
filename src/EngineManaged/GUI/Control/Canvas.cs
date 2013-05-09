@@ -150,7 +150,7 @@ namespace Flood.GUI.Controls
         /// Handler invoked when control's bounds change.
         /// </summary>
         /// <param name="oldBounds">Old bounds.</param>
-        protected override void OnBoundsChanged(Rect oldBounds)
+        protected override void OnBoundsChanged(Rectangle oldBounds)
         {
             base.OnBoundsChanged(oldBounds);
             InvalidateChildren(true);

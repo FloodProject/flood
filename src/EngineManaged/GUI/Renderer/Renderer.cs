@@ -11,7 +11,7 @@ namespace Flood.GUI.Renderers
     {
         //public Random rnd;
         private Vector2i m_RenderOffset;
-        private Rect m_ClipRegion;
+        private Rectangle m_ClipRegion;
         //protected ICacheToTexture m_RTT;
 
         public float Scale { get; set; }
@@ -72,7 +72,7 @@ namespace Flood.GUI.Renderers
         /// <summary>
         /// Clipping rectangle.
         /// </summary>
-        public Rect ClipRegion { get { return m_ClipRegion; } set { m_ClipRegion = value; } }
+        public Rectangle ClipRegion { get { return m_ClipRegion; } set { m_ClipRegion = value; } }
 
         /// <summary>
         /// Indicates whether the clip region is visible.
@@ -102,7 +102,7 @@ namespace Flood.GUI.Renderers
         /// Draws a solid filled rectangle.
         /// </summary>
         /// <param name="rect"></param>
-        public virtual void DrawFilledRect(Rect rect)
+        public virtual void DrawFilledRect(Rectangle rect)
         {}
 
         /// <summary>
@@ -120,20 +120,34 @@ namespace Flood.GUI.Renderers
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="t">Texture to use.</param>
-        /// <param name="targetRect">Rectangle bounds.</param>
-        /// <param name="u1">Texture coordinate u1.</param>
-        /// <param name="v1">Texture coordinate v1.</param>
-        /// <param name="u2">Texture coordinate u2.</param>
-        /// <param name="v2">Texture coordinate v2.</param>
-        public virtual void DrawTexturedRect(Texture t, Rect targetRect, float u1=0, float v1=0, float u2=1, float v2=1)
+        /// <param name="material">Material to use.</param>
+        /// <param name="materialHandle">Rectangle bounds.</param>
+        /// <param name="u1">MaterialHandle coordinate u1.</param>
+        /// <param name="v1">MaterialHandle coordinate v1.</param>
+        /// <param name="u2">MaterialHandle coordinate u2.</param>
+        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1=0, float v1=0, float u2=1, float v2=1)
         {}
+
+        /// <summary>
+        /// Draws textured rectangle.
+        /// </summary>
+        /// <param name="t">MaterialHandle to use.</param>
+        /// <param name="materialHandle">Material to use.</param>
+        /// <param name="u1">MaterialHandle coordinate u1.</param>
+        /// <param name="v1">MaterialHandle coordinate v1.</param>
+        /// <param name="u2">MaterialHandle coordinate u2.</param>
+        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        public void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1=0, float v1=0, float u2=1, float v2=1)
+        {
+            DrawTexturedRect(imageHandle, new RectangleF(rect.X, rect.Y, rect.Width, rect.Height), u1, v1, u2, v2);
+        }
 
         /// <summary>
         /// Draws "missing image" default texture.
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
-        public virtual void DrawMissingImage(Rect rect)
+        public virtual void DrawMissingImage(Rectangle rect)
         {
             //DrawColor = Color.FromArgb(255, rnd.Next(0,255), rnd.Next(0,255), rnd.Next(0, 255));
             DrawColor = Color.Red;
@@ -168,9 +182,9 @@ namespace Flood.GUI.Renderers
         /// <param name="font">Font to use.</param>
         /// <param name="text">Text to measure.</param>
         /// <returns>Width and height of the rendered text.</returns>
-        public virtual Vector2i MeasureText(Font font, String text)
+        public virtual Vector2 MeasureText(Font font, String text)
         {
-            var p = new Vector2i((int)(font.Size * Scale * text.Length * 0.4f), (int)(font.Size * Scale));
+            var p = new Vector2(font.Size * Scale * text.Length * 0.4f, font.Size * Scale);
             return p;
         }
 
@@ -191,7 +205,7 @@ namespace Flood.GUI.Renderers
                 if ( chr == ' ' ) 
                     continue;
 
-                Rect r = Util.FloatRect(position.X + i * size * 0.4f, position.Y, size * 0.4f - 1, size);
+                Rectangle r = Util.FloatRect(position.X + i * size * 0.4f, position.Y, size * 0.4f - 1, size);
 
                 /*
                     This isn't important, it's just me messing around changing the
@@ -236,13 +250,13 @@ namespace Flood.GUI.Renderers
         /// Draws a lined rectangle. Used for keyboard focus overlay.
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
-        public virtual void DrawLinedRect(Rect rect)
+        public virtual void DrawLinedRect(Rectangle rect)
         {
-            DrawFilledRect(new Rect(rect.X, rect.Y, rect.Width, 1));
-            DrawFilledRect(new Rect(rect.X, rect.Y + rect.Height - 1, rect.Width, 1));
+            DrawFilledRect(new Rectangle(rect.X, rect.Y, rect.Width, 1));
+            DrawFilledRect(new Rectangle(rect.X, rect.Y + rect.Height - 1, rect.Width, 1));
 
-            DrawFilledRect(new Rect(rect.X, rect.Y, 1, rect.Height));
-            DrawFilledRect(new Rect(rect.X + rect.Width - 1, rect.Y, 1, rect.Height));
+            DrawFilledRect(new Rectangle(rect.X, rect.Y, 1, rect.Height));
+            DrawFilledRect(new Rectangle(rect.X + rect.Width - 1, rect.Y, 1, rect.Height));
         }
 
         /// <summary>
@@ -253,30 +267,30 @@ namespace Flood.GUI.Renderers
         public virtual void DrawPixel(int x, int y)
         {
             // [omeg] amazing ;)
-            DrawFilledRect(new Rect(x, y, 1, 1));
+            DrawFilledRect(new Rectangle(x, y, 1, 1));
         }
 
         /// <summary>
         /// Gets pixel color of a specified texture. Slow.
         /// </summary>
-        /// <param name="texture">Texture.</param>
+        /// <param name="materialHandle"> </param>
         /// <param name="x">X.</param>
         /// <param name="y">Y.</param>
         /// <returns>Pixel color.</returns>
-        public virtual Color PixelColor(Texture texture, uint x, uint y)
+        public virtual Color PixelColor(ResourceHandle<Image> imagelHandle, uint x, uint y)
         {
-            return PixelColor(texture, x, y, Color.White);
+            return PixelColor(imagelHandle, x, y, Color.White);
         }
 
         /// <summary>
         /// Gets pixel color of a specified texture, returning default if otherwise failed. Slow.
         /// </summary>
-        /// <param name="texture">Texture.</param>
+        /// <param name="materialHandle"> </param>
         /// <param name="x">X.</param>
         /// <param name="y">Y.</param>
         /// <param name="defaultColor">Color to return on failure.</param>
         /// <returns>Pixel color.</returns>
-        public virtual Color PixelColor(Texture texture, uint x, uint y, Color defaultColor)
+        public virtual Color PixelColor(ResourceHandle<Image> imagelHandle, uint x, uint y, Color defaultColor)
         {
             return defaultColor;
         }
@@ -286,7 +300,7 @@ namespace Flood.GUI.Renderers
         /// </summary>
         /// <param name="rect">Target rectangle.</param>
         /// <param name="slight"></param>
-        public virtual void DrawShavedCornerRect(Rect rect, bool slight = false)
+        public virtual void DrawShavedCornerRect(Rectangle rect, bool slight = false)
         {
             // Draw INSIDE the w/h.
             rect.Width -= 1;
@@ -294,11 +308,11 @@ namespace Flood.GUI.Renderers
 
             if (slight)
             {
-                DrawFilledRect(new Rect(rect.X + 1, rect.Y, rect.Width - 1, 1));
-                DrawFilledRect(new Rect(rect.X + 1, rect.Y + rect.Height, rect.Width - 1, 1));
+                DrawFilledRect(new Rectangle(rect.X + 1, rect.Y, rect.Width - 1, 1));
+                DrawFilledRect(new Rectangle(rect.X + 1, rect.Y + rect.Height, rect.Width - 1, 1));
 
-                DrawFilledRect(new Rect(rect.X, rect.Y + 1, 1, rect.Height - 1));
-                DrawFilledRect(new Rect(rect.X + rect.Width, rect.Y + 1, 1, rect.Height - 1));
+                DrawFilledRect(new Rectangle(rect.X, rect.Y + 1, 1, rect.Height - 1));
+                DrawFilledRect(new Rectangle(rect.X + rect.Width, rect.Y + 1, 1, rect.Height - 1));
                 return;
             }
 
@@ -308,37 +322,23 @@ namespace Flood.GUI.Renderers
             DrawPixel(rect.X + 1, rect.Y + rect.Height - 1);
             DrawPixel(rect.X + rect.Width - 1, rect.Y + rect.Height - 1);
 
-            DrawFilledRect(new Rect(rect.X + 2, rect.Y, rect.Width - 3, 1));
-            DrawFilledRect(new Rect(rect.X + 2, rect.Y + rect.Height, rect.Width - 3, 1));
+            DrawFilledRect(new Rectangle(rect.X + 2, rect.Y, rect.Width - 3, 1));
+            DrawFilledRect(new Rectangle(rect.X + 2, rect.Y + rect.Height, rect.Width - 3, 1));
 
-            DrawFilledRect(new Rect(rect.X, rect.Y + 2, 1, rect.Height - 3));
-            DrawFilledRect(new Rect(rect.X + rect.Width, rect.Y + 2, 1, rect.Height - 3));
+            DrawFilledRect(new Rectangle(rect.X, rect.Y + 2, 1, rect.Height - 3));
+            DrawFilledRect(new Rectangle(rect.X + rect.Width, rect.Y + 2, 1, rect.Height - 3));
         }
 
-        private int TranslateX(int x)
+        private float TranslateX(float x)
         {
-            int x1 = x + m_RenderOffset.X;
-            return Util.Ceil(x1 * Scale);
+            var x1 = x + m_RenderOffset.X;
+            return x1 * Scale;
         }
 
-        private int TranslateY(int y)
+        private float TranslateY(float y)
         {
-            int y1 = y + m_RenderOffset.Y;
-            return Util.Ceil(y1 * Scale);
-        }
-
-        /// <summary>
-        /// Translates a panel's local drawing coordinate into view space, taking offsets into account.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void Translate(ref int x, ref int y)
-        {
-            x += m_RenderOffset.X;
-            y += m_RenderOffset.Y;
-
-            x = Util.Ceil(x * Scale);
-            y = Util.Ceil(y * Scale);
+            var y1 = y + m_RenderOffset.Y;
+            return y1 * Scale;
         }
 
         /// <summary>
@@ -346,25 +346,30 @@ namespace Flood.GUI.Renderers
         /// </summary>
         public Vector2i Translate(Vector2i p)
         {
-            int x = p.X;
-            int y = p.Y;
-            Translate(ref x, ref y);
-            return new Vector2i(x, y);
+            return new Vector2i(Util.Ceil(TranslateX(p.X)), Util.Ceil(TranslateY(p.Y)));
         }
 
         /// <summary>
         /// Translates a panel's local drawing coordinate into view space, taking offsets into account.
         /// </summary>
-        public Rect Translate(Rect rect)
+        protected Rectangle Translate(Rectangle rect)
         {
-            return new Rect(TranslateX(rect.X), TranslateY(rect.Y), Util.Ceil(rect.Width * Scale), Util.Ceil(rect.Height * Scale));
+            return new Rectangle(Util.Ceil(TranslateX(rect.X)), Util.Ceil(TranslateY(rect.Y)), Util.Ceil(rect.Width * Scale), Util.Ceil(rect.Height * Scale));
+        }
+
+        /// <summary>
+        /// Translates a panel's local drawing coordinate into view space, taking offsets into account.
+        /// </summary>
+        protected RectangleF Translate(RectangleF rect)
+        {
+            return new RectangleF(TranslateX(rect.X), TranslateY(rect.Y), rect.Width * Scale, rect.Height * Scale);
         }
 
         /// <summary>
         /// Adds a point to the render offset.
         /// </summary>
         /// <param name="offset">Point to add.</param>
-        public void AddRenderOffset(Rect offset)
+        public void AddRenderOffset(Rectangle offset)
         {
             m_RenderOffset = new Vector2i(m_RenderOffset.X + offset.X, m_RenderOffset.Y + offset.Y);
         }
@@ -373,13 +378,13 @@ namespace Flood.GUI.Renderers
         /// Adds a rectangle to the clipping region.
         /// </summary>
         /// <param name="rect">Rectangle to add.</param>
-        public void AddClipRegion(Rect rect)
+        public void AddClipRegion(Rectangle rect)
         {
 
             rect.X = m_RenderOffset.X;
             rect.Y = m_RenderOffset.Y;
 
-            Rect r = rect;
+            Rectangle r = rect;
             if (rect.X < m_ClipRegion.X)
             {
                 r.Width -= (m_ClipRegion.X - r.X);
