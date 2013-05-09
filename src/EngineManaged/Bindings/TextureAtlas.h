@@ -8,17 +8,18 @@
 #pragma once
 
 #include <Engine/Texture/TextureAtlas.h>
+#include "Image.h"
 #include "ResourceHandle.h"
 #include "Vector.h"
-#include "Image.h"
 
 namespace Flood
 {
+    enum struct PixelFormat;
     ref class Handle;
     ref class Image;
     ref class MaxRectsBinPack;
     ref class TextureAtlas;
-    value struct Rect;
+    value struct Rectangle;
     value struct SubTexture;
     value struct Vector2;
 
@@ -41,7 +42,7 @@ namespace Flood
 
         TextureAtlas(::TextureAtlas* native);
         TextureAtlas(System::IntPtr native);
-        TextureAtlas(unsigned int maxSize);
+        TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat);
         bool AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle);
         bool GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture);
         Flood::ResourceHandle<Flood::Image^> GetAtlasImageHandle();

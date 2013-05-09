@@ -8,7 +8,7 @@
 #include "_Marshal.h"
 #include "TextureAtlas.h"
 #include "Image.h"
-#include "Rect.h"
+#include "Rectangle.h"
 #include "ResourceHandle.h"
 #include "Vector.h"
 
@@ -46,10 +46,11 @@ Flood::TextureAtlas::TextureAtlas(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::TextureAtlas::TextureAtlas(unsigned int maxSize)
+Flood::TextureAtlas::TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat)
 {
     auto arg0 = (uint)(uint32)maxSize;
-    NativePtr = new ::TextureAtlas(arg0);
+    auto arg1 = (::PixelFormat)pixelFormat;
+    NativePtr = new ::TextureAtlas(arg0, arg1);
 }
 
 bool Flood::TextureAtlas::AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle)
