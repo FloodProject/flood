@@ -6,8 +6,9 @@ project "OpenAL"
 	local repo = "git://repo.or.cz/openal-soft.git"
 	local archive = "http://kcat.strangesoft.net/openal-releases/openal-soft-1.14.tar.bz2"
 	local license = "LGPL"
-	
+
 	kind "StaticLib"
+	language "C"
 	files { "src/OpenAL32/*.c", "src/Alc/*.c" }
 	files { "src/Alc/backends/null.c", "src/Alc/backends/loopback.c" }
 	
@@ -16,8 +17,14 @@ project "OpenAL"
 	
 	configuration "windows"
 		files { "src/Alc/backends/mmdevapi.c", "src/Alc/backends/winmm.c" }
-		defines { "strcasecmp=_stricmp", "strncasecmp=_strnicmp",
-		"snprintf=_snprintf", "isfinite=_finite", "isnan=_isnan" }
+		defines 
+		{
+			 "strcasecmp=_stricmp",
+			 "strncasecmp=_strnicmp",
+			"snprintf=_snprintf",
+			"isfinite=_finite",
+			"isnan=_isnan"
+		}
 	
 	configuration "linux"
 		files { "src/Alc/backends/alsa.c", "src/Alc/backends/pulseaudio.c" }
@@ -26,4 +33,9 @@ project "OpenAL"
 		files { "src/Alc/backends/coreaudio.c" }
 	
 	configuration "android"
-		files { "src/Alc/backends/opensl.c" }     
+		files { "src/Alc/backends/opensl.c" }
+
+	configuration "pnacl"
+		files { "src/Alc/backends/ppapi.c" }
+
+	configuration ""

@@ -377,7 +377,7 @@ __zzip_fetch_disk_trailer(int fd, zzip_off_t filesize,
  * to pointer types but we do need only the lower bits in this implementation,
  * so we can just cast the value to a long value.
  */
-_zzip_inline char *
+/*_zzip_inline*/ char *
 __zzip_aligned4(char *p)
 {
 #define aligned4   __zzip_aligned4

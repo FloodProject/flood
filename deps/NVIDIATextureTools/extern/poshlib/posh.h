@@ -382,6 +382,11 @@ Metrowerks:
 #  define POSH_OS_STRING "Amiga"
 #endif
 
+#if defined __native_client__
+#  define POSH_OS_NACL 1
+#  define POSH_OS_STRING "NaCl"
+#endif
+
 #if defined __unix__
 #  define POSH_OS_UNIX 1 
 #  if !defined POSH_OS_STRING
@@ -519,6 +524,11 @@ Metrowerks:
 #if defined __hppa || defined hppa
 #  define POSH_CPU_HPPA 1
 #  define POSH_CPU_STRING "PA-RISC"
+#endif
+
+#if defined __native_client__
+#  define POSH_CPU_NACL 1
+#  define POSH_CPU_STRING "NaCl"
 #endif
 
 #if !defined POSH_CPU_STRING

@@ -41,6 +41,11 @@
 #define HAVE_COREAUDIO
 #endif
 
+#if defined(__native_client__)
+/* Define if we have the PPAPI backend */
+#define HAVE_PPAPI
+#endif
+
 /* Define if we have the OpenSL backend */
 /* #undef HAVE_OPENSL */
 
@@ -102,7 +107,10 @@
 #define SIZEOF_LONG_LONG 8
 
 /* Define if we have GCC's destructor attribute */
+#if defined(__native_client__)
 /* #undef HAVE_GCC_DESTRUCTOR */
+#define HAVE_GCC_DESTRUCTOR
+#endif
 
 /* Define if we have GCC's format attribute */
 /* #undef HAVE_GCC_FORMAT */
@@ -114,7 +122,9 @@
 /* #undef HAVE_ARM_NEON_H */
 
 /* Define if we have guiddef.h */
+#if !defined(__native_client__)
 #define HAVE_GUIDDEF_H
+#endif
 
 /* Define if we have guiddef.h */
 /* #undef HAVE_INITGUID_H */
@@ -124,7 +134,7 @@
 
 /* Define if we have float.h */
 #define HAVE_FLOAT_H
-
+ 
 /* Define if we have fpu_control.h */
 /* #undef HAVE_FPU_CONTROL_H */
 
@@ -135,7 +145,9 @@
 /* #undef HAVE_FESETROUND */
 
 /* Define if we have _controlfp() */
+#if !defined(__native_client__)
 #define HAVE__CONTROLFP
+#endif
 
 /* Define if we have pthread_setschedparam() */
 /* #undef HAVE_PTHREAD_SETSCHEDPARAM */

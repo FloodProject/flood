@@ -9,6 +9,7 @@ project "OggVorbis"
 	local license = "BSD"
 	
   kind "StaticLib"
+  language "C"
   files { "src/Ogg/**.c" }
   files { "src/Vorbis/**.c" }
-  includedirs { "include" }
+  includedirs { "include", "src/Vorbis" }

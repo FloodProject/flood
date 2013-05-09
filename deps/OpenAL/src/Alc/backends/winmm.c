@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#if defined(HAVE_WINMM)
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
@@ -775,3 +777,5 @@ void alcWinMMProbe(enum DevProbe type)
             break;
     }
 }
+
+#endif

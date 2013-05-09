@@ -7,7 +7,7 @@ project "dlmalloc"
 	local archive = "ftp://g.oswego.edu/pub/misc/malloc.c"
 	
   	kind "StaticLib"
-  	
+  	language "C"
   	files { "malloc.c" }
   	
   	defines

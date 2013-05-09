@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#if defined(HAVE_MMDEVAPI)
+
 #define COBJMACROS
 #include <stdlib.h>
 #include <stdio.h>
@@ -1019,3 +1021,5 @@ void alcMMDevApiProbe(enum DevProbe type)
         CloseHandle(req.FinishedEvt);
     req.FinishedEvt = NULL;
 }
+
+#endif

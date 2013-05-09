@@ -48,6 +48,8 @@
 #elif defined POSH_OS_OSX
 #   define NV_OS_DARWIN 1
 #   define NV_OS_UNIX 1
+#elif defined POSH_OS_NACL
+#   define NV_OS_NACL 1
 #elif defined POSH_OS_UNIX
 #   define NV_OS_UNIX 1
 #elif defined POSH_OS_WIN32
@@ -65,6 +67,7 @@
 // NV_CPU_X86_64
 // NV_CPU_PPC
 // NV_CPU_ARM
+// NV_CPU_NACL
 
 #define NV_CPU_STRING   POSH_CPU_STRING
 
@@ -76,6 +79,8 @@
 #   define NV_CPU_PPC 1
 #elif defined POSH_CPU_STRONGARM
 #   define NV_CPU_ARM 1
+#elif defined POSH_CPU_NACL
+#   define NV_CPU_NACL 1
 #else
 #   error "Unsupported CPU"
 #endif
@@ -179,7 +184,7 @@ typedef uint32      uint;
 #endif
 
 #if __cplusplus > 199711L
-#define nvStaticCheck(x) static_assert(x)
+#define nvStaticCheck(x) static_assert(x, "")
 #else
 #define nvStaticCheck(x) typedef char NV_STRING_JOIN2(__static_assert_,__LINE__)[(x)]
 #endif
@@ -246,6 +251,8 @@ NV_COMPILER_CHECK(sizeof(uint32) == 4);
 #       include "DefsGnucDarwin.h"
 #   elif NV_OS_MINGW
 #       include "DefsGnucWin32.h"
+#   elif NV_OS_NACL
+#       include "DefsGnucLinux.h"
 #   elif NV_OS_CYGWIN
 #       error "GCC: Cygwin not supported"
 #   else

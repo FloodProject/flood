@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "StrLib.h" // StringBuilder
+#include <cstdlib>
 
 // Extern
 #if NV_OS_WIN32 //&& NV_CC_MSVC
@@ -583,8 +584,12 @@ namespace
             }
 #endif
 
+#if defined NV_OS_NACL
+            abort();
+#else
             // Exit cleanly.
             throw "Assertion failed";
+#endif
         }
     };
 
@@ -751,6 +756,8 @@ bool debug::isDebuggerPresent()
     info.kp_proc.p_flag = 0;
     sysctl(mib,4,&info,&size,NULL,0);
     return ((info.kp_proc.p_flag & P_TRACED) == P_TRACED);
+#elif NV_OS_NACL
+    return false;
 #else
     // if ppid != sid, some process spawned our app, probably a debugger. 
     return getsid(getpid()) != getppid();

@@ -1,7 +1,8 @@
 project "ENet"
 
   SetupNativeDependencyProject()
-  
+  DoNotBuildInNativeClient()
+
   local version = "1.3.4"
   local repo = "https://github.com/lsalzman/enet.git"
   local license = "BSD-like"

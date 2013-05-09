@@ -7,6 +7,7 @@ project "stb_image"
 	local archive = "http://nothings.org/stb_vorbis/stb_vorbis.c"
 	
   kind "StaticLib"
+  language "C"
   files { "stb_image.c" }
 
 project "stb_vorbis"
@@ -18,6 +19,7 @@ project "stb_vorbis"
 	local archive = "http://nothings.org/stb_image.c"
 	
   kind "StaticLib"
+  language "C"
   files { "stb_vorbis.c" }
 
  project "stb_truetype"
@@ -29,4 +31,5 @@ project "stb_vorbis"
 	local archive = "http://nothings.org/stb/stb_truetype.h"
 	
   kind "StaticLib"
+  language "C"
   files { "stb_truetype.c" }

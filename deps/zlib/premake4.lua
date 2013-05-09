@@ -7,5 +7,6 @@ project "zlib"
 	local license = "zlib"
 	
   kind "StaticLib"
+  language "C"
   files { "src/*.c" }
   includedirs { "include" }

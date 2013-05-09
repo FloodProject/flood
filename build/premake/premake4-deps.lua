@@ -9,15 +9,21 @@ ImportConfigs()
 solution "Dependencies"
 
 	configurations { "Debug", "Release" }
-	platforms { "x32", "x64" }
+	platforms { "x32", "x64", "pnacl" }
 	defaultplatform "x32"
-    
+
+	configuration "pnacl"
+		system "nacl"
+		architecture "pnacl"
+
+	configuration {}
+
 	flags { common_flags }
 	language "C++"
-	
+
 	location (builddir)
 	objdir (builddir .. "/obj/")
 	targetdir (libdir)
-	
-    print("Searching for dependencies...")
+
+	print("Searching for dependencies...")
 	IncludePremakeProjects(path.join(depsdir,"*"))

@@ -23,7 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <memory.h>
+#include <string.h>
 #include <ctype.h>
 #include <signal.h>
 
@@ -71,6 +71,9 @@ static struct BackendInfo BackendList[] = {
 #endif
 #ifdef HAVE_PORTAUDIO
     { "port", alc_pa_init, alc_pa_deinit, alc_pa_probe, EmptyFuncs },
+#endif
+#ifdef HAVE_PPAPI
+    { "ppapi", alc_ppapi_init, alc_ppapi_deinit, alc_ppapi_probe, EmptyFuncs },
 #endif
 #ifdef HAVE_OPENSL
     { "opensl", alc_opensl_init, alc_opensl_deinit, alc_opensl_probe, EmptyFuncs },
