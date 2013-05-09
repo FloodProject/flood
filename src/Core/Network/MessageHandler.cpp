@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/Network/MessageHandler.h"
 #include "Core/Network/MessageHandlers.h"
 
@@ -37,3 +40,5 @@ MessagesTable MessageHandler::NullMessageTable;
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

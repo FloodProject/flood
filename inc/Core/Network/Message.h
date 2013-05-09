@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Serialization.h"
@@ -102,3 +106,5 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

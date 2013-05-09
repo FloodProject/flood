@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/Stream.h"
 #include "Core/SerializationHelpers.h"
 
@@ -174,3 +177,5 @@ MessagePtr MessageCreate(MessageId id)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

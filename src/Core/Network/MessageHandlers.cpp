@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/Log.h"
 #include "Core/Network/MessageHandlers.h"
 
@@ -83,3 +86,5 @@ void MessageHandlers::removeMapping(const MessageMapping& handler)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

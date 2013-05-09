@@ -72,7 +72,10 @@ Engine::~Engine()
 	InputDeinitialize();
 	GraphicsDeinitialize();
 	ResourcesDeinitialize();
+
+#ifdef ENABLE_NETWORK_ENET
 	NetworkDeinitialize();
+#endif
 
 	TaskPoolDestroy(taskPool);
 	StreamDestroy(stream);
@@ -98,7 +101,10 @@ void Engine::init()
 	// Creates the task system.
 	taskPool = TaskPoolCreate( AllocatorGetThis(), 2 );
 
+#ifdef ENABLE_NETWORK_ENET
 	NetworkInitialize();
+#endif
+
 	ResourcesInitialize();
 	InputInitialize();
 	GraphicsInitialize();

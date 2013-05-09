@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/Network/MessageDispatcher.h"
 
 #include "Core/Log.h"
@@ -160,3 +163,5 @@ bool MessageDispatcher::processMessage()
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

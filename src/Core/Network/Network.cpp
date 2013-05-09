@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_NETWORK_ENET
+
 #include "Core/Log.h"
 #include "Core/Network/Network.h"
 #include "Core/Network/Host.h"
@@ -376,3 +379,5 @@ void HostServer::onMessage(const PeerPtr& peer, const MessagePtr& message)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
+
+#endif

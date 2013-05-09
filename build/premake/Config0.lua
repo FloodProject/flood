@@ -59,6 +59,9 @@ config =
 	-- Enables the binary serializer.
 	SERIALIZATION_BINARY = true,
 
+	-- Enables Enet networking support.
+	NETWORK_ENET = true,
+
 	-- Enables HTTP support via libCURL.
 	NETWORKING_CURL = true,
 
@@ -173,7 +176,4 @@ config =
 
 	-- Enables the server plugin.
 	PLUGIN_SERVER = false,
-
-	-- Disables the networking integration.
-	NO_NETWORK = true,
 }
