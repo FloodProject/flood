@@ -206,6 +206,7 @@ static_assert(sizeof(int64) == 8, "");
 //---------------------------------------------------------------------//
 
 #include <cassert>
+#define unreachable(s) assert("Unreachable code: " # s)
 
 //---------------------------------------------------------------------//
 // Forward-declaration Helpers

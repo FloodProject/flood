@@ -137,6 +137,10 @@ static void LogProcess(Log* log, const char* msg, va_list args, LogLevel level)
 	case LogLevel::Assert:
 		assert(false);
 		break;
+	case LogLevel::Info:
+	case LogLevel::Warn:
+	case LogLevel::Error:
+		unreachable("Invalid log level");
 	};
 }
 
