@@ -11,7 +11,7 @@
 #include "Core/Pointers.h"
 #include "Core/FileWatcher.h"
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -56,9 +56,14 @@ API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
 // Pointer helpers.
 typedef scoped_ptr<Archive, ArchiveDestroy> ArchiveScopedPtr;
-#define ArchiveCreateFromZipScoped(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
-#define ArchiveCreateFromDirectoryScoped(alloc, ...) CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
-#define ArchiveCreateVirtualScoped(alloc, ...) CreateScopedPtr(ArchiveCreateVirtual, alloc, __VA_ARGS__)
+#define ArchiveCreateFromZipScoped(alloc, ...) \
+    CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
+
+#define ArchiveCreateFromDirectoryScoped(alloc, ...) \
+    CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
+
+#define ArchiveCreateVirtualScoped(alloc, ...) \
+    CreateScopedPtr(ArchiveCreateVirtual, alloc, __VA_ARGS__)
 
 typedef uint32 ArchiveWatchId;
 typedef Event2<Archive*, const FileWatchEvent&> ArchiveWatchEvent;
@@ -111,5 +116,5 @@ struct ArchiveFuncs
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END
 

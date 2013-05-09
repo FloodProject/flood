@@ -39,7 +39,8 @@ API_CORE ReferenceCounted* HandleFind(HandleManager*, HandleId id);
 API_CORE void              HandleGarbageCollect(HandleManager*);
 
 typedef scoped_ptr<HandleManager, HandleDestroyManager> HandleManagerPtr;
-#define pHandleCreateManager(alloc, ...) CreateScopedPtr(HandleCreateManager, alloc, __VA_ARGS__)
+#define pHandleCreateManager(alloc, ...) CreateScopedPtr(HandleCreateManager, \
+	alloc, __VA_ARGS__)
 
 //-----------------------------------//
 

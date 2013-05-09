@@ -66,7 +66,8 @@ bool RefreshWatch(FileWatchStruct* pWatch, bool _clear = false);
 //-----------------------------------//
 
 /// Unpacks events and passes them to a user defined callback.
-void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, LPOVERLAPPED lpOverlapped)
+void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered,
+							LPOVERLAPPED lpOverlapped)
 {
 	TCHAR szFile[MAX_PATH];
 	PFILE_NOTIFY_INFORMATION pNotify;
@@ -85,8 +86,8 @@ void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, 
 
 			#if defined(UNICODE)
 			{
-				lstrcpynW(szFile, pNotify->FileName,
-					std::min(MAX_PATH, static_cast<int>( pNotify->FileNameLength / sizeof(WCHAR) + 1) ));
+				lstrcpynW(szFile, pNotify->FileName, std::min(MAX_PATH,
+					static_cast<int>(pNotify->FileNameLength / sizeof(WCHAR) + 1)));
 			}
 			#else
 			{
@@ -116,7 +117,8 @@ bool RefreshWatch(FileWatchStruct* pWatch, bool _clear)
 {
 	return ReadDirectoryChangesW(
 		pWatch->mDirHandle, pWatch->mBuffer, sizeof(pWatch->mBuffer), FALSE,
-		pWatch->mNotifyFilter, nullptr, &pWatch->mOverlapped, _clear ? 0 : WatchCallback) != 0;
+		pWatch->mNotifyFilter, nullptr, &pWatch->mOverlapped,
+		_clear ? 0 : WatchCallback) != 0;
 }
 
 //-----------------------------------//
@@ -150,7 +152,8 @@ FileWatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 {
 	FileWatchStruct* pWatch;
 	size_t ptrsize = sizeof(*pWatch);
-	pWatch = static_cast<FileWatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
+	pWatch = static_cast<FileWatchStruct*>(HeapAlloc(GetProcessHeap(),
+		HEAP_ZERO_MEMORY, ptrsize));
 
 	pWatch->mDirHandle = CreateFile(szDirectory, FILE_LIST_DIRECTORY,
 		FILE_SHARE_READ, nullptr, OPEN_EXISTING,
@@ -265,7 +268,8 @@ void FileWatcherWin32::update()
 
 //-----------------------------------//
 
-void FileWatcherWin32::handleAction(FileWatchStruct* watch, const std::wstring& filename, uint32 action)
+void FileWatcherWin32::handleAction(FileWatchStruct* watch,
+									const std::wstring& filename, uint32 action)
 {
 	FileWatchEvent::Enum fwAction;
 

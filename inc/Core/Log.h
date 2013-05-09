@@ -11,7 +11,7 @@
 #include "Core/Event.h"
 #include "Core/String.h"
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -64,4 +64,4 @@ API_CORE void LogAssert(const char* msg, ...);
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END
