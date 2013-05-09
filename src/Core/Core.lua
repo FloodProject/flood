@@ -18,7 +18,7 @@ project "Core"
 	pchheader "Core/API.h"
 	pchsource "Core.cpp"
 
-	files 
+	files
 	{
 		path.join(builddir,"../Config.lua"),
 		"Core.lua",
@@ -30,7 +30,7 @@ project "Core"
 	{
 		["*"] = { ".", path.join(incdir,"Core") },
 		["Platforms/*"] = { path.join( srcdir,"Platforms") },
-	}	
+	}
 
 	excludes
 	{
@@ -49,35 +49,49 @@ project "Core"
 
 	Core.deps =
 	{
-		"cURL",
 		"dlmalloc",
-		"ENet",
 		"FastLZ",
 		"Jansson",
-		"Mongoose",
-		"zlib",
 		"zziplib",
+		"zlib",
+	}
+
+	Core.extradeps =
+	{
+		"cURL",
+		"Mongoose",
+		"ENet",
 	}
 
 	configuration "windows"
 	
-		files { path.join( srcdir,"Platforms/Win32/File*.cpp") }
-		files { path.join( srcdir,"Platforms/Win32/Concurrency*.cpp") }
+		files { path.join(srcdir, "Platforms/Win32/FileWatcherWin32.cpp") }
+		files { path.join(srcdir, "Platforms/Win32/ConcurrencyWin32.cpp") }
 		
-		table.insert(Core.links, "ws2_32")
-		table.insert(Core.links, "winmm")
-		
+		links { "ws2_32", "winmm" }
+		deps { Core.extradeps }
+		--table.insert(Core.links, "ws2_32")
+		--table.insert(Core.links, "winmm")
+
+	configuration "pnacl"
+		files
+		{
+			path.join(srcdir, "Platforms/Posix/ThreadPosix.cpp"),
+			path.join(srcdir, "Platforms/NaCl/NaclModule.cpp"),
+		}
+		links { "c" }
+
+	configuration "vs* and not pnacl"
+
 		-- Setup Visual Leak Detector
 		if config.MEMORY_LEAK_DETECTOR then
 			table.insert(Core.links, "vld")
-			table.insert(Core.libdirs, path.join( 
-				depsdir, "VisualLeakDetector/lib/Win32"))
+			table.insert(Core.libdirs,
+				path.join(depsdir, "VisualLeakDetector/lib/Win32"))
 		end
 
 	configuration {}
 
 	links { Core.links }
 	libdirs { Core.libdirs }
-	deps(Core.deps)	
-
-	
+	deps(Core.deps)

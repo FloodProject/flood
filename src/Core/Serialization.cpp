@@ -332,13 +332,13 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	if( ReflectionIsComposite(field->type) )
 		context->object = (Object*) context->address;
 
+	ReflectionWalkFunction handleSerialize = nullptr;
+
 	if( FieldIsPointer(field) && !ReflectionWalkPointer(context) )
 		goto exit;
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
-	ReflectionWalkFunction handleSerialize = nullptr;
-	
 	if (ReflectionIsComposite(field->type))
 		HandleFindSerializeFunction(context, (Class*) field->type);
 

@@ -100,13 +100,13 @@ static int64 ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
 
 	switch(mode)
 	{
-	case StreamSeekMode::Absolute:
+	case (int)StreamSeekMode::Absolute:
 		origin = SEEK_SET;
 		break;
-	case StreamSeekMode::Relative:
+	case (int)StreamSeekMode::Relative:
 		origin = SEEK_CUR;
 		break;
-	case StreamSeekMode::RelativeEnd:
+	case (int)StreamSeekMode::RelativeEnd:
 		origin = SEEK_END;
 		break;
 	}

@@ -510,7 +510,7 @@ static void DeserializeHandle( ReflectionContext* context, json_t* value )
 		if( DeserializeHandleName(context, name) )
 			break;
 	}
-	while( iter2 = json_object_iter_next(obj, iter2) );
+	while( (iter2 = json_object_iter_next(obj, iter2)) );
 }
 
 //-----------------------------------//

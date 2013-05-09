@@ -73,7 +73,8 @@
 #pragma once
 
 #include "Core/API.h"
-#include <memory.h> // to allow <,> comparisons
+#include <memory> // to allow <,> comparisons
+#include <cstring>
 
 ////////////////////////////////////////////////////////////////////////////////
 //						Configuration options

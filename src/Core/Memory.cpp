@@ -27,6 +27,8 @@
 	#endif
 	
 	#include <malloc.h>
+#else
+	#include <alloca.h>
 #endif
 
 NAMESPACE_CORE_BEGIN

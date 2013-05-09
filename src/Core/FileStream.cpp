@@ -151,13 +151,13 @@ static int64 FileSeek(Stream* stream, int64 offset, int8 mode)
 
 	switch(mode)
 	{
-	case StreamSeekMode::Absolute:
+	case (int)StreamSeekMode::Absolute:
 		origin = SEEK_SET;
 		break;
-	case StreamSeekMode::Relative:
+	case (int)StreamSeekMode::Relative:
 		origin = SEEK_CUR;
 		break;
-	case StreamSeekMode::RelativeEnd:
+	case (int)StreamSeekMode::RelativeEnd:
 		origin = SEEK_END;
 		break;
 	}
@@ -182,12 +182,12 @@ static int64 FileGetSize(Stream* stream)
 	int64 curr = FileTell(fs);
 	
 	// Seek to the end of the file and get position.
-	FileSeek(fs, 0, StreamSeekMode::Absolute);
+	FileSeek(fs, 0, (int)StreamSeekMode::Absolute);
 	
 	int64 size = FileTell(fs);
 	
 	// Seek again to the previously current position.
-	FileSeek(fs, curr, StreamSeekMode::Absolute);
+	FileSeek(fs, curr, (int)StreamSeekMode::Absolute);
 
 	return size;
 #endif

@@ -13,7 +13,7 @@ WriteConfigToFile(conf, "../Build.h")
 solution "Flood"
 	
 	configurations { "Debug", "Release" }
-	platforms { "x32", "x64" }
+	platforms { "x32", "x64", "pnacl" }
 	defaultplatform "x32"
 	
 	flags { common_flags }
@@ -29,6 +29,10 @@ solution "Flood"
 	startproject "EditorRuntime"
 
 	-- Build configuration options
+
+	configuration "pnacl"
+		system "nacl"
+		architecture "pnacl"
 	
 	configuration "Release"
 		flags { "Optimize" }

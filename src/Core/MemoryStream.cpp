@@ -171,13 +171,13 @@ static int64 MemorySeek(Stream* stream, int64 offset, int8 mode)
 
 	switch(mode)
 	{
-	case StreamSeekMode::Absolute:
+	case (int)StreamSeekMode::Absolute:
 		ms->position = offset;
 		break;
-	case StreamSeekMode::Relative:
+	case (int)StreamSeekMode::Relative:
 		ms->position += offset;
 		break;
-	case StreamSeekMode::RelativeEnd:
+	case (int)StreamSeekMode::RelativeEnd:
 		ms->position = MemoryGetSize(stream) - offset;
 		break;
 	}

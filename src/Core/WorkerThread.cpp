@@ -81,8 +81,8 @@ NAMESPACE_CORE_BEGIN
 			LocalWorkerThread_ = nullptr;
 			//ThisThread_.release();
 		
-
-		Tasks_.swap( std::vector<TaskBase *>() );	// force deallocation of the task vector
+		std::vector<TaskBase *> vec;
+		Tasks_.swap(vec); // force deallocation of the task vector
 		TaskMutex_.reset();
 		Pool_ = nullptr;
 		Index_ = static_cast<uint32>(-1);

@@ -9,6 +9,7 @@
 #include "Core/Concurrency.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
+#include "Core/String.h"
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 
@@ -129,8 +130,8 @@ static void LogProcess(Log* log, const char* msg, va_list args, LogLevel level)
 	{
 	case LogLevel::Debug:
 	{
-		sprintf_s(g_LogBuffer, "%s\n", entry.message.c_str());
-		PrintDebug( g_LogBuffer );
+		StringFormat(g_LogBuffer, "%s\n", entry.message.c_str());
+		PrintDebug(g_LogBuffer);
 		break;
 	}
 	case LogLevel::Assert:

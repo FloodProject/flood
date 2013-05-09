@@ -10,6 +10,12 @@
 #include "../Build/Build.h"
 #include "Core/Platform.h"
 
+#ifdef PLATFORM_NACL
+#undef ENABLE_NETWORK_ENET
+#undef ENABLE_NETWORKING_CURL
+#undef ENABLE_HTTP_SERVER
+#endif
+
 //---------------------------------------------------------------------//
 // API Exports
 //---------------------------------------------------------------------//

@@ -17,8 +17,8 @@
 	#define PLATFORM_MACOSX
 #elif defined(__LINUX) || defined(__LINUX__) || defined(LINUX)
 	#define PLATFORM_LINUX
-#elif defined(__native_client__)
-	#define PLATFORM_NATIVE_CLIENT
+#elif defined(__native_client__) || defined(__pnacl__)
+	#define PLATFORM_NACL
 #else
 	#pragma warning Unknown platform
 #endif

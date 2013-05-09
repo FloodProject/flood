@@ -11,6 +11,8 @@
 
 #ifdef PLATFORM_WINDOWS
 	#include "Core/FileWatcherWin32.h"
+#else
+	#include "Core/FileWatcherNull.h"
 #endif
 
 #ifdef API_CORE_DLL_EXPORT
@@ -33,6 +35,8 @@ static void InitializeFileWatcher()
 
 #ifdef PLATFORM_WINDOWS
 	gs_FileWatcher = AllocateHeap(FileWatcherWin32);
+#else
+    gs_FileWatcher = AllocateHeap(FileWatcherNull);
 #endif
 }
 

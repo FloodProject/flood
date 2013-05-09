@@ -12,7 +12,6 @@
 
 #include <sstream>
 #include <algorithm>
-#include <cassert>
 #include <cstdio>
 
 #ifdef PLATFORM_WINDOWS
@@ -22,12 +21,8 @@
 	#include <Windows.h>
 
 	#include <direct.h>
-	#define my_getcwd _getcwd
-	#define my_stricmp _stricmp
 #else
 	#include <unistd.h>
-	#define my_getcwd getcwd
-	#define my_stricmp stricmp
 #endif
 
 #ifdef PLATFORM_WINDOWS
@@ -35,6 +30,15 @@
 	#define F_OK 0
 #else
 	#include <unistd.h>
+#endif
+
+#if defined(PLATFORM_NACL)
+// Declare these manually because GCC/Clang in C++11 mode
+// define __STRICT_ANSI__ and that makes them hidden.
+extern "C" {
+__cdecl int strcasecmp(const char *, const char *);
+__cdecl int vsnprintf(char *, size_t, const char *, __VALIST);
+}
 #endif
 
 #include <dirent.h>
@@ -87,7 +91,7 @@ void SystemSleep( int64 time )
 int StringCompareInsensitive(const String& s1, const String& s2)
 {
 #ifdef PLATFORM_WINDOWS
-	return my_stricmp(s1.c_str(), s2.c_str());
+	return _stricmp(s1.c_str(), s2.c_str());
 #else
 	return strcasecmp(s1.c_str(), s2.c_str());
 #endif
@@ -106,15 +110,15 @@ String StringFromFloat( float n, byte precision )
 
 String StringFromWideString(const std::wstring &wstr)
 {
-    // Convert a Unicode string to an ASCII string
-    String strTo;
-    char *szTo = new char[wstr.length() + 1];
-    szTo[wstr.size()] = '\0';
-    WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
+	// Convert a Unicode string to an ASCII string
+	String strTo;
+	char *szTo = new char[wstr.length() + 1];
+	szTo[wstr.size()] = '\0';
+	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
 		(int)wstr.length(), nullptr, nullptr);
-    strTo = szTo;
-    delete[] szTo;
-    return strTo;
+	strTo = szTo;
+	delete[] szTo;
+	return strTo;
 }
 
 #endif
@@ -125,15 +129,15 @@ String StringFromWideString(const std::wstring &wstr)
 
 std::wstring StringToWideString(const String &str)
 {
-    // Convert an ASCII string to a Unicode String
-    std::wstring wstrTo;
-    wchar_t *wszTo = new wchar_t[str.length() + 1];
-    wszTo[str.size()] = L'\0';
-    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
+	// Convert an ASCII string to a Unicode String
+	std::wstring wstrTo;
+	wchar_t *wszTo = new wchar_t[str.length() + 1];
+	wszTo[str.size()] = L'\0';
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
 		(int)str.length());
-    wstrTo = wszTo;
-    delete[] wszTo;
-    return wstrTo;
+	wstrTo = wszTo;
+	delete[] wszTo;
+	return wstrTo;
 }
 
 #endif
@@ -175,11 +179,11 @@ String StringFormatArgs(const char* str, va_list args)
 
 void StringSplit(const String& s, char delim, std::vector<String>& elems)
 {
-    std::stringstream ss(s);
-    String item;
-    
+	std::stringstream ss(s);
+	String item;
+	
 	while(std::getline(ss, item, delim)) 
-        elems.push_back(item);
+		elems.push_back(item);
 }
 
 //-----------------------------------//
@@ -316,7 +320,11 @@ Path PathNormalize(const Path& path)
 Path PathGetCurrentDir()
 {
 	char buf[256];
-	my_getcwd(buf, ARRAY_SIZE(buf));
+#ifdef PLATFORM_WINDOWS
+	_getcwd(buf, ARRAY_SIZE(buf));
+#else
+	getcwd(buf, ARRAY_SIZE(buf));
+#endif
 	return String(buf);
 }
 
@@ -377,7 +385,8 @@ StringHash HashString(const String& s)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path filePath, bool dirs)
+static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
+								Path filePath, bool dirs)
 {
 	// Open directory stream.
 	DIR* dir = opendir( dirPath.c_str() );
@@ -386,16 +395,18 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 	dirent* entry = nullptr;
 	
 	// Get all the files and directories within directory.
-	while(entry = readdir(dir))
+	while((entry = readdir(dir)))
 	{
 		const Path& name = entry->d_name;
 		
+#ifndef PLATFORM_NACL
 		switch(entry->d_type)
 		{
 		case DT_REG:
 		{
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
-			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(), name.c_str() );
+			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
+				name.c_str() );
 			if(!dirs) paths.push_back(path);
 			break;
 		}
@@ -411,6 +422,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 			
 			break;
 		} }
+#endif
 	}
 
 	closedir(dir);

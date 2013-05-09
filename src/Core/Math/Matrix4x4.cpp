@@ -11,6 +11,8 @@
 #include "Core/Math/Helpers.h"
 #include "Core/Log.h"
 
+#include <cmath>
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -156,7 +158,7 @@ Matrix4x4 Matrix4x4::inverse() const
                 {
                     if (pivotIdx[k] == -1)
                     {
-						float absVal = ::abs(inverse[j][k]);
+						float absVal = ::fabs(inverse[j][k]);
                         if (absVal > maxPivot)
                         {
                             maxPivot = absVal;

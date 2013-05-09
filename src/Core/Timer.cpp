@@ -14,9 +14,11 @@
 	#define WIN32_LEAN_AND_MEAN
 	#undef  NOMINMAX
 	#define NOMINMAX
-	#include <Windows.h>	
-#elif PLATFORM_MACOSX
+	#include <Windows.h>
+#elif defined(PLATFORM_MACOSX)
 	#pragma TODO("OSX: Use Mach timers: http://developer.apple.com/library/mac/#qa/qa2004/qa1398.html")
+#elif defined(PLATFORM_NACL)
+	#include <ppapi/c/pp_time.h>
 #else
 	#include <sys/time.h>
 	#define tv_time_ms(t) ((t.tv_sec * 1000000.0) + t.tv_usec)
@@ -47,6 +49,10 @@ static int64 GetTime()
 	return time.QuadPart;
 }
 
+#elif defined(PLATFORM_NACL)
+
+PP_Time GetTime();
+
 #elif PLATFORM_LINUX
 
 static timeval GetTime()
@@ -65,6 +71,9 @@ float TimerGetCurrentTimeMs()
 #ifdef PLATFORM_WINDOWS
 	int64 time = GetTime();
 	return float(time) / float(g_TicksPerSecond);
+#elif defined(PLATFORM_NACL)
+    PP_Time time = GetTime();
+    return time;
 #else
 	timeval time = GetTime();
 	return tv_time_ms(time);
@@ -106,10 +115,12 @@ void TimerReset(Timer* timer)
 
 float TimerGetElapsed(Timer* timer)
 {
-	int64 diff = GetTime() - timer->time;
-
 #ifdef PLATFORM_WINDOWS
+    int64 diff = GetTime() - timer->time;
 	return float(diff) / float(g_TicksPerSecond);
+#elif defined(PLATFORM_NACL)
+    int64 diff = GetTime() - timer->time;
+    return diff;
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
 #endif

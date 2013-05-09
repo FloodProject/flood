@@ -9,6 +9,7 @@
 
 #include "Core/Pointers.h"
 #include "Core/String.h"
+#include <cstdio>
 
 NAMESPACE_EXTERN_BEGIN
 

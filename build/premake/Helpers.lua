@@ -68,13 +68,11 @@ function SetupEngineWeaver(dllName)
 	
 	postbuildcommands
 	{
-		exePath  .. dllPath
+		exePath .. dllPath
 	}
 end
 
-function SetupLibPaths(lib) 
-	c = configuration {}
-	
+function SetupLibPaths(lib)
 	local src = path.join(depsdir, lib, "src")
 	local include = path.join(depsdir, lib, "include")
 	
@@ -95,8 +93,22 @@ function SetupLibPaths(lib)
 	end
 	
 	libdirs { libdir }
+end
+
+function SetupNativeBuildFlags()
+	-- Compiler-specific options
+
+	configuration "pnacl"
+		system "nacl"
+		architecture "pnacl"
 	
-	configuration(c)
+	configuration { "vs*", "not pnacl" }
+		buildoptions { msvc_buildflags, "/wd4251" }
+		defines { msvc_cpp_defines }
+		
+	configuration "gcc"
+		buildoptions { gcc_buildflags }
+
 end
 
 function SetupNativeProjects()
@@ -107,28 +119,15 @@ function SetupNativeProjects()
 		
 	configuration "Release"
 		defines { "NDEBUG" }
-		
-	-- Compiler-specific options
 	
-	configuration "vs*"
-		buildoptions { msvc_buildflags, "/wd4251" }
-		defines { msvc_cpp_defines }
-		
-	configuration "gcc"
-		buildoptions { gcc_buildflags }
-	
-	-- OS-specific options
-	
-	configuration "Windows"
-		defines { "WIN32", "_WINDOWS" }		
-	
+	SetupNativeBuildFlags()
 	configuration(c)
 end
 
 function SetupNativeDependencyProject()
 	location (path.join(builddir, "deps"))
-    
-    -- Build configuration options
+
+	-- Build configuration options
 	
 	local c = configuration "Debug"
 		defines { "_DEBUG" }
@@ -136,24 +135,10 @@ function SetupNativeDependencyProject()
 	
 	configuration "Release"
 		defines { "NDEBUG" }
-		flags { "Optimize", "NoMinimalRebuild", "FloatFast" }	
-	
-	-- Compiler-specific options
-	
-	configuration "vs*"
-		buildoptions { msvc_buildflags }
-		defines { "_CRT_SECURE_NO_WARNINGS" }
-		defines { msvc_cpp_defines }
-	
-	configuration "gcc"
-		buildoptions { gcc_buildflags }
-	
-	-- OS-specific options
-	
-	configuration "Windows"
-		defines { "WIN32", "_WINDOWS" } 	
-		
-	configuration {}
+		flags { "Optimize", "NoMinimalRebuild", "FloatFast" }
+
+	SetupNativeBuildFlags()
+	configuration(c)
 end
 
 function SetupManagedDependencyProject()
@@ -171,7 +156,6 @@ function SetupAddin(addinName)
     table.insert(addins, addinName)
     
     targetdir (addindir)
-    
     SetupAddinResources()
 end
 
@@ -204,13 +188,19 @@ function EmbedFiles(resources)
     configuration(c)
 end
 
+function DoNotBuildInNativeClient()
+	local c = configuration "pnacl"
+		buildaction "None"
+	configuration(c)
+end
+
 function deps(dep)
 	for i,lib in ipairs(dep) do
 		if type(lib) == "table" then
 			deps(lib)
 		else
-			SetupLibPaths(lib)
 			links {lib}
+			SetupLibPaths(lib)
 		end
 	end
 end
