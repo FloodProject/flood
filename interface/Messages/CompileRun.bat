@@ -1,1 +1,0 @@
-..\..\Tools\leg.exe -oMessageCompiler.cpp MessageCompiler.leg && cl /nologo /wd4551 /wd4530 /wd4190 /I..\..\inc\ MessageCompiler.cpp Definitions.cpp && MessageCompiler.exe < Chat.messages
