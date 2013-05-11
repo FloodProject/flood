@@ -42,6 +42,5 @@ namespace Flood.Editor.Client.Gui
             window.SetContext(context);
             return window;
         }
-
     }
 }
