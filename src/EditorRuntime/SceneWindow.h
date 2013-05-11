@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include "Editor/API.h"
+#include "Editor/RenderControl.h"
+#include "Engine/Scene/Camera.h"
+
 FWD_DECL(RenderView)
 
 NAMESPACE_EDITOR_BEGIN
@@ -51,7 +55,7 @@ public:
 	ACCESSOR(Camera, const CameraPtr&, camera)
 
 	// Gets the main camera of the window.
-	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)
+	GETTER(MainCamera, const CameraPtr&, mainCamera)
 
 	// Sets the main camera of the window.
 	SETTER(MainCamera, const CameraPtr&, mainCamera)
@@ -63,7 +67,7 @@ public:
 	CameraPtr camera;
 
 	// Camera of the window.
-	CameraWeakPtr mainCamera;
+	CameraPtr mainCamera;
 
 	// Control where the scene will be drawn.
 	RenderControl* control;

@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "Editor/API.h"
+#include "Graphics/RenderTarget.h"
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -17,7 +20,7 @@ class EditorApp : public wxApp
 {
 public:
 
-	bool OnInit() OVERRIDE;
+	bool OnInit() override;
 	EditorFrame* mainFrame;
 };
 
@@ -35,9 +38,6 @@ public:
 
 	EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
-	
-	// Gets the AUI interface manager.
-	GETTER(AUI, wxAuiManager*, paneCtrl)
 
 protected:
 
@@ -61,8 +61,6 @@ public:
 	Archive* archive;
 	InputManager* input;
 
-	// Docking widgets.
-	wxAuiManager* paneCtrl;
 	SceneWindow* sceneWindow;
 };
 

@@ -9,11 +9,6 @@
 
 #define NOMINMAX
 
-#include "Core/API.h"
-#include "Engine/API.h"
-#include "Pipeline/API.h"
-#include "Engine/Headers.h"
-
 #define EDITOR_NAME "Flood IDE"
 
 //---------------------------------------------------------------------//
@@ -66,10 +61,3 @@
 #include <wx/propgrid/propgrid.h>
 #include <wx/propgrid/advprops.h>
 #define wxID_INVALID -1
-
-NAMESPACE_EDITOR_BEGIN
-typedef CameraPtr CameraWeakPtr;
-typedef ScenePtr SceneWeakPtr;
-typedef ComponentPtr ComponentWeakPtr;
-typedef EntityPtr EntityWeakPtr;
-NAMESPACE_EDITOR_END

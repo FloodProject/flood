@@ -7,6 +7,7 @@
 
 #include "Editor/API.h"
 #include "EditorInputManager.h"
+#include "Engine/Input/Mouse.h"
 
 NAMESPACE_EDITOR_BEGIN
 

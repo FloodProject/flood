@@ -9,6 +9,8 @@
 #include "SceneWindow.h"
 #include "RenderWindow.h"
 #include "RenderControl.h"
+#include "Engine/Scene/Entity.h"
+#include "Engine/Scene/Transform.h"
 
 NAMESPACE_EDITOR_BEGIN
 

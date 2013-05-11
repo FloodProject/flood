@@ -10,6 +10,7 @@
 #include <wx/glcanvas.h>
 
 #include "Core/Event.h"
+#include "Graphics/RenderContext.h"
 
 FWD_DECL(Engine)
 

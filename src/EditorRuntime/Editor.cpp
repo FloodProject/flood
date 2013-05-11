@@ -7,12 +7,16 @@
 
 #include "Editor/API.h"
 #include "Editor.h"
-#include "EditorSettings.h"
 
 #include "SceneWindow.h"
 #include "RenderControl.h"
 #include "RenderWindow.h"
 #include "EditorWindowManager.h"
+
+#include "Core/Archive.h"
+#include "Resources/ResourceManager.h"
+#include "Graphics/RenderQueue.h"
+#include "Engine/Engine.h"
 
 FL_INSTANTIATE_TEMPLATES()
 
@@ -57,7 +61,6 @@ EditorFrame& GetEditor() { return *gs_EditorInstance; }
 
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
-	, paneCtrl(nullptr)
 	, engine(nullptr)
 	, archive(nullptr)
 	, input(nullptr)
@@ -155,7 +158,7 @@ void EditorFrame::createEngine()
 	
 	// Get the mount paths from the editor preferences.
 	archive = ArchiveCreateVirtual( GetResourcesAllocator() );
-	ArchiveMountDirectories(archive, MediaFolder, GetResourcesAllocator());
+	ArchiveMountDirectories(archive, "Assets/", GetResourcesAllocator());
 	
 	res->setArchive(archive);
 

@@ -6,6 +6,8 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+#include "Engine/Input/InputManager.h"
+#include "Graphics/RenderQueue.h"
 #include <vcclr.h>
 
 #using "Editor.Client.dll"
