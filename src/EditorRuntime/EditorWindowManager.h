@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Editor/API.h"
+#include "EditorRuntime/API.h"
 #include "Engine/Window/WindowManager.h"
 
 NAMESPACE_EDITOR_BEGIN

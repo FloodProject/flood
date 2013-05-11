@@ -43,21 +43,4 @@
 	#include "wx/wx.h"
 #endif
 
-#include <wx/event.h> 
-#include <wx/mstream.h>
-#include <wx/hyperlink.h>
-#include <wx/treectrl.h> 
-#include <wx/choicebk.h>
-#include <wx/notebook.h>
-#include <wx/statline.h>
-#include <wx/spinctrl.h>
-#include <wx/filectrl.h>
-#include <wx/splitter.h>
-#include <wx/progdlg.h>
-#include <wx/dnd.h>
-#include <wx/aui/framemanager.h>
-#include <wx/aui/auibook.h>
-#include <wx/aui/auibar.h>
-#include <wx/propgrid/propgrid.h>
-#include <wx/propgrid/advprops.h>
 #define wxID_INVALID -1

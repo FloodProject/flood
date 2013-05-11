@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "Editor/API.h"
-#include "Editor/Editor.h"
-#include "Editor/EditorWindowManager.h"
-#include "Editor/RenderControl.h"
-#include "Editor/RenderWindow.h"
+#include "EditorRuntime/API.h"
+#include "Editor.h"
+#include "EditorWindowManager.h"
+#include "RenderControl.h"
+#include "RenderWindow.h"
 
 //-----------------------------------//
 

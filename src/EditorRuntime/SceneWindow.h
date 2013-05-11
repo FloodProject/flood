@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Editor/API.h"
-#include "Editor/RenderControl.h"
+#include "EditorRuntime/API.h"
+#include "RenderControl.h"
 #include "Engine/Scene/Camera.h"
 
 FWD_DECL(RenderView)

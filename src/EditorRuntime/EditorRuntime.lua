@@ -45,7 +45,7 @@ project "EditorRuntime"
 	
 	flags { editor_flags }
 
-	pchheader "Editor/API.h"
+	pchheader "EditorRuntime/API.h"
 	pchsource "Editor.cpp"
 	
 	configuration "Debug"
@@ -55,7 +55,7 @@ project "EditorRuntime"
 		kind "WindowedApp"
 		flags { "WinMain" }
 		
-	configuration "*"	
+	configuration "*"
 	
 	files
 	{

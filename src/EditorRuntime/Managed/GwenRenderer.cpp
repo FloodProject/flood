@@ -5,7 +5,7 @@
 *
 ************************************************************************/
 
-#include "Editor/API.h"
+#include "EditorRuntime/API.h"
 #include "Engine/Input/InputManager.h"
 #include "Graphics/RenderQueue.h"
 #include <vcclr.h>
