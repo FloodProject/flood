@@ -71,7 +71,7 @@ enum class HostState
 	Disconnecting,
 };
 
-struct HostConnectionDetails
+struct FLD_VALUE_TYPE HostConnectionDetails
 {
 	String address;
 	uint16 port;

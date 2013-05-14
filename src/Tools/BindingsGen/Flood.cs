@@ -206,6 +206,8 @@ namespace Flood
                 | RenameTargets.Method | RenameTargets.Field;
             builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
 
+            builder.AddPass(new CheckMacroPass());
+
             builder.FindEvents(driver.TypeDatabase);
             builder.FunctionToInstanceMethod();
             builder.FunctionToStaticMethod();
@@ -249,6 +251,52 @@ namespace Flood
     }
 
     #region Passes
+
+    class CheckMacroPass : TranslationUnitPass
+    {
+        public override bool VisitDeclaration(Declaration decl)
+        {
+            if (AlreadyVisited(decl))
+                return false;
+
+            var expansions = decl.PreprocessedEntities.OfType<MacroExpansion>();
+
+            if (expansions.Any(e => e.Text == "FLD_IGNORE"))
+                decl.ExplicityIgnored = true;
+
+            return true;
+        }
+
+        public override bool VisitClassDecl(Class @class)
+        {
+            if (AlreadyVisited(@class))
+                return false;
+
+            var expansions = @class.PreprocessedEntities.OfType<MacroExpansion>();
+
+            if (expansions.Any(e => e.Text == "FLD_VALUE_TYPE"))
+                @class.Type = ClassType.ValueType;
+
+            return true;
+        }
+
+        public override bool VisitParameterDecl(Parameter parameter)
+        {
+            if (AlreadyVisited(parameter))
+                return false;
+
+            var expansions = parameter.PreprocessedEntities.OfType<MacroExpansion>();
+
+            if (expansions.Any(e => e.Text == "FLD_OUT"))
+                parameter.Usage = ParameterUsage.Out;
+
+            if (expansions.Any(e => e.Text == "FLD_IN_OUT"))
+                parameter.Usage = ParameterUsage.InOut;
+
+            return true;
+        }
+    }
+
     class FindEventsPass : TranslationUnitPass
     {
         readonly ITypeMapDatabase typeMapDatabase;

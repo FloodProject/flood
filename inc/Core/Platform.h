@@ -233,3 +233,12 @@ static_assert(sizeof(int64) == 8, "");
 		Type( const Type& ); \
 		const Type& operator=( const Type& ); \
 	public:
+
+//---------------------------------------------------------------------//
+// Binder macros
+//---------------------------------------------------------------------//
+
+#define FLD_VALUE_TYPE
+#define FLD_OUT
+#define FLD_IN_OUT
+#define FLD_IGNORE
