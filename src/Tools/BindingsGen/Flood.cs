@@ -295,6 +295,19 @@ namespace Flood
 
             return true;
         }
+
+        public override bool VisitEnumDecl(Enumeration @enum)
+        {
+            if (AlreadyVisited(@enum))
+                return false;
+
+            var expansions = @enum.PreprocessedEntities.OfType<MacroExpansion>();
+
+            if (expansions.Any(e => e.Text == "FLD_FLAGS"))
+                @enum.SetFlags();
+
+            return true;
+        }
     }
 
     class FindEventsPass : TranslationUnitPass

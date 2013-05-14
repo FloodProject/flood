@@ -198,8 +198,19 @@ static_assert(sizeof(int64) == 8, "");
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
-#define GetBitFlag(bf, i) ((bf & i) ? true : false)
-#define SetBitFlag(bf, i, state) (bf = (state) ? (bf | i) : (bf & ~i))
+template <typename T>
+inline bool GetBitFlag (T& flags, T flag)
+{
+    typedef std::underlying_type<T>::type ET;
+    return (((ET)flags & (ET)flag) ? true : false);
+}
+
+template <typename T>
+inline void SetBitFlag (T& flags, T flag, bool state)
+{
+    typedef std::underlying_type<T>::type ET;
+    flags = (T)((state) ? ((ET)flags | (ET)flag) : ((ET)flags & ~(ET)flag));
+}
 
 //---------------------------------------------------------------------//
 // Types and Data structures
@@ -242,3 +253,4 @@ static_assert(sizeof(int64) == 8, "");
 #define FLD_OUT
 #define FLD_IN_OUT
 #define FLD_IGNORE
+#define FLD_FLAGS
