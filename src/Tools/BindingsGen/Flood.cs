@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cxxi;
-using Cxxi.Generators;
-using Cxxi.Generators.CLI;
+using CppSharp;
+using CppSharp.Generators;
+using CppSharp.Generators.CLI;
 using Cxxi.Generators.CSharp;
-using Cxxi.Passes;
-using Cxxi.Types;
-
+using CppSharp.Passes;
+using CppSharp.Types;
 namespace Flood
 {
     class Flood : ILibrary
@@ -174,6 +173,9 @@ namespace Flood
                     "Core/Reflection.h",
                     "Core/Serialization.h",
                     "Core/Math/Color.h",
+                    "Core/Network/Host.h",
+                    "Core/Network/Peer.h",
+                    "Core/Network/Message.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
@@ -366,12 +368,12 @@ namespace Flood
 
     [TypeMap("Path")]
     [TypeMap("String")]
-    public class String : Cxxi.Types.Std.String
+    public class String : CppSharp.Types.Std.String
     {
     }
 
     [TypeMap("StringWide")]
-    public class StringWide : Cxxi.Types.Std.WString
+    public class StringWide : CppSharp.Types.Std.WString
     {
     }
 
