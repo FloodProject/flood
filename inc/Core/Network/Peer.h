@@ -13,14 +13,14 @@
 struct _ENetPeer;
 typedef _ENetPeer ENetPeer;
 
-FWD_DECL_INTRUSIVE(Message)
+FWD_DECL_INTRUSIVE(Packet)
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
 // Peers are representations of network entities.
-class Peer : public ReferenceCounted
+class API_CORE Peer : public ReferenceCounted
 {
 public:
 
@@ -38,8 +38,8 @@ public:
 	// Gets the peer IP address.
 	String getHostIP() const;
 
-	// Queues a message to be sent to the peer.
-	void queueMessage(const MessagePtr& message, uint8 channel);
+	// Queues a packet to be sent to the peer.
+	void queuePacket(const PacketPtr &packet, uint8 channel);
 
 	ENetPeer* peer;
 };

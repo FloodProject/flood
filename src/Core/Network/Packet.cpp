@@ -6,13 +6,10 @@
 ************************************************************************/
 
 #include "Core/API.h"
-
-#ifdef ENABLE_NETWORK_ENET
-
 #include "Core/Stream.h"
 #include "Core/SerializationHelpers.h"
 
-#include "Core/Network/Message.h"
+#include "Core/Network/Packet.h"
 #include "Core/Network/Session.h"
 #include "Core/Network/Peer.h"
 #include "Core/Network/Network.h"
@@ -26,21 +23,20 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Message::Message(MessageId id)
+Packet::Packet(PacketId id)
 	: id(id)
 	, ms(nullptr)
 	, packet(nullptr)
 	, freePacket(false)
-	, flags(0)
+	, flags((PacketFlags)0)
 {
 	ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
-	SetBitFlag(flags, MessageFlags::Reliable, true);
-	//SetBitFlag(flags, MessageFlags::Compressed, true);
+	SetBitFlag(flags, PacketFlags::Reliable, true);
 }
 
 //-----------------------------------//
 
-Message::~Message()
+Packet::~Packet()
 {
 	Deallocate(ms);
 
@@ -53,13 +49,13 @@ Message::~Message()
 
 //-----------------------------------//
 
-void Message::createPacket()
+void Packet::createPacket()
 {
 	void* data = nullptr;
 	size_t size = 0;
 	uint32 pflags = 0;
 
-	if(GetBitFlag(flags, MessageFlags::Reliable))
+	if(GetBitFlag(flags, PacketFlags::Reliable))
 	{
 		pflags |= ENET_PACKET_FLAG_RELIABLE;
 	}
@@ -82,7 +78,7 @@ static size_t GetCompressionBufferSize(size_t size)
 
 //-----------------------------------//
 
-void Message::prepare()
+void Packet::prepare()
 {
 	if( !packet ) createPacket();
 
@@ -96,9 +92,9 @@ void Message::prepare()
 	StreamMemorySetRawBuffer(&pms, packet->data);
 
 	EncodeVariableInteger(&pms, id);
-	StreamWrite(&pms, &flags, sizeof(flags));
+	StreamWrite(&pms, (uint8*) &flags, sizeof(flags));
 	
-	if( GetBitFlag(flags, MessageFlags::Compressed) )
+	if( GetBitFlag(flags, PacketFlags::Compressed) )
 	{
 		uint8* in = &ms->data[0];
 		uint8* out = pms.buffer + pms.position;
@@ -116,7 +112,7 @@ void Message::prepare()
 
 //-----------------------------------//
 
-void Message::setPacket(ENetPacket* packet)
+void Packet::setPacket(ENetPacket* packet)
 {
 	MemoryStream pms;
 	StreamMemoryInit(&pms);
@@ -127,15 +123,15 @@ void Message::setPacket(ENetPacket* packet)
 	if( !DecodeVariableInteger(&pms, id) )
 		return;
 
-	this->id = (MessageId) id;
+	this->id = (PacketId) id;
 	this->packet = packet;
 
-	StreamReadBuffer(&pms, &flags, sizeof(MessageFlags::Enum));
+	StreamReadBuffer(&pms, &flags, sizeof(PacketFlags));
 
 	uint8* in = packet->data + pms.position;
 	size_t inSize = packet->dataLength - (size_t) pms.position;
 
-	if( GetBitFlag(flags, MessageFlags::Compressed) )
+	if( GetBitFlag(flags, PacketFlags::Compressed) )
 	{
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
 		StreamResize(ms, bufSize);
@@ -154,9 +150,9 @@ void Message::setPacket(ENetPacket* packet)
 
 //-----------------------------------//
 
-void Message::write(const Object* object)
+void Packet::write(const Object* object)
 {
-	SetBitFlag(flags, MessageFlags::Binary, true);
+	SetBitFlag(flags, PacketFlags::Binary, true);
 
 	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis(), 0);
 	serializer->stream = ms;
@@ -168,10 +164,19 @@ void Message::write(const Object* object)
 
 //-----------------------------------//
 
-MessagePtr MessageCreate(MessageId id)
+void Packet::write(std::vector<byte> data)
 {
-	MessagePtr message = Allocate(AllocatorGetNetwork(), Message, id);
-	return message;
+	StreamSetPosition(ms, 0, StreamSeekMode::Absolute);
+	StreamResize(ms, data.size());
+	StreamWrite(ms,data.data(),data.size());
+}
+
+//-----------------------------------//
+
+PacketPtr PacketCreate(PacketId id)
+{
+	PacketPtr packet = Allocate(AllocatorGetNetwork(), Packet, id);
+	return packet;
 }
 
 //-----------------------------------//

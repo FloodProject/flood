@@ -175,7 +175,7 @@ namespace Flood
                     "Core/Math/Color.h",
                     "Core/Network/Host.h",
                     "Core/Network/Peer.h",
-                    "Core/Network/Message.h",
+                    "Core/Network/Packet.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",

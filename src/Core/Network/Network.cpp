@@ -13,7 +13,7 @@
 #include "Core/Network/Network.h"
 #include "Core/Network/Host.h"
 #include "Core/Network/Peer.h"
-#include "Core/Network/Message.h"
+#include "Core/Network/Packet.h"
 
 #include <enet/enet.h>
 
@@ -107,12 +107,12 @@ Peer::Peer()
 
 //-----------------------------------//
 
-void Peer::queueMessage(const MessagePtr& message, uint8 channel)
+void Peer::queuePacket(const PacketPtr& packet, uint8 channel)
 {
-	if( !message ) return;
-	message->prepare();
+	if( !packet ) return;
+	packet->prepare();
 	
-	int status = enet_peer_send(peer, channel, message->getPacket());
+	int status = enet_peer_send(peer, channel, packet->getPacket());
 
 	if(status  != 0)
 	{
@@ -226,10 +226,10 @@ void Host::processEvents(uint32 timeout)
 
 //-----------------------------------//
 
-void Host::broadcastMessage(const MessagePtr& message, uint8 channel)
+void Host::broadcastPacket(const PacketPtr& packet, uint8 channel)
 {
-	message->prepare();
-	enet_host_broadcast(host, channel, message->getPacket());
+	packet->prepare();
+	enet_host_broadcast(host, channel, packet->getPacket());
 }
 
 //-----------------------------------//
@@ -268,10 +268,10 @@ void Host::handleReceiveEvent(ENetEvent* event)
 	ENetPacket* packet = event->packet;
 	PeerPtr peer = (Peer*) event->peer->data;
 
-	MessagePtr message = MessageCreate(0);
-	message->setPacket(packet);
+	PacketPtr packetPtr = PacketCreate(0);
+	packetPtr->setPacket(packet);
 
-	onMessage(peer, message);
+	onPacket(peer, packetPtr);
 }
 
 //-----------------------------------//
@@ -331,9 +331,9 @@ void HostClient::onDisconnected(const PeerPtr& peer)
 
 //-----------------------------------//
 
-void HostClient::onMessage(const PeerPtr& peer, const MessagePtr& message)
+void HostClient::onPacket(const PeerPtr& peer, const PacketPtr& packet)
 {
-	onServerMessage(peer, message);
+	onServerPacket(peer, packet);
 }
 
 //-----------------------------------//
@@ -371,9 +371,9 @@ void HostServer::onDisconnected(const PeerPtr& peer)
 
 //-----------------------------------//
 
-void HostServer::onMessage(const PeerPtr& peer, const MessagePtr& message)
+void HostServer::onPacket(const PeerPtr& peer, const PacketPtr& packet)
 {
-	onClientMessage(peer, message);
+	onClientPacket(peer, packet);
 }
 
 //-----------------------------------//

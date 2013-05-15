@@ -69,7 +69,7 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Session);
 /**
  * Session groups are used to keep together a related set of
  * sessions. You can use these to for example, group sessions
- * by teams to broadcast a set of messages to the group.
+ * by teams to broadcast a set of packets to the group.
  */
 
 class SessionGroup

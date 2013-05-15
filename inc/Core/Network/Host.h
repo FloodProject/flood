@@ -16,7 +16,7 @@
 typedef struct _ENetHost ENetHost;
 typedef struct _ENetEvent ENetEvent;
 
-FWD_DECL_INTRUSIVE(Message)
+FWD_DECL_INTRUSIVE(Packet)
 FWD_DECL_INTRUSIVE(Peer)
 
 NAMESPACE_CORE_BEGIN
@@ -24,15 +24,15 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 // Hosts can be either servers or clients.
-class Host : public ReferenceCounted
+class API_CORE  Host : public ReferenceCounted
 {
 public:
 
 	// Destroys the current socket.
 	bool destroySocket();
 
-	// Broadcasts a message.
-	void broadcastMessage(const MessagePtr&, uint8 channel = 0);
+	// Broadcasts a packet.
+	void broadcastPacket(const PacketPtr&, uint8 channel = 0);
 
 	// Checks the host for events.
 	void processEvents(uint32 timeout);
@@ -48,7 +48,7 @@ protected:
 	// High-level events.
 	virtual void onConnected(const PeerPtr&) {}
 	virtual void onDisconnected(const PeerPtr&) {}
-	virtual void onMessage(const PeerPtr&, const MessagePtr&) {}
+	virtual void onPacket(const PeerPtr&, const PacketPtr&) {}
 
 	// Low-level events.
 	void handleConnectEvent(ENetEvent* event);
@@ -78,7 +78,7 @@ struct FLD_VALUE_TYPE HostConnectionDetails
 };
 
 // Clients connect to hosts.
-class HostClient : public Host
+class API_CORE HostClient : public Host
 {
 public:
 
@@ -95,13 +95,13 @@ public:
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 
-	Event2<const PeerPtr&, const MessagePtr&> onServerMessage;
+	Event2<const PeerPtr&, const PacketPtr&> onServerPacket;
 
 protected:
 
 	void onConnected(const PeerPtr&) OVERRIDE;
 	void onDisconnected(const PeerPtr&) OVERRIDE;
-	void onMessage(const PeerPtr&, const MessagePtr&) OVERRIDE;
+	void onPacket(const PeerPtr&, const PacketPtr&) OVERRIDE;
 
 	PeerPtr peer;
 	HostState state;
@@ -112,7 +112,7 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostClient )
 //-----------------------------------//
 
 // Hosts are servers that accepts clients and service peers.
-class HostServer : public Host
+class API_CORE HostServer : public Host
 {
 public:
 
@@ -124,13 +124,13 @@ public:
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 
-	Event2<const PeerPtr&, const MessagePtr&> onClientMessage;
+	Event2<const PeerPtr&, const PacketPtr&> onClientPacket;
 
 protected:
 
 	void onConnected(const PeerPtr&) OVERRIDE;
 	void onDisconnected(const PeerPtr&) OVERRIDE;
-	void onMessage(const PeerPtr&, const MessagePtr&) OVERRIDE;	
+	void onPacket(const PeerPtr&, const PacketPtr&) OVERRIDE;	
 
 	// Network peers.
 	NetworkPeers peers;
