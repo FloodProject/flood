@@ -199,7 +199,7 @@ static_assert(sizeof(int64) == 8, "");
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 template <typename T>
-inline bool GetBitFlag (T& flags, T flag)
+inline bool GetBitFlag (T flags, T flag)
 {
     typedef std::underlying_type<T>::type ET;
     return (((ET)flags & (ET)flag) ? true : false);
