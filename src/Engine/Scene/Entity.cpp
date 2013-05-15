@@ -305,14 +305,14 @@ bool Entity::isVisible() const
 
 bool Entity::getTag(int32 index) const
 {
-	return GetBitFlag(tags, (1 << index));
+	return GetBitFlag(tags, (uint32)(1 << index));
 }
 
 //-----------------------------------//
 
 void Entity::setTag(int32 index, bool state)
 {
-	SetBitFlag(tags, (1 << index), state);
+	SetBitFlag(tags, (uint32)(1 << index), state);
 }
 
 //-----------------------------------//
