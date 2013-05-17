@@ -6,7 +6,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
+#include <UnitTest++.h>
 
 int main()
 {

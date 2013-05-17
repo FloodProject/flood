@@ -6,9 +6,10 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
 #include "Core/Archive.h"
 #include "Core/Stream.h"
+
+#include <UnitTest++.h>
 
 SUITE(Core)
 {

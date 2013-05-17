@@ -6,10 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
 #include "Core/Concurrency.h"
 #include "Core/Memory.h"
+#include <UnitTest++.h>
 
 namespace {
 

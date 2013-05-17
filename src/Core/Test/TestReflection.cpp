@@ -6,14 +6,14 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
 #include "Core/Memory.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Serialization.h"
 #include "Core/ClassWatcher.h"
 #include "ReflectionTypes.h"
+
+#include <UnitTest++.h>
 
 REFLECT_ENUM(E)
 	ENUM(F1)
@@ -61,7 +61,7 @@ SUITE(Core)
 
 		CHECK_EQUAL("E", enumE->name);
 		CHECK_EQUAL(sizeof(E), enumE->size);
-		CHECK_EQUAL((uint8)Type::Enumeration, (uint8)enumE->type);
+		CHECK_EQUAL((uint8)TypeKind::Enumeration, (uint8)enumE->kind);
 		CHECK_EQUAL(E::Max, enumE->values.size());
 
 		CHECK_EQUAL("F1", EnumGetValueName(enumE, E::F1));
@@ -160,7 +160,7 @@ SUITE(Core)
 		static uint8 ident = 0;
 		#define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
 
-		static void WalkComposite(ReflectionContext* c, ReflectionWalkType::Enum wt)
+		static void WalkComposite(ReflectionContext* c, ReflectionWalkType wt)
 		{
 			if(wt == ReflectionWalkType::End)
 			{
@@ -172,7 +172,7 @@ SUITE(Core)
 			ident++;
 		}
 
-		static void WalkCompositeField(ReflectionContext* c, ReflectionWalkType::Enum wt)
+		static void WalkCompositeField(ReflectionContext* c, ReflectionWalkType wt)
 		{
 			if(wt != ReflectionWalkType::Begin) return;
 

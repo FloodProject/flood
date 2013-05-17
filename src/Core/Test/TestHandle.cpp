@@ -6,9 +6,10 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
 #include "Core/Handle.h"
 #include "Core/References.h"
+
+#include <UnitTest++.h>
 
 namespace
 {

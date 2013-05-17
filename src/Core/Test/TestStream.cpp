@@ -6,22 +6,22 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Pointers.h"
+
+#include <UnitTest++.h>
 
 SUITE(Core)
 {
 	TEST(FileStreams)
 	{
 		// File not found
-		Stream* notFound = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamMode::Read );
+		Stream* notFound = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamOpenMode::Read );
 		CHECK(nullptr == notFound);
 
 		// File opening
-		StreamPtr file( pStreamCreateFromFile(AllocatorGetHeap(), "file.txt", StreamMode::Read) );
+		StreamPtr file( pStreamCreateFromFile(AllocatorGetHeap(), "file.txt", StreamOpenMode::Read) );
 		CHECK(nullptr != file);
 
 		// File size.
@@ -44,7 +44,7 @@ SUITE(Core)
 		StreamReadString(file, text);
 		CHECK_EQUAL("bar", text.c_str());
 
-		StreamPtr flines( pStreamCreateFromFile(AllocatorGetHeap(), "lines.txt", StreamMode::Read) );
+		StreamPtr flines( pStreamCreateFromFile(AllocatorGetHeap(), "lines.txt", StreamOpenMode::Read) );
 		CHECK(nullptr != flines);
 
 		// Read lines.
@@ -56,9 +56,10 @@ SUITE(Core)
 		CHECK_EQUAL("spam", lines[2].c_str());
 	}
 
+#if defined(ENABLE_NETWORKING_CURL)
 	TEST(WebStreams)
 	{
-		Stream* ws = StreamCreateWeb(AllocatorGetHeap(), "http://www.google.com", StreamMode::Read);
+		Stream* ws = StreamCreateWeb(AllocatorGetHeap(), "http://www.google.com", StreamOpenMode::Read);
 
 		String response;
 		StreamReadString(ws, response);
@@ -67,4 +68,5 @@ SUITE(Core)
 
 		StreamDestroy(ws);
 	}
+#endif
 }

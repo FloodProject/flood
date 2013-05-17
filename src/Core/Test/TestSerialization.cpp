@@ -6,8 +6,6 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
 #include "Core/Memory.h"
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
@@ -16,11 +14,13 @@
 #include "Core/Stream.h"
 #include "ReflectionTypes.h"
 
+#include <UnitTest++.h>
+
 namespace
 {
 	typedef Serializer* (*SerializerCreateFunction)(Allocator*, ReflectionHandleContextMap*);
 
-	void SerializeH(ReflectionContext* context, ReflectionWalkType::Enum wt)
+	void SerializeH(ReflectionContext* context, ReflectionWalkType wt)
 	{
 		H* h = (H*) context->object;
 
@@ -43,7 +43,7 @@ namespace
 		}
 	}
 
-	void SerializeHookI(ReflectionContext* context, ReflectionWalkType::Enum wt)
+	void SerializeHookI(ReflectionContext* context, ReflectionWalkType wt)
 	{
 		I* i = (I*) context->object;
 		context->primitive = &PrimitiveGetBuiltins().p_uint32;;

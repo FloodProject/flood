@@ -6,8 +6,6 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
 #include "Core/Log.h"
 #include "Core/Utilities.h"
 
@@ -18,6 +16,8 @@
 
 #include <array>
 #include <functional>
+
+#include <UnitTest++.h>
 
 namespace {
 

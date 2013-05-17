@@ -8,9 +8,8 @@
 #define INSTANTIATE_TEMPLATES
 
 #include "Core/API.h"
-#include "UnitTest++.h"
-
-#include "String.h"
+#include "Core/String.h"
+#include <UnitTest++.h>
 
 SUITE(Core)
 {
