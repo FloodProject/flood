@@ -13,6 +13,7 @@
 #include "Core/Network/Session.h"
 #include "Core/Network/Peer.h"
 #include "Core/Network/Network.h"
+#include "Core/Utilities.h"
 
 #define NOMINMAX
 #include <enet/enet.h>
@@ -31,6 +32,7 @@ Packet::Packet(PacketId id)
 	, flags((PacketFlags)0)
 {
 	ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
+	StreamMemoryInit(ms);
 	SetBitFlag(flags, PacketFlags::Reliable, true);
 }
 
@@ -164,11 +166,16 @@ void Packet::write(const Object* object)
 
 //-----------------------------------//
 
-void Packet::write(std::vector<byte> data)
+void Packet::write(std::vector<byte>& data)
 {
 	StreamSetPosition(ms, 0, StreamSeekMode::Absolute);
 	StreamResize(ms, data.size());
 	StreamWrite(ms,data.data(),data.size());
+}
+
+std::vector<byte> Packet::read()
+{
+	return ms->data;
 }
 
 //-----------------------------------//
@@ -182,5 +189,3 @@ PacketPtr PacketCreate(PacketId id)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
-
-#endif

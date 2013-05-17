@@ -77,7 +77,10 @@ public:
 		return pod;
 	}
 
-	void write(std::vector<byte> data);
+	void write(std::vector<byte>& data);
+	std::vector<byte> read();
+
+private:
 
 	// Packet id.
 	PacketId id;
@@ -103,5 +106,3 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Packet)
 //-----------------------------------//
 
 NAMESPACE_CORE_END
-
-#endif
