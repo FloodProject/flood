@@ -173,6 +173,7 @@ namespace Flood
                     "Core/Reflection.h",
                     "Core/Serialization.h",
                     "Core/Math/Color.h",
+                    "Core/Network/Network.h",
                     "Core/Network/Host.h",
                     "Core/Network/Peer.h",
                     "Core/Network/Packet.h",
