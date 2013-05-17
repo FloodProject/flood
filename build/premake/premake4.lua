@@ -58,6 +58,7 @@ solution "Flood"
 	group "Managed"
 
 		dofile( srcdir .. "/EngineManaged/Bindings/EngineBindings.lua")
+        dofile( srcdir .. "/EngineBindings.Tests/EngineBindings.Tests.lua")
 		dofile( srcdir .. "/EngineManaged/EngineManaged.lua")
 		dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
 		dofile( srcdir .. "/ServerManaged/ServerManaged.lua")
