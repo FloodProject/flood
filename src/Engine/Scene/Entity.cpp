@@ -12,6 +12,7 @@
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Tags.h"
+#include "Core/Utilities.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
