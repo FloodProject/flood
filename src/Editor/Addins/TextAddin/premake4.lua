@@ -1,5 +1,3 @@
-EditorClient = {}
-EditorClient.name = "TextAddin"
 
 project "TextAddin"
 
