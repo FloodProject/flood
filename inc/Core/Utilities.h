@@ -8,8 +8,9 @@
 #pragma once
 
 #include "Core/String.h"
+#include <type_traits>
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //---------------------------------------------------------------------//
 // System Information
@@ -46,6 +47,36 @@ struct LocaleSwitch
 	char* context;
 };
 
+//---------------------------------------------------------------------//
+// Flags
+//---------------------------------------------------------------------//
+
+template <typename T>
+inline bool GetBitFlag(T flags, T flag, typename std::enable_if<!std::is_enum<T>::value>::type* = 0)
+{
+    return ((flags & flag) ? true : false);
+}
+
+template <typename E>
+inline bool GetBitFlag(E flags, E flag, typename std::enable_if<std::is_enum<E>::value>::type* = 0)
+{
+    typedef std::underlying_type<E>::type ET;
+    return (((ET)flags & (ET)flag) ? true : false);
+}
+
+template <typename T>
+inline void SetBitFlag(T& flags, T flag, bool state, typename std::enable_if<!std::is_enum<T>::value>::type* = 0)
+{
+    flags = (T)((state) ? (flags | flag) : (flags & ~flag));
+}
+
+template <typename E>
+inline void SetBitFlag(E& flags, E flag, bool state, typename std::enable_if<std::is_enum<E>::value>::type* = 0)
+{
+    typedef std::underlying_type<E>::type ET;
+    flags = (E)(((ET)state) ? ((ET)flags | (ET)flag) : ((ET)flags & ~(ET)flag));
+}
+
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END
