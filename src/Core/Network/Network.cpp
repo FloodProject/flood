@@ -114,7 +114,7 @@ void Peer::queuePacket(const PacketPtr& packet, uint8 channel)
 	
 	int status = enet_peer_send(peer, channel, packet->getPacket());
 
-	if(status  != 0)
+	if(status != 0)
 	{
 		LogWarn("Error sending packet to peer '%s'", getHostName().c_str());
 		return;
@@ -299,12 +299,22 @@ bool HostClient::connect( const HostConnectionDetails& details )
 	addr.host = 0;
 	addr.port = details.port;
 
-	enet_address_set_host( &addr, details.address.c_str() );
+	auto ret = enet_address_set_host( &addr, details.address.c_str() );
+	if(ret < 0)
+	{
+		LogError("Cannot resolve host address ", details.address.c_str()); 
+		return false;
+	}
 
 	size_t channelCount = 2;
 	enet_uint32 data = 0;
 
 	ENetPeer* newPeer = enet_host_connect(host, &addr, channelCount, data);
+	if (!newPeer)
+	{
+		LogError("No available peers for initiating an ENet connection.");
+		return false;
+	}
 
 	peer = Allocate(gs_NetworkAllocator, Peer);
 	peer->peer = newPeer;
