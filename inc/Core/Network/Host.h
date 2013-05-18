@@ -75,6 +75,19 @@ struct FLD_VALUE_TYPE HostConnectionDetails
 {
 	String address;
 	uint16 port;
+	uint8 channelCount;
+
+	HostConnectionDetails()
+		: address("")
+		, port(0)
+		, channelCount(1)
+	{}
+
+	HostConnectionDetails(String address, uint16 port, uint8 channelCount = 1)
+		: address(address)
+		, port(port)
+		, channelCount(channelCount)
+	{}
 };
 
 // Clients connect to hosts.
