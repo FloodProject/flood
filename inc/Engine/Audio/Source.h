@@ -19,17 +19,13 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-API_AUDIO REFLECT_DECLARE_ENUM(RolloffMode)
+API_AUDIO REFLECT_DECLARE_ENUM(AudioRolloffMode)
 
-#define AL_INVERSE_DISTANCE_CLAMPED  0xD002
-#define AL_LINEAR_DISTANCE_CLAMPED   0xD004
-#define AL_EXPONENT_DISTANCE_CLAMPED 0xD006
-
-enum struct API_AUDIO RolloffMode
+enum struct AudioRolloffMode
 {
-	Logarithmic = AL_INVERSE_DISTANCE_CLAMPED,
-	Linear = AL_LINEAR_DISTANCE_CLAMPED,
-	Exponential = AL_EXPONENT_DISTANCE_CLAMPED
+	Logarithmic,
+	Linear,
+	Exponential 
 };
 
 //-----------------------------------//
@@ -38,6 +34,14 @@ class AudioContext;
 class AudioDevice;
 
 const size_t AudioSourceNumBuffers = 2;
+
+enum struct AudioSourceState
+{
+	Playing,
+	Paused,
+	Stopped,
+	PendingPlay
+};
 
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 
@@ -51,14 +55,6 @@ class API_AUDIO AudioSource : public ReferenceCounted
 	DECLARE_UNCOPYABLE(AudioSource)
 
 public:
-
-	enum SourceState
-	{
-		PLAYING,
-		PAUSED,
-		STOPPED,
-		PENDING_PLAY
-	};
 
 	AudioSource( AudioContext* context );
 	~AudioSource();
@@ -94,7 +90,7 @@ public:
 	void setMaxDistance( float distance );
 
 	// Sets the rolloff mode of the source.
-	void setRolloffMode( RolloffMode rolloff );
+	void setRolloffMode( AudioRolloffMode rolloff );
 
 	// Sets the roll-off of the source. Roll-off is in the range [0.0-1.0].
 	void setRolloff( float rolloff );
@@ -123,7 +119,7 @@ protected:
 	void onBufferUploaded(AudioBuffer*);
 
 	// Holds the source state.
-	SourceState state;
+	AudioSourceState state;
 
 	// Handle to the sound resource.
 	SoundHandle soundHandle;

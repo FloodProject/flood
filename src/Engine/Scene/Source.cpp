@@ -37,7 +37,7 @@ REFLECT_CHILD_CLASS(Source, Component)
 	FIELD_PRIMITIVE_SETTER(8, float, pitch, Pitch)
 	FIELD_PRIMITIVE_SETTER(9, float, minDistance, MinDistance)
 	FIELD_PRIMITIVE_SETTER(10, float, maxDistance, MaxDistance)
-	FIELD_ENUM_SETTER(11, RolloffMode, rolloffMode, RolloffMode)
+	FIELD_ENUM_SETTER(11, AudioRolloffMode, rolloffMode, RolloffMode)
 	FIELD_PRIMITIVE_SETTER(12, float, rolloff, Rolloff)
 	FIELD_CLASS_PTR_SETTER(13, Sound, SoundHandle, sound, Handle, Sound)
 REFLECT_CLASS_END()
@@ -51,7 +51,7 @@ Source::Source()
 	, pitch(1.0f)
 	, minDistance(20.0f)
 	, maxDistance(40.0f)
-	, rolloffMode(RolloffMode::Logarithmic)
+	, rolloffMode(AudioRolloffMode::Logarithmic)
 	, rolloff(1.0f)
 	, loop(false)
 	, sound(HandleInvalid)
@@ -107,7 +107,7 @@ void Source::setRolloff(float rolloff)
 
 //-----------------------------------//
 
-void Source::setRolloffMode(RolloffMode mode)
+void Source::setRolloffMode(AudioRolloffMode mode)
 {
 	this->rolloffMode = mode;
 	if(audioSource) audioSource->setRolloffMode(rolloffMode);

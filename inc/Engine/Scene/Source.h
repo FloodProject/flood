@@ -80,7 +80,7 @@ public:
 	void setRolloff( float rolloff );
 
 	// Sets the rolloff mode of the source.
-	void setRolloffMode( RolloffMode mode );
+	void setRolloffMode( AudioRolloffMode mode );
 
 	// Sets the loop of the source.
 	void setLoop( bool state );
@@ -115,7 +115,7 @@ public:
 	float maxDistance;
 
 	// Rolloff mode of the source.
-	RolloffMode rolloffMode;
+	AudioRolloffMode rolloffMode;
 
 	// Rolloff of the source.
 	float rolloff;

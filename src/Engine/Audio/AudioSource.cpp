@@ -21,7 +21,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ENUM(RolloffMode)
+REFLECT_ENUM(AudioRolloffMode)
 	ENUM(Logarithmic)
 	ENUM(Linear)
 	ENUM(Exponential)
@@ -243,9 +243,9 @@ void AudioSource::play( int count )
 	if( !sound->getStreamed() && !buffers[0]->getUploaded() )
 	{
 		buffers[0]->onBufferUploaded.Connect(this, &AudioSource::onBufferUploaded);
-		state = AudioSource::PENDING_PLAY;
+		state = AudioSourceState::PendingPlay;
 
-		if(state != SourceState::PAUSED && state != SourceState::PLAYING)
+		if(state != AudioSourceState::Paused && state != AudioSourceState::Playing)
 			alSourcei(id, AL_BUFFER, buffers[0]->getId());
 
 		return;
@@ -255,7 +255,7 @@ void AudioSource::play( int count )
 	queue();
 
 	alSourcePlay(id);
-	state = SourceState::PLAYING;
+	state = AudioSourceState::Playing;
 
 	if(AudioCheckError())
 		LogAudio("Could not play audio source");
@@ -271,7 +271,7 @@ void AudioSource::onBufferUploaded(AudioBuffer* newBuffer)
 	// was not uploaded yet. This can happen due to asynchronous nature
 	// of the loading of the resources.
 
-	if( state != AudioSource::PENDING_PLAY ) return;
+	if( state != AudioSourceState::PendingPlay ) return;
 	play();
 }
 
@@ -284,7 +284,7 @@ void AudioSource::stop()
 	if(AudioCheckError())
 		LogAudio("Could not stop audio source");
 
-	state = AudioSource::STOPPED;
+	state = AudioSourceState::Stopped;
 
 	if( sound && sound->stream )
 		sound->stream->reset();
@@ -301,7 +301,7 @@ void AudioSource::pause()
 	if(AudioCheckError())
 		LogAudio( "Could not pause audio source");
 	
-	state = AudioSource::PAUSED;
+	state = AudioSourceState::Paused;
 }
 
 //-----------------------------------//
@@ -347,8 +347,23 @@ void AudioSource::setRolloff(float rolloff)
 
 //-----------------------------------//
 
-void AudioSource::setRolloffMode( RolloffMode mode )
+void AudioSource::setRolloffMode( AudioRolloffMode rolloffMode )
 {
+	ALenum mode;
+
+	switch(rolloffMode)
+	{
+	case AudioRolloffMode::Logarithmic:
+		mode = AL_INVERSE_DISTANCE_CLAMPED;
+		break;
+	case AudioRolloffMode::Linear:
+		mode = AL_LINEAR_DISTANCE_CLAMPED;
+		break;
+	case AudioRolloffMode::Exponential:
+		mode = AL_EXPONENT_DISTANCE_CLAMPED;
+		break;
+	}
+
 	alDistanceModel((ALenum)mode);
 }
 
