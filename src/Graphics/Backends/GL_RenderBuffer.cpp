@@ -6,10 +6,13 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
+
 #include "Graphics/Resources/Image.h"
 #include "Graphics/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
+
+#include "Core/Containers/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -20,6 +23,8 @@ GL_RenderBuffer::GL_RenderBuffer(const Settings& settings)
 	, bound(false)
 	, valid(false)
 	, colorAttach(false)
+	, renderBuffers(*AllocatorGetHeap())
+	, textureBuffers(*AllocatorGetHeap())
 {
 	glGenFramebuffersEXT(1, (GLuint*) &id);
 	CheckLastErrorGL( "Could not create framebuffer object" );
@@ -31,7 +36,7 @@ GL_RenderBuffer::~GL_RenderBuffer()
 {
 	glDeleteFramebuffersEXT(1, (GLuint*) &id);
 
-	for( size_t i = 0; i < renderBuffers.size(); i++ )
+	for( size_t i = 0; i < array::size(renderBuffers); ++i )
 	{
 		uint32 buffer = renderBuffers[i];
 
@@ -91,14 +96,14 @@ bool GL_RenderBuffer::check()
 
 //-----------------------------------//
 
-void GL_RenderBuffer::read(int8 attachment, std::vector<uint8>& data)
+void GL_RenderBuffer::read(int8 attachment, Array<uint8>& data)
 {
 	const Vector2i& size = settings.getSize();
 
-	data.resize( size.x*size.y*4 );
+	array::resize(data, size.x * size.y * 4);
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, &array::front(data));
 }
 
 //-----------------------------------//
@@ -159,7 +164,7 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
-	textureBuffers.push_back( tex );
+	array::push_back(textureBuffers, tex);
 
 	unbind();
 }

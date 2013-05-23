@@ -9,6 +9,7 @@
 
 #include "Pipeline/API.h"
 #include "Pipeline/ResourceProcessor.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 
 NAMESPACE_PIPELINE_BEGIN
@@ -18,7 +19,7 @@ NAMESPACE_PIPELINE_BEGIN
 REFLECT_ABSTRACT_CHILD_CLASS(ResourceProcessor, Extension)
 REFLECT_CLASS_END()
 
-std::vector<ResourceProcessor*> resourceProcessors;
+Array<ResourceProcessor*> resourceProcessors(*AllocatorGetHeap());
 
 //-----------------------------------//
 

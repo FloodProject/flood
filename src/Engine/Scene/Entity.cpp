@@ -12,6 +12,7 @@
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Tags.h"
+#include "Core/Containers/Array.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
@@ -39,6 +40,7 @@ Entity::Entity()
 	: visible(true)
 	, tags(0)
 	, parent(nullptr)
+	, components(*AllocatorGetHeap())
 {
 }
 
@@ -49,6 +51,7 @@ Entity::Entity( const String& name )
 	, visible(true)
 	, tags(0)
 	, parent(nullptr)
+	, components(*AllocatorGetHeap())
 {
 }
 
@@ -59,11 +62,9 @@ Entity::~Entity()
 	// Keep a reference so it is the last component destroyed.
 	TransformPtr transform = getTransform();
 	
-	components.clear();
+	array::clear(components);
 
-	ComponentMap::iterator it = componentsMap.begin();
-	
-	for(; it != componentsMap.end(); it++ )
+	for(auto it = componentsMap.begin(); it != componentsMap.end(); ++it )
 	{
 		ComponentPtr& component = it->second;
 		component.reset();
@@ -103,7 +104,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 		group->onEntityComponentAdded(component);
 	}
 
-	components.push_back(component);
+	array::push_back(components, component);
 
 	return true;
 }
@@ -182,12 +183,11 @@ ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 
 //-----------------------------------//
 
-std::vector<GeometryPtr> Entity::getGeometry() const
+Array<GeometryPtr> Entity::getGeometry() const
 {
-	std::vector<GeometryPtr> geoms;
+	Array<GeometryPtr> geoms(*AllocatorGetHeap());
 
-	ComponentMap::const_iterator it;
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+	for( auto it = componentsMap.begin(); it != componentsMap.end(); ++it )
 	{
 		const ComponentPtr& component = it->second;
 
@@ -195,7 +195,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 			continue;
 
 		const GeometryPtr& geo = RefCast<Geometry>(component);
-		geoms.push_back(geo);
+		array::push_back(geoms, geo);
 	}
 
 	return geoms;
@@ -206,9 +206,9 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 void Entity::update( float delta )
 {
 	// Update all geometry bounding boxes first.
-	const std::vector<GeometryPtr>& geoms = getGeometry();
+	const Array<GeometryPtr>& geoms = getGeometry();
 
-	for( size_t i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < array::size(geoms); ++i )
 	{
 		Geometry* geom = geoms[i].get();
 		geom->update( delta );
@@ -235,7 +235,7 @@ void Entity::update( float delta )
 
 void Entity::fixUp()
 {
-	for(size_t i = 0; i < components.size(); i++ )
+	for(size_t i = 0; i < array::size(components); ++i )
 	{
 		Component* component = components[i].get();
 		if( !component ) continue;

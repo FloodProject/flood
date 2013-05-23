@@ -6,9 +6,11 @@
 ************************************************************************/
 
 #pragma once
+#include "Core/API.h"
 
 #ifdef ENABLE_HTTP_SERVER
 
+#include "Core/String.h"
 #include "Core/Event.h"
 
 struct mg_context;
@@ -37,7 +39,7 @@ struct WebRoute
 struct WebContext
 {
 	mg_context* mongoose;
-	std::vector<WebRoute> routes;
+	fld::HeapArray<WebRoute> routes;
 };
 
 API_CORE WebContext* WebServerCreate( Allocator* );

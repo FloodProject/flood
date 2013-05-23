@@ -10,6 +10,7 @@
 #include "Core/Plugin.h"
 #include "Core/Reflection.h"
 #include "Core/Log.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -24,7 +25,7 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for(size_t i = 0; i < array::size(plugins); ++i)
 	{
 		Plugin* plugin = plugins[i];
 
@@ -42,7 +43,7 @@ void PluginManager::disablePlugins()
 	// We disable plugins in an explicit step so allow plugins
 	// being disabled to obtain other plugins and operate on them.
 
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for(size_t i = 0; i < array::size(plugins); ++i)
 	{
 		Plugin* plugin = plugins[i];
 		disablePlugin(plugin);
@@ -53,7 +54,7 @@ void PluginManager::disablePlugins()
 
 Plugin* PluginManager::getPlugin(const String& name)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for(size_t i = 0; i < array::size(plugins); ++i )
 	{
 		Plugin* plugin = plugins[i];
 		const PluginMetadata& metadata = plugin->getMetadata();
@@ -67,7 +68,7 @@ Plugin* PluginManager::getPlugin(const String& name)
 
 Plugin* PluginManager::getPluginFromClass(const Class* klass)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < array::size(plugins); ++i )
 	{
 		Plugin* plugin = plugins[i];
 		if(ClassGetType(plugin) == klass) return plugin;
@@ -78,9 +79,9 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 
 //-----------------------------------//
 
-void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
+void PluginManager::registerPlugins(const Array<Plugin*>& plugins)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < array::size(plugins); ++i )
 	{
 		Plugin* plugin = plugins[i];
 		registerPlugin(plugin);
@@ -92,7 +93,7 @@ void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
 void PluginManager::registerPlugin( Plugin* plugin )
 {
 	if( !plugin ) return;
-	plugins.push_back(plugin);
+	array::push_back(plugins, plugin);
 }
 
 //-----------------------------------//

@@ -10,7 +10,6 @@
 #include "Core/API.h"
 #include "Core/Event.h"
 #include "Core/Pointers.h"
-#include <vector>
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -158,7 +157,9 @@ NAMESPACE_EXTERN_BEGIN
 
 struct API_CORE TaskPool
 {
-	std::vector<Thread*> Threads;
+	TaskPool();
+
+	Array<Thread*> Threads;
 	ConcurrentQueue<Task*> Tasks;
 	ConcurrentQueue<TaskEvent> Events;
 	Event1<TaskEvent> OnTaskEvent;

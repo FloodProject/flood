@@ -34,6 +34,7 @@ class Milkshape3D
 public:
 
 	Milkshape3D();
+	~Milkshape3D();
 
 	// Loads the mesh data into the resource.
 	bool load(const Stream& stream);
@@ -97,19 +98,19 @@ protected:
 	int findJoint(const char* name);
 
 	// Contents of the file.
-	std::vector<byte> filebuf;
+	fld::Array<byte> filebuf;
 	unsigned long index;
 
 	// Mesh data structures.
-	std::vector<ms3d_vertex_t*> vertices;
-	std::vector<ms3d_triangle_t*> triangles;
-	std::vector<ms3d_group_t> groups;
-	std::vector<ms3d_material_t*> materials;
-	std::vector<ms3d_joint_t> joints;
+	fld::Array<ms3d_vertex_t*> vertices;
+	fld::Array<ms3d_triangle_t*> triangles;
+	fld::Array<ms3d_group_t> groups;
+	fld::Array<ms3d_material_t*> materials;
+	fld::Array<ms3d_joint_t> joints;
 	String mainComment;
 
 	// Animation metadata.
-	std::vector<AnimationMetadata> metadata;
+	fld::Array<AnimationMetadata*> metadata;
 
 	// Animation FPS.
 	float animationFPS;

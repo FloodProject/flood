@@ -6,8 +6,12 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Transform.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
@@ -16,25 +20,27 @@ NAMESPACE_ENGINE_BEGIN
 
 REFLECT_CHILD_CLASS(Group, Entity)
 	FIELD_VECTOR_PTR(6, Entity, EntityPtr, entities, RefPointer)
-	FIELD_ALIAS(entities, nodes)
+	FIELD_ALIAS(entities, "nodes")
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Group::Group()
+: entities(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
 
 Group::Group( const String& name )
 	: Entity(name)
+	, entities(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
 
 Group::~Group()
 {
-	for( size_t i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < array::size(entities); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
@@ -50,7 +56,7 @@ void Group::add( const EntityPtr& entity )
 	if( !entity ) return;
 
 	entity->setParent( this );
-	entities.push_back( entity );
+	array::push_back(entities, entity );
 
 	onEntityAdded(entity);
 	onEntityChanged();
@@ -60,7 +66,7 @@ void Group::add( const EntityPtr& entity )
 
 EntityPtr Group::findEntity( const String& name ) const
 {
-	for( size_t i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < array::size(entities); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
@@ -75,16 +81,15 @@ EntityPtr Group::findEntity( const String& name ) const
 
 bool Group::remove( const EntityPtr& entity )
 {
-	std::vector<EntityPtr>::iterator it;
-	it = std::find(entities.begin(), entities.end(), entity);
+	auto it = std::find(array::begin(entities), array::end(entities), entity);
 
-	if( it == entities.end() )
+	if( it == array::end(entities) )
 		return false;
 
 	onEntityRemoved(entity);
 	onEntityChanged();
 
-	entities.erase(it);
+	array::remove(entities, it);
 
 	return true;
 }
@@ -93,7 +98,7 @@ bool Group::remove( const EntityPtr& entity )
 
 void Group::update( float delta )
 {
-	for( size_t i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < array::size(entities); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		if(entity) entity->update( delta );
@@ -104,15 +109,15 @@ void Group::update( float delta )
 
 void Group::fixUp()
 {
-	std::vector<EntityPtr> invalid;
+	Array<EntityPtr> invalid(*AllocatorGetHeap());
 
-	for( size_t i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < array::size(entities); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
 		if( !entity )
 		{
-			invalid.push_back(entity);
+			array::push_back(invalid, entity);
 			continue;
 		}
 
@@ -120,10 +125,10 @@ void Group::fixUp()
 	}
 
 	// Remove invalid entities
-	for( size_t i = 0; i < invalid.size(); i++ )
+	for( size_t i = 0; i < array::size(invalid); ++i )
 	{
-		auto it = std::find(entities.begin(), entities.end(), invalid[i]);
-		entities.erase(it);
+		auto it = std::find(array::begin(entities), array::end(entities), invalid[i]);
+		array::remove(entities, it);
 	}
 }
 

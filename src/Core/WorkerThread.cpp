@@ -6,13 +6,14 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Log.h"
-#include "Core/Memory.h"
 
 #include "Core/Task.h"
 #include "Core/WorkerThread.h"
 #include "Core/WorkerThreadPool.h"
 
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -43,7 +44,7 @@ NAMESPACE_CORE_BEGIN
 	}
 
 	// -- Init / Shutdown --
-	void WorkerThread::Make(WorkerThreadPool * pool, uint32 threadIndex)
+	void WorkerThread::Initialize(WorkerThreadPool * pool, uint32 threadIndex)
 	{
 		//BOOST_LOG( gn_log::get() ) << "(Concurrent) \tWorker[ " << threadIndex << " ] starting up...\n";
 		LogInfo("WorkerThread[%i] starting up...", threadIndex);
@@ -51,7 +52,7 @@ NAMESPACE_CORE_BEGIN
 		Index_ = threadIndex;
 		Pool_ = pool;
 		TaskMutex_.reset( MutexCreate(AllocatorGetHeap()) );
-		Tasks_.reserve(TaskCapacity);	// some random number of tasks
+		array::reserve(Tasks_, TaskCapacity);	// some random number of tasks
 		
 		if(Index_ != 0)	// so long as we're not the main thread...
 		{
@@ -67,7 +68,7 @@ NAMESPACE_CORE_BEGIN
 			//ThisThread_.reset( (const_cast<Worker *>(this)) );
 	}
 
-	void WorkerThread::Unmake()
+	void WorkerThread::Shutdown()
 	{
 		//BOOST_LOG( gn_log::get() ) << "(Concurrent) \tWorker[ " << Index_ << " ] joining...\n";
 		LogInfo("WorkerThread[%i] joining...", Index_);
@@ -82,7 +83,7 @@ NAMESPACE_CORE_BEGIN
 			//ThisThread_.release();
 		
 
-		Tasks_.swap( std::vector<TaskBase *>() );	// force deallocation of the task vector
+		array::clear(Tasks_);
 		TaskMutex_.reset();
 		Pool_ = nullptr;
 		Index_ = static_cast<uint32>(-1);
@@ -186,7 +187,7 @@ NAMESPACE_CORE_BEGIN
 	{
 		// TODO: Traverse in psuedo-random pattern (see GCC3)
 		// loop through all the threads
-		for(auto w = Pool_->Workers_.begin(); w != Pool_->Workers_.end(); ++w)
+		for(auto w = array::begin(Pool_->Workers_); w != array::end(Pool_->Workers_); ++w)
 		{
 			// if we're looking at "this" thread, continue
 			if( *w == this )
@@ -199,7 +200,7 @@ NAMESPACE_CORE_BEGIN
 
 			// if in the interim, tasks were pushed into the internal queue
 			//  return true (because we got work)
-			if( !Tasks_.empty() )
+			if( !array::empty(Tasks_) )
 				return true;
 		}
 
@@ -221,7 +222,7 @@ NAMESPACE_CORE_BEGIN
 		MutexLock(TaskMutex_);
 
 		// if we have no tasks, return false
-		if(Tasks_.empty())
+		if(array::empty(Tasks_))
 		{
 			MutexUnlock(TaskMutex_);
 			return false;
@@ -232,7 +233,7 @@ NAMESPACE_CORE_BEGIN
 		MutexLock(thief->TaskMutex_);
 
 		// if the thieving thread got tasks in the interim, return false
-		if(thief->Tasks_.size() > 0)
+		if(array::size(thief->Tasks_) > 0)
 		{
 			MutexUnlock(thief->TaskMutex_);
 			MutexUnlock(TaskMutex_);
@@ -240,19 +241,19 @@ NAMESPACE_CORE_BEGIN
 		}
 
 		// if there is only one task
-		if(Tasks_.size() == 1)
+		if(array::size(Tasks_) == 1)
 		{
 			// attempt to split it in half
 			TaskBase * outTask = nullptr;
 			if( Tasks_[0]->Slice( outTask ) )
 			{
 				outTask->Completion_->Set(true);
-				thief->Tasks_.push_back( outTask );
+				array::push_back(thief->Tasks_, outTask);
 			}
 			else
 			{
-				thief->Tasks_.push_back(Tasks_[0]);
-				Tasks_.pop_back();
+				array::push_back(thief->Tasks_, Tasks_[0]);
+				array::pop_back(Tasks_);
 			}
 			
 			MutexUnlock(thief->TaskMutex_);
@@ -261,9 +262,9 @@ NAMESPACE_CORE_BEGIN
 		}
 
 		// calculate half of the current tasks this thread has
-		size_t splitDepth = ( Tasks_.size() + 1 ) / 2;
+		size_t splitDepth = ( array::size(Tasks_) + 1 ) / 2;
 
-		thief->Tasks_.resize( splitDepth );
+		array::resize(thief->Tasks_, splitDepth );
 
 		// for each task to be stolen
 		for(size_t i = 0; i < splitDepth; ++i)
@@ -272,15 +273,15 @@ NAMESPACE_CORE_BEGIN
 			thief->Tasks_[i] = Tasks_[i];
 
 			// in-place copy the i-th task with the i-th task beyond the split point
-			Tasks_[i] = Tasks_[(i + splitDepth) % Tasks_.size()];
+			Tasks_[i] = Tasks_[(i + splitDepth) % array::size(Tasks_)];
 		}
 
 		//memcpy( thief->Tasks_[0],	Tasks_[0],			(splitDepth * sizeof(TaskBase *))); // copy from me to them
 		//memcpy( Tasks_[0],			Tasks_[splitDepth], (splitDepth * sizeof(TaskBase *))); // copy down
 
 		// cut out the old tasks
-		Tasks_.resize(Tasks_.size() - splitDepth, nullptr);
-		assert( Tasks_.capacity() == WorkerThread::TaskCapacity );	// make sure that the STL doesn't deallocate our memory
+		array::resize(Tasks_, array::size(Tasks_) - splitDepth);
+		assert( Tasks_._capacity == WorkerThread::TaskCapacity );	// make sure that the STL doesn't deallocate our memory
 
 		MutexUnlock(thief->TaskMutex_);
 		MutexUnlock(TaskMutex_);
@@ -310,14 +311,14 @@ NAMESPACE_CORE_BEGIN
 			if(slices != nullptr)
 			{
 				// assign each thread a task (INCLUDING THIS ONE)
-				for(uint32 i = 0; i < slices->size(); ++i)
+				for(uint32 i = 0; i < array::size(*slices); ++i)
 				{
 					WorkerThread * w = Pool_->Workers_[i];
 					//boost::mutex::scoped_lock worker_lock( w->TaskMutex_ );
 					MutexLock(w->TaskMutex_);
 					
 					(*slices)[i]->Completion_->Set(true);
-					w->Tasks_.push_back( (*slices)[i] );
+					array::push_back(w->Tasks_, (*slices)[i] );
 					
 					MutexUnlock(w->TaskMutex_);
 				}
@@ -338,7 +339,7 @@ NAMESPACE_CORE_BEGIN
 			MutexLock(TaskMutex_);
 
 			// if the task vector is full, return false
-			if( Tasks_.size() >= WorkerThread::TaskCapacity )
+			if( array::size(Tasks_) >= WorkerThread::TaskCapacity )
 			{
 				MutexUnlock(TaskMutex_);
 				return false;
@@ -348,7 +349,7 @@ NAMESPACE_CORE_BEGIN
 			newTask->Completion_->Set(true);
 
 			// assign the job
-			Tasks_.push_back( newTask );
+			array::push_back(Tasks_, newTask );
 
 			MutexUnlock(TaskMutex_);
 		}
@@ -373,14 +374,14 @@ NAMESPACE_CORE_BEGIN
 		MutexLock(TaskMutex_);
 
 		// if the task vector is empty, return false
-		if( Tasks_.empty() )
+		if( array::empty(Tasks_) )
 		{
 			MutexUnlock(TaskMutex_);
 			return false;
 		}
 
 		// get a pointer to the last task in the vector
-		TaskBase * t = Tasks_.back();
+		TaskBase * t = array::back(Tasks_);
 
 		// if the task can slice itself into a new task (e.g. several iterations of a loop)
 		if( t->Slice( outTask ) )
@@ -396,7 +397,7 @@ NAMESPACE_CORE_BEGIN
 		outTask = t;
 
 		// pop the task out of the vector
-		Tasks_.pop_back();
+		array::pop_back(Tasks_);
 
 		MutexUnlock(TaskMutex_);
 		return true;// return the love

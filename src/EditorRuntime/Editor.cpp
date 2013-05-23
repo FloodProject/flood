@@ -22,7 +22,7 @@ wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 wxIMPLEMENT_WXWIN_MAIN
 #endif
 
-wxIMPLEMENT_APP_NO_MAIN(EditorApp);
+wxIMPLEMENT_APP_NO_MAIN(fld::EditorApp);
 
 int main(int argc, char **argv)
 {

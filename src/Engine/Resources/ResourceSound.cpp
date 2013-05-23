@@ -25,6 +25,7 @@ Sound::Sound()
 	, channels(0)
 	, size(0)
 	, streamed(false)
+	, dataBuffer(*AllocatorGetHeap())
 {
 
 }

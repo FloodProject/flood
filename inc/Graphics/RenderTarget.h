@@ -49,7 +49,7 @@ class RenderContext;
  * Each render target mantains a list of viewports.
  */
 
-typedef std::vector<RenderView*> RenderViewsVector;
+typedef Array<RenderView*> RenderViewsVector;
 
 class API_GRAPHICS RenderTarget
 {

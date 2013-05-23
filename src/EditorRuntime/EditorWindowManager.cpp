@@ -13,6 +13,8 @@
 #include "Editor/RenderControl.h"
 #include "Editor/RenderWindow.h"
 
+NAMESPACE_EDITOR_BEGIN
+
 //-----------------------------------//
 
 EditorWindowManager::EditorWindowManager()
@@ -38,3 +40,5 @@ Window* EditorWindowManager::createWindow(const WindowSettings& settings)
 }
 
 //-----------------------------------//
+
+NAMESPACE_EDITOR_END

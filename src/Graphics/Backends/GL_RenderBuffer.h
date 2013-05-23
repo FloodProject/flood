@@ -33,7 +33,7 @@ public:
 	bool check() OVERRIDE;
 
 	// Reads the contents of the render buffer.
-	void read(int8 attachment, std::vector<uint8>& data) OVERRIDE;
+	void read(int8 attachment, Array<uint8>& data) OVERRIDE;
 
 	// Updates the render target (usually swaps buffers).
 	void update() OVERRIDE;
@@ -59,8 +59,8 @@ protected:
 	bool checkSize();
 
 	uint32 id;
-	std::vector< uint32 > renderBuffers;
-	std::vector< TexturePtr > textureBuffers;
+	Array< uint32 > renderBuffers;
+	Array< TexturePtr > textureBuffers;
 
 	bool bound;
 	bool valid;

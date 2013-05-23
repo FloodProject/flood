@@ -9,11 +9,13 @@
 
 #ifdef ENABLE_ARCHIVE_DIR
 
-#include "Core/Archive.h"
-#include "Core/Stream.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Stream.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
+
+#include "Core/Archive.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -22,8 +24,8 @@ NAMESPACE_CORE_BEGIN
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
 static Stream* DirArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    DirArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    DirArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
+static void    DirArchiveEnumerateFiles(Archive*, Array<Path*>&);
+static void    DirArchiveEnumerateDirectories(Archive*, Array<Path*>&);
 static bool    DirArchiveExistsFile(Archive*, const Path&);
 static bool    DirArchiveExistsDir(Archive*, const Path&);
 static bool    DirArchiveMonitor(Archive*);
@@ -98,9 +100,9 @@ static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator*
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
+static void DirArchiveEnumerate(Array<String*>&, Path, Path, bool);
 
-static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+static void DirArchiveEnumerateFiles(Archive* archive, Array<Path*>& paths)
 {
 	if( !archive ) return;
 	FileEnumerateFiles(archive->path, paths);
@@ -108,7 +110,7 @@ static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+static void DirArchiveEnumerateDirectories(Archive* archive, Array<Path*>& paths)
 {
 	if( !archive ) return;
 	FileEnumerateDirectories(archive->path, paths);
@@ -128,12 +130,12 @@ static bool DirArchiveExistsFile(Archive* archive, const Path& file)
 
 static bool DirArchiveExistsDir(Archive* archive, const Path& path)
 {
-	std::vector<Path> dirs;
+	Array<Path*> dirs(*AllocatorGetHeap());
 	ArchiveEnumerateDirectories(archive, dirs);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+	for(size_t i = 0; i < array::size(dirs); i++)
 	{
-		Path normalized = PathNormalize(dirs[i]);
+		Path normalized = PathNormalize(*dirs[i]);
 		Path dir = StringTrim(normalized, "/");
 		if(dir == path) return true;
 	}

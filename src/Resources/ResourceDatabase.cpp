@@ -9,6 +9,8 @@
 #include "Resources/ResourceDatabase.h"
 #include "Resources/ResourceIndexer.h"
 #include "Core/Log.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -27,6 +29,7 @@ REFLECT_CLASS_END()
 
 ResourceDatabase::ResourceDatabase()
 	: indexer(nullptr)
+	, resources(*AllocatorGetHeap())
 {
 }
 
@@ -34,16 +37,19 @@ ResourceDatabase::ResourceDatabase()
 
 ResourceDatabase::~ResourceDatabase()
 {
+	for(size_t i = 0; i < array::size(resources); ++i)
+		Deallocate(resources[i]);
+	array::clear(resources);
 }
 
 //-----------------------------------//
 
 void ResourceDatabase::fixUp()
 {
-	for( size_t i = 0; i < resources.size(); i++ )
+	for( size_t i = 0; i < array::size(resources); ++i )
 	{
-		const ResourceMetadata& metadata = resources[i];
-		resourcesCache[metadata.hash] = metadata;
+		auto metadata = resources[i];
+		resourcesCache[metadata->hash] = *metadata;
 	}
 }
 
@@ -54,8 +60,10 @@ void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 	if(resourcesCache.find(metadata.hash) != resourcesCache.end())
 		return;
 
-	resources.push_back(metadata);
-	resourcesCache[metadata.hash] = metadata;
+	auto newMetadata = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(ResourceMetadata), alignof(ResourceMetadata))) ResourceMetadata(metadata);
+
+	array::push_back(resources, newMetadata);
+	resourcesCache[metadata.hash] = *newMetadata;
 
 	onResourceAdded(metadata);
 }

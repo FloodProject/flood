@@ -71,7 +71,7 @@ bool ArchiveExistsDirectory(Archive* archive, const Path& path)
 
 //-----------------------------------//
 
-void ArchiveEnumerateFiles(Archive* archive, std::vector<String>& files)
+void ArchiveEnumerateFiles(Archive* archive, Array<String*>& files)
 {
 	if( !archive ) return;
 	archive->fn->enumerate_files(archive, files);
@@ -79,7 +79,7 @@ void ArchiveEnumerateFiles(Archive* archive, std::vector<String>& files)
 
 //-----------------------------------//
 
-void ArchiveEnumerateDirectories(Archive* archive, std::vector<String>& dirs)
+void ArchiveEnumerateDirectories(Archive* archive, Array<String*>& dirs)
 {
 	if( !archive ) return;
 	archive->fn->enumerate_dirs(archive, dirs);

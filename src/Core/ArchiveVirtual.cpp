@@ -6,10 +6,12 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Archive.h"
-#include "Core/Stream.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Stream.h"
 #include "Core/Log.h"
+
+#include "Core/Archive.h"
 
 #ifdef ENABLE_ARCHIVE_VIRTUAL
 
@@ -20,8 +22,8 @@ NAMESPACE_CORE_BEGIN
 static bool    VirtualArchiveOpen(Archive*, const String&);
 static bool    VirtualArchiveClose(Archive*);
 static Stream* VirtualArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    VirtualArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    VirtualArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
+static void    VirtualArchiveEnumerateFiles(Archive*, Array<Path*>&);
+static void    VirtualArchiveEnumerateDirectories(Archive*, Array<Path*>&);
 static bool    VirtualArchiveExistsFile(Archive*, const Path&);
 static bool    VirtualArchiveExistsDir(Archive*, const Path&);
 static bool    VirtualArchiveMonitor(Archive*); 
@@ -40,7 +42,7 @@ static ArchiveFuncs gs_VirtualArchiveFuncs =
 
 struct ArchiveVirtual : public Archive
 {
-	std::vector<Archive*> mounts;
+	HeapArray<Archive*> mounts;
 };
 
 //-----------------------------------//
@@ -65,7 +67,7 @@ bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
 	if( !archive || !mount ) return false;
 
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	varchive->mounts.push_back(mount);
+	array::push_back(varchive->mounts, mount);
 
 	// Setup archive watch callbacks.
 	mount->userdata = varchive;
@@ -82,12 +84,12 @@ void ArchiveMountDirectories(Archive* archive, const String& dirPath, Allocator*
 	
 	ArchiveMount(archive, dir, "");
 	
-	std::vector<String> dirs;
+	Array<String*> dirs(*AllocatorGetHeap());
 	ArchiveEnumerateDirectories(dir, dirs);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+	for(size_t i = 0; i < array::size(dirs); ++i)
 	{
-		const String& path = dirPath + PathGetSeparator() + dirs[i];
+		const String& path = dirPath + PathGetSeparator() + *dirs[i];
 		Archive* ndir = ArchiveCreateFromDirectory(alloc, path);
 		ArchiveMount(archive, ndir, "");
 	}
@@ -108,13 +110,13 @@ static bool VirtualArchiveClose(Archive* archive)
 
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 	
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 		ArchiveDestroy(marchive);
 	}
 
-	varchive->mounts.clear();
+	array::clear(varchive->mounts);
 
 	return true;
 }
@@ -126,11 +128,11 @@ static Stream* VirtualArchiveOpenFile(Archive* archive, const Path& path, Alloca
 	if( !archive ) return nullptr;
 	
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	if( varchive->mounts.empty() ) return nullptr;
+	if( array::empty(varchive->mounts) ) return nullptr;
 
 	Stream* stream = nullptr;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 		stream = ArchiveOpenFile(marchive, path, alloc);
@@ -142,11 +144,11 @@ static Stream* VirtualArchiveOpenFile(Archive* archive, const Path& path, Alloca
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool dir)
+static void VirtualArchiveEnumerate(Archive* archive, Array<Path*>& paths, bool dir)
 {
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 
@@ -157,7 +159,7 @@ static void VirtualArchiveEnumerate(Archive* archive, std::vector<Path>& paths, 
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+static void VirtualArchiveEnumerateFiles(Archive* archive, Array<Path*>& paths)
 {
 	if( !archive ) return;
 	VirtualArchiveEnumerate(archive, paths, false);
@@ -165,7 +167,7 @@ static void VirtualArchiveEnumerateFiles(Archive* archive, std::vector<Path>& pa
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+static void VirtualArchiveEnumerateDirectories(Archive* archive, Array<Path*>& paths)
 {
 	if( !archive ) return;
 	VirtualArchiveEnumerate(archive, paths, true);
@@ -178,7 +180,7 @@ static bool VirtualArchiveExistsFile(Archive* archive, const Path& path)
 	if( !archive ) return false;
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 		bool exists = ArchiveExistsFile(marchive, path);
@@ -195,7 +197,7 @@ static bool VirtualArchiveExistsDir(Archive* archive, const Path& path)
 	if( !archive ) return false;
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 		bool exists = ArchiveExistsDirectory(marchive, path);
@@ -218,7 +220,7 @@ static bool VirtualArchiveMonitor(Archive* archive)
 	if( !archive ) return false;
 	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 	
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(size_t i = 0; i < array::size(varchive->mounts); ++i)
 	{
 		Archive* marchive = varchive->mounts[i];
 		marchive->fn->watch(marchive);

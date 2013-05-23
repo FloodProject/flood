@@ -49,7 +49,7 @@ public:
 	ACCESSOR(Streamed, bool, streamed)
 
 	// Gets/sets the buffer containing the data.
-	ACCESSOR(Buffer, const std::vector<byte>&, dataBuffer)
+	ACCESSOR(Buffer, const Array<byte>&, dataBuffer)
 
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Audio)
@@ -67,7 +67,7 @@ public:
 	bool streamed;
 
 	// Holds the sound data.
-	std::vector<byte> dataBuffer;
+	Array<byte> dataBuffer;
 };
 
 TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Sound );

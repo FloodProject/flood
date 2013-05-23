@@ -57,7 +57,7 @@ protected:
 	bool initOgg( OggVorbis_File*&, ResourceLoadOptions& );
 
 	// Decodes the audio from the Ogg stream.
-	void decodeOgg( OggVorbis_File* vf, std::vector<byte>& buffer );
+	void decodeOgg( OggVorbis_File* vf, Array<byte>& buffer );
 
 	// Used for providing libvorbisfile with I/O callbacks.
 	ov_callbacks callbacks;

@@ -6,11 +6,16 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Window/WindowManager.h"
+#include "Core/Containers/Array.h"
+
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 WindowManager::WindowManager()
+    : windows(*AllocatorGetHeap())
 {
 }
 
@@ -24,7 +29,7 @@ WindowManager::~WindowManager()
 
 void WindowManager::destroyWindows()
 {
-    for(auto &it = windows.begin(); it != windows.end(); ++it)
+    for(auto it = array::begin(windows); it != array::end(windows); ++it)
     {
         Window* window = *it;
         Deallocate(window);
@@ -33,3 +38,4 @@ void WindowManager::destroyWindows()
 
 
 //-----------------------------------//
+NAMESPACE_ENGINE_END

@@ -8,26 +8,40 @@
 #include "Engine/API.h"
 #include "Engine/Resources/Animation.h"
 #include "Engine/Resources/Bone.h"
+
+#include "Core/Containers/Array.h"
 #include "Core/Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+AnimationState::AnimationState()
+	:bonesMatrix(*AllocatorGetHeap())
+{}
+
 Animation::Animation()
 	: looped(true)
+	, keyFramesVector(*AllocatorGetHeap())
 { }
+
+Animation::~Animation()
+{
+	for(auto v = keyFrames.begin(); v != keyFrames.end(); ++v)
+		Deallocate(v->second);
+	keyFrames.clear();
+}
 
 //-----------------------------------//
 
 void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 {
-	keyFrames[bone] = frames;
+	keyFrames[bone] = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(KeyFramesVector), alignof(KeyFramesVector))) KeyFramesVector(frames);
 
-	for( size_t i = 0; i < frames.size(); i++ )
+	for( size_t i = 0; i < array::size(frames); ++i )
 	{	
 		const KeyFrame& frame = frames[i];
-		keyFramesVector.push_back(frame);
+		array::push_back(keyFramesVector, frame);
 	}
 }
 
@@ -41,7 +55,7 @@ float Animation::getTotalTime() const
 	float min = LimitsFloatMaximum;
 	float max = 0;
 
-	for( size_t i = 0; i < keyFramesVector.size(); i++ )
+	for( size_t i = 0; i < array::size(keyFramesVector); ++i )
 	{
 		const KeyFrame& keyFrame = keyFramesVector[i];
 
@@ -71,14 +85,14 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	if( !bone || keyFrames.empty() )
 		return Matrix4x3::Identity;
 		 
-	const KeyFramesVector& boneKeyFrames = keyFrames[bone];
+	auto& boneKeyFrames = *keyFrames[bone];
 
-	if( boneKeyFrames.empty() )
+	if( array::empty(boneKeyFrames) )
 		return Matrix4x3::Identity;
 	
 	uint endIndex = 0;
 
-	for( size_t i = 0; i < boneKeyFrames.size(); i++ )
+	for( size_t i = 0; i < array::size(boneKeyFrames); ++i )
 	{
 		if( boneKeyFrames[i].time > time )
 		{
@@ -95,7 +109,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	Quaternion rotation;
 #endif
 
-	if( endIndex == 0 || endIndex == boneKeyFrames.size() )
+	if( endIndex == 0 || endIndex == array::size(boneKeyFrames) )
 	{
 		endIndex -= (endIndex != 0) ? 1 : 0;
 		position = boneKeyFrames[endIndex].position;

@@ -15,6 +15,8 @@
 #include "Engine/Physics/DebugDraw.h"
 #include "Graphics/RenderDevice.h"
 
+#include "Core/Containers/Array.h"
+
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
 
@@ -75,7 +77,7 @@ void PhysicsManager::drawDebugWorld()
 	RenderDevice* renderDevice = GetRenderDevice();
 
 	RenderState state( debugDrawer->getRenderable().get() );
-	renderDevice->render( state, LightQueue() );
+	renderDevice->render( state, LightQueue(*AllocatorGetHeap()) );
 }
 
 //-----------------------------------//

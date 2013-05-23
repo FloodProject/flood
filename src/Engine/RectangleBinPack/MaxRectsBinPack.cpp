@@ -8,16 +8,23 @@
 
 #include "Engine/API.h"
 #include "Engine/RectangleBinPack/MaxRectsBinPack.h"
+#include "Core/Containers/Array.h"
+
+NAMESPACE_CORE_BEGIN
 
 using namespace std;
 
 MaxRectsBinPack::MaxRectsBinPack()
-:binWidth(0),
-binHeight(0)
+	: binWidth(0)
+	, binHeight(0)
+	, usedRectangles(*AllocatorGetHeap())
+	, freeRectangles(*AllocatorGetHeap())
 {
 }
 
 MaxRectsBinPack::MaxRectsBinPack(int width, int height)
+	: usedRectangles(*AllocatorGetHeap())
+	, freeRectangles(*AllocatorGetHeap())
 {
 	Init(width, height);
 }
@@ -33,10 +40,10 @@ void MaxRectsBinPack::Init(int width, int height)
 	n.width = width;
 	n.height = height;
 
-	usedRectangles.clear();
+	array::clear(usedRectangles);
 
-	freeRectangles.clear();
-	freeRectangles.push_back(n);
+	array::clear(freeRectangles);
+	array::push_back(freeRectangles, n);
 }
 
 Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic method)
@@ -56,12 +63,12 @@ Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic meth
 	if (newNode.height == 0)
 		return newNode;
 
-	size_t numRectanglesToProcess = freeRectangles.size();
+	size_t numRectanglesToProcess = array::size(freeRectangles);
 	for(size_t i = 0; i < numRectanglesToProcess; ++i)
 	{
 		if (SplitFreeNode(freeRectangles[i], newNode))
 		{
-			freeRectangles.erase(freeRectangles.begin() + i);
+			array::remove(freeRectangles, array::begin(freeRectangles) + i);
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -69,22 +76,22 @@ Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic meth
 
 	PruneFreeList();
 
-	usedRectangles.push_back(newNode);
+	array::push_back(usedRectangles, newNode);
 	return newNode;
 }
 
-void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect> &dst, FreeRectChoiceHeuristic method)
+void MaxRectsBinPack::Insert(Array<Vector2i> &rectSizes, Array<Rect> &dst, FreeRectChoiceHeuristic method)
 {
-	dst.clear();
+	array::clear(dst);
 
-	while(rectSizes.size() > 0)
+	while(array::size(rectSizes) > 0)
 	{
 		int bestScore1 = std::numeric_limits<int>::max();
 		int bestScore2 = std::numeric_limits<int>::max();
 		int bestRectIndex = -1;
 		Rect bestNode;
 
-		for(size_t i = 0; i < rectSizes.size(); ++i)
+		for(size_t i = 0; i < array::size(rectSizes); ++i)
 		{
 			int score1;
 			int score2;
@@ -103,18 +110,18 @@ void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rect>
 			return;
 
 		PlaceRect(bestNode);
-		rectSizes.erase(rectSizes.begin() + bestRectIndex);
+		array::remove(rectSizes, array::begin(rectSizes) + bestRectIndex);
 	}
 }
 
 void MaxRectsBinPack::PlaceRect(const Rect &node)
 {
-	size_t numRectanglesToProcess = freeRectangles.size();
+	size_t numRectanglesToProcess = array::size(freeRectangles);
 	for(size_t i = 0; i < numRectanglesToProcess; ++i)
 	{
 		if (SplitFreeNode(freeRectangles[i], node))
 		{
-			freeRectangles.erase(freeRectangles.begin() + i);
+			array::remove(freeRectangles, array::begin(freeRectangles) + i);
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -122,7 +129,7 @@ void MaxRectsBinPack::PlaceRect(const Rect &node)
 
 	PruneFreeList();
 
-	usedRectangles.push_back(node);
+	array::push_back(usedRectangles, node);
 	//		dst.push_back(bestNode); ///\todo Refactor so that this compiles.
 }
 
@@ -156,7 +163,7 @@ Rect MaxRectsBinPack::ScoreRect(int width, int height, FreeRectChoiceHeuristic m
 float MaxRectsBinPack::Occupancy() const
 {
 	unsigned long usedSurfaceArea = 0;
-	for(size_t i = 0; i < usedRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(usedRectangles); ++i)
 		usedSurfaceArea += usedRectangles[i].width * usedRectangles[i].height;
 
 	return (float)usedSurfaceArea / (binWidth * binHeight);
@@ -169,7 +176,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBottomLeft(int width, int height, in
 
 	bestY = std::numeric_limits<int>::max();
 
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
 	{
 		// Try to place the rectangle in upright (non-flipped) orientation.
 		if (freeRectangles[i].width >= width && freeRectangles[i].height >= height)
@@ -210,7 +217,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestShortSideFit(int width, int heig
 
 	bestShortSideFit = std::numeric_limits<int>::max();
 
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
 	{
 		// Try to place the rectangle in upright (non-flipped) orientation.
 		if (freeRectangles[i].width >= width && freeRectangles[i].height >= height)
@@ -260,7 +267,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestLongSideFit(int width, int heigh
 
 	bestLongSideFit = std::numeric_limits<int>::max();
 
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
 	{
 		// Try to place the rectangle in upright (non-flipped) orientation.
 		if (freeRectangles[i].width >= width && freeRectangles[i].height >= height)
@@ -310,7 +317,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeBestAreaFit(int width, int height,
 
 	bestAreaFit = std::numeric_limits<int>::max();
 
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
 	{
 		int areaFit = freeRectangles[i].width * freeRectangles[i].height - width * height;
 
@@ -369,7 +376,7 @@ int MaxRectsBinPack::ContactPointScoreNode(int x, int y, int width, int height) 
 	if (y == 0 || y + height == binHeight)
 		score += width;
 
-	for(size_t i = 0; i < usedRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(usedRectangles); ++i)
 	{
 		if (usedRectangles[i].x == x + width || usedRectangles[i].x + usedRectangles[i].width == x)
 			score += CommonIntervalLength(usedRectangles[i].y, usedRectangles[i].y + usedRectangles[i].height, y, y + height);
@@ -386,7 +393,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int height, 
 
 	bestContactScore = -1;
 
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
 	{
 		// Try to place the rectangle in upright (non-flipped) orientation.
 		if (freeRectangles[i].width >= width && freeRectangles[i].height >= height)
@@ -431,7 +438,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		{
 			Rect newNode = freeNode;
 			newNode.height = usedNode.y - newNode.y;
-			freeRectangles.push_back(newNode);
+			array::push_back(freeRectangles, newNode);
 		}
 
 		// New node at the bottom side of the used node.
@@ -440,7 +447,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 			Rect newNode = freeNode;
 			newNode.y = usedNode.y + usedNode.height;
 			newNode.height = freeNode.y + freeNode.height - (usedNode.y + usedNode.height);
-			freeRectangles.push_back(newNode);
+			array::push_back(freeRectangles, newNode);
 		}
 	}
 
@@ -451,7 +458,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 		{
 			Rect newNode = freeNode;
 			newNode.width = usedNode.x - newNode.x;
-			freeRectangles.push_back(newNode);
+			array::push_back(freeRectangles, newNode);
 		}
 
 		// New node at the right side of the used node.
@@ -460,7 +467,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
 			Rect newNode = freeNode;
 			newNode.x = usedNode.x + usedNode.width;
 			newNode.width = freeNode.x + freeNode.width - (usedNode.x + usedNode.width);
-			freeRectangles.push_back(newNode);
+			array::push_back(freeRectangles, newNode);
 		}
 	}
 
@@ -489,19 +496,21 @@ void MaxRectsBinPack::PruneFreeList()
 	*/
 
 	/// Go through each pair and remove any rectangle that is redundant.
-	for(size_t i = 0; i < freeRectangles.size(); ++i)
-		for(size_t j = i+1; j < freeRectangles.size(); ++j)
+	for(size_t i = 0; i < array::size(freeRectangles); ++i)
+		for(size_t j = i+1; j < array::size(freeRectangles); ++j)
 		{
 			if (freeRectangles[i].isContainedIn(freeRectangles[j]))
 			{
-				freeRectangles.erase(freeRectangles.begin()+i);
+				array::remove(freeRectangles, array::begin(freeRectangles) + i);
 				--i;
 				break;
 			}
 			if (freeRectangles[j].isContainedIn(freeRectangles[i]))
 			{
-				freeRectangles.erase(freeRectangles.begin()+j);
+				array::remove(freeRectangles, array::begin(freeRectangles) + j);
 				--j;
 			}
 		}
 }
+
+NAMESPACE_CORE_END

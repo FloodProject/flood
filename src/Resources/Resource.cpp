@@ -8,6 +8,7 @@
 #include "Resources/API.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 
 #ifdef API_RESOURCE_DLL_EXPORT
@@ -69,6 +70,7 @@ bool Resource::isLoaded() const
 //-----------------------------------//
 
 ResourceLoader::ResourceLoader()
+    : extensions(*AllocatorGetHeap())
 {
 }
 
@@ -76,6 +78,9 @@ ResourceLoader::ResourceLoader()
 
 ResourceLoader::~ResourceLoader()
 {
+    for(size_t i = 0; i < array::size(extensions); ++i)
+        Deallocate(extensions[i]);
+    array::clear(extensions);
 }
 
 //-----------------------------------//

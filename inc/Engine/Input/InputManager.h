@@ -45,7 +45,7 @@ public:
 	void addDevice( InputDevice* device );
 	
 	// Gets a vector with all the known input devices.
-	GETTER(Devices, const std::vector<InputDevice*>&, devices)
+	GETTER(Devices, const Array<InputDevice*>&, devices)
 
 	// Gets a keyboard device if it exists.
 	Keyboard* getKeyboard() const;
@@ -68,7 +68,7 @@ public:
 protected:
 	
 	// Holds all the input devices.
-	std::vector<InputDevice*> devices;
+	Array<InputDevice*> devices;
 
 	// Input window.
 	Window* window;

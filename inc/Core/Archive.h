@@ -33,8 +33,8 @@ API_CORE bool ArchiveExistsFile(Archive*, const Path&);
 API_CORE bool ArchiveExistsDirectory(Archive*, const Path&);
 
 // Enumerates all the files or directories in the archive.
-API_CORE void ArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-API_CORE void ArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
+API_CORE void ArchiveEnumerateFiles(Archive*, Array<Path*>&);
+API_CORE void ArchiveEnumerateDirectories(Archive*, Array<Path*>&);
 
 // Combines the path of a file to get the full path to an archive file.
 API_CORE Path ArchiveCombinePath(Archive*, const Path& filePath);
@@ -93,8 +93,8 @@ typedef bool (*ArchiveCloseFunction)(Archive*);
 typedef Stream* (*ArchiveOpenFileFunction)(Archive*, const Path&, Allocator*);
 typedef bool (*ArchiveExistsFileFunction)(Archive*, const Path&);
 typedef bool (*ArchiveExistsDirFunction)(Archive*, const Path&);
-typedef void (*ArchiveEnumerateFilesFunction)(Archive*, std::vector<Path>&);
-typedef void (*ArchiveEnumerateDirsFunction)(Archive*, std::vector<Path>&);
+typedef void (*ArchiveEnumerateFilesFunction)(Archive*, Array<Path*>&);
+typedef void (*ArchiveEnumerateDirsFunction)(Archive*, Array<Path*>&);
 typedef bool (*ArchiveWatchFunction)(Archive*);
 
 struct ArchiveFuncs

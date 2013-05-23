@@ -6,11 +6,12 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Log.h"
 #include "Core/Network/Network.h"
 #include "Core/Network/Host.h"
 #include "Core/Network/Peer.h"
 #include "Core/Network/Message.h"
+#include "Core/Containers/Array.h"
+#include "Core/Log.h"
 
 #include <enet/enet.h>
 
@@ -350,7 +351,7 @@ bool HostServer::createSocket( const HostConnectionDetails& details )
 
 void HostServer::onConnected(const PeerPtr& peer)
 {
-	peers.push_back(peer);
+	array::push_back(peers, peer);
 	onClientConnected(peer);
 }
 
@@ -360,10 +361,10 @@ void HostServer::onDisconnected(const PeerPtr& peer)
 {
 	onClientDisconnected(peer);
 	
-	NetworkPeers::iterator it = std::find(peers.begin(), peers.end(), peer);
-	assert( it != peers.end() );
+	auto it = std::find(array::begin(peers), array::end(peers), peer);
+	assert( it != array::end(peers) );
 	
-	peers.erase(it);
+	array::remove(peers, it);
 }
 
 //-----------------------------------//

@@ -17,6 +17,7 @@
 #include "Core/Utilities.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 
 #include "Core/Math/Vector.h"
@@ -649,7 +650,7 @@ void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
 	ms->position += n;
 
 	// Do some debug bounds checking.
-	if(ms->position > ms->data.size())
+	if(ms->position > array::size(ms->data))
 	{
 		LogAssert("Check the bounds of the buffer");
 	}

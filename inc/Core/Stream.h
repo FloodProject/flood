@@ -93,10 +93,10 @@ API_CORE bool   StreamClose(Stream*);
 API_CORE int64  StreamGetSize(Stream*);
 API_CORE void   StreamResize(Stream*, int64 size);
 
-API_CORE int64  StreamRead(Stream*, std::vector<uint8>& data);
+API_CORE int64  StreamRead(Stream*, Array<uint8>& data);
 API_CORE int64  StreamReadBuffer(Stream*, void* buffer, int64 size);
 API_CORE int64  StreamReadString(Stream*, String&);
-API_CORE int64  StreamReadLines(Stream*, std::vector<String>&);
+API_CORE int64  StreamReadLines(Stream*, Array<String*>&);
 
 API_CORE int64  StreamWrite(Stream*, uint8* buf, uint64 size);
 API_CORE int64  StreamWriteString(Stream*, const String&);
@@ -120,7 +120,9 @@ API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamOpenMode);
 
 struct API_CORE MemoryStream : Stream
 {
-	std::vector<uint8> data;
+	MemoryStream();
+
+	Array<uint8> data;
 	uint8* buffer;
 	uint64 position;
 	bool useRawBuffer;

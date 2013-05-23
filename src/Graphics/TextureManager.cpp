@@ -10,6 +10,8 @@
 #include "Graphics/RenderBackend.h"
 #include "Resources/ResourceManager.h"
 
+#include "Core/Containers/Array.h"
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
@@ -179,7 +181,7 @@ uint TextureManager::getMemoryUsage()
 
 	TextureMap::const_iterator it;
 	for( it = textures.begin(); it != textures.end(); it++ )
-		total += it->first->getBuffer().size();
+		total += array::size(it->first->getBuffer());
 
 	return total;
 }

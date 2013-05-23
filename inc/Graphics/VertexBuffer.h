@@ -87,6 +87,8 @@ struct API_GRAPHICS VertexElement : public VertexElementP
 
 struct API_GRAPHICS VertexDeclaration
 {
+	VertexDeclaration();
+
 	// Adds a new vertex element.
 	void add(VertexAttribute, int numComponents);
 
@@ -111,7 +113,7 @@ struct API_GRAPHICS VertexDeclaration
 	// Calculates the strides of the elements.
 	void calculateStrides();
 
-	std::vector<VertexElement> decls;
+	Array<VertexElement> decls;
 };
 
 //-----------------------------------//

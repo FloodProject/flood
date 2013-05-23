@@ -7,6 +7,8 @@
 
 #include "Graphics/API.h"
 #include "Graphics/Resources/Image.h"
+
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 #include "Core/Stream.h"
 
@@ -54,6 +56,7 @@ Image::Image()
 	, height(0)
 	, format(PixelFormat::Unknown)
     , timestamp(1)
+    , buffer(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
@@ -63,6 +66,7 @@ Image::Image(uint32 _width, uint32 _height, PixelFormat _format)
 	, height(0)
 	, format(PixelFormat::Unknown)
     , timestamp(1)
+    , buffer(*AllocatorGetHeap())
 {
 	create(_width, _height, _format);
 }
@@ -103,7 +107,7 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 	this->height = _height;
 	this->format = _format;
 
-    buffer.resize(getSize());
+    array::resize(buffer, getSize());
 }
 
 //-----------------------------------//
@@ -113,10 +117,10 @@ void Image::setBuffer(byte* data, uint size)
     uint32 expectedSize = getSize();
     assert(size == expectedSize);
 
-    if(buffer.size() != expectedSize)
-        buffer.resize(expectedSize);
+    if(array::size(buffer) != expectedSize)
+        array::resize(buffer, expectedSize);
 
-    memcpy(buffer.data(), data, size * sizeof(byte));
+    memcpy(&array::front(buffer), data, size * sizeof(byte));
 
     timestamp++;
 }
@@ -130,12 +134,12 @@ void Image::setBuffer(Image* image, Vector2i offset)
     assert(image->format == this->format);
 
     uint32 expectedSize = getSize();
-    if (buffer.size() != expectedSize)
-        buffer.resize(expectedSize);
+    if (array::size(buffer) != expectedSize)
+        array::resize(buffer, expectedSize);
 
     uint32 pixelSize = getPixelSize();
-    auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
-    auto origData = image->buffer.data();
+    auto destData = &array::front(buffer) +  (offset.x + offset.y * width) * pixelSize;
+    auto origData = &array::front(image->buffer);
     for (int i = 0; i < image->height; ++i)
     {
         memcpy(destData, origData, image->width * pixelSize * sizeof(byte));
@@ -170,7 +174,7 @@ void Image::setColor( const Color& color )
 	if( format != PixelFormat::R8G8B8A8 )
 		return;
 
-	for( size_t i = 0; i < buffer.size(); i += 4 )
+	for( size_t i = 0; i < array::size(buffer); i += 4 )
 	{
 		buffer[i+0] = byte(color.r * 255);
 		buffer[i+1] = byte(color.g * 255);
@@ -188,6 +192,12 @@ void Image::log() const
 	const char* desc = EnumGetValueName(PixelFormatGetType(), (int32)format);
 	LogInfo( "Image has pixel format '%s' and size %dx%d", desc, width, height );
 }
+
+//-----------------------------------//
+
+ImageWriter::ImageWriter()
+    : output(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 

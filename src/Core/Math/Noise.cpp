@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/Math/Noise.h"
 #include "Core/Math/Helpers.h"
 #include "Core/Log.h"
@@ -24,22 +27,22 @@ Noise::Noise( int seed )
 
 //-----------------------------------//
 
-void Noise::generate(std::vector<float>& noise, uint width, uint height)
+void Noise::generate(Array<float>& noise, uint width, uint height)
 {
-	assert( noise.empty() );
+	assert( array::empty(noise) );
 
-	noise.reserve(width*height);
+	array::reserve(noise, width * height);
 	
-	for (uint y = 0; y < height; y++)
+	for (uint y = 0; y < height; ++y)
 	{
-		for (uint x = 0; x < width; x++)
+		for (uint x = 0; x < width; ++x)
 		{
 			float total = 0;
 			float freq = frequency;
 			float amplitude = 1;
 			float maxAmplitude = 0;
 
-			for (uint i = 0; i < octaves; i++)
+			for (uint i = 0; i < octaves; ++i)
 			{
 				float fx = x * freq / (float)width;
 				float fy = y * freq / (float)height;
@@ -52,7 +55,7 @@ void Noise::generate(std::vector<float>& noise, uint width, uint height)
 				amplitude *= persistence;
 			}
 
-			noise.push_back(total / maxAmplitude);
+			array::push_back(noise, total / maxAmplitude);
 		}
 	}
 }

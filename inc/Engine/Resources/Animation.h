@@ -31,9 +31,9 @@ struct API_ENGINE KeyFrame
 	EulerAngles rotation;
 };
 
-typedef std::vector<KeyFrame> KeyFramesVector;
-typedef std::map<BonePtr, KeyFramesVector> KeyFramesMap;
-typedef std::pair<const BonePtr, KeyFramesVector> KeyFramesPair;
+typedef Array<KeyFrame> KeyFramesVector;
+typedef std::map<BonePtr, KeyFramesVector*> KeyFramesMap;
+typedef std::pair<const BonePtr, KeyFramesVector*> KeyFramesPair;
 
 //-----------------------------------//
 
@@ -48,6 +48,7 @@ class API_ENGINE Animation : public ReferenceCounted
 public:
 
 	Animation();
+	~Animation();
 
 	// Gets if the animation is looped.
 	bool isLooped();
@@ -86,6 +87,8 @@ protected:
 
 struct API_ENGINE AnimationState
 {
+	AnimationState();
+
 	// Animation data.
 	AnimationPtr animation;
 
@@ -93,7 +96,7 @@ struct API_ENGINE AnimationState
 	float animationTime;
 
 	// Interpolated bones matrices.
-	std::vector<Matrix4x3> bonesMatrix;
+	Array<Matrix4x3> bonesMatrix;
 };
 
 //-----------------------------------//

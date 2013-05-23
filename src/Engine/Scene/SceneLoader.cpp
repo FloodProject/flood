@@ -8,6 +8,7 @@
 #include "Engine/API.h"
 #include "Engine/Scene/SceneLoader.h"
 #include "Core/Serialization.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -20,7 +21,7 @@ REFLECT_CLASS_END()
 
 SceneLoader::SceneLoader()
 {
-	extensions.push_back("scene");
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("scene"));
 }
 
 //-----------------------------------//

@@ -51,10 +51,10 @@ public:
 	bool isPluginEnabled( Plugin* plugin ) const;
 
 	// Registers plugins.
-	void registerPlugins(const std::vector<Plugin*>& plugins);
+	void registerPlugins(const Array<Plugin*>& plugins);
 
 	// Gets all the registered plugins.
-	GETTER(Plugins, std::vector<Plugin*>, plugins)
+	GETTER(Plugins, Array<Plugin*>, plugins)
 
 	// Plugin events callback.
 	Event1<Plugin*> onPluginEnableEvent;
@@ -63,7 +63,7 @@ public:
 protected:
 	
 	// Keeps the known plugins.
-	std::vector<Plugin*> plugins;
+	fld::HeapArray<Plugin*> plugins;
 };
 
 //-----------------------------------//

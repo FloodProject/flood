@@ -11,6 +11,7 @@
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Tags.h"
 #include "Graphics/RenderView.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -73,35 +74,35 @@ void Overlay::createGeometry()
 
 void Overlay::rebuildGeometry()
 {
-	std::vector<Vector3> pos;
-	std::vector< Color > colors;
+	Array<Vector3> pos(*AllocatorGetHeap());
+	Array< Color > colors(*AllocatorGetHeap());
 
-	pos.push_back( Vector3(borderWidth, borderWidth, -0.1f) );
-	pos.push_back( Vector3(borderWidth, size.y-borderWidth, -0.1f) );
-	pos.push_back( Vector3(size.x-borderWidth, size.y-borderWidth, -0.1f) );
-	pos.push_back( Vector3(size.x-borderWidth, borderWidth, -0.1f) );
+	array::push_back(pos, Vector3(borderWidth, borderWidth, -0.1f) );
+	array::push_back(pos, Vector3(borderWidth, size.y-borderWidth, -0.1f) );
+	array::push_back(pos, Vector3(size.x-borderWidth, size.y-borderWidth, -0.1f) );
+	array::push_back(pos, Vector3(size.x-borderWidth, borderWidth, -0.1f) );
 
 	Color color = backgroundColor;
 	color.a = opacity;
 	
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
-	colors.push_back(color);
+	array::push_back(colors, color);
+	array::push_back(colors, color);
+	array::push_back(colors, color);
+	array::push_back(colors, color);
 
 	if( borderWidth > 0 )
 	{
-		pos.push_back( Vector3(0, 0, -0.2f) );
-		pos.push_back( Vector3(0, size.y, -0.2f) );
-		pos.push_back( Vector3(size.x, size.y, -0.2f) );
-		pos.push_back( Vector3(size.x, 0, -0.2f) );
+		array::push_back(pos, Vector3(0, 0, -0.2f) );
+		array::push_back(pos, Vector3(0, size.y, -0.2f) );
+		array::push_back(pos, Vector3(size.x, size.y, -0.2f) );
+		array::push_back(pos, Vector3(size.x, 0, -0.2f) );
 	
 		color = borderColor;
 
-		colors.push_back(color);
-		colors.push_back(color);
-		colors.push_back(color);
-		colors.push_back(color);
+		array::push_back(colors, color);
+		array::push_back(colors, color);
+		array::push_back(colors, color);
+		array::push_back(colors, color);
 	}
 
 	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
@@ -208,7 +209,7 @@ void Overlay::setOpacity( float opacity )
 {
 	this->opacity = opacity;
 
-	if( renderables.empty() ) return;
+	if( array::empty(renderables) ) return;
 
 	MaterialHandle materialHandle = renderables[0]->getMaterial();
 

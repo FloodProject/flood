@@ -10,12 +10,18 @@
 #ifdef ENABLE_RENDERER_OPENGL
 
 #include "Graphics/VertexBuffer.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
-VertexBuffer::VertexBuffer() : built(false)
+VertexDeclaration::VertexDeclaration()
+	: decls(*AllocatorGetHeap())
+{}
+
+VertexBuffer::VertexBuffer()
+	: built(false)
 {
 }
 

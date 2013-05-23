@@ -8,6 +8,9 @@
 #include "Engine/API.h"
 #include "Engine/Resources/TrueTypeFont.h"
 
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+
 #include "Core/Math/Rect.h"
 #include <stb_truetype.h>
 
@@ -21,6 +24,7 @@ struct TrueTypeFont::FontInfo
 //-----------------------------------//
 
 TrueTypeFont::TrueTypeFont()
+    : data(*AllocatorGetHeap())
 {
     fontInfo = AllocateThis(FontInfo);
 }
@@ -36,7 +40,7 @@ TrueTypeFont::~TrueTypeFont()
 
 void TrueTypeFont::init()
 {
-    stbtt_InitFont(&fontInfo->font, data.data(), 0);
+    stbtt_InitFont(&fontInfo->font, &array::front(data), 0);
 }
 
 //-----------------------------------//

@@ -18,6 +18,8 @@ using namespace System::Collections::Generic;
 
 static gcroot<Editor^> gs_EditorInstance = nullptr;
 
+NAMESPACE_EDITOR_BEGIN
+
 void InitializeGUI(InputManager* inputManager)
 {
     gs_EditorInstance = gcnew Editor();
@@ -50,3 +52,5 @@ void SetMainWindow(Window* window)
     auto NativeWindow = gcnew Flood::Window(System::IntPtr(window));
     gs_EditorInstance->MainWindow->NativeWindow = NativeWindow;
 }
+
+NAMESPACE_EDITOR_END

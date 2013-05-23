@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Scene/Camera.h"
 #include "Engine/Scene/Scene.h"
 #include "Engine/Scene/Geometry.h"
@@ -13,6 +14,7 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
 #include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -149,10 +151,10 @@ void Camera::render( RenderBlock& block, bool clearView )
 	if( clearView )
 		renderDevice->clearView();
 
-	block.renderables.insert(
-		block.renderables.begin(),
-		drawer.renderables.begin(),
-		drawer.renderables.end() );
+	array::insert(block.renderables,
+		array::begin(block.renderables),
+		array::begin(drawer.renderables),
+		array::end(drawer.renderables) );
 
 	renderDevice->render( block );
 }
@@ -170,10 +172,10 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 	{
 		const Group* group = (Group*) entity;
 
-		const std::vector<EntityPtr>& entities = group->getEntities();
+		auto& entities = group->getEntities();
 
 		// Cull the children entities recursively.
-		for( size_t i = 0; i < entities.size(); i++ )
+		for( size_t i = 0; i < array::size(entities); ++i )
 		{
 			const Entity* child = entities[i].get();
 			cull( block, child );
@@ -200,9 +202,9 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 	#pragma TODO("Fix multiple geometry instancing")
 
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	auto& geoms = entity->getGeometry();
 
-	for( size_t i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < array::size(geoms); ++i )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		geometry->appendRenderables( block.renderables, transform );

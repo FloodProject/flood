@@ -79,26 +79,26 @@ public:
 	void clearIndexes();
 
 	template<typename T>
-	void set(VertexAttribute attr, const std::vector<T>& data)
+	void set(VertexAttribute attr, const Array<T>& data)
 	{
-		if( data.empty() ) return;
+		if( array::empty(data) ) return;
 
-		uint32 sizeInBytes = data.size() * sizeof(T);
+		uint32 sizeInBytes = array::size(data) * sizeof(T);
 
 		if( !declarations.find(attr) )
 		{
 			VertexElement decl(attr, VertexDataType::Float, sizeof(T) / sizeof(float));
 			decl.stride = 0;
-			decl.offset = this->data.size();
+			decl.offset = array::size(this->data);
 			decl.size = sizeInBytes;
 
 			declarations.add(decl);
 
-			add((uint8*)&data.front(), sizeInBytes);
+			add((uint8*)&array::front(data), sizeInBytes);
 		}
 		else
 		{
-			set(attr, (uint8*)&data.front(), sizeInBytes);
+			set(attr, (uint8*)&array::front(data), sizeInBytes);
 		}
 	}
 	
@@ -109,10 +109,10 @@ public:
 	BufferAccess access;
 
 	// Holds the vertex data.
-	std::vector<uint8> data;
+	Array<uint8> data;
 
 	// Holds the index data.
-	std::vector<uint8> indexData;
+	Array<uint8> indexData;
 
 	// Holds the index size in bits.
 	uint8 indexSize;

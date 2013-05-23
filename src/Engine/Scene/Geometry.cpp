@@ -6,8 +6,10 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Entity.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -20,13 +22,14 @@ REFLECT_CLASS_END()
 
 Geometry::Geometry()
 	: needsBoundsRebuild(true)
+	, renderables(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
 
 void Geometry::addRenderable(const RenderBatchPtr& rend)
 {
-	renderables.push_back( rend );
+	array::push_back(renderables, rend );
 }
 
 //-----------------------------------//
@@ -42,7 +45,7 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 {
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < array::size(renderables); ++i)
 	{
 		RenderBatch* renderable = renderables[i].get();
 		if( !renderable ) continue;
@@ -50,7 +53,7 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 		RenderState state( renderable );
 		state.modelMatrix = absoluteTransform;
 
-		queue.push_back(state);
+		array::push_back(queue, state);
 	}
 }
 
@@ -61,7 +64,7 @@ void Geometry::updateBounds()
 	bounds.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < array::size(renderables); ++i )
 	{
 		Renderable* rend = renderables[i].get();
 		

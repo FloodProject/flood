@@ -43,7 +43,7 @@ NAMESPACE_CORE_BEGIN
 	class ALIGN_BEGIN(16) API_CORE TaskBase
 	{
 	public:
-		typedef std::vector<TaskBase *> Range;
+		typedef fld::HeapArray<TaskBase *> Range;
 
 	public:
 		Completion * Completion_;

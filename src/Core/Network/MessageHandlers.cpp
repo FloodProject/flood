@@ -6,8 +6,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Log.h"
 #include "Core/Network/MessageHandlers.h"
+#include "Core/Containers/Array.h"
+#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -18,7 +19,7 @@ void MessageHandlers::addHandlers(MessageHandler* handler, MessageDirection::Enu
 	const MessagesTable& messagesTable = handler->getMessagesTable();
 	Enum* messagesEnum = handler->getMessagesEnum();
 
-	for(size_t i = 0; i < messagesTable.size(); i++ )
+	for(size_t i = 0; i < array::size(messagesTable); ++i )
 	{
 		MessageMapping mapping = messagesTable[i];
 
@@ -41,7 +42,7 @@ void MessageHandlers::removeHandlers(MessageHandler* handler)
 	const MessagesTable& messagesTable = handler->getMessagesTable();
 	Enum* messagesEnum = handler->getMessagesEnum();
 
-	for(size_t i = 0; i < messagesTable.size(); i++)
+	for(size_t i = 0; i < array::size(messagesTable); ++i)
 	{
 		const MessageMapping& mapping = messagesTable[i];
 		removeMapping(mapping);

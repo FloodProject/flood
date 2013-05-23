@@ -10,6 +10,7 @@
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Entity.h"
 #include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -53,6 +54,7 @@ Particles::Particles()
 	, maxVelocity(0, 1, 0)
 	, attenuation(1, 0, 0)
 	, numParticles(0)
+	, particles(*AllocatorGetHeap())
 {
 	createGeometry();
 }
@@ -129,26 +131,26 @@ void Particles::createGeometry()
 	
 	addRenderable(renderable);
 
-	particles.resize(MAX_PARTICLES);
+	array::resize(particles, MAX_PARTICLES);
 }
 
 //-----------------------------------//
 
 void Particles::update(float delta)
 {
-	numParticles = particles.size();
+	numParticles = array::size(particles);
 
 	int numSpawn = ceil(spawnRate * delta);
 	spawnParticles(numSpawn);
 
-	std::vector<Vector3> positions;
-	positions.reserve( numParticles );
+	Array<Vector3> positions(*AllocatorGetHeap());
+	array::reserve(positions, numParticles );
 
-	std::vector<Color> colors;
-	colors.reserve( numParticles );
+	Array<Color> colors(*AllocatorGetHeap());
+	array::reserve(colors, numParticles );
 
 	// Update the particles.
-	for(size_t i = 0; i < numParticles; i++)
+	for(size_t i = 0; i < numParticles; ++i)
 	{
 		Particle& particle = particles[i];
 
@@ -165,8 +167,8 @@ void Particles::update(float delta)
 		particle.life -= float(delta);
 		particle.color.a = particle.life / maxLife;
 
-		positions.push_back( particle.position );
-		colors.push_back( particle.color );
+		array::push_back(positions, particle.position );
+		array::push_back(colors, particle.color );
 	}
 
 	gb->declarations.reset();

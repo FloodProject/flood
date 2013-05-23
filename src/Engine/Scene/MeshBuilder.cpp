@@ -6,10 +6,12 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Graphics/RenderBatch.h"
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Animation.h"
 #include "Engine/Resources/Skeleton.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -50,19 +52,19 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
 	
 	// Construct the renderables for each mesh group.
-	const std::vector<MeshGroup>& groups = mesh->groups;
+	auto& groups = mesh->groups;
 
-	for( size_t i = 0; i < groups.size(); i++ )
+	for( size_t i = 0; i < array::size(groups); ++i )
 	{
-		const MeshGroup& group = groups[i];
+		const MeshGroup& group = *groups[i];
 
-		uint32 numIndices = group.indices.size();
+		uint32 numIndices = array::size(group.indices);
 		if( numIndices == 0 ) continue;
 
 		// Gets a material for the group.
 		MaterialHandle material = MeshBuildMaterial(mesh, group);
 
-		gb->addIndex((uint8*)&group.indices.front(), numIndices*sizeof(uint16));
+		gb->addIndex((uint8*)&array::front(group.indices), numIndices * sizeof(uint16));
 
 		RenderBatch* renderable = AllocateHeap(RenderBatch);
 		renderable->setPrimitiveType( PrimitiveType::Triangles );
@@ -74,7 +76,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 		if( mat->isBlendingEnabled() )
 		renderable->setRenderLayer(RenderLayer::Transparency);
 
-		rends.push_back(renderable);
+		array::push_back<RenderablePtr>(rends, renderable);
 	}
 }
 

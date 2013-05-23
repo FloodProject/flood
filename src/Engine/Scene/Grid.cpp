@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Scene/Grid.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -38,8 +39,8 @@ GeometryBufferPtr Grid::buildGeometry()
 	GeometryBuffer* gb = AllocateThis(GeometryBuffer);
 
 	// Vertex data
-	std::vector< Vector3 > vertex;
-	std::vector< Vector3 > colors;
+	Array< Vector3 > vertex(*AllocatorGetHeap());
+	Array< Vector3 > colors(*AllocatorGetHeap());
 	
 	// Let's make the lines perpendicular to the X-axis.
 	float x_pos = -sizeX / 2;
@@ -47,20 +48,20 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
-		vertex.push_back( Vector3(x_pos, 0.0f, z_pos) );
-		vertex.push_back( Vector3(-x_pos, 0.0f, z_pos) );
+		array::push_back(vertex, Vector3(x_pos, 0.0f, z_pos) );
+		array::push_back(vertex, Vector3(-x_pos, 0.0f, z_pos) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( MainLineColor );
-			colors.push_back( MainLineColor );
+			array::push_back(colors, MainLineColor );
+			array::push_back(colors, MainLineColor );
 		}
 		else
 		{
-			colors.push_back( LineColor );
-			colors.push_back( LineColor );
+			array::push_back(colors, LineColor );
+			array::push_back(colors, LineColor );
 		}
 
 		z_pos += sizeZ / divZ;
@@ -70,22 +71,22 @@ GeometryBufferPtr Grid::buildGeometry()
 	x_pos = -sizeX / 2;
 	z_pos = -sizeZ / 2;
 	
-	for( int i = 0; i < divZ+1; i++ )
+	for( int i = 0; i < divZ+1; ++i)
 	{
-		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
-		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
+		array::push_back(vertex, Vector3( x_pos, 0.0f, z_pos ) );
+		array::push_back(vertex, Vector3( x_pos, 0.0f, -z_pos ) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( MainLineColor );
-			colors.push_back( MainLineColor );
+			array::push_back(colors, MainLineColor );
+			array::push_back(colors, MainLineColor );
 		}
 		else
 		{
-			colors.push_back( LineColor );
-			colors.push_back( LineColor );
+			array::push_back(colors, LineColor );
+			array::push_back(colors, LineColor );
 		}
 
 		x_pos += sizeX / divX;
@@ -102,7 +103,7 @@ GeometryBufferPtr Grid::buildGeometry()
 
 void Grid::update( float update )
 {
-	if( !renderables.empty() ) return;
+	if( !array::empty(renderables) ) return;
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
 

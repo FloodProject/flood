@@ -38,10 +38,10 @@ public:
 	void setSettings( const TerrainSettings& settings );
 
 	// Gets the heights of this terrain cell.
-	const std::vector<float>& getHeights();
+	const Array<float>& getHeights();
 
 	// Sets the heights of this terrain cell.
-	void setHeights( const std::vector<float>& heights );
+	void setHeights( const Array<float>& heights );
 
 	// Rebuilds the terrain geometry.
 	void rebuildGeometry();
@@ -50,7 +50,7 @@ public:
 	void rebuildNormals();
 
 	// Given an indice, gets the neighbour vertices.
-	byte getNeighborFaces( uint index, std::vector<uint>& n );
+	byte getNeighborFaces( uint index, Array<uint>& n );
 
 	// Gets the X coordinate of the cell.
 	GETTER(X, int32, x)
@@ -80,10 +80,10 @@ protected:
 	const TerrainSettings* settings;
 
 	// Stores the heights of this cell of terrain.
-	std::vector<float> heights;
+	Array<float> heights;
 	
 	// Stores the triangle face normals.
-	std::vector<Vector3> faceNormals;
+	Array<Vector3> faceNormals;
 
 	// Cell image.
 	ImageHandle image;

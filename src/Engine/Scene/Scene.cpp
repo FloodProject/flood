@@ -13,6 +13,7 @@
 #include "Engine/Scene/SceneLoader.h"
 #include "Graphics/RenderDevice.h"
 
+#include "Core/Containers/Array.h"
 #include "Core/Profiler.h"
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
@@ -101,10 +102,10 @@ static bool sortRayQueryResult(const RayQueryResult& lhs, const RayQueryResult& 
 
 static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryList& list, bool all )
 {
-	const std::vector<EntityPtr>& entities = group->getEntities();
+	const Array<EntityPtr>& entities = group->getEntities();
 
 	// Do some ray casting to find a collision.
-	for( size_t i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < array::size(entities); ++i )
 	{
 		Entity* entity = entities[i].get();
 		if( !entity ) continue;
@@ -140,7 +141,7 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 				res.entity = entity;
 				res.distance = distance;
 
-				list.push_back( res );
+				array::push_back(list, res );
 
 				if( !all ) break;
 			}
@@ -148,21 +149,21 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	}
 
 	// Sort the results by distance.
-	std::sort( list.begin(), list.end(), &sortRayQueryResult );
+	std::sort( array::begin(list), array::end(list), &sortRayQueryResult );
 
-	return !list.empty();
+	return !array::empty(list);
 }
 
 //-----------------------------------//
 
 bool Scene::doRayBoxQuery( const Ray& ray, RayQueryResult& res )
 {
-	RayQueryList list;
+	RayQueryList list(*AllocatorGetHeap());
 	
 	if( !doRayBoxQuery(ray, list, false) )
 		return false;
 
-	res = list.front();	
+	res = array::front(list);	
 	return true;
 }
 
@@ -191,10 +192,10 @@ bool Scene::doRayVolumeQuery( const Frustum& volume, RayQueryList& list, bool al
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 {
 	// Perform ray casting to find the entities.
-	RayQueryList list;
+	RayQueryList list(*AllocatorGetHeap());
 	doRayBoxQuery( ray, list );
 
-	for( size_t i = 0; i < list.size(); i++ )
+	for( size_t i = 0; i < array::size(list); ++i )
 	{
 		const RayQueryResult& query = list[i];
 	
@@ -232,8 +233,8 @@ static bool DoRayQueryIndexed( const Ray& ray, const GeometryBuffer* gb,
 {
 	int32 indexSizeBytes = gb->indexSize / 8;
 	
-	uint16* indices = (uint16*) &gb->indexData.front();
-	uint32 numIndices = gb->indexData.size() / indexSizeBytes;
+	uint16* indices = (uint16*) &array::front(gb->indexData);
+	uint32 numIndices = array::size(gb->indexData) / indexSizeBytes;
 
 	uint8* texCoords = (uint8*) gb->getAttribute(VertexAttribute::TexCoord0, 0);
 	size_t texCoordsOffset = gb->declarations.getOffset(VertexAttribute::TexCoord0);
@@ -304,7 +305,7 @@ static bool DoRayQuery( const Ray& ray,	const GeometryBuffer* gb,
 
 //-----------------------------------//
 
-static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositions)
+static bool DoSkinning(const Geometry* geo, Array<Vector3>& skinnedPositions)
 {
 	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
 	if( !isModel ) return false;
@@ -317,7 +318,7 @@ static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositio
 	// Resize the output vector to be of the proper size.
 	size_t size = mesh->getGeometryBuffer()->getNumVertices();
 
-	skinnedPositions.resize(size);
+	array::resize(skinnedPositions, size);
 
 	if( model->isHardwareSkinned() )
 	{
@@ -352,12 +353,12 @@ static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& entity )
 {
 	Ray entityRay = TransformRay(ray, entity);
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	auto geoms = entity->getGeometry();
 	
 	const Transform* transform = entity->getTransform().get();
 	Matrix4x3 absolute = transform->getAbsoluteTransform();
 
-	for( size_t i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < array::size(geoms); ++i )
 	{
 		const Geometry* geo = geoms[i].get();
 		if( !geo ) continue;
@@ -373,12 +374,12 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 		if( !bound.intersects(ray, distance) )
 			continue;
 
-		const std::vector<RenderBatchPtr>& rends = geo->getRenderables();
+		auto& rends = geo->getRenderables();
 
-		std::vector<Vector3> skinnedPositions;
+		Array<Vector3> skinnedPositions(*AllocatorGetHeap());
 		bool didSkinning = DoSkinning(geo, skinnedPositions);
 
-		for( size_t j = 0; j < rends.size(); j++ )
+		for(size_t j = 0; j < array::size(rends); ++j)
 		{
 			const RenderBatch* rend = rends[j].get();
 	
@@ -394,7 +395,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			
 			if(didSkinning)
 			{
-				vertices = (Vector3*) &skinnedPositions.front();
+				vertices = (Vector3*) &array::front(skinnedPositions);
 				vertexStride = 0;
 			}
 

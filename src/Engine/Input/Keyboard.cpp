@@ -6,6 +6,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+#include "Core/Containers/Array.h"
+
 #include "Engine/Input/Keyboard.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -13,8 +15,10 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState((int)Keys::MAX, false)
-{ }
+	: keyState(*AllocatorGetHeap())
+{
+	array::resize(keyState, (size_t)Keys::MAX);
+}
 
 //-----------------------------------//
 
@@ -27,7 +31,7 @@ bool Keyboard::isKeyPressed( Keys keycode ) const
 
 void Keyboard::resetKeys()
 {
-	std::fill(keyState.begin(), keyState.end(), false);
+	std::fill(array::begin(keyState), array::end(keyState), false);
 }
 
 //-----------------------------------//

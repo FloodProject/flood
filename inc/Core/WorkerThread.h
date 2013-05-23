@@ -29,7 +29,7 @@ public:
 private:
 	//  - task stuff
 	WorkerThreadPool * Pool_;					// a pointer back to the Pool that owns *this
-	std::vector<TaskBase *> Tasks_;				// an array of task pointers; this is accessed in the LIFO pattern
+	fld::HeapArray<TaskBase *> Tasks_;				// an array of task pointers; this is accessed in the LIFO pattern
 	Completion * CurrentCompletion_;			// the work that is currently being done
 
 	// - thread stuff
@@ -52,13 +52,13 @@ public:
 	// Called from the main thread. Creates the boost::thread, sets the index, etc etc. If the threadIndex == 0,
 	//  then no boost::thread is created, instead it 
 	// </summary>
-	void Make( WorkerThreadPool * pool, uint32 threadIndex );
+	void Initialize( WorkerThreadPool * pool, uint32 threadIndex );
 
 	// <summary>
 	// Thread: MAIN
 	// Called from the main thread. Joins the boost::thread, frees up any allocated memory, shuts down.
 	// </summary>
-	void Unmake();
+	void Shutdown();
 
 	// -- Push / Wait --
 

@@ -12,6 +12,7 @@
 #include "Engine/Resources/ShaderLoader.h"
 #include "Graphics/Resources/ShaderMaterial.h"
 #include "Core/Log.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -39,7 +40,7 @@ REFLECT_CLASS_END()
 
 ShaderLoader::ShaderLoader()
 {
-	extensions.push_back( "glsl" );
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("glsl"));
 }
 
 //-----------------------------------//

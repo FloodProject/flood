@@ -27,7 +27,7 @@ NAMESPACE_CORE_BEGIN
 		// -- Member Data --
 	private:
 		//	- workers / shared data
-		std::vector<WorkerThread *>		Workers_;				// array of Worker objects
+		fld::HeapArray<WorkerThread *>		Workers_;				// array of Worker objects
 
 		//	- synchronization stuff
 		Completion * CurrentCompletion_;					// pointer to a (somewhat) current task's completion flag; used to synchronize
@@ -43,8 +43,8 @@ NAMESPACE_CORE_BEGIN
 	public:
 		WorkerThreadPool();
 
-		void Make( uint32 threadCount );
-		void Unmake();
+		void Initialize( size_t threadCount );
+		void Shutdown();
 
 		// <summary>
 		// Will block until all of the worker threads (e.g. not the main thread) are idle.
@@ -71,7 +71,7 @@ NAMESPACE_CORE_BEGIN
 		// Returns the number of total worker objects that are allocated. This is usually
 		//	equivalent to boost::thread::hardware_concurrency()
 		// </summary>
-		INLINE uint32 WorkersCount() const { return Workers_.size(); }
+		INLINE size_t WorkersCount() const;
 
 		// <summary>
 		// Returns the number of total worker threads that are actively working, or trying to
@@ -84,12 +84,7 @@ NAMESPACE_CORE_BEGIN
 		// Debug helper function, returning a pair of iterators representing the iterable range of
 		//	the worker thread objects.
 		// </summary>
-		INLINE auto WorkersBeginEnd() 
-			-> std::pair<std::vector<WorkerThread*>::iterator, std::vector<WorkerThread*>::iterator>
-			//-> decltype( std::make_pair(Workers_.begin(), Workers_.end()) )
-		{
-			return std::make_pair(Workers_.begin(), Workers_.end());
-		}
+		INLINE std::pair<WorkerThread**, WorkerThread**> WorkersBeginEnd();
 	};
 
 NAMESPACE_CORE_END

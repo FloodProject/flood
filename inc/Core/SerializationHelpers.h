@@ -32,12 +32,14 @@ struct API_CORE SerializerBinary : public Serializer
 
 struct API_CORE SerializerJSON : public Serializer
 {
+	SerializerJSON();
+
 	// Root JSON value.
 	json_t* rootValue;
 	
 	// Stack of JSON values.
-	std::vector<json_t*> values;
-	std::vector<json_t*> arrays;
+	Array<json_t*> values;
+	Array<json_t*> arrays;
 };
 
 ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value );

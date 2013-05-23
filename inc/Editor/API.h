@@ -32,8 +32,8 @@
 // API Namespaces
 //---------------------------------------------------------------------//
 
-#define NAMESPACE_EDITOR_BEGIN 
-#define NAMESPACE_EDITOR_END 
+#define NAMESPACE_EDITOR_BEGIN NAMESPACE_CORE_BEGIN
+#define NAMESPACE_EDITOR_END NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
 // wxWidgets headers

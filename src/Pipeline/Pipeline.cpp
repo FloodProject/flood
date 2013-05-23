@@ -6,9 +6,12 @@
 ************************************************************************/
 
 #include "Pipeline/API.h"
+
 #include "Pipeline/ResourceProcessor.h"
 #include "Resources/ResourceLoader.h"
 #include "Resources/ResourceManager.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 
 #include "Pipeline/ImageProcessor.h"
@@ -20,6 +23,8 @@
 #ifdef API_PIPELINE_DLL_EXPORT
 FL_INSTANTIATE_TEMPLATES()
 #endif
+
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -51,12 +56,12 @@ void PipelineInit()
 
 	Class* klass = ResourceProcessorGetType();
 	
-	for( size_t i = 0; i < klass->childs.size(); i++ )
+	for( size_t i = 0; i < array::size(klass->childs); ++i )
 	{
 		Class* child = klass->childs[i];
 		
 		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
-		resourceProcessors.push_back(processor);
+		array::push_back(resourceProcessors, processor);
 
 		LogInfo("Registering asset handler: %s", child->name);
 	}
@@ -66,20 +71,20 @@ void PipelineInit()
 
 void PipelineCleanup()
 {
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	for( size_t i = 0; i < array::size(resourceProcessors); ++i )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
 		Deallocate(processor);
 	}
 
-	resourceProcessors.clear();
+	array::clear(resourceProcessors);
 }
 
 //-----------------------------------//
 
 ResourceProcessor* PipelineFindProcessor(Class* type)
 {
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	for( size_t i = 0; i < array::size(resourceProcessors); ++i )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
 		
@@ -145,3 +150,5 @@ int main(int argc, char* argv[])
 //-----------------------------------//
 
 #endif
+
+NAMESPACE_PIPELINE_END

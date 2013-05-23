@@ -70,7 +70,7 @@ public:
 	void updateDebugRenderable() const;
 
 	// Creates the debug.renderable.
-    RenderBatchPtr createDebuRenderable() const;
+	RenderBatchPtr createDebuRenderable() const;
 
 protected:
 
@@ -132,7 +132,7 @@ protected:
 	ImageHandle image;
 
 	// Particles.
-	std::vector<Particle> particles;
+	Array<Particle> particles;
 
 	// Number of active particles.
 	uint numParticles;

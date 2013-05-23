@@ -13,6 +13,8 @@
 #include "Engine/Audio/Device.h"
 #include "Engine/Audio/AL.h"
 
+#include "Core/Containers/Array.h"
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -63,10 +65,10 @@ void AudioBuffer::upload(const AudioBufferDetails& details)
 
 void AudioGetBufferDataDetails(AudioBufferDetails& details, Sound* sound)
 {
-	const std::vector<byte>& soundData = sound->getBuffer();
+	auto& soundData = sound->getBuffer();
 	
-	details.data = (uint8*) soundData.data();
-	details.size = soundData.size();
+	details.data = (uint8*) &array::front(soundData);
+	details.size = array::size(soundData);
 	details.frequency = sound->getFrequency();
 	details.format = AudioGetFormat(sound);
 }

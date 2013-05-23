@@ -12,6 +12,7 @@
 #include "Engine/Resources/TrueTypeFontLoader.h"
 #include "Resources/ResourceManager.h"
 
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/Stream.h"
@@ -30,7 +31,7 @@ REFLECT_CLASS_END()
 
 TrueTypeFontLoader::TrueTypeFontLoader()
 {
-	extensions.push_back("ttf");
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ttf"));
 }
 
 //-----------------------------------//

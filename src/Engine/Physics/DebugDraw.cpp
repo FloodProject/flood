@@ -13,6 +13,8 @@
 #include "Engine/Physics/Convert.h"
 #include "Graphics/RenderBatch.h"
 
+#include "Core/Containers/Array.h"
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -35,10 +37,10 @@ BulletDebugDrawer::BulletDebugDrawer()
 
 void BulletDebugDrawer::clearBuffer()
 {
-	std::vector<Vector3> pos;
+	Array<Vector3> pos(*AllocatorGetHeap());
 	gb->set(VertexAttribute::Position, pos);
 	
-	std::vector<Vector3> colors;
+	Array<Vector3> colors(*AllocatorGetHeap());
 	gb->set( VertexAttribute::Color, colors);
 }
 

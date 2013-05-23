@@ -6,20 +6,23 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Entity.h"
 #include "Engine/Geometry/DebugGeometry.h"
 #include "Core/Math/Helpers.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Transform, Component)
-	FIELD_PRIMITIVE(4, Vector3, position) FIELD_ALIAS(position, translation)
+	FIELD_PRIMITIVE(4, Vector3, position) FIELD_ALIAS(position, "translation")
 	FIELD_PRIMITIVE(5, Quaternion, rotation)
-	FIELD_PRIMITIVE(6, Vector3, scale) FIELD_ALIAS(scale, scaling)
+	FIELD_PRIMITIVE(6, Vector3, scale) FIELD_ALIAS(scale, "scaling")
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -174,9 +177,9 @@ void Transform::updateBoundingVolume()
 {
 	bounds.reset();
 
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	auto& geoms = entity->getGeometry();
 	
-	for( size_t i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < array::size(geoms); ++i )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		bounds.add( geometry->getBoundingVolume() );

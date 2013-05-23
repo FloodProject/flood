@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Scene/Projector.h"
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Entity.h"
@@ -13,6 +14,7 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/ShaderProgramManager.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -38,7 +40,7 @@ Projector::~Projector()
 
 	const RenderablesVector& renderables = geometry->getRenderables();
 	
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < array::size(renderables); ++i )
 	{
 		RenderBatch* renderable = renderables[i].get();
 		renderable->onPreRender.clear();
@@ -72,7 +74,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 	
 	const RenderablesVector& renderables = geometry->getRenderables();
 	
-	for( size_t i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < array::size(renderables); ++i )
 	{
 		RenderBatch* renderable = renderables[i].get();
 		if( !renderable ) continue;
@@ -85,7 +87,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 		state.modelMatrix = absoluteTransform;
 		state.priority = renderable->getRenderPriority() + 1;
 
-		queue.push_back(state);
+		array::push_back(queue, state);
 	}
 }
 

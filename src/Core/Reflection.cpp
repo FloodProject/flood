@@ -7,6 +7,7 @@
 
 #include "Core/API.h"
 #include "Core/Reflection.h"
+#include "Core/Containers/Array.h"
 #include "Core/Object.h"
 #include "Core/Log.h"
 #include "Core/Math/Hash.h"
@@ -21,6 +22,12 @@ REFLECT_ABSTRACT_CLASS(Object)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
+Class::Class()
+	: parent(nullptr)
+	, create_fn(nullptr)
+	, fields(*AllocatorGetHeap())
+	, childs(*AllocatorGetHeap())
+{ }
 
 Type::Type()
 {
@@ -72,7 +79,7 @@ static void RegisterClass(Class* klass)
 
 	// Register as child class in the parent class.
 	Class* parent = klass->parent;
-	if( parent ) parent->childs.push_back(klass);
+	if( parent ) array::push_back(parent->childs, klass);
 
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
@@ -183,7 +190,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 void ClassAddField(Class* klass, Field* field)
 {
-	klass->fields.push_back(field);
+	array::push_back(klass->fields, field);
 
 	if( ClassGetFieldById(klass, field->id) )
 	{
@@ -235,14 +242,14 @@ Class* ClassGetType(const Object* object)
 
 Field* ClassGetField(const Class* klass, const char* name)
 {
-	const std::vector<Field*>& fields = klass->fields;
+	const Array<Field*>& fields = klass->fields;
 	
-	for(size_t i = 0; i < fields.size(); i++)
+	for(size_t i = 0; i < array::size(fields); ++i)
 	{
 		Field* field = fields[i];
 		if(strcmp(field->name, name) == 0) return field;
 
-		for(size_t u = 0; u < field->aliases.size(); u++)
+		for(size_t u = 0; u < array::size(field->aliases); ++u)
 		{
 			const char* alias = field->aliases[u];
 			if(strcmp(alias, name) == 0) return field;
@@ -339,6 +346,7 @@ Field::Field()
 	, setter(nullptr)
 	, resize(nullptr)
 	, serialize(nullptr)
+	, aliases(*AllocatorGetHeap())
 {
 
 }

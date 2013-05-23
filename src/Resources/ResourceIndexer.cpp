@@ -16,6 +16,8 @@
 #include "Core/Utilities.h"
 #include "Core/Concurrency.h"
 #include "Core/Stream.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 #include "Core/Math/Hash.h"
 
@@ -66,12 +68,12 @@ static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 
 void ResourceIndexer::addArchive(Archive* archive)
 {
-	std::vector<String> res;	
+	Array<String*> res(*AllocatorGetHeap());	
 	ArchiveEnumerateFiles(archive, res);
 	
-	for( size_t i = 0; i < res.size(); i++ )
+	for( size_t i = 0; i < array::size(res); ++i )
 	{
-		Path fullPath = ArchiveCombinePath(archive, res[i]);
+		Path fullPath = ArchiveCombinePath(archive, *res[i]);
 		CreateIndexTask(this, fullPath);
 	}
 }
@@ -120,17 +122,17 @@ void ResourceIndexer::indexResources(Task* task)
 		return;
 	}
 
-	std::vector<byte> data;
+	Array<byte> data(*AllocatorGetHeap());
 	StreamRead(stream, data);
 	StreamDestroy(stream);
 
-	if( data.empty() )
+	if( array::empty(data) )
 	{
 		LogWarn("Resource '%s' is empty", basePath.c_str());
 		return;
 	}
 
-	uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
+	uint32 hash = HashMurmur2(0xBEEF, &data[0], array::size(data));
 		
 	ResourceMetadata metadata;
 	metadata.hash = hash;

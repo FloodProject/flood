@@ -8,7 +8,9 @@
 #pragma once
 
 #include "Engine/API.h"
+
 #include "Engine/Texture/TextureAtlas.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -44,8 +46,8 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
     int srcPitch  = srcWidth*bpp;
     int dstPitch  = dstImage->getWidth()*bpp;
 
-    byte* bsrc = srcImage->getBuffer().data();
-    byte* bdst = dstImage->getBuffer().data();
+    byte* bsrc = &array::front(srcImage->getBuffer());
+    byte* bdst = &array::front(dstImage->getBuffer());
 
     for(int xs = 0; xs < dstWidth; xs += RBLOCK) {    // for all image blocks of RBLOCK*RBLOCK pixels
         for(int ys = 0; ys < dstHeight; ys += RBLOCK) {
@@ -111,8 +113,8 @@ void TextureAtlas::resizeAtlas(uint newSize)
 {
     rectanglePacker.Init(newSize,newSize);
 
-    std::vector<Vector2i> rectSizes;
-    std::vector<Rect> newRects;
+    Array<Vector2i> rectSizes(*AllocatorGetHeap());
+    Array<Rect> newRects(*AllocatorGetHeap());
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
@@ -123,12 +125,12 @@ void TextureAtlas::resizeAtlas(uint newSize)
         int height = (iter->second.rightBottomUV.y - iter->second.leftTopUV.y)*height;
         rectSize.x = width;
         rectSize.y = height;
-        rectSizes.push_back(rectSize);
+        array::push_back(rectSizes, rectSize);
     }
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);
 
-    assert(newRects.size() == imageSubTextures.size());
+    assert(array::size(newRects) == imageSubTextures.size());
 
     int i;
     for (i = 0, iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter, ++i) 
@@ -160,8 +162,8 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
          Image tmpImage(newImage->getWidth(),newImage->getHeight(),PixelFormat::R8G8B8A8);
 
          int newImageSize = newImage->getSize();
-         std::vector<byte>& buffer = tmpImage.getBuffer();
-         buffer.resize(newImageSize*4,0);
+         auto& buffer = tmpImage.getBuffer();
+         array::resize(buffer, newImageSize * 4);
 
          for (int i = 0; i < newImageSize; i++)
          {

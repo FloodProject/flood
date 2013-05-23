@@ -11,6 +11,7 @@
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/Concurrency.h"
 #include "Core/Stream.h"
 #include "Core/Archive.h"
@@ -433,21 +434,20 @@ void ResourceManager::removeUnusedResources()
 
 	return;
 
-	std::vector<String> resourcesToRemove;
+	Array<String*> resourcesToRemove(*AllocatorGetHeap());
 
-	// Search for unused resources.
-	ResourceMap::const_iterator it;
-	for( it = resources.begin(); it != resources.end(); it++ )
+	// Search for unused resources
+	for( auto it = resources.begin(); it != resources.end(); ++it )
 	{
 		const ResourceHandle& resource = it->second;
 
 		if( resource.Resolve()->references == 1 )
-			resourcesToRemove.push_back(it->first);
+			array::push_back(resourcesToRemove, const_cast<String*>(&it->first));
 	}
 
-	for( size_t i = 0; i < resourcesToRemove.size(); i++ )
+	for( size_t i = 0; i < array::size(resourcesToRemove); ++i )
 	{
-		const String& resource = resourcesToRemove[i];
+		const String& resource = *resourcesToRemove[i];
 		removeResource(resource);
 	}
 }
@@ -490,11 +490,11 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 	Class* klass = loader->getType();
 	LogInfo( "Registering resource loader '%s'", klass->name );
 
-	const std::vector<String>& extensions = loader->getExtensions();
+	auto& extensions = loader->getExtensions();
 	
-	for( size_t i = 0; i < extensions.size(); i++ )
+	for( size_t i = 0; i < array::size(extensions); ++i )
 	{
-		const String& extension = extensions[i];
+		const String& extension = *extensions[i];
 
 		if(resourceLoaders.find(extension) != resourceLoaders.end())
 		{
@@ -544,11 +544,11 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 
 void ResourceManager::setupResourceLoaders(Class* klass)
 {
-	for( size_t i = 0; i < klass->childs.size(); i++ )
+	for( size_t i = 0; i < array::size(klass->childs); ++i )
 	{
 		Class* child = klass->childs[i];
 
-		if( !child->childs.empty() )
+		if( !array::empty(child->childs) )
 			setupResourceLoaders(child);
 	
 		if( ClassIsAbstract(child ) ) continue;

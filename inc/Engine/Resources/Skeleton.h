@@ -20,6 +20,7 @@ NAMESPACE_ENGINE_BEGIN
 class API_ENGINE Skeleton : public ReferenceCounted
 {
 public:
+	Skeleton();
 
 	// Adds a bone to the skeleton.
 	void addBone( const BonePtr& bone );

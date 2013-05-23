@@ -22,10 +22,12 @@
 	#define API_CORE
 #endif
 
-#undef NAMESPACE_CORE_DEFINED
+//#undef NAMESPACE_CORE_DEFINED
+#define NAMESPACE_CORE_DEFINED
+
 
 #ifdef NAMESPACE_CORE_DEFINED
-#define NAMESPACE_CORE flood
+#define NAMESPACE_CORE fld
 #else
 #define NAMESPACE_CORE
 #endif
@@ -78,3 +80,5 @@ API_CORE void CoreDeinitialize();
 struct Allocator;
 
 NAMESPACE_CORE_END
+
+#include "Core/Types/Containers.h"

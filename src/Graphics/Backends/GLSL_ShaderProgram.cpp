@@ -13,6 +13,7 @@
 #include "GLSL_ShaderProgram.h"
 #include "GL.h"
 #include "Graphics/UniformBuffer.h"
+#include "Core/Containers/Array.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 
@@ -22,6 +23,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 GLSL_ShaderProgram::GLSL_ShaderProgram()
 	: hadLinkError(false)
+	, shaders(*AllocatorGetHeap())
 {
 	create();
 	createShaders();
@@ -36,7 +38,7 @@ GLSL_ShaderProgram::~GLSL_ShaderProgram()
 	//Deallocate(vertex);
 	//Deallocate(fragment);
 
-	shaders.clear();
+	array::clear(shaders);
 
 	glDeleteProgram( id );
 
@@ -60,7 +62,7 @@ bool GLSL_ShaderProgram::create()
 
 void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
-	shaders.push_back( shader );
+	array::push_back<GLSL_ShaderPtr>(shaders, shader);
 	
 	bool isAttached = attached[shader];
 	
@@ -79,7 +81,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 
 void GLSL_ShaderProgram::detachShaders()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < array::size(shaders); ++i )
 	{
 		GLSL_Shader* shader = shaders[i].get();
 		bool isAttached = attached[shader];
@@ -113,7 +115,7 @@ void GLSL_ShaderProgram::createShaders()
 
 bool GLSL_ShaderProgram::compileShaders()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < array::size(shaders); ++i )
 	{
 		Shader* shader = shaders[i].get();
 		if( shader->isCompiled() ) continue;
@@ -138,7 +140,7 @@ bool GLSL_ShaderProgram::compileShaders()
 
 void GLSL_ShaderProgram::forceRecompile()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < array::size(shaders); ++i )
 	{
 		Shader* shader = shaders[i].get();
 		shader->forceRecompile();
@@ -158,7 +160,7 @@ bool GLSL_ShaderProgram::link()
 	if( hadLinkError ) return false;
 
 	// If there are no shader programs, no point in trying to link.
-	if( shaders.empty() ) return false;
+	if( array::empty(shaders) ) return false;
 
 	// If we could not compile the shaders, no point in trying to link.
 	if( !compileShaders() ) return false;

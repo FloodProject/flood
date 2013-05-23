@@ -6,11 +6,11 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/ClassWatcher.h"
-#include "Core/Memory.h"
+#include "Core/ClassWatcher.h"  
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Math/Hash.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -68,9 +68,9 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 	if( !watch || !object ) return;
 
 	Class* klass = ClassGetType(object);
-	const std::vector<Field*>& fields = klass->fields;
+	const Array<Field*>& fields = klass->fields;
 
-	for(size_t i = 0; i < fields.size(); i++)
+	for(size_t i = 0; i < array::size(fields); ++i)
 	{
 		const Field* field = fields[i];
 
@@ -93,7 +93,7 @@ void ClassWatchUpdate(ClassWatch* watch, FieldWatchVector& changed)
 	{
 		FieldWatch& fw = it->second;
 		bool updated = ClassWatchUpdateField(watch, fw.field);
-		if( updated ) changed.push_back(&fw);
+		if( updated ) array::push_back(changed, &fw);
 	}
 }
 

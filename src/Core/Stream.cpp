@@ -7,8 +7,9 @@
 
 #include "Core/API.h"
 #include "Core/Stream.h"
-#include "Core/Log.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -44,7 +45,7 @@ void StreamDestroy(Stream* stream)
 
 //-----------------------------------//
 
-int64 StreamRead(Stream* stream, std::vector<uint8>& data)
+int64 StreamRead(Stream* stream, Array<uint8>& data)
 {
 	if( !stream ) return 0;
 	
@@ -52,11 +53,11 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 
 	if( length < 0 ) return 0;
 
-	data.resize( (size_t) length );
+	array::resize(data, (size_t) length );
 
-	if( data.empty() ) return 0;
+	if( array::empty(data) ) return 0;
 
-	return StreamReadBuffer(stream, &data.front(), data.size());
+	return StreamReadBuffer(stream, &array::front(data), array::size(data));
 }
 
 //-----------------------------------//
@@ -71,15 +72,15 @@ int64 StreamReadBuffer(Stream* stream, void* buffer, int64 size)
 
 int64 StreamReadString(Stream* stream, String& text)
 {
-	std::vector<uint8> data;
+	fld::HeapArray<uint8> data;
 	int64 size = StreamRead(stream, data);
-	text.assign( data.begin(), data.end() );
+	text.assign( array::begin(data), array::end(data) );
 	return size;
 }
 
 //-----------------------------------//
 
-int64 StreamReadLines(Stream* stream, std::vector<String>& lines)
+int64 StreamReadLines(Stream* stream, Array<String*>& lines)
 {
 	String text;
 	int64 size = StreamReadString(stream, text);
@@ -87,9 +88,9 @@ int64 StreamReadLines(Stream* stream, std::vector<String>& lines)
 	StringSplit(text, '\n', lines);
 	
 	// Erase extra line endings.
-	for( size_t i = 0; i < lines.size(); i++ )
+	for( size_t i = 0; i < array::size(lines); ++i )
 	{
-		String& line = lines[i];
+		String& line = *lines[i];
 		size_t last = line.size() - 1;
 		if( line[last] == '\r' ) line.erase(last);
 	}

@@ -6,12 +6,19 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
+
 #include "Graphics/RenderQueue.h"
 #include "Graphics/RenderBatch.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
+
+RenderBlock::RenderBlock()
+	: renderables(*AllocatorGetHeap())
+	, lights(*AllocatorGetHeap())
+{}
 
 RenderState::RenderState()
 {
@@ -40,7 +47,7 @@ RenderState::RenderState(const RenderState& rhs)
 
 void RenderBlock::addState(RenderState renderState)
 {
-    renderables.push_back(renderState);
+	array::push_back(renderables, renderState);
 }
 
 NAMESPACE_GRAPHICS_END

@@ -9,6 +9,7 @@
 #include "Engine/Engine.h"
 
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/Network/Network.h"
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
@@ -43,6 +44,7 @@ Engine::Engine()
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
 	, windowManager(nullptr)
+	, subsystems(*AllocatorGetHeap())
 {
 	assert(gs_engineInstance == nullptr);
 	gs_engineInstance = this;
@@ -52,7 +54,7 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	for( size_t i = 0; i < subsystems.size(); i++ )
+	for( size_t i = 0; i < array::size(subsystems); ++i )
 	{
 		Subsystem* system = subsystems[i];
 		Deallocate(system);
@@ -85,7 +87,7 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 {
 	LogInfo( "Registering new engine subsystem" );
 	
-	subsystems.push_back( subsystem );
+	array::push_back(subsystems, subsystem);
 }
 
 //-----------------------------------//
@@ -139,7 +141,7 @@ void Engine::setupLogger()
 
 void Engine::update()
 {
-	for( size_t i = 0; i < subsystems.size(); i++ )
+	for( size_t i = 0; i < array::size(subsystems); ++i )
 	{
 		Subsystem* system = subsystems[i];
 		system->update();

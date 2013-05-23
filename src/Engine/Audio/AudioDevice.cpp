@@ -52,7 +52,7 @@ AudioDevice::~AudioDevice()
 	
 //-----------------------------------//
 
-bool AudioDevice::getExtensions(std::vector<String>& extensions)
+bool AudioDevice::getExtensions(Array<String*>& extensions)
 {
 	const ALCchar* allExtensions = alcGetString(nullptr, ALC_EXTENSIONS);
 
@@ -186,7 +186,7 @@ void AudioDevice::onResourceLoaded(const ResourceEvent& event)
 
 //-----------------------------------//
 
-bool AudioGetDevices(std::vector<String>& devices)
+bool AudioGetDevices(Array<String*>& devices)
 {
 	if (!alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
 		return false;

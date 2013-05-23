@@ -8,6 +8,7 @@
 #include "Core/API.h"
 #include "Core/Stream.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -33,6 +34,12 @@ static StreamFuncs gs_MemoryFuncs =
 	MemoryGetSize,
 	MemoryResize
 };
+
+//-----------------------------------//
+
+MemoryStream::MemoryStream()
+    : data(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 
@@ -137,7 +144,7 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 	if( !ms->useRawBuffer )
 	{
 		int64 newSize = ms->position + size;
-		bool needsResize = newSize > ms->data.size();
+		bool needsResize = newSize > array::size(ms->data);
 	
 		if(needsResize)
 			MemoryResize(stream, newSize);
@@ -145,7 +152,7 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 			MemoryResize(stream, GetNextPower2((int32)newSize));
 #endif
 
-		if( ms->data.empty() ) return 0;
+		if( array::empty(ms->data) ) return 0;
 	}
 
 	uint8* cur = ms->buffer + position;
@@ -190,7 +197,7 @@ static int64 MemorySeek(Stream* stream, int64 offset, int8 mode)
 static int64 MemoryGetSize(Stream* stream)
 {
 	MemoryStream* ms = (MemoryStream*) stream;
-	return ms->data.size();
+	return array::size(ms->data);
 }
 
 //-----------------------------------//
@@ -200,7 +207,7 @@ static void MemoryResize(Stream* stream, int64 size)
 	MemoryStream* ms = (MemoryStream*) stream;
 	if( size <= 0 ) return;
 
-	ms->data.resize((size_t)size);
+	array::resize(ms->data, (size_t)size);
 	ms->buffer = &ms->data[0];
 }
 

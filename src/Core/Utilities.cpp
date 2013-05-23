@@ -7,13 +7,16 @@
 
 #include "Core/API.h"
 #include "Core/Utilities.h"
+
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 #include "Core/String.h"
 #include "Core/Math/Hash.h"
 
-#include <sstream>
 #include <algorithm>
 #include <cassert>
 #include <cstdio>
+#include <vector>
 
 #ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
@@ -106,15 +109,15 @@ String StringFromFloat( float n, byte precision )
 
 String StringFromWideString(const std::wstring &wstr)
 {
-    // Convert a Unicode string to an ASCII string
-    String strTo;
-    char *szTo = new char[wstr.length() + 1];
-    szTo[wstr.size()] = '\0';
-    WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
+	// Convert a Unicode string to an ASCII string
+	String strTo;
+	char *szTo = new char[wstr.length() + 1];
+	szTo[wstr.size()] = '\0';
+	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
 		(int)wstr.length(), nullptr, nullptr);
-    strTo = szTo;
-    delete[] szTo;
-    return strTo;
+	strTo = szTo;
+	delete[] szTo;
+	return strTo;
 }
 
 #endif
@@ -125,15 +128,15 @@ String StringFromWideString(const std::wstring &wstr)
 
 std::wstring StringToWideString(const String &str)
 {
-    // Convert an ASCII string to a Unicode String
-    std::wstring wstrTo;
-    wchar_t *wszTo = new wchar_t[str.length() + 1];
-    wszTo[str.size()] = L'\0';
-    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
+	// Convert an ASCII string to a Unicode String
+	std::wstring wstrTo;
+	wchar_t *wszTo = new wchar_t[str.length() + 1];
+	wszTo[str.size()] = L'\0';
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
 		(int)str.length());
-    wstrTo = wszTo;
-    delete[] wszTo;
-    return wstrTo;
+	wstrTo = wszTo;
+	delete[] wszTo;
+	return wstrTo;
 }
 
 #endif
@@ -173,13 +176,16 @@ String StringFormatArgs(const char* str, va_list args)
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, std::vector<String>& elems)
+void StringSplit(const String& s, char delim, Array<String*>& elems)
 {
-    std::stringstream ss(s);
-    String item;
-    
-	while(std::getline(ss, item, delim)) 
-        elems.push_back(item);
+	std::stringstream ss(s);
+	String item;
+	
+	while(std::getline(ss, item, delim))
+	{
+		auto s = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String(item);
+		array::push_back(elems, s);
+	}
 }
 
 //-----------------------------------//
@@ -377,8 +383,11 @@ StringHash HashString(const String& s)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path filePath, bool dirs)
+static void DirArchiveEnumerate(Array<String*>& paths, Path dirPath, Path filePath, bool dirs)
 {
+	typedef std::vector<std::shared_ptr<std::string>> StaticStringStorage;
+	static StaticStringStorage _StringStorage;
+
 	// Open directory stream.
 	DIR* dir = opendir( dirPath.c_str() );
 	if( !dir ) return;
@@ -396,7 +405,11 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 		{
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
 			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(), name.c_str() );
-			if(!dirs) paths.push_back(path);
+#pragma TODO("Fix memory leak here.")
+			auto np = std::make_shared<std::string>(path);
+			_StringStorage.push_back(np);
+
+			if(!dirs) array::push_back(paths, np.get());
 			break;
 		}
 		case DT_DIR:
@@ -406,7 +419,13 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
 
-			if(dirs) paths.push_back(_filePath);
+#pragma TODO("Fix memory leak here.")
+			auto _nfp = std::make_shared<std::string>(_filePath);
+			_StringStorage.push_back(_nfp);
+
+			if(dirs)
+				array::push_back(paths, _nfp.get());
+
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			
 			break;
@@ -418,14 +437,14 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path f
 
 //-----------------------------------//
 
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
+void FileEnumerateFiles(const Path& path, Array<Path*>& files)
 {
 	DirArchiveEnumerate(files, path, "", false);
 }
 
 //-----------------------------------//
 
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
+void FileEnumerateDirectories(const Path& path, Array<Path*>& dirs)
 {
 	DirArchiveEnumerate(dirs, path, "", true);
 }

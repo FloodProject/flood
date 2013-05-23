@@ -21,6 +21,8 @@
 #include "Core/Math/Helpers.h"
 #include "Engine/Geometry/DebugGeometry.h"
 
+#include "Core/Containers/Array.h"
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -36,7 +38,7 @@ REFLECT_CHILD_CLASS(Model, Geometry)
 	FIELD_PRIMITIVE(7, bool, animationEnabled)
 	FIELD_ENUM_SETTER(8, SkinningMode, skinningMode, SkinningMode)
 	FIELD_CLASS_PTR_SETTER(9, Mesh, MeshHandle, meshHandle, Handle, Mesh)
-	FIELD_ALIAS(meshHandle, mesh)
+	FIELD_ALIAS(meshHandle, "mesh")
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -44,6 +46,9 @@ REFLECT_CLASS_END()
 Model::MeshRenderablesMap Model::meshRenderables;
 
 Model::Model()
+	: animations(*AllocatorGetHeap())
+	, attachments(*AllocatorGetHeap())
+	, bones(*AllocatorGetHeap())
 {
 }
 
@@ -51,6 +56,9 @@ Model::Model()
 
 Model::~Model()
 {
+	for(auto i = array::begin(animations); i != array::end(animations); ++i)
+		Deallocate(*i);
+	array::clear(animations);
 }
 
 //-----------------------------------//
@@ -68,17 +76,17 @@ void Model::init()
 	animationCurrentFadeTime = 0;
 	animationSpeed = 1;
 
-	animations.clear();
-	attachments.clear();
-	bones.clear();
-	renderables.clear();
+	array::clear(animations);
+	array::clear(attachments);
+	array::clear(bones);
+	array::clear(renderables);
 }
 
 //-----------------------------------//
 
 void Model::setMesh(const MeshHandle& meshHandle)
 {
-	for( size_t i = 0; i < renderables.size(); ++i )
+	for( size_t i = 0; i < array::size(renderables); ++i )
 	{
 		Renderable* rend = renderables[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
@@ -105,7 +113,7 @@ void Model::updateSkinning()
 	bool isCPU = skinningMode == SkinningMode::CPU;
 	String shader = isCPU ? "VertexLit" : "VertexLitSkinned";
 	
-	for( size_t i = 0; i < renderables.size(); ++i )
+	for( size_t i = 0; i < array::size(renderables); ++i )
 	{
 		const RenderBatch* rend = renderables[i].get();
 	
@@ -135,7 +143,7 @@ void Model::update( float delta )
 
 	if( mesh->isAnimated() )
 	{
-		if( animations.empty() )
+		if( array::empty(animations) )
 			setAnimation( mesh->getBindPose().get() );
 
 		if( animationEnabled )
@@ -157,8 +165,8 @@ void Model::prepareSkinning()
 {
 	if( !mesh->isAnimated() ) return;
 
-	size_t numBones = mesh->getSkeleton()->getBones().size();
-	bones.resize( numBones );
+	size_t numBones = array::size(mesh->getSkeleton()->getBones());
+	array::resize(bones, numBones );
 }
 
 //-----------------------------------//
@@ -173,7 +181,7 @@ void Model::build()
 	
 	if( it == meshRenderables.end() )
 	{
-		RenderablesVector& rends = meshRenderables[mesh];
+		auto& rends = *meshRenderables[mesh];
 	
 		if( !MeshBuild(mesh, rends) )
 		{
@@ -182,9 +190,9 @@ void Model::build()
 		}
 	}
 
-	RenderablesVector& rends = meshRenderables[mesh];
+	auto& rends = *meshRenderables[mesh];
 
-	for( size_t i = 0; i < rends.size(); ++i )
+	for( size_t i = 0; i < array::size(rends); ++i )
 	{
 		Renderable* rend = rends[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
@@ -208,9 +216,9 @@ void Model::build()
 
 void Model::updateAnimations(float delta)
 {
-	for( size_t i = 0; i < animations.size(); ++i )
+	for( size_t i = 0; i < array::size(animations); ++i )
 	{
-		AnimationState& state = animations[i];
+		auto& state = *animations[i];
 
 		updateAnimationBones(state);
 		updateAnimationTime(state, delta);
@@ -221,8 +229,8 @@ void Model::updateAnimations(float delta)
 		animationFadeTime = 0;
 		animationCurrentFadeTime = 0;
 
-		if( animations.size() >= 2 )
-			animations.erase( animations.begin() + 1 );
+		if( array::size(animations) >= 2 )
+			array::remove(animations, array::begin(animations) + 1 );
 	}
 
 	if( animationFadeTime > 0 )
@@ -262,11 +270,10 @@ void Model::updateAnimationBones(AnimationState& state)
 	const AnimationPtr& animation = state.animation;
 	float animationTime = state.animationTime;
 
-	std::vector<Matrix4x3>& bones = state.bonesMatrix;
+	auto& bones = state.bonesMatrix;
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
-	KeyFramesMap::const_iterator it;
-	for( it = keyFrames.begin(); it != keyFrames.end(); it++ )
+	for( auto it = keyFrames.begin(); it != keyFrames.end(); ++it )
 	{
 		const BonePtr& bone = it->first;
 		
@@ -284,27 +291,27 @@ void Model::updateAnimationBones(AnimationState& state)
 
 void Model::updateFinalAnimationBones()
 {
-	if( mesh->animations.empty() )
+	if( array::empty(mesh->animations) )
 	{
 		const BonesVector& skeletonBones = mesh->skeleton->getBones();
 		
-		for( size_t i = 0; i < bones.size(); ++i )
+		for( size_t i = 0; i < array::size(bones); ++i )
 			bones[i] = skeletonBones[i]->absoluteMatrix;
 		
 		return;
 	}
 
-	for( size_t i = 0; i < bones.size(); ++i )
+	for( size_t i = 0; i < array::size(bones); ++i )
 	{
-		if( animations.size() >= 2 )
+		if( array::size(animations) >= 2 )
 		{
 			bones[i] = Matrix4x3::lerp(
-				animations[0].bonesMatrix[i], animations[1].bonesMatrix[i],
+				animations[0]->bonesMatrix[i], animations[1]->bonesMatrix[i],
 				1 - (animationCurrentFadeTime / animationFadeTime));
 		}
 		else
 		{
-			bones[i] = animations[0].bonesMatrix[i];
+			bones[i] = animations[0]->bonesMatrix[i];
 		}
 	}
 }
@@ -313,7 +320,7 @@ void Model::updateFinalAnimationBones()
 
 void Model::updateAttachments()
 {
-	for( size_t i = 0; i < attachments.size(); ++i )
+	for( size_t i = 0; i < array::size(attachments); ++i )
 	{
 		const AttachmentPtr& attachment = attachments[i];
 		const EntityPtr& node = attachment->node;
@@ -341,17 +348,20 @@ void Model::setAnimation(Animation* animation)
 
 	if( !animation ) return;
 
-	AnimationState state;
-	state.animation = animation;
-	state.animationTime = 0;
+	auto state = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(AnimationState), alignof(AnimationState))) AnimationState();;
+	state->animation = animation;
+	state->animationTime = 0;
 
-	size_t numBones = mesh->getSkeleton()->getBones().size();
-	state.bonesMatrix.resize(numBones);
+	size_t numBones = array::size(mesh->getSkeleton()->getBones());
+	array::resize(state->bonesMatrix, numBones);
 
-	if( animations.empty() )
-		animations.push_back(state);
+	if( array::empty(animations) )
+		array::push_back(animations, state);
 	else
+	{
+#pragma TODO("Fix memory leak here.")
 		animations[0] = state;
+	}
 
 	animationEnabled = true;
 }
@@ -375,10 +385,10 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 	if( !mesh->isAnimated() )
 		return;
 
-	if( animations.size() >= 2 )
+	if( array::size(animations) >= 2 )
 		animations[1] = animations[0];
 	else
-		animations.push_back( animations[0] );
+		array::push_back(animations, animations[0] );
 		
 	setAnimation(name);
 	animationFadeTime = fadeTime;
@@ -406,7 +416,7 @@ void Model::onRender(RenderView* view, const RenderState&)
 
 	if( !isHardwareSkinned() )
 	{
-		if( renderables.empty() ) return;
+		if( array::empty(renderables) ) return;
 
 		const RenderBatch* rend = renderables[0].get();
 		
@@ -474,19 +484,19 @@ void Model::doSkinning(const GeometryBufferPtr& gb)
 void Model::setupShaderSkinning()
 {
 	// Setup matrices.
-	std::vector<Matrix4x4> matrices;
-	matrices.reserve( bones.size() );
+	Array<Matrix4x4> matrices(*AllocatorGetHeap());
+	array::reserve(matrices, array::size(bones) );
 
-	for( size_t i = 0; i < bones.size(); ++i )
+	for( size_t i = 0; i < array::size(bones); ++i )
 	{
 		const Matrix4x3& bone = bones[i];
-		matrices.push_back( Matrix4x4(bone) );
+		array::push_back(matrices, Matrix4x4(bone) );
 	}
 
 	// Send them to the uniform buffer.
-	const std::vector<RenderBatchPtr>& rends = getRenderables();
+	auto& rends = getRenderables();
 
-	for( size_t i = 0; i < rends.size(); ++i )
+	for( size_t i = 0; i < array::size(rends); ++i )
 	{
 		const RenderBatch* rend = rends[i].get();
 		
@@ -512,7 +522,7 @@ void Model::setAttachment(const String& boneName, const EntityPtr& node)
 	attachment->bone = bone;
 	attachment->node = node;
 
-	attachments.push_back(attachment);
+	array::push_back<AttachmentPtr>(attachments, attachment); 
 }
 
 //-----------------------------------//
@@ -522,17 +532,17 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 	const Skeleton* skeleton = mesh->getSkeleton().get();
 	if( !skeleton ) return;
 	
-	if( bones.empty() ) return;
+	if( array::empty(bones) ) return;
 
 	if( !debugRenderable )
 		debugRenderable = createDebugRenderable();
 
 	GeometryBuffer* gb = debugRenderable->getGeometryBuffer().get();
 
-	std::vector<Vector3> pos;
-	std::vector<Vector3> colors;
+	Array<Vector3> pos(*AllocatorGetHeap());
+	Array<Vector3> colors(*AllocatorGetHeap());
 
-	size_t numBones = skeleton->bones.size();
+	size_t numBones = array::size(skeleton->bones);
 	
 	for( size_t i = 0; i < numBones; ++i )
 	{
@@ -546,17 +556,17 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 		
 		parentVertex = bones[bone->indexParent]*parentVertex;
 
-		pos.push_back( bones[bone->index]*vertex );
-		colors.push_back( Color::Blue );
+		array::push_back(pos, bones[bone->index]*vertex );
+		array::push_back<Vector3>(colors, Color::Blue );
 
-		pos.push_back( parentVertex);
-		colors.push_back( Color::Blue );
+		array::push_back(pos, parentVertex);
+		array::push_back<Vector3>(colors, Color::Blue );
 	}
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
 
-	debug.renderables.push_back(debugRenderable.get());
+	array::push_back(debug.renderables, debugRenderable.get());
 }
 
 //-----------------------------------//

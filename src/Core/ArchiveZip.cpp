@@ -6,15 +6,18 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Archive.h"
-#include "Core/Stream.h"
 #include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Stream.h"
 #include "Core/Log.h"
+
+#include "Core/Archive.h"
 
 #ifdef ENABLE_ARCHIVE_ZIP
 
 #include <cstdio>
 #include <zzip/zzip.h>
+#include <vector>
 
 NAMESPACE_CORE_BEGIN
 
@@ -134,8 +137,8 @@ static int64 ZipStreamGetSize(Stream* stream)
 static bool    ZipArchiveOpen(Archive*, const String&);
 static bool    ZipArchiveClose(Archive*);
 static Stream* ZipArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    ZipArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    ZipArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
+static void    ZipArchiveEnumerateFiles(Archive*, Array<Path*>&);
+static void    ZipArchiveEnumerateDirectories(Archive*, Array<Path*>&);
 static bool    ZipArchiveExistsFile(Archive*, const Path&);
 static bool    ZipArchiveExistsDir(Archive*, const Path&);
 static bool    ZipArchiveMonitor(Archive*); 
@@ -220,8 +223,10 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool dir)
+static void ZipArchiveEnumerate(Archive* archive, Array<Path*>& paths, bool dir)
 {
+	std::vector<std::shared_ptr<std::string>> _StringStorage;
+
 	if( !archive || !archive->handle ) return;
 
 	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
@@ -231,25 +236,27 @@ static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool
 	
 	while( zzip_dir_read(zip, &entry) != 0 )
 	{
-		Path name = entry.d_name;
+		auto name = std::make_shared<std::string>(entry.d_name);
+		_StringStorage.push_back(name);
 		
-		bool isDir = !name.empty() && name[name.size()-1] == '/';
+		bool isDir = !name->empty() && name->operator[](name->size()-1) == '/';
 
+#pragma TODO("Fix memory leak here.")
 		if( (dir && isDir) || (!dir && !isDir) )
-			paths.push_back(name);
+			array::push_back(paths, name.get());
 	}
 }
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+static void ZipArchiveEnumerateFiles(Archive* archive, Array<Path*>& paths)
 {
 	ZipArchiveEnumerate(archive, paths, false);
 }
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+static void ZipArchiveEnumerateDirectories(Archive* archive, Array<Path*>& paths)
 {
 	ZipArchiveEnumerate(archive, paths, true);
 }
@@ -270,12 +277,12 @@ static bool ZipArchiveExistsFile(Archive* archive, const Path& path)
 
 static bool ZipArchiveExistsDir(Archive* archive, const Path& path)
 {
-	std::vector<Path> dirs;
+	Array<Path*> dirs(*AllocatorGetHeap());
 	ArchiveEnumerateDirectories(archive, dirs);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+	for(size_t i = 0; i < array::size(dirs); ++i)
 	{
-		const Path& dir = StringTrim(dirs[i], "/");
+		const Path& dir = StringTrim(*dirs[i], "/");
 		if(dir == path) return true;
 	}
 

@@ -112,9 +112,9 @@ public:
 	virtual ResourceGroup getResourceGroup() const = 0;
 
 	// Gets the recognized extensions of this loader.
-	GETTER(Extensions, const std::vector<String>&, extensions);
+	GETTER(Extensions, const Array<String*>&, extensions);
 
-	std::vector<String> extensions;
+	Array<String*> extensions;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(ResourceLoader)

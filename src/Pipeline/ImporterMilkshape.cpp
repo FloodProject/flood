@@ -12,6 +12,7 @@
 #include "Pipeline/ImporterMilkshape.h"
 #include "Pipeline/Milkshape3D.h"
 #include "Engine/Resources/Skeleton.h"
+#include "Core/Containers/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -24,7 +25,7 @@ REFLECT_CLASS_END()
 
 ImporterMilkshape::ImporterMilkshape()
 {
-	extensions.push_back("ms3d");
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ms3d"));
 }
 
 //-----------------------------------//

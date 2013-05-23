@@ -6,13 +6,15 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Stream.h"
+#include "Core/Network/Network.h"
 #include "Core/SerializationHelpers.h"
 
 #include "Core/Network/Message.h"
 #include "Core/Network/Session.h"
 #include "Core/Network/Peer.h"
-#include "Core/Network/Network.h"
+
+#include "Core/Stream.h"
+#include "Core/Containers/Array.h"
 
 #define NOMINMAX
 #include <enet/enet.h>
@@ -137,7 +139,7 @@ void Message::setPacket(ENetPacket* packet)
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
 		StreamResize(ms, bufSize);
 
-		int32 length = fastlz_decompress(in, inSize, &ms->data[0], ms->data.size());
+		int32 length = fastlz_decompress(in, inSize, &ms->data[0], array::size(ms->data));
 		StreamResize(ms, length);
 	}
 	else

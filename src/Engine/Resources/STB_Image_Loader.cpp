@@ -11,6 +11,8 @@
 
 #include "Engine/Resources/STB_Image_Loader.h"
 #include "Core/Log.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
 
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
@@ -26,25 +28,25 @@ REFLECT_CLASS_END()
 
 STB_Image_Loader::STB_Image_Loader()
 {
-	extensions.push_back("png");
-	extensions.push_back("jpg");
-	extensions.push_back("bmp");
-	extensions.push_back("tga");
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("png"));
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("jpg"));
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("bmp"));
+	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("tga"));
 }
 
 //-----------------------------------//
 
 bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 {
-	std::vector<uint8> data;
+	Array<uint8> data(*AllocatorGetHeap());
 	StreamRead(options.stream, data);
 
-	if( data.empty() ) return false;
+	if( array::empty(data) ) return false;
 
 	int width, height, comp;
 	
 	byte* pixelData = stbi_load_from_memory(
-		&data[0], data.size(), &width, &height,
+		&data[0], array::size(data), &width, &height,
 		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
 	if( !pixelData )
@@ -71,9 +73,9 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 		return false;
 	}
 	
-	std::vector<byte> buffer;
+	Array<byte> buffer(*AllocatorGetHeap());
 	uint32 size = width*height*comp; 
-	buffer.resize(size);
+	array::resize(buffer, size);
 	
 	memcpy(&buffer[0], pixelData, size);
 	free(pixelData);

@@ -6,11 +6,12 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Log.h"
-#include "Core/Memory.h"
 
-#include "Core/WorkerThreadPool.h"
 #include "Core/WorkerThread.h"
+#include "Core/WorkerThreadPool.h"
+#include "Core/Memory.h"
+#include "Core/Containers/Array.h"
+#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -22,7 +23,7 @@ NAMESPACE_CORE_BEGIN
 		, ActiveWorkers_(0)
 	{}
 
-	void WorkerThreadPool::Make( uint32 threadCount )
+	void WorkerThreadPool::Initialize( size_t threadCount )
 	{
 		LogInfo("WorkerThreadPool is starting up. Thread count: %i", threadCount);
 
@@ -39,18 +40,18 @@ NAMESPACE_CORE_BEGIN
 		WakeupNotifiction_.reset( ConditionCreate(AllocatorGetHeap()) );
 
 		// allocate the appropriate memory in the vector
-		Workers_.reserve( threadCount );
+		array::reserve(Workers_, threadCount );
 
 		// allocate and make the worker objects
 		for(uint32 i = 0; i < threadCount; ++i)
 		{
 			WorkerThread * w = new WorkerThread();
-			w->Make(this, i);
-			Workers_.push_back(w);
+			w->Initialize(this, i);
+			array::push_back(Workers_, w);
 		}
 	}
 
-	void WorkerThreadPool::Unmake()
+	void WorkerThreadPool::Shutdown()
 	{
 		LogInfo("WorkerThreadPool shutting down...");
 
@@ -59,8 +60,18 @@ NAMESPACE_CORE_BEGIN
 
 		// iterate through them all and unmake them
 		WakeAll();
-		for(auto w = Workers_.begin(); w != Workers_.end(); ++w)
-			(*w)->Unmake();
+		for(auto w = array::begin(Workers_); w != array::end(Workers_); ++w)
+			(*w)->Shutdown();
+	}
+
+	size_t WorkerThreadPool::WorkersCount() const 
+	{ 
+		return array::size(Workers_);
+	}
+
+	std::pair<WorkerThread**, WorkerThread**> WorkerThreadPool::WorkersBeginEnd()
+	{
+		return std::make_pair(array::begin(Workers_), array::end(Workers_));
 	}
 
 #pragma endregion

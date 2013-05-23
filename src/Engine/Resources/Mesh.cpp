@@ -6,9 +6,11 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Skeleton.h"
 #include "Engine/Resources/Animation.h"
+#include "Core/Containers/Array.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
 #include "Core/Math/Vector.h"
@@ -28,6 +30,8 @@ Mesh::Mesh()
 	, bindPose(nullptr)
 	, built(false)
 	, geometryBuffer(nullptr)
+	, animations(*AllocatorGetHeap())
+	, groups(*AllocatorGetHeap())
 {
 }
 
@@ -57,7 +61,7 @@ bool Mesh::isAnimated() const
 
 Animation* Mesh::findAnimation( const String& name )
 {
-	for( size_t i = 0; i < animations.size(); i++ )
+	for( size_t i = 0; i < array::size(animations); ++i )
 	{
 		 Animation* animation = animations[i].get();
 
@@ -78,13 +82,13 @@ void Mesh::buildBounds()
 
 	size_t numVertices = geometryBuffer->getNumVertices();
 
-	for( size_t i = 0; i < groups.size(); i++ )
+	for( size_t i = 0; i < array::size(groups); ++i )
 	{
-		MeshGroup& group = groups[i];
-		const std::vector<uint16>& indices = group.indices;
+		MeshGroup& group = *groups[i];
+		auto& indices = group.indices;
 		
 		// Update the bounding box to accomodate new geometry.
-		for( size_t j = 0; j < indices.size(); j++ )
+		for( size_t j = 0; j < array::size(indices); ++j )
 		{
 			const uint16& index = indices[j];
 			if( index > numVertices ) continue;

@@ -10,12 +10,15 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
 
+#include "Core/Containers/Array.h"
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 RenderTarget::RenderTarget()
 	: context(nullptr)
+	, views(*AllocatorGetHeap())
 {
 }
 
@@ -33,7 +36,7 @@ RenderTarget::~RenderTarget()
 		renderDevice->setActiveContext(nullptr);
 	}
 
-	for(size_t i = 0; i < views.size(); ++i)
+	for(size_t i = 0; i < array::size(views); ++i)
 	{
 		RenderView* view = views[i];
 		Deallocate(view);
@@ -47,7 +50,7 @@ RenderView* RenderTarget::createView()
 	RenderView* renderView = AllocateThis(RenderView);
 	renderView->setRenderTarget(this);
 	renderView->setSize(getSettings().getSize());
-	views.push_back(renderView);
+	array::push_back(views, renderView);
 	
 	return renderView;
 }
@@ -58,7 +61,7 @@ void RenderTarget::removeViews()
 {
 	RenderDevice* renderDevice = GetRenderDevice();
 
-	for( size_t i = 0; i < views.size(); i++ )
+	for( size_t i = 0; i < array::size(views); ++i )
 	{
 		RenderView* view = views[i];
 
@@ -71,7 +74,7 @@ void RenderTarget::removeViews()
 		Deallocate(view);
 	}
 
-	views.clear();
+	array::clear(views);
 }
 
 //-----------------------------------//
@@ -85,7 +88,7 @@ void RenderTarget::setContext(RenderContext* newContext)
 
 void RenderTarget::handleResize()
 {
-	for( size_t i = 0; i < views.size(); i++ )
+	for( size_t i = 0; i < array::size(views); ++i )
 	{
 		RenderView* view = views[i];
 		view->handleRenderTargetResize();

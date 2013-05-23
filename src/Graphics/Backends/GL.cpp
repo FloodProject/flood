@@ -6,6 +6,8 @@
 ************************************************************************/
 
 #include "Graphics/API.h"
+#include "Core/Containers/Array.h"
+
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/RenderBatch.h"
 #include "Graphics/RenderCapabilities.h"
@@ -141,11 +143,11 @@ void BindFixedVertexBufferDeclarations(VertexBuffer* vb)
 	assert( vb->built );
 
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
-	const std::vector<VertexElement>& vertexDecls = gb->declarations.decls;
+	auto& vertexDecls = gb->declarations.decls;
 
 	int offset = 0;
 
-	for( size_t i = 0; i < vertexDecls.size(); ++i )
+	for( size_t i = 0; i < array::size(vertexDecls); ++i )
 	{
 		const VertexElement& decl = vertexDecls[i];
 		GLenum type = ConvertBufferTypeGL(decl.type);
@@ -182,9 +184,9 @@ void BindFixedVertexBufferDeclarations(VertexBuffer* vb)
 void UnbindFixedVertexBufferDeclarations(VertexBuffer* vb)
 {
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
-	const std::vector<VertexElement>& vertexDecls = gb->declarations.decls;
+	auto& vertexDecls = gb->declarations.decls;
 
-	for( size_t i = 0; i < vertexDecls.size(); i++ )
+	for( size_t i = 0; i < array::size(vertexDecls); ++i )
 	{
 		const VertexElement& decl = vertexDecls[i];
 		
@@ -215,9 +217,9 @@ void UnbindFixedVertexBufferDeclarations(VertexBuffer* vb)
 void BindGenericVertexBufferDeclarations(VertexBuffer* vb)
 {
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
-	const std::vector<VertexElement>& decls = gb->declarations.decls;
+	auto& decls = gb->declarations.decls;
 
-	for( size_t i = 0; i < decls.size(); i++ )
+	for( size_t i = 0; i < array::size(decls); ++i )
 	{
 		const VertexElement& decl = decls[i];
 		int index = (int) decl.attribute;
@@ -244,9 +246,9 @@ void BindGenericVertexBufferDeclarations(VertexBuffer* vb)
 void UnbindGenericVertexBufferDeclarations(VertexBuffer* vb)
 {
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
-	const std::vector<VertexElement>& decls = gb->declarations.decls;
+	auto& decls = gb->declarations.decls;
 
-	for( size_t i = 0; i < decls.size(); i++ )
+	for( size_t i = 0; i < array::size(decls); ++i )
 	{
 		const VertexElement& decl = decls[i];
 
