@@ -118,7 +118,13 @@ public:
 	template<typename U>
 	RefPtr& operator=(const RefPtr<U>& rhs)
 	{
-		RefPtr(rhs).swap(*this);
+		if(rhs.px && &rhs != this)
+		{
+			rhs.px->addReference();
+			REFERENCES_DEBUG_CALLBACK();
+		}
+
+		this->px = rhs.px;
 		return *this;
 	}
 
@@ -130,14 +136,26 @@ public:
 
 	RefPtr& operator=(RefPtr&& rhs)
 	{
-		RefPtr(static_cast<RefPtr&&>(rhs)).swap(*this);
+		if(rhs.px)
+		{
+			rhs.px->addReference();
+			REFERENCES_DEBUG_CALLBACK();
+		}
+
+		this->px = std::move(rhs.px);
 		return *this;
 	}
 #endif
 
 	RefPtr& operator=(const RefPtr& rhs)
 	{
-		RefPtr(rhs).swap(*this);
+		if(rhs.px && &rhs != this)
+		{
+			rhs.px->addReference();
+			REFERENCES_DEBUG_CALLBACK();
+		}
+
+		this->px = rhs.px;
 		return *this;
 	}
 
