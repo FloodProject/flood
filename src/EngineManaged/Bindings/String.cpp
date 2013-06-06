@@ -69,7 +69,7 @@ void Flood::FloodString::StringSplit(System::String^ s, char delim, System::Coll
 
 System::String^ Flood::FloodString::StringFromWideString(System::String^ ws)
 {
-    auto arg0 = marshalString<E_UTF16>(ws);
+    auto arg0 = clix::marshalString<clix::E_UTF16>(ws);
     auto ret = ::StringFromWideString(arg0);
     return clix::marshalString<clix::E_UTF8>(ret);
 }
@@ -78,7 +78,7 @@ System::String^ Flood::FloodString::StringToWideString(System::String^ s)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(s);
     auto ret = ::StringToWideString(arg0);
-    return marshalString<E_UTF16>(ret);
+    return clix::marshalString<clix::E_UTF16>(ret);
 }
 
 System::String^ Flood::FloodString::StringToLowerCase(System::String^ s)

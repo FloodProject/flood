@@ -16,7 +16,6 @@ namespace Flood
 {
     enum struct InputDeviceType;
     enum struct Keys;
-    ref class Event1;
     ref class InputDevice;
     ref class InputEvent;
     ref class Keyboard;
@@ -41,31 +40,31 @@ namespace Flood
         {
             void add(System::Action<Flood::KeyEvent^>^ evt);
             void remove(System::Action<Flood::KeyEvent^>^ evt);
-            void raise(Flood::KeyEvent^);
+            void raise(Flood::KeyEvent^ _0);
         }
     private:
-        delegate void _KeyReleaseDelegate(const ::KeyEvent& _0);
+        delegate void _KeyReleaseDelegate(const ::KeyEvent& _1);
         _KeyReleaseDelegate^ _KeyReleaseDelegateInstance;
-        void _KeyReleaseRaise(const ::KeyEvent& _0);
+        void _KeyReleaseRaise(const ::KeyEvent& _1);
         System::Action<Flood::KeyEvent^>^ _KeyRelease;
     public:
         event System::Action<Flood::KeyEvent^>^ KeyRelease
         {
             void add(System::Action<Flood::KeyEvent^>^ evt);
             void remove(System::Action<Flood::KeyEvent^>^ evt);
-            void raise(Flood::KeyEvent^);
+            void raise(Flood::KeyEvent^ _1);
         }
     private:
-        delegate void _KeyTextDelegate(const ::KeyEvent& _0);
+        delegate void _KeyTextDelegate(const ::KeyEvent& _2);
         _KeyTextDelegate^ _KeyTextDelegateInstance;
-        void _KeyTextRaise(const ::KeyEvent& _0);
+        void _KeyTextRaise(const ::KeyEvent& _2);
         System::Action<Flood::KeyEvent^>^ _KeyText;
     public:
         event System::Action<Flood::KeyEvent^>^ KeyText
         {
             void add(System::Action<Flood::KeyEvent^>^ evt);
             void remove(System::Action<Flood::KeyEvent^>^ evt);
-            void raise(Flood::KeyEvent^);
+            void raise(Flood::KeyEvent^ _2);
         }
         bool IsKeyPressed(Flood::Keys keyCode);
         void ResetKeys();

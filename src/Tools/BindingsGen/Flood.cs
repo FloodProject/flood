@@ -175,8 +175,10 @@ namespace Flood
                     "Core/Math/Color.h",
                     "Core/Network/Network.h",
                     "Core/Network/Host.h",
-                    "Core/Network/Peer.h",
+                    "Core/Network/Session.h",
+                    "Core/Network/SessionManager.h",
                     "Core/Network/Packet.h",
+                    "Core/Network/Peer.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
@@ -255,14 +257,15 @@ namespace Flood
 
     class CheckMacroPass : TranslationUnitPass
     {
+
         public override bool VisitDeclaration(Declaration decl)
         {
-            if (AlreadyVisited(decl))
-                return false;
-
             var expansions = decl.PreprocessedEntities.OfType<MacroExpansion>();
 
-            if (expansions.Any(e => e.Text == "FLD_IGNORE"))
+            if (expansions.Any(e => e.Text == "FLD_IGNORE" &&
+                                    e.Location != MacroLocation.ClassBody &&
+                                    e.Location != MacroLocation.FunctionBody &&
+                                    e.Location != MacroLocation.FunctionParameters))
                 decl.ExplicityIgnored = true;
 
             return true;
@@ -270,22 +273,16 @@ namespace Flood
 
         public override bool VisitClassDecl(Class @class)
         {
-            if (AlreadyVisited(@class))
-                return false;
-
             var expansions = @class.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_VALUE_TYPE"))
                 @class.Type = ClassType.ValueType;
 
-            return true;
+            return base.VisitClassDecl(@class);
         }
 
         public override bool VisitParameterDecl(Parameter parameter)
         {
-            if (AlreadyVisited(parameter))
-                return false;
-
             var expansions = parameter.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_OUT"))
@@ -299,9 +296,6 @@ namespace Flood
 
         public override bool VisitEnumDecl(Enumeration @enum)
         {
-            if (AlreadyVisited(@enum))
-                return false;
-
             var expansions = @enum.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_FLAGS"))
@@ -322,6 +316,9 @@ namespace Flood
 
         public override bool VisitFieldDecl(Field field)
         {
+            if(field.Ignore)
+                return false;
+
             TypeMap typeMap;
             if (!typeMapDatabase.FindTypeMap(field.Type, out typeMap))
                 return false;
@@ -336,7 +333,8 @@ namespace Flood
                 return false;
 
             var template = decl.Type as TemplateSpecializationType;
-            var @params = template.Arguments.Select(param => param.Type).ToList();
+            var @params = template.Arguments.Select(param => 
+                new Parameter(){ QualifiedType = param.Type }).ToList();
 
             if (template.Template.TemplatedDecl.Name.StartsWith("Delegate"))
                 return false;

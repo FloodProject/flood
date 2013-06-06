@@ -16,7 +16,6 @@ namespace Flood
 {
     enum struct ResourceGroup;
     ref class Extension;
-    ref class RefPtr;
     ref class Resource;
     ref class ResourceLoader;
     ref class ResourceStream;

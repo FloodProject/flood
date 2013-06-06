@@ -14,10 +14,7 @@
 namespace Flood
 {
     enum struct WindowStyles;
-    ref class Event0;
-    ref class Event1;
     ref class InputManager;
-    ref class RefPtr;
     ref class RenderContext;
     ref class RenderTarget;
     ref class Window;
@@ -72,16 +69,16 @@ namespace Flood
             void raise();
         }
     private:
-        delegate void _WindowFocusChangeDelegate(bool _0);
+        delegate void _WindowFocusChangeDelegate(bool _2);
         _WindowFocusChangeDelegate^ _WindowFocusChangeDelegateInstance;
-        void _WindowFocusChangeRaise(bool _0);
+        void _WindowFocusChangeRaise(bool _2);
         System::Action<bool>^ _WindowFocusChange;
     public:
         event System::Action<bool>^ WindowFocusChange
         {
             void add(System::Action<bool>^ evt);
             void remove(System::Action<bool>^ evt);
-            void raise(bool);
+            void raise(bool _2);
         }
         Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
         void Update();

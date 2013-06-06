@@ -44,14 +44,14 @@ namespace Flood
         Flood::Matrix4x3 Transpose();
         Flood::Vector3 operator*(Flood::Vector3 p);
         Flood::Matrix4x3 operator*(Flood::Matrix4x3 m);
-        Flood::Matrix4x3 Lerp(Flood::Matrix4x3 a, Flood::Matrix4x3 b, float t);
-        Flood::Matrix4x3 CreateTranslation(Flood::Vector3 translate);
-        Flood::Matrix4x3 CreateRotation(Flood::EulerAngles angles);
-        Flood::Matrix4x3 CreateScale(Flood::Vector3 scale);
-        Flood::Matrix4x3 CreateFromQuaternion(Flood::Quaternion q);
-        Flood::Matrix4x3 RotateX(float ang);
-        Flood::Matrix4x3 RotateY(float ang);
-        Flood::Matrix4x3 RotateZ(float ang);
+        static Flood::Matrix4x3 Lerp(Flood::Matrix4x3 a, Flood::Matrix4x3 b, float t);
+        static Flood::Matrix4x3 CreateTranslation(Flood::Vector3 translate);
+        static Flood::Matrix4x3 CreateRotation(Flood::EulerAngles angles);
+        static Flood::Matrix4x3 CreateScale(Flood::Vector3 scale);
+        static Flood::Matrix4x3 CreateFromQuaternion(Flood::Quaternion q);
+        static Flood::Matrix4x3 RotateX(float ang);
+        static Flood::Matrix4x3 RotateY(float ang);
+        static Flood::Matrix4x3 RotateZ(float ang);
         static property Flood::Matrix4x3 Identity
         {
             Flood::Matrix4x3 get();

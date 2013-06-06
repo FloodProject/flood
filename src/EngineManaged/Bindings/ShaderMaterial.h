@@ -14,8 +14,6 @@
 namespace Flood
 {
     enum struct ResourceGroup;
-    ref class Handle;
-    ref class RefPtr;
     ref class Resource;
     ref class ShaderMaterial;
 

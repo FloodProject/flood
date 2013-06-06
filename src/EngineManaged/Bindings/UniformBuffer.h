@@ -13,7 +13,6 @@
 namespace Flood
 {
     enum struct UniformDataType : unsigned char;
-    ref class RefPtr;
     ref class UniformBuffer;
     value struct Color;
     value struct Matrix4x3;

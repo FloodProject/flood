@@ -192,14 +192,14 @@ void Flood::ResourceManager::ResourcePrepared::remove(System::Action<Flood::Reso
     _ResourcePrepared = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourcePrepared, evt));
 }
 
-void Flood::ResourceManager::ResourcePrepared::raise(Flood::ResourceEvent^ _0)
+void Flood::ResourceManager::ResourcePrepared::raise(Flood::ResourceEvent^ _1)
 {
-    _ResourcePrepared(_0);
+    _ResourcePrepared(_1);
 }
 
-void Flood::ResourceManager::_ResourcePreparedRaise(const ::ResourceEvent& _0)
+void Flood::ResourceManager::_ResourcePreparedRaise(const ::ResourceEvent& _1)
 {
-    ResourcePrepared::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourcePrepared::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_1));
 }
 
 void Flood::ResourceManager::ResourceLoaded::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -218,14 +218,14 @@ void Flood::ResourceManager::ResourceLoaded::remove(System::Action<Flood::Resour
     _ResourceLoaded = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceLoaded, evt));
 }
 
-void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent^ _0)
+void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent^ _2)
 {
-    _ResourceLoaded(_0);
+    _ResourceLoaded(_2);
 }
 
-void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _0)
+void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _2)
 {
-    ResourceLoaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceLoaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_2));
 }
 
 void Flood::ResourceManager::ResourceRemoved::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -244,14 +244,14 @@ void Flood::ResourceManager::ResourceRemoved::remove(System::Action<Flood::Resou
     _ResourceRemoved = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceRemoved, evt));
 }
 
-void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent^ _0)
+void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent^ _3)
 {
-    _ResourceRemoved(_0);
+    _ResourceRemoved(_3);
 }
 
-void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _0)
+void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _3)
 {
-    ResourceRemoved::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceRemoved::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_3));
 }
 
 void Flood::ResourceManager::ResourceReloaded::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -270,14 +270,14 @@ void Flood::ResourceManager::ResourceReloaded::remove(System::Action<Flood::Reso
     _ResourceReloaded = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceReloaded, evt));
 }
 
-void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent^ _0)
+void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent^ _4)
 {
-    _ResourceReloaded(_0);
+    _ResourceReloaded(_4);
 }
 
-void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _0)
+void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _4)
 {
-    ResourceReloaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceReloaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_4));
 }
 
 void Flood::ResourceManager::ResourceLoaderRegistered::add(System::Action<Flood::ResourceLoader^>^ evt)
@@ -296,52 +296,14 @@ void Flood::ResourceManager::ResourceLoaderRegistered::remove(System::Action<Flo
     _ResourceLoaderRegistered = static_cast<System::Action<Flood::ResourceLoader^>^>(System::Delegate::Remove(_ResourceLoaderRegistered, evt));
 }
 
-void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoader^ _0)
+void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoader^ _5)
 {
-    _ResourceLoaderRegistered(_0);
+    _ResourceLoaderRegistered(_5);
 }
 
-void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _0)
+void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _5)
 {
-    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
-}
-
-generic<typename T>
-Flood::ResourceHandle<T> Flood::ResourceManager::GetResource(System::String^ name)
-{
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
-    auto ret = ((::ResourceManager*)NativePtr)->getResource<::Resource>(arg0);
-    return Flood::ResourceHandle<T>(ret.id);
-}
-
-generic<typename T>
-Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(System::String^ name)
-{
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
-    auto ret = ((::ResourceManager*)NativePtr)->loadResource<::Resource>(arg0);
-    return Flood::ResourceHandle<T>(ret.id);
-}
-
-generic<typename T>
-Flood::ResourceHandle<T> Flood::ResourceManager::LoadResource(Flood::ResourceLoadOptions options)
-{
-    auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
-
-    if (options.Resource != nullptr)
-        _marshal0.resource = (::Resource*)options.Resource->NativePtr;
-    _marshal0.group = (::ResourceGroup)options.Group;
-    _marshal0.isHighPriority = options.IsHighPriority;
-    _marshal0.sendLoadEvent = options.SendLoadEvent;
-    _marshal0.asynchronousLoad = options.AsynchronousLoad;
-    _marshal0.keepStreamOpen = options.KeepStreamOpen;
-    auto _marshal1 = ::ResourceLoadOption();
-    _marshal1.key = options.Option.Key;
-    _marshal1.value = options.Option.Value;
-    _marshal0.option = _marshal1;
-    auto arg0 = _marshal0;
-    auto ret = ((::ResourceManager*)NativePtr)->loadResource<::Resource>(arg0);
-    return Flood::ResourceHandle<T>(ret.id);
+    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_5));
 }
 
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
