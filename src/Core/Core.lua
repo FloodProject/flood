@@ -40,7 +40,7 @@ project "Core"
 	includedirs
 	{
 		incdir,
-		path.join(depsdir,"Dirent"),
+		path.join(depsdir,"Dirent")
 	}
 	
 	Core.links = {}
@@ -53,6 +53,7 @@ project "Core"
 		"FastLZ",
 		"Jansson",
 		"zziplib",
+<<<<<<< HEAD
 		"zlib",
 	}
 
@@ -61,6 +62,9 @@ project "Core"
 		"cURL",
 		"Mongoose",
 		"ENet",
+=======
+		"tropicssl"
+>>>>>>> fc71476... Networking with packet processors, encryptor and key exchanger for session creation and recovery.
 	}
 
 	configuration "windows"

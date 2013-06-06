@@ -7,12 +7,18 @@
 
 #pragma once
 
+#include "Core/API.h"
 #include "Core/References.h"
-#include "Core/Network/CipherISAAC.h"
+
+#include <array>
 
 FWD_DECL_INTRUSIVE(Peer)
+FWD_DECL_INTRUSIVE(Packet)
+FWD_DECL_INTRUSIVE(Session)
 
 NAMESPACE_CORE_BEGIN
+
+FLD_IGNORE typedef std::array<uint8,20> SessionHash;
 
 //-----------------------------------//
 
@@ -22,9 +28,8 @@ NAMESPACE_CORE_BEGIN
 
 enum class SessionState
 {
-	Connecting,
-	Connected,
-	Authenticated
+	Closed,
+	Open,
 };
 
 //-----------------------------------//
@@ -36,47 +41,33 @@ enum class SessionState
  * the peer explicitly terminates their connection.
  */
 
-class Session : public ReferenceCounted
+class API_CORE Session : public ReferenceCounted
 {
 public:
 
 	Session();
 	~Session();
 
-	// Accesses the peer associated with this session.
-	ACCESSOR(Peer, const PeerPtr&, peer)
+	GETTER(State, SessionState, state);
+	FLD_IGNORE void setState(SessionState state);
+	FLD_IGNORE ACCESSOR(Peer, Peer*, peer);
 
-	// Handles session authentication.
-	void handleAuthentication();
+	SessionHash* getHash();
+	FLD_IGNORE void setHash(const SessionHash& newHash);
 
-	// Handles session connection.
-	void handleConnection();
+	Event1<SessionState> onStateChange;
+	Event2<const PacketPtr&, int> onPacket;
 
-protected:
+private:
 
 	SessionState state;
-	CipherISAAC cipher;
-	PeerPtr peer;
+	Peer* peer;
 
-	float lastConnection;
-	float lastCommunication;
+	SessionHash hash;
+	bool hasHash;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Session);
-
-//-----------------------------------//
-
-/**
- * Session groups are used to keep together a related set of
- * sessions. You can use these to for example, group sessions
- * by teams to broadcast a set of packets to the group.
- */
-
-class SessionGroup
-{
-
-
-};
 
 //-----------------------------------//
 

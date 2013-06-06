@@ -7,20 +7,26 @@
 
 #pragma once
 
+#include "Core/API.h"
+#include "Core/Network/Session.h"
 #include "Core/References.h"
 #include "Core/String.h"
 
 struct _ENetPeer;
 typedef _ENetPeer ENetPeer;
 
+FWD_DECL_INTRUSIVE(Host)
 FWD_DECL_INTRUSIVE(Packet)
 
 NAMESPACE_CORE_BEGIN
 
+class PacketProcessor;
+class PacketProcessors;
+
 //-----------------------------------//
 
 // Peers are representations of network entities.
-class API_CORE Peer : public ReferenceCounted
+ class API_CORE Peer : public ReferenceCounted
 {
 public:
 
@@ -39,13 +45,29 @@ public:
 	String getHostIP() const;
 
 	// Queues a packet to be sent to the peer.
-	void queuePacket(const PacketPtr &packet, uint8 channel);
+	void queuePacket(const PacketPtr& packet, uint8 channel);
+
+	FLD_IGNORE void processInPacket(const PacketPtr& packet, uint8 channel);
+
+	FLD_IGNORE void addProcessor(PacketProcessor* processor);
+
+	FLD_IGNORE ACCESSOR(Peer, ENetPeer*, peer)
+
+	FLD_IGNORE ACCESSOR(Host, Host*, host)
+
+	GETTER(Session, Session*, session)
+	FLD_IGNORE SETTER(Session, Session*, session)
+
+private:
 
 	ENetPeer* peer;
+	Host* host;
+	Session* session;
+
+	PacketProcessors* processors;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Peer )
-typedef std::vector<PeerPtr> NetworkPeers;
 
 //-----------------------------------//
 

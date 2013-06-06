@@ -28,9 +28,11 @@ SessionManager::~SessionManager()
 void SessionManager::addSession(const SessionPtr& session)
 {
 	if( !session ) return;
-	const PeerPtr& peer = session->getPeer();
-	
-	sessions[peer] = session;
+
+	SessionHash* hash = session->getHash();
+	assert(hash && sessions.find(*hash) == sessions.end());
+
+	sessions[*hash] = session;
 
 	onSessionAdded(session);
 }
@@ -40,9 +42,11 @@ void SessionManager::addSession(const SessionPtr& session)
 void SessionManager::removeSession(const SessionPtr& session)
 {
 	if( !session ) return;
-	const PeerPtr& peer = session->getPeer();
 
-	SessionsMap::iterator it = sessions.find(peer);
+	SessionHash* hash = session->getHash();
+	assert(hash);
+
+	auto it = sessions.find(*hash);
 	
 	if( it == sessions.end() )
 		return;
@@ -54,16 +58,14 @@ void SessionManager::removeSession(const SessionPtr& session)
 
 //-----------------------------------//
 
-SessionPtr SessionManager::getSession(const PeerPtr& peer)
+Session* SessionManager::getSession(const SessionHash& hash) const
 {
-	SessionsMap::iterator it = sessions.find(peer);
+	auto it = sessions.find(hash);
 
 	if( it == sessions.end() )
 		return nullptr;
 
-	return it->second;
+	return it->second.get();
 }
-
-//-----------------------------------//
 
 NAMESPACE_CORE_END

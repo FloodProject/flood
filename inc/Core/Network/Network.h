@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Core/API.h";
+#include "Core/API.h"
 
 NAMESPACE_CORE_BEGIN
 

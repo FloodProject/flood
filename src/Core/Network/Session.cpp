@@ -8,15 +8,22 @@
 #include "Core/API.h"
 #include "Core/Network/Session.h"
 #include "Core/Network/Peer.h"
-#include "Core/Timer.h"
+#include "Core/Network/Host.h"
+#include "Core/Network/Packet.h"
+#include "Core/Network/Network.h"
+#include "Core/Network/PacketProcessor.h"
+#include "Core/Log.h"
+#include "Core/Utilities.h"
+
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
 Session::Session()
- : lastConnection(0)
- , lastCommunication(0)
+ : state(SessionState::Closed)
+ , peer(nullptr)
+ , hasHash(false)
 {
 }
 
@@ -28,16 +35,37 @@ Session::~Session()
 
 //-----------------------------------//
 
-void Session::handleAuthentication()
+void Session::setState(SessionState state)
 {
+    if(state == this->state)
+        return;
 
+    if(state == SessionState::Closed)
+        peer = nullptr;
+
+    assert(state == SessionState::Open && peer != nullptr && hasHash );
+
+    this->state = state;
+    onStateChange(state);
 }
 
 //-----------------------------------//
 
-void Session::handleConnection()
+SessionHash* Session::getHash()
 {
-	lastConnection = TimerGetCurrentTimeMs();
+    if(!hasHash)
+        return nullptr;
+
+    return &hash;
+}
+
+//-----------------------------------//
+
+void Session::setHash(const SessionHash& newHash)
+{
+    assert(!hasHash);
+    hash = newHash;
+    hasHash = true;
 }
 
 //-----------------------------------//

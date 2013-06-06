@@ -7,19 +7,23 @@
 
 #pragma once
 
+#include "Core/API.h"
+#include "Session.h"
+#include "SessionManager.h"
 #include "Core/References.h"
-#include "Core/Concurrency.h"
-#include "Core/ConcurrentQueue.h"
 #include "Core/Event.h"
-#include "Core/Network/Peer.h"
+#include "Core/String.h"
 
 typedef struct _ENetHost ENetHost;
 typedef struct _ENetEvent ENetEvent;
 
-FWD_DECL_INTRUSIVE(Packet)
 FWD_DECL_INTRUSIVE(Peer)
+FWD_DECL_INTRUSIVE(Packet)
+FWD_DECL_INTRUSIVE(Session)
 
 NAMESPACE_CORE_BEGIN
+
+class PacketProcessors;
 
 //-----------------------------------//
 
@@ -27,6 +31,8 @@ NAMESPACE_CORE_BEGIN
 class API_CORE  Host : public ReferenceCounted
 {
 public:
+
+	~Host();
 
 	// Destroys the current socket.
 	bool destroySocket();
@@ -40,23 +46,30 @@ public:
 	// Returns if the host has a networking context.
 	bool hasContext();
 
+	Event1<const PeerPtr&> onPeerConnect;
+	Event1<const PeerPtr&> onPeerDisconnect;
+	Event3<const PeerPtr&, const PacketPtr&, int> onPeerPacket;
+
 protected:
 
 	Host();
-	~Host();
 
 	// High-level events.
 	virtual void onConnected(const PeerPtr&) {}
 	virtual void onDisconnected(const PeerPtr&) {}
-	virtual void onPacket(const PeerPtr&, const PacketPtr&) {}
+
+	// Host context.
+	ENetHost* host;
+
+	PacketProcessors* processors;
+
+private:
 
 	// Low-level events.
 	void handleConnectEvent(ENetEvent* event);
 	void handleDisconnectEvent(ENetEvent* event);
 	void handleReceiveEvent(ENetEvent* event);
 
-	// Host context.
-	ENetHost* host;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Host )
@@ -90,6 +103,8 @@ struct FLD_VALUE_TYPE HostConnectionDetails
 	{}
 };
 
+//-----------------------------------//
+
 // Clients connect to hosts.
 class API_CORE HostClient : public Host
 {
@@ -100,24 +115,17 @@ public:
 	// Connects the client to a remote host.
 	bool connect( const HostConnectionDetails& );
 
-	// Gets the network peer.
-	GETTER(Peer, const PeerPtr&, peer)
-
-	// Gets the client state.
-	ACCESSOR(State, HostState, state)
-
-	Event1<const PeerPtr&> onClientConnected;
-	Event1<const PeerPtr&> onClientDisconnected; 
-	Event2<const PeerPtr&, const PacketPtr&> onServerPacket;
+	GETTER(Peer, PeerPtr, peer);
+	GETTER(Session, Session*, session);
 
 protected:
 
 	void onConnected(const PeerPtr&) OVERRIDE;
 	void onDisconnected(const PeerPtr&) OVERRIDE;
-	void onPacket(const PeerPtr&, const PacketPtr&) OVERRIDE;
 
-	PeerPtr peer;
 	HostState state;
+	PeerPtr peer;
+	Session* session;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostClient )
@@ -132,21 +140,16 @@ public:
 	// Creates a new socket.
 	bool createSocket( const HostConnectionDetails& );
 
-	// Gets the network peers.
-	GETTER(Peers, const NetworkPeers&, peers)
-
-	Event1<const PeerPtr&> onClientConnected;
-	Event1<const PeerPtr&> onClientDisconnected; 
-	Event2<const PeerPtr&, const PacketPtr&> onClientPacket;
+	GETTER(Peers, const std::vector<PeerPtr>&, peers);
+	SessionManager& getSessionManager() { return sessions; }
 
 protected:
 
 	void onConnected(const PeerPtr&) OVERRIDE;
 	void onDisconnected(const PeerPtr&) OVERRIDE;
-	void onPacket(const PeerPtr&, const PacketPtr&) OVERRIDE;	
 
-	// Network peers.
-	NetworkPeers peers;
+	std::vector<PeerPtr> peers;
+	SessionManager sessions;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostServer )

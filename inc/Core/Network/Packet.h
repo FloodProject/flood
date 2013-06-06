@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Core/API.h"
-
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Serialization.h"
@@ -16,7 +15,6 @@
 struct _ENetPacket;
 typedef _ENetPacket ENetPacket;
 
-FWD_DECL_INTRUSIVE(Session)
 FWD_DECL_INTRUSIVE(Packet)
 
 NAMESPACE_CORE_BEGIN
@@ -31,6 +29,7 @@ enum class FLD_FLAGS PacketFlags : uint8
 	Encrypted	= 1 << 1,
 	Compressed	= 1 << 2,
 	Reliable	= 1 << 3,
+	Signed		= 1 << 4,
 };
 
 class API_CORE Packet : public ReferenceCounted
@@ -41,28 +40,34 @@ public:
 	~Packet();
 
 	// Writes an object to the packet.
-	void FLD_IGNORE write(const Object* object);
+	FLD_IGNORE void write(const Object* object);
 
 	// Accesses the packet flags.
 	ACCESSOR(Flags, PacketFlags, flags)
+
+	// Accesses the packet processed flags.
+	ACCESSOR(ProcessedFlags, PacketFlags, processedFlags)
 
 	// Accesses the packet id.
 	GETTER(Id, PacketId, id)
 
 	// Gets the internal packet.
-	GETTER(Packet, ENetPacket* FLD_IGNORE, packet)
+	FLD_IGNORE GETTER(Packet, ENetPacket*, packet)
+
+	// Gets the packet memory stream.
+	FLD_IGNORE GETTER(MemoryStream, MemoryStream*, ms)
 
 	// Creates a network packet.
-	void FLD_IGNORE createPacket();
+	FLD_IGNORE void createPacket();
 
 	// Sets the internal packet.
-	void FLD_IGNORE setPacket(ENetPacket* packet);
+	FLD_IGNORE void setPacket(ENetPacket* packet);
 
 	// Prepares the packet for sending.
-	void FLD_IGNORE prepare();
+	FLD_IGNORE void prepare();
 
 	// Writes a POD type to the packet.
-	template<typename T> void FLD_IGNORE writeRaw(const T& pod)
+	FLD_IGNORE template<typename T> void writeRaw(const T& pod)
 	{
 		ms->data.resize(ms->data.size() + sizeof(T));
 		memcpy(&ms->data[0] + ms->position, &pod, sizeof(T));
@@ -70,15 +75,27 @@ public:
 	}
 
 	// Reads a POD type from the packet.
-	template<typename T> T* FLD_IGNORE readRaw()
+	FLD_IGNORE template<typename T> T* readRaw()
 	{
 		T* pod = (T*)(&ms->data[0] + ms->position);
 		ms->position += sizeof(T);
 		return pod;
 	}
 
+	// Returns the size of the packet's data.
+	int size() const;
+
+	// Clears all the packet's data.
+	void clear();
+
+	// Appends new data to the packet.
+	FLD_IGNORE void write(byte* data, int size);
+
+	// Appends new data to the packet.
 	void write(std::vector<byte>& data);
-	std::vector<byte> read();
+
+	// Returns a copy of the packet's data
+	std::vector<byte> read() const;
 
 private:
 
@@ -87,6 +104,9 @@ private:
 
 	// Packet flags.
 	PacketFlags flags;
+
+	// Packet processed flags.
+	PacketFlags processedFlags;
 
 	// Packet data.
 	MemoryStream* ms;

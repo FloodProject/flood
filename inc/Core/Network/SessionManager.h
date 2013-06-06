@@ -15,9 +15,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map<PeerPtr, SessionPtr> SessionsMap;
-
-class SessionManager
+class API_CORE SessionManager
 {
 public:
 
@@ -25,13 +23,13 @@ public:
 	~SessionManager();
 
 	// Adds a session to the manager.
-	void addSession(const SessionPtr& session);
+	FLD_IGNORE void addSession(const SessionPtr& session);
 
 	// Removes a session from the manager.
-	void removeSession(const SessionPtr& session);
+	FLD_IGNORE void removeSession(const SessionPtr& session);
 
-	// Gets a session from a network peer.
-	SessionPtr getSession(const PeerPtr& peer);
+	// Gets a session with a given hash.
+	Session* SessionManager::getSession(const SessionHash& hash) const;
 
 	// Sent when a session is added.
 	Event1<const SessionPtr&> onSessionAdded;
@@ -40,8 +38,7 @@ public:
 	Event1<const SessionPtr&> onSessionRemoved;
 
 protected:
-
-	SessionsMap sessions;
+	 std::map<SessionHash, SessionPtr> sessions;
 };
 
 //-----------------------------------//
