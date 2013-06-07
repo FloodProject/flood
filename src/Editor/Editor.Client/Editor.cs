@@ -1,5 +1,5 @@
 ﻿using Flood.Editor.Client.Gui;
-using Flood.Extensions;
+using Mono.Addins;
 using System;
 using System.IO;
 using System.Reflection;
@@ -65,11 +65,36 @@ namespace Flood.Editor.Client
 
         private void InitializeAddins()
         {
-            var libdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var addinsPath = Path.Combine(libdir,"Addins");
+            AddinManager.AddinLoadError += OnLoadError;
+            AddinManager.AddinLoaded += OnLoad;
+            AddinManager.AddinUnloaded += OnUnload;
 
-            ExtensionLoader.LoadAssemblies(addinsPath);
-            ExtensionLoader.InitAssembliesExtensions();
+            var libdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //var addinsPath = Path.Combine(libdir,"Addins");
+
+            AddinManager.Initialize(libdir, libdir);
+            AddinManager.Registry.Update(null);
+            AddinManager.ExtensionChanged += OnExtensionChange;
+        }
+
+        static void OnLoadError (object s, AddinErrorEventArgs args)
+        {
+            Log.Error("Error loading add-in: " + args.Message);
+        }
+
+        static void OnLoad (object s, AddinEventArgs args)
+        {
+            Log.Info("Add-in loaded: " + args.AddinId);
+        }
+
+        static void OnUnload (object s, AddinEventArgs args)
+        {
+            Log.Info("Add-in unloaded: " + args.AddinId);
+        }
+
+        static void OnExtensionChange (object s, ExtensionEventArgs args)
+        {
+            Log.Info("Extension changed: " + args.Path);
         }
     }
 }
