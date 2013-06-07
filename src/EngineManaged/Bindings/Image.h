@@ -16,8 +16,11 @@ namespace Flood
     enum struct PixelFormat;
     enum struct ResourceGroup;
     ref class Allocator;
+    ref class Enum;
+    ref class Handle;
     ref class Image;
     ref class ImageWriter;
+    ref class RefPtr;
     ref class Resource;
     value struct Color;
     value struct Vector2i;
@@ -58,10 +61,9 @@ namespace Flood
         void SetHeight(unsigned int v);
         Flood::PixelFormat GetPixelFormat();
         void SetPixelFormat(Flood::PixelFormat v);
-        System::Collections::Generic::List<unsigned char>^ GetBuffer0();
+        System::Collections::Generic::List<unsigned char>^ GetBuffer();
         void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
         bool IsCompressed();
-        System::Collections::Generic::List<unsigned char>^ GetBuffer();
         void SetBuffer(System::IntPtr data);
         void SetBuffer(System::IntPtr data, unsigned int stride);
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);

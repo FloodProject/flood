@@ -14,6 +14,7 @@ namespace Flood
 {
     ref class BufferManager;
     ref class ProgramManager;
+    ref class RefPtr;
     ref class RenderBackend;
     ref class RenderBuffer;
     ref class RenderCapabilities;

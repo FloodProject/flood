@@ -98,14 +98,14 @@ void Flood::Keyboard::KeyRelease::remove(System::Action<Flood::KeyEvent^>^ evt)
     _KeyRelease = static_cast<System::Action<Flood::KeyEvent^>^>(System::Delegate::Remove(_KeyRelease, evt));
 }
 
-void Flood::Keyboard::KeyRelease::raise(Flood::KeyEvent^ _1)
+void Flood::Keyboard::KeyRelease::raise(Flood::KeyEvent^ _0)
 {
-    _KeyRelease(_1);
+    _KeyRelease(_0);
 }
 
-void Flood::Keyboard::_KeyReleaseRaise(const ::KeyEvent& _1)
+void Flood::Keyboard::_KeyReleaseRaise(const ::KeyEvent& _0)
 {
-    KeyRelease::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_1));
+    KeyRelease::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_0));
 }
 
 void Flood::Keyboard::KeyText::add(System::Action<Flood::KeyEvent^>^ evt)
@@ -124,13 +124,13 @@ void Flood::Keyboard::KeyText::remove(System::Action<Flood::KeyEvent^>^ evt)
     _KeyText = static_cast<System::Action<Flood::KeyEvent^>^>(System::Delegate::Remove(_KeyText, evt));
 }
 
-void Flood::Keyboard::KeyText::raise(Flood::KeyEvent^ _2)
+void Flood::Keyboard::KeyText::raise(Flood::KeyEvent^ _0)
 {
-    _KeyText(_2);
+    _KeyText(_0);
 }
 
-void Flood::Keyboard::_KeyTextRaise(const ::KeyEvent& _2)
+void Flood::Keyboard::_KeyTextRaise(const ::KeyEvent& _0)
 {
-    KeyText::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_2));
+    KeyText::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_0));
 }
 

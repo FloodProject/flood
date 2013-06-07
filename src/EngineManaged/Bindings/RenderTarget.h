@@ -12,18 +12,14 @@
 
 namespace Flood
 {
+    ref class Event1;
+    ref class RefPtr;
     ref class RenderContext;
     ref class RenderTarget;
     ref class RenderView;
     value struct Settings;
     value struct Vector2i;
 
-    /// <summary>
-    /// Render targets are surfaces where the rendered images can be stored and/or
-    /// displayed. The most common use is windows, but there are also FBOs, which
-    /// are basically offscreen buffers where you can render to. Each render target
-    /// mantains a list of viewports.
-    /// </summary>
     public value struct Settings
     {
     public:
@@ -53,7 +49,7 @@ namespace Flood
         {
             void add(System::Action<Flood::Settings>^ evt);
             void remove(System::Action<Flood::Settings>^ evt);
-            void raise(Flood::Settings _0);
+            void raise(Flood::Settings);
         }
         Flood::RenderView^ CreateView();
         void RemoveViews();

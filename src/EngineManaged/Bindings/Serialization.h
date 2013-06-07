@@ -29,6 +29,8 @@ namespace Flood
         ElementEnd = 4
     };
 
+    public delegate unsigned int ReflectionDeserializeHandleFn(System::String^ _1);
+
     public ref class ReflectionHandleContext
     {
     public:
@@ -37,6 +39,11 @@ namespace Flood
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
         ReflectionHandleContext();
+        property Flood::ReflectionDeserializeHandleFn^ Deserialize
+        {
+            Flood::ReflectionDeserializeHandleFn^ get();
+            void set(Flood::ReflectionDeserializeHandleFn^);
+        }
     };
 
 }

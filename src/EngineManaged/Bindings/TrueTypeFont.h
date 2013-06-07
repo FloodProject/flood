@@ -15,6 +15,7 @@ namespace Flood
 {
     ref class Font;
     ref class FontInfo;
+    ref class Handle;
     ref class Image;
     ref class TrueTypeFont;
     value struct Glyph;

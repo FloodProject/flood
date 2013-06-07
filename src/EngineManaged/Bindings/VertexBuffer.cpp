@@ -91,6 +91,11 @@ Flood::VertexDeclaration::VertexDeclaration(System::IntPtr native)
     NativePtr = __native;
 }
 
+Flood::VertexDeclaration::VertexDeclaration()
+{
+    NativePtr = new ::VertexDeclaration();
+}
+
 void Flood::VertexDeclaration::Add(Flood::VertexAttribute _0, int numComponents)
 {
     auto arg0 = (::VertexAttribute)_0;
@@ -148,11 +153,6 @@ unsigned char Flood::VertexDeclaration::GetVertexSize()
 void Flood::VertexDeclaration::CalculateStrides()
 {
     ((::VertexDeclaration*)NativePtr)->calculateStrides();
-}
-
-Flood::VertexDeclaration::VertexDeclaration()
-{
-    NativePtr = new ::VertexDeclaration();
 }
 
 System::Collections::Generic::List<Flood::VertexElement>^ Flood::VertexDeclaration::Decls::get()

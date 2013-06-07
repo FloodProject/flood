@@ -16,6 +16,7 @@ namespace Flood
     enum struct BufferUsage : unsigned char;
     ref class Buffer;
     ref class GeometryBuffer;
+    ref class RefPtr;
 
     /// <summary>
     /// "Static" means the data in VBO will not be changed (specified once and used
@@ -45,12 +46,6 @@ namespace Flood
         ReadWrite = 2
     };
 
-    /// <summary>
-    /// Represents a buffer of data stored in memory. They mainly store rendering
-    /// data given to the render API. The buffers may be stored in different kinds
-    /// of memory, like system RAM or video RAM, depending on the usage and type
-    /// flags that they are created with.
-    /// </summary>
     public ref class Buffer
     {
     public:

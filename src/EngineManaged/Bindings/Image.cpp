@@ -79,7 +79,7 @@ void Flood::Image::SetPixelFormat(Flood::PixelFormat v)
     ((::Image*)NativePtr)->setPixelFormat(arg0);
 }
 
-System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer0()
+System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer()
 {
     auto &ret = ((::Image*)NativePtr)->getBuffer();
     auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
@@ -107,18 +107,6 @@ bool Flood::Image::IsCompressed()
 {
     auto ret = ((::Image*)NativePtr)->isCompressed();
     return ret;
-}
-
-System::Collections::Generic::List<unsigned char>^ Flood::Image::GetBuffer()
-{
-    auto &ret = ((::Image*)NativePtr)->getBuffer();
-    auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
-    for(auto _element : ret)
-    {
-        auto _marshalElement = _element;
-        _tmpret->Add(_marshalElement);
-    }
-    return _tmpret;
 }
 
 void Flood::Image::SetBuffer(System::IntPtr data)
@@ -218,15 +206,15 @@ Flood::ImageWriter::ImageWriter(System::IntPtr native)
     NativePtr = __native;
 }
 
+Flood::ImageWriter::ImageWriter()
+{
+    NativePtr = new ::ImageWriter();
+}
+
 bool Flood::ImageWriter::Convert(Flood::Image^ image)
 {
     auto arg0 = (::Image*)image->NativePtr;
     auto ret = ((::ImageWriter*)NativePtr)->convert(arg0);
     return ret;
-}
-
-Flood::ImageWriter::ImageWriter()
-{
-    NativePtr = new ::ImageWriter();
 }
 

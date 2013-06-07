@@ -16,6 +16,7 @@ namespace Flood
     enum struct StreamSeekMode;
     ref class Allocator;
     ref class FileStream;
+    ref class scoped_ptr;
 
     /// <summary>
     /// Use these for different kinds of access to the streams.

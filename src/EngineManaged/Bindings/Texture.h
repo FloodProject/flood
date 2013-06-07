@@ -18,7 +18,9 @@ namespace Flood
     enum struct TextureMipMode;
     enum struct TextureTarget;
     enum struct TextureWrapMode;
+    ref class Handle;
     ref class Image;
+    ref class RefPtr;
     ref class Texture;
     ref class TextureUnit;
     value struct Vector2i;
@@ -63,6 +65,7 @@ namespace Flood
         Texture(::Texture* native);
         Texture(System::IntPtr native);
         Texture();
+        ~Texture(){}
         property unsigned int Id
         {
             unsigned int get();

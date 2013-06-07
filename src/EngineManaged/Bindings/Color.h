@@ -8,7 +8,6 @@
 #pragma once
 
 #include <Core/Math/Color.h>
-#include "RenderContext.h"
 #include "ResourceHandle.h"
 
 namespace Flood

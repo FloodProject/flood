@@ -21,6 +21,7 @@ namespace Flood
     enum struct DepthCompare;
     enum struct ResourceGroup;
     ref class Allocator;
+    ref class Handle;
     ref class Image;
     ref class Material;
     ref class Resource;

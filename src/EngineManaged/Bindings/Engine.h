@@ -18,6 +18,7 @@ namespace Flood
     ref class Log;
     ref class PageManager;
     ref class PhysicsManager;
+    ref class RefPtr;
     ref class RenderDevice;
     ref class ResourceManager;
     ref class Scene;

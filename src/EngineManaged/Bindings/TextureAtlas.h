@@ -15,8 +15,9 @@
 namespace Flood
 {
     enum struct PixelFormat;
-    ref class CompareHandle;
+    ref class Handle;
     ref class Image;
+    ref class MaxRectsBinPack;
     ref class TextureAtlas;
     value struct Rectangle;
     value struct SubTexture;

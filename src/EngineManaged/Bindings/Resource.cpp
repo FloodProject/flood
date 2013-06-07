@@ -49,16 +49,12 @@ void Flood::Resource::SetStatus(Flood::ResourceStatus v)
     ((::Resource*)NativePtr)->setStatus(arg0);
 }
 
-// Gets if the resource is fully loaded.
-// Gets if the resource is fully loaded.
 bool Flood::Resource::IsLoaded()
 {
     auto ret = ((::Resource*)NativePtr)->isLoaded();
     return ret;
 }
 
-// Gets the resource group associated with this resource.
-// Gets the resource group associated with this resource.
 Flood::ResourceGroup Flood::Resource::GetResourceGroup()
 {
     auto ret = ((::Resource*)NativePtr)->getResourceGroup();
@@ -70,6 +66,12 @@ Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate()
     auto arg0 = (::Resource*)NativePtr;
     auto ret = ::ResourceHandleCreate(arg0);
     return Flood::ResourceHandle<Flood::Resource^>(ret.id);
+}
+
+void Flood::Resource::HandleDestroy(unsigned int id)
+{
+    auto arg0 = (HandleId)(uint32)id;
+    ::ResourceHandleDestroy(arg0);
 }
 
 System::String^ Flood::Resource::Path::get()
@@ -90,15 +92,5 @@ Flood::ResourceStatus Flood::Resource::Status::get()
 void Flood::Resource::Status::set(Flood::ResourceStatus value)
 {
     ((::Resource*)NativePtr)->status = (::ResourceStatus)value;
-}
-
-Flood::ResourceStream^ Flood::Resource::Stream::get()
-{
-    return gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);
-}
-
-void Flood::Resource::Stream::set(Flood::ResourceStream^ value)
-{
-    ((::Resource*)NativePtr)->stream = (::ResourceStream*)value->NativePtr;
 }
 

@@ -39,26 +39,16 @@ Flood::Rectangle::Rectangle(int x, int y, int width, int height)
     this->Height = _native.height;
 }
 
-// Returns true if this rectangle is contained in rect.
-// Returns true if this rectangle is contained in rect.
 bool Flood::Rectangle::IsContainedIn(Flood::Rectangle rect)
 {
-    auto _this0 = ::Rectangle();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.width = (*this).Width;
-    _this0.height = (*this).Height;
+    auto this0 = (::Rectangle*) 0;
     auto _marshal0 = ::Rectangle();
     _marshal0.x = rect.X;
     _marshal0.y = rect.Y;
     _marshal0.width = rect.Width;
     _marshal0.height = rect.Height;
     auto arg0 = _marshal0;
-    auto ret = _this0.isContainedIn(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Width = _this0.width;
-    Height = _this0.height;
+    auto ret = this0->isContainedIn(arg0);
     return ret;
 }
 
@@ -88,26 +78,16 @@ Flood::RectangleF::RectangleF(float x, float y, float width, float height)
     this->Height = _native.height;
 }
 
-// Returns true if this rectangle is contained in rect.
-// Returns true if this rectangle is contained in rect.
 bool Flood::RectangleF::IsContainedIn(Flood::RectangleF rect)
 {
-    auto _this0 = ::RectangleF();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.width = (*this).Width;
-    _this0.height = (*this).Height;
+    auto this0 = (::RectangleF*) 0;
     auto _marshal0 = ::RectangleF();
     _marshal0.x = rect.X;
     _marshal0.y = rect.Y;
     _marshal0.width = rect.Width;
     _marshal0.height = rect.Height;
     auto arg0 = _marshal0;
-    auto ret = _this0.isContainedIn(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Width = _this0.width;
-    Height = _this0.height;
+    auto ret = this0->isContainedIn(arg0);
     return ret;
 }
 

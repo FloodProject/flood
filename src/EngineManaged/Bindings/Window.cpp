@@ -191,13 +191,13 @@ void Flood::Window::WindowFocusChange::remove(System::Action<bool>^ evt)
     _WindowFocusChange = static_cast<System::Action<bool>^>(System::Delegate::Remove(_WindowFocusChange, evt));
 }
 
-void Flood::Window::WindowFocusChange::raise(bool _2)
+void Flood::Window::WindowFocusChange::raise(bool _0)
 {
-    _WindowFocusChange(_2);
+    _WindowFocusChange(_0);
 }
 
-void Flood::Window::_WindowFocusChangeRaise(bool _2)
+void Flood::Window::_WindowFocusChangeRaise(bool _0)
 {
-    WindowFocusChange::raise(_2);
+    WindowFocusChange::raise(_0);
 }
 

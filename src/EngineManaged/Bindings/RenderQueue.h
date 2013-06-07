@@ -26,12 +26,6 @@ namespace Flood
     value struct RenderState;
 
     /// <summary>
-    /// This is a queue of objects that are usually returned by performing a
-    /// culling operation on the camera. Each.renderable can be assigned a
-    /// different priority to be rendered on different times. For example you might
-    /// want to render the GUI after everything else is rendered.
-    /// </summary>
-    /// <summary>
     /// This contains all the rendering state information that is needed by the
     /// rendering device to properly render the associated.renderable. This should
     /// be set by the camera and then appended to a render queue where it will be

@@ -10,7 +10,7 @@ namespace EngineBindings.Tests
     public class NetworkTests
     {
         [Test]
-        public void TestPeerConnection()
+        public void Test()
         {
             FloodNetwork.NetworkInitialize();
 
@@ -28,8 +28,8 @@ namespace EngineBindings.Tests
             {
                 bool clientConnected = false;
                 bool serverConnected = false;
-                hostClient.PeerConnect += peer => clientConnected = true;
-                hostServer.PeerConnect += peer => serverConnected = true;
+                hostClient.ClientConnected += peer => clientConnected = true;
+                hostServer.ClientConnected += peer => serverConnected = true;
 
                 var watch = Stopwatch.StartNew();
                 while (watch.ElapsedMilliseconds < 20)
@@ -51,7 +51,7 @@ namespace EngineBindings.Tests
                 var packetReceivedId = -1;
                 var packetReceiveString = "";
 
-                hostServer.PeerPacket += (session, packet, channel) =>
+                hostServer.ClientPacket += (peer, packet) =>
                                            {
                                                packetReceived = true;
                                                packetReceivedId = packet.GetId();
@@ -62,42 +62,7 @@ namespace EngineBindings.Tests
                 var p = new Packet(packetId);
                 p.Write(new List<byte>(Encoding.ASCII.GetBytes(packetString)));
 
-                hostClient.GetPeer().QueuePacket(p, 0);
-
-                var watch = Stopwatch.StartNew();
-                while (watch.ElapsedMilliseconds < 20)
-                {
-                    hostClient.ProcessEvents(1);
-                    hostServer.ProcessEvents(1);
-                }
-
-                Assert.IsTrue(packetReceived);
-                Assert.AreEqual(packetId,packetReceivedId);
-                Assert.AreEqual(packetString,packetReceiveString);
-            }
-
-            //Test Encrypted Packet
-            {
-                const ushort packetId = 13;
-                const string packetString = "message";
-
-                var packetReceived = false;
-                var packetReceivedId = -1;
-                var packetReceiveString = "";
-
-                hostServer.PeerPacket += (session, packet, channel) =>
-                                           {
-                                               packetReceived = true;
-                                               packetReceivedId = packet.GetId();
-                                               var bytes = packet.Read();
-                                               packetReceiveString = Encoding.UTF8.GetString(bytes.ToArray(),0,bytes.Count);
-                                           };
-
-                var p = new Packet(packetId);
-                p.SetFlags(PacketFlags.Encrypted);
-                p.Write(new List<byte>(Encoding.ASCII.GetBytes(packetString)));
-
-                hostClient.GetPeer().QueuePacket(p, 0);
+                hostClient.GetPeer().QueuePacket(p, 1);
 
                 var watch = Stopwatch.StartNew();
                 while (watch.ElapsedMilliseconds < 20)

@@ -18,7 +18,9 @@ namespace Flood
     enum struct RenderLayer : unsigned char;
     ref class Allocator;
     ref class GeometryBuffer;
+    ref class Handle;
     ref class Material;
+    ref class RefPtr;
     ref class RenderBatch;
     ref class RenderView;
     ref class UniformBuffer;
