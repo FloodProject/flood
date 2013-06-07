@@ -16,7 +16,6 @@ namespace Flood
     enum struct VertexAttribute : unsigned char;
     enum struct VertexDataType : unsigned char;
     ref class Buffer;
-    ref class RefPtr;
     ref class VertexBuffer;
     ref class VertexDeclaration;
     value struct VertexElement;
@@ -49,6 +48,11 @@ namespace Flood
         Integer = 2
     };
 
+    /// <summary>
+    /// Represents a vertex buffer. One limitation here is that all data is tied to
+    /// the vertex so if you want a normal per primitive and not per vertex you
+    /// will have to duplicate that normal for each vertex for now.
+    /// </summary>
     /// <summary>
     /// Each element inside a vertex declaration.
     /// </summary>

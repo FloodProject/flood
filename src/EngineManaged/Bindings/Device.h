@@ -13,7 +13,6 @@
 namespace Flood
 {
     enum struct InputDeviceType;
-    ref class Enum;
     ref class InputDevice;
     ref class InputEvent;
 

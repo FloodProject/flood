@@ -18,7 +18,6 @@ namespace Flood
     enum struct BufferUsage : unsigned char;
     enum struct VertexAttribute : unsigned char;
     ref class GeometryBuffer;
-    ref class RefPtr;
     ref class VertexDeclaration;
 
     /// <summary>

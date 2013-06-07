@@ -68,11 +68,6 @@ Flood::RenderBlock::RenderBlock(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::RenderBlock::RenderBlock()
-{
-    NativePtr = new ::RenderBlock();
-}
-
 void Flood::RenderBlock::AddState(Flood::RenderState renderState)
 {
     auto _marshal0 = ::RenderState();
@@ -97,6 +92,11 @@ void Flood::RenderBlock::AddState(Flood::RenderState renderState)
     _marshal0.priority = (int32)renderState.Priority;
     auto arg0 = _marshal0;
     ((::RenderBlock*)NativePtr)->addState(arg0);
+}
+
+Flood::RenderBlock::RenderBlock()
+{
+    NativePtr = new ::RenderBlock();
 }
 
 System::Collections::Generic::List<Flood::RenderState>^ Flood::RenderBlock::Renderables::get()

@@ -206,15 +206,15 @@ Flood::ImageWriter::ImageWriter(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::ImageWriter::ImageWriter()
-{
-    NativePtr = new ::ImageWriter();
-}
-
 bool Flood::ImageWriter::Convert(Flood::Image^ image)
 {
     auto arg0 = (::Image*)image->NativePtr;
     auto ret = ((::ImageWriter*)NativePtr)->convert(arg0);
     return ret;
+}
+
+Flood::ImageWriter::ImageWriter()
+{
+    NativePtr = new ::ImageWriter();
 }
 

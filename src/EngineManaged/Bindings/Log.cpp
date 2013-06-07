@@ -139,13 +139,13 @@ void Flood::Log::Handlers::remove(System::Action<Flood::LogEntry>^ evt)
     _Handlers = static_cast<System::Action<Flood::LogEntry>^>(System::Delegate::Remove(_Handlers, evt));
 }
 
-void Flood::Log::Handlers::raise(Flood::LogEntry _0)
+void Flood::Log::Handlers::raise(Flood::LogEntry _1)
 {
-    _Handlers(_0);
+    _Handlers(_1);
 }
 
-void Flood::Log::_HandlersRaise(::LogEntry* _0)
+void Flood::Log::_HandlersRaise(::LogEntry* _1)
 {
-    Handlers::raise(Flood::LogEntry((::LogEntry*)_0));
+    Handlers::raise(Flood::LogEntry((::LogEntry*)_1));
 }
 

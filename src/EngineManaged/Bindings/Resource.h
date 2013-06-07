@@ -14,8 +14,6 @@ namespace Flood
 {
     enum struct ResourceGroup;
     enum struct ResourceStatus;
-    ref class Enum;
-    ref class Handle;
     ref class Resource;
     ref class ResourceStream;
 
@@ -83,13 +81,26 @@ namespace Flood
             Flood::ResourceStatus get();
             void set(Flood::ResourceStatus);
         }
+        /// <summary>
+        /// Resource stream.
+        /// </summary>
+        property Flood::ResourceStream^ Stream
+        {
+            Flood::ResourceStream^ get();
+            void set(Flood::ResourceStream^);
+        }
         System::String^ GetPath();
         void SetPath(System::String^ v);
         Flood::ResourceStatus GetStatus();
         void SetStatus(Flood::ResourceStatus v);
+        /// <summary>
+        /// Gets if the resource is fully loaded.
+        /// </summary>
         bool IsLoaded();
+        /// <summary>
+        /// Gets the resource group associated with this resource.
+        /// </summary>
         Flood::ResourceGroup GetResourceGroup();
         Flood::ResourceHandle<Flood::Resource^> HandleCreate();
-        static void HandleDestroy(unsigned int id);
     };
 }

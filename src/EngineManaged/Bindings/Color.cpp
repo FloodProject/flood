@@ -7,6 +7,7 @@
 
 #include "_Marshal.h"
 #include "Color.h"
+#include "RenderContext.h"
 #include "ResourceHandle.h"
 #include "Vector.h"
 

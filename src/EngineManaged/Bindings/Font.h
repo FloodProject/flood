@@ -16,7 +16,6 @@ namespace Flood
 {
     enum struct ResourceGroup;
     ref class Font;
-    ref class Handle;
     ref class Image;
     ref class Resource;
     value struct Glyph;

@@ -16,11 +16,8 @@ namespace Flood
     enum struct PixelFormat;
     enum struct ResourceGroup;
     ref class Allocator;
-    ref class Enum;
-    ref class Handle;
     ref class Image;
     ref class ImageWriter;
-    ref class RefPtr;
     ref class Resource;
     value struct Color;
     value struct Vector2i;

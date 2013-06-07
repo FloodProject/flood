@@ -14,7 +14,6 @@ namespace Flood
 {
     enum struct LogLevel;
     ref class Allocator;
-    ref class Event1;
     ref class Log;
     ref class Mutex;
     ref class Timer;
@@ -50,16 +49,16 @@ namespace Flood
         Log(System::IntPtr native);
         Log();
     private:
-        delegate void _HandlersDelegate(::LogEntry* _0);
+        delegate void _HandlersDelegate(::LogEntry* _1);
         _HandlersDelegate^ _HandlersDelegateInstance;
-        void _HandlersRaise(::LogEntry* _0);
+        void _HandlersRaise(::LogEntry* _1);
         System::Action<Flood::LogEntry>^ _Handlers;
     public:
         event System::Action<Flood::LogEntry>^ Handlers
         {
             void add(System::Action<Flood::LogEntry>^ evt);
             void remove(System::Action<Flood::LogEntry>^ evt);
-            void raise(Flood::LogEntry);
+            void raise(Flood::LogEntry _1);
         }
         void Destroy();
         void AddHandler(Flood::LogFunction^ _1);

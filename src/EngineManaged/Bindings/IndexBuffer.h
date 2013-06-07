@@ -16,7 +16,6 @@ namespace Flood
     ref class Buffer;
     ref class GeometryBuffer;
     ref class IndexBuffer;
-    ref class RefPtr;
 
     public ref class IndexBuffer : Flood::Buffer
     {
