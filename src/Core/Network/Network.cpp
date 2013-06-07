@@ -10,6 +10,10 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 
+#if defined(PLATFORM_WINDOWS) && !defined(WIN32)
+#define WIN32
+#endif
+
 #include <enet/enet.h>
 
 NAMESPACE_CORE_BEGIN

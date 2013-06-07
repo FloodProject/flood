@@ -15,6 +15,10 @@
 #include "Core/Network/PacketProcessor.h"
 #include "Core/Network/Processors/PacketKeyExchanger.h"
 
+#if defined(PLATFORM_WINDOWS) && !defined(WIN32)
+#define WIN32
+#endif
+
 #include <enet/enet.h>
 
 NAMESPACE_CORE_BEGIN

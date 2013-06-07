@@ -12,6 +12,10 @@
 #include "Core/SerializationHelpers.h"
 #include "Core/Utilities.h"
 
+#if defined(PLATFORM_WINDOWS) && !defined(WIN32)
+#define WIN32
+#endif
+
 #define NOMINMAX
 #include <enet/enet.h>
 

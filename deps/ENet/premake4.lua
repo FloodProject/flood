@@ -9,5 +9,9 @@ project "ENet"
   
   kind "StaticLib"
   files { "src/*.c" }
+  language "C"
   includedirs { "include" }
   defines { "ENET_BUILDING_LIB" }
+
+  configuration "windows"
+    defines { "WIN32" }
