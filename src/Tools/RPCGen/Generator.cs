@@ -147,7 +147,7 @@ namespace Flood.Tools.RPCGen
             Type baseType;
             GetInheritedService(type, out baseType);
 
-            Write("public class Client");
+            Write("public class Client : {0}", type.FullName);
 
             if (baseType != null)
                 Write(" : {0}Impl.Client", baseType.Name);
@@ -239,7 +239,7 @@ namespace Flood.Tools.RPCGen
 
         internal void GenerateProtocolReceive(MethodInfo method)
         {
-            Write("public {0} recv_{1}(", ConvertToTypeString(method.ReturnType),
+            Write("private {0} recv_{1}(", ConvertToTypeString(method.ReturnType),
                   method.Name);
             WriteLine(")");
             WriteStartBraceIndent();
@@ -283,7 +283,7 @@ namespace Flood.Tools.RPCGen
 
         internal void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
-            Write("public void send_{0}(", method.Name);
+            Write("private void send_{0}(", method.Name);
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();

@@ -17,6 +17,7 @@ project "RPCGen"
 	links {
 		"System",
 		"EngineManaged",
+		"EngineWeaver",
 		path.join(depsdir,"NUnit","nunit.framework"),
 		path.join(depsdir,"NSubstitute","NSubstitute")
 	}

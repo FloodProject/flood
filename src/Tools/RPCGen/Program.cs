@@ -32,7 +32,7 @@ namespace Flood.Tools.RPCGen
         public string Assembly;
     }
 
-    class Program
+    public class Program
     {
         static void ShowHelp(OptionSet options)
         {
@@ -92,7 +92,17 @@ namespace Flood.Tools.RPCGen
             try
             {
                 var fullPath = Path.GetFullPath(path);
-                assembly = Assembly.LoadFile(fullPath);
+                var pdbPath = Path.ChangeExtension(fullPath,".pdb");
+                var assemblyBytes = File.ReadAllBytes(fullPath);
+                if (File.Exists(pdbPath))
+                {
+                    var pdbBytes = File.ReadAllBytes(pdbPath);
+                    assembly = Assembly.Load(assemblyBytes, pdbBytes);
+                }
+                else
+                {
+                    assembly = Assembly.Load(assemblyBytes);
+                }
             }
             catch 
             {
@@ -103,27 +113,39 @@ namespace Flood.Tools.RPCGen
             return true;
         }
 
-        static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var options = new Options();
 
             if (!ParseCommandLineOptions(args, options))
-                return;
+                return 1;
 
             if (!Directory.Exists(options.OutputDir))
                 Directory.CreateDirectory(options.OutputDir);
 
             Assembly assembly;
             if (!ParseAssembly(options.Assembly, out assembly))
-                return;
+                return 1;
 
             var compiler = new Compiler(options, assembly);
-            compiler.Process();
+
+            try
+            {
+                compiler.Process();
+                compiler.Compile(options.Assembly);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 1;
+            }
+            
 
             if(!string.IsNullOrEmpty(options.MSBuildProjectPath)){
                 MSBuildUpdater.UpdateMSBuild(options.MSBuildProjectPath,compiler.GeneratedFiles);
             }
             
+            return 0;
         }
     }
 }

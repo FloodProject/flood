@@ -18,7 +18,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.CodeDom.Compiler;
+using Microsoft.CSharp;
 using Flood.RPC.Metadata;
+using System.Text;
+using System.Linq;
 
 namespace Flood.Tools.RPCGen
 {
@@ -37,27 +41,30 @@ namespace Flood.Tools.RPCGen
 
         public void Process()
         {
-            foreach (var type in assembly.GetTypes())
+            foreach(var module in assembly.GetModules())
             {
-                var service = type.GetCustomAttribute<ServiceAttribute>();
-                if (service != null)
+                foreach (var type in module.GetTypes())
                 {
-                    Debug.Assert(type.IsInterface);
-                    ProcessService(type);
-                }
+                    var service = type.GetCustomAttribute<ServiceAttribute>();
+                    if (service != null)
+                    {
+                        Debug.Assert(type.IsInterface);
+                        ProcessService(type);
+                    }
 
-                var message = type.GetCustomAttribute<MessageAttribute>();
-                if (message != null)
-                {
-                    Debug.Assert(type.IsValueType || type.IsClass);
-                    ProcessMessage(type);
-                }
+                    var message = type.GetCustomAttribute<MessageAttribute>();
+                    if (message != null)
+                    {
+                        Debug.Assert(type.IsValueType || type.IsClass);
+                        ProcessMessage(type);
+                    }
 
-                var exception = type.GetCustomAttribute<ExceptionAttribute>();
-                if (exception != null)
-                {
-                    Debug.Assert(type.IsClass);
-                    ProcessException(type);
+                    var exception = type.GetCustomAttribute<ExceptionAttribute>();
+                    if (exception != null)
+                    {
+                        Debug.Assert(type.IsClass);
+                        ProcessException(type);
+                    }
                 }
             }
         }
@@ -124,6 +131,55 @@ namespace Flood.Tools.RPCGen
 
             Console.WriteLine("Generated '{0}'", fileName);
         }
-    }
 
+        public void Compile(string assemblyPath)
+        {
+            assemblyPath = Path.GetFullPath(assemblyPath);
+            var generatedAssemblyPath = Path.GetFullPath(Path.GetRandomFileName())+".dll";
+
+            CodeDomProvider provider = new CSharpCodeProvider();
+            CompilerParameters cp = new CompilerParameters()
+            {
+                GenerateExecutable = false,
+                OutputAssembly = generatedAssemblyPath,
+                IncludeDebugInformation = false
+            };
+
+            var dlls = new DirectoryInfo(".").GetFiles("*.dll");
+
+            foreach (var assemblyName in assembly.GetReferencedAssemblies())
+            {
+                string location;
+                var dll = dlls.FirstOrDefault(fi => fi.Name == assemblyName.Name + ".dll");
+                if(dll != null)
+                    location = dll.FullName;
+                else
+                    location = Assembly.Load(assemblyName).Location;
+
+                cp.ReferencedAssemblies.Add(location);
+            }
+            cp.ReferencedAssemblies.Add(assemblyPath);
+
+            try { 
+                CompilerResults cr = provider.CompileAssemblyFromFile(cp, GeneratedFiles.ToArray());
+            
+                if (cr.Errors.HasErrors)
+                {
+                    var message = new StringBuilder();
+                    message.Append("Error compiling generated files.\n");
+                    foreach(var error in cr.Errors)
+                        message.AppendFormat("  {0}\n",error.ToString());
+                    throw new Exception(message.ToString());
+                }
+
+                var weaver = new EngineWeaver.AssemblyWeaver(assemblyPath);
+                weaver.AddAssembly(generatedAssemblyPath);
+                weaver.Write();
+                
+            } finally
+            {
+                File.Delete(generatedAssemblyPath);
+            }
+        }
+    }
 }
