@@ -53,9 +53,8 @@ function SetupRPCGen(projectName,extension)
 
 	local exePath = SafePath("$(TargetDir)" .. "RPCGen.exe")
 	local outPath = SafePath(path.join(gendir,projectName))
-	local projPath = SafePath(path.getabsolute(path.join(".", projectName .. ".csproj")))
 	local dllPath = SafePath("$(TargetDir)" .. projectName .. extension)
-	local command = exePath .. " -o=" .. outPath .. " -msbuild=" .. projPath .. " " .. dllPath;
+	local command = exePath .. " -o=" .. outPath .. " " .. dllPath;
     
 	postbuildcommands { command }
 end

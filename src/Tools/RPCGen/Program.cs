@@ -28,7 +28,6 @@ namespace Flood.Tools.RPCGen
         public bool OutputDebug = false;
         public string OutputNamespace;
         public string OutputDir;
-        public string MSBuildProjectPath;
         public string Assembly;
     }
 
@@ -54,7 +53,6 @@ namespace Flood.Tools.RPCGen
                     { "o|outdir=", v => options.OutputDir = v },
                     { "debug", v => options.OutputDebug = true },
                     // Misc. options
-                    { "m|msbuild=",  v => { options.MSBuildProjectPath = v; } },
                     { "v|verbose",  v => { options.Verbose = true; } },
                     { "h|?|help",   v => options.ShowHelpText = v != null },
                 };
@@ -138,11 +136,6 @@ namespace Flood.Tools.RPCGen
             {
                 Console.WriteLine(e.Message);
                 return 1;
-            }
-            
-
-            if(!string.IsNullOrEmpty(options.MSBuildProjectPath)){
-                MSBuildUpdater.UpdateMSBuild(options.MSBuildProjectPath,compiler.GeneratedFiles);
             }
             
             return 0;
