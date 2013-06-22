@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mono.Cecil;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +7,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DSLToolkit.Util
+namespace EngineWeaver.Util
 {
-    public class DeepCopier
+    public abstract class DeepCopier
     {
-        private object objectMethod;
         private Dictionary<Type, MethodInfo> mergeMethodInfos;
         private Dictionary<Type, MethodInfo> copyMethodInfos;
 
@@ -19,28 +19,23 @@ namespace DSLToolkit.Util
         private readonly Logger log = new Logger(Logger.Level.Info);
         private readonly Logger publicLog = new Logger(Logger.Level.Info);
 
-        public DeepCopier(object obj){
+        public DeepCopier(){
             mergeMethodInfos = new Dictionary<Type, MethodInfo>();
             copyMethodInfos = new Dictionary<Type, MethodInfo>();
             CopyMap = new Dictionary<object,object>();
 
-            objectMethod = obj;
-
-            var type = obj.GetType();
+            var type = this.GetType();
             foreach (var m in type.GetMethods(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance)){
                 if (m.Name.StartsWith("Merge") && 
-                    m.GetParameters().Count() >= 3 &&
-                    m.GetParameters()[0].ParameterType == this.GetType() &&
-                    m.GetParameters()[1].ParameterType == m.GetParameters()[2].ParameterType &&
+                    m.GetParameters().Count() >= 2 &&
+                    m.GetParameters()[0].ParameterType == m.GetParameters()[1].ParameterType &&
                     !m.IsGenericMethod)
                     mergeMethodInfos.Add(m.GetParameters()[1].ParameterType,m);
                  if (m.Name.StartsWith("Copy") && 
-                    m.GetParameters().Count() >= 2 &&
-                     m.GetParameters()[0].ParameterType == this.GetType() &&
+                    m.GetParameters().Count() >= 1 &&
                     !m.IsGenericMethod)
-                    copyMethodInfos.Add(m.GetParameters()[1].ParameterType,m);
+                    copyMethodInfos.Add(m.GetParameters()[0].ParameterType,m);
             }
-          
         }
 
         public void Log(string msg){
@@ -67,10 +62,10 @@ namespace DSLToolkit.Util
 
             var m = mergeMethodInfos[type];
             //try {
-                if(m.GetParameters().Count() == 3){
-                    m.Invoke(objectMethod,new object[]{this, obj1, obj2});
+                if(m.GetParameters().Count() == 2){
+                    m.Invoke(this, new object[]{obj1, obj2});
                 } else {
-                    m.Invoke(objectMethod,new object[]{this, obj1, obj2, data});
+                    m.Invoke(this, new object[]{obj1, obj2, data});
                 }
            // } catch(Exception e){
            //     log.Error(e.ToString());
@@ -102,10 +97,10 @@ namespace DSLToolkit.Util
 
             var m = copyMethodInfos[type];
             object copy = null;
-            if(m.GetParameters().Count() == 2){
-                copy = m.Invoke(objectMethod,new object[]{this, value});
+            if(m.GetParameters().Count() == 1){
+                copy = m.Invoke(this, new object[]{value});
             } else {
-                copy = m.Invoke(objectMethod,new object[]{this, value, data});
+                copy = m.Invoke(this, new object[]{value, data});
             }
             if(copy == null){
                 throw new NullReferenceException();
@@ -259,7 +254,9 @@ namespace DSLToolkit.Util
                     log.Info("> List "+ property.Name);
                     log.Tabs++;
                     foreach(var el in fromList){
-                        toList.Add(Copy(el,data));
+                        var m = el as MemberReference;
+                        var copy = Copy(el,data);
+                        toList.Add(copy);
                     }
                     log.Tabs--;
                     properties.Remove(property);
@@ -268,11 +265,11 @@ namespace DSLToolkit.Util
 
             //Misses
             foreach(FieldInfo field in fields.ToArray()) {
-                 log.Info("Cant copy field "+ field.FieldType +" "+ field.Name);
-             }
-             foreach(PropertyInfo property in properties) {
-                 log.Info("Cant copy property "+ property.Name);
-             }
+                log.Info("Cant copy field "+ field.FieldType +" "+ field.Name);
+            }
+            foreach(PropertyInfo property in properties) {
+                log.Info("Cant copy property "+ property.Name);
+            }
             log.Tabs--;
         }
 

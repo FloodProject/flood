@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Flood;
 
-namespace DSLToolkit.Weaver
+namespace EngineWeaver
 {
     
     public class NotifierWeaver
@@ -99,7 +99,8 @@ namespace DSLToolkit.Weaver
 
             type = destinationEvent.DeclaringType; //can be base type
 
-            var weaver = new TypeWeaver(originType, type);
+            var copier = new CecilCopier(originType.Module,type.Module);
+            var weaver = new TypeWeaver(originType, type, copier);
 
             weaver.ProcessNestedTypes();
 
@@ -126,16 +127,17 @@ namespace DSLToolkit.Weaver
 
             Console.WriteLine(type.FullName);
 
-            var weaver = new TypeWeaver(originType, type);
+            var copier = new CecilCopier(originType.Module,type.Module);
+            var weaver = new TypeWeaver(originType, type, copier);
                     
             foreach(var property in properties)
             {
 
-                weaver.NamePrefix = "<$" + property.Name + "$>";
+                copier.NamePrefix = "<$" + property.Name + "$>";
 
                 var desNotifierMethod =  type.GetMethod(tNotifierMethod.Name);
                          
-                weaver.Map(tNotifierMethod, desNotifierMethod);
+                copier.Map(tNotifierMethod, desNotifierMethod);
 
                 var propField = weaver.AddDefinition(tPropertyField);
                 propField.FieldType = property.PropertyType;
