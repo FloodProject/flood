@@ -90,6 +90,7 @@ solution "Flood"
 		end
 
 		dofile( srcdir .. "/Tools/RPCGen/RPCGen.lua")
+        dofile( srcdir .. "/Tools/RPCGen.Tests/RPCGen.Tests.lua")
 		dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
 		dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
 
