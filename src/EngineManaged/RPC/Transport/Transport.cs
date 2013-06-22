@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Threading;
 
 namespace Flood.RPC.Transport
 {
@@ -51,7 +52,11 @@ namespace Flood.RPC.Transport
             while (got < len)
             {
                 ret = Read(buf, off + got, len - got);
-                if (ret <= 0)
+                if (ret == 0) //TODO: Timeout
+                {
+                    Thread.Sleep(10);
+                }
+                if (ret < 0)
                 {
                     throw new TTransportException(
                         TTransportException.ExceptionType.EndOfFile,
