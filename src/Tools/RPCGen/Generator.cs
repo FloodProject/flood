@@ -8,21 +8,13 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Flood.RPC.Protocol;
-using Flood.RPC.Metadata;
+using RPCGen;
 
 [assembly: InternalsVisibleToAttribute("Flood.Tools.RPCGen.Tests.GeneratorTests")]
 namespace Flood.Tools.RPCGen
 {
     internal class Generator : TextGenerator
     {
-        private readonly Options options;
-
-        
-        public Generator(Options options)
-        {
-            this.options = options;
-        }
-
 
 #region Generate Messages
 
@@ -43,7 +35,7 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             foreach (var field in GetAllFields(type))
             {
-                if (field.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(field))
                     continue;
 
                 WriteLine("private {0} _{1};", ConvertToTypeString(field.FieldType), field.Name);
@@ -53,7 +45,7 @@ namespace Flood.Tools.RPCGen
             // Generate properties.
             foreach (var property in GetAllProperties(type))
             {
-                if (property.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(property))
                     continue;
 
                 WriteLine("private {0} _{1};",
@@ -87,14 +79,15 @@ namespace Flood.Tools.RPCGen
             var parameters = new List<Parameter>();
             foreach(var field in GetAllFields(type))
             {
-                if ((field.GetCustomAttribute<IdAttribute>() == null))
+                if (!Metadata.HasId(field))
                     continue;
+
                 parameters.Add(new Parameter(field));
             }
 
             foreach (var property in GetAllProperties(type))
             {
-                if (property.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(property))
                     continue;
                 
                 parameters.Add(new Parameter(property));
@@ -263,13 +256,16 @@ namespace Flood.Tools.RPCGen
                 WriteLineIndent("return result.Success;");
             }
 
-            var throws = method.GetCustomAttributes<ThrowsAttribute>();
-            foreach (var exception in throws)
-            {
-                WriteLine("if (result.__isset.exception{0})", exception.Id);
-                WriteStartBraceIndent();
-                WriteLine("throw result.Exception{0};", exception.Id);
-                WriteCloseBraceIndent();
+            List<ExceptionInfo> exceptionsInfo;
+            if (Metadata.TryGetThrows(method, out exceptionsInfo))
+            { 
+                foreach (var exception in exceptionsInfo)
+                {
+                    WriteLine("if (result.__isset.exception{0})", exception.Id);
+                    WriteStartBraceIndent();
+                    WriteLine("throw result.Exception{0};", exception.Id);
+                    WriteCloseBraceIndent();
+                }
             }
 
             if (method.ReturnType != typeof(void))
@@ -379,10 +375,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("var result = new {0}_result();", method.Name);
 
             // If the method throws exceptions, we need to call it inside a try-catch.
-            var throws = method.GetCustomAttributes<ThrowsAttribute>();
-            var hasExceptions = throws.Any();
-
-            if (hasExceptions)
+            if (Metadata.HasThrows(method))
             {
                 WriteLine("try {");
                 PushIndent();
@@ -421,15 +414,15 @@ namespace Flood.Tools.RPCGen
             }
 
 
-
-            if (hasExceptions)
+            List<ExceptionInfo> exceptionsInfo;
+            if (Metadata.TryGetThrows(method, out exceptionsInfo))
             {
                 PopIndent();
 
                 // Write the catch part of the exception handling.
-                foreach (var exception in throws)
+                foreach (var exception in exceptionsInfo)
                 {
-                    WriteLine("}} catch ({0} ex{1}) {{", exception.Exception.FullName,
+                    WriteLine("}} catch ({0} ex{1}) {{", exception.Type.FullName,
                               exception.Id);
                     PushIndent();
                     WriteLine("result.Exception{0} = ex{0};", exception.Id);
@@ -521,16 +514,19 @@ namespace Flood.Tools.RPCGen
                 });
             }
 
-            var throws = method.GetCustomAttributes<ThrowsAttribute>();
-            foreach (var exception in throws)
-            {
-                var param = new Parameter()
+            List<ExceptionInfo> exceptionsInfo;
+            if (Metadata.TryGetThrows(method, out exceptionsInfo))
+            {   
+                foreach (var exception in exceptionsInfo)
                 {
-                    Name = "exception" + exception.Id,
-                    ParameterType = exception.Exception,
-                    Id = exception.Id
-                };
-                parameters.Add(param);
+                    var param = new Parameter()
+                    {
+                        Name = "exception" + exception.Id,
+                        ParameterType = exception.Type,
+                        Id = exception.Id
+                    };
+                    parameters.Add(param);
+                }
             }
 
             foreach (var param in parameters)
@@ -589,8 +585,7 @@ namespace Flood.Tools.RPCGen
 
             foreach (var @interface in type.GetInterfaces())
             {
-                var service = @interface.GetCustomAttribute<ServiceAttribute>();
-                if (service == null)
+                if (!Metadata.IsService(@interface))
                     continue;
 
                 @base = @interface;
@@ -755,7 +750,7 @@ namespace Flood.Tools.RPCGen
         internal void GenerateServiceMethodWrite(string typeName,
             IEnumerable<Parameter> parameters, bool isResult)
         {
-            WriteLine("public void Write({0} oprot)", typeof(Serializer).Name);
+            WriteLine("public void Write(Serializer oprot)");
             WriteStartBraceIndent();
 
             WriteLine("var struc = new Struct(\"{0}_{1}\");",
@@ -844,14 +839,13 @@ namespace Flood.Tools.RPCGen
 
                 GenerateFieldDeserialize(param);
 
-                var required = param.GetType().GetCustomAttribute<RequiredAttribute>();
-                if (required != null)
+                if (Metadata.IsRequired(param.GetType()))
                     WriteLine("isset_{0} = true;", param.Name);
 
                 WriteCloseBraceIndent();
                 WriteLine("else");
                 WriteStartBraceIndent();
-                WriteLine("{0}.Skip(iprot, field.Type);", typeof(ProtocolUtil).Name);
+                WriteLine("ProtocolUtil.Skip(iprot, field.Type);");
                 WriteCloseBraceIndent();
                 WriteLine("break;");
 
@@ -860,7 +854,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("default:");
             PushIndent();
-            WriteLine("{0}.Skip(iprot, field.Type);", typeof(ProtocolUtil).Name);
+            WriteLine("ProtocolUtil.Skip(iprot, field.Type);");
             WriteLine("break;");
             PopIndent();
 
@@ -1009,14 +1003,14 @@ namespace Flood.Tools.RPCGen
 
             foreach (var field in GetAllFields(param.ParameterType))
             {
-                if (field.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(field))
                     continue;
 
                 WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
             }
             foreach (var property in GetAllProperties(param.ParameterType))
             {
-                if (property.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(property))
                     continue;
 
                 WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), property.Name);
@@ -1158,14 +1152,14 @@ namespace Flood.Tools.RPCGen
                     WriteStartBraceIndent();
                     foreach (var field in GetAllFields(elemType))
                     {
-                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(field))
                             continue;
 
                         WriteLine("{0} = {1}.{0},", field.Name, iterName);
                     }
                     foreach (var property in GetAllProperties(elemType))
                     {
-                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(property))
                             continue;
 
                         WriteLine("{0} = {1}.{0},", property.Name, iterName);
@@ -1363,14 +1357,13 @@ namespace Flood.Tools.RPCGen
                     WriteStartBraceIndent();
                     foreach (var field in GetAllFields(elemType))
                     {
-                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(field))
                             continue;
-
                         WriteLine("{0} = {1}.{0},", field.Name, elemName);
                     }
                     foreach (var property in GetAllProperties(elemType))
                     {
-                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(property))
                             continue;
                         WriteLine("{0} = {1}.{0},", property.Name, elemName);
                     }
@@ -1421,14 +1414,14 @@ namespace Flood.Tools.RPCGen
 
             foreach (var field in GetAllFields(param.ParameterType))
             {
-                if (field.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(field))
                     continue;
 
                 WriteLine("{1} = {0}Impl.{1},", ToTitleCase(param.Name), field.Name);
             }
             foreach (var property in GetAllProperties(param.ParameterType))
             {
-                if (property.GetCustomAttribute<IdAttribute>() == null)
+                if (!Metadata.HasId(property))
                     continue;
 
                 WriteLine("{1} = {0}Impl.{1},", ToTitleCase(param.Name), property.Name);
@@ -1626,14 +1619,13 @@ namespace Flood.Tools.RPCGen
                     WriteStartBraceIndent();
                     foreach (var field in GetAllFields(elemType))
                     {
-                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(field))
                             continue;
-
                         WriteLine("{0} = {1}.{0},", field.Name, elemName);
                     }
                     foreach (var property in GetAllProperties(elemType))
                     {
-                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(property))
                             continue;
                         WriteLine("{0} = {1}.{0},", property.Name, elemName);
                     }
@@ -1710,14 +1702,13 @@ namespace Flood.Tools.RPCGen
                     WriteStartBraceIndent();
                     foreach (var field in GetAllFields(elemType))
                     {
-                        if (field.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(field))
                             continue;
-
                         WriteLine("{0} = {1}.{0},", field.Name, elemNameImpl);
                     }
                     foreach (var property in GetAllProperties(elemType))
                     {
-                        if (property.GetCustomAttribute<IdAttribute>() == null)
+                        if (!Metadata.HasId(property))
                             continue;
                         WriteLine("{0} = {1}.{0},", property.Name, elemNameImpl);
                     }
@@ -2047,11 +2038,11 @@ namespace Flood.Tools.RPCGen
                     return;
                 }
 
-                var id = info.GetCustomAttribute<IdAttribute>();
-                if (id == null)
+                int id;
+                if (!Metadata.TryGetId(info, out id))
                     throw new Exception("expected an Id() attribute");
 
-                Id = id.Id;
+                Id = id;
             }
 
             public Parameter(FieldInfo info)
@@ -2059,11 +2050,11 @@ namespace Flood.Tools.RPCGen
                 Name = info.Name;
                 ParameterType = info.FieldType;
 
-                var id = info.GetCustomAttribute<IdAttribute>();
-                if (id == null)
+                int id;
+                if (!Metadata.TryGetId(info, out id))
                     throw new Exception("expected an Id() attribute");
 
-                Id = id.Id;
+                Id = id;
             }
 
             public Parameter(PropertyInfo info)
@@ -2071,11 +2062,11 @@ namespace Flood.Tools.RPCGen
                 Name = info.Name;
                 ParameterType = info.PropertyType;
 
-                var id = info.GetCustomAttribute<IdAttribute>();
-                if (id == null)
+                int id;
+                if (!Metadata.TryGetId(info, out id))
                     throw new Exception("expected an Id() attribute");
 
-                Id = id.Id;
+                Id = id;
             }
 
             public Parameter(string  name, Type type, int id)

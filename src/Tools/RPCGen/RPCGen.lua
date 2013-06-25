@@ -1,23 +1,18 @@
-RPCGen = {}
-RPCGen.name = "RPCGen"
-
 project "RPCGen"
 
-	kind "ConsoleApp"
-	language "C#"
-	
-	location "."
-	
-	files
-	{
-		"RPCGen.lua",
-		"**.cs",
-	}
-	
-	links {
-		"System",
-		"EngineManaged",
-		"EngineWeaver",
-		path.join(depsdir,"NUnit","nunit.framework"),
-		path.join(depsdir,"NSubstitute","NSubstitute")
-	}
+    kind "ConsoleApp"
+    language "C#"
+    
+    location "."
+    
+    files
+    {
+        "**.cs",
+        "RPCGen.lua",
+        path.join(srcdir, "EngineManaged/RPC/Protocol/Type.cs")
+    }
+    
+    links {
+        "System",
+        "EngineWeaver",
+    }

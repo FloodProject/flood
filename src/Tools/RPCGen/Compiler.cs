@@ -20,23 +20,63 @@ using System.IO;
 using System.Reflection;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
-using Flood.RPC.Metadata;
 using System.Text;
 using System.Linq;
+using RPCGen;
 
 namespace Flood.Tools.RPCGen
 {
     public class Compiler
     {
-        private readonly Options options;
-        private readonly Assembly assembly;
+        private readonly string destAssemblyPath;
         public readonly List<string> GeneratedFiles;
+        public bool outputDebug;
+        public string outputDir;
+        public Assembly assembly;
 
-        public Compiler(Options options, Assembly assembly)
+        public Compiler(string destAssemblyPath, string outputDir)
         {
-            this.options = options;
-            this.assembly = assembly;
+            this.destAssemblyPath = destAssemblyPath;
+            this.outputDir = outputDir;
+            this.outputDebug = true;
             this.GeneratedFiles = new List<string>();
+            
+            if(!ParseAssembly(destAssemblyPath, out assembly))
+                throw new ArgumentException();
+        }
+
+        static bool ParseAssembly(string path, out Assembly assembly)
+        {
+            assembly = null;
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Console.WriteLine("Error: no assembly provided");
+                return false;
+            }
+
+            try
+            {
+                var fullPath = Path.GetFullPath(path);
+                var pdbPath = Path.ChangeExtension(fullPath,".pdb");
+                var assemblyBytes = File.ReadAllBytes(fullPath);
+                if (File.Exists(pdbPath))
+                {
+                    var pdbBytes = File.ReadAllBytes(pdbPath);
+                    assembly = Assembly.Load(assemblyBytes, pdbBytes);
+                }
+                else
+                {
+                    assembly = Assembly.Load(assemblyBytes);
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Error: assembly '{0}' could not be loaded", path);
+                return false;
+            }
+
+            return true;
         }
 
         public void Process()
@@ -45,22 +85,19 @@ namespace Flood.Tools.RPCGen
             {
                 foreach (var type in module.GetTypes())
                 {
-                    var service = type.GetCustomAttribute<ServiceAttribute>();
-                    if (service != null)
+                    if (Metadata.IsService(type))
                     {
                         Debug.Assert(type.IsInterface);
                         ProcessService(type);
                     }
 
-                    var message = type.GetCustomAttribute<MessageAttribute>();
-                    if (message != null)
+                    if (Metadata.IsMessage(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
                         ProcessMessage(type);
                     }
 
-                    var exception = type.GetCustomAttribute<ExceptionAttribute>();
-                    if (exception != null)
+                    if (Metadata.IsException(type))
                     {
                         Debug.Assert(type.IsClass);
                         ProcessException(type);
@@ -71,7 +108,7 @@ namespace Flood.Tools.RPCGen
 
         private void ProcessService(Type type)
         {
-            if (options.OutputDebug)
+            if (outputDebug)
             {
                 Console.WriteLine("Service: {0}", type.Name);
 
@@ -79,7 +116,7 @@ namespace Flood.Tools.RPCGen
                     Console.WriteLine("  Method: {0}", method.Name);
             }
 
-            var gen = new Generator(options);
+            var gen = new Generator();
             gen.GenerateService(type);
 
             WriteGeneratorToFile(type, gen);
@@ -87,7 +124,7 @@ namespace Flood.Tools.RPCGen
 
         private void ProcessMessage(Type type)
         {
-            if (options.OutputDebug)
+            if (outputDebug)
             {
                 Console.WriteLine("Message: {0}", type.Name);
 
@@ -95,7 +132,7 @@ namespace Flood.Tools.RPCGen
                     Console.WriteLine("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator(options);
+            var gen = new Generator();
             gen.GenerateMessage(type);
 
             WriteGeneratorToFile(type, gen);
@@ -103,7 +140,7 @@ namespace Flood.Tools.RPCGen
 
         private void ProcessException(Type type)
         {
-            if (options.OutputDebug)
+            if (outputDebug)
             {
                 Console.WriteLine("Exception: {0}", type.Name);
 
@@ -111,7 +148,7 @@ namespace Flood.Tools.RPCGen
                     Console.WriteLine("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator(options);
+            var gen = new Generator();
             gen.GenerateMessage(type);
 
             WriteGeneratorToFile(type, gen);
@@ -119,10 +156,10 @@ namespace Flood.Tools.RPCGen
 
         private void WriteGeneratorToFile(Type type, Generator gen)
         {
-            if (string.IsNullOrEmpty(options.OutputDir))
-                options.OutputDir = ".";
+            if (string.IsNullOrEmpty(outputDir))
+                outputDir = ".";
 
-            var filePath = Path.GetFullPath(options.OutputDir);
+            var filePath = Path.GetFullPath(outputDir);
             var fileName = string.Format("{0}.cs", type.Name);
 
             filePath = Path.Combine(filePath, fileName);
@@ -132,9 +169,9 @@ namespace Flood.Tools.RPCGen
             Console.WriteLine("Generated '{0}'", fileName);
         }
 
-        public void Compile(string assemblyPath)
+        public void Compile(string outputAssemblyPath)
         {
-            assemblyPath = Path.GetFullPath(assemblyPath);
+            outputAssemblyPath = Path.GetFullPath(outputAssemblyPath);
             var generatedAssemblyPath = Path.GetFullPath(Path.GetRandomFileName())+".dll";
 
             CodeDomProvider provider = new CSharpCodeProvider();
@@ -158,7 +195,7 @@ namespace Flood.Tools.RPCGen
 
                 cp.ReferencedAssemblies.Add(location);
             }
-            cp.ReferencedAssemblies.Add(assemblyPath);
+            cp.ReferencedAssemblies.Add(destAssemblyPath);
 
             try { 
                 CompilerResults cr = provider.CompileAssemblyFromFile(cp, GeneratedFiles.ToArray());
@@ -172,9 +209,9 @@ namespace Flood.Tools.RPCGen
                     throw new Exception(message.ToString());
                 }
 
-                var weaver = new EngineWeaver.AssemblyWeaver(assemblyPath);
+                var weaver = new EngineWeaver.AssemblyWeaver(destAssemblyPath);
                 weaver.AddAssembly(generatedAssemblyPath);
-                weaver.Write();
+                weaver.Write(outputAssemblyPath);
                 
             } finally
             {

@@ -77,40 +77,6 @@ namespace Flood.Tools.RPCGen
             return true;
         }
 
-        static bool ParseAssembly(string path, out Assembly assembly)
-        {
-            assembly = null;
-
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                Console.WriteLine("Error: no assembly provided");
-                return false;
-            }
-
-            try
-            {
-                var fullPath = Path.GetFullPath(path);
-                var pdbPath = Path.ChangeExtension(fullPath,".pdb");
-                var assemblyBytes = File.ReadAllBytes(fullPath);
-                if (File.Exists(pdbPath))
-                {
-                    var pdbBytes = File.ReadAllBytes(pdbPath);
-                    assembly = Assembly.Load(assemblyBytes, pdbBytes);
-                }
-                else
-                {
-                    assembly = Assembly.Load(assemblyBytes);
-                }
-            }
-            catch 
-            {
-                Console.WriteLine("Error: assembly '{0}' could not be loaded", path);
-                return false;
-            }
-
-            return true;
-        }
-
         public static int Main(string[] args)
         {
             var options = new Options();
@@ -121,20 +87,16 @@ namespace Flood.Tools.RPCGen
             if (!Directory.Exists(options.OutputDir))
                 Directory.CreateDirectory(options.OutputDir);
 
-            Assembly assembly;
-            if (!ParseAssembly(options.Assembly, out assembly))
-                return 1;
-
-            var compiler = new Compiler(options, assembly);
-
             try
             {
+                var compiler = new Compiler(options.Assembly, options.OutputDir);
                 compiler.Process();
                 compiler.Compile(options.Assembly);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return 1;
             }
             
