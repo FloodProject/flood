@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using Flood;
 
 namespace EngineWeaver
 {
     
     public class NotifierWeaver
     {
-
+        /*
         class Template{
             private Dictionary<PropertyChanged, PropertyChanged> handlers = new Dictionary<PropertyChanged,PropertyChanged>();
             
@@ -168,6 +167,6 @@ namespace EngineWeaver
                 WeaveTypeProperties(type);
             }
 
-        }
+        }*/
     }
 }

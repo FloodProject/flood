@@ -15,9 +15,9 @@ project "EngineWeaver"
     links
     {
         "System",
-        "EngineManaged",
-		"Mono.Cecil.Pdb",
+        "Mono.Cecil.Pdb",
         "Mono.Cecil",
+        "EngineManaged",
         "ICSharpCode.Decompiler",
         "ICSharpCode.NRefactory",
         "ICSharpCode.NRefactory.CSharp"
