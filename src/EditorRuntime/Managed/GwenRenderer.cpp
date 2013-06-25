@@ -15,14 +15,13 @@
 #using "EngineBindings.dll"
 
 using namespace Flood::GUI;
-using namespace Flood::Editor::Client;
 using namespace System::Collections::Generic;
 
-static gcroot<Editor^> gs_EditorInstance = nullptr;
+static gcroot<Flood::Editor::Client::Editor^> gs_EditorInstance = nullptr;
 
 void InitializeGUI(InputManager* inputManager)
 {
-    gs_EditorInstance = gcnew Editor();
+    gs_EditorInstance = gcnew Flood::Editor::Client::Editor();
 }
 
 void UpdateGUI()
