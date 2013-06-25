@@ -30,19 +30,6 @@ internal static class CecilExtensions
     }
 
     /// <summary>
-    /// Gets method from type or base types
-    /// </summary>
-    public static MethodDefinition GetMethod(this TypeDefinition type, string methodName)
-    {
-        var method = type.Methods.SingleOrDefault(m => m.Name.Equals(methodName));
-        if(method!=null)
-            return method;
-        if(type.BaseType!=null)
-            return type.BaseType.Resolve().GetMethod(methodName);
-        return null;
-    }
-
-    /// <summary>
     /// Gets event from type or base types
     /// </summary>
     public static EventDefinition GetEvent(this TypeDefinition type, string eventName)

@@ -68,5 +68,50 @@ namespace EngineWeaver.Util
 
             return typeDef;
         }
+
+        public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodReference origMethod)
+        {
+            foreach (var destMethod in destType.Methods)
+            {
+                if(destMethod.Name != origMethod.Name)
+                    continue;
+
+                if(destMethod.Parameters.Count != origMethod.Parameters.Count)
+                    continue;
+
+                var @continue = false;
+                for (var i = 0; i < destMethod.Parameters.Count; i++)
+                {
+                    if (destMethod.Parameters[i].ParameterType.FullName != origMethod.Parameters[i].ParameterType.FullName)
+                    {
+                        @continue = true;
+                        break;
+                    }
+                }
+
+                if(@continue)
+                    continue;
+
+                return destMethod;
+            }
+
+            return null;
+        }
+
+        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldReference origField)
+        {
+            foreach (var destField in destType.Fields)
+            {
+                if(destField.Name != origField.Name)
+                    continue;
+
+                if(destField.FieldType.FullName != origField.FieldType.FullName)
+                    continue;
+
+                return destField;
+            }
+
+            return null;
+        }
     }
 }
