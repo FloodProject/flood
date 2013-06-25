@@ -121,7 +121,7 @@ namespace EngineWeaver
         {
             foreach(var method in type.Methods)
             {
-                if(method.IsAbstract)
+                if(method.Body == null)
                     continue;
 
                 var offset = 0;
