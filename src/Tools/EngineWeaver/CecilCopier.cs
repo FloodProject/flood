@@ -153,14 +153,23 @@ namespace EngineWeaver
             var declaringType = @ref.DeclaringType as TypeReference;
             if (declaringType != null)
             {
-                var typeRef = destinationModule.GetType(declaringType.FullName);
-                if (typeRef != null)
+                var destTypeDef = destinationModule.GetType(declaringType.FullName);
+                if (destTypeDef != null)
                 {
-                    if (@ref is MethodReference)
+                    var origMethodRef = @ref as MethodReference;
+                    if (origMethodRef != null)
                     {
-                        var methodRef = typeRef.GetMethod(@ref.Name);
-                        if(methodRef != null) 
-                            return (T)(MemberReference)methodRef;
+                        var destMethodDef = CecilUtils.GetTypeMethodDef(destTypeDef, origMethodRef);
+                        if(destMethodDef != null) 
+                            return (T)(MemberReference)destMethodDef;
+                    }
+
+                    var origFieldRef = @ref as FieldReference;
+                    if (origFieldRef != null)
+                    {
+                        var destFieldDef = CecilUtils.GetTypeFieldDef(destTypeDef, origFieldRef);
+                        if(destFieldDef != null) 
+                            return (T)(MemberReference)destFieldDef;
                     }
                 }
             }
