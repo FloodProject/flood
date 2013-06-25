@@ -15,8 +15,6 @@ namespace EngineWeaver
         private string destAssemblyPath;
         private AssemblyDefinition destAssembly;
 
-        private List<CecilCopier> copiers;
-
         public AssemblyWeaver(string destAssemblyPath)
         {
             this.destAssemblyPath = destAssemblyPath; 
