@@ -36,12 +36,12 @@ namespace EngineWeaver
 
         }
 
-        public void Write()
+        public void Write(string outputAssemblyPath)
         {
             var writerParameters = new WriterParameters();
             writerParameters.WriteSymbols = destAssembly.MainModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
-            destAssembly.Write(destAssemblyPath, writerParameters);
+            destAssembly.Write(outputAssemblyPath, writerParameters);
         }
 
     }
