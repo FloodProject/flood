@@ -7,6 +7,8 @@ project "EngineManaged"
 	language "C#"
 	flags { "Unsafe" }
 	location "."
+
+	SetupRPCGen("EngineManaged",".dll")
 	
 	files
 	{
