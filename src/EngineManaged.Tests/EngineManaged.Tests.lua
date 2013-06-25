@@ -15,6 +15,7 @@ project "EngineManaged.Tests"
 	links {
 		"System",
 		"EngineManaged",
+		"EngineBindings",
 		path.join(depsdir,"NUnit","nunit.framework"),
 		path.join(depsdir,"NSubstitute","NSubstitute")
 	}
