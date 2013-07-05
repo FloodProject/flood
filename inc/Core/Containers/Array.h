@@ -109,7 +109,7 @@ namespace array
             memcpy(new_data, a._data, sizeof(T)*a._size);
         }
             
-        Deallocate(a._data);
+        AllocatorDeallocate(a._data);
         a._data = new_data;
         a._capacity = new_capacity;
     }
@@ -211,16 +211,5 @@ const T& Array<T>::operator[](size_t i) const
 {
     return _data[i];
 }
-
-//////////////////////////////////////////////////////////////////////////
-    
-template < typename T >
-HeapArray<T>::HeapArray()
-    : Array(*AllocatorGetHeap())
-{}
-
-template < typename T >
-HeapArray<T>::~HeapArray()
-{}
 
 NAMESPACE_CORE_END

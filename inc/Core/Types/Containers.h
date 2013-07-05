@@ -41,13 +41,6 @@ template<typename T> struct Array
     T *_data;
 };
 
-template < typename T >
-struct HeapArray : public Array<T>
-{
-    HeapArray();
-    virtual ~HeapArray();
-};
-
 /// A double-ended queue/ring buffer.
 template <typename T> struct Queue
 {
@@ -73,6 +66,9 @@ public:
         size_t next;
         T value;
     };
+
+    Entry const * begin() const;
+    Entry const * end() const;
 
     Array<size_t> _hash;
     Array<Entry> _data;
