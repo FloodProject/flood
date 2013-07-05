@@ -21,7 +21,7 @@
 #include "Core/Math/Helpers.h"
 #include "Engine/Geometry/DebugGeometry.h"
 
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -273,9 +273,9 @@ void Model::updateAnimationBones(AnimationState& state)
 	auto& bones = state.bonesMatrix;
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
-	for( auto it = keyFrames.begin(); it != keyFrames.end(); ++it )
+	for( auto it = hash::begin(keyFrames); it != hash::end(keyFrames); ++it )
 	{
-		const BonePtr& bone = it->first;
+		BonePtr bone((Bone*)it->key);
 		
 		const Matrix4x3& matKey = animation->getKeyFrameMatrix(bone, animationTime);	
 		Matrix4x3 matBone = matKey * bone->relativeMatrix;

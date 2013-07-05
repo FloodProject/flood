@@ -8,12 +8,14 @@
 #include "Core/API.h"
 #include "Core/Network/SessionManager.h"
 #include "Core/Network/Peer.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
 SessionManager::SessionManager()
+	: sessions(*AllocatorGetHeap())
 {
 }
 
@@ -30,7 +32,7 @@ void SessionManager::addSession(const SessionPtr& session)
 	if( !session ) return;
 	const PeerPtr& peer = session->getPeer();
 	
-	sessions[peer] = session;
+	hash::set(sessions, (uint64)session.get(), session);
 
 	onSessionAdded(session);
 }
@@ -42,12 +44,11 @@ void SessionManager::removeSession(const SessionPtr& session)
 	if( !session ) return;
 	const PeerPtr& peer = session->getPeer();
 
-	SessionsMap::iterator it = sessions.find(peer);
-	
-	if( it == sessions.end() )
+	auto s = hash::get(sessions, (uint64)peer.get(), SessionPtr(nullptr));
+	if(!s)
 		return;
 
-	sessions.erase(it);
+	hash::remove(sessions, (uint64)s.get());
 
 	onSessionRemoved(session);
 }
@@ -56,12 +57,7 @@ void SessionManager::removeSession(const SessionPtr& session)
 
 SessionPtr SessionManager::getSession(const PeerPtr& peer)
 {
-	SessionsMap::iterator it = sessions.find(peer);
-
-	if( it == sessions.end() )
-		return nullptr;
-
-	return it->second;
+	return hash::get(sessions, (uint64)peer.get(), SessionPtr(nullptr));
 }
 
 //-----------------------------------//

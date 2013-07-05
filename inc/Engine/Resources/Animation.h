@@ -32,8 +32,7 @@ struct API_ENGINE KeyFrame
 };
 
 typedef Array<KeyFrame> KeyFramesVector;
-typedef std::map<BonePtr, KeyFramesVector*> KeyFramesMap;
-typedef std::pair<const BonePtr, KeyFramesVector*> KeyFramesPair;
+typedef Hash<KeyFramesVector*> KeyFramesMap;
 
 //-----------------------------------//
 

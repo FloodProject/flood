@@ -9,7 +9,7 @@
 #include "Engine/Resources/Animation.h"
 #include "Engine/Resources/Bone.h"
 
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Math/Helpers.h"
 
 NAMESPACE_ENGINE_BEGIN
@@ -23,20 +23,22 @@ AnimationState::AnimationState()
 Animation::Animation()
 	: looped(true)
 	, keyFramesVector(*AllocatorGetHeap())
+	, keyFrames(*AllocatorGetHeap())
 { }
 
 Animation::~Animation()
 {
-	for(auto v = keyFrames.begin(); v != keyFrames.end(); ++v)
-		Deallocate(v->second);
-	keyFrames.clear();
+	for(auto v = hash::begin(keyFrames); v != hash::end(keyFrames); ++v)
+		DeallocateObject(v);
+	hash::clear(keyFrames);
 }
 
 //-----------------------------------//
 
 void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 {
-	keyFrames[bone] = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(KeyFramesVector), alignof(KeyFramesVector))) KeyFramesVector(frames);
+	auto v = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(KeyFramesVector), alignof(KeyFramesVector))) KeyFramesVector(frames);
+	hash::set(keyFrames, (uint64)bone.get(), v);
 
 	for( size_t i = 0; i < array::size(frames); ++i )
 	{	
@@ -49,7 +51,7 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 
 float Animation::getTotalTime() const
 {
-	if( keyFrames.empty() )
+	if( hash::empty(keyFrames) )
 		return 0;
 
 	float min = LimitsFloatMaximum;
@@ -82,19 +84,21 @@ bool Animation::isLooped()
 
 Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 {
-	if( !bone || keyFrames.empty() )
+	if( !bone || hash::empty(keyFrames) )
 		return Matrix4x3::Identity;
-		 
-	auto& boneKeyFrames = *keyFrames[bone];
+	
+	auto boneKeyFrames = hash::get<KeyFramesVector*>(keyFrames, (uint64)bone.px, nullptr);
 
-	if( array::empty(boneKeyFrames) )
+	assert(boneKeyFrames != nullptr);
+
+	if( array::empty(*boneKeyFrames) )
 		return Matrix4x3::Identity;
 	
 	uint endIndex = 0;
 
-	for( size_t i = 0; i < array::size(boneKeyFrames); ++i )
+	for( size_t i = 0; i < array::size(*boneKeyFrames); ++i )
 	{
-		if( boneKeyFrames[i].time > time )
+		if( (*boneKeyFrames)[i].time > time )
 		{
 			endIndex = i;
 			break;
@@ -109,18 +113,18 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	Quaternion rotation;
 #endif
 
-	if( endIndex == 0 || endIndex == array::size(boneKeyFrames) )
+	if( endIndex == 0 || endIndex == array::size(*boneKeyFrames) )
 	{
 		endIndex -= (endIndex != 0) ? 1 : 0;
-		position = boneKeyFrames[endIndex].position;
-		rotation = boneKeyFrames[endIndex].rotation;
+		position = (*boneKeyFrames)[endIndex].position;
+		rotation = (*boneKeyFrames)[endIndex].rotation;
 	}
 	else
 	{
 		int startIndex = endIndex - 1;
 
-		const KeyFrame& keyL = boneKeyFrames[startIndex];
-		const KeyFrame& keyR = boneKeyFrames[endIndex];
+		const KeyFrame& keyL = (*boneKeyFrames)[startIndex];
+		const KeyFrame& keyR = (*boneKeyFrames)[endIndex];
 
 		float timeDelta = keyR.time - keyL.time;
 		float interpolator = ((float) time - keyL.time) / timeDelta;

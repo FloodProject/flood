@@ -10,9 +10,15 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Math/Hash.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_CORE_BEGIN
+
+//-----------------------------------//
+
+ClassWatch::ClassWatch()
+	:fields(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 
@@ -27,14 +33,14 @@ ClassWatch* ClassWatchCreate(Allocator* alloc)
 void ClassWatchReset(ClassWatch* watch)
 {
 	if( !watch ) return;
-	watch->fields.clear();
+	hash::clear(watch->fields);
 }
 
 //-----------------------------------//
 
 bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 {
-	FieldWatch& fw = watch->fields[field];
+	auto fw = hash::get(watch->fields, (uint64)field, FieldWatch());
 
 	byte* min = (byte*) ClassGetFieldAddress(fw.object, field);
 	byte* max = min + field->size;
@@ -48,6 +54,8 @@ bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 	{
 		fw.hash = hash;
 		changed = true;
+
+		hash::set(watch->fields, (uint64)field, fw);
 	}
 
 	return changed;
@@ -57,7 +65,7 @@ bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 
 void ClassWatchAddField(ClassWatch* watch, const FieldWatch& fw )
 {
-	watch->fields[fw.field] = fw;
+	hash::set(watch->fields, (uint64)fw.field, fw);
 	ClassWatchUpdateField(watch, fw.field);
 }
 
@@ -86,14 +94,10 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 
 void ClassWatchUpdate(ClassWatch* watch, FieldWatchVector& changed)
 {
-	FieldWatchMap& watches = watch->fields;
-	FieldWatchMap::iterator it = watches.begin();
-
-	for(; it != watches.end(); ++it)
+	for(auto fw : watch->fields)
 	{
-		FieldWatch& fw = it->second;
-		bool updated = ClassWatchUpdateField(watch, fw.field);
-		if( updated ) array::push_back(changed, &fw);
+		bool updated = ClassWatchUpdateField(watch, fw.value.field);
+		if( updated ) array::push_back(changed, &fw.value);
 	}
 }
 

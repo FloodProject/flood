@@ -9,13 +9,12 @@
 
 #include "Core/Event.h"
 #include "Core/Network/Session.h"
-#include <map>
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map<PeerPtr, SessionPtr> SessionsMap;
+typedef Hash<SessionPtr> SessionsMap;
 
 class SessionManager
 {

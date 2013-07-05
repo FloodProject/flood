@@ -31,11 +31,12 @@ struct FieldWatch
 	uint32 hash;
 };
 
-typedef std::map<const Field*, FieldWatch> FieldWatchMap;
+typedef Hash<FieldWatch> FieldWatchMap;
 typedef Array<FieldWatch*> FieldWatchVector;
 
 struct ClassWatch
 {
+	ClassWatch();
 	FieldWatchMap fields;
 };
 

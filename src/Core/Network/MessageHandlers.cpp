@@ -7,10 +7,24 @@
 
 #include "Core/API.h"
 #include "Core/Network/MessageHandlers.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
+
+//-----------------------------------//
+
+MessageHandlers::MessageHandlers()
+	: handlers(*AllocatorGetHeap())
+{}
+
+//-----------------------------------//
+
+MessageHandlers::~MessageHandlers()
+{
+	for(auto h : handlers)
+		DeallocateObject(h.value);
+}
 
 //-----------------------------------//
 
@@ -53,32 +67,28 @@ void MessageHandlers::removeHandlers(MessageHandler* handler)
 
 MessageMapping* MessageHandlers::findHandler(MessageId id)
 {
-	MessageHandlersMap::iterator it = handlers.find(id);
-
-	if( it == handlers.end() )
-		return nullptr;
-
-	return &it->second;
+	return hash::get<MessageMapping*>(handlers, (uint64)id, nullptr);
 }
 
 //-----------------------------------//
 
 void MessageHandlers::addMapping(const MessageMapping& handler)
 {
-	MessageId id = handler.id;
-	handlers[id] = handler;
+	auto h = hash::get<MessageMapping*>(handlers, (uint64)handler.id, nullptr);
+	if(h != nullptr)
+		DeallocateObject(h);
+
+	h = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(MessageMapping), alignof(MessageMapping))) MessageMapping(handler);
+	hash::set<MessageMapping*>(handlers, (uint64)handler.id, h);
 }
 
 //-----------------------------------//
 
 void MessageHandlers::removeMapping(const MessageMapping& handler)
 {
-	MessageHandlersMap::iterator it = handlers.find(handler.id);
-
-	if( it == handlers.end() )
-		return;
-
-	handlers.erase(it);
+	auto h = hash::get<MessageMapping*>(handlers, (uint64)handler.id, nullptr);
+	if(h != nullptr)
+		hash::remove(handlers, (uint64)handler.id);
 }
 
 //-----------------------------------//

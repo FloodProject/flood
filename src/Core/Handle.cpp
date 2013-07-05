@@ -8,8 +8,15 @@
 #include "Core/API.h"
 #include "Core/Handle.h"
 #include "Core/Log.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_EXTERN_BEGIN
+
+//-----------------------------------//
+
+HandleManager::HandleManager()
+	: handles(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 
@@ -28,7 +35,7 @@ void HandleDestroyManager( HandleManager* man )
 
 	const HandleMap& handles = man->handles;
 
-	if( handles.size() > 0 )
+	if( hash::size(handles) > 0 )
 	{
 		//LogAssert("Handle manager should not have any handles");
 		goto out;
@@ -48,7 +55,7 @@ HandleId HandleCreate(HandleManager* man, ReferenceCounted* ref)
 	HandleMap& handles = man->handles;
 	
 	HandleId id = AtomicIncrement(&man->nextHandle);
-	handles[id] = ref;
+	hash::set(handles, (uint64)id, ref);
 	
 	return id;
 }
@@ -59,13 +66,7 @@ void HandleDestroy(HandleManager* man, HandleId id)
 {
 	if( !man ) return;
 	
-	HandleMap& handles = man->handles;
-	HandleMap::iterator it = handles.find(id);
-
-	if( it == handles.end() )
-		return;
-
-	handles.erase(it);
+	hash::remove(man->handles, (uint64)id);
 }
 
 //-----------------------------------//
@@ -78,13 +79,7 @@ void HandleGarbageCollect(HandleManager* man)
 
 ReferenceCounted* HandleFind(HandleManager* man, HandleId id)
 {
-	HandleMap& handles = man->handles;
-	HandleMap::iterator it = handles.find(id);
-	
-	if( it == handles.end() )
-		return nullptr;
-
-	return handles[id];
+	return hash::get<ReferenceCounted*>(man->handles, (uint64)id, nullptr);
 }
 
 //-----------------------------------//

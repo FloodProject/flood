@@ -17,7 +17,7 @@
 #include "Core/Utilities.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Log.h"
 
 #include "Core/Math/Vector.h"
@@ -515,17 +515,9 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	ClassId id = (ClassId) val;
 	
 	// Find the class id.
-	ClassIdMap::iterator it = ids.find(id);
+	auto newClass = hash::get<Class*>(ids, id, nullptr);
 
-	if( it == ids.end() )
-	{
-		LogDebug("Deserialize: Invalid class id");
-		return nullptr;
-	}
-
-	Class* newClass = it->second;
-	
-	if( !newClass )
+	if(!newClass)
 	{
 		LogDebug("Deserialize: Invalid class id");
 		return nullptr;

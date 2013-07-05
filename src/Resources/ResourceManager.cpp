@@ -11,7 +11,7 @@
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Concurrency.h"
 #include "Core/Stream.h"
 #include "Core/Archive.h"
@@ -621,7 +621,7 @@ void ResourceManager::handleWatchResource(Archive*, const FileWatchEvent& evt)
 
 	// Switch the resource but mantain the same handle.
 	resource->addReference();
-	handleManager->handles[handleId] = resource;
+	hash::set<ReferenceCounted*>(handleManager->handles, (uint64)handleId, resource);
 
 	onResourceReloaded(event);
 

@@ -25,6 +25,8 @@
 #include "Core/FileWatcherWin32.h"
 #include "Core/Utilities.h"
 #include "Core/Log.h"
+#include "Core/Containers/Hash.h"
+#include "Core/Memory.h"
 
 #include <algorithm>
 
@@ -182,19 +184,15 @@ FileWatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 
 FileWatcherWin32::FileWatcherWin32()
 	: mLastWatchID(0)
+	, mWatches(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
 
 FileWatcherWin32::~FileWatcherWin32()
-{
-	FileWatchMap::iterator iter = mWatches.begin();
-	FileWatchMap::iterator end = mWatches.end();
-	
-	for(; iter != end; ++iter)
-		DestroyWatch(iter->second);
-
-	mWatches.clear();
+{	
+	for(auto w : mWatches)
+		DestroyWatch(w.value);
 }
 
 //-----------------------------------//
@@ -220,7 +218,7 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 	strcpy_s(watch->mDirName, len, directory.c_str());
 	watch->mCustomData = userdata;
 
-	mWatches.insert(std::make_pair(watchid, watch));
+	hash::set(mWatches, (uint64)watchid, watch);
 
 	return watchid;
 }
@@ -229,13 +227,11 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 
 void FileWatcherWin32::removeWatch(const String& directory)
 {
-	FileWatchMap::iterator iter = mWatches.begin();
-	FileWatchMap::iterator end = mWatches.end();
-	for(; iter != end; ++iter)
+	for(auto w : mWatches)
 	{
-		if(directory == iter->second->mDirName)
+		if(directory == w.value->mDirName)
 		{
-			removeWatch(iter->first);
+			removeWatch(w.key);
 			return;
 		}
 	}
@@ -245,15 +241,13 @@ void FileWatcherWin32::removeWatch(const String& directory)
 
 void FileWatcherWin32::removeWatch(FileWatchId watchid)
 {
-	FileWatchMap::iterator iter = mWatches.find(watchid);
-
-	if(iter == mWatches.end())
+	auto fw = hash::get<FileWatchStruct*>(mWatches, (uint64)watchid, nullptr);
+	if(fw == nullptr)
 		return;
 
-	FileWatchStruct* watch = iter->second;
-	mWatches.erase(iter);
+	hash::remove(mWatches, (uint64)watchid);
 
-	DestroyWatch(watch);
+	DestroyWatch(fw);
 }
 
 //-----------------------------------//

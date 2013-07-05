@@ -37,11 +37,14 @@ struct MessageMapping
 	MessageHandler* handler;
 };
 
-typedef std::map<MessageId, MessageMapping> MessageHandlersMap;
+typedef Hash<MessageMapping*> MessageHandlersMap;
 
 class MessageHandlers
 {
 public:
+
+	MessageHandlers();
+	~MessageHandlers();
 
 	// Adds a message handler.
 	void addHandlers(MessageHandler* handler, MessageDirection::Enum);
