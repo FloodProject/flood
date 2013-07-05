@@ -12,6 +12,8 @@
 #include "Core/Math/Color.h"
 #include "Core/Math/Matrix4x4.h"
 
+#include <map>
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//

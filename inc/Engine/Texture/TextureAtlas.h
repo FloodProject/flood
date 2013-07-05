@@ -11,6 +11,8 @@
 #include "Graphics/Resources/Image.h"
 #include "Engine/RectangleBinPack/MaxRectsBinPack.h"
 
+#include <map>
+
 NAMESPACE_ENGINE_BEGIN
 
 class TextureAtlas;

@@ -12,6 +12,8 @@
 #include "Engine/Resources/Sound.h"
 #include "Core/Math/Vector.h"
 
+#include <map>
+
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)
 

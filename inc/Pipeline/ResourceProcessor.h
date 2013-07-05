@@ -9,6 +9,8 @@
 
 #include "Core/Extension.h"
 
+#include <map>
+
 FWD_DECL_INTRUSIVE(Resource)
 
 NAMESPACE_PIPELINE_BEGIN

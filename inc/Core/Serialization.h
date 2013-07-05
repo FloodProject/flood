@@ -15,6 +15,8 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/String.h"
 
+#include <map>
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//

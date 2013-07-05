@@ -11,6 +11,8 @@
 #include "Graphics/Resources/Image.h"
 #include "Graphics/RenderTarget.h"
 
+#include <map>
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//

@@ -10,6 +10,8 @@
 #include "Graphics/API.h"
 #include "Core/References.h"
 
+#include <map>
+
 FWD_DECL_INTRUSIVE(ShaderProgram)
 
 NAMESPACE_GRAPHICS_BEGIN

@@ -11,6 +11,8 @@
 #include "Core/References.h"
 #include "Core/Object.h"
 
+#include <map>
+
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
 

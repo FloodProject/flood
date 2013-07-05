@@ -10,6 +10,8 @@
 #include "Resources/API.h"
 #include "Resources/Resource.h"
 
+#include <map>
+
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
