@@ -9,7 +9,6 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
-#include <map>
 
 NAMESPACE_CORE_BEGIN
 
@@ -67,7 +66,7 @@ struct API_CORE Type
 	ReflectionWalkFunction serialize;
 };
 
-typedef std::map<const char*, Type*, RawStringCompare> TypeMap;
+typedef Hash<Type*> TypeMap;    // keyed with const char *
 
 // Gets if this type represents a primitive type.
 API_CORE bool ReflectionIsPrimitive(const Type*);
@@ -86,6 +85,8 @@ API_CORE bool ReflectionIsEqual(const Type*, const Type*);
 // Keeps a map with the types in the database.
 struct API_CORE ReflectionDatabase
 {
+	ReflectionDatabase();
+
 	TypeMap types;
 };
 
@@ -115,8 +116,8 @@ typedef uint8 FieldId;
 
 typedef void* (*ClassCreateFunction)(Allocator*);
 
-typedef std::map<FieldId, Field*> ClassFieldIdMap;
-typedef std::map<ClassId, Class*> ClassIdMap;
+typedef Hash<Field*> ClassFieldIdMap;
+typedef Hash<Class*> ClassIdMap;
 
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
@@ -299,12 +300,15 @@ API_CORE PrimitiveBuiltins& PrimitiveGetBuiltins();
 
 //-----------------------------------//
 
-typedef std::map<const char*, int32, RawStringCompare> EnumValuesMap;
-typedef std::pair<const char*, int32> EnumValuesPair;
+typedef Hash<int32> EnumValuesMap; // keyed by const char *
 
 struct API_CORE Enum : public Type
 {
+	Enum();
+
+
 	EnumValuesMap values;
+	Hash<String*> value_names;
 	PrimitiveTypeKind backing;
 };
 

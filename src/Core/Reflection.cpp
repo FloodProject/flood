@@ -7,12 +7,13 @@
 
 #include "Core/API.h"
 #include "Core/Reflection.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Object.h"
 #include "Core/Log.h"
 #include "Core/Math/Hash.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
+#include "Core/Containers/MurmurHash.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -22,12 +23,22 @@ REFLECT_ABSTRACT_CLASS(Object)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
+
+ReflectionDatabase::ReflectionDatabase()
+	: types(*AllocatorGetHeap())
+{}
+
+//-----------------------------------//
+
 Class::Class()
 	: parent(nullptr)
 	, create_fn(nullptr)
 	, fields(*AllocatorGetHeap())
+	, fieldIds(*AllocatorGetHeap())
 	, childs(*AllocatorGetHeap())
 { }
+
+//-----------------------------------//
 
 Type::Type()
 {
@@ -39,6 +50,13 @@ Type::Type(TypeKind kind, const char* name, uint16 size)
 	: kind(kind), name(name), size(size), serialize(nullptr)
 {
 }
+
+//-----------------------------------//
+
+Enum::Enum()
+	: values(*AllocatorGetHeap())
+	, value_names(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 
@@ -84,13 +102,15 @@ static void RegisterClass(Class* klass)
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
 
-	if( ids.find(klass->id) != ids.end() )
+	auto id = hash::get<Class*>(ids, klass->id, nullptr);
+	
+	if(id)
 	{
 		LogError("Class with the same id already exists: '%s'", klass->name);
 		return;
 	}
 
-	ids[klass->id] = klass;
+	hash::set(ids, klass->id, klass);
 }
 
 //-----------------------------------//
@@ -99,15 +119,17 @@ bool ReflectionDatabaseRegisterType(ReflectionDatabase* db, Type* type)
 {
 	if( !db || !type ) return false;
 
-	const char* name = type->name;
+	String name(type->name);
+	auto nh = murmur_hash_64(name.c_str(), name.size(), 0);
+	auto val = hash::get<Type*>(db->types, nh, nullptr);
 
-	if( db->types.find(name) != db->types.end() )
+	if(val)
 	{
 		LogAssert("Type '%s' already exists in the database", name);
 		return false;
 	}
 
-	db->types[name] = type;
+	hash::set(db->types, nh, type);
 
 	if( !ReflectionIsComposite(type) )
 		return true;
@@ -128,14 +150,15 @@ bool ReflectionRegisterType(Type* type)
 
 //-----------------------------------//
 
-Type* ReflectionFindType(const char* name)
+Type* ReflectionFindType(const char* ncstr)
 {
 	ReflectionDatabase& db = ReflectionGetDatabase();
-	
-	TypeMap::iterator it = db.types.find(name);
-	if( it == db.types.end() ) return nullptr;
 
-	return it->second;
+	String name(ncstr);
+	auto nh = murmur_hash_64(name.c_str(), name.size(), 0);
+	auto val = hash::get<Type*>(db.types, nh, nullptr);
+	
+	return val;
 }
 
 //-----------------------------------//
@@ -150,9 +173,12 @@ bool ReflectionIsEqual(const Type* t1, const Type* t2)
 void EnumAddValue(Enum* enumeration, const char* name, int32 value)
 {
 	if( !enumeration ) return;
-
-	EnumValuesMap& values = enumeration->values;
-	values[name] = value;
+	
+#pragma TODO("Fix memory leak in reflected enumeration names.")
+	auto ns = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String(name);
+	auto nh = murmur_hash_64(ns->c_str(), ns->size(), 0);
+	hash::set(enumeration->values, nh, value);
+	hash::set(enumeration->value_names, nh, ns);
 }
 
 //-----------------------------------//
@@ -161,11 +187,11 @@ int32 EnumGetValue(Enum* enumeration, const char* name)
 {
 	if( !enumeration ) return -1;
 	EnumValuesMap& values = enumeration->values;
-	
-	EnumValuesMap::iterator it = values.find(name);
-	if( it == values.end() ) return -1;
-	
-	return it->second;
+	String ns(name);
+	auto nh = murmur_hash_64(ns.c_str(), ns.size(), 0);
+	auto val = hash::get<int32>(values, nh, -1);
+
+	return val;
 }
 
 //-----------------------------------//
@@ -174,13 +200,15 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 {
 	if( !enumeration ) return nullptr;
 	EnumValuesMap& values = enumeration->values;
-	
-	EnumValuesMap::iterator it = values.begin();
-	
-	for(; it != values.end(); ++it)
+
+	for(auto e = hash::begin(values); e != hash::end(values); ++e)
 	{
-		const char* name = it->first;
-		if( value == it->second ) return name;
+		if(e->value == value)
+		{
+			auto name = hash::get<String *>(enumeration->value_names, e->key, nullptr);
+			assert(name != nullptr);
+			return name->c_str();
+		}
 	}
 
 	return nullptr;
@@ -206,14 +234,14 @@ void ClassAddField(Class* klass, Field* field)
 	}
 
 	ClassFieldIdMap& fieldIds = klass->fieldIds;
-	fieldIds[field->id] = field;
+	hash::set(fieldIds, field->id, field);
 }
 
 //-----------------------------------//
 
 ClassIdMap& ClassGetIdMap()
 {
-	static ClassIdMap s_ClassIds;
+	static ClassIdMap s_ClassIds(*AllocatorGetHeap());
 	return s_ClassIds;
 }
 
@@ -222,12 +250,8 @@ ClassIdMap& ClassGetIdMap()
 Class* ClassGetById(ClassId id)
 {
 	ClassIdMap& classIds = ClassGetIdMap();
-	ClassIdMap::iterator it = classIds.find(id);
-
-	if( it == classIds.end() )
-		return nullptr;
-
-	return it->second;
+	auto val = hash::get<Class*>(classIds, id, nullptr);
+	return val;
 }
 
 //-----------------------------------//
@@ -266,17 +290,14 @@ Field* ClassGetField(const Class* klass, const char* name)
 
 Field* ClassGetFieldById(Class* klass, FieldId id)
 {
-	ClassFieldIdMap& fieldIds = klass->fieldIds;
-
-	ClassFieldIdMap::iterator it = fieldIds.find(id);
-
-	if( it != fieldIds.end() )
-		return it->second;
-
-	if( klass->parent )
-		return ClassGetFieldById(klass->parent, id);
-	else
+	if(!klass)
 		return nullptr;
+
+	auto field = hash::get<Field*>(klass->fieldIds, id, nullptr);
+	if(!field)
+		field = ClassGetFieldById(klass->parent, id);
+
+	return field;
 }
 
 //-----------------------------------//
