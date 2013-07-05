@@ -36,6 +36,7 @@ NAMESPACE_CORE_BEGIN
 		: Index_( 0 )
 		, Pool_(nullptr)
 		, CurrentCompletion_(nullptr)
+		, Tasks_(*AllocatorGetHeap())
 	{}
 
 	WorkerThread::~WorkerThread()

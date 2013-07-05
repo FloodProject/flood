@@ -45,7 +45,7 @@ public:
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Peer )
-typedef fld::HeapArray<PeerPtr> NetworkPeers;
+typedef Array<PeerPtr> NetworkPeers;
 
 //-----------------------------------//
 

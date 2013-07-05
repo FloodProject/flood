@@ -54,6 +54,12 @@ static void* MongooseCallback(mg_event event, mg_connection* conn, const mg_requ
 
 //-----------------------------------//
 
+WebContext::WebContext()
+	: routes(*AllocatorGetHeap())
+{}
+
+//-----------------------------------//
+
 WebContext* WebServerCreate( Allocator* alloc )
 {
 	WebContext* context = Allocate(alloc, WebContext);

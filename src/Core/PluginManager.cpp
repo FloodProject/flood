@@ -17,9 +17,8 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 PluginManager::PluginManager()
-{
-
-}
+	: plugins(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 

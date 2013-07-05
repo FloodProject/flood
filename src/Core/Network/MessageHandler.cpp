@@ -22,6 +22,10 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
+MessagesTable MessageHandler::NullMessageTable = Array<MessageMapping>(*AllocatorGetHeap());
+
+//-----------------------------------//
+
 ExtensionMetadata* MessageHandler::getMetadata()
 {
 	static ExtensionMetadata s_Extension =
@@ -32,8 +36,6 @@ ExtensionMetadata* MessageHandler::getMetadata()
 
 	return &s_Extension;
 }
-
-MessagesTable MessageHandler::NullMessageTable;
 
 //-----------------------------------//
 

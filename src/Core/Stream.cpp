@@ -72,7 +72,7 @@ int64 StreamReadBuffer(Stream* stream, void* buffer, int64 size)
 
 int64 StreamReadString(Stream* stream, String& text)
 {
-	fld::HeapArray<uint8> data;
+	Array<uint8> data(*AllocatorGetHeap());
 	int64 size = StreamRead(stream, data);
 	text.assign( array::begin(data), array::end(data) );
 	return size;

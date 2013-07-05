@@ -21,6 +21,7 @@ NAMESPACE_CORE_BEGIN
 		: CurrentCompletion_(nullptr)
 		, IsDone_(false)
 		, ActiveWorkers_(0)
+		, Workers_(*AllocatorGetHeap())
 	{}
 
 	void WorkerThreadPool::Initialize( size_t threadCount )

@@ -63,7 +63,7 @@ public:
 protected:
 	
 	// Keeps the known plugins.
-	fld::HeapArray<Plugin*> plugins;
+	Array<Plugin*> plugins;
 };
 
 //-----------------------------------//

@@ -29,7 +29,7 @@ public:
 private:
 	//  - task stuff
 	WorkerThreadPool * Pool_;					// a pointer back to the Pool that owns *this
-	fld::HeapArray<TaskBase *> Tasks_;				// an array of task pointers; this is accessed in the LIFO pattern
+	Array<TaskBase *> Tasks_;				// an array of task pointers; this is accessed in the LIFO pattern
 	Completion * CurrentCompletion_;			// the work that is currently being done
 
 	// - thread stuff

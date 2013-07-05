@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 struct MessageMapping;
-typedef fld::HeapArray<MessageMapping> MessagesTable;
+typedef Array<MessageMapping> MessagesTable;
 
 REFLECT_DECLARE_CLASS(MessageHandler)
 

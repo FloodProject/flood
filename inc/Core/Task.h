@@ -43,7 +43,7 @@ NAMESPACE_CORE_BEGIN
 	class ALIGN_BEGIN(16) API_CORE TaskBase
 	{
 	public:
-		typedef fld::HeapArray<TaskBase *> Range;
+		typedef Array<TaskBase *> Range;
 
 	public:
 		Completion * Completion_;

@@ -27,7 +27,7 @@ NAMESPACE_CORE_BEGIN
 		// -- Member Data --
 	private:
 		//	- workers / shared data
-		fld::HeapArray<WorkerThread *>		Workers_;				// array of Worker objects
+		Array<WorkerThread *>		Workers_;				// array of Worker objects
 
 		//	- synchronization stuff
 		Completion * CurrentCompletion_;					// pointer to a (somewhat) current task's completion flag; used to synchronize

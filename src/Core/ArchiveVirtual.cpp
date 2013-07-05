@@ -42,7 +42,11 @@ static ArchiveFuncs gs_VirtualArchiveFuncs =
 
 struct ArchiveVirtual : public Archive
 {
-	HeapArray<Archive*> mounts;
+	ArchiveVirtual()
+		: mounts(*AllocatorGetHeap())
+	{}
+
+	Array<Archive*> mounts;
 };
 
 //-----------------------------------//

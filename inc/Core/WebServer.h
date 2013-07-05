@@ -38,8 +38,10 @@ struct WebRoute
 
 struct WebContext
 {
+	WebContext();
+
 	mg_context* mongoose;
-	fld::HeapArray<WebRoute> routes;
+	Array<WebRoute> routes;
 };
 
 API_CORE WebContext* WebServerCreate( Allocator* );
