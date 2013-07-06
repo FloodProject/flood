@@ -10,8 +10,8 @@
 #include "Core/Log.h"
 #include "Core/References.h"
 #include "Core/Object.h"
-
-#include <map>
+#include "Core/Containers/Hash.h"
+#include "Core/Containers/MurmurHash.h"
 
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
@@ -95,23 +95,49 @@ AllocationMetadata::AllocationMetadata()
 
 static const int32 MEMORY_PATTERN = 0xDEADBEEF;
 
-// TODO: Do not use STL in this low level code.
-
-typedef std::map<const char*, AllocationGroup, RawStringCompare> MemoryGroupMap;
+typedef Hash<AllocationGroup> MemoryGroupMap;   // keyed by const char *
+typedef Array<const char *> MemoryGroupNameMap;
 
 static MemoryGroupMap& GetMemoryGroupMap()
 {
-	static MemoryGroupMap memoryGroups;
+	static MemoryGroupMap memoryGroups(*AllocatorGetHeap());
 	return memoryGroups;
+}
+
+static MemoryGroupNameMap& GetMemoryGroupNameMap()
+{
+	static MemoryGroupNameMap memGroupNames(*AllocatorGetHeap());
+	return memGroupNames;
 }
 
 static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 {
+	static bool recurseGuard = false;
+
 	if(!metadata) return;
 
 	MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
-	memoryGroups[metadata->group].total += alloc ? metadata->size : 0;
-	memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
+
+	String ns(metadata->group);
+	auto key = murmur_hash_64(ns.c_str(), ns.size(), 0);
+
+	if(!hash::has(memoryGroups, key) && !recurseGuard)
+	{
+		recurseGuard = true;
+		array::push_back(GetMemoryGroupNameMap(), metadata->group);
+		recurseGuard = false;
+	}
+
+	auto memGroup = hash::get<AllocationGroup>(memoryGroups, key, AllocationGroup());
+	memGroup.total += alloc ? metadata->size : 0;
+	memGroup.freed += alloc ? 0 : metadata->size;
+
+	if(!recurseGuard)
+	{
+		recurseGuard = true;
+		hash::set(memoryGroups, key, memGroup);
+		recurseGuard = false;
+	}
 }
 
 //-----------------------------------//
@@ -151,18 +177,19 @@ void AllocatorSetGroup( Allocator* alloc, const char* group )
 
 void AllocatorDumpInfo()
 {
-	MemoryGroupMap& groups = GetMemoryGroupMap();
-	if( groups.empty() ) return;
+	auto& groups = GetMemoryGroupNameMap();
+	if( array::empty(groups) ) return;
 
 	LogDebug("-----------------------------------------------------");
 	LogDebug("Memory stats");
 	LogDebug("-----------------------------------------------------");
 
-	MemoryGroupMap::iterator it;
-	for(it = groups.begin(); it != groups.end(); ++it)
+	for(auto it = array::begin(groups); it != array::end(groups); ++it)
 	{
-		const char* id = it->first;
-		AllocationGroup& group = it->second;
+		const char* id = *it;
+		String ns(id);
+		auto key = murmur_hash_64(ns.c_str(), ns.size(), 0);
+		auto group = hash::get<AllocationGroup>(GetMemoryGroupMap(), key, AllocationGroup());
 		
 		const char* fs = "%s\t| total freed: %I64d bytes, total allocated: %I64d bytes";
 		String format = StringFormat(fs, id, group.freed, group.total );
