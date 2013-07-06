@@ -224,12 +224,10 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 #endif
 
 #ifdef BUILD_DEBUG
-	const ComponentMap& components = entity->getComponents();
-	ComponentMap::const_iterator it;
-	
-	for( it = components.begin(); it != components.end(); it++ )
+	const auto& components = entity->getComponents();
+	for( auto it : components)
 	{
-		const ComponentPtr& component = it->second;
+		const auto& component = it.value;
 		component->onPreRender(*this);
 
 		if( !component->isDebugRenderableVisible() )

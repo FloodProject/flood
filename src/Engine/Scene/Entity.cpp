@@ -12,7 +12,7 @@
 #include "Engine/Scene/Geometry.h"
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Tags.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
@@ -41,6 +41,7 @@ Entity::Entity()
 	, tags(0)
 	, parent(nullptr)
 	, components(*AllocatorGetHeap())
+	, componentsMap(*AllocatorGetHeap())
 {
 }
 
@@ -52,6 +53,7 @@ Entity::Entity( const String& name )
 	, tags(0)
 	, parent(nullptr)
 	, components(*AllocatorGetHeap())
+	, componentsMap(*AllocatorGetHeap())
 {
 }
 
@@ -64,11 +66,8 @@ Entity::~Entity()
 	
 	array::clear(components);
 
-	for(auto it = componentsMap.begin(); it != componentsMap.end(); ++it )
-	{
-		ComponentPtr& component = it->second;
-		component.reset();
-	}
+	for(auto c : componentsMap)
+		c.value.reset();
 }
 
 //-----------------------------------//
@@ -86,13 +85,13 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	Class* type = component->getType();
 
-	if( componentsMap.find(type) != componentsMap.end() )
+	if(hash::has(componentsMap, (uint64)type))
 	{
 		LogWarn( "Component '%s' already exists in '%s'", type->name, name.c_str() );
 		return false;
 	}
 
-	componentsMap[type] = component;
+	hash::set(componentsMap, (uint64)type, component);
 	component->setEntity(this);
 
 	onComponentAdded(component);
@@ -117,13 +116,11 @@ bool Entity::removeComponent( const ComponentPtr& component )
 	
 	Class* type = component->getType();
 
-	ComponentMap::iterator it = componentsMap.find(type);
-	
-	if( it == componentsMap.end() )
+	auto it = hash::get<ComponentPtr>(componentsMap, (uint64)type, nullptr);
+	if(!it)
 		return false;
 
-	componentsMap.erase(it);
-
+	hash::remove(componentsMap, (uint64)type);
 	onComponentRemoved(component);
 	sendEvents();
 
@@ -155,27 +152,20 @@ ComponentPtr Entity::getComponent(const char* name) const
 
 ComponentPtr Entity::getComponent(Class* klass) const
 {
-	ComponentMap::const_iterator it = componentsMap.find(klass);
-		
-	if( it == componentsMap.end() )
-		return nullptr;
-
-	return it->second;
+	return hash::get<ComponentPtr>(componentsMap, (uint64)klass, nullptr);
 }
 
 //-----------------------------------//
 
 ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 {
-	ComponentMap::const_iterator it;
-	
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+	for( auto it : componentsMap)
 	{
-		const ComponentPtr& component = it->second;
-		Class* componentClass = component->getType();
+		const auto& comp = it.value;
+		Class* componentClass = comp->getType();
 
 		if( ClassInherits(componentClass, klass) )
-			return component;
+			return comp;
 	}
 
 	return nullptr;
@@ -187,9 +177,9 @@ Array<GeometryPtr> Entity::getGeometry() const
 {
 	Array<GeometryPtr> geoms(*AllocatorGetHeap());
 
-	for( auto it = componentsMap.begin(); it != componentsMap.end(); ++it )
+	for( auto it : componentsMap)
 	{
-		const ComponentPtr& component = it->second;
+		const auto& component = it.value;
 
 		if( !ClassInherits(component->getType(), ReflectionGetType(Geometry)) )
 			continue;
@@ -219,11 +209,9 @@ void Entity::update( float delta )
 	if( transform ) transform->update( delta );
 
 	// Update the other components.
-	ComponentMap::const_iterator it;
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+	for( auto it : componentsMap)
 	{
-		const ComponentPtr& component = it->second;
-
+		const auto& component = it.value;
 		if( component == transform ) 
 			continue;
 
@@ -237,13 +225,12 @@ void Entity::fixUp()
 {
 	for(size_t i = 0; i < array::size(components); ++i )
 	{
-		Component* component = components[i].get();
-		if( !component ) continue;
+		auto component = components[i];
+		if( !component ) 
+			continue;
 
 		component->setEntity(this);
-		
-		Class* type = component->getType();
-		componentsMap[type] = component;
+		hash::set(componentsMap, (uint64)component->getType(), component);
 	}
 
 	if( !getTransform() ) addTransform();
