@@ -12,8 +12,6 @@
 #include "Engine/Resources/Sound.h"
 #include "Core/Math/Vector.h"
 
-#include <map>
-
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)
 
@@ -58,7 +56,7 @@ API_AUDIO bool AudioCheckError();
  * Audio device to play sound data using OpenAL as backend.
  */
 
-typedef std::map<Sound*, AudioBufferPtr> SoundBufferMap;
+typedef Hash<AudioBufferPtr> SoundBufferMap; // keyed by Sound *
 struct ResourceEvent;
 
 class API_AUDIO AudioDevice

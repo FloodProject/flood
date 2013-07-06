@@ -15,6 +15,8 @@
 #include "Engine/Audio/AL.h"
 #include "Resources/ResourceManager.h"
 
+#include "Core/Containers/Hash.h"
+
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -27,6 +29,7 @@ AudioDevice* GetAudioDevice() { return gs_audioDevice; }
 AudioDevice::AudioDevice(ALCdevice* device)
 	: device(device)
 	, mainContext(nullptr)
+	, soundBuffers(*AllocatorGetHeap())
 {
 	if(!gs_audioDevice) gs_audioDevice = this;
 
@@ -150,11 +153,12 @@ AudioBufferPtr AudioDevice::createBuffer()
 AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 {
 	// Check if buffer with same resource already exists
-	if( soundBuffers.find(sound) != soundBuffers.end() ) 
-		return soundBuffers[sound];
+	auto buffer = hash::get<AudioBufferPtr>(soundBuffers, (uint64)sound, nullptr);
+	if(buffer)
+		return buffer;
 
-	AudioBufferPtr buffer = createBuffer();
-	soundBuffers[sound] = buffer;
+	buffer = createBuffer();
+	hash::set(soundBuffers, (uint64)sound, buffer);
 
 	return buffer;
 }
@@ -175,13 +179,10 @@ void AudioDevice::onResourceLoaded(const ResourceEvent& event)
 	Sound* sound = (Sound*) resource;
 	assert( sound->isLoaded() );
 
-	auto it = soundBuffers.find(sound);
-	
-	if( it == soundBuffers.end() )
-		return;
+	auto buffer = hash::get<AudioBufferPtr>(soundBuffers, (uint64)sound, nullptr);
 
-	AudioBuffer* soundBuffer = it->second.get();
-	AudioBufferSound(soundBuffer, sound);
+	if(buffer)
+		AudioBufferSound(buffer.get(), sound);
 }
 
 //-----------------------------------//
