@@ -145,7 +145,7 @@ ResourceManager::ResourceManager()
 	context.serialize = ResourceHandleSerialize;
 	context.deserialize = ResourceHandleFind;
 	
-	ReflectionHandleContextMap contextMap;
+	ReflectionHandleContextMap contextMap(*AllocatorGetHeap());
 	ReflectionSetHandleContext(&contextMap, context);
 
 	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );

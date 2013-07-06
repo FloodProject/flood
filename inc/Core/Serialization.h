@@ -15,8 +15,6 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/String.h"
 
-#include <map>
-
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -86,7 +84,7 @@ struct API_CORE ReflectionHandleContext
 	ReflectionDeserializeHandleFn deserialize;
 };
 
-typedef std::map<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
+typedef Hash<ReflectionHandleContext> ReflectionHandleContextMap;
 
 API_CORE void ReflectionSetHandleContext(
 	ReflectionHandleContextMap*, ReflectionHandleContext context);

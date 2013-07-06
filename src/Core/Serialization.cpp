@@ -12,7 +12,7 @@
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
 
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Reflection.h"
@@ -57,27 +57,25 @@ ReflectionContext::ReflectionContext()
 //-----------------------------------//
 
 void ReflectionSetHandleContext( ReflectionHandleContextMap* handleContextMap,
-								    ReflectionHandleContext context)
+									ReflectionHandleContext context)
 {
 	assert(handleContextMap && "Expected a valid context map");
 	if (!handleContextMap ) return;
 
-	(*handleContextMap)[context.type] = context;
+	hash::set(*handleContextMap, (uint64)context.type, context);
 }
 
 //-----------------------------------//
 
 bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
-								    Class* klass, ReflectionHandleContext& ctx)
+									Class* klass, ReflectionHandleContext& ctx)
 {
 	assert(handleContextMap && "Expected a valid context map");
 	if (!handleContextMap ) return false;
 
-	auto it = handleContextMap->find(klass);
-	
-	if( it != handleContextMap->end() )
+	if(hash::has(*handleContextMap, (uint64)klass))
 	{
-		ctx = it->second;
+		ctx = hash::get(*handleContextMap, (uint64)klass, ctx);
 		return true;
 	}
 	else if( ClassHasParent(klass) )
@@ -327,7 +325,7 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	Type* type = context->type;
 	Object* object = context->object;
 
- 	context->address = ClassGetFieldAddress(context->object, field);
+	context->address = ClassGetFieldAddress(context->object, field);
 	context->elementAddress = context->address;
 	context->type = field->type;
 
