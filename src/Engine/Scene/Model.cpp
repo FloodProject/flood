@@ -43,7 +43,7 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Model::MeshRenderablesMap Model::meshRenderables;
+Model::MeshRenderablesMap Model::meshRenderables(*AllocatorGetHeap());
 
 Model::Model()
 	: animations(*AllocatorGetHeap())
@@ -177,24 +177,22 @@ void Model::build()
 {
 	if( modelBuilt ) return;
 
-	MeshRenderablesMap::iterator it = meshRenderables.find(mesh);
+	auto rends = hash::get<Array<RenderablePtr>*>(meshRenderables, (uint64)mesh, nullptr);
 	
-	if( it == meshRenderables.end() )
+	if( !rends )
 	{
-		auto& rends = *meshRenderables[mesh];
-	
-		if( !MeshBuild(mesh, rends) )
+#pragma TODO("Fix memory leak in global list of renderables.")
+		rends = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(Array<RenderablePtr>), alignof(Array<RenderablePtr>))) Array<RenderablePtr>(*AllocatorGetHeap());
+		if( !MeshBuild(mesh, *rends) )
 		{
 			LogError("Error building mesh '%s'", mesh->getPath().c_str());
 			return;
 		}
 	}
 
-	auto& rends = *meshRenderables[mesh];
-
-	for( size_t i = 0; i < array::size(rends); ++i )
+	for( size_t i = 0; i < array::size(*rends); ++i )
 	{
-		Renderable* rend = rends[i].get();
+		Renderable* rend = (*rends)[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
 		
 		addRenderable( rend );
