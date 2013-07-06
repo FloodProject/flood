@@ -10,6 +10,8 @@
 #include "Graphics/RenderBackend.h"
 #include "Graphics/GeometryBuffer.h"
 
+#include "Core/Containers/Hash.h"
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
@@ -24,6 +26,7 @@ BufferEntry::BufferEntry()
 
 BufferManager::BufferManager()
 	: backend(nullptr)
+	, buffers(*AllocatorGetHeap())
 {
 }
 
@@ -39,15 +42,10 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 {
 	if( !gb ) return nullptr;
 
-	auto it = buffers.find(gb);
+	if(hash::has(buffers, (uint64)gb))
+		return const_cast<BufferEntry*>(&(hash::get(buffers, (uint64)gb, BufferEntry())));
 
-	if( it != buffers.end() )
-	{
-		// Buffers already allocated.
-		return &it->second;
-	}
-
-	BufferEntry& entry = buffers[gb];
+	BufferEntry entry;
 	entry.vb = backend->createVertexBuffer();
 	entry.vb->setBufferAccess( gb->getBufferAccess() );
 	entry.vb->setBufferUsage( gb->getBufferUsage() );
@@ -61,7 +59,8 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 		entry.ib->setGeometryBuffer( gb );
 	}
 
-	return &entry;
+	hash::set(buffers, (uint64)gb, entry);
+	return const_cast<BufferEntry*>(&(hash::get(buffers, (uint64)gb, BufferEntry())));
 }
 
 //-----------------------------------//
