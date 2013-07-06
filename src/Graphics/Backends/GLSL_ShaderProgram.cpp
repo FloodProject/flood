@@ -13,7 +13,7 @@
 #include "GLSL_ShaderProgram.h"
 #include "GL.h"
 #include "Graphics/UniformBuffer.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Utilities.h"
 #include "Core/References.h"
 
@@ -24,6 +24,7 @@ NAMESPACE_GRAPHICS_BEGIN
 GLSL_ShaderProgram::GLSL_ShaderProgram()
 	: hadLinkError(false)
 	, shaders(*AllocatorGetHeap())
+	, attached(*AllocatorGetHeap())
 {
 	create();
 	createShaders();
@@ -64,7 +65,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
 	array::push_back<GLSL_ShaderPtr>(shaders, shader);
 	
-	bool isAttached = attached[shader];
+	bool isAttached = hash::get(attached, (uint64)shader, false);
 	
 	if( !isAttached )
 	{
@@ -73,7 +74,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 		if( CheckLastErrorGL("Could not attach shader object") )
 			return;
 
-		attached[shader] = true;
+		hash::set(attached, (uint64)shader, true);
 	}
 }
 
@@ -84,7 +85,7 @@ void GLSL_ShaderProgram::detachShaders()
 	for( size_t i = 0; i < array::size(shaders); ++i )
 	{
 		GLSL_Shader* shader = shaders[i].get();
-		bool isAttached = attached[shader];
+		bool isAttached = hash::get(attached, (uint64)shader, false);
 		
 		if( !isAttached ) continue;
 
@@ -92,7 +93,7 @@ void GLSL_ShaderProgram::detachShaders()
 		CheckLastErrorGL("Could not detach shader object");
 	}
 
-	attached.clear();
+	hash::clear(attached);
 }
 
 //-----------------------------------//

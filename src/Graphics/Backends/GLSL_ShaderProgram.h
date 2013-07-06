@@ -22,7 +22,7 @@ NAMESPACE_GRAPHICS_BEGIN
  */
 
 typedef Array< GLSL_ShaderPtr > ShadersVector;
-typedef std::map< GLSL_ShaderPtr, bool > ShadersAttachMap;
+typedef Hash< bool > ShadersAttachMap; // keyed by GLSL_Shader *
 
 class API_GRAPHICS GLSL_ShaderProgram : public ShaderProgram
 {
