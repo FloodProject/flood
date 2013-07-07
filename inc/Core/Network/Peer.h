@@ -47,7 +47,7 @@ public:
 	// Queues a packet to be sent to the peer.
 	void queuePacket(const PacketPtr& packet, uint8 channel);
 
-	FLD_IGNORE void processInPacket(const PacketPtr& packet, uint8 channel);
+	FLD_IGNORE bool processInPacket(const PacketPtr& packet, uint8 channel);
 
 	FLD_IGNORE void addProcessor(PacketProcessor* processor);
 

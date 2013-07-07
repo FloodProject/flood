@@ -55,9 +55,9 @@ void Peer::queuePacket(const PacketPtr& packet, uint8 channel)
 
 //-----------------------------------//
 
-void Peer::processInPacket(const PacketPtr& packet, uint8 channel)
+bool Peer::processInPacket(const PacketPtr& packet, uint8 channel)
 {
-	processors->processInPacket(this, packet.get(), channel);
+	return processors->processInPacket(this, packet.get(), channel);
 }
 
 //-----------------------------------//

@@ -154,9 +154,8 @@ void Host::handleReceiveEvent(ENetEvent* event)
 	PacketPtr packetPtr = PacketCreate(0);
 	packetPtr->setPacket(packet);
 
-	peer->processInPacket(packetPtr.get(), event->channelID);
-
-	onPeerPacket(peer, packetPtr, event->channelID);
+	if(peer->processInPacket(packetPtr.get(), event->channelID))
+		onPeerPacket(peer, packetPtr, event->channelID);
 }
 
 //-----------------------------------//
