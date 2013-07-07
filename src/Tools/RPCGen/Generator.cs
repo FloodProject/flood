@@ -716,8 +716,6 @@ namespace Flood.Tools.RPCGen
         // Used to generate unique names when (de)serializing collections.
         int GenericIndex = 0;
 
-        private string UtilsPathName = "Flood.RPC.Utils";
-
         internal void GenerateUsings()
         {
             WriteLine("using System;");
@@ -1167,47 +1165,6 @@ namespace Flood.Tools.RPCGen
             GenerateContainerSingleElementSerialization(elemType2, iterName + ".Value");
         }
 
-        /// <summary>
-        /// Generates the code to serialize a class element of a container  
-        /// </summary>
-        internal void GenerateContainerClassElementSerialization(Type elemType, string iterName)
-        {
-            var typeImpl = string.Format("_typeImpl{0}", GenericIndex++);
-            var typeBase = string.Format("_typeBase{0}", GenericIndex++);
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = System.Type.GetType({1}.GetType().Name + \"Impl\");", typeImpl, iterName);
-            WriteLine("var {0} = {1}.GetType();", typeBase, iterName);
-
-            WriteLine("oprot.WriteString({0}.Name);", typeBase);
-            WriteLine("oprot.WriteString({0}.Namespace);", typeBase);
-            WriteLine("var {0} = Activator.CreateInstance({1}) as {2}Impl;", elemName,
-                      typeImpl, elemType.Name);
-
-            var props = string.Format("_props{0}", GenericIndex++);
-            WriteLine("IEnumerable<PropertyInfo> {0} = {1}.GetAllProperties({2});", props, UtilsPathName, typeImpl);
-            var iter = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iter, props);
-            WriteStartBraceIndent();
-            var propName = string.Format("_propName{0}", GenericIndex++);
-            var fInfo = string.Format("_fInfo{0}", GenericIndex++);
-            var pInfo = string.Format("_pInfo{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Name;", propName, iter);
-            WriteLine("var {0} = {1}.GetField({2}, {3});", fInfo, UtilsPathName, typeBase, propName);
-            WriteLine("var {0} = {1}.GetProperty({2}, {3});", pInfo, UtilsPathName, typeBase, propName);
-            WriteLine("if (!({0} != null ^ {1} != null))", fInfo, pInfo);
-            PushIndent();
-            WriteLine("continue;");
-            PopIndent();
-            var value = string.Format("_value{0}", GenericIndex++);
-            WriteLine("var {0} = ({1} != null) ? {1}.GetValue({3}) : {2}.GetValue({3});", value, fInfo, pInfo,
-                      iterName);
-            WriteLine("{0}.SetValue({1}, {2});", iter, elemName, value);
-
-            WriteCloseBraceIndent();
-            WriteLine("{0}.Write(oprot);", elemName);
-
-        }
-
         #endregion
 
         #region Deserialization
@@ -1312,31 +1269,14 @@ namespace Flood.Tools.RPCGen
                     throw new NotSupportedException();
                 case TType.Struct:
                 case TType.Exception:
+                case TType.Class:
                     WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
                     WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
-                    WriteStartBraceIndent();
-                    foreach (var field in GetAllFields(elemType))
-                    {
-                        if (!Metadata.HasId(field))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", field.Name, elemName);
-                    }
-                    foreach (var property in GetAllProperties(elemType))
-                    {
-                        if (!Metadata.HasId(property))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", property.Name, elemName);
-                    }
-                    PopIndent();
-                    WriteLine("};");
+                    GenerateStructInit(elemType, elemName ,elemName2);
                     WriteLine("{0}[{1}] = {2};", containerName, iterName, elemName2);
-                    break;
-                case TType.Class:
-                    GenerateContainerClassElementDeserialization(elemType, elemName);
-                    WriteLine("{0}[{1}] = {2};", containerName, iterName, elemName);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1513,31 +1453,14 @@ namespace Flood.Tools.RPCGen
                     throw new NotSupportedException();
                 case TType.Struct:
                 case TType.Exception:
+                case TType.Class:
                     WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
                     WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
-                    WriteStartBraceIndent();
-                    foreach (var field in GetAllFields(elemType))
-                    {
-                        if (!Metadata.HasId(field))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", field.Name, elemName);
-                    }
-                    foreach (var property in GetAllProperties(elemType))
-                    {
-                        if (!Metadata.HasId(property))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", property.Name, elemName);
-                    }
-                    PopIndent();
-                    WriteLine("};");
+                    GenerateStructInit(elemType, elemName, elemName2);
                     WriteLine("{0}.Add({1});", containerName, elemName2);
-                    break;
-                case TType.Class:
-                    GenerateContainerClassElementDeserialization(elemType, elemName);
-                    WriteLine("{0}.Add({1});", containerName, elemName);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1623,60 +1546,6 @@ namespace Flood.Tools.RPCGen
                 default:
                     throw new NotImplementedException();
             }
-        }
-
-        /// <summary>
-        /// Generate the code to deserialize a  class element  of a container,
-        /// the code generated creates a copy of the element serialized and stores it 
-        /// in the variable with the name elemName
-        /// </summary>
-        internal void GenerateContainerClassElementDeserialization(Type elemType, string elemName)
-        {
-            var typeName = string.Format("_typeName{0}", GenericIndex++);
-            var typeNameSpace = string.Format("_typeNameSpace{0}", GenericIndex++);
-            var typeImpl = string.Format("_typeImpl{0}", GenericIndex++);
-            var typeBase = string.Format("_typeBase{0}", GenericIndex++);
-            WriteLine("var {0} = iprot.ReadString();", typeName);
-            WriteLine("var {0} = iprot.ReadString();", typeNameSpace);
-            WriteLine("var {0} = System.Type.GetType({1} + \"Impl\");", typeImpl, typeName);
-            WriteLine("var {0} = System.Type.GetType({1} + \".\" + {2});", typeBase, typeNameSpace, typeName);
-
-            WriteLine("var {0}Impl = Activator.CreateInstance({1}) as {2}Impl;", elemName,
-                      typeImpl, elemType.Name);
-            WriteLine("{0}Impl.Read(iprot);", elemName);
-
-            WriteLine("var {0} = Activator.CreateInstance({1}) as {2};", elemName,
-                       typeBase, elemType.FullName);
-
-            var props = string.Format("_props{0}", GenericIndex++);
-            WriteLine("IEnumerable<PropertyInfo> {0} = {1}.GetAllProperties({2});", props, UtilsPathName, typeImpl);
-            var iter = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iter, props);
-            WriteStartBraceIndent();
-
-            var propName = string.Format("_propName{0}", GenericIndex++);
-            var fInfo = string.Format("_fInfo{0}", GenericIndex++);
-            var pInfo = string.Format("_pInfo{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Name;", propName, iter);
-            WriteLine("var {0} = {1}.GetField({2}, {3});", fInfo, UtilsPathName, typeBase, propName);
-            WriteLine("var {0} = {1}.GetProperty({2}, {3});", pInfo, UtilsPathName, typeBase, propName);
-            WriteLine("if (!({0} != null ^ {1} != null))", fInfo, pInfo);
-            PushIndent();
-            WriteLine("continue;");
-            PopIndent();
-            var value = string.Format("_value{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.GetValue({2}Impl);", value, iter,
-                      elemName);
-            WriteLine("if ({0} != null)", fInfo);
-            PushIndent();
-            WriteLine("{0}.SetValue({1}, {2});", fInfo, elemName, value);
-            PopIndent();
-            WriteLine("else");
-            PushIndent();
-            WriteLine("{0}.SetValue({1}, {2});", pInfo, elemName, value);
-            PopIndent();
-            WriteCloseBraceIndent();
-
         }
 
         #endregion
