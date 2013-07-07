@@ -393,6 +393,9 @@ namespace EngineWeaver
                 var methodInfo = typeof(Instruction).GetMethod("Create",new Type[]{def.OpCode.GetType(),def.Operand.GetType()});
                 ret = (Instruction) methodInfo.Invoke(null,new object[]{def.OpCode,def.Operand});
             }
+
+            ret.SequencePoint = def.SequencePoint;
+
             instructions.Add(ret);
             return ret;
         }
