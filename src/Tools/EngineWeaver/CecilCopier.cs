@@ -96,6 +96,15 @@ namespace EngineWeaver
                     i.Operand = CopyMap[i.Operand];
                     continue;
                 }
+                var operandI = i.Operand as Instruction[];
+                if (operandI != null) //i.e: switch
+                {
+                    var l = new Instruction[operandI.Length];
+                    for(var k = 0; k <  operandI.Length; k++)
+                        l[k] = (Instruction) CopyMap[operandI[k]];
+                    i.Operand = l;
+                    continue;
+                }
                
                 throw new NotImplementedException("No handling for operands of type "+i.Operand.GetType());
             }
