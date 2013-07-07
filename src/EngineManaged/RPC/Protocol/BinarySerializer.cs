@@ -27,7 +27,7 @@ using Flood.RPC.Transport;
 
 namespace Flood.RPC.Protocol
 {
-    public class BinaryProtocol : Serializer
+    public class BinarySerializer : Serializer
     {
         protected const uint VERSION_MASK = 0xffff0000;
         protected const uint VERSION_1 = 0x80010000;
@@ -39,7 +39,7 @@ namespace Flood.RPC.Protocol
         protected bool checkReadLength_ = false;
 
 
-        #region BinaryProtocol Factory
+        #region BinarySerializer Factory
          /**
           * Factory
           */
@@ -60,18 +60,18 @@ namespace Flood.RPC.Protocol
               }
 
             public Serializer GetProtocol(TTransport trans) {
-              return new BinaryProtocol(trans, strictRead_, strictWrite_);
+              return new BinarySerializer(trans, strictRead_, strictWrite_);
             }
           }
 
         #endregion
 
-        public BinaryProtocol(TTransport trans)
+        public BinarySerializer(TTransport trans)
             : this(trans, false, true)
         {
         }
 
-        public BinaryProtocol(TTransport trans, bool strictRead, bool strictWrite)
+        public BinarySerializer(TTransport trans, bool strictRead, bool strictWrite)
             :base(trans)
         {
             strictRead_ = strictRead;

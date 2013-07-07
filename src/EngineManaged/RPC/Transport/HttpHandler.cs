@@ -27,7 +27,7 @@ namespace Flood.RPC.Transport
         protected System.Text.Encoding encoding = System.Text.Encoding.UTF8;
 
         public THttpHandler(Processor processor)
-            : this(processor, new BinaryProtocol.Factory())
+            : this(processor, new BinarySerializer.Factory())
         {
 
         }

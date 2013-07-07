@@ -58,8 +58,8 @@ namespace RPCGen.Tests.Services
             var proxyTransport = new TStreamTransport(stream1, stream2);
             var implTransport = new TStreamTransport(stream2, stream1);
 
-            var proxySerializer = new BinaryProtocol(proxyTransport);
-            var implSerializer = new BinaryProtocol(implTransport);
+            var proxySerializer = new BinarySerializer(proxyTransport);
+            var implSerializer = new BinarySerializer(implTransport);
 
             var serviceImpl = new Service();
             var serviceProxy = (IService) clientCttr.Invoke(new object[]{proxySerializer});
