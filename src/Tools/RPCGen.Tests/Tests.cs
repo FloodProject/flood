@@ -22,23 +22,17 @@ namespace RPCGen.Tests
         {
             var testAssemblyPath = Path.GetFullPath("RPCGen.Tests.Services.dll");
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
+            string genDirectory = Path.Combine(Path.GetDirectoryName(testAssemblyPath), "gen","RPCGen.Tests.Services");
+            Directory.CreateDirectory(genDirectory);
 
-            try {
+            var args = new string[]
+            {
+                String.Format("-o={0}", genDirectory),
+                testAssemblyPath
+            };
 
-                var args = new string[]
-                {
-                    String.Format("-o={0}",tempDirectory),
-                    testAssemblyPath
-                };
-
-                var ret = Flood.Tools.RPCGen.Program.Main(args);
-                Assert.AreEqual(0,ret);
-
-            } finally {
-                Directory.Delete(tempDirectory,true);
-            }
+            var ret = Flood.Tools.RPCGen.Program.Main(args);
+            Assert.AreEqual(0,ret);
 
             var testAssembly = Assembly.LoadFile(testAssemblyPath);
 
