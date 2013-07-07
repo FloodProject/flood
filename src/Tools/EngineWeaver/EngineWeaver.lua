@@ -17,7 +17,6 @@ project "EngineWeaver"
         "System",
         "Mono.Cecil.Pdb",
         "Mono.Cecil",
-        "EngineManaged",
         "ICSharpCode.Decompiler",
         "ICSharpCode.NRefactory",
         "ICSharpCode.NRefactory.CSharp"
