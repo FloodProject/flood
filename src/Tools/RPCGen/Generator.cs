@@ -897,7 +897,7 @@ namespace Flood.Tools.RPCGen
                     GenerateStructSerialize(param);
                     break;
                 case TType.Class:
-                    GenerateClassSerialize(param);
+                    GenerateStructSerialize(param);
                     break;
                 case TType.Array:
                     GenerateArraySerialize(param);
@@ -955,70 +955,48 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to serialize a class
+        /// Generates the code to serialize a field of type struct
         /// </summary>
-        internal void GenerateClassSerialize(Parameter param)
+        internal void GenerateStructSerialize(Parameter param)
         {
-            var typeImpl = string.Format("_typeImpl{0}", GenericIndex++);
-            var typeBase = string.Format("_typeBase{0}", GenericIndex++);
-            var paramName = ToTitleCase(param.Name);
-            WriteLine("var {0} = System.Type.GetType({1}.GetType().Name + \"Impl\");", typeImpl, paramName);
-            WriteLine("var {0} = {1}.GetType();", typeBase, paramName);
-
-            WriteLine("var {0}Impl = Activator.CreateInstance({1}) as {2}Impl;", ToTitleCase(param.Name),
-                      typeImpl, param.ParameterType.Name);
-            var props = string.Format("_props{0}", GenericIndex++);
-            WriteLine("IEnumerable<PropertyInfo> {0} = {1}.GetAllProperties({2});", props, UtilsPathName, typeImpl);
-            var iter = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iter, props);
-            WriteStartBraceIndent();
-            
-            var propName = string.Format("_propName{0}", GenericIndex++);
-            var fInfo = string.Format("_fInfo{0}", GenericIndex++);
-            var pInfo = string.Format("_pInfo{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Name;", propName, iter);
-            WriteLine("var {0} = {1}.GetField({2}, {3});", fInfo, UtilsPathName, typeBase, propName);
-            WriteLine("var {0} = {1}.GetProperty({2}, {3});", pInfo, UtilsPathName, typeBase, propName);
-            WriteLine("if (!({0} != null ^ {1} != null))", fInfo, pInfo);
-            PushIndent();
-            WriteLine("continue;");
-            PopIndent();
-            var value = string.Format("_value{0}", GenericIndex++);
-            WriteLine("var {0} = ({1} != null) ? {1}.GetValue({3}) : {2}.GetValue({3});", value, fInfo, pInfo,
-                      paramName);
-            WriteLine("{0}.SetValue({1}Impl, {2});", iter, paramName, value);
-
-            WriteCloseBraceIndent();
-            WriteLine("{0}Impl.Write(oprot);", paramName);
+            var objName = ToTitleCase(param.Name);
+            GenerateStructSerialize(param.ParameterType, objName);
         }
 
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        internal void GenerateStructSerialize(Parameter param)
+        internal void GenerateStructSerialize(Type type, string varName)
         {
-            WriteLine("var {0}Impl = new {1}Impl()", ToTitleCase(param.Name),
-                param.ParameterType.Name);
-            WriteStartBraceIndent();
+            var implObjName = varName + "Impl";
+            WriteLine("var {0} = new {1}Impl();", implObjName, type.Name);
+            GenerateStructInit(type, varName, implObjName, true);
+            WriteLine("{0}.Write(oprot);", implObjName);
+        }
 
-            foreach (var field in GetAllFields(param.ParameterType))
+        /// <summary>
+        /// Generates the code to serialize a field of type struct
+        /// </summary>
+        internal void GenerateStructInit(Type type, string origObjName, string destObjName, bool destTitleCase = true)
+        {
+            foreach (var field in GetAllFields(type))
             {
                 if (!Metadata.HasId(field))
                     continue;
 
-                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), field.Name);
+                var destName = (destTitleCase)? ToTitleCase(field.Name) : field.Name;
+                var origName = (!destTitleCase)? ToTitleCase(field.Name) : field.Name;
+                WriteLine("{0}.{1} = {2}.{3};", destObjName, destName, origObjName, origName);
             }
-            foreach (var property in GetAllProperties(param.ParameterType))
+            foreach (var property in GetAllProperties(type))
             {
                 if (!Metadata.HasId(property))
                     continue;
 
-                WriteLine("{1} = {0}.{1},", ToTitleCase(param.Name), property.Name);
+                var destName = (destTitleCase)? ToTitleCase(property.Name) : property.Name;
+                var origName = (!destTitleCase)? ToTitleCase(property.Name) : property.Name;
+                 WriteLine("{0}.{1} = {2}.{3};", destObjName, destName, origObjName, origName);
             }
-    
-            PopIndent();
-            WriteLine("};");
-            WriteLine("{0}Impl.Write(oprot);", ToTitleCase(param.Name));
         }
 
         /// <summary>
@@ -1148,28 +1126,10 @@ namespace Flood.Tools.RPCGen
                     throw new NotSupportedException();
                 case TType.Struct:
                 case TType.Exception:
-                    WriteLine("var {0} = new {1}Impl()", elemName, elemType.Name);
-                    WriteStartBraceIndent();
-                    foreach (var field in GetAllFields(elemType))
-                    {
-                        if (!Metadata.HasId(field))
-                            continue;
-
-                        WriteLine("{0} = {1}.{0},", field.Name, iterName);
-                    }
-                    foreach (var property in GetAllProperties(elemType))
-                    {
-                        if (!Metadata.HasId(property))
-                            continue;
-
-                        WriteLine("{0} = {1}.{0},", property.Name, iterName);
-                    }
-                    PopIndent();
-                    WriteLine("};");
-                    WriteLine("{0}.Write(oprot);", elemName);
+                    GenerateStructSerialize(elemType, elemName);
                     break;
                 case TType.Class:
-                    GenerateContainerClassElementSerialization(elemType, iterName);
+                    GenerateStructSerialize(elemType, elemName);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1266,7 +1226,7 @@ namespace Flood.Tools.RPCGen
                     GenerateStructDeserialize(param);
                     break;
                 case TType.Class:
-                    GenerateClassDeserialize(param);
+                    GenerateStructDeserialize(param);
                     break;
                 case TType.Array:
                     GenerateArrayDeserialize(param);
@@ -1404,80 +1364,19 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         internal void GenerateStructDeserialize(Parameter param)
         {
-            WriteLine("var {0}Impl = new {1}Impl();", ToTitleCase(param.Name),
-                param.ParameterType.Name);
-            WriteLine("{0}Impl.Read(iprot);", ToTitleCase(param.Name));
-
-            WriteLine("{0} = new {1}()", ToTitleCase(param.Name),
-                ConvertToTypeString(param.ParameterType));
-            WriteStartBraceIndent();
-
-            foreach (var field in GetAllFields(param.ParameterType))
-            {
-                if (!Metadata.HasId(field))
-                    continue;
-
-                WriteLine("{1} = {0}Impl.{1},", ToTitleCase(param.Name), field.Name);
-            }
-            foreach (var property in GetAllProperties(param.ParameterType))
-            {
-                if (!Metadata.HasId(property))
-                    continue;
-
-                WriteLine("{1} = {0}Impl.{1},", ToTitleCase(param.Name), property.Name);
-            }
-
-            PopIndent();
-            WriteLine("};");
+            GenerateStructDeserialize(param.ParameterType, ToTitleCase(param.Name));
         }
 
         /// <summary>
-        /// Generates the code to deserialize a class
+        /// Generates the code to deserialize a field of type struct
         /// </summary>
-        internal void GenerateClassDeserialize(Parameter param)
+        internal void GenerateStructDeserialize(Type type, string varName)
         {
-            var typeImpl = string.Format("_typeImpl{0}", GenericIndex++);
-            var typeBase = string.Format("_typeBase{0}", GenericIndex++);
-            var paramName = ToTitleCase(param.Name);
-            WriteLine("var {0} = System.Type.GetType(field.ClassName + \"Impl\");", typeImpl);
-            WriteLine("var {0} = System.Type.GetType(field.ClassName);", typeBase);
-
-            WriteLine("var {0}Impl = Activator.CreateInstance({1}) as {2}Impl;", ToTitleCase(param.Name),
-                      typeImpl, param.ParameterType.Name);
-
-            WriteLine("{0}Impl.Read(iprot);", ToTitleCase(param.Name));
-
-            WriteLine("{0} = Activator.CreateInstance({1}) as {2};", ToTitleCase(param.Name),
-                       typeBase, param.ParameterType.FullName);
-
-            var props = string.Format("_props{0}", GenericIndex++);
-            WriteLine("IEnumerable<PropertyInfo> {0} = {1}.GetAllProperties({2});", props, UtilsPathName, typeImpl);
-            var iter = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iter, props);
-            WriteStartBraceIndent();
-
-            var propName = string.Format("_propName{0}", GenericIndex++);
-            var fInfo = string.Format("_fInfo{0}", GenericIndex++);
-            var pInfo = string.Format("_pInfo{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Name;", propName, iter);
-            WriteLine("var {0} = {1}.GetField({2}, {3});", fInfo, UtilsPathName, typeBase, propName);
-            WriteLine("var {0} = {1}.GetProperty({2}, {3});", pInfo, UtilsPathName, typeBase, propName);
-            WriteLine("if (!({0} != null ^ {1} != null))", fInfo, pInfo);
-            PushIndent();
-            WriteLine("continue;");
-            PopIndent();
-            var value = string.Format("_value{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.GetValue({2}Impl);", value, iter,
-                      paramName);
-            WriteLine("if ({0} != null)", fInfo);
-            PushIndent();
-            WriteLine("{0}.SetValue({1}, {2});", fInfo, paramName, value);
-            PopIndent();
-            WriteLine("else");
-            PushIndent();
-            WriteLine("{0}.SetValue({1}, {2});", pInfo, paramName, value);
-            PopIndent();
-            WriteCloseBraceIndent();
+            var origObjName = varName+"Impl";
+            WriteLine("var {0} = new {1}Impl();", origObjName, type.Name);
+            WriteLine("{0}.Read(iprot);", origObjName);
+            WriteLine("{0} = new {1}();", varName, type.FullName);
+            GenerateStructInit(type, origObjName, varName, false);
         }
 
         /// <summary>
@@ -1695,29 +1594,10 @@ namespace Flood.Tools.RPCGen
                 case TType.Struct:
 
                 case TType.Exception:
-                    WriteLine("var {0} = new {1}Impl();", elemNameImpl, elemType.Name);
-                    WriteLine("{0}.Read(iprot);", elemNameImpl);
-
-                    WriteLine("var {0} = new {1}()", elemName, elemType.FullName);
-                    WriteStartBraceIndent();
-                    foreach (var field in GetAllFields(elemType))
-                    {
-                        if (!Metadata.HasId(field))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", field.Name, elemNameImpl);
-                    }
-                    foreach (var property in GetAllProperties(elemType))
-                    {
-                        if (!Metadata.HasId(property))
-                            continue;
-                        WriteLine("{0} = {1}.{0},", property.Name, elemNameImpl);
-                    }
-                    PopIndent();
-                    WriteLine("};");
-
+                    GenerateStructInit(elemType, elemName, elemNameImpl, false);
                     break;
                 case TType.Class:
-                    GenerateContainerClassElementDeserialization(elemType, elemName);
+                    GenerateStructInit(elemType, elemName, elemNameImpl, false);
                     break;
                 case TType.Bool:
                 case TType.Byte:
