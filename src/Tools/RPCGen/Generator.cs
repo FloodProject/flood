@@ -102,8 +102,10 @@ namespace Flood.Tools.RPCGen
 
         public void GenerateService(Type type)
         {
-            // TODO: Generate namespace
             GenerateUsings();
+
+            WriteLine("namespace  {0}", type.Namespace);
+            WriteStartBraceIndent();
 
             WriteLine("public partial class {0}Impl", type.Name);
             WriteStartBraceIndent();
@@ -130,6 +132,7 @@ namespace Flood.Tools.RPCGen
                     NewLine();
             }
 
+            WriteCloseBraceIndent();
             WriteCloseBraceIndent();
         }
 
