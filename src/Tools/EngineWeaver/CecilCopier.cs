@@ -355,7 +355,7 @@ namespace EngineWeaver
             var ret = new Mono.Cecil.Cil.MethodBody(parent);
 
             Log("< MethodBody ");
-            CopyAll(def,ret,ret,"Method");
+            CopyAll(def,ret,ret,"Method","Scope");
 
             return ret;
         }
