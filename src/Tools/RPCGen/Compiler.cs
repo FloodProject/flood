@@ -179,7 +179,7 @@ namespace Flood.Tools.RPCGen
             {
                 GenerateExecutable = false,
                 OutputAssembly = generatedAssemblyPath,
-                IncludeDebugInformation = false
+                IncludeDebugInformation = true
             };
 
             var dlls = new DirectoryInfo(".").GetFiles("*.dll");
