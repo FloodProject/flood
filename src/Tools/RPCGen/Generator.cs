@@ -287,7 +287,7 @@ namespace Flood.Tools.RPCGen
             WriteLine(")");
             WriteStartBraceIndent();
 
-            WriteLine("oprot_.WriteMessageBegin(new Message(\"{0}\", MessageType.Call, seqid_));",
+            WriteLine("oprot_.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
@@ -435,8 +435,8 @@ namespace Flood.Tools.RPCGen
                 WriteLine("}");
             }
 
-            // Create a new message and reply to the RPC call
-            WriteLine("oprot.WriteMessageBegin(new Message(\"{0}\", MessageType.Reply, seqid));",
+            // Create a new Flood.RPC.Protocol.Message and reply to the RPC call
+            WriteLine("oprot.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Reply, seqid));",
                       method.Name);
 
             WriteLine("result.Write(oprot);");
