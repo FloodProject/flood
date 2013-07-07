@@ -716,7 +716,7 @@ namespace Flood.Tools.RPCGen
         // Used to generate unique names when (de)serializing collections.
         int GenericIndex = 0;
 
-        private string UtilsPathName = "Flood.Editor.Shared.Utils";
+        private string UtilsPathName = "Flood.RPC.Utils";
 
         internal void GenerateUsings()
         {
