@@ -10,8 +10,6 @@
 #include "Resources/API.h"
 #include "Resources/Resource.h"
 
-#include <map>
-
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
@@ -34,8 +32,7 @@ struct API_RESOURCE ResourceMetadata
 };
 
 typedef Array<ResourceMetadata*> ResourcesCache;
-typedef std::map<uint32, ResourceMetadata> ResourcesCacheMap;
-typedef std::pair<uint32, ResourceMetadata> ResourcesCacheMapPair;
+typedef Hash<ResourceMetadata> ResourcesCacheMap;
 
 //-----------------------------------//
 

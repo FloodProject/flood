@@ -10,7 +10,7 @@
 #include "Resources/ResourceIndexer.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -30,6 +30,7 @@ REFLECT_CLASS_END()
 ResourceDatabase::ResourceDatabase()
 	: indexer(nullptr)
 	, resources(*AllocatorGetHeap())
+	, resourcesCache(*AllocatorGetHeap())
 {
 }
 
@@ -49,7 +50,7 @@ void ResourceDatabase::fixUp()
 	for( size_t i = 0; i < array::size(resources); ++i )
 	{
 		auto metadata = resources[i];
-		resourcesCache[metadata->hash] = *metadata;
+		hash::set(resourcesCache, metadata->hash, *metadata);
 	}
 }
 
@@ -57,13 +58,14 @@ void ResourceDatabase::fixUp()
 
 void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 {
-	if(resourcesCache.find(metadata.hash) != resourcesCache.end())
+	if(hash::has(resourcesCache, metadata.hash))
 		return;
 
+#pragma TODO("Fix memory leak in resource cache metadata.")
 	auto newMetadata = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(ResourceMetadata), alignof(ResourceMetadata))) ResourceMetadata(metadata);
 
 	array::push_back(resources, newMetadata);
-	resourcesCache[metadata.hash] = *newMetadata;
+	hash::set(resourcesCache, metadata.hash, *newMetadata);
 
 	onResourceAdded(metadata);
 }
