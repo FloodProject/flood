@@ -1,7 +1,7 @@
 
 project "EngineWeaver"
 
-    kind "ConsoleApp"
+    kind "SharedLib"
     language "C#"
     
     location "."
