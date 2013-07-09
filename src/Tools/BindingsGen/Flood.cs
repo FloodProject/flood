@@ -4,14 +4,15 @@ using System.Linq;
 using CppSharp;
 using CppSharp.Generators;
 using CppSharp.Generators.CLI;
-using Cxxi.Generators.CSharp;
+using CppSharp.Generators.CSharp;
 using CppSharp.Passes;
 using CppSharp.Types;
+
 namespace Flood
 {
     class Flood : ILibrary
     {
-        public void Preprocess(Library lib)
+        public void Preprocess(Driver driver, Library lib)
         {
             lib.IgnoreHeadersWithName("API.h");
             lib.IgnoreHeadersWithName("Concurrency.h");
@@ -138,8 +139,9 @@ namespace Flood
         {
         }
 
-        public void Setup(DriverOptions options)
+        public void Setup(Driver driver)
         {
+            var options = driver.Options;
             options.OutputInteropIncludes = false;
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
@@ -526,7 +528,7 @@ namespace Flood
     {
         public static void Main(string[] args)
         {
-            Driver.Run(new Flood());
+            ConsoleDriver.Run(new Flood());
         }
     }
 }
