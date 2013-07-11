@@ -10,13 +10,14 @@
 #include "Graphics/RenderBackend.h"
 #include "Resources/ResourceManager.h"
 
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
 
 TextureManager::TextureManager()
+	: textures(*AllocatorGetHeap())
 {
 	ResourceManager* res = GetResourceManager();
 	res->onResourceLoaded.Connect( this, &TextureManager::onLoaded );
@@ -34,24 +35,14 @@ TextureManager::~TextureManager()
 	res->onResourceReloaded.Disconnect( this, &TextureManager::onReloaded );
 
 	#pragma TODO("Make sure all textures are released on exit")
-	TextureMap::const_iterator it;
-	for( it = textures.begin(); it != textures.end(); it++ )
-	{
-		const Texture* texture = it->second.get();
-		//assert( texture->getReferenceCount() == 2 );
-	}
 }
 
 //-----------------------------------//
 
 void TextureManager::removeTexture(Image* image)
 {
-	TextureMap::iterator it = textures.find(image);
-	
-	if( it == textures.end() )
-		return;
-
-	textures.erase(it);
+	if(hash::has(textures, (uint64)image))
+		hash::remove(textures, (uint64)image);
 }
 
 //-----------------------------------//
@@ -70,46 +61,37 @@ TexturePtr TextureManager::getTexture( const String& name )
 TexturePtr TextureManager::getTexture( Image* image )
 {
 	if( !image )
-	{
-		// Image not valid.
 		return nullptr;
-	}
 
-	// Image already has texture.
-	else if( textures.find(image) != textures.end() )
+	auto tex = hash::get<TexturePtr>(textures, (uint64)image, nullptr);
+	
+	if( !tex && !image->isLoaded())
 	{
-		return textures[image];
+		tex = backend->createTexture();
+		tex->allocate(Vector2i(TEX_SIZE, TEX_SIZE), PixelFormat::R8G8B8A8);
+
+		hash::set(textures, (uint64)image, tex);
 	}
 
-	// Image not loaded yet.
-	else if( !image->isLoaded() ) 
-	{
-		Texture* texture = backend->createTexture();
-		texture->allocate(Vector2i(TEX_SIZE, TEX_SIZE), PixelFormat::R8G8B8A8);
-
-		textures[image] = texture;
-		return texture;
-	}
-
-	return nullptr;
+	return tex;
 }
 
 //-----------------------------------//
 
 TexturePtr TextureManager::getTexture( const ImageHandle& imageHandle )
 {
-	Image* image = imageHandle.Resolve();
+	auto image = imageHandle.Resolve();
+	auto tex = getTexture(image);
+	if (!tex)
+	{
+		// Create a new texture from image.
+		tex = backend->createTexture();
+		tex->setImage(imageHandle);
 
-	if (TexturePtr texture = getTexture(image))
-		return texture;
+		hash::set(textures, (uint64)image, tex);
+	}
 
-	// Create a new texture from image.
-	Texture* texture = backend->createTexture();
-	texture->setImage(imageHandle);
-
-	textures[image] = texture;
-
-	return texture;
+	return tex;
 }
 
 //-----------------------------------//
@@ -122,13 +104,12 @@ void TextureManager::onLoaded( const ResourceEvent& event )
 	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	if( textures.find(image) == textures.end() )
-		return;
-
-	Texture* texture = textures[image].get();
-	texture->setImage(handleImage);
-
-	backend->uploadTexture(texture);
+	auto tex = (hash::get<TexturePtr>(textures, (uint64)image, nullptr)).get();
+	if(tex)
+	{
+		tex->setImage(handleImage);
+		backend->uploadTexture(tex);
+	}
 }
 
 //-----------------------------------//
@@ -141,7 +122,7 @@ void TextureManager::onUnloaded( const ResourceEvent& event )
 	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	if( textures.find(image) == textures.end() )
+	if(!hash::has(textures, (uint64)image))
 		return;
 
 	LogDebug( "Removing texture '%s'", image->getPath().c_str() );
@@ -161,16 +142,16 @@ void TextureManager::onReloaded( const ResourceEvent& event )
 	
 	Image* oldImage = (Image*) event.oldResource;
 
-	if( textures.find(oldImage) == textures.end() )
+	if(!hash::has(textures, (uint64)oldImage))
 		return;
 
 	LogDebug( "Reloading texture '%s'", newImage->getPath().c_str() );
 
-	Texture* texture = textures[oldImage].get();
-	texture->setImage(handleImage);
+	auto tex = hash::get<TexturePtr>(textures, (uint64)oldImage, nullptr);
+	tex->setImage(handleImage);
 
-	textures.erase(oldImage);
-	textures[newImage] = texture;
+	hash::remove(textures, (uint64)oldImage);
+	hash::set(textures, (uint64)newImage, tex);
 }
 
 //-----------------------------------//
@@ -179,9 +160,11 @@ uint TextureManager::getMemoryUsage()
 {
 	uint total = 0;
 
-	TextureMap::const_iterator it;
-	for( it = textures.begin(); it != textures.end(); it++ )
-		total += array::size(it->first->getBuffer());
+	for(auto it : textures)
+	{
+		auto img = (Image*)it.key;
+		total += array::size(img->getBuffer());
+	}
 
 	return total;
 }

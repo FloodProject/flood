@@ -66,8 +66,7 @@ protected:
 	void onReloaded( const ResourceEvent& event );
 
 	// Maps the identifiers to the textures.
-	typedef std::map< Image*, TexturePtr > TextureMap;
-	typedef std::pair< Image*, TexturePtr > TextureMapPair;
+	typedef Hash<TexturePtr> TextureMap; // keyed by Image*
 	TextureMap textures;
 
 	RenderBackend* backend;
