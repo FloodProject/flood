@@ -12,8 +12,6 @@
 #include "Core/Math/Color.h"
 #include "Core/Math/Matrix4x4.h"
 
-#include <map>
-
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
@@ -51,7 +49,7 @@ struct API_GRAPHICS UniformBufferElement
 
 //-----------------------------------//
 
-typedef std::map<String, UniformBufferElement*> UniformBufferElements;
+typedef Hash<UniformBufferElement*> UniformBufferElements; // keyed by String
 
 /**
  * Represents a uniform buffer.
@@ -60,6 +58,7 @@ typedef std::map<String, UniformBufferElement*> UniformBufferElements;
 class API_GRAPHICS UniformBuffer : public ReferenceCounted
 {
 public:
+	UniformBuffer();
 
 	UniformBufferElements elements;
 

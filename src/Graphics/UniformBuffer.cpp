@@ -13,7 +13,8 @@
 #include "Graphics/UniformBuffer.h"
 #include "Core/Math/Matrix4x3.h"
 #include "Core/Math/Matrix4x4.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
+#include "Core/Containers/MurmurHash.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -29,6 +30,12 @@ static char* AllocateName(const char* name)
 	newName[nameSize] = '\0';
 	return newName;
 }
+
+//-----------------------------------//
+
+UniformBuffer::UniformBuffer()
+	: elements(*AllocatorGetHeap())
+{}
 
 //-----------------------------------//
 
@@ -56,7 +63,8 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 	element->count = 0;
 	element->name = (char*) name; // AllocateName(name);
 
-	elements[name] = element;
+	auto key = murmur_hash_64(name, strlen(name), 0);
+	hash::set(elements, key, element);
 	return element;
 }
 
@@ -64,10 +72,9 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 
 void UniformBuffer::removeUniform( const char* slot )
 {
-	UniformBufferElements::iterator it = elements.find(slot);
-	if( it == elements.end() ) return;
-
-	elements.erase(it);
+	auto key = murmur_hash_64(slot, strlen(slot), 0);
+	if(hash::has(elements, key))
+		hash::remove(elements, key);
 }
 
 //-----------------------------------//

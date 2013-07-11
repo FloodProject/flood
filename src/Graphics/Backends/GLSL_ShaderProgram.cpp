@@ -284,15 +284,13 @@ void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute attr 
 //-----------------------------------//
 
 void GLSL_ShaderProgram::setUniforms( UniformBuffer* ub )
-{
-	UniformBufferElements::iterator it;
-	
-	for( it = ub->elements.begin(); it != ub->elements.end(); it++ )
+{	
+	for(auto it : ub->elements)
 	{
-		UniformBufferElement* element = it->second;
+		UniformBufferElement* element = it.value;
 		if( !element || !element->name ) continue;
 
-		GLint location = glGetUniformLocation( id, /*element->name*/it->first.c_str() );
+		GLint location = glGetUniformLocation( id, element->name );
 		if( location == -1 ) continue;
 
 		GLint count = element->count;
