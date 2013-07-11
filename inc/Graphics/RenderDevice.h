@@ -62,7 +62,7 @@ class RenderBatch;
  * responsible for creating a new window if no window handle is passed to it.
  */
 
-typedef std::map<Light*, Texture*> ShadowTextureMap;
+//typedef std::map<Light*, Texture*> ShadowTextureMap;
 
 class API_GRAPHICS RenderDevice
 {
