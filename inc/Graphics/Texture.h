@@ -11,8 +11,6 @@
 #include "Graphics/Resources/Image.h"
 #include "Graphics/RenderTarget.h"
 
-#include <map>
-
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
@@ -142,7 +140,7 @@ protected:
 	TextureWrapMode wrap;
 };
 
-typedef std::map<uint8, TextureUnit> TextureUnitMap;
+typedef Hash<TextureUnit> TextureUnitMap; // keyed by uint8
 
 //-----------------------------------//
 

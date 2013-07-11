@@ -21,7 +21,7 @@
 #include "Graphics/ShaderProgramManager.h"
 #include "Graphics/TextureManager.h"
 
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 #include "Core/Utilities.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -167,10 +167,9 @@ void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 	TextureUnitMap& units = state.material->textureUnits;
 	UniformBuffer* ub = state.renderable->getUniformBuffer().get();
 
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
+	for(auto it : units)
 	{
-		const TextureUnit& unit = it->second;
+		const TextureUnit& unit = it.value;
 		const ImageHandle& handle = unit.image;
 
 		Texture* texture = activeContext->textureManager->getTexture(handle).get();
@@ -206,10 +205,9 @@ void RenderDevice::unbindTextureUnits(Material* material)
 	TextureUnitMap& units = material->textureUnits;
 	TextureManager* textureManager = activeContext->textureManager;
 
-	TextureUnitMap::const_iterator it;
-	for( it = units.begin(); it != units.end(); it++ )
+	for(auto it : units)
 	{
-		const TextureUnit& unit = it->second;
+		const TextureUnit& unit = it.value;
 		const ImageHandle& handle = unit.image;
 
 		Texture* texture = textureManager->getTexture(handle).get();

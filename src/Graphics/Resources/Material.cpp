@@ -9,6 +9,7 @@
 #include "Graphics/Resources/Material.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Log.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -39,6 +40,7 @@ float Material::DefaultLineWidth = 1.0f;
 //-----------------------------------//
 
 Material::Material()
+	: textureUnits(*AllocatorGetHeap())
 {
 	init();
 	setShader("VertexColor");
@@ -48,6 +50,7 @@ Material::Material()
 
 Material::Material( const String& name )
 	: name(name)
+	, textureUnits(*AllocatorGetHeap())
 {
 	init();
 	setShader("VertexColor");
@@ -164,28 +167,34 @@ void Material::setTexture( uint8 unit, const String& name )
 	texUnit.image = handle;
 	texUnit.unit = unit;
 
-	textureUnits[unit] = texUnit;
+	hash::set(textureUnits, unit, texUnit);
 }
 
 //-----------------------------------//
 
 void Material::setTexture( uint8 unit, const ImageHandle& handle )
 {
-	textureUnits[unit].image = handle;
+	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	tu.unit = unit;
+	tu.image = handle;
+
+	hash::set(textureUnits, unit, tu);
 }
 
 //-----------------------------------//
 
 ImageHandle Material::getTexture( uint8 unit )
 {
-	return textureUnits[unit].image;
+	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	return tu.image;
 }
 
 //-----------------------------------//
 
 TextureUnit& Material::getTextureUnit( uint8 unit )
 {
-	return textureUnits[unit];
+	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	return const_cast<TextureUnit&>(tu);
 }
 
 //-----------------------------------//
