@@ -11,8 +11,6 @@
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"
 
-#include <map>
-
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//

@@ -11,8 +11,6 @@
 #include "Core/Object.h"
 #include "Core/Event.h"
 
-#include <map>
-
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Transform)
 FWD_DECL_INTRUSIVE(Geometry)

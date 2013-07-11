@@ -12,8 +12,6 @@
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
 
-#include <map>
-
 NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//

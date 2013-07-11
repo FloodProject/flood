@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <map>
-
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
