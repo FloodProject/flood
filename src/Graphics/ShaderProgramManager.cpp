@@ -14,6 +14,7 @@
 #include "Graphics/Resources/ShaderMaterial.h"
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -21,6 +22,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 ProgramManager::ProgramManager(RenderBackend* backend)
 	: backend(backend)
+	, programs(*AllocatorGetHeap())
 {
 	GetResourceManager()->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
 	GetResourceManager()->onResourceReloaded.Connect( this, &ProgramManager::onReload );
@@ -68,31 +70,28 @@ ShaderProgram* ProgramManager::getProgram( const ShaderMaterial* shader, bool pr
 {
 	if( !shader ) return nullptr;
 
-	ShaderProgramsMap::iterator it = programs.find(shader);
-
-	if( it != programs.end() )
+	auto it = hash::get<ShaderProgramPtr>(programs, (uint64)shader, nullptr);
+	if(!it)
 	{
-		ShaderProgram* program = it->second.get();
-		return program;
+		auto prog = createProgram(shader);
+		registerProgram(shader, prog);
+		it.reset(prog);
 	}
 
-	ShaderProgram* program = createProgram(shader);
-	registerProgram(shader, program);
-
-	return program;
+	return it.get();
 }
 
 //-----------------------------------//
 
 bool ProgramManager::registerProgram( const ShaderMaterial* shader, ShaderProgram* program )
 {
-	if( programs.find(shader) != programs.end() )
+	if(hash::has(programs, (uint64)shader))
 	{
 		LogWarn( "Shader '%s' already registered", shader->getPath().c_str() );
 		return false;
 	}
 
-	programs[shader] = program;
+	hash::set(programs, (uint64)shader, ShaderProgramPtr(program));
 	return true;
 }
 
@@ -121,25 +120,23 @@ void ProgramManager::onReload( const ResourceEvent& event )
 		return;
 
 	ShaderMaterial* oldShader = (ShaderMaterial*) event.oldResource;
+	ShaderMaterial* shader = (ShaderMaterial*) event.resource;
 
 	#pragma TODO("Handle reloading of unregistered resources")
-	
-	ShaderProgramsMap::iterator it = programs.find(oldShader);
-	assert( it != programs.end() );
-	
-	ShaderProgramPtr program = it->second; // We need to hold the ref.
-	programs.erase(it);
 
-	ShaderMaterial* shader = (ShaderMaterial*) event.resource;
-	programs[shader] = program;
+	auto prog = hash::get<ShaderProgramPtr>(programs, (uint64)oldShader, nullptr);
+	assert( prog.get() != nullptr );
+	
+	hash::remove(programs, (uint64)oldShader);
+	hash::set(programs, (uint64)shader, prog);
 
 	LogDebug( "Reloading shader '%s'", shader->getPath().c_str() );
 
-	program->getVertexShader()->setText( shader->getVertexSource() );
-	program->getFragmentShader()->setText( shader->getFragmentSource() );
+	prog->getVertexShader()->setText( shader->getVertexSource() );
+	prog->getFragmentShader()->setText( shader->getFragmentSource() );
 
 	// Force the recompilation of all shader programs.
-	program->forceRecompile();
+	prog->forceRecompile();
 }
 
 //-----------------------------------//

@@ -10,8 +10,6 @@
 #include "Graphics/API.h"
 #include "Core/References.h"
 
-#include <map>
-
 FWD_DECL_INTRUSIVE(ShaderProgram)
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -20,8 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 class ShaderMaterial;
 
-typedef std::map<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMap;
-typedef std::pair<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMapPair;
+typedef Hash<ShaderProgramPtr> ShaderProgramsMap; // keyed by ShaderMaterial*
 
 class ResourceManager;
 struct ResourceEvent;
