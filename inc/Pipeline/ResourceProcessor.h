@@ -9,8 +9,6 @@
 
 #include "Core/Extension.h"
 
-#include <map>
-
 FWD_DECL_INTRUSIVE(Resource)
 
 NAMESPACE_PIPELINE_BEGIN
@@ -18,7 +16,7 @@ NAMESPACE_PIPELINE_BEGIN
 //-----------------------------------//
 
 class ResourceProcessor;
-typedef std::map<Class*, ResourceProcessor*> ResourceProcessorMap;
+typedef Hash<ResourceProcessor*> ResourceProcessorMap; // keyed by Class*
 
 /**
  * Resource processors handle the pre-processing of resource data.
