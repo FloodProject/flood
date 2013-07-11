@@ -11,8 +11,6 @@
 #include "Graphics/Resources/Image.h"
 #include "Engine/RectangleBinPack/MaxRectsBinPack.h"
 
-#include <map>
-
 NAMESPACE_ENGINE_BEGIN
 
 class TextureAtlas;
@@ -55,11 +53,7 @@ private:
     uint atlasMaxSize;
     MaxRectsBinPack rectanglePacker;
 
-    struct CompareHandle {
-		    bool operator()(const ImageHandle& h1,const ImageHandle& h2) const { return h1.id < h2.id; }
-    };
-
-    std::map<ImageHandle, SubTexture, CompareHandle> imageSubTextures;
+    Hash<SubTexture> imageSubTextures; // keyed by Handle::id
     ImageHandle atlasImageHandle;
 };
 

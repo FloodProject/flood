@@ -10,7 +10,7 @@
 #include "Engine/API.h"
 
 #include "Engine/Texture/TextureAtlas.h"
-#include "Core/Containers/Array.h"
+#include "Core/Containers/Hash.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -20,6 +20,7 @@ static const MaxRectsBinPack::FreeRectChoiceHeuristic gs_heuristic =
              MaxRectsBinPack::FreeRectChoiceHeuristic::RectBestAreaFit;
 
 TextureAtlas::TextureAtlas(uint maxSize)
+    : imageSubTextures(*AllocatorGetHeap())
 {
     atlasMaxSize = maxSize;
     atlasSize = std::min(maxSize, DefaultSize);
@@ -72,7 +73,7 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
 
 bool TextureAtlas::addImage(const ImageHandle& newImageHandle) 
 {
-    if(imageSubTextures.find( newImageHandle ) != imageSubTextures.end())
+    if(hash::has(imageSubTextures, (uint64)newImageHandle.id))
         return true;
 
     Image* newImage = newImageHandle.Resolve();
@@ -96,10 +97,10 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
 
 bool TextureAtlas::getImageSubTexture(const ImageHandle& imageHandle, SubTexture& subTexture)
 {
-    if(imageSubTextures.find( imageHandle ) == imageSubTextures.end())
+    if(!hash::has(imageSubTextures, imageHandle.id))
         return false;
 
-    subTexture = imageSubTextures[imageHandle];
+    subTexture = hash::get(imageSubTextures, (uint64)imageHandle.id, subTexture);
     return true;
 }
 
@@ -118,11 +119,11 @@ void TextureAtlas::resizeAtlas(uint newSize)
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
-    std::map<ImageHandle, SubTexture>::iterator iter;
-    for (iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter) {
+    for (auto it : imageSubTextures)
+    {
         Vector2i rectSize;
-        int width = (iter->second.rightBottomUV.x - iter->second.leftTopUV.x)*width;
-        int height = (iter->second.rightBottomUV.y - iter->second.leftTopUV.y)*height;
+        int width = (it.value.rightBottomUV.x - it.value.leftTopUV.x)*width;
+        int height = (it.value.rightBottomUV.y - it.value.leftTopUV.y)*height;
         rectSize.x = width;
         rectSize.y = height;
         array::push_back(rectSizes, rectSize);
@@ -130,15 +131,16 @@ void TextureAtlas::resizeAtlas(uint newSize)
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);
 
-    assert(array::size(newRects) == imageSubTextures.size());
+    assert(array::size(newRects) == hash::size(imageSubTextures));
 
-    int i;
-    for (i = 0, iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter, ++i) 
+    size_t i = 0;
+    for (auto it : imageSubTextures) 
     {
-        ImageHandle newImageHandle = iter->first;
+        ImageHandle newImageHandle((HandleId)it.key);
         Rect newRect = newRects[i];
 
         addImage(newImageHandle, newRect);
+        ++i;
     }
 }
 
@@ -199,7 +201,7 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
         subTexture.leftTopUV = Vector2(left,bottom);
     }
 
-    imageSubTextures[newImageHandle] = subTexture;
+    hash::set(imageSubTextures, (uint64)newImageHandle.id, subTexture);
 }
 
 //-----------------------------------//
