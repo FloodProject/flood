@@ -9,13 +9,13 @@ project "BindingsGen"
 
   files { "**.cs", "./*.lua" }
 
-  dependson { "Bridge", "Generator", "Parser" }
+  dependson { "CppSharp.AST", "CppSharp.Generator", "CppSharp.Parser" }
 
   links
   {
     "System",
-    path.join(depsdir, "cxxi", "build", action, "lib", "Bridge"),
-    path.join(depsdir, "cxxi", "build", action, "lib", "Generator"),
+    path.join(depsdir, "CppSharp", "build", action, "lib", "CppSharp.AST"),
+    path.join(depsdir, "CppSharp", "build", action, "lib", "CppSharp.Generator"),
   }
 
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CppSharp;
+using CppSharp.AST;
 using CppSharp.Generators;
 using CppSharp.Generators.CLI;
 using CppSharp.Generators.CSharp;
@@ -12,6 +13,96 @@ namespace Flood
 {
     class Flood : ILibrary
     {
+        Driver Driver;
+
+        #region Setup
+
+        public void Setup(Driver driver)
+        {
+            Driver = driver;
+
+            var options = driver.Options;
+            options.LibraryName = "Engine";
+            options.OutputNamespace = "Flood";
+            options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
+            options.OutputDir = @"../../../../src/EngineManaged/Bindings";
+            options.IncludeDirs.Add(@"../../../../inc");
+            options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
+            options.WriteOnlyWhenChanged = true;
+
+            SetupLibraries(options.Libraries);
+            SetupHeaders(options.Headers);
+        }
+
+        public void SetupLibraries(List<string> libraries)
+        {
+            libraries.AddRange(new string[]
+                {
+                    "Core.lib",
+                    "Resources.lib",
+                    "Graphics.lib",
+                    "Engine.lib"
+                });
+        }
+
+        public void SetupHeaders(List<string> headers)
+        {
+            headers.AddRange(new string[]
+                {
+                    "Core/Log.h",
+                    "Core/Extension.h",
+                    "Core/Reflection.h",
+                    "Core/Serialization.h",
+                    "Core/Math/Color.h",
+                    "Core/Network/Network.h",
+                    "Core/Network/Host.h",
+                    "Core/Network/Session.h",
+                    "Core/Network/SessionManager.h",
+                    "Core/Network/Packet.h",
+                    "Core/Network/Peer.h",
+                    "Resources/Resource.h",
+                    "Resources/ResourceLoader.h",
+                    "Resources/ResourceManager.h",
+                    "Graphics/Resources/Image.h",
+                    "Graphics/Graphics.h",
+                    "Graphics/GeometryBuffer.h",
+                    "Graphics/RenderContext.h",
+                    "Graphics/RenderDevice.h",
+                    "Graphics/RenderBatch.h",
+                    "Graphics/RenderQueue.h",
+                    "Graphics/RenderTarget.h",
+                    "Graphics/RenderView.h",
+                    "Graphics/Texture.h",
+                    "Engine/Engine.h",
+                    "Engine/Window/Window.h",
+                    "Engine/Window/WindowManager.h",
+                    "Engine/Input/InputManager.h",
+                    "Engine/Input/Keyboard.h",
+                    "Engine/Input/Mouse.h",
+                    "Engine/Resources/TrueTypeFont.h",
+                    "Engine/Texture/TextureAtlas.h"
+                });
+        }
+
+        public void SetupPasses(Driver driver, PassBuilder builder)
+        {
+            const RenameTargets renameTargets = RenameTargets.Function
+                                              | RenameTargets.Method | RenameTargets.Field;
+            builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
+
+            builder.AddPass(new CheckMacroPass());
+            builder.AddPass(new ObjectOverridesPass());
+            builder.AddPass(new GetterSetterToPropertyPass());
+            builder.FindEvents(driver.TypeDatabase);
+            builder.FunctionToInstanceMethod();
+            builder.FunctionToStaticMethod();
+            builder.CheckDuplicateNames();
+        }
+
+        #endregion
+
+        #region Processing
+
         public void Preprocess(Driver driver, Library lib)
         {
             lib.IgnoreHeadersWithName("API.h");
@@ -38,7 +129,7 @@ namespace Flood
 
             lib.IgnoreClassWithName("TaskPool");
             lib.IgnoreClassWithName("ConcurrentQueue");
-            
+
             lib.SetClassAsValueType("StringHash");
             lib.IgnoreClassWithName("RawStringCompare");
 
@@ -108,7 +199,7 @@ namespace Flood
             lib.SetClassAsValueType("ResourceLoadOption");
             lib.SetClassAsValueType("ResourceLoadOptions");
             lib.SetNameOfClassMethod("Texture", "allocate", "alloc");
-            lib.ExcludeFromPass("ResourceHandleCreate", typeof(FunctionToInstanceMethodPass));
+            lib.ExcludeFromPass("ResourceHandleCreate", typeof (FunctionToInstanceMethodPass));
 
             // Graphics
             lib.SetClassAsValueType("RenderContextSettings");
@@ -137,129 +228,48 @@ namespace Flood
 
         public void Postprocess(Library lib)
         {
+            Driver.Generator.OnUnitGenerated += ProcessUnit;
         }
 
-        public void Setup(Driver driver)
+        public void WriteHeader(TextGenerator g)
         {
-            var options = driver.Options;
-            options.OutputInteropIncludes = false;
-            options.LibraryName = "Engine";
-            options.OutputNamespace = "Flood";
-            options.GeneratorKind = LanguageGeneratorKind.CSharp;
-            options.OutputDir = @"../../../../src/EngineManaged/BindingsCSharp";
-            options.IncludeDirs.Add(@"../../../../inc");
-            options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
-            options.WriteOnlyWhenChanged = true;
-
-            SetupLibraries(options.Libraries);
-            SetupHeaders(options.Headers);
+            g.WriteLine("/************************************************************************");
+            g.WriteLine("*");
+            g.WriteLine("* Flood Project \u00A9 (2008-201x)");
+            g.WriteLine("* Licensed under the simplified BSD license. All rights reserved.");
+            g.WriteLine("*");
+            g.WriteLine("************************************************************************/");
+            g.NewLine();
         }
 
-        public void SetupLibraries(List<string> libraries)
+        public void ProcessUnit(GeneratorOutput output)
         {
-            libraries.AddRange(new string[]
-                {
-                    "Core.lib",
-                    "Resources.lib",
-                    "Graphics.lib",
-                    "Engine.lib"
-                });
-        }
-
-        public void SetupHeaders(List<string> headers)
-        {
-           headers.AddRange(new string[]
-                {
-                    "Core/Log.h",
-                    "Core/Extension.h",
-                    "Core/Reflection.h",
-                    "Core/Serialization.h",
-                    "Core/Math/Color.h",
-                    "Core/Network/Network.h",
-                    "Core/Network/Host.h",
-                    "Core/Network/Session.h",
-                    "Core/Network/SessionManager.h",
-                    "Core/Network/Packet.h",
-                    "Core/Network/Peer.h",
-                    "Resources/Resource.h",
-                    "Resources/ResourceLoader.h",
-                    "Resources/ResourceManager.h",
-                    "Graphics/Resources/Image.h",
-                    "Graphics/Graphics.h",
-                    "Graphics/GeometryBuffer.h",
-                    "Graphics/RenderContext.h",
-                    "Graphics/RenderDevice.h",
-                    "Graphics/RenderBatch.h",
-                    "Graphics/RenderQueue.h",
-                    "Graphics/RenderTarget.h",
-                    "Graphics/RenderView.h",
-                    "Graphics/Texture.h",
-                    "Engine/Engine.h",
-                    "Engine/Window/Window.h",
-                    "Engine/Window/WindowManager.h",
-                    "Engine/Input/InputManager.h",
-                    "Engine/Input/Keyboard.h",
-                    "Engine/Input/Mouse.h",
-                    "Engine/Resources/TrueTypeFont.h",
-                    "Engine/Texture/TextureAtlas.h"
-                });
-        }
-
-        public void SetupPasses(Driver driver, PassBuilder builder)
-        {
-            const RenameTargets renameTargets = RenameTargets.Function
-                | RenameTargets.Method | RenameTargets.Field;
-            builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
-
-            builder.AddPass(new CheckMacroPass());
-
-            builder.FindEvents(driver.TypeDatabase);
-            builder.FunctionToInstanceMethod();
-            builder.FunctionToStaticMethod();
-            builder.CheckDuplicateNames();
-        }
-
-        public void GenerateStart(TextTemplate template)
-        {
-            template.WriteLine("/************************************************************************");
-            template.WriteLine("*");
-            template.WriteLine("* Flood Project \u00A9 (2008-201x)");
-            template.WriteLine("* Licensed under the simplified BSD license. All rights reserved.");
-            template.WriteLine("*");
-            template.WriteLine("************************************************************************/");
-            template.NewLine();
-
-            if (template is CLISourcesTemplate)
+            foreach (var template in output.Templates)
             {
-                template.WriteLine("#include \"_Marshal.h\"");
-            }
-
-            if (template is CLITextTemplate)
-            {
-                var cliTemplate = template as CLITextTemplate;
-
-                var include = new Include()
-                    {
-                        File = "ResourceHandle.h",
-                        Kind = Include.IncludeKind.Quoted
-                    };
-
-                cliTemplate.Includes.Add(include);
+                WriteHeader(template.FindBlock(BlockKind.Header).Text);
+                ProcessTemplate((dynamic) template);
             }
         }
 
-        public void GenerateAfterNamespaces(TextTemplate template)
+        public void ProcessTemplate(CLIHeadersTemplate template)
         {
-            if (template is CLISourcesTemplate)
-                template.WriteLine("using namespace clix;");
         }
+
+        public void ProcessTemplate(CLISourcesTemplate template)
+        {
+        }
+
+        public void ProcessTemplate(CSharpTextTemplate template)
+        {
+        }
+
+        #endregion
     }
 
     #region Passes
 
     class CheckMacroPass : TranslationUnitPass
     {
-
         public override bool VisitDeclaration(Declaration decl)
         {
             var expansions = decl.PreprocessedEntities.OfType<MacroExpansion>();
