@@ -356,6 +356,8 @@ namespace multi_hash
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 template <typename T> Hash<T>::Hash(Allocator &a)
 	:_hash(a), _data(a)
 {}
@@ -370,6 +372,54 @@ template<typename T>
 typename Hash<T>::Entry const * Hash<T>::end() const
 {
 	return hash::end(*this);
+}
+
+template <typename T>
+size_t Hash<T>::size() const
+{
+	return hash::size(*this);
+}
+
+template <typename T>
+bool Hash<T>::empty() const
+{
+	return hash::empty(*this);
+}
+
+template <typename T>
+bool Hash<T>::has(uint64 key) const
+{
+	return hash::has(*this, key);
+}
+
+template <typename T>
+T const & Hash<T>::get(uint64 key, T const & default_value) const
+{
+	return hash::get(*this, key, default_value);
+}
+
+template <typename T>
+void Hash<T>::set(uint64 key, T const & value)
+{
+	hash::set(*this, key, value);
+}
+
+template <typename T>
+void Hash<T>::remove(uint64 key)
+{
+	hash::remove(*this, key);
+}
+
+template <typename T>
+void Hash<T>::reserve(size_t size)
+{
+	hash::reserve(*this, size);
+}
+
+template <typename T>
+void Hash<T>::clear()
+{
+	hash::clear(*this);
 }
 
 NAMESPACE_CORE_END

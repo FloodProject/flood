@@ -164,6 +164,8 @@ namespace array
     }
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 template <typename T>
 Array<T>::Array(Allocator& allocator)
     : _allocator(&allocator)
@@ -210,6 +212,102 @@ template <typename T>
 const T& Array<T>::operator[](size_t i) const
 {
     return _data[i];
+}
+
+template <typename T>
+size_t Array<T>::size() const
+{
+    return array::size(*this);
+}
+
+template <typename T>
+bool Array<T>::any() const
+{
+    return array::any(*this);
+}
+
+template <typename T>
+bool Array<T>::empty() const
+{
+    return array::empty(*this);
+}
+
+template <typename T>
+T& Array<T>::front()
+{
+    return array::front(*this);
+}
+
+template <typename T>
+T const & Array<T>::front() const
+{
+    return array::front(*this);
+}
+
+template <typename T>
+T& Array<T>::back()
+{
+    return array::back(*this);
+}
+
+template <typename T>
+T const & Array<T>::back() const
+{
+    return array::back(*this);
+}
+
+template <typename T>
+void Array<T>::resize(size_t size)
+{
+    array::resize(*this, size);
+}
+
+template <typename T>
+void Array<T>::clear()
+{
+    array::clear(*this);
+}
+
+template <typename T>
+void Array<T>::set_capacity(size_t size)
+{
+    array::set_capacity(*this, size);
+}
+
+template <typename T>
+void Array<T>::reserve(size_t size)
+{
+    array::reserve(*this, size);
+}
+
+template <typename T>
+void Array<T>::grow(size_t min_capacity)
+{
+    array::grow(*this, min_capacity);
+}
+
+template <typename T>
+void Array<T>::trim()
+{
+    array::trim(*this);
+}
+
+template <typename T>
+void Array<T>::push_back(T const & item)
+{
+    array::push_back(*this, item);
+}
+
+template <typename T>
+void Array<T>::pop_back()
+{
+    array::pop_back(*this);
+}
+
+template <typename T>
+void Array<T>::remove(T const * item)
+{
+    array::remove(*this, item);
 }
 
 NAMESPACE_CORE_END
