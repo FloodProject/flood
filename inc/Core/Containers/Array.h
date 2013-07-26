@@ -310,4 +310,11 @@ void Array<T>::remove(T const * item)
     array::remove(*this, item);
 }
 
+template <typename T>
+template <typename U>
+void Array<T>::insert(T * pos, U * first, U * last)
+{
+    array::insert(*this, pos, first, last);
+}
+
 NAMESPACE_CORE_END

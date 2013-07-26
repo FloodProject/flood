@@ -57,6 +57,9 @@ public:
     void push_back(T const & item);
     void pop_back();
     void remove(T const * item);
+    
+    template <typename U>
+    void insert(T * pos, U * first, U * last);
 
 public:
     Allocator *_allocator;
