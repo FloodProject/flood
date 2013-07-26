@@ -33,7 +33,7 @@ void MessageHandlers::addHandlers(MessageHandler* handler, MessageDirection::Enu
 	const MessagesTable& messagesTable = handler->getMessagesTable();
 	Enum* messagesEnum = handler->getMessagesEnum();
 
-	for(size_t i = 0; i < array::size(messagesTable); ++i )
+	for(size_t i = 0; i < messagesTable.size(); ++i )
 	{
 		MessageMapping mapping = messagesTable[i];
 
@@ -56,7 +56,7 @@ void MessageHandlers::removeHandlers(MessageHandler* handler)
 	const MessagesTable& messagesTable = handler->getMessagesTable();
 	Enum* messagesEnum = handler->getMessagesEnum();
 
-	for(size_t i = 0; i < array::size(messagesTable); ++i)
+	for(size_t i = 0; i < messagesTable.size(); ++i)
 	{
 		const MessageMapping& mapping = messagesTable[i];
 		removeMapping(mapping);

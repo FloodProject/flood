@@ -54,7 +54,7 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	for( size_t i = 0; i < array::size(subsystems); ++i )
+	for( size_t i = 0; i < subsystems.size(); ++i )
 	{
 		Subsystem* system = subsystems[i];
 		Deallocate(system);
@@ -87,7 +87,7 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 {
 	LogInfo( "Registering new engine subsystem" );
 	
-	array::push_back(subsystems, subsystem);
+	subsystems.push_back(subsystem);
 }
 
 //-----------------------------------//
@@ -141,7 +141,7 @@ void Engine::setupLogger()
 
 void Engine::update()
 {
-	for( size_t i = 0; i < array::size(subsystems); ++i )
+	for( size_t i = 0; i < subsystems.size(); ++i )
 	{
 		Subsystem* system = subsystems[i];
 		system->update();

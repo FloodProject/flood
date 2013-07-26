@@ -47,8 +47,8 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
     int srcPitch  = srcWidth*bpp;
     int dstPitch  = dstImage->getWidth()*bpp;
 
-    byte* bsrc = &array::front(srcImage->getBuffer());
-    byte* bdst = &array::front(dstImage->getBuffer());
+    byte* bsrc = &srcImage->getBuffer().front();
+    byte* bdst = &dstImage->getBuffer().front();
 
     for(int xs = 0; xs < dstWidth; xs += RBLOCK) {    // for all image blocks of RBLOCK*RBLOCK pixels
         for(int ys = 0; ys < dstHeight; ys += RBLOCK) {
@@ -126,12 +126,12 @@ void TextureAtlas::resizeAtlas(uint newSize)
         int height = (it.value.rightBottomUV.y - it.value.leftTopUV.y)*height;
         rectSize.x = width;
         rectSize.y = height;
-        array::push_back(rectSizes, rectSize);
+        rectSizes.push_back(rectSize);
     }
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);
 
-    assert(array::size(newRects) == hash::size(imageSubTextures));
+    assert(newRects.size() == hash::size(imageSubTextures));
 
     size_t i = 0;
     for (auto it : imageSubTextures) 
@@ -165,7 +165,7 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
 
          int newImageSize = newImage->getSize();
          auto& buffer = tmpImage.getBuffer();
-         array::resize(buffer, newImageSize * 4);
+         buffer.resize(newImageSize * 4);
 
          for (int i = 0; i < newImageSize; i++)
          {

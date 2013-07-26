@@ -56,9 +56,11 @@ Model::Model()
 
 Model::~Model()
 {
-	for(auto i = array::begin(animations); i != array::end(animations); ++i)
+	for(auto i = animations.begin(); i != animations.end(); ++i)
+	{
 		Deallocate(*i);
-	array::clear(animations);
+	}
+	animations.clear();
 }
 
 //-----------------------------------//
@@ -76,17 +78,17 @@ void Model::init()
 	animationCurrentFadeTime = 0;
 	animationSpeed = 1;
 
-	array::clear(animations);
-	array::clear(attachments);
-	array::clear(bones);
-	array::clear(renderables);
+	animations.clear();
+	attachments.clear();
+	bones.clear();
+	renderables.clear();
 }
 
 //-----------------------------------//
 
 void Model::setMesh(const MeshHandle& meshHandle)
 {
-	for( size_t i = 0; i < array::size(renderables); ++i )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
 		Renderable* rend = renderables[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
@@ -113,7 +115,7 @@ void Model::updateSkinning()
 	bool isCPU = skinningMode == SkinningMode::CPU;
 	String shader = isCPU ? "VertexLit" : "VertexLitSkinned";
 	
-	for( size_t i = 0; i < array::size(renderables); ++i )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
 		const RenderBatch* rend = renderables[i].get();
 	
@@ -143,7 +145,7 @@ void Model::update( float delta )
 
 	if( mesh->isAnimated() )
 	{
-		if( array::empty(animations) )
+		if( animations.empty() )
 			setAnimation( mesh->getBindPose().get() );
 
 		if( animationEnabled )
@@ -165,8 +167,8 @@ void Model::prepareSkinning()
 {
 	if( !mesh->isAnimated() ) return;
 
-	size_t numBones = array::size(mesh->getSkeleton()->getBones());
-	array::resize(bones, numBones );
+	size_t numBones = mesh->getSkeleton()->getBones().size();
+	bones.resize(numBones);
 }
 
 //-----------------------------------//
@@ -190,7 +192,7 @@ void Model::build()
 		}
 	}
 
-	for( size_t i = 0; i < array::size(*rends); ++i )
+	for( size_t i = 0; i < rends->size(); ++i )
 	{
 		Renderable* rend = (*rends)[i].get();
 		rend->onPreRender.Bind(this, &Model::onRender);
@@ -214,7 +216,7 @@ void Model::build()
 
 void Model::updateAnimations(float delta)
 {
-	for( size_t i = 0; i < array::size(animations); ++i )
+	for( size_t i = 0; i < animations.size(); ++i )
 	{
 		auto& state = *animations[i];
 
@@ -227,8 +229,8 @@ void Model::updateAnimations(float delta)
 		animationFadeTime = 0;
 		animationCurrentFadeTime = 0;
 
-		if( array::size(animations) >= 2 )
-			array::remove(animations, array::begin(animations) + 1 );
+		if( animations.size() >= 2 )
+			animations.remove(animations.begin() + 1 );
 	}
 
 	if( animationFadeTime > 0 )
@@ -289,19 +291,19 @@ void Model::updateAnimationBones(AnimationState& state)
 
 void Model::updateFinalAnimationBones()
 {
-	if( array::empty(mesh->animations) )
+	if( mesh->animations.empty() )
 	{
 		const BonesVector& skeletonBones = mesh->skeleton->getBones();
 		
-		for( size_t i = 0; i < array::size(bones); ++i )
+		for( size_t i = 0; i < bones.size(); ++i )
 			bones[i] = skeletonBones[i]->absoluteMatrix;
 		
 		return;
 	}
 
-	for( size_t i = 0; i < array::size(bones); ++i )
+	for( size_t i = 0; i < bones.size(); ++i )
 	{
-		if( array::size(animations) >= 2 )
+		if( animations.size() >= 2 )
 		{
 			bones[i] = Matrix4x3::lerp(
 				animations[0]->bonesMatrix[i], animations[1]->bonesMatrix[i],
@@ -318,7 +320,7 @@ void Model::updateFinalAnimationBones()
 
 void Model::updateAttachments()
 {
-	for( size_t i = 0; i < array::size(attachments); ++i )
+	for( size_t i = 0; i < attachments.size(); ++i )
 	{
 		const AttachmentPtr& attachment = attachments[i];
 		const EntityPtr& node = attachment->node;
@@ -350,11 +352,11 @@ void Model::setAnimation(Animation* animation)
 	state->animation = animation;
 	state->animationTime = 0;
 
-	size_t numBones = array::size(mesh->getSkeleton()->getBones());
-	array::resize(state->bonesMatrix, numBones);
+	size_t numBones = mesh->getSkeleton()->getBones().size();
+	state->bonesMatrix.resize(numBones);
 
-	if( array::empty(animations) )
-		array::push_back(animations, state);
+	if( animations.empty() )
+		animations.push_back(state);
 	else
 	{
 #pragma TODO("Fix memory leak here.")
@@ -383,10 +385,10 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 	if( !mesh->isAnimated() )
 		return;
 
-	if( array::size(animations) >= 2 )
+	if( animations.size() >= 2 )
 		animations[1] = animations[0];
 	else
-		array::push_back(animations, animations[0] );
+		animations.push_back(animations[0] );
 		
 	setAnimation(name);
 	animationFadeTime = fadeTime;
@@ -414,7 +416,7 @@ void Model::onRender(RenderView* view, const RenderState&)
 
 	if( !isHardwareSkinned() )
 	{
-		if( array::empty(renderables) ) return;
+		if( renderables.empty() ) return;
 
 		const RenderBatch* rend = renderables[0].get();
 		
@@ -483,18 +485,18 @@ void Model::setupShaderSkinning()
 {
 	// Setup matrices.
 	Array<Matrix4x4> matrices(*AllocatorGetHeap());
-	array::reserve(matrices, array::size(bones) );
+	matrices.reserve(bones.size());
 
-	for( size_t i = 0; i < array::size(bones); ++i )
+	for( size_t i = 0; i < bones.size(); ++i )
 	{
 		const Matrix4x3& bone = bones[i];
-		array::push_back(matrices, Matrix4x4(bone) );
+		matrices.push_back(Matrix4x4(bone) );
 	}
 
 	// Send them to the uniform buffer.
 	auto& rends = getRenderables();
 
-	for( size_t i = 0; i < array::size(rends); ++i )
+	for( size_t i = 0; i < rends.size(); ++i )
 	{
 		const RenderBatch* rend = rends[i].get();
 		
@@ -520,7 +522,7 @@ void Model::setAttachment(const String& boneName, const EntityPtr& node)
 	attachment->bone = bone;
 	attachment->node = node;
 
-	array::push_back<AttachmentPtr>(attachments, attachment); 
+	attachments.push_back(attachment);
 }
 
 //-----------------------------------//
@@ -530,7 +532,7 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 	const Skeleton* skeleton = mesh->getSkeleton().get();
 	if( !skeleton ) return;
 	
-	if( array::empty(bones) ) return;
+	if( bones.empty() ) return;
 
 	if( !debugRenderable )
 		debugRenderable = createDebugRenderable();
@@ -540,7 +542,7 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 	Array<Vector3> pos(*AllocatorGetHeap());
 	Array<Vector3> colors(*AllocatorGetHeap());
 
-	size_t numBones = array::size(skeleton->bones);
+	size_t numBones = skeleton->bones.size();
 	
 	for( size_t i = 0; i < numBones; ++i )
 	{
@@ -554,17 +556,17 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 		
 		parentVertex = bones[bone->indexParent]*parentVertex;
 
-		array::push_back(pos, bones[bone->index]*vertex );
-		array::push_back<Vector3>(colors, Color::Blue );
+		pos.push_back(bones[bone->index]*vertex );
+		colors.push_back(Color::Blue);
 
-		array::push_back(pos, parentVertex);
-		array::push_back<Vector3>(colors, Color::Blue );
+		pos.push_back(parentVertex);
+		colors.push_back(Color::Blue );
 	}
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
 
-	array::push_back(debug.renderables, debugRenderable.get());
+	debug.renderables.push_back(debugRenderable.get());
 }
 
 //-----------------------------------//

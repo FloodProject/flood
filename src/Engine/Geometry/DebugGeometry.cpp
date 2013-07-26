@@ -50,7 +50,7 @@ DebugDrawer::DebugDrawer()
 	lines->setPrimitiveType(PrimitiveType::Lines);
 	lines->setMaterial(debug);
 	lines->setRenderLayer(RenderLayer::PostTransparency);
-	array::push_back(renderables, lines.get());
+	renderables.push_back(lines.get());
 
 	// Triangles
 	GeometryBufferPtr trianglesVB = AllocateThis(GeometryBuffer);
@@ -63,7 +63,7 @@ DebugDrawer::DebugDrawer()
 	triangles->setPrimitiveType(PrimitiveType::Triangles);
 	triangles->setMaterial(debug);
 	triangles->setRenderLayer(RenderLayer::PostTransparency);
-	array::push_back(renderables, triangles.get());
+	renderables.push_back(triangles.get());
 
 	// Quads
 	GeometryBufferPtr quadsVB = AllocateThis(GeometryBuffer);
@@ -76,7 +76,7 @@ DebugDrawer::DebugDrawer()
 	quads->setPrimitiveType(PrimitiveType::Quads);
 	quads->setMaterial(debug);
 	quads->setRenderLayer(RenderLayer::PostTransparency);
-	array::push_back(renderables, quads.get());
+	renderables.push_back(quads.get());
 
 	reset();
 }
@@ -204,7 +204,7 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 	};
 
 	Array<Vertex> vs(*AllocatorGetHeap());
-	array::resize(vs, 24);
+	vs.resize(24);
 
 	size_t i = 0;
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
@@ -214,10 +214,10 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
 	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
 
-	for(i = 0; i < array::size(vs); ++i)
+	for(i = 0; i < vs.size(); ++i)
 		vs[i].color = color;
 
-	gb->add((uint8*)&array::front(vs), array::size(vs) * sizeof(Vertex));
+	gb->add((uint8*)&vs.front(), vs.size() * sizeof(Vertex));
 
 	gb->forceRebuild();
 }
@@ -227,11 +227,11 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 {
 	Array<Vector3> vertex(*AllocatorGetHeap());
-	array::push_back(vertex, pickRay.origin);
-	array::push_back(vertex, pickRay.getPoint(length));
+	vertex.push_back(pickRay.origin);
+	vertex.push_back(pickRay.getPoint(length));
 
 	Array<Vector3> colors(*AllocatorGetHeap());
-    array::resize(colors, 2);
+    colors.resize(2);
     colors[0] = Color::Red;
     colors[1] = Color::Red;
 
@@ -272,10 +272,10 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 //-----------------------------------//
 
 #define ADD_BOX_FRUSTUM( a, b, c, d ) \
-	array::push_back(pos, box.corners[a] ); \
-	array::push_back(pos, box.corners[b] ); \
-	array::push_back(pos, box.corners[c] ); \
-	array::push_back(pos, box.corners[d] );
+	pos.push_back(box.corners[a] ); \
+	pos.push_back(box.corners[b] ); \
+	pos.push_back(box.corners[c] ); \
+	pos.push_back(box.corners[d] );
 
 void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 {
@@ -291,9 +291,9 @@ void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 	gb->set( VertexAttribute::Position, pos );
 
     Array<Vector3> colors(*AllocatorGetHeap());
-    array::reserve(colors, array::size(pos));
-    for(size_t i = 0; i < array::size(pos); ++i)
-        array::push_back<Vector3>(colors, Color::White);
+    colors.reserve(pos.size());
+    for(size_t i = 0; i < pos.size(); ++i)
+        colors.push_back(Color::White);
 	gb->set( VertexAttribute::Color, colors );
 
 	gb->forceRebuild();

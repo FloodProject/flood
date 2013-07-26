@@ -84,7 +84,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 	// Build Texture Coordinates.
 	BoundingBox box;
 	
-	for( size_t i = 0; i < array::size(position); ++i )
+	for( size_t i = 0; i < position.size(); ++i )
 	{
 		const Vector3& v = position[i];
 		box.add(v);
@@ -94,7 +94,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 
 	Array<Vector3> texCoords(*AllocatorGetHeap());
 
-	for( size_t i = 0; i < array::size(position); ++i )
+	for( size_t i = 0; i < position.size(); ++i )
 	{
 		const Vector3& vert = position[i];
 		Vector3 d = vert-center;
@@ -110,7 +110,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 		float u = std::asin(d.x) / PI + 0.5f;
 		float v = std::asin(d.y) / PI + 0.5f;
 
-		array::push_back<Vector3>(texCoords, Vector2(u, v));
+		texCoords.push_back(Vector2(u, v));
 	}
 
 	gb->set( VertexAttribute::Position, position );
@@ -124,9 +124,9 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2,
 {
 	if (depth == 0)
 	{
-		array::push_back(pos, v1);
-		array::push_back(pos, v2);
-		array::push_back(pos, v3);
+		pos.push_back(v1);
+		pos.push_back(v2);
+		pos.push_back(v3);
 		
 		return;
 	}
@@ -179,7 +179,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	}
 
 	// Scale all the vertices.
-	for( size_t i = 0; i < array::size(pos); ++i )
+	for( size_t i = 0; i < pos.size(); ++i )
 	{
 		Vector3& vec = pos[i];	
 		vec *= dim;

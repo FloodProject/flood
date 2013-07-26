@@ -48,20 +48,20 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
-		array::push_back(vertex, Vector3(x_pos, 0.0f, z_pos) );
-		array::push_back(vertex, Vector3(-x_pos, 0.0f, z_pos) );
+		vertex.push_back(Vector3(x_pos, 0.0f, z_pos) );
+		vertex.push_back(Vector3(-x_pos, 0.0f, z_pos) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			array::push_back(colors, MainLineColor );
-			array::push_back(colors, MainLineColor );
+			colors.push_back(MainLineColor);
+			colors.push_back(MainLineColor);
 		}
 		else
 		{
-			array::push_back(colors, LineColor );
-			array::push_back(colors, LineColor );
+			colors.push_back(LineColor);
+			colors.push_back(LineColor);
 		}
 
 		z_pos += sizeZ / divZ;
@@ -73,20 +73,20 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	for( int i = 0; i < divZ+1; ++i)
 	{
-		array::push_back(vertex, Vector3( x_pos, 0.0f, z_pos ) );
-		array::push_back(vertex, Vector3( x_pos, 0.0f, -z_pos ) );
+		vertex.push_back(Vector3( x_pos, 0.0f, z_pos ) );
+		vertex.push_back(Vector3( x_pos, 0.0f, -z_pos ) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			array::push_back(colors, MainLineColor );
-			array::push_back(colors, MainLineColor );
+			colors.push_back(MainLineColor);
+			colors.push_back(MainLineColor);
 		}
 		else
 		{
-			array::push_back(colors, LineColor );
-			array::push_back(colors, LineColor );
+			colors.push_back(LineColor);
+			colors.push_back(LineColor);
 		}
 
 		x_pos += sizeX / divX;
@@ -103,7 +103,7 @@ GeometryBufferPtr Grid::buildGeometry()
 
 void Grid::update( float update )
 {
-	if( !array::empty(renderables) ) return;
+	if( !renderables.empty() ) return;
 
 	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
 

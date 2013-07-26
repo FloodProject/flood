@@ -124,7 +124,7 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 	if(!hash::has(memoryGroups, key) && !recurseGuard)
 	{
 		recurseGuard = true;
-		array::push_back(GetMemoryGroupNameMap(), metadata->group);
+		GetMemoryGroupNameMap().push_back(metadata->group);
 		recurseGuard = false;
 	}
 
@@ -178,13 +178,13 @@ void AllocatorSetGroup( Allocator* alloc, const char* group )
 void AllocatorDumpInfo()
 {
 	auto& groups = GetMemoryGroupNameMap();
-	if( array::empty(groups) ) return;
+	if( groups.empty() ) return;
 
 	LogDebug("-----------------------------------------------------");
 	LogDebug("Memory stats");
 	LogDebug("-----------------------------------------------------");
 
-	for(auto it = array::begin(groups); it != array::end(groups); ++it)
+	for(auto it = groups.begin(); it != groups.end(); ++it)
 	{
 		const char* id = *it;
 		String ns(id);

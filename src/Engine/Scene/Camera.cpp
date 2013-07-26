@@ -151,10 +151,7 @@ void Camera::render( RenderBlock& block, bool clearView )
 	if( clearView )
 		renderDevice->clearView();
 
-	array::insert(block.renderables,
-		array::begin(block.renderables),
-		array::begin(drawer.renderables),
-		array::end(drawer.renderables) );
+	block.renderables.insert( block.renderables.begin(), drawer.renderables.begin(), drawer.renderables.end() );
 
 	renderDevice->render( block );
 }
@@ -175,7 +172,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 		auto& entities = group->getEntities();
 
 		// Cull the children entities recursively.
-		for( size_t i = 0; i < array::size(entities); ++i )
+		for( size_t i = 0; i < entities.size(); ++i )
 		{
 			const Entity* child = entities[i].get();
 			cull( block, child );
@@ -204,7 +201,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 	auto& geoms = entity->getGeometry();
 
-	for( size_t i = 0; i < array::size(geoms); ++i )
+	for( size_t i = 0; i < geoms.size(); ++i )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		geometry->appendRenderables( block.renderables, transform );

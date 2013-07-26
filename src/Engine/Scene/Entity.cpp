@@ -64,7 +64,7 @@ Entity::~Entity()
 	// Keep a reference so it is the last component destroyed.
 	TransformPtr transform = getTransform();
 	
-	array::clear(components);
+	components.clear();
 
 	for(auto c : componentsMap)
 		c.value.reset();
@@ -103,7 +103,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 		group->onEntityComponentAdded(component);
 	}
 
-	array::push_back(components, component);
+	components.push_back(component);
 
 	return true;
 }
@@ -185,7 +185,7 @@ Array<GeometryPtr> Entity::getGeometry() const
 			continue;
 
 		const GeometryPtr& geo = RefCast<Geometry>(component);
-		array::push_back(geoms, geo);
+		geoms.push_back(geo);
 	}
 
 	return geoms;
@@ -198,7 +198,7 @@ void Entity::update( float delta )
 	// Update all geometry bounding boxes first.
 	const Array<GeometryPtr>& geoms = getGeometry();
 
-	for( size_t i = 0; i < array::size(geoms); ++i )
+	for( size_t i = 0; i < geoms.size(); ++i )
 	{
 		Geometry* geom = geoms[i].get();
 		geom->update( delta );
@@ -223,7 +223,7 @@ void Entity::update( float delta )
 
 void Entity::fixUp()
 {
-	for(size_t i = 0; i < array::size(components); ++i )
+	for(size_t i = 0; i < components.size(); ++i )
 	{
 		auto component = components[i];
 		if( !component ) 

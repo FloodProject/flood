@@ -71,7 +71,7 @@ void ResourceIndexer::addArchive(Archive* archive)
 	Array<String*> res(*AllocatorGetHeap());	
 	ArchiveEnumerateFiles(archive, res);
 	
-	for( size_t i = 0; i < array::size(res); ++i )
+	for( size_t i = 0; i < res.size(); ++i )
 	{
 		Path fullPath = ArchiveCombinePath(archive, *res[i]);
 		CreateIndexTask(this, fullPath);
@@ -126,13 +126,13 @@ void ResourceIndexer::indexResources(Task* task)
 	StreamRead(stream, data);
 	StreamDestroy(stream);
 
-	if( array::empty(data) )
+	if( data.empty() )
 	{
 		LogWarn("Resource '%s' is empty", basePath.c_str());
 		return;
 	}
 
-	uint32 hash = HashMurmur2(0xBEEF, &data[0], array::size(data));
+	uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
 		
 	ResourceMetadata metadata;
 	metadata.hash = hash;

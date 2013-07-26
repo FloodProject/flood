@@ -40,7 +40,7 @@ Projector::~Projector()
 
 	const RenderablesVector& renderables = geometry->getRenderables();
 	
-	for( size_t i = 0; i < array::size(renderables); ++i )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
 		RenderBatch* renderable = renderables[i].get();
 		renderable->onPreRender.clear();
@@ -74,7 +74,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 	
 	const RenderablesVector& renderables = geometry->getRenderables();
 	
-	for( size_t i = 0; i < array::size(renderables); ++i )
+	for( size_t i = 0; i < renderables.size(); ++i )
 	{
 		RenderBatch* renderable = renderables[i].get();
 		if( !renderable ) continue;
@@ -87,7 +87,7 @@ void Projector::appendRenderables( RenderQueue& queue, const Transform* transfor
 		state.modelMatrix = absoluteTransform;
 		state.priority = renderable->getRenderPriority() + 1;
 
-		array::push_back(queue, state);
+		queue.push_back(state);
 	}
 }
 

@@ -131,23 +131,23 @@ void Particles::createGeometry()
 	
 	addRenderable(renderable);
 
-	array::resize(particles, MAX_PARTICLES);
+	particles.resize(MAX_PARTICLES);
 }
 
 //-----------------------------------//
 
 void Particles::update(float delta)
 {
-	numParticles = array::size(particles);
+	numParticles = particles.size();
 
 	int numSpawn = ceil(spawnRate * delta);
 	spawnParticles(numSpawn);
 
 	Array<Vector3> positions(*AllocatorGetHeap());
-	array::reserve(positions, numParticles );
+	positions.reserve(numParticles );
 
 	Array<Color> colors(*AllocatorGetHeap());
-	array::reserve(colors, numParticles );
+	colors.reserve(numParticles );
 
 	// Update the particles.
 	for(size_t i = 0; i < numParticles; ++i)
@@ -167,8 +167,8 @@ void Particles::update(float delta)
 		particle.life -= float(delta);
 		particle.color.a = particle.life / maxLife;
 
-		array::push_back(positions, particle.position );
-		array::push_back(colors, particle.color );
+		positions.push_back(particle.position );
+		colors.push_back(particle.color );
 	}
 
 	gb->declarations.reset();

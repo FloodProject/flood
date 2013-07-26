@@ -40,10 +40,10 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 	auto v = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(KeyFramesVector), alignof(KeyFramesVector))) KeyFramesVector(frames);
 	hash::set(keyFrames, (uint64)bone.get(), v);
 
-	for( size_t i = 0; i < array::size(frames); ++i )
+	for( size_t i = 0; i < frames.size(); ++i )
 	{	
 		const KeyFrame& frame = frames[i];
-		array::push_back(keyFramesVector, frame);
+		keyFramesVector.push_back(frame);
 	}
 }
 
@@ -57,7 +57,7 @@ float Animation::getTotalTime() const
 	float min = LimitsFloatMaximum;
 	float max = 0;
 
-	for( size_t i = 0; i < array::size(keyFramesVector); ++i )
+	for( size_t i = 0; i < keyFramesVector.size(); ++i )
 	{
 		const KeyFrame& keyFrame = keyFramesVector[i];
 
@@ -91,12 +91,12 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 
 	assert(boneKeyFrames != nullptr);
 
-	if( array::empty(*boneKeyFrames) )
+	if( boneKeyFrames->empty() )
 		return Matrix4x3::Identity;
 	
 	uint endIndex = 0;
 
-	for( size_t i = 0; i < array::size(*boneKeyFrames); ++i )
+	for( size_t i = 0; i < boneKeyFrames->size(); ++i )
 	{
 		if( (*boneKeyFrames)[i].time > time )
 		{
@@ -113,7 +113,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	Quaternion rotation;
 #endif
 
-	if( endIndex == 0 || endIndex == array::size(*boneKeyFrames) )
+	if( endIndex == 0 || endIndex == boneKeyFrames->size() )
 	{
 		endIndex -= (endIndex != 0) ? 1 : 0;
 		position = (*boneKeyFrames)[endIndex].position;

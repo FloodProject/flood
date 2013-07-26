@@ -56,12 +56,12 @@ void PipelineInit()
 
 	Class* klass = ResourceProcessorGetType();
 	
-	for( size_t i = 0; i < array::size(klass->childs); ++i )
+	for( size_t i = 0; i < klass->childs.size(); ++i )
 	{
 		Class* child = klass->childs[i];
 		
 		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
-		array::push_back(resourceProcessors, processor);
+		resourceProcessors.push_back(processor);
 
 		LogInfo("Registering asset handler: %s", child->name);
 	}
@@ -71,20 +71,20 @@ void PipelineInit()
 
 void PipelineCleanup()
 {
-	for( size_t i = 0; i < array::size(resourceProcessors); ++i )
+	for( size_t i = 0; i < resourceProcessors.size(); ++i )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
 		Deallocate(processor);
 	}
 
-	array::clear(resourceProcessors);
+	resourceProcessors.clear();
 }
 
 //-----------------------------------//
 
 ResourceProcessor* PipelineFindProcessor(Class* type)
 {
-	for( size_t i = 0; i < array::size(resourceProcessors); ++i )
+	for( size_t i = 0; i < resourceProcessors.size(); ++i )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
 		

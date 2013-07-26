@@ -446,7 +446,7 @@ void ResourceManager::removeUnusedResources()
 		auto res = it.value.Resolve();
 
 		if( res->references == 1 )
-			array::push_back(resourcesToRemove, res);
+			resourcesToRemove.push_back(res);
 	}
 
 	for(auto res : resourcesToRemove)
@@ -493,7 +493,7 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 
 	auto& extensions = loader->getExtensions();
 	
-	for( size_t i = 0; i < array::size(extensions); ++i )
+	for( size_t i = 0; i < extensions.size(); ++i )
 	{
 		const String& extension = *extensions[i];
 		auto key = murmur_hash_64(extension.c_str(), extension.size(), 0);
@@ -544,11 +544,11 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 
 void ResourceManager::setupResourceLoaders(Class* klass)
 {
-	for( size_t i = 0; i < array::size(klass->childs); ++i )
+	for( size_t i = 0; i < klass->childs.size(); ++i )
 	{
 		Class* child = klass->childs[i];
 
-		if( !array::empty(child->childs) )
+		if( !child->childs.empty() )
 			setupResourceLoaders(child);
 	
 		if( ClassIsAbstract(child ) ) continue;

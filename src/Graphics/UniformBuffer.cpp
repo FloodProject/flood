@@ -105,12 +105,12 @@ void UniformBuffer::setUniform( const char* name, float data )
 
 void UniformBuffer::setUniform( const char* name, const Array<Vector3>& vec )
 {
-	size_t size = sizeof(Vector3) * array::size(vec);
+	size_t size = sizeof(Vector3) * vec.size();
 	UniformBufferElement* element = getElement(name, size);
 	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
-	element->count = array::size(vec);
-	memcpy(&element->data, &array::front(vec), size);
+	element->count = vec.size();
+	memcpy(&element->data, &vec.front(), size);
 }
 
 //-----------------------------------//
@@ -170,12 +170,12 @@ void UniformBuffer::setUniform( const char* name, const Matrix4x4& matrix )
 
 void UniformBuffer::setUniform( const char* name, const Array<Matrix4x4>& vec )
 {
-	size_t size = sizeof(Matrix4x4) * array::size(vec);
+	size_t size = sizeof(Matrix4x4) * vec.size();
 	UniformBufferElement* element = getElement(name, size);
 	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
-	element->count = array::size(vec);
-	memcpy(&element->data, &array::front(vec), size);
+	element->count = vec.size();
+	memcpy(&element->data, &vec.front(), size);
 }
 
 //-----------------------------------//

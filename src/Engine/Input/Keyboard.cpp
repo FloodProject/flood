@@ -17,7 +17,7 @@ NAMESPACE_ENGINE_BEGIN
 Keyboard::Keyboard()
 	: keyState(*AllocatorGetHeap())
 {
-	array::resize(keyState, (size_t)Keys::MAX);
+	keyState.resize((size_t)Keys::MAX);
 }
 
 //-----------------------------------//
@@ -31,7 +31,7 @@ bool Keyboard::isKeyPressed( Keys keycode ) const
 
 void Keyboard::resetKeys()
 {
-	std::fill(array::begin(keyState), array::end(keyState), false);
+	std::fill(keyState.begin(), keyState.end(), false);
 }
 
 //-----------------------------------//

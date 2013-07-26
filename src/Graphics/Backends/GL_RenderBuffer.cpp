@@ -36,7 +36,7 @@ GL_RenderBuffer::~GL_RenderBuffer()
 {
 	glDeleteFramebuffersEXT(1, (GLuint*) &id);
 
-	for( size_t i = 0; i < array::size(renderBuffers); ++i )
+	for( size_t i = 0; i < renderBuffers.size(); ++i )
 	{
 		uint32 buffer = renderBuffers[i];
 
@@ -100,10 +100,10 @@ void GL_RenderBuffer::read(int8 attachment, Array<uint8>& data)
 {
 	const Vector2i& size = settings.getSize();
 
-	array::resize(data, size.x * size.y * 4);
+	data.resize(size.x * size.y * 4);
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, &array::front(data));
+	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, &data.front());
 }
 
 //-----------------------------------//
@@ -164,7 +164,7 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
-	array::push_back(textureBuffers, tex);
+	textureBuffers.push_back(tex);
 
 	unbind();
 }

@@ -188,13 +188,13 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* array = json_array();	
-		array::push_back(json->values, array );
+		json->values.push_back(array );
 	}
 	else if(wt == ReflectionWalkType::ElementEnd)
 	{
-		json_t* element = array::back(json->values);
-		array::pop_back(json->values);
-		json_array_append_new(array::back(json->values), element);
+		json_t* element = json->values.back();
+		json->values.pop_back();
+		json_array_append_new(json->values.back(), element);
 	}
 }
 
@@ -211,15 +211,15 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* klass = json_object();
-		array::push_back(json->values, klass );
+		json->values.push_back( klass );
 	}
 	else if(wt == ReflectionWalkType::End)
 	{
 		json_t* klass = json_object();
-		json_object_set_new(klass, ctx->objectClass->name, array::back(json->values));
+		json_object_set_new(klass, ctx->objectClass->name, json->values.back());
 		
-		array::pop_back(json->values);
-		array::push_back(json->values, klass);
+		json->values.pop_back();
+		json->values.push_back(klass);
 	}
 }
 
@@ -231,9 +231,9 @@ static void SerializeField(ReflectionContext* ctx, ReflectionWalkType wt)
 
 	if(wt == ReflectionWalkType::End)
 	{
-		json_t* field = array::back(json->values);
-		array::pop_back(json->values);
-		json_object_set_new(array::back(json->values), ctx->field->name, field);
+		json_t* field = json->values.back();
+		json->values.pop_back();
+		json_object_set_new(json->values.back(), ctx->field->name, field);
 		
 		return;
 	}
@@ -250,7 +250,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType wt)
 	assert( name != nullptr );
 
 	json_t* str = json_string(name);
-	array::push_back(json->values, str);
+	json->values.push_back(str);
 }
 
 //-----------------------------------//
@@ -316,7 +316,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType w
 		assert( false );
 	}
 
-	array::push_back(json->values, value);
+	json->values.push_back(value);
 }
 
 //-----------------------------------//
@@ -324,7 +324,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType w
 static void DeserializeEnum( ReflectionContext* context )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	const char* name = json_string_value(value);
 	int32 enumValue = EnumGetValue(context->enume, name);
@@ -338,7 +338,7 @@ static void DeserializeEnum( ReflectionContext* context )
 static void DeserializePrimitive( ReflectionContext* context )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	ValueContext vc = ConvertValueToPrimitive(context->primitive->kind, value);
 
@@ -394,7 +394,7 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	} }
 
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	array::pop_back(json->values);
+	json->values.pop_back();
 }
 
 //-----------------------------------//
@@ -405,7 +405,7 @@ static void DeserializeArray( ReflectionContext* context )
 	// as an array, so don't force the JSON value to be an array.
 
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	const Field* field = context->field;
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
@@ -429,7 +429,7 @@ static void DeserializeArray( ReflectionContext* context )
 		for( size_t i = 0; i < size; i++ )
 		{
 			json_t* arrayValue = json_array_get(value, i);
-			array::push_back(json->values, arrayValue);
+			json->values.push_back(arrayValue);
 
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i;
@@ -449,7 +449,7 @@ static void DeserializeArray( ReflectionContext* context )
 			json_t* arrayValue = json_object();
 			json_object_set(arrayValue, key, val);
 
-			array::push_back(json->values, arrayValue);
+			json->values.push_back(arrayValue);
 
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i++;
@@ -539,7 +539,7 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType wt 
 	}
 
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	switch(field->type->kind)
 	{
@@ -587,7 +587,7 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType wt 
 static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	void* iter = json_object_iter(value);
 	for(; iter; iter = json_object_iter_next(value, iter))
@@ -610,9 +610,9 @@ static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 
 		context->field = newField;
 
-		array::push_back(json->values, fieldValue);
+		json->values.push_back(fieldValue);
 		DeserializeField(context, ReflectionWalkType::Element);
-		array::pop_back(json->values);
+		json->values.pop_back();
 
 		context->field = field;
 		context->composite = composite;
@@ -624,7 +624,7 @@ static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 static Object* DeserializeComposite( ReflectionContext* context, Object* newObject )
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json_t* value = array::back(json->values);
+	json_t* value = json->values.back();
 
 	if( !json_is_object(value) ) return 0;
 
@@ -668,14 +668,14 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	context->composite = newClass;
 	context->object = newObject;
 
-	array::push_back(json->values, value);
+	json->values.push_back(value);
 
 	if( newClass->serialize )
 		newClass->serialize(context, ReflectionWalkType::Begin);
 	else
 		DeserializeFields(context, ReflectionWalkType::Begin);
 
-	array::pop_back(json->values);
+	json->values.pop_back();
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();
@@ -694,8 +694,8 @@ static Object* SerializeLoad( Serializer* serializer )
 	SerializerJSON* json = (SerializerJSON*) serializer;
 	
 	json->rootValue = nullptr;
-	array::clear(json->values);
-	array::clear(json->arrays);
+	json->values.clear();
+	json->arrays.clear();
 
 	String text;
 	StreamReadString(json->stream, text);
@@ -717,12 +717,12 @@ static Object* SerializeLoad( Serializer* serializer )
 	ReflectionContext* context = &serializer->deserializeContext;
 	Object* object = serializer->object;
 
-	array::push_back(json->values, rootValue);
+	json->values.push_back(rootValue);
 
 	object = DeserializeComposite(context, object);
 
-	array::pop_back(json->values);
-	assert( array::empty(json->values) );
+	json->values.pop_back();
+	assert( json->values.empty() );
 
 	json_decref(rootValue);
 
@@ -736,13 +736,13 @@ static bool SerializeSave( Serializer* serializer, const Object* object )
 	SerializerJSON* json = (SerializerJSON*) serializer;
 
 	json->rootValue = nullptr;
-	array::clear(json->values);
-	array::clear(json->arrays);
+	json->values.clear();
+	json->arrays.clear();
 
 	ReflectionWalk(object, &json->serializeContext);
-	assert( array::size(json->values) == 1 );
+	assert( json->values.size() == 1 );
 		
-	json_t* rootValue = array::back(json->values);
+	json_t* rootValue = json->values.back();
 
 	// Always switch to the platform independent "C" locale when writing
 	// JSON, else the library will format the data erroneously.

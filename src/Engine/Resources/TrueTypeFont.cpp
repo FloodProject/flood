@@ -40,7 +40,7 @@ TrueTypeFont::~TrueTypeFont()
 
 void TrueTypeFont::init()
 {
-    stbtt_InitFont(&fontInfo->font, &array::front(data), 0);
+    stbtt_InitFont(&fontInfo->font, &data.front(), 0);
 }
 
 //-----------------------------------//

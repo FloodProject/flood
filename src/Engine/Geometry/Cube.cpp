@@ -56,10 +56,10 @@ void Cube::create()
 //-----------------------------------//
 
 #define ADD_BOX_FACE( a, b, c, d )				\
-	array::push_back(pos, a*width );					\
-	array::push_back(pos, b*width );					\
-	array::push_back(pos, c*width );					\
-	array::push_back(pos, d*width );
+	pos.push_back(a*width );					\
+	pos.push_back(b*width );					\
+	pos.push_back(c*width );					\
+	pos.push_back(d*width );
 
 #define v(a,b,c) Vector3(a,b,c)
 
@@ -67,7 +67,7 @@ void BuildCube( GeometryBuffer* gb, float width, float height )
 {
 	// Vertex position data
 	Array<Vector3> pos(*AllocatorGetHeap());
-	array::reserve(pos, 24);
+	pos.reserve(24);
 
 	ADD_BOX_FACE( v( 1, 1, 1), v(-1, 1, 1), v(-1,-1, 1), v( 1,-1, 1) )	// Front
 	ADD_BOX_FACE( v( 1,-1, 1), v(-1,-1, 1), v(-1,-1,-1), v( 1,-1,-1) )	// Bottom
@@ -78,44 +78,44 @@ void BuildCube( GeometryBuffer* gb, float width, float height )
 
 	// Vertex color data
 	Array<Vector3> colors(*AllocatorGetHeap());
-	array::resize(colors, array::size(pos));
-	std::fill(array::begin(colors), array::end(colors), Color::White);
+	colors.resize(pos.size());
+	std::fill(colors.begin(), colors.end(), Color::White);
 
 	// Vertex tex coords data
 	Array<Vector3> coords(*AllocatorGetHeap());//, Vector3::Zero );
-	array::resize(coords, array::size(pos));
-	std::fill(array::begin(coords), array::end(coords), Vector3::Zero);
+	coords.resize(pos.size());
+	std::fill(coords.begin(), coords.end(), Vector3::Zero);
 	
 	// Top
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
 	// Bottom
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
 	// Front
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
 	// Back
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
 	// Left
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
 	// Right
-	array::push_back<Vector3>(coords, Vector2(0.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
 
 	// Vertex buffer setup
 	gb->set( VertexAttribute::Position, pos );

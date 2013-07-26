@@ -77,32 +77,32 @@ void Overlay::rebuildGeometry()
 	Array<Vector3> pos(*AllocatorGetHeap());
 	Array< Color > colors(*AllocatorGetHeap());
 
-	array::push_back(pos, Vector3(borderWidth, borderWidth, -0.1f) );
-	array::push_back(pos, Vector3(borderWidth, size.y-borderWidth, -0.1f) );
-	array::push_back(pos, Vector3(size.x-borderWidth, size.y-borderWidth, -0.1f) );
-	array::push_back(pos, Vector3(size.x-borderWidth, borderWidth, -0.1f) );
+	pos.push_back(Vector3(borderWidth, borderWidth, -0.1f) );
+	pos.push_back(Vector3(borderWidth, size.y-borderWidth, -0.1f) );
+	pos.push_back(Vector3(size.x-borderWidth, size.y-borderWidth, -0.1f) );
+	pos.push_back(Vector3(size.x-borderWidth, borderWidth, -0.1f) );
 
 	Color color = backgroundColor;
 	color.a = opacity;
 	
-	array::push_back(colors, color);
-	array::push_back(colors, color);
-	array::push_back(colors, color);
-	array::push_back(colors, color);
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
 
 	if( borderWidth > 0 )
 	{
-		array::push_back(pos, Vector3(0, 0, -0.2f) );
-		array::push_back(pos, Vector3(0, size.y, -0.2f) );
-		array::push_back(pos, Vector3(size.x, size.y, -0.2f) );
-		array::push_back(pos, Vector3(size.x, 0, -0.2f) );
+		pos.push_back(Vector3(0, 0, -0.2f) );
+		pos.push_back(Vector3(0, size.y, -0.2f) );
+		pos.push_back(Vector3(size.x, size.y, -0.2f) );
+		pos.push_back(Vector3(size.x, 0, -0.2f) );
 	
 		color = borderColor;
 
-		array::push_back(colors, color);
-		array::push_back(colors, color);
-		array::push_back(colors, color);
-		array::push_back(colors, color);
+		colors.push_back(color);
+		colors.push_back(color);
+		colors.push_back(color);
+		colors.push_back(color);
 	}
 
 	GeometryBuffer* gb = renderable->getGeometryBuffer().get();
@@ -209,7 +209,7 @@ void Overlay::setOpacity( float opacity )
 {
 	this->opacity = opacity;
 
-	if( array::empty(renderables) ) return;
+	if( renderables.empty() ) return;
 
 	MaterialHandle materialHandle = renderables[0]->getMaterial();
 

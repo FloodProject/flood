@@ -163,7 +163,7 @@ uint TextureManager::getMemoryUsage()
 	for(auto it : textures)
 	{
 		auto img = (Image*)it.key;
-		total += array::size(img->getBuffer());
+		total += img->getBuffer().size();
 	}
 
 	return total;

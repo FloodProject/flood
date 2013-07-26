@@ -29,7 +29,7 @@ WindowManager::~WindowManager()
 
 void WindowManager::destroyWindows()
 {
-    for(auto it = array::begin(windows); it != array::end(windows); ++it)
+    for(auto it = windows.begin(); it != windows.end(); ++it)
     {
         Window* window = *it;
         Deallocate(window);

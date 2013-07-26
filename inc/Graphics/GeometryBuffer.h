@@ -81,24 +81,24 @@ public:
 	template<typename T>
 	void set(VertexAttribute attr, const Array<T>& data)
 	{
-		if( array::empty(data) ) return;
+		if( data.empty() ) return;
 
-		uint32 sizeInBytes = array::size(data) * sizeof(T);
+		uint32 sizeInBytes = data.size() * sizeof(T);
 
 		if( !declarations.find(attr) )
 		{
 			VertexElement decl(attr, VertexDataType::Float, sizeof(T) / sizeof(float));
 			decl.stride = 0;
-			decl.offset = array::size(this->data);
+			decl.offset = this->data.size();
 			decl.size = sizeInBytes;
 
 			declarations.add(decl);
 
-			add((uint8*)&array::front(data), sizeInBytes);
+			add((uint8*)&data.front(), sizeInBytes);
 		}
 		else
 		{
-			set(attr, (uint8*)&array::front(data), sizeInBytes);
+			set(attr, (uint8*)&data.front(), sizeInBytes);
 		}
 	}
 	

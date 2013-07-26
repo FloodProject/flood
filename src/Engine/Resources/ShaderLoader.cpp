@@ -40,7 +40,7 @@ REFLECT_CLASS_END()
 
 ShaderLoader::ShaderLoader()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("glsl"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("glsl"));
 }
 
 //-----------------------------------//

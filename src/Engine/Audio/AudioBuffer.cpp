@@ -67,8 +67,8 @@ void AudioGetBufferDataDetails(AudioBufferDetails& details, Sound* sound)
 {
 	auto& soundData = sound->getBuffer();
 	
-	details.data = (uint8*) &array::front(soundData);
-	details.size = array::size(soundData);
+	details.data = (uint8*) &soundData.front();
+	details.size = soundData.size();
 	details.frequency = sound->getFrequency();
 	details.format = AudioGetFormat(sound);
 }

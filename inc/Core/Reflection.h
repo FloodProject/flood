@@ -346,7 +346,7 @@ void FieldSet( const Field* field, void* object, const T& value )
 template<typename T>
 void ClassCreateChilds(const Class* klass, Allocator* alloc, Array<T*>& instances)
 {
-	for( size_t i = 0; i < array::size(klass->childs); ++i )
+	for( size_t i = 0; i < klass->childs.size(); ++i )
 	{
 		Class* child = klass->childs[i];
 		if( !child ) continue;
@@ -359,7 +359,7 @@ void ClassCreateChilds(const Class* klass, Allocator* alloc, Array<T*>& instance
 		T* object = (T*) ClassCreateInstance(child, alloc);
 		if(!object) continue;
 
-		array::push_back(instances, object);
+		instances.push_back(object);
 	}
 }
 

@@ -39,7 +39,7 @@ GLSL_ShaderProgram::~GLSL_ShaderProgram()
 	//Deallocate(vertex);
 	//Deallocate(fragment);
 
-	array::clear(shaders);
+	shaders.clear();
 
 	glDeleteProgram( id );
 
@@ -63,7 +63,7 @@ bool GLSL_ShaderProgram::create()
 
 void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
-	array::push_back<GLSL_ShaderPtr>(shaders, shader);
+	shaders.push_back(shader);
 	
 	bool isAttached = hash::get(attached, (uint64)shader, false);
 	
@@ -82,7 +82,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 
 void GLSL_ShaderProgram::detachShaders()
 {
-	for( size_t i = 0; i < array::size(shaders); ++i )
+	for( size_t i = 0; i < shaders.size(); ++i )
 	{
 		GLSL_Shader* shader = shaders[i].get();
 		bool isAttached = hash::get(attached, (uint64)shader, false);
@@ -116,7 +116,7 @@ void GLSL_ShaderProgram::createShaders()
 
 bool GLSL_ShaderProgram::compileShaders()
 {
-	for( size_t i = 0; i < array::size(shaders); ++i )
+	for( size_t i = 0; i < shaders.size(); ++i )
 	{
 		Shader* shader = shaders[i].get();
 		if( shader->isCompiled() ) continue;
@@ -141,7 +141,7 @@ bool GLSL_ShaderProgram::compileShaders()
 
 void GLSL_ShaderProgram::forceRecompile()
 {
-	for( size_t i = 0; i < array::size(shaders); ++i )
+	for( size_t i = 0; i < shaders.size(); ++i )
 	{
 		Shader* shader = shaders[i].get();
 		shader->forceRecompile();
@@ -161,7 +161,7 @@ bool GLSL_ShaderProgram::link()
 	if( hadLinkError ) return false;
 
 	// If there are no shader programs, no point in trying to link.
-	if( array::empty(shaders) ) return false;
+	if( shaders.empty() ) return false;
 
 	// If we could not compile the shaders, no point in trying to link.
 	if( !compileShaders() ) return false;

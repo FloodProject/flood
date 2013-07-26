@@ -61,7 +61,7 @@ bool Mesh::isAnimated() const
 
 Animation* Mesh::findAnimation( const String& name )
 {
-	for( size_t i = 0; i < array::size(animations); ++i )
+	for( size_t i = 0; i < animations.size(); ++i )
 	{
 		 Animation* animation = animations[i].get();
 
@@ -82,13 +82,13 @@ void Mesh::buildBounds()
 
 	size_t numVertices = geometryBuffer->getNumVertices();
 
-	for( size_t i = 0; i < array::size(groups); ++i )
+	for( size_t i = 0; i < groups.size(); ++i )
 	{
 		MeshGroup& group = *groups[i];
 		auto& indices = group.indices;
 		
 		// Update the bounding box to accomodate new geometry.
-		for( size_t j = 0; j < array::size(indices); ++j )
+		for( size_t j = 0; j < indices.size(); ++j )
 		{
 			const uint16& index = indices[j];
 			if( index > numVertices ) continue;

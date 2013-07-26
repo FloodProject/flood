@@ -48,7 +48,7 @@ InputManager::InputManager()
 
 InputManager::~InputManager()
 {
-	for( size_t i = 0; i < array::size(devices); ++i )
+	for( size_t i = 0; i < devices.size(); ++i )
 	{
 		InputDevice* device = devices[i];
 		Deallocate(device);
@@ -65,7 +65,7 @@ void InputManager::addDevice( InputDevice* device )
 		return;
 	}
 	
-	array::push_back(devices, device);
+	devices.push_back(device);
 
 	LogInfo( "Registered a new input device: '%s'",
 		EnumGetValueName(ReflectionGetType(InputDeviceType), (int32)device->getType()));
@@ -75,7 +75,7 @@ void InputManager::addDevice( InputDevice* device )
 
 Keyboard* InputManager::getKeyboard() const
 {
-	for( size_t i = 0; i < array::size(devices); ++i )
+	for( size_t i = 0; i < devices.size(); ++i )
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Keyboard )
@@ -89,7 +89,7 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	for( size_t i = 0; i < array::size(devices); ++i )
+	for( size_t i = 0; i < devices.size(); ++i )
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Mouse )
@@ -103,7 +103,7 @@ Mouse* InputManager::getMouse() const
 
 void InputManager::processEvent( const InputEvent& event )
 {
-	for( size_t i = 0; i < array::size(devices); ++i )
+	for( size_t i = 0; i < devices.size(); ++i )
 	{
 		InputDevice* device = devices[i];
 		device->processEvent( event );

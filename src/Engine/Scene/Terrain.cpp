@@ -85,7 +85,7 @@ void Terrain::addCell( int x, int y )
 	int numHeights = numTiles*numTiles;
 
 	Array<float> heights(*AllocatorGetHeap());
-	array::resize(heights, numHeights);
+	heights.resize(numHeights);
 
 	createCell(x, y, heights);
 }
@@ -105,14 +105,14 @@ void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 	request.x = x;
 	request.y = y;
 
-	array::push_back(requestsQueue, request);
+	requestsQueue.push_back(request);
 }
 
 //-----------------------------------//
 
 CellPtr Terrain::getCell( int x, int y )
 {
-	for( size_t i = 0; i < array::size(terrainCells); ++i )
+	for( size_t i = 0; i < terrainCells.size(); ++i )
 	{
 		const CellPtr& cell = terrainCells[i];
 
@@ -141,7 +141,7 @@ CellPtr Terrain::createCell( int x, int y, Array<float>& heights )
 	cell->setSettings(settings);
 	cell->setHeights(heights);
 
-	array::push_back(terrainCells, cell);
+	terrainCells.push_back(cell);
 
 	String name = StringFormat("Cell (%d,%d)", x, y);
 
@@ -186,7 +186,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, Array<float>& heights
 
 	auto& data = heightmap->getBuffer();
 
-	for( size_t i = 0; i < array::size(data); i += 4 )
+	for( size_t i = 0; i < data.size(); i += 4 )
 	{
 		byte R = data[i];
 		byte G = data[i+1];
@@ -195,7 +195,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, Array<float>& heights
 		float S = 255*3;
 		float height = (R/S)+(G/S)+(B/S);
 		
-		array::push_back(heights, height );
+		heights.push_back(height);
 	}
 }
 
@@ -252,9 +252,9 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 void Terrain::update( float delta )
 {
-	auto it = array::begin(requestsQueue);
+	auto it = requestsQueue.begin();
 
-	while( it != array::end(requestsQueue) )
+	while( it != requestsQueue.end() )
 	{
 		const CellRequest& request = (*it);
 		
@@ -267,7 +267,7 @@ void Terrain::update( float delta )
 		if( heightmap->isLoaded() )
 		{
 			createCellHeightmap( x, y, heightmap );
-			array::remove(requestsQueue, it);
+			requestsQueue.remove(it);
 		}
 		else
 		{

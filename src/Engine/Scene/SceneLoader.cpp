@@ -21,7 +21,7 @@ REFLECT_CLASS_END()
 
 SceneLoader::SceneLoader()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("scene"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("scene"));
 }
 
 //-----------------------------------//

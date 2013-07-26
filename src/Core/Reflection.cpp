@@ -97,7 +97,7 @@ static void RegisterClass(Class* klass)
 
 	// Register as child class in the parent class.
 	Class* parent = klass->parent;
-	if( parent ) array::push_back(parent->childs, klass);
+	if( parent ) parent->childs.push_back(klass);
 
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
@@ -218,7 +218,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 void ClassAddField(Class* klass, Field* field)
 {
-	array::push_back(klass->fields, field);
+	klass->fields.push_back(field);
 
 	if( ClassGetFieldById(klass, field->id) )
 	{
@@ -268,12 +268,12 @@ Field* ClassGetField(const Class* klass, const char* name)
 {
 	const Array<Field*>& fields = klass->fields;
 	
-	for(size_t i = 0; i < array::size(fields); ++i)
+	for(size_t i = 0; i < fields.size(); ++i)
 	{
 		Field* field = fields[i];
 		if(strcmp(field->name, name) == 0) return field;
 
-		for(size_t u = 0; u < array::size(field->aliases); ++u)
+		for(size_t u = 0; u < field->aliases.size(); ++u)
 		{
 			const char* alias = field->aliases[u];
 			if(strcmp(alias, name) == 0) return field;

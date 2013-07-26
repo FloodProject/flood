@@ -31,7 +31,7 @@ REFLECT_CLASS_END()
 
 TrueTypeFontLoader::TrueTypeFontLoader()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ttf"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ttf"));
 }
 
 //-----------------------------------//

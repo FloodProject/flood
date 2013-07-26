@@ -250,7 +250,7 @@ static void ReflectionWalkArray(ReflectionContext* context)
 	Array<byte>& array = *(Array<byte>*) context->address;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
-	uint32 arraySize = array::size(array) / elementSize;
+	uint32 arraySize = array.size() / elementSize;
 
 	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
@@ -404,7 +404,7 @@ void ReflectionWalkComposite(ReflectionContext* context)
 
 	const Field* field = context->field; 
 
-	for( size_t i = 0; i < array::size(fields); ++i )
+	for( size_t i = 0; i < fields.size(); ++i )
 	{
 		context->field = fields[i];
 		ReflectionWalkCompositeField(context);
@@ -540,14 +540,14 @@ void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 s
 	if( FieldIsRawPointer(field) )
 	{
 		ObjectRawPtrArray* a_ = (ObjectRawPtrArray*) address;
-		array::resize(*a_, size);
-		return &array::front(*a_);
+		a_->resize(size);
+		return &a_->front();
 	}
 	else if( FieldIsRefPointer(field) )
 	{
 		ObjectRefPtrArray* a_ = (ObjectRefPtrArray*) address;
-		array::resize(*a_, size);
-		return &array::front(*a_);
+		a_->resize(size);
+		return &a_->front();
 	}
 #if 0
 	else if( FieldIsSharedPointer(field) )

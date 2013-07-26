@@ -40,7 +40,7 @@ Group::Group( const String& name )
 
 Group::~Group()
 {
-	for( size_t i = 0; i < array::size(entities); ++i )
+	for( size_t i = 0; i < entities.size(); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
@@ -56,7 +56,7 @@ void Group::add( const EntityPtr& entity )
 	if( !entity ) return;
 
 	entity->setParent( this );
-	array::push_back(entities, entity );
+	entities.push_back(entity);
 
 	onEntityAdded(entity);
 	onEntityChanged();
@@ -66,7 +66,7 @@ void Group::add( const EntityPtr& entity )
 
 EntityPtr Group::findEntity( const String& name ) const
 {
-	for( size_t i = 0; i < array::size(entities); ++i )
+	for( size_t i = 0; i < entities.size(); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
@@ -81,15 +81,15 @@ EntityPtr Group::findEntity( const String& name ) const
 
 bool Group::remove( const EntityPtr& entity )
 {
-	auto it = std::find(array::begin(entities), array::end(entities), entity);
+	auto it = std::find(entities.begin(), entities.end(), entity);
 
-	if( it == array::end(entities) )
+	if( it == entities.end() )
 		return false;
 
 	onEntityRemoved(entity);
 	onEntityChanged();
 
-	array::remove(entities, it);
+	entities.remove(it);
 
 	return true;
 }
@@ -98,7 +98,7 @@ bool Group::remove( const EntityPtr& entity )
 
 void Group::update( float delta )
 {
-	for( size_t i = 0; i < array::size(entities); ++i )
+	for( size_t i = 0; i < entities.size(); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		if(entity) entity->update( delta );
@@ -111,13 +111,13 @@ void Group::fixUp()
 {
 	Array<EntityPtr> invalid(*AllocatorGetHeap());
 
-	for( size_t i = 0; i < array::size(entities); ++i )
+	for( size_t i = 0; i < entities.size(); ++i )
 	{
 		const EntityPtr& entity = entities[i];
 		
 		if( !entity )
 		{
-			array::push_back(invalid, entity);
+			invalid.push_back(entity);
 			continue;
 		}
 
@@ -125,10 +125,10 @@ void Group::fixUp()
 	}
 
 	// Remove invalid entities
-	for( size_t i = 0; i < array::size(invalid); ++i )
+	for( size_t i = 0; i < invalid.size(); ++i )
 	{
-		auto it = std::find(array::begin(entities), array::end(entities), invalid[i]);
-		array::remove(entities, it);
+		auto it = std::find(entities.begin(), entities.end(), invalid[i]);
+		entities.remove(it);
 	}
 }
 

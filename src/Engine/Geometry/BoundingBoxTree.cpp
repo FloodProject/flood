@@ -538,9 +538,9 @@ public:
 		mLeafTriangleIndex = TRI_EOF;
 		
 		TriVector triangles(*AllocatorGetHeap());
-		array::reserve(triangles, tcount);
+		triangles.reserve(tcount);
 		for (uint32 i=0; i<tcount; ++i)
-			array::push_back(triangles, i);
+			triangles.push_back(i);
 		
 		mBounds.setMin( vertices );
 		mBounds.setMax( vertices );
@@ -598,7 +598,7 @@ public:
 			laxis = dz;
 		}
 
-		uint32 count = array::size(triangles);
+		uint32 count = triangles.size();
 
 		// if the number of triangles is less than the minimum allowed for a leaf node or...
 		// we have reached the maximum recursion depth or..
@@ -607,10 +607,10 @@ public:
 		if ( count < minLeafSize || depth >= maxDepth || laxis < minAxisSize )
 		{ 
 			// Copy the triangle indices into the leaf triangles array
-			mLeafTriangleIndex = array::size(leafTriangles); // assign the array start location for these leaf triangles.
-			array::push_back(leafTriangles, count);
-			for (auto i = array::begin(triangles); i != array::end(triangles); ++i)
-				array::push_back(leafTriangles, *i );
+			mLeafTriangleIndex = leafTriangles.size(); // assign the array start location for these leaf triangles.
+			leafTriangles.push_back(count);
+			for (auto i = triangles.begin(); i != triangles.end(); ++i)
+				leafTriangles.push_back(*i );
 		}
 		else
 		{
@@ -629,7 +629,7 @@ public:
 
 			// Create two arrays; one of all triangles which intersect the 'left' half of the bounding volume node
 			// and another array that includes all triangles which intersect the 'right' half of the bounding volume node.
-			for (auto i = array::begin(triangles); i != array::end(triangles); ++i)
+			for (auto i = triangles.begin(); i != triangles.end(); ++i)
 			{
 				uint32 tri = (*i); 
 
@@ -644,7 +644,7 @@ public:
 
 					if ( b1.containsTriangle(p1,p2,p3))
 					{
-						if ( array::empty(leftTriangles) )
+						if ( leftTriangles.empty() )
 						{
 							leftBounds.setMin(p1);
 							leftBounds.setMax(p1);
@@ -652,12 +652,12 @@ public:
 						leftBounds.include(p1);
 						leftBounds.include(p2);
 						leftBounds.include(p3);
-						array::push_back(leftTriangles, tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
+						leftTriangles.push_back(tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
 					}
 
 					if ( b2.containsTriangle(p1,p2,p3))
 					{
-						if ( array::empty(rightTriangles) )
+						if ( rightTriangles.empty() )
 						{
 							rightBounds.setMin(p1);
 							rightBounds.setMax(p1);
@@ -665,12 +665,12 @@ public:
 						rightBounds.include(p1);
 						rightBounds.include(p2);
 						rightBounds.include(p3);
-						array::push_back(rightTriangles, tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
+						rightTriangles.push_back(tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
 					}
 				}
 			}
 
-			if ( !array::empty(leftTriangles) ) // If there are triangles in the left half then...
+			if ( !leftTriangles.empty() ) // If there are triangles in the left half then...
 			{
 				leftBounds.clamp(b1); // we have to clamp the bounding volume so it stays inside the parent volume.
 				mLeft = callback->getNode();	// get a new AABB node
@@ -679,7 +679,7 @@ public:
 				mLeft->split(leftTriangles,vcount,vertices,tcount,indices,depth+1,maxDepth,minLeafSize,minAxisSize,callback,leafTriangles);
 			}
 
-			if ( !array::empty(rightTriangles) ) // If there are triangles in the right half then..
+			if ( !rightTriangles.empty() ) // If there are triangles in the right half then..
 			{
 				rightBounds.clamp(b2);	// clamps the bounding volume so it stays restricted to the size of the parent volume.
 				mRight = callback->getNode(); // allocate and default initialize a new node

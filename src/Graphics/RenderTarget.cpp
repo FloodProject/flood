@@ -36,7 +36,7 @@ RenderTarget::~RenderTarget()
 		renderDevice->setActiveContext(nullptr);
 	}
 
-	for(size_t i = 0; i < array::size(views); ++i)
+	for(size_t i = 0; i < views.size(); ++i)
 	{
 		RenderView* view = views[i];
 		Deallocate(view);
@@ -50,7 +50,7 @@ RenderView* RenderTarget::createView()
 	RenderView* renderView = AllocateThis(RenderView);
 	renderView->setRenderTarget(this);
 	renderView->setSize(getSettings().getSize());
-	array::push_back(views, renderView);
+	views.push_back(renderView);
 	
 	return renderView;
 }
@@ -61,7 +61,7 @@ void RenderTarget::removeViews()
 {
 	RenderDevice* renderDevice = GetRenderDevice();
 
-	for( size_t i = 0; i < array::size(views); ++i )
+	for( size_t i = 0; i < views.size(); ++i )
 	{
 		RenderView* view = views[i];
 
@@ -74,7 +74,7 @@ void RenderTarget::removeViews()
 		Deallocate(view);
 	}
 
-	array::clear(views);
+	views.clear();
 }
 
 //-----------------------------------//
@@ -88,7 +88,7 @@ void RenderTarget::setContext(RenderContext* newContext)
 
 void RenderTarget::handleResize()
 {
-	for( size_t i = 0; i < array::size(views); ++i )
+	for( size_t i = 0; i < views.size(); ++i )
 	{
 		RenderView* view = views[i];
 		view->handleRenderTargetResize();

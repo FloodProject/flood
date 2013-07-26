@@ -147,7 +147,7 @@ void BindFixedVertexBufferDeclarations(VertexBuffer* vb)
 
 	int offset = 0;
 
-	for( size_t i = 0; i < array::size(vertexDecls); ++i )
+	for( size_t i = 0; i < vertexDecls.size(); ++i )
 	{
 		const VertexElement& decl = vertexDecls[i];
 		GLenum type = ConvertBufferTypeGL(decl.type);
@@ -186,7 +186,7 @@ void UnbindFixedVertexBufferDeclarations(VertexBuffer* vb)
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
 	auto& vertexDecls = gb->declarations.decls;
 
-	for( size_t i = 0; i < array::size(vertexDecls); ++i )
+	for( size_t i = 0; i < vertexDecls.size(); ++i )
 	{
 		const VertexElement& decl = vertexDecls[i];
 		
@@ -219,7 +219,7 @@ void BindGenericVertexBufferDeclarations(VertexBuffer* vb)
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
 	auto& decls = gb->declarations.decls;
 
-	for( size_t i = 0; i < array::size(decls); ++i )
+	for( size_t i = 0; i < decls.size(); ++i )
 	{
 		const VertexElement& decl = decls[i];
 		int index = (int) decl.attribute;
@@ -248,7 +248,7 @@ void UnbindGenericVertexBufferDeclarations(VertexBuffer* vb)
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
 	auto& decls = gb->declarations.decls;
 
-	for( size_t i = 0; i < array::size(decls); ++i )
+	for( size_t i = 0; i < decls.size(); ++i )
 	{
 		const VertexElement& decl = decls[i];
 

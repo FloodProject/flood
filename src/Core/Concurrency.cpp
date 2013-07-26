@@ -84,12 +84,12 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 	pool->IsStopping = false;
 
 	ThreadQueue& threads = pool->Threads;
-	array::reserve(threads, Size);
+	threads.reserve(Size);
 
 	for( size_t i = 0; i < (size_t) Size; i++ )
 	{
 		Thread* thread = ThreadCreate(alloc);
-		array::push_back(threads, thread);
+		threads.push_back(thread);
 
 		ThreadFunction taskFunction;
 		taskFunction.Bind(TaskPoolRun);
@@ -98,7 +98,7 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 		ThreadSetName(thread, "Task Pool");
 	}
 
-	LogInfo("Created task pool with '%d' threads", array::size(threads));
+	LogInfo("Created task pool with '%d' threads", threads.size());
 
 	return pool;
 }
@@ -115,7 +115,7 @@ void TaskPoolDestroy(TaskPool* pool)
 
 	ThreadQueue& threads = pool->Threads;
 
-	for( size_t i = 0; i < array::size(threads); ++i)
+	for( size_t i = 0; i < threads.size(); ++i)
 	{
 		Thread* thread = threads[i];
 		ThreadDestroy(thread);

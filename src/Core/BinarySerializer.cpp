@@ -642,7 +642,7 @@ void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
 	ms->position += n;
 
 	// Do some debug bounds checking.
-	if(ms->position > array::size(ms->data))
+	if(ms->position > ms->data.size())
 	{
 		LogAssert("Check the bounds of the buffer");
 	}

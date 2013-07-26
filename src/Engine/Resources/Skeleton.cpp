@@ -21,14 +21,14 @@ Skeleton::Skeleton()
 
 void Skeleton::addBone( const BonePtr& bone )
 {
-	array::push_back(bones, bone);
+	bones.push_back(bone);
 }
 
 //-----------------------------------//
 
 BonePtr Skeleton::getBone( size_t index )
 {
-	assert( index < array::size(bones) );
+	assert( index < bones.size() );
 	return bones[index];
 }
 
@@ -36,7 +36,7 @@ BonePtr Skeleton::getBone( size_t index )
 
 BonePtr Skeleton::findBone( const String& name )
 {
-	for( size_t i = 0; i < array::size(bones); ++i )
+	for( size_t i = 0; i < bones.size(); ++i )
 	{
 		const BonePtr& bone = bones[i];
 

@@ -31,7 +31,7 @@ static void* MongooseCallback(mg_event event, mg_connection* conn, const mg_requ
 	// Find route callback.
 	WebCallback callback = 0;
 
-	for(size_t i = 0; i < array::size(context->routes); ++i)
+	for(size_t i = 0; i < context->routes.size(); ++i)
 	{
 		WebRoute& route = context->routes[i];
 		
@@ -107,7 +107,7 @@ void WebServerStop( WebContext* context )
 
 void WebServerAddRoute( WebContext* context, WebRoute route )
 {
-	array::push_back(context->routes, route);
+	context->routes.push_back(route);
 }
 
 //-----------------------------------//

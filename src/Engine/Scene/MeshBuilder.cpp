@@ -54,17 +54,17 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 	// Construct the renderables for each mesh group.
 	auto& groups = mesh->groups;
 
-	for( size_t i = 0; i < array::size(groups); ++i )
+	for( size_t i = 0; i < groups.size(); ++i )
 	{
 		const MeshGroup& group = *groups[i];
 
-		uint32 numIndices = array::size(group.indices);
+		uint32 numIndices = group.indices.size();
 		if( numIndices == 0 ) continue;
 
 		// Gets a material for the group.
 		MaterialHandle material = MeshBuildMaterial(mesh, group);
 
-		gb->addIndex((uint8*)&array::front(group.indices), numIndices * sizeof(uint16));
+		gb->addIndex((uint8*)&group.indices.front(), numIndices * sizeof(uint16));
 
 		RenderBatch* renderable = AllocateHeap(RenderBatch);
 		renderable->setPrimitiveType( PrimitiveType::Triangles );
@@ -76,7 +76,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 		if( mat->isBlendingEnabled() )
 		renderable->setRenderLayer(RenderLayer::Transparency);
 
-		array::push_back<RenderablePtr>(rends, renderable);
+		rends.push_back(renderable);
 	}
 }
 

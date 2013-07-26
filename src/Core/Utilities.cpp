@@ -184,7 +184,7 @@ void StringSplit(const String& s, char delim, Array<String*>& elems)
 	while(std::getline(ss, item, delim))
 	{
 		auto s = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String(item);
-		array::push_back(elems, s);
+		elems.push_back(s);
 	}
 }
 
@@ -409,7 +409,7 @@ static void DirArchiveEnumerate(Array<String*>& paths, Path dirPath, Path filePa
 			auto np = std::make_shared<std::string>(path);
 			_StringStorage.push_back(np);
 
-			if(!dirs) array::push_back(paths, np.get());
+			if(!dirs) paths.push_back(np.get());
 			break;
 		}
 		case DT_DIR:
@@ -424,7 +424,7 @@ static void DirArchiveEnumerate(Array<String*>& paths, Path dirPath, Path filePa
 			_StringStorage.push_back(_nfp);
 
 			if(dirs)
-				array::push_back(paths, _nfp.get());
+				paths.push_back(_nfp.get());
 
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			

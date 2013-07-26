@@ -351,7 +351,7 @@ bool HostServer::createSocket( const HostConnectionDetails& details )
 
 void HostServer::onConnected(const PeerPtr& peer)
 {
-	array::push_back(peers, peer);
+	peers.push_back(peer);
 	onClientConnected(peer);
 }
 
@@ -361,10 +361,10 @@ void HostServer::onDisconnected(const PeerPtr& peer)
 {
 	onClientDisconnected(peer);
 	
-	auto it = std::find(array::begin(peers), array::end(peers), peer);
-	assert( it != array::end(peers) );
+	auto it = std::find(peers.begin(), peers.end(), peer);
+	assert( it != peers.end() );
 	
-	array::remove(peers, it);
+	peers.remove(it);
 }
 
 //-----------------------------------//

@@ -132,7 +132,7 @@ void OggStream::reset()
 
 OGG_Loader::OGG_Loader()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ogg"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ogg"));
 
 	callbacks.read_func = OggRead;
 	callbacks.seek_func = OggSeek;
@@ -241,7 +241,7 @@ void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, Array<byte>& buffer )
 			&bitStream);
 		
 		// Append to end of buffer.
-		array::insert(buffer, array::end(buffer), array, array + bytes);
+		buffer.insert(buffer.end(), array, array + bytes);
 
 	} while (bytes > 0);
 }

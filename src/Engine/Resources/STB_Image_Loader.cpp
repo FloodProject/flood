@@ -28,10 +28,10 @@ REFLECT_CLASS_END()
 
 STB_Image_Loader::STB_Image_Loader()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("png"));
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("jpg"));
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("bmp"));
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("tga"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("png"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("jpg"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("bmp"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("tga"));
 }
 
 //-----------------------------------//
@@ -41,12 +41,12 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 	Array<uint8> data(*AllocatorGetHeap());
 	StreamRead(options.stream, data);
 
-	if( array::empty(data) ) return false;
+	if( data.empty() ) return false;
 
 	int width, height, comp;
 	
 	byte* pixelData = stbi_load_from_memory(
-		&data[0], array::size(data), &width, &height,
+		&data[0], data.size(), &width, &height,
 		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
 	if( !pixelData )
@@ -75,7 +75,7 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 	
 	Array<byte> buffer(*AllocatorGetHeap());
 	uint32 size = width*height*comp; 
-	array::resize(buffer, size);
+	buffer.resize(size);
 	
 	memcpy(&buffer[0], pixelData, size);
 	free(pixelData);

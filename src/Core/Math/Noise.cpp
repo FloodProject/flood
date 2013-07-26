@@ -29,9 +29,9 @@ Noise::Noise( int seed )
 
 void Noise::generate(Array<float>& noise, uint width, uint height)
 {
-	assert( array::empty(noise) );
+	assert( noise.empty() );
 
-	array::reserve(noise, width * height);
+	noise.reserve(width * height);
 	
 	for (uint y = 0; y < height; ++y)
 	{
@@ -55,7 +55,7 @@ void Noise::generate(Array<float>& noise, uint width, uint height)
 				amplitude *= persistence;
 			}
 
-			array::push_back(noise, total / maxAmplitude);
+			noise.push_back(total / maxAmplitude);
 		}
 	}
 }

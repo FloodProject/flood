@@ -53,11 +53,11 @@ int64 StreamRead(Stream* stream, Array<uint8>& data)
 
 	if( length < 0 ) return 0;
 
-	array::resize(data, (size_t) length );
+	data.resize((size_t) length );
 
-	if( array::empty(data) ) return 0;
+	if( data.empty() ) return 0;
 
-	return StreamReadBuffer(stream, &array::front(data), array::size(data));
+	return StreamReadBuffer(stream, &data.front(), data.size());
 }
 
 //-----------------------------------//
@@ -74,7 +74,7 @@ int64 StreamReadString(Stream* stream, String& text)
 {
 	Array<uint8> data(*AllocatorGetHeap());
 	int64 size = StreamRead(stream, data);
-	text.assign( array::begin(data), array::end(data) );
+	text.assign( data.begin(), data.end() );
 	return size;
 }
 
@@ -88,7 +88,7 @@ int64 StreamReadLines(Stream* stream, Array<String*>& lines)
 	StringSplit(text, '\n', lines);
 	
 	// Erase extra line endings.
-	for( size_t i = 0; i < array::size(lines); ++i )
+	for( size_t i = 0; i < lines.size(); ++i )
 	{
 		String& line = *lines[i];
 		size_t last = line.size() - 1;

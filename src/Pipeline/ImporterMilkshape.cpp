@@ -25,7 +25,7 @@ REFLECT_CLASS_END()
 
 ImporterMilkshape::ImporterMilkshape()
 {
-	array::push_back(extensions, new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ms3d"));
+	extensions.push_back(new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String("ms3d"));
 }
 
 //-----------------------------------//

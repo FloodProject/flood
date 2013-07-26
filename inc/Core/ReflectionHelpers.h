@@ -119,8 +119,8 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_RESIZER(fieldType, fieldName) \
 	static void* Resize##fieldName (void* obj, size_t size) { \
 		Array<fieldType>* a_ = (Array<fieldType>*) obj; \
-		array::resize(*a_, size); \
-		return &array::front(*a_); \
+		a_->resize(size); \
+		return &a_->front(); \
 	}
 
 #define FIELD_RESIZER_CLASS(fieldType, fieldName) \
@@ -210,7 +210,7 @@ NAMESPACE_CORE_BEGIN
 	FieldSetQualifier(&fieldName, FieldQualifier::NoSerialize);
 
 #define FIELD_ALIAS(fieldName, aliasName) \
-	array::push_back(fieldName.aliases, (const char *)(#aliasName));
+	fieldName.aliases.push_back((const char *)(#aliasName));
 
 //-----------------------------------//
 

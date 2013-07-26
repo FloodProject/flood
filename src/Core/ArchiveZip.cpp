@@ -243,7 +243,7 @@ static void ZipArchiveEnumerate(Archive* archive, Array<Path*>& paths, bool dir)
 
 #pragma TODO("Fix memory leak here.")
 		if( (dir && isDir) || (!dir && !isDir) )
-			array::push_back(paths, name.get());
+			paths.push_back(name.get());
 	}
 }
 
@@ -280,7 +280,7 @@ static bool ZipArchiveExistsDir(Archive* archive, const Path& path)
 	Array<Path*> dirs(*AllocatorGetHeap());
 	ArchiveEnumerateDirectories(archive, dirs);
 
-	for(size_t i = 0; i < array::size(dirs); ++i)
+	for(size_t i = 0; i < dirs.size(); ++i)
 	{
 		const Path& dir = StringTrim(*dirs[i], "/");
 		if(dir == path) return true;

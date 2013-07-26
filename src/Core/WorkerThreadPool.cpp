@@ -41,14 +41,14 @@ NAMESPACE_CORE_BEGIN
 		WakeupNotifiction_.reset( ConditionCreate(AllocatorGetHeap()) );
 
 		// allocate the appropriate memory in the vector
-		array::reserve(Workers_, threadCount );
+		Workers_.reserve(threadCount );
 
 		// allocate and make the worker objects
 		for(uint32 i = 0; i < threadCount; ++i)
 		{
 			WorkerThread * w = new WorkerThread();
 			w->Initialize(this, i);
-			array::push_back(Workers_, w);
+			Workers_.push_back(w);
 		}
 	}
 
@@ -61,18 +61,18 @@ NAMESPACE_CORE_BEGIN
 
 		// iterate through them all and unmake them
 		WakeAll();
-		for(auto w = array::begin(Workers_); w != array::end(Workers_); ++w)
+		for(auto w = Workers_.begin(); w != Workers_.end(); ++w)
 			(*w)->Shutdown();
 	}
 
 	size_t WorkerThreadPool::WorkersCount() const 
 	{ 
-		return array::size(Workers_);
+		return Workers_.size();
 	}
 
 	std::pair<WorkerThread**, WorkerThread**> WorkerThreadPool::WorkersBeginEnd()
 	{
-		return std::make_pair(array::begin(Workers_), array::end(Workers_));
+		return std::make_pair(Workers_.begin(), Workers_.end());
 	}
 
 #pragma endregion

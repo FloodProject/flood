@@ -133,7 +133,7 @@ static bool DirArchiveExistsDir(Archive* archive, const Path& path)
 	Array<Path*> dirs(*AllocatorGetHeap());
 	ArchiveEnumerateDirectories(archive, dirs);
 
-	for(size_t i = 0; i < array::size(dirs); i++)
+	for(size_t i = 0; i < dirs.size(); ++i)
 	{
 		Path normalized = PathNormalize(*dirs[i]);
 		Path dir = StringTrim(normalized, "/");

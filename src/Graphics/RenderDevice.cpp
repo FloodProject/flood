@@ -75,10 +75,10 @@ void RenderDevice::render( RenderBlock& queue )
 	#pragma TODO("Sort the render group by depth distance")
 
 	// Sort the renderables by render group.
-	std::sort( array::begin(queue.renderables), array::end(queue.renderables), &RenderStateSorter );
+	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
 	// Render all the renderables in the queue.
-	for( size_t i = 0; i < array::size(queue.renderables); ++i )
+	for( size_t i = 0; i < queue.renderables.size(); ++i )
 	{
 		const RenderState& state = queue.renderables[i];
 		render(state, queue.lights);
@@ -96,7 +96,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	bindBuffers(renderable);
 
 	const GeometryBuffer* gb = renderable->getGeometryBuffer().get();
-	if( array::empty(gb->data) ) return;
+	if( gb->data.empty() ) return;
 
 	BufferEntry* bufs = buffers->getBuffer(gb);
 
@@ -376,7 +376,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 #if 0
 	const UniformBufferPtr& ub = state.renderable->getUniformBuffer();
 
-	for( size_t i = 0; i < array::size(lights); ++i )
+	for( size_t i = 0; i < lights.size(); ++i )
 	{
 		const LightState& lightState = lights[i];
 		const Light* light = lightState.light;
@@ -386,10 +386,10 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 		//assert( shadowDepthTexture != nullptr );
 
 		Array< Color > colors(*AllocatorGetHeap());
-		array::push_back(colors, light->getDiffuseColor() );
-		array::push_back(colors, light->getSpecularColor() );
-		array::push_back(colors, light->getEmissiveColor() );
-		array::push_back(colors, light->getAmbientColor() );
+		colors.push_back(light->getDiffuseColor());
+		colors.push_back(light->getSpecularColor());
+		colors.push_back(light->getEmissiveColor());
+		colors.push_back(light->getAmbientColor());
 
 		const Transform* transform = lightState.transform;
 

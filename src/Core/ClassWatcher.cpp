@@ -78,7 +78,7 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 	Class* klass = ClassGetType(object);
 	const Array<Field*>& fields = klass->fields;
 
-	for(size_t i = 0; i < array::size(fields); ++i)
+	for(size_t i = 0; i < fields.size(); ++i)
 	{
 		const Field* field = fields[i];
 
@@ -97,7 +97,7 @@ void ClassWatchUpdate(ClassWatch* watch, FieldWatchVector& changed)
 	for(auto fw : watch->fields)
 	{
 		bool updated = ClassWatchUpdateField(watch, fw.value.field);
-		if( updated ) array::push_back(changed, &fw.value);
+		if( updated ) changed.push_back(&fw.value);
 	}
 }
 

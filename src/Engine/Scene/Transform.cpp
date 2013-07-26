@@ -179,7 +179,7 @@ void Transform::updateBoundingVolume()
 
 	auto& geoms = entity->getGeometry();
 	
-	for( size_t i = 0; i < array::size(geoms); ++i )
+	for( size_t i = 0; i < geoms.size(); ++i )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		bounds.add( geometry->getBoundingVolume() );

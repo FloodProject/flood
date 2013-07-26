@@ -92,7 +92,7 @@ void Cell::rebuildGeometry()
 
 void Cell::rebuildVertices()
 {
-	if( array::empty(heights) ) return;
+	if( heights.empty() ) return;
 
 	// Vertex data
 	Array<Vector3> vertex(*AllocatorGetHeap());
@@ -116,12 +116,12 @@ void Cell::rebuildVertices()
 		float Z = offsetZ + tileSize*col;
 		float Y = heights[i] * settings->MaxHeight;
 		
-		array::push_back(vertex, Vector3(X, Y, Z) );
-		array::push_back<Vector3>(texCoords, Vector2(X/sizeCell, Z/sizeCell) );
+		vertex.push_back(Vector3(X, Y, Z) );
+		texCoords.push_back(Vector2(X/sizeCell, Z/sizeCell) );
 	}
 
-	assert( array::size(vertex) == numExpectedVertices );
-	assert( array::size(texCoords) == numExpectedVertices );
+	assert( vertex.size() == numExpectedVertices );
+	assert( texCoords.size() == numExpectedVertices );
 
 	// Vertex buffer setup.
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
@@ -145,19 +145,19 @@ void Cell::rebuildIndices()
 			int i = col * (numTiles + 1) + row;
 
 			// First triangle
-			array::push_back(indices, uint16(i) );
-			array::push_back(indices, uint16(i+(numTiles+1)) );
-			array::push_back(indices, uint16(i+1) );
+			indices.push_back(uint16(i) );
+			indices.push_back(uint16(i+(numTiles+1)) );
+			indices.push_back(uint16(i+1) );
 
 			// Second triangle
-			array::push_back(indices, uint16(i+1) );
-			array::push_back(indices, uint16(i+(numTiles+1)) ) ;
-			array::push_back(indices, uint16(i+(numTiles+2)) );
+			indices.push_back(uint16(i+1) );
+			indices.push_back(uint16(i+(numTiles+1)) ) ;
+			indices.push_back(uint16(i+(numTiles+2)) );
 		}
 	}
 
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
-	gb->setIndex((uint8*) &array::front(indices), array::size(indices) * sizeof(uint16));
+	gb->setIndex((uint8*) &indices.front(), indices.size() * sizeof(uint16));
 
 }
 
@@ -184,11 +184,11 @@ static Vector3 CalculateTriangleNormal( const Vector3& v1, const Vector3& v2, co
 
 void Cell::rebuildFaceNormals()
 {
-	if( array::empty(heights) ) return;
+	if( heights.empty() ) return;
 
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 
-	array::clear(faceNormals);
+	faceNormals.clear();
 
 	LogInfo( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
@@ -197,7 +197,7 @@ void Cell::rebuildFaceNormals()
 	Vector3* vertexData = (Vector3*) gb->getAttribute(VertexAttribute::Position, 0);
 	int8 vertexStride = gb->getAttributeStride(VertexAttribute::Position);
 	
-	uint16* indexData = (uint16*) &array::front(gb->indexData);
+	uint16* indexData = (uint16*) &gb->indexData.front();
 
 	for( size_t i = 0; i < numIndices; i += 3 )
 	{
@@ -208,11 +208,11 @@ void Cell::rebuildFaceNormals()
 		const Vector3& v3 = vertexData[index(i+2) + offset];
 
 		Vector3 normal = CalculateTriangleNormal(v1, v2, v3);
-		array::push_back(faceNormals, normal );
+		faceNormals.push_back(normal );
 	}
 
 	const uint numTiles = settings->NumberTiles;
-	assert( array::size(faceNormals) == numTiles*numTiles*2 );
+	assert( faceNormals.size() == numTiles*numTiles*2 );
 }
 
 //-----------------------------------//
@@ -259,7 +259,7 @@ byte Cell::getNeighborFaces( uint i, Array<uint>& ns )
 
 void Cell::rebuildAveragedNormals()
 {
-	if( array::empty(faceNormals) ) return;
+	if( faceNormals.empty() ) return;
 
 	const GeometryBufferPtr& gb = rend->getGeometryBuffer();
 
@@ -272,7 +272,7 @@ void Cell::rebuildAveragedNormals()
 	LogInfo( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
 
 	Array<uint> ns(*AllocatorGetHeap());
-	array::resize(ns, 6);
+	ns.resize(6);
 
 	uint32 numVertices = gb->getNumVertices();
 
@@ -288,10 +288,10 @@ void Cell::rebuildAveragedNormals()
 		average /= n;
 		average.normalize();
 
-		array::push_back(normals, average );
+		normals.push_back(average );
 	}
 
-	assert( array::size(normals) ==  gb->getNumVertices() );
+	assert( normals.size() ==  gb->getNumVertices() );
 	gb->set( VertexAttribute::Normal, normals );
 
 	gb->forceRebuild();

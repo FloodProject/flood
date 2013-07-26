@@ -144,7 +144,7 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 	if( !ms->useRawBuffer )
 	{
 		int64 newSize = ms->position + size;
-		bool needsResize = newSize > array::size(ms->data);
+		bool needsResize = newSize > ms->data.size();
 	
 		if(needsResize)
 			MemoryResize(stream, newSize);
@@ -152,7 +152,7 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 			MemoryResize(stream, GetNextPower2((int32)newSize));
 #endif
 
-		if( array::empty(ms->data) ) return 0;
+		if( ms->data.empty() ) return 0;
 	}
 
 	uint8* cur = ms->buffer + position;
@@ -197,7 +197,7 @@ static int64 MemorySeek(Stream* stream, int64 offset, int8 mode)
 static int64 MemoryGetSize(Stream* stream)
 {
 	MemoryStream* ms = (MemoryStream*) stream;
-	return array::size(ms->data);
+	return ms->data.size();
 }
 
 //-----------------------------------//
@@ -207,7 +207,7 @@ static void MemoryResize(Stream* stream, int64 size)
 	MemoryStream* ms = (MemoryStream*) stream;
 	if( size <= 0 ) return;
 
-	array::resize(ms->data, (size_t)size);
+	ms->data.resize((size_t)size);
 	ms->buffer = &ms->data[0];
 }
 

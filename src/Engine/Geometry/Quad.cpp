@@ -42,24 +42,24 @@ GeometryBufferPtr Quad::createQuad( float width, float height )
 
 	// Vertex position data
 	Array< Vector3 > vertex(*AllocatorGetHeap());
-	array::push_back<Vector3>(vertex, Vector2(0.0f, 0.0f) );
-	array::push_back<Vector3>(vertex,  Vector2(width, 0.0f) );
-	array::push_back<Vector3>(vertex, Vector2(0.0f, height) );
-	array::push_back<Vector3>(vertex, Vector2(width, height) );
+	vertex.push_back(Vector2(0.0f, 0.0f) );
+	vertex.push_back(Vector2(width, 0.0f) );
+	vertex.push_back(Vector2(0.0f, height) );
+	vertex.push_back(Vector2(width, height) );
 
 	// Vertex color data
 	Array< Vector3 > colors(*AllocatorGetHeap());
-	array::push_back<Vector3>(colors, Color::White);
-	array::push_back<Vector3>(colors, Color::White);
-	array::push_back<Vector3>(colors, Color::White);
-	array::push_back<Vector3>(colors, Color::White);
+	colors.push_back(Color::White);
+	colors.push_back(Color::White);
+	colors.push_back(Color::White);
+	colors.push_back(Color::White);
 
 	// Vertex tex coords data
 	Array< Vector3 > coords(*AllocatorGetHeap());
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 0.0f));
-	array::push_back<Vector3>(coords, Vector2(1.0f, 1.0f));
-	array::push_back<Vector3>(coords, Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
+	coords.push_back(Vector2(1.0f, 0.0f));
+	coords.push_back(Vector2(1.0f, 1.0f));
+	coords.push_back(Vector2(0.0f, 1.0f));
 
 	// Vertex buffer setup
 	gb->set( VertexAttribute::Position, vertex );

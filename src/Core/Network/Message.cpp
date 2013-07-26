@@ -139,7 +139,7 @@ void Message::setPacket(ENetPacket* packet)
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
 		StreamResize(ms, bufSize);
 
-		int32 length = fastlz_decompress(in, inSize, &ms->data[0], array::size(ms->data));
+		int32 length = fastlz_decompress(in, inSize, &ms->data[0], ms->data.size());
 		StreamResize(ms, length);
 	}
 	else

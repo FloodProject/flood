@@ -70,7 +70,7 @@ bool Resource::isLoaded() const
 //-----------------------------------//
 
 ResourceLoader::ResourceLoader()
-    : extensions(*AllocatorGetHeap())
+	: extensions(*AllocatorGetHeap())
 {
 }
 
@@ -78,9 +78,11 @@ ResourceLoader::ResourceLoader()
 
 ResourceLoader::~ResourceLoader()
 {
-    for(size_t i = 0; i < array::size(extensions); ++i)
-        Deallocate(extensions[i]);
-    array::clear(extensions);
+	for(size_t i = 0; i < extensions.size(); ++i)
+	{
+		Deallocate(extensions[i]);
+	}
+	extensions.clear();
 }
 
 //-----------------------------------//
