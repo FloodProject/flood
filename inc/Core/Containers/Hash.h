@@ -92,8 +92,8 @@ namespace hash_internal
 		typename Hash<T>::Entry e;
 		e.key = key;
 		e.next = END_OF_LIST;
-		size_t ei = array::size(h._data);
-		array::push_back(h._data, e);
+		size_t ei = h._data.size();
+		h._data.push_back(e);
 		return ei;
 	}
 
@@ -104,12 +104,13 @@ namespace hash_internal
 		else
 			h._data[fr.data_prev].next = h._data[fr.data_i].next;
 
-		if (fr.data_i == array::size(h._data) - 1) {
-			array::pop_back(h._data);
+		if (fr.data_i == h._data.size() - 1)
+		{
+			h._data.pop_back();
 			return;
 		}
 
-		h._data[fr.data_i] = h._data[array::size(h._data) - 1];
+		h._data[fr.data_i] = h._data[h._data.size() - 1];
 		FindResult last = find(h, h._data[fr.data_i].key);
 
 		if (last.data_prev != END_OF_LIST)
@@ -125,12 +126,13 @@ namespace hash_internal
 		fr.data_prev = END_OF_LIST;
 		fr.data_i = END_OF_LIST;
 
-		if (array::size(h._hash) == 0)
+		if (h._hash.size() == 0)
 			return fr;
 
-		fr.hash_i = key % array::size(h._hash);
+		fr.hash_i = key % h._hash.size();
 		fr.data_i = h._hash[fr.hash_i];
-		while (fr.data_i != END_OF_LIST) {
+		while (fr.data_i != END_OF_LIST)
+		{
 			if (h._data[fr.data_i].key == key)
 				return fr;
 			fr.data_prev = fr.data_i;
@@ -146,12 +148,13 @@ namespace hash_internal
 		fr.data_prev = END_OF_LIST;
 		fr.data_i = END_OF_LIST;
 
-		if (array::size(h._hash) == 0)
+		if (h._hash.size() == 0)
 			return fr;
 
-		fr.hash_i = e->key % array::size(h._hash);
+		fr.hash_i = e->key % h._hash.size();
 		fr.data_i = h._hash[fr.hash_i];
-		while (fr.data_i != END_OF_LIST) {
+		while (fr.data_i != END_OF_LIST)
+		{
 			if (&h._data[fr.data_i] == e)
 				return fr;
 			fr.data_prev = fr.data_i;
@@ -202,17 +205,18 @@ namespace hash_internal
 
 	template<typename T> void rehash(Hash<T> &h, size_t new_size)
 	{
-		Hash<T> nh(*h._hash._allocator);
-		array::resize(nh._hash, new_size);
-		array::reserve(nh._data, array::size(h._data));
+		Hash<T> nh(*h._hash.allocator());
+		nh._hash.resize(new_size);
+		nh._data.reserve(h._data.size());
 		for (size_t i=0; i<new_size; ++i)
 			nh._hash[i] = END_OF_LIST;
-		for (size_t i=0; i<array::size(h._data); ++i) {
+		for (size_t i=0; i<h._data.size(); ++i)
+		{
 			const typename Hash<T>::Entry &e = h._data[i];
 			multi_hash::insert(nh, e.key, e.value);
 		}
 
-		Hash<T> empty(*h._hash._allocator);
+		Hash<T> empty(*h._hash.allocator());
 		h.~Hash<T>();
 		memcpy(&h, &nh, sizeof(Hash<T>));
 		memcpy(&nh, &empty, sizeof(Hash<T>));
@@ -221,12 +225,12 @@ namespace hash_internal
 	template<typename T> bool full(const Hash<T> &h)
 	{
 		const float max_load_factor = 0.7f;
-		return array::size(h._data) >= array::size(h._hash) * max_load_factor;
+		return h._data.size() >= h._hash.size() * max_load_factor;
 	}
 
 	template<typename T> void grow(Hash<T> &h)
 	{
-		const size_t new_size = array::size(h._data) * 2 + 10;
+		const size_t new_size = h._data.size() * 2 + 10;
 		rehash(h, new_size);
 	}
 }
@@ -235,7 +239,7 @@ namespace hash
 {
 	template<typename T> size_t size(const Hash<T>& h)
 	{
-		return array::size(h._data);
+		return h._data.size();
 	}
 
 	template<typename T> bool empty(const Hash<T>& h)
@@ -256,7 +260,7 @@ namespace hash
 
 	template<typename T> void set(Hash<T> &h, uint64 key, const T &value)
 	{
-		if (array::size(h._hash) == 0)
+		if (h._hash.size() == 0)
 			hash_internal::grow(h);
 
 		const size_t i = hash_internal::find_or_make(h, key);
@@ -277,18 +281,18 @@ namespace hash
 
 	template<typename T> void clear(Hash<T>& h)
 	{
-		array::clear(h._hash);
-		array::clear(h._data);
+		h._hash.clear();
+		h._data.clear();
 	}
 
 	template<typename T> const typename Hash<T>::Entry *begin(const Hash<T> &h)
 	{
-		return array::begin(h._data);
+		return h._data.begin();
 	}
 
 	template<typename T> const typename Hash<T>::Entry *end(const Hash<T> &h)
 	{
-		return array::end(h._data);
+		return h._data.end();
 	}
 }
 
@@ -303,7 +307,8 @@ namespace multi_hash
 	template<typename T> const typename Hash<T>::Entry *find_next(const Hash<T> &h, const typename Hash<T>::Entry *e)
 	{
 		size_t i = e->next;
-		while (i != hash_internal::END_OF_LIST) {
+		while (i != hash_internal::END_OF_LIST)
+		{
 			if (h._data[i].key == e->key)
 				return &h._data[i];
 			i = h._data[i].next;
@@ -315,7 +320,8 @@ namespace multi_hash
 	{
 		size_t i = 0;
 		const typename Hash<T>::Entry *e = find_first(h, key);
-		while (e) {
+		while (e)
+		{
 			++i;
 			e = find_next(h, e);
 		}
@@ -325,15 +331,16 @@ namespace multi_hash
 	template<typename T> void get(const Hash<T> &h, uint64 key, Array<T> &items)
 	{
 		const typename Hash<T>::Entry *e = find_first(h, key);
-		while (e) {
-			array::push_back(items, e->value);
+		while (e)
+		{
+			items.push_back(e->value);
 			e = find_next(h, e);
 		}
 	}
 
 	template<typename T> void insert(Hash<T> &h, uint64 key, const T &value)
 	{
-		if (array::size(h._hash) == 0)
+		if (h._hash.size() == 0)
 			hash_internal::grow(h);
 
 		const size_t i = hash_internal::make(h, key);
@@ -359,7 +366,8 @@ namespace multi_hash
 //////////////////////////////////////////////////////////////////////////
 
 template <typename T> Hash<T>::Hash(Allocator &a)
-	:_hash(a), _data(a)
+	: _hash(a)
+	, _data(a)
 {}
 
 template <typename T>

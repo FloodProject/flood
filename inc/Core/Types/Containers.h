@@ -24,44 +24,50 @@ template<typename T> struct Array
 {
 public:
     Array(Allocator &a);
-    virtual ~Array();
     Array(const Array &other);
+    ~Array();
     Array &operator=(const Array &other);
         
     T &operator[](size_t i);
     const T &operator[](size_t i) const;
 
-    T * begin() { return _data; }
-    T const * begin() const { return _data; }
-    T const * cbegin() const { return _data; }
-    T * end() { return _data + _size; }
-    T const * end() const { return _data + _size; }
-    T const * cend() const { return _data + _size; }
-
-    size_t size() const;
-    bool any() const;
-    bool empty() const;
+    T * begin();
+    T const * begin() const;
+    T const * cbegin() const;
+    T * end();
+    T const * end() const;
+    T const * cend() const;
 
     T& front();
     T const & front() const;
     T& back();
     T const & back() const;
 
-    void resize(size_t size);
-    void clear();
-    void set_capacity(size_t size);
-    void reserve(size_t size);
-    void grow(size_t min_capacity = 0);
+    size_t size() const;
+    size_t capacity() const;
+    bool any() const;
+    bool empty() const;
+    
+    void resize(size_t new_size);
+    void reserve(size_t new_capacity);
     void trim();
+    void clear();
 
     void push_back(T const & item);
     void pop_back();
-    void remove(T const * item);
-    
-    template <typename U>
-    void insert(T * pos, U * first, U * last);
 
-public:
+    template <typename Iter>
+    void insert(T * pos, Iter first, Iter last);
+    void remove(T const * item);
+
+    Allocator * allocator();
+    Allocator const * allocator() const;
+    
+private:
+    void set_capacity(size_t new_capacity);
+    void grow(size_t min_capacity = 0);
+
+private:
     Allocator *_allocator;
     size_t _size;
     size_t _capacity;

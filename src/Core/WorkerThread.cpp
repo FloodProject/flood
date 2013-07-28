@@ -282,7 +282,7 @@ NAMESPACE_CORE_BEGIN
 
 		// cut out the old tasks
 		Tasks_.resize(Tasks_.size() - splitDepth);
-		assert( Tasks_._capacity == WorkerThread::TaskCapacity );	// make sure that the STL doesn't deallocate our memory
+		assert( Tasks_.capacity() == WorkerThread::TaskCapacity );	// make sure that the STL doesn't deallocate our memory
 
 		MutexUnlock(thief->TaskMutex_);
 		MutexUnlock(TaskMutex_);
