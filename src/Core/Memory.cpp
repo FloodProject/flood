@@ -13,7 +13,7 @@
 #include "Core/Containers/Hash.h"
 #include "Core/Containers/MurmurHash.h"
 
-#define ALLOCATOR_TRACKING
+//#define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
 
 #ifdef PLATFORM_WINDOWS
@@ -112,6 +112,7 @@ static MemoryGroupNameMap& GetMemoryGroupNameMap()
 
 static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 {
+#pragma TODO("Fix crash on attempting to track the deallocation of the tracking groups container.")
 	static bool recurseGuard = false;
 
 	if(!metadata) return;
@@ -273,8 +274,9 @@ static void HeapDellocate(Allocator* alloc, const void* p)
 #if ALIGNED_MALLOC
 	_aligned_free(base);
 #endif
-
+#ifdef ALLOCATOR_TRACKING
 	free(base);
+#endif
 }
 
 //-----------------------------------//
