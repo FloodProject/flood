@@ -85,13 +85,13 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	Class* type = component->getType();
 
-	if(hash::has(componentsMap, (uint64)type))
+	if(componentsMap.has((uint64)type))
 	{
 		LogWarn( "Component '%s' already exists in '%s'", type->name, name.c_str() );
 		return false;
 	}
 
-	hash::set(componentsMap, (uint64)type, component);
+	componentsMap.set((uint64)type, component);
 	component->setEntity(this);
 
 	onComponentAdded(component);
@@ -116,11 +116,11 @@ bool Entity::removeComponent( const ComponentPtr& component )
 	
 	Class* type = component->getType();
 
-	auto it = hash::get<ComponentPtr>(componentsMap, (uint64)type, nullptr);
+	auto it = componentsMap.get((uint64)type, nullptr);
 	if(!it)
 		return false;
 
-	hash::remove(componentsMap, (uint64)type);
+	componentsMap.remove((uint64)type);
 	onComponentRemoved(component);
 	sendEvents();
 
@@ -152,7 +152,7 @@ ComponentPtr Entity::getComponent(const char* name) const
 
 ComponentPtr Entity::getComponent(Class* klass) const
 {
-	return hash::get<ComponentPtr>(componentsMap, (uint64)klass, nullptr);
+	return componentsMap.get((uint64)klass, nullptr);
 }
 
 //-----------------------------------//
@@ -230,7 +230,7 @@ void Entity::fixUp()
 			continue;
 
 		component->setEntity(this);
-		hash::set(componentsMap, (uint64)component->getType(), component);
+		componentsMap.set((uint64)component->getType(), component);
 	}
 
 	if( !getTransform() ) addTransform();

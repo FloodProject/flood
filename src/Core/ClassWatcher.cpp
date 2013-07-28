@@ -33,14 +33,14 @@ ClassWatch* ClassWatchCreate(Allocator* alloc)
 void ClassWatchReset(ClassWatch* watch)
 {
 	if( !watch ) return;
-	hash::clear(watch->fields);
+	watch->fields.clear();
 }
 
 //-----------------------------------//
 
 bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 {
-	auto fw = hash::get(watch->fields, (uint64)field, FieldWatch());
+	auto fw = watch->fields.get((uint64)field, FieldWatch());
 
 	byte* min = (byte*) ClassGetFieldAddress(fw.object, field);
 	byte* max = min + field->size;
@@ -55,7 +55,7 @@ bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 		fw.hash = hash;
 		changed = true;
 
-		hash::set(watch->fields, (uint64)field, fw);
+		watch->fields.set((uint64)field, fw);
 	}
 
 	return changed;
@@ -65,7 +65,7 @@ bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 
 void ClassWatchAddField(ClassWatch* watch, const FieldWatch& fw )
 {
-	hash::set(watch->fields, (uint64)fw.field, fw);
+	watch->fields.set((uint64)fw.field, fw);
 	ClassWatchUpdateField(watch, fw.field);
 }
 

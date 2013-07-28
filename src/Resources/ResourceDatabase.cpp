@@ -52,7 +52,7 @@ void ResourceDatabase::fixUp()
 	for( size_t i = 0; i < resources.size(); ++i )
 	{
 		auto metadata = resources[i];
-		hash::set(resourcesCache, metadata->hash, *metadata);
+		resourcesCache.set(metadata->hash, *metadata);
 	}
 }
 
@@ -60,14 +60,14 @@ void ResourceDatabase::fixUp()
 
 void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 {
-	if(hash::has(resourcesCache, metadata.hash))
+	if(resourcesCache.has(metadata.hash))
 		return;
 
 #pragma TODO("Fix memory leak in resource cache metadata.")
 	auto newMetadata = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(ResourceMetadata), alignof(ResourceMetadata))) ResourceMetadata(metadata);
 
 	resources.push_back(newMetadata);
-	hash::set(resourcesCache, metadata.hash, *newMetadata);
+	resourcesCache.set(metadata.hash, *newMetadata);
 
 	onResourceAdded(metadata);
 }

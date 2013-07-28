@@ -35,7 +35,7 @@ void HandleDestroyManager( HandleManager* man )
 
 	const HandleMap& handles = man->handles;
 
-	if( hash::size(handles) > 0 )
+	if( handles.size() > 0 )
 	{
 		//LogAssert("Handle manager should not have any handles");
 		goto out;
@@ -55,7 +55,7 @@ HandleId HandleCreate(HandleManager* man, ReferenceCounted* ref)
 	HandleMap& handles = man->handles;
 	
 	HandleId id = AtomicIncrement(&man->nextHandle);
-	hash::set(handles, (uint64)id, ref);
+	handles.set((uint64)id, ref);
 	
 	return id;
 }
@@ -66,7 +66,7 @@ void HandleDestroy(HandleManager* man, HandleId id)
 {
 	if( !man ) return;
 	
-	hash::remove(man->handles, (uint64)id);
+	man->handles.remove((uint64)id);
 }
 
 //-----------------------------------//
@@ -79,7 +79,7 @@ void HandleGarbageCollect(HandleManager* man)
 
 ReferenceCounted* HandleFind(HandleManager* man, HandleId id)
 {
-	return hash::get<ReferenceCounted*>(man->handles, (uint64)id, nullptr);
+	return man->handles.get((uint64)id, nullptr);
 }
 
 //-----------------------------------//

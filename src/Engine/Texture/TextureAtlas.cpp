@@ -73,7 +73,7 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
 
 bool TextureAtlas::addImage(const ImageHandle& newImageHandle) 
 {
-    if(hash::has(imageSubTextures, (uint64)newImageHandle.id))
+    if(imageSubTextures.has((uint64)newImageHandle.id))
         return true;
 
     Image* newImage = newImageHandle.Resolve();
@@ -97,10 +97,10 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
 
 bool TextureAtlas::getImageSubTexture(const ImageHandle& imageHandle, SubTexture& subTexture)
 {
-    if(!hash::has(imageSubTextures, imageHandle.id))
+    if(!imageSubTextures.has(imageHandle.id))
         return false;
 
-    subTexture = hash::get(imageSubTextures, (uint64)imageHandle.id, subTexture);
+    subTexture = imageSubTextures.get((uint64)imageHandle.id, subTexture);
     return true;
 }
 
@@ -131,7 +131,7 @@ void TextureAtlas::resizeAtlas(uint newSize)
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);
 
-    assert(newRects.size() == hash::size(imageSubTextures));
+    assert(newRects.size() == imageSubTextures.size());
 
     size_t i = 0;
     for (auto it : imageSubTextures) 
@@ -201,7 +201,7 @@ void TextureAtlas::addImage(ImageHandle newImageHandle, Rect newRect)
         subTexture.leftTopUV = Vector2(left,bottom);
     }
 
-    hash::set(imageSubTextures, (uint64)newImageHandle.id, subTexture);
+    imageSubTextures.set((uint64)newImageHandle.id, subTexture);
 }
 
 //-----------------------------------//

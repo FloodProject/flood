@@ -167,25 +167,25 @@ void Material::setTexture( uint8 unit, const String& name )
 	texUnit.image = handle;
 	texUnit.unit = unit;
 
-	hash::set(textureUnits, unit, texUnit);
+	textureUnits.set(unit, texUnit);
 }
 
 //-----------------------------------//
 
 void Material::setTexture( uint8 unit, const ImageHandle& handle )
 {
-	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	auto tu = textureUnits.get(unit, TextureUnit());
 	tu.unit = unit;
 	tu.image = handle;
 
-	hash::set(textureUnits, unit, tu);
+	textureUnits.set(unit, tu);
 }
 
 //-----------------------------------//
 
 ImageHandle Material::getTexture( uint8 unit )
 {
-	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	auto tu = textureUnits.get(unit, TextureUnit());
 	return tu.image;
 }
 
@@ -193,7 +193,7 @@ ImageHandle Material::getTexture( uint8 unit )
 
 TextureUnit& Material::getTextureUnit( uint8 unit )
 {
-	auto tu = hash::get(textureUnits, unit, TextureUnit());
+	auto tu = textureUnits.get(unit, TextureUnit());
 	return const_cast<TextureUnit&>(tu);
 }
 

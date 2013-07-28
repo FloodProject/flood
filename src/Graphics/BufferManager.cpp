@@ -42,8 +42,8 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 {
 	if( !gb ) return nullptr;
 
-	if(hash::has(buffers, (uint64)gb))
-		return const_cast<BufferEntry*>(&(hash::get(buffers, (uint64)gb, BufferEntry())));
+	if(buffers.has((uint64)gb))
+		return const_cast<BufferEntry*>(&(buffers.get((uint64)gb, BufferEntry())));
 
 	BufferEntry entry;
 	entry.vb = backend->createVertexBuffer();
@@ -59,8 +59,8 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 		entry.ib->setGeometryBuffer( gb );
 	}
 
-	hash::set(buffers, (uint64)gb, entry);
-	return const_cast<BufferEntry*>(&(hash::get(buffers, (uint64)gb, BufferEntry())));
+	buffers.set((uint64)gb, entry);
+	return const_cast<BufferEntry*>(&(buffers.get((uint64)gb, BufferEntry())));
 }
 
 //-----------------------------------//

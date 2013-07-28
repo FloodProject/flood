@@ -62,7 +62,7 @@ void ReflectionSetHandleContext( ReflectionHandleContextMap* handleContextMap,
 	assert(handleContextMap && "Expected a valid context map");
 	if (!handleContextMap ) return;
 
-	hash::set(*handleContextMap, (uint64)context.type, context);
+	handleContextMap->set((uint64)context.type, context);
 }
 
 //-----------------------------------//
@@ -73,9 +73,9 @@ bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
 	assert(handleContextMap && "Expected a valid context map");
 	if (!handleContextMap ) return false;
 
-	if(hash::has(*handleContextMap, (uint64)klass))
+	if(handleContextMap->has((uint64)klass))
 	{
-		ctx = hash::get(*handleContextMap, (uint64)klass, ctx);
+		ctx = handleContextMap->get((uint64)klass, ctx);
 		return true;
 	}
 	else if( ClassHasParent(klass) )

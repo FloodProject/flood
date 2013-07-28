@@ -67,28 +67,28 @@ void MessageHandlers::removeHandlers(MessageHandler* handler)
 
 MessageMapping* MessageHandlers::findHandler(MessageId id)
 {
-	return hash::get<MessageMapping*>(handlers, (uint64)id, nullptr);
+	return handlers.get((uint64)id, nullptr);
 }
 
 //-----------------------------------//
 
 void MessageHandlers::addMapping(const MessageMapping& handler)
 {
-	auto h = hash::get<MessageMapping*>(handlers, (uint64)handler.id, nullptr);
+	auto h = handlers.get((uint64)handler.id, nullptr);
 	if(h != nullptr)
 		DeallocateObject(h);
 
 	h = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(MessageMapping), alignof(MessageMapping))) MessageMapping(handler);
-	hash::set<MessageMapping*>(handlers, (uint64)handler.id, h);
+	handlers.set((uint64)handler.id, h);
 }
 
 //-----------------------------------//
 
 void MessageHandlers::removeMapping(const MessageMapping& handler)
 {
-	auto h = hash::get<MessageMapping*>(handlers, (uint64)handler.id, nullptr);
+	auto h = handlers.get((uint64)handler.id, nullptr);
 	if(h != nullptr)
-		hash::remove(handlers, (uint64)handler.id);
+		handlers.remove((uint64)handler.id);
 }
 
 //-----------------------------------//

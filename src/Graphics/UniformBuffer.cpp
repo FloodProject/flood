@@ -64,7 +64,7 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 	element->name = (char*) name; // AllocateName(name);
 
 	auto key = murmur_hash_64(name, strlen(name), 0);
-	hash::set(elements, key, element);
+	elements.set(key, element);
 	return element;
 }
 
@@ -73,8 +73,8 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 void UniformBuffer::removeUniform( const char* slot )
 {
 	auto key = murmur_hash_64(slot, strlen(slot), 0);
-	if(hash::has(elements, key))
-		hash::remove(elements, key);
+	if(elements.has(key))
+		elements.remove(key);
 }
 
 //-----------------------------------//

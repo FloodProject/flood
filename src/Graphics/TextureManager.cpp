@@ -41,8 +41,8 @@ TextureManager::~TextureManager()
 
 void TextureManager::removeTexture(Image* image)
 {
-	if(hash::has(textures, (uint64)image))
-		hash::remove(textures, (uint64)image);
+	if(textures.has((uint64)image))
+		textures.remove((uint64)image);
 }
 
 //-----------------------------------//
@@ -63,14 +63,14 @@ TexturePtr TextureManager::getTexture( Image* image )
 	if( !image )
 		return nullptr;
 
-	auto tex = hash::get<TexturePtr>(textures, (uint64)image, nullptr);
+	auto tex = textures.get((uint64)image, nullptr);
 	
 	if( !tex && !image->isLoaded())
 	{
 		tex = backend->createTexture();
 		tex->allocate(Vector2i(TEX_SIZE, TEX_SIZE), PixelFormat::R8G8B8A8);
 
-		hash::set(textures, (uint64)image, tex);
+		textures.set((uint64)image, tex);
 	}
 
 	return tex;
@@ -88,7 +88,7 @@ TexturePtr TextureManager::getTexture( const ImageHandle& imageHandle )
 		tex = backend->createTexture();
 		tex->setImage(imageHandle);
 
-		hash::set(textures, (uint64)image, tex);
+		textures.set((uint64)image, tex);
 	}
 
 	return tex;
@@ -104,7 +104,7 @@ void TextureManager::onLoaded( const ResourceEvent& event )
 	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	auto tex = (hash::get<TexturePtr>(textures, (uint64)image, nullptr)).get();
+	auto tex = (textures.get((uint64)image, nullptr)).get();
 	if(tex)
 	{
 		tex->setImage(handleImage);
@@ -122,7 +122,7 @@ void TextureManager::onUnloaded( const ResourceEvent& event )
 	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	if(!hash::has(textures, (uint64)image))
+	if(!textures.has((uint64)image))
 		return;
 
 	LogDebug( "Removing texture '%s'", image->getPath().c_str() );
@@ -142,16 +142,16 @@ void TextureManager::onReloaded( const ResourceEvent& event )
 	
 	Image* oldImage = (Image*) event.oldResource;
 
-	if(!hash::has(textures, (uint64)oldImage))
+	if(!textures.has((uint64)oldImage))
 		return;
 
 	LogDebug( "Reloading texture '%s'", newImage->getPath().c_str() );
 
-	auto tex = hash::get<TexturePtr>(textures, (uint64)oldImage, nullptr);
+	auto tex = textures.get((uint64)oldImage, nullptr);
 	tex->setImage(handleImage);
 
-	hash::remove(textures, (uint64)oldImage);
-	hash::set(textures, (uint64)newImage, tex);
+	textures.remove((uint64)oldImage);
+	textures.set((uint64)newImage, tex);
 }
 
 //-----------------------------------//

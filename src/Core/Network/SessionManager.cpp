@@ -32,7 +32,7 @@ void SessionManager::addSession(const SessionPtr& session)
 	if( !session ) return;
 	const PeerPtr& peer = session->getPeer();
 	
-	hash::set(sessions, (uint64)session.get(), session);
+	sessions.set((uint64)session.get(), session);
 
 	onSessionAdded(session);
 }
@@ -44,11 +44,11 @@ void SessionManager::removeSession(const SessionPtr& session)
 	if( !session ) return;
 	const PeerPtr& peer = session->getPeer();
 
-	auto s = hash::get(sessions, (uint64)peer.get(), SessionPtr(nullptr));
+	auto s = sessions.get((uint64)peer.get(), nullptr);
 	if(!s)
 		return;
 
-	hash::remove(sessions, (uint64)s.get());
+	sessions.remove((uint64)s.get());
 
 	onSessionRemoved(session);
 }
@@ -57,7 +57,7 @@ void SessionManager::removeSession(const SessionPtr& session)
 
 SessionPtr SessionManager::getSession(const PeerPtr& peer)
 {
-	return hash::get(sessions, (uint64)peer.get(), SessionPtr(nullptr));
+	return sessions.get((uint64)peer.get(), nullptr);
 }
 
 //-----------------------------------//

@@ -179,7 +179,7 @@ void Model::build()
 {
 	if( modelBuilt ) return;
 
-	auto rends = hash::get<Array<RenderablePtr>*>(meshRenderables, (uint64)mesh, nullptr);
+	auto rends = meshRenderables.get((uint64)mesh, nullptr);
 	
 	if( !rends )
 	{
@@ -273,7 +273,7 @@ void Model::updateAnimationBones(AnimationState& state)
 	auto& bones = state.bonesMatrix;
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
-	for( auto it = hash::begin(keyFrames); it != hash::end(keyFrames); ++it )
+	for( auto it = keyFrames.begin(); it != keyFrames.end(); ++it )
 	{
 		BonePtr bone((Bone*)it->key);
 		

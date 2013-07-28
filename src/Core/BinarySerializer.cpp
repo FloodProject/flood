@@ -515,7 +515,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	ClassId id = (ClassId) val;
 	
 	// Find the class id.
-	auto newClass = hash::get<Class*>(ids, id, nullptr);
+	auto newClass = ids.get(id, nullptr);
 
 	if(!newClass)
 	{

@@ -102,7 +102,7 @@ static void RegisterClass(Class* klass)
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
 
-	auto id = hash::get<Class*>(ids, klass->id, nullptr);
+	auto id = ids.get(klass->id, nullptr);
 	
 	if(id)
 	{
@@ -110,7 +110,7 @@ static void RegisterClass(Class* klass)
 		return;
 	}
 
-	hash::set(ids, klass->id, klass);
+	ids.set(klass->id, klass);
 }
 
 //-----------------------------------//
@@ -121,7 +121,7 @@ bool ReflectionDatabaseRegisterType(ReflectionDatabase* db, Type* type)
 
 	String name(type->name);
 	auto nh = murmur_hash_64(name.c_str(), name.size(), 0);
-	auto val = hash::get<Type*>(db->types, nh, nullptr);
+	auto val = db->types.get(nh, nullptr);
 
 	if(val)
 	{
@@ -129,7 +129,7 @@ bool ReflectionDatabaseRegisterType(ReflectionDatabase* db, Type* type)
 		return false;
 	}
 
-	hash::set(db->types, nh, type);
+	db->types.set(nh, type);
 
 	if( !ReflectionIsComposite(type) )
 		return true;
@@ -156,7 +156,7 @@ Type* ReflectionFindType(const char* ncstr)
 
 	String name(ncstr);
 	auto nh = murmur_hash_64(name.c_str(), name.size(), 0);
-	auto val = hash::get<Type*>(db.types, nh, nullptr);
+	auto val = db.types.get(nh, nullptr);
 	
 	return val;
 }
@@ -177,8 +177,8 @@ void EnumAddValue(Enum* enumeration, const char* name, int32 value)
 #pragma TODO("Fix memory leak in reflected enumeration names.")
 	auto ns = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(String), alignof(String))) String(name);
 	auto nh = murmur_hash_64(ns->c_str(), ns->size(), 0);
-	hash::set(enumeration->values, nh, value);
-	hash::set(enumeration->value_names, nh, ns);
+	enumeration->values.set(nh, value);
+	enumeration->value_names.set(nh, ns);
 }
 
 //-----------------------------------//
@@ -189,7 +189,7 @@ int32 EnumGetValue(Enum* enumeration, const char* name)
 	EnumValuesMap& values = enumeration->values;
 	String ns(name);
 	auto nh = murmur_hash_64(ns.c_str(), ns.size(), 0);
-	auto val = hash::get<int32>(values, nh, -1);
+	auto val = values.get(nh, -1);
 
 	return val;
 }
@@ -201,11 +201,11 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 	if( !enumeration ) return nullptr;
 	EnumValuesMap& values = enumeration->values;
 
-	for(auto e = hash::begin(values); e != hash::end(values); ++e)
+	for(auto e = values.begin(); e != values.end(); ++e)
 	{
 		if(e->value == value)
 		{
-			auto name = hash::get<String *>(enumeration->value_names, e->key, nullptr);
+			auto name = enumeration->value_names.get(e->key, nullptr);
 			assert(name != nullptr);
 			return name->c_str();
 		}
@@ -234,7 +234,7 @@ void ClassAddField(Class* klass, Field* field)
 	}
 
 	ClassFieldIdMap& fieldIds = klass->fieldIds;
-	hash::set(fieldIds, field->id, field);
+	fieldIds.set(field->id, field);
 }
 
 //-----------------------------------//
@@ -250,7 +250,7 @@ ClassIdMap& ClassGetIdMap()
 Class* ClassGetById(ClassId id)
 {
 	ClassIdMap& classIds = ClassGetIdMap();
-	auto val = hash::get<Class*>(classIds, id, nullptr);
+	auto val = classIds.get(id, nullptr);
 	return val;
 }
 
@@ -293,7 +293,7 @@ Field* ClassGetFieldById(Class* klass, FieldId id)
 	if(!klass)
 		return nullptr;
 
-	auto field = hash::get<Field*>(klass->fieldIds, id, nullptr);
+	auto field = klass->fieldIds.get(id, nullptr);
 	if(!field)
 		field = ClassGetFieldById(klass->parent, id);
 

@@ -65,7 +65,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
 	shaders.push_back(shader);
 	
-	bool isAttached = hash::get(attached, (uint64)shader, false);
+	bool isAttached = attached.get((uint64)shader, false);
 	
 	if( !isAttached )
 	{
@@ -74,7 +74,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 		if( CheckLastErrorGL("Could not attach shader object") )
 			return;
 
-		hash::set(attached, (uint64)shader, true);
+		attached.set((uint64)shader, true);
 	}
 }
 
@@ -85,7 +85,7 @@ void GLSL_ShaderProgram::detachShaders()
 	for( size_t i = 0; i < shaders.size(); ++i )
 	{
 		GLSL_Shader* shader = shaders[i].get();
-		bool isAttached = hash::get(attached, (uint64)shader, false);
+		bool isAttached = attached.get((uint64)shader, false);
 		
 		if( !isAttached ) continue;
 
@@ -93,7 +93,7 @@ void GLSL_ShaderProgram::detachShaders()
 		CheckLastErrorGL("Could not detach shader object");
 	}
 
-	hash::clear(attached);
+	attached.clear();
 }
 
 //-----------------------------------//

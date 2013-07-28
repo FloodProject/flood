@@ -161,8 +161,8 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 	destroyHandles();
-	hash::clear(resourceLoaders);
-	hash::clear(resourceLoaderExts);
+	resourceLoaders.clear();
+	resourceLoaderExts.clear();
 
 	ConditionDestroy(resourceFinishLoad);
 	MutexDestroy(resourceFinishLoadMutex);
@@ -182,7 +182,7 @@ void ResourceManager::destroyHandles()
 	}
 
 	gs_RemoveResource = false;
-	hash::clear(resources);
+	resources.clear();
 	
 	HandleDestroyManager(handleManager);
 	handleManager = nullptr;
@@ -195,7 +195,7 @@ ResourceHandle ResourceManager::getResource(const String& path)
 	Path name = PathGetFile(path);
 
 	auto key = murmur_hash_64(path.c_str(), path.size(), 0);
-	auto res = hash::get(resources, key, ResourceHandle(HandleInvalid));
+	auto res = resources.get(key, ResourceHandle(HandleInvalid));
 
 	return res;
 }
@@ -250,7 +250,7 @@ ResourceHandle ResourceManager::loadResource(ResourceLoadOptions& options)
 	// Register the decoded resource in the map.
 	Path base = PathGetFile(options.name);
 	auto key = murmur_hash_64(base.c_str(), base.size(), 0);
-	hash::set(resources, key, handle);
+	resources.set(key, handle);
 
 	decodeResource(options);
 
@@ -266,7 +266,7 @@ bool ResourceManager::findResource(ResourceLoadOptions& options)
 	for(auto it : resourceLoaders)
 	{
 		auto loader = it.value.get();
-		auto ext = hash::get<String*>(resourceLoaderExts, it.key, nullptr);
+		auto ext = resourceLoaderExts.get(it.key, nullptr);
 		assert(ext != nullptr);
 
 		if( loader->getResourceGroup() != options.group )
@@ -421,7 +421,7 @@ void ResourceManager::sendPendingEvents()
 
 		// Find the handle to the resource.
 		auto key = murmur_hash_64(base.c_str(), base.size(), 0);
-		auto res = hash::get(resources, key, ResourceHandle(HandleInvalid));
+		auto res = resources.get(key, ResourceHandle(HandleInvalid));
 		if( res == HandleInvalid )
 			continue;
 
@@ -468,7 +468,7 @@ void ResourceManager::removeResource(Resource* resource)
 void ResourceManager::removeResource(const String& path)
 {
 	auto key = murmur_hash_64(path.c_str(), path.size(), 0);
-	auto res = hash::get(resources, key, ResourceHandle(HandleInvalid));
+	auto res = resources.get(key, ResourceHandle(HandleInvalid));
 	if(res == HandleInvalid)
 		return;
 	
@@ -479,7 +479,7 @@ void ResourceManager::removeResource(const String& path)
 	onResourceRemoved( event );
 
 	LogInfo("Unloaded resource: %s", path.c_str());
-	hash::remove(resources, key);
+	resources.remove(key);
 }
 
 //-----------------------------------//
@@ -498,15 +498,15 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 		const String& extension = *extensions[i];
 		auto key = murmur_hash_64(extension.c_str(), extension.size(), 0);
 
-		if(hash::has(resourceLoaders, key))
+		if(resourceLoaders.has(key))
 		{
 			LogDebug("Extension '%s' already has a resource loader",
 				extension.c_str());
 			continue;
 		}
 
-		hash::set(resourceLoaders, key, ResourceLoaderPtr(loader));
-		hash::set(resourceLoaderExts, key, extensions[i]);
+		resourceLoaders.set(key, ResourceLoaderPtr(loader));
+		resourceLoaderExts.set(key, extensions[i]);
 	}
 
 	// Send callback notifications.
@@ -519,7 +519,7 @@ ResourceLoader* ResourceManager::findLoader(const String& ext)
 {
 	String extension = StringToLowerCase(ext);
 	auto key = murmur_hash_64(extension.c_str(), extension.size(), 0);
-	auto loader = hash::get<ResourceLoaderPtr>(resourceLoaders, key, nullptr);
+	auto loader = resourceLoaders.get(key, nullptr);
 
 	return loader.get();
 }
@@ -587,7 +587,7 @@ void ResourceManager::handleWatchResource(Archive*, const FileWatchEvent& evt)
 	// Check if the filename maps to a known resource.
 	const Path& file = PathGetFile(evt.filename);
 	auto key = murmur_hash_64(file.c_str(), file.size(), 0);
-	auto res = hash::get(resources, key, ResourceHandle(HandleInvalid));
+	auto res = resources.get(key, ResourceHandle(HandleInvalid));
 
 	if(res == HandleInvalid)
 		return; // Resource is not known.
@@ -621,7 +621,7 @@ void ResourceManager::handleWatchResource(Archive*, const FileWatchEvent& evt)
 
 	// Switch the resource but mantain the same handle.
 	resource->addReference();
-	hash::set<ReferenceCounted*>(handleManager->handles, (uint64)handleId, resource);
+	handleManager->handles.set((uint64)handleId, resource);
 
 	onResourceReloaded(event);
 

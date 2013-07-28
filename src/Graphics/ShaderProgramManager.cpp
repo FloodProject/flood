@@ -70,7 +70,7 @@ ShaderProgram* ProgramManager::getProgram( const ShaderMaterial* shader, bool pr
 {
 	if( !shader ) return nullptr;
 
-	auto it = hash::get<ShaderProgramPtr>(programs, (uint64)shader, nullptr);
+	auto it = programs.get((uint64)shader, nullptr);
 	if(!it)
 	{
 		auto prog = createProgram(shader);
@@ -85,13 +85,13 @@ ShaderProgram* ProgramManager::getProgram( const ShaderMaterial* shader, bool pr
 
 bool ProgramManager::registerProgram( const ShaderMaterial* shader, ShaderProgram* program )
 {
-	if(hash::has(programs, (uint64)shader))
+	if(programs.has((uint64)shader))
 	{
 		LogWarn( "Shader '%s' already registered", shader->getPath().c_str() );
 		return false;
 	}
 
-	hash::set(programs, (uint64)shader, ShaderProgramPtr(program));
+	programs.set((uint64)shader, ShaderProgramPtr(program));
 	return true;
 }
 
@@ -124,11 +124,11 @@ void ProgramManager::onReload( const ResourceEvent& event )
 
 	#pragma TODO("Handle reloading of unregistered resources")
 
-	auto prog = hash::get<ShaderProgramPtr>(programs, (uint64)oldShader, nullptr);
+	auto prog = programs.get((uint64)oldShader, nullptr);
 	assert( prog.get() != nullptr );
 	
-	hash::remove(programs, (uint64)oldShader);
-	hash::set(programs, (uint64)shader, prog);
+	programs.remove((uint64)oldShader);
+	programs.set((uint64)shader, prog);
 
 	LogDebug( "Reloading shader '%s'", shader->getPath().c_str() );
 

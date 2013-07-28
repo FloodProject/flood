@@ -218,7 +218,7 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 	strcpy_s(watch->mDirName, len, directory.c_str());
 	watch->mCustomData = userdata;
 
-	hash::set(mWatches, (uint64)watchid, watch);
+	mWatches.set((uint64)watchid, watch);
 
 	return watchid;
 }
@@ -241,11 +241,11 @@ void FileWatcherWin32::removeWatch(const String& directory)
 
 void FileWatcherWin32::removeWatch(FileWatchId watchid)
 {
-	auto fw = hash::get<FileWatchStruct*>(mWatches, (uint64)watchid, nullptr);
+	auto fw = mWatches.get((uint64)watchid, nullptr);
 	if(fw == nullptr)
 		return;
 
-	hash::remove(mWatches, (uint64)watchid);
+	mWatches.remove((uint64)watchid);
 
 	DestroyWatch(fw);
 }

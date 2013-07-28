@@ -121,21 +121,21 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 	String ns(metadata->group);
 	auto key = murmur_hash_64(ns.c_str(), ns.size(), 0);
 
-	if(!hash::has(memoryGroups, key) && !recurseGuard)
+	if(!memoryGroups.has(key) && !recurseGuard)
 	{
 		recurseGuard = true;
 		GetMemoryGroupNameMap().push_back(metadata->group);
 		recurseGuard = false;
 	}
 
-	auto memGroup = hash::get<AllocationGroup>(memoryGroups, key, AllocationGroup());
+	auto memGroup = memoryGroups.get(key, AllocationGroup());
 	memGroup.total += alloc ? metadata->size : 0;
 	memGroup.freed += alloc ? 0 : metadata->size;
 
 	if(!recurseGuard)
 	{
 		recurseGuard = true;
-		hash::set(memoryGroups, key, memGroup);
+		memoryGroups.set(key, memGroup);
 		recurseGuard = false;
 	}
 }
@@ -189,7 +189,7 @@ void AllocatorDumpInfo()
 		const char* id = *it;
 		String ns(id);
 		auto key = murmur_hash_64(ns.c_str(), ns.size(), 0);
-		auto group = hash::get<AllocationGroup>(GetMemoryGroupMap(), key, AllocationGroup());
+		auto group = GetMemoryGroupMap().get(key, AllocationGroup());
 		
 		const char* fs = "%s\t| total freed: %I64d bytes, total allocated: %I64d bytes";
 		String format = StringFormat(fs, id, group.freed, group.total );

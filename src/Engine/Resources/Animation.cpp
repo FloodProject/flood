@@ -28,9 +28,9 @@ Animation::Animation()
 
 Animation::~Animation()
 {
-	for(auto v = hash::begin(keyFrames); v != hash::end(keyFrames); ++v)
+	for(auto v = keyFrames.begin(); v != keyFrames.end(); ++v)
 		DeallocateObject(v);
-	hash::clear(keyFrames);
+	keyFrames.clear();
 }
 
 //-----------------------------------//
@@ -38,7 +38,7 @@ Animation::~Animation()
 void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 {
 	auto v = new (AllocatorAllocate(AllocatorGetHeap(), sizeof(KeyFramesVector), alignof(KeyFramesVector))) KeyFramesVector(frames);
-	hash::set(keyFrames, (uint64)bone.get(), v);
+	keyFrames.set((uint64)bone.get(), v);
 
 	for( size_t i = 0; i < frames.size(); ++i )
 	{	
@@ -51,7 +51,7 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 
 float Animation::getTotalTime() const
 {
-	if( hash::empty(keyFrames) )
+	if( keyFrames.empty() )
 		return 0;
 
 	float min = LimitsFloatMaximum;
@@ -84,10 +84,10 @@ bool Animation::isLooped()
 
 Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 {
-	if( !bone || hash::empty(keyFrames) )
+	if( !bone || keyFrames.empty() )
 		return Matrix4x3::Identity;
 	
-	auto boneKeyFrames = hash::get<KeyFramesVector*>(keyFrames, (uint64)bone.px, nullptr);
+	auto boneKeyFrames = keyFrames.get((uint64)bone.px, nullptr);
 
 	assert(boneKeyFrames != nullptr);
 
