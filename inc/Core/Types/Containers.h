@@ -107,13 +107,36 @@ public:
 
     size_t size() const;
     bool empty() const;
-    
-    bool has(uint64 key) const;
-    T const & get(uint64 key, T const & default_value) const;
-    void set(uint64 key, T const & value);
-    void remove(uint64 key);
     void reserve(size_t size);
     void clear();
+    
+    T const & get(uint64 key, T const & default_value) const;
+    void set(uint64 key, T const & value);
+    bool has(uint64 key) const;
+    void remove(uint64 key);
+
+public:
+    const static size_t END_OF_LIST;
+    const static float MAX_LOAD_FACTOR;
+    struct FindResult
+    {
+        size_t hash_i;
+        size_t data_prev;
+        size_t data_i;
+    };
+
+    bool full() const;
+    void rehash(size_t new_size);
+    size_t add_entry(uint64 key);
+    size_t make(uint64 key);
+    void erase(FindResult const & fr);
+    void grow();
+
+    FindResult find(uint64 key) const;
+    FindResult find(Entry const * e) const;
+    size_t find_or_fail(uint64 key) const;
+    size_t find_or_make(uint64 key);
+    void find_and_erase(uint64 key);
 
 public:
     Array<size_t> _hash;
