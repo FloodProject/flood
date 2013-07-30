@@ -339,6 +339,8 @@ namespace Flood
             if (!(typeMap is EventMap))
                 return false;
 
+            field.ExplicityIgnored = true;
+
             ITypedDecl decl = field;
 
             var typedef = field.Type as TypedefType;
@@ -371,6 +373,7 @@ namespace Flood
             };
 
             field.Class.Events.Add(@event);
+
             return true;
         }
     }
