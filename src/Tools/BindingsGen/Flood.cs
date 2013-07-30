@@ -378,15 +378,6 @@ namespace Flood
         }
     }
 
-    static class FindEventsPassExtensions
-    {
-        public static void FindEvents(this PassBuilder builder,
-            TypeMapDatabase database)
-        {
-            var pass = new FindEventsPass(database);
-            builder.AddPass(pass);
-        }
-    }
     #endregion
 
     #region Type Maps
