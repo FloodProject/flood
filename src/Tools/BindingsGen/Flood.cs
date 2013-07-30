@@ -485,8 +485,6 @@ namespace Flood
 
             return output;
         }
-
-        public override bool IsIgnored { get { return true; } }
     }
 
     [TypeMap("Handle")]
@@ -496,8 +494,11 @@ namespace Flood
         public override string CLISignature(CLITypePrinterContext ctx)
         {
             var type = Type.Desugar() as TemplateSpecializationType;
-            return string.Format("Flood::ResourceHandle<{0}>",
-                type.Arguments[0].Type);
+            var arg = type.Arguments[0].Type.ToString();
+            if (string.IsNullOrEmpty(arg))
+                arg = type.Template.Parameters[0].Name;
+            
+            return string.Format("Flood::ResourceHandle<{0}>", arg);
         }
 
         public override void CLIMarshalToNative(MarshalContext ctx)
