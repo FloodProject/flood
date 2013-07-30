@@ -91,12 +91,12 @@ namespace Flood
             builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
 
             builder.AddPass(new CheckMacroPass());
-            builder.AddPass(new ObjectOverridesPass());
+            builder.AddPass(new FindEventsPass(driver.TypeDatabase));
             builder.AddPass(new GetterSetterToPropertyPass());
-            builder.FindEvents(driver.TypeDatabase);
+            builder.AddPass(new FieldToPropertyPass());
+            builder.AddPass(new ObjectOverridesPass());
             builder.FunctionToInstanceMethod();
             builder.FunctionToStaticMethod();
-            builder.CheckDuplicateNames();
         }
 
         #endregion
