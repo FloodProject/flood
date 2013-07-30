@@ -29,6 +29,7 @@ namespace Flood
             options.IncludeDirs.Add(@"../../../../inc");
             options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
             options.WriteOnlyWhenChanged = true;
+            options.GenerateFunctionTemplates = true;
 
             SetupLibraries(options.Libraries);
             SetupHeaders(options.Headers);
