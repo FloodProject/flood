@@ -11,37 +11,6 @@
 
 NAMESPACE_CORE_BEGIN
 
-/// The hash function stores its data in a "list-in-an-array" where
-/// indices are used instead of pointers. 
-///
-/// When items are removed, the array-list is repacked to always keep
-/// it tightly ordered.
-
-namespace multi_hash
-{
-    /// Finds the first entry with the specified key.
-    template<typename T> const typename Hash<T>::Entry *find_first(const Hash<T> &h, uint64 key);
-
-    /// Finds the next entry with the same key as e.
-    template<typename T> const typename Hash<T>::Entry *find_next(const Hash<T> &h, const typename Hash<T>::Entry *e);
-
-    /// Returns the number of entries with the key.
-    template<typename T> size_t count(const Hash<T> &h, uint64 key);
-
-    /// Returns all the entries with the specified key.
-    /// Use a TempAllocator for the array to avoid allocating memory.
-    template<typename T> void get(const Hash<T> &h, uint64 key, Array<T> &items);
-
-    /// Inserts the value as an additional value for the key.
-    template<typename T> void insert(Hash<T> &h, uint64 key, const T &value);
-
-    /// Removes the specified entry.
-    template<typename T> void remove(Hash<T> &h, const typename Hash<T>::Entry *e);
-
-    /// Removes all entries with the specified key.
-    template<typename T> void remove_all(Hash<T> &h, uint64 key);
-}
-
 template <typename T>
 const size_t Hash<T>::END_OF_LIST = SIZE_MAX;
 
@@ -139,7 +108,7 @@ void Hash<T>::rehash(size_t new_size)
     for (size_t i = 0; i < _data.size(); ++i)
     {
         const typename Hash<T>::Entry &e = _data[i];
-        multi_hash::insert(nh, e.key, e.value);
+        nh.insert(e.key, e.value);
     }
 
     Hash<T> empty(*_hash.allocator());
@@ -172,6 +141,18 @@ size_t Hash<T>::make(uint64 key)
 
     _data[i].next = fr.data_i;
     return i;
+}
+
+template<typename T>
+void Hash<T>::insert(uint64 key, const T &value)
+{
+    if (_hash.size() == 0)
+        grow();
+
+    const size_t i = make(key);
+    _data[i].value = value;
+    if (full())
+        grow();
 }
 
 template<typename T>
@@ -277,73 +258,6 @@ void Hash<T>::find_and_erase(uint64 key)
     const FindResult fr = find(key);
     if (fr.data_i != END_OF_LIST)
         erase(fr);
-}
-
-namespace multi_hash
-{
-    template<typename T> const typename Hash<T>::Entry *find_first(const Hash<T> &h, uint64 key)
-    {
-        const size_t i = h.find_or_fail(key);
-        return i == Hash<T>::END_OF_LIST ? 0 : &h._data[i];
-    }
-
-    template<typename T> const typename Hash<T>::Entry *find_next(const Hash<T> &h, const typename Hash<T>::Entry *e)
-    {
-        size_t i = e->next;
-        while (i != Hash<T>::END_OF_LIST)
-        {
-            if (h._data[i].key == e->key)
-                return &h._data[i];
-            i = h._data[i].next;
-        }
-        return 0;
-    }
-
-    template<typename T> size_t count(const Hash<T> &h, uint64 key)
-    {
-        size_t i = 0;
-        const typename Hash<T>::Entry *e = find_first(h, key);
-        while (e)
-        {
-            ++i;
-            e = find_next(h, e);
-        }
-        return i;
-    }
-
-    template<typename T> void get(const Hash<T> &h, uint64 key, Array<T> &items)
-    {
-        const typename Hash<T>::Entry *e = find_first(h, key);
-        while (e)
-        {
-            items.push_back(e->value);
-            e = find_next(h, e);
-        }
-    }
-
-    template<typename T> void insert(Hash<T> &h, uint64 key, const T &value)
-    {
-        if (h._hash.size() == 0)
-            h.grow();
-
-        const size_t i = h.make(key);
-        h._data[i].value = value;
-        if (h.full())
-            h.grow();
-    }
-
-    template<typename T> void remove(Hash<T> &h, const typename Hash<T>::Entry *e)
-    {
-        const typename Hash<T>::FindResult fr = h.find(e);
-        if (fr.data_i != Hash<T>::END_OF_LIST)
-            h.erase(fr);
-    }
-
-    template<typename T> void remove_all(Hash<T> &h, uint64 key)
-    {
-        while (h.has(key))
-            h.remove(key);
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////

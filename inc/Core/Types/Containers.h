@@ -115,7 +115,7 @@ public:
     bool has(uint64 key) const;
     void remove(uint64 key);
 
-public:
+private:
     const static size_t END_OF_LIST;
     const static float MAX_LOAD_FACTOR;
     struct FindResult
@@ -129,6 +129,7 @@ public:
     void rehash(size_t new_size);
     size_t add_entry(uint64 key);
     size_t make(uint64 key);
+    void insert(uint64 key, const T &value);
     void erase(FindResult const & fr);
     void grow();
 
@@ -138,7 +139,7 @@ public:
     size_t find_or_make(uint64 key);
     void find_and_erase(uint64 key);
 
-public:
+private:
     Array<size_t> _hash;
     Array<Entry> _data;
 };
