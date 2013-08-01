@@ -1,4 +1,3 @@
-using Flood.RPC.Server;
 using Flood.RPC.Transport;
 
 namespace Flood.Server
@@ -6,10 +5,6 @@ namespace Flood.Server
     public abstract class Server
     {
         public IDatabaseManager Database { get; set; }
-
-        public TSimpleServer RPCServer { get; set; }
-
-        public TServerSocket Socket { get; set; }
 
         protected Server()
         {

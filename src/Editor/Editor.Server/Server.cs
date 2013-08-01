@@ -1,5 +1,3 @@
-using Flood.RPC.Server;
-using Flood.RPC.Transport;
 using System;
 
 namespace Flood.Editor.Server
@@ -14,16 +12,12 @@ namespace Flood.Editor.Server
         public EditorServer()
         {
             var handler = new ProjectManager(Database);
-            var processor = new IProjectManagerImpl.Processor(handler);
 
-            Socket = new TServerSocket(Settings.RPCPort);
-            RPCServer = new TSimpleServer(processor, Socket);
         }
 
         public void Serve()
         {
             Console.WriteLine("Server is starting...");
-            RPCServer.Serve();
         }
     }
 }
