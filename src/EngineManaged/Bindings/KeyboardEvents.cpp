@@ -5,14 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "KeyboardEvents.h"
-#include "Device.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::KeyEvent::KeyEvent(::KeyEvent* native)
     : Flood::InputEvent(native)
@@ -30,6 +26,17 @@ Flood::KeyEvent::KeyEvent(Flood::KeyboardEventType eventType)
 {
     auto arg0 = (::KeyboardEventType)eventType;
     NativePtr = new ::KeyEvent(arg0);
+}
+
+bool Flood::KeyEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::KeyEvent::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 Flood::KeyboardEventType Flood::KeyEvent::EventType::get()

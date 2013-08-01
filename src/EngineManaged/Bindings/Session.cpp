@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Session.h"
 #include "Packet.h"
 #include "Peer.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Session::Session(::Session* native)
 {
@@ -31,7 +28,28 @@ Flood::Session::Session()
     NativePtr = new ::Session();
 }
 
-Flood::SessionState Flood::Session::GetState()
+bool Flood::Session::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Session::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Session::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Session::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Session*)object.ToPointer();
+}
+
+Flood::SessionState Flood::Session::State::get()
 {
     auto ret = ((::Session*)NativePtr)->getState();
     return (Flood::SessionState)ret;
@@ -58,7 +76,7 @@ void Flood::Session::StateChange::raise(Flood::SessionState _0)
     _StateChange(_0);
 }
 
-void Flood::Session::_StateChangeRaise(SessionState _0)
+void Flood::Session::_StateChangeRaise(::SessionState _0)
 {
     StateChange::raise((Flood::SessionState)_0);
 }

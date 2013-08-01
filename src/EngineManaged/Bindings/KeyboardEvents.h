@@ -7,21 +7,16 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Input/KeyboardEvents.h>
 #include "Device.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct KeyboardEventType;
     enum struct Keys;
-    ref class InputEvent;
     ref class KeyEvent;
 
-    /// <summary>
-    /// Represents all the available keyboard keys with a unique key code. When
-    /// interacting with the Keyboard class you should always use these values.
-    /// </summary>
     public enum struct Keys
     {
         A = 65,
@@ -128,9 +123,6 @@ namespace Flood
         MAX = 321
     };
 
-    /// <summary>
-    /// Different types of keyboard events.
-    /// </summary>
     public enum struct KeyboardEventType
     {
         KeyPressed = 0,
@@ -138,11 +130,6 @@ namespace Flood
         KeyText = 2
     };
 
-    /// <summary>
-    /// Main keyboard event. Holds the related keycode, and whether some special
-    /// keys are pressed (handy for testing shortcuts). Finally it also needs to
-    /// know if it's a key press or release event.
-    /// </summary>
     public ref class KeyEvent : Flood::InputEvent
     {
     public:
@@ -179,5 +166,7 @@ namespace Flood
             unsigned int get();
             void set(unsigned int);
         }
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

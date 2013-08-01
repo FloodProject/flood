@@ -5,17 +5,14 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Engine.h"
 #include "InputManager.h"
 #include "Log.h"
-#include "ResourceHandle.h"
 #include "ResourceManager.h"
 #include "WindowManager.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Engine::Engine(::Engine* native)
 {
@@ -48,45 +45,68 @@ void Flood::Engine::SetupLogger()
     ((::Engine*)NativePtr)->setupLogger();
 }
 
-Flood::ResourceManager^ Flood::Engine::GetResourceManager()
+void Flood::Engine::StepFrame()
+{
+    ((::Engine*)NativePtr)->stepFrame();
+}
+
+bool Flood::Engine::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Engine::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Engine::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Engine::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Engine*)object.ToPointer();
+}
+
+Flood::ResourceManager^ Flood::Engine::ResourceManager::get()
 {
     auto ret = ((::Engine*)NativePtr)->getResourceManager();
     return gcnew Flood::ResourceManager((::ResourceManager*)ret);
 }
 
-Flood::InputManager^ Flood::Engine::GetInputManager()
+Flood::InputManager^ Flood::Engine::InputManager::get()
 {
     auto ret = ((::Engine*)NativePtr)->getInputManager();
     return gcnew Flood::InputManager((::InputManager*)ret);
 }
 
-void Flood::Engine::SetInputManager(Flood::InputManager^ v)
+void Flood::Engine::InputManager::set(Flood::InputManager^ value)
 {
+    auto v = value;
     auto arg0 = (::InputManager*)v->NativePtr;
     ((::Engine*)NativePtr)->setInputManager(arg0);
 }
 
-Flood::WindowManager^ Flood::Engine::GetWindowManager()
+Flood::WindowManager^ Flood::Engine::WindowManager::get()
 {
     auto ret = ((::Engine*)NativePtr)->getWindowManager();
     return gcnew Flood::WindowManager((::WindowManager*)ret);
 }
 
-void Flood::Engine::SetWindowManager(Flood::WindowManager^ v)
+void Flood::Engine::WindowManager::set(Flood::WindowManager^ value)
 {
+    auto v = value;
     auto arg0 = (::WindowManager*)v->NativePtr;
     ((::Engine*)NativePtr)->setWindowManager(arg0);
 }
 
-Flood::Log^ Flood::Engine::GetLogger()
+Flood::Log^ Flood::Engine::Logger::get()
 {
     auto ret = ((::Engine*)NativePtr)->getLogger();
     return gcnew Flood::Log((::Log*)ret);
-}
-
-void Flood::Engine::StepFrame()
-{
-    ((::Engine*)NativePtr)->stepFrame();
 }
 
 Flood::Engine^ Flood::FloodEngine::GetEngine()

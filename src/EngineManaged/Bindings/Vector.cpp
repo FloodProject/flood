@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Vector.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Vector3::Vector3(::Vector3* native)
 {

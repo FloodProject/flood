@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Network.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 bool Flood::FloodNetwork::NetworkInitialize()
 {

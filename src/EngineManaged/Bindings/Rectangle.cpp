@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Rectangle.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Rectangle::Rectangle(::Rectangle* native)
 {
@@ -39,8 +36,6 @@ Flood::Rectangle::Rectangle(int x, int y, int width, int height)
     this->Height = _native.height;
 }
 
-// Returns true if this rectangle is contained in rect.
-// Returns true if this rectangle is contained in rect.
 bool Flood::Rectangle::IsContainedIn(Flood::Rectangle rect)
 {
     auto _this0 = ::Rectangle();
@@ -88,8 +83,6 @@ Flood::RectangleF::RectangleF(float x, float y, float width, float height)
     this->Height = _native.height;
 }
 
-// Returns true if this rectangle is contained in rect.
-// Returns true if this rectangle is contained in rect.
 bool Flood::RectangleF::IsContainedIn(Flood::RectangleF rect)
 {
     auto _this0 = ::RectangleF();

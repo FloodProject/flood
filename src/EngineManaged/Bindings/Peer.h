@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Network/Peer.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -20,19 +20,35 @@ namespace Flood
     ref class Peer;
     ref class Session;
 
-    public ref class Peer
+    public ref class Peer : ICppInstance
     {
     public:
         property ::Peer* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Peer(::Peer* native);
         Peer(System::IntPtr native);
         Peer();
+        property System::String^ HostName
+        {
+            System::String^ get();
+        }
+        property System::String^ HostIP
+        {
+            System::String^ get();
+        }
+        property Flood::Session^ Session
+        {
+            Flood::Session^ get();
+        }
         void Disconnect();
         void ForceDisconnect();
-        System::String^ GetHostName();
-        System::String^ GetHostIP();
         void QueuePacket(Flood::Packet^ packet, unsigned char channel);
-        Flood::Session^ GetSession();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

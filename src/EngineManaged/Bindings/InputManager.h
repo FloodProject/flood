@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Input/InputManager.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -20,25 +20,41 @@ namespace Flood
     ref class Mouse;
     ref class Window;
 
-    /// <summary>
-    /// Manages a set of input devices.
-    /// </summary>
-    public ref class InputManager
+    public ref class InputManager : ICppInstance
     {
     public:
         property ::InputManager* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         InputManager(::InputManager* native);
         InputManager(System::IntPtr native);
         InputManager();
+        property System::Collections::Generic::List<Flood::InputDevice^>^ Devices
+        {
+            System::Collections::Generic::List<Flood::InputDevice^>^ get();
+        }
+        property Flood::Keyboard^ Keyboard
+        {
+            Flood::Keyboard^ get();
+        }
+        property Flood::Mouse^ Mouse
+        {
+            Flood::Mouse^ get();
+        }
+        property Flood::Window^ Window
+        {
+            Flood::Window^ get();
+            void set(Flood::Window^);
+        }
         void AddDevice(Flood::InputDevice^ device);
-        System::Collections::Generic::List<Flood::InputDevice^>^ GetDevices();
-        Flood::Keyboard^ GetKeyboard();
-        Flood::Mouse^ GetMouse();
         void ProcessEvent(Flood::InputEvent^ event);
         void CreateDefaultDevices();
-        Flood::Window^ GetWindow();
-        void SetWindow(Flood::Window^ window);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
     public ref class FloodInputManager

@@ -5,19 +5,17 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "RenderBatch.h"
 #include "GeometryBuffer.h"
+#include "IndexBuffer.h"
 #include "Material.h"
 #include "Memory.h"
 #include "RenderQueue.h"
 #include "RenderView.h"
-#include "ResourceHandle.h"
 #include "UniformBuffer.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::RenderBatchRange::RenderBatchRange(::RenderBatchRange* native)
 {
@@ -48,86 +46,114 @@ Flood::RenderBatch::RenderBatch()
     NativePtr = new ::RenderBatch();
 }
 
-Flood::RenderLayer Flood::RenderBatch::GetRenderLayer()
+bool Flood::RenderBatch::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::RenderBatch::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::RenderBatch::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::RenderBatch::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::RenderBatch*)object.ToPointer();
+}
+
+Flood::RenderLayer Flood::RenderBatch::RenderLayer::get()
 {
     auto ret = ((::RenderBatch*)NativePtr)->getRenderLayer();
     return (Flood::RenderLayer)ret;
 }
 
-void Flood::RenderBatch::SetRenderLayer(Flood::RenderLayer v)
+void Flood::RenderBatch::RenderLayer::set(Flood::RenderLayer value)
 {
+    auto v = value;
     auto arg0 = (::RenderLayer)v;
     ((::RenderBatch*)NativePtr)->setRenderLayer(arg0);
 }
 
-int Flood::RenderBatch::GetRenderPriority()
+int Flood::RenderBatch::RenderPriority::get()
 {
     auto ret = ((::RenderBatch*)NativePtr)->getRenderPriority();
     return ret;
 }
 
-void Flood::RenderBatch::SetRenderPriority(int v)
+void Flood::RenderBatch::RenderPriority::set(int value)
 {
+    auto v = value;
     auto arg0 = (int32)v;
     ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
 
-Flood::GeometryBuffer^ Flood::RenderBatch::GetGeometryBuffer()
+Flood::GeometryBuffer^ Flood::RenderBatch::GeometryBuffer::get()
 {
     auto &ret = ((::RenderBatch*)NativePtr)->getGeometryBuffer();
     return gcnew Flood::GeometryBuffer((::GeometryBuffer*)ret.get());
 }
 
-void Flood::RenderBatch::SetGeometryBuffer(Flood::GeometryBuffer^ v)
+void Flood::RenderBatch::GeometryBuffer::set(Flood::GeometryBuffer^ value)
 {
+    auto v = value;
     auto arg0 = (::GeometryBuffer*)v->NativePtr;
     ((::RenderBatch*)NativePtr)->setGeometryBuffer(arg0);
 }
 
-Flood::UniformBuffer^ Flood::RenderBatch::GetUniformBuffer()
+Flood::UniformBuffer^ Flood::RenderBatch::UniformBuffer::get()
 {
     auto &ret = ((::RenderBatch*)NativePtr)->getUniformBuffer();
     return gcnew Flood::UniformBuffer((::UniformBuffer*)ret.get());
 }
 
-void Flood::RenderBatch::SetUniformBuffer(Flood::UniformBuffer^ v)
+void Flood::RenderBatch::UniformBuffer::set(Flood::UniformBuffer^ value)
 {
+    auto v = value;
     auto arg0 = (::UniformBuffer*)v->NativePtr;
     ((::RenderBatch*)NativePtr)->setUniformBuffer(arg0);
 }
 
-Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::GetMaterial()
+Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::Material::get()
 {
     auto &ret = ((::RenderBatch*)NativePtr)->getMaterial();
     return Flood::ResourceHandle<Flood::Material^>(ret.id);
 }
 
-void Flood::RenderBatch::SetMaterial(Flood::ResourceHandle<Flood::Material^> v)
+void Flood::RenderBatch::Material::set(Flood::ResourceHandle<Flood::Material^> value)
 {
+    auto v = value;
     auto arg0 = (HandleId)v.Id;
     ((::RenderBatch*)NativePtr)->setMaterial(arg0);
 }
 
-Flood::PrimitiveRasterMode Flood::RenderBatch::GetPrimitiveRasterMode()
+Flood::PrimitiveRasterMode Flood::RenderBatch::PrimitiveRasterMode::get()
 {
     auto ret = ((::RenderBatch*)NativePtr)->getPrimitiveRasterMode();
     return (Flood::PrimitiveRasterMode)ret;
 }
 
-void Flood::RenderBatch::SetPrimitiveRasterMode(Flood::PrimitiveRasterMode v)
+void Flood::RenderBatch::PrimitiveRasterMode::set(Flood::PrimitiveRasterMode value)
 {
+    auto v = value;
     auto arg0 = (::PrimitiveRasterMode)v;
     ((::RenderBatch*)NativePtr)->setPrimitiveRasterMode(arg0);
 }
 
-Flood::PrimitiveType Flood::RenderBatch::GetPrimitiveType()
+Flood::PrimitiveType Flood::RenderBatch::PrimitiveType::get()
 {
     auto ret = ((::RenderBatch*)NativePtr)->getPrimitiveType();
     return (Flood::PrimitiveType)ret;
 }
 
-void Flood::RenderBatch::SetPrimitiveType(Flood::PrimitiveType v)
+void Flood::RenderBatch::PrimitiveType::set(Flood::PrimitiveType value)
 {
+    auto v = value;
     auto arg0 = (::PrimitiveType)v;
     ((::RenderBatch*)NativePtr)->setPrimitiveType(arg0);
 }
@@ -205,12 +231,12 @@ void Flood::RenderBatch::Ub::set(Flood::UniformBuffer^ value)
     ((::RenderBatch*)NativePtr)->ub = (::UniformBuffer*)value->NativePtr;
 }
 
-Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::Material::get()
+Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::Material1::get()
 {
     return Flood::ResourceHandle<Flood::Material^>(((::RenderBatch*)NativePtr)->material.id);
 }
 
-void Flood::RenderBatch::Material::set(Flood::ResourceHandle<Flood::Material^> value)
+void Flood::RenderBatch::Material1::set(Flood::ResourceHandle<Flood::Material^> value)
 {
     ((::RenderBatch*)NativePtr)->material = (HandleId)value.Id;
 }

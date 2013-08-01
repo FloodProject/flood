@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Texture/TextureAtlas.h>
 #include "Image.h"
 #include "ResourceHandle.h"
@@ -16,11 +17,9 @@ namespace Flood
 {
     enum struct PixelFormat;
     ref class CompareHandle;
-    ref class Image;
     ref class TextureAtlas;
     value struct Rectangle;
     value struct SubTexture;
-    value struct Vector2;
 
     public value struct SubTexture
     {
@@ -34,16 +33,26 @@ namespace Flood
         Flood::TextureAtlas^ Atlas;
     };
 
-    public ref class TextureAtlas
+    public ref class TextureAtlas : ICppInstance
     {
     public:
         property ::TextureAtlas* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         TextureAtlas(::TextureAtlas* native);
         TextureAtlas(System::IntPtr native);
         TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat);
+        property Flood::ResourceHandle<Flood::Image^> AtlasImageHandle
+        {
+            Flood::ResourceHandle<Flood::Image^> get();
+        }
         bool AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle);
         bool GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture);
-        Flood::ResourceHandle<Flood::Image^> GetAtlasImageHandle();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

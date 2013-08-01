@@ -5,16 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "TextureAtlas.h"
 #include "Image.h"
 #include "Rectangle.h"
-#include "ResourceHandle.h"
-#include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::SubTexture::SubTexture(::SubTexture* native)
 {
@@ -69,7 +65,28 @@ bool Flood::TextureAtlas::GetImageSubTexture(Flood::ResourceHandle<Flood::Image^
     return ret;
 }
 
-Flood::ResourceHandle<Flood::Image^> Flood::TextureAtlas::GetAtlasImageHandle()
+bool Flood::TextureAtlas::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::TextureAtlas::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::TextureAtlas::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::TextureAtlas::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::TextureAtlas*)object.ToPointer();
+}
+
+Flood::ResourceHandle<Flood::Image^> Flood::TextureAtlas::AtlasImageHandle::get()
 {
     auto ret = ((::TextureAtlas*)NativePtr)->getAtlasImageHandle();
     return Flood::ResourceHandle<Flood::Image^>(ret.id);

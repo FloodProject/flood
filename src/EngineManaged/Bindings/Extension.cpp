@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Extension.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::ExtensionMetadata::ExtensionMetadata(::ExtensionMetadata* native)
 {
@@ -43,12 +40,6 @@ Flood::Extension::Extension()
 {
 }
 
-Flood::ExtensionMetadata Flood::Extension::GetMetadata()
-{
-    auto ret = ((::Extension*)NativePtr)->getMetadata();
-    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
-}
-
 void Flood::Extension::OnInit()
 {
     ((::Extension*)NativePtr)->onInit();
@@ -57,5 +48,32 @@ void Flood::Extension::OnInit()
 void Flood::Extension::OnCleanup()
 {
     ((::Extension*)NativePtr)->onCleanup();
+}
+
+bool Flood::Extension::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Extension::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Extension::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Extension::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Extension*)object.ToPointer();
+}
+
+Flood::ExtensionMetadata Flood::Extension::Metadata::get()
+{
+    auto ret = ((::Extension*)NativePtr)->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 

@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/String.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -22,7 +22,6 @@ namespace Flood
         StringHash(System::String^ str, unsigned int size);
         unsigned int Hash;
     };
-
 
     public ref class FloodString
     {

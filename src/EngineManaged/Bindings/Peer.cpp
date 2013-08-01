@@ -5,16 +5,13 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Peer.h"
 #include "Host.h"
 #include "Packet.h"
-#include "ResourceHandle.h"
 #include "Session.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Peer::Peer(::Peer* native)
 {
@@ -42,18 +39,6 @@ void Flood::Peer::ForceDisconnect()
     ((::Peer*)NativePtr)->forceDisconnect();
 }
 
-System::String^ Flood::Peer::GetHostName()
-{
-    auto ret = ((::Peer*)NativePtr)->getHostName();
-    return clix::marshalString<clix::E_UTF8>(ret);
-}
-
-System::String^ Flood::Peer::GetHostIP()
-{
-    auto ret = ((::Peer*)NativePtr)->getHostIP();
-    return clix::marshalString<clix::E_UTF8>(ret);
-}
-
 void Flood::Peer::QueuePacket(Flood::Packet^ packet, unsigned char channel)
 {
     auto arg0 = (::Packet*)packet->NativePtr;
@@ -61,7 +46,40 @@ void Flood::Peer::QueuePacket(Flood::Packet^ packet, unsigned char channel)
     ((::Peer*)NativePtr)->queuePacket(arg0, arg1);
 }
 
-Flood::Session^ Flood::Peer::GetSession()
+bool Flood::Peer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Peer::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Peer::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Peer::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Peer*)object.ToPointer();
+}
+
+System::String^ Flood::Peer::HostName::get()
+{
+    auto ret = ((::Peer*)NativePtr)->getHostName();
+    return clix::marshalString<clix::E_UTF8>(ret);
+}
+
+System::String^ Flood::Peer::HostIP::get()
+{
+    auto ret = ((::Peer*)NativePtr)->getHostIP();
+    return clix::marshalString<clix::E_UTF8>(ret);
+}
+
+Flood::Session^ Flood::Peer::Session::get()
 {
     auto ret = ((::Peer*)NativePtr)->getSession();
     return gcnew Flood::Session((::Session*)ret);

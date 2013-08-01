@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/Texture.h>
 #include "Image.h"
 #include "ResourceHandle.h"
@@ -18,7 +19,6 @@ namespace Flood
     enum struct TextureMipMode;
     enum struct TextureTarget;
     enum struct TextureWrapMode;
-    ref class Image;
     ref class Texture;
     ref class TextureUnit;
     value struct Vector2i;
@@ -43,27 +43,43 @@ namespace Flood
         ClampToEdge = 3
     };
 
-    /// <summary>
-    /// Represents a texture on the rendering API. This will be basically an the
-    /// same content of a resource image stored on the graphics card, but it is not
-    /// guaranteed that the GPU internal format will be the same. You can also
-    /// create textures that are not backed by an image.
-    /// </summary>
     public enum struct TextureTarget
     {
         Target2D = 0,
         Target3D = 1
     };
 
-    public ref class Texture
+    public ref class Texture : ICppInstance
     {
     public:
         property ::Texture* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Texture(::Texture* native);
         Texture(System::IntPtr native);
         Texture();
         property unsigned int Id
+        {
+            unsigned int get();
+        }
+        property Flood::PixelFormat PixelFormat
+        {
+            Flood::PixelFormat get();
+        }
+        property Flood::ResourceHandle<Flood::Image^> Image
+        {
+            Flood::ResourceHandle<Flood::Image^> get();
+            void set(Flood::ResourceHandle<Flood::Image^>);
+        }
+        property unsigned int ExpectedSize
+        {
+            unsigned int get();
+        }
+        property unsigned int Id1
         {
             unsigned int get();
             void set(unsigned int);
@@ -94,24 +110,41 @@ namespace Flood
             void set(float);
         }
         void Alloc(Flood::Vector2i size, Flood::PixelFormat _0);
-        unsigned int GetId();
-        Flood::PixelFormat GetPixelFormat();
-        Flood::ResourceHandle<Flood::Image^> GetImage();
-        void SetImage(Flood::ResourceHandle<Flood::Image^> image);
         Flood::Image^ ReadImage();
-        unsigned int GetExpectedSize();
         bool IsUploaded();
         void SetUploaded();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
-    public ref class TextureUnit
+    public ref class TextureUnit : ICppInstance
     {
     public:
         property ::TextureUnit* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         TextureUnit(::TextureUnit* native);
         TextureUnit(System::IntPtr native);
         TextureUnit();
+        property Flood::TextureFilterMode FilterMode
+        {
+            Flood::TextureFilterMode get();
+            void set(Flood::TextureFilterMode);
+        }
+        property Flood::TextureMipMode MipMode
+        {
+            Flood::TextureMipMode get();
+            void set(Flood::TextureMipMode);
+        }
+        property Flood::TextureWrapMode WrapMode
+        {
+            Flood::TextureWrapMode get();
+            void set(Flood::TextureWrapMode);
+        }
         property unsigned char Unit
         {
             unsigned char get();
@@ -127,11 +160,7 @@ namespace Flood
             bool get();
             void set(bool);
         }
-        Flood::TextureFilterMode GetFilterMode();
-        Flood::TextureMipMode GetMipMode();
-        Flood::TextureWrapMode GetWrapMode();
-        void SetFilterMode(Flood::TextureFilterMode _0);
-        void SetMipMode(Flood::TextureMipMode _0);
-        void SetWrapMode(Flood::TextureWrapMode _0);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

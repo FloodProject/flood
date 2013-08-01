@@ -5,16 +5,13 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Matrix4x3.h"
 #include "EulerAngles.h"
 #include "Quaternion.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Matrix4x3::Matrix4x3(::Matrix4x3* native)
 {

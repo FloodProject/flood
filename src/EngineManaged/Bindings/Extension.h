@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Extension.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -25,21 +25,26 @@ namespace Flood
         int Priority;
     };
 
-    /// <summary>
-    /// Extensions are clearly defined units of extensibility to applications.
-    /// Typically an application will create the extension points and provide some
-    /// kind of runtime support for loading the extensions from a plugin.
-    /// </summary>
-    public ref class Extension
+    public ref class Extension : ICppInstance
     {
     public:
         property ::Extension* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Extension(::Extension* native);
         Extension(System::IntPtr native);
         Extension();
-        Flood::ExtensionMetadata GetMetadata();
+        property Flood::ExtensionMetadata Metadata
+        {
+            Flood::ExtensionMetadata get();
+        }
         void OnInit();
         void OnCleanup();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

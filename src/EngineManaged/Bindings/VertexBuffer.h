@@ -7,23 +7,19 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/VertexBuffer.h>
 #include "Buffer.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct VertexAttribute : unsigned char;
     enum struct VertexDataType : unsigned char;
-    ref class Buffer;
     ref class VertexBuffer;
     ref class VertexDeclaration;
     value struct VertexElement;
     value struct VertexElementP;
 
-    /// <summary>
-    /// Attribute of a vertex element.
-    /// </summary>
     public enum struct VertexAttribute : unsigned char
     {
         Position = 0,
@@ -48,14 +44,6 @@ namespace Flood
         Integer = 2
     };
 
-    /// <summary>
-    /// Represents a vertex buffer. One limitation here is that all data is tied to
-    /// the vertex so if you want a normal per primitive and not per vertex you
-    /// will have to duplicate that normal for each vertex for now.
-    /// </summary>
-    /// <summary>
-    /// Each element inside a vertex declaration.
-    /// </summary>
     public value struct VertexElementP
     {
     public:
@@ -78,20 +66,29 @@ namespace Flood
         char Stride;
         unsigned int Offset;
         unsigned int Size;
-        unsigned char GetSize();
+        property unsigned char Size1
+        {
+            unsigned char get();
+        }
     };
 
-    /// <summary>
-    /// This describes structure of a geometry buffer.
-    /// </summary>
-    public ref class VertexDeclaration
+    public ref class VertexDeclaration : ICppInstance
     {
     public:
         property ::VertexDeclaration* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         VertexDeclaration(::VertexDeclaration* native);
         VertexDeclaration(System::IntPtr native);
         VertexDeclaration();
+        property unsigned char VertexSize
+        {
+            unsigned char get();
+        }
         property System::Collections::Generic::List<Flood::VertexElement>^ Decls
         {
             System::Collections::Generic::List<Flood::VertexElement>^ get();
@@ -103,8 +100,9 @@ namespace Flood
         void Reset();
         Flood::VertexElement Find(Flood::VertexAttribute _0);
         unsigned char GetOffset(Flood::VertexAttribute _0);
-        unsigned char GetVertexSize();
         void CalculateStrides();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
     public ref class VertexBuffer : Flood::Buffer
@@ -120,5 +118,7 @@ namespace Flood
         }
         bool IsBuilt();
         void ForceRebuild();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

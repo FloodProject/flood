@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "SessionManager.h"
-#include "ResourceHandle.h"
 #include "Session.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::SessionManager::SessionManager(::SessionManager* native)
 {
@@ -30,18 +27,26 @@ Flood::SessionManager::SessionManager()
     NativePtr = new ::SessionManager();
 }
 
-void Flood::SessionManager::AddSession(Flood::Session^ session)
+bool Flood::SessionManager::Equals(System::Object^ object)
 {
-    auto arg0 = (::Session*)session->NativePtr;
-    ((::SessionManager*)NativePtr)->addSession(arg0);
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
 }
 
-void Flood::SessionManager::RemoveSession(Flood::Session^ session)
+int Flood::SessionManager::GetHashCode()
 {
-    auto arg0 = (::Session*)session->NativePtr;
-    ((::SessionManager*)NativePtr)->removeSession(arg0);
+    return (int)NativePtr;
 }
 
+System::IntPtr Flood::SessionManager::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::SessionManager::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::SessionManager*)object.ToPointer();
+}
 void Flood::SessionManager::SessionAdded::add(System::Action<Flood::Session^>^ evt)
 {
     if (!_SessionAddedDelegateInstance)
@@ -58,14 +63,14 @@ void Flood::SessionManager::SessionAdded::remove(System::Action<Flood::Session^>
     _SessionAdded = static_cast<System::Action<Flood::Session^>^>(System::Delegate::Remove(_SessionAdded, evt));
 }
 
-void Flood::SessionManager::SessionAdded::raise(Flood::Session^ _3)
+void Flood::SessionManager::SessionAdded::raise(Flood::Session^ _0)
 {
-    _SessionAdded(_3);
+    _SessionAdded(_0);
 }
 
-void Flood::SessionManager::_SessionAddedRaise(const ::SessionPtr& _3)
+void Flood::SessionManager::_SessionAddedRaise(const ::SessionPtr& _0)
 {
-    SessionAdded::raise(gcnew Flood::Session((::Session*)_3.get()));
+    SessionAdded::raise(gcnew Flood::Session((::Session*)_0.get()));
 }
 
 void Flood::SessionManager::SessionRemoved::add(System::Action<Flood::Session^>^ evt)
@@ -84,13 +89,13 @@ void Flood::SessionManager::SessionRemoved::remove(System::Action<Flood::Session
     _SessionRemoved = static_cast<System::Action<Flood::Session^>^>(System::Delegate::Remove(_SessionRemoved, evt));
 }
 
-void Flood::SessionManager::SessionRemoved::raise(Flood::Session^ _4)
+void Flood::SessionManager::SessionRemoved::raise(Flood::Session^ _1)
 {
-    _SessionRemoved(_4);
+    _SessionRemoved(_1);
 }
 
-void Flood::SessionManager::_SessionRemovedRaise(const ::SessionPtr& _4)
+void Flood::SessionManager::_SessionRemovedRaise(const ::SessionPtr& _1)
 {
-    SessionRemoved::raise(gcnew Flood::Session((::Session*)_4.get()));
+    SessionRemoved::raise(gcnew Flood::Session((::Session*)_1.get()));
 }
 

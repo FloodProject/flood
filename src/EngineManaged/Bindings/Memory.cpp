@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Memory.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Allocator::Allocator(::Allocator* native)
 {
@@ -27,6 +24,17 @@ Flood::Allocator::Allocator(System::IntPtr native)
 Flood::Allocator::Allocator()
 {
     NativePtr = new ::Allocator();
+}
+
+bool Flood::Allocator::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Allocator::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 void Flood::Allocator::Destroy()
@@ -103,6 +111,16 @@ void Flood::Allocator::DumpInfo()
     ::AllocatorDumpInfo();
 }
 
+System::IntPtr Flood::Allocator::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Allocator::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Allocator*)object.ToPointer();
+}
+
 Flood::MemoryAllocateFunction^ Flood::Allocator::Allocate::get()
 {
     return safe_cast<Flood::MemoryAllocateFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->allocate), Flood::MemoryAllocateFunction::typeid));
@@ -161,6 +179,17 @@ Flood::PoolAllocator::PoolAllocator()
     NativePtr = new ::PoolAllocator();
 }
 
+bool Flood::PoolAllocator::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::PoolAllocator::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
 System::IntPtr Flood::PoolAllocator::Current::get()
 {
     return IntPtr(((::PoolAllocator*)NativePtr)->current);
@@ -186,6 +215,17 @@ Flood::BumpAllocator::BumpAllocator()
     : Flood::Allocator(nullptr)
 {
     NativePtr = new ::BumpAllocator();
+}
+
+bool Flood::BumpAllocator::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::BumpAllocator::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 System::IntPtr Flood::BumpAllocator::Start::get()
@@ -233,6 +273,17 @@ Flood::HeapAllocator::HeapAllocator()
     : Flood::Allocator(nullptr)
 {
     NativePtr = new ::HeapAllocator();
+}
+
+bool Flood::HeapAllocator::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::HeapAllocator::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 System::IntPtr Flood::HeapAllocator::Space::get()

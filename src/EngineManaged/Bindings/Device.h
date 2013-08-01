@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Input/Device.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -16,9 +16,6 @@ namespace Flood
     ref class InputDevice;
     ref class InputEvent;
 
-    /// <summary>
-    /// Different types of input devices.
-    /// </summary>
     public enum struct InputDeviceType
     {
         Keyboard = 0,
@@ -26,13 +23,15 @@ namespace Flood
         Joystick = 2
     };
 
-    /// <summary>
-    /// Base struct for input events.
-    /// </summary>
-    public ref class InputEvent
+    public ref class InputEvent : ICppInstance
     {
     public:
         property ::InputEvent* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         InputEvent(::InputEvent* native);
         InputEvent(System::IntPtr native);
@@ -42,20 +41,29 @@ namespace Flood
             Flood::InputDeviceType get();
             void set(Flood::InputDeviceType);
         }
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
-    /// <summary>
-    /// Input device.
-    /// </summary>
-    public ref class InputDevice
+    public ref class InputDevice : ICppInstance
     {
     public:
         property ::InputDevice* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         InputDevice(::InputDevice* native);
         InputDevice(System::IntPtr native);
         InputDevice();
+        property Flood::InputDeviceType Type
+        {
+            Flood::InputDeviceType get();
+        }
         void ProcessEvent(Flood::InputEvent^ event);
-        Flood::InputDeviceType GetType();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

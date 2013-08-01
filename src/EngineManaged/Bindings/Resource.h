@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Resources/Resource.h>
 #include "ResourceHandle.h"
 
@@ -14,14 +15,8 @@ namespace Flood
 {
     enum struct ResourceGroup;
     enum struct ResourceStatus;
-    ref class Resource;
     ref class ResourceStream;
 
-    /// <summary>
-    /// Resources can be loaded in a background task. In that case the caller will
-    /// still receive a resource but it won't be fully loaded. It will only be
-    /// fully loaded when the resource status changes to loaded.
-    /// </summary>
     public enum struct ResourceStatus
     {
         Error = 0,
@@ -30,11 +25,6 @@ namespace Flood
         Loaded = 3
     };
 
-    /// <summary>
-    /// Resource groups identify the kind of data a resource holds. The resource
-    /// manager class uses this information to keep the related resources together,
-    /// and for managing the data.
-    /// </summary>
     public enum struct ResourceGroup
     {
         General = 0,
@@ -49,58 +39,50 @@ namespace Flood
         Particles = 9
     };
 
-    /// <summary>
-    /// Represents a generic resource that tipically is used to hold a piece of
-    /// data that is used by the various systems of the engine, for example mesh,
-    /// sounds, fonts, images, shaders, and other types of resource data. Each
-    /// resource is identified by a path (Uniform Resource Identifier), that way we
-    /// can add virtual resources (it could be used for various things, like
-    /// procedural content generation and to identify streaming resource from a
-    /// network connection).
-    /// </summary>
-    public ref class Resource
+    public ref class Resource : ICppInstance
     {
     public:
         property ::Resource* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Resource(::Resource* native);
         Resource(System::IntPtr native);
-        /// <summary>
-        /// Path to the resource.
-        /// </summary>
         property System::String^ Path
         {
             System::String^ get();
             void set(System::String^);
         }
-        /// <summary>
-        /// Status of the resource.
-        /// </summary>
         property Flood::ResourceStatus Status
         {
             Flood::ResourceStatus get();
             void set(Flood::ResourceStatus);
         }
-        /// <summary>
-        /// Resource stream.
-        /// </summary>
+        property Flood::ResourceGroup ResourceGroup
+        {
+            Flood::ResourceGroup get();
+        }
+        property System::String^ Path1
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+        property Flood::ResourceStatus Status1
+        {
+            Flood::ResourceStatus get();
+            void set(Flood::ResourceStatus);
+        }
         property Flood::ResourceStream^ Stream
         {
             Flood::ResourceStream^ get();
             void set(Flood::ResourceStream^);
         }
-        System::String^ GetPath();
-        void SetPath(System::String^ v);
-        Flood::ResourceStatus GetStatus();
-        void SetStatus(Flood::ResourceStatus v);
-        /// <summary>
-        /// Gets if the resource is fully loaded.
-        /// </summary>
         bool IsLoaded();
-        /// <summary>
-        /// Gets the resource group associated with this resource.
-        /// </summary>
-        Flood::ResourceGroup GetResourceGroup();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
         Flood::ResourceHandle<Flood::Resource^> HandleCreate();
     };
 }

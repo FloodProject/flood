@@ -7,29 +7,28 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Input/Keyboard.h>
 #include "Device.h"
-#include "KeyboardEvents.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct InputDeviceType;
     enum struct Keys;
-    ref class InputDevice;
     ref class InputEvent;
     ref class Keyboard;
     ref class KeyEvent;
 
-    /// <summary>
-    /// Keyboard device.
-    /// </summary>
     public ref class Keyboard : Flood::InputDevice
     {
     public:
         Keyboard(::Keyboard* native);
         Keyboard(System::IntPtr native);
         Keyboard();
+        property System::Collections::Generic::List<bool>^ KeyState
+        {
+            System::Collections::Generic::List<bool>^ get();
+        }
     private:
         delegate void _KeyPressDelegate(const ::KeyEvent& _0);
         _KeyPressDelegate^ _KeyPressDelegateInstance;
@@ -68,6 +67,7 @@ namespace Flood
         }
         bool IsKeyPressed(Flood::Keys keyCode);
         void ResetKeys();
-        System::Collections::Generic::List<bool>^ GetKeyState();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

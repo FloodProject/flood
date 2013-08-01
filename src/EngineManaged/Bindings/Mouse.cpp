@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Mouse.h"
 #include "Device.h"
 #include "MouseEvents.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::MouseInfo::MouseInfo(::MouseInfo* native)
 {
@@ -29,6 +26,27 @@ Flood::MouseInfo::MouseInfo(System::IntPtr native)
 Flood::MouseInfo::MouseInfo()
 {
     NativePtr = new ::MouseInfo();
+}
+
+bool Flood::MouseInfo::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseInfo::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::MouseInfo::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::MouseInfo::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::MouseInfo*)object.ToPointer();
 }
 
 short Flood::MouseInfo::X::get()
@@ -135,22 +153,33 @@ void Flood::Mouse::ProcessEvent(Flood::InputEvent^ event)
     ((::Mouse*)NativePtr)->processEvent(arg0);
 }
 
-Flood::MouseInfo^ Flood::Mouse::GetMouseInfo()
+Flood::Mouse::Mouse()
+    : Flood::InputDevice(nullptr)
+{
+    NativePtr = new ::Mouse();
+}
+
+bool Flood::Mouse::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Mouse::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+Flood::MouseInfo^ Flood::Mouse::MouseInfo::get()
 {
     auto &ret = ((::Mouse*)NativePtr)->getMouseInfo();
     return gcnew Flood::MouseInfo((::MouseInfo*)&ret);
 }
 
-Flood::InputDeviceType Flood::Mouse::GetType()
+Flood::InputDeviceType Flood::Mouse::Type::get()
 {
     auto ret = ((::Mouse*)NativePtr)->getType();
     return (Flood::InputDeviceType)ret;
-}
-
-Flood::Mouse::Mouse()
-    : Flood::InputDevice(nullptr)
-{
-    NativePtr = new ::Mouse();
 }
 
 void Flood::Mouse::MouseMove::add(System::Action<Flood::MouseMoveEvent^>^ evt)

@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Network/Network.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {

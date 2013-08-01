@@ -5,16 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Font.h"
-#include "Image.h"
 #include "Resource.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Glyph::Glyph(::Glyph* native)
 {
@@ -66,30 +62,42 @@ Flood::Vector2 Flood::Font::GetKerning(int codepoint1, int codepoint2, int fontS
     return Flood::Vector2((::Vector2*)&ret);
 }
 
-System::String^ Flood::Font::GetName()
+bool Flood::Font::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Font::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::String^ Flood::Font::Name::get()
 {
     auto &ret = ((::Font*)NativePtr)->getName();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
-void Flood::Font::SetName(System::String^ v)
+void Flood::Font::Name::set(System::String^ value)
 {
+    auto v = value;
     auto arg0 = clix::marshalString<clix::E_UTF8>(v);
     ((::Font*)NativePtr)->setName(arg0);
 }
 
-Flood::ResourceGroup Flood::Font::GetResourceGroup()
+Flood::ResourceGroup Flood::Font::ResourceGroup::get()
 {
     auto ret = ((::Font*)NativePtr)->getResourceGroup();
     return (Flood::ResourceGroup)ret;
 }
 
-System::String^ Flood::Font::Name::get()
+System::String^ Flood::Font::Name1::get()
 {
     return clix::marshalString<clix::E_UTF8>(((::Font*)NativePtr)->name);
 }
 
-void Flood::Font::Name::set(System::String^ value)
+void Flood::Font::Name1::set(System::String^ value)
 {
     ((::Font*)NativePtr)->name = clix::marshalString<clix::E_UTF8>(value);
 }

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/Resources/Image.h>
 #include "Resource.h"
 #include "ResourceHandle.h"
@@ -16,15 +17,10 @@ namespace Flood
     enum struct PixelFormat;
     enum struct ResourceGroup;
     ref class Allocator;
-    ref class Image;
     ref class ImageWriter;
-    ref class Resource;
     value struct Color;
     value struct Vector2i;
 
-    /// <summary>
-    /// Possible pixel formats for an image.
-    /// </summary>
     public enum struct PixelFormat
     {
         R8G8B8A8 = 0,
@@ -40,11 +36,6 @@ namespace Flood
         Unknown = 10
     };
 
-    /// <summary>
-    /// Represents an image in the engine. An image usually holds uncompressed
-    /// image data, stored in an pixel array in a given pixel format specified at
-    /// creation time.
-    /// </summary>
     public ref class Image : Flood::Resource
     {
     public:
@@ -52,37 +43,77 @@ namespace Flood
         Image(System::IntPtr native);
         Image();
         Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        unsigned int GetWidth();
-        void SetWidth(unsigned int v);
-        unsigned int GetHeight();
-        void SetHeight(unsigned int v);
-        Flood::PixelFormat GetPixelFormat();
-        void SetPixelFormat(Flood::PixelFormat v);
-        System::Collections::Generic::List<unsigned char>^ GetBuffer();
+        property unsigned int Width
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property unsigned int Height
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+        property Flood::PixelFormat PixelFormat
+        {
+            Flood::PixelFormat get();
+            void set(Flood::PixelFormat);
+        }
+        property System::Collections::Generic::List<unsigned char>^ Buffer
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+        }
+        property System::Collections::Generic::List<unsigned char>^ Buffer1
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+        }
+        property unsigned int PixelSize
+        {
+            unsigned int get();
+        }
+        property unsigned int Size
+        {
+            unsigned int get();
+        }
+        property Flood::ResourceGroup ResourceGroup
+        {
+            Flood::ResourceGroup get();
+        }
+        property Flood::Color Color
+        {
+            void set(Flood::Color);
+        }
+        property unsigned int Timestamp
+        {
+            unsigned int get();
+        }
         void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
         bool IsCompressed();
         void SetBuffer(System::IntPtr data);
         void SetBuffer(System::IntPtr data, unsigned int stride);
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
-        unsigned int GetPixelSize();
-        unsigned int GetSize();
-        Flood::ResourceGroup GetResourceGroup();
-        void SetColor(Flood::Color color);
         void Log();
         void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
-        unsigned int GetTimestamp();
         void SetModified();
-        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _1, unsigned int width, unsigned int height, Flood::PixelFormat _2);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
+        static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _0, unsigned int width, unsigned int height, Flood::PixelFormat _1);
     };
 
-    public ref class ImageWriter
+    public ref class ImageWriter : ICppInstance
     {
     public:
         property ::ImageWriter* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         ImageWriter(::ImageWriter* native);
         ImageWriter(System::IntPtr native);
         ImageWriter();
         bool Convert(Flood::Image^ image);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

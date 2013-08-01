@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/UniformBuffer.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -37,11 +37,6 @@ namespace Flood
         Matrix4x3_F = 12
     };
 
-    /// <summary>
-    /// Uniforms are named constants that can be set in programs. These are
-    /// allocated from a special frame bump allocator, that frees all the memory
-    /// when the frame ends.
-    /// </summary>
     public value struct UniformBufferElement
     {
     public:
@@ -53,13 +48,15 @@ namespace Flood
         cli::array<unsigned char>^ Data;
     };
 
-    /// <summary>
-    /// Represents a uniform buffer.
-    /// </summary>
-    public ref class UniformBuffer
+    public ref class UniformBuffer : ICppInstance
     {
     public:
         property ::UniformBuffer* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         UniformBuffer(::UniformBuffer* native);
         UniformBuffer(System::IntPtr native);
@@ -74,5 +71,7 @@ namespace Flood
         void SetUniform(System::String^ slot, Flood::Matrix4x3 _0);
         void SetUniform(System::String^ slot, Flood::Matrix4x4 _0);
         void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Matrix4x4>^ vec);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

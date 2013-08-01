@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Engine.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -25,31 +25,43 @@ namespace Flood
     ref class Subsystem;
     ref class WindowManager;
 
-    /// <summary>
-    /// Main engine class. This is a utility class that instantiates all the other
-    /// engine classes and provides suitable methods to get/set them. It is also
-    /// responsible to set the default logger for all of the engine logging needs.
-    /// If you need extra flexibility in your app, you can create a class like this
-    /// one that instantiates everything and sets it all up.
-    /// </summary>
-    public ref class Engine
+    public ref class Engine : ICppInstance
     {
     public:
         property ::Engine* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Engine(::Engine* native);
         Engine(System::IntPtr native);
         Engine();
+        property Flood::ResourceManager^ ResourceManager
+        {
+            Flood::ResourceManager^ get();
+        }
+        property Flood::InputManager^ InputManager
+        {
+            Flood::InputManager^ get();
+            void set(Flood::InputManager^);
+        }
+        property Flood::WindowManager^ WindowManager
+        {
+            Flood::WindowManager^ get();
+            void set(Flood::WindowManager^);
+        }
+        property Flood::Log^ Logger
+        {
+            Flood::Log^ get();
+        }
         void Init();
         void Update();
         void SetupLogger();
-        Flood::ResourceManager^ GetResourceManager();
-        Flood::InputManager^ GetInputManager();
-        void SetInputManager(Flood::InputManager^ v);
-        Flood::WindowManager^ GetWindowManager();
-        void SetWindowManager(Flood::WindowManager^ v);
-        Flood::Log^ GetLogger();
         void StepFrame();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
     public ref class FloodEngine

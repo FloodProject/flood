@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Matrix4x4.h"
 #include "Matrix4x3.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Matrix4x4::Matrix4x4(::Matrix4x4* native)
 {

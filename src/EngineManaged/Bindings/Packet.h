@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Network/Packet.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -26,23 +26,39 @@ namespace Flood
         Signed = 16
     };
 
-    public ref class Packet
+    public ref class Packet : ICppInstance
     {
     public:
         property ::Packet* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Packet(::Packet* native);
         Packet(System::IntPtr native);
         Packet(unsigned short id);
-        Flood::PacketFlags GetFlags();
-        void SetFlags(Flood::PacketFlags v);
-        Flood::PacketFlags GetProcessedFlags();
-        void SetProcessedFlags(Flood::PacketFlags v);
-        unsigned short GetId();
+        property Flood::PacketFlags Flags
+        {
+            Flood::PacketFlags get();
+            void set(Flood::PacketFlags);
+        }
+        property Flood::PacketFlags ProcessedFlags
+        {
+            Flood::PacketFlags get();
+            void set(Flood::PacketFlags);
+        }
+        property unsigned short Id
+        {
+            unsigned short get();
+        }
         int Size();
         void Clear();
         void Write(System::Collections::Generic::List<unsigned char>^ data);
         System::Collections::Generic::List<unsigned char>^ Read();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
         static Flood::Packet^ Create(unsigned short id);
     };
 }

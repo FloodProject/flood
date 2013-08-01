@@ -5,17 +5,13 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Window.h"
 #include "InputManager.h"
 #include "RenderContext.h"
-#include "RenderTarget.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
@@ -98,32 +94,10 @@ bool Flood::Window::PumpEvents()
     return ret;
 }
 
-void Flood::Window::SetTitle(System::String^ title)
-{
-    auto arg0 = clix::marshalString<clix::E_UTF8>(title);
-    ((::Window*)NativePtr)->setTitle(arg0);
-}
-
-void Flood::Window::SetCursorVisible(bool state)
-{
-    ((::Window*)NativePtr)->setCursorVisible(state);
-}
-
 bool Flood::Window::IsCursorVisible()
 {
     auto ret = ((::Window*)NativePtr)->isCursorVisible();
     return ret;
-}
-
-void Flood::Window::SetCursorCapture(bool state)
-{
-    ((::Window*)NativePtr)->setCursorCapture(state);
-}
-
-Flood::Vector2i Flood::Window::GetCursorPosition()
-{
-    auto ret = ((::Window*)NativePtr)->getCursorPosition();
-    return Flood::Vector2i((::Vector2i*)&ret);
 }
 
 void Flood::Window::SetCursorPosition(int x, int y)
@@ -137,13 +111,49 @@ bool Flood::Window::HasFocus()
     return ret;
 }
 
-Flood::InputManager^ Flood::Window::GetInput()
+bool Flood::Window::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Window::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+void Flood::Window::Title::set(System::String^ value)
+{
+    auto title = value;
+    auto arg0 = clix::marshalString<clix::E_UTF8>(title);
+    ((::Window*)NativePtr)->setTitle(arg0);
+}
+
+void Flood::Window::CursorVisible::set(bool value)
+{
+    auto state = value;
+    ((::Window*)NativePtr)->setCursorVisible(state);
+}
+
+void Flood::Window::CursorCapture::set(bool value)
+{
+    auto state = value;
+    ((::Window*)NativePtr)->setCursorCapture(state);
+}
+
+Flood::Vector2i Flood::Window::CursorPosition::get()
+{
+    auto ret = ((::Window*)NativePtr)->getCursorPosition();
+    return Flood::Vector2i((::Vector2i*)&ret);
+}
+
+Flood::InputManager^ Flood::Window::Input::get()
 {
     auto ret = ((::Window*)NativePtr)->getInput();
     return gcnew Flood::InputManager((::InputManager*)ret);
 }
 
-Flood::Settings Flood::Window::GetSettings()
+Flood::Settings Flood::Window::Settings::get()
 {
     auto &ret = ((::Window*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
@@ -191,13 +201,13 @@ void Flood::Window::WindowFocusChange::remove(System::Action<bool>^ evt)
     _WindowFocusChange = static_cast<System::Action<bool>^>(System::Delegate::Remove(_WindowFocusChange, evt));
 }
 
-void Flood::Window::WindowFocusChange::raise(bool _2)
+void Flood::Window::WindowFocusChange::raise(bool _0)
 {
-    _WindowFocusChange(_2);
+    _WindowFocusChange(_0);
 }
 
-void Flood::Window::_WindowFocusChangeRaise(bool _2)
+void Flood::Window::_WindowFocusChangeRaise(bool _0)
 {
-    WindowFocusChange::raise(_2);
+    WindowFocusChange::raise(_0);
 }
 

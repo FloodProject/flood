@@ -5,14 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "VertexBuffer.h"
-#include "Buffer.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::VertexElementP::VertexElementP(::VertexElementP* native)
 {
@@ -61,7 +57,7 @@ Flood::VertexElement::VertexElement(Flood::VertexAttribute _0, Flood::VertexData
     this->Size = _native.size;
 }
 
-unsigned char Flood::VertexElement::GetSize()
+unsigned char Flood::VertexElement::Size1::get()
 {
     auto _this0 = ::VertexElement();
     _this0.attribute = (::VertexAttribute)(*this).Attribute;
@@ -139,12 +135,6 @@ unsigned char Flood::VertexDeclaration::GetOffset(Flood::VertexAttribute _0)
     return ret;
 }
 
-unsigned char Flood::VertexDeclaration::GetVertexSize()
-{
-    auto ret = ((::VertexDeclaration*)NativePtr)->getVertexSize();
-    return ret;
-}
-
 void Flood::VertexDeclaration::CalculateStrides()
 {
     ((::VertexDeclaration*)NativePtr)->calculateStrides();
@@ -153,6 +143,33 @@ void Flood::VertexDeclaration::CalculateStrides()
 Flood::VertexDeclaration::VertexDeclaration()
 {
     NativePtr = new ::VertexDeclaration();
+}
+
+bool Flood::VertexDeclaration::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::VertexDeclaration::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::VertexDeclaration::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::VertexDeclaration::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::VertexDeclaration*)object.ToPointer();
+}
+
+unsigned char Flood::VertexDeclaration::VertexSize::get()
+{
+    auto ret = ((::VertexDeclaration*)NativePtr)->getVertexSize();
+    return ret;
 }
 
 System::Collections::Generic::List<Flood::VertexElement>^ Flood::VertexDeclaration::Decls::get()
@@ -210,6 +227,17 @@ bool Flood::VertexBuffer::IsBuilt()
 void Flood::VertexBuffer::ForceRebuild()
 {
     ((::VertexBuffer*)NativePtr)->forceRebuild();
+}
+
+bool Flood::VertexBuffer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::VertexBuffer::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 bool Flood::VertexBuffer::Built::get()

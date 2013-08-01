@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Color.h"
 #include "RenderContext.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Color::Color(::Color* native)
 {

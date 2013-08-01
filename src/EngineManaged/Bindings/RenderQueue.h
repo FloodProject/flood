@@ -7,10 +7,10 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/RenderQueue.h>
 #include "Matrix4x3.h"
 #include "Matrix4x4.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -21,23 +21,8 @@ namespace Flood
     ref class Texture;
     ref class Transform;
     value struct LightState;
-    value struct Matrix4x3;
-    value struct Matrix4x4;
     value struct RenderState;
 
-    /// <summary>
-    /// This is a queue of objects that are usually returned by performing a
-    /// culling operation on the camera. Each.renderable can be assigned a
-    /// different priority to be rendered on different times. For example you might
-    /// want to render the GUI after everything else is rendered.
-    /// </summary>
-    /// <summary>
-    /// This contains all the rendering state information that is needed by the
-    /// rendering device to properly render the associated.renderable. This should
-    /// be set by the camera and then appended to a render queue where it will be
-    /// sorted to minimize the state changes and finally rendered to the render
-    /// target that is currently active on the device.
-    /// </summary>
     public value struct RenderState
     {
     public:
@@ -50,9 +35,6 @@ namespace Flood
         int Priority;
     };
 
-    /// <summary>
-    /// Light properties that will be passed down to the renderer.
-    /// </summary>
     public value struct LightState
     {
     public:
@@ -62,10 +44,15 @@ namespace Flood
         Flood::Matrix4x4 Projection;
     };
 
-    public ref class RenderBlock
+    public ref class RenderBlock : ICppInstance
     {
     public:
         property ::RenderBlock* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         RenderBlock(::RenderBlock* native);
         RenderBlock(System::IntPtr native);
@@ -81,5 +68,7 @@ namespace Flood
             void set(System::Collections::Generic::List<Flood::LightState>^);
         }
         void AddState(Flood::RenderState renderState);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

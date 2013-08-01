@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Keyboard.h"
 #include "Device.h"
 #include "KeyboardEvents.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Keyboard::Keyboard(::Keyboard* native)
     : Flood::InputDevice(native)
@@ -44,7 +41,18 @@ void Flood::Keyboard::ResetKeys()
     ((::Keyboard*)NativePtr)->resetKeys();
 }
 
-System::Collections::Generic::List<bool>^ Flood::Keyboard::GetKeyState()
+bool Flood::Keyboard::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Keyboard::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::Collections::Generic::List<bool>^ Flood::Keyboard::KeyState::get()
 {
     auto &ret = ((::Keyboard*)NativePtr)->getKeyState();
     auto _tmpret = gcnew System::Collections::Generic::List<bool>();

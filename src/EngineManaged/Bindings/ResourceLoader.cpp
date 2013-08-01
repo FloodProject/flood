@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "ResourceLoader.h"
 #include "Extension.h"
 #include "Resource.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::ResourceLoadOption::ResourceLoadOption(::ResourceLoadOption* native)
 {
@@ -107,6 +104,27 @@ void Flood::ResourceStream::Reset()
     ((::ResourceStream*)NativePtr)->reset();
 }
 
+bool Flood::ResourceStream::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::ResourceStream::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::ResourceStream::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::ResourceStream::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::ResourceStream*)object.ToPointer();
+}
+
 Flood::ResourceLoader^ Flood::ResourceStream::Loader::get()
 {
     return gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
@@ -131,12 +149,6 @@ Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
 Flood::ResourceLoader::ResourceLoader()
     : Flood::Extension(nullptr)
 {
-}
-
-Flood::ExtensionMetadata Flood::ResourceLoader::GetMetadata()
-{
-    auto ret = ((::ResourceLoader*)NativePtr)->getMetadata();
-    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
 }
 
 Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
@@ -179,19 +191,36 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
     return ret;
 }
 
-System::String^ Flood::ResourceLoader::GetName()
+bool Flood::ResourceLoader::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::ResourceLoader::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+Flood::ExtensionMetadata Flood::ResourceLoader::Metadata::get()
+{
+    auto ret = ((::ResourceLoader*)NativePtr)->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
+}
+
+System::String^ Flood::ResourceLoader::Name::get()
 {
     auto ret = ((::ResourceLoader*)NativePtr)->getName();
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
-Flood::ResourceGroup Flood::ResourceLoader::GetResourceGroup()
+Flood::ResourceGroup Flood::ResourceLoader::ResourceGroup::get()
 {
     auto ret = ((::ResourceLoader*)NativePtr)->getResourceGroup();
     return (Flood::ResourceGroup)ret;
 }
 
-System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::GetExtensions()
+System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions::get()
 {
     auto &ret = ((::ResourceLoader*)NativePtr)->getExtensions();
     auto _tmpret = gcnew System::Collections::Generic::List<System::String^>();
@@ -203,7 +232,7 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::GetE
     return _tmpret;
 }
 
-System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions::get()
+System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions1::get()
 {
     auto _tmpExtensions = gcnew System::Collections::Generic::List<System::String^>();
     for(auto _element : ((::ResourceLoader*)NativePtr)->extensions)
@@ -214,7 +243,7 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Exte
     return _tmpExtensions;
 }
 
-void Flood::ResourceLoader::Extensions::set(System::Collections::Generic::List<System::String^>^ value)
+void Flood::ResourceLoader::Extensions1::set(System::Collections::Generic::List<System::String^>^ value)
 {
     auto _tmpvalue = std::vector<::String>();
     for each(System::String^ _element in value)

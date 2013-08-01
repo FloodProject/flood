@@ -5,16 +5,13 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "RenderTarget.h"
 #include "RenderContext.h"
 #include "RenderView.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Settings::Settings(::Settings* native)
 {
@@ -36,7 +33,7 @@ Flood::Settings::Settings(unsigned short width, unsigned short height)
     this->Height = _native.height;
 }
 
-Flood::Vector2i Flood::Settings::GetSize()
+Flood::Vector2i Flood::Settings::Size::get()
 {
     auto _this0 = ::Settings();
     _this0.width = (uint16)(*this).Width;
@@ -83,25 +80,47 @@ void Flood::RenderTarget::Update()
     ((::RenderTarget*)NativePtr)->update();
 }
 
-Flood::Settings Flood::RenderTarget::GetSettings()
+bool Flood::RenderTarget::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::RenderTarget::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::RenderTarget::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::RenderTarget::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::RenderTarget*)object.ToPointer();
+}
+
+Flood::Settings Flood::RenderTarget::Settings::get()
 {
     auto &ret = ((::RenderTarget*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&ret);
 }
 
-Flood::RenderContext^ Flood::RenderTarget::GetContext()
+Flood::RenderContext^ Flood::RenderTarget::Context::get()
 {
     auto ret = ((::RenderTarget*)NativePtr)->getContext();
     return gcnew Flood::RenderContext((::RenderContext*)ret);
 }
 
-void Flood::RenderTarget::SetContext(Flood::RenderContext^ context)
+void Flood::RenderTarget::Context::set(Flood::RenderContext^ value)
 {
+    auto context = value;
     auto arg0 = (::RenderContext*)context->NativePtr;
     ((::RenderTarget*)NativePtr)->setContext(arg0);
 }
 
-System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::GetViews()
+System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::Views::get()
 {
     auto &ret = ((::RenderTarget*)NativePtr)->getViews();
     auto _tmpret = gcnew System::Collections::Generic::List<Flood::RenderView^>();
@@ -113,14 +132,15 @@ System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::Get
     return _tmpret;
 }
 
-System::IntPtr Flood::RenderTarget::GetUserData()
+System::IntPtr Flood::RenderTarget::UserData::get()
 {
     auto ret = ((::RenderTarget*)NativePtr)->getUserData();
     return IntPtr(ret);
 }
 
-void Flood::RenderTarget::SetUserData(System::IntPtr v)
+void Flood::RenderTarget::UserData::set(System::IntPtr value)
 {
+    auto v = value;
     auto arg0 = v.ToPointer();
     ((::RenderTarget*)NativePtr)->setUserData(arg0);
 }

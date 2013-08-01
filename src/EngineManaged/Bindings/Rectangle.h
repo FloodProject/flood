@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/Rectangle.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -25,9 +25,6 @@ namespace Flood
         int Y;
         int Width;
         int Height;
-        /// <summary>
-        /// Returns true if this rectangle is contained in rect.
-        /// </summary>
         bool IsContainedIn(Flood::Rectangle rect);
     };
 
@@ -41,9 +38,6 @@ namespace Flood
         float Y;
         float Width;
         float Height;
-        /// <summary>
-        /// Returns true if this rectangle is contained in rect.
-        /// </summary>
         bool IsContainedIn(Flood::RectangleF rect);
     };
 }

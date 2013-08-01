@@ -5,17 +5,14 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Host.h"
 #include "Packet.h"
 #include "Peer.h"
-#include "ResourceHandle.h"
 #include "Session.h"
 #include "SessionManager.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Host::Host(::Host* native)
 {
@@ -53,6 +50,26 @@ bool Flood::Host::HasContext()
     return ret;
 }
 
+bool Flood::Host::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Host::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Host::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Host::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Host*)object.ToPointer();
+}
 void Flood::Host::PeerConnect::add(System::Action<Flood::Peer^>^ evt)
 {
     if (!_PeerConnectDelegateInstance)
@@ -69,14 +86,14 @@ void Flood::Host::PeerConnect::remove(System::Action<Flood::Peer^>^ evt)
     _PeerConnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Remove(_PeerConnect, evt));
 }
 
-void Flood::Host::PeerConnect::raise(Flood::Peer^ _1)
+void Flood::Host::PeerConnect::raise(Flood::Peer^ _0)
 {
-    _PeerConnect(_1);
+    _PeerConnect(_0);
 }
 
-void Flood::Host::_PeerConnectRaise(const ::PeerPtr& _1)
+void Flood::Host::_PeerConnectRaise(const ::PeerPtr& _0)
 {
-    PeerConnect::raise(gcnew Flood::Peer((::Peer*)_1.get()));
+    PeerConnect::raise(gcnew Flood::Peer((::Peer*)_0.get()));
 }
 
 void Flood::Host::PeerDisconnect::add(System::Action<Flood::Peer^>^ evt)
@@ -95,14 +112,14 @@ void Flood::Host::PeerDisconnect::remove(System::Action<Flood::Peer^>^ evt)
     _PeerDisconnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Remove(_PeerDisconnect, evt));
 }
 
-void Flood::Host::PeerDisconnect::raise(Flood::Peer^ _3)
+void Flood::Host::PeerDisconnect::raise(Flood::Peer^ _1)
 {
-    _PeerDisconnect(_3);
+    _PeerDisconnect(_1);
 }
 
-void Flood::Host::_PeerDisconnectRaise(const ::PeerPtr& _3)
+void Flood::Host::_PeerDisconnectRaise(const ::PeerPtr& _1)
 {
-    PeerDisconnect::raise(gcnew Flood::Peer((::Peer*)_3.get()));
+    PeerDisconnect::raise(gcnew Flood::Peer((::Peer*)_1.get()));
 }
 
 void Flood::Host::PeerPacket::add(System::Action<Flood::Peer^, Flood::Packet^, int>^ evt)
@@ -121,14 +138,14 @@ void Flood::Host::PeerPacket::remove(System::Action<Flood::Peer^, Flood::Packet^
     _PeerPacket = static_cast<System::Action<Flood::Peer^, Flood::Packet^, int>^>(System::Delegate::Remove(_PeerPacket, evt));
 }
 
-void Flood::Host::PeerPacket::raise(Flood::Peer^ _4, Flood::Packet^ _5, int _7)
+void Flood::Host::PeerPacket::raise(Flood::Peer^ _2, Flood::Packet^ _3, int _4)
 {
-    _PeerPacket(_4, _5, _7);
+    _PeerPacket(_2, _3, _4);
 }
 
-void Flood::Host::_PeerPacketRaise(const ::PeerPtr& _4, const ::PacketPtr& _5, int _7)
+void Flood::Host::_PeerPacketRaise(const ::PeerPtr& _2, const ::PacketPtr& _3, int _4)
 {
-    PeerPacket::raise(gcnew Flood::Peer((::Peer*)_4.get()), gcnew Flood::Packet((::Packet*)_5.get()), _7);
+    PeerPacket::raise(gcnew Flood::Peer((::Peer*)_2.get()), gcnew Flood::Packet((::Packet*)_3.get()), _4);
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)
@@ -182,13 +199,24 @@ bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
     return ret;
 }
 
-Flood::Peer^ Flood::HostClient::GetPeer()
+bool Flood::HostClient::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::HostClient::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+Flood::Peer^ Flood::HostClient::Peer::get()
 {
     auto ret = ((::HostClient*)NativePtr)->getPeer();
     return gcnew Flood::Peer((::Peer*)ret.get());
 }
 
-Flood::Session^ Flood::HostClient::GetSession()
+Flood::Session^ Flood::HostClient::Session::get()
 {
     auto ret = ((::HostClient*)NativePtr)->getSession();
     return gcnew Flood::Session((::Session*)ret);
@@ -216,7 +244,24 @@ bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
     return ret;
 }
 
-System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::GetPeers()
+Flood::HostServer::HostServer()
+    : Flood::Host(nullptr)
+{
+    NativePtr = new ::HostServer();
+}
+
+bool Flood::HostServer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::HostServer::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::Peers::get()
 {
     auto &ret = ((::HostServer*)NativePtr)->getPeers();
     auto _tmpret = gcnew System::Collections::Generic::List<Flood::Peer^>();
@@ -228,15 +273,9 @@ System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::GetPeers()
     return _tmpret;
 }
 
-Flood::SessionManager^ Flood::HostServer::GetSessionManager()
+Flood::SessionManager^ Flood::HostServer::SessionManager::get()
 {
     auto &ret = ((::HostServer*)NativePtr)->getSessionManager();
     return gcnew Flood::SessionManager((::SessionManager*)&ret);
-}
-
-Flood::HostServer::HostServer()
-    : Flood::Host(nullptr)
-{
-    NativePtr = new ::HostServer();
 }
 

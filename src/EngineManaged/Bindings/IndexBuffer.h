@@ -7,13 +7,12 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/IndexBuffer.h>
 #include "Buffer.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
-    ref class Buffer;
     ref class GeometryBuffer;
     ref class IndexBuffer;
 
@@ -28,5 +27,7 @@ namespace Flood
             bool get();
             void set(bool);
         }
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

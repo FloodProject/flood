@@ -7,19 +7,15 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Stream.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct StreamOpenMode;
     enum struct StreamSeekMode;
     ref class Allocator;
-    ref class FileStream;
 
-    /// <summary>
-    /// Use these for different kinds of access to the streams.
-    /// </summary>
     public enum struct StreamOpenMode
     {
         Read = 0,
@@ -27,14 +23,10 @@ namespace Flood
         Append = 2
     };
 
-    /// <summary>
-    /// Controls where the seeking will occur from.
-    /// </summary>
     public enum struct StreamSeekMode
     {
         Absolute = 0,
         Relative = 1,
         RelativeEnd = 2
     };
-
 }

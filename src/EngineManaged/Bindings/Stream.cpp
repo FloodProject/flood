@@ -5,12 +5,9 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Stream.h"
 #include "Memory.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 

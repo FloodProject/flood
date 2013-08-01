@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Serialization.h"
 #include "Memory.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::ReflectionHandleContext::ReflectionHandleContext(::ReflectionHandleContext* native)
 {
@@ -30,3 +27,23 @@ Flood::ReflectionHandleContext::ReflectionHandleContext()
     NativePtr = new ::ReflectionHandleContext();
 }
 
+bool Flood::ReflectionHandleContext::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::ReflectionHandleContext::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::ReflectionHandleContext::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::ReflectionHandleContext::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::ReflectionHandleContext*)object.ToPointer();
+}

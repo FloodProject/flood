@@ -7,9 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/Color.h>
-#include "RenderContext.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {

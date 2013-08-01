@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Packet.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Packet::Packet(::Packet* native)
 {
@@ -28,36 +25,6 @@ Flood::Packet::Packet(unsigned short id)
 {
     auto arg0 = (PacketId)(uint16)id;
     NativePtr = new ::Packet(arg0);
-}
-
-Flood::PacketFlags Flood::Packet::GetFlags()
-{
-    auto ret = ((::Packet*)NativePtr)->getFlags();
-    return (Flood::PacketFlags)ret;
-}
-
-void Flood::Packet::SetFlags(Flood::PacketFlags v)
-{
-    auto arg0 = (::PacketFlags)v;
-    ((::Packet*)NativePtr)->setFlags(arg0);
-}
-
-Flood::PacketFlags Flood::Packet::GetProcessedFlags()
-{
-    auto ret = ((::Packet*)NativePtr)->getProcessedFlags();
-    return (Flood::PacketFlags)ret;
-}
-
-void Flood::Packet::SetProcessedFlags(Flood::PacketFlags v)
-{
-    auto arg0 = (::PacketFlags)v;
-    ((::Packet*)NativePtr)->setProcessedFlags(arg0);
-}
-
-unsigned short Flood::Packet::GetId()
-{
-    auto ret = ((::Packet*)NativePtr)->getId();
-    return ret;
 }
 
 int Flood::Packet::Size()
@@ -95,10 +62,63 @@ System::Collections::Generic::List<unsigned char>^ Flood::Packet::Read()
     return _tmpret;
 }
 
+bool Flood::Packet::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Packet::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
 Flood::Packet^ Flood::Packet::Create(unsigned short id)
 {
     auto arg0 = (PacketId)(uint16)id;
     auto ret = ::PacketCreate(arg0);
     return gcnew Flood::Packet((::Packet*)ret.get());
+}
+
+System::IntPtr Flood::Packet::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Packet::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Packet*)object.ToPointer();
+}
+
+Flood::PacketFlags Flood::Packet::Flags::get()
+{
+    auto ret = ((::Packet*)NativePtr)->getFlags();
+    return (Flood::PacketFlags)ret;
+}
+
+void Flood::Packet::Flags::set(Flood::PacketFlags value)
+{
+    auto v = value;
+    auto arg0 = (::PacketFlags)v;
+    ((::Packet*)NativePtr)->setFlags(arg0);
+}
+
+Flood::PacketFlags Flood::Packet::ProcessedFlags::get()
+{
+    auto ret = ((::Packet*)NativePtr)->getProcessedFlags();
+    return (Flood::PacketFlags)ret;
+}
+
+void Flood::Packet::ProcessedFlags::set(Flood::PacketFlags value)
+{
+    auto v = value;
+    auto arg0 = (::PacketFlags)v;
+    ((::Packet*)NativePtr)->setProcessedFlags(arg0);
+}
+
+unsigned short Flood::Packet::Id::get()
+{
+    auto ret = ((::Packet*)NativePtr)->getId();
+    return ret;
 }
 

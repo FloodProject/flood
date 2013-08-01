@@ -5,16 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "TrueTypeFont.h"
 #include "Font.h"
-#include "Image.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::TrueTypeFont::TrueTypeFont(::TrueTypeFont* native)
     : Flood::Font(native)
@@ -61,6 +57,17 @@ Flood::Vector2 Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2, i
 {
     auto ret = ((::TrueTypeFont*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
     return Flood::Vector2((::Vector2*)&ret);
+}
+
+bool Flood::TrueTypeFont::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::TrueTypeFont::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 System::Collections::Generic::List<unsigned char>^ Flood::TrueTypeFont::Data::get()

@@ -5,17 +5,14 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "UniformBuffer.h"
 #include "Color.h"
 #include "Matrix4x3.h"
 #include "Matrix4x4.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::UniformBufferElement::UniformBufferElement(::UniformBufferElement* native)
 {
@@ -195,3 +192,23 @@ Flood::UniformBuffer::UniformBuffer()
     NativePtr = new ::UniformBuffer();
 }
 
+bool Flood::UniformBuffer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::UniformBuffer::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::UniformBuffer::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::UniformBuffer::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::UniformBuffer*)object.ToPointer();
+}

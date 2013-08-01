@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/RenderTarget.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -18,12 +18,6 @@ namespace Flood
     value struct Settings;
     value struct Vector2i;
 
-    /// <summary>
-    /// Render targets are surfaces where the rendered images can be stored and/or
-    /// displayed. The most common use is windows, but there are also FBOs, which
-    /// are basically offscreen buffers where you can render to. Each render target
-    /// mantains a list of viewports.
-    /// </summary>
     public value struct Settings
     {
     public:
@@ -32,17 +26,43 @@ namespace Flood
         Settings(unsigned short width, unsigned short height);
         unsigned short Width;
         unsigned short Height;
-        Flood::Vector2i GetSize();
+        property Flood::Vector2i Size
+        {
+            Flood::Vector2i get();
+        }
     };
 
-    public ref class RenderTarget
+    public ref class RenderTarget : ICppInstance
     {
     public:
         property ::RenderTarget* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
         RenderTarget();
+        property Flood::Settings Settings
+        {
+            Flood::Settings get();
+        }
+        property Flood::RenderContext^ Context
+        {
+            Flood::RenderContext^ get();
+            void set(Flood::RenderContext^);
+        }
+        property System::Collections::Generic::List<Flood::RenderView^>^ Views
+        {
+            System::Collections::Generic::List<Flood::RenderView^>^ get();
+        }
+        property System::IntPtr UserData
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
     private:
         delegate void _TargetResizeDelegate(const ::Settings& _0);
         _TargetResizeDelegate^ _TargetResizeDelegateInstance;
@@ -59,11 +79,7 @@ namespace Flood
         void RemoveViews();
         void MakeCurrent();
         void Update();
-        Flood::Settings GetSettings();
-        Flood::RenderContext^ GetContext();
-        void SetContext(Flood::RenderContext^ context);
-        System::Collections::Generic::List<Flood::RenderView^>^ GetViews();
-        System::IntPtr GetUserData();
-        void SetUserData(System::IntPtr v);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

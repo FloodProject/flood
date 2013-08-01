@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/RenderContext.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -36,17 +36,23 @@ namespace Flood
         unsigned short AntialiasLevel;
     };
 
-    /// <summary>
-    /// Represents a rendering context.
-    /// </summary>
-    public ref class RenderContext
+    public ref class RenderContext : ICppInstance
     {
     public:
         property ::RenderContext* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         RenderContext(::RenderContext* native);
         RenderContext(System::IntPtr native);
         RenderContext();
+        property Flood::RenderTarget^ Target
+        {
+            void set(Flood::RenderTarget^);
+        }
         property bool InitDone
         {
             bool get();
@@ -58,9 +64,10 @@ namespace Flood
             void set(Flood::RenderTarget^);
         }
         void MakeCurrent(Flood::RenderTarget^ target);
-        void SetTarget(Flood::RenderTarget^ target);
         void Init();
         void ResetState();
         Flood::Color GetPixel(unsigned short x, unsigned short y);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

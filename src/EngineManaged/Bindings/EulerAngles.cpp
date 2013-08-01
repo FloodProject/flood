@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "EulerAngles.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::EulerAngles::EulerAngles(::EulerAngles* native)
 {

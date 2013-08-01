@@ -7,10 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Graphics/GeometryBuffer.h>
-#include "Buffer.h"
-#include "ResourceHandle.h"
-#include "VertexBuffer.h"
 
 namespace Flood
 {
@@ -20,19 +18,38 @@ namespace Flood
     ref class GeometryBuffer;
     ref class VertexDeclaration;
 
-    /// <summary>
-    /// Represents a buffer with geometry data. You have to associate the vertex
-    /// data layout to the buffer so it can be used by the engine.
-    /// </summary>
-    public ref class GeometryBuffer
+    public ref class GeometryBuffer : ICppInstance
     {
     public:
         property ::GeometryBuffer* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         GeometryBuffer(::GeometryBuffer* native);
         GeometryBuffer(System::IntPtr native);
         GeometryBuffer();
         GeometryBuffer(Flood::BufferUsage _0, Flood::BufferAccess _1);
+        property Flood::BufferUsage BufferUsage
+        {
+            Flood::BufferUsage get();
+            void set(Flood::BufferUsage);
+        }
+        property Flood::BufferAccess BufferAccess
+        {
+            Flood::BufferAccess get();
+            void set(Flood::BufferAccess);
+        }
+        property unsigned int NumVertices
+        {
+            unsigned int get();
+        }
+        property unsigned int NumIndices
+        {
+            unsigned int get();
+        }
         property Flood::BufferUsage Usage
         {
             Flood::BufferUsage get();
@@ -73,10 +90,6 @@ namespace Flood
             Flood::VertexDeclaration^ get();
             void set(Flood::VertexDeclaration^);
         }
-        Flood::BufferUsage GetBufferUsage();
-        void SetBufferUsage(Flood::BufferUsage v);
-        Flood::BufferAccess GetBufferAccess();
-        void SetBufferAccess(Flood::BufferAccess v);
         void ForceRebuild();
         void Clear();
         void Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size);
@@ -88,8 +101,10 @@ namespace Flood
         bool IsIndexed();
         System::IntPtr GetAttribute(Flood::VertexAttribute _0, unsigned int i);
         char GetAttributeStride(Flood::VertexAttribute _0);
-        unsigned int GetNumVertices();
-        unsigned int GetNumIndices();
         void ClearIndexes();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
+        generic<typename T>
+        void Set(Flood::VertexAttribute attr, System::Collections::Generic::List<T>^ data);
     };
 }

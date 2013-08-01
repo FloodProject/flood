@@ -7,18 +7,14 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/EulerAngles.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     value struct EulerAngles;
     value struct Vector3;
 
-    /// <summary>
-    /// Representation of an orientation as a set of Euler angles that can be
-    /// transformed into and back in a rotation matrix and quaternions.
-    /// </summary>
     public value struct EulerAngles
     {
     public:

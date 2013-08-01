@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "GeometryBuffer.h"
 #include "Buffer.h"
-#include "ResourceHandle.h"
 #include "VertexBuffer.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::GeometryBuffer::GeometryBuffer(::GeometryBuffer* native)
 {
@@ -36,30 +33,6 @@ Flood::GeometryBuffer::GeometryBuffer(Flood::BufferUsage _0, Flood::BufferAccess
     auto arg0 = (::BufferUsage)_0;
     auto arg1 = (::BufferAccess)_1;
     NativePtr = new ::GeometryBuffer(arg0, arg1);
-}
-
-Flood::BufferUsage Flood::GeometryBuffer::GetBufferUsage()
-{
-    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferUsage();
-    return (Flood::BufferUsage)ret;
-}
-
-void Flood::GeometryBuffer::SetBufferUsage(Flood::BufferUsage v)
-{
-    auto arg0 = (::BufferUsage)v;
-    ((::GeometryBuffer*)NativePtr)->setBufferUsage(arg0);
-}
-
-Flood::BufferAccess Flood::GeometryBuffer::GetBufferAccess()
-{
-    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferAccess();
-    return (Flood::BufferAccess)ret;
-}
-
-void Flood::GeometryBuffer::SetBufferAccess(Flood::BufferAccess v)
-{
-    auto arg0 = (::BufferAccess)v;
-    ((::GeometryBuffer*)NativePtr)->setBufferAccess(arg0);
 }
 
 void Flood::GeometryBuffer::ForceRebuild()
@@ -135,21 +108,68 @@ char Flood::GeometryBuffer::GetAttributeStride(Flood::VertexAttribute _0)
     return ret;
 }
 
-unsigned int Flood::GeometryBuffer::GetNumVertices()
+void Flood::GeometryBuffer::ClearIndexes()
+{
+    ((::GeometryBuffer*)NativePtr)->clearIndexes();
+}
+
+bool Flood::GeometryBuffer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::GeometryBuffer::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::GeometryBuffer::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::GeometryBuffer::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::GeometryBuffer*)object.ToPointer();
+}
+
+Flood::BufferUsage Flood::GeometryBuffer::BufferUsage::get()
+{
+    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferUsage();
+    return (Flood::BufferUsage)ret;
+}
+
+void Flood::GeometryBuffer::BufferUsage::set(Flood::BufferUsage value)
+{
+    auto v = value;
+    auto arg0 = (::BufferUsage)v;
+    ((::GeometryBuffer*)NativePtr)->setBufferUsage(arg0);
+}
+
+Flood::BufferAccess Flood::GeometryBuffer::BufferAccess::get()
+{
+    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferAccess();
+    return (Flood::BufferAccess)ret;
+}
+
+void Flood::GeometryBuffer::BufferAccess::set(Flood::BufferAccess value)
+{
+    auto v = value;
+    auto arg0 = (::BufferAccess)v;
+    ((::GeometryBuffer*)NativePtr)->setBufferAccess(arg0);
+}
+
+unsigned int Flood::GeometryBuffer::NumVertices::get()
 {
     auto ret = ((::GeometryBuffer*)NativePtr)->getNumVertices();
     return ret;
 }
 
-unsigned int Flood::GeometryBuffer::GetNumIndices()
+unsigned int Flood::GeometryBuffer::NumIndices::get()
 {
     auto ret = ((::GeometryBuffer*)NativePtr)->getNumIndices();
     return ret;
-}
-
-void Flood::GeometryBuffer::ClearIndexes()
-{
-    ((::GeometryBuffer*)NativePtr)->clearIndexes();
 }
 
 Flood::BufferUsage Flood::GeometryBuffer::Usage::get()
@@ -254,5 +274,11 @@ Flood::VertexDeclaration^ Flood::GeometryBuffer::Declarations::get()
 void Flood::GeometryBuffer::Declarations::set(Flood::VertexDeclaration^ value)
 {
     ((::GeometryBuffer*)NativePtr)->declarations = *(::VertexDeclaration*)value->NativePtr;
+}
+
+generic<typename T>
+void Flood::GeometryBuffer::Set(Flood::VertexAttribute attr, System::Collections::Generic::List<T>^ data)
+{
+   // Not binded
 }
 

@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/Matrix4x4.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -17,13 +17,6 @@ namespace Flood
     value struct Vector3;
     value struct Vector4;
 
-    /// <summary>
-    /// Implements a 4x4 transformation matrix that can represent the full range of
-    /// types of operations that can be used in computer graphics. Usually you just
-    /// want to use the 4x3 because it suffices for the most common operations,
-    /// like translation, rotation and scaling, but in the case of projections a
-    /// full 4x4 matrix is needed.
-    /// </summary>
     public value struct Matrix4x4
     {
     public:

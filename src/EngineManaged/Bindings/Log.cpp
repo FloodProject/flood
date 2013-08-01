@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Log.h"
 #include "Memory.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
@@ -43,6 +40,17 @@ Flood::Log::Log(System::IntPtr native)
 Flood::Log::Log()
 {
     NativePtr = new ::Log();
+}
+
+bool Flood::Log::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Log::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 void Flood::Log::Destroy()
@@ -123,6 +131,15 @@ void Flood::Log::Assert(System::String^ msg)
     ::LogAssert(arg0);
 }
 
+System::IntPtr Flood::Log::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Log::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Log*)object.ToPointer();
+}
 void Flood::Log::Handlers::add(System::Action<Flood::LogEntry>^ evt)
 {
     if (!_HandlersDelegateInstance)
@@ -139,13 +156,13 @@ void Flood::Log::Handlers::remove(System::Action<Flood::LogEntry>^ evt)
     _Handlers = static_cast<System::Action<Flood::LogEntry>^>(System::Delegate::Remove(_Handlers, evt));
 }
 
-void Flood::Log::Handlers::raise(Flood::LogEntry _1)
+void Flood::Log::Handlers::raise(Flood::LogEntry _0)
 {
-    _Handlers(_1);
+    _Handlers(_0);
 }
 
-void Flood::Log::_HandlersRaise(::LogEntry* _1)
+void Flood::Log::_HandlersRaise(::LogEntry* _0)
 {
-    Handlers::raise(Flood::LogEntry((::LogEntry*)_1));
+    Handlers::raise(Flood::LogEntry((::LogEntry*)_0));
 }
 

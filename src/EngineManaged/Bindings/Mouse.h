@@ -7,16 +7,14 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Input/Mouse.h>
 #include "Device.h"
-#include "MouseEvents.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct InputDeviceType;
     enum struct MouseButton : unsigned char;
-    ref class InputDevice;
     ref class InputEvent;
     ref class Mouse;
     ref class MouseButtonEvent;
@@ -25,13 +23,15 @@ namespace Flood
     ref class MouseMoveEvent;
     ref class MouseWheelEvent;
 
-    /// <summary>
-    /// Holds the mouse state.
-    /// </summary>
-    public ref class MouseInfo
+    public ref class MouseInfo : ICppInstance
     {
     public:
         property ::MouseInfo* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         MouseInfo(::MouseInfo* native);
         MouseInfo(System::IntPtr native);
@@ -76,6 +76,8 @@ namespace Flood
             bool get();
             void set(bool);
         }
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
     public ref class Mouse : Flood::InputDevice
@@ -84,6 +86,14 @@ namespace Flood
         Mouse(::Mouse* native);
         Mouse(System::IntPtr native);
         Mouse();
+        property Flood::MouseInfo^ MouseInfo
+        {
+            Flood::MouseInfo^ get();
+        }
+        property Flood::InputDeviceType Type
+        {
+            Flood::InputDeviceType get();
+        }
     private:
         delegate void _MouseMoveDelegate(const ::MouseMoveEvent& _0);
         _MouseMoveDelegate^ _MouseMoveDelegateInstance;
@@ -170,7 +180,7 @@ namespace Flood
         }
         bool IsButtonPressed(Flood::MouseButton button);
         void ProcessEvent(Flood::InputEvent^ event);
-        Flood::MouseInfo^ GetMouseInfo();
-        Flood::InputDeviceType GetType();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

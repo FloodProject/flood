@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Network/Session.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -17,33 +17,33 @@ namespace Flood
     ref class Peer;
     ref class Session;
 
-    /// <summary>
-    /// Enumerates all the states a network session can be.
-    /// </summary>
     public enum struct SessionState
     {
         Closed = 0,
         Open = 1
     };
 
-    /// <summary>
-    /// Sessions are higher-level than peers. They allow for example for peers to
-    /// reconnect to their game even if their connection drops. Sessions will be
-    /// usually terminated when a timeout expires or if the peer explicitly
-    /// terminates their connection.
-    /// </summary>
-    public ref class Session
+    public ref class Session : ICppInstance
     {
     public:
         property ::Session* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Session(::Session* native);
         Session(System::IntPtr native);
         Session();
+        property Flood::SessionState State
+        {
+            Flood::SessionState get();
+        }
     private:
-        delegate void _StateChangeDelegate(SessionState _0);
+        delegate void _StateChangeDelegate(::SessionState _0);
         _StateChangeDelegate^ _StateChangeDelegateInstance;
-        void _StateChangeRaise(SessionState _0);
+        void _StateChangeRaise(::SessionState _0);
         System::Action<Flood::SessionState>^ _StateChange;
     public:
         event System::Action<Flood::SessionState>^ StateChange
@@ -64,6 +64,7 @@ namespace Flood
             void remove(System::Action<Flood::Packet^, int>^ evt);
             void raise(Flood::Packet^ _1, int _0);
         }
-        Flood::SessionState GetState();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/Matrix4x3.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -17,10 +17,6 @@ namespace Flood
     value struct Quaternion;
     value struct Vector3;
 
-    /// <summary>
-    /// Implements a 4x3 transformation matrix. This class can represent any 3D
-    /// affine transformation, like scaling, translation, rotation, shearing, etc.
-    /// </summary>
     public value struct Matrix4x3
     {
     public:

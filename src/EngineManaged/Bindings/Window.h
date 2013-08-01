@@ -7,19 +7,17 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Window/Window.h>
 #include "RenderTarget.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct WindowStyles;
     ref class InputManager;
     ref class RenderContext;
-    ref class RenderTarget;
     ref class Window;
     value struct RenderContextSettings;
-    value struct Settings;
     value struct Vector2i;
     value struct WindowSettings;
 
@@ -45,17 +43,36 @@ namespace Flood
         Flood::WindowStyles Styles;
     };
 
-    /// <summary>
-    /// In most platforms (PCs) this will be just a normal window on the desktop,
-    /// but on some platforms (consoles, for instance) this might be slighty
-    /// different, so some methods might not make much sense.
-    /// </summary>
     public ref class Window : Flood::RenderTarget
     {
     public:
         Window(::Window* native);
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
+        property System::String^ Title
+        {
+            void set(System::String^);
+        }
+        property bool CursorVisible
+        {
+            void set(bool);
+        }
+        property bool CursorCapture
+        {
+            void set(bool);
+        }
+        property Flood::Vector2i CursorPosition
+        {
+            Flood::Vector2i get();
+        }
+        property Flood::InputManager^ Input
+        {
+            Flood::InputManager^ get();
+        }
+        property Flood::Settings Settings
+        {
+            Flood::Settings get();
+        }
     private:
         delegate void _WindowCloseDelegate();
         _WindowCloseDelegate^ _WindowCloseDelegateInstance;
@@ -69,30 +86,26 @@ namespace Flood
             void raise();
         }
     private:
-        delegate void _WindowFocusChangeDelegate(bool _2);
+        delegate void _WindowFocusChangeDelegate(bool _0);
         _WindowFocusChangeDelegate^ _WindowFocusChangeDelegateInstance;
-        void _WindowFocusChangeRaise(bool _2);
+        void _WindowFocusChangeRaise(bool _0);
         System::Action<bool>^ _WindowFocusChange;
     public:
         event System::Action<bool>^ WindowFocusChange
         {
             void add(System::Action<bool>^ evt);
             void remove(System::Action<bool>^ evt);
-            void raise(bool _2);
+            void raise(bool _0);
         }
         Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
         void Update();
         void MakeCurrent();
         void Show(bool visible);
         bool PumpEvents();
-        void SetTitle(System::String^ title);
-        void SetCursorVisible(bool state);
         bool IsCursorVisible();
-        void SetCursorCapture(bool state);
-        Flood::Vector2i GetCursorPosition();
         void SetCursorPosition(int x, int y);
         bool HasFocus();
-        Flood::InputManager^ GetInput();
-        Flood::Settings GetSettings();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

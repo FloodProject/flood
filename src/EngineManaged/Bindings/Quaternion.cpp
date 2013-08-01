@@ -5,15 +5,12 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Quaternion.h"
 #include "EulerAngles.h"
-#include "ResourceHandle.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Quaternion::Quaternion(::Quaternion* native)
 {
@@ -211,48 +208,6 @@ void Flood::Quaternion::Normalize()
     W = _this0.w;
 }
 
-void Flood::Quaternion::SetToRotateAboutX(float theta)
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    _this0.setToRotateAboutX(theta);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-}
-
-void Flood::Quaternion::SetToRotateAboutY(float theta)
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    _this0.setToRotateAboutY(theta);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-}
-
-void Flood::Quaternion::SetToRotateAboutZ(float theta)
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    _this0.setToRotateAboutZ(theta);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-}
-
 void Flood::Quaternion::SetToRotateAboutAxis(Flood::Vector3 axis, float theta)
 {
     auto _this0 = ::Quaternion();
@@ -287,36 +242,6 @@ float Flood::Quaternion::SafeAcos(float x)
     return ret;
 }
 
-float Flood::Quaternion::GetRotationAngle()
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    auto ret = _this0.getRotationAngle();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-    return ret;
-}
-
-Flood::Vector3 Flood::Quaternion::GetRotationAxis()
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    auto ret = _this0.getRotationAxis();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-    return Flood::Vector3((::Vector3*)&ret);
-}
-
 float Flood::Quaternion::Dot(Flood::Quaternion a)
 {
     auto _this0 = ::Quaternion();
@@ -338,21 +263,6 @@ float Flood::Quaternion::Dot(Flood::Quaternion a)
     return ret;
 }
 
-Flood::EulerAngles Flood::Quaternion::GetEulerAngles()
-{
-    auto _this0 = ::Quaternion();
-    _this0.x = (*this).X;
-    _this0.y = (*this).Y;
-    _this0.z = (*this).Z;
-    _this0.w = (*this).W;
-    auto ret = _this0.getEulerAngles();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
-    return Flood::EulerAngles((::EulerAngles*)&ret);
-}
-
 Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
 {
     auto _this0 = ::Quaternion();
@@ -372,6 +282,96 @@ Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
     Z = _this0.z;
     W = _this0.w;
     return Flood::Quaternion((::Quaternion*)&ret);
+}
+
+void Flood::Quaternion::ToRotateAboutX::set(float value)
+{
+    auto theta = value;
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    _this0.setToRotateAboutX(theta);
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+}
+
+void Flood::Quaternion::ToRotateAboutY::set(float value)
+{
+    auto theta = value;
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    _this0.setToRotateAboutY(theta);
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+}
+
+void Flood::Quaternion::ToRotateAboutZ::set(float value)
+{
+    auto theta = value;
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    _this0.setToRotateAboutZ(theta);
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+}
+
+float Flood::Quaternion::RotationAngle::get()
+{
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    auto ret = _this0.getRotationAngle();
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+    return ret;
+}
+
+Flood::Vector3 Flood::Quaternion::RotationAxis::get()
+{
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    auto ret = _this0.getRotationAxis();
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+    return Flood::Vector3((::Vector3*)&ret);
+}
+
+Flood::EulerAngles Flood::Quaternion::EulerAngles::get()
+{
+    auto _this0 = ::Quaternion();
+    _this0.x = (*this).X;
+    _this0.y = (*this).Y;
+    _this0.z = (*this).Z;
+    _this0.w = (*this).W;
+    auto ret = _this0.getEulerAngles();
+    X = _this0.x;
+    Y = _this0.y;
+    Z = _this0.z;
+    W = _this0.w;
+    return Flood::EulerAngles((::EulerAngles*)&ret);
 }
 
 Flood::Quaternion Flood::Quaternion::Identity::get()

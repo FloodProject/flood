@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Log.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -40,26 +40,33 @@ namespace Flood
         Flood::LogLevel Level;
     };
 
-    public ref class Log
+    public ref class Log : ICppInstance
     {
     public:
         property ::Log* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         Log(::Log* native);
         Log(System::IntPtr native);
         Log();
     private:
-        delegate void _HandlersDelegate(::LogEntry* _1);
+        delegate void _HandlersDelegate(::LogEntry* _0);
         _HandlersDelegate^ _HandlersDelegateInstance;
-        void _HandlersRaise(::LogEntry* _1);
+        void _HandlersRaise(::LogEntry* _0);
         System::Action<Flood::LogEntry>^ _Handlers;
     public:
         event System::Action<Flood::LogEntry>^ Handlers
         {
             void add(System::Action<Flood::LogEntry>^ evt);
             void remove(System::Action<Flood::LogEntry>^ evt);
-            void raise(Flood::LogEntry _1);
+            void raise(Flood::LogEntry _0);
         }
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
         void Destroy();
         void AddHandler(Flood::LogFunction^ _1);
         void RemoveHandler(Flood::LogFunction^ _1);

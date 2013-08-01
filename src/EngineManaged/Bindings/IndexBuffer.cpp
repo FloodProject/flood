@@ -5,15 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "IndexBuffer.h"
-#include "Buffer.h"
 #include "GeometryBuffer.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::IndexBuffer::IndexBuffer(::IndexBuffer* native)
     : Flood::Buffer(native)
@@ -30,6 +26,17 @@ Flood::IndexBuffer::IndexBuffer()
     : Flood::Buffer(nullptr)
 {
     NativePtr = new ::IndexBuffer();
+}
+
+bool Flood::IndexBuffer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::IndexBuffer::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 bool Flood::IndexBuffer::IsBuilt::get()

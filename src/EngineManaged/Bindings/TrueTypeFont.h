@@ -7,24 +7,19 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Resources/TrueTypeFont.h>
 #include "Font.h"
+#include "Image.h"
 #include "ResourceHandle.h"
 
 namespace Flood
 {
-    ref class Font;
     ref class FontInfo;
-    ref class Image;
     ref class TrueTypeFont;
     value struct Glyph;
     value struct Vector2;
 
-    /// <summary>
-    /// Represents a TrueType font resource. Loads a TTF font using the
-    /// cross-platform FreeType library. Parses all the font glyphs of a size, and
-    /// packs them all into a big texture (texture atlas) for rendering.
-    /// </summary>
     public ref class TrueTypeFont : Flood::Font
     {
     public:
@@ -40,5 +35,7 @@ namespace Flood
         bool GetGlyphInfo(int codepoint, int size, Flood::Glyph glyph);
         Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size);
         Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

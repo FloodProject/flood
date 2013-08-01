@@ -5,13 +5,10 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Device.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::InputEvent::InputEvent(::InputEvent* native)
 {
@@ -28,6 +25,27 @@ Flood::InputEvent::InputEvent(Flood::InputDeviceType _0)
 {
     auto arg0 = (::InputDeviceType)_0;
     NativePtr = new ::InputEvent(arg0);
+}
+
+bool Flood::InputEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::InputEvent::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::InputEvent::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::InputEvent::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::InputEvent*)object.ToPointer();
 }
 
 Flood::InputDeviceType Flood::InputEvent::DeviceType::get()
@@ -61,7 +79,28 @@ void Flood::InputDevice::ProcessEvent(Flood::InputEvent^ event)
     ((::InputDevice*)NativePtr)->processEvent(arg0);
 }
 
-Flood::InputDeviceType Flood::InputDevice::GetType()
+bool Flood::InputDevice::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::InputDevice::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::InputDevice::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::InputDevice::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::InputDevice*)object.ToPointer();
+}
+
+Flood::InputDeviceType Flood::InputDevice::Type::get()
 {
     auto ret = ((::InputDevice*)NativePtr)->getType();
     return (Flood::InputDeviceType)ret;

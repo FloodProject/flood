@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "WindowManager.h"
-#include "ResourceHandle.h"
 #include "Window.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::WindowManager::WindowManager(::WindowManager* native)
 {
@@ -46,6 +43,27 @@ Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings
 void Flood::WindowManager::DestroyWindows()
 {
     ((::WindowManager*)NativePtr)->destroyWindows();
+}
+
+bool Flood::WindowManager::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::WindowManager::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::WindowManager::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::WindowManager::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::WindowManager*)object.ToPointer();
 }
 
 System::Collections::Generic::List<Flood::Window^>^ Flood::WindowManager::Windows::get()

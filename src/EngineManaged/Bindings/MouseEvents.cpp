@@ -5,15 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "MouseEvents.h"
-#include "Device.h"
 #include "Mouse.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::MouseEvent::MouseEvent(::MouseEvent* native)
     : Flood::InputEvent(native)
@@ -31,6 +27,17 @@ Flood::MouseEvent::MouseEvent(Flood::MouseEventType eventType)
 {
     auto arg0 = (::MouseEventType)eventType;
     NativePtr = new ::MouseEvent(arg0);
+}
+
+bool Flood::MouseEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseEvent::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 Flood::MouseEventType Flood::MouseEvent::EventType::get()
@@ -58,6 +65,17 @@ Flood::MouseMoveEvent::MouseMoveEvent()
     : Flood::MouseEvent(nullptr)
 {
     NativePtr = new ::MouseMoveEvent();
+}
+
+bool Flood::MouseMoveEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseMoveEvent::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 short Flood::MouseMoveEvent::X::get()
@@ -95,6 +113,17 @@ Flood::MouseDragEvent::MouseDragEvent()
     : Flood::MouseEvent(nullptr)
 {
     NativePtr = new ::MouseDragEvent();
+}
+
+bool Flood::MouseDragEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseDragEvent::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 short Flood::MouseDragEvent::Dx::get()
@@ -183,6 +212,17 @@ bool Flood::MouseButtonEvent::IsMiddleButton()
     return ret;
 }
 
+bool Flood::MouseButtonEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseButtonEvent::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
 short Flood::MouseButtonEvent::X::get()
 {
     return ((::MouseButtonEvent*)NativePtr)->x;
@@ -228,6 +268,17 @@ Flood::MouseWheelEvent::MouseWheelEvent()
     : Flood::MouseEvent(nullptr)
 {
     NativePtr = new ::MouseWheelEvent();
+}
+
+bool Flood::MouseWheelEvent::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::MouseWheelEvent::GetHashCode()
+{
+    return (int)NativePtr;
 }
 
 short Flood::MouseWheelEvent::Delta::get()

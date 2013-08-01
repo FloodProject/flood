@@ -7,15 +7,13 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Resources/ResourceLoader.h>
 #include "Extension.h"
-#include "Resource.h"
-#include "ResourceHandle.h"
 
 namespace Flood
 {
     enum struct ResourceGroup;
-    ref class Extension;
     ref class Resource;
     ref class ResourceLoader;
     ref class ResourceStream;
@@ -48,10 +46,15 @@ namespace Flood
         void AddOption(int key, int value);
     };
 
-    public ref class ResourceStream
+    public ref class ResourceStream : ICppInstance
     {
     public:
         property ::ResourceStream* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         ResourceStream(::ResourceStream* native);
         ResourceStream(System::IntPtr native);
@@ -63,30 +66,40 @@ namespace Flood
         }
         int Decode(System::IntPtr buffer, unsigned int size);
         void Reset();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 
-    /// <summary>
-    /// Resource loaders decode resource data into a proper resource. This is an
-    /// interface that should be implemented to provide the resource codec services
-    /// for the formats handled by the loader. The loader also provides the
-    /// extensions of those formats.
-    /// </summary>
     public ref class ResourceLoader : Flood::Extension
     {
     public:
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
         ResourceLoader();
+        property Flood::ExtensionMetadata Metadata
+        {
+            Flood::ExtensionMetadata get();
+        }
+        property System::String^ Name
+        {
+            System::String^ get();
+        }
+        property Flood::ResourceGroup ResourceGroup
+        {
+            Flood::ResourceGroup get();
+        }
         property System::Collections::Generic::List<System::String^>^ Extensions
+        {
+            System::Collections::Generic::List<System::String^>^ get();
+        }
+        property System::Collections::Generic::List<System::String^>^ Extensions1
         {
             System::Collections::Generic::List<System::String^>^ get();
             void set(System::Collections::Generic::List<System::String^>^);
         }
-        Flood::ExtensionMetadata GetMetadata();
         Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
         bool Decode(Flood::ResourceLoadOptions _0);
-        System::String^ GetName();
-        Flood::ResourceGroup GetResourceGroup();
-        System::Collections::Generic::List<System::String^>^ GetExtensions();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

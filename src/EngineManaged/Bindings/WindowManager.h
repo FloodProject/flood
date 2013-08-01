@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Engine/Window/WindowManager.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -16,13 +16,15 @@ namespace Flood
     ref class WindowManager;
     value struct WindowSettings;
 
-    /// <summary>
-    /// Window manager manages windows (Windows baby!).
-    /// </summary>
-    public ref class WindowManager
+    public ref class WindowManager : ICppInstance
     {
     public:
         property ::WindowManager* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         WindowManager(::WindowManager* native);
         WindowManager(System::IntPtr native);
@@ -34,5 +36,7 @@ namespace Flood
         }
         Flood::Window^ CreateWindow(Flood::WindowSettings settings);
         void DestroyWindows();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
 }

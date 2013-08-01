@@ -5,14 +5,11 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "Buffer.h"
 #include "GeometryBuffer.h"
-#include "ResourceHandle.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::Buffer::Buffer(::Buffer* native)
 {
@@ -37,38 +34,62 @@ Flood::Buffer::Buffer(Flood::BufferUsage usage, Flood::BufferAccess access)
     NativePtr = new ::Buffer(arg0, arg1);
 }
 
-Flood::BufferUsage Flood::Buffer::GetBufferUsage()
+bool Flood::Buffer::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::Buffer::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::Buffer::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::Buffer::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::Buffer*)object.ToPointer();
+}
+
+Flood::BufferUsage Flood::Buffer::BufferUsage::get()
 {
     auto ret = ((::Buffer*)NativePtr)->getBufferUsage();
     return (Flood::BufferUsage)ret;
 }
 
-void Flood::Buffer::SetBufferUsage(Flood::BufferUsage v)
+void Flood::Buffer::BufferUsage::set(Flood::BufferUsage value)
 {
+    auto v = value;
     auto arg0 = (::BufferUsage)v;
     ((::Buffer*)NativePtr)->setBufferUsage(arg0);
 }
 
-Flood::BufferAccess Flood::Buffer::GetBufferAccess()
+Flood::BufferAccess Flood::Buffer::BufferAccess::get()
 {
     auto ret = ((::Buffer*)NativePtr)->getBufferAccess();
     return (Flood::BufferAccess)ret;
 }
 
-void Flood::Buffer::SetBufferAccess(Flood::BufferAccess v)
+void Flood::Buffer::BufferAccess::set(Flood::BufferAccess value)
 {
+    auto v = value;
     auto arg0 = (::BufferAccess)v;
     ((::Buffer*)NativePtr)->setBufferAccess(arg0);
 }
 
-Flood::GeometryBuffer^ Flood::Buffer::GetGeometryBuffer()
+Flood::GeometryBuffer^ Flood::Buffer::GeometryBuffer::get()
 {
     auto ret = ((::Buffer*)NativePtr)->getGeometryBuffer();
     return gcnew Flood::GeometryBuffer((::GeometryBuffer*)ret);
 }
 
-void Flood::Buffer::SetGeometryBuffer(Flood::GeometryBuffer^ v)
+void Flood::Buffer::GeometryBuffer::set(Flood::GeometryBuffer^ value)
 {
+    auto v = value;
     auto arg0 = (::GeometryBuffer*)v->NativePtr;
     ((::Buffer*)NativePtr)->setGeometryBuffer(arg0);
 }

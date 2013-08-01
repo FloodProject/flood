@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Math/Quaternion.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -28,6 +28,30 @@ namespace Flood
         float Y;
         float Z;
         float W;
+        property float ToRotateAboutX
+        {
+            void set(float);
+        }
+        property float ToRotateAboutY
+        {
+            void set(float);
+        }
+        property float ToRotateAboutZ
+        {
+            void set(float);
+        }
+        property float RotationAngle
+        {
+            float get();
+        }
+        property Flood::Vector3 RotationAxis
+        {
+            Flood::Vector3 get();
+        }
+        property Flood::EulerAngles EulerAngles
+        {
+            Flood::EulerAngles get();
+        }
         bool operator==(Flood::Quaternion q);
         bool operator!=(Flood::Quaternion q);
         void SetIdentity();
@@ -36,15 +60,9 @@ namespace Flood
         Flood::Quaternion operator*=(Flood::Quaternion a);
         float Magnitude();
         void Normalize();
-        void SetToRotateAboutX(float theta);
-        void SetToRotateAboutY(float theta);
-        void SetToRotateAboutZ(float theta);
         void SetToRotateAboutAxis(Flood::Vector3 axis, float theta);
         float SafeAcos(float x);
-        float GetRotationAngle();
-        Flood::Vector3 GetRotationAxis();
         float Dot(Flood::Quaternion a);
-        Flood::EulerAngles GetEulerAngles();
         Flood::Quaternion Slerp(Flood::Quaternion q, float t);
         static property Flood::Quaternion Identity
         {

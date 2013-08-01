@@ -5,18 +5,13 @@
 *
 ************************************************************************/
 
-#include "_Marshal.h"
 #include "RenderQueue.h"
 #include "Material.h"
-#include "Matrix4x3.h"
-#include "Matrix4x4.h"
 #include "RenderBatch.h"
-#include "ResourceHandle.h"
 #include "Texture.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
-using namespace clix;
 
 Flood::RenderState::RenderState(::RenderState* native)
 {
@@ -97,6 +92,27 @@ void Flood::RenderBlock::AddState(Flood::RenderState renderState)
 Flood::RenderBlock::RenderBlock()
 {
     NativePtr = new ::RenderBlock();
+}
+
+bool Flood::RenderBlock::Equals(System::Object^ object)
+{
+    if (!object) return false;
+    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+}
+
+int Flood::RenderBlock::GetHashCode()
+{
+    return (int)NativePtr;
+}
+
+System::IntPtr Flood::RenderBlock::Instance::get()
+{
+    return System::IntPtr(NativePtr);
+}
+
+void Flood::RenderBlock::Instance::set(System::IntPtr object)
+{
+    NativePtr = (::RenderBlock*)object.ToPointer();
 }
 
 System::Collections::Generic::List<Flood::RenderState>^ Flood::RenderBlock::Renderables::get()

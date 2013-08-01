@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "CppSharp.h"
 #include <Core/Serialization.h>
-#include "ResourceHandle.h"
 
 namespace Flood
 {
@@ -29,14 +29,20 @@ namespace Flood
         ElementEnd = 4
     };
 
-    public ref class ReflectionHandleContext
+    public ref class ReflectionHandleContext : ICppInstance
     {
     public:
         property ::ReflectionHandleContext* NativePtr;
+        property System::IntPtr Instance
+        {
+            virtual System::IntPtr get();
+            virtual void set(System::IntPtr instance);
+        }
 
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
         ReflectionHandleContext();
+        virtual bool Equals(System::Object^ object) override;
+        virtual int GetHashCode() override;
     };
-
 }
