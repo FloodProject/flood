@@ -17,8 +17,8 @@ namespace Flood.GUI.Skins.Texturing
         {
             this._imageHandle = imageHandle;
 
-            float texw = imageHandle.Resolve().GetWidth();
-            float texh = imageHandle.Resolve().GetHeight();
+            float texw = imageHandle.Resolve().Width;
+            float texh = imageHandle.Resolve().Height;
 
             m_uv = new float[4];
             m_uv[0] = x / texw;

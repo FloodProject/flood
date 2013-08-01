@@ -59,7 +59,7 @@ namespace Flood.Editor.Client
         {
             var materialHandle = Material.Create(Allocator.GetHeap(), "GwenGui");
             var mat = materialHandle.Resolve();
-            mat.SetBackfaceCulling(false);
+            mat.BackfaceCulling = false;
             mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
 
             if (imageHandle.Id == ResourceHandle<Image>.Invalid)
@@ -70,7 +70,7 @@ namespace Flood.Editor.Client
             {
                 mat.SetShader("TexColor");
                 mat.SetTexture(0, imageHandle);
-                mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.Clamp);
+                mat.GetTextureUnit(0).WrapMode = TextureWrapMode.Clamp;
             }
 
             return materialHandle;
@@ -182,7 +182,7 @@ namespace Flood.Editor.Client
         protected void AddQuad(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr v4, uint structSize, ResourceHandle<Material> materialHandle)
         {
             var batchInfo = GetCreateBatchInfo(materialHandle);
-            batchInfo.Ranges.Add((int) gb.GetNumVertices());
+            batchInfo.Ranges.Add((int) gb.NumVertices);
 
             gb.Add(v1, structSize);
             gb.Add(v2, structSize);
@@ -197,7 +197,7 @@ namespace Flood.Editor.Client
                 if (batch.Ranges.Count > 0)
                 {
                     RenderBatchRange newRange;
-                    newRange.Start = (ushort)gb.GetNumIndices();
+                    newRange.Start = (ushort)gb.NumIndices;
 
                     foreach (var range in batch.Ranges)
                     {
@@ -208,7 +208,7 @@ namespace Flood.Editor.Client
                         gb.AddIndex(vertexIndex);
                     }
 
-                    newRange.End = (ushort)gb.GetNumIndices();
+                    newRange.End = (ushort)gb.NumIndices;
                     batch.Batch.Range = newRange;
 
                     var state = new RenderState(batch.Batch);
@@ -246,11 +246,13 @@ namespace Flood.Editor.Client
         {
             if (!batches.ContainsKey(materialHandle.Id))
             {
-                var batch = new RenderBatch();
-                batch.SetGeometryBuffer(gb);
-                batch.SetRenderLayer(RenderLayer.Overlays);
-                batch.SetPrimitiveType(PrimitiveType.Quads);
-                batch.SetMaterial(materialHandle);
+                var batch = new RenderBatch
+                {
+                    GeometryBuffer = gb,
+                    RenderLayer = RenderLayer.Overlays,
+                    PrimitiveType = PrimitiveType.Quads,
+                    Material = materialHandle
+                };
 
                 var batchInfo = new BatchInfo {Batch = batch, Ranges = new List<int>()};
                 batches[materialHandle.Id] = batchInfo;
@@ -276,11 +278,11 @@ namespace Flood.Editor.Client
 
             textMaterial = Material.Create(Allocator.GetHeap(), "TextMaterial");
             var mat = textMaterial.Resolve();
-            mat.SetBackfaceCulling(false);
+            mat.BackfaceCulling = false;
             mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
             mat.SetShader("Text");
-            mat.SetTexture(0, textureAtlas.GetAtlasImageHandle());
-            mat.GetTextureUnit(0).SetWrapMode(TextureWrapMode.ClampToEdge);
+            mat.SetTexture(0, textureAtlas.AtlasImageHandle);
+            mat.GetTextureUnit(0).WrapMode = TextureWrapMode.ClampToEdge;
         }
 
         public static Vector2 MeasureText(System.String text, Flood.GUI.Font font)
@@ -461,11 +463,11 @@ namespace Flood.Editor.Client
         public override Color PixelColor(ResourceHandle<Image> imageHandle, uint x, uint y, Color defaultColor)
         {
             var image = imageHandle.Resolve();
-            if(image == null || image.GetWidth() == 0)
+            if(image == null || image.Width == 0)
                 return defaultColor;
 
-            var offset = (int)(4 * (x + y * image.GetWidth()));
-            var data = image.GetBuffer();
+            var offset = (int)(4 * (x + y * image.Width));
+            var data = image.Buffer;
 
             var pixel = new Color(data[offset + 0],
                 data[offset + 1], data[offset + 2], data[offset + 3]);
@@ -497,14 +499,14 @@ namespace Flood.Editor.Client
             mouseY = 0;
             m_AltGr = false;
 
-            mouse = inputManager.GetMouse();
+            mouse = inputManager.Mouse;
             mouse.MouseMove += ProcessMouseMove;
             mouse.MouseDrag += ProcessMouseDrag;
             mouse.MouseButtonPress += ProcessMouseButtonPressed;
             mouse.MouseButtonRelease += ProcessMouseButtonReleased;
             mouse.MouseWheelMove += ProcessMouseWheel;
 
-            keyboard = inputManager.GetKeyboard();
+            keyboard = inputManager.Keyboard;
             keyboard.KeyPress += ProcessKeyDown;
             keyboard.KeyRelease += ProcessKeyUp;
             keyboard.KeyText += ProcessText;

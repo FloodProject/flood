@@ -43,7 +43,7 @@ namespace Flood.Editor.Client.Gui
         {
             Renderer = renderer;
 
-            var resMan = FloodEngine.GetEngine().GetResourceManager();
+            var resMan = FloodEngine.GetEngine().ResourceManager;
             var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
             var imageHandle = resMan.LoadResource<Image>(options);
 

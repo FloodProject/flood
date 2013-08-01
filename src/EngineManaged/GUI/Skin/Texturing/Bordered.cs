@@ -42,8 +42,8 @@ namespace Flood.GUI.Skins.Texturing
 
         void SetRect(int num, float x, float y, float w, float h)
         {
-            float texw = imageHandle.Resolve().GetWidth();
-            float texh = imageHandle.Resolve().GetHeight();
+            float texw = imageHandle.Resolve().Width;
+            float texh = imageHandle.Resolve().Height;
 
             //x -= 1.0f;
             //y -= 1.0f;

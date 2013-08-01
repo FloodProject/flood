@@ -64,8 +64,8 @@ namespace Flood.GUI.Controls
             if(imageHandle.Id == ResourceHandle<Image>.Invalid)
                 return;
 
-            float texw = imageHandle.Resolve().GetWidth();
-            float texh = imageHandle.Resolve().GetHeight();
+            float texw = imageHandle.Resolve().Width;
+            float texh = imageHandle.Resolve().Height;
 
             SetSize((int)texw, (int)texh);
         }

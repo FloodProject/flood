@@ -23,7 +23,7 @@ namespace Flood.Editor.Client.Gui
         static public Window Create(RenderContext context)
         {
             var engine = FloodEngine.GetEngine();
-            var windowManager = engine.GetWindowManager();
+            var windowManager = engine.WindowManager;
 
             var settings = new WindowSettings
             {
@@ -39,7 +39,7 @@ namespace Flood.Editor.Client.Gui
             window.TargetResize += s => Log.Info("Size: " + s.Width);
             window.Show(visible: true);
 
-            window.SetContext(context);
+            window.Context = context;
             return window;
         }
     }

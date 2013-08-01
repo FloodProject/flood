@@ -42,7 +42,7 @@ namespace Flood.Editor.Client
             MainWindow = new MainWindow();
             MainWindow.Init(GuiRenderer, "DefaultSkin.png",new Flood.GUI.Font("Vera.ttf",16));
 
-            GuiInput = new GwenInput(Engine.GetInputManager());
+            GuiInput = new GwenInput(Engine.InputManager);
             GuiInput.Initialize(MainWindow.Canvas);
         }
 
