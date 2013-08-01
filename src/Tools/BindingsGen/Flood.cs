@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
+using CppSharp.Generators.AST;
 using CppSharp.Generators.CLI;
 using CppSharp.Generators.CSharp;
 using CppSharp.Passes;
@@ -509,6 +511,37 @@ namespace Flood
         public override void CLIMarshalToManaged(MarshalContext ctx)
         {
             ctx.Return.Write("{0}({1}.id)", CLISignature(null), ctx.ReturnVarName);
+        }
+
+        public override void CLITypeReference(CLITypeReferenceCollector collector, ASTRecord<Declaration> loc)
+        {
+            if(!(Declaration is ClassTemplate))
+                return;
+
+            var typeRef = collector.GetTypeReference(Declaration);
+            typeRef.Include = new Include()
+            {
+                File = "ResourceHandle.h",
+                Kind = Include.IncludeKind.Quoted,
+                InHeader = true
+            };
+
+            Debug.Assert(loc.Parent != null);
+
+            var type = loc.Parent.Object as CppSharp.AST.Type;
+            var templateType = type.Desugar() as TemplateSpecializationType;
+            var tag = templateType.Arguments[0].Type.Type as TagType;
+            if(tag == null)
+                return; // TODO Fix this
+
+            var argDecl = tag.Declaration;
+            var argTypeDef = collector.GetTypeReference(argDecl);
+            argTypeDef.Include = new Include()
+            {
+                File = argDecl.Namespace.TranslationUnit.FileName,
+                Kind = Include.IncludeKind.Quoted,
+                InHeader = true
+            };
         }
 
         public override string CSharpSignature(CSharpTypePrinterContext ctx)
