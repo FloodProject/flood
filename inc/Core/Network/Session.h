@@ -58,6 +58,9 @@ public:
 	Event1<SessionState> onStateChange;
 	Event2<const PacketPtr&, int> onPacket;
 
+	FLD_HASHCODE int hashCode();
+	FLD_EQUALS bool isEquals(Session* session);
+
 private:
 
 	SessionState state;

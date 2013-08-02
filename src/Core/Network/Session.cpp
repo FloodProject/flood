@@ -70,4 +70,18 @@ void Session::setHash(const SessionHash& newHash)
 
 //-----------------------------------//
 
+int Session::hashCode()
+{
+    return (int)getHash();
+}
+
+//-----------------------------------//
+
+bool Session::isEquals(Session* session)
+{
+    return getHash() == session->getHash();
+}
+
+//-----------------------------------//
+
 NAMESPACE_CORE_END
