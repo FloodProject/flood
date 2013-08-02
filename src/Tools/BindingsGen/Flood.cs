@@ -10,6 +10,7 @@ using CppSharp.Generators.CLI;
 using CppSharp.Generators.CSharp;
 using CppSharp.Passes;
 using CppSharp.Types;
+using Type = CppSharp.AST.Type;
 
 namespace Flood
 {
@@ -87,19 +88,22 @@ namespace Flood
                 });
         }
 
-        public void SetupPasses(Driver driver, PassBuilder builder)
+        public void SetupPasses(Driver driver)
         {
             const RenameTargets renameTargets = RenameTargets.Function
-                                              | RenameTargets.Method | RenameTargets.Field;
-            builder.RenameDeclsCase(renameTargets, RenameCasePattern.UpperCamelCase);
+                                              | RenameTargets.Method 
+                                              | RenameTargets.Field;
 
-            builder.AddPass(new CheckMacroPass());
-            builder.AddPass(new FindEventsPass(driver.TypeDatabase));
-            builder.AddPass(new GetterSetterToPropertyPass());
-            builder.AddPass(new FieldToPropertyPass());
-            builder.AddPass(new ObjectOverridesPass());
-            builder.FunctionToInstanceMethod();
-            builder.FunctionToStaticMethod();
+            driver.AddTranslationUnitPass(new CaseRenamePass(renameTargets, RenameCasePattern.UpperCamelCase));
+            driver.AddTranslationUnitPass(new CheckMacroPass());
+            driver.AddTranslationUnitPass(new FindEventsPass(driver.TypeDatabase));
+            driver.AddTranslationUnitPass(new GetterSetterToPropertyPass());
+            driver.AddTranslationUnitPass(new FieldToPropertyPass());
+            driver.AddTranslationUnitPass(new ObjectOverridesPass());
+            driver.AddTranslationUnitPass(new FunctionToInstanceMethodPass());
+            driver.AddTranslationUnitPass(new FunctionToStaticMethodPass());
+
+            driver.AddGeneratorOutputPass(new FLDObjectOverridesPass());
         }
 
         #endregion
