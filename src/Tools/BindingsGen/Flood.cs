@@ -307,6 +307,16 @@ namespace Flood
 
             return true;
         }
+
+        public override bool VisitMethodDecl(Method method)
+        {
+            var expansions = method.PreprocessedEntities.OfType<MacroExpansion>();
+
+            if (expansions.Any(e => e.Text == "FLD_HASHCODE" || e.Text == "FLD_EQUALS"))
+                method.ExplicityIgnored = true;
+
+            return base.VisitMethodDecl(method);
+        }
     }
 
     class FindEventsPass : TranslationUnitPass
@@ -366,6 +376,69 @@ namespace Flood
             field.Class.Events.Add(@event);
 
             return true;
+        }
+    }
+
+    class FLDObjectOverridesPass : GeneratorOutputPass
+    {
+        public override void VisitGeneratorOutput(GeneratorOutput output)
+        {
+            foreach (var template in output.Templates)
+            {
+                var blocks = template.FindBlocks(CLIBlockKind.MethodBody);
+
+                foreach (var block in blocks)
+                {
+                    var method = block.Declaration as Method;
+                    var @class = (Class) method.Namespace;
+
+                    if (method.Name == "GetHashCode" && method.Parameters.Count == 0)
+                    {
+                        var hashcodeOverride = @class.Methods.FirstOrDefault(m =>
+                        {
+                            var expansions = m.PreprocessedEntities.OfType<MacroExpansion>();
+                            return expansions.Any(e => e.Text == "FLD_HASHCODE");
+                        });
+
+                        if (hashcodeOverride == null)
+                            continue;
+
+                        var cppTypePrinter = new CppTypePrinter(Driver.TypeDatabase);
+                        var classCppType = @class.Visit(cppTypePrinter);
+
+                        block.Text.StringBuilder.Clear();
+                        block.WriteLine("return (({0}*)NativePtr)->{1}();", 
+                            classCppType, hashcodeOverride.OriginalName);
+                    }
+
+                    if (method.Name == "Equals" && method.Parameters.Count == 1)
+                    {
+                        var equalsOverride = @class.Methods.FirstOrDefault(m =>
+                        {
+                            var expansions = m.PreprocessedEntities.OfType<MacroExpansion>();
+                            return expansions.Any(e => e.Text == "FLD_EQUALS");
+                        });
+
+                        if (equalsOverride == null)
+                            continue;
+
+                        var cliTypePrinter = new CLITypePrinter(Driver);
+                        var cppTypePrinter = new CppTypePrinter(Driver.TypeDatabase);
+                        var paramCppType = equalsOverride.Parameters[0].Visit(cppTypePrinter);
+                        var classCppType = @class.Visit(cppTypePrinter);
+                        var classCliType = @class.Visit(cliTypePrinter);
+
+                        block.Text.StringBuilder.Clear();
+                        block.WriteLine("if (!object) return false;");
+                        block.WriteLine("auto obj = dynamic_cast<{0}>({1});",
+                            classCliType, method.Parameters[0].Name);
+                        block.WriteLine("if (!obj) return false;");
+                        block.WriteLine("auto param = ({0})obj->NativePtr;", paramCppType);
+                        block.WriteLine("return (({0}*)NativePtr)->{1}(param);", 
+                            classCppType, equalsOverride.OriginalName);
+                    }
+                }
+            }
         }
     }
 

@@ -240,3 +240,5 @@ static_assert(sizeof(int64) == 8, "");
 #define FLD_IN_OUT
 #define FLD_IGNORE
 #define FLD_FLAGS
+#define FLD_HASHCODE
+#define FLD_EQUALS
