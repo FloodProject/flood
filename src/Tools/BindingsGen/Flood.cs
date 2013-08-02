@@ -252,22 +252,7 @@ namespace Flood
         public void ProcessUnit(GeneratorOutput output)
         {
             foreach (var template in output.Templates)
-            {
                 WriteHeader(template.FindBlock(BlockKind.Header).Text);
-                ProcessTemplate((dynamic) template);
-            }
-        }
-
-        public void ProcessTemplate(CLIHeadersTemplate template)
-        {
-        }
-
-        public void ProcessTemplate(CLISourcesTemplate template)
-        {
-        }
-
-        public void ProcessTemplate(CSharpTextTemplate template)
-        {
         }
 
         #endregion
