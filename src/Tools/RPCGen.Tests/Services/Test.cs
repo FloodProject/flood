@@ -18,14 +18,35 @@ namespace RPCGen.Tests.Services
     [Service]
     public interface IService
     {
-        string Ping();
+        Task<string> Ping();
+
+        Task<Message> GetMessage();
+    }
+
+    [Message]
+    public class Message
+    {
+        [Id(0)]
+        public int i;
+
+        [Id(1)]
+        public string s;
     }
 
     public class Service : IService
     {
-        public string Ping()
+        public async Task<string> Ping()
         {
             return "pong"; 
+        }
+
+        public async Task<Message> GetMessage()
+        {
+            return new Message()
+            {
+                i = 1337,
+                s = "leet"
+            };
         }
     }
 
@@ -39,7 +60,7 @@ namespace RPCGen.Tests.Services
 
         public void Test()
         {
-            var implType = Assembly.GetExecutingAssembly().GetType("IServiceImpl");
+            var implType = Assembly.GetExecutingAssembly().GetType(typeof(IService).FullName+"Impl");
             Assert.NotNull(implType);
 
             var clientType = implType.GetNestedType("Client");
@@ -69,8 +90,14 @@ namespace RPCGen.Tests.Services
             var processInfo = new ProcessInfo(){Processor=processor, Serializer=implSerializer};
             thread.Start(processInfo);
              
-            var result = serviceProxy.Ping();
-            Assert.AreEqual("pong", result);
+            var pingTask = serviceProxy.Ping();
+            Assert.IsTrue(pingTask.Wait(1000));
+            Assert.AreEqual("pong", pingTask.Result);
+            
+            var messageTask = serviceProxy.GetMessage();
+            Assert.IsTrue(messageTask.Wait(1000));
+            Assert.AreEqual(1337, messageTask.Result.i);
+            Assert.AreEqual("leet", messageTask.Result.s);
 
             thread.Abort();
         }
