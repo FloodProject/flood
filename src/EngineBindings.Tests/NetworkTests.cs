@@ -54,7 +54,7 @@ namespace EngineBindings.Tests
                 hostServer.PeerPacket += (session, packet, channel) =>
                                            {
                                                packetReceived = true;
-                                               packetReceivedId = packet.GetId();
+                                               packetReceivedId = packet.Id;
                                                var bytes = packet.Read();
                                                packetReceiveString = Encoding.UTF8.GetString(bytes.ToArray(),0,bytes.Count);
                                            };
@@ -62,7 +62,7 @@ namespace EngineBindings.Tests
                 var p = new Packet(packetId);
                 p.Write(new List<byte>(Encoding.ASCII.GetBytes(packetString)));
 
-                hostClient.GetPeer().QueuePacket(p, 0);
+                hostClient.Peer.QueuePacket(p, 0);
 
                 var watch = Stopwatch.StartNew();
                 while (watch.ElapsedMilliseconds < 20)
@@ -88,16 +88,16 @@ namespace EngineBindings.Tests
                 hostServer.PeerPacket += (session, packet, channel) =>
                                            {
                                                packetReceived = true;
-                                               packetReceivedId = packet.GetId();
+                                               packetReceivedId = packet.Id;
                                                var bytes = packet.Read();
                                                packetReceiveString = Encoding.UTF8.GetString(bytes.ToArray(),0,bytes.Count);
                                            };
 
                 var p = new Packet(packetId);
-                p.SetFlags(PacketFlags.Encrypted);
+                p.Flags = PacketFlags.Encrypted;
                 p.Write(new List<byte>(Encoding.ASCII.GetBytes(packetString)));
 
-                hostClient.GetPeer().QueuePacket(p, 0);
+                hostClient.Peer.QueuePacket(p, 0);
 
                 var watch = Stopwatch.StartNew();
                 while (watch.ElapsedMilliseconds < 20)
