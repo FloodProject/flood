@@ -55,7 +55,6 @@ namespace EngineWeaver
             Update();
         }
 
-
         private void CopyTypes()
         {
             foreach (var t in types)
@@ -147,7 +146,7 @@ namespace EngineWeaver
 
         private T GetLocalReference<T>(T @ref) where T : MemberReference
         {
-            if(CopyMap.ContainsKey(@ref)) 
+            if(CopyMap.ContainsKey(@ref))
                 return  (T)CopyMap[@ref];
             if(referenceMap.ContainsKey(@ref))
                 return  (T)referenceMap[@ref];
@@ -159,27 +158,23 @@ namespace EngineWeaver
                     return (T)(MemberReference)typeRef;
             }
 
-            var declaringType = @ref.DeclaringType as TypeReference;
-            if (declaringType != null)
+            var destTypeDef = destinationModule.GetType(@ref.DeclaringType.FullName);
+            if (destTypeDef != null)
             {
-                var destTypeDef = destinationModule.GetType(declaringType.FullName);
-                if (destTypeDef != null)
+                var origMethodRef = @ref as MethodReference;
+                if (origMethodRef != null)
                 {
-                    var origMethodRef = @ref as MethodReference;
-                    if (origMethodRef != null)
-                    {
-                        var destMethodDef = CecilUtils.GetTypeMethodDef(destTypeDef, origMethodRef);
-                        if(destMethodDef != null) 
-                            return (T)(MemberReference)destMethodDef;
-                    }
+                    var destMethodDef = CecilUtils.GetTypeMethodDef(destTypeDef, origMethodRef);
+                    if(destMethodDef != null) 
+                        return (T)(MemberReference)destMethodDef;
+                }
 
-                    var origFieldRef = @ref as FieldReference;
-                    if (origFieldRef != null)
-                    {
-                        var destFieldDef = CecilUtils.GetTypeFieldDef(destTypeDef, origFieldRef);
-                        if(destFieldDef != null) 
-                            return (T)(MemberReference)destFieldDef;
-                    }
+                var origFieldRef = @ref as FieldReference;
+                if (origFieldRef != null)
+                {
+                    var destFieldDef = CecilUtils.GetTypeFieldDef(destTypeDef, origFieldRef);
+                    if(destFieldDef != null) 
+                        return (T)(MemberReference)destFieldDef;
                 }
             }
 
@@ -210,23 +205,64 @@ namespace EngineWeaver
                 return GetLocalReference(@ref);
 
             Log("Importing "+@ref.FullName+ " from "+ @ref.DeclaringType.Scope.Name);
+
+            // Fix bad imports of generic arguments.
+            CheckGenericArguments(@ref);
+
             return destinationModule.Import(@ref);
         }
 
         private TypeReference CopyReference(TypeReference @ref)
         {
-            if(IsLocalReference(@ref.Scope.Name))
+            if (IsLocalReference(@ref.Scope.Name))
                 return GetLocalReference(@ref);
 
-            Log("Importing "+@ref.FullName+ " from "+ @ref.Scope.Name);
+            Log("Importing " + @ref.FullName + " from " + @ref.Scope.Name);
+
+            // Fix bad imports of generic arguments.
+            CheckGenericArguments(@ref);
+
             return destinationModule.Import(@ref);
         }
 
-        private GenericInstanceType CopyReference(GenericInstanceType def)
+        private void CheckGenericArguments(TypeReference typeRef)
         {
-            return CopyReference(def);
+            if (typeRef == null)
+                return;
+
+            var genericTypeRef = typeRef as GenericInstanceType;
+            if (genericTypeRef != null)
+            {
+                for (int i = 0; i < genericTypeRef.GenericArguments.Count; i++)
+                {
+                    var genericArgument = genericTypeRef.GenericArguments[i];
+                    if (genericArgument is GenericParameter) continue;
+                    genericTypeRef.GenericArguments[i] = CopyReference(genericArgument);
+                }
+            }
+
+            CheckGenericArguments(typeRef.DeclaringType as GenericInstanceType);
         }
 
+        private void CheckGenericArguments(MethodReference methodRef)
+        {
+            if (methodRef == null)
+                return;
+
+            var genericMethodRef = methodRef as GenericInstanceMethod;
+            if (genericMethodRef != null)
+            {
+                for (int i = 0; i < genericMethodRef.GenericArguments.Count; i++)
+                {
+                    var genericArgument = genericMethodRef.GenericArguments[i];
+                    if (genericArgument is GenericParameter) continue;
+                    genericMethodRef.GenericArguments[i] = CopyReference(genericArgument);
+                }
+            }
+
+            CheckGenericArguments(methodRef.ReturnType as GenericInstanceType);
+            CheckGenericArguments(methodRef.DeclaringType as GenericInstanceType);
+        }
 
         /*
          * COPY DEFINITIONS
@@ -345,14 +381,14 @@ namespace EngineWeaver
             var ret = new CustomAttribute(CopyReference(def.Constructor),def.GetBlob());
 
             Log("< CopyAttributes ");
-            CopyAll(def,ret,ret,"DeclaringType");
+            CopyAll(def,ret,ret,"DeclaringType", "ConstructorArguments");
 
             return ret;
         }
 
-        private Mono.Cecil.Cil.MethodBody Copy(Mono.Cecil.Cil.MethodBody def, MethodDefinition parent)
+        private MethodBody Copy(MethodBody def, MethodDefinition parent)
         {
-            var ret = new Mono.Cecil.Cil.MethodBody(parent);
+            var ret = new MethodBody(parent);
 
             Log("< MethodBody ");
             CopyAll(def,ret,ret,"Method","Scope");
