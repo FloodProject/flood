@@ -1,23 +1,14 @@
 ﻿using EngineWeaver.Util;
 using Mono.Cecil;
-using Mono.Cecil.Cil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EngineWeaver
 {
     public class AssemblyWeaver
     {
-        private string destAssemblyPath;
         private AssemblyDefinition destAssembly;
 
         public AssemblyWeaver(string destAssemblyPath)
         {
-            this.destAssemblyPath = destAssemblyPath; 
             destAssembly = CecilUtils.GetAssemblyDef(destAssemblyPath);
         }
 
@@ -31,7 +22,6 @@ namespace EngineWeaver
                     copier.Copy(origType);
 
             copier.Process();
-
         }
 
         public void Write(string outputAssemblyPath)
