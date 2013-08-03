@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Flood.RPC.Protocol;
 
 namespace Flood.RPC
@@ -35,7 +36,7 @@ namespace Flood.RPC
 
     public abstract class SimpleProcessor : Processor
     {
-        protected delegate void ProcessFunction(int seqid, Serializer iprot, Serializer oprot);
+        protected delegate Task ProcessFunction(int seqid, Serializer iprot, Serializer oprot);
         protected Dictionary<string, ProcessFunction> processMap_;
 
         public SimpleProcessor()

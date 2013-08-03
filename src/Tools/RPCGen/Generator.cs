@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using Flood.RPC.Protocol;
 using RPCGen;
 
@@ -74,7 +75,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal List<Parameter> ConvertFieldToParametersList(Type type)
+        private List<Parameter> ConvertFieldToParametersList(Type type)
         {
             var parameters = new List<Parameter>();
             foreach(var field in GetAllFields(type))
@@ -123,6 +124,9 @@ namespace Flood.Tools.RPCGen
                 if (IsEventMethod(type, method))
                     continue;
 
+                // Throws exeption if type is not Task
+                GetMethodReturnType(method);
+
                 GenerateServiceMethodArgs(method);
                 NewLine();
 
@@ -138,7 +142,7 @@ namespace Flood.Tools.RPCGen
 
         #region Service Client 
 
-        internal void GenerateServiceClient(Type type)
+        private void GenerateServiceClient(Type type)
         {
             Type baseType;
             GetInheritedService(type, out baseType);
@@ -198,10 +202,18 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        internal void GenerateProtocolMethod(MethodInfo method)
+        private void GenerateProtocolMethod(MethodInfo method)
         {
-            Write("public {0} {1}(", ConvertToTypeString(method.ReturnType),
-                method.Name);
+            var retType = GetMethodReturnType(method);
+            if (retType == typeof (void))
+            {
+                Write("public async Task {1}(", method.Name);
+            }
+            else
+            {
+                var typeString = ConvertToTypeString(retType);
+                Write("public async Task<{0}> {1}(", typeString, method.Name);
+            }
 
             var parameters = method.GetParameters();
             GenerateParameterList(parameters);
@@ -219,9 +231,9 @@ namespace Flood.Tools.RPCGen
             }
             WriteLine(");");
 
-            if (method.ReturnType != typeof(void))
+            if (retType != typeof(void))
                 Write("return ");
-            WriteLine("recv_{0}();", method.Name);
+            WriteLine("await Task.Run( () =>  recv_{0}());", method.Name);
 
             WriteCloseBraceIndent();
             NewLine();
@@ -233,9 +245,10 @@ namespace Flood.Tools.RPCGen
             GenerateProtocolReceive(method);
         }
 
-        internal void GenerateProtocolReceive(MethodInfo method)
+        private void GenerateProtocolReceive(MethodInfo method)
         {
-            Write("private {0} recv_{1}(", ConvertToTypeString(method.ReturnType),
+            var retType = GetMethodReturnType(method);
+            Write("private {0} recv_{1}(", ConvertToTypeString(retType),
                   method.Name);
             WriteLine(")");
             WriteStartBraceIndent();
@@ -253,7 +266,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("result.Read(iprot_);");
             WriteLine("iprot_.ReadMessageEnd();");
 
-            if (method.ReturnType != typeof(void))
+            if (retType != typeof(void))
             {
                 WriteLine("if (result.__isset.success)");
                 WriteLineIndent("return result.Success;");
@@ -271,7 +284,7 @@ namespace Flood.Tools.RPCGen
                 }
             }
 
-            if (method.ReturnType != typeof(void))
+            if (retType != typeof(void))
             {
                 WriteLine("throw new RPCException(RPCException.ExceptionType.MissingResult,");
                 WriteLineIndent(" \"{0} failed: unknown result\");", method.Name);
@@ -280,7 +293,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
+        private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
             Write("private void send_{0}(", method.Name);
             GenerateParameterList(parameters);
@@ -300,7 +313,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        internal void GenerateParameterList(IList<ParameterInfo> parameters)
+        private void GenerateParameterList(IList<ParameterInfo> parameters)
         {
             for (var i = 0; i < parameters.Count; i++)
             {
@@ -317,7 +330,7 @@ namespace Flood.Tools.RPCGen
 
         #region Service Processor
 
-        internal void GenerateServiceProcessor(Type type)
+        private void GenerateServiceProcessor(Type type)
         {
             Type baseType;
             GetInheritedService(type, out baseType);
@@ -366,9 +379,9 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        internal void GenerateServiceProcessMethod(MethodInfo method)
+        private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public void {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
+            WriteLine("public async Task {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
                       method.Name);
             WriteStartBraceIndent();
 
@@ -384,7 +397,8 @@ namespace Flood.Tools.RPCGen
                 PushIndent();
             }
 
-            if (method.ReturnType != typeof(void))
+            var retType = GetMethodReturnType(method);
+            if (retType != typeof(void))
                 Write("result.Success = ");
 
 
@@ -392,7 +406,7 @@ namespace Flood.Tools.RPCGen
             PropertyInfo prop = GetProperty(method);
             if (prop == null)
             {
-                Write("iface_.{0}(", method.Name);
+                Write("await iface_.{0}(", method.Name);
                 var parameters = method.GetParameters();
                 for (var i = 0; i < parameters.Length; i++)
                 {
@@ -450,7 +464,7 @@ namespace Flood.Tools.RPCGen
 
         #region Service Method Args
 
-        internal void GenerateServiceMethodArgs(MethodInfo method)
+        private void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
             WriteLine("public partial class {0}_args : Base", method.Name);
@@ -485,7 +499,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal static List<Parameter> ConvertToParametersList(MethodInfo method)
+        private static List<Parameter> ConvertToParametersList(MethodInfo method)
         {
             // Convert from PropertyInfo to our own struct. This makes it easier
             // to use the same code for argument and result marshaling.
@@ -499,7 +513,19 @@ namespace Flood.Tools.RPCGen
 
         #region General Auxiliaries
 
-        internal void GenerateServiceMethodResult(MethodInfo method)
+        public static Type GetMethodReturnType(MethodInfo method)
+        {
+            if (method.ReturnType == typeof (Task))
+                return typeof(void);
+
+            if (IsInstanceOfGenericType(typeof (Task<>), method.ReturnType))
+                return method.ReturnType.GenericTypeArguments[0];
+
+            throw new Exception(string.Format("{0}.{1} does not return a Task", 
+                        method.DeclaringType.FullName, method.Name));
+        }
+
+        private void GenerateServiceMethodResult(MethodInfo method)
         {
             WriteLine("[Serializable]");
             WriteLine("public partial class {0}_result : Base", method.Name);
@@ -507,13 +533,15 @@ namespace Flood.Tools.RPCGen
 
             var parameters = new List<Parameter>();
 
-            var hasReturn = method.ReturnType != typeof(void);
+            var retType = GetMethodReturnType(method);
+
+            var hasReturn = retType != typeof(void);
             if (hasReturn)
             {
                 parameters.Add(new Parameter
                 {
                     Name = "success",
-                    ParameterType = method.ReturnType
+                    ParameterType = retType
                 });
             }
 
@@ -570,7 +598,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal static bool IsEventMethod(Type type, MethodInfo method)
+        private static bool IsEventMethod(Type type, MethodInfo method)
         {
             foreach (var @event in type.GetEvents())
             {
@@ -582,7 +610,7 @@ namespace Flood.Tools.RPCGen
             return false;
         }
 
-        internal static bool GetInheritedService(Type type, out Type @base)
+        private static bool GetInheritedService(Type type, out Type @base)
         {
             @base = null;
 
@@ -598,35 +626,7 @@ namespace Flood.Tools.RPCGen
             return false;
         }
 
-        internal void GenerateEvent(Type type)
-        {
-
-        }
-
-        internal void GenerateInterface(Type type)
-        {
-            WriteLine("public interface {0}");
-            WriteStartBraceIndent();
-
-            foreach (var method in type.GetMethods())
-            {
-                Write("{0} {1}(", method.ReturnType.Name, method.Name);
-                WriteLine(");");
-            }
-
-            WriteCloseBraceIndent();
-            NewLine();
-        }
-
-        #endregion
-
-#endregion
-
-#region Shared Auxiliaries 
-
-        #region General Auxiliaries 
-
-        internal static string ToTitleCase(string str)
+        private static string ToTitleCase(string str)
         {
             var result = str;
             if (!string.IsNullOrEmpty(str))
@@ -650,11 +650,11 @@ namespace Flood.Tools.RPCGen
         /// If method is getter or setter of a property returns the PropertyInfo associated
         /// </summary>
         /// <returns>PropertyInfo or null if not a property getter/setter</returns>
-        internal static PropertyInfo GetProperty(MethodInfo method)
+        private static PropertyInfo GetProperty(MethodInfo method)
         {
-
+            var retType = GetMethodReturnType(method);
             bool takesArg = method.GetParameters().Length == 1;
-            bool hasReturn = method.ReturnType != typeof(void);
+            bool hasReturn = retType != typeof(void);
             if (takesArg == hasReturn) return null;
             if (takesArg)
                 return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetSetMethod() == method);
@@ -662,7 +662,7 @@ namespace Flood.Tools.RPCGen
             return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetGetMethod() == method);
         }
 
-        internal IEnumerable<Parameter> ConvertToActualParameters(IEnumerable<Parameter> parameters, bool isResult)
+        private IEnumerable<Parameter> ConvertToActualParameters(IEnumerable<Parameter> parameters, bool isResult)
         {
             var actualParams = new List<Parameter>();
             foreach (var param in parameters)
@@ -674,7 +674,7 @@ namespace Flood.Tools.RPCGen
             return actualParams;
         }
 
-        internal static bool IsNullableType(Type type)
+        private static bool IsNullableType(Type type)
         {
             switch (ConvertFromTypeToThrift(type))
             {
@@ -691,7 +691,7 @@ namespace Flood.Tools.RPCGen
             }
         }
 
-        internal static IEnumerable<FieldInfo> GetAllFields(Type t)
+        private static IEnumerable<FieldInfo> GetAllFields(Type t)
         {
             if (t == null)
                 return Enumerable.Empty<FieldInfo>();
@@ -700,7 +700,7 @@ namespace Flood.Tools.RPCGen
             return t.GetFields(flags).Union(GetAllFields(t.BaseType));
         }
 
-        internal static IEnumerable<PropertyInfo> GetAllProperties(Type t)
+        private static IEnumerable<PropertyInfo> GetAllProperties(Type t)
         {
             if (t == null)
                 return Enumerable.Empty<PropertyInfo>();
@@ -716,7 +716,7 @@ namespace Flood.Tools.RPCGen
         // Used to generate unique names when (de)serializing collections.
         int GenericIndex = 0;
 
-        internal void GenerateUsings()
+        private void GenerateUsings()
         {
             WriteLine("using System;");
             WriteLine("using System.Collections.Generic;");
@@ -726,11 +726,12 @@ namespace Flood.Tools.RPCGen
             WriteLine("using Flood.RPC.Protocol;");
             WriteLine("using Flood.RPC.Transport;");
             WriteLine("using System.Reflection;");
+            WriteLine("using System.Threading.Tasks;");
 
             NewLine();
         }
         
-        internal void GenerateIsSet(IEnumerable<Parameter> parameters)
+        private void GenerateIsSet(IEnumerable<Parameter> parameters)
         {
             // Generate an __isset structure that keeps track of what variables
             // have been set.
@@ -748,7 +749,7 @@ namespace Flood.Tools.RPCGen
         
         //TODO : this function seems to generate useless code if there are no actual parameters, 
         //TODO : should it even be called in that case?
-        internal void GenerateServiceMethodWrite(string typeName,
+        private void GenerateServiceMethodWrite(string typeName,
             IEnumerable<Parameter> parameters, bool isResult)
         {
             WriteLine("public void Write(Serializer oprot)");
@@ -797,7 +798,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
+        private void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, bool isResult)
         {
             WriteLine("public void Read(Serializer iprot)");
             WriteStartBraceIndent();
@@ -815,7 +816,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        internal void GenerateServiceMethodReadFields(IEnumerable<Parameter> parameters, bool isResult)
+        private void GenerateServiceMethodReadFields(IEnumerable<Parameter> parameters, bool isResult)
         {
             WriteLine("var field = iprot.ReadFieldBegin();");
             WriteLine("if (field.Type == TType.Stop)");
@@ -863,7 +864,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("iprot.ReadFieldEnd();");
         }
 
-        internal void GeneratePropertyList(IEnumerable<Parameter> parameters)
+        private void GeneratePropertyList(IEnumerable<Parameter> parameters)
         {
             foreach (var param in parameters)
             {
@@ -884,7 +885,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field
         /// </summary>
-        internal void GenerateFieldSerialize(Parameter param)
+        private void GenerateFieldSerialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -935,7 +936,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize an array
         /// </summary>
-        internal void GenerateArraySerialize(Parameter param)
+        private void GenerateArraySerialize(Parameter param)
         {
             var paramType = param.ParameterType;
             var arrayElemType = paramType.GetElementType();
@@ -958,7 +959,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        internal void GenerateStructSerialize(Parameter param)
+        private void GenerateStructSerialize(Parameter param)
         {
             var objName = ToTitleCase(param.Name);
             GenerateStructSerialize(param.ParameterType, objName);
@@ -967,7 +968,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        internal void GenerateStructSerialize(Type type, string varName)
+        private void GenerateStructSerialize(Type type, string varName)
         {
             var implObjName = varName + "Impl";
             WriteLine("var {0} = new {1}Impl();", implObjName, type.Name);
@@ -978,7 +979,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        internal void GenerateStructInit(Type type, string origObjName, string destObjName, bool destTitleCase = true)
+        private void GenerateStructInit(Type type, string origObjName, string destObjName, bool destTitleCase = true)
         {
             foreach (var field in GetAllFields(type))
             {
@@ -1003,7 +1004,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a container field  
         /// </summary>
-        internal void GenerateContainerSerialize(Parameter param)
+        private void GenerateContainerSerialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -1030,7 +1031,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a list  
         /// </summary>
-        internal void GenerateListSerialize(Parameter param)
+        private void GenerateListSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
             var listElemType = param.ParameterType.GetGenericArguments()[0];
@@ -1053,7 +1054,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a collection  
         /// </summary>
-        internal void GenerateCollectionSerialize(Parameter param)
+        private void GenerateCollectionSerialize(Parameter param)
         {
             GenerateListSerialize(param);
         }
@@ -1061,7 +1062,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a set  
         /// </summary>
-        internal void GenerateSetSerialize(Parameter param)
+        private void GenerateSetSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
             var setElemType = param.ParameterType.GetGenericArguments()[0];
@@ -1084,7 +1085,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a map  
         /// </summary>
-        internal void GenerateMapSerialize(Parameter param)
+        private void GenerateMapSerialize(Parameter param)
         {
             var paramType = param.ParameterType;
             var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
@@ -1110,7 +1111,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a container element  
         /// </summary>
-        internal void GenerateContainerSingleElementSerialization(Type elemType, string iterName)
+        private void GenerateContainerSingleElementSerialization(Type elemType, string iterName)
         {
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1159,7 +1160,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a dual element container  
         /// </summary>
-        internal void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName)
+        private void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName)
         {
             GenerateContainerSingleElementSerialization(elemType1, iterName + ".Key");
             GenerateContainerSingleElementSerialization(elemType2, iterName + ".Value");
@@ -1172,7 +1173,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field
         /// </summary>
-        internal void GenerateFieldDeserialize(Parameter param)
+        private void GenerateFieldDeserialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -1227,7 +1228,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize an array 
         /// </summary>
-        internal void GenerateArrayDeserialize(Parameter param)
+        private void GenerateArrayDeserialize(Parameter param)
         {
             var arrayElemType = param.ParameterType.GetElementType();
 
@@ -1252,7 +1253,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a single element of an array 
         /// </summary>
-        internal void GenerateArraySingleElementDeserialization(Type elemType, string containerName, string iterName)
+        private void GenerateArraySingleElementDeserialization(Type elemType, string containerName, string iterName)
         {
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1274,7 +1275,7 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
-                    WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
+                    WriteLine("var {0} = new {1}();", elemName2, elemType.FullName);
                     GenerateStructInit(elemType, elemName ,elemName2);
                     WriteLine("{0}[{1}] = {2};", containerName, iterName, elemName2);
                     break;
@@ -1305,7 +1306,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
-        internal void GenerateStructDeserialize(Parameter param)
+        private void GenerateStructDeserialize(Parameter param)
         {
             GenerateStructDeserialize(param.ParameterType, ToTitleCase(param.Name));
         }
@@ -1313,7 +1314,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
-        internal void GenerateStructDeserialize(Type type, string varName)
+        private void GenerateStructDeserialize(Type type, string varName)
         {
             var origObjName = varName+"Impl";
             WriteLine("var {0} = new {1}Impl();", origObjName, type.Name);
@@ -1325,7 +1326,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a container field  
         /// </summary>
-        internal void GenerateContainerDeserialize(Parameter param)
+        private void GenerateContainerDeserialize(Parameter param)
         {
             var type = param.ParameterType;
             var thriftType = ConvertFromTypeToThrift(param.ParameterType);
@@ -1352,7 +1353,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a list  
         /// </summary>
-        internal void GenerateListDeserialize(Parameter param)
+        private void GenerateListDeserialize(Parameter param)
         {
             var listElemType = param.ParameterType.GetGenericArguments()[0];
 
@@ -1377,7 +1378,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a collection  
         /// </summary>
-        internal void GenerateCollectionDeserialize(Parameter param)
+        private void GenerateCollectionDeserialize(Parameter param)
         {
             GenerateListDeserialize(param);
         }
@@ -1385,7 +1386,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a set  
         /// </summary>
-        internal void GenerateSetDeserialize(Parameter param)
+        private void GenerateSetDeserialize(Parameter param)
         {
             var setElemType = param.ParameterType.GetGenericArguments()[0];
 
@@ -1410,7 +1411,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a map  
         /// </summary>
-        internal void GenerateMapDeserialize(Parameter param)
+        private void GenerateMapDeserialize(Parameter param)
         {
             var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
             var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
@@ -1436,7 +1437,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a container element  
         /// </summary>
-        internal void GenerateContainerSingleElementDeserialization(Type elemType, string containerName)
+        private void GenerateContainerSingleElementDeserialization(Type elemType, string containerName)
         {
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1489,7 +1490,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a double element container  
         /// </summary>
-        internal void GenerateContainerDoubleElementDeserialization(Type elemType1, Type elemType2, string containerName)
+        private void GenerateContainerDoubleElementDeserialization(Type elemType1, Type elemType2, string containerName)
         {
             var elemName1 = string.Format("_elem{0}", GenericIndex++);
             var elemName2 = string.Format("_elem{0}", GenericIndex++);
@@ -1504,7 +1505,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Auxiliary method to generate the code to deserialize a  double element container 
         /// </summary>
-        internal void GenerateContainerDoubleElementDeserializationAux(Type elemType, string elemName)
+        private void GenerateContainerDoubleElementDeserializationAux(Type elemType, string elemName)
         {
             var elemNameImpl = string.Format("_elem{0}", GenericIndex++);
             var thriftType = ConvertFromTypeToThrift(elemType);
@@ -1777,7 +1778,7 @@ namespace Flood.Tools.RPCGen
 
         #region Data Types
 
-        internal struct Parameter
+        private struct Parameter
         {
             public Parameter(ParameterInfo info)
             {
