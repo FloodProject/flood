@@ -42,9 +42,9 @@ typedef void  (*MemoryResetFunction)(Allocator*);
 
 struct API_CORE Allocator
 {
-	MemoryAllocateFunction allocate;
-	MemoryFreeFunction deallocate;
-	MemoryResetFunction reset;
+	FLD_IGNORE MemoryAllocateFunction allocate;
+	FLD_IGNORE MemoryFreeFunction deallocate;
+	FLD_IGNORE MemoryResetFunction reset;
 	const char* group;
 };
 
