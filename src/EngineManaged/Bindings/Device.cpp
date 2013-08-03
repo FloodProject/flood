@@ -30,7 +30,9 @@ Flood::InputEvent::InputEvent(Flood::InputDeviceType _0)
 bool Flood::InputEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<InputEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::InputEvent::GetHashCode()
@@ -82,7 +84,9 @@ void Flood::InputDevice::ProcessEvent(Flood::InputEvent^ event)
 bool Flood::InputDevice::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<InputDevice^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::InputDevice::GetHashCode()

@@ -58,7 +58,9 @@ void Flood::Texture::SetUploaded()
 bool Flood::Texture::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Texture^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Texture::GetHashCode()
@@ -186,7 +188,9 @@ Flood::TextureUnit::TextureUnit()
 bool Flood::TextureUnit::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<TextureUnit^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::TextureUnit::GetHashCode()

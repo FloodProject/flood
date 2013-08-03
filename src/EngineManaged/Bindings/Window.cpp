@@ -114,7 +114,9 @@ bool Flood::Window::HasFocus()
 bool Flood::Window::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Window^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Window::GetHashCode()

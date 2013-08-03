@@ -68,7 +68,9 @@ bool Flood::TextureAtlas::GetImageSubTexture(Flood::ResourceHandle<Flood::Image^
 bool Flood::TextureAtlas::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<TextureAtlas^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::TextureAtlas::GetHashCode()

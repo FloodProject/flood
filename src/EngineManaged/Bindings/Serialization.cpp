@@ -30,7 +30,9 @@ Flood::ReflectionHandleContext::ReflectionHandleContext()
 bool Flood::ReflectionHandleContext::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ReflectionHandleContext^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ReflectionHandleContext::GetHashCode()

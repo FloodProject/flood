@@ -50,7 +50,9 @@ void Flood::InputManager::CreateDefaultDevices()
 bool Flood::InputManager::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<InputManager^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::InputManager::GetHashCode()

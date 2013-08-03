@@ -30,7 +30,9 @@ Flood::SessionManager::SessionManager()
 bool Flood::SessionManager::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<SessionManager^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::SessionManager::GetHashCode()

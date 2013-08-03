@@ -49,7 +49,9 @@ void Flood::Peer::QueuePacket(Flood::Packet^ packet, unsigned char channel)
 bool Flood::Peer::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Peer^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Peer::GetHashCode()

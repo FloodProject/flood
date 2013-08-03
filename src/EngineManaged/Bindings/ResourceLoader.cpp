@@ -107,7 +107,9 @@ void Flood::ResourceStream::Reset()
 bool Flood::ResourceStream::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ResourceStream^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ResourceStream::GetHashCode()
@@ -194,7 +196,9 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
 bool Flood::ResourceLoader::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ResourceLoader^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ResourceLoader::GetHashCode()

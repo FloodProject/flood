@@ -32,7 +32,9 @@ Flood::MouseEvent::MouseEvent(Flood::MouseEventType eventType)
 bool Flood::MouseEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<MouseEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::MouseEvent::GetHashCode()
@@ -70,7 +72,9 @@ Flood::MouseMoveEvent::MouseMoveEvent()
 bool Flood::MouseMoveEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<MouseMoveEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::MouseMoveEvent::GetHashCode()
@@ -118,7 +122,9 @@ Flood::MouseDragEvent::MouseDragEvent()
 bool Flood::MouseDragEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<MouseDragEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::MouseDragEvent::GetHashCode()
@@ -215,7 +221,9 @@ bool Flood::MouseButtonEvent::IsMiddleButton()
 bool Flood::MouseButtonEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<MouseButtonEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::MouseButtonEvent::GetHashCode()
@@ -273,7 +281,9 @@ Flood::MouseWheelEvent::MouseWheelEvent()
 bool Flood::MouseWheelEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<MouseWheelEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::MouseWheelEvent::GetHashCode()

@@ -71,7 +71,9 @@ Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
 bool Flood::RenderContext::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<RenderContext^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::RenderContext::GetHashCode()

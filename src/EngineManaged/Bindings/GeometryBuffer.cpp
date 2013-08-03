@@ -116,7 +116,9 @@ void Flood::GeometryBuffer::ClearIndexes()
 bool Flood::GeometryBuffer::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<GeometryBuffer^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::GeometryBuffer::GetHashCode()

@@ -83,7 +83,9 @@ void Flood::RenderTarget::Update()
 bool Flood::RenderTarget::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<RenderTarget^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::RenderTarget::GetHashCode()

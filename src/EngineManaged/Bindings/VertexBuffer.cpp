@@ -148,7 +148,9 @@ Flood::VertexDeclaration::VertexDeclaration()
 bool Flood::VertexDeclaration::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<VertexDeclaration^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::VertexDeclaration::GetHashCode()
@@ -232,7 +234,9 @@ void Flood::VertexBuffer::ForceRebuild()
 bool Flood::VertexBuffer::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<VertexBuffer^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::VertexBuffer::GetHashCode()

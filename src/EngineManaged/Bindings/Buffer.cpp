@@ -37,7 +37,9 @@ Flood::Buffer::Buffer(Flood::BufferUsage usage, Flood::BufferAccess access)
 bool Flood::Buffer::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Buffer^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Buffer::GetHashCode()

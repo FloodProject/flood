@@ -102,7 +102,9 @@ void Flood::Image::SetModified()
 bool Flood::Image::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Image^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Image::GetHashCode()
@@ -245,7 +247,9 @@ Flood::ImageWriter::ImageWriter()
 bool Flood::ImageWriter::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ImageWriter^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ImageWriter::GetHashCode()

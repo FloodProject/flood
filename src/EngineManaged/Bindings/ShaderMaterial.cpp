@@ -25,7 +25,9 @@ Flood::ShaderMaterial::ShaderMaterial(System::IntPtr native)
 bool Flood::ShaderMaterial::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ShaderMaterial^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ShaderMaterial::GetHashCode()

@@ -62,7 +62,9 @@ Flood::Vector2 Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2, i
 bool Flood::TrueTypeFont::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<TrueTypeFont^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::TrueTypeFont::GetHashCode()

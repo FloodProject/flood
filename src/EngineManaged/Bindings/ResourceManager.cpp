@@ -30,7 +30,9 @@ Flood::ResourceEvent::ResourceEvent()
 bool Flood::ResourceEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ResourceEvent^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ResourceEvent::GetHashCode()
@@ -185,7 +187,9 @@ Flood::ResourceLoader^ Flood::ResourceManager::FindLoader(System::String^ extens
 bool Flood::ResourceManager::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<ResourceManager^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::ResourceManager::GetHashCode()

@@ -49,7 +49,9 @@ Flood::RenderBatch::RenderBatch()
 bool Flood::RenderBatch::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<RenderBatch^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::RenderBatch::GetHashCode()

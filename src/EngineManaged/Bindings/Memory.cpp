@@ -29,7 +29,9 @@ Flood::Allocator::Allocator()
 bool Flood::Allocator::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Allocator^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::Allocator::GetHashCode()
@@ -182,7 +184,9 @@ Flood::PoolAllocator::PoolAllocator()
 bool Flood::PoolAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<PoolAllocator^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::PoolAllocator::GetHashCode()
@@ -220,7 +224,9 @@ Flood::BumpAllocator::BumpAllocator()
 bool Flood::BumpAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<BumpAllocator^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::BumpAllocator::GetHashCode()
@@ -278,7 +284,9 @@ Flood::HeapAllocator::HeapAllocator()
 bool Flood::HeapAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<HeapAllocator^>(object);
+    if (!obj) return false;
+    return Instance == obj->Instance;
 }
 
 int Flood::HeapAllocator::GetHashCode()
