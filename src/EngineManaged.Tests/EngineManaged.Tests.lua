@@ -6,6 +6,8 @@ project "EngineManaged.Tests"
 	
 	location "."
 	
+	SetupRPCGen("EngineManaged.Tests",".dll")
+
 	files
 	{
 		"EngineManaged.Tests.lua",
