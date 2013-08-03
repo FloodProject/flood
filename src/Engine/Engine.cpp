@@ -78,7 +78,7 @@ Engine::~Engine()
 #endif
 
 	TaskPoolDestroy(taskPool);
-	StreamDestroy(stream);
+	Deallocate(stream);
 	LogDestroy(log);
 }
 
@@ -137,7 +137,7 @@ void Engine::init()
 
 void Engine::setupLogger()
 {
-	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamOpenMode::Write);
+	stream = AllocateHeap(FileStream, "Log.html", StreamOpenMode::Write);
 	log = LogCreate( AllocatorGetHeap() );
 }
 

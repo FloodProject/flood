@@ -144,11 +144,11 @@ SUITE(Core)
 	TEST(SerializeBinaryField)
 	{
 		Allocator* alloc = AllocatorGetHeap();
-		MemoryStream* ms = StreamCreateFromMemory(alloc, 16);
+		MemoryStream ms(16);
 
 		ReflectionHandleContextMap handleContextMap;
 		auto bin = (SerializerBinary*) SerializerCreateBinary(alloc, &handleContextMap);
-		bin->ms = ms;
+		bin->ms = &ms;
 
 		A a;
 		a.foo = 33;
@@ -168,11 +168,10 @@ SUITE(Core)
 		dcontext.object = &a;
 		dcontext.composite = classA;
 
-		StreamSetPosition(ms, 0, StreamSeekMode::Absolute);
+		ms.setPosition( 0, StreamSeekMode::Absolute);
 		DeserializeFields(&dcontext);
 		CHECK_EQUAL(33, a.foo);
 
-		Deallocate(ms);
 		Deallocate(bin);
 	}
 

@@ -56,7 +56,7 @@ cleanup:
 	ConditionWakeOne(res->resourceFinishLoad);
 
 	if( !options->keepStreamOpen )
-		StreamDestroy(stream);
+		Deallocate(stream);
 
 	Deallocate(options);
 }

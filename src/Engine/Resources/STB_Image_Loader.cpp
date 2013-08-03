@@ -37,7 +37,7 @@ STB_Image_Loader::STB_Image_Loader()
 bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 {
 	std::vector<uint8> data;
-	StreamRead(options.stream, data);
+	options.stream->read(data);
 
 	if( data.empty() ) return false;
 

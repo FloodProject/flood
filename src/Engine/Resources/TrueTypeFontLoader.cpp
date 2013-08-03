@@ -40,7 +40,7 @@ bool TrueTypeFontLoader::decode(ResourceLoadOptions& options)
 {
 	TrueTypeFont* font = (TrueTypeFont*) options.resource;
 
-	StreamRead(options.stream, font->data);
+	options.stream->read(font->data);
 
 	font->init();
 

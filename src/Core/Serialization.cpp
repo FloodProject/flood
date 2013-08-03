@@ -477,7 +477,7 @@ Object* SerializerLoad(Serializer* serializer)
 	if( !serializer->stream ) return nullptr;
 
 	Object* object = serializer->load(serializer);
-	StreamClose(serializer->stream);
+	serializer->stream->close();
 
 	return object;
 }
@@ -490,7 +490,7 @@ bool SerializerSave(Serializer* serializer, const Object* object)
 	if( !serializer->stream ) return false;
 	
 	serializer->save(serializer, object);
-	StreamClose(serializer->stream);
+	serializer->stream->close();
 
 	serializer->object = nullptr;
 
@@ -501,11 +501,11 @@ bool SerializerSave(Serializer* serializer, const Object* object)
 
 Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 {
-	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamOpenMode::Read);	
-	serializer->stream = stream;
+	FileStream stream(file.c_str(), StreamOpenMode::Read);	
+	serializer->stream = (Stream *)&stream;
 
 	Object* object = SerializerLoad(serializer);
-	StreamDestroy(stream);
+	stream.close();
 
 	return object;
 }
@@ -514,16 +514,15 @@ Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 
 bool SerializerSaveObjectToFile(Serializer* serializer, const Path& file, Object* object)
 {
-	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamOpenMode::Write);
-	if( !stream ) return false;
+	FileStream stream(file.c_str(), StreamOpenMode::Write);
 
-	serializer->stream = stream;
+	serializer->stream = (Stream *)&stream;
 	serializer->object = object;
 	
 	if( !SerializerSave(serializer, object) )
 		return false;
 
-	StreamDestroy(stream);
+	stream.close();
 
 	return true;
 }

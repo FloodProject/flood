@@ -17,39 +17,39 @@ SUITE(Core)
 	TEST(FileStreams)
 	{
 		// File not found
-		Stream* notFound = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamOpenMode::Read );
-		CHECK(nullptr == notFound);
+		FileStream notFound("Test.h", StreamOpenMode::Read);
+		CHECK(!notFound.isValid);
 
 		// File opening
-		StreamPtr file( pStreamCreateFromFile(AllocatorGetHeap(), "file.txt", StreamOpenMode::Read) );
-		CHECK(nullptr != file);
+		FileStream file("file.txt", StreamOpenMode::Read);
+		CHECK(file.isValid);
 
 		// File size.
-		int64 size = StreamGetSize(file);
+		int64 size = file.size();
 		CHECK_EQUAL(6, (int) size);
 
 		// File read
 		String text;
-		StreamReadString(file, text);
+		file.readString(text);
 		CHECK_EQUAL("foobar", text.c_str());
 
 		// File seek
-		StreamSetPosition(file, -3, StreamSeekMode::RelativeEnd);
+		file.setPosition(-3, StreamSeekMode::RelativeEnd);
 
 		// File tell
-		int64 offset = StreamGetPosition(file);
+		int64 offset = file.getPosition();
 		CHECK_EQUAL(3, (int) offset);
 
 		// File read
-		StreamReadString(file, text);
+		file.readString(text);
 		CHECK_EQUAL("bar", text.c_str());
 
-		StreamPtr flines( pStreamCreateFromFile(AllocatorGetHeap(), "lines.txt", StreamOpenMode::Read) );
-		CHECK(nullptr != flines);
+		FileStream flines("lines.txt", StreamOpenMode::Read);
+		CHECK(flines.isValid);
 
 		// Read lines.
 		std::vector<String> lines;
-		StreamReadLines(flines, lines);
+		flines.readLines(lines);
 		CHECK_EQUAL(3, lines.size());
 		CHECK_EQUAL("foo", lines[0].c_str());
 		CHECK_EQUAL("bar", lines[1].c_str());
@@ -59,14 +59,12 @@ SUITE(Core)
 #if defined(ENABLE_NETWORKING_CURL)
 	TEST(WebStreams)
 	{
-		Stream* ws = StreamCreateWeb(AllocatorGetHeap(), "http://www.google.com", StreamOpenMode::Read);
+		WebStream ws("http://www.google.com", StreamOpenMode::Read);
 
 		String response;
-		StreamReadString(ws, response);
+		ws.readString(response);
 
 		CHECK(response.size() > 0);
-
-		StreamDestroy(ws);
 	}
 #endif
 }

@@ -55,7 +55,7 @@ public:
 	FLD_IGNORE GETTER(Packet, ENetPacket*, packet)
 
 	// Gets the packet memory stream.
-	FLD_IGNORE GETTER(MemoryStream, MemoryStream*, ms)
+	FLD_IGNORE GETTER(MemoryStream, MemoryStream*, (MemoryStream*)&ms)
 
 	// Creates a network packet.
 	FLD_IGNORE void createPacket();
@@ -109,7 +109,7 @@ private:
 	PacketFlags processedFlags;
 
 	// Packet data.
-	MemoryStream* ms;
+	MemoryStream ms;
 
 	// Network packet;
 	ENetPacket* packet;

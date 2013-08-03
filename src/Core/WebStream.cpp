@@ -18,35 +18,6 @@
 
 NAMESPACE_CORE_BEGIN
 
-//-----------------------------------//
-
-struct API_CORE WebStream : Stream
-{
-	CURL* handle;
-	MemoryStream ms;
-	bool downloaded;
-};
-
-static bool  WebStreamOpen(Stream*);
-static bool  WebStreamClose(Stream*);
-static int64 WebStreamRead(Stream*, void*, int64);
-static int64 WebStreamWrite(Stream*, void*, int64);
-static int64 WebStreamGetSize(Stream* s);
-
-static StreamFuncs gs_WebFuncs = 
-{
-	WebStreamOpen,
-	WebStreamClose,
-	WebStreamRead,
-	WebStreamWrite,
-	0/*WebStreamTell*/,
-	0/*WebStreamSeek*/,
-	WebStreamGetSize,
-	0/*WebStreamResize*/
-};
-
-//-----------------------------------//
-
 static bool g_InitializedCURL = false;
 
 static void CleanupCURL()
@@ -64,139 +35,21 @@ static void InitCURL()
 	g_InitializedCURL = true;
 }
 
-static size_t HandleHTTP(void* ptr, size_t size, size_t nmemb, void* userdata);
-static size_t HandleProgress(void *clientp, double, double, double, double);
-
 //-----------------------------------//
 
-Stream* StreamCreateWeb(Allocator* alloc, const String& URL, StreamOpenMode mode)
+WebStream::WebStream(const String& URL, StreamOpenMode mode)
+	: Stream(URL, mode)
+	, handle(nullptr)
 {
-	WebStream* ws = Allocate(alloc, WebStream);
-	if( !ws ) return nullptr;
-	
-	ws->handle = nullptr;
-	ws->path = URL;
-	ws->mode = mode;
-	ws->fn = &gs_WebFuncs;
-
-	if( !WebStreamOpen(ws) )
-	{
-		Deallocate(ws);
-		return nullptr;
-	}
-
-	return ws;
+	open(); 
 }
 
 //-----------------------------------//
 
-static bool WebStreamOpen(Stream* s)
+WebStream::~WebStream()
 {
-	WebStream* ws = (WebStream*) s;
-	if( !ws ) return false;
-
-	InitCURL();
-
-	ws->handle = curl_easy_init();
-
-	if( !ws->handle )
-	{
-		LogError("Could not initialize cURL");
-		return false;
-	}
-
-	ws->downloaded = false;
-
-	curl_easy_setopt(ws->handle, CURLOPT_FOLLOWLOCATION, true);
-	curl_easy_setopt(ws->handle, CURLOPT_URL, ws->path.c_str());
-	curl_easy_setopt(ws->handle, CURLOPT_NOPROGRESS, 0);
-	curl_easy_setopt(ws->handle, CURLOPT_PROGRESSFUNCTION, &HandleProgress);
-
-	StreamMemoryInit(&ws->ms);
-
-	return true;
-}
-
-//-----------------------------------//
-
-static bool WebStreamClose(Stream* s)
-{
-	WebStream* ws = (WebStream*) s;
-	if( !ws ) return false;
-
-	curl_easy_cleanup(ws->handle);
-	ws->handle = nullptr;
-
-	return true;
-}
-
-//-----------------------------------//
-
-static bool WebStreamPerform(WebStream* ws)
-{
-	CURL* curl = ws->handle;
-
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &HandleHTTP);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, ws);
-	CURLcode status = curl_easy_perform(curl);
-
-	return status == CURLE_OK;
-}
-
-//-----------------------------------//
-
-static int64 WebStreamRead(Stream* s, void* buffer, int64 size)
-{
-	WebStream* ws = (WebStream*) s;
-	if( !ws ) return -1;
-
-	//StreamMemorySetRawBuffer(&ws->ms, (uint8*) buffer);
-
-	if( !ws->downloaded && !WebStreamPerform(ws) )
-		return -1;
-
-	memcpy(buffer, ws->ms.buffer, (size_t) size);
-
-	return ws->ms.position;
-}
-
-//-----------------------------------//
-
-static int64 WebStreamWrite(Stream* s, void* buf, int64 size)
-{
-	WebStream* ws = (WebStream*) s;
-	
-	LogAssert("Not implemented yet");
-	return 0;
-}
-
-//-----------------------------------//
-
-static int64 WebStreamGetSize(Stream* s)
-{
-	WebStream* ws = (WebStream*) s;
-	
-	if( !ws->downloaded && !WebStreamPerform(ws) )
-		return -1;
-
-	double size;
-	curl_easy_getinfo(ws->handle, CURLINFO_SIZE_DOWNLOAD, &size);
-
-	return (int64) size;
-}
-
-//-----------------------------------//
-
-static size_t HandleHTTP(void* ptr, size_t size, size_t nmemb, void* userdata)
-{
-	WebStream* ws = (WebStream*) userdata;
-	MemoryStream* ms = &ws->ms;
-	ws->downloaded = true;
-
-	size_t total = size*nmemb;
-	int64 written = StreamWrite(ms, (uint8*) ptr, total);
-
-	return (size_t) written;
+	if( !close() )
+		LogDebug("Error closing web stream: %s", path.c_str());
 }
 
 //-----------------------------------//
@@ -208,6 +61,107 @@ static size_t HandleProgress(void *clientp, double dltotal, double dlnow,
 }
 
 //-----------------------------------//
+
+bool WebStream::open()
+{
+	InitCURL();
+
+	handle = curl_easy_init();
+
+	if( !handle )
+	{
+		LogError("Could not initialize cURL");
+		return false;
+	}
+
+	isPerformDone = false;
+
+	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
+	curl_easy_setopt(handle, CURLOPT_URL, path.c_str());
+	curl_easy_setopt(handle, CURLOPT_NOPROGRESS, 0);
+	curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION, &HandleProgress);
+
+	ms.init();
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool WebStream::close()
+{
+	curl_easy_cleanup(handle);
+	handle = nullptr;
+
+	return true;
+}
+
+//-----------------------------------//
+
+static size_t HandleHTTP(void* ptr, size_t size, size_t nmemb, void* data)
+{
+	auto ws = (WebStream*) data;
+	ws->isPerformDone = true;
+
+	size_t total = size * nmemb;
+	int64 written = ws->ms.write((uint8*) ptr, total);
+
+	return (size_t) written;
+}
+
+//-----------------------------------//
+
+bool WebStream::perform() const
+{
+	CURL* curl = handle;
+
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &HandleHTTP);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
+	CURLcode status = curl_easy_perform(curl);
+
+	return status == CURLE_OK;
+}
+
+//-----------------------------------//
+int64 WebStream::read(void* buffer, uint64 size) const
+{
+	//StreamMemorySetRawBuffer(&ws->ms, (uint8*) buffer);
+
+	if (!isPerformDone && !perform())
+		return InvalidState;
+
+	if (ms.size() < size)
+		size = ms.size();
+
+	memcpy(buffer, ms.buffer, (size_t) size);
+
+	return ms.position;
+}
+
+//-----------------------------------//
+
+int64 WebStream::write(void* buf, uint64 size)
+{
+	LogAssert("Not implemented yet");
+	return 0;
+}
+
+//-----------------------------------//
+
+uint64 WebStream::size() const
+{
+	if( !isPerformDone && !perform() )
+		return InvalidState;
+
+	double size;
+	curl_easy_getinfo(handle, CURLINFO_SIZE_DOWNLOAD, &size);
+
+	return (int64) size;
+}
+
+//-----------------------------------//
+
+
 
 NAMESPACE_CORE_END
 

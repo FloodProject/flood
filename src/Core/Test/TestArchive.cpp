@@ -31,8 +31,8 @@ SUITE(Core)
 		CHECK( stream != nullptr);
 
 		String text;
-		StreamReadString(stream, text);
-		StreamDestroy(stream);
+		stream->readString(text);
+		Deallocate(stream);
 		CHECK_EQUAL( "foobar", text.c_str());
 
 		std::vector<Path> dirs;
@@ -64,8 +64,8 @@ SUITE(Core)
 		CHECK( stream != nullptr );
 
 		String text;
-		StreamReadString(stream, text);
-		StreamDestroy(stream);
+		stream->readString(text);
+		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
 		std::vector<Path> dirs;
@@ -105,8 +105,8 @@ SUITE(Core)
 		CHECK(stream != nullptr);
 
 		String text;
-		StreamReadString(stream, text);
-		StreamDestroy(stream);
+		stream->readString(text);
+		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
 		std::vector<Path> dirs;

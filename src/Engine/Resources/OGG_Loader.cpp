@@ -24,7 +24,7 @@ REFLECT_CLASS_END()
 static size_t OggRead(void* ptr, size_t size, size_t nmemb, void* datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return StreamReadBuffer(stream, ptr, size*nmemb);
+	return stream->readBuffer(ptr, size*nmemb);
 }
 
 //-----------------------------------//
@@ -48,7 +48,7 @@ static int OggSeek(void* datasource, ogg_int64_t offset, int whence)
 		break;
 	}
 
-	StreamSetPosition(stream, offset, mode);
+	stream->setPosition(offset, mode);
 
 	return 0;
 }
@@ -65,7 +65,7 @@ static int OggClose(void* /*datasource*/)
 static long OggTell(void* datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return StreamGetPosition(stream);
+	return stream->getPosition();
 }
 
 //-----------------------------------//

@@ -23,171 +23,146 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static bool  FileOpen(Stream*);
-static bool  FileClose(Stream*);
-static int64 FileRead(Stream*, void*, int64);
-static int64 FileWrite(Stream*, void*, int64);
-static int64 FileTell(Stream*);
-static int64 FileSeek(Stream*, int64, int8);
-static int64 FileGetSize(Stream*);
-
-static StreamFuncs gs_FileFuncs = 
+FileStream::FileStream(const Path& path, StreamOpenMode mode)
+	: Stream(path, mode)
+	, fp(nullptr)
 {
-	FileOpen,
-	FileClose,
-	FileRead,
-	FileWrite,
-	FileTell,
-	FileSeek,
-	FileGetSize,
-	0/*FileResize*/
-};
-
-//-----------------------------------//
-
-Stream* StreamCreateFromFile(Allocator* alloc,
-							 const Path& path, StreamOpenMode mode)
-{
-	FileStream* fs = Allocate(alloc, FileStream);
-	if( !fs ) return nullptr;
-	
-	fs->fp = nullptr;
-	fs->path = path;
-	fs->mode = mode;
-	fs->fn = &gs_FileFuncs;
-
-	if( !FileOpen(fs) )
-	{
-		//LogWarn("Error opening file: %s", PathGetFile(path).c_str());
-		Deallocate(fs);
-		return nullptr;
-	}
-
-	return fs;
+	open();
 }
 
 //-----------------------------------//
 
-static bool FileOpen(Stream* stream)
+FileStream::~FileStream()
 {
-	FileStream* fs = (FileStream*) stream;
+	if( !close() )
+		LogDebug("Error closing file stream: %s", path.c_str());
+}
+
+//-----------------------------------//
+
+bool FileStream::open()
+{
 	const char* mode = nullptr;
 
-	switch(fs->mode)
+	switch(this->mode)
 	{
-	case StreamOpenMode::Read:   mode = "rb"; break;
-	case StreamOpenMode::Write:  mode = "w+b"; break;
-	case StreamOpenMode::Append: mode = "a+b"; break;
+		case StreamOpenMode::Read:   mode = "rb"; break;
+		case StreamOpenMode::Write:  mode = "w+b"; break;
+		case StreamOpenMode::Append: mode = "a+b"; break;
 	}
 
 #ifdef COMPILER_MSVC
-	fopen_s(&fs->fp, fs->path.c_str(), mode);
+	fopen_s(&fp, path.c_str(), mode);
 #else
-	fs->fp = fopen(fs->path.c_str(), mode);
+	fp = fopen(path.c_str(), mode);
 #endif
 
-	return fs->fp != nullptr;
+	isValid = fp != nullptr;
+	return isValid;
 }
 
 //-----------------------------------//
 
-static bool FileClose(Stream* stream)
+bool FileStream::close()
 {
-	FileStream* fs = (FileStream*) stream;
-
-	if(fs->fp == nullptr)
+	if (!fp)
 		return true;
 
-	int ret = fclose(fs->fp);
-	fs->fp = nullptr;
-
+	int ret = fclose(fp);
+	fp = nullptr;
+	isValid = false;
 	return ret == 0;
 }
 
 //-----------------------------------//
 
-static int64 FileRead(Stream* stream, void* buffer, int64 size)
+int64 FileStream::read(void* buffer, uint64 size) const
 {
-	FileStream* fs = (FileStream*) stream;
+	if (!isValid)
+		return InvalidState;
 
-	if( feof(fs->fp) )
-		return StreamEOF;
+	if (feof(fp))
+		return EndOfStream;
 
-	return fread(buffer, 1, size_t(size), fs->fp);
+	return fread(buffer, (size_t)size, /*NumbBlocks=*/1, fp);
 }
 
 //-----------------------------------//
 
-static int64 FileWrite(Stream* stream, void* buffer, int64 size)
+int64 FileStream::write(void* buffer, uint64 size)
 {
-	FileStream* fs = (FileStream*) stream;
+	if (!isValid)
+		return InvalidState;
 
-	assert( fs->mode == StreamOpenMode::Write || fs->mode == StreamOpenMode::Append );
+	assert( mode == StreamOpenMode::Write || mode == StreamOpenMode::Append );
 	assert( buffer && size >= 0 );
 
-	return fwrite(buffer, size_t(size), 1, fs->fp);
+	return fwrite(buffer, size_t(size), 1, fp);
 }
 
 //-----------------------------------//
 
-static int64 FileTell(Stream* stream)
+int64 FileStream::getPosition() const
 {
-	FileStream* fs = (FileStream*) stream;
+	if (!isValid)
+		return InvalidState;
 
 #ifdef COMPILER_MSVC
-	return _ftelli64(fs->fp);
+	return _ftelli64(fp);
 #else
-	return ftell(fs->fp);
+	return ftell(fp);
 #endif
 }
 
 //-----------------------------------//
 
-static int64 FileSeek(Stream* stream, int64 offset, int8 mode)
+void FileStream::setPosition(int64 offset, StreamSeekMode mode)
 {
-	FileStream* fs = (FileStream*) stream;
+	if (!isValid)
+		return;
 
 	int origin = 0;
 
 	switch(mode)
 	{
-	case (int)StreamSeekMode::Absolute:
+	case StreamSeekMode::Absolute:
 		origin = SEEK_SET;
 		break;
-	case (int)StreamSeekMode::Relative:
+	case StreamSeekMode::Relative:
 		origin = SEEK_CUR;
 		break;
-	case (int)StreamSeekMode::RelativeEnd:
+	case StreamSeekMode::RelativeEnd:
 		origin = SEEK_END;
 		break;
 	}
 
 #ifdef COMPILER_MSVC
-	return _fseeki64(fs->fp, offset, origin);
+	_fseeki64(fp, offset, origin);
 #else
-	return fseek(fs->fp, (long) offset, origin);
+	fseek(fp, (long) offset, origin);
 #endif
 }
 
 //-----------------------------------//
 
-static int64 FileGetSize(Stream* stream)
+uint64 FileStream::size() const
 {
-	FileStream* fs = (FileStream*) stream;
+	if (!isValid)
+		return InvalidState;
 
 #ifdef COMPILER_MSVC
-	return _filelengthi64( _fileno(fs->fp) );
+	return _filelengthi64( _fileno(fp) );
 #else
 	// Hold the current file position.
-	int64 curr = FileTell(fs);
+	int64 curr = getPosition();
 	
 	// Seek to the end of the file and get position.
-	FileSeek(fs, 0, (int)StreamSeekMode::Absolute);
+	setPosition(0, (int)StreamSeekMode::Absolute);
 	
-	int64 size = FileTell(fs);
+	int64 size = getPosition();;
 	
 	// Seek again to the previously current position.
-	FileSeek(fs, curr, (int)StreamSeekMode::Absolute);
+	setPosition(curr, (int)StreamSeekMode::Absolute);
 
 	return size;
 #endif
@@ -195,14 +170,14 @@ static int64 FileGetSize(Stream* stream)
 
 //-----------------------------------//
 
-static void FileSetBuffering( Stream* stream, bool state )
+void FileStream::setBuffering(bool state)
 {
-	FileStream* fs = (FileStream*) stream;
-	FILE* fp = fs->fp;
-
+	if (!isValid)
+		return;
+	
 	int mode = _IOFBF;
 	
-	if( !state )
+	if (!state)
 		mode = _IONBF;
 	
 	setvbuf(fp, nullptr, mode, 0);

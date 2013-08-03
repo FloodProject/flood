@@ -8,147 +8,105 @@
 #include "Core/API.h"
 #include "Core/Stream.h"
 #include "Core/Memory.h"
+#include "Core/Log.h"
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static bool  MemoryOpen(Stream*);
-static bool  MemoryClose(Stream*);
-static int64 MemoryRead(Stream*, void*, int64);
-static int64 MemoryWrite(Stream*, void*, int64);
-static int64 MemoryTell(Stream*);
-static int64 MemorySeek(Stream*, int64, int8);
-static int64 MemoryGetSize(Stream*);
-static void  MemoryResize(Stream*, int64 size);
-
-static StreamFuncs gs_MemoryFuncs = 
+MemoryStream::MemoryStream(uint64 size)
+	: Stream("", StreamOpenMode::Default)
 {
-	MemoryOpen,
-	MemoryClose,
-	MemoryRead,
-	MemoryWrite,
-	MemoryTell,
-	MemorySeek,
-	MemoryGetSize,
-	MemoryResize
-};
-
-//-----------------------------------//
-
-MemoryStream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
-{
-	MemoryStream* ms = Allocate(alloc, MemoryStream);
-	if( !ms ) return nullptr;
-	
-	StreamMemoryInit(ms);
-
-	if( !MemoryOpen(ms) )
-	{
-		Deallocate(ms);
-		return nullptr;
-	}
-
-	MemoryResize(ms, size);
-
-	return ms;
+	init();
+	resize(size);
 }
 
 //-----------------------------------//
 
-void StreamMemoryInit(MemoryStream* ms)
+MemoryStream::MemoryStream()
+	: Stream("", StreamOpenMode::Default)
+
 {
-	if( !ms ) return;
-	
-	ms->fn = &gs_MemoryFuncs;
-	ms->position = 0;
-	ms->buffer = nullptr;
-	ms->useRawBuffer = false;
+	init();
 }
 
 //-----------------------------------//
 
-void StreamMemorySetRawBuffer(MemoryStream* ms, uint8* buffer)
+MemoryStream::~MemoryStream()
 {
-	ms->buffer = buffer;
-	ms->useRawBuffer = true;
+	if( !close() )
+		LogDebug("Error closing memory stream: %s", path.c_str());
 }
 
 //-----------------------------------//
 
-static bool MemoryOpen(Stream* stream)
+void MemoryStream::init()
 {
-	MemoryStream* ms = (MemoryStream*) stream;
-	return ms != nullptr;
+	position = 0;
+	buffer = nullptr;
+	useRawBuffer = false;
+	data.clear();
 }
 
 //-----------------------------------//
 
-static bool MemoryClose(Stream* stream)
+void MemoryStream::setRawBuffer(uint8* buffer)
 {
-	MemoryStream* ms = (MemoryStream*) stream;
+	this->buffer = buffer;
+	useRawBuffer = true;
+}
+
+//-----------------------------------//
+
+bool MemoryStream::open()
+{
 	return true;
 }
 
 //-----------------------------------//
 
-static int64 MemoryRead(Stream* stream, void* buffer, int64 size)
+bool MemoryStream::close()
 {
-	MemoryStream* ms = (MemoryStream*) stream;
+	return true;
+}
+
+//-----------------------------------//
+
+int64 MemoryStream::read(void* buffer, uint64 size) const
+{
 	if(size < 0) return -1;
 
-	if( !ms->useRawBuffer )
+	if(!useRawBuffer)
 	{
-		int64 left = MemoryGetSize(stream) - ms->position;
+		int64 left = this->size() - position;
 		if(size > left) size = left;
 	}
 
-	uint8* cur = ms->buffer + ms->position;
+	uint8* cur = this->buffer + position;
 	memcpy(buffer, cur, (size_t) size);
 
-	ms->position += size;
+	position += size;
 	return size;
 }
 
 //-----------------------------------//
 
-static int32 GetNextPower2(int32 v)
+int64 MemoryStream::write(void* buffer, uint64 size)
 {
-	v--;
-	v |= v >> 1;
-	v |= v >> 2;
-	v |= v >> 4;
-	v |= v >> 8;
-	v |= v >> 16;
-	v++;
+	if(size <= 0) return -1;
 
-	return v;
-}
-
-//-----------------------------------//
-
-static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
-{
-	if(size < 0) return -1;
-
-	MemoryStream* ms = (MemoryStream*) stream;
-	uint64& position = ms->position;
-
-	if( !ms->useRawBuffer )
+	if(!useRawBuffer)
 	{
-		int64 newSize = ms->position + size;
-		bool needsResize = newSize > ms->data.size();
+		int64 newSize = position + size;
+		bool needsResize = newSize > data.size();
 	
 		if(needsResize)
-			MemoryResize(stream, newSize);
-#if 0
-			MemoryResize(stream, GetNextPower2((int32)newSize));
-#endif
+			resize(newSize);
 
-		if( ms->data.empty() ) return 0;
+		if(data.empty()) return 0;
 	}
 
-	uint8* cur = ms->buffer + position;
+	uint8* cur = this->buffer + position;
 	memcpy(cur, buffer, (size_t) size);
 
 	position += size;
@@ -157,51 +115,44 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 
 //-----------------------------------//
 
-static int64 MemoryTell(Stream* stream)
+int64 MemoryStream::getPosition() const
 {
-	MemoryStream* ms = (MemoryStream*) stream;
-	return ms->position;
+	return position;
 }
 
 //-----------------------------------//
 
-static int64 MemorySeek(Stream* stream, int64 offset, int8 mode)
+void MemoryStream::setPosition(int64 offset, StreamSeekMode mode)
 {
-	MemoryStream* ms = (MemoryStream*) stream;
-
 	switch(mode)
 	{
-	case (int)StreamSeekMode::Absolute:
-		ms->position = offset;
+	case StreamSeekMode::Absolute:
+		position = offset;
 		break;
-	case (int)StreamSeekMode::Relative:
-		ms->position += offset;
+	case StreamSeekMode::Relative:
+		position += offset;
 		break;
-	case (int)StreamSeekMode::RelativeEnd:
-		ms->position = MemoryGetSize(stream) - offset;
+	case StreamSeekMode::RelativeEnd:
+		position = size() - offset;
 		break;
 	}
-
-	return true;
 }
 
 //-----------------------------------//
 
-static int64 MemoryGetSize(Stream* stream)
+uint64 MemoryStream::size() const
 {
-	MemoryStream* ms = (MemoryStream*) stream;
-	return ms->data.size();
+	return data.size();
 }
 
 //-----------------------------------//
 
-static void MemoryResize(Stream* stream, int64 size)
+void MemoryStream::resize(int64 size)
 {
-	MemoryStream* ms = (MemoryStream*) stream;
 	if( size <= 0 ) return;
 
-	ms->data.resize((size_t)size);
-	ms->buffer = &ms->data[0];
+	data.resize((size_t)size);
+	buffer = data.data();
 }
 
 //-----------------------------------//
