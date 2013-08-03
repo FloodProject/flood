@@ -31,12 +31,15 @@ Flood::Session::Session()
 bool Flood::Session::Equals(System::Object^ object)
 {
     if (!object) return false;
-    return Instance == safe_cast<ICppInstance^>(object)->Instance;
+    auto obj = dynamic_cast<Session^>(object);
+    if (!obj) return false;
+    auto param = (::Session*)obj->NativePtr;
+    return ((::Session*)NativePtr)->isEquals(param);
 }
 
 int Flood::Session::GetHashCode()
 {
-    return (int)NativePtr;
+    return ((::Session*)NativePtr)->hashCode();
 }
 
 System::IntPtr Flood::Session::Instance::get()
