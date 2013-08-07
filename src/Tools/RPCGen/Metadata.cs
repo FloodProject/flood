@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPCGen
 {
@@ -13,60 +10,42 @@ namespace RPCGen
         public Type Type;
     }
 
-    class Metadata
+    public class Metadata
     {
-        public static bool IsService(Type type)
+        private static bool HasAttribute(ICustomAttributeProvider info, string fullName)
         {
-            foreach (var attribute in type.GetCustomAttributes(true))
+            foreach (var attribute in info.GetCustomAttributes(true))
             {
-                if(attribute.GetType().FullName == "Flood.RPC.Metadata.ServiceAttribute")
+                if(attribute.GetType().FullName == fullName)
                     return true;
             }
 
             return false;
+        }
+
+        public static bool IsService(Type type)
+        {
+            return HasAttribute(type, "Flood.RPC.Metadata.ServiceAttribute");
         }
 
         public static bool IsMessage(Type type)
         {
-            foreach (var attribute in type.GetCustomAttributes(true))
-            {
-                if(attribute.GetType().FullName == "Flood.RPC.Metadata.MessageAttribute")
-                    return true;
-            }
-
-            return false;
+            return HasAttribute(type, "Flood.RPC.Metadata.MessageAttribute");
         }
 
         public static bool IsException(Type type)
         {
-            foreach (var attribute in type.GetCustomAttributes(true))
-            {
-                if(attribute.GetType().FullName == "Flood.RPC.Metadata.ExceptionAttribute")
-                    return true;
-            }
-
-            return false;
+            return HasAttribute(type, "Flood.RPC.Metadata.ExceptionAttribute");
         }
 
         public static bool IsRequired(ICustomAttributeProvider info)
         {
-            foreach (var attribute in info.GetCustomAttributes(true))
-            {
-                if(attribute.GetType().FullName == "Flood.RPC.Metadata.RequiredAttribute")
-                    return true;
-            }
-
-            return false;
+            return HasAttribute(info, "Flood.RPC.Metadata.RequiredAttribute");
         }
 
         public static bool HasId(ICustomAttributeProvider info)
         {
-            foreach (var attribute in info.GetCustomAttributes(true))
-            {
-                if (attribute.GetType().FullName == "Flood.RPC.Metadata.IdAttribute") 
-                    return true;
-            }
-            return false;
+            return HasAttribute(info, "Flood.RPC.Metadata.IdAttribute");
         }
 
         public static bool TryGetId(ICustomAttributeProvider info, out int id)
@@ -86,12 +65,7 @@ namespace RPCGen
 
         public static bool HasThrows(ICustomAttributeProvider info)
         {
-            foreach (var attribute in info.GetCustomAttributes(true))
-            {
-                if (attribute.GetType().FullName == "Flood.RPC.Metadata.ThrowsAttribute") 
-                    return true;
-            }
-            return false;
+            return HasAttribute(info, "Flood.RPC.Metadata.ThrowsAttribute");
         }
 
         public static bool TryGetThrows(ICustomAttributeProvider info, out List<ExceptionInfo> exceptionsInfo)
