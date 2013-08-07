@@ -207,14 +207,14 @@ bool HostClient::connect( const HostConnectionDetails& details )
 
 void HostClient::onPeerConnect(const PeerPtr& newPeer)
 {
-	
-	newPeer->setSession(session);
-	session->setPeer(newPeer.get());
 	peer = newPeer;
+	peer->setSession(&session);
+	session.setPeer(peer.get());
+
 
 	auto keyExchanger = Allocate(AllocatorGetNetwork(), PacketClientKeyExchanger);
-	newPeer->addProcessor(keyExchanger);
-	keyExchanger->beginKeyExchange(newPeer.get());
+	peer->addProcessor(keyExchanger);
+	keyExchanger->beginKeyExchange(peer.get());
 }
 
 //-----------------------------------//
