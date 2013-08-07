@@ -27,6 +27,18 @@ namespace Flood.RPC.Protocol
 {
     public abstract class Serializer
     {
+        public RPCBuffer Buffer { get; private set; }
+
+        protected Serializer(RPCBuffer buffer)
+        {
+            Buffer = buffer;
+        }
+
+        protected Serializer()
+        {
+            Buffer = new RPCBuffer();
+        }
+
         public abstract void WriteMessageBegin(Message message);
         public abstract void WriteMessageEnd();
         public abstract void WriteStructBegin(Struct struc);

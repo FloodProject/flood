@@ -23,9 +23,6 @@
 
 using System;
 using System.Text;
-using Flood.RPC.Transport;
-using System.Collections;
-using System.IO;
 using System.Collections.Generic;
 
 namespace Flood.RPC.Protocol
@@ -84,25 +81,7 @@ namespace Flood.RPC.Protocol
         private  Nullable<Boolean> boolValue_;
 
 
-        #region CompactProtocol Factory
-
-        /**
-          * Factory
-          */
-        public class Factory : ProtocolFactory
-        {
-            public Factory() { }
-
-            public Serializer GetProtocol(TTransport trans)
-            {
-                return new CompactProtocol(trans);
-            }
-        }
-
-        #endregion
-
-        public CompactProtocol(TTransport trans)
-            : base(trans)
+        public CompactProtocol()
         {
             ttypeToCompactType[(int)TType.Stop] = Types.STOP;
             ttypeToCompactType[(int)TType.Bool] = Types.BOOLEAN_TRUE;
@@ -135,7 +114,7 @@ namespace Flood.RPC.Protocol
         private void WriteByteDirect(byte b)
         {
             byteDirectBuffer[0] = b;
-            trans.Write(byteDirectBuffer);
+            Buffer.Write(byteDirectBuffer);
         }
 
         /** 
@@ -170,7 +149,7 @@ namespace Flood.RPC.Protocol
                     n >>= 7;
                 }
             }
-            trans.Write(i32buf, 0, idx);
+            Buffer.Write(i32buf, 0, idx);
         }
 
         /**
@@ -372,7 +351,7 @@ namespace Flood.RPC.Protocol
         {
             byte[] data = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
             fixedLongToBytes(BitConverter.DoubleToInt64Bits(dub), data, 0);
-            trans.Write(data);
+            Buffer.Write(data);
         }
 
         /**
@@ -395,7 +374,7 @@ namespace Flood.RPC.Protocol
         private void WriteBinary(byte[] buf, int offset, int length)
         {
             WriteVarint32((uint)length);
-            trans.Write(buf, offset, length);
+            Buffer.Write(buf, offset, length);
         }
 
         //
@@ -452,7 +431,7 @@ namespace Flood.RPC.Protocol
                     n >>= 7;
                 }
             }
-            trans.Write(varint64out, 0, idx);
+            Buffer.Write(varint64out, 0, idx);
         }
 
         /**
@@ -670,7 +649,7 @@ namespace Flood.RPC.Protocol
          */
         public override byte ReadByte()
         {
-            trans.ReadAll(byteRawBuf, 0, 1);
+            Buffer.Read(byteRawBuf, 0, 1);
             return byteRawBuf[0];
         }
 
@@ -704,7 +683,7 @@ namespace Flood.RPC.Protocol
         public override double ReadDouble()
         {
             byte[] longBits = new byte[8];
-            trans.ReadAll(longBits, 0, 8);
+            Buffer.Read(longBits, 0, 8);
             return BitConverter.Int64BitsToDouble(bytesToLong(longBits));
         }
 
@@ -732,7 +711,7 @@ namespace Flood.RPC.Protocol
             if (length == 0) return new byte[0];
 
             byte[] buf = new byte[length];
-            trans.ReadAll(buf, 0, length);
+            Buffer.Read(buf, 0, length);
             return buf;
         }
 
@@ -744,7 +723,7 @@ namespace Flood.RPC.Protocol
             if (length == 0) return new byte[0];
 
             byte[] buf = new byte[length];
-            trans.ReadAll(buf, 0, length);
+            Buffer.Read(buf, 0, length);
             return buf;
         }
 

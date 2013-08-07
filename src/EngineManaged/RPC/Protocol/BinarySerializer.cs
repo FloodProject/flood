@@ -23,7 +23,6 @@
 
 using System;
 using System.Text;
-using Flood.RPC.Transport;
 
 namespace Flood.RPC.Protocol
 {
@@ -39,40 +38,12 @@ namespace Flood.RPC.Protocol
         protected bool checkReadLength_ = false;
 
 
-        #region BinarySerializer Factory
-         /**
-          * Factory
-          */
-          public class Factory : ProtocolFactory {
-
-              protected bool strictRead_ = false;
-              protected bool strictWrite_ = true;
-
-              public Factory()
-                  :this(false, true)
-              {
-              }
-
-              public Factory(bool strictRead, bool strictWrite)
-              {
-                  strictRead_ = strictRead;
-                  strictWrite_ = strictWrite;
-              }
-
-            public Serializer GetProtocol(TTransport trans) {
-              return new BinarySerializer(trans, strictRead_, strictWrite_);
-            }
-          }
-
-        #endregion
-
-        public BinarySerializer(TTransport trans)
-            : this(trans, false, true)
+        public BinarySerializer()
+            : this(false, true)
         {
         }
 
-        public BinarySerializer(TTransport trans, bool strictRead, bool strictWrite)
-            :base(trans)
+        public BinarySerializer(bool strictRead, bool strictWrite)
         {
             strictRead_ = strictRead;
             strictWrite_ = strictWrite;
@@ -188,7 +159,7 @@ namespace Flood.RPC.Protocol
         public override void WriteByte(byte b)
         {
             bout[0] = b;
-            trans.Write(bout, 0, 1);
+            Buffer.Write(bout, 0, 1);
         }
 
         private byte[] i16out = new byte[2];
@@ -196,7 +167,7 @@ namespace Flood.RPC.Protocol
         {
             i16out[0] = (byte)(0xff & (s >> 8));
             i16out[1] = (byte)(0xff & s);
-            trans.Write(i16out, 0, 2);
+            Buffer.Write(i16out, 0, 2);
         }
 
         private byte[] i32out = new byte[4];
@@ -206,7 +177,7 @@ namespace Flood.RPC.Protocol
             i32out[1] = (byte)(0xff & (i32 >> 16));
             i32out[2] = (byte)(0xff & (i32 >> 8));
             i32out[3] = (byte)(0xff & i32);
-            trans.Write(i32out, 0, 4);
+            Buffer.Write(i32out, 0, 4);
         }
 
         private byte[] i64out = new byte[8];
@@ -220,7 +191,7 @@ namespace Flood.RPC.Protocol
             i64out[5] = (byte)(0xff & (i64 >> 16));
             i64out[6] = (byte)(0xff & (i64 >> 8));
             i64out[7] = (byte)(0xff & i64);
-            trans.Write(i64out, 0, 8);
+            Buffer.Write(i64out, 0, 8);
         }
 
         public override void WriteDouble(double d)
@@ -236,7 +207,7 @@ namespace Flood.RPC.Protocol
         public override void WriteBinary(byte[] b)
         {
             WriteI32(b.Length);
-            trans.Write(b, 0, b.Length);
+            Buffer.Write(b, 0, b.Length);
         }
 
         #endregion
@@ -447,21 +418,21 @@ namespace Flood.RPC.Protocol
             int size = ReadI32();
             CheckReadLength(size);
             byte[] buf = new byte[size];
-            trans.ReadAll(buf, 0, size);
+            Buffer.Read(buf, 0, size);
             return buf;
         }
         private  string ReadStringBody(int size)
         {
             CheckReadLength(size);
             byte[] buf = new byte[size];
-            trans.ReadAll(buf, 0, size);
+            Buffer.Read(buf, 0, size);
             return Encoding.UTF8.GetString(buf, 0, buf.Length);
         }
 
         private int ReadAll(byte[] buf, int off, int len)
         {
             CheckReadLength(len);
-            return trans.ReadAll(buf, off, len);
+            return Buffer.Read(buf, off, len);
         }
 
         #endregion

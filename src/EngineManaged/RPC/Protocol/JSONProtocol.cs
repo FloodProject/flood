@@ -21,8 +21,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-
-using Flood.RPC.Transport;
 using System.Globalization;
 
 namespace Flood.RPC.Protocol
@@ -39,17 +37,6 @@ namespace Flood.RPC.Protocol
     /// </summary>
     public class JSONProtocol : Serializer
     {
-        /// <summary>
-        /// Factory for JSON protocol objects
-        /// </summary>
-        public class Factory : ProtocolFactory
-        {
-            public Serializer GetProtocol(TTransport trans)
-            {
-                return new JSONProtocol(trans);
-            }
-        }
-
         private static byte[] COMMA = new byte[] { (byte)',' };
         private static byte[] COLON = new byte[] { (byte)':' };
         private static byte[] LBRACE = new byte[] { (byte)'{' };
@@ -223,7 +210,7 @@ namespace Flood.RPC.Protocol
                 }
                 else
                 {
-                    proto.trans.Write(COMMA);
+                    proto.Buffer.Write(COMMA);
                 }
             }
 
@@ -266,7 +253,7 @@ namespace Flood.RPC.Protocol
                 }
                 else
                 {
-                    proto.trans.Write(colon ? COLON : COMMA);
+                    proto.Buffer.Write(colon ? COLON : COMMA);
                     colon = !colon;
                 }
             }
@@ -318,7 +305,7 @@ namespace Flood.RPC.Protocol
                 }
                 else
                 {
-                    proto.trans.ReadAll(data, 0, 1);
+                    proto.Buffer.Read(data, 0, 1);
                 }
                 return data[0];
             }
@@ -331,7 +318,7 @@ namespace Flood.RPC.Protocol
             {
                 if (!hasData)
                 {
-                    proto.trans.ReadAll(data, 0, 1);
+                    proto.Buffer.Read(data, 0, 1);
                 }
                 hasData = true;
                 return data[0];
@@ -370,8 +357,7 @@ namespace Flood.RPC.Protocol
         ///<summary>
         /// JSONProtocol Constructor
         ///</summary>
-        public JSONProtocol(TTransport trans)
-            : base(trans)
+        public JSONProtocol()
         {
             context = new JSONBaseContext(this);
             reader = new LookaheadReader(this);
@@ -438,7 +424,7 @@ namespace Flood.RPC.Protocol
         private void WriteJSONString(byte[] b)
         {
             context.Write();
-            trans.Write(QUOTE);
+            Buffer.Write(QUOTE);
             int len = b.Length;
             for (int i = 0; i < len; i++)
             {
@@ -446,12 +432,12 @@ namespace Flood.RPC.Protocol
                 {
                     if (b[i] == BACKSLASH[0])
                     {
-                        trans.Write(BACKSLASH);
-                        trans.Write(BACKSLASH);
+                        Buffer.Write(BACKSLASH);
+                        Buffer.Write(BACKSLASH);
                     }
                     else
                     {
-                        trans.Write(b, i, 1);
+                        Buffer.Write(b, i, 1);
                     }
                 }
                 else
@@ -459,23 +445,23 @@ namespace Flood.RPC.Protocol
                     tempBuffer[0] = JSON_CHAR_TABLE[b[i]];
                     if (tempBuffer[0] == 1)
                     {
-                        trans.Write(b, i, 1);
+                        Buffer.Write(b, i, 1);
                     }
                     else if (tempBuffer[0] > 1)
                     {
-                        trans.Write(BACKSLASH);
-                        trans.Write(tempBuffer, 0, 1);
+                        Buffer.Write(BACKSLASH);
+                        Buffer.Write(tempBuffer, 0, 1);
                     }
                     else
                     {
-                        trans.Write(ESCSEQ);
+                        Buffer.Write(ESCSEQ);
                         tempBuffer[0] = HexChar((byte)(b[i] >> 4));
                         tempBuffer[1] = HexChar(b[i]);
-                        trans.Write(tempBuffer, 0, 2);
+                        Buffer.Write(tempBuffer, 0, 2);
                     }
                 }
             }
-            trans.Write(QUOTE);
+            Buffer.Write(QUOTE);
         }
 
         ///<summary>
@@ -489,12 +475,12 @@ namespace Flood.RPC.Protocol
 
             bool escapeNum = context.EscapeNumbers();
             if (escapeNum)
-                trans.Write(QUOTE);
+                Buffer.Write(QUOTE);
 
-            trans.Write(utf8Encoding.GetBytes(str));
+            Buffer.Write(utf8Encoding.GetBytes(str));
 
             if (escapeNum)
-                trans.Write(QUOTE);
+                Buffer.Write(QUOTE);
         }
 
         ///<summary>
@@ -524,12 +510,12 @@ namespace Flood.RPC.Protocol
             bool escapeNum = special || context.EscapeNumbers();
 
             if (escapeNum)
-                trans.Write(QUOTE);
+                Buffer.Write(QUOTE);
 
-            trans.Write(utf8Encoding.GetBytes(str));
+            Buffer.Write(utf8Encoding.GetBytes(str));
 
             if (escapeNum)
-                trans.Write(QUOTE);
+                Buffer.Write(QUOTE);
         }
         ///<summary>
         /// Write out contents of byte array b as a JSON string with base-64 encoded
@@ -538,7 +524,7 @@ namespace Flood.RPC.Protocol
         private void WriteJSONBase64(byte[] b)
         {
             context.Write();
-            trans.Write(QUOTE);
+            Buffer.Write(QUOTE);
 
             int len = b.Length;
             int off = 0;
@@ -547,7 +533,7 @@ namespace Flood.RPC.Protocol
             {
                 // Encode 3 bytes at a time
                 Base64Utils.encode(b, off, 3, tempBuffer, 0);
-                trans.Write(tempBuffer, 0, 4);
+                Buffer.Write(tempBuffer, 0, 4);
                 off += 3;
                 len -= 3;
             }
@@ -555,36 +541,36 @@ namespace Flood.RPC.Protocol
             {
                 // Encode remainder
                 Base64Utils.encode(b, off, len, tempBuffer, 0);
-                trans.Write(tempBuffer, 0, len + 1);
+                Buffer.Write(tempBuffer, 0, len + 1);
             }
 
-            trans.Write(QUOTE);
+            Buffer.Write(QUOTE);
         }
 
         private void WriteJSONObjectStart()
         {
             context.Write();
-            trans.Write(LBRACE);
+            Buffer.Write(LBRACE);
             PushContext(new JSONPairContext(this));
         }
 
         private void WriteJSONObjectEnd()
         {
             PopContext();
-            trans.Write(RBRACE);
+            Buffer.Write(RBRACE);
         }
 
         private void WriteJSONArrayStart()
         {
             context.Write();
-            trans.Write(LBRACKET);
+            Buffer.Write(LBRACKET);
             PushContext(new JSONListContext(this));
         }
 
         private void WriteJSONArrayEnd()
         {
             PopContext();
-            trans.Write(RBRACKET);
+            Buffer.Write(RBRACKET);
         }
 
         public override void WriteMessageBegin(Message message)
@@ -764,7 +750,7 @@ namespace Flood.RPC.Protocol
                     {
                         ReadJSONSyntaxChar(ZERO);
                         ReadJSONSyntaxChar(ZERO);
-                        trans.ReadAll(tempBuffer, 0, 2);
+                        Buffer.Read(tempBuffer, 0, 2);
                         ch = (byte)((HexVal((byte)tempBuffer[0]) << 4) + HexVal(tempBuffer[1]));
                     }
                     else
