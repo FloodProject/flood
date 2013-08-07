@@ -155,7 +155,8 @@ void Host::handleReceiveEvent(ENetEvent* event)
 	packetPtr->setPacket(packet);
 
 	if(peer->processInPacket(packetPtr.get(), event->channelID))
-		onPeerPacket(peer, packetPtr, event->channelID);
+		if(peer->getSession())
+			onSessionPacket(peer->getSession(), packetPtr, event->channelID);
 }
 
 //-----------------------------------//

@@ -46,9 +46,7 @@ public:
 	// Returns if the host has a networking context.
 	bool hasContext();
 
-	Event1<const PeerPtr&> onPeerConnect;
-	Event1<const PeerPtr&> onPeerDisconnect;
-	Event3<const PeerPtr&, const PacketPtr&, int> onPeerPacket;
+	Event3<Session*, const PacketPtr&, int> onSessionPacket;
 
 protected:
 
