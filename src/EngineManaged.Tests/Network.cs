@@ -30,26 +30,30 @@ namespace EngineManaged.Tests
         [Test]
         public void Test()
         {
-             var server = new Server(13337);
-             var client = new Client("localhost", 13337);
+            var server = new Server(13337);
+            var client = new Client();
 
-             var impl = new ServiceTest();
-             server.LocalServiceManager.AddService<IServiceTest>(impl);
+            var sThread = new Thread(Process);
+            var cThread = new Thread(Process);
+            sThread.Start(server);
+            cThread.Start(client);
 
-             var proxy = client.RemoteServiceManager.GetService<IServiceTest>(1);
+            var connectTask = client.Connect("localhost", 13337);
+            connectTask.Wait();
+            Assert.IsTrue(connectTask.Result);
 
-             var sThread = new Thread(Process);
-             var cThread = new Thread(Process);
-             sThread.Start(server);
-             cThread.Start(client);
+            var impl = new ServiceTest();
+            server.ServiceManager.AddImplementation<IServiceTest>(impl);
+
+            var proxy = client.ServiceManager.GetProxy<IServiceTest>(client.Session, 1);
 
             var pingTask = proxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));
             Assert.AreEqual("Pong", pingTask.Result);
 
-             sThread.Abort();
-             cThread.Abort();
+            sThread.Abort();
+            cThread.Abort();
          }
 
         private void Process(object peer)
