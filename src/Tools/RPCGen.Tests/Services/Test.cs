@@ -1,12 +1,10 @@
-﻿using Flood;
+﻿using System;
+using Flood;
 using Flood.RPC;
-using Flood.RPC.Protocol;
 using Flood.RPC.Metadata;
 using NUnit.Framework;
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace RPCGen.Tests.Services
 {
@@ -64,19 +62,15 @@ namespace RPCGen.Tests.Services
 
             var clientType = implType.GetNestedType("Client");
             Assert.NotNull(clientType);
-            var clientCttr = clientType.GetConstructor(new[]{typeof(IRPCManager), typeof(Session), typeof(int)});
-            Assert.NotNull(clientCttr);
 
             var processorType = implType.GetNestedType("Processor");
             Assert.NotNull(processorType);
-            var processorCttr = processorType.GetConstructor(new[]{typeof(IService)});
-            Assert.NotNull(processorCttr);
 
             var serviceManager = new ServiceManager();
 
             var serviceImpl = new Service();
-            var serviceProxy = (IService) clientCttr.Invoke(new object[]{serviceManager, null, 0});
-            serviceManager.Processor = (Processor) processorCttr.Invoke(new object[]{serviceImpl});
+            var serviceProxy = (IService) Activator.CreateInstance(clientType, new object[]{serviceManager, new Session(), 0});
+            serviceManager.Processor = (Processor) Activator.CreateInstance(processorType, new object[]{serviceImpl});
 
             var pingTask = serviceProxy.Ping();
             Assert.IsTrue(pingTask.Wait(1000));
