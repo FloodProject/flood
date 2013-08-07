@@ -204,7 +204,7 @@ bool HostClient::connect( const HostConnectionDetails& details )
 
 //-----------------------------------//
 
-void HostClient::onConnected(const PeerPtr& newPeer)
+void HostClient::onPeerConnect(const PeerPtr& newPeer)
 {
 
 	if(!session)
@@ -234,7 +234,7 @@ bool HostServer::createSocket( const HostConnectionDetails& details )
 
 //-----------------------------------//
 
-void HostServer::onConnected(const PeerPtr& peer)
+void HostServer::onPeerConnect(const PeerPtr& peer)
 {
 	peers.push_back(peer);
 
@@ -244,7 +244,7 @@ void HostServer::onConnected(const PeerPtr& peer)
 
 //-----------------------------------//
 
-void HostServer::onDisconnected(const PeerPtr& peer)
+void HostServer::onPeerDisconnect(const PeerPtr& peer)
 {
 	auto it = std::find(peers.begin(), peers.end(), peer);
 	assert( it != peers.end() );

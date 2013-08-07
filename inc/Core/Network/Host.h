@@ -55,8 +55,8 @@ protected:
 	Host();
 
 	// High-level events.
-	virtual void onConnected(const PeerPtr&) {}
-	virtual void onDisconnected(const PeerPtr&) {}
+	virtual void onPeerConnect(const PeerPtr&) {}
+	virtual void onPeerDisconnect(const PeerPtr&) {}
 
 	// Host context.
 	ENetHost* host;
@@ -112,7 +112,7 @@ public:
 
 protected:
 
-	void onConnected(const PeerPtr&) OVERRIDE;
+	void onPeerConnect(const PeerPtr&) OVERRIDE;
 
 	PeerPtr peer;
 	Session* session;
@@ -135,8 +135,8 @@ public:
 
 protected:
 
-	void onConnected(const PeerPtr&) OVERRIDE;
-	void onDisconnected(const PeerPtr&) OVERRIDE;
+	void onPeerConnect(const PeerPtr&) OVERRIDE;
+	void onPeerDisconnect(const PeerPtr&) OVERRIDE;
 
 	std::vector<PeerPtr> peers;
 	SessionManager sessions;
