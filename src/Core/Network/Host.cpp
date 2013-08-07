@@ -173,8 +173,6 @@ bool HostClient::connect( const HostConnectionDetails& details )
 	if( peer && peer->getState() != PeerState::Disconnected )
 		return false;
 
-	peer->setState(PeerState::Connecting);
-
 	host = CreateEnetSocket(nullptr);
 
 	if( !host )

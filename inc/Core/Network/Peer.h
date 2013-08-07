@@ -29,7 +29,6 @@ class PacketProcessors;
 enum class PeerState
 {
 	Disconnected,
-	Connecting,
 	Connected,
 	Disconnecting,
 };
