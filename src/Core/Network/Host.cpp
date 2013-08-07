@@ -206,9 +206,6 @@ bool HostClient::connect( const HostConnectionDetails& details )
 
 void HostClient::onPeerConnect(const PeerPtr& newPeer)
 {
-
-	if(!session)
-		session = Allocate(AllocatorGetNetwork(), Session);
 	
 	newPeer->setSession(session);
 	session->setPeer(newPeer.get());

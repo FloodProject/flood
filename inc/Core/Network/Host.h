@@ -108,14 +108,14 @@ public:
 	bool connect( const HostConnectionDetails& );
 
 	GETTER(Peer, PeerPtr, peer);
-	GETTER(Session, Session*, session);
+	GETTER(Session, const Session*, &session);
 
 protected:
 
 	void onPeerConnect(const PeerPtr&) OVERRIDE;
 
 	PeerPtr peer;
-	Session* session;
+	Session session;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostClient )
