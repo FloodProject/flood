@@ -76,14 +76,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Host )
 
 //-----------------------------------//
 
-enum class HostState
-{
-	Disconnected,
-	Connecting,
-	Connected,
-	Disconnecting,
-};
-
 struct FLD_VALUE_TYPE HostConnectionDetails
 {
 	String address;
@@ -121,9 +113,7 @@ public:
 protected:
 
 	void onConnected(const PeerPtr&) OVERRIDE;
-	void onDisconnected(const PeerPtr&) OVERRIDE;
 
-	HostState state;
 	PeerPtr peer;
 	Session* session;
 };

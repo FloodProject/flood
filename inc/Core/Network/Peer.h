@@ -11,6 +11,7 @@
 #include "Core/Network/Session.h"
 #include "Core/References.h"
 #include "Core/String.h"
+#include "Core/Event.h"
 
 struct _ENetPeer;
 typedef _ENetPeer ENetPeer;
@@ -22,6 +23,16 @@ NAMESPACE_CORE_BEGIN
 
 class PacketProcessor;
 class PacketProcessors;
+
+//-----------------------------------//
+
+enum class PeerState
+{
+	Disconnected,
+	Connecting,
+	Connected,
+	Disconnecting,
+};
 
 //-----------------------------------//
 
@@ -55,6 +66,10 @@ public:
 
 	FLD_IGNORE ACCESSOR(Host, Host*, host)
 
+	GETTER(State, PeerState, state);
+	FLD_IGNORE void setState(PeerState state);
+	Event1<PeerState> onStateChanged;
+
 	GETTER(Session, Session*, session)
 	FLD_IGNORE SETTER(Session, Session*, session)
 
@@ -63,6 +78,8 @@ private:
 	ENetPeer* peer;
 	Host* host;
 	Session* session;
+
+	PeerState state;
 
 	PacketProcessors* processors;
 };

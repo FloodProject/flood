@@ -125,7 +125,7 @@ void Host::handleConnectEvent(ENetEvent* event)
 	// Store the network peer as user data.
 	peer->data = networkPeer.get();
 
-	onConnected(networkPeer);
+	networkPeer->setState(PeerState::Connected);
 	onPeerConnect(networkPeer);
 }
 
@@ -136,7 +136,7 @@ void Host::handleDisconnectEvent(ENetEvent* event)
 	PeerPtr networkPeer = (Peer*) event->peer->data;
 	if( !networkPeer ) return;
 
-	onDisconnected(networkPeer);
+	networkPeer->setState(PeerState::Disconnected);
 	onPeerDisconnect(networkPeer);
 
 	// Reset the peer userdata.
@@ -161,8 +161,6 @@ void Host::handleReceiveEvent(ENetEvent* event)
 //-----------------------------------//
 
 HostClient::HostClient()
-	: state(HostState::Disconnected)
-	, session(nullptr)
 {
 
 }
@@ -171,10 +169,10 @@ HostClient::HostClient()
 
 bool HostClient::connect( const HostConnectionDetails& details )
 {
-	if( state != HostState::Disconnected )
+	if( peer && peer->getState() != PeerState::Disconnected )
 		return false;
 
-	state = HostState::Connecting;
+	peer->setState(PeerState::Connecting);
 
 	host = CreateEnetSocket(nullptr);
 
@@ -208,7 +206,6 @@ bool HostClient::connect( const HostConnectionDetails& details )
 
 void HostClient::onConnected(const PeerPtr& newPeer)
 {
-	state = HostState::Connected;
 
 	if(!session)
 		session = Allocate(AllocatorGetNetwork(), Session);
@@ -220,13 +217,6 @@ void HostClient::onConnected(const PeerPtr& newPeer)
 	auto keyExchanger = Allocate(AllocatorGetNetwork(), PacketClientKeyExchanger);
 	newPeer->addProcessor(keyExchanger);
 	keyExchanger->beginKeyExchange(newPeer.get());
-}
-
-//-----------------------------------//
-
-void HostClient::onDisconnected(const PeerPtr& peer)
-{
-	state = HostState::Disconnected;
 }
 
 //-----------------------------------//

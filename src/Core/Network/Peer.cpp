@@ -30,6 +30,7 @@ Peer::Peer()
 	, host(nullptr)
 	, session(nullptr)
 	, processors(nullptr)
+	, state(PeerState::Disconnected)
 {
 	processors = Allocate(AllocatorGetNetwork(), PacketProcessors);
 }
@@ -73,6 +74,7 @@ void Peer::disconnect()
 {
 	//enet_peer_disconnect_now(peer, 0);
 	enet_peer_disconnect_later(peer, 0);
+	setState(PeerState::Disconnecting);
 }
 
 //-----------------------------------//
@@ -113,5 +115,14 @@ String Peer::getHostIP() const
 }
 
 //-----------------------------------//
+
+void Peer::setState(PeerState newState)
+{
+	if(newState == state)
+		return;
+
+	state = newState;
+	onStateChanged(state);
+}
 
 NAMESPACE_CORE_END
