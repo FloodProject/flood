@@ -59,6 +59,5 @@ namespace Flood
         System::Collections::Generic::List<unsigned char>^ Read();
         virtual bool Equals(System::Object^ object) override;
         virtual int GetHashCode() override;
-        static Flood::Packet^ Create(unsigned short id);
     };
 }

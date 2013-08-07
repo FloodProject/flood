@@ -58,6 +58,12 @@ Flood::SessionState Flood::Session::State::get()
     return (Flood::SessionState)ret;
 }
 
+Flood::Peer^ Flood::Session::Peer::get()
+{
+    auto ret = ((::Session*)NativePtr)->getPeer();
+    return gcnew Flood::Peer((::Peer*)ret);
+}
+
 void Flood::Session::StateChange::add(System::Action<Flood::SessionState>^ evt)
 {
     if (!_StateChangeDelegateInstance)

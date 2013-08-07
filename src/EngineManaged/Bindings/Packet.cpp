@@ -75,13 +75,6 @@ int Flood::Packet::GetHashCode()
     return (int)NativePtr;
 }
 
-Flood::Packet^ Flood::Packet::Create(unsigned short id)
-{
-    auto arg0 = (PacketId)(uint16)id;
-    auto ret = ::PacketCreate(arg0);
-    return gcnew Flood::Packet((::Packet*)ret.get());
-}
-
 System::IntPtr Flood::Packet::Instance::get()
 {
     return System::IntPtr(NativePtr);

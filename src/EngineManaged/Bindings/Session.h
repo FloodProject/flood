@@ -40,6 +40,10 @@ namespace Flood
         {
             Flood::SessionState get();
         }
+        property Flood::Peer^ Peer
+        {
+            Flood::Peer^ get();
+        }
     private:
         delegate void _StateChangeDelegate(::SessionState _0);
         _StateChangeDelegate^ _StateChangeDelegateInstance;

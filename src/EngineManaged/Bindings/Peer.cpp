@@ -81,9 +81,41 @@ System::String^ Flood::Peer::HostIP::get()
     return clix::marshalString<clix::E_UTF8>(ret);
 }
 
+Flood::PeerState Flood::Peer::State::get()
+{
+    auto ret = ((::Peer*)NativePtr)->getState();
+    return (Flood::PeerState)ret;
+}
+
 Flood::Session^ Flood::Peer::Session::get()
 {
     auto ret = ((::Peer*)NativePtr)->getSession();
     return gcnew Flood::Session((::Session*)ret);
+}
+
+void Flood::Peer::StateChanged::add(System::Action<Flood::PeerState>^ evt)
+{
+    if (!_StateChangedDelegateInstance)
+    {
+        _StateChangedDelegateInstance = gcnew _StateChangedDelegate(this, &Flood::Peer::_StateChangedRaise);
+        auto _fptr = (void (*)(::PeerState))Marshal::GetFunctionPointerForDelegate(_StateChangedDelegateInstance).ToPointer();
+        ((::Peer*)NativePtr)->onStateChanged.Connect(_fptr);
+    }
+    _StateChanged = static_cast<System::Action<Flood::PeerState>^>(System::Delegate::Combine(_StateChanged, evt));
+}
+
+void Flood::Peer::StateChanged::remove(System::Action<Flood::PeerState>^ evt)
+{
+    _StateChanged = static_cast<System::Action<Flood::PeerState>^>(System::Delegate::Remove(_StateChanged, evt));
+}
+
+void Flood::Peer::StateChanged::raise(Flood::PeerState _0)
+{
+    _StateChanged(_0);
+}
+
+void Flood::Peer::_StateChangedRaise(::PeerState _0)
+{
+    StateChanged::raise((Flood::PeerState)_0);
 }
 

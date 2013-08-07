@@ -72,82 +72,30 @@ void Flood::Host::Instance::set(System::IntPtr object)
 {
     NativePtr = (::Host*)object.ToPointer();
 }
-void Flood::Host::PeerConnect::add(System::Action<Flood::Peer^>^ evt)
+void Flood::Host::SessionPacket::add(System::Action<Flood::Session^, Flood::Packet^, int>^ evt)
 {
-    if (!_PeerConnectDelegateInstance)
+    if (!_SessionPacketDelegateInstance)
     {
-        _PeerConnectDelegateInstance = gcnew _PeerConnectDelegate(this, &Flood::Host::_PeerConnectRaise);
-        auto _fptr = (void (*)(const ::PeerPtr&))Marshal::GetFunctionPointerForDelegate(_PeerConnectDelegateInstance).ToPointer();
-        ((::Host*)NativePtr)->onPeerConnect.Connect(_fptr);
+        _SessionPacketDelegateInstance = gcnew _SessionPacketDelegate(this, &Flood::Host::_SessionPacketRaise);
+        auto _fptr = (void (*)(::Session*, const ::PacketPtr&, int))Marshal::GetFunctionPointerForDelegate(_SessionPacketDelegateInstance).ToPointer();
+        ((::Host*)NativePtr)->onSessionPacket.Connect(_fptr);
     }
-    _PeerConnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Combine(_PeerConnect, evt));
+    _SessionPacket = static_cast<System::Action<Flood::Session^, Flood::Packet^, int>^>(System::Delegate::Combine(_SessionPacket, evt));
 }
 
-void Flood::Host::PeerConnect::remove(System::Action<Flood::Peer^>^ evt)
+void Flood::Host::SessionPacket::remove(System::Action<Flood::Session^, Flood::Packet^, int>^ evt)
 {
-    _PeerConnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Remove(_PeerConnect, evt));
+    _SessionPacket = static_cast<System::Action<Flood::Session^, Flood::Packet^, int>^>(System::Delegate::Remove(_SessionPacket, evt));
 }
 
-void Flood::Host::PeerConnect::raise(Flood::Peer^ _0)
+void Flood::Host::SessionPacket::raise(Flood::Session^ _0, Flood::Packet^ _1, int _2)
 {
-    _PeerConnect(_0);
+    _SessionPacket(_0, _1, _2);
 }
 
-void Flood::Host::_PeerConnectRaise(const ::PeerPtr& _0)
+void Flood::Host::_SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int _2)
 {
-    PeerConnect::raise(gcnew Flood::Peer((::Peer*)_0.get()));
-}
-
-void Flood::Host::PeerDisconnect::add(System::Action<Flood::Peer^>^ evt)
-{
-    if (!_PeerDisconnectDelegateInstance)
-    {
-        _PeerDisconnectDelegateInstance = gcnew _PeerDisconnectDelegate(this, &Flood::Host::_PeerDisconnectRaise);
-        auto _fptr = (void (*)(const ::PeerPtr&))Marshal::GetFunctionPointerForDelegate(_PeerDisconnectDelegateInstance).ToPointer();
-        ((::Host*)NativePtr)->onPeerDisconnect.Connect(_fptr);
-    }
-    _PeerDisconnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Combine(_PeerDisconnect, evt));
-}
-
-void Flood::Host::PeerDisconnect::remove(System::Action<Flood::Peer^>^ evt)
-{
-    _PeerDisconnect = static_cast<System::Action<Flood::Peer^>^>(System::Delegate::Remove(_PeerDisconnect, evt));
-}
-
-void Flood::Host::PeerDisconnect::raise(Flood::Peer^ _1)
-{
-    _PeerDisconnect(_1);
-}
-
-void Flood::Host::_PeerDisconnectRaise(const ::PeerPtr& _1)
-{
-    PeerDisconnect::raise(gcnew Flood::Peer((::Peer*)_1.get()));
-}
-
-void Flood::Host::PeerPacket::add(System::Action<Flood::Peer^, Flood::Packet^, int>^ evt)
-{
-    if (!_PeerPacketDelegateInstance)
-    {
-        _PeerPacketDelegateInstance = gcnew _PeerPacketDelegate(this, &Flood::Host::_PeerPacketRaise);
-        auto _fptr = (void (*)(const ::PeerPtr&, const ::PacketPtr&, int))Marshal::GetFunctionPointerForDelegate(_PeerPacketDelegateInstance).ToPointer();
-        ((::Host*)NativePtr)->onPeerPacket.Connect(_fptr);
-    }
-    _PeerPacket = static_cast<System::Action<Flood::Peer^, Flood::Packet^, int>^>(System::Delegate::Combine(_PeerPacket, evt));
-}
-
-void Flood::Host::PeerPacket::remove(System::Action<Flood::Peer^, Flood::Packet^, int>^ evt)
-{
-    _PeerPacket = static_cast<System::Action<Flood::Peer^, Flood::Packet^, int>^>(System::Delegate::Remove(_PeerPacket, evt));
-}
-
-void Flood::Host::PeerPacket::raise(Flood::Peer^ _2, Flood::Packet^ _3, int _4)
-{
-    _PeerPacket(_2, _3, _4);
-}
-
-void Flood::Host::_PeerPacketRaise(const ::PeerPtr& _2, const ::PacketPtr& _3, int _4)
-{
-    PeerPacket::raise(gcnew Flood::Peer((::Peer*)_2.get()), gcnew Flood::Packet((::Packet*)_3.get()), _4);
+    SessionPacket::raise(gcnew Flood::Session((::Session*)_0), gcnew Flood::Packet((::Packet*)_1.get()), _2);
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)

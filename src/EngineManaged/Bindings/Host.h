@@ -12,7 +12,6 @@
 
 namespace Flood
 {
-    enum struct HostState;
     ref class _ENetEvent;
     ref class _ENetHost;
     ref class Host;
@@ -24,14 +23,6 @@ namespace Flood
     ref class Session;
     ref class SessionManager;
     value struct HostConnectionDetails;
-
-    public enum struct HostState
-    {
-        Disconnected = 0,
-        Connecting = 1,
-        Connected = 2,
-        Disconnecting = 3
-    };
 
     public ref class Host : ICppInstance
     {
@@ -46,40 +37,16 @@ namespace Flood
         Host(::Host* native);
         Host(System::IntPtr native);
     private:
-        delegate void _PeerConnectDelegate(const ::PeerPtr& _0);
-        _PeerConnectDelegate^ _PeerConnectDelegateInstance;
-        void _PeerConnectRaise(const ::PeerPtr& _0);
-        System::Action<Flood::Peer^>^ _PeerConnect;
+        delegate void _SessionPacketDelegate(::Session* _0, const ::PacketPtr& _1, int _2);
+        _SessionPacketDelegate^ _SessionPacketDelegateInstance;
+        void _SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int _2);
+        System::Action<Flood::Session^, Flood::Packet^, int>^ _SessionPacket;
     public:
-        event System::Action<Flood::Peer^>^ PeerConnect
+        event System::Action<Flood::Session^, Flood::Packet^, int>^ SessionPacket
         {
-            void add(System::Action<Flood::Peer^>^ evt);
-            void remove(System::Action<Flood::Peer^>^ evt);
-            void raise(Flood::Peer^ _0);
-        }
-    private:
-        delegate void _PeerDisconnectDelegate(const ::PeerPtr& _1);
-        _PeerDisconnectDelegate^ _PeerDisconnectDelegateInstance;
-        void _PeerDisconnectRaise(const ::PeerPtr& _1);
-        System::Action<Flood::Peer^>^ _PeerDisconnect;
-    public:
-        event System::Action<Flood::Peer^>^ PeerDisconnect
-        {
-            void add(System::Action<Flood::Peer^>^ evt);
-            void remove(System::Action<Flood::Peer^>^ evt);
-            void raise(Flood::Peer^ _1);
-        }
-    private:
-        delegate void _PeerPacketDelegate(const ::PeerPtr& _2, const ::PacketPtr& _3, int _4);
-        _PeerPacketDelegate^ _PeerPacketDelegateInstance;
-        void _PeerPacketRaise(const ::PeerPtr& _2, const ::PacketPtr& _3, int _4);
-        System::Action<Flood::Peer^, Flood::Packet^, int>^ _PeerPacket;
-    public:
-        event System::Action<Flood::Peer^, Flood::Packet^, int>^ PeerPacket
-        {
-            void add(System::Action<Flood::Peer^, Flood::Packet^, int>^ evt);
-            void remove(System::Action<Flood::Peer^, Flood::Packet^, int>^ evt);
-            void raise(Flood::Peer^ _2, Flood::Packet^ _3, int _4);
+            void add(System::Action<Flood::Session^, Flood::Packet^, int>^ evt);
+            void remove(System::Action<Flood::Session^, Flood::Packet^, int>^ evt);
+            void raise(Flood::Session^ _0, Flood::Packet^ _1, int _2);
         }
         bool DestroySocket();
         void BroadcastPacket(Flood::Packet^ _0, unsigned char channel);
