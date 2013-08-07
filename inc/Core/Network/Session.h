@@ -50,7 +50,9 @@ public:
 
 	GETTER(State, SessionState, state);
 	FLD_IGNORE void setState(SessionState state);
-	FLD_IGNORE ACCESSOR(Peer, Peer*, peer);
+
+	GETTER(Peer, Peer*, peer);
+	FLD_IGNORE SETTER(Peer, Peer*, peer);
 
 	SessionHash* getHash();
 	FLD_IGNORE void setHash(const SessionHash& newHash);
