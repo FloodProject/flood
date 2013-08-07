@@ -17,3 +17,6 @@
 [submodule "deps/tropicssl"]
 	path = deps/tropicssl
 	url = git@github.com:FloodProject/tropicssl.git
+[submodule "deps/wxWidgets"]
+	path = deps/wxWidgets
+	url = https://github.com/FloodProject/wxWidgets.git
