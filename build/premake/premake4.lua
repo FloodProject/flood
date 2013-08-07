@@ -50,10 +50,10 @@ solution "Flood"
 		dofile( srcdir .. "/Engine/Engine.lua")
 		dofile( srcdir .. "/Pipeline/Pipeline.lua")
 
-	group "Runtimes"
+	--group "Runtimes"
 
-		dofile( srcdir .. "/Runtime/Runtime.lua")
-		dofile( srcdir .. "/GameRuntime/GameRuntime.lua")
+		--dofile( srcdir .. "/Runtime/Runtime.lua")
+		--dofile( srcdir .. "/GameRuntime/GameRuntime.lua")
 
 	group "Managed"
 
