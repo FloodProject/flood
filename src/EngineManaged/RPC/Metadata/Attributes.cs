@@ -66,7 +66,7 @@ namespace Flood.RPC.Metadata
             Exception = type;
         }
 
-        public int Id;
-        public Type Exception;
+        public int Id { get; private set; }
+        public Type Exception { get; private set; }
     }
 }
