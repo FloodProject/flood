@@ -119,7 +119,7 @@ private:
 };
 
 // Creates a new packet using the network allocator.
-API_CORE PacketPtr PacketCreate(PacketId id);
+FLD_IGNORE API_CORE PacketPtr PacketCreate(PacketId id);
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Packet)
 
