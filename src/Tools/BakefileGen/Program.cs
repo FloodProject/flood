@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using Flood;
 
@@ -95,7 +94,7 @@ namespace BakefileParser
             {
                 Console.WriteLine("Invalid arguments.");
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  {0}.exe files.bkl output.lua",
+                Console.WriteLine("  {0} files.bkl output.lua",
                     Path.GetFileName(Environment.GetCommandLineArgs()[0]));
                 return;
             }
@@ -103,8 +102,8 @@ namespace BakefileParser
             var parser = new BakefileParser();
             parser.Parse(args[0]);
 
-            var options = new {UseAUI = true, UseAdvanced = true,
-                UsePropgrid = true};
+            var options = new {UseAUI = false, UseAdvanced = true,
+                UsePropgrid = false};
 
             // Common files
             parser.GenerateFileGroup("BASE_CMN_SRC");
