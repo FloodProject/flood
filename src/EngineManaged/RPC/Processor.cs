@@ -25,18 +25,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Flood.RPC;
 using Flood.RPC.Protocol;
 
 namespace Flood.RPC
 {
     public interface Processor
     {
-        bool Process(Serializer iprot, Serializer oprot);
+        Task<RPCData> Process(RPCData request);
     }
 
     public abstract class SimpleProcessor : Processor
     {
-        protected delegate Task ProcessFunction(int seqid, Serializer iprot, Serializer oprot);
+        protected delegate Task<RPCData> ProcessFunction(int seqid, RPCData request);
         protected Dictionary<string, ProcessFunction> processMap_;
 
         public SimpleProcessor()
@@ -44,31 +45,23 @@ namespace Flood.RPC
             processMap_ = new Dictionary<string, ProcessFunction>();
         }
 
-        public bool Process(Serializer iprot, Serializer oprot)
+        public async Task<RPCData> Process(RPCData request)
         {
-            try
-            {
-                Message msg = iprot.ReadMessageBegin();
-                ProcessFunction fn;
-                processMap_.TryGetValue(msg.Name, out fn);
-                if (fn == null)
-                {
-                    ProtocolUtil.Skip(iprot, TType.Struct);
-                    iprot.ReadMessageEnd();
-                    RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
-                    oprot.WriteMessageBegin(new Message(msg.Name, MessageType.Exception, msg.SeqID));
-                    x.Write(oprot);
-                    oprot.WriteMessageEnd();
-                    oprot.Transport.Flush();
-                    return true;
-                }
-                fn(msg.SeqID, iprot, oprot);
-            }
-            catch (IOException)
-            {
-                return false;
-            }
-            return true;
+            Message msg = request.Serializer.ReadMessageBegin();
+            ProcessFunction fn;
+            processMap_.TryGetValue(msg.Name, out fn);
+            if (fn != null)
+                return await fn(msg.SeqID, request);
+           
+            var response = new RPCData(request);
+            response.IsResponse = true;
+            ProtocolUtil.Skip(request.Serializer, TType.Struct);
+            request.Serializer.ReadMessageEnd();
+            RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
+            response.Serializer.WriteMessageBegin(new Message(msg.Name, MessageType.Exception, msg.SeqID));
+            x.Write(response.Serializer);
+            response.Serializer.WriteMessageEnd();
+            return response;
         }
     }
 }

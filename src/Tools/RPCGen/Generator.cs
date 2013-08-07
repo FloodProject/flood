@@ -155,38 +155,24 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Client(Serializer prot) : this(prot, prot)");
-            WriteStartBraceIndent();
-            WriteCloseBraceIndent();
-            NewLine();
-
-            Write("public Client(Serializer iprot, Serializer oprot)");
+            WriteLine("public Client(IRPCManager rpcManager, Session session, int serviceId)");
             if (baseType != null)
-                Write(" : base(iprot, oprot)", baseType.Name);
-            NewLine();
+                Write(" : base(rpcManager)", baseType.Name);
             WriteStartBraceIndent();
-            WriteLine("iprot_ = iprot;");
-            WriteLine("oprot_ = oprot;");
+            WriteLine("RPCManager = rpcManager;");
+            WriteLine("Session = session;");
+            WriteLine("ServiceId = serviceId;");
             WriteCloseBraceIndent();
             NewLine();
 
             if (baseType == null)
             {
-                WriteLine("protected Serializer iprot_;");
-                WriteLine("protected Serializer oprot_;");
                 WriteLine("protected int seqid_;");
                 NewLine();
 
-                WriteLine("public Serializer InputProtocol");
-                WriteStartBraceIndent();
-                WriteLine("get { return iprot_; }");
-                WriteCloseBraceIndent();
-                NewLine();
-
-                WriteLine("public Serializer OutputProtocol");
-                WriteStartBraceIndent();
-                WriteLine("get { return oprot_; }");
-                WriteCloseBraceIndent();
+                WriteLine("public IRPCManager RPCManager { get; private set; }");
+                WriteLine("protected Session Session { get; private set; }");
+                WriteLine("protected int ServiceId { get; private set; }");
                 NewLine();
             }
 
@@ -222,7 +208,7 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            Write("send_{0}(", method.Name);
+            Write("var request = send_{0}(", method.Name);
             for (var i = 0; i < parameters.Length; i++)
             {
                 Write("{0}", parameters[i].Name);
@@ -230,10 +216,10 @@ namespace Flood.Tools.RPCGen
                     Write(", ");
             }
             WriteLine(");");
-
+            WriteLine("var response = await RPCManager.RemoteProcedureCall(request);");
             if (retType != typeof(void))
                 Write("return ");
-            WriteLine("await Task.Run( () =>  recv_{0}());", method.Name);
+            WriteLine("recv_{0}(response);", method.Name);
 
             WriteCloseBraceIndent();
             NewLine();
@@ -248,23 +234,22 @@ namespace Flood.Tools.RPCGen
         private void GenerateProtocolReceive(MethodInfo method)
         {
             var retType = GetMethodReturnType(method);
-            Write("private {0} recv_{1}(", ConvertToTypeString(retType),
+            Write("private {0} recv_{1}(RPCData response)", ConvertToTypeString(retType),
                   method.Name);
-            WriteLine(")");
             WriteStartBraceIndent();
 
-            WriteLine("var msg = iprot_.ReadMessageBegin();");
+            WriteLine("var msg = response.Serializer.ReadMessageBegin();");
+
             WriteLine("if (msg.Type == MessageType.Exception)");
-
             WriteStartBraceIndent();
-            WriteLine("var x = RPCException.Read(iprot_);");
-            WriteLine("iprot_.ReadMessageEnd();");
+            WriteLine("var x = RPCException.Read(response.Serializer);");
+            WriteLine("response.Serializer.ReadMessageEnd();");
             WriteLine("throw x;");
             WriteCloseBraceIndent();
 
             WriteLine("var result = new {0}_result();", method.Name);
-            WriteLine("result.Read(iprot_);");
-            WriteLine("iprot_.ReadMessageEnd();");
+            WriteLine("result.Read(response.Serializer);");
+            WriteLine("response.Serializer.ReadMessageEnd();");
 
             if (retType != typeof(void))
             {
@@ -295,20 +280,21 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
-            Write("private void send_{0}(", method.Name);
+            Write("private RPCData send_{0}(", method.Name);
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();
-
-            WriteLine("oprot_.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Call, seqid_));",
+            WriteLine("var request = new RPCData();");
+            WriteLine("request.Session = Session;");
+            WriteLine("request.ServiceId = ServiceId;");
+            WriteLine("request.Serializer.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
                 WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
-            WriteLine("args.Write(oprot_);");
-            WriteLine("oprot_.WriteMessageEnd();");
-            WriteLine("oprot_.Transport.Flush();");
-
+            WriteLine("args.Write(request.Serializer);");
+            WriteLine("request.Serializer.WriteMessageEnd();");
+            WriteLine("return request;");
             WriteCloseBraceIndent();
             NewLine();
         }
@@ -381,13 +367,13 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public async Task {0}_Process(int seqid, Serializer iprot, Serializer oprot)",
+            WriteLine("public async Task<RPCData> {0}_Process(int seqid, RPCData request)",
                       method.Name);
             WriteStartBraceIndent();
 
             WriteLine("var args = new {0}_args();", method.Name);
-            WriteLine("args.Read(iprot);");
-            WriteLine("iprot.ReadMessageEnd();");
+            WriteLine("args.Read(request.Serializer);");
+            WriteLine("request.Serializer.ReadMessageEnd();");
             WriteLine("var result = new {0}_result();", method.Name);
 
             // If the method throws exceptions, we need to call it inside a try-catch.
@@ -449,13 +435,15 @@ namespace Flood.Tools.RPCGen
                 WriteLine("}");
             }
 
+            WriteLine("var response = new RPCData(request);");
+            WriteLine("response.IsResponse = true;");
             // Create a new Flood.RPC.Protocol.Message and reply to the RPC call
-            WriteLine("oprot.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Reply, seqid));",
+            WriteLine("response.Serializer.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Reply, seqid));",
                       method.Name);
 
-            WriteLine("result.Write(oprot);");
-            WriteLine("oprot.WriteMessageEnd();");
-            WriteLine("oprot.Transport.Flush();");
+            WriteLine("result.Write(response.Serializer);");
+            WriteLine("response.Serializer.WriteMessageEnd();");
+            WriteLine("return response;");
 
             WriteCloseBraceIndent();
         }
@@ -720,12 +708,10 @@ namespace Flood.Tools.RPCGen
         {
             WriteLine("using System;");
             WriteLine("using System.Collections.Generic;");
-
+            WriteLine("using Flood;");
             WriteLine("using Flood.RPC;");
             WriteLine("using Flood.RPC.Metadata;");
             WriteLine("using Flood.RPC.Protocol;");
-            WriteLine("using Flood.RPC.Transport;");
-            WriteLine("using System.Reflection;");
             WriteLine("using System.Threading.Tasks;");
 
             NewLine();
