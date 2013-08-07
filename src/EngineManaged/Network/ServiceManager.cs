@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Flood.RPC;
 using Flood;
 using Flood.RPC.Metadata;
 using Flood.RPC.Protocol;
@@ -24,185 +25,103 @@ namespace EngineManaged.Network
         Task<ServiceId> GetServiceId([Id(0)]string serviceName);
     }
 
-
-    public abstract class ServiceManager
+    public class ServiceManager : IServiceManager, IRPCManager
     {
-        internal readonly Dictionary<int, ServiceHandler> services;
+        private int localIdCounter;
+        private int requestIdCounter;
 
-        internal readonly Queue<ServiceData> inData;
-        internal readonly Queue<ServiceData> outData;
+        private Dictionary<RPCData, TaskCompletionSource<RPCData>> pendingRPC;
 
-        protected ServiceManager()
+        internal readonly Dictionary<int, ServiceImplementation> implementations;
+
+        private Dictionary<string, int> namedServicesIds;
+
+        public Queue<RPCData> Data { get; private set; }
+
+        public ServiceManager()
         {
-            services = new Dictionary<int,ServiceHandler>();
-            inData = new Queue<ServiceData>();
-            outData = new Queue<ServiceData>();
+            pendingRPC = new Dictionary<RPCData, TaskCompletionSource<RPCData>>();
+            namedServicesIds = new Dictionary<string, int>();
+            implementations = new Dictionary<int, ServiceImplementation>();
+            Data = new Queue<RPCData>();
+
+            AddImplementation<IServiceManager>(this); // serviceId = 0
+
+
         }
 
-        protected bool ContainsServiceHandler(int serviceId)
-        {
-            return services.ContainsKey(serviceId);
-        }
-
-        internal ServiceHandler GetServiceHandler(int serviceId)
-        {
-            if (!services.ContainsKey(serviceId))
-                throw new ArgumentException("Service " + serviceId + " not added");
-
-            return services[serviceId];
-        }
-
-        internal void AddServiceHandler(int serviceId, ServiceHandler service)
-        {
-            if (services.ContainsKey(serviceId))
-                throw new ArgumentException("Service " + serviceId + " already added");
-
-            services.Add(serviceId, service);
-        }
-
-        internal void AddInData(ServiceData @in)
-        {
-            inData.Enqueue(@in);
-        }
-
-        internal ServiceData GetOutData()
-        {
-            if(outData.Count == 0)
-                return null;
-
-            return outData.Dequeue();
-        }
-
-        public abstract void Process();
-        
-    }
-
-
-    public class RemoteServiceManager : ServiceManager
-    {
-        private IServiceManager serviceManager;
-
-        private Peer peer;
-
-        public RemoteServiceManager(Peer peer)
-        {
-            this.peer = peer;
-            var serviceManagerProxy = new ServiceProxy<IServiceManager>(0);
-            AddServiceHandler(0, (ServiceHandler) serviceManagerProxy);
-            serviceManager = serviceManagerProxy.Service;
-        }
-
-        public T GetService<T>(int serviceId)
-        {
-            if (!ContainsServiceHandler(serviceId))
-            {
-                //TODO verify if service is accessible
-                var service = new ServiceProxy<T>(serviceId);
-                AddServiceHandler(serviceId, service);
-            }
-
-            return ((ServiceProxy<T>) GetServiceHandler(serviceId)).Service;
-        }
-
-        public override void Process()
-        {
-            if(inData.Count == 0)
-                return;
-
-            var @in = inData.Dequeue();
-            var serviceProxy = (ServiceProxy) GetServiceHandler(@in.ServiceId);
-
-            serviceProxy.WriteResponses(@in.Data);
-
-            foreach(var serviceKV in services)
-            {
-                var data = ((ServiceProxy) serviceKV.Value).ReadRequests();
-            
-                if(data == null)
-                    return;
-
-                var @out = new ServiceData()
-                {
-                    Peer = peer,
-                    ServiceId = serviceKV.Key,
-                    Data = data
-                };
-
-                outData.Enqueue(@out);
-            }
-            
-        }
-    }
-
-    public class LocalServiceManager : ServiceManager, IServiceManager
-    {
-        private int localIdCounter = 0;
-
-        private Dictionary<string, int> serviceIds;
-
-        public LocalServiceManager()
-        {
-            serviceIds = new Dictionary<string, int>();
-
-            AddService<IServiceManager>(this); // serviceId = 0
-        }
-
-        public void AddService<T>(T service)
+        public void AddImplementation<T>(T service)
         {
             var serviceName = typeof (T).FullName;
-            if(serviceIds.ContainsKey(serviceName))
+            if(namedServicesIds.ContainsKey(serviceName))
                 throw new ArgumentException("Service "+serviceName+" already added");
 
-            serviceIds.Add(serviceName, localIdCounter);
+            namedServicesIds.Add(serviceName, localIdCounter);
 
             var serviceImpl = new ServiceImplementation<T>(service);
 
-            AddServiceHandler(localIdCounter, serviceImpl);
+            implementations.Add(localIdCounter, serviceImpl);
             localIdCounter++;
         }
 
-        public T GetService<T>(int serviceId)
+        public T GetProxy<T>(Session session, int serviceId)
         {
-            return ((ServiceImplementation<T>) GetServiceHandler(serviceId)).Service;
+            return new ServiceProxy<T>(this, session, serviceId).Service;
         }
 
         public async Task<ServiceId> GetServiceId(string serviceName)
         {
-            if (serviceIds.ContainsKey(serviceName))
+            if (namedServicesIds.ContainsKey(serviceName))
                 throw new ArgumentException("Service " + serviceName + " not added");
 
             var serviceId = new ServiceId()
             {
-                Id = serviceIds[serviceName],
+                Id = namedServicesIds[serviceName],
                 Type = serviceName
             };
 
             return serviceId;
         }
 
-        public override void Process()
+        public void Process(RPCData data)
         {
-            if(inData.Count == 0)
-                return;
-
-            var @in = inData.Dequeue();
-            var serviceImpl = (ServiceImplementation) GetServiceHandler(@in.ServiceId);
-
-            var data = serviceImpl.Process(@in.Data);
-
-            if(data == null)
-                return;
-
-            var @out = new ServiceData()
+            if (data.IsResponse)
             {
-                Peer = @in.Peer,
-                ServiceId = @in.ServiceId,
-                Data = data
-            };
+                ProcessResponse(data);
+                return;
+            }
 
-            outData.Enqueue(@out);
-            
+            ProcessRequest(data);
         }
 
+        private void ProcessRequest(RPCData data)
+        {
+            if (!implementations.ContainsKey(data.ServiceId))
+                return;
+
+            var responseTask = implementations[data.ServiceId].Process(data);
+            responseTask.ContinueWith(task => Data.Enqueue(task.Result) );
+        }
+
+        private void ProcessResponse(RPCData data)
+        {
+            if (!pendingRPC.ContainsKey(data))
+                return;
+
+            pendingRPC[data].SetResult(data);
+        }
+
+        public Task<RPCData> RemoteProcedureCall(RPCData data)
+        {
+            data.RequestId = requestIdCounter++;
+            data.IsResponse = false;
+
+            Data.Enqueue(data);
+
+            var tcs = new TaskCompletionSource<RPCData>();
+            pendingRPC.Add(data, tcs);
+
+            return tcs.Task;
+        }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flood.RPC;
 using Flood;
+using Flood.RPC.Protocol;
 
 namespace EngineManaged.Network
 {
@@ -11,77 +13,48 @@ namespace EngineManaged.Network
     {
         protected Flood.Host host;
 
-        public LocalServiceManager LocalServiceManager { get; private set; }
-        protected Dictionary<Peer,RemoteServiceManager> RemoteServiceManagers { get; private set; }
+        public ServiceManager ServiceManager { get; private set; }
         
         public Host()
         {
-            LocalServiceManager = new LocalServiceManager();
-            RemoteServiceManagers = new Dictionary<Peer,RemoteServiceManager>();
+            ServiceManager = new ServiceManager();
         }
 
-        protected void OnPacket(Peer peer, Packet packet, int channel)
+        protected void OnPacket(Session session, Packet packet, int channel)
         {
-            if (peer.Session == null)
+            if (packet.Id != 1)
                 return;
 
-            var sData = new ServiceData()
-            {
-                Flags = packet.Flags,
-                Peer = peer,
-                ServiceId = packet.Id,
-                Data = packet.Read().ToArray()
-            };
-
-            ServiceManager sManager;
-            if (channel == 0)
-            {
-                sManager = LocalServiceManager;
-            }
-            else
-            {
-                sManager = RemoteServiceManagers[peer];
-            }
-
-            sManager.AddInData(sData);
+            var rpcData = RPCDataHelper.CreateRPCData(packet);
+            rpcData.Session = session;
+            ServiceManager.Process(rpcData);
         }
 
         public void Update()
         {
+            if (host == null)
+                return;
+
             host.ProcessEvents(0);
 
-            var dataSended = Process(LocalServiceManager, 1);
-            foreach (var remoteManager in RemoteServiceManagers.Values)
-            {
-                dataSended |= Process(remoteManager, 0);
-            }
-
-            if(dataSended)
+            if(SendData(1))
                 host.ProcessEvents(0);
         }
 
-        private bool Process(ServiceManager sManager, byte channel)
+        private bool SendData(byte channel)
         {
-            sManager.Process();
+            var hasDataToSend = ServiceManager.Data.Count>0;
 
-            var dataSended = false;
-            ServiceData data = null;
-            while ((data = sManager.GetOutData()) != null)
+            while (ServiceManager.Data.Count != 0)
             {
-                dataSended = true;
-                SendData(data, channel);
+                var data = ServiceManager.Data.Dequeue(); 
+                var packet = RPCDataHelper.CreatePacket(data, 1);
+                data.Session.Peer.QueuePacket(packet, channel);
             }
-            return dataSended;
+
+            return hasDataToSend;
         }
 
-        private void SendData(ServiceData data, byte channel)
-        {
-            var packet = new Packet((ushort) data.ServiceId);
-            packet.Flags = data.Flags;
-            packet.Write(new List<byte>(data.Data));
-            
-            data.Peer.QueuePacket(packet, channel);
-        }
     }
 
     public class Server : Host
@@ -93,39 +66,50 @@ namespace EngineManaged.Network
             var conn = new HostConnectionDetails("", port, 2);
 
             var server = new HostServer();
+            host = server;
+
             server.CreateSocket(conn);
 
-            server.PeerPacket += OnPacket;
-
-            host = server;
+            server.SessionPacket += OnPacket;
         }
     }
 
     public class Client : Host
     {
-        public Client(string address, ushort port)
+
+        public async Task<bool> Connect(string address, ushort port, int timeout = 1000)
         {
             FloodNetwork.NetworkInitialize();
-
             var conn = new HostConnectionDetails(address, port, 2);
 
             var client = new HostClient();
+            host = client;
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            var session = client.Session;
+            session.StateChange += state =>
+                                       {
+                                           if (state == SessionState.Open)
+                                               tcs.SetResult(true);
+                                       };
+
             client.Connect(conn);
 
-            client.PeerPacket += OnPacket;
+            // wait for task somewhere else
+            if (await Task.WhenAny(tcs.Task, Task.Delay(timeout)) != tcs.Task)
+                return false;
 
-            var peer = client.Peer;
-            RemoteServiceManagers.Add(peer, new RemoteServiceManager(peer));
+            client.SessionPacket += OnPacket;
 
-            host = client;
+            Console.WriteLine("Client connected with session!");
+
+            return true;
         }
 
-        public RemoteServiceManager RemoteServiceManager
+        public Session Session
         {
-            get { 
-                var peer = ((HostClient)host).Peer;
-                return RemoteServiceManagers[peer]; 
-            }
+            get { return ((HostClient) host).Session; }
         }
     }
 }
