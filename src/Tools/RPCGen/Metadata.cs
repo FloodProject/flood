@@ -77,7 +77,7 @@ namespace RPCGen
                 { 
                     var eInfo = new ExceptionInfo();
                     eInfo.Id = (int) attribute.GetType().GetProperty("Id").GetValue(attribute);
-                    eInfo.Type = (Type) attribute.GetType().GetProperty("Type").GetValue(attribute);
+                    eInfo.Type = (Type) attribute.GetType().GetProperty("Exception").GetValue(attribute);
                     exceptionsInfo.Add(eInfo);
                 }
                     
