@@ -21,12 +21,9 @@
  * details.
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using Flood.RPC;
-using Flood.RPC.Protocol;
+using Flood.RPC.Serialization;
 
 namespace Flood.RPC
 {
@@ -55,7 +52,7 @@ namespace Flood.RPC
            
             var response = new RPCData(request);
             response.IsResponse = true;
-            ProtocolUtil.Skip(request.Serializer, TType.Struct);
+            SerializerUtil.Skip(request.Serializer, TType.Struct);
             request.Serializer.ReadMessageEnd();
             RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
             response.Serializer.WriteMessageBegin(new Message(msg.Name, MessageType.Exception, msg.SeqID));

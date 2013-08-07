@@ -25,9 +25,9 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public class CompactProtocol : Serializer
+    public class CompactSerializer : Serializer
     {
         private static Struct ANONYMOUS_STRUCT = new Struct("");
         private static Field TSTOP = new Field("", TType.Stop, (short)0);
@@ -81,7 +81,7 @@ namespace Flood.RPC.Protocol
         private  Nullable<Boolean> boolValue_;
 
 
-        public CompactProtocol()
+        public CompactSerializer()
         {
             ttypeToCompactType[(int)TType.Stop] = Types.STOP;
             ttypeToCompactType[(int)TType.Bool] = Types.BOOLEAN_TRUE;
@@ -480,13 +480,13 @@ namespace Flood.RPC.Protocol
             byte protocolId = ReadByte();
             if (protocolId != PROTOCOL_ID)
             {
-                throw new ProtocolException("Expected protocol id " + PROTOCOL_ID.ToString("X") + " but got " + protocolId.ToString("X"));
+                throw new SerializerException("Expected protocol id " + PROTOCOL_ID.ToString("X") + " but got " + protocolId.ToString("X"));
             }
             byte versionAndType = ReadByte();
             byte version = (byte)(versionAndType & VERSION_MASK);
             if (version != VERSION)
             {
-                throw new ProtocolException("Expected version " + VERSION + " but got " + version);
+                throw new SerializerException("Expected version " + VERSION + " but got " + version);
             }
             byte type = (byte)((versionAndType >> TYPE_SHIFT_AMOUNT) & 0x03);
             int seqid = (int)ReadVarint32();
@@ -864,7 +864,7 @@ namespace Flood.RPC.Protocol
                 case Types.STRUCT:
                     return TType.Struct;
                 default:
-                    throw new ProtocolException("don't know what type: " + (byte)(type & 0x0f));
+                    throw new SerializerException("don't know what type: " + (byte)(type & 0x0f));
             }
         }
 

@@ -25,44 +25,38 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public struct Field
+    public struct TMap
     {
-        private string name;
-        private TType type;
-        private short id;
+        private TType keyType;
+        private TType valueType;
+        private int count;
 
-        public Field(string name, TType type, short id)
+        public TMap(TType keyType, TType valueType, int count)
             :this()
         {
-            this.name = name;
-            this.type = type;
-            this.id = id;
+            this.keyType = keyType;
+            this.valueType = valueType;
+            this.count = count;
         }
 
-        public string Name
+        public TType KeyType
         {
-            get { return name; }
-            set { name = value; }
+            get { return keyType; }
+            set { keyType = value; }
         }
 
-        public TType Type
+        public TType ValueType
         {
-            get { return type; }
-            set { type = value; }
+            get { return valueType; }
+            set { valueType = value; }
         }
 
-        public short ID
+        public int Count
         {
-            get { return id; }
-            set { id = value; }
-        }
-
-        public string ClassName
-        {
-            get;
-            set; 
+            get { return count; }
+            set { count = value; }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Flood.RPC.Protocol;
-using Flood;
+﻿using Flood.RPC.Serialization;
 
 namespace Flood.RPC
 {

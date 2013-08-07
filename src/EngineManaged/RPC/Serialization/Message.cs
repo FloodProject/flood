@@ -25,38 +25,38 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public struct TMap
+    public struct Message
     {
-        private TType keyType;
-        private TType valueType;
-        private int count;
+        private string name;
+        private MessageType type;
+        private int seqID;
 
-        public TMap(TType keyType, TType valueType, int count)
+        public Message(string name, MessageType type, int seqid)
             :this()
         {
-            this.keyType = keyType;
-            this.valueType = valueType;
-            this.count = count;
+            this.name = name;
+            this.type = type;
+            this.seqID = seqid;
         }
 
-        public TType KeyType
+        public string Name
         {
-            get { return keyType; }
-            set { keyType = value; }
+            get { return name; }
+            set { name = value; }
         }
 
-        public TType ValueType
+        public MessageType Type
         {
-            get { return valueType; }
-            set { valueType = value; }
+            get { return type; }
+            set { type = value; }
         }
 
-        public int Count
+        public int SeqID
         {
-            get { return count; }
-            set { count = value; }
+            get { return seqID; }
+            set { seqID = value; }
         }
     }
 }

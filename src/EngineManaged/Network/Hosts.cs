@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flood.RPC;
 using Flood;
-using Flood.RPC.Protocol;
+using Flood.RPC.Serialization;
 
 namespace EngineManaged.Network
 {

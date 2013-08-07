@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
     public struct TCollection
     {

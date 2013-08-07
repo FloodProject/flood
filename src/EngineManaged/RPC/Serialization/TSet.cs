@@ -22,45 +22,38 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public class ProtocolException : Exception
+    public struct TSet
     {
-        public const int UNKNOWN = 0;
-        public const int INVALID_DATA = 1;
-        public const int NEGATIVE_SIZE = 2;
-        public const int SIZE_LIMIT = 3;
-        public const int BAD_VERSION = 4;
-        public const int NOT_IMPLEMENTED= 5;
+        private TType elementType;
+        private int count;
 
-        protected int type_ = UNKNOWN;
+        public TSet(TType elementType, int count)
+            :this()
+        {
+            this.elementType = elementType;
+            this.count = count;
+        }
 
-        public ProtocolException()
-            : base()
+        public TSet(TList list)
+            : this(list.ElementType, list.Count)
         {
         }
 
-        public ProtocolException(int type)
-            : base()
+        public TType ElementType
         {
-            type_ = type;
+            get { return elementType; }
+            set { elementType = value; }
         }
 
-        public ProtocolException(int type, String message)
-            : base(message)
+        public int Count
         {
-            type_ = type;
-        }
-
-        public ProtocolException(String message)
-            : base(message)
-        {
-        }
-
-        public int getType()
-        {
-            return type_;
+            get { return count; }
+            set { count = value; }
         }
     }
 }

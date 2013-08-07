@@ -23,9 +23,9 @@
 
 using System;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public static class ProtocolUtil
+    public static class SerializerUtil
     {
         public static void Skip(Serializer prot, TType type)
         {

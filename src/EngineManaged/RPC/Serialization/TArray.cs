@@ -15,17 +15,40 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * Contains some contributions under the Thrift Software License.
+ * Please see doc/old-thrift-license.txt in the Thrift distribution for
+ * details.
  */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public enum MessageType
+    public struct TArray
     {
-        Call = 1,
-        Reply = 2,
-        Exception = 3,
-        Oneway = 4
+        private TType elementType;
+        private int count;
+
+        public TArray(TType elementType, int count)
+            :this()
+        {
+            this.elementType = elementType;
+            this.count = count;
+        }
+
+        public TType ElementType
+        {
+            get { return elementType; }
+            set { elementType = value; }
+        }
+
+        public int Count
+        {
+            get { return count; }
+            set { count = value; }
+        }
     }
 }

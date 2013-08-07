@@ -22,12 +22,25 @@
  */
 
 using System;
-using Flood.RPC.Transport;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public interface ProtocolFactory
+    public struct Struct
     {
-        Serializer GetProtocol(TTransport trans);
+        private string name;
+
+        public Struct(string name)
+            :this()
+        {
+            this.name = name;
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
     }
 }

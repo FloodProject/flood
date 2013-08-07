@@ -25,23 +25,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public struct TSet
+    public struct TList
     {
         private TType elementType;
         private int count;
 
-        public TSet(TType elementType, int count)
+        public TList(TType elementType, int count)
             :this()
         {
             this.elementType = elementType;
             this.count = count;
-        }
-
-        public TSet(TList list)
-            : this(list.ElementType, list.Count)
-        {
         }
 
         public TType ElementType

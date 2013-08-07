@@ -23,7 +23,7 @@
 
 using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
     public abstract class Serializer
     {

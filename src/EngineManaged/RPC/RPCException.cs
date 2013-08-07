@@ -22,7 +22,8 @@
  */
 
 using System;
-using Flood.RPC.Protocol;
+using Flood.RPC;
+using Flood.RPC.Serialization;
 
 namespace Flood.RPC
 {
@@ -70,7 +71,7 @@ namespace Flood.RPC
                         }
                         else
                         {
-                            ProtocolUtil.Skip(iprot, field.Type);
+                            SerializerUtil.Skip(iprot, field.Type);
                         }
                         break;
                     case 2:
@@ -80,11 +81,11 @@ namespace Flood.RPC
                         }
                         else
                         {
-                            ProtocolUtil.Skip(iprot, field.Type);
+                            SerializerUtil.Skip(iprot, field.Type);
                         }
                         break;
                     default:
-                        ProtocolUtil.Skip(iprot, field.Type);
+                        SerializerUtil.Skip(iprot, field.Type);
                         break;
                 }
 

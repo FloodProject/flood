@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Flood.RPC.Protocol;
+using Flood.RPC.Serialization;
 using RPCGen;
 
 [assembly: InternalsVisibleToAttribute("Flood.Tools.RPCGen.Tests.GeneratorTests")]
@@ -30,7 +30,7 @@ namespace Flood.Tools.RPCGen
             var typeName = string.Format("{0}Impl", type.Name);
 
             WriteLine("[Serializable]");
-            WriteLine("public class {0} : Base", typeName);
+            WriteLine("public class {0}", typeName);
             WriteStartBraceIndent();
 
             // Generate fields
@@ -290,7 +290,7 @@ namespace Flood.Tools.RPCGen
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
-            WriteLine("request.Serializer.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Call, seqid_));",
+            WriteLine("request.Serializer.WriteMessageBegin(new Flood.RPC.Serialization.Message(\"{0}\", MessageType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
@@ -452,8 +452,8 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var response = new RPCData(request);");
             WriteLine("response.IsResponse = true;");
-            // Create a new Flood.RPC.Protocol.Message and reply to the RPC call
-            WriteLine("response.Serializer.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Reply, seqid));",
+            // Create a new Message and reply to the RPC call
+            WriteLine("response.Serializer.WriteMessageBegin(new Flood.RPC.Serialization.Message(\"{0}\", MessageType.Reply, seqid));",
                       method.Name);
 
             WriteLine("result.Write(response.Serializer);");
@@ -470,7 +470,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_args : Base", method.Name);
+            WriteLine("public partial class {0}_args", method.Name);
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -531,7 +531,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateServiceMethodResult(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_result : Base", method.Name);
+            WriteLine("public partial class {0}_result", method.Name);
             WriteStartBraceIndent();
 
             var parameters = new List<Parameter>();
@@ -726,7 +726,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("using Flood;");
             WriteLine("using Flood.RPC;");
             WriteLine("using Flood.RPC.Metadata;");
-            WriteLine("using Flood.RPC.Protocol;");
+            WriteLine("using Flood.RPC.Serialization;");
             WriteLine("using System.Threading.Tasks;");
 
             NewLine();
@@ -848,7 +848,7 @@ namespace Flood.Tools.RPCGen
                 WriteCloseBraceIndent();
                 WriteLine("else");
                 WriteStartBraceIndent();
-                WriteLine("ProtocolUtil.Skip(iprot, field.Type);");
+                WriteLine("SerializerUtil.Skip(iprot, field.Type);");
                 WriteCloseBraceIndent();
                 WriteLine("break;");
 
@@ -857,7 +857,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("default:");
             PushIndent();
-            WriteLine("ProtocolUtil.Skip(iprot, field.Type);");
+            WriteLine("SerializerUtil.Skip(iprot, field.Type);");
             WriteLine("break;");
             PopIndent();
 

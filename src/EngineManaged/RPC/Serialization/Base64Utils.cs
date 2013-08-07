@@ -19,7 +19,7 @@
 
 using System;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
     internal static class Base64Utils
     {

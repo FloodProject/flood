@@ -22,41 +22,45 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
-    public struct Message
+    public class SerializerException : Exception
     {
-        private string name;
-        private MessageType type;
-        private int seqID;
+        public const int UNKNOWN = 0;
+        public const int INVALID_DATA = 1;
+        public const int NEGATIVE_SIZE = 2;
+        public const int SIZE_LIMIT = 3;
+        public const int BAD_VERSION = 4;
+        public const int NOT_IMPLEMENTED= 5;
 
-        public Message(string name, MessageType type, int seqid)
-            :this()
+        protected int type_ = UNKNOWN;
+
+        public SerializerException()
+            : base()
         {
-            this.name = name;
-            this.type = type;
-            this.seqID = seqid;
         }
 
-        public string Name
+        public SerializerException(int type)
+            : base()
         {
-            get { return name; }
-            set { name = value; }
+            type_ = type;
         }
 
-        public MessageType Type
+        public SerializerException(int type, String message)
+            : base(message)
         {
-            get { return type; }
-            set { type = value; }
+            type_ = type;
         }
 
-        public int SeqID
+        public SerializerException(String message)
+            : base(message)
         {
-            get { return seqID; }
-            set { seqID = value; }
+        }
+
+        public int getType()
+        {
+            return type_;
         }
     }
 }

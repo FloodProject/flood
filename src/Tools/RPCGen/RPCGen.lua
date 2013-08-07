@@ -9,7 +9,7 @@ project "RPCGen"
     {
         "**.cs",
         "RPCGen.lua",
-        path.join(srcdir, "EngineManaged/RPC/Protocol/Type.cs")
+        path.join(srcdir, "EngineManaged/RPC/Serialization/Type.cs")
     }
     
     links {

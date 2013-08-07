@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Flood;
 using Flood.RPC;
-using Flood.RPC.Protocol;
+using Flood.RPC.Serialization;
 
 namespace EngineManaged.Network
 {

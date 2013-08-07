@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
     public class BinarySerializer : Serializer
     {
@@ -223,7 +223,7 @@ namespace Flood.RPC.Protocol
                 uint version = (uint)size & VERSION_MASK;
                 if (version != VERSION_1)
                 {
-                    throw new ProtocolException(ProtocolException.BAD_VERSION, "Bad version in ReadMessageBegin: " + version);
+                    throw new SerializerException(SerializerException.BAD_VERSION, "Bad version in ReadMessageBegin: " + version);
                 }
                 message.Type = (MessageType)(size & 0x000000ff);
                 message.Name = ReadString();
@@ -233,7 +233,7 @@ namespace Flood.RPC.Protocol
             {
                 if (strictRead_)
                 {
-                    throw new ProtocolException(ProtocolException.BAD_VERSION, "Missing version in readMessageBegin, old client?");
+                    throw new SerializerException(SerializerException.BAD_VERSION, "Missing version in readMessageBegin, old client?");
                 }
                 message.Name = ReadStringBody(size);
                 message.Type = (MessageType)ReadByte();

@@ -2,7 +2,7 @@
 using Flood.RPC;
 using Flood;
 using Flood.RPC.Metadata;
-using Flood.RPC.Protocol;
+using Flood.RPC.Serialization;
 using System;
 using System.Collections.Generic;
 

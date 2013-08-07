@@ -23,7 +23,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Flood.RPC.Protocol
+namespace Flood.RPC.Serialization
 {
     /// <summary>
     /// JSON protocol implementation for thrift.
@@ -35,7 +35,7 @@ namespace Flood.RPC.Protocol
     ///
     /// Adapted from the Java version.
     /// </summary>
-    public class JSONProtocol : Serializer
+    public class JSONSerializer : Serializer
     {
         private static byte[] COMMA = new byte[] { (byte)',' };
         private static byte[] COLON = new byte[] { (byte)':' };
@@ -103,7 +103,7 @@ namespace Flood.RPC.Protocol
                 case TType.List:
                     return NAME_LIST;
                 default:
-                    throw new ProtocolException(ProtocolException.NOT_IMPLEMENTED,
+                    throw new SerializerException(SerializerException.NOT_IMPLEMENTED,
                                                  "Unrecognized type");
             }
         }
@@ -161,7 +161,7 @@ namespace Flood.RPC.Protocol
             }
             if (result == TType.Stop)
             {
-                throw new ProtocolException(ProtocolException.NOT_IMPLEMENTED,
+                throw new SerializerException(SerializerException.NOT_IMPLEMENTED,
                                              "Unrecognized type");
             }
             return result;
@@ -174,9 +174,9 @@ namespace Flood.RPC.Protocol
         ///</summary>
         protected class JSONBaseContext
         {
-            protected JSONProtocol proto;
+            protected JSONSerializer proto;
 
-            public JSONBaseContext(JSONProtocol proto)
+            public JSONBaseContext(JSONSerializer proto)
             {
                 this.proto = proto;
             }
@@ -194,8 +194,8 @@ namespace Flood.RPC.Protocol
         ///</summary>
         protected class JSONListContext : JSONBaseContext
         {
-            public JSONListContext(JSONProtocol protocol)
-                : base(protocol)
+            public JSONListContext(JSONSerializer serializer)
+                : base(serializer)
             {
 
             }
@@ -235,7 +235,7 @@ namespace Flood.RPC.Protocol
         ///</summary>
         protected class JSONPairContext : JSONBaseContext
         {
-            public JSONPairContext(JSONProtocol proto)
+            public JSONPairContext(JSONSerializer proto)
                 : base(proto)
             {
 
@@ -283,9 +283,9 @@ namespace Flood.RPC.Protocol
         ///</summary>
         protected class LookaheadReader
         {
-            protected JSONProtocol proto;
+            protected JSONSerializer proto;
 
-            public LookaheadReader(JSONProtocol proto)
+            public LookaheadReader(JSONSerializer proto)
             {
                 this.proto = proto;
             }
@@ -357,7 +357,7 @@ namespace Flood.RPC.Protocol
         ///<summary>
         /// JSONProtocol Constructor
         ///</summary>
-        public JSONProtocol()
+        public JSONSerializer()
         {
             context = new JSONBaseContext(this);
             reader = new LookaheadReader(this);
@@ -376,7 +376,7 @@ namespace Flood.RPC.Protocol
             byte ch = reader.Read();
             if (ch != b[0])
             {
-                throw new ProtocolException(ProtocolException.INVALID_DATA,
+                throw new SerializerException(SerializerException.INVALID_DATA,
                                              "Unexpected character:" + (char)ch);
             }
         }
@@ -397,7 +397,7 @@ namespace Flood.RPC.Protocol
             }
             else
             {
-                throw new ProtocolException(ProtocolException.INVALID_DATA,
+                throw new SerializerException(SerializerException.INVALID_DATA,
                                              "Expected hex character");
             }
         }
@@ -758,7 +758,7 @@ namespace Flood.RPC.Protocol
                         int off = Array.IndexOf(ESCAPE_CHARS, (char)ch);
                         if (off == -1)
                         {
-                            throw new ProtocolException(ProtocolException.INVALID_DATA,
+                            throw new SerializerException(SerializerException.INVALID_DATA,
                                                          "Expected control char");
                         }
                         ch = ESCAPE_CHAR_VALS[off];
@@ -836,7 +836,7 @@ namespace Flood.RPC.Protocol
             }
             catch (FormatException)
             {
-                throw new ProtocolException(ProtocolException.INVALID_DATA,
+                throw new SerializerException(SerializerException.INVALID_DATA,
                                              "Bad data encounted in numeric data");
             }
         }
@@ -857,7 +857,7 @@ namespace Flood.RPC.Protocol
                     !Double.IsInfinity(dub))
                 {
                     // Throw exception -- we should not be in a string in this case
-                    throw new ProtocolException(ProtocolException.INVALID_DATA,
+                    throw new SerializerException(SerializerException.INVALID_DATA,
                                                  "Numeric data unexpectedly quoted");
                 }
                 return dub;
@@ -875,7 +875,7 @@ namespace Flood.RPC.Protocol
                 }
                 catch (FormatException)
                 {
-                    throw new ProtocolException(ProtocolException.INVALID_DATA,
+                    throw new SerializerException(SerializerException.INVALID_DATA,
                                                  "Bad data encounted in numeric data");
                 }
             }
@@ -944,7 +944,7 @@ namespace Flood.RPC.Protocol
             ReadJSONArrayStart();
             if (ReadJSONInteger() != VERSION)
             {
-                throw new ProtocolException(ProtocolException.BAD_VERSION,
+                throw new SerializerException(SerializerException.BAD_VERSION,
                                              "Message contained bad version.");
             }
 
