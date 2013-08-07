@@ -21,26 +21,12 @@
  * details.
  */
 
-using System;
 using System.Text;
-using Flood.RPC.Transport;
 
 namespace Flood.RPC.Protocol
 {
     public abstract class Serializer
     {
-        protected TTransport trans;
-
-        protected Serializer(TTransport trans)
-        {
-            this.trans = trans;
-        }
-
-        public TTransport Transport
-        {
-            get { return trans; }
-        }
-
         public abstract void WriteMessageBegin(Message message);
         public abstract void WriteMessageEnd();
         public abstract void WriteStructBegin(Struct struc);
