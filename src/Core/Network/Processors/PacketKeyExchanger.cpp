@@ -96,6 +96,7 @@ bool PacketClientKeyExchanger::processInPacket(Peer* peer, Packet* packet, int c
     case ClientKeyExchangerState::WaitingServerSession:
         if (processServerSessionAckPacket(peer, packet, channelId))
         {
+            peer->getSession()->setState(SessionState::Open);
             parent->removeProcessor(this);
             return false;
         }
@@ -217,6 +218,7 @@ bool PacketServerKeyExchanger::processInPacket(Peer* peer, Packet* packet, int c
     case ServerKeyExchangerState::WaitingClientSession:
         if (processClientSessionPacket(peer, packet, channelId))
         {
+            peer->getSession()->setState(SessionState::Open);
             parent->removeProcessor(this);
             return false;
         }
