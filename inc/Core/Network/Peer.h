@@ -71,7 +71,7 @@ public:
 	Event1<PeerState> onStateChanged;
 
 	GETTER(Session, Session*, session)
-	FLD_IGNORE SETTER(Session, Session*, session)
+	FLD_IGNORE SETTER(Session, Session*, session);
 
 private:
 
