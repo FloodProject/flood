@@ -89,6 +89,7 @@ solution "Flood"
 			dofile( srcdir .. "/Tools/BakefileGen/BakefileGen.lua")
 		end
 
+		dofile( srcdir .. "/Tools/PackageGen/PackageGen.lua")
 		dofile( srcdir .. "/Tools/RPCGen/RPCGen.lua")
         dofile( srcdir .. "/Tools/RPCGen.Tests/RPCGen.Tests.lua")
 		dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
