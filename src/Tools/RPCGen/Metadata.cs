@@ -85,8 +85,19 @@ namespace RPCGen
             return exceptionsInfo.Count != 0;
         }
 
+        public static bool HasEncrypted(ICustomAttributeProvider info)
+        {
+            return HasAttribute(info, "Flood.RPC.Metadata.EncryptedAttribute");
+        }
 
+        public static bool HasCompressed(ICustomAttributeProvider info)
+        {
+            return HasAttribute(info, "Flood.RPC.Metadata.CompressedAttribute");
+        }
 
-
+        public static bool HasSigned(ICustomAttributeProvider info)
+        {
+            return HasAttribute(info, "Flood.RPC.Metadata.SignedAttribute");
+        }
     }
 }

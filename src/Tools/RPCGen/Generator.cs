@@ -287,6 +287,9 @@ namespace Flood.Tools.RPCGen
             WriteLine("var request = new RPCData();");
             WriteLine("request.Session = Session;");
             WriteLine("request.ServiceId = ServiceId;");
+            var flags = GetRPCDataFlags(method);
+            if (flags.Count > 0)
+                WriteLine("request.Flags = {0};", string.Join(" | ", flags));
             WriteLine("request.Serializer.WriteMessageBegin(new Flood.RPC.Protocol.Message(\"{0}\", MessageType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
@@ -297,6 +300,18 @@ namespace Flood.Tools.RPCGen
             WriteLine("return request;");
             WriteCloseBraceIndent();
             NewLine();
+        }
+
+        private List<string> GetRPCDataFlags(MethodInfo method)
+        {
+            var flags = new List<string>();
+            if(Metadata.HasEncrypted(method))
+                flags.Add("PacketFlags.Ecrypted");
+            if(Metadata.HasCompressed(method))
+                flags.Add("PacketFlags.Compressed");
+            if(Metadata.HasSigned(method))
+                flags.Add("PacketFlags.Signed");
+            return flags;
         }
 
         private void GenerateParameterList(IList<ParameterInfo> parameters)

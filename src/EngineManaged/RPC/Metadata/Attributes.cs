@@ -69,4 +69,19 @@ namespace Flood.RPC.Metadata
         public int Id { get; private set; }
         public Type Exception { get; private set; }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class EncryptedAttribute : System.Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class CompressedAttribute : System.Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SignedAttribute : System.Attribute
+    {
+    }
 }
