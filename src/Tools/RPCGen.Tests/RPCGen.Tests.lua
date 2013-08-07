@@ -40,5 +40,6 @@ project "RPCGen.Tests.Services"
     {
         "System",
         "EngineManaged",
+        "EngineBindings",
         path.join(depsdir,"NUnit","nunit.framework"),
     }
