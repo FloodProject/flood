@@ -578,18 +578,18 @@ static Object* SerializeLoad( Serializer* serializer )
 	SerializerBinary* bin = (SerializerBinary*) serializer;
 	if( !bin->stream ) return nullptr;
 
-	int64 size = StreamGetSize(bin->stream);
+	int64 size = bin->stream->size();
 	if( size == 0 ) return nullptr;
 
-	bin->ms = (MemoryStream*) StreamCreateFromMemory(bin->alloc, size);
-	StreamReadBuffer(bin->stream, &bin->ms->data[0], size);
+	MemoryStream ms(size);
+	bin->ms = &ms;
+	bin->stream->readBuffer(bin->ms->data.data(), size);
 
 	ReflectionContext* context = &serializer->deserializeContext;
 
 	Object* object = serializer->object;
 	object = DeserializeComposite(context, object);
 	
-	Deallocate(bin->ms);
 	return object;
 }
 
@@ -600,14 +600,13 @@ static bool SerializeSave( Serializer* serializer, const Object* object )
 	SerializerBinary* bin = (SerializerBinary*) serializer;
 	if( !bin->stream ) return false;
 
-	Stream* buf = StreamCreateFromMemory(bin->alloc, 1024);
-	bin->ms = (MemoryStream*) buf;
-	
-	ReflectionWalk(object, &bin->serializeContext);
-	StreamWrite(bin->stream, &bin->ms->data[0], bin->ms->position);
+	MemoryStream ms(1024);
+	bin->ms = &ms;
 
-	StreamDestroy(buf);
-	StreamClose(bin->stream);
+	ReflectionWalk(object, &bin->serializeContext);
+	bin->stream->write(bin->ms->data.data(), bin->ms->position);
+
+	ms.close();
 
 	return true;
 }
@@ -778,7 +777,7 @@ float DecodeFloat(MemoryStream* ms)
 void EncodeString(MemoryStream* ms, const String& s)
 {
 	EncodeVariableInteger(ms, s.size());
-	StreamWriteString(ms, s);
+	ms->writeString(s);
 }
 
 bool DecodeString(MemoryStream* ms, String& s)

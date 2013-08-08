@@ -30,7 +30,7 @@ ResourceStream::ResourceStream()
 
 ResourceStream::~ResourceStream()
 {
-	StreamDestroy(stream);
+	Deallocate(stream);
 }
 
 //-----------------------------------//

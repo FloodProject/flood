@@ -15,7 +15,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct Stream;
+class Stream;
 struct Archive;
 struct ArchiveFuncs;
 

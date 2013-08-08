@@ -690,8 +690,8 @@ static Object* SerializeLoad( Serializer* serializer )
 	json->arrays.clear();
 
 	String text;
-	StreamReadString(json->stream, text);
-	StreamClose(json->stream);
+	json->stream->readString(text);
+	json->stream->close();
 
 	json_t* rootValue;
 
@@ -746,9 +746,9 @@ static bool SerializeSave( Serializer* serializer, const Object* object )
 	char* dump = json_dumps(rootValue, flags);
 	
 	if( dump )
-		StreamWriteString(json->stream, dump);
+		json->stream->writeString(dump);
 	
-	StreamClose(json->stream);
+	json->stream->close();
 
 	Deallocate(dump);
 	json_decref(rootValue);

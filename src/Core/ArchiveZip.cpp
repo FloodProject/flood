@@ -20,110 +20,88 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct ZipStream : Stream
+ZipStream::ZipStream()
+	: Stream("", StreamOpenMode::Default)
+
 {
-	ZZIP_DIR* dir;
-	ZZIP_FILE* handle;
-};
-
-static bool  ZipStreamOpen(Stream*);
-static bool  ZipStreamClose(Stream*);
-static int64 ZipStreamRead(Stream*, void*, int64);
-static int64 ZipStreamTell(Stream*);
-static int64 ZipStreamSeek(Stream*, int64, int8);
-static int64 ZipStreamGetSize(Stream*);
-
-static StreamFuncs gs_ZipStreamFuncs = 
-{
-	ZipStreamOpen,
-	ZipStreamClose,
-	ZipStreamRead,
-	nullptr /*ZipStreamWrite*/,
-	ZipStreamTell,
-	ZipStreamSeek,
-	ZipStreamGetSize
-};
-
-//-----------------------------------//
-
-static bool ZipStreamOpen(Stream* stream)
-{
-	if( !stream ) return false;
-
-	ZipStream* zip = (ZipStream*) stream;
-	zip->handle = zzip_file_open(zip->dir, zip->path.c_str(), ZZIP_ONLYZIP);
-
-	return zip->handle != nullptr;
 }
 
 //-----------------------------------//
 
-static bool ZipStreamClose(Stream* stream)
+ZipStream::ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, String path,
+	StreamOpenMode mode)
+	: Stream(path, mode)
+	, dir(dir)
+	, handle(handle)
 {
-	if( !stream ) return false;
+}
 
-	ZipStream* zip = (ZipStream*) stream;
-	int ret = zzip_file_close(zip->handle);
 
-	return ret == ZZIP_NO_ERROR;
+//-----------------------------------//
+
+ZipStream::~ZipStream()
+{
+	if( !close() )
+		LogDebug("Error closing zip stream: %s", path.c_str());
 }
 
 //-----------------------------------//
 
-static int64 ZipStreamRead(Stream* stream, void* buf, int64 len)
+bool ZipStream::open()
 {
-	if( !stream ) return false;
-
-	ZipStream* zip = (ZipStream*) stream;
-	return zzip_file_read(zip->handle, buf, (zzip_size_t) len);
+	handle = zzip_file_open(dir, path.c_str(), ZZIP_ONLYZIP);
+	return handle != nullptr;
 }
 
 //-----------------------------------//
 
-static int64 ZipStreamTell(Stream* stream)
+bool ZipStream::close()
 {
-	if( !stream ) return false;
-
-	ZipStream* zip = (ZipStream*) stream;
-	return zzip_tell(zip->handle);
+	return zzip_file_close(handle) == ZZIP_NO_ERROR;
 }
 
 //-----------------------------------//
 
-static int64 ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
+int64 ZipStream::read(void* buf, uint64 len) const
 {
-	if( !stream ) return false;
+	return zzip_file_read(handle, buf, (zzip_size_t) len);
+}
 
-	ZipStream* zip = (ZipStream*) stream;
+//-----------------------------------//
 
+int64 ZipStream::getPosition() const
+{
+	return zzip_tell(handle);
+}
+
+//-----------------------------------//
+
+void ZipStream::setPosition(int64 offset, StreamSeekMode mode)
+{
 	int origin = 0;
 
 	switch(mode)
 	{
-	case (int)StreamSeekMode::Absolute:
+	case StreamSeekMode::Absolute:
 		origin = SEEK_SET;
 		break;
-	case (int)StreamSeekMode::Relative:
+	case StreamSeekMode::Relative:
 		origin = SEEK_CUR;
 		break;
-	case (int)StreamSeekMode::RelativeEnd:
+	case StreamSeekMode::RelativeEnd:
 		origin = SEEK_END;
 		break;
 	}
 
-	return zzip_seek(zip->handle, (zzip_off_t) offset, origin) > 0;
+	zzip_seek(handle, (zzip_off_t) offset, origin);
 }
 
 //-----------------------------------//
 
-static int64 ZipStreamGetSize(Stream* stream)
+uint64 ZipStream::size() const
 {
-	if( !stream ) return false;
-	
-	ZipStream* zip = (ZipStream*) stream;
-
 	ZZIP_STAT zs;
-	int ret = zzip_file_stat(zip->handle, &zs);
+	int ret = zzip_file_stat(handle, &zs);
 	assert( ret != -1 );
 	
 	return zs.st_size;
@@ -201,21 +179,18 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 {
 	if( !archive ) return nullptr;
 
-	ZipStream* stream = Allocate(alloc, ZipStream);
-	stream->dir = (ZZIP_DIR*) archive->handle;
-	stream->handle = nullptr;
-	stream->path = path;
-	stream->mode = StreamOpenMode::Read; // only read-only for zips for now.
-	stream->fn = &gs_ZipStreamFuncs;
-
-	if( !ZipStreamOpen(stream) )
+	auto zip = AllocateHeap(ZipStream);
+	zip->dir = (ZZIP_DIR*) archive->handle;
+	zip->handle = nullptr;
+	zip->path = path;
+	zip->mode = StreamOpenMode::Read; // only read-only for zips for now.
+	
+	if( !zip->open() )
 	{
 		//LogWarn("Error opening zip file: %s", path.c_str());
-		Deallocate( stream);
 		return nullptr;
 	}
-
-	return stream;
+	return zip;
 }
 
 //-----------------------------------//

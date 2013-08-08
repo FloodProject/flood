@@ -11,6 +11,7 @@
 #include "Core/Stream.h"
 #include "Core/SerializationHelpers.h"
 #include "Core/Utilities.h"
+#include <cmath>
 
 #if defined(PLATFORM_WINDOWS) && !defined(WIN32)
 #define WIN32
@@ -25,14 +26,15 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+const size_t DefaultPacketSize = 512;
+
 Packet::Packet(PacketId id)
 	: id(id)
-	, ms(nullptr)
+	, ms(DefaultPacketSize)
 	, packet(nullptr)
 	, freePacket(false)
 	, flags((PacketFlags)0)
 {
-	ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
 	SetBitFlag(flags, PacketFlags::Reliable, true);
 }
 
@@ -40,8 +42,6 @@ Packet::Packet(PacketId id)
 
 Packet::~Packet()
 {
-	Deallocate(ms);
-
 	if(freePacket)
 	{
 		enet_packet_destroy(packet);
@@ -84,21 +84,20 @@ void Packet::prepare()
 {
 	if( !packet ) createPacket();
 
-	size_t totalSize = (size_t) ms->position;
+	size_t totalSize = (size_t) ms.getPosition();
 
 	size_t bufSize = GetCompressionBufferSize(totalSize);
 	enet_packet_resize(packet, bufSize);
 
 	MemoryStream pms;
-	StreamMemoryInit(&pms);
-	StreamMemorySetRawBuffer(&pms, packet->data);
+	pms.setRawBuffer(packet->data);
 
 	EncodeVariableInteger(&pms, id);
-	StreamWrite(&pms, (uint8*) &flags, sizeof(flags));
+	pms.write((uint8*) &flags, sizeof(flags));
 	
 	if( GetBitFlag(flags, PacketFlags::Compressed) )
 	{
-		uint8* in = &ms->data[0];
+		uint8* in = ms.data.data();
 		uint8* out = pms.buffer + pms.position;
 		int32 length = fastlz_compress_level(1, in, totalSize, out);
 		pms.position += length;
@@ -106,7 +105,7 @@ void Packet::prepare()
 	else
 	{
 		enet_packet_resize(packet, totalSize + pms.position);
-		StreamWrite(&pms, &ms->data[0], totalSize);
+		pms.write(ms.data.data(), totalSize);
 	}
 
 	packet->dataLength = (size_t) pms.position;
@@ -117,8 +116,7 @@ void Packet::prepare()
 void Packet::setPacket(ENetPacket* packet)
 {
 	MemoryStream pms;
-	StreamMemoryInit(&pms);
-	StreamMemorySetRawBuffer(&pms, packet->data);
+	pms.setRawBuffer(packet->data);
 
 	uint64 id;
 
@@ -128,7 +126,7 @@ void Packet::setPacket(ENetPacket* packet)
 	this->id = (PacketId) id;
 	this->packet = packet;
 
-	StreamReadBuffer(&pms, &flags, sizeof(PacketFlags));
+	pms.readBuffer(&flags, sizeof(PacketFlags));
 
 	uint8* in = packet->data + pms.position;
 	size_t inSize = packet->dataLength - (size_t) pms.position;
@@ -136,15 +134,15 @@ void Packet::setPacket(ENetPacket* packet)
 	if( GetBitFlag(flags, PacketFlags::Compressed) )
 	{
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
-		StreamResize(ms, bufSize);
+		ms.resize(bufSize);
 
-		int32 length = fastlz_decompress(in, inSize, &ms->data[0], ms->data.size());
-		StreamResize(ms, length);
+		int32 length = fastlz_decompress(in, inSize, ms.data.data(), ms.data.size());
+		ms.resize(length);
 	}
 	else
 	{
-		StreamResize(ms, inSize);
-		StreamWrite(ms, in, inSize);
+		ms.resize(inSize);
+		ms.write(in, inSize);
 	}
 
 	freePacket = true;
@@ -157,7 +155,7 @@ void Packet::write(const Object* object)
 	SetBitFlag(flags, PacketFlags::Binary, true);
 
 	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis(), 0);
-	serializer->stream = ms;
+	serializer->stream = &ms;
 
 	SerializerSave(serializer, object);
 	
@@ -168,26 +166,26 @@ void Packet::write(const Object* object)
 
 int Packet::size() const
 {
-	return StreamGetPosition(ms);
+	return ms.getPosition();
 }
 
 //-----------------------------------//
 
 void Packet::clear()
 {
-	StreamSetPosition(ms, 0, StreamSeekMode::Absolute);
+	ms.setPosition(0, StreamSeekMode::Absolute);
 }
 
 //-----------------------------------//
 
 void Packet::write(byte* data, int size)
 {
-	int streamSize = StreamGetSize(ms);
-	int streamPosition = StreamGetPosition(ms);
+	int streamSize = ms.size();
+	int streamPosition = ms.getPosition();
 	if(streamPosition+size > streamSize)
-		StreamResize(ms,2*streamSize+size);
+		ms.resize(2*streamSize+size);
 
-	StreamWrite(ms,data,size);
+	ms.write(data,size);
 }
 
 void Packet::write(std::vector<byte>& data)
@@ -197,7 +195,7 @@ void Packet::write(std::vector<byte>& data)
 
 std::vector<byte> Packet::read() const
 {
-	std::vector<uint8> vec(ms->data.begin(), ms->data.begin()+size());
+	std::vector<uint8> vec(ms.data.begin(), ms.data.begin()+size());
 	return vec;
 }
 
