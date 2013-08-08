@@ -14,41 +14,71 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Stream* StreamCreateFromURI(Allocator*, const Path&, StreamOpenMode)
+Stream::Stream(const String& path, StreamOpenMode mode)
+	: path(path)
+	, mode(mode) 
 {
-	assert("TODO: Creating URIs from schemes");
-	return nullptr;
 }
 
 //-----------------------------------//
 
-bool StreamClose(Stream* stream)
+bool Stream::open() 
 {
-	if(!stream || !stream->fn->close ) return false;
-	return stream->fn->close(stream);
+	return false; 
 }
 
 //-----------------------------------//
 
-void StreamDestroy(Stream* stream)
-{
-	if( !stream ) return;
+bool Stream::close() 
+{ 
+	return false; 
+}
 
-	if( !StreamClose(stream) )
-	{
-		LogDebug("Error closing stream: %s", stream->path.c_str());
-	}
+//-----------------------------------//
+
+int64 Stream::read(void* buffer, uint64 size) const
+{ 
+	return InvalidState; 
+}	
 	
-	Deallocate(stream);
+//-----------------------------------//	
+	
+int64 Stream::write(void* buffer, uint64 size) 
+{
+	return InvalidState; 
 }
 
 //-----------------------------------//
 
-int64 StreamRead(Stream* stream, std::vector<uint8>& data)
+int64 Stream::getPosition() const
 {
-	if( !stream ) return 0;
-	
-	int64 length = StreamGetSize(stream);
+	return InvalidState; 
+}
+
+//-----------------------------------//
+
+void Stream::setPosition(int64 pos, StreamSeekMode mode) 
+{
+}
+
+//-----------------------------------//
+
+uint64 Stream::size() const
+{ 
+	return InvalidState; 
+}
+
+//-----------------------------------//
+
+void Stream::resize(int64 size) 
+{
+}
+
+//-----------------------------------//
+
+int64 Stream::read(std::vector<uint8>& data) const
+{
+	int64 length = size();
 
 	if( length < 0 ) return 0;
 
@@ -56,33 +86,32 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 
 	if( data.empty() ) return 0;
 
-	return StreamReadBuffer(stream, &data.front(), data.size());
+	return readBuffer(&data.front(), data.size());
 }
 
 //-----------------------------------//
 
-int64 StreamReadBuffer(Stream* stream, void* buffer, int64 size)
+int64 Stream::readBuffer(void* buffer, int64 size) const
 {
-	if( !stream || !stream->fn->read ) return 0;
-	return stream->fn->read(stream, buffer, size);
+	return read(buffer, size);
 }
 
 //-----------------------------------//
 
-int64 StreamReadString(Stream* stream, String& text)
+int64 Stream::readString(String& text) const
 {
 	std::vector<uint8> data;
-	int64 size = StreamRead(stream, data);
+	int64 size = read(data);
 	text.assign( data.begin(), data.end() );
 	return size;
 }
 
 //-----------------------------------//
 
-int64 StreamReadLines(Stream* stream, std::vector<String>& lines)
+int64 Stream::readLines(std::vector<String>& lines) const
 {
 	String text;
-	int64 size = StreamReadString(stream, text);
+	int64 size = readString(text);
 
 	StringSplit(text, '\n', lines);
 	
@@ -99,49 +128,16 @@ int64 StreamReadLines(Stream* stream, std::vector<String>& lines)
 
 //-----------------------------------//
 
-int64 StreamWrite(Stream* stream, uint8* buf, uint64 size)
+int64 Stream::write(uint8* buf, uint64 size)
 {
-	if( !stream || !stream->fn->write ) return -1;
-	return stream->fn->write(stream, buf, size);
+	return write((void *)buf, size);
 }
 
 //-----------------------------------//
 
-int64 StreamWriteString(Stream* stream, const String& string)
+int64 Stream::writeString(const String& string)
 {
-	return StreamWrite(stream, (uint8*) string.data(), string.size());
-}
-
-//-----------------------------------//
-
-int64 StreamGetPosition(Stream* stream)
-{
-	if( !stream || !stream->fn->tell ) return -1;
-	return stream->fn->tell(stream);
-}
-
-//-----------------------------------//
-
-int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode mode)
-{
-	if( !stream || !stream->fn->seek ) return -1;
-	return stream->fn->seek(stream, offset, (int8) mode);
-}
-
-//-----------------------------------//
-
-int64 StreamGetSize(Stream* stream)
-{
-	if( !stream || !stream->fn->size ) return -1;
-	return stream->fn->size(stream);
-}
-
-//-----------------------------------//
-
-void StreamResize(Stream* stream, int64 size)
-{
-	if( !stream || !stream->fn->resize ) return;
-	stream->fn->resize(stream, size);
+	return write((uint8*) string.data(), string.size());
 }
 
 //-----------------------------------//

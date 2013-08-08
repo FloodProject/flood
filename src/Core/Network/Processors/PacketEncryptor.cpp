@@ -39,7 +39,7 @@ bool PacketEncryptor::processInPacket(Peer* peer, Packet* packet, int channelId)
         return true;
 
     auto stream = packet->getMemoryStream();
-    int size = StreamGetPosition(stream);
+	int size = stream->getPosition();
     uint8* data = stream->data.data();
 
     // Decrypt
@@ -48,7 +48,7 @@ bool PacketEncryptor::processInPacket(Peer* peer, Packet* packet, int channelId)
 
     // Remove AES padding
     uint8 p = *(data+size-1);
-    StreamSetPosition(stream, -p-1,  StreamSeekMode::Relative);
+	stream->setPosition(-p-1,  StreamSeekMode::Relative);
 
     return true;
 }
@@ -61,12 +61,12 @@ bool PacketEncryptor::processOutPacket(Peer* peer, Packet* packet, int channelId
     auto stream = packet->getMemoryStream();
 
     // Add AES padding
-    uint8 p = 16 - (StreamGetPosition(stream)+1)%16;
-    StreamSetPosition(stream, p, StreamSeekMode::Relative);
-    StreamWrite(stream, &p, 1);
+	uint8 p = 16 - (stream->getPosition()+1)%16;
+	stream->setPosition(p, StreamSeekMode::Relative);
+	stream->write(&p, 1);
 
     // Encrypt
-    int size = StreamGetPosition(stream);
+	int size = stream->getPosition();
     uint8* data = stream->data.data();
     aes_setkey_enc(aes, secret.data(), secret.size());
     aes_crypt_cbc(aes, AES_ENCRYPT, size, iv, data, data);

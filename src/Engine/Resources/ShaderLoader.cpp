@@ -58,7 +58,7 @@ static const String gs_FragmentBlock("[fragment]");
 bool ShaderLoader::decode(ResourceLoadOptions& options)
 {
 	String text;
-	StreamReadString(options.stream, text);
+	options.stream->readString(text);
 
 	ShaderTextMaterial* shader = static_cast<ShaderTextMaterial*>(options.resource);
 

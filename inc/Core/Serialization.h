@@ -127,7 +127,7 @@ struct API_CORE ReflectionContext
 
 //-----------------------------------//
 
-struct Stream;
+class Stream;
 struct Serializer;
 
 typedef Object* (*SerializerLoadFunction)(Serializer*);

@@ -112,17 +112,17 @@ void ResourceIndexer::indexResources(Task* task)
 
 	//LogDebug("Indexing file '%s'", basePath.c_str());
 
-	Stream* stream = StreamCreateFromFile(AllocatorGetThis(), path, StreamOpenMode::Read);
+	FileStream stream(path, StreamOpenMode::Read);
 		
-	if( !stream )
+	if( !stream.isValid )
 	{
 		LogWarn("Error indexing resource '%s': cannot open stream", basePath.c_str());
 		return;
 	}
 
 	std::vector<byte> data;
-	StreamRead(stream, data);
-	StreamDestroy(stream);
+	stream.read(data);
+	stream.close();
 
 	if( data.empty() )
 	{

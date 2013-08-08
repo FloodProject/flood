@@ -134,7 +134,7 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Image );
 
 API_GRAPHICS ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat);
 
-struct Stream;
+class Stream;
 
 class API_GRAPHICS ImageWriter
 {
