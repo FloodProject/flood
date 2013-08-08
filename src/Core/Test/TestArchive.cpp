@@ -16,51 +16,51 @@ SUITE(Core)
 
 	TEST(ArchiveDirStream)
 	{
-		ArchiveScopedPtr archive( ArchiveCreateFromDirectoryScoped(AllocatorGetHeap(), "teste") );
-		CHECK( archive != nullptr );
+		ArchiveDirectory archive("teste");
+		CHECK(archive.isValid);
 
 		std::vector<Path> files;
-		ArchiveEnumerateFiles(archive, files);
+		archive.enumerateFiles(files);
 
-		CHECK( ArchiveExistsFile(archive, "foo.txt") );
-		CHECK( ArchiveExistsFile(archive, "bar.txt") );
-		CHECK( ArchiveExistsFile(archive, "foo/bar.txt") );
-		CHECK( !ArchiveExistsFile(archive, "spam.txt") );
+		CHECK( archive.existsFile("foo.txt") );
+		CHECK( archive.existsFile("bar.txt") );
+		CHECK( archive.existsFile("foo/bar.txt") );
+		CHECK( !archive.existsFile("spam.txt") );
 
-		Stream * stream = ArchiveOpenFile(archive, "foo.txt", AllocatorGetHeap());
-		CHECK( stream != nullptr);
+		Stream * stream = archive.openFile("foo.txt", AllocatorGetHeap());
+		CHECK(stream != nullptr);
 
 		String text;
 		stream->readString(text);
 		Deallocate(stream);
-		CHECK_EQUAL( "foobar", text.c_str());
+		CHECK_EQUAL( "foobar", text.c_str() );
 
 		std::vector<Path> dirs;
-		ArchiveEnumerateDirectories(archive, dirs);
+		archive.enumerateDirs(dirs);
 
-		CHECK( dirs.size() == 2);
-		CHECK( ArchiveExistsDirectory(archive, "foo"));
-		CHECK( !ArchiveExistsDirectory(archive, "foo/bar"));
-		CHECK( !ArchiveExistsDirectory(archive, "foo/spam"));
+		CHECK( dirs.size() == 2 );
+		CHECK( archive.existsDir("foo"));
+		CHECK( !archive.existsDir("foo/bar") );
+		CHECK( !archive.existsDir("foo/spam") );
 	}
 
 	TEST(ArchiveZip)
 	{
-		ArchiveScopedPtr archive( ArchiveCreateFromZipScoped(AllocatorGetHeap(), "teste.zip"));
-		CHECK( archive != nullptr );
+		ArchiveZip archive("teste.zip");
+		CHECK( archive.isValid );
 
 		std::vector<Path> files;
-		ArchiveEnumerateFiles(archive, files);
+		archive.enumerateFiles(files);
 		CHECK( files.size() == 5 );
 
-		CHECK( ArchiveExistsFile(archive, "LeaksReport.txt") );
-		CHECK( ArchiveExistsFile(archive, "Log.html") );
-		CHECK( ArchiveExistsFile(archive, "foo.txt") );
-		CHECK( ArchiveExistsFile(archive, "bar.txt") );
-		CHECK( ArchiveExistsFile(archive, "files/foo.txt") );
-		CHECK( !ArchiveExistsFile(archive, "files/spam.txt") );
+		CHECK( archive.existsFile("LeaksReport.txt") );
+		CHECK( archive.existsFile("Log.html") );
+		CHECK( archive.existsFile("foo.txt") );
+		CHECK( archive.existsFile("bar.txt") );
+		CHECK( archive.existsFile("files/foo.txt") );
+		CHECK( !archive.existsFile("files/spam.txt") );
 
-		Stream * stream = ArchiveOpenFile(archive, "file.txt", AllocatorGetHeap());
+		Stream * stream = archive.openFile("file.txt", AllocatorGetHeap());
 		CHECK( stream != nullptr );
 
 		String text;
@@ -69,39 +69,40 @@ SUITE(Core)
 		CHECK_EQUAL("foobar", text.c_str());
 
 		std::vector<Path> dirs;
-		ArchiveEnumerateDirectories(archive, dirs);
+
+		archive.enumerateDirs(dirs);
 
 		CHECK( dirs.size() == 3 );
-		CHECK( ArchiveExistsDirectory(archive, "files") );
-		CHECK( !ArchiveExistsDirectory(archive, "dunno") );
+		CHECK( archive.existsDir("files") );
+		CHECK( !archive.existsDir("dunno") );
 	}
 
 	TEST(ArchiveVirtual)
 	{
-		Archive* archive_zip = ArchiveCreateFromZip(AllocatorGetHeap(), "teste.zip");
-		CHECK( archive_zip != nullptr );
+		Archive* archive_zip = AllocateHeap(ArchiveZip, "teste.zip");
+		CHECK( archive_zip != nullptr && archive_zip->isValid);
 
-		Archive* archive_dir = ArchiveCreateFromDirectory(AllocatorGetHeap(), "teste");
-		CHECK( archive_dir != nullptr );
+		Archive* archive_dir = AllocateHeap(ArchiveDirectory, "teste");
+		CHECK( archive_dir != nullptr && archive_dir->isValid );
 
-		ArchiveScopedPtr archive( ArchiveCreateVirtual(AllocatorGetHeap()));
-		CHECK(archive != nullptr);
+		ArchiveVirtual archive;
+		CHECK(archive.isValid);
 
-		ArchiveMount(archive, archive_zip, "");
-		ArchiveMount(archive, archive_dir, "");
+		archive.archiveMount(archive_zip, "");
+		archive.archiveMount(archive_dir, "");
 
 		std::vector<Path> files;
-		ArchiveEnumerateFiles(archive, files);
+		archive.enumerateFiles(files);
 		CHECK(files.size() == 5+4 );
 
-		CHECK(ArchiveExistsFile(archive, "foo.txt"));
-		CHECK(ArchiveExistsFile(archive, "bar.txt"));
-		CHECK(ArchiveExistsFile(archive, "files/foo.txt"));
-		CHECK(!ArchiveExistsFile(archive, "files/spam.txt"));
-		CHECK(ArchiveExistsFile(archive, "foo/bar.txt"));
-		CHECK(!ArchiveExistsFile(archive, "spam.txt"));
+		CHECK(archive.existsFile("foo.txt"));
+		CHECK(archive.existsFile("bar.txt"));
+		CHECK(archive.existsFile("files/foo.txt"));
+		CHECK(!archive.existsFile("files/spam.txt"));
+		CHECK(archive.existsFile("foo/bar.txt"));
+		CHECK(!archive.existsFile("spam.txt"));
 
-		Stream* stream = ArchiveOpenFile(archive, "file.txt", AllocatorGetHeap());
+		Stream* stream = archive.openFile("file.txt", AllocatorGetHeap());
 		CHECK(stream != nullptr);
 
 		String text;
@@ -110,13 +111,12 @@ SUITE(Core)
 		CHECK_EQUAL("foobar", text.c_str());
 
 		std::vector<Path> dirs;
-		ArchiveEnumerateDirectories(archive, dirs);
-
+		archive.enumerateDirs(dirs);
 		CHECK(dirs.size() == 5);
-		CHECK(ArchiveExistsDirectory(archive, "files"));
-		CHECK(!ArchiveExistsDirectory(archive, "dunno"));
-		CHECK(ArchiveExistsDirectory(archive, "foo"));
-		CHECK(!ArchiveExistsDirectory(archive, "foo/bar"));
-		CHECK(!ArchiveExistsDirectory(archive, "foo/spam"));
+		CHECK(archive.existsDir("files"));
+		CHECK(!archive.existsDir("dunno"));
+		CHECK(archive.existsDir("foo"));
+		CHECK(!archive.existsDir("foo/bar"));
+		CHECK(!archive.existsDir("foo/spam"));
 	}
 }
