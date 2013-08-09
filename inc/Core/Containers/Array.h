@@ -34,7 +34,7 @@ Array<T>::Array(const Array<T>& other)
 {
     const size_t n = other._size;
     set_capacity(n);
-    memcpy(_data, other._data, sizeof(T) * n);
+    copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
     _size = n;
 }
 
@@ -43,6 +43,7 @@ Array<T>::Array(const Array<T>& other)
 template <typename T>
 Array<T>::~Array()
 {
+    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
     AllocatorDeallocate(_data);
 }
 
@@ -53,7 +54,7 @@ Array<T>& Array<T>::operator=(const Array<T>& other)
 {
     const size_t n = other._size;
     resize(n);
-    memcpy(_data, other._data, sizeof(T)*n);
+    copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
     return *this;
 }
 
@@ -192,6 +193,8 @@ void Array<T>::resize(size_t new_size)
 {
     if (new_size > _capacity)
         grow(new_size);
+    else
+        destruct_range(_data + new_size, _size - new_size, std::integral_constant<bool, std::is_pod<T>::value>());
     _size = new_size;
 }
 
@@ -235,6 +238,7 @@ void Array<T>::push_back(T const & item)
 template <typename T>
 void Array<T>::pop_back()
 {
+    destruct_range(_data + _size - 1, 1, std::integral_constant<bool, std::is_pod<T>::value>());
     _size--;
 }
 
@@ -250,8 +254,9 @@ void Array<T>::insert(T * pos, Iter first, Iter last)
     size_t offset_ = (pos - begin());
     size_t newSize_ = size() + (last - first);
     auto newData_ = (byte*) AllocatorAllocate(_allocator, newSize_ * sizeof(T), alignof(T));
-    memcpy(newData_, _data, offset_ * sizeof(T));
-    memcpy(&newData_[(offset_ + (last - first)) * sizeof(T)], &_data[offset_], (size() - offset_) * sizeof(T));
+
+    copy_range((T*)newData_, _data, offset_, std::integral_constant<bool, std::is_pod<T>::value>());
+    copy_range((T*)(newData_ + (offset_ + (last - first)) * sizeof(T)), _data + offset_, size() - offset_, std::integral_constant<bool, std::is_pod<T>::value>());
 
     for(auto it = first; it != last; ++it)
         new (&newData_[sizeof(T) * (offset_ + (it - first))]) T(*it);
@@ -304,12 +309,12 @@ void Array<T>::set_capacity(size_t new_capacity)
     T *new_data = 0;
     if (new_capacity > 0) {
         new_data = (T*) AllocatorAllocate(_allocator, sizeof(T) * new_capacity, alignof(T));
-#ifdef _DEBUG
-        memset(new_data, 0, sizeof(T));
-#endif
-        memcpy(new_data, _data, sizeof(T) * _size);
+
+        copy_range(new_data, _data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+        construct_range(new_data + _size, new_capacity - _size, std::integral_constant<bool, std::is_pod<T>::value>());
     }
 
+    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
     AllocatorDeallocate(_data);
     _data = new_data;
     _capacity = new_capacity;
@@ -327,5 +332,58 @@ void Array<T>::grow(size_t min_capacity)
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::construct_range(T * data, size_t count, std::true_type)
+{
+#ifdef _DEBUG
+    memset(data, 0, sizeof(T) * count);
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::construct_range(T * data, size_t count, std::false_type)
+{
+    for(size_t i = 0; i < count; ++i)
+        new (data + i) T();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::copy_range(T * data, T * src, size_t count, std::true_type)
+{
+    memcpy(data, src, sizeof(T) * count);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::copy_range(T * data, T * src, size_t count, std::false_type)
+{
+    for(size_t i = 0; i < count; ++i)
+        new (data + i) T( *(src + i) );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::destruct_range(T * data, size_t count, std::true_type)
+{
+#ifdef _DEBUG
+    memset(data, 0, sizeof(T) * count);
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void Array<T>::destruct_range(T * data, size_t count, std::false_type)
+{
+    for(size_t i = 0; i < count; ++i)
+        data[i].~T();
+}
 
 NAMESPACE_CORE_END

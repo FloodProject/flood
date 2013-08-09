@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/API.h"
+#include <type_traits>
 
 /// All collection types assume that they are used to store POD objects. I.e. they:
 ///
@@ -66,6 +67,13 @@ public:
 private:
     void set_capacity(size_t new_capacity);
     void grow(size_t min_capacity = 0);
+
+    void construct_range(T * data, size_t count, std::true_type);
+    void construct_range(T * data, size_t count, std::false_type);
+    void copy_range(T * data, T * src, size_t count, std::true_type);
+    void copy_range(T * data, T * src, size_t count, std::false_type);
+    void destruct_range(T * data, size_t count, std::true_type);
+    void destruct_range(T * data, size_t count, std::false_type);
 
 private:
     Allocator *_allocator;
