@@ -77,6 +77,16 @@ struct ALIGN_BEGIN(1) ms3d_triangle_t
 
 struct ALIGN_BEGIN(1) ms3d_group_t
 {
+	ms3d_group_t()
+		: flags(0)
+		, numGroupTriangles(0)
+		, triangleIndices(*AllocatorGetHeap())
+		, materialIndex(0)
+	{
+		memset(name, 0, 32);
+		memset(comment, 0, 32);
+	}
+
 	uint8 flags;
 	char name[32];
 	uint16 numGroupTriangles;
@@ -95,10 +105,10 @@ struct ALIGN_BEGIN(1) ms3d_material_t
 	Color   specular;
 	Color   emissive;
 	float   shininess;
-    float   transparency;
+	float   transparency;
 	uint8   mode;
 	char    texture[MAX_TEXTURE_FILENAME_SIZE];
-    char    alphamap[MAX_TEXTURE_FILENAME_SIZE];
+	char    alphamap[MAX_TEXTURE_FILENAME_SIZE];
 } ALIGN_END(1);
 
 //-----------------------------------//
@@ -121,6 +131,17 @@ struct ALIGN_BEGIN(1) ms3d_tangent_t
 
 struct ALIGN_BEGIN(1) ms3d_joint_t
 {
+	ms3d_joint_t()
+		: flags(0)
+		, indexParent(0)
+		, rotationKeys(*AllocatorGetHeap())
+		, positionKeys(*AllocatorGetHeap())
+		, tangents(*AllocatorGetHeap())
+	{
+		memset(name, 0, 32);
+		memset(parentName, 0, 32);
+	}
+
 	uint8 flags;
 	char name[32];
 	char parentName[32];
