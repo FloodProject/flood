@@ -91,6 +91,10 @@ static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator*
 	if( !archive ) return nullptr;
 	
 	Path fullPath = ArchiveCombinePath(archive, file);
+
+	if (!FileExists(fullPath))
+		return nullptr;
+
 	Stream* stream = AllocateHeap(FileStream, fullPath, StreamOpenMode::Read);
 
 	return stream;
