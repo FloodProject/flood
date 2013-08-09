@@ -14,9 +14,7 @@ namespace EngineBindings.Tests
         {
             FloodNetwork.NetworkInitialize();
 
-            var conn = new HostConnectionDetails();
-            conn.Address = "";
-            conn.Port = 13131;
+            var conn = new HostConnectionDetails {Address = "", Port = 13131};
 
             var hostServer = new HostServer();
             var hostClient = new HostClient();
@@ -93,8 +91,7 @@ namespace EngineBindings.Tests
                                                packetReceiveString = Encoding.UTF8.GetString(bytes.ToArray(),0,bytes.Count);
                                            };
 
-                var p = new Packet(packetId);
-                p.Flags = PacketFlags.Encrypted;
+                var p = new Packet(packetId) {Flags = PacketFlags.Encrypted};
                 p.Write(new List<byte>(Encoding.ASCII.GetBytes(packetString)));
 
                 hostClient.Peer.QueuePacket(p, 0);
