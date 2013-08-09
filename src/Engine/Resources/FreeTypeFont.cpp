@@ -68,8 +68,11 @@ bool FreeTypeFont::getGlyphInfo(int codepoint, int fontSize, Glyph& glyph) const
       LogError("Error setting font size");
 
     error = FT_Load_Glyph( fontInfo->face, glyph_index, FT_LOAD_RENDER );
-    if ( error ) 
+    if ( error )
+    {
         LogError("Error loading glyph");
+        return false;
+    }
 
     FT_Glyph_Metrics glyphMetrics = fontInfo->face->glyph->metrics;
 

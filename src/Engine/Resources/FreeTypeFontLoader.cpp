@@ -39,10 +39,10 @@ bool FreeTypeFontLoader::decode(ResourceLoadOptions& options)
 {
 	FreeTypeFont* font = (FreeTypeFont*) options.resource;
 
-	options.stream->read(font->data);
+	if (options.stream->read(font->data) <= 0)
+		return false;
 
 	font->init();
-
 	return true;
 }
 
