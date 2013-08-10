@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-
+﻿
 namespace Flood.GUI.Controls
 {
     /// <summary>

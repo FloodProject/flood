@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Flood.GUI.ControlInternal;
 using Flood.GUI.Input;
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Flood.GUI.Controls;
-using Control = Flood.GUI.Controls.Control;
+﻿using System.Windows.Forms;
 
 namespace Flood.GUI.ControlInternal
 {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
-using Control = Flood.GUI.Controls.Control;
 
 namespace Flood.GUI.DragDrop
 {

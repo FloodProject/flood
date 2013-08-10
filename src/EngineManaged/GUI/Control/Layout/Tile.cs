@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Flood.GUI.Controls.Layout
 {
     public class Tile : Control

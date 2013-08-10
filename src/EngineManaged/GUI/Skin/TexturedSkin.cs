@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using Flood.GUI.Skins.Texturing;
-using Single = Flood.GUI.Skins.Texturing.Single;
+﻿using Flood.GUI.Skins.Texturing;
 
 namespace Flood.GUI.Skins
 {

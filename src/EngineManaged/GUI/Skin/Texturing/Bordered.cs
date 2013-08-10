@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-
+﻿
 namespace Flood.GUI.Skins.Texturing
 {
     public struct SubRect
