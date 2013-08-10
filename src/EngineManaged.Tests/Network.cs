@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using EngineManaged.Network;
@@ -28,42 +25,46 @@ namespace EngineManaged.Tests
     public class Network
     {
         [Test]
-        public void Test()
+        public void TestServiceAsyncCall()
         {
-            var server = new Server(13337);
+            const ushort ServerPort = 13337;
+
+            // Start the server and setup our service.
+            var server = new Server(ServerPort);
+            var serverThread = new Thread(Process);
+            serverThread.Start(server);
+
+            var serviceImpl = new ServiceTest();
+            server.ServiceManager.AddImplementation<IServiceTest>(serviceImpl);
+
+            // Start the client and connect to the service.
             var client = new Client();
+            var clientThread = new Thread(Process);
+            clientThread.Start(client);
 
-            var sThread = new Thread(Process);
-            var cThread = new Thread(Process);
-            sThread.Start(server);
-            cThread.Start(client);
-
-            var connectTask = client.Connect("localhost", 13337);
+            var connectTask = client.Connect("localhost", ServerPort);
             connectTask.Wait();
             Assert.IsTrue(connectTask.Result);
 
-            var impl = new ServiceTest();
-            server.ServiceManager.AddImplementation<IServiceTest>(impl);
-
-            var proxy = client.ServiceManager.GetProxy<IServiceTest>(client.Session, 1);
-
-            var pingTask = proxy.Ping();
+            var serviceProxy = client.ServiceManager.GetProxy<IServiceTest>(client.Session, 1);
+            var pingTask = serviceProxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));
             Assert.AreEqual("Pong", pingTask.Result);
 
-            sThread.Abort();
-            cThread.Abort();
+            serverThread.Abort();
+            clientThread.Abort();
          }
 
         private void Process(object peer)
         {
-            var p = (Host) peer;
+            var host = (Host) peer;
+
             while (true)
             {
                 try
                 {
-                    p.Update();
+                    host.Update();
                     Thread.Sleep(50);
                 }
                 catch (Exception e)

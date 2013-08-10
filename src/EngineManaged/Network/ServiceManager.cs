@@ -1,14 +1,11 @@
-﻿using System.Threading.Tasks;
-using Flood.RPC;
-using Flood;
+﻿using Flood.RPC;
 using Flood.RPC.Metadata;
-using Flood.RPC.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace EngineManaged.Network
+namespace Flood.Network
 {
-
     [Message]
     public class ServiceId
     {
@@ -46,8 +43,6 @@ namespace EngineManaged.Network
             Data = new Queue<RPCData>();
 
             AddImplementation<IServiceManager>(this); // serviceId = 0
-
-
         }
 
         public void AddImplementation<T>(T service)

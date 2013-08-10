@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Flood.RPC;
-using Flood;
-using Flood.RPC.Serialization;
 
-namespace EngineManaged.Network
+namespace Flood.Network
 {
+    /// <summary>
+    /// Hosts represents a node connected to the network.
+    /// </summary>
     public class Host
     {
         protected Flood.Host host;
@@ -54,9 +51,11 @@ namespace EngineManaged.Network
 
             return hasDataToSend;
         }
-
     }
 
+    /// <summary>
+    /// Represents a server host in the network.
+    /// </summary>
     public class Server : Host
     {
         public Server(ushort port)
@@ -74,9 +73,11 @@ namespace EngineManaged.Network
         }
     }
 
+    /// <summary>
+    /// Represents a client host in the network.
+    /// </summary>
     public class Client : Host
     {
-
         public async Task<bool> Connect(string address, ushort port, int timeout = 1000)
         {
             FloodNetwork.NetworkInitialize();

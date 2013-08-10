@@ -3,7 +3,7 @@ using Flood;
 using Flood.RPC;
 using Flood.RPC.Serialization;
 
-namespace EngineManaged.Network
+namespace Flood.Network
 {
     class RPCDataHelper
     {
