@@ -13,3 +13,4 @@
 *.csproj
 *.user
 /media
+/externals/*
