@@ -5,6 +5,7 @@ project "Editor.Tests"
 
 	kind "SharedLib"
 	language "C#"
+	uuid "8AA944C5-4C06-4EE9-93B7-44720E5630B4"
 	
 	location "."
 	

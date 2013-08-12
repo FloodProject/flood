@@ -5,6 +5,7 @@ project "ServerManaged"
 
 	kind "SharedLib"
 	language "C#"
+	uuid "E7CB0022-89E0-4C09-A8AF-F06B4D2B38D3"
 	
 	--flags { common_flags }
 	

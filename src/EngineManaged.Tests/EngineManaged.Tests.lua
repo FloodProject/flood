@@ -3,6 +3,7 @@ project "EngineManaged.Tests"
 
 	kind "SharedLib"
 	language "C#"
+	uuid "000E000F-F309-4EAA-AC69-0D71ED1015ED"
 	
 	location "."
 	

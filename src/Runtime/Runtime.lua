@@ -9,6 +9,8 @@ Mono.shared = true
 
 project "Runtime"
 
+	uuid "CE017688-F643-4A58-9F87-DE9FA184700E"
+
 	if Runtime.shared then
 		kind "SharedLib"
 		table.insert(Runtime.defines, "API_RUNTIME_DLL")

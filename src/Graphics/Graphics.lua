@@ -5,6 +5,8 @@ Graphics.defines = {}
 
 project "Graphics"
 
+	uuid "01BBC20D-8550-413A-9176-BB5911A68F82"
+
 	if Graphics.shared then
 		kind "SharedLib"
 		table.insert(Graphics.defines, "API_GRAPHICS_DLL")

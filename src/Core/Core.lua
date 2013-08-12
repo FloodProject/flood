@@ -5,6 +5,8 @@ Core.defines = {}
 
 project "Core"
 
+	uuid "2B0C5D93-3873-4AB3-81FD-2D41965DD031"
+
 	if Core.isShared then
 		kind "SharedLib"
 		table.insert(Core.defines, "API_CORE_DLL")

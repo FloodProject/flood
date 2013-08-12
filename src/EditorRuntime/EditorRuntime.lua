@@ -25,6 +25,8 @@ end
 
 project "EditorRuntime"
 
+	uuid "69765483-81E7-471A-A252-01D16EA17413"
+
 	debugdir(bindir)
 	
 	SetupNativeProjects()

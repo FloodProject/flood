@@ -5,6 +5,8 @@ Resources.defines = {}
 
 project "Resources"
 
+	uuid "8848C478-A23F-4B45-8580-FB7BFDE58F9C"
+
 	if Resources.shared then
 		kind "SharedLib"
 		table.insert(Resources.defines, "API_RESOURCE_DLL")

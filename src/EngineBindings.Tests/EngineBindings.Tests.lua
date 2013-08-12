@@ -3,6 +3,7 @@ project "EngineBindings.Tests"
 
 	kind "SharedLib"
 	language "C#"
+	uuid "3C32D4AB-C63A-4CCD-B460-CFBD9F51008B"
 	
 	location "."
 	

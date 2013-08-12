@@ -9,6 +9,8 @@ end
 
 project "Pipeline"
 
+	uuid "65CCD652-683D-4626-A525-F30307C0429F"
+
 	if Pipeline.shared then
 		kind "SharedLib"
 		table.insert(Pipeline.defines, "API_PIPELINE_DLL")

@@ -1,5 +1,7 @@
 project "UnitTests"
 
+	uuid "EE6EEE36-5946-4DFF-BEB8-06A99B864148"
+
 	kind "ConsoleApp"
 	debugdir "../Core/Test/"
 	

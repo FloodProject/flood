@@ -3,6 +3,8 @@ GameRuntime.name = "GameRuntime"
 
 project "GameRuntime"
 
+	uuid "92D7D852-240F-44EF-BAB6-1B59A227266F"
+
 	kind "ConsoleApp"
 
 	SetupNativeProjects()

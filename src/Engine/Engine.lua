@@ -5,6 +5,8 @@ Engine.defines = {}
 
 project "Engine"
 
+	uuid "3227B553-7C5A-4944-A097-B68AE248DDEE"
+
 	if Engine.shared then
 		kind "SharedLib"
 		table.insert(Engine.defines, "API_ENGINE_DLL")

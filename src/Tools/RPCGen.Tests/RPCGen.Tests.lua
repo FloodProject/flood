@@ -3,6 +3,7 @@ project "RPCGen.Tests"
 
     kind "SharedLib"
     language "C#"
+	uuid "E4FC8997-E7B9-4F88-B741-016B6092197C"
     
     location "."
     
@@ -31,6 +32,7 @@ project "RPCGen.Tests.Services"
 
     kind "SharedLib"
     language "C#"
+	uuid "F8CDF6F2-1B2A-4540-B5C3-5ECED4937C2B"
     
     location "Services/"
     
