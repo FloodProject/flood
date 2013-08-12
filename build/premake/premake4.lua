@@ -96,3 +96,7 @@ solution "Flood"
 		dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
 
 	group "Examples"
+    
+    group "Externals"
+        print("Searching for externals projects...")
+        IncludePremakeProjects(path.join(extdir, "*"))

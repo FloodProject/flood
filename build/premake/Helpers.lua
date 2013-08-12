@@ -3,6 +3,7 @@
 action = _ACTION or ""
 
 depsdir = path.getabsolute("../../deps");
+extdir = path.getabsolute("../../externals");
 srcdir = path.getabsolute("../../src");
 incdir = path.getabsolute("../../inc");
 bindir = path.getabsolute("../../bin");
