@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Flood.Editor.Server
 {
@@ -15,7 +16,7 @@ namespace Flood.Editor.Server
             get { return users; }
         }
 
-        public bool Auth(UserId user)
+        public async Task<bool> Auth(UserId user)
         {
             throw new System.NotImplementedException();
         }

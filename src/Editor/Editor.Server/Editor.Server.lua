@@ -5,9 +5,8 @@ project "Editor.Server"
 
 	kind "SharedLib"
 	language "C#"
-	
 	location "."
-	
+
 	files
 	{
 		"Editor.Server.lua",
@@ -18,6 +17,7 @@ project "Editor.Server"
 	{
 		"System",
 		"ServerManaged",
+		"EngineBindings",
 		"EngineManaged",
 		"Editor.Shared",
 	}

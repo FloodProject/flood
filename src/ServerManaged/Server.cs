@@ -3,10 +3,14 @@ namespace Flood.Server
 {
     public abstract class Server
     {
+        public Network.Server Host;
+
         public IDatabaseManager Database { get; set; }
 
-        protected Server()
+        protected Server(HostConnectionDetails details)
         {
+            Host = new Network.Server(details);
+
 #if USE_RAVENDB
             Database = new RavenDatabaseManager();
 #else
@@ -14,14 +18,9 @@ namespace Flood.Server
 #endif
         }
 
-        public void Shutdown()
+        public virtual void Update()
         {
-
-        }
-
-        public void Update()
-        {
-
+            Host.Update();
         }
     }
 }

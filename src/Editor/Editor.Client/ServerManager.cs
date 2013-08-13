@@ -13,6 +13,9 @@ namespace Flood.Editor
         {
             serverCreatedEvent.Set();
             Server.Serve();
+
+            while(true)
+                Server.Update();
         }
 
         public void CreateBuiltinServer()
@@ -20,7 +23,10 @@ namespace Flood.Editor
             Log.Info("Initializing the built-in editor server...");
 
             serverCreatedEvent = new ManualResetEventSlim();
-            Server = new EditorServer();
+
+            var details = new HostConnectionDetails(Settings.Host,
+                Settings.RPCPort, Settings.Channels);
+            Server = new EditorServer(details);
 
             System.Threading.Tasks.Task.Run((Action)RunBuiltinServer);
             serverCreatedEvent.Wait();

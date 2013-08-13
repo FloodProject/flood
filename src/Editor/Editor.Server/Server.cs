@@ -8,11 +8,18 @@ namespace Flood.Editor.Server
     public class EditorServer : Flood.Server.Server
     {
         public UserManager UserManager { get; set; }
+        public ProjectManager ProjectManager { get; set; }
 
-        public EditorServer()
+        public EditorServer(HostConnectionDetails details)
+            : base(details)
         {
-            var handler = new ProjectManager(Database);
+            var serviceManager = Host.ServiceManager;
 
+            UserManager = new UserManager();
+            //serviceManager.AddImplementation<IUserManager>(UserManager);
+
+            ProjectManager = new ProjectManager(Database);
+            //serviceManager.AddImplementation<IProjectManager>(ProjectManager);
         }
 
         public void Serve()

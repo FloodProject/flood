@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Flood.Server;
 using Flood.Editor.Shared;
 using System;
@@ -82,7 +83,7 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Adds user to project
         /// </summary>
-        public bool AddUserToProject(Guid projectId, ProjectUser user)
+        public async Task<bool> AddUserToProject(Guid projectId, ProjectUser user)
         {
             if (!projects.ContainsKey(projectId))
                 return false;
@@ -97,7 +98,7 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Removes user from project
         /// </summary>
-        public bool RemoveUserFromProject(Guid projectId, ProjectUser user)
+        public async Task<bool> RemoveUserFromProject(Guid projectId, ProjectUser user)
         {
             if (!projects.ContainsKey(projectId))
                 return false;
@@ -112,7 +113,7 @@ namespace Flood.Editor.Server
         /// Modifies user permissions.
         /// </summary>
         /// <remarks /> New permissions are passed insed the ProjectUser
-        public bool ModifyUserPermissions(Guid projectId, ProjectUser user)
+        public async Task<bool> ModifyUserPermissions(Guid projectId, ProjectUser user)
         {
             if (!projects.ContainsKey(projectId))
                 return false;
@@ -129,7 +130,7 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Returns all project users.
         /// </summary>
-        public ICollection<ProjectUser> GetUsers(Guid projectId)
+        public async Task<ICollection<ProjectUser>> GetUsers(Guid projectId)
         {
             if (!projects.ContainsKey(projectId))
                 return null;
@@ -140,20 +141,21 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Returns project.
         /// </summary>
-        public Project GetProject(Guid projectId)
+        public async Task<Project> GetProject(Guid projectId)
         {
             if (!projects.ContainsKey(projectId))
                 return null;
             return projects[projectId];
         }
 
+
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        public Dictionary<Guid, Project> Projects
-        {
-            get { return projects; }
-        }
+        public Task<Dictionary<Guid, Project>> Projects { get; private set; }
+        //{
+        //    get { return projects; }
+        //}
 
         /// <summary>
         /// Event fired when a project is added.
@@ -184,7 +186,7 @@ namespace Flood.Editor.Server
         /// </summary>
         /// <remarks>Invokes the ProjectRemoved event.</remarks>
         /// <returns>True if the project was removed, false otherwise.</returns>
-        public bool RemoveProject(Guid id)
+        public async Task<bool> RemoveProject(Guid id)
         {
             var project = projects[id];
             var didRemove = projects.Remove(id);
@@ -204,7 +206,7 @@ namespace Flood.Editor.Server
         /// it to the list.
         /// </summary>
         /// <returns>Returns a new project of this type.</returns>
-        public Project CreateProject(ProjectType type, string name, Owner founder)
+        public async Task<Project> CreateProject(ProjectType type, string name, Owner founder)
         {
             var project = new Project(type, name, System.Guid.NewGuid(), founder);
 
