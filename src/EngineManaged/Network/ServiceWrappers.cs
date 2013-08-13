@@ -1,13 +1,11 @@
-﻿using System.Threading.Tasks;
-using Flood.RPC;
-using Flood;
+﻿using Flood.RPC;
 using System;
+using System.Threading.Tasks;
 
-namespace EngineManaged.Network
+namespace Flood.Network
 {
     abstract class ServiceHandler
     {
-
         protected object service;
 
         public object GetService()
