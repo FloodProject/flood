@@ -58,18 +58,15 @@ namespace Flood.Network
     /// </summary>
     public class Server : Host
     {
-        public Server(ushort port)
+        public Server(HostConnectionDetails details)
         {
             FloodNetwork.NetworkInitialize();
-
-            var conn = new HostConnectionDetails("", port, 2);
 
             var server = new HostServer();
             host = server;
 
-            server.CreateSocket(conn);
-
             server.SessionPacket += OnPacket;
+            server.CreateSocket(details);
         }
     }
 
@@ -78,10 +75,9 @@ namespace Flood.Network
     /// </summary>
     public class Client : Host
     {
-        public async Task<bool> Connect(string address, ushort port, int timeout = 1000)
+        public async Task<bool> Connect(HostConnectionDetails details, int timeout = 1000)
         {
             FloodNetwork.NetworkInitialize();
-            var conn = new HostConnectionDetails(address, port, 2);
 
             var client = new HostClient();
             host = client;
@@ -95,16 +91,15 @@ namespace Flood.Network
                                                tcs.SetResult(true);
                                        };
 
-            client.Connect(conn);
+            client.Connect(details);
 
-            // wait for task somewhere else
+            // Wait for task somewhere else
             if (await Task.WhenAny(tcs.Task, Task.Delay(timeout)) != tcs.Task)
                 return false;
 
             client.SessionPacket += OnPacket;
 
-            Console.WriteLine("Client connected with session!");
-
+            Log.Info("Client connected with session!");
             return true;
         }
 
