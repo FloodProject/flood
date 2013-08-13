@@ -17,58 +17,28 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static bool    VirtualArchiveOpen(Archive*, const String&);
-static bool    VirtualArchiveClose(Archive*);
-static Stream* VirtualArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    VirtualArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    VirtualArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
-static bool    VirtualArchiveExistsFile(Archive*, const Path&);
-static bool    VirtualArchiveExistsDir(Archive*, const Path&);
-static bool    VirtualArchiveMonitor(Archive*); 
-
-static ArchiveFuncs gs_VirtualArchiveFuncs =
+ArchiveVirtual::ArchiveVirtual() 
+	: Archive("")
 {
-	VirtualArchiveOpen,
-	VirtualArchiveClose,
-	VirtualArchiveOpenFile,
-	VirtualArchiveExistsFile,
-	VirtualArchiveExistsDir,
-	VirtualArchiveEnumerateFiles,
-	VirtualArchiveEnumerateDirectories,
-	VirtualArchiveMonitor,
-};
-
-struct ArchiveVirtual : public Archive
-{
-	std::vector<Archive*> mounts;
-};
+}
 
 //-----------------------------------//
 
-Archive* ArchiveCreateVirtual(Allocator* alloc)
+ArchiveVirtual::~ArchiveVirtual()
 {
-	Archive* archive = Allocate(alloc, ArchiveVirtual);
-	
-	archive->handle = nullptr;
-	archive->scheme = "vfs";
-	archive->fn = &gs_VirtualArchiveFuncs;
-
-	return archive;
+	close();
 }
 
 //-----------------------------------//
 
 static void HandleWatch(Archive*, const FileWatchEvent& event);
 
-bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
+bool ArchiveVirtual::archiveMount(Archive * mount, const Path& mountPath)
 {
-	if( !archive || !mount ) return false;
-
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	varchive->mounts.push_back(mount);
+	mounts.push_back(mount);
 
 	// Setup archive watch callbacks.
-	mount->userdata = varchive;
+	mount->userdata = this;
 	mount->watch.Connect(HandleWatch);
 
 	return true;
@@ -76,69 +46,60 @@ bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
 
 //-----------------------------------//
 
-void ArchiveMountDirectories(Archive* archive, const String& dirPath, Allocator* alloc)
+void ArchiveVirtual::archiveMountDirectories(const Path& dirPath, Allocator* alloc)
 {
-	Archive* dir = ArchiveCreateFromDirectory(alloc, dirPath);
+	Archive* dir = Allocate(alloc, ArchiveDirectory, dirPath);
 	if (!dir) return;
 
-	ArchiveMount(archive, dir, "");
+	archiveMount(dir, "");
 	
-	std::vector<String> dirs;
-	ArchiveEnumerateDirectories(dir, dirs);
+	std::vector<Path> dirs;
+	dir->enumerateDirs(dirs);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+	for(auto& dir : dirs)
 	{
-		const String& path = PathCombine(dirPath, dirs[i]);
-
-		Archive* ndir = ArchiveCreateFromDirectory(alloc, path);
-		if (!ndir) continue;
-
-		ArchiveMount(archive, ndir, "");
+		auto& path = PathCombine(dirPath, dir);
+		Archive* ndir = Allocate(alloc, ArchiveDirectory, path);
+		archiveMount(ndir, "");
 	}
 }
 
 //-----------------------------------//
 
-static bool VirtualArchiveOpen(Archive* archive, const String& path)
+bool ArchiveVirtual::open(const Path& path)
 {
-	return (archive != nullptr);
+	isValid = true; 
+	return isValid;
 }
 
 //-----------------------------------//
 
-static bool VirtualArchiveClose(Archive* archive)
+bool ArchiveVirtual::close()
 {
-	if( !archive ) return false;
-
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(auto& i : mounts)
 	{
-		Archive* marchive = varchive->mounts[i];
-		ArchiveDestroy(marchive);
+		Archive* marchive = i;
+		Deallocate(marchive);
 	}
 
-	varchive->mounts.clear();
+	mounts.clear();
 
 	return true;
 }
 
 //-----------------------------------//
 
-static Stream* VirtualArchiveOpenFile(Archive* archive, const Path& path, Allocator* alloc)
+Stream* ArchiveVirtual::openFile(const Path& path, Allocator* alloc)
 {
-	if( !archive ) return nullptr;
-	
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	if( varchive->mounts.empty() ) return nullptr;
+	if (mounts.empty()) return nullptr;
 
 	Stream* stream = nullptr;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(auto& i : mounts)
 	{
-		Archive* marchive = varchive->mounts[i];
-		stream = ArchiveOpenFile(marchive, path, alloc);
-		if( stream ) break;
+		Archive* marchive = i;
+		stream = marchive->openFile(path, alloc);
+		if (stream) break;
 	}
 
 	return stream;
@@ -146,65 +107,50 @@ static Stream* VirtualArchiveOpenFile(Archive* archive, const Path& path, Alloca
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool dir)
+void ArchiveVirtual::enumerate(std::vector<Path>& paths, bool dir)
 {
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
 
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	for(auto& i : mounts)
 	{
-		Archive* marchive = varchive->mounts[i];
+		Archive* marchive = i;
 
-		if(dir) ArchiveEnumerateDirectories(marchive, paths);
-		else ArchiveEnumerateFiles(marchive, paths);
+		if (dir) marchive->enumerateDirs(paths);
+		else marchive->enumerateFiles(paths);
 	}
 }
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+void ArchiveVirtual::enumerateFiles(std::vector<Path>& paths)
 {
-	if( !archive ) return;
-	VirtualArchiveEnumerate(archive, paths, false);
+	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-static void VirtualArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+void ArchiveVirtual::enumerateDirs(std::vector<Path>& paths)
 {
-	if( !archive ) return;
-	VirtualArchiveEnumerate(archive, paths, true);
+	enumerate(paths, true);
 }
 
 //-----------------------------------//
 
-static bool VirtualArchiveExistsFile(Archive* archive, const Path& path)
+bool ArchiveVirtual::existsFile(const Path& path)
 {
-	if( !archive ) return false;
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
-	{
-		Archive* marchive = varchive->mounts[i];
-		bool exists = ArchiveExistsFile(marchive, path);
-		if(exists) return true;
-	}
+	for(auto& i : mounts)
+		if (i->existsFile(path))
+			return true;
 
 	return false;
 }
 
 //-----------------------------------//
 
-static bool VirtualArchiveExistsDir(Archive* archive, const Path& path)
+bool ArchiveVirtual::existsDir(const Path& path)
 {
-	if( !archive ) return false;
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
-	{
-		Archive* marchive = varchive->mounts[i];
-		bool exists = ArchiveExistsDirectory(marchive, path);
-		if(exists) return true;
-	}
+	for(auto& i : mounts)
+		if(i->existsDir(path))
+			return true;
 
 	return false;
 }
@@ -217,16 +163,10 @@ static void HandleWatch(Archive* archive, const FileWatchEvent& event)
 	varchive->watch(archive, event);
 }
 
-static bool VirtualArchiveMonitor(Archive* archive)
+bool ArchiveVirtual::monitor()
 {
-	if( !archive ) return false;
-	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
-	
-	for(size_t i = 0; i < varchive->mounts.size(); i++)
-	{
-		Archive* marchive = varchive->mounts[i];
-		marchive->fn->watch(marchive);
-	}
+	for(auto& i : mounts)
+		i->monitor();
 
 	return true;
 }

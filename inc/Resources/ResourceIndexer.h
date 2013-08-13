@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
-struct Archive;
+class Archive;
 class ResourceDatabase;
 
 /**

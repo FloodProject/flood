@@ -19,66 +19,35 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static bool    DirArchiveOpen(Archive*, const String&);
-static bool    DirArchiveClose(Archive*);
-static Stream* DirArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    DirArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    DirArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
-static bool    DirArchiveExistsFile(Archive*, const Path&);
-static bool    DirArchiveExistsDir(Archive*, const Path&);
-static bool    DirArchiveMonitor(Archive*);
-
-static ArchiveFuncs gs_DirArchiveFuncs =
+ArchiveDirectory::ArchiveDirectory(const Path& path)
+	: Archive(path)
 {
-	DirArchiveOpen,
-	DirArchiveClose,
-	DirArchiveOpenFile,
-	DirArchiveExistsFile,
-	DirArchiveExistsDir,
-	DirArchiveEnumerateFiles,
-	DirArchiveEnumerateDirectories,
-	DirArchiveMonitor,
-};
-
-//-----------------------------------//
-
-Archive* ArchiveCreateFromDirectory(Allocator* alloc, const Path& path)
-{
-	Archive* archive = Allocate(alloc, Archive);
-	
-	archive->path = path;
-	archive->handle = nullptr;
-	archive->scheme = "fs";
-	archive->fn = &gs_DirArchiveFuncs;
-
-	if( !ArchiveOpen(archive, path) )
-	{
-		LogDebug("Error opening archive: %s", path.c_str());
-		Deallocate(archive);
-		return nullptr;
-	}
-
-	return archive;
+	open(path);
 }
 
 //-----------------------------------//
 
-static bool DirArchiveOpen(Archive* archive, const String& path)
+ArchiveDirectory::~ArchiveDirectory()
 {
-	if( !archive ) return false;
-	return true;
+	close();
 }
 
 //-----------------------------------//
 
-static bool DirArchiveClose(Archive* archive)
+bool ArchiveDirectory::open(const Path& path)
 {
-	if( !archive ) return false;
+	isValid = true;
+	return isValid;
+}
 
-	if(archive->watchId != 0)
+//-----------------------------------//
+
+bool ArchiveDirectory::close()
+{
+	if (watchId != 0)
 	{
 		// Remove the archive from the watch list.
-		GetFileWatcher()->removeWatch(archive->watchId);
+		GetFileWatcher()->removeWatch(watchId);
 	}
 
 	return true;
@@ -86,16 +55,14 @@ static bool DirArchiveClose(Archive* archive)
 
 //-----------------------------------//
 
-static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator* alloc)
+Stream* ArchiveDirectory::openFile(const Path& file, Allocator* alloc)
 {
-	if( !archive ) return nullptr;
-	
-	Path fullPath = ArchiveCombinePath(archive, file);
+	Path fullPath = combinePath(file);
 
 	if (!FileExists(fullPath))
 		return nullptr;
 
-	Stream* stream = AllocateHeap(FileStream, fullPath, StreamOpenMode::Read);
+	Stream* stream = Allocate(alloc, FileStream, fullPath, StreamOpenMode::Read);
 
 	return stream;
 }
@@ -104,42 +71,41 @@ static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator*
 
 static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
 
-static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+void  ArchiveDirectory::enumerateFiles(std::vector<Path>& paths)
 {
-	if( !archive ) return;
-	FileEnumerateFiles(archive->path, paths);
+	FileEnumerateFiles(path, paths);
 }
 
 //-----------------------------------//
 
-static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+void ArchiveDirectory::enumerateDirs(std::vector<Path>& paths)
 {
-	if( !archive ) return;
-	FileEnumerateDirectories(archive->path, paths);
+	FileEnumerateDirectories(path, paths);
 }
 
 //-----------------------------------//
 
-static bool DirArchiveExistsFile(Archive* archive, const Path& file)
+bool ArchiveDirectory::existsFile(const Path& path)
 {
-	if( !archive ) return false;
-	
-	const Path& fullPath = ArchiveCombinePath(archive, file);
+	Path normalized = PathNormalize(path);
+	auto& fullPath = combinePath(normalized);
 	return FileExists(fullPath);
 }
 
 //-----------------------------------//
 
-static bool DirArchiveExistsDir(Archive* archive, const Path& path)
+bool ArchiveDirectory::existsDir(const Path& path)
 {
 	std::vector<Path> dirs;
-	ArchiveEnumerateDirectories(archive, dirs);
+	enumerateDirs(dirs);
+	Path normalizedPath = PathNormalize(path);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+
+	for(auto& i : dirs)
 	{
-		Path normalized = PathNormalize(dirs[i]);
+		Path normalized = PathNormalize(i);
 		Path dir = StringTrim(normalized, "/");
-		if(dir == path) return true;
+		if(dir == normalizedPath) return true;
 	}
 
 	return false;
@@ -157,16 +123,14 @@ static void HandleFileWatch(const FileWatchEvent& event)
 
 //-----------------------------------//
 
-static bool DirArchiveMonitor(Archive* archive)
+bool ArchiveDirectory::monitor()
 {
-	if( !archive ) return false;
-
 	GetFileWatcher()->onFileWatchEvent.Connect(&HandleFileWatch);
 
-	if(archive->watchId == 0)
+	if(watchId == 0)
 	{
 		// Add the archive to the watch list.
-		archive->watchId = GetFileWatcher()->addWatch(archive->path, archive);
+		watchId = GetFileWatcher()->addWatch(path, this);
 	}
 
 	GetFileWatcher()->update();

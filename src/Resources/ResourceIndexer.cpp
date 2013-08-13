@@ -66,12 +66,12 @@ static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 
 void ResourceIndexer::addArchive(Archive* archive)
 {
-	std::vector<String> res;	
-	ArchiveEnumerateFiles(archive, res);
+	std::vector<Path> res;
+	archive->enumerateFiles(res);
 	
-	for( size_t i = 0; i < res.size(); i++ )
+	for(auto& i : res)
 	{
-		Path fullPath = ArchiveCombinePath(archive, res[i]);
+		Path fullPath = archive->combinePath(i);
 		CreateIndexTask(this, fullPath);
 	}
 }

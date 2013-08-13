@@ -30,7 +30,7 @@ class SceneWindow;
 class EditorInputManager;
 class InputManager;
 class Engine;
-struct Archive;
+class ArchiveVirtual;
 
 class API_EDITOR EditorFrame : public wxFrame
 {
@@ -58,7 +58,7 @@ protected:
 public:
 
 	Engine* engine;
-	Archive* archive;
+	ArchiveVirtual* archive;
 	InputManager* input;
 
 	SceneWindow* sceneWindow;

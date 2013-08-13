@@ -36,7 +36,6 @@ ZipStream::ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, String path,
 {
 }
 
-
 //-----------------------------------//
 
 ZipStream::~ZipStream()
@@ -109,65 +108,37 @@ uint64 ZipStream::size() const
 
 //-----------------------------------//
 
-static bool    ZipArchiveOpen(Archive*, const String&);
-static bool    ZipArchiveClose(Archive*);
-static Stream* ZipArchiveOpenFile(Archive*, const Path&, Allocator*);
-static void    ZipArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void    ZipArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
-static bool    ZipArchiveExistsFile(Archive*, const Path&);
-static bool    ZipArchiveExistsDir(Archive*, const Path&);
-static bool    ZipArchiveMonitor(Archive*); 
-
-static ArchiveFuncs gs_ZipArchiveFuncs =
+ArchiveZip::ArchiveZip(const Path& path)
+	: Archive(path)
+	, handle(nullptr)
 {
-	ZipArchiveOpen,
-	ZipArchiveClose,
-	ZipArchiveOpenFile,
-	ZipArchiveExistsFile,
-	ZipArchiveExistsDir,
-	ZipArchiveEnumerateFiles,
-	ZipArchiveEnumerateDirectories,
-	ZipArchiveMonitor,
-};
-
-//-----------------------------------//
-
-Archive* ArchiveCreateFromZip(Allocator* alloc, const Path& path)
-{
-	Archive* archive = Allocate(alloc, Archive);
-	
-	archive->handle = nullptr;
-	archive->scheme = "zip";
-	archive->fn = &gs_ZipArchiveFuncs;
-	
-	if( !ArchiveOpen(archive, path) )
-	{
-		//LogWarn("Error opening archive: %s", path.c_str());
-		Deallocate( archive);
-		return nullptr;
-	}
-
-	return archive;
+	open(path);
 }
 
 //-----------------------------------//
 
-static bool ZipArchiveOpen(Archive* archive, const String& path)
+ArchiveZip::~ArchiveZip()
 {
-	if( !archive ) return false;
-	
+	close();
+}
+
+//-----------------------------------//
+
+bool ArchiveZip::open(const Path& path)
+{
 	ZZIP_DIR* zip = zzip_dir_open(path.c_str(), nullptr);
-	archive->handle = zip;
-	
-	return zip != nullptr;
+	handle = zip;
+	isValid = zip != nullptr;
+	return isValid;
 }
 
 //-----------------------------------//
 
-static bool ZipArchiveClose(Archive* archive)
+bool ArchiveZip::close()
 {
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
-	assert( zip != nullptr );
+	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
+	if (!isValid)
+		return true;
 
 	int ret = zzip_dir_close(zip);
 	return ret == ZZIP_NO_ERROR ;
@@ -175,31 +146,30 @@ static bool ZipArchiveClose(Archive* archive)
 
 //-----------------------------------//
 
-static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator* alloc)
+Stream* ArchiveZip::openFile(const Path& path, Allocator* alloc)
 {
-	if( !archive ) return nullptr;
+	if (!isValid)
+		return nullptr;
 
-	auto zip = AllocateHeap(ZipStream);
-	zip->dir = (ZZIP_DIR*) archive->handle;
-	zip->handle = nullptr;
-	zip->path = path;
-	zip->mode = StreamOpenMode::Read; // only read-only for zips for now.
+	auto zip = Allocate(alloc, ZipStream, (ZZIP_DIR*) handle, nullptr, path, StreamOpenMode::Read);
 	
-	if( !zip->open() )
+	if (!zip->open())
 	{
-		//LogWarn("Error opening zip file: %s", path.c_str());
+		LogWarn("Error opening zip file: %s", path.c_str());
+		Deallocate(zip);
 		return nullptr;
 	}
+
 	return zip;
 }
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool dir)
+void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
 {
-	if( !archive || !archive->handle ) return;
+	if (!isValid || !handle) return;
 
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
+	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
 	ZZIP_DIRENT entry;
 
 	zzip_rewinddir(zip);
@@ -217,41 +187,46 @@ static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
+void ArchiveZip::enumerateFiles(std::vector<Path>& paths)
 {
-	ZipArchiveEnumerate(archive, paths, false);
+	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-static void ZipArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
+void ArchiveZip::enumerateDirs(std::vector<Path>& paths)
 {
-	ZipArchiveEnumerate(archive, paths, true);
+	enumerate(paths, true);
 }
 
 //-----------------------------------//
 
-static bool ZipArchiveExistsFile(Archive* archive, const Path& path)
+bool ArchiveZip::existsFile(const Path& path)
 {
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
+	if (!isValid)
+		return false;
+	
+	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
 
 	ZZIP_STAT zstat;
-	int res = zzip_dir_stat(zip, path.c_str(), &zstat, ZZIP_CASEINSENSITIVE | ZZIP_IGNOREPATH);
+	Path normalized = PathNormalize(path);
+	int res = zzip_dir_stat(zip, normalized.c_str(), &zstat, ZZIP_CASEINSENSITIVE | ZZIP_IGNOREPATH);
 
 	return (res == ZZIP_NO_ERROR);
 }
 
 //-----------------------------------//
 
-static bool ZipArchiveExistsDir(Archive* archive, const Path& path)
+bool ArchiveZip::existsDir(const Path& path)
 {
 	std::vector<Path> dirs;
-	ArchiveEnumerateDirectories(archive, dirs);
+	enumerateDirs(dirs);
+	Path normalized = PathNormalize(path);
 
-	for(size_t i = 0; i < dirs.size(); i++)
+	for(auto& i : dirs)
 	{
-		const Path& dir = StringTrim(dirs[i], "/");
-		if(dir == path) return true;
+		auto& dir = StringTrim(i, "/");
+		if(dir == normalized) return true;
 	}
 
 	return false;
@@ -259,7 +234,7 @@ static bool ZipArchiveExistsDir(Archive* archive, const Path& path)
 
 //-----------------------------------//
 
-static bool ZipArchiveMonitor(Archive*)
+bool ArchiveZip::monitor()
 {
 	return false;
 }
