@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EngineWeaver.Util
 {
@@ -16,8 +14,8 @@ namespace EngineWeaver.Util
 
         public readonly Dictionary<object,object> CopyMap;
 
-        private readonly Logger log = new Logger(Logger.Level.Info);
-        private readonly Logger publicLog = new Logger(Logger.Level.Info);
+        private readonly Logger log = new Logger(Logger.LogLevel.Warning);
+        private readonly Logger publicLog = new Logger(Logger.LogLevel.Warning);
 
         public DeepCopier(){
             mergeMethodInfos = new Dictionary<Type, MethodInfo>();
