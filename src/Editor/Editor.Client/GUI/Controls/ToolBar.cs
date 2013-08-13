@@ -4,11 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flood.Editor.Client.Extensions;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Skins;
-using Mono.Addins;
 
 namespace Flood.Editor.Client.GUI.Controls
 {
@@ -23,17 +21,15 @@ namespace Flood.Editor.Client.GUI.Controls
             this.extensionPoint = extensionPoint;
 
             RebuildToolbar();
-
-            AddinManager.AddExtensionNodeHandler(extensionPoint, (s,a) => RebuildToolbar());
         }
 
         private void RebuildToolbar()
         {
             DeleteAllChildren();
-            foreach (var tool in AddinManager.GetExtensionNodes(extensionPoint).Cast<ToolNode>())
+            /*foreach (var tool in AddinManager.GetExtensionNodes(extensionPoint).Cast<ToolNode>())
             {
                 var control = tool.CreateControl(this);
-            }
+            }*/
             SizeToChildren(false,true);
         }
 

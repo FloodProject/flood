@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Flood.Editor.Client.Extensions;
 using Flood.GUI;
 using Flood.GUI.Controls;
-using Mono.Addins;
 
 namespace Flood.Editor.Client.GUI.Controls
 {
@@ -23,22 +21,20 @@ namespace Flood.Editor.Client.GUI.Controls
             menuStrip.Dock = Pos.Top;
 
             RebuildMenubar();
-
-            AddinManager.AddExtensionNodeHandler(extensionPoint, (s,a) => RebuildMenubar());
         }
 
         private void RebuildMenubar()
         {
-            menuStrip.DeleteAllChildren();
+            /*menuStrip.DeleteAllChildren();
             foreach (var submenu in AddinManager.GetExtensionNodes(extensionPoint).Cast<SubmenuNode>())
             {
                 var menuControl = menuStrip.AddItem(submenu.Label);
                 menuControl.BringToFront();
                 BuildSubmenu(submenu, menuControl);
-            }
+            }*/
         }
 
-        private void BuildSubmenu(SubmenuNode menu, MenuItem menuControl)
+        /*private void BuildSubmenu(SubmenuNode menu, MenuItem menuControl)
         {
             foreach (var menuChild in menu.ChildNodes)
             {
@@ -65,6 +61,6 @@ namespace Flood.Editor.Client.GUI.Controls
 
                 throw new NotImplementedException();
             }
-        }
+        }*/
     }
 }
