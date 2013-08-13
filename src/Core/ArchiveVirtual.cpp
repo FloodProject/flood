@@ -79,7 +79,8 @@ bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
 void ArchiveMountDirectories(Archive* archive, const String& dirPath, Allocator* alloc)
 {
 	Archive* dir = ArchiveCreateFromDirectory(alloc, dirPath);
-	
+	if (!dir) return;
+
 	ArchiveMount(archive, dir, "");
 	
 	std::vector<String> dirs;
@@ -87,8 +88,11 @@ void ArchiveMountDirectories(Archive* archive, const String& dirPath, Allocator*
 
 	for(size_t i = 0; i < dirs.size(); i++)
 	{
-		const String& path = dirPath + PathGetSeparator() + dirs[i];
+		const String& path = PathCombine(dirPath, dirs[i]);
+
 		Archive* ndir = ArchiveCreateFromDirectory(alloc, path);
+		if (!ndir) continue;
+
 		ArchiveMount(archive, ndir, "");
 	}
 }
