@@ -181,24 +181,25 @@ namespace Flood.Tools.RPCGen
                 if (IsEventMethod(type, method))
                     continue;
 
-                GenerateProtocolMethod(method);
+                GenerateProtocolMethod(type, method);
             }
 
             WriteCloseBraceIndent();
             NewLine();
         }
 
-        private void GenerateProtocolMethod(MethodInfo method)
+        private void GenerateProtocolMethod(Type type, MethodInfo method)
         {
             var retType = GetMethodReturnType(method);
             if (retType == typeof (void))
             {
-                Write("public async Task {1}(", method.Name);
+                Write("async Task {0}.{1}(", type.Name, method.Name);
             }
             else
             {
                 var typeString = ConvertToTypeString(retType);
-                Write("public async Task<{0}> {1}(", typeString, method.Name);
+                Write("async Task<{0}> {1}.{2}(", typeString, type.Name,
+                    method.Name);
             }
 
             var parameters = method.GetParameters();
