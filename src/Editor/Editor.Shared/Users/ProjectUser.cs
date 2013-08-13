@@ -34,11 +34,11 @@ namespace Flood.Editor.Shared
         /// <summary>
         /// User id
         /// </summary>
-        [Id(3)]
-        public Guid Id
-        {
-            get { return SystemUser.Id; }
-        }
+        //[Id(3)]
+        //public Guid Id
+        //{
+        //    get { return SystemUser.Id; }
+        //}
 
         protected ProjectUser(User sysUser, Project proj)
         {

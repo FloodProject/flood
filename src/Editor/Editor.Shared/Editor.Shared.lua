@@ -5,8 +5,9 @@ project "Editor.Shared"
 
 	kind "SharedLib"
 	language "C#"
-	
 	location "."
+
+	SetupRPCGen("Editor.Shared", ".dll")
 	
 	files
 	{

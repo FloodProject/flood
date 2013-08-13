@@ -123,10 +123,10 @@ namespace Flood.Editor.Shared
         /// <returns>True if the user was added, false otherwise.</returns>
         public bool AddUser(ProjectUser user)
         {
-            if (Users.ContainsKey(user.Id))
-                return false;
+            //if (Users.ContainsKey(user.Id))
+            //    return false;
 
-            Users[user.Id] = user;
+            //Users[user.Id] = user;
             return true;
         }
 
@@ -136,10 +136,10 @@ namespace Flood.Editor.Shared
         /// <returns>True if the user was modified, false otherwise.</returns>
         public bool ModifyUser(ProjectUser user)
         {
-            if (!Users.ContainsKey(user.Id))
-                return false;
+            //if (!Users.ContainsKey(user.Id))
+            //    return false;
 
-            Users[user.Id] = user;
+            //Users[user.Id] = user;
             return true;
         }
 
@@ -149,7 +149,8 @@ namespace Flood.Editor.Shared
         /// <returns>True if the user was removed, false otherwise.</returns>
         public bool RemoveUser(ProjectUser user)
         {
-            return Users.Remove(user.Id);
+            //return Users.Remove(user.Id);
+            return false;
         }
 
         public Project(ProjectType type, string name, Guid id, ProjectUser founder)
@@ -159,7 +160,7 @@ namespace Flood.Editor.Shared
             DateCreated = System.DateTime.Now;
             Id = id;
             Users = new Dictionary<Guid, ProjectUser>();
-            Users[founder.Id] = founder;
+            //Users[founder.Id] = founder;
         }
     }
 }

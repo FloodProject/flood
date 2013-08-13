@@ -1,4 +1,5 @@
-﻿using Flood.Editor.Shared;
+﻿using System.Threading.Tasks;
+using Flood.Editor.Shared;
 using Flood.RPC.Metadata;
 using System;
 using System.Collections.Generic;
@@ -83,56 +84,56 @@ namespace Flood.Editor
     public interface IUser
     {
         /// <summary>
-        /// Validate user 
-        /// </summary>
-        bool Auth();
-
-        /// <summary>
-        /// Get user validation status 
-        /// </summary>
-        bool GetAuthStatus();
-
-        /// <summary>
-        /// Get user info
-        /// </summary>
-        UserInfo GetInfo();
-
-        /// <summary>
         /// User name.
         /// </summary>
-        string Name { get; }
+        //Task<string> Name { get; }
 
         /// <summary>
         /// User id.
         /// </summary>
-        Guid Id { get; }
+        //Task<Guid> Id { get; }
 
         /// <summary>
         /// List of projects user is member of and permission level of the user.
         /// </summary>
-        Dictionary<Guid, ProjectUser> ProjectList { get; }
+        //Task<Dictionary<Guid, ProjectUser>> ProjectList { get; }
+
+        /// <summary>
+        /// Validate user 
+        /// </summary>
+        Task<bool> Auth();
+
+        /// <summary>
+        /// Get user validation status 
+        /// </summary>
+        Task<bool> GetAuthStatus();
+
+        /// <summary>
+        /// Get user info
+        /// </summary>
+        Task<UserInfo> GetInfo();
 
         /// <summary>
         /// Add project to user list
         /// </summary>
         /// <remarks/> can be  used to change user permission level(Owner, member ...) within existing project
-        void AddProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
+        Task AddProject([Id(0)]Guid projectId, [Id(1)]ProjectUser user);
 
         /// <summary>
         /// Remove project from user list
         /// </summary>
         /// <returns>True if the project was removed, false otherwise.</returns>
-        bool RemoveProject([Id(0)]Guid projectId);
+        Task<bool> RemoveProject([Id(0)]Guid projectId);
     }
 
     [Service]
     public interface IUserManager
     {
-        bool Auth([Id(0)] UserId user);
+        Task<bool> Auth([Id(0)] UserId user);
 
         /// <summary>
         /// Event fired when a new user is created.
         /// </summary>
-        event EventHandler<IUser> UserCreated;
+        //event EventHandler<IUser> UserCreated;
     }
 }
