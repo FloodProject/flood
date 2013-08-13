@@ -237,7 +237,7 @@ public:
 	 */
 	void setBuffering(bool state);
 
-	FILE* fp; //!< file handle
+	FILE* fileHandle; //!< file handle
 
 	bool isValid; 
 };

@@ -25,7 +25,7 @@ NAMESPACE_CORE_BEGIN
 
 FileStream::FileStream(const Path& path, StreamOpenMode mode)
 	: Stream(path, mode)
-	, fp(nullptr)
+	, fileHandle(nullptr)
     , isValid(false)
 {
 	open();
@@ -53,12 +53,12 @@ bool FileStream::open()
 	}
 
 #ifdef COMPILER_MSVC
-	fopen_s(&fp, path.c_str(), mode);
+	fopen_s(&fileHandle, path.c_str(), mode);
 #else
-	fp = fopen(path.c_str(), mode);
+	fileHandle = fopen(path.c_str(), mode);
 #endif
 
-	isValid = fp != nullptr;
+	isValid = fileHandle != nullptr;
 	return isValid;
 }
 
@@ -66,11 +66,11 @@ bool FileStream::open()
 
 bool FileStream::close()
 {
-	if (!fp)
+	if (!fileHandle)
 		return true;
 
-	int ret = fclose(fp);
-	fp = nullptr;
+	int ret = fclose(fileHandle);
+	fileHandle = nullptr;
 	isValid = false;
 	return ret == 0;
 }
@@ -82,10 +82,10 @@ int64 FileStream::read(void* buffer, uint64 size) const
 	if (!isValid)
 		return InvalidState;
 
-	if (feof(fp))
+	if (feof(fileHandle))
 		return EndOfStream;
 
-	return fread(buffer, (size_t)size, /*NumbBlocks=*/1, fp);
+	return fread(buffer, (size_t)size, /*NumbBlocks=*/1, fileHandle);
 }
 
 //-----------------------------------//
@@ -98,7 +98,7 @@ int64 FileStream::write(void* buffer, uint64 size)
 	assert( mode == StreamOpenMode::Write || mode == StreamOpenMode::Append );
 	assert( buffer && size >= 0 );
 
-	return fwrite(buffer, size_t(size), 1, fp);
+	return fwrite(buffer, size_t(size), 1, fileHandle);
 }
 
 //-----------------------------------//
@@ -109,9 +109,9 @@ int64 FileStream::getPosition() const
 		return InvalidState;
 
 #ifdef COMPILER_MSVC
-	return _ftelli64(fp);
+	return _ftelli64(fileHandle);
 #else
-	return ftell(fp);
+	return ftell(fileHandle);
 #endif
 }
 
@@ -138,9 +138,9 @@ void FileStream::setPosition(int64 offset, StreamSeekMode mode)
 	}
 
 #ifdef COMPILER_MSVC
-	_fseeki64(fp, offset, origin);
+	_fseeki64(fileHandle, offset, origin);
 #else
-	fseek(fp, (long) offset, origin);
+	fseek(fileHandle, (long) offset, origin);
 #endif
 }
 
@@ -152,7 +152,7 @@ uint64 FileStream::size() const
 		return InvalidState;
 
 #ifdef COMPILER_MSVC
-	return _filelengthi64( _fileno(fp) );
+	return _filelengthi64( _fileno(fileHandle) );
 #else
 	// Hold the current file position.
 	int64 curr = getPosition();
@@ -181,7 +181,7 @@ void FileStream::setBuffering(bool state)
 	if (!state)
 		mode = _IONBF;
 	
-	setvbuf(fp, nullptr, mode, 0);
+	setvbuf(fileHandle, nullptr, mode, 0);
 }
 
 //-----------------------------------//
