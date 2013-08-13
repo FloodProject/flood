@@ -1461,7 +1461,7 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
-                    WriteLine("var {0} = new {1}()", elemName2, elemType.FullName);
+                    WriteLine("var {0} = new {1}();", elemName2, elemType.FullName);
                     GenerateStructInit(elemType, elemName, elemName2);
                     WriteLine("{0}.Add({1});", containerName, elemName2);
                     break;
