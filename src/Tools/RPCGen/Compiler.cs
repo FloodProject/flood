@@ -184,6 +184,7 @@ namespace Flood.Tools.RPCGen
             };
 
             var dlls = new DirectoryInfo(".").GetFiles("*.dll");
+            var references = new HashSet<string>();
 
             foreach (var assemblyName in assembly.GetReferencedAssemblies())
             {
@@ -194,8 +195,17 @@ namespace Flood.Tools.RPCGen
                 else
                     location = Assembly.Load(assemblyName).Location;
 
-                cp.ReferencedAssemblies.Add(location);
+                references.Add(location);
             }
+
+            // Add an explicit reference to the EngineBindings.dll.
+            var bindings = dlls.FirstOrDefault(fi => fi.Name == "EngineBindings.dll");
+            if (bindings != null)
+                references.Add(bindings.FullName);
+
+            foreach (var @ref in references)
+                cp.ReferencedAssemblies.Add(@ref);
+
             cp.ReferencedAssemblies.Add(destAssemblyPath);
 
             try { 
