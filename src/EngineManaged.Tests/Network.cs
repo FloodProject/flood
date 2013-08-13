@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Flood.Network;
 using NUnit.Framework;
-using EngineManaged.Network;
 using Flood.RPC.Metadata;
 using System.Threading;
 
-namespace EngineManaged.Tests
+namespace Flood.Tests
 {
     [Service]
     public interface IServiceTest
@@ -58,7 +58,7 @@ namespace EngineManaged.Tests
 
         private void Process(object peer)
         {
-            var host = (Host) peer;
+            var host = (Flood.Network.Host) peer;
 
             while (true)
             {
