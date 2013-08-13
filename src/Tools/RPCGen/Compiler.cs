@@ -33,6 +33,7 @@ namespace Flood.Tools.RPCGen
         public bool outputDebug;
         public string outputDir;
         public Assembly assembly;
+        Logger log = new Logger(Logger.LogLevel.Info);
 
         public Compiler(string destAssemblyPath, string outputDir)
         {
@@ -110,10 +111,10 @@ namespace Flood.Tools.RPCGen
         {
             if (outputDebug)
             {
-                Console.WriteLine("Service: {0}", type.Name);
+                log.Debug("Service: {0}", type.Name);
 
                 foreach (var method in type.GetMethods())
-                    Console.WriteLine("  Method: {0}", method.Name);
+                    log.Debug("  Method: {0}", method.Name);
             }
 
             var gen = new Generator();
@@ -126,10 +127,10 @@ namespace Flood.Tools.RPCGen
         {
             if (outputDebug)
             {
-                Console.WriteLine("Message: {0}", type.Name);
+                log.Debug("Message: {0}", type.Name);
 
                 foreach (var field in type.GetFields())
-                    Console.WriteLine("  Field: {0}", field.Name);
+                    log.Debug("  Field: {0}", field.Name);
             }
 
             var gen = new Generator();
@@ -142,10 +143,10 @@ namespace Flood.Tools.RPCGen
         {
             if (outputDebug)
             {
-                Console.WriteLine("Exception: {0}", type.Name);
+                log.Debug("Exception: {0}", type.Name);
 
                 foreach (var field in type.GetFields())
-                    Console.WriteLine("  Field: {0}", field.Name);
+                    log.Debug("  Field: {0}", field.Name);
             }
 
             var gen = new Generator();

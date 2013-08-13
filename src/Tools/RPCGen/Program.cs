@@ -15,9 +15,7 @@
 
 using Mono.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace Flood.Tools.RPCGen
 {
@@ -38,7 +36,7 @@ namespace Flood.Tools.RPCGen
             var module = System.Diagnostics.Process.GetCurrentProcess().MainModule;
             var exeName = Path.GetFileName(module.FileName);
             Console.WriteLine("Usage: " + exeName + " [options]+ assembly");
-            Console.WriteLine("Generates Thrift code from .NET assembly files.");
+            Console.WriteLine("Generates RPC glue code from .NET assembly files.");
             Console.WriteLine();
             Console.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
