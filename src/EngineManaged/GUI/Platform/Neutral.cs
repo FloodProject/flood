@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace Flood.GUI.Platform
 {
@@ -19,6 +17,7 @@ namespace Flood.GUI.Platform
         public static void SetCursor(Cursor cursor)
         {
             Cursor.Current = cursor;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -27,27 +26,7 @@ namespace Flood.GUI.Platform
         /// <returns>Clipboard text.</returns>
         public static String GetClipboardText()
         {
-            // code from http://forums.getpaint.net/index.php?/topic/13712-trouble-accessing-the-clipboard/page__view__findpost__p__226140
-            String ret = String.Empty;
-            var staThread = new System.Threading.Thread(
-                () =>
-                {
-                    try
-                    {
-                        if (!Clipboard.ContainsText())
-                            return;
-                        ret = Clipboard.GetText();
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-                });
-            staThread.SetApartmentState(ApartmentState.STA);
-            staThread.Start();
-            staThread.Join();
-            // at this point either you have clipboard data or an exception
-            return ret;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -57,25 +36,7 @@ namespace Flood.GUI.Platform
         /// <returns>True if succeeded.</returns>
         public static bool SetClipboardText(String text)
         {
-            bool ret = false;
-            var staThread = new System.Threading.Thread(
-                () =>
-                {
-                    try
-                    {
-                        Clipboard.SetText(text);
-                        ret = true;
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-                });
-            staThread.SetApartmentState(ApartmentState.STA);
-            staThread.Start();
-            staThread.Join();
-            // at this point either you have clipboard data or an exception
-            return ret;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -104,32 +65,7 @@ namespace Flood.GUI.Platform
         /// <returns>True if succeeded.</returns>
         public static bool FileOpen(String title, String startPath, String extension, Action<String> callback)
         {
-            var dialog = new OpenFileDialog
-                             {
-                                 Title = title,
-                                 InitialDirectory = startPath,
-                                 DefaultExt = @"*.*",
-                                 Filter = extension,
-                                 CheckPathExists = true,
-                                 Multiselect = false
-                             };
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                if (callback != null)
-                {
-                    callback(dialog.FileName);
-                }
-            }
-            else
-            {
-                if (callback != null)
-                {
-                    callback(String.Empty);
-                }
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -142,32 +78,7 @@ namespace Flood.GUI.Platform
         /// <returns>True if succeeded.</returns>
         public static bool FileSave(String title, String startPath, String extension, Action<String> callback)
         {
-            var dialog = new SaveFileDialog
-            {
-                Title = title,
-                InitialDirectory = startPath,
-                DefaultExt = @"*.*",
-                Filter = extension,
-                CheckPathExists = true,
-                OverwritePrompt = true
-            };
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                if (callback != null)
-                {
-                    callback(dialog.FileName);
-                }
-            }
-            else
-            {
-                if (callback != null)
-                {
-                    callback(String.Empty);
-                }
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

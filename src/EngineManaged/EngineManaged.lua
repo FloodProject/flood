@@ -20,6 +20,4 @@ project "EngineManaged"
 	{
 		"EngineBindings",
 		"System",
-		"System.Web",
-		"System.Windows.Forms"
 	}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using Flood.GUI.ControlInternal;
 
 namespace Flood.GUI.Controls
