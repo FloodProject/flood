@@ -1115,9 +1115,6 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateContainerSingleElementSerialization(Type elemType, string iterName)
         {
-
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-
             var thriftType = ConvertFromTypeToThrift(elemType);
 
             switch (thriftType)
@@ -1130,10 +1127,10 @@ namespace Flood.Tools.RPCGen
                     throw new NotSupportedException();
                 case TType.Struct:
                 case TType.Exception:
-                    GenerateStructSerialize(elemType, elemName);
+                    GenerateStructSerialize(elemType, iterName);
                     break;
                 case TType.Class:
-                    GenerateStructSerialize(elemType, elemName);
+                    GenerateStructSerialize(elemType, iterName);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1321,8 +1318,12 @@ namespace Flood.Tools.RPCGen
             var origObjName = varName+"Impl";
             WriteLine("var {0} = new {1}Impl();", origObjName, type.Name);
             WriteLine("{0}.Read(iprot);", origObjName);
-            WriteLine("{0} = new {1}();", varName, type.FullName);
-            GenerateStructInit(type, origObjName, varName, false);
+
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+
+            WriteLine("var {0} = new {1}();", elemName, type.FullName);
+            GenerateStructInit(type, origObjName, elemName, false);
+            WriteLine("var {0} = {1};", varName, elemName);
         }
 
         /// <summary>
