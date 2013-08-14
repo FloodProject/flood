@@ -8,8 +8,6 @@ project "Editor.Shared"
 	uuid "B0811D44-B7E9-43A0-BB93-6B05E4F91385"
 
 	location "."
-
-	SetupRPCGen("Editor.Shared", ".dll")
 	
 	files
 	{
