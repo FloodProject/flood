@@ -152,10 +152,10 @@ namespace Flood.Editor.Server
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        public Task<Dictionary<Guid, Project>> Projects { get; private set; }
-        //{
-        //    get { return projects; }
-        //}
+        public async Task<Dictionary<Guid, Project>> GetProjects()
+        {
+            return projects;
+        }
 
         /// <summary>
         /// Event fired when a project is added.
