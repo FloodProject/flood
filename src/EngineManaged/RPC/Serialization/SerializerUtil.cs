@@ -76,14 +76,6 @@ namespace Flood.RPC.Serialization
                     }
                     prot.ReadMapEnd();
                     break;
-                case TType.Set:
-                    TSet set = prot.ReadSetBegin();
-                    for (int i = 0; i < set.Count; i++)
-                    {
-                        Skip(prot, set.ElementType);
-                    }
-                    prot.ReadSetEnd();
-                    break;
                 case TType.List:
                     TList list = prot.ReadListBegin();
                     for (int i = 0; i < list.Count; i++)

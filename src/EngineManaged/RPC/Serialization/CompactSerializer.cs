@@ -92,7 +92,6 @@ namespace Flood.RPC.Serialization
             ttypeToCompactType[(int)TType.Double] = Types.DOUBLE;
             ttypeToCompactType[(int)TType.String] = Types.BINARY;
             ttypeToCompactType[(int)TType.List] = Types.LIST;
-            ttypeToCompactType[(int)TType.Set] = Types.SET;
             ttypeToCompactType[(int)TType.Map] = Types.MAP;
             ttypeToCompactType[(int)TType.Struct] = Types.STRUCT;
         }
@@ -857,8 +856,6 @@ namespace Flood.RPC.Serialization
                     return TType.String;
                 case Types.LIST:
                     return TType.List;
-                case Types.SET:
-                    return TType.Set;
                 case Types.MAP:
                     return TType.Map;
                 case Types.STRUCT:

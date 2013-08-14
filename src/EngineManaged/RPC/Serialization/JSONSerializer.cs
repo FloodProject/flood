@@ -98,8 +98,6 @@ namespace Flood.RPC.Serialization
                     return NAME_STRUCT;
                 case TType.Map:
                     return NAME_MAP;
-                case TType.Set:
-                    return NAME_SET;
                 case TType.List:
                     return NAME_LIST;
                 default:
@@ -148,10 +146,6 @@ namespace Flood.RPC.Serialization
                         if (name[1] == (byte)'t')
                         {
                             result = TType.String;
-                        }
-                        else if (name[1] == (byte)'e')
-                        {
-                            result = TType.Set;
                         }
                         break;
                     case (byte)'t':

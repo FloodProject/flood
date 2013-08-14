@@ -39,13 +39,11 @@ namespace Flood.RPC.Serialization
         String = 11,
         Struct = 12,
         Map = 13,
-        Set = 14,
-        List = 15,
-        Collection = 16,
-        Class = 17,
-        Guid = 18,
-        DateTime = 19,
-        Array = 20
+        List = 14,
+        Class = 15,
+        Guid = 16,
+        DateTime = 17,
+        Array = 18
 
     }
 }
