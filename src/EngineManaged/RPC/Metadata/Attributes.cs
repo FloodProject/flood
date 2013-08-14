@@ -12,7 +12,12 @@ namespace Flood.RPC.Metadata
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
     public class MessageAttribute : System.Attribute
     {
+        public Guid Guid { get; private set; }
 
+        public MessageAttribute(string guid)
+        {
+            Guid = new Guid(guid);
+        }
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
