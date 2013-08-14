@@ -11,82 +11,26 @@ namespace Flood.Editor.Shared
         Game
     }
 
-    public interface IProject
-    {
-        /// <summary>
-        /// Id of the project.
-        /// </summary>
-        Guid Id { get; }
-
-        /// <summary>
-        /// Date the project was created. 
-        /// </summary>
-        DateTime DateCreated { get; }
-
-        /// <summary>
-        /// List of users assigned to the project.
-        /// </summary>
-        ICollection<ProjectUser> GetUsers();
-
-        /// <summary>
-        /// Current version of the project.
-        /// </summary>
-        string CurrentVersion { get; }
-
-        /// <summary>
-        /// Description of the project.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Type of the project.
-        /// </summary>
-        ProjectType Type { get; }
-
-        /// <summary>
-        /// Name of the project.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Add member to project.
-        /// </summary>
-        /// <returns>True if the user was added, false otherwise.</returns>
-        bool AddUser(ProjectUser user);
-
-        /// <summary>
-        /// Remove member from project.
-        /// </summary>
-        /// <returns>True if the user was removed, false otherwise.</returns>
-        bool RemoveUser(ProjectUser user);
-
-        /// <summary>
-        /// Modifies project User.
-        /// </summary>
-        /// <returns>True if the user was modified, false otherwise.</returns>
-        bool ModifyUser(ProjectUser user);
-    }
-
-    [Message]
-    public class Project : IProject
+    [Message("BDA5FBCD-8D57-435A-B6D0-3DF52EB71FE4")]
+    public class Project
     {
         /// <summary>
         /// Id of the project.
         /// </summary>
         [Id(0)]
-        public Guid Id { get; private set; }
+        public Guid Id;
 
         /// <summary>
         /// Date the project was created. 
         /// </summary>
         [Id(1)]
-        public DateTime DateCreated { get; private set; }
+        public DateTime DateCreated;
 
         /// <summary>
         /// Users assigned to the project.
         /// </summary>
         [Id(2)]
-        public Dictionary<Guid, ProjectUser> Users { get; private set; }
+        public Dictionary<Guid, ProjectUser> Users;
 
         public ICollection<ProjectUser> GetUsers()
         {
@@ -97,25 +41,25 @@ namespace Flood.Editor.Shared
         /// Current version of the project.
         /// </summary>
         [Id(3)]
-        public string CurrentVersion { get; private set; }
+        public string CurrentVersion;
 
         /// <summary>
         /// Description of the project.
         /// </summary>
         [Id(4)]
-        public string Description { get; private set; }
+        public string Description;
 
         /// <summary>
         /// Type of the project.
         /// </summary>
         [Id(5)]
-        public ProjectType Type { get; private set; }
+        public ProjectType Type;
 
         /// <summary>
         /// Name of the project.
         /// </summary>
         [Id(6)]
-        public string Name { get; private set; }
+        public string Name;
 
         /// <summary>
         /// Add member to project.
