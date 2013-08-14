@@ -23,13 +23,13 @@ namespace Flood.Editor.Shared
         /// User system identity.
         /// </summary>
         [Id(1)]
-        public User SystemUser { get; private set; }
+        public User SystemUser { get; set; }
 
         /// <summary>
         /// Project user is assigned to.
         /// </summary>
         [Id(2)]
-        public Project Proj { get; private set; }
+        public Project Proj { get; set; }
 
         /// <summary>
         /// User id
