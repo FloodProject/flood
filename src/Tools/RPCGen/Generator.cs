@@ -197,7 +197,7 @@ namespace Flood.Tools.RPCGen
             }
             else
             {
-                var typeString = ConvertToTypeString(retType);
+                var typeString = PrettyName(retType);
                 Write("async Task<{0}> {1}.{2}(", typeString, type.Name,
                     method.Name);
             }
@@ -685,9 +685,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Array:
                 case TType.List:
                 case TType.Map:
-                case TType.Set:
                 case TType.String:
-                case TType.Collection:
                 case TType.Class:
                     return true;
                 default:
@@ -787,7 +785,7 @@ namespace Flood.Tools.RPCGen
 
                 WriteLine("field.ClassName = {0};", className);
                 WriteLine("oprot.WriteFieldBegin(field);");
-                GenerateFieldSerialize(param);
+                GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name));
 
                 WriteLine("oprot.WriteFieldEnd();");
 
@@ -841,7 +839,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("if (field.Type == TType.{0})", typeName.ToString());
                 WriteStartBraceIndent();
 
-                GenerateFieldDeserialize(param);
+                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name));
 
                 if (Metadata.IsRequired(param.GetType()))
                     WriteLine("isset_{0} = true;", param.Name);
@@ -885,32 +883,27 @@ namespace Flood.Tools.RPCGen
         #region Serialization
 
         /// <summary>
-        /// Generates the code to serialize a field
+        /// Generates the code to serialize a type 
         /// </summary>
-        private void GenerateFieldSerialize(Parameter param)
+        private void GenerateTypeSerialization(Type type, string name)
         {
-            var type = param.ParameterType;
-            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
+            var thriftType = ConvertFromTypeToThrift(type);
 
             switch (thriftType)
             {
-                case TType.Void:
-                    throw new NotSupportedException();
-                case TType.Struct:
-                case TType.Exception:
-                    GenerateStructSerialize(param);
-                    break;
-                case TType.Class:
-                    GenerateStructSerialize(param);
-                    break;
                 case TType.Array:
-                    GenerateArraySerialize(param);
+                    GenerateArraySerialize(type, name);
                     break;
                 case TType.List:
+                    GenerateListSerialize(type, name);
+                    break;
                 case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                    GenerateContainerSerialize(param);
+                    GenerateMapSerialize(type, name);
+                    break;
+                case TType.Struct:
+                case TType.Exception:
+                case TType.Class:
+                    GenerateStructSerialize(type, name);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -919,39 +912,41 @@ namespace Flood.Tools.RPCGen
                 case TType.I32:
                 case TType.I64:
                 case TType.String:
-                    Write("oprot.Write{0}(", thriftType.ToString());
+                    var enumCast = "";
                     if (type.IsEnum)
-                        Write("({0})", Enum.GetUnderlyingType(type).ToString());
-                    WriteLine("_{0});", param.Name);
+                        enumCast = String.Format("({0})", Enum.GetUnderlyingType(type).ToString());
+                    WriteLine("oprot.Write{0}({1}{2});", thriftType.ToString(), enumCast, name);
                     break;
                 case TType.Guid:
-                    WriteLine("oprot.WriteString(_{0}.ToString());", param.Name);
+                    WriteLine("oprot.WriteString({0}.ToString());", name);
                     break;
                 case TType.DateTime:
-                    WriteLine("oprot.WriteI64(_{0}.Ticks);", param.Name);
+                    WriteLine("oprot.WriteI64({0}.Ticks);", name);
                     break;
+                case TType.Void:
                 default:
+                    System.Diagnostics.Debugger.Break();
                     throw new NotImplementedException();
             }
+
         }
 
         /// <summary>
         /// Generates the code to serialize an array
         /// </summary>
-        private void GenerateArraySerialize(Parameter param)
+        private void GenerateArraySerialize(Type type, string name)
         {
-            var paramType = param.ParameterType;
-            var arrayElemType = paramType.GetElementType();
+            var arrayElemType = type.GetElementType();
 
             WriteLine("oprot.WriteArrayBegin(new TArray(TType.{0}, {1}.Length));",
-                      ConvertFromTypeToThrift(paramType).ToString(),
-                      ToTitleCase(param.Name));
+                      ConvertFromTypeToThrift(type).ToString(),
+                      ToTitleCase(name));
 
             var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
             WriteStartBraceIndent();
 
-            GenerateContainerSingleElementSerialization(arrayElemType, iterName);
+            GenerateTypeSerialization(arrayElemType, iterName);
 
             WriteCloseBraceIndent();
 
@@ -973,6 +968,8 @@ namespace Flood.Tools.RPCGen
         private void GenerateStructSerialize(Type type, string varName)
         {
             var implObjName = varName + "Impl";
+            implObjName = implObjName.Replace(".", "");
+
             WriteLine("var {0} = new {1}Impl();", implObjName, type.Name);
             GenerateStructInit(type, varName, implObjName, true);
             WriteLine("{0}.Write(oprot);", implObjName);
@@ -1004,49 +1001,21 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to serialize a container field  
-        /// </summary>
-        private void GenerateContainerSerialize(Parameter param)
-        {
-            var type = param.ParameterType;
-            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
-
-            switch (thriftType)
-            {
-                case TType.List:
-                    GenerateListSerialize(param);
-                    break;
-                case TType.Map:
-                    GenerateMapSerialize(param);
-                    break;
-                case TType.Set:
-                    GenerateSetSerialize(param);
-                    break;
-                case TType.Collection:
-                    GenerateCollectionSerialize(param);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
         /// Generates the code to serialize a list  
         /// </summary>
-        private void GenerateListSerialize(Parameter param)
+        private void GenerateListSerialize(Type type, string name)
         {
-            var paramType = param.ParameterType;
-            var listElemType = param.ParameterType.GetGenericArguments()[0];
+            var listElemType = type.GetGenericArguments()[0];
 
             WriteLine("oprot.WriteListBegin(new TList(TType.{0}, {1}.Count));",
-                      ConvertFromTypeToThrift(paramType).ToString(),
-                      ToTitleCase(param.Name));
+                      ConvertFromTypeToThrift(type).ToString(),
+                      ToTitleCase(name));
 
             var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
             WriteStartBraceIndent();
 
-            GenerateContainerSingleElementSerialization(listElemType, iterName);
+            GenerateTypeSerialization(listElemType, iterName);
 
             WriteCloseBraceIndent();
 
@@ -1054,52 +1023,20 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to serialize a collection  
-        /// </summary>
-        private void GenerateCollectionSerialize(Parameter param)
-        {
-            GenerateListSerialize(param);
-        }
-
-        /// <summary>
-        /// Generates the code to serialize a set  
-        /// </summary>
-        private void GenerateSetSerialize(Parameter param)
-        {
-            var paramType = param.ParameterType;
-            var setElemType = param.ParameterType.GetGenericArguments()[0];
-
-            WriteLine("oprot.WriteSetBegin(new TSet(TType.{0}, {1}.Count));",
-                      ConvertFromTypeToThrift(paramType).ToString(),
-                      ToTitleCase(param.Name));
-
-            var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
-            WriteStartBraceIndent();
-
-            GenerateContainerSingleElementSerialization(setElemType, iterName);
-
-            WriteCloseBraceIndent();
-
-            WriteLine("oprot.WriteSetEnd();");
-        }
-
-        /// <summary>
         /// Generates the code to serialize a map  
         /// </summary>
-        private void GenerateMapSerialize(Parameter param)
+        private void GenerateMapSerialize(Type type, string name)
         {
-            var paramType = param.ParameterType;
-            var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
-            var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
+            var mapElemType1 = type.GetGenericArguments()[0];
+            var mapElemType2 = type.GetGenericArguments()[1];
 
             WriteLine("oprot.WriteMapBegin(new TMap(TType.{0}, TType.{1}, {2}.Count));",
                       ConvertFromTypeToThrift(mapElemType1).ToString(),
                       ConvertFromTypeToThrift(mapElemType2).ToString(),
-                      ToTitleCase(param.Name));
+                      ToTitleCase(name));
 
             var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(param.Name));
+            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
             WriteStartBraceIndent();
 
             GenerateContainerDoubleElementSerialization(mapElemType1, mapElemType2, iterName);
@@ -1111,26 +1048,51 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to serialize a container element  
+        /// Generates the code to serialize a dual element container  
         /// </summary>
-        private void GenerateContainerSingleElementSerialization(Type elemType, string iterName)
+        private void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName)
         {
-            var thriftType = ConvertFromTypeToThrift(elemType);
+            GenerateTypeSerialization(elemType1, iterName + ".Key");
+            GenerateTypeSerialization(elemType2, iterName + ".Value");
+        }
+
+        #endregion
+
+        #region Deserialization
+
+        /// <summary>
+        /// Generates the code to deserialize a single element of an array 
+        /// </summary>
+        private void GenerateTypeDeserialization(Type type, string name, bool varExists = true)
+        {
+
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+
+            var thriftType = ConvertFromTypeToThrift(type);
 
             switch (thriftType)
             {
+                case TType.Array:
+                    GenerateArrayDeserialize(type, name);
+                    break;
                 case TType.List:
+                    GenerateListDeserialize(type, name);
+                    break;
                 case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                case TType.Void:
-                    throw new NotSupportedException();
+                    GenerateMapDeserialize(type, name);
+                    break;
                 case TType.Struct:
                 case TType.Exception:
-                    GenerateStructSerialize(elemType, iterName);
-                    break;
                 case TType.Class:
-                    GenerateStructSerialize(elemType, iterName);
+                    WriteLine("var {0} = new {1}Impl();", elemName, type.Name);
+                    WriteLine("{0}.Read(iprot);", elemName);
+
+                    var elemName2 = string.Format("_elem{0}", GenericIndex++);
+                    WriteLine("var {0} = new {1}();", elemName2, type.FullName);
+                    GenerateStructInit(type, elemName, elemName2);
+                    if (!varExists)
+                        Write("var ");
+                    WriteLine("{0} = {1};", name, elemName2);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1140,101 +1102,40 @@ namespace Flood.Tools.RPCGen
                 case TType.I64:
                 case TType.String:
                     var enumCast = "";
-                    if (elemType.IsEnum)
-                        enumCast = String.Format("({0})", Enum.GetUnderlyingType(elemType).ToString());
-                    WriteLine("oprot.Write{0}({1}{2});", thriftType.ToString(), enumCast, iterName);
+                    if (type.IsEnum)
+                        enumCast = String.Format("({0})", type.FullName);
+                    if (!varExists)
+                        Write("var ");
+                    WriteLine("{0} = {1}iprot.Read{2}();", name, enumCast, thriftType.ToString());
                     break;
                 case TType.Guid:
-                    WriteLine("oprot.WriteString({0}.ToString());", iterName);
+                    if (!varExists)
+                        Write("var ");
+                    WriteLine("{0} = new System.Guid(iprot.ReadString());", name);
                     break;
                 case TType.DateTime:
-                    WriteLine("oprot.WriteI64({0}.Ticks);", iterName);
+                    if (!varExists)
+                        Write("var ");
+                    WriteLine("{0} = new System.DateTime(iprot.ReadI64());", name);
                     break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-        }
-
-        /// <summary>
-        /// Generates the code to serialize a dual element container  
-        /// </summary>
-        private void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName)
-        {
-            GenerateContainerSingleElementSerialization(elemType1, iterName + ".Key");
-            GenerateContainerSingleElementSerialization(elemType2, iterName + ".Value");
-        }
-
-        #endregion
-
-        #region Deserialization
-
-        /// <summary>
-        /// Generates the code to deserialize a field
-        /// </summary>
-        private void GenerateFieldDeserialize(Parameter param)
-        {
-            var type = param.ParameterType;
-            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
-
-            switch (thriftType)
-            {
                 case TType.Void:
-                    throw new NotSupportedException();
-                case TType.Struct:
-                case TType.Exception:
-                    GenerateStructDeserialize(param);
-                    break;
-                case TType.Class:
-                    GenerateStructDeserialize(param);
-                    break;
-                case TType.Array:
-                    GenerateArrayDeserialize(param);
-                    break;
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                    GenerateContainerDeserialize(param);
-                    break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
-                    Write("{0} = ", ToTitleCase(param.Name));
-                    // If it is an enum, then we need to cast the value.
-                    if (type.IsValueType && !type.IsPrimitive)
-                        Write("({0}) ", type.FullName);
-                    WriteLine("iprot.Read{0}();", thriftType.ToString());
-                    break;
-                case TType.Guid:
-                    Write("{0} = ", ToTitleCase(param.Name));
-                    WriteLine("new Guid(iprot.ReadString());");
-                    break;
-                case TType.DateTime:
-                    Write("{0} = ", ToTitleCase(param.Name));
-                    WriteLine("new DateTime(iprot.ReadI64());");
-                    break;
-
                 default:
                     throw new NotImplementedException();
             }
+
         }
 
         /// <summary>
         /// Generates the code to deserialize an array 
         /// </summary>
-        private void GenerateArrayDeserialize(Parameter param)
+        private void GenerateArrayDeserialize(Type type, string name)
         {
-            var arrayElemType = param.ParameterType.GetElementType();
+            var arrayElemType = type.GetElementType();
 
             var arrayName = string.Format("_array{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadArrayBegin();", arrayName);
 
-            WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(param.Name),
+            WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(name),
                       ConvertToTypeString(arrayElemType), arrayName);
 
             var iterName = string.Format("_i{0}", GenericIndex++);
@@ -1243,71 +1144,10 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            GenerateArraySingleElementDeserialization(arrayElemType, ToTitleCase(param.Name), iterName);
+            GenerateTypeDeserialization(arrayElemType, ToTitleCase(name) + "[" + iterName + "]");
 
             WriteCloseBraceIndent();
             WriteLine("iprot.ReadArrayEnd();");
-        }
-
-        /// <summary>
-        /// Generates the code to deserialize a single element of an array 
-        /// </summary>
-        private void GenerateArraySingleElementDeserialization(Type elemType, string containerName, string iterName)
-        {
-
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-
-            var thriftType = ConvertFromTypeToThrift(elemType);
-
-            switch (thriftType)
-            {
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                case TType.Void:
-                    throw new NotSupportedException();
-                case TType.Struct:
-                case TType.Exception:
-                case TType.Class:
-                    WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
-                    WriteLine("{0}.Read(iprot);", elemName);
-
-                    var elemName2 = string.Format("_elem{0}", GenericIndex++);
-                    WriteLine("var {0} = new {1}();", elemName2, elemType.FullName);
-                    GenerateStructInit(elemType, elemName ,elemName2);
-                    WriteLine("{0}[{1}] = {2};", containerName, iterName, elemName2);
-                    break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
-                    var enumCast = "";
-                    if (elemType.IsEnum)
-                        enumCast = String.Format("({0})", elemType.FullName);
-                    WriteLine("{0}[{1}] = {2}iprot.Read{3}();", containerName, iterName, enumCast, thriftType.ToString());
-                    break;
-                case TType.Guid:
-                    WriteLine("{0}[{1}] = new System.Guid(iprot.ReadString());", containerName, iterName);
-                    break;
-                case TType.DateTime:
-                    WriteLine("{0}[{1}] = new System.DateTime(iprot.ReadI64());", containerName, iterName);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-        }
-
-        /// <summary>
-        /// Generates the code to deserialize a field of type struct
-        /// </summary>
-        private void GenerateStructDeserialize(Parameter param)
-        {
-            GenerateStructDeserialize(param.ParameterType, ToTitleCase(param.Name));
         }
 
         /// <summary>
@@ -1327,41 +1167,14 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to deserialize a container field  
-        /// </summary>
-        private void GenerateContainerDeserialize(Parameter param)
-        {
-            var type = param.ParameterType;
-            var thriftType = ConvertFromTypeToThrift(param.ParameterType);
-
-            switch (thriftType)
-            {
-                case TType.List:
-                    GenerateListDeserialize(param);
-                    break;
-                case TType.Map:
-                    GenerateMapDeserialize(param);
-                    break;
-                case TType.Set:
-                    GenerateSetDeserialize(param);
-                    break;
-                case TType.Collection:
-                    GenerateCollectionDeserialize(param);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
         /// Generates the code to deserialize a list  
         /// </summary>
-        private void GenerateListDeserialize(Parameter param)
+        private void GenerateListDeserialize(Type type, string name)
         {
-            var listElemType = param.ParameterType.GetGenericArguments()[0];
+            var listElemType = type.GetGenericArguments()[0];
 
-            WriteLine("{0} = new List<{1}>();", ToTitleCase(param.Name),
-                      ConvertToGenericArgsString(param.ParameterType));
+            WriteLine("{0} = new List<{1}>();", ToTitleCase(name),
+                      ConvertToGenericArgsString(type));
 
             var listName = string.Format("_list{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadListBegin();", listName);
@@ -1372,55 +1185,25 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            GenerateContainerSingleElementDeserialization(listElemType, ToTitleCase(param.Name));
+            var elemName = string.Format("_elem{0}", GenericIndex++);
+
+            GenerateTypeDeserialization(listElemType, elemName, false);
+            WriteLine("{0}.Add({1});", name, elemName);
 
             WriteCloseBraceIndent();
             WriteLine("iprot.ReadListEnd();");
         }
 
         /// <summary>
-        /// Generates the code to deserialize a collection  
-        /// </summary>
-        private void GenerateCollectionDeserialize(Parameter param)
-        {
-            GenerateListDeserialize(param);
-        }
-
-        /// <summary>
-        /// Generates the code to deserialize a set  
-        /// </summary>
-        private void GenerateSetDeserialize(Parameter param)
-        {
-            var setElemType = param.ParameterType.GetGenericArguments()[0];
-
-            WriteLine("{0} = new HashSet<{1}>();", ToTitleCase(param.Name),
-                      ConvertToGenericArgsString(param.ParameterType));
-
-            var setName = string.Format("_set{0}", GenericIndex++);
-            WriteLine("var {0} = iprot.ReadSetBegin();", setName);
-
-            var iterName = string.Format("_i{0}", GenericIndex++);
-            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
-                      iterName, setName);
-
-            WriteStartBraceIndent();
-
-            GenerateContainerSingleElementDeserialization(setElemType, ToTitleCase(param.Name));
-
-            WriteCloseBraceIndent();
-            WriteLine("iprot.ReadSetEnd();");
-        }
-
-        /// <summary>
         /// Generates the code to deserialize a map  
         /// </summary>
-        private void GenerateMapDeserialize(Parameter param)
+        private void GenerateMapDeserialize(Type type, string name)
         {
-            var mapElemType1 = param.ParameterType.GetGenericArguments()[0];
-            var mapElemType2 = param.ParameterType.GetGenericArguments()[1];
+            var mapElemType1 = type.GetGenericArguments()[0];
+            var mapElemType2 = type.GetGenericArguments()[1];
 
-            WriteLine("{0} = new Dictionary<{1}>();", ToTitleCase(param.Name),
-                      ConvertToGenericArgsString(param.ParameterType));
+            WriteLine("{0} = new Dictionary<{1}>();", ToTitleCase(name),
+                      ConvertToGenericArgsString(type));
 
             var mapName = string.Format("_set{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadMapBegin();", mapName);
@@ -1431,63 +1214,10 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(param.Name));
+            GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(name));
 
             WriteCloseBraceIndent();
             WriteLine("iprot.ReadMapEnd();");
-        }
-
-        /// <summary>
-        /// Generates the code to deserialize a container element  
-        /// </summary>
-        private void GenerateContainerSingleElementDeserialization(Type elemType, string containerName)
-        {
-
-            var elemName = string.Format("_elem{0}", GenericIndex++);
-
-            var thriftType = ConvertFromTypeToThrift(elemType);
-
-            switch (thriftType)
-            {
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                case TType.Void:
-                    throw new NotSupportedException();
-                case TType.Struct:
-                case TType.Exception:
-                case TType.Class:
-                    WriteLine("var {0} = new {1}Impl();", elemName, elemType.Name);
-                    WriteLine("{0}.Read(iprot);", elemName);
-
-                    var elemName2 = string.Format("_elem{0}", GenericIndex++);
-                    WriteLine("var {0} = new {1}();", elemName2, elemType.FullName);
-                    GenerateStructInit(elemType, elemName, elemName2);
-                    WriteLine("{0}.Add({1});", containerName, elemName2);
-                    break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
-                    var enumCast = "";
-                    if (elemType.IsEnum)
-                        enumCast = String.Format("({0})", elemType.FullName);
-                    WriteLine("{0}.Add({1}iprot.Read{2}());", containerName, enumCast, thriftType.ToString());
-                    break;
-                case TType.Guid:
-                    WriteLine("{0}.Add(new System.Guid(iprot.ReadString()));", containerName);
-                    break;
-                case TType.DateTime:
-                    WriteLine("{0}.Add(new System.DateTime(iprot.ReadI64()));", containerName);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
         }
 
         /// <summary>
@@ -1498,58 +1228,10 @@ namespace Flood.Tools.RPCGen
             var elemName1 = string.Format("_elem{0}", GenericIndex++);
             var elemName2 = string.Format("_elem{0}", GenericIndex++);
 
-            GenerateContainerDoubleElementDeserializationAux(elemType1, elemName1);
-            GenerateContainerDoubleElementDeserializationAux(elemType2, elemName2);
+            GenerateTypeDeserialization(elemType1, elemName1, false);
+            GenerateTypeDeserialization(elemType2, elemName2, false);
 
             WriteLine("{0}.Add({1}, {2});", containerName, elemName1, elemName2);
-
-        }
-
-        /// <summary>
-        /// Auxiliary method to generate the code to deserialize a  double element container 
-        /// </summary>
-        private void GenerateContainerDoubleElementDeserializationAux(Type elemType, string elemName)
-        {
-            var elemNameImpl = string.Format("_elem{0}", GenericIndex++);
-            var thriftType = ConvertFromTypeToThrift(elemType);
-
-            switch (thriftType)
-            {
-                case TType.List:
-                case TType.Map:
-                case TType.Set:
-                case TType.Collection:
-                case TType.Void:
-                    throw new NotSupportedException();
-                case TType.Struct:
-
-                case TType.Exception:
-                    GenerateStructInit(elemType, elemName, elemNameImpl, false);
-                    break;
-                case TType.Class:
-                    GenerateStructInit(elemType, elemName, elemNameImpl, false);
-                    break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
-                    var enumCast = "";
-                    if (elemType.IsEnum)
-                        enumCast = String.Format("({0})", elemType.FullName);
-                    WriteLine("var {0} = {1}iprot.Read{2}();", elemName, enumCast, thriftType.ToString());
-                    break;
-                case TType.Guid:
-                    WriteLine("var {0} = new System.Guid(iprot.ReadString());", elemName);
-                    break;
-                case TType.DateTime:
-                    WriteLine("var {0} = new System.DateTime(iprot.ReadI64());", elemName);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         #endregion
@@ -1557,6 +1239,18 @@ namespace Flood.Tools.RPCGen
         #endregion
 
         #region Type Conversion 
+
+        private static string PrettyName(Type type)
+        {
+            if (type.GetGenericArguments().Length == 0)
+            {
+                return type.FullName;
+            }
+            var genericArguments = type.GetGenericArguments();
+            var typeDefeninition = type.Name;
+            var unmangledName = typeDefeninition.Substring(0, typeDefeninition.IndexOf("`"));
+            return unmangledName + "<" + String.Join(",", genericArguments.Select(PrettyName)) + ">";
+        }
 
         /// <summary>
         /// Checks if type of instance is a generic type and if it is of the type of genericType 
@@ -1644,18 +1338,14 @@ namespace Flood.Tools.RPCGen
                 return TType.Struct;
             else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
                 return TType.Exception;
-            else if (IsInstanceOfGenericType(typeof(IList<>), type))
-                return TType.List;
             else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))
                 return TType.Map;
-            else if (IsInstanceOfGenericType(typeof(ISet<>), type))
-                return TType.Set;
             else if (IsInstanceOfGenericType(typeof(ICollection<>), type))
-                return TType.Collection;
+                return TType.List;
             else if (type.IsClass)
                 return TType.Class;
 
-            throw new NotImplementedException();
+            throw new NotImplementedException("Unhandle type "+type);
         }
 
         /// <summary>
@@ -1709,8 +1399,6 @@ namespace Flood.Tools.RPCGen
                     return ConvertToTypeString(type.GetElementType()) +"[]";
                 case TType.List:
                 case TType.Map:
-                case TType.Set:
-                case TType.Collection:
                     return ConvertToGenericTypeString(type, thriftType);
             }
 
@@ -1734,12 +1422,6 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Map:
                     sb.Append("Dictionary<");
-                    break;
-                case TType.Set:
-                    sb.Append("ISet<");
-                    break;
-                case TType.Collection:
-                    sb.Append("ICollection<");
                     break;
             }
 
