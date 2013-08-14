@@ -38,7 +38,7 @@ namespace Flood.Editor
         /// <summary>
         /// Read-only dictionary of all the projects.
         /// </summary>
-        //Task<Dictionary<Guid, Project>> Projects { get; }
+        Task<Dictionary<Guid, Project>> GetProjects();
 
         /// <summary>
         /// Removes an existing project.
