@@ -25,6 +25,5 @@ project "Editor.Client"
 		"EngineBindings",
 		"Editor.Shared",
 		"Editor.Server",
-		"ServerManaged",
-		"Mono.Addins"
+		"ServerManaged"
 	}
