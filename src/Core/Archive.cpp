@@ -13,10 +13,9 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 Archive::Archive()
-	: handle(nullptr)
-	, userdata(nullptr)
+	: userdata(nullptr)
 	, watchId(0)
-	, fn(nullptr)
+	, isValid(true) 
 {
 }
 
@@ -28,83 +27,28 @@ Archive::~Archive()
 
 //-----------------------------------//
 
-bool ArchiveOpen(Archive* archive, const String& path)
+Archive::Archive(const Path& path)
+	: path(path)
+	, userdata(nullptr)
+	, watchId(0)
 {
-	if( !archive ) return false;
-	return archive->fn->open(archive, path);
 }
 
 //-----------------------------------//
 
-void ArchiveDestroy(Archive* archive)
+static Path CombinePath(const Path& path, const Path& filePath)
 {
-	if( !archive ) return;
-	archive->fn->close(archive);
-	Deallocate(archive);
-}
-
-//-----------------------------------//
-
-Stream* ArchiveOpenFile(Archive* archive, const Path& path, Allocator* alloc)
-{
-	if( !archive ) return nullptr;
-	return archive->fn->open_file(archive, path, alloc);
-}
-
-//-----------------------------------//
-
-bool ArchiveExistsFile(Archive* archive, const Path& path)
-{
-	if( !archive ) return false;
-	Path normalized = PathNormalize(path);
-	return archive->fn->exists_file(archive, normalized);
-}
-
-//-----------------------------------//
-
-bool ArchiveExistsDirectory(Archive* archive, const Path& path)
-{
-	if( !archive ) return false;
-	Path normalized = PathNormalize(path);
-	return archive->fn->exists_dir(archive, normalized);
-}
-
-//-----------------------------------//
-
-void ArchiveEnumerateFiles(Archive* archive, std::vector<String>& files)
-{
-	if( !archive ) return;
-	archive->fn->enumerate_files(archive, files);
-}
-
-//-----------------------------------//
-
-void ArchiveEnumerateDirectories(Archive* archive, std::vector<String>& dirs)
-{
-	if( !archive ) return;
-	archive->fn->enumerate_dirs(archive, dirs);
-}
-
-//-----------------------------------//
-
-bool ArchiveWatchUpdate(Archive* archive)
-{
-	if( !archive ) return false;
-	return archive->fn->watch(archive);
-}
-
-//-----------------------------------//
-
-Path ArchiveCombinePath(Archive* archive, const Path& filePath)
-{
-	if( !archive ) return "";
-	
 	const Path& sep = PathGetSeparator();
-	Path fullPath = StringFormat("%s%s%s", archive->path.c_str(), sep.c_str(), filePath.c_str());
+	Path fullPath = StringFormat("%s%s%s", 
+		path.c_str(), sep.c_str(), filePath.c_str());
 
 	return PathNormalize(fullPath);
 }
 
-//-----------------------------------//
+Path Archive::combinePath(const Path& filePath)
+{
+	return CombinePath(path, filePath);
+}
 
+//-----------------------------------//
 NAMESPACE_CORE_END

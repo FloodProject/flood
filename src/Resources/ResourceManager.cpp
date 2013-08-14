@@ -267,7 +267,7 @@ bool ResourceManager::findResource(ResourceLoadOptions& options)
 
 		Path newPath = StringFormat("%s.%s", path.c_str(), ext.c_str());
 
-		if( ArchiveExistsFile(archive, newPath) )
+		if (archive->existsFile(newPath))
 		{
 			path = PathNormalize(newPath);
 			return true;
@@ -306,7 +306,7 @@ Resource* ResourceManager::prepareResource( ResourceLoadOptions& options )
 {
 	const Path& path = options.name;
 
-	Stream* stream = ArchiveOpenFile(archive, path, GetResourcesAllocator());
+	Stream* stream = archive->openFile(path, GetResourcesAllocator());
 	
 	if( !stream )
 	{
@@ -397,7 +397,7 @@ void ResourceManager::update()
 	sendPendingEvents();
 
 	// Update the archive watches.
-	ArchiveWatchUpdate(archive);
+	archive->monitor();
 
 	removeUnusedResources();
 }

@@ -403,7 +403,7 @@ public:
 
 class API_CORE ZipStream : public Stream
 {
-public:
+private:
 
 	ZipStream();
 	ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, String path, StreamOpenMode mode);

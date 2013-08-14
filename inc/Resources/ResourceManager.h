@@ -17,7 +17,7 @@ NAMESPACE_RESOURCES_BEGIN
 //-----------------------------------//
 
 class Stream;
-struct Archive;
+class Archive;
 struct TaskPool;
 struct FileWatchEvent;
 

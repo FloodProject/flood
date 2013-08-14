@@ -89,7 +89,7 @@ EditorFrame::~EditorFrame()
 	sceneWindow->getControl()->stopFrameLoop();
 	Deallocate(sceneWindow);
 
-	ArchiveDestroy(archive);
+	Deallocate(archive);
 
 	engine->getWindowManager()->destroyWindows();
 
@@ -157,8 +157,8 @@ void EditorFrame::createEngine()
 	ResourceManager* res = engine->getResourceManager();
 	
 	// Get the mount paths from the editor preferences.
-	archive = ArchiveCreateVirtual( GetResourcesAllocator() );
-	ArchiveMountDirectories(archive, "Assets/", GetResourcesAllocator());
+	archive = Allocate(GetResourcesAllocator(), ArchiveVirtual);
+	archive->archiveMountDirectories("Assets/", GetResourcesAllocator());
 	
 	res->setArchive(archive);
 
