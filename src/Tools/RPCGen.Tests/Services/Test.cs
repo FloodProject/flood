@@ -16,7 +16,7 @@ namespace RPCGen.Tests.Services
         Task<Message> GetMessage();
     }
 
-    [Message]
+    [Message("29B05FE4-3A9A-4EC6-9643-989B5B2ADC3B")]
     public class Message
     {
         [Id(0)]

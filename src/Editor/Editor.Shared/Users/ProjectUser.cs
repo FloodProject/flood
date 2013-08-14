@@ -10,7 +10,7 @@ namespace Flood.Editor.Shared
         Observer
     }
 
-    [Message]
+    [Message("D5BF4EE8-F49A-45D2-A037-AF94099DD8A3")]
     public abstract class ProjectUser
     {
         /// <summary>

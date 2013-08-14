@@ -14,7 +14,7 @@ namespace RPCGen.Tests
         bool Ping();
     }
 
-    [Message]
+    [Message("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
     struct Message
     {
         [Required, Id(1337)] 

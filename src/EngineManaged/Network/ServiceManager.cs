@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flood.Network
 {
-    [Message]
+    [Message("64974CF9-B0D7-4A7B-9C10-DF48CF4B7460")]
     public class ServiceId
     {
         [Id(0)]

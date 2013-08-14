@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Flood.Editor
 {
-    [Message]
+    [Message("B68611E4-9E95-4A83-9EB6-547375F7D67C")]
     public struct UserId
     {
         [Id(0)]
@@ -64,7 +64,7 @@ namespace Flood.Editor
     }
  */
 
-    [Message]
+    [Message("3E35A72D-888E-4152-BA38-6326562FC3AD")]
     public struct UserInfo
     {
         [Id(0)]
