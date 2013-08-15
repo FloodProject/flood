@@ -8,6 +8,8 @@
 #include "Core/API.h"
 #include "Core/Memory.h"
 #include "Core/Containers/Array.h"
+#include "Core/References.h"
+#include "Core/String.h"
 
 #include <algorithm>
 
@@ -187,5 +189,77 @@ SUITE(CoreTests_Containers)
         
         it = std::find(v.begin(), v.end(), 51);
         CHECK(it == v.end());
+    }
+
+    TEST_FIXTURE(ContainerFixture, ArrayHoldStringByValue)
+    {
+        Array<String> v(*_a);
+
+        v.push_back("Zero");
+        v.push_back(String("One"));
+
+        String s("Two");
+        v.push_back(s);
+
+        CHECK_EQUAL(3, v.size());
+
+        Array<String> w(v);
+        CHECK_EQUAL(3, w.size());
+    }
+
+    class HeapObject : public ReferenceCounted
+    {
+    public:
+        static size_t dtorCount;
+
+        HeapObject(String val)
+            : value(val)
+        {}
+        ~HeapObject()
+        {
+            value = "";
+            ++dtorCount;
+        }
+
+        String value;
+    };
+
+    size_t HeapObject::dtorCount = 0;
+
+    TEST_FIXTURE(ContainerFixture, ArrayHoldRefPtrByValue)
+    {
+        typedef HeapObject obj;
+        typedef RefPtr<HeapObject> ptr;
+        Array<ptr> ptrs(*_a);
+
+        for(size_t i = 0; i < 100; ++i)
+        {
+            auto o = (obj*)Allocate(_a, obj, String("asdfawilebufa"));
+            ptr p(o);
+            ptrs.push_back(p);
+        }
+
+        size_t refcount = 0;
+        for(auto& rp : ptrs)
+            refcount += rp->references;
+
+        CHECK_EQUAL(100, refcount);
+
+        Array<ptr> more_ptrs(ptrs);
+        refcount = 0;
+        for(auto& rp : ptrs)
+            refcount += rp->references;
+
+        CHECK_EQUAL(200, refcount);
+
+        more_ptrs.clear();
+        refcount = 0;
+        for(auto& rp : ptrs)
+            refcount += rp->references;
+
+        CHECK_EQUAL(100, refcount);
+
+        ptrs.clear();
+        CHECK_EQUAL(100, obj::dtorCount);
     }
 }
