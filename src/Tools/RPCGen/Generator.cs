@@ -27,10 +27,9 @@ namespace Flood.Tools.RPCGen
 
         public void GenerateMessageClass(Type type)
         {
-            var typeName = string.Format("{0}Impl", type.Name);
 
             WriteLine("[Serializable]");
-            WriteLine("public class {0}", typeName);
+            WriteLine("public class {0}", ImplName(type, false));
             WriteStartBraceIndent();
 
             // Generate fields
@@ -60,7 +59,7 @@ namespace Flood.Tools.RPCGen
             GenerateIsSet(parameters);
 
             // Generate constructor
-            WriteLine("public {0}()", typeName);
+            WriteLine("public {0}()", ImplName(type, false));
             WriteLine("{");
             WriteLine("}");
             NewLine();
@@ -108,7 +107,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("namespace  {0}", type.Namespace);
             WriteStartBraceIndent();
 
-            WriteLine("public partial class {0}Impl", type.Name);
+            WriteLine("public class {0}", ImplName(type, false));
             WriteStartBraceIndent();
 
             //GenerateInterface(type);
@@ -150,7 +149,7 @@ namespace Flood.Tools.RPCGen
             Write("public class Client : {0}", type.FullName);
 
             if (baseType != null)
-                Write(" : {0}Impl.Client", baseType.Name);
+                Write(" : {0}.Client", ImplName(baseType, true));
             NewLine();
             WriteStartBraceIndent();
 
@@ -339,7 +338,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("public class Processor : {0}",
                       baseType == null ? "SimpleProcessor" :
-                      baseType.Name + "Impl.Processor");
+                      ImplName(baseType, true) + ".Processor");
             WriteStartBraceIndent();
 
             WriteLine("private readonly {0} iface_;", type.FullName);
@@ -961,7 +960,7 @@ namespace Flood.Tools.RPCGen
             var implObjName = varName + "Impl";
             implObjName = implObjName.Replace(".", "");
 
-            WriteLine("var {0} = new {1}Impl();", implObjName, type.Name);
+            WriteLine("var {0} = new {1}();", implObjName, ImplName(type, true));
             GenerateStructInit(type, varName, implObjName);
             WriteLine("{0}.Write(oprot);", implObjName);
         }
@@ -1074,7 +1073,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Struct:
                 case TType.Exception:
                 case TType.Class:
-                    WriteLine("var {0} = new {1}Impl();", elemName, type.Name);
+                    WriteLine("var {0} = new {1}();", elemName, ImplName(type, true));
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
@@ -1146,7 +1145,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateStructDeserialize(Type type, string varName)
         {
             var origObjName = varName+"Impl";
-            WriteLine("var {0} = new {1}Impl();", origObjName, type.Name);
+            WriteLine("var {0} = new {1}();", origObjName, ImplName(type, true));
             WriteLine("{0}.Read(iprot);", origObjName);
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1243,6 +1242,18 @@ namespace Flood.Tools.RPCGen
             var typeDefeninition = type.Name;
             var unmangledName = typeDefeninition.Substring(0, typeDefeninition.IndexOf("`"));
             return unmangledName + "<" + String.Join(",", genericArguments.Select(PrettyName)) + ">";
+        }
+
+        private static string ImplName(Type type, bool fullName)
+        {
+            var name = type.FullName;
+            if (!fullName && name.Contains('.'))
+            {
+                var names = name.Split('.');
+                name = names[names.Length - 1];
+            }
+
+            return name.Replace("+", "_") + "Impl";
         }
 
         /// <summary>
