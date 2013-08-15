@@ -27,6 +27,8 @@ namespace Flood.Tools.RPCGen
 
         public void GenerateMessageClass(Type type)
         {
+            WriteLine("namespace  {0}", type.Namespace);
+            WriteStartBraceIndent();
 
             WriteLine("[Serializable]");
             WriteLine("public class {0}", ImplName(type, false));
@@ -71,6 +73,7 @@ namespace Flood.Tools.RPCGen
             // Generate write method
             GenerateServiceMethodWrite(type.Name, parameters, isResult: false);
 
+            WriteCloseBraceIndent();
             WriteCloseBraceIndent();
         }
 
