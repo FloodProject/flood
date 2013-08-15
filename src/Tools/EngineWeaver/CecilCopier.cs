@@ -381,9 +381,14 @@ namespace EngineWeaver
             var ret = new CustomAttribute(CopyReference(def.Constructor),def.GetBlob());
 
             Log("< CopyAttributes ");
-            CopyAll(def,ret,ret,"DeclaringType", "ConstructorArguments");
+            CopyAll(def,ret,ret,"DeclaringType");
 
             return ret;
+        }
+
+        private CustomAttributeArgument Copy(CustomAttributeArgument def)
+        {
+            return new CustomAttributeArgument(CopyReference(def.Type), def.Value);
         }
 
         private MethodBody Copy(MethodBody def, MethodDefinition parent)
