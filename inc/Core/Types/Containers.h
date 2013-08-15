@@ -21,7 +21,7 @@
 NAMESPACE_CORE_BEGIN
 
 /// Dynamically resizable array of POD objects.
-template<typename T> struct Array
+template<typename T> class Array
 {
 public:
     Array(Allocator &a);
@@ -39,6 +39,8 @@ public:
     T const * end() const;
     T const * cend() const;
 
+    T * data();
+    T const * data() const;
     T& front();
     T const & front() const;
     T& back();
