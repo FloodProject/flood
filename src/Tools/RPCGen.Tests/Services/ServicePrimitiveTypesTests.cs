@@ -9,76 +9,79 @@ using RPCGen.Tests.Interfaces;
 
 namespace RPCGen.Tests.Services
 {
-    [Service]
-    public interface IService
-    {
-        Task TestVoid();
-        Task<Byte> TestByte([Id(0)]Byte param);
-        Task<float> TestFloat([Id(0)]float param);
-        Task<double> TestDouble([Id(0)]double param);
-        Task<short> TestShort([Id(0)]short param);
-        Task<int> TestInt([Id(0)]int param);
-        Task<long> TestLong([Id(0)]long param);
-        Task<string> TestString([Id(0)]string param);
-        Task<Guid> TestGuid([Id(0)]Guid param);
-        Task<DateTime> TestDateTime([Id(0)]DateTime param);
-    }
-
-    public class Service : IService
-    {
-
-        public async Task TestVoid()
-        {
-        }
-
-        public async Task<byte> TestByte(byte param)
-        {
-            return param;
-        }
-
-        public async Task<float> TestFloat(float param)
-        {
-            return param;
-        }
-
-        public async Task<double> TestDouble(double param)
-        {
-            return param;
-        }
-
-        public async Task<short> TestShort(short param)
-        {
-            return param;
-        }
-
-        public async Task<int> TestInt(int param)
-        {
-            return param;
-        }
-
-        public async Task<long> TestLong(long param)
-        {
-            return param;
-        }
-
-        public async Task<string> TestString(string param)
-        {
-            return param;
-        }
-
-        public async Task<Guid> TestGuid(Guid param)
-        {
-            return param;
-        }
-
-        public async Task<DateTime> TestDateTime(DateTime param)
-        {
-            return param;
-        }
-    }
-
     public class ServicePrimitiveTypesTests : IPrimitiveTypesTests
     {
+        #region Service
+        [Service]
+        public interface IService
+        {
+            Task TestVoid();
+            Task<Byte> TestByte([Id(0)]Byte param);
+            Task<float> TestFloat([Id(0)]float param);
+            Task<double> TestDouble([Id(0)]double param);
+            Task<short> TestShort([Id(0)]short param);
+            Task<int> TestInt([Id(0)]int param);
+            Task<long> TestLong([Id(0)]long param);
+            Task<string> TestString([Id(0)]string param);
+            Task<Guid> TestGuid([Id(0)]Guid param);
+            Task<DateTime> TestDateTime([Id(0)]DateTime param);
+        }
+
+        public class Service : IService
+        {
+
+            public async Task TestVoid()
+            {
+            }
+
+            public async Task<byte> TestByte(byte param)
+            {
+                return param;
+            }
+
+            public async Task<float> TestFloat(float param)
+            {
+                return param;
+            }
+
+            public async Task<double> TestDouble(double param)
+            {
+                return param;
+            }
+
+            public async Task<short> TestShort(short param)
+            {
+                return param;
+            }
+
+            public async Task<int> TestInt(int param)
+            {
+                return param;
+            }
+
+            public async Task<long> TestLong(long param)
+            {
+                return param;
+            }
+
+            public async Task<string> TestString(string param)
+            {
+                return param;
+            }
+
+            public async Task<Guid> TestGuid(Guid param)
+            {
+                return param;
+            }
+
+            public async Task<DateTime> TestDateTime(DateTime param)
+            {
+                return param;
+            }
+        }
+
+        #endregion
+
         IService service;
 
         public void SetUp()
