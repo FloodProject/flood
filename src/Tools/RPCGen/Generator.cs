@@ -146,7 +146,7 @@ namespace Flood.Tools.RPCGen
             Type baseType;
             GetInheritedService(type, out baseType);
 
-            Write("public class Client : {0}", type.FullName);
+            Write("public class Client : {0}", PrettyName(type));
 
             if (baseType != null)
                 Write(" : {0}.Client", ImplName(baseType, true));
@@ -192,12 +192,12 @@ namespace Flood.Tools.RPCGen
             var retType = GetMethodReturnType(method);
             if (retType == typeof (void))
             {
-                Write("async Task {0}.{1}(", type.Name, method.Name);
+                Write("async Task {0}.{1}(", PrettyName(type), method.Name);
             }
             else
             {
                 var typeString = PrettyName(retType);
-                Write("async Task<{0}> {1}.{2}(", typeString, type.Name,
+                Write("async Task<{0}> {1}.{2}(", typeString, PrettyName(type),
                     method.Name);
             }
 
@@ -341,11 +341,11 @@ namespace Flood.Tools.RPCGen
                       ImplName(baseType, true) + ".Processor");
             WriteStartBraceIndent();
 
-            WriteLine("private readonly {0} iface_;", type.FullName);
+            WriteLine("private readonly {0} iface_;", PrettyName(type));
 
             // Generate constructor
             {
-                Write("public Processor({0} iface)", type.FullName);
+                Write("public Processor({0} iface)", PrettyName(type));
 
                 if (baseType != null)
                     Write(" : base(iface)");
@@ -440,7 +440,7 @@ namespace Flood.Tools.RPCGen
                 // Write the catch part of the exception handling.
                 foreach (var exception in exceptionsInfo)
                 {
-                    WriteLine("}} catch ({0} ex{1}) {{", exception.Type.FullName,
+                    WriteLine("}} catch ({0} ex{1}) {{", PrettyName(exception.Type),
                               exception.Id);
                     PushIndent();
                     WriteLine("result.Exception{0} = ex{0};", exception.Id);
@@ -1077,7 +1077,7 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
-                    WriteLine("var {0} = new {1}();", elemName2, type.FullName);
+                    WriteLine("var {0} = new {1}();", elemName2, PrettyName(type));
                     GenerateStructInit(type, elemName, elemName2, true);
                     if (!varExists)
                         Write("var ");
@@ -1092,7 +1092,7 @@ namespace Flood.Tools.RPCGen
                 case TType.String:
                     var cast = "";
                     if (type.IsEnum || type == typeof(float))
-                        cast = String.Format("({0})", type.FullName);
+                        cast = String.Format("({0})", PrettyName(type));
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = {1}iprot.Read{2}();", name, cast, thriftType.ToString());
@@ -1150,7 +1150,7 @@ namespace Flood.Tools.RPCGen
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
 
-            WriteLine("var {0} = new {1}();", elemName, type.FullName);
+            WriteLine("var {0} = new {1}();", elemName, PrettyName(type));
             GenerateStructInit(type, origObjName, elemName, true);
             WriteLine("var {0} = {1};", varName, elemName);
         }
@@ -1229,6 +1229,7 @@ namespace Flood.Tools.RPCGen
 
         #region Type Conversion 
 
+        /// Returns a c# string representation o a type
         private static string PrettyName(Type type)
         {
             if (type.GetGenericArguments().Length == 0)
@@ -1236,7 +1237,7 @@ namespace Flood.Tools.RPCGen
                 if (type == typeof(void))
                     return "void";
 
-                return type.FullName;
+                return type.FullName.Replace("+",".");
             }
             var genericArguments = type.GetGenericArguments();
             var typeDefeninition = type.Name;
