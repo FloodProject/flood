@@ -473,7 +473,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_args", method.Name);
+            WriteLine("public class {0}_args", method.Name);
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -534,7 +534,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateServiceMethodResult(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public partial class {0}_result", method.Name);
+            WriteLine("public class {0}_result", method.Name);
             WriteStartBraceIndent();
 
             var parameters = new List<Parameter>();
