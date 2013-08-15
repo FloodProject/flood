@@ -24,7 +24,9 @@ namespace RPCGen.Tests.Services
     {
         public static T GetProxy<T>(T serviceImpl)
         {
-            var implType = Assembly.GetExecutingAssembly().GetType(typeof(T).FullName + "Impl");
+            var fullName = Flood.RPC.Helper.ImplName(typeof(T), true);
+
+            var implType = Assembly.GetExecutingAssembly().GetType(fullName);
             Assert.NotNull(implType);
 
             var clientType = implType.GetNestedType("Client");
