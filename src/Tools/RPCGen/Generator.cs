@@ -39,7 +39,7 @@ namespace Flood.Tools.RPCGen
                 if (!Metadata.HasId(field))
                     continue;
 
-                WriteLine("private {0} _{1};", ConvertToTypeString(field.FieldType), field.Name);
+                WriteLine("private {0} _{1};", PrettyName(field.FieldType), field.Name);
                 NeedNewLine();
             }
 
@@ -50,7 +50,7 @@ namespace Flood.Tools.RPCGen
                     continue;
 
                 WriteLine("private {0} _{1};",
-                    ConvertToTypeString(property.PropertyType), property.Name);
+                    PrettyName(property.PropertyType), property.Name);
                 NeedNewLine();
             }
             NewLineIfNeeded();
@@ -235,7 +235,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateProtocolReceive(MethodInfo method)
         {
             var retType = GetMethodReturnType(method);
-            Write("private {0} recv_{1}(RPCData response)", ConvertToTypeString(retType),
+            Write("private {0} recv_{1}(RPCData response)", PrettyName(retType),
                   method.Name);
             WriteStartBraceIndent();
 
@@ -320,7 +320,7 @@ namespace Flood.Tools.RPCGen
             for (var i = 0; i < parameters.Count; i++)
             {
                 var param = parameters[i];
-                Write("{0} {1}", ConvertToTypeString(param.ParameterType),
+                Write("{0} {1}", PrettyName(param.ParameterType),
                       param.Name);
 
                 if (i < parameters.Count - 1)
@@ -478,7 +478,7 @@ namespace Flood.Tools.RPCGen
             foreach (var param in method.GetParameters())
             {
                 WriteLine("private {0} _{1};",
-                    ConvertToTypeString(param.ParameterType), param.Name);
+                    PrettyName(param.ParameterType), param.Name);
                 NeedNewLine();
             }
             NewLineIfNeeded();
@@ -567,7 +567,7 @@ namespace Flood.Tools.RPCGen
             foreach (var param in parameters)
             {
                 WriteLine("private {0} _{1};",
-                    ConvertToTypeString(param.ParameterType), param.Name);
+                    PrettyName(param.ParameterType), param.Name);
             }
             NewLine();
 
@@ -868,7 +868,7 @@ namespace Flood.Tools.RPCGen
         {
             foreach (var param in parameters)
             {
-                WriteLine("public {0} {1}", ConvertToTypeString(param.ParameterType),
+                WriteLine("public {0} {1}", PrettyName(param.ParameterType),
                           ToTitleCase(param.Name));
                 WriteStartBraceIndent();
 
@@ -1126,7 +1126,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("var {0} = iprot.ReadArrayBegin();", arrayName);
 
             WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(name),
-                      ConvertToTypeString(arrayElemType), arrayName);
+                      PrettyName(arrayElemType), arrayName);
 
             var iterName = string.Format("_i{0}", GenericIndex++);
             WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
@@ -1163,8 +1163,8 @@ namespace Flood.Tools.RPCGen
         {
             var listElemType = type.GetGenericArguments()[0];
 
-            WriteLine("{0} = new List<{1}>();", ToTitleCase(name),
-                      ConvertToGenericArgsString(type));
+            WriteLine("{0} = new {1}();", ToTitleCase(name),
+                      PrettyName(type));
 
             var listName = string.Format("_list{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadListBegin();", listName);
@@ -1192,8 +1192,8 @@ namespace Flood.Tools.RPCGen
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
 
-            WriteLine("{0} = new Dictionary<{1}>();", ToTitleCase(name),
-                      ConvertToGenericArgsString(type));
+            WriteLine("{0} = new {1}();", ToTitleCase(name),
+                      PrettyName(type));
 
             var mapName = string.Format("_set{0}", GenericIndex++);
             WriteLine("var {0} = iprot.ReadMapBegin();", mapName);
@@ -1312,8 +1312,6 @@ namespace Flood.Tools.RPCGen
                 return TType.I32;
             else if (type == typeof(long))
                 return TType.I64;
-            else if (type == typeof(double))
-                return TType.Double;
             else if (type == typeof(string))
                 return TType.String;
             else if (type.IsArray)
@@ -1336,117 +1334,6 @@ namespace Flood.Tools.RPCGen
                 return TType.Class;
 
             throw new NotImplementedException("Unhandle type "+type);
-        }
-
-        /// <summary>
-        /// Converts a basic TType to string.
-        /// </summary>
-        internal static string ConvertToTypeString(TType type)
-        {
-            switch (type)
-            {
-                case TType.Void:
-                    return "void";
-                case TType.Bool:
-                    return "bool";
-                case TType.Byte:
-                    return "byte";
-                case TType.Double:
-                    return "double";
-                case TType.I16:
-                    return "short";
-                case TType.I32:
-                    return "int";
-                case TType.I64:
-                    return "long";
-                case TType.String:
-                    return "string";
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
-        /// Converts the type of enums, structs exceptions, regular classes and generic classes 
-        /// to string form.
-        /// </summary>
-        internal static string ConvertToTypeString(Type type)
-        {
-            if (type.IsEnum)
-                return type.FullName;
-
-            var thriftType = ConvertFromTypeToThrift(type);
-
-            switch (thriftType)
-            {
-                case TType.Struct:
-                case TType.Exception:
-                case TType.Class:
-                case TType.Guid:
-                case TType.DateTime:
-                    return type.FullName;
-                case TType.Array:
-                    return ConvertToTypeString(type.GetElementType()) +"[]";
-                case TType.List:
-                case TType.Map:
-                    return ConvertToGenericTypeString(type, thriftType);
-            }
-
-            return ConvertToTypeString(thriftType);
-        }
-
-        /// <summary>
-        /// Auxiliary that converts a generic type(List, Set, etc.) to string form.
-        /// </summary>
-        internal static string ConvertToGenericTypeString(Type type, TType thriftType)
-        {
-            var sb = new StringBuilder();
-            Debug.Assert(type.IsGenericType);
-
-            switch (thriftType)
-            {
-                default:
-                    throw new NotSupportedException();
-                case TType.List:
-                    sb.Append("IList<");
-                    break;
-                case TType.Map:
-                    sb.Append("Dictionary<");
-                    break;
-            }
-
-            sb.Append(ConvertToGenericArgsString(type, thriftType));
-            sb.Append(">");
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Converts a group of parameters or arguments to string form.
-        /// </summary>
-        internal static string ConvertToGenericArgsString(Type type)
-        {
-            var thriftType = ConvertFromTypeToThrift(type);
-            return ConvertToGenericArgsString(type, thriftType);
-        }
-
-        /// <summary>
-        /// Converts a group of parameters or arguments to string form.
-        /// </summary>
-        internal static string ConvertToGenericArgsString(Type type, TType thriftType)
-        {
-            var sb = new StringBuilder();
-
-            var parameters = type.GetGenericArguments();
-            for (var i = 0; i < parameters.Length; i++)
-            {
-                var param = parameters[i];
-                sb.Append(param.FullName);
-                if (i < parameters.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
         }
 
         #endregion
