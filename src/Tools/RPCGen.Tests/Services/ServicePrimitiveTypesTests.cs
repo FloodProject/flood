@@ -77,7 +77,7 @@ namespace RPCGen.Tests.Services
         }
     }
 
-    public class PrimitiveTypesTests : IPrimitiveTypesTests
+    public class ServicePrimitiveTypesTests : IPrimitiveTypesTests
     {
         IService service;
 

@@ -7,14 +7,14 @@ using System.Reflection;
 namespace RPCGen.Tests
 {
     [TestFixture]
-    class PrimitiveTypesTests : IPrimitiveTypesTests
+    class ServicePrimitiveTypesTests : IPrimitiveTypesTests
     {
         public IPrimitiveTypesTests tests;
 
         [TestFixtureSetUp] 
         public void SetUp()
         {
-            tests = (IPrimitiveTypesTests)Helper.GetInstance("RPCGen.Tests.Services.PrimitiveTypesTests");
+            tests = (IPrimitiveTypesTests)Helper.GetInstance("RPCGen.Tests.Services.ServicePrimitiveTypesTests");
             tests.SetUp();
         }
 
