@@ -27,13 +27,13 @@ using System.Text;
 
 namespace Flood.RPC.Serialization
 {
-    public struct Message
+    public struct DataObject
     {
         private string name;
-        private MessageType type;
+        private DataObjectType type;
         private int seqID;
 
-        public Message(string name, MessageType type, int seqid)
+        public DataObject(string name, DataObjectType type, int seqid)
             :this()
         {
             this.name = name;
@@ -47,7 +47,7 @@ namespace Flood.RPC.Serialization
             set { name = value; }
         }
 
-        public MessageType Type
+        public DataObjectType Type
         {
             get { return type; }
             set { type = value; }

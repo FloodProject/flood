@@ -95,7 +95,7 @@ namespace Flood.Tools.RPCGen
                     if (Metadata.IsDataObject(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
-                        ProcessMessage(type);
+                        ProcessDataObject(type);
                     }
 
                     if (Metadata.IsException(type))
@@ -123,18 +123,18 @@ namespace Flood.Tools.RPCGen
             WriteGeneratorToFile(type, gen);
         }
 
-        private void ProcessMessage(Type type)
+        private void ProcessDataObject(Type type)
         {
             if (outputDebug)
             {
-                log.Debug("Message: {0}", type.Name);
+                log.Debug("DataObject: {0}", type.Name);
 
                 foreach (var field in type.GetFields())
                     log.Debug("  Field: {0}", field.Name);
             }
 
             var gen = new Generator();
-            gen.GenerateMessage(type);
+            gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
         }
@@ -150,7 +150,7 @@ namespace Flood.Tools.RPCGen
             }
 
             var gen = new Generator();
-            gen.GenerateMessage(type);
+            gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
         }

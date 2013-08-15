@@ -567,7 +567,7 @@ namespace Flood.RPC.Serialization
             Buffer.Write(RBRACKET);
         }
 
-        public override void WriteMessageBegin(Message message)
+        public override void WriteDataObjectBegin(DataObject message)
         {
             WriteJSONArrayStart();
             WriteJSONInteger(VERSION);
@@ -579,7 +579,7 @@ namespace Flood.RPC.Serialization
             WriteJSONInteger(message.SeqID);
         }
 
-        public override void WriteMessageEnd()
+        public override void WriteDataObjectEnd()
         {
             WriteJSONArrayEnd();
         }
@@ -932,9 +932,9 @@ namespace Flood.RPC.Serialization
             PopContext();
         }
 
-        public override Message ReadMessageBegin()
+        public override DataObject ReadDataObjectBegin()
         {
-            Message message = new Message();
+            DataObject message = new DataObject();
             ReadJSONArrayStart();
             if (ReadJSONInteger() != VERSION)
             {
@@ -944,12 +944,12 @@ namespace Flood.RPC.Serialization
 
             var buf = ReadJSONString(false);
             message.Name = utf8Encoding.GetString(buf,0,buf.Length);
-            message.Type = (MessageType)ReadJSONInteger();
+            message.Type = (DataObjectType)ReadJSONInteger();
             message.SeqID = (int)ReadJSONInteger();
             return message;
         }
 
-        public override void ReadMessageEnd()
+        public override void ReadDataObjectEnd()
         {
             ReadJSONArrayEnd();
         }

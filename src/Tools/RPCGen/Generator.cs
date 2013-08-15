@@ -17,15 +17,15 @@ namespace Flood.Tools.RPCGen
     internal class Generator : TextGenerator
     {
 
-#region Generate Messages
+#region Generate Data Objects
 
-        public void GenerateMessage(Type type)
+        public void GenerateDataObject(Type type)
         {
             GenerateUsings();
-            GenerateMessageClass(type);
+            GenerateDataObjectClass(type);
         }
 
-        public void GenerateMessageClass(Type type)
+        public void GenerateDataObjectClass(Type type)
         {
             WriteLine("namespace  {0}", type.Namespace);
             WriteStartBraceIndent();
@@ -241,18 +241,18 @@ namespace Flood.Tools.RPCGen
                   method.Name);
             WriteStartBraceIndent();
 
-            WriteLine("var msg = response.Serializer.ReadMessageBegin();");
+            WriteLine("var msg = response.Serializer.ReadDataObjectBegin();");
 
-            WriteLine("if (msg.Type == MessageType.Exception)");
+            WriteLine("if (msg.Type == DataObjectType.Exception)");
             WriteStartBraceIndent();
             WriteLine("var x = RPCException.Read(response.Serializer);");
-            WriteLine("response.Serializer.ReadMessageEnd();");
+            WriteLine("response.Serializer.ReadDataObjectEnd();");
             WriteLine("throw x;");
             WriteCloseBraceIndent();
 
             WriteLine("var result = new {0}_result();", method.Name);
             WriteLine("result.Read(response.Serializer);");
-            WriteLine("response.Serializer.ReadMessageEnd();");
+            WriteLine("response.Serializer.ReadDataObjectEnd();");
 
             if (retType != typeof(void))
             {
@@ -293,13 +293,13 @@ namespace Flood.Tools.RPCGen
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
-            WriteLine("request.Serializer.WriteMessageBegin(new Flood.RPC.Serialization.Message(\"{0}\", MessageType.Call, seqid_));",
+            WriteLine("request.Serializer.WriteDataObjectBegin(new Flood.RPC.Serialization.DataObject(\"{0}\", DataObjectType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
                 WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
             WriteLine("args.Write(request.Serializer);");
-            WriteLine("request.Serializer.WriteMessageEnd();");
+            WriteLine("request.Serializer.WriteDataObjectEnd();");
             WriteLine("return request;");
             WriteCloseBraceIndent();
             NewLine();
@@ -391,7 +391,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var args = new {0}_args();", method.Name);
             WriteLine("args.Read(request.Serializer);");
-            WriteLine("request.Serializer.ReadMessageEnd();");
+            WriteLine("request.Serializer.ReadDataObjectEnd();");
             WriteLine("var result = new {0}_result();", method.Name);
 
             // If the method throws exceptions, we need to call it inside a try-catch.
@@ -455,12 +455,12 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var response = new RPCData(request);");
             WriteLine("response.IsResponse = true;");
-            // Create a new Message and reply to the RPC call
-            WriteLine("response.Serializer.WriteMessageBegin(new Flood.RPC.Serialization.Message(\"{0}\", MessageType.Reply, seqid));",
+            // Create a new DataObject and reply to the RPC call
+            WriteLine("response.Serializer.WriteDataObjectBegin(new Flood.RPC.Serialization.DataObject(\"{0}\", DataObjectType.Reply, seqid));",
                       method.Name);
 
             WriteLine("result.Write(response.Serializer);");
-            WriteLine("response.Serializer.WriteMessageEnd();");
+            WriteLine("response.Serializer.WriteDataObjectEnd();");
             WriteLine("return response;");
 
             WriteCloseBraceIndent();
@@ -1385,7 +1385,7 @@ namespace Flood.Tools.RPCGen
 
                 int id;
                 if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("Message's Fields require an Id attribute.");
+                    throw new Exception("DataObject's Fields require an Id attribute.");
 
                 Id = id;
             }
@@ -1397,7 +1397,7 @@ namespace Flood.Tools.RPCGen
 
                 int id;
                 if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("Message's Properties require an Id attribute.");
+                    throw new Exception("DataObject's Properties require an Id attribute.");
 
                 Id = id;
             }

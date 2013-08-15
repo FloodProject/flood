@@ -89,7 +89,7 @@ static void LogConsole(LogEntry* entry)
 {
     PP_LogLevel level = GetPPLogLevel(entry->level);
 
-    const String& msg = entry->message;
+    const String& msg = entry->struct;
     PP_Var var = ppbVarInterface->VarFromUtf8(msg.data(), msg.size());
 
     ppbConsoleInterface->Log(ppInstance, level, var);
