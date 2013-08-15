@@ -13,15 +13,15 @@ namespace RPCGen.Tests
     {
         static Assembly testAssembly;
 
-        static void GenerateAssembly(){
-
+        static void GenerateAssembly()
+        {
             if (testAssembly != null)
                 return;
 
-            var testAssemblyPath = Path.GetFullPath("RPCGen.Tests.Services.dll");
-
-            string genDirectory = Path.Combine(Path.GetDirectoryName(testAssemblyPath), "gen", "RPCGen.Tests.Services");
+            string genDirectory = Path.Combine("..", "..", "gen", "RPCGen.Tests.Services");
             Directory.CreateDirectory(genDirectory);
+
+            var testAssemblyPath = Path.GetFullPath("RPCGen.Tests.Services.dll");
 
             var args = new string[]
             {
@@ -33,8 +33,6 @@ namespace RPCGen.Tests
             Assert.AreEqual(0, ret);
 
             testAssembly = Assembly.LoadFile(testAssemblyPath);
-
-            
         }
 
         public static object GetInstance(string type)
