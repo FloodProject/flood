@@ -92,7 +92,7 @@ namespace Flood.Tools.RPCGen
                         ProcessService(type);
                     }
 
-                    if (Metadata.IsMessage(type))
+                    if (Metadata.IsDataObject(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
                         ProcessMessage(type);

@@ -14,8 +14,8 @@ namespace RPCGen.Tests
         bool Ping();
     }
 
-    [Message("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
-    struct Message
+    [DataObject("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
+    struct DataObject
     {
         [Required, Id(1337)] 
         public int Field;
@@ -34,9 +34,9 @@ namespace RPCGen.Tests
         }
 
         [Test]
-        public void Message()
+        public void DataObject()
         {
-            Assert.IsTrue(RPCGen.Metadata.IsMessage(typeof (Message)), "Is not a message");
+            Assert.IsTrue(RPCGen.Metadata.IsDataObject(typeof(DataObject)), "Is not a DataObject");
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace RPCGen.Tests
         [Test]
         public void Required()
         {
-            var field = typeof (Message).GetField("Field");
+            var field = typeof(DataObject).GetField("Field");
             Assert.IsNotNull(field);
 
             Assert.IsTrue(RPCGen.Metadata.IsRequired(field), "Field is not required");
@@ -84,7 +84,7 @@ namespace RPCGen.Tests
         [Test]
         public void Id()
         {
-            var field = typeof (Message).GetField("Field");
+            var field = typeof(DataObject).GetField("Field");
             Assert.IsNotNull(field);
 
             Assert.IsTrue(RPCGen.Metadata.HasId(field), "Field has not an id");

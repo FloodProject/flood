@@ -21,4 +21,9 @@ namespace RPCGen.Tests.Interfaces
         void TestGuid();
         void TestDateTime();
     }
+
+    public interface IMethodOverloadTests
+    {
+        void TestOverload();
+    }
 }

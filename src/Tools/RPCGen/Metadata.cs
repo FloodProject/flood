@@ -28,9 +28,9 @@ namespace RPCGen
             return HasAttribute(type, "Flood.RPC.Metadata.ServiceAttribute");
         }
 
-        public static bool IsMessage(Type type)
+        public static bool IsDataObject(Type type)
         {
-            return HasAttribute(type, "Flood.RPC.Metadata.MessageAttribute");
+            return HasAttribute(type, "Flood.RPC.Metadata.DataObjectAttribute");
         }
 
         public static bool IsException(Type type)

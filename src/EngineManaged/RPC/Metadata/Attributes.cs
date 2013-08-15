@@ -10,11 +10,11 @@ namespace Flood.RPC.Metadata
     }
 
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
-    public class MessageAttribute : System.Attribute
+    public class DataObjectAttribute : System.Attribute
     {
         public Guid Guid { get; private set; }
 
-        public MessageAttribute(string guid)
+        public DataObjectAttribute(string guid)
         {
             Guid = new Guid(guid);
         }
