@@ -161,7 +161,7 @@ namespace Flood.Tools.RPCGen
                 outputDir = ".";
 
             var filePath = Path.GetFullPath(outputDir);
-            var fileName = string.Format("{0}.cs", type.Name);
+            var fileName = string.Format("{0}.cs", type.FullName);
 
             filePath = Path.Combine(filePath, fileName);
             File.WriteAllText(filePath, gen.ToString());
