@@ -956,47 +956,37 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        private void GenerateStructSerialize(Parameter param)
-        {
-            var objName = ToTitleCase(param.Name);
-            GenerateStructSerialize(param.ParameterType, objName);
-        }
-
-        /// <summary>
-        /// Generates the code to serialize a field of type struct
-        /// </summary>
         private void GenerateStructSerialize(Type type, string varName)
         {
             var implObjName = varName + "Impl";
             implObjName = implObjName.Replace(".", "");
 
             WriteLine("var {0} = new {1}Impl();", implObjName, type.Name);
-            GenerateStructInit(type, varName, implObjName, true);
+            GenerateStructInit(type, varName, implObjName);
             WriteLine("{0}.Write(oprot);", implObjName);
         }
 
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        private void GenerateStructInit(Type type, string origObjName, string destObjName, bool destTitleCase = true)
+        private void GenerateStructInit(Type type, string origObjName, string destObjName, bool fromProperties = false)
         {
             foreach (var field in GetAllFields(type))
             {
                 if (!Metadata.HasId(field))
                     continue;
 
-                var destName = (destTitleCase)? ToTitleCase(field.Name) : field.Name;
-                var origName = (!destTitleCase)? ToTitleCase(field.Name) : field.Name;
+                var origName = (fromProperties) ? ToTitleCase(field.Name) : field.Name;
+                var destName = (!fromProperties) ? ToTitleCase(field.Name) : field.Name;
                 WriteLine("{0}.{1} = {2}.{3};", destObjName, destName, origObjName, origName);
             }
+
             foreach (var property in GetAllProperties(type))
             {
                 if (!Metadata.HasId(property))
                     continue;
 
-                var destName = (destTitleCase)? ToTitleCase(property.Name) : property.Name;
-                var origName = (!destTitleCase)? ToTitleCase(property.Name) : property.Name;
-                 WriteLine("{0}.{1} = {2}.{3};", destObjName, destName, origObjName, origName);
+                WriteLine("{0}.{1} = {2}.{3};", destObjName, property.Name, origObjName, property.Name);
             }
         }
 
@@ -1089,7 +1079,7 @@ namespace Flood.Tools.RPCGen
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
                     WriteLine("var {0} = new {1}();", elemName2, type.FullName);
-                    GenerateStructInit(type, elemName, elemName2);
+                    GenerateStructInit(type, elemName, elemName2, true);
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = {1};", name, elemName2);
@@ -1162,7 +1152,7 @@ namespace Flood.Tools.RPCGen
             var elemName = string.Format("_elem{0}", GenericIndex++);
 
             WriteLine("var {0} = new {1}();", elemName, type.FullName);
-            GenerateStructInit(type, origObjName, elemName, false);
+            GenerateStructInit(type, origObjName, elemName, true);
             WriteLine("var {0} = {1};", varName, elemName);
         }
 
