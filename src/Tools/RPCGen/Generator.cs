@@ -1091,12 +1091,12 @@ namespace Flood.Tools.RPCGen
                 case TType.I32:
                 case TType.I64:
                 case TType.String:
-                    var enumCast = "";
-                    if (type.IsEnum)
-                        enumCast = String.Format("({0})", type.FullName);
+                    var cast = "";
+                    if (type.IsEnum || type == typeof(float))
+                        cast = String.Format("({0})", type.FullName);
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = {1}iprot.Read{2}();", name, enumCast, thriftType.ToString());
+                    WriteLine("{0} = {1}iprot.Read{2}();", name, cast, thriftType.ToString());
                     break;
                 case TType.Guid:
                     if (!varExists)
@@ -1234,6 +1234,9 @@ namespace Flood.Tools.RPCGen
         {
             if (type.GetGenericArguments().Length == 0)
             {
+                if (type == typeof(void))
+                    return "void";
+
                 return type.FullName;
             }
             var genericArguments = type.GetGenericArguments();
@@ -1304,7 +1307,7 @@ namespace Flood.Tools.RPCGen
                 return TType.Bool;
             else if (type == typeof(byte))
                 return TType.Byte;
-            else if (type == typeof(double))
+            else if (type == typeof(double) || type == typeof(float))
                 return TType.Double;
             else if (type == typeof(short))
                 return TType.I16;
