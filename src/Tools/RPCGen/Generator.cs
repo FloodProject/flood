@@ -1358,7 +1358,7 @@ namespace Flood.Tools.RPCGen
 
                 int id;
                 if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("expected an Id() attribute");
+                    throw new Exception("Service Method's Parameters require an Id attribute.");
 
                 Id = id;
             }
@@ -1370,7 +1370,7 @@ namespace Flood.Tools.RPCGen
 
                 int id;
                 if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("expected an Id() attribute");
+                    throw new Exception("Message's Fields require an Id attribute.");
 
                 Id = id;
             }
@@ -1382,7 +1382,7 @@ namespace Flood.Tools.RPCGen
 
                 int id;
                 if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("expected an Id() attribute");
+                    throw new Exception("Message's Properties require an Id attribute.");
 
                 Id = id;
             }
