@@ -31,14 +31,12 @@ namespace Flood.RPC.Serialization
     {
         private int id;
         private ProcedureCallType type;
-        private int seqID;
 
-        public ProcedureCall(int id, ProcedureCallType type, int seqid)
+        public ProcedureCall(int id, ProcedureCallType type)
             :this()
         {
             this.id = id;
             this.type = type;
-            this.seqID = seqid;
         }
 
         public int Id
@@ -51,12 +49,6 @@ namespace Flood.RPC.Serialization
         {
             get { return type; }
             set { type = value; }
-        }
-
-        public int SeqID
-        {
-            get { return seqID; }
-            set { seqID = value; }
         }
     }
 }

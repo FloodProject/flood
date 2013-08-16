@@ -58,13 +58,11 @@ namespace Flood.RPC.Serialization
                 uint version = VERSION_1 | (uint)(message.Type);
                 WriteI32((int)version);
                 WriteI32(message.Id);
-                WriteI32(message.SeqID);
             }
             else
             {
                 WriteI32(message.Id);
                 WriteByte((byte)message.Type);
-                WriteI32(message.SeqID);
             }
         }
 
@@ -227,7 +225,6 @@ namespace Flood.RPC.Serialization
                 }
                 message.Type = (ProcedureCallType)(size & 0x000000ff);
                 message.Id = ReadI32();
-                message.SeqID = ReadI32();
             }
             else
             {
@@ -237,7 +234,6 @@ namespace Flood.RPC.Serialization
                 }
                 message.Id = ReadI32();
                 message.Type = (ProcedureCallType)ReadByte();
-                message.SeqID = ReadI32();
             }
             return message;
         }

@@ -169,9 +169,6 @@ namespace Flood.Tools.RPCGen
 
             if (baseType == null)
             {
-                WriteLine("protected int seqid_;");
-                NewLine();
-
                 WriteLine("public IRPCManager RPCManager { get; private set; }");
                 WriteLine("protected Session Session { get; private set; }");
                 WriteLine("protected int ServiceId { get; private set; }");
@@ -307,7 +304,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
 
             int procedureId = GetProcedureCallId(method);
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call, seqid_);", procedureId);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call);", procedureId);
             WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
@@ -420,7 +417,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public async Task<RPCData> {0}(int seqid, RPCData request)",
+            WriteLine("public async Task<RPCData> {0}(RPCData request)",
                       GetProcedureProcessMethodName(method));
             WriteStartBraceIndent();
 
@@ -493,7 +490,7 @@ namespace Flood.Tools.RPCGen
 
             var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Reply, seqid);", procedureId);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Reply);", procedureId);
             WriteLine("response.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("result.Write(response.Serializer);");

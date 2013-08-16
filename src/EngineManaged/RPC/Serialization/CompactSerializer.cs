@@ -159,7 +159,6 @@ namespace Flood.RPC.Serialization
         {
             WriteByteDirect(PROTOCOL_ID);
             WriteByteDirect((byte)((VERSION & VERSION_MASK) | ((((uint)message.Type) << TYPE_SHIFT_AMOUNT) & TYPE_MASK)));
-            WriteVarint32((uint)message.SeqID);
             WriteVarint32((uint)message.Id);
         }
 
@@ -488,9 +487,8 @@ namespace Flood.RPC.Serialization
                 throw new SerializerException("Expected version " + VERSION + " but got " + version);
             }
             byte type = (byte)((versionAndType >> TYPE_SHIFT_AMOUNT) & 0x03);
-            int seqid = (int)ReadVarint32();
             int messageId = (int)ReadVarint32();
-            return new ProcedureCall(messageId, (ProcedureCallType)type, seqid);
+            return new ProcedureCall(messageId, (ProcedureCallType)type);
         }
 
         /**
