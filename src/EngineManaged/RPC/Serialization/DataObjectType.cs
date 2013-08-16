@@ -21,7 +21,7 @@ using System;
 
 namespace Flood.RPC.Serialization
 {
-    public enum DataObjectType
+    public enum ProcedureCallType
     {
         Call = 1,
         Reply = 2,

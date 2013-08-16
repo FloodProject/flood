@@ -44,7 +44,7 @@ namespace Flood.RPC
 
         public async Task<RPCData> Process(RPCData request)
         {
-            DataObject msg = request.Serializer.ReadDataObjectBegin();
+            ProcedureCall msg = request.Serializer.ReadProcedureCallBegin();
             ProcessFunction fn;
             processMap_.TryGetValue(msg.Name, out fn);
             if (fn != null)
@@ -53,11 +53,11 @@ namespace Flood.RPC
             var response = new RPCData(request);
             response.IsResponse = true;
             SerializerUtil.Skip(request.Serializer, TType.Struct);
-            request.Serializer.ReadDataObjectEnd();
+            request.Serializer.ReadProcedureCallEnd();
             RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
-            response.Serializer.WriteDataObjectBegin(new DataObject(msg.Name, DataObjectType.Exception, msg.SeqID));
+            response.Serializer.WriteProcedureCallBegin(new ProcedureCall(msg.Id, ProcedureCallType.Exception, msg.SeqID));
             x.Write(response.Serializer);
-            response.Serializer.WriteDataObjectEnd();
+            response.Serializer.WriteProcedureCallEnd();
             return response;
         }
     }

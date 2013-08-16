@@ -155,7 +155,7 @@ namespace Flood.RPC.Serialization
         * Write a message header to the wire. Compact Protocol messages contain the
         * protocol version so we can migrate forwards in the future if need be.
         */
-        public override void WriteDataObjectBegin(DataObject message)
+        public override void WriteProcedureCallBegin(ProcedureCall message)
         {
             WriteByteDirect(PROTOCOL_ID);
             WriteByteDirect((byte)((VERSION & VERSION_MASK) | ((((uint)message.Type) << TYPE_SHIFT_AMOUNT) & TYPE_MASK)));
@@ -381,7 +381,7 @@ namespace Flood.RPC.Serialization
         // output or purpose.
         // 
 
-        public override void WriteDataObjectEnd() { }
+        public override void WriteProcedureCallEnd() { }
         public override void WriteMapEnd() { }
         public override void WriteListEnd() { }
         public override void WriteArrayEnd() { }
@@ -474,7 +474,7 @@ namespace Flood.RPC.Serialization
         /**
    * Read a message header. 
    */
-        public override DataObject ReadDataObjectBegin()
+        public override ProcedureCall ReadProcedureCallBegin()
         {
             byte protocolId = ReadByte();
             if (protocolId != PROTOCOL_ID)
@@ -490,7 +490,7 @@ namespace Flood.RPC.Serialization
             byte type = (byte)((versionAndType >> TYPE_SHIFT_AMOUNT) & 0x03);
             int seqid = (int)ReadVarint32();
             String messageName = ReadString();
-            return new DataObject(messageName, (DataObjectType)type, seqid);
+            return new ProcedureCall(messageName, (ProcedureCallType)type, seqid);
         }
 
         /**
@@ -730,7 +730,7 @@ namespace Flood.RPC.Serialization
         // These methods are here for the struct to call, but don't have any wire 
         // encoding.
         //
-        public override void ReadDataObjectEnd() { }
+        public override void ReadProcedureCallEnd() { }
         public override void ReadFieldEnd() { }
         public override void ReadMapEnd() { }
         public override void ReadArrayEnd() { }

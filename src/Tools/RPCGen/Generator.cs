@@ -241,18 +241,18 @@ namespace Flood.Tools.RPCGen
                   method.Name);
             WriteStartBraceIndent();
 
-            WriteLine("var msg = response.Serializer.ReadDataObjectBegin();");
+            WriteLine("var msg = response.Serializer.ReadProcedureCallBegin();");
 
-            WriteLine("if (msg.Type == DataObjectType.Exception)");
+            WriteLine("if (msg.Type == ProcedureCallType.Exception)");
             WriteStartBraceIndent();
             WriteLine("var x = RPCException.Read(response.Serializer);");
-            WriteLine("response.Serializer.ReadDataObjectEnd();");
+            WriteLine("response.Serializer.ReadProcedureCallEnd();");
             WriteLine("throw x;");
             WriteCloseBraceIndent();
 
             WriteLine("var result = new {0}_result();", method.Name);
             WriteLine("result.Read(response.Serializer);");
-            WriteLine("response.Serializer.ReadDataObjectEnd();");
+            WriteLine("response.Serializer.ReadProcedureCallEnd();");
 
             if (retType != typeof(void))
             {
@@ -293,13 +293,13 @@ namespace Flood.Tools.RPCGen
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
-            WriteLine("request.Serializer.WriteDataObjectBegin(new Flood.RPC.Serialization.DataObject(\"{0}\", DataObjectType.Call, seqid_));",
+            WriteLine("request.Serializer.WriteProcedureCallBegin(new Flood.RPC.Serialization.ProcedureCall(\"{0}\", ProcedureCallType.Call, seqid_));",
                       method.Name);
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
                 WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
             WriteLine("args.Write(request.Serializer);");
-            WriteLine("request.Serializer.WriteDataObjectEnd();");
+            WriteLine("request.Serializer.WriteProcedureCallEnd();");
             WriteLine("return request;");
             WriteCloseBraceIndent();
             NewLine();
@@ -391,7 +391,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var args = new {0}_args();", method.Name);
             WriteLine("args.Read(request.Serializer);");
-            WriteLine("request.Serializer.ReadDataObjectEnd();");
+            WriteLine("request.Serializer.ReadProcedureCallEnd();");
             WriteLine("var result = new {0}_result();", method.Name);
 
             // If the method throws exceptions, we need to call it inside a try-catch.
@@ -455,12 +455,12 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var response = new RPCData(request);");
             WriteLine("response.IsResponse = true;");
-            // Create a new DataObject and reply to the RPC call
-            WriteLine("response.Serializer.WriteDataObjectBegin(new Flood.RPC.Serialization.DataObject(\"{0}\", DataObjectType.Reply, seqid));",
+            // Create a new ProcedureCall and reply to the RPC call
+            WriteLine("response.Serializer.WriteProcedureCallBegin(new Flood.RPC.Serialization.ProcedureCall(\"{0}\", ProcedureCallType.Reply, seqid));",
                       method.Name);
 
             WriteLine("result.Write(response.Serializer);");
-            WriteLine("response.Serializer.WriteDataObjectEnd();");
+            WriteLine("response.Serializer.WriteProcedureCallEnd();");
             WriteLine("return response;");
 
             WriteCloseBraceIndent();

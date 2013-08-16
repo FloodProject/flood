@@ -51,7 +51,7 @@ namespace Flood.RPC.Serialization
 
         #region Write Methods
 
-        public override void WriteDataObjectBegin(DataObject message)
+        public override void WriteProcedureCallBegin(ProcedureCall message)
         {
             if (strictWrite_)
             {
@@ -68,7 +68,7 @@ namespace Flood.RPC.Serialization
             }
         }
 
-        public override void WriteDataObjectEnd()
+        public override void WriteProcedureCallEnd()
         {
         }
 
@@ -214,9 +214,9 @@ namespace Flood.RPC.Serialization
 
         #region ReadMethods
 
-        public override DataObject ReadDataObjectBegin()
+        public override ProcedureCall ReadProcedureCallBegin()
         {
-            DataObject message = new DataObject();
+            ProcedureCall message = new ProcedureCall();
             int size = ReadI32();
             if (size < 0)
             {
@@ -225,7 +225,7 @@ namespace Flood.RPC.Serialization
                 {
                     throw new SerializerException(SerializerException.BAD_VERSION, "Bad version in ReadMessageBegin: " + version);
                 }
-                message.Type = (DataObjectType)(size & 0x000000ff);
+                message.Type = (ProcedureCallType)(size & 0x000000ff);
                 message.Name = ReadString();
                 message.SeqID = ReadI32();
             }
@@ -236,13 +236,13 @@ namespace Flood.RPC.Serialization
                     throw new SerializerException(SerializerException.BAD_VERSION, "Missing version in readMessageBegin, old client?");
                 }
                 message.Name = ReadStringBody(size);
-                message.Type = (DataObjectType)ReadByte();
+                message.Type = (ProcedureCallType)ReadByte();
                 message.SeqID = ReadI32();
             }
             return message;
         }
 
-        public override void ReadDataObjectEnd()
+        public override void ReadProcedureCallEnd()
         {
         }
 
