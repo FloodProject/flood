@@ -99,7 +99,8 @@ namespace Flood
             driver.AddTranslationUnitPass(new FindEventsPass(driver.TypeDatabase));
             driver.AddTranslationUnitPass(new GetterSetterToPropertyPass());
             driver.AddTranslationUnitPass(new FieldToPropertyPass());
-            driver.AddTranslationUnitPass(new ObjectOverridesPass());
+            if (driver.Options.GeneratorKind == LanguageGeneratorKind.CPlusPlusCLI)
+                driver.AddTranslationUnitPass(new ObjectOverridesPass());
             driver.AddTranslationUnitPass(new FunctionToInstanceMethodPass());
             driver.AddTranslationUnitPass(new FunctionToStaticMethodPass());
 
