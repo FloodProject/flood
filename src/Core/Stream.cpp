@@ -14,7 +14,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Stream::Stream(const String& path, StreamOpenMode mode)
+Stream::Stream(const Path& path, StreamOpenMode mode)
 	: path(path)
 	, mode(mode) 
 {
