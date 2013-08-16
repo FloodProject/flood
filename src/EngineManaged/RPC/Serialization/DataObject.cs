@@ -29,22 +29,22 @@ namespace Flood.RPC.Serialization
 {
     public struct ProcedureCall
     {
-        private string name;
+        private int id;
         private ProcedureCallType type;
         private int seqID;
 
-        public ProcedureCall(string name, ProcedureCallType type, int seqid)
+        public ProcedureCall(int id, ProcedureCallType type, int seqid)
             :this()
         {
-            this.name = name;
+            this.id = id;
             this.type = type;
             this.seqID = seqid;
         }
 
-        public string Name
+        public int Id
         {
-            get { return name; }
-            set { name = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         public ProcedureCallType Type

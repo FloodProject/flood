@@ -293,8 +293,11 @@ namespace Flood.Tools.RPCGen
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
-            WriteLine("request.Serializer.WriteProcedureCallBegin(new Flood.RPC.Serialization.ProcedureCall(\"{0}\", ProcedureCallType.Call, seqid_));",
-                      method.Name);
+
+            int procedureId = GetProcedureCallId(method);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call, seqid_);", procedureId);
+            WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
+
             WriteLine("var args = new {0}_args();", method.Name);
             foreach (var param in method.GetParameters())
                 WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
@@ -303,6 +306,17 @@ namespace Flood.Tools.RPCGen
             WriteLine("return request;");
             WriteCloseBraceIndent();
             NewLine();
+        }
+
+        private static int GetProcedureCallId(MethodInfo method)
+        {
+            int id;
+            if (!Metadata.TryGetId(method, out id))
+            {
+                var msg = string.Format("Method {0}.{1} require an Id attribute.", method.DeclaringType.FullName, method.Name);
+                throw new Exception(msg);
+            }
+            return id;
         }
 
         private List<string> GetRPCDataFlags(MethodInfo method)
@@ -362,7 +376,9 @@ namespace Flood.Tools.RPCGen
                     if (IsEventMethod(type, method))
                         continue;
 
-                    WriteLine("processMap_[\"{0}\"] = {0}_Process;", method.Name);
+                    var procedureId = GetProcedureCallId(method);
+
+                    WriteLine("processMap_[{0}] = {1}_Process;", procedureId, method.Name);
                 }
 
                 WriteCloseBraceIndent();
@@ -455,9 +471,11 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var response = new RPCData(request);");
             WriteLine("response.IsResponse = true;");
+
+            var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
-            WriteLine("response.Serializer.WriteProcedureCallBegin(new Flood.RPC.Serialization.ProcedureCall(\"{0}\", ProcedureCallType.Reply, seqid));",
-                      method.Name);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Reply, seqid);", procedureId);
+            WriteLine("response.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("result.Write(response.Serializer);");
             WriteLine("response.Serializer.WriteProcedureCallEnd();");

@@ -35,18 +35,18 @@ namespace Flood.RPC
     public abstract class SimpleProcessor : Processor
     {
         protected delegate Task<RPCData> ProcessFunction(int seqid, RPCData request);
-        protected Dictionary<string, ProcessFunction> processMap_;
+        protected Dictionary<int, ProcessFunction> processMap_;
 
         public SimpleProcessor()
         {
-            processMap_ = new Dictionary<string, ProcessFunction>();
+            processMap_ = new Dictionary<int, ProcessFunction>();
         }
 
         public async Task<RPCData> Process(RPCData request)
         {
             ProcedureCall msg = request.Serializer.ReadProcedureCallBegin();
             ProcessFunction fn;
-            processMap_.TryGetValue(msg.Name, out fn);
+            processMap_.TryGetValue(msg.Id, out fn);
             if (fn != null)
                 return await fn(msg.SeqID, request);
            
@@ -54,7 +54,7 @@ namespace Flood.RPC
             response.IsResponse = true;
             SerializerUtil.Skip(request.Serializer, TType.Struct);
             request.Serializer.ReadProcedureCallEnd();
-            RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
+            RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + msg.Id + "'");
             response.Serializer.WriteProcedureCallBegin(new ProcedureCall(msg.Id, ProcedureCallType.Exception, msg.SeqID));
             x.Write(response.Serializer);
             response.Serializer.WriteProcedureCallEnd();

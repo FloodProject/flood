@@ -572,8 +572,7 @@ namespace Flood.RPC.Serialization
             WriteJSONArrayStart();
             WriteJSONInteger(VERSION);
 
-            byte[] b = utf8Encoding.GetBytes(message.Name);
-            WriteJSONString(b);
+            WriteJSONInteger(message.Id);
 
             WriteJSONInteger((long)message.Type);
             WriteJSONInteger(message.SeqID);
@@ -943,8 +942,8 @@ namespace Flood.RPC.Serialization
             }
 
             var buf = ReadJSONString(false);
-            message.Name = utf8Encoding.GetString(buf,0,buf.Length);
-            message.Type = (DataObjectType)ReadJSONInteger();
+            message.Id = (int)ReadJSONInteger();
+            message.Type = (ProcedureCallType)ReadJSONInteger();
             message.SeqID = (int)ReadJSONInteger();
             return message;
         }
