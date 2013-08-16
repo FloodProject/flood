@@ -10,6 +10,7 @@ namespace Flood.Tests
     [Service]
     public interface IServiceTest
     {
+        [Id(1)]
         Task<string> Ping();
     }
 

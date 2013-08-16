@@ -85,15 +85,34 @@ namespace RPCGen.Tests.Services
         [Service]
         public interface IService
         {
+            [Id(1)]
             Task TestVoid();
+
+            [Id(2)]
             Task<ByteDO> TestByte([Id(0)]ByteDO param);
+
+            [Id(3)]
             Task<FloatDO> TestFloat([Id(0)]FloatDO param);
+
+            [Id(4)]
             Task<DoubleDO> TestDouble([Id(0)]DoubleDO param);
+
+            [Id(5)]
             Task<ShortDO> TestShort([Id(0)]ShortDO param);
+
+            [Id(6)]
             Task<IntDO> TestInt([Id(0)]IntDO param);
+
+            [Id(7)]
             Task<LongDO> TestLong([Id(0)]LongDO param);
+
+            [Id(8)]
             Task<StringDO> TestString([Id(0)]StringDO param);
+
+            [Id(9)]
             Task<GuidDO> TestGuid([Id(0)]GuidDO param);
+
+            [Id(10)]
             Task<DateTimeDO> TestDateTime([Id(0)]DateTimeDO param);
         }
 

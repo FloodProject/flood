@@ -19,6 +19,7 @@ namespace Flood.Network
     [Service]
     public interface IServiceManager
     {
+        [Id(1)]
         Task<ServiceId> GetServiceId([Id(0)]string serviceName);
     }
 
