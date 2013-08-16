@@ -271,26 +271,26 @@ void FileWatcherWin32::update()
 void FileWatcherWin32::handleAction(FileWatchStruct* watch,
 									const std::wstring& filename, uint32 action)
 {
-	FileWatchEvent::Enum fwAction;
+	FileWatchEventKind fwAction;
 
 	switch(action)
 	{
 	case FILE_ACTION_ADDED:
-		fwAction = FileWatchEvent::Added;
+		fwAction = FileWatchEventKind::Added;
 		break;
 	case FILE_ACTION_REMOVED:
-		fwAction = FileWatchEvent::Deleted;
+		fwAction = FileWatchEventKind::Deleted;
 		break;
 	case FILE_ACTION_MODIFIED:
-		fwAction = FileWatchEvent::Modified;
+		fwAction = FileWatchEventKind::Modified;
 		break;
 	case FILE_ACTION_RENAMED_NEW_NAME:
 	case FILE_ACTION_RENAMED_OLD_NAME:
-		fwAction = FileWatchEvent::Renamed;
+		fwAction = FileWatchEventKind::Renamed;
 		break;
 	default:
 		assert( 0 && "This should not be reached" );
-		fwAction = FileWatchEvent::Added;
+		fwAction = FileWatchEventKind::Added;
 	};
 
 	// Convert wide string to regular string.

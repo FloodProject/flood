@@ -28,7 +28,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-FileWatchEvent::FileWatchEvent( FileWatchEvent::Enum action, FileWatchId id,
+FileWatchEvent::FileWatchEvent( FileWatchEventKind action, FileWatchId id,
 	const String& dir, const String& file )
 	: action(action)
 	, watchId(id)

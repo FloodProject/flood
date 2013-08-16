@@ -591,7 +591,7 @@ void ResourceManager::handleWatchResource(Archive*, const FileWatchEvent& evt)
 		return; // Resource is not known.
 
 	// Reload the resource if it was modified.
-	if( evt.action != FileWatchEvent::Modified )
+	if( evt.action != FileWatchEventKind::Modified )
 	{
 		#pragma TODO("Add rename support in live updating")
 
