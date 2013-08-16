@@ -493,18 +493,32 @@ namespace Flood
 
         public override string CSharpSignature(CSharpTypePrinterContext ctx)
         {
+            var fullType = ctx.FullType.Type;
+            var isPointer = (fullType != null) && (fullType is PointerType
+                || fullType.Desugar() is TemplateSpecializationType);
+
+            if (ctx.CSharpKind == CSharpTypePrinterContextKind.Native && isPointer)
+                return "global::System.IntPtr";
+
             var type = Type as TemplateSpecializationType;
             return string.Format("{0}", type.Arguments[0].Type);
         }
 
         public override void CSharpMarshalToNative(MarshalContext ctx)
         {
-            ctx.Return.Write("{0}.Instance", ctx.Parameter.Name);
+            var type = Type as TemplateSpecializationType;
+            ctx.Return.Write("{0}._Instance", ctx.Parameter.Name);
         }
 
         public override void CSharpMarshalToManaged(MarshalContext ctx)
         {
-            ctx.Return.Write("new IntPtr(&{0})", ctx.ReturnVarName);
+            var type = Type as TemplateSpecializationType;
+
+            Class @class;
+            type.Arguments[0].Type.Type.Desugar().IsTagDecl(out @class);
+
+            ctx.Return.Write("new {0}({1})", @class.Name, ctx.ReturnVarName);
+            //ctx.Return.Write("new IntPtr(&{0})", ctx.ReturnVarName);
         }
     }
 
@@ -619,6 +633,15 @@ namespace Flood
 
         public override string CSharpSignature(CSharpTypePrinterContext ctx)
         {
+            if (ctx.CSharpKind == CSharpTypePrinterContextKind.Native)
+            {
+                if (ctx.FullType.Type is PointerType)
+                    return "Flood.ResourceHandle*";
+
+                // Handles only contain a single 32-bit unsigned int handle id.
+                return "Flood.ResourceHandle";
+            }
+
             var type = Type.Desugar() as TemplateSpecializationType;
             return string.Format("Flood.ResourceHandle<{0}>",
                 type.Arguments[0].Type);
@@ -626,12 +649,22 @@ namespace Flood
 
         public override void CSharpMarshalToNative(MarshalContext ctx)
         {
-            ctx.Return.Write("{0}.Id", ctx.Parameter.Name);
+            var marshal = ctx as CSharpMarshalContext;
+            if (marshal.FullType.Type is PointerType)
+                marshal.ArgumentPrefix.Write("&");
+
+            ctx.Return.Write("new Flood.ResourceHandle({0}.Id)", ctx.Parameter.Name);
         }
 
         public override void CSharpMarshalToManaged(MarshalContext ctx)
         {
-            ctx.Return.Write("{0}.id", ctx.ReturnVarName);
+            var marshal = ctx as CSharpMarshalContext;
+            var fullType = marshal.FullType.Type;
+
+            var type = Type.Desugar() as TemplateSpecializationType;
+            ctx.Return.Write("new Flood.ResourceHandle<{0}>({1}{2}Id)",
+                type.Arguments[0].Type, ctx.ReturnVarName,
+                (fullType is PointerType) ? "->" : ".");
         }
     }
     #endregion
