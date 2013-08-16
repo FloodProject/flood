@@ -16,6 +16,9 @@ namespace Flood
     ref class InputDevice;
     ref class InputEvent;
 
+    /// <summary>
+    /// Different types of input devices.
+    /// </summary>
     public enum struct InputDeviceType
     {
         Keyboard = 0,
@@ -23,9 +26,13 @@ namespace Flood
         Joystick = 2
     };
 
+    /// <summary>
+    /// Base struct for input events.
+    /// </summary>
     public ref class InputEvent : ICppInstance
     {
     public:
+
         property ::InputEvent* NativePtr;
         property System::IntPtr Instance
         {
@@ -36,18 +43,25 @@ namespace Flood
         InputEvent(::InputEvent* native);
         InputEvent(System::IntPtr native);
         InputEvent(Flood::InputDeviceType _0);
+
         property Flood::InputDeviceType DeviceType
         {
             Flood::InputDeviceType get();
             void set(Flood::InputDeviceType);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
+    /// <summary>
+    /// Input device.
+    /// </summary>
     public ref class InputDevice : ICppInstance
     {
     public:
+
         property ::InputDevice* NativePtr;
         property System::IntPtr Instance
         {
@@ -58,12 +72,16 @@ namespace Flood
         InputDevice(::InputDevice* native);
         InputDevice(System::IntPtr native);
         InputDevice();
+
         property Flood::InputDeviceType Type
         {
             Flood::InputDeviceType get();
         }
-        void ProcessEvent(Flood::InputEvent^ event);
+        virtual void ProcessEvent(Flood::InputEvent^ event);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

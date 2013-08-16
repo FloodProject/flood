@@ -17,12 +17,21 @@ namespace Flood
     value struct Vector3;
     value struct Vector4;
 
+    /// <summary>
+    /// Implements a 4x4 transformation matrix that can represent the full range of
+    /// types of operations that can be used in computer graphics. Usually you just
+    /// want to use the 4x3 because it suffices for the most common operations,
+    /// like translation, rotation and scaling, but in the case of projections a
+    /// full 4x4 matrix is needed.
+    /// </summary>
     public value struct Matrix4x4
     {
     public:
+
         Matrix4x4(::Matrix4x4* native);
         Matrix4x4(System::IntPtr native);
         Matrix4x4(Flood::Matrix4x3 _0);
+
         float M11;
         float M12;
         float M13;
@@ -40,13 +49,21 @@ namespace Flood
         float Tz;
         float Tw;
         void SetIdentity();
+
         Flood::Matrix4x4 Inverse();
+
         Flood::Matrix4x4 Transpose();
+
         Flood::Matrix4x4 operator*(Flood::Matrix4x4 m);
+
         Flood::Vector3 operator*(Flood::Vector3 v);
+
         Flood::Vector4 operator*(Flood::Vector4 v);
+
         static Flood::Matrix4x4 CreatePerspective(float FOV, float aspectRatio, float nearPlane, float farPlane);
+
         static Flood::Matrix4x4 CreateOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+
         static property Flood::Matrix4x4 Identity
         {
             Flood::Matrix4x4 get();

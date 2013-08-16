@@ -20,9 +20,13 @@ namespace Flood
     ref class Mouse;
     ref class Window;
 
+    /// <summary>
+    /// Manages a set of input devices.
+    /// </summary>
     public ref class InputManager : ICppInstance
     {
     public:
+
         property ::InputManager* NativePtr;
         property System::IntPtr Instance
         {
@@ -33,6 +37,7 @@ namespace Flood
         InputManager(::InputManager* native);
         InputManager(System::IntPtr native);
         InputManager();
+
         property System::Collections::Generic::List<Flood::InputDevice^>^ Devices
         {
             System::Collections::Generic::List<Flood::InputDevice^>^ get();
@@ -51,10 +56,15 @@ namespace Flood
             void set(Flood::Window^);
         }
         void AddDevice(Flood::InputDevice^ device);
+
         void ProcessEvent(Flood::InputEvent^ event);
+
         void CreateDefaultDevices();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class FloodInputManager

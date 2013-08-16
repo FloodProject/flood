@@ -19,12 +19,18 @@ namespace Flood
     ref class ResourceLoader;
     ref class ResourceManager;
     ref class ResourceTask;
+    ref class Stream;
     value struct FileWatchEvent;
     value struct ResourceLoadOptions;
 
+    /// <summary>
+    /// Event fired whenever an operation on the resource happens. This can be
+    /// useful to know when monitoring for changes, for example in editors.
+    /// </summary>
     public ref class ResourceEvent : ICppInstance
     {
     public:
+
         property ::ResourceEvent* NativePtr;
         property System::IntPtr Instance
         {
@@ -35,6 +41,7 @@ namespace Flood
         ResourceEvent(::ResourceEvent* native);
         ResourceEvent(System::IntPtr native);
         ResourceEvent();
+
         property Flood::Resource^ Resource
         {
             Flood::Resource^ get();
@@ -51,12 +58,21 @@ namespace Flood
             void set(Flood::ResourceHandle<Flood::Resource^>);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
+    /// <summary>
+    /// Responsible for managing a set of resources that are added by the app. It
+    /// should be possible to enforce a strict memory budget, and the manager will
+    /// automatically load or unload the resources from memory, using for example
+    /// an LRU policy.
+    /// </summary>
     public ref class ResourceManager : ICppInstance
     {
     public:
+
         property ::ResourceManager* NativePtr;
         property System::IntPtr Instance
         {
@@ -67,10 +83,16 @@ namespace Flood
         ResourceManager(::ResourceManager* native);
         ResourceManager(System::IntPtr native);
         ResourceManager();
+
         property bool AsynchronousLoading
         {
             bool get();
             void set(bool);
+        }
+        property Flood::Archive^ Archive
+        {
+            Flood::Archive^ get();
+            void set(Flood::Archive^);
         }
     private:
         delegate void _ResourcePreparedDelegate(const ::ResourceEvent& _0);
@@ -133,16 +155,27 @@ namespace Flood
             void raise(Flood::ResourceLoader^ _4);
         }
         Flood::ResourceHandle<Flood::Resource^> GetResource(System::String^ name);
+
         Flood::ResourceHandle<Flood::Resource^> LoadResource(System::String^ name);
+
         Flood::ResourceHandle<Flood::Resource^> LoadResource(Flood::ResourceLoadOptions options);
+
         bool FindResource(Flood::ResourceLoadOptions options);
+
         void RemoveResource(Flood::Resource^ resource);
+
         void RemoveResource(System::String^ name);
+
         void RemoveUnusedResources();
+
         void LoadQueuedResources();
+
         void Update();
+
         Flood::ResourceLoader^ FindLoader(System::String^ extension);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
         generic<typename T> where T : Flood::Resource
         Flood::ResourceHandle<T> GetResource(System::String^ name);

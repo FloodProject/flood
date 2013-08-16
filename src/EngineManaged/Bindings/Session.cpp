@@ -32,6 +32,7 @@ bool Flood::Session::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Session^>(object);
+
     if (!obj) return false;
     auto param = (::Session*)obj->NativePtr;
     return ((::Session*)NativePtr)->isEquals(param);

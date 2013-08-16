@@ -6,7 +6,10 @@
 ************************************************************************/
 
 #include "ResourceManager.h"
+#include "Archive.h"
+#include "FileWatcher.h"
 #include "ResourceLoader.h"
+#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -31,6 +34,7 @@ bool Flood::ResourceEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ResourceEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -114,6 +118,8 @@ Flood::ResourceHandle<Flood::Resource^> Flood::ResourceManager::LoadResource(Flo
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
+    if (options.Stream != nullptr)
+        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
     if (options.Resource != nullptr)
         _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
@@ -134,6 +140,8 @@ bool Flood::ResourceManager::FindResource(Flood::ResourceLoadOptions options)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(options.Name);
+    if (options.Stream != nullptr)
+        _marshal0.stream = (::Stream*)options.Stream->NativePtr;
     if (options.Resource != nullptr)
         _marshal0.resource = (::Resource*)options.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)options.Group;
@@ -188,6 +196,7 @@ bool Flood::ResourceManager::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ResourceManager^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -217,6 +226,19 @@ void Flood::ResourceManager::AsynchronousLoading::set(bool value)
 {
     auto v = value;
     ((::ResourceManager*)NativePtr)->setAsynchronousLoading(v);
+}
+
+Flood::Archive^ Flood::ResourceManager::Archive::get()
+{
+    auto ret = ((::ResourceManager*)NativePtr)->getArchive();
+    return gcnew Flood::Archive((::Archive*)ret);
+}
+
+void Flood::ResourceManager::Archive::set(Flood::Archive^ value)
+{
+    auto archive = value;
+    auto arg0 = (::Archive*)archive->NativePtr;
+    ((::ResourceManager*)NativePtr)->setArchive(arg0);
 }
 
 void Flood::ResourceManager::ResourcePrepared::add(System::Action<Flood::ResourceEvent^>^ evt)

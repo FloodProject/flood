@@ -51,6 +51,7 @@ bool Flood::InputManager::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<InputManager^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

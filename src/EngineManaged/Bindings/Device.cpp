@@ -31,6 +31,7 @@ bool Flood::InputEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<InputEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -85,6 +86,7 @@ bool Flood::InputDevice::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<InputDevice^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

@@ -23,9 +23,13 @@ namespace Flood
     ref class MouseMoveEvent;
     ref class MouseWheelEvent;
 
+    /// <summary>
+    /// Holds the mouse state.
+    /// </summary>
     public ref class MouseInfo : ICppInstance
     {
     public:
+
         property ::MouseInfo* NativePtr;
         property System::IntPtr Instance
         {
@@ -36,6 +40,7 @@ namespace Flood
         MouseInfo(::MouseInfo* native);
         MouseInfo(System::IntPtr native);
         MouseInfo();
+
         property short X
         {
             short get();
@@ -77,15 +82,19 @@ namespace Flood
             void set(bool);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class Mouse : Flood::InputDevice
     {
     public:
+
         Mouse(::Mouse* native);
         Mouse(System::IntPtr native);
         Mouse();
+
         property Flood::MouseInfo^ MouseInfo
         {
             Flood::MouseInfo^ get();
@@ -179,8 +188,12 @@ namespace Flood
             void raise();
         }
         bool IsButtonPressed(Flood::MouseButton button);
-        void ProcessEvent(Flood::InputEvent^ event);
+
+        virtual void ProcessEvent(Flood::InputEvent^ event) override;
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

@@ -32,7 +32,7 @@ Flood::RenderState::RenderState(System::IntPtr native)
 
 Flood::RenderState::RenderState(Flood::RenderBatch^ renderable)
 {
-    auto _native = ::RenderState((::RenderBatch*)renderable->NativePtr);
+    ::RenderState _native((::RenderBatch*)renderable->NativePtr);
     this->Renderable = gcnew Flood::RenderBatch((::RenderBatch*)_native.renderable);
     this->Material = gcnew Flood::Material((::Material*)_native.material);
     this->ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&_native.modelMatrix);
@@ -84,7 +84,7 @@ void Flood::RenderBlock::AddState(Flood::RenderState renderState)
     _marshal1.ty = renderState.ModelMatrix.Ty;
     _marshal1.tz = renderState.ModelMatrix.Tz;
     _marshal0.modelMatrix = _marshal1;
-    _marshal0.priority = (int32)renderState.Priority;
+    _marshal0.priority = (::int32)renderState.Priority;
     auto arg0 = _marshal0;
     ((::RenderBlock*)NativePtr)->addState(arg0);
 }
@@ -98,6 +98,7 @@ bool Flood::RenderBlock::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<RenderBlock^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -152,7 +153,7 @@ void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flo
         _marshal1.ty = _element.ModelMatrix.Ty;
         _marshal1.tz = _element.ModelMatrix.Tz;
         _marshal0.modelMatrix = _marshal1;
-        _marshal0.priority = (int32)_element.Priority;
+        _marshal0.priority = (::int32)_element.Priority;
         auto _marshalElement = _marshal0;
         _tmpvalue.push_back(_marshalElement);
     }

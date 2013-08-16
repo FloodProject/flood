@@ -12,7 +12,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::MouseEvent::MouseEvent(::MouseEvent* native)
-    : Flood::InputEvent(native)
+    : Flood::InputEvent((::InputEvent*)native)
 {
 }
 
@@ -23,7 +23,7 @@ Flood::MouseEvent::MouseEvent(System::IntPtr native)
 }
 
 Flood::MouseEvent::MouseEvent(Flood::MouseEventType eventType)
-    : Flood::InputEvent(nullptr)
+    : Flood::InputEvent((::InputEvent*)nullptr)
 {
     auto arg0 = (::MouseEventType)eventType;
     NativePtr = new ::MouseEvent(arg0);
@@ -33,6 +33,7 @@ bool Flood::MouseEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -53,7 +54,7 @@ void Flood::MouseEvent::EventType::set(Flood::MouseEventType value)
 }
 
 Flood::MouseMoveEvent::MouseMoveEvent(::MouseMoveEvent* native)
-    : Flood::MouseEvent(native)
+    : Flood::MouseEvent((::MouseEvent*)native)
 {
 }
 
@@ -64,7 +65,7 @@ Flood::MouseMoveEvent::MouseMoveEvent(System::IntPtr native)
 }
 
 Flood::MouseMoveEvent::MouseMoveEvent()
-    : Flood::MouseEvent(nullptr)
+    : Flood::MouseEvent((::MouseEvent*)nullptr)
 {
     NativePtr = new ::MouseMoveEvent();
 }
@@ -73,6 +74,7 @@ bool Flood::MouseMoveEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseMoveEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -103,7 +105,7 @@ void Flood::MouseMoveEvent::Y::set(short value)
 }
 
 Flood::MouseDragEvent::MouseDragEvent(::MouseDragEvent* native)
-    : Flood::MouseEvent(native)
+    : Flood::MouseEvent((::MouseEvent*)native)
 {
 }
 
@@ -114,7 +116,7 @@ Flood::MouseDragEvent::MouseDragEvent(System::IntPtr native)
 }
 
 Flood::MouseDragEvent::MouseDragEvent()
-    : Flood::MouseEvent(nullptr)
+    : Flood::MouseEvent((::MouseEvent*)nullptr)
 {
     NativePtr = new ::MouseDragEvent();
 }
@@ -123,6 +125,7 @@ bool Flood::MouseDragEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseDragEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -183,7 +186,7 @@ void Flood::MouseDragEvent::Info::set(Flood::MouseInfo^ value)
 }
 
 Flood::MouseButtonEvent::MouseButtonEvent(::MouseButtonEvent* native)
-    : Flood::MouseEvent(native)
+    : Flood::MouseEvent((::MouseEvent*)native)
 {
 }
 
@@ -194,7 +197,7 @@ Flood::MouseButtonEvent::MouseButtonEvent(System::IntPtr native)
 }
 
 Flood::MouseButtonEvent::MouseButtonEvent(Flood::MouseEventType eventType)
-    : Flood::MouseEvent(nullptr)
+    : Flood::MouseEvent((::MouseEvent*)nullptr)
 {
     auto arg0 = (::MouseEventType)eventType;
     NativePtr = new ::MouseButtonEvent(arg0);
@@ -222,6 +225,7 @@ bool Flood::MouseButtonEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseButtonEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -262,7 +266,7 @@ void Flood::MouseButtonEvent::Button::set(Flood::MouseButton value)
 }
 
 Flood::MouseWheelEvent::MouseWheelEvent(::MouseWheelEvent* native)
-    : Flood::MouseEvent(native)
+    : Flood::MouseEvent((::MouseEvent*)native)
 {
 }
 
@@ -273,7 +277,7 @@ Flood::MouseWheelEvent::MouseWheelEvent(System::IntPtr native)
 }
 
 Flood::MouseWheelEvent::MouseWheelEvent()
-    : Flood::MouseEvent(nullptr)
+    : Flood::MouseEvent((::MouseEvent*)nullptr)
 {
     NativePtr = new ::MouseWheelEvent();
 }
@@ -282,6 +286,7 @@ bool Flood::MouseWheelEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseWheelEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

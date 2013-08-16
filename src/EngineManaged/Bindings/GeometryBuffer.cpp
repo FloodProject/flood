@@ -49,41 +49,41 @@ void Flood::GeometryBuffer::Set(Flood::VertexAttribute _0, System::IntPtr data, 
 {
     auto arg0 = (::VertexAttribute)_0;
     auto arg1 = (uint8*)data.ToPointer();
-    auto arg2 = (uint32)size;
+    auto arg2 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1, arg2);
 }
 
 void Flood::GeometryBuffer::Set(System::IntPtr data, unsigned int size)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint32)size;
+    auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::Add(System::IntPtr data, unsigned int size)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint32)size;
+    auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->add(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::SetIndex(System::IntPtr data, unsigned int size)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint32)size;
+    auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->setIndex(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::AddIndex(System::IntPtr data, unsigned int size)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint32)size;
+    auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->addIndex(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::AddIndex(unsigned short index)
 {
-    auto arg0 = (uint16)index;
+    auto arg0 = (::uint16)index;
     ((::GeometryBuffer*)NativePtr)->addIndex(arg0);
 }
 
@@ -96,7 +96,7 @@ bool Flood::GeometryBuffer::IsIndexed()
 System::IntPtr Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _0, unsigned int i)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto arg1 = (uint32)i;
+    auto arg1 = (::uint32)i;
     auto ret = ((::GeometryBuffer*)NativePtr)->getAttribute(arg0, arg1);
     return IntPtr(ret);
 }
@@ -117,6 +117,7 @@ bool Flood::GeometryBuffer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<GeometryBuffer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -210,7 +211,7 @@ void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigne
     auto _tmpvalue = std::vector<::uint8>();
     for each(unsigned char _element in value)
     {
-        auto _marshalElement = (uint8)_element;
+        auto _marshalElement = (::uint8)_element;
         _tmpvalue.push_back(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->data = _tmpvalue;
@@ -232,7 +233,7 @@ void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<un
     auto _tmpvalue = std::vector<::uint8>();
     for each(unsigned char _element in value)
     {
-        auto _marshalElement = (uint8)_element;
+        auto _marshalElement = (::uint8)_element;
         _tmpvalue.push_back(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->indexData = _tmpvalue;
@@ -245,7 +246,7 @@ unsigned char Flood::GeometryBuffer::IndexSize::get()
 
 void Flood::GeometryBuffer::IndexSize::set(unsigned char value)
 {
-    ((::GeometryBuffer*)NativePtr)->indexSize = (uint8)value;
+    ((::GeometryBuffer*)NativePtr)->indexSize = (::uint8)value;
 }
 
 bool Flood::GeometryBuffer::NeedsRebuild::get()
@@ -265,7 +266,7 @@ unsigned int Flood::GeometryBuffer::Hash::get()
 
 void Flood::GeometryBuffer::Hash::set(unsigned int value)
 {
-    ((::GeometryBuffer*)NativePtr)->hash = (uint32)value;
+    ((::GeometryBuffer*)NativePtr)->hash = (::uint32)value;
 }
 
 Flood::VertexDeclaration^ Flood::GeometryBuffer::Declarations::get()

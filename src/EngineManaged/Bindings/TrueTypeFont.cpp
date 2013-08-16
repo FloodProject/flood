@@ -13,7 +13,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::TrueTypeFont::TrueTypeFont(::TrueTypeFont* native)
-    : Flood::Font(native)
+    : Flood::Font((::Font*)native)
 {
 }
 
@@ -24,7 +24,7 @@ Flood::TrueTypeFont::TrueTypeFont(System::IntPtr native)
 }
 
 Flood::TrueTypeFont::TrueTypeFont()
-    : Flood::Font(nullptr)
+    : Flood::Font((::Font*)nullptr)
 {
     NativePtr = new ::TrueTypeFont();
 }
@@ -34,16 +34,11 @@ void Flood::TrueTypeFont::Init()
     ((::TrueTypeFont*)NativePtr)->init();
 }
 
-bool Flood::TrueTypeFont::GetGlyphInfo(int codepoint, int size, Flood::Glyph glyph)
+bool Flood::TrueTypeFont::GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
-    auto _marshal2 = ::Glyph();
-    _marshal2.xOffset = glyph.XOffset;
-    _marshal2.baseLineOffset = glyph.BaseLineOffset;
-    _marshal2.advance = glyph.Advance;
-    _marshal2.width = glyph.Width;
-    _marshal2.height = glyph.Height;
-    auto arg2 = _marshal2;
+    ::Glyph arg2;
     auto ret = ((::TrueTypeFont*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
+    glyph = Flood::Glyph((::Glyph*)&arg2);
     return ret;
 }
 
@@ -63,6 +58,7 @@ bool Flood::TrueTypeFont::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<TrueTypeFont^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -88,7 +84,7 @@ void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned 
     auto _tmpvalue = std::vector<::byte>();
     for each(unsigned char _element in value)
     {
-        auto _marshalElement = (byte)(uint8)_element;
+        auto _marshalElement = (::byte)(::uint8)_element;
         _tmpvalue.push_back(_marshalElement);
     }
     ((::TrueTypeFont*)NativePtr)->data = _tmpvalue;

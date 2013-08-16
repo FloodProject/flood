@@ -43,6 +43,12 @@ namespace Flood
         ClampToEdge = 3
     };
 
+    /// <summary>
+    /// Represents a texture on the rendering API. This will be basically an the
+    /// same content of a resource image stored on the graphics card, but it is not
+    /// guaranteed that the GPU internal format will be the same. You can also
+    /// create textures that are not backed by an image.
+    /// </summary>
     public enum struct TextureTarget
     {
         Target2D = 0,
@@ -52,6 +58,7 @@ namespace Flood
     public ref class Texture : ICppInstance
     {
     public:
+
         property ::Texture* NativePtr;
         property System::IntPtr Instance
         {
@@ -62,6 +69,7 @@ namespace Flood
         Texture(::Texture* native);
         Texture(System::IntPtr native);
         Texture();
+
         property unsigned int Id
         {
             unsigned int get();
@@ -110,16 +118,23 @@ namespace Flood
             void set(float);
         }
         void Alloc(Flood::Vector2i size, Flood::PixelFormat _0);
+
         Flood::Image^ ReadImage();
+
         bool IsUploaded();
+
         void SetUploaded();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class TextureUnit : ICppInstance
     {
     public:
+
         property ::TextureUnit* NativePtr;
         property System::IntPtr Instance
         {
@@ -130,6 +145,7 @@ namespace Flood
         TextureUnit(::TextureUnit* native);
         TextureUnit(System::IntPtr native);
         TextureUnit();
+
         property Flood::TextureFilterMode FilterMode
         {
             Flood::TextureFilterMode get();
@@ -161,6 +177,8 @@ namespace Flood
             void set(bool);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

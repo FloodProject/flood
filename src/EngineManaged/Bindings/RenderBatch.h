@@ -25,6 +25,9 @@ namespace Flood
     value struct RenderBatchRange;
     value struct RenderState;
 
+    /// <summary>
+    /// Type of primitive of the RenderBatch.
+    /// </summary>
     public enum struct PrimitiveType : unsigned char
     {
         Points = 0,
@@ -39,6 +42,9 @@ namespace Flood
         Polygon = 9
     };
 
+    /// <summary>
+    /// Type of rendering mode of the RenderBatch.
+    /// </summary>
     public enum struct PrimitiveRasterMode : unsigned char
     {
         Solid = 0,
@@ -46,6 +52,11 @@ namespace Flood
         Point = 2
     };
 
+    /// <summary>
+    /// Use these different kinds of render groups to signal to the renderer how
+    /// you want your RenderBatchs to be sorted by the render device. Lower numbers
+    /// render before higher numbers.
+    /// </summary>
     public enum struct RenderLayer : unsigned char
     {
         Normal = 0,
@@ -54,9 +65,13 @@ namespace Flood
         Overlays = 10
     };
 
+    /// <summary>
+    /// The range of indices in the render batch
+    /// </summary>
     public value struct RenderBatchRange
     {
     public:
+
         RenderBatchRange(::RenderBatchRange* native);
         RenderBatchRange(System::IntPtr native);
         unsigned short Start;
@@ -66,6 +81,7 @@ namespace Flood
     public ref class RenderBatch : ICppInstance
     {
     public:
+
         property ::RenderBatch* NativePtr;
         property System::IntPtr Instance
         {
@@ -76,6 +92,7 @@ namespace Flood
         RenderBatch(::RenderBatch* native);
         RenderBatch(System::IntPtr native);
         RenderBatch();
+
         property Flood::RenderLayer RenderLayer
         {
             Flood::RenderLayer get();
@@ -152,7 +169,9 @@ namespace Flood
             void set(Flood::ResourceHandle<Flood::Material^>);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class FloodRenderBatch

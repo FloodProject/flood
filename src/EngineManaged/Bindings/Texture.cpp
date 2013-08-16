@@ -31,8 +31,8 @@ Flood::Texture::Texture()
 void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _0)
 {
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)size.X;
-    _marshal0.y = (int32)size.Y;
+    _marshal0.x = (::int32)size.X;
+    _marshal0.y = (::int32)size.Y;
     auto arg0 = _marshal0;
     auto arg1 = (::PixelFormat)_0;
     ((::Texture*)NativePtr)->allocate(arg0, arg1);
@@ -59,6 +59,7 @@ bool Flood::Texture::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Texture^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -116,7 +117,7 @@ unsigned int Flood::Texture::Id1::get()
 
 void Flood::Texture::Id1::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->id = (uint32)value;
+    ((::Texture*)NativePtr)->id = (::uint32)value;
 }
 
 Flood::TextureTarget Flood::Texture::Target::get()
@@ -136,7 +137,7 @@ unsigned int Flood::Texture::Width::get()
 
 void Flood::Texture::Width::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->width = (uint32)value;
+    ((::Texture*)NativePtr)->width = (::uint32)value;
 }
 
 unsigned int Flood::Texture::Height::get()
@@ -146,7 +147,7 @@ unsigned int Flood::Texture::Height::get()
 
 void Flood::Texture::Height::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->height = (uint32)value;
+    ((::Texture*)NativePtr)->height = (::uint32)value;
 }
 
 Flood::PixelFormat Flood::Texture::Format::get()
@@ -189,6 +190,7 @@ bool Flood::TextureUnit::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<TextureUnit^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -254,7 +256,7 @@ unsigned char Flood::TextureUnit::Unit::get()
 
 void Flood::TextureUnit::Unit::set(unsigned char value)
 {
-    ((::TextureUnit*)NativePtr)->unit = (uint8)value;
+    ((::TextureUnit*)NativePtr)->unit = (::uint8)value;
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::TextureUnit::Image::get()

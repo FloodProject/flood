@@ -18,6 +18,7 @@ namespace Flood
     public ref class SessionManager : ICppInstance
     {
     public:
+
         property ::SessionManager* NativePtr;
         property System::IntPtr Instance
         {
@@ -28,6 +29,7 @@ namespace Flood
         SessionManager(::SessionManager* native);
         SessionManager(System::IntPtr native);
         SessionManager();
+
     private:
         delegate void _SessionAddedDelegate(const ::SessionPtr& _0);
         _SessionAddedDelegate^ _SessionAddedDelegateInstance;
@@ -53,6 +55,8 @@ namespace Flood
             void raise(Flood::Session^ _1);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

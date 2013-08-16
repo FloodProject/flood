@@ -8,6 +8,7 @@
 #include "ResourceLoader.h"
 #include "Extension.h"
 #include "Resource.h"
+#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -28,6 +29,7 @@ Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
     Name = clix::marshalString<clix::E_UTF8>(native->name);
+    Stream = gcnew Flood::Stream((::Stream*)native->stream);
     Resource = gcnew Flood::Resource((::Resource*)native->resource);
     Group = (Flood::ResourceGroup)native->group;
     IsHighPriority = native->isHighPriority;
@@ -41,6 +43,7 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
     auto __native = (::ResourceLoadOptions*)native.ToPointer();
     Name = clix::marshalString<clix::E_UTF8>(__native->name);
+    Stream = gcnew Flood::Stream((::Stream*)__native->stream);
     Resource = gcnew Flood::Resource((::Resource*)__native->resource);
     Group = (Flood::ResourceGroup)__native->group;
     IsHighPriority = __native->isHighPriority;
@@ -54,6 +57,8 @@ void Flood::ResourceLoadOptions::AddOption(int key, int value)
 {
     auto _this0 = ::ResourceLoadOptions();
     _this0.name = clix::marshalString<clix::E_UTF8>((*this).Name);
+    if ((*this).Stream != nullptr)
+        _this0.stream = (::Stream*)(*this).Stream->NativePtr;
     if ((*this).Resource != nullptr)
         _this0.resource = (::Resource*)(*this).Resource->NativePtr;
     _this0.group = (::ResourceGroup)(*this).Group;
@@ -67,6 +72,7 @@ void Flood::ResourceLoadOptions::AddOption(int key, int value)
     _this0.option = _marshal0;
     _this0.addOption(key, value);
     Name = clix::marshalString<clix::E_UTF8>(_this0.name);
+    Stream = gcnew Flood::Stream((::Stream*)_this0.stream);
     Resource = gcnew Flood::Resource((::Resource*)_this0.resource);
     Group = (Flood::ResourceGroup)_this0.group;
     IsHighPriority = _this0.isHighPriority;
@@ -94,7 +100,7 @@ Flood::ResourceStream::ResourceStream()
 int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
 {
     auto arg0 = (uint8*)buffer.ToPointer();
-    auto arg1 = (size_t)size;
+    auto arg1 = (::size_t)size;
     auto ret = ((::ResourceStream*)NativePtr)->decode(arg0, arg1);
     return ret;
 }
@@ -108,6 +114,7 @@ bool Flood::ResourceStream::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ResourceStream^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -127,6 +134,16 @@ void Flood::ResourceStream::Instance::set(System::IntPtr object)
     NativePtr = (::ResourceStream*)object.ToPointer();
 }
 
+Flood::Stream^ Flood::ResourceStream::Stream::get()
+{
+    return gcnew Flood::Stream((::Stream*)((::ResourceStream*)NativePtr)->stream);
+}
+
+void Flood::ResourceStream::Stream::set(Flood::Stream^ value)
+{
+    ((::ResourceStream*)NativePtr)->stream = (::Stream*)value->NativePtr;
+}
+
 Flood::ResourceLoader^ Flood::ResourceStream::Loader::get()
 {
     return gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
@@ -138,7 +155,7 @@ void Flood::ResourceStream::Loader::set(Flood::ResourceLoader^ value)
 }
 
 Flood::ResourceLoader::ResourceLoader(::ResourceLoader* native)
-    : Flood::Extension(native)
+    : Flood::Extension((::Extension*)native)
 {
 }
 
@@ -149,7 +166,7 @@ Flood::ResourceLoader::ResourceLoader(System::IntPtr native)
 }
 
 Flood::ResourceLoader::ResourceLoader()
-    : Flood::Extension(nullptr)
+    : Flood::Extension((::Extension*)nullptr)
 {
 }
 
@@ -157,6 +174,8 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
+    if (_0.Stream != nullptr)
+        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
     if (_0.Resource != nullptr)
         _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)_0.Group;
@@ -177,6 +196,8 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
 {
     auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
+    if (_0.Stream != nullptr)
+        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
     if (_0.Resource != nullptr)
         _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
     _marshal0.group = (::ResourceGroup)_0.Group;
@@ -197,6 +218,7 @@ bool Flood::ResourceLoader::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ResourceLoader^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

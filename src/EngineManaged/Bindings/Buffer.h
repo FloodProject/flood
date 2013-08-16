@@ -17,6 +17,15 @@ namespace Flood
     ref class Buffer;
     ref class GeometryBuffer;
 
+    /// <summary>
+    /// "Static" means the data in VBO will not be changed (specified once and used
+    /// many times), "dynamic" means the data will be changed frequently (specified
+    /// and used repeatedly), and "stream" means the data will be changed every
+    /// frame (specified once and used once). "Draw" means the data will be sent to
+    /// GPU in order to draw (application to GL), "read" means the data will be
+    /// read by the client's application (GL to application), and "copy" means the
+    /// data will be used both drawing and reading (GL to GL).
+    /// </summary>
     public enum struct BufferUsage : unsigned char
     {
         Static = 0,
@@ -24,6 +33,11 @@ namespace Flood
         Dynamic = 2
     };
 
+    /// <summary>
+    /// Use these enums to represent the lifetime and usage patterns of a buffer.
+    /// These help the engine make better decisions about where to store the
+    /// buffers, which leads to better rendering performance.
+    /// </summary>
     public enum struct BufferAccess : unsigned char
     {
         Read = 0,
@@ -34,6 +48,7 @@ namespace Flood
     public ref class Buffer : ICppInstance
     {
     public:
+
         property ::Buffer* NativePtr;
         property System::IntPtr Instance
         {
@@ -44,7 +59,9 @@ namespace Flood
         Buffer(::Buffer* native);
         Buffer(System::IntPtr native);
         Buffer();
+
         Buffer(Flood::BufferUsage usage, Flood::BufferAccess access);
+
         property Flood::BufferUsage BufferUsage
         {
             Flood::BufferUsage get();
@@ -81,6 +98,8 @@ namespace Flood
             void set(Flood::GeometryBuffer^);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

@@ -24,7 +24,7 @@ Flood::StringHash::StringHash(System::IntPtr native)
 Flood::StringHash::StringHash(System::String^ str, unsigned int size)
 {
     auto _str = clix::marshalString<clix::E_UTF8>(str);
-    auto _native = ::StringHash(_str.c_str(), (size_t)size);
+    ::StringHash _native(_str.c_str(), (::size_t)size);
     this->Hash = _native.hash;
 }
 
@@ -111,7 +111,7 @@ System::String^ Flood::FloodString::StringTrim(System::String^ s, System::String
 
 System::String^ Flood::FloodString::StringFromFloat(float n, unsigned char precision)
 {
-    auto arg1 = (uint8)precision;
+    auto arg1 = (::uint8)precision;
     auto ret = ::StringFromFloat(n, arg1);
     return clix::marshalString<clix::E_UTF8>(ret);
 }
@@ -128,7 +128,7 @@ System::String^ Flood::FloodString::RawStringMatch(System::String^ s, unsigned i
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(s);
     auto arg0 = _arg0.c_str();
-    auto arg1 = (size_t)len;
+    auto arg1 = (::size_t)len;
     auto _arg2 = clix::marshalString<clix::E_UTF8>(p);
     auto arg2 = _arg2.c_str();
     auto ret = ::RawStringMatch(arg0, arg1, arg2);

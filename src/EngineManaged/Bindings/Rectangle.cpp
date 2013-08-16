@@ -29,7 +29,7 @@ Flood::Rectangle::Rectangle(System::IntPtr native)
 
 Flood::Rectangle::Rectangle(int x, int y, int width, int height)
 {
-    auto _native = ::Rectangle(x, y, width, height);
+    ::Rectangle _native(x, y, width, height);
     this->X = _native.x;
     this->Y = _native.y;
     this->Width = _native.width;
@@ -76,7 +76,7 @@ Flood::RectangleF::RectangleF(System::IntPtr native)
 
 Flood::RectangleF::RectangleF(float x, float y, float width, float height)
 {
-    auto _native = ::RectangleF(x, y, width, height);
+    ::RectangleF _native(x, y, width, height);
     this->X = _native.x;
     this->Y = _native.y;
     this->Width = _native.width;

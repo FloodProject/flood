@@ -31,6 +31,7 @@ bool Flood::SessionManager::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<SessionManager^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

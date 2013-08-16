@@ -28,7 +28,7 @@ Flood::EulerAngles::EulerAngles(System::IntPtr native)
 
 Flood::EulerAngles::EulerAngles(float x, float y, float z)
 {
-    auto _native = ::EulerAngles(x, y, z);
+    ::EulerAngles _native(x, y, z);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;

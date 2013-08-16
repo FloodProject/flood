@@ -28,7 +28,7 @@ Flood::Settings::Settings(System::IntPtr native)
 
 Flood::Settings::Settings(unsigned short width, unsigned short height)
 {
-    auto _native = ::Settings((uint16)width, (uint16)height);
+    ::Settings _native((::uint16)width, (::uint16)height);
     this->Width = _native.width;
     this->Height = _native.height;
 }
@@ -36,8 +36,8 @@ Flood::Settings::Settings(unsigned short width, unsigned short height)
 Flood::Vector2i Flood::Settings::Size::get()
 {
     auto _this0 = ::Settings();
-    _this0.width = (uint16)(*this).Width;
-    _this0.height = (uint16)(*this).Height;
+    _this0.width = (::uint16)(*this).Width;
+    _this0.height = (::uint16)(*this).Height;
     auto ret = _this0.getSize();
     Width = _this0.width;
     Height = _this0.height;
@@ -84,6 +84,7 @@ bool Flood::RenderTarget::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<RenderTarget^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

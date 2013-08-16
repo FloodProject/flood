@@ -50,6 +50,7 @@ bool Flood::RenderBatch::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<RenderBatch^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -91,7 +92,7 @@ int Flood::RenderBatch::RenderPriority::get()
 void Flood::RenderBatch::RenderPriority::set(int value)
 {
     auto v = value;
-    auto arg0 = (int32)v;
+    auto arg0 = (::int32)v;
     ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
 
@@ -168,8 +169,8 @@ Flood::RenderBatchRange Flood::RenderBatch::Range::get()
 void Flood::RenderBatch::Range::set(Flood::RenderBatchRange value)
 {
     auto _marshal0 = ::RenderBatchRange();
-    _marshal0.start = (RenderIndexOffset)(uint16)value.Start;
-    _marshal0.end = (RenderIndexOffset)(uint16)value.End;
+    _marshal0.start = (::RenderIndexOffset)(::uint16)value.Start;
+    _marshal0.end = (::RenderIndexOffset)(::uint16)value.End;
     ((::RenderBatch*)NativePtr)->range = _marshal0;
 }
 
@@ -190,7 +191,7 @@ int Flood::RenderBatch::Priority::get()
 
 void Flood::RenderBatch::Priority::set(int value)
 {
-    ((::RenderBatch*)NativePtr)->priority = (int32)value;
+    ((::RenderBatch*)NativePtr)->priority = (::int32)value;
 }
 
 Flood::PrimitiveType Flood::RenderBatch::Type::get()

@@ -20,22 +20,35 @@ namespace Flood
     value struct Glyph;
     value struct Vector2;
 
+    /// <summary>
+    /// Represents a TrueType font resource. Loads a TTF font using the
+    /// cross-platform FreeType library. Parses all the font glyphs of a size, and
+    /// packs them all into a big texture (texture atlas) for rendering.
+    /// </summary>
     public ref class TrueTypeFont : Flood::Font
     {
     public:
+
         TrueTypeFont(::TrueTypeFont* native);
         TrueTypeFont(System::IntPtr native);
         TrueTypeFont();
+
         property System::Collections::Generic::List<unsigned char>^ Data
         {
             System::Collections::Generic::List<unsigned char>^ get();
             void set(System::Collections::Generic::List<unsigned char>^);
         }
         void Init();
-        bool GetGlyphInfo(int codepoint, int size, Flood::Glyph glyph);
-        Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size);
-        Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
+
+        virtual bool GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph) override;
+
+        virtual Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size) override;
+
+        virtual Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize) override;
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

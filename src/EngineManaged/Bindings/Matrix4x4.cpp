@@ -56,7 +56,7 @@ Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
 Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3 _0)
 {
     auto _marshal0 = ::Matrix4x3();
-    auto _native = ::Matrix4x4(_marshal0);
+    ::Matrix4x4 _native(_marshal0);
     this->M11 = _native.m11;
     this->M12 = _native.m12;
     this->M13 = _native.m13;

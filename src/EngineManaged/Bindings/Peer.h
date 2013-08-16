@@ -31,6 +31,7 @@ namespace Flood
     public ref class Peer : ICppInstance
     {
     public:
+
         property ::Peer* NativePtr;
         property System::IntPtr Instance
         {
@@ -41,6 +42,7 @@ namespace Flood
         Peer(::Peer* native);
         Peer(System::IntPtr native);
         Peer();
+
         property System::String^ HostName
         {
             System::String^ get();
@@ -70,9 +72,14 @@ namespace Flood
             void raise(Flood::PeerState _0);
         }
         void Disconnect();
+
         void ForceDisconnect();
+
         void QueuePacket(Flood::Packet^ packet, unsigned char channel);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

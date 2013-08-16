@@ -38,6 +38,7 @@ bool Flood::Buffer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Buffer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -103,7 +104,7 @@ unsigned int Flood::Buffer::Id::get()
 
 void Flood::Buffer::Id::set(unsigned int value)
 {
-    ((::Buffer*)NativePtr)->id = (BufferId)(uint32)value;
+    ((::Buffer*)NativePtr)->id = (::BufferId)(::uint32)value;
 }
 
 Flood::BufferUsage Flood::Buffer::Usage::get()

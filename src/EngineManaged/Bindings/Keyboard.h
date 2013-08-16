@@ -19,12 +19,17 @@ namespace Flood
     ref class Keyboard;
     ref class KeyEvent;
 
+    /// <summary>
+    /// Keyboard device.
+    /// </summary>
     public ref class Keyboard : Flood::InputDevice
     {
     public:
+
         Keyboard(::Keyboard* native);
         Keyboard(System::IntPtr native);
         Keyboard();
+
         property System::Collections::Generic::List<bool>^ KeyState
         {
             System::Collections::Generic::List<bool>^ get();
@@ -66,8 +71,12 @@ namespace Flood
             void raise(Flood::KeyEvent^ _2);
         }
         bool IsKeyPressed(Flood::Keys keyCode);
+
         void ResetKeys();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

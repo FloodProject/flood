@@ -33,6 +33,7 @@ namespace Flood
     public value struct LogEntry
     {
     public:
+
         LogEntry(::LogEntry* native);
         LogEntry(System::IntPtr native);
         float Time;
@@ -43,6 +44,7 @@ namespace Flood
     public ref class Log : ICppInstance
     {
     public:
+
         property ::Log* NativePtr;
         property System::IntPtr Instance
         {
@@ -53,6 +55,7 @@ namespace Flood
         Log(::Log* native);
         Log(System::IntPtr native);
         Log();
+
     private:
         delegate void _HandlersDelegate(::LogEntry* _0);
         _HandlersDelegate^ _HandlersDelegateInstance;
@@ -66,17 +69,30 @@ namespace Flood
             void raise(Flood::LogEntry _0);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
         void Destroy();
+
         void AddHandler(Flood::LogFunction^ _1);
+
         void RemoveHandler(Flood::LogFunction^ _1);
+
         void Write(Flood::LogEntry entry);
+
         void SetDefault();
+
         static Flood::Log^ GetDefault();
+
         static void Info(System::String^ msg);
+
         static void Warn(System::String^ msg);
+
         static void Error(System::String^ msg);
+
         static void Debug(System::String^ msg);
+
         static void Assert(System::String^ msg);
+
     };
 }

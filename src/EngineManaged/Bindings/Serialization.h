@@ -18,6 +18,7 @@ namespace Flood
     ref class Field;
     ref class Primitive;
     ref class ReflectionHandleContext;
+    ref class Stream;
     ref class Type;
 
     public enum struct ReflectionWalkType : unsigned char
@@ -32,6 +33,7 @@ namespace Flood
     public ref class ReflectionHandleContext : ICppInstance
     {
     public:
+
         property ::ReflectionHandleContext* NativePtr;
         property System::IntPtr Instance
         {
@@ -42,7 +44,10 @@ namespace Flood
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
         ReflectionHandleContext();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

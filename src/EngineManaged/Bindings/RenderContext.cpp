@@ -62,8 +62,8 @@ void Flood::RenderContext::ResetState()
 
 Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
 {
-    auto arg0 = (uint16)x;
-    auto arg1 = (uint16)y;
+    auto arg0 = (::uint16)x;
+    auto arg1 = (::uint16)y;
     auto ret = ((::RenderContext*)NativePtr)->getPixel(arg0, arg1);
     return Flood::Color((::Color*)&ret);
 }
@@ -72,6 +72,7 @@ bool Flood::RenderContext::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<RenderContext^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

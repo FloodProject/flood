@@ -27,6 +27,7 @@ namespace Flood
     public ref class Host : ICppInstance
     {
     public:
+
         property ::Host* NativePtr;
         property System::IntPtr Instance
         {
@@ -49,19 +50,27 @@ namespace Flood
             void raise(Flood::Session^ _0, Flood::Packet^ _1, int _2);
         }
         bool DestroySocket();
+
         void BroadcastPacket(Flood::Packet^ _0, unsigned char channel);
+
         void ProcessEvents(unsigned int timeout);
+
         bool HasContext();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public value struct HostConnectionDetails
     {
     public:
+
         HostConnectionDetails(::HostConnectionDetails* native);
         HostConnectionDetails(System::IntPtr native);
         HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount);
+
         System::String^ Address;
         unsigned short Port;
         unsigned char ChannelCount;
@@ -70,9 +79,11 @@ namespace Flood
     public ref class HostClient : Flood::Host
     {
     public:
+
         HostClient(::HostClient* native);
         HostClient(System::IntPtr native);
         HostClient();
+
         property Flood::Peer^ Peer
         {
             Flood::Peer^ get();
@@ -82,16 +93,21 @@ namespace Flood
             Flood::Session^ get();
         }
         bool Connect(Flood::HostConnectionDetails _0);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class HostServer : Flood::Host
     {
     public:
+
         HostServer(::HostServer* native);
         HostServer(System::IntPtr native);
         HostServer();
+
         property System::Collections::Generic::List<Flood::Peer^>^ Peers
         {
             System::Collections::Generic::List<Flood::Peer^>^ get();
@@ -101,7 +117,10 @@ namespace Flood
             Flood::SessionManager^ get();
         }
         bool CreateSocket(Flood::HostConnectionDetails _0);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

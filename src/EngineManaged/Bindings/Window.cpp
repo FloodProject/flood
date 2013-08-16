@@ -36,7 +36,7 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen)
 {
-    auto _native = ::WindowSettings((uint16)width, (uint16)height, clix::marshalString<clix::E_UTF8>(title), fullscreen);
+    ::WindowSettings _native((::uint16)width, (::uint16)height, clix::marshalString<clix::E_UTF8>(title), fullscreen);
     this->Width = _native.width;
     this->Height = _native.height;
     this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
@@ -46,7 +46,7 @@ Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short heigh
 }
 
 Flood::Window::Window(::Window* native)
-    : Flood::RenderTarget(native)
+    : Flood::RenderTarget((::RenderTarget*)native)
 {
 }
 
@@ -57,17 +57,17 @@ Flood::Window::Window(System::IntPtr native)
 }
 
 Flood::Window::Window(Flood::WindowSettings settings)
-    : Flood::RenderTarget(nullptr)
+    : Flood::RenderTarget((::RenderTarget*)nullptr)
 {
 }
 
 Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _0)
 {
     auto _marshal0 = ::RenderContextSettings();
-    _marshal0.bitsPerPixel = (uint16)_0.BitsPerPixel;
-    _marshal0.depthBits = (uint16)_0.DepthBits;
-    _marshal0.stencilBits = (uint16)_0.StencilBits;
-    _marshal0.antialiasLevel = (uint16)_0.AntialiasLevel;
+    _marshal0.bitsPerPixel = (::uint16)_0.BitsPerPixel;
+    _marshal0.depthBits = (::uint16)_0.DepthBits;
+    _marshal0.stencilBits = (::uint16)_0.StencilBits;
+    _marshal0.antialiasLevel = (::uint16)_0.AntialiasLevel;
     auto arg0 = _marshal0;
     auto ret = ((::Window*)NativePtr)->createContext(arg0);
     return gcnew Flood::RenderContext((::RenderContext*)ret);
@@ -115,6 +115,7 @@ bool Flood::Window::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Window^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

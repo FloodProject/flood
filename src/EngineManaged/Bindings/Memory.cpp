@@ -30,6 +30,7 @@ bool Flood::Allocator::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Allocator^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -62,7 +63,7 @@ void Flood::Allocator::SetGroup(System::String^ group)
 Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto arg1 = (int32)size;
+    auto arg1 = (::int32)size;
     auto ret = ::AllocatorCreatePool(arg0, arg1);
     return gcnew Flood::Allocator((::Allocator*)ret);
 }
@@ -70,7 +71,7 @@ Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto arg1 = (int32)size;
+    auto arg1 = (::int32)size;
     auto ret = ::AllocatorCreateBump(arg0, arg1);
     return gcnew Flood::Allocator((::Allocator*)ret);
 }
@@ -165,7 +166,7 @@ void Flood::Allocator::Group::set(System::String^ value)
 }
 
 Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)
-    : Flood::Allocator(native)
+    : Flood::Allocator((::Allocator*)native)
 {
 }
 
@@ -176,7 +177,7 @@ Flood::PoolAllocator::PoolAllocator(System::IntPtr native)
 }
 
 Flood::PoolAllocator::PoolAllocator()
-    : Flood::Allocator(nullptr)
+    : Flood::Allocator((::Allocator*)nullptr)
 {
     NativePtr = new ::PoolAllocator();
 }
@@ -185,6 +186,7 @@ bool Flood::PoolAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<PoolAllocator^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -205,7 +207,7 @@ void Flood::PoolAllocator::Current::set(System::IntPtr value)
 }
 
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
-    : Flood::Allocator(native)
+    : Flood::Allocator((::Allocator*)native)
 {
 }
 
@@ -216,7 +218,7 @@ Flood::BumpAllocator::BumpAllocator(System::IntPtr native)
 }
 
 Flood::BumpAllocator::BumpAllocator()
-    : Flood::Allocator(nullptr)
+    : Flood::Allocator((::Allocator*)nullptr)
 {
     NativePtr = new ::BumpAllocator();
 }
@@ -225,6 +227,7 @@ bool Flood::BumpAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<BumpAllocator^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -261,11 +264,11 @@ unsigned int Flood::BumpAllocator::Size::get()
 
 void Flood::BumpAllocator::Size::set(unsigned int value)
 {
-    ((::BumpAllocator*)NativePtr)->size = (uint32)value;
+    ((::BumpAllocator*)NativePtr)->size = (::uint32)value;
 }
 
 Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)
-    : Flood::Allocator(native)
+    : Flood::Allocator((::Allocator*)native)
 {
 }
 
@@ -276,7 +279,7 @@ Flood::HeapAllocator::HeapAllocator(System::IntPtr native)
 }
 
 Flood::HeapAllocator::HeapAllocator()
-    : Flood::Allocator(nullptr)
+    : Flood::Allocator((::Allocator*)nullptr)
 {
     NativePtr = new ::HeapAllocator();
 }
@@ -285,6 +288,7 @@ bool Flood::HeapAllocator::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<HeapAllocator^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

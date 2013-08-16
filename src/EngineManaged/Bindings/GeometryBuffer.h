@@ -18,9 +18,14 @@ namespace Flood
     ref class GeometryBuffer;
     ref class VertexDeclaration;
 
+    /// <summary>
+    /// Represents a buffer with geometry data. You have to associate the vertex
+    /// data layout to the buffer so it can be used by the engine.
+    /// </summary>
     public ref class GeometryBuffer : ICppInstance
     {
     public:
+
         property ::GeometryBuffer* NativePtr;
         property System::IntPtr Instance
         {
@@ -31,7 +36,9 @@ namespace Flood
         GeometryBuffer(::GeometryBuffer* native);
         GeometryBuffer(System::IntPtr native);
         GeometryBuffer();
+
         GeometryBuffer(Flood::BufferUsage _0, Flood::BufferAccess _1);
+
         property Flood::BufferUsage BufferUsage
         {
             Flood::BufferUsage get();
@@ -91,19 +98,33 @@ namespace Flood
             void set(Flood::VertexDeclaration^);
         }
         void ForceRebuild();
+
         void Clear();
+
         void Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size);
+
         void Set(System::IntPtr data, unsigned int size);
+
         void Add(System::IntPtr data, unsigned int size);
+
         void SetIndex(System::IntPtr data, unsigned int size);
+
         void AddIndex(System::IntPtr data, unsigned int size);
+
         void AddIndex(unsigned short index);
+
         bool IsIndexed();
+
         System::IntPtr GetAttribute(Flood::VertexAttribute _0, unsigned int i);
+
         char GetAttributeStride(Flood::VertexAttribute _0);
+
         void ClearIndexes();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
         generic<typename T>
         void Set(Flood::VertexAttribute attr, System::Collections::Generic::List<T>^ data);
     };

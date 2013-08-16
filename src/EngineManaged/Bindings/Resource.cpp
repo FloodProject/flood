@@ -32,6 +32,7 @@ bool Flood::Resource::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Resource^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

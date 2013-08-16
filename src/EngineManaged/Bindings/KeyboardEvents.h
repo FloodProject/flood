@@ -17,6 +17,10 @@ namespace Flood
     enum struct Keys;
     ref class KeyEvent;
 
+    /// <summary>
+    /// Represents all the available keyboard keys with a unique key code. When
+    /// interacting with the Keyboard class you should always use these values.
+    /// </summary>
     public enum struct Keys
     {
         A = 65,
@@ -123,6 +127,9 @@ namespace Flood
         MAX = 321
     };
 
+    /// <summary>
+    /// Different types of keyboard events.
+    /// </summary>
     public enum struct KeyboardEventType
     {
         KeyPressed = 0,
@@ -130,12 +137,19 @@ namespace Flood
         KeyText = 2
     };
 
+    /// <summary>
+    /// Main keyboard event. Holds the related keycode, and whether some special
+    /// keys are pressed (handy for testing shortcuts). Finally it also needs to
+    /// know if it's a key press or release event.
+    /// </summary>
     public ref class KeyEvent : Flood::InputEvent
     {
     public:
+
         KeyEvent(::KeyEvent* native);
         KeyEvent(System::IntPtr native);
         KeyEvent(Flood::KeyboardEventType eventType);
+
         property Flood::KeyboardEventType EventType
         {
             Flood::KeyboardEventType get();
@@ -167,6 +181,8 @@ namespace Flood
             void set(unsigned int);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

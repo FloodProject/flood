@@ -24,6 +24,7 @@ namespace Flood
     public value struct SubTexture
     {
     public:
+
         SubTexture(::SubTexture* native);
         SubTexture(System::IntPtr native);
         Flood::Vector2 LeftTopUV;
@@ -36,6 +37,7 @@ namespace Flood
     public ref class TextureAtlas : ICppInstance
     {
     public:
+
         property ::TextureAtlas* NativePtr;
         property System::IntPtr Instance
         {
@@ -46,13 +48,18 @@ namespace Flood
         TextureAtlas(::TextureAtlas* native);
         TextureAtlas(System::IntPtr native);
         TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat);
+
         property Flood::ResourceHandle<Flood::Image^> AtlasImageHandle
         {
             Flood::ResourceHandle<Flood::Image^> get();
         }
         bool AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle);
+
         bool GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

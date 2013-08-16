@@ -54,6 +54,7 @@ bool Flood::Extension::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Extension^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

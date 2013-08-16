@@ -22,12 +22,21 @@ namespace Flood
     ref class ResourceManager;
     ref class Scene;
     ref class ScriptManager;
+    ref class Stream;
     ref class Subsystem;
     ref class WindowManager;
 
+    /// <summary>
+    /// Main engine class. This is a utility class that instantiates all the other
+    /// engine classes and provides suitable methods to get/set them. It is also
+    /// responsible to set the default logger for all of the engine logging needs.
+    /// If you need extra flexibility in your app, you can create a class like this
+    /// one that instantiates everything and sets it all up.
+    /// </summary>
     public ref class Engine : ICppInstance
     {
     public:
+
         property ::Engine* NativePtr;
         property System::IntPtr Instance
         {
@@ -38,6 +47,7 @@ namespace Flood
         Engine(::Engine* native);
         Engine(System::IntPtr native);
         Engine();
+
         property Flood::ResourceManager^ ResourceManager
         {
             Flood::ResourceManager^ get();
@@ -57,11 +67,17 @@ namespace Flood
             Flood::Log^ get();
         }
         void Init();
+
         void Update();
+
         void SetupLogger();
+
         void StepFrame();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
     public ref class FloodEngine

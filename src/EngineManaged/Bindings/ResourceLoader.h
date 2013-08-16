@@ -17,6 +17,7 @@ namespace Flood
     ref class Resource;
     ref class ResourceLoader;
     ref class ResourceStream;
+    ref class Stream;
     value struct ExtensionMetadata;
     value struct ResourceLoadOption;
     value struct ResourceLoadOptions;
@@ -24,6 +25,7 @@ namespace Flood
     public value struct ResourceLoadOption
     {
     public:
+
         ResourceLoadOption(::ResourceLoadOption* native);
         ResourceLoadOption(System::IntPtr native);
         int Key;
@@ -33,9 +35,11 @@ namespace Flood
     public value struct ResourceLoadOptions
     {
     public:
+
         ResourceLoadOptions(::ResourceLoadOptions* native);
         ResourceLoadOptions(System::IntPtr native);
         System::String^ Name;
+        Flood::Stream^ Stream;
         Flood::Resource^ Resource;
         Flood::ResourceGroup Group;
         bool IsHighPriority;
@@ -44,11 +48,13 @@ namespace Flood
         bool KeepStreamOpen;
         Flood::ResourceLoadOption Option;
         void AddOption(int key, int value);
+
     };
 
     public ref class ResourceStream : ICppInstance
     {
     public:
+
         property ::ResourceStream* NativePtr;
         property System::IntPtr Instance
         {
@@ -59,23 +65,41 @@ namespace Flood
         ResourceStream(::ResourceStream* native);
         ResourceStream(System::IntPtr native);
         ResourceStream();
+
+        property Flood::Stream^ Stream
+        {
+            Flood::Stream^ get();
+            void set(Flood::Stream^);
+        }
         property Flood::ResourceLoader^ Loader
         {
             Flood::ResourceLoader^ get();
             void set(Flood::ResourceLoader^);
         }
-        int Decode(System::IntPtr buffer, unsigned int size);
-        void Reset();
+        virtual int Decode(System::IntPtr buffer, unsigned int size);
+
+        virtual void Reset();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 
+    /// <summary>
+    /// Resource loaders decode resource data into a proper resource. This is an
+    /// interface that should be implemented to provide the resource codec services
+    /// for the formats handled by the loader. The loader also provides the
+    /// extensions of those formats.
+    /// </summary>
     public ref class ResourceLoader : Flood::Extension
     {
     public:
+
         ResourceLoader(::ResourceLoader* native);
         ResourceLoader(System::IntPtr native);
         ResourceLoader();
+
         property Flood::ExtensionMetadata Metadata
         {
             Flood::ExtensionMetadata get();
@@ -97,9 +121,13 @@ namespace Flood
             System::Collections::Generic::List<System::String^>^ get();
             void set(System::Collections::Generic::List<System::String^>^);
         }
-        Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
-        bool Decode(Flood::ResourceLoadOptions _0);
+        virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
+
+        virtual bool Decode(Flood::ResourceLoadOptions _0);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

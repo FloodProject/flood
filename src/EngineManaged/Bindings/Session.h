@@ -17,15 +17,25 @@ namespace Flood
     ref class Peer;
     ref class Session;
 
+    /// <summary>
+    /// Enumerates all the states a network session can be.
+    /// </summary>
     public enum struct SessionState
     {
         Closed = 0,
         Open = 1
     };
 
+    /// <summary>
+    /// Sessions are higher-level than peers. They allow for example for peers to
+    /// reconnect to their game even if their connection drops. Sessions will be
+    /// usually terminated when a timeout expires or if the peer explicitly
+    /// terminates their connection.
+    /// </summary>
     public ref class Session : ICppInstance
     {
     public:
+
         property ::Session* NativePtr;
         property System::IntPtr Instance
         {
@@ -36,6 +46,7 @@ namespace Flood
         Session(::Session* native);
         Session(System::IntPtr native);
         Session();
+
         property Flood::SessionState State
         {
             Flood::SessionState get();
@@ -69,6 +80,8 @@ namespace Flood
             void raise(Flood::Packet^ _1, int _0);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

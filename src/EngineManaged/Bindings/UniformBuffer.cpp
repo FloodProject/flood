@@ -46,7 +46,7 @@ Flood::UniformBufferElement Flood::UniformBuffer::GetElement(System::String^ nam
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(name);
     auto arg0 = _arg0.c_str();
-    auto arg1 = (size_t)size;
+    auto arg1 = (::size_t)size;
     auto ret = ((::UniformBuffer*)NativePtr)->getElement(arg0, arg1);
     return Flood::UniformBufferElement((::UniformBufferElement*)ret);
 }
@@ -62,7 +62,7 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, int data)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
-    auto arg1 = (int32)data;
+    auto arg1 = (::int32)data;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }
 
@@ -99,10 +99,10 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
     for each(Flood::Color _element in vec)
     {
         auto _marshal0 = ::Color();
-        _marshal0.r = (byte)(uint8)_element.R;
-        _marshal0.g = (byte)(uint8)_element.G;
-        _marshal0.b = (byte)(uint8)_element.B;
-        _marshal0.a = (byte)(uint8)_element.A;
+        _marshal0.r = (::byte)(::uint8)_element.R;
+        _marshal0.g = (::byte)(::uint8)_element.G;
+        _marshal0.b = (::byte)(::uint8)_element.B;
+        _marshal0.a = (::byte)(::uint8)_element.A;
         auto _marshalElement = _marshal0;
         _tmpvec.push_back(_marshalElement);
     }
@@ -196,6 +196,7 @@ bool Flood::UniformBuffer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<UniformBuffer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

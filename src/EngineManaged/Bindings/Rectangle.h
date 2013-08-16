@@ -18,26 +18,38 @@ namespace Flood
     public value struct Rectangle
     {
     public:
+
         Rectangle(::Rectangle* native);
         Rectangle(System::IntPtr native);
         Rectangle(int x, int y, int width, int height);
+
         int X;
         int Y;
         int Width;
         int Height;
+        /// <summary>
+        /// Returns true if this rectangle is contained in rect.
+        /// </summary>
         bool IsContainedIn(Flood::Rectangle rect);
+
     };
 
     public value struct RectangleF
     {
     public:
+
         RectangleF(::RectangleF* native);
         RectangleF(System::IntPtr native);
         RectangleF(float x, float y, float width, float height);
+
         float X;
         float Y;
         float Width;
         float Height;
+        /// <summary>
+        /// Returns true if this rectangle is contained in rect.
+        /// </summary>
         bool IsContainedIn(Flood::RectangleF rect);
+
     };
 }

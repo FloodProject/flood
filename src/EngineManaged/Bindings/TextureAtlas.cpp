@@ -44,7 +44,7 @@ Flood::TextureAtlas::TextureAtlas(System::IntPtr native)
 
 Flood::TextureAtlas::TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat)
 {
-    auto arg0 = (uint)(uint32)maxSize;
+    auto arg0 = (::uint)(::uint32)maxSize;
     auto arg1 = (::PixelFormat)pixelFormat;
     NativePtr = new ::TextureAtlas(arg0, arg1);
 }
@@ -69,6 +69,7 @@ bool Flood::TextureAtlas::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<TextureAtlas^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

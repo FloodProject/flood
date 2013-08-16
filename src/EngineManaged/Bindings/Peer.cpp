@@ -42,7 +42,7 @@ void Flood::Peer::ForceDisconnect()
 void Flood::Peer::QueuePacket(Flood::Packet^ packet, unsigned char channel)
 {
     auto arg0 = (::Packet*)packet->NativePtr;
-    auto arg1 = (uint8)channel;
+    auto arg1 = (::uint8)channel;
     ((::Peer*)NativePtr)->queuePacket(arg0, arg1);
 }
 
@@ -50,6 +50,7 @@ bool Flood::Peer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Peer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

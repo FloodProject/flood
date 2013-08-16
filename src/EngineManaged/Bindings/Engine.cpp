@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "Log.h"
 #include "ResourceManager.h"
+#include "Stream.h"
 #include "WindowManager.h"
 
 using namespace System;
@@ -54,6 +55,7 @@ bool Flood::Engine::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Engine^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

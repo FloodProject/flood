@@ -46,6 +46,7 @@ bool Flood::Log::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Log^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

@@ -31,7 +31,7 @@ Flood::Quaternion::Quaternion(System::IntPtr native)
 
 Flood::Quaternion::Quaternion(float u)
 {
-    auto _native = ::Quaternion(u);
+    ::Quaternion _native(u);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -40,7 +40,7 @@ Flood::Quaternion::Quaternion(float u)
 
 Flood::Quaternion::Quaternion(float a, float b, float c, float d)
 {
-    auto _native = ::Quaternion(a, b, c, d);
+    ::Quaternion _native(a, b, c, d);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -53,7 +53,7 @@ Flood::Quaternion::Quaternion(Flood::EulerAngles angles)
     _marshal0.x = angles.X;
     _marshal0.y = angles.Y;
     _marshal0.z = angles.Z;
-    auto _native = ::Quaternion(_marshal0);
+    ::Quaternion _native(_marshal0);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;

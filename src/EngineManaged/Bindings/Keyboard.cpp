@@ -13,7 +13,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::Keyboard::Keyboard(::Keyboard* native)
-    : Flood::InputDevice(native)
+    : Flood::InputDevice((::InputDevice*)native)
 {
 }
 
@@ -24,7 +24,7 @@ Flood::Keyboard::Keyboard(System::IntPtr native)
 }
 
 Flood::Keyboard::Keyboard()
-    : Flood::InputDevice(nullptr)
+    : Flood::InputDevice((::InputDevice*)nullptr)
 {
     NativePtr = new ::Keyboard();
 }
@@ -45,6 +45,7 @@ bool Flood::Keyboard::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Keyboard^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

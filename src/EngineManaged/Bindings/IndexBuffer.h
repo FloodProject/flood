@@ -19,15 +19,19 @@ namespace Flood
     public ref class IndexBuffer : Flood::Buffer
     {
     public:
+
         IndexBuffer(::IndexBuffer* native);
         IndexBuffer(System::IntPtr native);
         IndexBuffer();
+
         property bool IsBuilt
         {
             bool get();
             void set(bool);
         }
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

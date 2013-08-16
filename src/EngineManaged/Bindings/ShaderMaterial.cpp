@@ -12,7 +12,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::ShaderMaterial::ShaderMaterial(::ShaderMaterial* native)
-    : Flood::Resource(native)
+    : Flood::Resource((::Resource*)native)
 {
 }
 
@@ -26,6 +26,7 @@ bool Flood::ShaderMaterial::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ShaderMaterial^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

@@ -21,9 +21,11 @@ namespace Flood
     public value struct Settings
     {
     public:
+
         Settings(::Settings* native);
         Settings(System::IntPtr native);
         Settings(unsigned short width, unsigned short height);
+
         unsigned short Width;
         unsigned short Height;
         property Flood::Vector2i Size
@@ -35,6 +37,7 @@ namespace Flood
     public ref class RenderTarget : ICppInstance
     {
     public:
+
         property ::RenderTarget* NativePtr;
         property System::IntPtr Instance
         {
@@ -45,6 +48,7 @@ namespace Flood
         RenderTarget(::RenderTarget* native);
         RenderTarget(System::IntPtr native);
         RenderTarget();
+
         property Flood::Settings Settings
         {
             Flood::Settings get();
@@ -76,10 +80,16 @@ namespace Flood
             void raise(Flood::Settings _0);
         }
         Flood::RenderView^ CreateView();
+
         void RemoveViews();
-        void MakeCurrent();
-        void Update();
+
+        virtual void MakeCurrent();
+
+        virtual void Update();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

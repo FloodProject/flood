@@ -32,6 +32,7 @@ bool Flood::MouseInfo::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<MouseInfo^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -132,7 +133,7 @@ void Flood::MouseInfo::Aux2Button::set(bool value)
 }
 
 Flood::Mouse::Mouse(::Mouse* native)
-    : Flood::InputDevice(native)
+    : Flood::InputDevice((::InputDevice*)native)
 {
 }
 
@@ -156,7 +157,7 @@ void Flood::Mouse::ProcessEvent(Flood::InputEvent^ event)
 }
 
 Flood::Mouse::Mouse()
-    : Flood::InputDevice(nullptr)
+    : Flood::InputDevice((::InputDevice*)nullptr)
 {
     NativePtr = new ::Mouse();
 }
@@ -165,6 +166,7 @@ bool Flood::Mouse::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Mouse^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

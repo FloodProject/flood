@@ -29,6 +29,7 @@ namespace Flood
     public ref class Packet : ICppInstance
     {
     public:
+
         property ::Packet* NativePtr;
         property System::IntPtr Instance
         {
@@ -39,6 +40,7 @@ namespace Flood
         Packet(::Packet* native);
         Packet(System::IntPtr native);
         Packet(unsigned short id);
+
         property Flood::PacketFlags Flags
         {
             Flood::PacketFlags get();
@@ -54,10 +56,16 @@ namespace Flood
             unsigned short get();
         }
         int Size();
+
         void Clear();
+
         void Write(System::Collections::Generic::List<unsigned char>^ data);
+
         System::Collections::Generic::List<unsigned char>^ Read();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

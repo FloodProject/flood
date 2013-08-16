@@ -64,10 +64,13 @@ namespace Flood
     public ref class Material : Flood::Resource
     {
     public:
+
         Material(::Material* native);
         Material(System::IntPtr native);
         Material();
+
         Material(System::String^ name);
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
@@ -206,16 +209,27 @@ namespace Flood
             void set(bool);
         }
         void SetShader(System::String^ name);
+
         bool IsBlendingEnabled();
+
         void SetBlending(Flood::BlendSource _0, Flood::BlendDestination _1);
+
         void SetTexture(unsigned char unit, System::String^ name);
+
         void SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image);
+
         Flood::ResourceHandle<Flood::Image^> GetTexture(unsigned char unit);
+
         Flood::TextureUnit^ GetTextureUnit(unsigned char unit);
+
         void Init();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
         static Flood::ResourceHandle<Flood::Material^> Create(Flood::Allocator^ _0, System::String^ name);
+
         static property float DefaultLineWidth
         {
             float get();

@@ -7,6 +7,7 @@
 
 #include "Serialization.h"
 #include "Memory.h"
+#include "Stream.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -31,6 +32,7 @@ bool Flood::ReflectionHandleContext::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ReflectionHandleContext^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

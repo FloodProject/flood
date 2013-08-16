@@ -32,9 +32,11 @@ namespace Flood
     public value struct WindowSettings
     {
     public:
+
         WindowSettings(::WindowSettings* native);
         WindowSettings(System::IntPtr native);
         WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen);
+
         unsigned short Width;
         unsigned short Height;
         System::String^ Title;
@@ -43,12 +45,19 @@ namespace Flood
         Flood::WindowStyles Styles;
     };
 
+    /// <summary>
+    /// In most platforms (PCs) this will be just a normal window on the desktop,
+    /// but on some platforms (consoles, for instance) this might be slighty
+    /// different, so some methods might not make much sense.
+    /// </summary>
     public ref class Window : Flood::RenderTarget
     {
     public:
+
         Window(::Window* native);
         Window(System::IntPtr native);
         Window(Flood::WindowSettings settings);
+
         property System::String^ Title
         {
             void set(System::String^);
@@ -97,15 +106,25 @@ namespace Flood
             void remove(System::Action<bool>^ evt);
             void raise(bool _0);
         }
-        Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
-        void Update();
-        void MakeCurrent();
-        void Show(bool visible);
-        bool PumpEvents();
-        bool IsCursorVisible();
-        void SetCursorPosition(int x, int y);
-        bool HasFocus();
+        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
+
+        virtual void Update() override;
+
+        virtual void MakeCurrent() override;
+
+        virtual void Show(bool visible);
+
+        virtual bool PumpEvents();
+
+        virtual bool IsCursorVisible();
+
+        virtual void SetCursorPosition(int x, int y);
+
+        virtual bool HasFocus();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

@@ -23,7 +23,7 @@ Flood::Packet::Packet(System::IntPtr native)
 
 Flood::Packet::Packet(unsigned short id)
 {
-    auto arg0 = (PacketId)(uint16)id;
+    auto arg0 = (::PacketId)(::uint16)id;
     NativePtr = new ::Packet(arg0);
 }
 
@@ -43,7 +43,7 @@ void Flood::Packet::Write(System::Collections::Generic::List<unsigned char>^ dat
     auto _tmpdata = std::vector<::byte>();
     for each(unsigned char _element in data)
     {
-        auto _marshalElement = (byte)(uint8)_element;
+        auto _marshalElement = (::byte)(::uint8)_element;
         _tmpdata.push_back(_marshalElement);
     }
     auto arg0 = _tmpdata;
@@ -66,6 +66,7 @@ bool Flood::Packet::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Packet^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

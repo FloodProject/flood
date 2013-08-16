@@ -34,13 +34,13 @@ bool Flood::Host::DestroySocket()
 void Flood::Host::BroadcastPacket(Flood::Packet^ _0, unsigned char channel)
 {
     auto arg0 = (::Packet*)_0->NativePtr;
-    auto arg1 = (uint8)channel;
+    auto arg1 = (::uint8)channel;
     ((::Host*)NativePtr)->broadcastPacket(arg0, arg1);
 }
 
 void Flood::Host::ProcessEvents(unsigned int timeout)
 {
-    auto arg0 = (uint32)timeout;
+    auto arg0 = (::uint32)timeout;
     ((::Host*)NativePtr)->processEvents(arg0);
 }
 
@@ -54,6 +54,7 @@ bool Flood::Host::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Host^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -115,14 +116,14 @@ Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
 {
-    auto _native = ::HostConnectionDetails(clix::marshalString<clix::E_UTF8>(address), (uint16)port, (uint8)channelCount);
+    ::HostConnectionDetails _native(clix::marshalString<clix::E_UTF8>(address), (::uint16)port, (::uint8)channelCount);
     this->Address = clix::marshalString<clix::E_UTF8>(_native.address);
     this->Port = _native.port;
     this->ChannelCount = _native.channelCount;
 }
 
 Flood::HostClient::HostClient(::HostClient* native)
-    : Flood::Host(native)
+    : Flood::Host((::Host*)native)
 {
 }
 
@@ -133,7 +134,7 @@ Flood::HostClient::HostClient(System::IntPtr native)
 }
 
 Flood::HostClient::HostClient()
-    : Flood::Host(nullptr)
+    : Flood::Host((::Host*)nullptr)
 {
     NativePtr = new ::HostClient();
 }
@@ -142,8 +143,8 @@ bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
     _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
-    _marshal0.port = (uint16)_0.Port;
-    _marshal0.channelCount = (uint8)_0.ChannelCount;
+    _marshal0.port = (::uint16)_0.Port;
+    _marshal0.channelCount = (::uint8)_0.ChannelCount;
     auto arg0 = _marshal0;
     auto ret = ((::HostClient*)NativePtr)->connect(arg0);
     return ret;
@@ -153,6 +154,7 @@ bool Flood::HostClient::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<HostClient^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -175,7 +177,7 @@ Flood::Session^ Flood::HostClient::Session::get()
 }
 
 Flood::HostServer::HostServer(::HostServer* native)
-    : Flood::Host(native)
+    : Flood::Host((::Host*)native)
 {
 }
 
@@ -189,15 +191,15 @@ bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
     _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
-    _marshal0.port = (uint16)_0.Port;
-    _marshal0.channelCount = (uint8)_0.ChannelCount;
+    _marshal0.port = (::uint16)_0.Port;
+    _marshal0.channelCount = (::uint8)_0.ChannelCount;
     auto arg0 = _marshal0;
     auto ret = ((::HostServer*)NativePtr)->createSocket(arg0);
     return ret;
 }
 
 Flood::HostServer::HostServer()
-    : Flood::Host(nullptr)
+    : Flood::Host((::Host*)nullptr)
 {
     NativePtr = new ::HostServer();
 }
@@ -206,6 +208,7 @@ bool Flood::HostServer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<HostServer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

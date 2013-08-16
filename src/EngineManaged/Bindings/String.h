@@ -17,9 +17,11 @@ namespace Flood
     public value struct StringHash
     {
     public:
+
         StringHash(::StringHash* native);
         StringHash(System::IntPtr native);
         StringHash(System::String^ str, unsigned int size);
+
         unsigned int Hash;
     };
 

@@ -29,8 +29,8 @@ Flood::WindowManager::WindowManager()
 Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings)
 {
     auto _marshal0 = ::WindowSettings();
-    _marshal0.width = (uint16)settings.Width;
-    _marshal0.height = (uint16)settings.Height;
+    _marshal0.width = (::uint16)settings.Width;
+    _marshal0.height = (::uint16)settings.Height;
     _marshal0.title = clix::marshalString<clix::E_UTF8>(settings.Title);
     _marshal0.fullScreen = settings.FullScreen;
     _marshal0.handle = settings.Handle.ToPointer();
@@ -49,6 +49,7 @@ bool Flood::WindowManager::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<WindowManager^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

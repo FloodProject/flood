@@ -18,9 +18,13 @@ namespace Flood
     enum struct ResourceGroup;
     ref class Allocator;
     ref class ImageWriter;
+    ref class Stream;
     value struct Color;
     value struct Vector2i;
 
+    /// <summary>
+    /// Possible pixel formats for an image.
+    /// </summary>
     public enum struct PixelFormat
     {
         R8G8B8A8 = 0,
@@ -36,13 +40,21 @@ namespace Flood
         Unknown = 10
     };
 
+    /// <summary>
+    /// Represents an image in the engine. An image usually holds uncompressed
+    /// image data, stored in an pixel array in a given pixel format specified at
+    /// creation time.
+    /// </summary>
     public ref class Image : Flood::Resource
     {
     public:
+
         Image(::Image* native);
         Image(System::IntPtr native);
         Image();
+
         Image(unsigned int width, unsigned int height, Flood::PixelFormat format);
+
         property unsigned int Width
         {
             unsigned int get();
@@ -87,21 +99,33 @@ namespace Flood
             unsigned int get();
         }
         void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
+
         bool IsCompressed();
+
         void SetBuffer(System::IntPtr data);
+
         void SetBuffer(System::IntPtr data, unsigned int stride);
+
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
+
         void Log();
+
         void Create(unsigned int width, unsigned int height, Flood::PixelFormat format);
+
         void SetModified();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
         static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _0, unsigned int width, unsigned int height, Flood::PixelFormat _1);
+
     };
 
     public ref class ImageWriter : ICppInstance
     {
     public:
+
         property ::ImageWriter* NativePtr;
         property System::IntPtr Instance
         {
@@ -112,8 +136,14 @@ namespace Flood
         ImageWriter(::ImageWriter* native);
         ImageWriter(System::IntPtr native);
         ImageWriter();
+
+        void Save(Flood::Image^ image, Flood::Stream^ stream);
+
         bool Convert(Flood::Image^ image);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

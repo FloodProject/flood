@@ -11,7 +11,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::KeyEvent::KeyEvent(::KeyEvent* native)
-    : Flood::InputEvent(native)
+    : Flood::InputEvent((::InputEvent*)native)
 {
 }
 
@@ -22,7 +22,7 @@ Flood::KeyEvent::KeyEvent(System::IntPtr native)
 }
 
 Flood::KeyEvent::KeyEvent(Flood::KeyboardEventType eventType)
-    : Flood::InputEvent(nullptr)
+    : Flood::InputEvent((::InputEvent*)nullptr)
 {
     auto arg0 = (::KeyboardEventType)eventType;
     NativePtr = new ::KeyEvent(arg0);
@@ -32,6 +32,7 @@ bool Flood::KeyEvent::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<KeyEvent^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -98,6 +99,6 @@ unsigned int Flood::KeyEvent::Unicode::get()
 
 void Flood::KeyEvent::Unicode::set(unsigned int value)
 {
-    ((::KeyEvent*)NativePtr)->unicode = (uint32)value;
+    ((::KeyEvent*)NativePtr)->unicode = (::uint32)value;
 }
 

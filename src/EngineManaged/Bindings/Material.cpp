@@ -16,7 +16,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::Material::Material(::Material* native)
-    : Flood::Resource(native)
+    : Flood::Resource((::Resource*)native)
 {
 }
 
@@ -27,13 +27,13 @@ Flood::Material::Material(System::IntPtr native)
 }
 
 Flood::Material::Material()
-    : Flood::Resource(nullptr)
+    : Flood::Resource((::Resource*)nullptr)
 {
     NativePtr = new ::Material();
 }
 
 Flood::Material::Material(System::String^ name)
-    : Flood::Resource(nullptr)
+    : Flood::Resource((::Resource*)nullptr)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     NativePtr = new ::Material(arg0);
@@ -60,28 +60,28 @@ void Flood::Material::SetBlending(Flood::BlendSource _0, Flood::BlendDestination
 
 void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
 {
-    auto arg0 = (uint8)unit;
+    auto arg0 = (::uint8)unit;
     auto arg1 = clix::marshalString<clix::E_UTF8>(name);
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
 void Flood::Material::SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image)
 {
-    auto arg0 = (uint8)unit;
+    auto arg0 = (::uint8)unit;
     auto arg1 = (HandleId)image.Id;
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::Material::GetTexture(unsigned char unit)
 {
-    auto arg0 = (uint8)unit;
+    auto arg0 = (::uint8)unit;
     auto ret = ((::Material*)NativePtr)->getTexture(arg0);
     return Flood::ResourceHandle<Flood::Image^>(ret.id);
 }
 
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
-    auto arg0 = (uint8)unit;
+    auto arg0 = (::uint8)unit;
     auto &ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
     return gcnew Flood::TextureUnit((::TextureUnit*)&ret);
 }
@@ -95,6 +95,7 @@ bool Flood::Material::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Material^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

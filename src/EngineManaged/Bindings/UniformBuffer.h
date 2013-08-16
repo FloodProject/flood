@@ -37,9 +37,15 @@ namespace Flood
         Matrix4x3_F = 12
     };
 
+    /// <summary>
+    /// Uniforms are named constants that can be set in programs. These are
+    /// allocated from a special frame bump allocator, that frees all the memory
+    /// when the frame ends.
+    /// </summary>
     public value struct UniformBufferElement
     {
     public:
+
         UniformBufferElement(::UniformBufferElement* native);
         UniformBufferElement(System::IntPtr native);
         System::String^ Name;
@@ -48,9 +54,13 @@ namespace Flood
         cli::array<unsigned char>^ Data;
     };
 
+    /// <summary>
+    /// Represents a uniform buffer.
+    /// </summary>
     public ref class UniformBuffer : ICppInstance
     {
     public:
+
         property ::UniformBuffer* NativePtr;
         property System::IntPtr Instance
         {
@@ -61,17 +71,30 @@ namespace Flood
         UniformBuffer(::UniformBuffer* native);
         UniformBuffer(System::IntPtr native);
         UniformBuffer();
+
         Flood::UniformBufferElement GetElement(System::String^ name, unsigned int size);
+
         void RemoveUniform(System::String^ slot);
+
         void SetUniform(System::String^ slot, int data);
+
         void SetUniform(System::String^ slot, float value);
+
         void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Vector3>^ vec);
+
         void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Color>^ vec);
+
         void SetUniform(System::String^ slot, Flood::Vector3 vec);
+
         void SetUniform(System::String^ slot, Flood::Matrix4x3 _0);
+
         void SetUniform(System::String^ slot, Flood::Matrix4x4 _0);
+
         void SetUniform(System::String^ slot, System::Collections::Generic::List<Flood::Matrix4x4>^ vec);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

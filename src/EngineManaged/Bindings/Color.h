@@ -18,16 +18,21 @@ namespace Flood
     public value struct Color
     {
     public:
+
         Color(::Color* native);
         Color(System::IntPtr native);
         Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+
         unsigned char R;
         unsigned char G;
         unsigned char B;
         unsigned char A;
         bool operator==(Flood::Color v);
+
         bool NearEqual(Flood::Color a, float tolerance);
+
         Flood::Color operator*(float s);
+
         static property Flood::Color White
         {
             Flood::Color get();

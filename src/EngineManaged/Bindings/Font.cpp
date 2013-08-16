@@ -32,7 +32,7 @@ Flood::Glyph::Glyph(System::IntPtr native)
 }
 
 Flood::Font::Font(::Font* native)
-    : Flood::Resource(native)
+    : Flood::Resource((::Resource*)native)
 {
 }
 
@@ -66,6 +66,7 @@ bool Flood::Font::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Font^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

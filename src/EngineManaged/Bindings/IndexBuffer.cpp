@@ -12,7 +12,7 @@ using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::IndexBuffer::IndexBuffer(::IndexBuffer* native)
-    : Flood::Buffer(native)
+    : Flood::Buffer((::Buffer*)native)
 {
 }
 
@@ -23,7 +23,7 @@ Flood::IndexBuffer::IndexBuffer(System::IntPtr native)
 }
 
 Flood::IndexBuffer::IndexBuffer()
-    : Flood::Buffer(nullptr)
+    : Flood::Buffer((::Buffer*)nullptr)
 {
     NativePtr = new ::IndexBuffer();
 }
@@ -32,6 +32,7 @@ bool Flood::IndexBuffer::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<IndexBuffer^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

@@ -16,9 +16,13 @@ namespace Flood
     ref class WindowManager;
     value struct WindowSettings;
 
+    /// <summary>
+    /// Window manager manages windows (Windows baby!).
+    /// </summary>
     public ref class WindowManager : ICppInstance
     {
     public:
+
         property ::WindowManager* NativePtr;
         property System::IntPtr Instance
         {
@@ -29,14 +33,19 @@ namespace Flood
         WindowManager(::WindowManager* native);
         WindowManager(System::IntPtr native);
         WindowManager();
+
         property System::Collections::Generic::List<Flood::Window^>^ Windows
         {
             System::Collections::Generic::List<Flood::Window^>^ get();
             void set(System::Collections::Generic::List<Flood::Window^>^);
         }
-        Flood::Window^ CreateWindow(Flood::WindowSettings settings);
+        virtual Flood::Window^ CreateWindow(Flood::WindowSettings settings);
+
         void DestroyWindows();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

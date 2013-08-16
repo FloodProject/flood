@@ -23,21 +23,34 @@ namespace Flood
     value struct LightState;
     value struct RenderState;
 
+    /// <summary>
+    /// This contains all the rendering state information that is needed by the
+    /// rendering device to properly render the associated.renderable. This should
+    /// be set by the camera and then appended to a render queue where it will be
+    /// sorted to minimize the state changes and finally rendered to the render
+    /// target that is currently active on the device.
+    /// </summary>
     public value struct RenderState
     {
     public:
+
         RenderState(::RenderState* native);
         RenderState(System::IntPtr native);
         RenderState(Flood::RenderBatch^ renderable);
+
         Flood::RenderBatch^ Renderable;
         Flood::Material^ Material;
         Flood::Matrix4x3 ModelMatrix;
         int Priority;
     };
 
+    /// <summary>
+    /// Light properties that will be passed down to the renderer.
+    /// </summary>
     public value struct LightState
     {
     public:
+
         LightState(::LightState* native);
         LightState(System::IntPtr native);
         Flood::Texture^ Depth;
@@ -47,6 +60,7 @@ namespace Flood
     public ref class RenderBlock : ICppInstance
     {
     public:
+
         property ::RenderBlock* NativePtr;
         property System::IntPtr Instance
         {
@@ -57,6 +71,7 @@ namespace Flood
         RenderBlock(::RenderBlock* native);
         RenderBlock(System::IntPtr native);
         RenderBlock();
+
         property System::Collections::Generic::List<Flood::RenderState>^ Renderables
         {
             System::Collections::Generic::List<Flood::RenderState>^ get();
@@ -68,7 +83,10 @@ namespace Flood
             void set(System::Collections::Generic::List<Flood::LightState>^);
         }
         void AddState(Flood::RenderState renderState);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

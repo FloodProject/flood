@@ -28,6 +28,7 @@ namespace Flood
     public value struct RenderContextSettings
     {
     public:
+
         RenderContextSettings(::RenderContextSettings* native);
         RenderContextSettings(System::IntPtr native);
         unsigned short BitsPerPixel;
@@ -36,9 +37,13 @@ namespace Flood
         unsigned short AntialiasLevel;
     };
 
+    /// <summary>
+    /// Represents a rendering context.
+    /// </summary>
     public ref class RenderContext : ICppInstance
     {
     public:
+
         property ::RenderContext* NativePtr;
         property System::IntPtr Instance
         {
@@ -49,6 +54,7 @@ namespace Flood
         RenderContext(::RenderContext* native);
         RenderContext(System::IntPtr native);
         RenderContext();
+
         property Flood::RenderTarget^ Target
         {
             void set(Flood::RenderTarget^);
@@ -63,11 +69,17 @@ namespace Flood
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
-        void MakeCurrent(Flood::RenderTarget^ target);
+        virtual void MakeCurrent(Flood::RenderTarget^ target);
+
         void Init();
+
         void ResetState();
+
         Flood::Color GetPixel(unsigned short x, unsigned short y);
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }

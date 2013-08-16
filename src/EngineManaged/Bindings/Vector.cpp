@@ -27,7 +27,7 @@ Flood::Vector3::Vector3(System::IntPtr native)
 
 Flood::Vector3::Vector3(float v)
 {
-    auto _native = ::Vector3(v);
+    ::Vector3 _native(v);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -35,7 +35,7 @@ Flood::Vector3::Vector3(float v)
 
 Flood::Vector3::Vector3(float a, float b, float c)
 {
-    auto _native = ::Vector3(a, b, c);
+    ::Vector3 _native(a, b, c);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -471,7 +471,7 @@ Flood::Vector4::Vector4(System::IntPtr native)
 
 Flood::Vector4::Vector4(float v)
 {
-    auto _native = ::Vector4(v);
+    ::Vector4 _native(v);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -480,7 +480,7 @@ Flood::Vector4::Vector4(float v)
 
 Flood::Vector4::Vector4(float a, float b, float c, float d)
 {
-    auto _native = ::Vector4(a, b, c, d);
+    ::Vector4 _native(a, b, c, d);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -493,7 +493,7 @@ Flood::Vector4::Vector4(Flood::Vector3 v, float d)
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
     _marshal0.z = v.Z;
-    auto _native = ::Vector4(_marshal0, d);
+    ::Vector4 _native(_marshal0, d);
     this->X = _native.x;
     this->Y = _native.y;
     this->Z = _native.z;
@@ -818,7 +818,7 @@ Flood::Vector2::Vector2(System::IntPtr native)
 
 Flood::Vector2::Vector2(float x, float y)
 {
-    auto _native = ::Vector2(x, y);
+    ::Vector2 _native(x, y);
     this->X = _native.x;
     this->Y = _native.y;
 }
@@ -1016,7 +1016,7 @@ Flood::Vector2i::Vector2i(System::IntPtr native)
 
 Flood::Vector2i::Vector2i(int x, int y)
 {
-    auto _native = ::Vector2i((int32)x, (int32)y);
+    ::Vector2i _native((::int32)x, (::int32)y);
     this->X = _native.x;
     this->Y = _native.y;
 }
@@ -1024,11 +1024,11 @@ Flood::Vector2i::Vector2i(int x, int y)
 bool Flood::Vector2i::operator==(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator==(arg0);
     X = _this0.x;
@@ -1039,11 +1039,11 @@ bool Flood::Vector2i::operator==(Flood::Vector2i v)
 bool Flood::Vector2i::operator!=(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator!=(arg0);
     X = _this0.x;
@@ -1054,11 +1054,11 @@ bool Flood::Vector2i::operator!=(Flood::Vector2i v)
 bool Flood::Vector2i::operator<(Flood::Vector2i rhs)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)rhs.X;
-    _marshal0.y = (int32)rhs.Y;
+    _marshal0.x = (::int32)rhs.X;
+    _marshal0.y = (::int32)rhs.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator<(arg0);
     X = _this0.x;
@@ -1069,11 +1069,11 @@ bool Flood::Vector2i::operator<(Flood::Vector2i rhs)
 bool Flood::Vector2i::operator>(Flood::Vector2i rhs)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)rhs.X;
-    _marshal0.y = (int32)rhs.Y;
+    _marshal0.x = (::int32)rhs.X;
+    _marshal0.y = (::int32)rhs.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator>(arg0);
     X = _this0.x;
@@ -1084,11 +1084,11 @@ bool Flood::Vector2i::operator>(Flood::Vector2i rhs)
 Flood::Vector2i Flood::Vector2i::operator+(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator+(arg0);
     X = _this0.x;
@@ -1099,11 +1099,11 @@ Flood::Vector2i Flood::Vector2i::operator+(Flood::Vector2i v)
 Flood::Vector2i Flood::Vector2i::operator+=(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto &ret = _this0.operator+=(arg0);
     X = _this0.x;
@@ -1114,8 +1114,8 @@ Flood::Vector2i Flood::Vector2i::operator+=(Flood::Vector2i v)
 Flood::Vector2i Flood::Vector2i::operator-()
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto ret = _this0.operator-();
     X = _this0.x;
     Y = _this0.y;
@@ -1125,11 +1125,11 @@ Flood::Vector2i Flood::Vector2i::operator-()
 Flood::Vector2i Flood::Vector2i::operator-(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto ret = _this0.operator-(arg0);
     X = _this0.x;
@@ -1140,11 +1140,11 @@ Flood::Vector2i Flood::Vector2i::operator-(Flood::Vector2i v)
 Flood::Vector2i Flood::Vector2i::operator-=(Flood::Vector2i v)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (int32)v.X;
-    _marshal0.y = (int32)v.Y;
+    _marshal0.x = (::int32)v.X;
+    _marshal0.y = (::int32)v.Y;
     auto arg0 = _marshal0;
     auto &ret = _this0.operator-=(arg0);
     X = _this0.x;
@@ -1155,9 +1155,9 @@ Flood::Vector2i Flood::Vector2i::operator-=(Flood::Vector2i v)
 Flood::Vector2i Flood::Vector2i::operator*(int s)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
-    auto arg0 = (int32)s;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
+    auto arg0 = (::int32)s;
     auto ret = _this0.operator*(arg0);
     X = _this0.x;
     Y = _this0.y;
@@ -1167,8 +1167,8 @@ Flood::Vector2i Flood::Vector2i::operator*(int s)
 Flood::Vector2i Flood::Vector2i::operator/(int s)
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     auto ret = _this0.operator/(s);
     X = _this0.x;
     Y = _this0.y;
@@ -1178,8 +1178,8 @@ Flood::Vector2i Flood::Vector2i::operator/(int s)
 void Flood::Vector2i::Zero()
 {
     auto _this0 = ::Vector2i();
-    _this0.x = (int32)(*this).X;
-    _this0.y = (int32)(*this).Y;
+    _this0.x = (::int32)(*this).X;
+    _this0.y = (::int32)(*this).Y;
     _this0.zero();
     X = _this0.x;
     Y = _this0.y;

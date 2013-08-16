@@ -9,13 +9,14 @@
 #include "Color.h"
 #include "Memory.h"
 #include "Resource.h"
+#include "Stream.h"
 #include "Vector.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::Image::Image(::Image* native)
-    : Flood::Resource(native)
+    : Flood::Resource((::Resource*)native)
 {
 }
 
@@ -26,16 +27,16 @@ Flood::Image::Image(System::IntPtr native)
 }
 
 Flood::Image::Image()
-    : Flood::Resource(nullptr)
+    : Flood::Resource((::Resource*)nullptr)
 {
     NativePtr = new ::Image();
 }
 
 Flood::Image::Image(unsigned int width, unsigned int height, Flood::PixelFormat format)
-    : Flood::Resource(nullptr)
+    : Flood::Resource((::Resource*)nullptr)
 {
-    auto arg0 = (uint32)width;
-    auto arg1 = (uint32)height;
+    auto arg0 = (::uint32)width;
+    auto arg1 = (::uint32)height;
     auto arg2 = (::PixelFormat)format;
     NativePtr = new ::Image(arg0, arg1, arg2);
 }
@@ -45,7 +46,7 @@ void Flood::Image::SetBuffer(System::Collections::Generic::List<unsigned char>^ 
     auto _tmpv = std::vector<::byte>();
     for each(unsigned char _element in v)
     {
-        auto _marshalElement = (byte)(uint8)_element;
+        auto _marshalElement = (::byte)(::uint8)_element;
         _tmpv.push_back(_marshalElement);
     }
     auto arg0 = _tmpv;
@@ -67,7 +68,7 @@ void Flood::Image::SetBuffer(System::IntPtr data)
 void Flood::Image::SetBuffer(System::IntPtr data, unsigned int stride)
 {
     auto arg0 = (uint8*)data.ToPointer();
-    auto arg1 = (uint)(uint32)stride;
+    auto arg1 = (::uint)(::uint32)stride;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
 
@@ -75,8 +76,8 @@ void Flood::Image::SetBuffer(Flood::Image^ image, Flood::Vector2i offset)
 {
     auto arg0 = (::Image*)image->NativePtr;
     auto _marshal1 = ::Vector2i();
-    _marshal1.x = (int32)offset.X;
-    _marshal1.y = (int32)offset.Y;
+    _marshal1.x = (::int32)offset.X;
+    _marshal1.y = (::int32)offset.Y;
     auto arg1 = _marshal1;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
@@ -88,8 +89,8 @@ void Flood::Image::Log()
 
 void Flood::Image::Create(unsigned int width, unsigned int height, Flood::PixelFormat format)
 {
-    auto arg0 = (uint32)width;
-    auto arg1 = (uint32)height;
+    auto arg0 = (::uint32)width;
+    auto arg1 = (::uint32)height;
     auto arg2 = (::PixelFormat)format;
     ((::Image*)NativePtr)->create(arg0, arg1, arg2);
 }
@@ -103,6 +104,7 @@ bool Flood::Image::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<Image^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }
@@ -115,8 +117,8 @@ int Flood::Image::GetHashCode()
 Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _0, unsigned int width, unsigned int height, Flood::PixelFormat _1)
 {
     auto arg0 = (::Allocator*)_0->NativePtr;
-    auto arg1 = (uint32)width;
-    auto arg2 = (uint32)height;
+    auto arg1 = (::uint32)width;
+    auto arg2 = (::uint32)height;
     auto arg3 = (::PixelFormat)_1;
     auto ret = ::ImageCreate(arg0, arg1, arg2, arg3);
     return Flood::ResourceHandle<Flood::Image^>(ret.id);
@@ -131,7 +133,7 @@ unsigned int Flood::Image::Width::get()
 void Flood::Image::Width::set(unsigned int value)
 {
     auto v = value;
-    auto arg0 = (uint32)v;
+    auto arg0 = (::uint32)v;
     ((::Image*)NativePtr)->setWidth(arg0);
 }
 
@@ -144,7 +146,7 @@ unsigned int Flood::Image::Height::get()
 void Flood::Image::Height::set(unsigned int value)
 {
     auto v = value;
-    auto arg0 = (uint32)v;
+    auto arg0 = (::uint32)v;
     ((::Image*)NativePtr)->setHeight(arg0);
 }
 
@@ -207,10 +209,10 @@ void Flood::Image::Color::set(Flood::Color value)
 {
     auto color = value;
     auto _marshal0 = ::Color();
-    _marshal0.r = (byte)(uint8)color.R;
-    _marshal0.g = (byte)(uint8)color.G;
-    _marshal0.b = (byte)(uint8)color.B;
-    _marshal0.a = (byte)(uint8)color.A;
+    _marshal0.r = (::byte)(::uint8)color.R;
+    _marshal0.g = (::byte)(::uint8)color.G;
+    _marshal0.b = (::byte)(::uint8)color.B;
+    _marshal0.a = (::byte)(::uint8)color.A;
     auto arg0 = _marshal0;
     ((::Image*)NativePtr)->setColor(arg0);
 }
@@ -232,6 +234,13 @@ Flood::ImageWriter::ImageWriter(System::IntPtr native)
     NativePtr = __native;
 }
 
+void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
+{
+    auto arg0 = (::Image*)image->NativePtr;
+    auto arg1 = (::Stream*)stream->NativePtr;
+    ((::ImageWriter*)NativePtr)->save(arg0, arg1);
+}
+
 bool Flood::ImageWriter::Convert(Flood::Image^ image)
 {
     auto arg0 = (::Image*)image->NativePtr;
@@ -248,6 +257,7 @@ bool Flood::ImageWriter::Equals(System::Object^ object)
 {
     if (!object) return false;
     auto obj = dynamic_cast<ImageWriter^>(object);
+
     if (!obj) return false;
     return Instance == obj->Instance;
 }

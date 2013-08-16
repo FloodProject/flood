@@ -19,9 +19,14 @@ namespace Flood
     ref class RenderTarget;
     ref class RenderView;
 
+    /// <summary>
+    /// A view is a region in a render target that can be rendered into. It has an
+    /// associated renderer that will render into the view.
+    /// </summary>
     public ref class RenderView : ICppInstance
     {
     public:
+
         property ::RenderView* NativePtr;
         property System::IntPtr Instance
         {
@@ -32,6 +37,7 @@ namespace Flood
         RenderView(::RenderView* native);
         RenderView(System::IntPtr native);
         RenderView();
+
         property Flood::RenderTarget^ RenderTarget
         {
             Flood::RenderTarget^ get();
@@ -97,8 +103,12 @@ namespace Flood
             void set(Flood::Matrix4x3);
         }
         bool operator<(Flood::RenderView^ view);
+
         void HandleRenderTargetResize();
+
         virtual bool Equals(System::Object^ object) override;
+
         virtual int GetHashCode() override;
+
     };
 }
