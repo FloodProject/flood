@@ -29,14 +29,10 @@ namespace Flood.Tests
         {
             const ushort ServerPort = 13337;
 
-            var details = new HostConnectionDetails
-            {
-                Address = "localhost",
-                Port = ServerPort
-            };
+            var endPoint = new HostEndPoint("localhost", ServerPort);
 
             // Start the server and setup our service.
-            var server = new Server(details);
+            var server = new Server(endPoint);
             var serverThread = new Thread(Process);
             serverThread.Start(server);
 
@@ -48,7 +44,7 @@ namespace Flood.Tests
             var clientThread = new Thread(Process);
             clientThread.Start(client);
 
-            var connectTask = client.Connect(details);
+            var connectTask = client.Connect(endPoint);
             connectTask.Wait();
             Assert.IsTrue(connectTask.Result);
 
