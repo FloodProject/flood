@@ -54,7 +54,7 @@ namespace Flood.Network
             var serviceAssembly = serviceType.Assembly;
 
             var implType = serviceAssembly.GetType(serviceType.FullName + "Impl");
-            var proxyType = implType.GetNestedType("Client");
+            var proxyType = implType.GetNestedType("Proxy");
 
             service = Activator.CreateInstance(proxyType, rpcManager, session, id);
             Id = id;

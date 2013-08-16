@@ -115,7 +115,7 @@ namespace Flood.Tools.RPCGen
 
             //GenerateInterface(type);
 
-            GenerateServiceClient(type);
+            GenerateServiceProxy(type);
             GenerateServiceProcessor(type);
 
             var methods = type.GetMethods();
@@ -142,22 +142,22 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        #region Service Client 
+        #region Service Proxy
 
-        private void GenerateServiceClient(Type type)
+        private void GenerateServiceProxy(Type type)
         {
             Type baseType;
             GetInheritedService(type, out baseType);
 
-            Write("public class Client : {0}", PrettyName(type));
+            Write("public class Proxy : {0}", PrettyName(type));
 
             if (baseType != null)
-                Write(" : {0}.Client", ImplName(baseType, true));
+                Write(" : {0}.Proxy", ImplName(baseType, true));
             NewLine();
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Client(IRPCManager rpcManager, Session session, int serviceId)");
+            WriteLine("public Proxy(IRPCManager rpcManager, Session session, int serviceId)");
             if (baseType != null)
                 Write(" : base(rpcManager)", baseType.Name);
             WriteStartBraceIndent();

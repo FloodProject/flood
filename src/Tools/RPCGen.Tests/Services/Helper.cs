@@ -29,7 +29,7 @@ namespace RPCGen.Tests.Services
             var implType = Assembly.GetExecutingAssembly().GetType(fullName);
             Assert.NotNull(implType);
 
-            var clientType = implType.GetNestedType("Client");
+            var clientType = implType.GetNestedType("Proxy");
             Assert.NotNull(clientType);
 
             var processorType = implType.GetNestedType("Processor");
