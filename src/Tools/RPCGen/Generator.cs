@@ -157,11 +157,11 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Proxy(IRPCManager rpcManager, Session session, int serviceId)");
+            WriteLine("public Proxy(IProxyHandler proxyHandler, Session session, int serviceId)");
             if (baseType != null)
-                Write(" : base(rpcManager)", baseType.Name);
+                Write(" : base(proxyHandler)", baseType.Name);
             WriteStartBraceIndent();
-            WriteLine("RPCManager = rpcManager;");
+            WriteLine("ProxyHandler = proxyHandler;");
             WriteLine("Session = session;");
             WriteLine("ServiceId = serviceId;");
             WriteCloseBraceIndent();
@@ -169,7 +169,7 @@ namespace Flood.Tools.RPCGen
 
             if (baseType == null)
             {
-                WriteLine("public IRPCManager RPCManager { get; private set; }");
+                WriteLine("public IProxyHandler ProxyHandler { get; private set; }");
                 WriteLine("protected Session Session { get; private set; }");
                 WriteLine("protected int ServiceId { get; private set; }");
                 NewLine();
@@ -228,7 +228,7 @@ namespace Flood.Tools.RPCGen
                     Write(", ");
             }
             WriteLine(");");
-            WriteLine("var response = await RPCManager.RemoteProcedureCall(request);");
+            WriteLine("var response = await ProxyHandler.RemoteProcedureCall(request);");
             if (retType != typeof(void))
                 Write("return ");
             WriteLine("{0}(response);", GetProcedureReceiveMethodName(method));

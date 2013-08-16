@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RPCGen.Tests.Services
 {
-    public class ServiceManager : IRPCManager
+    public class ServiceManager : IProxyHandler
     {
         public Processor Processor { get; set; }
 

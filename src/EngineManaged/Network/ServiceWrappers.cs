@@ -46,7 +46,7 @@ namespace Flood.Network
 
     class ServiceProxy : ServiceHandler
     {
-        public ServiceProxy(IRPCManager rpcManager, Session session, int id, Type serviceType)
+        public ServiceProxy(IProxyHandler rpcManager, Session session, int id, Type serviceType)
         {
             if(session == null)
                 throw new ArgumentNullException("session");
@@ -65,7 +65,7 @@ namespace Flood.Network
 
     class ServiceProxy<T> : ServiceProxy
     {
-        public ServiceProxy(IRPCManager rpcManager, Session session, int id)
+        public ServiceProxy(IProxyHandler rpcManager, Session session, int id)
             :base(rpcManager, session, id, typeof(T))
         {}
 

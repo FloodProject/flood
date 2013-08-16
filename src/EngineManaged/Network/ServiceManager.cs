@@ -23,7 +23,7 @@ namespace Flood.Network
         Task<ServiceId> GetServiceId([Id(0)]string serviceName);
     }
 
-    public class ServiceManager : IServiceManager, IRPCManager
+    public class ServiceManager : IServiceManager, IProxyHandler
     {
         private int localIdCounter;
         private int requestIdCounter;

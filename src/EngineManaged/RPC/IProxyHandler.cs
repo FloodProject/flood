@@ -2,7 +2,7 @@
 
 namespace Flood.RPC
 {
-    public interface IRPCManager
+    public interface IProxyHandler
     {
         Task<RPCData> RemoteProcedureCall(RPCData data);
     }
