@@ -3,11 +3,27 @@ using System.Threading.Tasks;
 
 namespace Flood.Network
 {
+    /// Represents a network endpoint as an IP address and a port number.
+    public struct HostEndPoint
+    {
+        public string Address { get; private set; }
+        public ushort Port { get; private set; }
+
+        public HostEndPoint(string address, ushort port)
+            : this()
+        {
+            Address = address;
+            Port = port;
+        }
+    }
+
     /// <summary>
     /// Hosts represents a node connected to the network.
     /// </summary>
     public class Host
     {
+        public const int ChannelCount = 2;
+
         protected Flood.Host host;
 
         public ServiceManager ServiceManager { get; private set; }
@@ -58,12 +74,20 @@ namespace Flood.Network
     /// </summary>
     public class Server : Host
     {
-        public Server(HostConnectionDetails details)
+        public Server(HostEndPoint endPoint)
         {
+            // TODO: remove this from here.
             FloodNetwork.NetworkInitialize();
 
             var server = new HostServer();
             host = server;
+
+            var details = new HostConnectionDetails()
+            {
+                Address = endPoint.Address,
+                Port = endPoint.Port,
+                ChannelCount = ChannelCount
+            };
 
             server.SessionPacket += OnPacket;
             server.CreateSocket(details);
@@ -75,8 +99,9 @@ namespace Flood.Network
     /// </summary>
     public class Client : Host
     {
-        public async Task<bool> Connect(HostConnectionDetails details, int timeout = 1000)
+        public async Task<bool> Connect(HostEndPoint endPoint, int timeout = 1000)
         {
+            // TODO: remove this from here.
             FloodNetwork.NetworkInitialize();
 
             var client = new HostClient();
@@ -90,6 +115,13 @@ namespace Flood.Network
                                            if (state == SessionState.Open)
                                                tcs.SetResult(true);
                                        };
+
+            var details = new HostConnectionDetails()
+            {
+                Address = endPoint.Address,
+                Port = endPoint.Port,
+                ChannelCount = ChannelCount
+            };
 
             client.Connect(details);
 
