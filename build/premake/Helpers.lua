@@ -7,6 +7,7 @@ extdir = path.getabsolute("../../externals");
 srcdir = path.getabsolute("../../src");
 incdir = path.getabsolute("../../inc");
 bindir = path.getabsolute("../../bin");
+examplesdir = path.getabsolute("../../examples");
 builddir = path.getabsolute("../" .. action);
 libdir = path.join(builddir, "lib","%{cfg.buildcfg}_%{cfg.platform}");
 addindir = path.join(libdir, "Addins");

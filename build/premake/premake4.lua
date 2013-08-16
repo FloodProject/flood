@@ -42,7 +42,7 @@ solution "Flood"
 		
 	configuration {}
 	
-	group "Engines"
+	group "Native"
 	
 		dofile( srcdir .. "/Core/Core.lua")
 		dofile( srcdir .. "/Resources/Resources.lua")
@@ -58,14 +58,11 @@ solution "Flood"
 	group "Managed"
 
 		dofile( srcdir .. "/EngineManaged/Bindings/EngineBindings.lua")
+		dofile( srcdir .. "/EngineManaged/Bindings.CSharp/EngineBindings.CSharp.lua")
         dofile( srcdir .. "/EngineBindings.Tests/EngineBindings.Tests.lua")
 		dofile( srcdir .. "/EngineManaged/EngineManaged.lua")
 		dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
 		dofile( srcdir .. "/ServerManaged/ServerManaged.lua")
-		
-    group "Editor Addins"
-        print("Searching for addins...")
-        IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))   
         
 	group "Editor"
 	
@@ -74,6 +71,11 @@ solution "Flood"
 		dofile( srcdir .. "/Editor/Editor.Shared/Editor.Shared.lua")
 		dofile( srcdir .. "/Editor/Editor.Server/Editor.Server.lua")
 		dofile( srcdir .. "/Editor/Editor.Tests/Editor.Tests.lua")
+
+	group "Editor/Addins"
+
+    	print("Searching for addins...")
+    	IncludePremakeProjects(path.join(srcdir, "Editor","Addins", "*"))		
         
 	group "Tests"
 
@@ -96,7 +98,11 @@ solution "Flood"
 		dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
 
 	group "Examples"
-    
+
+        print("Searching for externals projects...")
+        IncludePremakeProjects(path.join(examplesdir, "*"))	
+
     group "Externals"
+
         print("Searching for externals projects...")
         IncludePremakeProjects(path.join(extdir, "*"))

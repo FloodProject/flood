@@ -15,8 +15,10 @@ project "EngineManaged"
 	files
 	{
 		"EngineManaged.lua",
-		"**.cs",
+		"**.cs"
 	}
+
+	excludes { "**Bindings.CSharp**" }
 	
 	links
 	{
