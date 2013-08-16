@@ -52,11 +52,10 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	for( size_t i = 0; i < subsystems.size(); i++ )
-	{
-		Subsystem* system = subsystems[i];
-		Deallocate(system);
-	}
+	for(auto& subsystem : subsystems)
+    {
+		Deallocate(subsystem);
+    }
 	
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
@@ -145,11 +144,8 @@ void Engine::setupLogger()
 
 void Engine::update()
 {
-	for( size_t i = 0; i < subsystems.size(); i++ )
-	{
-		Subsystem* system = subsystems[i];
-		system->update();
-	}
+	for(auto& subsystem : subsystems)
+		subsystem->update();
 
 	resourceManager->update();
 
