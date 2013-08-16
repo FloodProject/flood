@@ -94,7 +94,7 @@ namespace Flood.RPC.Serialization
                     return NAME_DOUBLE;
                 case TType.String:
                     return NAME_STRING;
-                case TType.Struct:
+                case TType.DataObject:
                     return NAME_STRUCT;
                 case TType.Map:
                     return NAME_MAP;
@@ -140,7 +140,7 @@ namespace Flood.RPC.Serialization
                         result = TType.Map;
                         break;
                     case (byte)'r':
-                        result = TType.Struct;
+                        result = TType.DataObject;
                         break;
                     case (byte)'s':
                         if (name[1] == (byte)'t')
@@ -583,12 +583,12 @@ namespace Flood.RPC.Serialization
             WriteJSONArrayEnd();
         }
 
-        public override void WriteStructBegin(Struct str)
+        public override void WriteDataObjectBegin(DataObject str)
         {
             WriteJSONObjectStart();
         }
 
-        public override void WriteStructEnd()
+        public override void WriteDataObjectEnd()
         {
             WriteJSONObjectEnd();
         }
@@ -953,13 +953,13 @@ namespace Flood.RPC.Serialization
             ReadJSONArrayEnd();
         }
 
-        public override Struct ReadStructBegin()
+        public override DataObject ReadDataObjectBegin()
         {
             ReadJSONObjectStart();
-            return new Struct();
+            return new DataObject();
         }
 
-        public override void ReadStructEnd()
+        public override void ReadDataObjectEnd()
         {
             ReadJSONObjectEnd();
         }

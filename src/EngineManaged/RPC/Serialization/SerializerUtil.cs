@@ -53,8 +53,8 @@ namespace Flood.RPC.Serialization
                     // Don't try to decode the string, just skip it.
                     prot.ReadBinary();
                     break;
-                case TType.Struct:
-                    prot.ReadStructBegin();
+                case TType.DataObject:
+                    prot.ReadDataObjectBegin();
                     while (true)
                     {
                         Field field = prot.ReadFieldBegin();
@@ -65,7 +65,7 @@ namespace Flood.RPC.Serialization
                         Skip(prot, field.Type);
                         prot.ReadFieldEnd();
                     }
-                    prot.ReadStructEnd();
+                    prot.ReadDataObjectEnd();
                     break;
                 case TType.Map:
                     TMap map = prot.ReadMapBegin();

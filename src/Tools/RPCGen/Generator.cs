@@ -810,10 +810,10 @@ namespace Flood.Tools.RPCGen
             WriteLine("public void Write(Serializer oprot)");
             WriteStartBraceIndent();
 
-            WriteLine("var struc = new Struct(\"{0}_{1}\");",
+            WriteLine("var struc = new DataObject(\"{0}_{1}\");",
                 typeName, isResult ? "result" : "args");
 
-            WriteLine("oprot.WriteStructBegin(struc);");
+            WriteLine("oprot.WriteDataObjectBegin(struc);");
 
             parameters = ConvertToActualParameters(parameters, isResult);
             if (parameters.Any())
@@ -848,7 +848,7 @@ namespace Flood.Tools.RPCGen
             }
 
             WriteLine("oprot.WriteFieldStop();");
-            WriteLine("oprot.WriteStructEnd();");
+            WriteLine("oprot.WriteDataObjectEnd();");
 
             WriteCloseBraceIndent();
         }
@@ -858,7 +858,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("public void Read(Serializer iprot)");
             WriteStartBraceIndent();
 
-            WriteLine("iprot.ReadStructBegin();");
+            WriteLine("iprot.ReadDataObjectBegin();");
 
             WriteLine("while (true)");
             WriteStartBraceIndent();
@@ -866,7 +866,7 @@ namespace Flood.Tools.RPCGen
             GenerateServiceMethodReadFields(parameters, isResult);
 
             WriteCloseBraceIndent();
-            WriteLine("iprot.ReadStructEnd();");
+            WriteLine("iprot.ReadDataObjectEnd();");
 
             WriteCloseBraceIndent();
         }
@@ -955,7 +955,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Map:
                     GenerateMapSerialize(type, name);
                     break;
-                case TType.Struct:
+                case TType.DataObject:
                 case TType.Exception:
                 case TType.Class:
                     GenerateStructSerialize(type, name);
@@ -1126,7 +1126,7 @@ namespace Flood.Tools.RPCGen
                 case TType.Map:
                     GenerateMapDeserialize(type, name);
                     break;
-                case TType.Struct:
+                case TType.DataObject:
                 case TType.Exception:
                 case TType.Class:
                     WriteLine("var {0} = new {1}();", elemName, ImplName(type, true));
@@ -1394,7 +1394,7 @@ namespace Flood.Tools.RPCGen
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
             else if (type.IsValueType && !type.IsPrimitive)
-                return TType.Struct;
+                return TType.DataObject;
             else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
                 return TType.Exception;
             else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))

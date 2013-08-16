@@ -39,10 +39,10 @@ namespace Flood.RPC.Serialization
             Buffer = new RPCBuffer();
         }
 
-        public abstract void WriteProcedureCallBegin(ProcedureCall dataObject);
+        public abstract void WriteProcedureCallBegin(ProcedureCall procedure);
         public abstract void WriteProcedureCallEnd();
-        public abstract void WriteStructBegin(Struct struc);
-        public abstract void WriteStructEnd();
+        public abstract void WriteDataObjectBegin(DataObject data);
+        public abstract void WriteDataObjectEnd();
         public abstract void WriteFieldBegin(Field field);
         public abstract void WriteFieldEnd();
         public abstract void WriteFieldStop();
@@ -69,8 +69,8 @@ namespace Flood.RPC.Serialization
 
         public abstract ProcedureCall ReadProcedureCallBegin();
         public abstract void ReadProcedureCallEnd();
-        public abstract Struct ReadStructBegin();
-        public abstract void ReadStructEnd();
+        public abstract DataObject ReadDataObjectBegin();
+        public abstract void ReadDataObjectEnd();
         public abstract Field ReadFieldBegin();
         public abstract void ReadFieldEnd();
         public abstract TMap ReadMapBegin();

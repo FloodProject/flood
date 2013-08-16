@@ -53,7 +53,7 @@ namespace Flood.RPC
             string message = null;
             ExceptionType type = ExceptionType.Unknown;
 
-            iprot.ReadStructBegin();
+            iprot.ReadDataObjectBegin();
             while (true)
             {
                 field = iprot.ReadFieldBegin();
@@ -92,17 +92,17 @@ namespace Flood.RPC
                 iprot.ReadFieldEnd();
             }
 
-            iprot.ReadStructEnd();
+            iprot.ReadDataObjectEnd();
 
             return new RPCException(type, message);
         }
 
         public void Write(Serializer oprot)
         {
-            Struct struc = new Struct("TApplicationException");
+            DataObject struc = new DataObject("TApplicationException");
             Field field = new Field();
 
-            oprot.WriteStructBegin(struc);
+            oprot.WriteDataObjectBegin(struc);
 
             if (!String.IsNullOrEmpty(Message))
             {
@@ -121,7 +121,7 @@ namespace Flood.RPC
             oprot.WriteI32((int)type);
             oprot.WriteFieldEnd();
             oprot.WriteFieldStop();
-            oprot.WriteStructEnd();
+            oprot.WriteDataObjectEnd();
         }
 
         public enum ExceptionType

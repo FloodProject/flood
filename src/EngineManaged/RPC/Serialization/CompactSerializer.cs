@@ -29,7 +29,7 @@ namespace Flood.RPC.Serialization
 {
     public class CompactSerializer : Serializer
     {
-        private static Struct ANONYMOUS_STRUCT = new Struct("");
+        private static DataObject ANONYMOUS_STRUCT = new DataObject("");
         private static Field TSTOP = new Field("", TType.Stop, (short)0);
 
         private static byte[] ttypeToCompactType = new byte[16];
@@ -57,7 +57,7 @@ namespace Flood.RPC.Serialization
             public const byte LIST = 0x09;
             public const byte SET = 0x0A;
             public const byte MAP = 0x0B;
-            public const byte STRUCT = 0x0C;
+            public const byte DATA_OBJECT = 0x0C;
         }
 
         /** 
@@ -93,7 +93,7 @@ namespace Flood.RPC.Serialization
             ttypeToCompactType[(int)TType.String] = Types.BINARY;
             ttypeToCompactType[(int)TType.List] = Types.LIST;
             ttypeToCompactType[(int)TType.Map] = Types.MAP;
-            ttypeToCompactType[(int)TType.Struct] = Types.STRUCT;
+            ttypeToCompactType[(int)TType.DataObject] = Types.DATA_OBJECT;
         }
 
         public void reset()
@@ -168,7 +168,7 @@ namespace Flood.RPC.Serialization
          * use it as an opportunity to put special placeholder markers on the field
          * stack so we can get the field id deltas correct.
          */
-        public override void WriteStructBegin(Struct strct)
+        public override void WriteDataObjectBegin(DataObject strct)
         {
             lastField_.Push(lastFieldId_);
             lastFieldId_ = 0;
@@ -179,7 +179,7 @@ namespace Flood.RPC.Serialization
          * this as an opportunity to pop the last field from the current struct off
          * of the field stack.
          */
-        public override void WriteStructEnd()
+        public override void WriteDataObjectEnd()
         {
             lastFieldId_ = lastField_.Pop();
         }
@@ -497,7 +497,7 @@ namespace Flood.RPC.Serialization
          * Read a struct begin. There's nothing on the wire for this, but it is our
          * opportunity to push a new struct begin marker onto the field stack.
          */
-        public override Struct ReadStructBegin()
+        public override DataObject ReadDataObjectBegin()
         {
             lastField_.Push(lastFieldId_);
             lastFieldId_ = 0;
@@ -508,7 +508,7 @@ namespace Flood.RPC.Serialization
          * Doesn't actually consume any wire data, just removes the last field for 
          * this struct from the field stack.
          */
-        public override void ReadStructEnd()
+        public override void ReadDataObjectEnd()
         {
             // consume the last field we Read off the wire.
             lastFieldId_ = lastField_.Pop();
@@ -858,8 +858,8 @@ namespace Flood.RPC.Serialization
                     return TType.List;
                 case Types.MAP:
                     return TType.Map;
-                case Types.STRUCT:
-                    return TType.Struct;
+                case Types.DATA_OBJECT:
+                    return TType.DataObject;
                 default:
                     throw new SerializerException("don't know what type: " + (byte)(type & 0x0f));
             }

@@ -27,11 +27,11 @@ using System.Text;
 
 namespace Flood.RPC.Serialization
 {
-    public struct Struct
+    public struct DataObject
     {
         private string name;
 
-        public Struct(string name)
+        public DataObject(string name)
             :this()
         {
             this.name = name;

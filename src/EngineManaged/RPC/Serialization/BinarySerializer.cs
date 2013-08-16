@@ -72,11 +72,11 @@ namespace Flood.RPC.Serialization
         {
         }
 
-        public override void WriteStructBegin(Struct struc)
+        public override void WriteDataObjectBegin(DataObject struc)
         {
         }
 
-        public override void WriteStructEnd()
+        public override void WriteDataObjectEnd()
         {
         }
 
@@ -246,12 +246,12 @@ namespace Flood.RPC.Serialization
         {
         }
 
-        public override Struct ReadStructBegin()
+        public override DataObject ReadDataObjectBegin()
         {
-            return new Struct();
+            return new DataObject();
         }
 
-        public override void ReadStructEnd()
+        public override void ReadDataObjectEnd()
         {
         }
 

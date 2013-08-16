@@ -37,7 +37,7 @@ namespace Flood.RPC.Serialization
         I32 = 8,
         I64 = 10,
         String = 11,
-        Struct = 12,
+        DataObject = 12,
         Map = 13,
         List = 14,
         Class = 15,
