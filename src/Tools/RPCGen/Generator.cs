@@ -190,6 +190,18 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
+        private static string GetProcedureSendMethodName(MethodInfo method)
+        {
+            var procedureId = GetProcedureCallId(method);
+            return string.Format("send_{0}_{1}", method.Name, procedureId);
+        }
+
+        private static string GetProcedureReceiveMethodName(MethodInfo method)
+        {
+            var procedureId = GetProcedureCallId(method);
+            return string.Format("recv_{0}_{1}", method.Name, procedureId);
+        }
+
         private void GenerateProtocolMethod(Type type, MethodInfo method)
         {
             var retType = GetMethodReturnType(method);
@@ -211,7 +223,7 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            Write("var request = send_{0}(", method.Name);
+            Write("var request = {0}(", GetProcedureSendMethodName(method));
             for (var i = 0; i < parameters.Length; i++)
             {
                 Write("{0}", parameters[i].Name);
@@ -222,7 +234,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("var response = await RPCManager.RemoteProcedureCall(request);");
             if (retType != typeof(void))
                 Write("return ");
-            WriteLine("recv_{0}(response);", method.Name);
+            WriteLine("{0}(response);", GetProcedureReceiveMethodName(method));
 
             WriteCloseBraceIndent();
             NewLine();
@@ -237,8 +249,8 @@ namespace Flood.Tools.RPCGen
         private void GenerateProtocolReceive(MethodInfo method)
         {
             var retType = GetMethodReturnType(method);
-            Write("private {0} recv_{1}(RPCData response)", PrettyName(retType),
-                  method.Name);
+            Write("private {0} {1}(RPCData response)", PrettyName(retType),
+                  GetProcedureReceiveMethodName(method));
             WriteStartBraceIndent();
 
             WriteLine("var msg = response.Serializer.ReadProcedureCallBegin();");
@@ -250,7 +262,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("throw x;");
             WriteCloseBraceIndent();
 
-            WriteLine("var result = new {0}_result();", method.Name);
+            WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
             WriteLine("result.Read(response.Serializer);");
             WriteLine("response.Serializer.ReadProcedureCallEnd();");
 
@@ -283,7 +295,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
-            Write("private RPCData send_{0}(", method.Name);
+            Write("private RPCData {0}(", GetProcedureSendMethodName(method));
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();
@@ -298,7 +310,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call, seqid_);", procedureId);
             WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
 
-            WriteLine("var args = new {0}_args();", method.Name);
+            WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
             foreach (var param in method.GetParameters())
                 WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
             WriteLine("args.Write(request.Serializer);");
@@ -378,7 +390,8 @@ namespace Flood.Tools.RPCGen
 
                     var procedureId = GetProcedureCallId(method);
 
-                    WriteLine("processMap_[{0}] = {1}_Process;", procedureId, method.Name);
+                    WriteLine("processMap_[{0}] = {1};", procedureId,
+                        GetProcedureProcessMethodName(method));
                 }
 
                 WriteCloseBraceIndent();
@@ -399,16 +412,22 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
+        private static string GetProcedureProcessMethodName(MethodInfo method)
+        {
+            var procedureId = GetProcedureCallId(method);
+            return string.Format("{0}_{1}_Process", method.Name, procedureId);
+        }
+
         private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public async Task<RPCData> {0}_Process(int seqid, RPCData request)",
-                      method.Name);
+            WriteLine("public async Task<RPCData> {0}(int seqid, RPCData request)",
+                      GetProcedureProcessMethodName(method));
             WriteStartBraceIndent();
 
-            WriteLine("var args = new {0}_args();", method.Name);
+            WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
             WriteLine("args.Read(request.Serializer);");
             WriteLine("request.Serializer.ReadProcedureCallEnd();");
-            WriteLine("var result = new {0}_result();", method.Name);
+            WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
 
             // If the method throws exceptions, we need to call it inside a try-catch.
             if (Metadata.HasThrows(method))
@@ -488,10 +507,16 @@ namespace Flood.Tools.RPCGen
 
         #region Service Method Args
 
+        private static string GetProcedureArgsClassName(MethodInfo method)
+        {
+            var procedureId = GetProcedureCallId(method);
+            return string.Format("{0}_{1}_args", method.Name, procedureId);
+        }
+
         private void GenerateServiceMethodArgs(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public class {0}_args", method.Name);
+            WriteLine("public class {0}", GetProcedureArgsClassName(method));
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -508,7 +533,7 @@ namespace Flood.Tools.RPCGen
             GenerateIsSet(parameters);
 
             // Generate constructor
-            WriteLine("public {0}_args()", method.Name);
+            WriteLine("public {0}()", GetProcedureArgsClassName(method));
             WriteLine("{");
             WriteLine("}");
             NewLine();
@@ -535,24 +560,18 @@ namespace Flood.Tools.RPCGen
         
         #endregion
 
-        #region General Auxiliaries
+        #region Service Method Result
 
-        public static Type GetMethodReturnType(MethodInfo method)
+        private static string GetProcedureResultClassName(MethodInfo method)
         {
-            if (method.ReturnType == typeof (Task))
-                return typeof(void);
-
-            if (IsInstanceOfGenericType(typeof (Task<>), method.ReturnType))
-                return method.ReturnType.GenericTypeArguments[0];
-
-            throw new Exception(string.Format("{0}.{1} does not return a Task", 
-                        method.DeclaringType.FullName, method.Name));
+            var procedureId = GetProcedureCallId(method);
+            return string.Format("{0}_{1}_result", method.Name, procedureId);
         }
 
         private void GenerateServiceMethodResult(MethodInfo method)
         {
             WriteLine("[Serializable]");
-            WriteLine("public class {0}_result", method.Name);
+            WriteLine("public class {0}", GetProcedureResultClassName(method));
             WriteStartBraceIndent();
 
             var parameters = new List<Parameter>();
@@ -571,7 +590,7 @@ namespace Flood.Tools.RPCGen
 
             List<ExceptionInfo> exceptionsInfo;
             if (Metadata.TryGetThrows(method, out exceptionsInfo))
-            {   
+            {
                 foreach (var exception in exceptionsInfo)
                 {
                     var param = new Parameter()
@@ -607,7 +626,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate constructor
-            WriteLine("public {0}_result()", method.Name);
+            WriteLine("public {0}()", GetProcedureResultClassName(method));
             WriteLine("{");
             WriteLine("}");
             NewLine();
@@ -620,6 +639,22 @@ namespace Flood.Tools.RPCGen
             GenerateServiceMethodWrite(method.Name, parameters, isResult: true);
 
             WriteCloseBraceIndent();
+        }
+
+        #endregion
+
+        #region General Auxiliaries
+
+        public static Type GetMethodReturnType(MethodInfo method)
+        {
+            if (method.ReturnType == typeof (Task))
+                return typeof(void);
+
+            if (IsInstanceOfGenericType(typeof (Task<>), method.ReturnType))
+                return method.ReturnType.GenericTypeArguments[0];
+
+            throw new Exception(string.Format("{0}.{1} does not return a Task", 
+                        method.DeclaringType.FullName, method.Name));
         }
 
         private static bool IsEventMethod(Type type, MethodInfo method)
