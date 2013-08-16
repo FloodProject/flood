@@ -29,7 +29,7 @@ public:
 
     void init();
 
-    virtual bool getGlyphInfo(int codepoint, int size, Glyph& glyph) const OVERRIDE;
+    virtual bool getGlyphInfo(int codepoint, int size, FLD_OUT Glyph& glyph) const OVERRIDE;
     virtual ImageHandle createGlyphImage(int codepoint, int size) const OVERRIDE;
 
     virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const OVERRIDE;
