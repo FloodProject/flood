@@ -57,6 +57,9 @@ namespace Flood
                     "Core/Extension.h",
                     "Core/Reflection.h",
                     "Core/Serialization.h",
+                    "Core/Archive.h",
+                    "Core/Stream.h",
+                    "Core/FileWatcher.h",
                     "Core/Math/Color.h",
                     "Core/Network/Network.h",
                     "Core/Network/Host.h",
@@ -163,7 +166,6 @@ namespace Flood
 
             lib.SetClassAsValueType("ExtensionMetadata");
 
-            lib.IgnoreClassWithName("Stream");
             lib.IgnoreClassWithName("MemoryStream");
             lib.IgnoreClassWithName("Serializer");
             lib.IgnoreClassWithName("Thread");

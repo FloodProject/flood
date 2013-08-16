@@ -175,11 +175,12 @@ public:
 	void archiveMountDirectories(const Path& dirPath, Allocator* alloc);
 
 private:
+
 	void enumerate(std::vector<Path>& paths, bool dir);
 
 public:
-	std::vector<Archive*> mounts; //!< mounted archives
 
+	std::vector<Archive*> mounts; //!< mounted archives
 };
 
 //-----------------------------------//
@@ -245,7 +246,6 @@ public:
 	 * Sets up and updates the watching functionality for the archive.
 	 */
 	virtual bool monitor() override;
-
 };
 
 //-----------------------------------//
@@ -313,11 +313,12 @@ public:
 	virtual bool monitor() override;
 
 private:
+
 	void enumerate(std::vector<Path>& paths, bool dir);
 
 public:
-	void* handle; //!< zip handle
 
+	void* handle; //!< zip handle
 };
 
 //-----------------------------------//

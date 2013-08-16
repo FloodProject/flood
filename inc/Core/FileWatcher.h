@@ -44,22 +44,22 @@ NAMESPACE_CORE_BEGIN
 
 typedef uint32 FileWatchId;
 
+enum class FileWatchEventKind
+{
+	Added,
+	Deleted,
+	Modified,
+	Renamed,
+};
+
 struct API_CORE FileWatchEvent
 {
 	DECLARE_UNCOPYABLE(FileWatchEvent)
 
-	enum Enum
-	{
-		Added,
-		Deleted,
-		Modified,
-		Renamed,
-	};
-
-	FileWatchEvent( FileWatchEvent::Enum, FileWatchId,
+	FileWatchEvent( FileWatchEventKind, FileWatchId,
 		const String& dir, const String& file );
 
-	FileWatchEvent::Enum action;
+	FileWatchEventKind action;
 	FileWatchId watchId;
 
 	String dir;
@@ -99,7 +99,7 @@ public:
 	Event1<const FileWatchEvent&> onFileWatchEvent;
 };
 
-API_CORE FileWatcher* GetFileWatcher();
+FLD_IGNORE API_CORE FileWatcher* GetFileWatcher();
 
 //-----------------------------------//
 

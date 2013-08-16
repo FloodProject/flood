@@ -50,7 +50,7 @@ class API_CORE Stream
 {
 public:
 	
-	enum { EndOfStream = 0, InvalidState = -1 };
+	enum FLD_IGNORE { EndOfStream = 0, InvalidState = -1 };
 
 protected:
 
@@ -59,7 +59,7 @@ protected:
 	 * \param path stream path
 	 * \param mode stream opening mode
 	 */
-	Stream(const String& path, StreamOpenMode mode);
+	Stream(const Path& path, StreamOpenMode mode);
 
 public:
 
