@@ -126,7 +126,7 @@ public:
 	// Events gets called when a component is removed.
 	Event1<const ComponentPtr&> onComponentRemoved;
 
-public:
+protected:
 
 	// Name of the entity.
 	String name;

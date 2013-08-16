@@ -68,7 +68,7 @@ public:
 	// Gets/sets if the debug.renderable inherits the transform.
 	ACCESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
 
-public:
+protected:
 
 	// Entity that owns this component.
 	Entity* entity;
