@@ -741,7 +741,6 @@ namespace Flood.Tools.RPCGen
                 case TType.List:
                 case TType.Map:
                 case TType.String:
-                case TType.Class:
                     return true;
                 default:
                     return false;
@@ -835,7 +834,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("field.ID = {0};", param.Id);
                 var className = "\"\"";
                 
-                if (ConvertFromTypeToThrift(param.ParameterType) == TType.Class)
+                if (ConvertFromTypeToThrift(param.ParameterType) == TType.DataObject)
                     className = ToTitleCase(param.Name) + ".GetType().Name";
 
                 WriteLine("field.ClassName = {0};", className);
@@ -957,7 +956,6 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.DataObject:
                 case TType.Exception:
-                case TType.Class:
                     GenerateStructSerialize(type, name);
                     break;
                 case TType.Bool:
@@ -1128,7 +1126,6 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.DataObject:
                 case TType.Exception:
-                case TType.Class:
                     WriteLine("var {0} = new {1}();", elemName, ImplName(type, true));
                     WriteLine("{0}.Read(iprot);", elemName);
 
@@ -1393,7 +1390,7 @@ namespace Flood.Tools.RPCGen
                 return TType.DateTime;
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
-            else if (type.IsValueType && !type.IsPrimitive)
+            else if (Metadata.IsDataObject(type))
                 return TType.DataObject;
             else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
                 return TType.Exception;
@@ -1401,8 +1398,6 @@ namespace Flood.Tools.RPCGen
                 return TType.Map;
             else if (IsInstanceOfGenericType(typeof(ICollection<>), type))
                 return TType.List;
-            else if (type.IsClass)
-                return TType.Class;
 
             throw new NotImplementedException("Unhandle type "+type);
         }

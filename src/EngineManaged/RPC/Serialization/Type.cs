@@ -40,10 +40,9 @@ namespace Flood.RPC.Serialization
         DataObject = 12,
         Map = 13,
         List = 14,
-        Class = 15,
-        Guid = 16,
-        DateTime = 17,
-        Array = 18
+        Guid = 15,
+        DateTime = 16,
+        Array = 17
 
     }
 }
