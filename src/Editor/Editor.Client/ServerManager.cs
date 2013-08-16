@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Flood.Editor.Server;
+using Flood.Network;
 
 namespace Flood.Editor
 {
@@ -24,9 +25,8 @@ namespace Flood.Editor
 
             serverCreatedEvent = new ManualResetEventSlim();
 
-            var details = new HostConnectionDetails(Settings.Host,
-                Settings.RPCPort, Settings.Channels);
-            Server = new EditorServer(details);
+            var endPoint = new HostEndPoint(Settings.Host, Settings.RPCPort);
+            Server = new EditorServer(endPoint);
 
             System.Threading.Tasks.Task.Run((Action)RunBuiltinServer);
             serverCreatedEvent.Wait();

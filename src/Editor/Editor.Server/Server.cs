@@ -1,3 +1,4 @@
+using Flood.Network;
 using System;
 
 namespace Flood.Editor.Server
@@ -10,8 +11,8 @@ namespace Flood.Editor.Server
         public UserManager UserManager { get; set; }
         public ProjectManager ProjectManager { get; set; }
 
-        public EditorServer(HostConnectionDetails details)
-            : base(details)
+        public EditorServer(HostEndPoint endPoint)
+            : base(endPoint)
         {
             var serviceManager = Host.ServiceManager;
 

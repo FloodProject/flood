@@ -1,4 +1,5 @@
 
+using Flood.Network;
 namespace Flood.Server
 {
     public abstract class Server
@@ -7,9 +8,9 @@ namespace Flood.Server
 
         public IDatabaseManager Database { get; set; }
 
-        protected Server(HostConnectionDetails details)
+        protected Server(HostEndPoint endPeer)
         {
-            Host = new Network.Server(details);
+            Host = new Network.Server(endPeer);
 
 #if USE_RAVENDB
             Database = new RavenDatabaseManager();
