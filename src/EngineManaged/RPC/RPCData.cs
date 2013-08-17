@@ -11,6 +11,14 @@ namespace Flood.RPC
         Signed = 4,
     }
 
+    public enum RPCDataType
+    {
+        Call = 1,
+        Reply = 2,
+        Exception = 3,
+        Oneway = 4
+    }
+
     public struct RPCData
     {
         public struct RPCDataHeader
@@ -19,7 +27,7 @@ namespace Flood.RPC
 
             public int ServiceId;
             public int SequenceNumber;
-            public ProcedureCallType CallType;
+            public RPCDataType CallType;
 
             public RPCDataHeader(Serializer serializer)
                 : this()
@@ -31,7 +39,7 @@ namespace Flood.RPC
             {
                 ServiceId = serializer.ReadI32();
                 SequenceNumber = serializer.ReadI32();
-                CallType = (ProcedureCallType)serializer.ReadI32();
+                CallType = (RPCDataType)serializer.ReadI32();
             }
 
             public void Write()
@@ -62,7 +70,7 @@ namespace Flood.RPC
             reply.Peer = call.Peer;
             reply.Flags = flags;
             reply.Header.SequenceNumber = call.Header.SequenceNumber;
-            reply.Header.CallType = ProcedureCallType.Reply;
+            reply.Header.CallType = RPCDataType.Reply;
             reply.Header.ServiceId = call.Header.ServiceId;
             reply.Header.Write();
 

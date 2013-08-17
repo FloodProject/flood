@@ -33,12 +33,12 @@ namespace Flood.RPC
 
             switch(data.Header.CallType)
             {
-            case ProcedureCallType.Call:
+            case RPCDataType.Call:
             {
                 ImplementationManager.Process(data);
                 return;
             }
-            case ProcedureCallType.Reply:
+            case RPCDataType.Reply:
             {
                 RPCProxyManager proxyManager;
                 if (!ProxyManagers.TryGetValue(peer, out proxyManager))

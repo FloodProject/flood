@@ -24,7 +24,7 @@ namespace Flood.RPC
         {
             switch (reply.Header.CallType)
             {
-            case ProcedureCallType.Reply:
+            case RPCDataType.Reply:
             {
                 var seqNum = reply.Header.SequenceNumber;
                 if (!pendingCalls.ContainsKey(seqNum)) 
@@ -48,7 +48,7 @@ namespace Flood.RPC
             call.Peer = peer;
             call.Flags = flags;
             call.Header.SequenceNumber = sequenceNumber++;
-            call.Header.CallType = ProcedureCallType.Call;
+            call.Header.CallType = RPCDataType.Call;
             call.Header.ServiceId = serviceId;
             call.Header.Write();
 

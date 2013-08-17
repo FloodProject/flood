@@ -53,7 +53,7 @@ namespace Flood.RPC
             var response = new RPCData(new BinarySerializer());
             response.Header.ServiceId = request.Header.ServiceId;
             response.Header.SequenceNumber = request.Header.SequenceNumber;
-            response.Header.CallType = ProcedureCallType.Exception;
+            response.Header.CallType = RPCDataType.Exception;
             response.Header.Write();
             SerializerUtil.Skip(request.Serializer, TType.DataObject);
             request.Serializer.ReadProcedureCallEnd();
