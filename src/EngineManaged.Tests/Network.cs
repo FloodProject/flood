@@ -37,9 +37,6 @@ namespace Flood.Tests
             var serverThread = new Thread(Process);
             serverThread.Start(server);
 
-            var serviceImpl = new ServiceTest();
-            server.ServiceManager.AddImplementation<IServiceTest>(serviceImpl);
-
             // Start the client and connect to the service.
             var client = new Client();
             var clientThread = new Thread(Process);
@@ -49,7 +46,10 @@ namespace Flood.Tests
             connectTask.Wait();
             Assert.IsTrue(connectTask.Result);
 
-            var serviceProxy = client.ServiceManager.GetProxy<IServiceTest>(client.Session, 1);
+            var serviceImpl = new ServiceTest();
+            var serviceId = server.ServiceManager.AddImplementation<IServiceTest>(serviceImpl);
+
+            var serviceProxy = client.ServiceManager.CreateProxy<IServiceTest>(new SessionRPCPeer(client.Session), serviceId);
             var pingTask = serviceProxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));

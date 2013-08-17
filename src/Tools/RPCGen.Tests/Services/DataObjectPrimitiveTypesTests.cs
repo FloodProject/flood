@@ -190,12 +190,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = byte.MinValue;
             t = service.TestByte(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = byte.MaxValue;
             t = service.TestByte(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -206,12 +206,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = float.MinValue;
             t = service.TestFloat(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = float.MaxValue;
             t = service.TestFloat(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -222,12 +222,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = double.MinValue;
             t = service.TestDouble(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = double.MaxValue;
             t = service.TestDouble(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -243,12 +243,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = short.MinValue;
             t = service.TestShort(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = short.MaxValue;
             t = service.TestShort(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -259,12 +259,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = int.MinValue;
             t = service.TestInt(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = int.MaxValue;
             t = service.TestInt(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -275,12 +275,12 @@ namespace RPCGen.Tests.Services
 
             d.Value = long.MinValue;
             t = service.TestLong(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = long.MaxValue;
             t = service.TestLong(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -291,17 +291,17 @@ namespace RPCGen.Tests.Services
 
             d.Value = "";
             t = service.TestString(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = "1234567890";
             t = service.TestString(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = "\01234567890";
             t = service.TestString(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -312,7 +312,7 @@ namespace RPCGen.Tests.Services
 
             d.Value = new Guid("CB873FC8-6759-4F80-81BE-0EC214BAB26E");
             t = service.TestGuid(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
 
@@ -323,17 +323,17 @@ namespace RPCGen.Tests.Services
 
             d.Value = DateTime.MinValue;
             t = service.TestDateTime(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = DateTime.Now;
             t = service.TestDateTime(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
 
             d.Value = DateTime.MaxValue;
             t = service.TestDateTime(d);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
         }
     }

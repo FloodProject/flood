@@ -121,12 +121,12 @@ namespace RPCGen.Tests.Services
 
             v = byte.MinValue;
             t = service.TestByte(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = byte.MaxValue;
             t = service.TestByte(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -137,12 +137,12 @@ namespace RPCGen.Tests.Services
 
             v = float.MinValue;
             t = service.TestFloat(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = float.MaxValue;
             t = service.TestFloat(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -153,12 +153,12 @@ namespace RPCGen.Tests.Services
 
             v = double.MinValue;
             t = service.TestDouble(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = double.MaxValue;
             t = service.TestDouble(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -174,12 +174,12 @@ namespace RPCGen.Tests.Services
 
             v = short.MinValue;
             t = service.TestShort(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = short.MaxValue;
             t = service.TestShort(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -190,12 +190,12 @@ namespace RPCGen.Tests.Services
 
             v = int.MinValue;
             t = service.TestInt(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = int.MaxValue;
             t = service.TestInt(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -206,12 +206,12 @@ namespace RPCGen.Tests.Services
 
             v = long.MinValue;
             t = service.TestLong(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = long.MaxValue;
             t = service.TestLong(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -222,17 +222,17 @@ namespace RPCGen.Tests.Services
 
             v = "";
             t = service.TestString(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = "1234567890";
             t = service.TestString(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = "\01234567890";
             t = service.TestString(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -241,7 +241,7 @@ namespace RPCGen.Tests.Services
             var v = new Guid("CB873FC8-6759-4F80-81BE-0EC214BAB26E");
             Task<Guid> t;
             t = service.TestGuid(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
 
@@ -252,17 +252,17 @@ namespace RPCGen.Tests.Services
 
             v = DateTime.MinValue;
             t = service.TestDateTime(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = DateTime.Now;
             t = service.TestDateTime(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
 
             v = DateTime.MaxValue;
             t = service.TestDateTime(v);
-            t.Wait();
+            Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(v, t.Result);
         }
     }

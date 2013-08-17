@@ -50,8 +50,11 @@ namespace Flood.RPC
             if (fn != null)
                 return await fn(request);
            
-            var response = new RPCData(request);
-            response.IsResponse = true;
+            var response = new RPCData(new BinarySerializer());
+            response.Header.ServiceId = request.Header.ServiceId;
+            response.Header.SequenceNumber = request.Header.SequenceNumber;
+            response.Header.CallType = ProcedureCallType.Exception;
+            response.Header.Write();
             SerializerUtil.Skip(request.Serializer, TType.DataObject);
             request.Serializer.ReadProcedureCallEnd();
             RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + msg.Id + "'");

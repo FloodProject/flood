@@ -47,5 +47,11 @@ namespace Flood.RPC
         {
             get { return stream.Length; }
         }
+
+        public long Position
+        {
+            get { return stream.Position; }
+            set { stream.Position = value; }
+        }
     }
 }

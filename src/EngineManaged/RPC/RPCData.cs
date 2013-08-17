@@ -1,53 +1,72 @@
 ﻿using Flood.RPC.Serialization;
+using System;
 
 namespace Flood.RPC
 {
-    public class RPCData
+    public enum RPCFlags
     {
-        public int ServiceId { get; set; }
-        public int RequestId { get; set; }
-        public virtual bool IsResponse { get; set; }
+        None = 0,
+        Encrypted = 1,
+        Compressed = 2,
+        Signed = 4,
+    }
 
-        public BinarySerializer Serializer { get; private set; }
-
-        public PacketFlags Flags { get; set; }
-        public Session Session { get; set; }
-        
-
-        public RPCData()
+    public struct RPCData
+    {
+        public struct RPCDataHeader
         {
-            Serializer = new BinarySerializer();
+            Serializer serializer;
+
+            public int ServiceId;
+            public int SequenceNumber;
+            public ProcedureCallType CallType;
+
+            public RPCDataHeader(Serializer serializer)
+                : this()
+            {
+                this.serializer = serializer;
+            }
+
+            public void Read()
+            {
+                ServiceId = serializer.ReadI32();
+                SequenceNumber = serializer.ReadI32();
+                CallType = (ProcedureCallType)serializer.ReadI32();
+            }
+
+            public void Write()
+            {
+                serializer.WriteI32(ServiceId);
+                serializer.WriteI32(SequenceNumber);
+                serializer.WriteI32((int)CallType);
+            }
         }
 
-        public RPCData(RPCBuffer buffer)
-        {
-            Serializer = new BinarySerializer();
-        }
+        public Serializer Serializer;
+        public RPCFlags Flags;
+        public RPCPeer Peer;
 
-        public RPCData(RPCData data)
+        public RPCDataHeader Header;
+
+        public RPCData(Serializer serializer)
             : this()
         {
-            ServiceId = data.ServiceId;
-            RequestId = data.RequestId;
-            Session = data.Session;
+            Serializer = serializer;
+            Header = new RPCDataHeader(Serializer);
         }
 
-        // GetHashCode and Equals are implemented in a way that a response 
-        // is considered equal to its request. This way we can use a request
-        // as a dictionary key and retrieve its value with the given response.
-        public override int GetHashCode()
+        public static RPCData CreateReply(RPCData call, RPCFlags flags = RPCFlags.None)
         {
-            return RequestId;
-        }
+            var serializer = new BinarySerializer();
+            var reply = new RPCData(serializer);
+            reply.Peer = call.Peer;
+            reply.Flags = flags;
+            reply.Header.SequenceNumber = call.Header.SequenceNumber;
+            reply.Header.CallType = ProcedureCallType.Reply;
+            reply.Header.ServiceId = call.Header.ServiceId;
+            reply.Header.Write();
 
-        public override bool Equals(object obj)
-        {
-            var d = obj as RPCData;
-            if (d == null) return false;
-
-            return ServiceId == d.ServiceId
-                   && RequestId == d.RequestId
-                   && Session.Equals(d.Session);
+            return reply;
         }
     }
 }

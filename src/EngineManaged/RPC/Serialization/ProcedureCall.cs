@@ -27,6 +27,14 @@ using System.Text;
 
 namespace Flood.RPC.Serialization
 {
+    public enum ProcedureCallType
+    {
+        Call = 1,
+        Reply = 2,
+        Exception = 3,
+        Oneway = 4
+    }
+
     public struct ProcedureCall
     {
         private int id;

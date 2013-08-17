@@ -157,21 +157,19 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Proxy(IProxyHandler proxyHandler, Session session, int serviceId)");
+            WriteLine("public Proxy(RPCProxyManager proxyManager, int serviceId)");
             if (baseType != null)
                 Write(" : base(proxyHandler)", baseType.Name);
             WriteStartBraceIndent();
-            WriteLine("ProxyHandler = proxyHandler;");
-            WriteLine("Session = session;");
+            WriteLine("ProxyManager = proxyManager;");
             WriteLine("ServiceId = serviceId;");
             WriteCloseBraceIndent();
             NewLine();
 
             if (baseType == null)
             {
-                WriteLine("public IProxyHandler ProxyHandler { get; private set; }");
-                WriteLine("protected Session Session { get; private set; }");
-                WriteLine("protected int ServiceId { get; private set; }");
+                WriteLine("public RPCProxyManager ProxyManager { get; private set; }");
+                WriteLine("public int ServiceId { get; private set; }");
                 NewLine();
             }
 
@@ -228,7 +226,7 @@ namespace Flood.Tools.RPCGen
                     Write(", ");
             }
             WriteLine(");");
-            WriteLine("var response = await ProxyHandler.RemoteProcedureCall(request);");
+            WriteLine("var response = await ProxyManager.DispatchCall(request);");
             if (retType != typeof(void))
                 Write("return ");
             WriteLine("{0}(response);", GetProcedureReceiveMethodName(method));
@@ -296,13 +294,17 @@ namespace Flood.Tools.RPCGen
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();
-            WriteLine("var request = new RPCData();");
-            WriteLine("request.Session = Session;");
-            WriteLine("request.ServiceId = ServiceId;");
+
+            WriteLine("var request = ProxyManager.CreateCall(ServiceId);");
+
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
+            {
+                NewLine();
                 WriteLine("request.Flags = {0};", string.Join(" | ", flags));
+            }  
 
+            NewLine();
             int procedureId = GetProcedureCallId(method);
             WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call);", procedureId);
             WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
@@ -485,17 +487,16 @@ namespace Flood.Tools.RPCGen
                 WriteLine("}");
             }
 
-            WriteLine("var response = new RPCData(request);");
-            WriteLine("response.IsResponse = true;");
+            WriteLine("var reply = RPCData.CreateReply(request);");
 
             var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
             WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Reply);", procedureId);
-            WriteLine("response.Serializer.WriteProcedureCallBegin(procedureCall);");
+            WriteLine("reply.Serializer.WriteProcedureCallBegin(procedureCall);");
 
-            WriteLine("result.Write(response.Serializer);");
-            WriteLine("response.Serializer.WriteProcedureCallEnd();");
-            WriteLine("return response;");
+            WriteLine("result.Write(reply.Serializer);");
+            WriteLine("reply.Serializer.WriteProcedureCallEnd();");
+            WriteLine("return reply;");
 
             WriteCloseBraceIndent();
         }

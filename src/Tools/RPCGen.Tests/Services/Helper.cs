@@ -10,35 +10,44 @@ using System.Threading.Tasks;
 
 namespace RPCGen.Tests.Services
 {
-    public class ServiceManager : IProxyHandler
-    {
-        public Processor Processor { get; set; }
-
-        public Task<RPCData> RemoteProcedureCall(RPCData data)
-        {
-            return Processor.Process(data);
-        }
-    }
 
     public class Helper
     {
+        class MockRPCPeer : RPCPeer
+        {
+            RPCManager manager;
+
+            public MockRPCPeer(RPCManager mgr)
+            {
+                manager = mgr;
+            }
+
+            public override void DispatchCall(RPCData data)
+            {
+                data.Serializer.Buffer.Position = 0;
+                data.Header.Read();
+                manager.Process(data);
+            }
+
+            public override bool Equals(object other)
+            {
+                return true;
+            }
+
+            public override int GetHashCode()
+            {
+                return 1337;
+            }
+        }
+
+
+        /// Gets a service interface proxy for a given implementation
         public static T GetProxy<T>(T serviceImpl)
         {
-            var fullName = Flood.RPC.Helper.ImplName(typeof(T), true);
+            var serviceManager = new RPCManager();
+            var serviceId = serviceManager.AddImplementation<T>(serviceImpl);
 
-            var implType = Assembly.GetExecutingAssembly().GetType(fullName);
-            Assert.NotNull(implType);
-
-            var clientType = implType.GetNestedType("Proxy");
-            Assert.NotNull(clientType);
-
-            var processorType = implType.GetNestedType("Processor");
-            Assert.NotNull(processorType);
-
-            var serviceManager = new ServiceManager();
-
-            serviceManager.Processor = (Processor)Activator.CreateInstance(processorType, new object[] { serviceImpl });
-            return (T)Activator.CreateInstance(clientType, new object[] { serviceManager, new Session(), 0 });
+            return serviceManager.CreateProxy<T>(new MockRPCPeer(serviceManager), serviceId);
         }
     }
 }

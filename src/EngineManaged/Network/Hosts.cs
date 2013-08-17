@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Flood.RPC;
+using Flood.RPC.Serialization;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Flood.Network
@@ -22,25 +25,22 @@ namespace Flood.Network
     /// </summary>
     public class Host
     {
-        public const int ChannelCount = 2;
+        public const int ChannelCount = 1;
 
         protected Flood.Host host;
 
-        public ServiceManager ServiceManager { get; private set; }
+        public RPCManager ServiceManager { get; private set; }
         
         public Host()
         {
-            ServiceManager = new ServiceManager();
+            ServiceManager = new RPCManager();
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)
         {
-            if (packet.Id != 1)
-                return;
+            var peer = new SessionRPCPeer(session);
 
-            var rpcData = RPCDataHelper.CreateRPCData(packet);
-            rpcData.Session = session;
-            ServiceManager.Process(rpcData);
+            ServiceManager.Process(packet.Read().ToArray(), peer);
         }
 
         public void Update()
@@ -49,23 +49,6 @@ namespace Flood.Network
                 return;
 
             host.ProcessEvents(0);
-
-            if(SendData(1))
-                host.ProcessEvents(0);
-        }
-
-        private bool SendData(byte channel)
-        {
-            var hasDataToSend = ServiceManager.Data.Count>0;
-
-            while (ServiceManager.Data.Count != 0)
-            {
-                var data = ServiceManager.Data.Dequeue(); 
-                var packet = RPCDataHelper.CreatePacket(data, 1);
-                data.Session.Peer.QueuePacket(packet, channel);
-            }
-
-            return hasDataToSend;
         }
     }
 
