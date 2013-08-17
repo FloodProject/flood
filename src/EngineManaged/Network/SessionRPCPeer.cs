@@ -18,14 +18,10 @@ namespace Flood.Network
 
         public override void DispatchCall(RPCData data)
         {
-            var stream = data.Serializer.Buffer;
-            var bytes = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(bytes, 0, (int) stream.Length);
-            var bytesLst = new List<byte>(bytes);
+            var bytes = data.Serializer.Buffer.ReadAllBytes();
 
             var packet = new Packet(0);
-            packet.Write(bytesLst);
+            packet.Write(new List<byte>(bytes));
             packet.Flags = ConvertFlags(data.Flags);
 
             Session.Peer.QueuePacket(packet, 0);
