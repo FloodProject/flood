@@ -203,7 +203,7 @@ namespace Flood.RPC.Serialization
                 }
                 else
                 {
-                    proto.Buffer.Write(COMMA);
+                    proto.Buffer.Write(COMMA, 0, COMMA.Length);
                 }
             }
 
@@ -246,7 +246,8 @@ namespace Flood.RPC.Serialization
                 }
                 else
                 {
-                    proto.Buffer.Write(colon ? COLON : COMMA);
+                    var buf = colon ? COLON : COMMA;
+                    proto.Buffer.Write(buf, 0, buf.Length);
                     colon = !colon;
                 }
             }
@@ -417,7 +418,7 @@ namespace Flood.RPC.Serialization
         private void WriteJSONString(byte[] b)
         {
             context.Write();
-            Buffer.Write(QUOTE);
+            Buffer.Write(QUOTE, 0, QUOTE.Length);
             int len = b.Length;
             for (int i = 0; i < len; i++)
             {
@@ -425,8 +426,8 @@ namespace Flood.RPC.Serialization
                 {
                     if (b[i] == BACKSLASH[0])
                     {
-                        Buffer.Write(BACKSLASH);
-                        Buffer.Write(BACKSLASH);
+                        Buffer.Write(BACKSLASH, 0, BACKSLASH.Length);
+                        Buffer.Write(BACKSLASH, 0, BACKSLASH.Length);
                     }
                     else
                     {
@@ -442,19 +443,19 @@ namespace Flood.RPC.Serialization
                     }
                     else if (tempBuffer[0] > 1)
                     {
-                        Buffer.Write(BACKSLASH);
+                        Buffer.Write(BACKSLASH, 0, BACKSLASH.Length);
                         Buffer.Write(tempBuffer, 0, 1);
                     }
                     else
                     {
-                        Buffer.Write(ESCSEQ);
+                        Buffer.Write(ESCSEQ, 0, ESCSEQ.Length);
                         tempBuffer[0] = HexChar((byte)(b[i] >> 4));
                         tempBuffer[1] = HexChar(b[i]);
                         Buffer.Write(tempBuffer, 0, 2);
                     }
                 }
             }
-            Buffer.Write(QUOTE);
+            Buffer.Write(QUOTE, 0, QUOTE.Length);
         }
 
         ///<summary>
@@ -468,12 +469,13 @@ namespace Flood.RPC.Serialization
 
             bool escapeNum = context.EscapeNumbers();
             if (escapeNum)
-                Buffer.Write(QUOTE);
+                Buffer.Write(QUOTE, 0, QUOTE.Length);
 
-            Buffer.Write(utf8Encoding.GetBytes(str));
+            var strBytes = utf8Encoding.GetBytes(str);
+            Buffer.Write(strBytes, 0, strBytes.Length);
 
             if (escapeNum)
-                Buffer.Write(QUOTE);
+                Buffer.Write(QUOTE, 0, QUOTE.Length);
         }
 
         ///<summary>
@@ -503,12 +505,13 @@ namespace Flood.RPC.Serialization
             bool escapeNum = special || context.EscapeNumbers();
 
             if (escapeNum)
-                Buffer.Write(QUOTE);
+                Buffer.Write(QUOTE, 0, QUOTE.Length);
 
-            Buffer.Write(utf8Encoding.GetBytes(str));
+            var strBytes = utf8Encoding.GetBytes(str);
+            Buffer.Write(strBytes, 0, strBytes.Length);
 
             if (escapeNum)
-                Buffer.Write(QUOTE);
+                Buffer.Write(QUOTE, 0, QUOTE.Length);
         }
         ///<summary>
         /// Write out contents of byte array b as a JSON string with base-64 encoded
@@ -517,7 +520,7 @@ namespace Flood.RPC.Serialization
         private void WriteJSONBase64(byte[] b)
         {
             context.Write();
-            Buffer.Write(QUOTE);
+            Buffer.Write(QUOTE, 0, QUOTE.Length);
 
             int len = b.Length;
             int off = 0;
@@ -537,33 +540,33 @@ namespace Flood.RPC.Serialization
                 Buffer.Write(tempBuffer, 0, len + 1);
             }
 
-            Buffer.Write(QUOTE);
+            Buffer.Write(QUOTE, 0, QUOTE.Length);
         }
 
         private void WriteJSONObjectStart()
         {
             context.Write();
-            Buffer.Write(LBRACE);
+            Buffer.Write(LBRACE, 0, LBRACE.Length);
             PushContext(new JSONPairContext(this));
         }
 
         private void WriteJSONObjectEnd()
         {
             PopContext();
-            Buffer.Write(RBRACE);
+            Buffer.Write(RBRACE, 0, RBRACE.Length);
         }
 
         private void WriteJSONArrayStart()
         {
             context.Write();
-            Buffer.Write(LBRACKET);
+            Buffer.Write(LBRACKET, 0, LBRACKET.Length);
             PushContext(new JSONListContext(this));
         }
 
         private void WriteJSONArrayEnd()
         {
             PopContext();
-            Buffer.Write(RBRACKET);
+            Buffer.Write(RBRACKET, 0, RBRACKET.Length);
         }
 
         public override void WriteProcedureCallBegin(ProcedureCall message)

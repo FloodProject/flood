@@ -21,22 +21,18 @@
  * details.
  */
 
+using System.IO;
 using System.Text;
 
 namespace Flood.RPC.Serialization
 {
     public abstract class Serializer
     {
-        public RPCBuffer Buffer { get; private set; }
-
-        protected Serializer(RPCBuffer buffer)
-        {
-            Buffer = buffer;
-        }
+        public MemoryStream Buffer { get; private set; }
 
         protected Serializer()
         {
-            Buffer = new RPCBuffer();
+            Buffer = new MemoryStream();
         }
 
         public abstract void WriteProcedureCallBegin(ProcedureCall procedure);

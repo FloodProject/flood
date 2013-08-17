@@ -107,7 +107,7 @@ namespace Flood.RPC.Serialization
         private void WriteByteDirect(byte b)
         {
             byteDirectBuffer[0] = b;
-            Buffer.Write(byteDirectBuffer);
+            Buffer.Write(byteDirectBuffer, 0, byteDirectBuffer.Length);
         }
 
         /** 
@@ -341,7 +341,7 @@ namespace Flood.RPC.Serialization
         {
             byte[] data = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 };
             fixedLongToBytes(BitConverter.DoubleToInt64Bits(dub), data, 0);
-            Buffer.Write(data);
+            Buffer.Write(data, 0, data.Length);
         }
 
         /**

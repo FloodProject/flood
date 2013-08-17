@@ -250,7 +250,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var msg = response.Serializer.ReadProcedureCallBegin();");
 
-            WriteLine("if (response.Header.CallType == ProcedureCallType.Exception)");
+            WriteLine("if (response.Header.CallType == RPCDataType.Exception)");
             WriteStartBraceIndent();
             WriteLine("var x = RPCException.Read(response.Serializer);");
             WriteLine("response.Serializer.ReadProcedureCallEnd();");

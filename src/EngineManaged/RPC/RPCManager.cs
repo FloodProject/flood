@@ -19,7 +19,9 @@ namespace Flood.RPC
         public void Process(byte[] data, RPCPeer peer)
         {
             var serializer = new BinarySerializer();
-            serializer.Buffer.Write(data);
+            serializer.Buffer.Write(data, 0, data.Length);
+            serializer.Buffer.Position = 0;
+
             var rpcData = new RPCData(serializer);
             rpcData.Header.Read();
             rpcData.Peer = peer;
