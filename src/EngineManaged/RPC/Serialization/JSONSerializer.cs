@@ -351,7 +351,8 @@ namespace Flood.RPC.Serialization
         ///<summary>
         /// JSONProtocol Constructor
         ///</summary>
-        public JSONSerializer()
+        public JSONSerializer(System.IO.Stream stream)
+            : base(stream)
         {
             context = new JSONBaseContext(this);
             reader = new LookaheadReader(this);

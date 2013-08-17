@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.IO;
 using System.Text;
 
 namespace Flood.RPC.Serialization
@@ -30,6 +31,16 @@ namespace Flood.RPC.Serialization
     {
         protected int readLength_;
         protected bool checkReadLength_ = false;
+
+        public BinarySerializer(System.IO.Stream stream)
+            :base(stream)
+        {
+        }
+
+        public BinarySerializer()
+            : base(new MemoryStream())
+        {
+        }
 
         #region Write Methods
 

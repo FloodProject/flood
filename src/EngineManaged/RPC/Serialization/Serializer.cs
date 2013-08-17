@@ -26,13 +26,15 @@ using System.Text;
 
 namespace Flood.RPC.Serialization
 {
+    using Stream = System.IO.Stream;
+
     public abstract class Serializer
     {
-        public MemoryStream Buffer { get; private set; }
+        public Stream Buffer { get; private set; }
 
-        protected Serializer()
+        protected Serializer(Stream stream)
         {
-            Buffer = new MemoryStream();
+            Buffer = stream;
         }
 
         public abstract void WriteProcedureCallBegin(ProcedureCall procedure);

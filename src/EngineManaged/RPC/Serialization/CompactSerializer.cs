@@ -75,7 +75,8 @@ namespace Flood.RPC.Serialization
         private  Nullable<Boolean> boolValue_;
 
 
-        public CompactSerializer()
+        public CompactSerializer(System.IO.Stream stream)
+            :base(stream)
         {
             ttypeToCompactType[(int)TType.Stop] = Types.STOP;
             ttypeToCompactType[(int)TType.Bool] = Types.BOOLEAN_TRUE;
