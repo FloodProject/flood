@@ -34,12 +34,6 @@ namespace Flood.RPC.Serialization
 
         private static byte[] ttypeToCompactType = new byte[16];
 
-        private const byte PROTOCOL_ID = 0x82;
-        private const byte VERSION = 1;
-        private const byte VERSION_MASK = 0x1f; // 0001 1111
-        private const byte TYPE_MASK = 0xE0; // 1110 0000
-        private const int TYPE_SHIFT_AMOUNT = 5;
-
         /**
          * All of the on-wire type codes.
          */
@@ -157,8 +151,6 @@ namespace Flood.RPC.Serialization
         */
         public override void WriteProcedureCallBegin(ProcedureCall message)
         {
-            WriteByteDirect(PROTOCOL_ID);
-            WriteByteDirect((byte)((VERSION & VERSION_MASK) | ((((uint)message.Type) << TYPE_SHIFT_AMOUNT) & TYPE_MASK)));
             WriteVarint32((uint)message.Id);
         }
 
@@ -475,20 +467,8 @@ namespace Flood.RPC.Serialization
    */
         public override ProcedureCall ReadProcedureCallBegin()
         {
-            byte protocolId = ReadByte();
-            if (protocolId != PROTOCOL_ID)
-            {
-                throw new SerializerException("Expected protocol id " + PROTOCOL_ID.ToString("X") + " but got " + protocolId.ToString("X"));
-            }
-            byte versionAndType = ReadByte();
-            byte version = (byte)(versionAndType & VERSION_MASK);
-            if (version != VERSION)
-            {
-                throw new SerializerException("Expected version " + VERSION + " but got " + version);
-            }
-            byte type = (byte)((versionAndType >> TYPE_SHIFT_AMOUNT) & 0x03);
             int messageId = (int)ReadVarint32();
-            return new ProcedureCall(messageId, (ProcedureCallType)type);
+            return new ProcedureCall(messageId);
         }
 
         /**

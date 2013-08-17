@@ -58,7 +58,7 @@ namespace Flood.RPC
             SerializerUtil.Skip(request.Serializer, TType.DataObject);
             request.Serializer.ReadProcedureCallEnd();
             RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + msg.Id + "'");
-            response.Serializer.WriteProcedureCallBegin(new ProcedureCall(msg.Id, ProcedureCallType.Exception));
+            response.Serializer.WriteProcedureCallBegin(new ProcedureCall(msg.Id));
             x.Write(response.Serializer);
             response.Serializer.WriteProcedureCallEnd();
             return response;

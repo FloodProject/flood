@@ -28,42 +28,14 @@ namespace Flood.RPC.Serialization
 {
     public class BinarySerializer : Serializer
     {
-        protected const uint VERSION_MASK = 0xffff0000;
-        protected const uint VERSION_1 = 0x80010000;
-
-        protected bool strictRead_ = false;
-        protected bool strictWrite_ = true;
-
         protected int readLength_;
         protected bool checkReadLength_ = false;
-
-
-        public BinarySerializer()
-            : this(false, true)
-        {
-        }
-
-        public BinarySerializer(bool strictRead, bool strictWrite)
-        {
-            strictRead_ = strictRead;
-            strictWrite_ = strictWrite;
-        }
 
         #region Write Methods
 
         public override void WriteProcedureCallBegin(ProcedureCall message)
         {
-            if (strictWrite_)
-            {
-                uint version = VERSION_1 | (uint)(message.Type);
-                WriteI32((int)version);
-                WriteI32(message.Id);
-            }
-            else
-            {
-                WriteI32(message.Id);
-                WriteByte((byte)message.Type);
-            }
+            WriteI32(message.Id);
         }
 
         public override void WriteProcedureCallEnd()
@@ -214,27 +186,9 @@ namespace Flood.RPC.Serialization
 
         public override ProcedureCall ReadProcedureCallBegin()
         {
-            ProcedureCall message = new ProcedureCall();
-            int size = ReadI32();
-            if (size < 0)
-            {
-                uint version = (uint)size & VERSION_MASK;
-                if (version != VERSION_1)
-                {
-                    throw new SerializerException(SerializerException.BAD_VERSION, "Bad version in ReadMessageBegin: " + version);
-                }
-                message.Type = (ProcedureCallType)(size & 0x000000ff);
-                message.Id = ReadI32();
-            }
-            else
-            {
-                if (strictRead_)
-                {
-                    throw new SerializerException(SerializerException.BAD_VERSION, "Missing version in readMessageBegin, old client?");
-                }
-                message.Id = ReadI32();
-                message.Type = (ProcedureCallType)ReadByte();
-            }
+            var message = new ProcedureCall();
+            message.Id = ReadI32();
+
             return message;
         }
 

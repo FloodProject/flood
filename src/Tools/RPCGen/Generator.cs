@@ -250,7 +250,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("var msg = response.Serializer.ReadProcedureCallBegin();");
 
-            WriteLine("if (msg.Type == ProcedureCallType.Exception)");
+            WriteLine("if (response.Header.CallType == ProcedureCallType.Exception)");
             WriteStartBraceIndent();
             WriteLine("var x = RPCException.Read(response.Serializer);");
             WriteLine("response.Serializer.ReadProcedureCallEnd();");
@@ -306,7 +306,7 @@ namespace Flood.Tools.RPCGen
 
             NewLine();
             int procedureId = GetProcedureCallId(method);
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Call);", procedureId);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0});", procedureId);
             WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
@@ -491,7 +491,7 @@ namespace Flood.Tools.RPCGen
 
             var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, ProcedureCallType.Reply);", procedureId);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0});", procedureId);
             WriteLine("reply.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("result.Write(reply.Serializer);");

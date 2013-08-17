@@ -49,7 +49,6 @@ namespace Flood.RPC.Serialization
 
         private byte[] ESCSEQ = new byte[] { (byte)'\\', (byte)'u', (byte)'0', (byte)'0' };
 
-        private const long VERSION = 1;
         private byte[] JSON_CHAR_TABLE = {
     0,  0,  0,  0,  0,  0,  0,  0,(byte)'b',(byte)'t',(byte)'n',  0,(byte)'f',(byte)'r',  0,  0, 
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
@@ -570,11 +569,7 @@ namespace Flood.RPC.Serialization
         public override void WriteProcedureCallBegin(ProcedureCall message)
         {
             WriteJSONArrayStart();
-            WriteJSONInteger(VERSION);
-
             WriteJSONInteger(message.Id);
-
-            WriteJSONInteger((long)message.Type);
         }
 
         public override void WriteProcedureCallEnd()
@@ -934,15 +929,7 @@ namespace Flood.RPC.Serialization
         {
             ProcedureCall message = new ProcedureCall();
             ReadJSONArrayStart();
-            if (ReadJSONInteger() != VERSION)
-            {
-                throw new SerializerException(SerializerException.BAD_VERSION,
-                                             "Message contained bad version.");
-            }
-
-            var buf = ReadJSONString(false);
             message.Id = (int)ReadJSONInteger();
-            message.Type = (ProcedureCallType)ReadJSONInteger();
             return message;
         }
 

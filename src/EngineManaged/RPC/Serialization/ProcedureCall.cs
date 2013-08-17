@@ -38,25 +38,17 @@ namespace Flood.RPC.Serialization
     public struct ProcedureCall
     {
         private int id;
-        private ProcedureCallType type;
 
-        public ProcedureCall(int id, ProcedureCallType type)
+        public ProcedureCall(int id)
             :this()
         {
             this.id = id;
-            this.type = type;
         }
 
         public int Id
         {
             get { return id; }
             set { id = value; }
-        }
-
-        public ProcedureCallType Type
-        {
-            get { return type; }
-            set { type = value; }
         }
     }
 }
