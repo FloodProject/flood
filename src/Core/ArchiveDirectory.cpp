@@ -14,6 +14,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -69,16 +70,16 @@ Stream* ArchiveDirectory::openFile(const Path& file, Allocator* alloc)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
+static void DirArchiveEnumerate(Array<Path>&, Path, Path, bool);
 
-void  ArchiveDirectory::enumerateFiles(std::vector<Path>& paths)
+void  ArchiveDirectory::enumerateFiles(Array<Path>& paths)
 {
 	FileEnumerateFiles(path, paths);
 }
 
 //-----------------------------------//
 
-void ArchiveDirectory::enumerateDirs(std::vector<Path>& paths)
+void ArchiveDirectory::enumerateDirs(Array<Path>& paths)
 {
 	FileEnumerateDirectories(path, paths);
 }
@@ -96,10 +97,9 @@ bool ArchiveDirectory::existsFile(const Path& path)
 
 bool ArchiveDirectory::existsDir(const Path& path)
 {
-	std::vector<Path> dirs;
+	Array<Path> dirs(*AllocatorGetHeap());
 	enumerateDirs(dirs);
 	Path normalizedPath = PathNormalize(path);
-
 
 	for(auto& i : dirs)
 	{

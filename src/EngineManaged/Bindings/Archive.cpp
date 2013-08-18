@@ -9,8 +9,9 @@
 #include "FileWatcher.h"
 #include "Memory.h"
 #include "Stream.h"
+#include <Core/Array.h>
 
-using namespace System;
+//using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::Archive::Archive(::Archive* native)
@@ -69,7 +70,7 @@ bool Flood::Archive::ExistsDir(System::String^ path)
 
 void Flood::Archive::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -81,7 +82,7 @@ void Flood::Archive::EnumerateFiles(System::Collections::Generic::List<System::S
 
 void Flood::Archive::EnumerateDirs(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -135,7 +136,7 @@ System::String^ Flood::Archive::Path::get()
 
 System::IntPtr Flood::Archive::Userdata::get()
 {
-    return IntPtr(((::Archive*)NativePtr)->userdata);
+    return System::IntPtr(((::Archive*)NativePtr)->userdata);
 }
 
 void Flood::Archive::Userdata::set(System::IntPtr value)
@@ -217,7 +218,7 @@ bool Flood::ArchiveVirtual::ExistsDir(System::String^ path)
 
 void Flood::ArchiveVirtual::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -229,7 +230,7 @@ void Flood::ArchiveVirtual::EnumerateFiles(System::Collections::Generic::List<Sy
 
 void Flood::ArchiveVirtual::EnumerateDirs(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -287,7 +288,7 @@ System::Collections::Generic::List<Flood::Archive^>^ Flood::ArchiveVirtual::Moun
 
 void Flood::ArchiveVirtual::Mounts::set(System::Collections::Generic::List<Flood::Archive^>^ value)
 {
-    auto _tmpvalue = std::vector<::Archive*>();
+    auto _tmpvalue = ::Array<::Archive*>(*AllocatorGetHeap());
     for each(Flood::Archive^ _element in value)
     {
         auto _marshalElement = (::Archive*)_element->NativePtr;
@@ -351,7 +352,7 @@ bool Flood::ArchiveDirectory::ExistsDir(System::String^ path)
 
 void Flood::ArchiveDirectory::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -363,7 +364,7 @@ void Flood::ArchiveDirectory::EnumerateFiles(System::Collections::Generic::List<
 
 void Flood::ArchiveDirectory::EnumerateDirs(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -448,7 +449,7 @@ bool Flood::ArchiveZip::ExistsDir(System::String^ path)
 
 void Flood::ArchiveZip::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -460,7 +461,7 @@ void Flood::ArchiveZip::EnumerateFiles(System::Collections::Generic::List<System
 
 void Flood::ArchiveZip::EnumerateDirs(System::Collections::Generic::List<System::String^>^ paths)
 {
-    auto _tmppaths = std::vector<::Path>();
+    auto _tmppaths = ::Array<::Path>(*AllocatorGetHeap());
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -492,7 +493,7 @@ int Flood::ArchiveZip::GetHashCode()
 
 System::IntPtr Flood::ArchiveZip::Handle::get()
 {
-    return IntPtr(((::ArchiveZip*)NativePtr)->handle);
+    return System::IntPtr(((::ArchiveZip*)NativePtr)->handle);
 }
 
 void Flood::ArchiveZip::Handle::set(System::IntPtr value)

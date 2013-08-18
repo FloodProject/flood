@@ -17,6 +17,7 @@
 #include "Core/Math/Helpers.h"
 #include "Core/Utilities.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -24,6 +25,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 Milkshape3D::Milkshape3D()
 	: index(0)
+	, filebuf(*AllocatorGetHeap())
 { }
 
 //-----------------------------------//
@@ -194,7 +196,7 @@ void Milkshape3D::buildAnimationMetadata()
 		if( c == 13 ) c = '\n';
 	}
 
-	std::vector<String> lines;
+	Array<String> lines(*AllocatorGetHeap());
 	StringSplit(mainComment, '\n', lines);
 
 	for( size_t i = 0; i < lines.size(); i++ )

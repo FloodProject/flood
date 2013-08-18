@@ -73,13 +73,13 @@ public:
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) = 0;
+	virtual void enumerateFiles(Array<Path>& paths) = 0;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) = 0;
+	virtual void enumerateDirs(Array<Path>& paths) = 0;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -141,19 +141,19 @@ public:
 	 * Checks if a directory exists.
 	 * @param path directory path
 	 */
-	virtual bool existsDir(const Path& path) override;;
+	virtual bool existsDir(const Path& path) override;
 
 	/**
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Array<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Array<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -170,17 +170,15 @@ public:
 	/**
 	 * Mounts a directory and its direct hierarchy.
 	 * @param dirPath path of directory to mount
-	 * @param alloc alocator to use for mounting
+	 * @param alloc allocator to use for mounting
 	 */
 	void archiveMountDirectories(const Path& dirPath, Allocator* alloc);
 
 private:
-
-	void enumerate(std::vector<Path>& paths, bool dir);
+	void enumerate(Array<Path>& paths, bool dir);
 
 public:
-
-	std::vector<Archive*> mounts; //!< mounted archives
+	Array<Archive*> mounts; //!< mounted archives
 };
 
 //-----------------------------------//
@@ -228,19 +226,19 @@ public:
 	 * Checks if a directory exists.
 	 * @param path directory path
 	 */
-	virtual bool existsDir(const Path& path) override;;
+	virtual bool existsDir(const Path& path) override;
 
 	/**
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Array<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Array<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -293,19 +291,19 @@ public:
 	 * Checks if a directory exists.
 	 * @param path directory path
 	 */
-	virtual bool existsDir(const Path& path) override;;
+	virtual bool existsDir(const Path& path) override;
 
 	/**
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Array<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Array<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -313,8 +311,7 @@ public:
 	virtual bool monitor() override;
 
 private:
-
-	void enumerate(std::vector<Path>& paths, bool dir);
+	void enumerate(Array<Path>& paths, bool dir);
 
 public:
 

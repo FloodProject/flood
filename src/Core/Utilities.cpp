@@ -7,6 +7,8 @@
 
 #include "Core/API.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
+#include "Core/Memory.h"
 #include "Core/String.h"
 #include "Core/Math/Hash.h"
 
@@ -177,7 +179,7 @@ String StringFormatArgs(const char* str, va_list args)
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, std::vector<String>& elems)
+void StringSplit(const String& s, char delim, Array<String>& elems)
 {
 	std::stringstream ss(s);
 	String item;
@@ -385,7 +387,7 @@ StringHash HashString(const String& s)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
+static void DirArchiveEnumerate(Array<Path>& paths, Path dirPath,
 								Path filePath, bool dirs)
 {
 	// Open directory stream.
@@ -430,14 +432,14 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 
 //-----------------------------------//
 
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
+void FileEnumerateFiles(const Path& path, Array<Path>& files)
 {
 	DirArchiveEnumerate(files, path, "", false);
 }
 
 //-----------------------------------//
 
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
+void FileEnumerateDirectories(const Path& path, Array<Path>& dirs)
 {
 	DirArchiveEnumerate(dirs, path, "", true);
 }

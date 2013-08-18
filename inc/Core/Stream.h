@@ -121,7 +121,7 @@ public:
 	 * \param data byte vector to read into
 	 * \return number of bytes read 
 	 */ 
-	int64 read(std::vector<uint8>& data) const;
+	int64 read(Array<uint8>& data) const;
 
 	/** 
 	 * Reads from the the stream into a buffer.
@@ -143,7 +143,7 @@ public:
 	 * \param lines string vector to read into
 	 * \return text size 
 	 */ 
-	int64 readLines(std::vector<String>& lines) const;
+	int64 readLines(Array<String>& lines) const;
 	
 	/** 
 	 * Writes from buffer into the the stream.
@@ -184,13 +184,13 @@ public:
 
 	/** 
 	 * Opens the stream.
-	 * \return indication wether opening succeeded
+	 * \return indication whether opening succeeded
 	 */
 	virtual bool open() override;
 	
 	/** 
 	 * Closes the stream.
-	 * \return indication wether closing was succceeded 
+	 * \return indication whether closing was succeeded 
 	 */
 	virtual bool close() override;
 	
@@ -232,7 +232,7 @@ public:
 	virtual uint64 size() const override;
 	
 	/** 
-	 * Controls wether IO buffering is active or not.
+	 * Controls whether IO buffering is active or not.
 	 * \param state true to set buffering active, false to do otherwise  
 	 */
 	void setBuffering(bool state);
@@ -272,13 +272,13 @@ public:
 
 	/** 
 	 * Opens the stream.
-	 * \return indication wether opening succeeded  
+	 * \return indication whether opening succeeded  
 	 */
 	virtual bool open() override;
 	
 	/** 
 	 * Closes the stream.
-	 * \return indication wether closing was succceeded 
+	 * \return indication whether closing was succeeded 
 	 */
 	virtual bool close() override;
 
@@ -330,7 +330,7 @@ public:
 
 public:
 
-	std::vector<uint8> data; //!< buffer vector
+	Array<uint8> data; //!< buffer vector
 	uint8* buffer; //!< pointer to buffer start
 	mutable uint64 position; //!< current position in buffer
 	bool useRawBuffer; //!< using set buffer or data
@@ -356,13 +356,13 @@ public:
 	
 	/** 
 	 * Opens the stream.
-	 * \return indication wether opening succeeded  
+	 * \return indication whether opening succeeded  
 	 */
 	virtual bool open() override;
 	
 	/** 
 	 * Closes the stream.
-	 * \return indication wether closing was succceeded 
+	 * \return indication whether closing was succeeded 
 	 */
 	virtual bool close() override;
 	
@@ -417,13 +417,13 @@ public:
 
 	/** 
 	 * Opens the stream.
-	 * \return indication wether opening succeeded 
+	 * \return indication whether opening succeeded 
 	 */
 	virtual bool open() override;
 
 	/** 
 	 * Closes the stream.
-	 * \return indication wether closing was succceeded 
+	 * \return indication whether closing was succeeded 
 	 */
 	virtual bool close() override;
 

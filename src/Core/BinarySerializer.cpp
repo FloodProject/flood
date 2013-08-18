@@ -18,6 +18,7 @@
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 #include "Core/Math/Vector.h"
 #include "Core/Math/Quaternion.h"

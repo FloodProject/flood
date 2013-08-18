@@ -97,7 +97,7 @@ protected:
 	int findJoint(const char* name);
 
 	// Contents of the file.
-	std::vector<byte> filebuf;
+	Array<byte> filebuf;
 	unsigned long index;
 
 	// Mesh data structures.

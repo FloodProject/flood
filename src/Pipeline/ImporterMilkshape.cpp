@@ -12,6 +12,7 @@
 #include "Pipeline/ImporterMilkshape.h"
 #include "Pipeline/Milkshape3D.h"
 #include "Engine/Resources/Skeleton.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

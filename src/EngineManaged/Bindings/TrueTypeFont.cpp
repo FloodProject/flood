@@ -8,8 +8,9 @@
 #include "TrueTypeFont.h"
 #include "Font.h"
 #include "Vector.h"
+#include "Core/Array.h"
 
-using namespace System;
+//using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::TrueTypeFont::TrueTypeFont(::TrueTypeFont* native)
@@ -81,7 +82,7 @@ System::Collections::Generic::List<unsigned char>^ Flood::TrueTypeFont::Data::ge
 
 void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::byte>();
+    auto _tmpvalue = Array<::byte>(*AllocatorGetHeap());
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::byte)(::uint8)_element;

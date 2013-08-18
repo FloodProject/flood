@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+#include "Core/Array.h"
 
 #ifdef ENABLE_IMAGE_STB
 
@@ -36,7 +37,7 @@ STB_Image_Loader::STB_Image_Loader()
 
 bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 {
-	std::vector<uint8> data;
+	Array<uint8> data(*AllocatorGetHeap());
 	options.stream->read(data);
 
 	if( data.empty() ) return false;

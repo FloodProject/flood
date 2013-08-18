@@ -7,7 +7,9 @@
 
 #include "Stream.h"
 
-using namespace System;
+#include "Core/Array.h"
+
+//using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::Stream::Stream(::Stream* native)
@@ -70,7 +72,7 @@ void Flood::Stream::Resize(long long size)
 
 long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^ data)
 {
-    auto _tmpdata = std::vector<::uint8>();
+    auto _tmpdata = ::Array<::uint8>(*AllocatorGetHeap());
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::uint8)_element;
@@ -98,7 +100,7 @@ long long Flood::Stream::ReadString(System::String^ text)
 
 long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::String^>^ lines)
 {
-    auto _tmplines = std::vector<::String>();
+    auto _tmplines = ::Array<::String>(*AllocatorGetHeap());
     for each(System::String^ _element in lines)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
@@ -249,7 +251,7 @@ int Flood::WebStream::GetHashCode()
 
 System::IntPtr Flood::WebStream::Handle::get()
 {
-    return IntPtr(((::WebStream*)NativePtr)->handle);
+    return System::IntPtr(((::WebStream*)NativePtr)->handle);
 }
 
 void Flood::WebStream::Handle::set(System::IntPtr value)

@@ -11,6 +11,7 @@
 #include "Core/Stream.h"
 #include "Core/SerializationHelpers.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 #include <cmath>
 
 #if defined(PLATFORM_WINDOWS) && !defined(WIN32)

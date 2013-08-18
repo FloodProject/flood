@@ -9,6 +9,7 @@
 #include "Core/Stream.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -76,7 +77,7 @@ void Stream::resize(int64 size)
 
 //-----------------------------------//
 
-int64 Stream::read(std::vector<uint8>& data) const
+int64 Stream::read(Array<uint8>& data) const
 {
 	int64 length = size();
 
@@ -100,7 +101,7 @@ int64 Stream::readBuffer(void* buffer, int64 size) const
 
 int64 Stream::readString(String& text) const
 {
-	std::vector<uint8> data;
+	Array<uint8> data(*AllocatorGetHeap());
 	int64 size = read(data);
 	text.assign( data.begin(), data.end() );
 	return size;
@@ -108,7 +109,7 @@ int64 Stream::readString(String& text) const
 
 //-----------------------------------//
 
-int64 Stream::readLines(std::vector<String>& lines) const
+int64 Stream::readLines(Array<String>& lines) const
 {
 	String text;
 	int64 size = readString(text);
