@@ -574,6 +574,7 @@ namespace Flood.RPC.Serialization
         {
             WriteJSONArrayStart();
             WriteJSONInteger(message.Id);
+            WriteJSONInteger(message.SequenceNumber);
         }
 
         public override void WriteProcedureCallEnd()
@@ -934,6 +935,7 @@ namespace Flood.RPC.Serialization
             ProcedureCall message = new ProcedureCall();
             ReadJSONArrayStart();
             message.Id = (int)ReadJSONInteger();
+            message.SequenceNumber = (int)ReadJSONInteger();
             return message;
         }
 

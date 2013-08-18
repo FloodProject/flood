@@ -29,18 +29,14 @@ namespace Flood.RPC.Serialization
 {
     public struct ProcedureCall
     {
-        private int id;
-
-        public ProcedureCall(int id)
+        public ProcedureCall(int id, int sequenceNumber)
             :this()
         {
-            this.id = id;
+            Id = id;
+            SequenceNumber = sequenceNumber;
         }
 
-        public int Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
+        public int Id;
+        public int SequenceNumber;
     }
 }

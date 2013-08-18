@@ -153,6 +153,7 @@ namespace Flood.RPC.Serialization
         public override void WriteProcedureCallBegin(ProcedureCall message)
         {
             WriteVarint32((uint)message.Id);
+            WriteVarint32((uint)message.SequenceNumber);
         }
 
         /**
@@ -469,7 +470,8 @@ namespace Flood.RPC.Serialization
         public override ProcedureCall ReadProcedureCallBegin()
         {
             int messageId = (int)ReadVarint32();
-            return new ProcedureCall(messageId);
+            int sequenceNumber = (int)ReadVarint32();
+            return new ProcedureCall(messageId, sequenceNumber);
         }
 
         /**
