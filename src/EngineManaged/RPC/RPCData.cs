@@ -25,8 +25,8 @@ namespace Flood.RPC
         {
             Serializer serializer;
 
-            public int ServiceId;
-            public int SequenceNumber;
+            public int ImplId;
+            public int ProxyId;
             public RPCDataType CallType;
 
             public RPCDataHeader(Serializer serializer)
@@ -37,15 +37,15 @@ namespace Flood.RPC
 
             public void Read()
             {
-                ServiceId = serializer.ReadI32();
-                SequenceNumber = serializer.ReadI32();
+                ImplId = serializer.ReadI32();
+                ProxyId = serializer.ReadI32();
                 CallType = (RPCDataType)serializer.ReadI32();
             }
 
             public void Write()
             {
-                serializer.WriteI32(ServiceId);
-                serializer.WriteI32(SequenceNumber);
+                serializer.WriteI32(ImplId);
+                serializer.WriteI32(ProxyId);
                 serializer.WriteI32((int)CallType);
             }
         }
