@@ -69,6 +69,11 @@ namespace Flood.RPC
             Header = new RPCDataHeader(Serializer);
         }
 
+        public void Dispatch()
+        {
+            Peer.Dispatch(this);
+        }
+
         public static RPCData CreateReply(RPCData call, RPCFlags flags = RPCFlags.None)
         {
             var serializer = new BinarySerializer();
