@@ -22,74 +22,74 @@ NAMESPACE_CORE_BEGIN
 static void* _ThreadMain(void* ptr)
 {	
 	Thread* thread = (Thread*) ptr;
-	thread->Function(thread, thread->Userdata);
+	thread->function(thread, thread->userdata);
 
-	thread->Handle = nullptr;
-	thread->IsRunning = false;
+	thread->handle = nullptr;
+	thread->isRunning = false;
 
 	return nullptr;
 }
 
-bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
+bool Thread::start(ThreadFunction function, void* data)
 {
-	if (!thread || !function || thread->IsRunning)
+	if (!function || isRunning)
 		return false;
 
-	thread->Function = function;
-	thread->Userdata = data;
+	this->function = function;
+	userdata = data;
 
-	bool result = pthread_create((pthread_t*)&thread->Handle, /*attr=*/0,
-		&_ThreadMain, thread) == 0;
+	bool result = pthreadcreate((pthreadt*)&handle, /*attr=*/0,
+		&_ThreadMain, this) == 0;
 
 	if (result)
 	{
-		thread->IsRunning = true;
-		ThreadResume(thread);
+		isRunning = true;
+		resume();
 	}
 	
 	return result;
 }
 
-bool ThreadJoin(Thread* thread)
+bool Thread::join()
 {
-	int res = pthread_join((pthread_t)thread->Handle, 0);
+	int res = pthreadjoin((pthreadt)handle, 0);
 
 	assert(res == 0);
-	thread->IsRunning = false;
+	isRunning = false;
 
 	return res == 0;
 }
 
-bool ThreadPause(Thread* thread)
+bool Thread::pause()
 {
 	assert(false && "ThreadPause not implemented");
 	return false;
 }
 
-bool ThreadResume(Thread* thread)
+bool Thread::resume()
 {
 	assert(false && "ThreadResume not implemented");
 	return false;
 }
 
-bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
+bool Thread::setPriority(ThreadPriority priority)
 {
 	// Update our internal state
-	thread->Priority = priority;
-	int res = pthread_setschedprio((pthread_t)thread->Handle, (int) priority);
+	this->priority = priority;
+	int res = pthreadsetschedprio((pthreadt)handle, (int) priority);
 
 	return res == 0;
 
 #if 0
-	// Propogate to the thread if its running
-	if (thread->IsRunning)
+	// Propagate to the thread if it's running
+	if (isRunning)
 	{
 		int policy;
 		sched_param param;
 		memset(&param, 0, sizeof(param));
 		
 		// Get current policy
-		assert( pthread_getschedparam( (pthread_t)thread->Handle, &policy, &param ) == 0 );
+		assert( pthreadgetschedparam( (pthreadt)handle, &policy, &param ) == 0 );
 
 		// Calculate priority range
 		int max = sched_get_priority_max(policy);
@@ -103,135 +103,88 @@ bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
 		param.sched_priority = new_priority;
 		
 		// Set new priority
-		int res = pthread_setschedparam((pthread_t)thread->Handle, policy, &param);
+		int res = pthreadsetschedparam((pthreadt)handle, policy, &param);
 		assert(res == 0);
 	}
 #endif
 }
 
-void ThreadSetName(Thread*, const char* name)
+void Thread::setName(const char* name)
 {
 	// TODO:
 	//prctl(PR_SET_NAME);
 }
 
 //-----------------------------------//
-
-struct Mutex
 {
-	pthread_mutex_t Handle;
-};
-
-Mutex* MutexCreate(Allocator* alloc)
+Mutex::Mutex()
 {
-	Mutex* mutex = Allocate(alloc, Mutex);
-	MutexInit(mutex);
-
-	return mutex;
+	init();
 }
 
-void MutexInit(Mutex* mutex)
+Mutex::~Mutex()
 {
-	if (!mutex) return;
+	int res = pthreadmutex_destroy(handle);
+	Deallocate(handle);
+	assert((res == 0) && "Could not destroy critical section");
+}
 
-	int res = pthread_mutex_init(&mutex->Handle, /*attr=*/0);
+void Mutex::init()
+{
+	handle = AllocateHeap(pthreadmutex_t);
+	int res = pthreadmutex_init(handle, /*attr=*/0);
 	assert((res == 0) && "Could not initialize critical section");
 }
 
-void MutexDestroy(Mutex* mutex)
+void Mutex::lock()
 {
-	if (!mutex) return;
-
-	int res = pthread_mutex_destroy(&mutex->Handle);
-	assert((res == 0) && "Could not destroy critical section");
-
-	Deallocate(mutex);
-}
-
-void MutexLock(Mutex* mutex)
-{
-	int res = pthread_mutex_lock(&mutex->Handle);
+	int res = pthreadmutex_lock(handle);
 	assert((res == 0) && "Could not lock critical section");
 }
 
-void MutexUnlock(Mutex* mutex)
+void Mutex::unlock()
 {
-	int res = pthread_mutex_lock(&mutex->Handle);
+	int res = pthreadmutex_lock(handle);
 	assert((res == 0) && "Could not unlock critical section");
 }
 
 //-----------------------------------//
 
-struct Condition
+Condition::Condition()
 {
-	pthread_cond_t Handle;
-};
-
-Condition* ConditionCreate(Allocator* alloc)
-{
-	Condition* cond = Allocate(alloc, Condition);
-	ConditionInit(cond);
-
-	return cond;
+	init();
 }
 
-void ConditionDestroy(Condition* cond)
+Condition::~Condition()
 {
-	int res = pthread_cond_destroy(&cond->Handle);
+	int res = pthreadcond_destroy(handle);
 	assert((res == 0) && "Could not destroy condition variable");
-
-	Deallocate(cond);
+	Deallocate(handle);
 }
 
-void ConditionInit(Condition* cond)
+void Condition::init()
 {
-	int res = pthread_cond_init(&cond->Handle, /*cond_attr=*/0);
+	handle = AllocateHeap(pthreadcond_t);
+	int res = pthreadcond_init(handle, /*cond_attr=*/0);
 	assert((res == 0) && "Could not destroy condition variable");
 }
 
-void ConditionWait(Condition* cond, Mutex* mutex)
+void Condition::wait(Mutex& mutex)
 {
-	int res = pthread_cond_wait(&cond->Handle, &mutex->Handle);
+	int res = pthreadcond_wait(handle, mutex.handle);
 	assert((res == 0) && "Could not wait on condition variable");
 }
 
-void ConditionWakeOne(Condition* cond)
+void Condition::wakeOne()
 {
-	int res = pthread_cond_signal(&cond->Handle);
+	int res = pthreadcond_signal(handle);
 	assert((res == 0) && "Could not signal condition variable");
 }
 
-void ConditionWakeAll(Condition* cond)
+void Condition::wakeAll()
 {
-	int res = pthread_cond_broadcast(&cond->Handle);
+	int res = pthreadcond_broadcast(handle);
 	assert((res == 0) && "Could not broadcast condition variable");
-}
-
-//-----------------------------------//
-
-int32 AtomicRead(volatile Atomic* atomic)
-{
-	return __sync_add_and_fetch(atomic, 0);
-}
-
-int32 AtomicWrite(volatile Atomic* atomic, int32 value)
-{
-	return __sync_lock_test_and_set(atomic, value);
-}
-
-int32 AtomicAdd(volatile Atomic* atomic, int32 value)
-{
-	return __sync_add_and_fetch(atomic, value);
-}
-
-int32 AtomicIncrement(volatile Atomic* atomic)
-{
-	return __sync_add_and_fetch(atomic, 1);
-}
-
-int32 AtomicDecrement(volatile Atomic* atomic)
-{
-	return __sync_sub_and_fetch(atomic, 1);
 }
 
 //-----------------------------------//

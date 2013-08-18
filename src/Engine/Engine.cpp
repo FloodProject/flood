@@ -76,7 +76,7 @@ Engine::~Engine()
 	NetworkDeinitialize();
 #endif
 
-	TaskPoolDestroy(taskPool);
+	Deallocate(taskPool);
 	Deallocate(stream);
 	LogDestroy(log);
 }
@@ -98,7 +98,7 @@ void Engine::init()
 	setupLogger();
 
 	// Creates the task system.
-	taskPool = TaskPoolCreate( AllocatorGetThis(), 2 );
+	taskPool = AllocateThis(TaskPool, 2 );
 
 #ifdef ENABLE_NETWORK_ENET
 	NetworkInitialize();

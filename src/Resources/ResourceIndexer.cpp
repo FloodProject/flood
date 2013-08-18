@@ -53,12 +53,12 @@ static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 	Path* path = Allocate(AllocatorGetObject(index), Path);
 	path->assign(resPath);
 
-	Task* task = TaskCreate( AllocatorGetObject(index) );
+	Task* task = Allocate(AllocatorGetObject(index), Task);
 	task->callback.Bind(index, &ResourceIndexer::indexResources);
 	task->userdata = path;
 
 	TaskPool* taskPool = GetResourceManager()->getTaskPool();
-	TaskPoolAdd(taskPool, task, 0);
+	taskPool->add(task, 0);
 
 	return task;
 }
