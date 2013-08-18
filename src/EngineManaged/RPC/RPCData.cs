@@ -56,10 +56,16 @@ namespace Flood.RPC
 
         public RPCDataHeader Header;
 
-        public RPCData(Serializer serializer)
+        public RPCData(RPCPeer peer)
+            : this(peer, peer.CreateSerializer())
+        {
+        }
+
+        public RPCData(RPCPeer peer, Serializer serializer)
             : this()
         {
             Serializer = serializer;
+            Peer = peer;
             Header = new RPCDataHeader(Serializer);
         }
 
