@@ -1,6 +1,7 @@
 ﻿using Flood.RPC.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Flood.RPC
@@ -17,7 +18,7 @@ namespace Flood.RPC
 
         protected int GetNextSequenceNumber()
         {
-            return sequenceNumber++;
+            return Interlocked.Increment(ref sequenceNumber);
         }
 
         public abstract void InvokeEvent(RPCData data);
