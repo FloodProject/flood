@@ -38,7 +38,7 @@ Group::~Group()
 	{
 		const EntityPtr& entity = entities[i];
 		
-		if( entity->references != 1 )
+		if( entity->references.read() != 1 )
             LogDebug("Entity '%s' should not have any references", entity->getName().c_str());
 	}
 }

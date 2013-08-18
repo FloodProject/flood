@@ -17,7 +17,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 class Stream;
-struct TaskPool;
+class TaskPool;
 
 class Subsystem;
 class ResourceManager;

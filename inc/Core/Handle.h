@@ -28,7 +28,7 @@ typedef std::map<HandleId, ReferenceCounted*> HandleMap;
 struct API_CORE HandleManager
 {
 	HandleMap handles;
-	volatile Atomic nextHandle;
+	Atomic<uint32> nextHandle;
 };
 
 API_CORE HandleManager*    HandleCreateManager( Allocator* );

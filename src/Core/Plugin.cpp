@@ -7,6 +7,7 @@
 
 #include "Core/API.h"
 #include "Core/Plugin.h"
+#include <algorithm> 
 
 NAMESPACE_CORE_BEGIN
 

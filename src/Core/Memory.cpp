@@ -436,17 +436,17 @@ Allocator* AllocatorCreateBump( Allocator* alloc, int32 size )
 
 int32 ReferenceGetCount(ReferenceCounted* ref)
 {
-	return AtomicRead(&ref->references);
+	return ref->references.read();
 }
 
 void ReferenceAdd(ReferenceCounted* ref)
 {
-	AtomicIncrement(&ref->references);
+	ref->references.increment();
 }
 
 bool ReferenceRelease(ReferenceCounted* ref)
 {
-	return AtomicDecrement(&ref->references) == 0;
+	return ref->references.decrement() == 0;
 }
 
 //-----------------------------------//
