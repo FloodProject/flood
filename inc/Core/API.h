@@ -84,3 +84,5 @@ API_CORE void CoreDeinitialize();
 struct Allocator;
 
 NAMESPACE_CORE_END
+
+#include "Core/Containers.h"
