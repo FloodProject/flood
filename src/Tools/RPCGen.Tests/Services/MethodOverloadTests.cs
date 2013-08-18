@@ -62,13 +62,13 @@ namespace RPCGen.Tests.Services
             var t2 = proxy.Test((double)i);
             var t3 = proxy.Test(i, i);
 
-            t1.Wait();
+            Assert.IsTrue(t1.Wait(1000));
             Assert.AreEqual(i, t1.Result);
 
-            t2.Wait();
+            Assert.IsTrue(t2.Wait(1000));
             Assert.AreEqual(i + 1, t2.Result);
 
-            t3.Wait();
+            Assert.IsTrue(t3.Wait(1000));
             Assert.AreEqual(i + i, t3.Result);
         }
     }
