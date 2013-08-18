@@ -74,18 +74,36 @@ namespace Flood.RPC
             Peer.Dispatch(this);
         }
 
+        public static RPCData Create(RPCPeer peer, int implId, int proxyId, RPCDataType type, RPCFlags flags = RPCFlags.None)
+        {
+            var data = new RPCData(peer);
+            data.Peer = peer;
+            data.Flags = flags;
+            data.Header.CallType = type;
+            data.Header.ImplId = implId;
+            data.Header.ProxyId = proxyId;
+            data.Header.Write();
+
+            return data;
+        }
         public static RPCData CreateReply(RPCData call, RPCFlags flags = RPCFlags.None)
         {
-            var serializer = new BinarySerializer();
-            var reply = new RPCData(serializer);
-            reply.Peer = call.Peer;
-            reply.Flags = flags;
-            reply.Header.SequenceNumber = call.Header.SequenceNumber;
-            reply.Header.CallType = RPCDataType.Reply;
-            reply.Header.ServiceId = call.Header.ServiceId;
-            reply.Header.Write();
+            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, RPCDataType.Reply, flags);
+        }
 
-            return reply;
+        public static RPCData CreateCall(RPCPeer peer, int implId, int proxyId, RPCFlags flags = RPCFlags.None)
+        {
+            return Create(peer, implId, proxyId, RPCDataType.Call, flags);
+        }
+
+        public static RPCData CreateEventSubscribe(RPCPeer peer, int implId, int proxyId)
+        {
+            return Create(peer, implId, proxyId, RPCDataType.EventSubscribe);
+        }
+
+        public static RPCData CreateException(RPCData call)
+        {
+            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, RPCDataType.Exception);
         }
     }
 }
