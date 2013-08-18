@@ -260,4 +260,34 @@ SUITE(CoreTests_Containers)
         ptrs.clear();
         CHECK_EQUAL(100, obj::dtorCount);
     }
+
+    TEST_FIXTURE(ContainerFixture, ArrayMoveCtorAssnOperator)
+    {
+        Array<String> v(*_a);
+
+        v.push_back("herp");
+        v.push_back("derp");
+        v.push_back("sherp");
+        v.push_back("alerp");
+
+        Array<String> w(std::move(v));
+
+        CHECK(v.allocator() == nullptr);
+        CHECK_EQUAL(0, v.size());
+        CHECK_EQUAL(0, v.capacity());
+        CHECK(v.data() == nullptr);
+
+        Array<String> x(*_a);
+
+        x = std::move(w);
+
+        CHECK(w.allocator() == nullptr);
+        CHECK_EQUAL(0, w.size());
+        CHECK_EQUAL(0, w.capacity());
+        CHECK(w.data() == nullptr);
+
+        CHECK(x.allocator() != nullptr);
+        CHECK_EQUAL(4, x.size());
+        CHECK(x.data() != nullptr);
+    }
 }

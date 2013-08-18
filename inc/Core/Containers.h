@@ -23,11 +23,14 @@ public:
      *	Creates the Array.
      *	@param a allocator serving any memory requests
      */
-    Array(Allocator &a);
-
-    Array(const Array &other);
+    Array(Allocator& a);
     ~Array();
-    Array &operator=(const Array &other);
+
+    Array(const Array& other);
+    Array(Array&& other);
+    
+    Array& operator=(const Array &other);
+    Array& operator=(Array&& other);
         
     /**
      *	Indexing operator.
@@ -150,6 +153,8 @@ private:
     void construct_range(T * data, size_t count, std::false_type);
     void copy_range(T * data, T * src, size_t count, std::true_type);
     void copy_range(T * data, T * src, size_t count, std::false_type);
+    void move_range(T * data, T * src, size_t count, std::true_type);
+    void move_range(T * data, T * src, size_t count, std::false_type);
     void destruct_range(T * data, size_t count, std::true_type);
     void destruct_range(T * data, size_t count, std::false_type);
 

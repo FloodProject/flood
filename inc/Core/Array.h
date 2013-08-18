@@ -13,7 +13,7 @@
 
 NAMESPACE_CORE_BEGIN
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 Array<T>::Array(Allocator& allocator)
@@ -23,7 +23,7 @@ Array<T>::Array(Allocator& allocator)
     , _data(0) 
 {}
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 Array<T>::Array(const Array<T>& other) 
@@ -38,7 +38,22 @@ Array<T>::Array(const Array<T>& other)
     _size = n;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
+
+template <typename T>
+Array<T>::Array(Array&& other)
+    : _allocator(other._allocator)
+    , _size(other._size)
+    , _capacity(other._capacity)
+    , _data(other._data)
+{
+    other._allocator = nullptr;
+    other._size = 0;
+    other._capacity = 0;
+    other._data = nullptr;
+}
+
+//-----------------------------------//
 
 template <typename T>
 Array<T>::~Array()
@@ -47,18 +62,43 @@ Array<T>::~Array()
     AllocatorDeallocate(_data);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 Array<T>& Array<T>::operator=(const Array<T>& other)
 {
-    const size_t n = other._size;
-    resize(n);
-    copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
+    if(this != &other)
+    {
+        const size_t n = other._size;
+        resize(n);
+        copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
+    }
+    
     return *this;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
+
+template <typename T>
+Array<T>& Array<T>::operator=(Array<T>&& other)
+{
+    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+    AllocatorDeallocate(_data);
+
+    _allocator = other._allocator;
+    _size = other._size;
+    _capacity = other._capacity;
+    _data = other._data;
+
+    other._allocator = nullptr;
+    other._size = 0;
+    other._capacity = 0;
+    other._data = nullptr;
+
+    return *this;
+}
+
+//-----------------------------------//
 
 template <typename T>
 T& Array<T>::operator[](size_t i)
@@ -66,7 +106,7 @@ T& Array<T>::operator[](size_t i)
     return _data[i];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 const T& Array<T>::operator[](size_t i) const
@@ -74,7 +114,7 @@ const T& Array<T>::operator[](size_t i) const
     return _data[i];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T * Array<T>::begin()
@@ -82,7 +122,7 @@ T * Array<T>::begin()
     return _data;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const * Array<T>::begin() const
@@ -90,7 +130,7 @@ T const * Array<T>::begin() const
     return _data;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const * Array<T>::cbegin() const
@@ -98,7 +138,7 @@ T const * Array<T>::cbegin() const
     return _data;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T * Array<T>::end()
@@ -106,7 +146,7 @@ T * Array<T>::end()
     return _data + _size;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const * Array<T>::end() const
@@ -114,7 +154,7 @@ T const * Array<T>::end() const
     return _data + _size;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const * Array<T>::cend() const
@@ -122,7 +162,7 @@ T const * Array<T>::cend() const
     return _data + _size;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T * Array<T>::data()
@@ -130,7 +170,7 @@ T * Array<T>::data()
     return _data;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const * Array<T>::data() const
@@ -138,7 +178,7 @@ T const * Array<T>::data() const
     return _data;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T& Array<T>::front()
@@ -146,7 +186,7 @@ T& Array<T>::front()
     return _data[0];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const & Array<T>::front() const
@@ -154,7 +194,7 @@ T const & Array<T>::front() const
     return _data[0];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T& Array<T>::back()
@@ -162,7 +202,7 @@ T& Array<T>::back()
     return _data[_size - 1];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 T const & Array<T>::back() const
@@ -170,7 +210,7 @@ T const & Array<T>::back() const
     return _data[_size - 1];
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 size_t Array<T>::size() const
@@ -178,7 +218,7 @@ size_t Array<T>::size() const
     return _size;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 size_t Array<T>::capacity() const
@@ -186,7 +226,7 @@ size_t Array<T>::capacity() const
     return _capacity;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 bool Array<T>::any() const
@@ -194,7 +234,7 @@ bool Array<T>::any() const
     return _size != 0;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 bool Array<T>::empty() const
@@ -202,7 +242,7 @@ bool Array<T>::empty() const
     return _size == 0;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::resize(size_t new_size)
@@ -217,7 +257,7 @@ void Array<T>::resize(size_t new_size)
     _size = new_size;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::reserve(size_t new_capacity)
@@ -226,7 +266,7 @@ void Array<T>::reserve(size_t new_capacity)
         set_capacity(new_capacity);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::trim()
@@ -234,7 +274,7 @@ void Array<T>::trim()
     set_capacity(_size);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::clear()
@@ -242,7 +282,7 @@ void Array<T>::clear()
     resize(0);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::push_back(T const & item)
@@ -252,7 +292,7 @@ void Array<T>::push_back(T const & item)
     _data[_size++] = item;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::pop_back()
@@ -261,7 +301,7 @@ void Array<T>::pop_back()
     _size--;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 template <typename Iter>
@@ -274,11 +314,12 @@ void Array<T>::insert(T * pos, Iter first, Iter last)
     size_t newSize_ = size() + (last - first);
     auto newData_ = (byte*) AllocatorAllocate(_allocator, newSize_ * sizeof(T), alignof(T));
 
-    copy_range((T*)newData_, _data, offset_, std::integral_constant<bool, std::is_pod<T>::value>());
-    copy_range((T*)(newData_ + (offset_ + (last - first)) * sizeof(T)), _data + offset_, size() - offset_, std::integral_constant<bool, std::is_pod<T>::value>());
+    move_range((T*)newData_, _data, offset_, std::integral_constant<bool, std::is_pod<T>::value>());
 
     for(auto it = first; it != last; ++it)
         new (&newData_[sizeof(T) * (offset_ + (it - first))]) T(*it);
+
+    move_range((T*)(newData_ + (offset_ + (last - first)) * sizeof(T)), _data + offset_, size() - offset_, std::integral_constant<bool, std::is_pod<T>::value>());
 
     AllocatorDeallocate(_data);
     _data = (T*)newData_;
@@ -286,7 +327,7 @@ void Array<T>::insert(T * pos, Iter first, Iter last)
     _capacity = newSize_;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::remove(T const * item)
@@ -298,7 +339,7 @@ void Array<T>::remove(T const * item)
     pop_back();
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 Allocator * Array<T>::allocator()
@@ -306,7 +347,7 @@ Allocator * Array<T>::allocator()
     return _allocator;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 Allocator const * Array<T>::allocator() const
@@ -314,7 +355,7 @@ Allocator const * Array<T>::allocator() const
     return _allocator;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::set_capacity(size_t new_capacity)
@@ -329,7 +370,7 @@ void Array<T>::set_capacity(size_t new_capacity)
     if (new_capacity > 0) {
         new_data = (T*) AllocatorAllocate(_allocator, sizeof(T) * new_capacity, alignof(T));
 
-        copy_range(new_data, _data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+        move_range(new_data, _data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
         construct_range(new_data + _size, new_capacity - _size, std::integral_constant<bool, std::is_pod<T>::value>());
     }
 
@@ -339,7 +380,7 @@ void Array<T>::set_capacity(size_t new_capacity)
     _capacity = new_capacity;
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::grow(size_t min_capacity)
@@ -350,7 +391,7 @@ void Array<T>::grow(size_t min_capacity)
     set_capacity(new_capacity);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::construct_range(T * data, size_t count, std::true_type)
@@ -360,7 +401,7 @@ void Array<T>::construct_range(T * data, size_t count, std::true_type)
 #endif
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::construct_range(T * data, size_t count, std::false_type)
@@ -369,7 +410,7 @@ void Array<T>::construct_range(T * data, size_t count, std::false_type)
         new (data + i) T();
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::copy_range(T * data, T * src, size_t count, std::true_type)
@@ -377,7 +418,7 @@ void Array<T>::copy_range(T * data, T * src, size_t count, std::true_type)
     memcpy(data, src, sizeof(T) * count);
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::copy_range(T * data, T * src, size_t count, std::false_type)
@@ -386,7 +427,24 @@ void Array<T>::copy_range(T * data, T * src, size_t count, std::false_type)
         new (data + i) T( *(src + i) );
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
+
+template <typename T>
+void Array<T>::move_range(T * data, T * src, size_t count, std::true_type)
+{
+    memcpy(data, src, sizeof(T) * count);
+}
+
+//-----------------------------------//
+
+template <typename T>
+void Array<T>::move_range(T * data, T * src, size_t count, std::false_type)
+{
+    for(size_t i = 0; i < count; ++i)
+        new (data + i) T(std::move( *(src + i) ));
+}
+
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::destruct_range(T * data, size_t count, std::true_type)
@@ -396,7 +454,7 @@ void Array<T>::destruct_range(T * data, size_t count, std::true_type)
 #endif
 }
 
-//////////////////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 template <typename T>
 void Array<T>::destruct_range(T * data, size_t count, std::false_type)
