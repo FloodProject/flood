@@ -15,7 +15,7 @@ namespace Flood.RPC
             pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
         }
 
-        protected int GetIncrementSequenceNumber()
+        protected int GetNextSequenceNumber()
         {
             return sequenceNumber++;
         }

@@ -220,7 +220,7 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            WriteLine("var seqNum = GetIncrementSequenceNumber();");
+            WriteLine("var seqNum = GetNextSequenceNumber();");
             Write("var request = {0}(seqNum", GetProcedureSendMethodName(method));
             for (var i = 0; i < parameters.Length; i++)
             {
