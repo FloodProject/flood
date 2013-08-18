@@ -29,49 +29,33 @@ template<typename T> class ConcurrentQueue
 {
 public:
 
-	ConcurrentQueue()
-	{
-		mutex = MutexCreate(AllocatorGetThis());
-		cond = ConditionCreate(AllocatorGetThis());
-	}
-
-	//-----------------------------------//
-
-	~ConcurrentQueue()
-	{
-		MutexDestroy(mutex);
-		ConditionDestroy(cond);
-	}
-
-	//-----------------------------------//
-
 	void push_front(const T& value)
 	{
-		MutexLock(mutex);
+		mutex.lock();
 		queue.push_front(value);
-		MutexUnlock(mutex);
+		mutex.unlock();
 		
-		ConditionWakeOne(cond);
+		condition.wakeOne();
 	}
 
 	//-----------------------------------//
 
 	void push_back(const T& value)
 	{
-		MutexLock(mutex);
+		mutex.lock();
 		queue.push_back(value);
-		MutexUnlock(mutex);
+		mutex.unlock();
 		
-		ConditionWakeOne(cond);
+		condition.wakeOne();
 	}
 
 	//-----------------------------------//
 
 	bool empty() const
 	{
-		MutexLock(mutex);
+		mutex.lock();
 		bool empty = queue.empty();
-		MutexUnlock(mutex);
+		mutex.unlock();
 		
 		return empty;
 	}
@@ -80,18 +64,18 @@ public:
 
 	bool try_pop_front(T& popped_value)
 	{
-		MutexLock(mutex);
-		
+		mutex.lock();
+
 		if( queue.empty() )
 		{
-			MutexUnlock(mutex);
+			mutex.unlock();
 			return false;
 		}
 
 		popped_value = queue.front();
 		queue.pop_front();
 		
-		MutexUnlock(mutex);
+		mutex.unlock();
 
 		return true;
 	}
@@ -100,28 +84,28 @@ public:
 
 	void wait_and_pop_front(T& popped_value)
 	{
-		MutexLock(mutex);
-	
+		mutex.lock();
+
 		while( queue.empty() )
-			ConditionWait(cond, mutex);
+			condition.wait(mutex);
 	
 		popped_value = queue.front();
 		queue.pop_front();
 
-		MutexUnlock(mutex);
+		mutex.unlock();
 	}
 
 	//-----------------------------------//
 
 	bool find(const T& value)
 	{
-		MutexLock(mutex);
+		mutex.lock();
 
 		typename std::deque<T>::const_iterator it;
 		it = std::find(queue.begin(), queue.end(), value);
 		bool found = it != queue.end();
 
-		MutexUnlock(mutex);
+		mutex.unlock();
 
 		return found;
 	}
@@ -132,8 +116,8 @@ protected:
 
 	std::deque<T> queue;
 
-	Mutex* mutex;
-	Condition* cond;
+	mutable Mutex mutex;
+	Condition condition;
 };
 
 //-----------------------------------//

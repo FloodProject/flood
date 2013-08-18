@@ -12,15 +12,25 @@
 #include "Core/Pointers.h"
 #include <vector>
 
-NAMESPACE_EXTERN_BEGIN
+#if defined(COMPILER_MSVC)
+extern "C"
+{
+long __cdecl _InterlockedIncrement(long volatile * _Addend);
+long __cdecl _InterlockedExchange(long volatile * _Target, long _Value);
+long __cdecl _InterlockedExchangeAdd(long volatile * _Addend, long _Value);
+}
+#endif
+
+#if defined(PLATFORM_WINDOWS)
+typedef struct _RTL_CRITICAL_SECTION CRITICAL_SECTION;
+typedef struct _RTL_CONDITION_VARIABLE CONDITION_VARIABLE;
+#else
+#include <pthread.h>
+#endif
+
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
-
-/**
- * A thread is the entity within a process that can be scheduled for
- * execution. All threads of a process share its virtual address space
- * and system resources.
- */
 
 enum class ThreadPriority
 {
@@ -29,30 +39,63 @@ enum class ThreadPriority
 	High
 };
 
-struct Thread;
+class Thread;
 typedef Delegate2<Thread*, void*> ThreadFunction;
 
-struct API_CORE Thread
+/**
+ * A thread is the entity within a process that can be scheduled for
+ * execution. All threads of a process share its virtual address space
+ * and system resources.
+ */
+class API_CORE Thread
 {
-	void* Handle;
-	volatile bool IsRunning;
-	ThreadPriority Priority;
-	ThreadFunction Function;
-	void* Userdata;
+public:
+
+	Thread();
+	~Thread();
+
+	/**
+	 * Start thread execution.
+	 * @param function function to run in the thread
+	 * @param data function arguments
+	 */
+	bool start(ThreadFunction function, void* data);
+
+	/**
+	 * Blocks the calling thread until a thread terminates.
+	 */
+	bool join();
+
+	/**
+	 * Pause thread execution.
+	 */
+	bool pause();
+
+	/**
+	 * Resume thread execution.
+	 */
+	bool resume();
+
+	/**
+	 * Set thread priority.
+	 * @param priority thread priority
+	 */
+	bool setPriority(ThreadPriority priority);
+
+	/**
+	 * Set thread name.
+	 * @param name thread name
+	 */
+
+	void setName(const char* name);
+
+
+	void* handle; //!< thread handle 
+	volatile bool isRunning; //!< whether thread is running
+	ThreadPriority priority; //!< thread priority
+	ThreadFunction function; //!< function for the thread to run
+	void* userdata; //!< function arguments
 };
-
-API_CORE Thread* ThreadCreate(Allocator*);
-API_CORE void    ThreadDestroy(Thread*);
-API_CORE bool    ThreadStart(Thread*, ThreadFunction, void*);
-API_CORE bool    ThreadJoin(Thread*);
-API_CORE bool    ThreadPause(Thread*);
-API_CORE bool    ThreadResume(Thread*);
-API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority);
-API_CORE void    ThreadSetName(Thread*, const char* name);
-
-typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
-#define pThreadCreate(alloc, ...) CreateScopedPtr(ThreadCreate, alloc, \
-    __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -61,119 +104,180 @@ typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
  * use of a common resource, such as a global variable, by pieces of 
  * computer code called critical sections.
  */
+struct API_CORE Mutex
+{
+	Mutex();
+	~Mutex();
 
-struct API_CORE Mutex;
+	/**
+	 * Init mutex.
+	 */
+	void init();
 
-API_CORE Mutex* MutexCreate(Allocator*);
-API_CORE void   MutexDestroy(Mutex*);
-API_CORE void   MutexInit(Mutex*);
-API_CORE void   MutexLock(Mutex*);
-API_CORE void   MutexUnlock(Mutex*);
+	/**
+	 * Lock mutex.
+	 */
+	void lock();
 
-typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
-#define pMutexCreate(alloc, ...) CreateScopedPtr(MutexCreate, alloc, \
-    __VA_ARGS__)
+	/**
+	 * Unlock mutex.
+	 */
+	void unlock();
+
+#if defined(PLATFORM_WINDOWS)
+	CRITICAL_SECTION* handle; //!< mutex handle
+#else
+	pthreadmutex_t* handle; //!< mutex handle
+#endif
+};
 
 //-----------------------------------//
 
-struct API_CORE Condition;
+/**
+ * Condition variables allow threads to wait for certain 
+ * events or conditions to occur and they notify other threads 
+ * that are also waiting for the same events or conditions. 
+ * The thread can wait on a condition variable and broadcast a 
+ * condition such that one or all of the threads that are waiting on the 
+ * condition variable become active.
+ */
+struct API_CORE Condition
+{
+	Condition();
+	~Condition();
+	
+	/**
+	 * Init condition.
+	 */
+	void init();
 
-API_CORE Condition* ConditionCreate(Allocator*);
-API_CORE void       ConditionDestroy(Condition*);
-API_CORE void       ConditionInit(Condition*);
-API_CORE void       ConditionWait(Condition*, Mutex*);
-API_CORE void       ConditionWakeOne(Condition*);
-API_CORE void       ConditionWakeAll(Condition*);
+	/**
+	 * Block the calling thread until condition is signalled.
+	 * @param mutex associated mutex
+	 * @note the associated mutex is used to control access to the condition 
+	 * variable. This method should be called while mutex is locked, 
+	 * and it will automatically release the mutex while it waits. 
+	 * After signal is received and thread is awakened, mutex will 
+	 * be automatically locked for use by the thread. The programmer is 
+	 * then responsible for unlocking mutex when the thread is finished 
+	 * with it. 
+	 */
+	void wait(Mutex& mutex);
+	
+	/**
+	 * Unblock one of the threads waiting on this condition variable.
+	 */
+	void wakeOne();
 
-typedef scoped_ptr<Condition, ConditionDestroy> ConditionPtr;
-#define pConditionCreate(alloc, ...) CreateScopedPtr(ConditionCreate, \
-    alloc, __VA_ARGS__)
+	/**
+	 * Unblock all of the threads waiting on this condition variable.
+	 */
+	void wakeAll();
+
+#if defined(PLATFORM_WINDOWS)
+	CONDITION_VARIABLE* handle; //!< condition variable handle
+#else
+	pthreadcond_t* handle; //!< condition variable handle
+#endif
+};
 
 //-----------------------------------//
 
 /**
  * Synchronizes access to variables that are shared by multiple threads.
  * Operations on these variables are performed atomically.
- * Remarks: On Windows this should be aligned to 32-bits.
+ * @note type T must be castable to int32
+ * On Windows this should be aligned to 32-bits.
  */
+template<typename T> class ALIGN_BEGIN(32) Atomic
+{
+public:
 
-typedef volatile int32 Atomic;
+	static_assert(sizeof(T) == 4, "T must be 32 bits");
+	
+	Atomic(const T& value = 0)
+	{
+		atomic = value;
+	}
 
-API_CORE int32 AtomicRead(volatile Atomic* atomic);
-API_CORE int32 AtomicWrite(volatile Atomic* atomic, int32 value);
-API_CORE int32 AtomicAdd(volatile Atomic* atomic, int32 value);
-API_CORE int32 AtomicIncrement(volatile Atomic* atomic);
-API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
+	Atomic(const Atomic<T>& other)
+	{
+		atomic = other.read();
+	}
+
+	Atomic<T> operator=(const Atomic<T>& value)
+	{
+		atomic = value.read();
+		return *this;
+	}
+
+	/**
+	 * Read the value of the atomic variable.
+	 */
+	T read() const
+	{
+#if defined(PLATFORM_WINDOWS)
+		return ::_InterlockedExchangeAdd((volatile long*)&atomic, 0);
+#else
+		return __sync_add_and_fetch(const_cast<T*>(&atomic), 0);
+#endif
+	}
+
+	/**
+	 * Write a value to the atomic variable.
+	 * @param value value to write 
+	 */
+	T write(const T& value)
+	{
+#if defined(PLATFORM_WINDOWS)
+		return ::_InterlockedExchange((volatile long*)&atomic, value);
+#else
+		return __sync_lock_test_and_set(&atomic, value);
+#endif
+	}
+
+	/**
+	 * Add a value to the atomic variable.
+	 * @param value value to add 
+	 */
+	T add(const T& value)
+	{
+#if defined(PLATFORM_WINDOWS)
+		return ::_InterlockedExchangeAdd((volatile long*)&atomic, value);
+#else
+		return __sync_add_and_fetch(&atomic, value);
+#endif
+	}
+
+	/**
+	 * Increment the atomic variable.
+	 */
+	T increment()
+	{
+#if defined(PLATFORM_WINDOWS)
+		return ::_InterlockedIncrement((volatile long*)&atomic);
+#else
+		return __sync_add_and_fetch(&atomic, 1);
+#endif
+	}
+
+	/**
+	 * Decrement the atomic variable.
+	 */
+	T decrement()
+	{
+#if defined(PLATFORM_WINDOWS)
+		return ::_InterlockedDecrement((volatile long*)&atomic);
+#else
+		return __sync_sub_and_fetch(&atomic, 1);
+#endif
+	}
+
+private:
+
+	mutable T atomic; //!< atomic variable
+} ALIGN_END(32);
 
 //-----------------------------------//
 
-/**
- * Tasks provide an higher level interface to concurrency than threads.
- * They can be managed by the engine and grouped in different hardware
- * threads.
- */
-
-struct Task;
-typedef Delegate1<Task*> TaskFunction;
-
-struct API_CORE Task
-{
-	int16 group;
-	int16 priority;
-	TaskFunction callback;
-	void* userdata;
-};
-
-API_CORE Task* TaskCreate(Allocator*);
-API_CORE void  TaskDestroy(Task*);
-API_CORE void  TaskRun(Task*);
-
-typedef scoped_ptr<Task, TaskDestroy> TaskPtr;
-#define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, \
-    __VA_ARGS__)
-
-enum class TaskState
-{
-	Added,
-	Started,
-	Finished
-};
-
-struct API_CORE TaskEvent
-{
-	Task* task;
-	TaskState state;
-};
-
-//-----------------------------------//
-
-NAMESPACE_EXTERN_END
-
-// Workaround for template cyclic dependency.
-#include "Core/ConcurrentQueue.h"
-
-NAMESPACE_EXTERN_BEGIN
-
-//-----------------------------------//
-
-struct API_CORE TaskPool
-{
-	std::vector<Thread*> Threads;
-	ConcurrentQueue<Task*> Tasks;
-	ConcurrentQueue<TaskEvent> Events;
-	Event1<TaskEvent> OnTaskEvent;
-	bool IsStopping;
-};
-
-API_CORE TaskPool*  TaskPoolCreate(Allocator*, int8 Size);
-API_CORE void       TaskPoolDestroy(TaskPool*);
-API_CORE void       TaskPoolAdd(TaskPool*, Task*, uint8 Priority);
-API_CORE void       TaskPoolUpdate(TaskPool*);
-
-typedef scoped_ptr<TaskPool, TaskPoolDestroy> TaskPoolPtr;
-#define pTaskPoolCreate(alloc, ...) CreateScopedPtr(TaskPoolCreate, \
-    alloc, __VA_ARGS__)
-
-//-----------------------------------//
-
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END

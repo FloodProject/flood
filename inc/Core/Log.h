@@ -10,6 +10,7 @@
 #include "Core/API.h"
 #include "Core/Event.h"
 #include "Core/String.h"
+#include "Core/Concurrency.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -34,7 +35,6 @@ struct API_CORE LogEntry
 typedef void (*LogFunction)(LogEntry*);
 
 struct Timer;
-struct Mutex;
 struct Allocator;
 
 struct API_CORE Log
@@ -43,7 +43,7 @@ struct API_CORE Log
 	~Log();
 
 	Timer* timer;
-	Mutex* mutex;
+	Mutex mutex;
 	Event1<LogEntry*> handlers;
 };
 

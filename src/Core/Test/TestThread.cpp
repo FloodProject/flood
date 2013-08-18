@@ -7,41 +7,61 @@
 
 #include "Core/API.h"
 #include "Core/Concurrency.h"
+#include "Core/Task.h"
 #include "Core/Memory.h"
 #include <UnitTest++.h>
 
 namespace {
 
-static int value = 20;
+int value = 20;
 
-static void Run(Thread*, void* data)
+void Run(Thread*, void* data)
 {
 	int* num = (int*) data;
 	value = *num;
 }
-
-static Condition* cond;
-static Mutex* mutex;
-
-static void Run2(Thread*, void* data)
+int taskVal= 10;
+void RunTask(Task* task)
 {
-	value = 30;
-	ConditionWakeOne(cond);
+	taskVal = 20;
 }
+
+bool added = false; 
+void TaskEventWatch(TaskEvent taskEvent)
+{
+	switch(taskVal)
+	{
+		case 10:
+			if(!added)
+			{
+				CHECK(taskEvent.state == TaskState::Added);
+				added = true;
+			}
+			else
+			{
+				CHECK(taskEvent.state == TaskState::Started);
+			}
+			break;
+		case 20:
+			CHECK(taskEvent.state == TaskState::Finished);
+			break;
+	}
+}
+
 }
 
 SUITE(Core)
 {
 	TEST(ThreadBasics)
 	{
-		ThreadPtr thread( pThreadCreate(AllocatorGetHeap()) );
+		Thread thread;
 
 		ThreadFunction fn;
 		fn.Bind(::Run);
 
 		int data = 42;
-		ThreadStart(thread, fn, &data);
-		ThreadJoin(thread);
+		thread.start(fn, &data);
+		thread.join();
 
 		CHECK(42 == value);
 	}
@@ -50,50 +70,64 @@ SUITE(Core)
 	{
 		value = 20;
 
-		ThreadPtr thread( pThreadCreate(AllocatorGetHeap()) );
+		Thread thread;
 
-		cond = ConditionCreate( AllocatorGetHeap() );
-		mutex = MutexCreate( AllocatorGetHeap() );
+		Condition cond;
+		Mutex mutex; 
 
 		ThreadFunction fn;
-		fn.Bind(Run2);
+		fn.Bind([=] (Thread* thread, void* data) {
+			value = 30;
+			auto cond = (Condition*)data;
+			cond->wakeOne();
+		});
 
-		ThreadStart(thread, fn, nullptr);
+		thread.start(fn, &cond);
 		CHECK(20 == value);
 
-		MutexLock(mutex);
+		mutex.lock();
 
 		// Prevents deadlock.
 		while(value == 20)
 		{
-			ConditionWait(cond, mutex);
+			cond.wait(mutex);
 		}
 
-		MutexUnlock(mutex);
+		mutex.unlock();
 
-		ThreadJoin(thread);
+		thread.join();
 		CHECK( 30 == value);
-
-		MutexDestroy(mutex);
-		ConditionDestroy(cond);
 	}
 
 	TEST(ThreadAtomics)
 	{
-		Atomic atomic = 17;
-		CHECK( atomic == 17 );
+		Atomic<uint32> atomic(17);
+		CHECK( atomic.read() == 17 );
 
-		AtomicIncrement(&atomic);
-		CHECK( atomic == 18 );
+		atomic.increment();
+		CHECK( atomic.read() == 18 );
 
-		AtomicDecrement(&atomic);
-		AtomicDecrement(&atomic);
-		CHECK( atomic == 16 );
+		atomic.decrement();
+		atomic.decrement();
+		CHECK( atomic.read() == 16 );
 
-		AtomicAdd(&atomic, 10);
-		CHECK( atomic == 26 );
+		atomic.add(10);
+		CHECK( atomic.read() == 26 );
+		
+		atomic.write(33);
+		CHECK( atomic.read() == 33 );
+	}
 
-		AtomicWrite(&atomic, 33);
-		CHECK( AtomicRead(&atomic) == 33 );
+	TEST(TaskpoolEvents)
+	{
+		TaskPool pool(1); 
+		Task task;
+		task.callback.Bind(RunTask);
+		CHECK( taskVal == 10 );
+		pool.onTaskEvent.Connect(TaskEventWatch);
+		pool.add(&task, 1);
+		pool.waitAll();
+		CHECK( taskVal == 20 );
+
 	}
 }

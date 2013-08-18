@@ -34,7 +34,7 @@ struct API_CORE NO_VTABLE ReferenceCounted
 	inline void addReference() { ReferenceAdd(this); }
 	inline bool releaseReference() { return ReferenceRelease(this); }
 
-	volatile Atomic references;
+	Atomic<uint32> references;
 };
 
 //-----------------------------------//
