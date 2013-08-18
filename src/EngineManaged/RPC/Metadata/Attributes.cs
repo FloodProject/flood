@@ -20,7 +20,8 @@ namespace Flood.RPC.Metadata
         }
     }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter |
+        AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Event)]
     public class IdAttribute : System.Attribute
     {
         public IdAttribute(int id)
