@@ -8,185 +8,171 @@
 #include "Core/API.h"
 #include "Core/Concurrency.h"
 #include "Core/Log.h"
+#include "Core/Task.h"
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Thread* ThreadCreate(Allocator* alloc)
+Thread::Thread()
+	: handle(nullptr)
+	, isRunning(false)
+	, function(nullptr)
+	, userdata(nullptr)
+	, priority(ThreadPriority::Normal)
 {
-	Thread* thread = Allocate(alloc, Thread);
-
-	if( !thread ) return nullptr;
-
-	thread->Handle = nullptr;
-	thread->IsRunning = false;
-	thread->Function = nullptr;
-	thread->Userdata = nullptr;
-	thread->Priority = ThreadPriority::Normal;
-
-	return thread;
 }
 
 //-----------------------------------//
 
-void ThreadDestroy(Thread* thread)
+Thread::~Thread()
 {
-	ThreadPause(thread);
-	Deallocate(thread);
+	pause();
 }
 
 //-----------------------------------//
 
-Task* TaskCreate(Allocator* alloc)
+Task::Task()
+	: group(0)
+	, priority(0)
+	, userdata(nullptr)
 {
-	Task* task = Allocate(alloc, Task);
-	
-	task->group = 0;
-	task->priority = 0;
-	task->userdata = nullptr;
-	
-	return task;
 }
 
 //-----------------------------------//
 
-void TaskDestroy(Task* task)
+void Task::run()
 {
-	Deallocate(task);
+	callback(this);
 }
 
 //-----------------------------------//
 
-void TaskRun(Task* task)
-{
-	if( !task ) return;
-	task->callback(task);
-	TaskDestroy(task);
-}
-
-//-----------------------------------//
-
-static void TaskPoolRun(Thread*, void*);
 typedef std::vector<Thread*> ThreadQueue;
 
-TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
+TaskPool::TaskPool(int8 size)
+	: threadCount(size)
+	, isWaiting(false)
+	, isStopping(false)
 {
-	TaskPool* pool = Allocate(alloc, TaskPool);
-	
-	pool->IsStopping = false;
+	threads.reserve(threadCount);
 
-	ThreadQueue& threads = pool->Threads;
-	threads.reserve(Size);
-
-	for( size_t i = 0; i < (size_t) Size; i++ )
+	for(size_t i = 0; i < (size_t) threadCount; i++)
 	{
-		Thread* thread = ThreadCreate(alloc);
+		Thread* thread = AllocateHeap(Thread);
 		threads.push_back(thread);
 
 		ThreadFunction taskFunction;
-		taskFunction.Bind(TaskPoolRun);
+		taskFunction.Bind(this, &TaskPool::run);
 		
-		ThreadStart(thread, taskFunction, pool);
-		ThreadSetName(thread, "Task Pool");
+		thread->start(taskFunction, this);
+		thread->setName("Task Pool");
 	}
 
 	LogInfo("Created task pool with '%d' threads", threads.size());
-
-	return pool;
 }
 
 //-----------------------------------//
 
-void TaskPoolDestroy(TaskPool* pool)
+TaskPool::~TaskPool()
 {
-	if( !pool ) return;
-
 	LogDebug("Destroying task pool");
 	
-	pool->IsStopping = true;
+	isStopping = true;
 
-	ThreadQueue& threads = pool->Threads;
-
-	for( size_t i = 0; i < threads.size(); i++ )
-	{
-		Thread* thread = threads[i];
-		ThreadDestroy(thread);
+	for(auto thread : threads)
+	{	
+		Deallocate(thread);
 	}
-
-	Deallocate(pool);
 }
 
 //-----------------------------------//
-#ifdef ENABLE_TASK_EVENTS
-static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskState state)
+
+void TaskPool::pushEvent(Task* task, TaskState state)
 {
 	TaskEvent event;
 	event.task = task;
 	event.state = state;
 
-	pool->Events.push( event);
+	events.push_back(event);
+	
+	onTaskEvent(event);
 }
-#endif
 //-----------------------------------//
 
-void TaskPoolAdd(TaskPool* pool, Task* task, uint8 priority)
+void TaskPool::add(Task* task, uint8 priority)
 {
-	if( !task ) return;
-
-	if( pool->Tasks.find(task) )
+	if (tasks.find(task))
 	{
 		LogAssert("Task is already in the queue");
 		return;
 	}
 
-	if(priority > 0)
-		pool->Tasks.push_front(task);
+	if (priority > 0)
+		tasks.push_front(task);
 	else
-		pool->Tasks.push_back(task);
+		tasks.push_back(task);
 
-#ifdef ENABLE_TASK_EVENTS
 	TaskEvent event;
 	event.task = task;
 	event.state = TaskState::Added;
 
-	pool->OnTaskEvent(event);
-#endif
+	onTaskEvent(event);
 }
 
 //-----------------------------------//
 
-void TaskPoolUpdate(TaskPool* pool)
+void TaskPool::update()
 {
 	TaskEvent event;
 	
-	while( pool->Events.try_pop_front(event) )
-		pool->OnTaskEvent(event);
+	while (events.try_pop_front(event))
+		onTaskEvent(event);
 }
 
 //-----------------------------------//
 
-static void TaskPoolRun(Thread* thread, void* userdata)
+void TaskPool::run(Thread* thread, void* userdata)
 {
-	TaskPool* pool = (TaskPool*) userdata;
 
-	while( !pool->IsStopping )
+	while (!isStopping && (!tasks.empty() || !isWaiting))
 	{
 		Task* task;
-		pool->Tasks.wait_and_pop_front(task);
+		tasks.wait_and_pop_front(task);
 
-		if( !task ) continue;
+		if (!task) continue;
 
-#ifdef ENABLE_TASK_EVENTS
-		TaskPoolPushEvent( pool, task, TaskState::Started );
-#endif
+		pushEvent(task, TaskState::Started );
 
-		TaskRun(task);
+		task->run();
 		
-#ifdef ENABLE_TASK_EVENTS
-		TaskPoolPushEvent( pool, task, TaskState::Finished );
-#endif
+		pushEvent(task, TaskState::Finished );
 	}
+}
+
+//-----------------------------------//
+
+void TaskPool::waitAll()
+{
+	isWaiting = true;
+	for(auto thread : threads)
+		thread->join();
+}
+
+//-----------------------------------//
+
+void TaskPool::restartThreads()
+{
+
+	isWaiting = false;
+	for(auto thread : threads)
+	{
+		ThreadFunction taskFunction;
+		taskFunction.Bind(this, &TaskPool::run);
+		thread->start(taskFunction, this);
+	}
+
+
 }
 
 //-----------------------------------//

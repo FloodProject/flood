@@ -6,7 +6,6 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Core/Concurrency.h"
 #include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/String.h"
@@ -49,12 +48,10 @@ static void LogConsoleHandler(LogEntry* entry)
 
 Log::Log()
 	: timer(nullptr)
-	, mutex(nullptr)
 {
 	Allocator* alloc = AllocatorGetThis();
 
 	timer = TimerCreate(alloc);
-	mutex = MutexCreate(alloc);
 
 	LogAddHandler(this, LogConsoleHandler);
 
@@ -68,7 +65,6 @@ Log::~Log()
 	if( gs_Log == this ) LogSetDefault(nullptr);
 
 	TimerDestroy(timer);
-	MutexDestroy(mutex);
 }
 
 //-----------------------------------//
@@ -105,9 +101,9 @@ void LogRemoveHandler(Log* log, LogFunction fn)
 
 void LogWrite(Log* log, LogEntry* entry)
 {
-	MutexLock(log->mutex);
+	log->mutex.lock();
 	log->handlers(entry);
-	MutexUnlock(log->mutex);
+	log->mutex.unlock();
 }
 
 //-----------------------------------//

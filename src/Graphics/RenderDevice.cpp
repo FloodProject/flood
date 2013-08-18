@@ -22,7 +22,7 @@
 #include "Graphics/TextureManager.h"
 
 #include "Core/Utilities.h"
-
+#include <algorithm>
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//

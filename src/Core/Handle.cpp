@@ -47,7 +47,7 @@ HandleId HandleCreate(HandleManager* man, ReferenceCounted* ref)
 	
 	HandleMap& handles = man->handles;
 	
-	HandleId id = AtomicIncrement(&man->nextHandle);
+	HandleId id = man->nextHandle.increment();
 	handles[id] = ref;
 	
 	return id;

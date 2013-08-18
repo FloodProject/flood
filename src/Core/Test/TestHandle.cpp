@@ -47,7 +47,7 @@ SUITE(Core)
 		HandleManagerPtr pHandleManagerA( pHandleCreateManager(AllocatorGetHeap()) );
 		HandleManagerA = pHandleManagerA.get();
 
-		CHECK_EQUAL( 0, AtomicRead(&HandleManagerA->nextHandle));
+		CHECK_EQUAL( 0, HandleManagerA->nextHandle.read());
 
 		A* instance = AllocateHeap(A);
 
@@ -65,7 +65,7 @@ SUITE(Core)
 
 		CHECK(instance == instanceB);
 
-		CHECK_EQUAL(1, AtomicRead(&HandleManagerA->nextHandle));
+		CHECK_EQUAL(1, HandleManagerA->nextHandle.read());
 		CHECK_EQUAL(1, handle.getId());
 		CHECK(instance == handle.Resolve());
 		CHECK_EQUAL(3, ReferenceGetCount((instance)));
@@ -82,9 +82,9 @@ SUITE(Core)
 		HandleA handle3 = HandleCreate(HandleManagerA, a3);
 		HandleA handle4 = handle3;
 
-		CHECK_EQUAL(2, a3->references);
+		CHECK_EQUAL(2, a3->references.read());
 		handle3.setId(HandleInvalid);
-		CHECK_EQUAL(1, a3->references);
+		CHECK_EQUAL(1, a3->references.read());
 		handle4.setId(HandleInvalid);
 
 		CHECK(nullptr == handle3.Resolve());

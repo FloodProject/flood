@@ -20,6 +20,7 @@
 #include "Engine/Scene/Model.h"
 #include "Engine/Resources/Animation.h"
 #include "Engine/Resources/Skeleton.h"
+#include <algorithm>
 
 #if SERIALIZE_SCENE
 #include <jansson.h>

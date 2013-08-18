@@ -70,13 +70,13 @@ namespace {
 	// - Task that linearly adds a range of numbers together and supports slicing of
 	//		the target range in half, in order to share / distribute the workload
 	//		across the pool of WorkerThreads.
-	class ALIGN_BEGIN(16) SliceableTask : public TaskBase
+	class ALIGN_BEGIN(32) SliceableTask : public TaskBase
 	{
 	public:
 		typedef std::array<uint32, 4> OutputVector;
 		typedef uint32 InputIter;
 
-		static volatile Atomic SliceCount;
+		static Atomic<uint32> SliceCount;
 		static OutputVector TaskCountPerThread;
 
 	private:
@@ -117,14 +117,14 @@ namespace {
 			Tail_ = Head_ + sliceSize;
 
 			// increment the number of slices
-			AtomicIncrement(&SliceCount);
+			SliceCount.increment();
 
 			return true;
 		}
 
-	} ALIGN_END(16);
+	} ALIGN_END(32);
 
-	volatile Atomic SliceableTask::SliceCount = 0;
+	Atomic<uint32> SliceableTask::SliceCount = 0;
 	SliceableTask::OutputVector SliceableTask::TaskCountPerThread = SliceableTask::OutputVector();
 
 	typedef scoped_ptr<SimpleTask> SimpleTaskPtr;
@@ -134,25 +134,25 @@ namespace {
 	//		such as the number of times it was split, number of times sliced, and
 	//		how many individual segments of the range were executed per-thread.
 	template < typename IterType >
-	class ALIGN_BEGIN(16) ProfiledForTask : public ForTask<IterType>
+	class ALIGN_BEGIN(32) ProfiledForTask : public ForTask<IterType>
 	{
 	public:
 		typedef std::function< void (IterType, IterType) > Func;
 		typedef std::array<uint32, 4> TaskCountOutput;
 
 	private:
-		TaskCountOutput * TaskCounter_;
-		volatile Atomic * SplitCount_;
-		volatile Atomic * SliceCount_;
+		TaskCountOutput* taskCounter;
+		Atomic<uint32>* splitCount;
+		Atomic<uint32>* sliceCount;
 
 
 	public:
 		ProfiledForTask(Completion * comp, IterType begin, IterType end, Func const & func, IterType minSliceSize
-			, TaskCountOutput * taskCounter, volatile Atomic * splitCount, volatile Atomic * sliceCount)
+			, TaskCountOutput * taskCounter, Atomic<uint32>* splitCount, Atomic<uint32>* sliceCount)
 			: ForTask(comp, begin, end, func, minSliceSize)
-			, TaskCounter_(taskCounter)
-			, SplitCount_(splitCount)
-			, SliceCount_(sliceCount)
+			, taskCounter(taskCounter)
+			, splitCount(splitCount)
+			, sliceCount(sliceCount)
 		{}
 
 		// - Has the same behavior as the ForTask, excepting that it counts
@@ -161,7 +161,7 @@ namespace {
 			Func_(Begin_, End_);
 
 			// annotate the task iteration
-			(*TaskCounter_)[WorkerThread::This()->Index()] += 1;
+			(*taskCounter)[WorkerThread::This()->Index()] += 1;
 
 			// HACK : I HATE THIS I DON'T LIKE IT MAKE IT STOP
 			delete this;
@@ -173,7 +173,7 @@ namespace {
 			TaskBase::Range * splits = ForTask::Split(numSlices);
 
 			if(splits != nullptr)
-				AtomicAdd(SplitCount_, splits->size());
+				splitCount->add(splits->size());
 
 			return splits;
 		}
@@ -185,16 +185,16 @@ namespace {
 				return false;
 
 			outTask = new ProfiledForTask(this->Completion_, Begin_ + sliceSize, End_, Func_, MinSliceSize_,
-							TaskCounter_, SplitCount_, SliceCount_);
+							taskCounter, splitCount, sliceCount);
 			End_ = Begin_ + sliceSize;
 
 			// annotate the slice increment
-			AtomicIncrement(SliceCount_);
+			sliceCount->increment();
 
 			return true;
 		}
 
-	} ALIGN_END(16);
+	} ALIGN_END(32);
 
 	template < class IterType >
 	void ProfiledForEach( IterType begin, IterType end, typename ProfiledForTask<IterType>::Func func, uint32 minSliceSize = 16)
@@ -207,8 +207,8 @@ namespace {
 		for(uint32 i = 0; i < counters.size(); ++i)
 			counters[i] = 0;
 
-		volatile Atomic splits = 0;
-		volatile Atomic slices = 0;
+		Atomic<uint32> splits = 0;
+		Atomic<uint32> slices = 0;
 
 		Completion completion;
 		ProfiledForTask<IterType> * task = new ProfiledForTask<IterType>( &completion, begin, end, func, minSliceSize,
@@ -217,8 +217,8 @@ namespace {
 		WorkerThread::This()->YieldUntil( &completion );
 
 		LogInfo("ProfiledForEach done...");
-		LogInfo("  Total Splits: %i ...", splits);
-		LogInfo("  Total Slices: %i ...", slices);
+		LogInfo("  Total Splits: %i ...", splits.read());
+		LogInfo("  Total Slices: %i ...", slices.read());
 
 		uint32 count = 0;
 		for(uint32 i = 0; i < counters.size(); ++i)
@@ -324,7 +324,7 @@ SUITE(Core)
 
 		// verify the task has been split across all the threads
 		LogInfo("SliceableTask test done...");
-		LogInfo("  Total Slices: %i ...", SliceableTask::SliceCount);
+		LogInfo("  Total Slices: %i ...", SliceableTask::SliceCount.read());
 
 		count = 0;
 		for(uint32 i = 0; i < counters.size(); ++i)
@@ -339,7 +339,7 @@ SUITE(Core)
 
 		LogInfo("  Total tasks executed: %i", count);
 
-		CHECK(count == (SliceableTask::SliceCount + 1));
+		CHECK(count == (SliceableTask::SliceCount.read() + 1));
 
 		// -- FOR EACH
 		

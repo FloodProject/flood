@@ -9,6 +9,8 @@
 
 #include "Resources/API.h"
 #include "Core/Concurrency.h"
+#include "Core/ConcurrentQueue.h"
+#include "Core/Task.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
 
@@ -18,7 +20,7 @@ NAMESPACE_RESOURCES_BEGIN
 
 class Stream;
 class Archive;
-struct TaskPool;
+class TaskPool;
 struct FileWatchEvent;
 
 class ResourceTask;
@@ -215,7 +217,7 @@ protected:
 	Mutex* resourceFinishLoadMutex;
 
 	// Number of resources queued for loading.
-	volatile Atomic numResourcesQueuedLoad;
+	Atomic<uint32> numResourcesQueuedLoad;
 };
 
 //-----------------------------------//
