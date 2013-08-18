@@ -1,4 +1,5 @@
 ﻿using Flood.RPC;
+using Flood.RPC.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Flood.Network
             Session = session;
         }
 
-        public override void DispatchCall(RPCData data)
+        public override void Dispatch(RPCData data)
         {
             var bytes = data.Serializer.Buffer.ReadAllBytes();
 
@@ -25,6 +26,11 @@ namespace Flood.Network
             packet.Flags = ConvertFlags(data.Flags);
 
             Session.Peer.QueuePacket(packet, 0);
+        }
+
+        public override RPC.Serialization.Serializer CreateSerializer()
+        {
+            return new BinarySerializer();
         }
 
         public override bool Equals(object other)

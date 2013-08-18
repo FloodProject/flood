@@ -39,7 +39,7 @@ namespace Flood.RPC
 
         internal void Process(RPCData call)
         {
-            var serviceId = call.Header.ServiceId;
+            var serviceId = call.Header.ImplId;
 
             ServiceImpl serviceImpl;
             if(!ServiceImpls.TryGetValue(serviceId, out serviceImpl))
@@ -53,7 +53,7 @@ namespace Flood.RPC
             var task = serviceImpl.Process(call);
 
             task.ContinueWith( reply => {
-                peer.DispatchCall(reply.Result);
+                peer.Dispatch(reply.Result);
             });
         }
 

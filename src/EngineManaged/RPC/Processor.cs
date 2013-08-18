@@ -32,36 +32,63 @@ namespace Flood.RPC
         Task<RPCData> Process(RPCData request);
     }
 
+
     public abstract class SimpleProcessor : Processor
     {
-        protected delegate Task<RPCData> ProcessFunction(RPCData request);
-        protected Dictionary<int, ProcessFunction> processMap_;
+        protected delegate Task<RPCData> ProcessCall(RPCData request, ProcedureCall call);
+        protected delegate void ProcessSubscribe();
+
+        protected struct Processors
+        {
+            public ProcessCall Call;
+            public ProcessSubscribe Subscribe;
+            public ProcessSubscribe Unsubscribe;
+
+            public Processors(ProcessCall call)
+                : this()
+            {
+                Call = call;
+            }
+
+            public Processors(ProcessSubscribe subscribe, ProcessSubscribe unsubscribe)
+                : this()
+            {
+                Subscribe = subscribe;
+                Unsubscribe = unsubscribe;
+            }
+        }
+
+        protected Dictionary<int, Processors> processors;
 
         public SimpleProcessor()
         {
-            processMap_ = new Dictionary<int, ProcessFunction>();
+            processors = new Dictionary<int, Processors>();
         }
 
         public async Task<RPCData> Process(RPCData request)
         {
             ProcedureCall msg = request.Serializer.ReadProcedureCallBegin();
-            ProcessFunction fn;
-            processMap_.TryGetValue(msg.Id, out fn);
+            var fn = processors[msg.Id].Call;
             if (fn != null)
-                return await fn(request);
+                return await fn(request, msg);
            
-            var response = new RPCData(new BinarySerializer());
-            response.Header.ServiceId = request.Header.ServiceId;
-            response.Header.SequenceNumber = request.Header.SequenceNumber;
-            response.Header.CallType = RPCDataType.Exception;
-            response.Header.Write();
+            var response = RPCData.CreateException(request);
             SerializerUtil.Skip(request.Serializer, TType.DataObject);
             request.Serializer.ReadProcedureCallEnd();
             RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + msg.Id + "'");
-            response.Serializer.WriteProcedureCallBegin(new ProcedureCall(msg.Id));
+            response.Serializer.WriteProcedureCallBegin(msg);
             x.Write(response.Serializer);
             response.Serializer.WriteProcedureCallEnd();
             return response;
+        }
+
+        public void SubscribeEvent(RPCData request)
+        {
+            var eventId = request.Serializer.ReadI32();
+
+            var fn = processors[eventId].Subscribe;
+            //if (fn != null)
+            //    fn(request.Peer, eventId);
         }
     }
 }

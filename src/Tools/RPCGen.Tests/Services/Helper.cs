@@ -1,5 +1,6 @@
 ﻿using Flood;
 using Flood.RPC;
+using Flood.RPC.Serialization;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,16 @@ namespace RPCGen.Tests.Services
                 manager = mgr;
             }
 
-            public override void DispatchCall(RPCData data)
+            public override void Dispatch(RPCData data)
             {
                 data.Serializer.Buffer.Position = 0;
                 data.Header.Read();
                 manager.Process(data);
+            }
+
+            public override Flood.RPC.Serialization.Serializer CreateSerializer()
+            {
+                return new BinarySerializer();
             }
 
             public override bool Equals(object other)

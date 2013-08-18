@@ -8,12 +8,12 @@ namespace Flood.RPC
     {
         public RPCImplManager ImplementationManager { get; private set; }
 
-        public Dictionary<RPCPeer, RPCProxyManager> ProxyManagers { get; private set; }
+        public RPCProxyManager ProxyManager { get; private set; }
 
         public RPCManager()
         {
             ImplementationManager = new RPCImplManager();
-            ProxyManagers = new Dictionary<RPCPeer, RPCProxyManager>();
+            ProxyManager = new RPCProxyManager();
         }
 
         public void Process(byte[] data, RPCPeer peer)
@@ -22,36 +22,24 @@ namespace Flood.RPC
             serializer.Buffer.Write(data, 0, data.Length);
             serializer.Buffer.Position = 0;
 
-            var rpcData = new RPCData(serializer);
+            var rpcData = new RPCData(peer, serializer);
             rpcData.Header.Read();
-            rpcData.Peer = peer;
 
             Process(rpcData);
         }
 
         public void Process(RPCData data)
         {
-            var peer = data.Peer;
-
             switch(data.Header.CallType)
             {
+            case RPCDataType.EventSubscribe:
             case RPCDataType.Call:
-            {
                 ImplementationManager.Process(data);
                 return;
-            }
             case RPCDataType.Reply:
-            {
-                RPCProxyManager proxyManager;
-                if (!ProxyManagers.TryGetValue(peer, out proxyManager))
-                {
-                    Log.Error("RPC proxy not found for peer:" + peer);
-                    return;
-                } 
-
-                proxyManager.Process(data);
+            case RPCDataType.EventInvoke:
+                ProxyManager.Process(data);
                 return;
-            }
             default:
                 throw new NotImplementedException();
             }
@@ -62,12 +50,9 @@ namespace Flood.RPC
             return ImplementationManager.AddImplementation(service);
         }
 
-        public T CreateProxy<T>(RPCPeer peer, int serviceId)
+        public T CreateProxy<T>(RPCPeer peer, int implId)
         {
-            if (!ProxyManagers.ContainsKey(peer))
-                ProxyManagers.Add(peer, new RPCProxyManager(peer));
-
-            return ProxyManagers[peer].CreateProxy<T>(serviceId);
+            return ProxyManager.CreateProxy<T>(peer, implId);
         }
 
     }

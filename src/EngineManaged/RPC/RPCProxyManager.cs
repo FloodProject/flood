@@ -5,67 +5,81 @@ using System.Threading.Tasks;
 
 namespace Flood.RPC
 {
-    public class RPCProxyManager
+    public abstract class RPCProxy
     {
-        private RPCPeer peer;
         private Dictionary<int, TaskCompletionSource<RPCData>> pendingCalls;
         private int sequenceNumber;
 
-        public RPCProxyManager(RPCPeer peer)
+        protected RPCProxy()
         {
-            if (peer == null)
-                throw new ArgumentNullException("peer");
-
-            this.peer = peer;
             pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
         }
 
-        internal void Process(RPCData reply)
+        protected int GetIncrementSequenceNumber()
         {
-            switch (reply.Header.CallType)
-            {
-            case RPCDataType.Reply:
-            {
-                var seqNum = reply.Header.SequenceNumber;
-                if (!pendingCalls.ContainsKey(seqNum)) 
-                {
-                    Log.Error("Received unexpected reply.");
-                    return;
-                }
+            return sequenceNumber++;
+        }
 
-                pendingCalls[seqNum].SetResult(reply);
+        public abstract void InvokeEvent(RPCData data);
+
+        protected Task<RPCData> DispatchCall(RPCData data, int seqNumber)
+        {
+            var tcs = new TaskCompletionSource<RPCData>();
+            pendingCalls.Add(seqNumber, tcs);
+
+            data.Peer.Dispatch(data);
+
+            return tcs.Task;
+        }
+
+        internal void ProcessReply(RPCData reply)
+        {
+            var call = reply.Serializer.ReadProcedureCallBegin();
+            if (!pendingCalls.ContainsKey(call.SequenceNumber)) 
+            {
+                Log.Error("Received unexpected reply.");
                 return;
             }
+
+            pendingCalls[call.SequenceNumber].SetResult(reply);
+        }
+    }
+
+    public class RPCProxyManager
+    {
+        private Dictionary<int, RPCProxy> proxies;
+        private int proxyCounter;
+
+        private int sequenceNumber;
+
+        public RPCProxyManager()
+        {
+            proxies = new Dictionary<int, RPCProxy>();
+        }
+
+        internal void Process(RPCData data)
+        {
+            RPCProxy proxy;
+            if (!proxies.TryGetValue(data.Header.ProxyId, out proxy))
+            {
+                Log.Error("Received RPC data to unexpected Proxy.");
+                return;
+            }
+
+            switch (data.Header.CallType)
+            {
+            case RPCDataType.Reply:
+                proxy.ProcessReply(data);
+                return;
+            case RPCDataType.EventInvoke:
+                proxy.InvokeEvent(data);
+                return;
             default:
                 throw new NotImplementedException();
             }
         }
 
-        public RPCData CreateCall(int serviceId, RPCFlags flags = RPCFlags.None)
-        {
-            var serializer = new BinarySerializer();
-            var call = new RPCData(serializer);
-            call.Peer = peer;
-            call.Flags = flags;
-            call.Header.SequenceNumber = sequenceNumber++;
-            call.Header.CallType = RPCDataType.Call;
-            call.Header.ServiceId = serviceId;
-            call.Header.Write();
-
-            return call;
-        }
-
-        public Task<RPCData> DispatchCall(RPCData data)
-        {
-            var tcs = new TaskCompletionSource<RPCData>();
-            pendingCalls.Add(data.Header.SequenceNumber, tcs);
-
-            data.Peer.DispatchCall(data);
-
-            return tcs.Task;
-        }
-
-        internal T CreateProxy<T>(int serviceId)
+        internal T CreateProxy<T>(RPCPeer peer, int implId)
         {
             var serviceType = typeof(T);
             var serviceAssembly = serviceType.Assembly;
@@ -73,7 +87,13 @@ namespace Flood.RPC
             var implType = serviceAssembly.GetType(Helper.ImplName(serviceType, true));
             var proxyType = implType.GetNestedType("Proxy");
 
-            return (T)Activator.CreateInstance(proxyType, this, serviceId);
+            var proxyId = proxyCounter++;
+
+            var proxy = Activator.CreateInstance(proxyType, peer, implId, proxyId);
+
+            proxies.Add(proxyId, (RPCProxy)proxy);
+
+            return (T)proxy;
         }
     }
 }

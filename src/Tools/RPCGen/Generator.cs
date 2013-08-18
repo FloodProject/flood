@@ -149,7 +149,7 @@ namespace Flood.Tools.RPCGen
             Type baseType;
             GetInheritedService(type, out baseType);
 
-            Write("public class Proxy : {0}", PrettyName(type));
+            Write("public class Proxy : RPCProxy, {0}", PrettyName(type));
 
             if (baseType != null)
                 Write(" : {0}.Proxy", ImplName(baseType, true));
@@ -157,19 +157,21 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Proxy(RPCProxyManager proxyManager, int serviceId)");
+            WriteLine("public Proxy(RPCPeer peer, int implId, int proxyId)");
             if (baseType != null)
                 Write(" : base(proxyHandler)", baseType.Name);
             WriteStartBraceIndent();
-            WriteLine("ProxyManager = proxyManager;");
-            WriteLine("ServiceId = serviceId;");
+            WriteLine("Peer = peer;");
+            WriteLine("ImplId = implId;");
+            WriteLine("ProxyId = proxyId;");
             WriteCloseBraceIndent();
             NewLine();
 
             if (baseType == null)
             {
-                WriteLine("public RPCProxyManager ProxyManager { get; private set; }");
-                WriteLine("public int ServiceId { get; private set; }");
+                WriteLine("public RPCPeer Peer { get; private set; }");
+                WriteLine("public int ImplId { get; private set; }");
+                WriteLine("public int ProxyId { get; private set; }");
                 NewLine();
             }
 
@@ -218,15 +220,14 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            Write("var request = {0}(", GetProcedureSendMethodName(method));
+            WriteLine("var seqNum = GetIncrementSequenceNumber();");
+            Write("var request = {0}(seqNum", GetProcedureSendMethodName(method));
             for (var i = 0; i < parameters.Length; i++)
             {
-                Write("{0}", parameters[i].Name);
-                if (i < parameters.Length - 1)
-                    Write(", ");
+                Write(", {0}", parameters[i].Name);
             }
             WriteLine(");");
-            WriteLine("var response = await ProxyManager.DispatchCall(request);");
+            WriteLine("var response = await DispatchCall(request, seqNum);");
             if (retType != typeof(void))
                 Write("return ");
             WriteLine("{0}(response);", GetProcedureReceiveMethodName(method));
@@ -247,8 +248,6 @@ namespace Flood.Tools.RPCGen
             Write("private {0} {1}(RPCData response)", PrettyName(retType),
                   GetProcedureReceiveMethodName(method));
             WriteStartBraceIndent();
-
-            WriteLine("var msg = response.Serializer.ReadProcedureCallBegin();");
 
             WriteLine("if (response.Header.CallType == RPCDataType.Exception)");
             WriteStartBraceIndent();
@@ -290,12 +289,13 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters)
         {
-            Write("private RPCData {0}(", GetProcedureSendMethodName(method));
+            var seqParam = (parameters.Length == 0) ? "int seqNum" : "int seqNum, ";
+            Write("private RPCData {0}({1}", GetProcedureSendMethodName(method), seqParam);
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();
 
-            WriteLine("var request = ProxyManager.CreateCall(ServiceId);");
+            WriteLine("var request = RPCData.CreateCall(Peer, ImplId, ProxyId);");
 
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
@@ -306,7 +306,7 @@ namespace Flood.Tools.RPCGen
 
             NewLine();
             int procedureId = GetProcedureCallId(method);
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0});", procedureId);
+            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0}, seqNum);", procedureId);
             WriteLine("request.Serializer.WriteProcedureCallBegin(procedureCall);");
 
             WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
@@ -389,7 +389,7 @@ namespace Flood.Tools.RPCGen
 
                     var procedureId = GetProcedureCallId(method);
 
-                    WriteLine("processMap_[{0}] = {1};", procedureId,
+                    WriteLine("processors[{0}] = new Processors({1});", procedureId,
                         GetProcedureProcessMethodName(method));
                 }
 
@@ -419,7 +419,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public async Task<RPCData> {0}(RPCData request)",
+            WriteLine("public async Task<RPCData> {0}(RPCData request, ProcedureCall msg)",
                       GetProcedureProcessMethodName(method));
             WriteStartBraceIndent();
 
@@ -491,8 +491,7 @@ namespace Flood.Tools.RPCGen
 
             var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
-            WriteLine("var procedureCall = new Flood.RPC.Serialization.ProcedureCall({0});", procedureId);
-            WriteLine("reply.Serializer.WriteProcedureCallBegin(procedureCall);");
+            WriteLine("reply.Serializer.WriteProcedureCallBegin(msg);");
 
             WriteLine("result.Write(reply.Serializer);");
             WriteLine("reply.Serializer.WriteProcedureCallEnd();");
