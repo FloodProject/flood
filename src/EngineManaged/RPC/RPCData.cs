@@ -16,7 +16,10 @@ namespace Flood.RPC
         Call = 1,
         Reply = 2,
         Exception = 3,
-        Oneway = 4
+        Oneway = 4,
+        EventSubscribe = 5,
+        EventUnsubscribe = 6,
+        EventInvoke = 7
     }
 
     public struct RPCData

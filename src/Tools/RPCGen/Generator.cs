@@ -183,6 +183,15 @@ namespace Flood.Tools.RPCGen
                 GenerateProtocolMethod(type, method);
             }
 
+            foreach (var @event in type.GetEvents())
+            {
+                GenerateProxyEvent(type, @event);
+            }
+
+            WriteLine("public override void InvokeEvent(RPCData data)");
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+
             WriteCloseBraceIndent();
             NewLine();
         }
@@ -319,12 +328,54 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
+        private void GenerateProxyEvent(Type type, EventInfo eventInfo)
+        {
+            var eventType = PrettyName(eventInfo.EventHandlerType);
+            var eventName = eventInfo.Name;
+            var eventName2 = "_" + eventName;
+
+            WriteLine("private event {0} {1};", eventType, eventName2);
+
+            WriteLine("public event {0} {1}", eventType, eventName);
+            WriteStartBraceIndent();
+            WriteLine("add");
+            WriteStartBraceIndent();
+            WriteLine("if({0} == null)", eventName2);
+            WriteStartBraceIndent();
+            WriteLine("var eventSubscribe = RPCData.CreateEventSubscribe(Peer, ImplId, ProxyId);");
+            WriteLine("eventSubscribe.Serializer.WriteI32({0});", GetEventId(eventInfo));
+            WriteLine("Peer.Dispatch(eventSubscribe);");
+            WriteCloseBraceIndent();
+            WriteLine("{0} += value;", eventName2);
+            WriteCloseBraceIndent();
+            WriteLine("remove");
+            WriteStartBraceIndent();
+            WriteLine("{0} -= value;", eventName2);
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+            WriteLine("private void Invoke_{0}(RPCData data)", eventName);
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+            NewLine();
+        }
+
         private static int GetProcedureCallId(MethodInfo method)
         {
             int id;
             if (!Metadata.TryGetId(method, out id))
             {
                 var msg = string.Format("Method {0}.{1} require an Id attribute.", method.DeclaringType.FullName, method.Name);
+                throw new Exception(msg);
+            }
+            return id;
+        }
+
+        private static int GetEventId(EventInfo @event)
+        {
+            int id;
+            if (!Metadata.TryGetId(@event, out id))
+            {
+                var msg = string.Format("Event {0}.{1} require an Id attribute.", @event.DeclaringType.FullName, @event.Name);
                 throw new Exception(msg);
             }
             return id;
@@ -393,6 +444,16 @@ namespace Flood.Tools.RPCGen
                         GetProcedureProcessMethodName(method));
                 }
 
+                foreach (var @event in type.GetEvents())
+                {
+                    var eventId = GetEventId(@event);
+
+                    WriteLine("processors[{0}] = new Processors({1}, {2});", eventId,
+                        GetEventSubscribeMethodName(@event),
+                        GetEventUnsubscribeMethodName(@event)
+                        );
+                }
+
                 WriteCloseBraceIndent();
                 NewLine();
             }
@@ -407,6 +468,12 @@ namespace Flood.Tools.RPCGen
                 NewLine();
             }
 
+            foreach (var @event in type.GetEvents())
+            {
+                GenerateEventSubscribeMethod(@event);
+                GenerateEventUnsubscribeMethod(@event);
+            }
+
             WriteCloseBraceIndent();
             NewLine();
         }
@@ -415,6 +482,16 @@ namespace Flood.Tools.RPCGen
         {
             var procedureId = GetProcedureCallId(method);
             return string.Format("{0}_{1}_Process", method.Name, procedureId);
+        }
+
+        private static string GetEventSubscribeMethodName(EventInfo @event)
+        {
+            return string.Format("{0}_Subscribe", @event.Name);
+        }
+
+        private static string GetEventUnsubscribeMethodName(EventInfo @event)
+        {
+            return string.Format("{0}_Unsubscribe", @event.Name);
         }
 
         private void GenerateServiceProcessMethod(MethodInfo method)
@@ -497,6 +574,20 @@ namespace Flood.Tools.RPCGen
             WriteLine("reply.Serializer.WriteProcedureCallEnd();");
             WriteLine("return reply;");
 
+            WriteCloseBraceIndent();
+        }
+
+        private void GenerateEventSubscribeMethod(EventInfo @event)
+        {
+            WriteLine("void {0}()", GetEventSubscribeMethodName(@event));
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+        }
+
+        private void GenerateEventUnsubscribeMethod(EventInfo @event)
+        {
+            WriteLine("void {0}()", GetEventUnsubscribeMethodName(@event));
+            WriteStartBraceIndent();
             WriteCloseBraceIndent();
         }
 
