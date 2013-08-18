@@ -10,6 +10,7 @@
 #ifdef ENABLE_RESOURCE_INDEXER
 
 #include "Core/Concurrency.h"
+#include "Core/Task.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceDatabase.h"
 

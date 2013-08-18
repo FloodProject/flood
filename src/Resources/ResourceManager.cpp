@@ -147,8 +147,8 @@ ResourceManager::ResourceManager()
 	ReflectionHandleContextMap contextMap;
 	ReflectionSetHandleContext(&contextMap, context);
 
-	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
-	resourceFinishLoad = ConditionCreate( GetResourcesAllocator() );
+	resourceFinishLoadMutex = Allocate(GetResourcesAllocator(), Mutex);
+	resourceFinishLoad = Allocate(GetResourcesAllocator(), Condition);
 }
 
 //-----------------------------------//
@@ -158,8 +158,8 @@ ResourceManager::~ResourceManager()
 	destroyHandles();
 	resourceLoaders.clear();
 
-	ConditionDestroy(resourceFinishLoad);
-	MutexDestroy(resourceFinishLoadMutex);
+	Deallocate(resourceFinishLoad);
+	Deallocate(resourceFinishLoadMutex);
 }
 
 //-----------------------------------//
@@ -172,7 +172,7 @@ void ResourceManager::destroyHandles()
 		Resource* res = handle.Resolve();
 		
 		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(),
-			res->references);
+			res->references.read());
 	}
 
 	gs_RemoveResource = false;
@@ -349,7 +349,7 @@ void ResourceTaskRun(Task* task);
 
 void ResourceManager::decodeResource( ResourceLoadOptions& options )
 {
-	Task* task = TaskCreate( GetResourcesAllocator() );
+	Task* task = Allocate(GetResourcesAllocator(), Task);
 	
 	ResourceLoadOptions* taskOptions = Allocate(GetResourcesAllocator(),
 		ResourceLoadOptions);
@@ -359,17 +359,17 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 	task->callback.Bind(ResourceTaskRun);
 	task->userdata = taskOptions;
 
-	AtomicIncrement(&numResourcesQueuedLoad);
+	numResourcesQueuedLoad.increment();
 
 #ifdef ENABLE_THREADED_LOADING
 	if( taskPool && asynchronousLoading && options.asynchronousLoad )
 	{
-		TaskPoolAdd(taskPool, task, options.isHighPriority);
+		taskPool->add(task, options.isHighPriority);
 		return;
 	}
 #endif
 
-	TaskRun(task);
+	task->run();
 	sendPendingEvents();
 }
 
@@ -377,17 +377,17 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 
 void ResourceManager::loadQueuedResources()
 {
-	MutexLock(resourceFinishLoadMutex);
+	resourceFinishLoadMutex->lock();
 
-	while( AtomicRead(&numResourcesQueuedLoad) > 0 )
+	while(numResourcesQueuedLoad.read() > 0 )
 	{
 		#pragma TODO("Use a sleep and notify the observers of progress")
-		ConditionWait(resourceFinishLoad, resourceFinishLoadMutex);
+		resourceFinishLoad->wait(*resourceFinishLoadMutex);
 	}
 
-	MutexUnlock(resourceFinishLoadMutex);
+	resourceFinishLoadMutex->unlock();
 
-	assert( AtomicRead(&numResourcesQueuedLoad) == 0 );
+	assert(numResourcesQueuedLoad.read() == 0);
 }
 
 //-----------------------------------//
@@ -441,7 +441,7 @@ void ResourceManager::removeUnusedResources()
 	{
 		const ResourceHandle& resource = it->second;
 
-		if( resource.Resolve()->references == 1 )
+		if( resource.Resolve()->references.read() == 1 )
 			resourcesToRemove.push_back(it->first);
 	}
 

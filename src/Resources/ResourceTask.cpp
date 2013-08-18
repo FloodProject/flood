@@ -52,8 +52,8 @@ void ResourceTaskRun(Task* task)
 
 cleanup:
 
-	AtomicDecrement(&res->numResourcesQueuedLoad);
-	ConditionWakeOne(res->resourceFinishLoad);
+	res->numResourcesQueuedLoad.decrement();
+	res->resourceFinishLoad->wakeOne();
 
 	if( !options->keepStreamOpen )
 		Deallocate(stream);

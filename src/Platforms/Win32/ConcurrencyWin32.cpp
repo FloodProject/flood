@@ -23,64 +23,65 @@ NAMESPACE_CORE_BEGIN
 
 #pragma region Threads
 
+//TODO this function might not be neccessary
 static bool ThreadIsValid(Thread* thread)
 {
-	return thread && thread->Handle;
+	return thread && thread->handle;
 }
 
-bool ThreadJoin(Thread* thread)
+bool Thread::join()
 {
-	if( !ThreadIsValid(thread) || !thread->IsRunning )
+	if (!handle || !isRunning)
 		return false;
 	
-	thread->IsRunning = false;
-	assert(thread->Handle);
+	isRunning = false;
+	assert(handle);
 
-	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
+	return ::WaitForSingleObject(handle, INFINITE) != WAIT_FAILED;
 }
 
 //-----------------------------------//
 
-bool ThreadPause(Thread* thread)
+bool Thread::pause()
 {
-	if( !ThreadIsValid(thread) )
+	if (!handle)
 		return false;
 
-	return ::SuspendThread((HANDLE) thread->Handle) != -1;
+	return ::SuspendThread((HANDLE) handle) != -1;
 }
 
 //-----------------------------------//
 
-bool ThreadResume(Thread* thread)
+bool Thread::resume()
 {
-	if( !ThreadIsValid(thread) )
+	if (!handle)
 		return false;
 
-	return ::ResumeThread((HANDLE) thread->Handle) != -1;
+	return ::ResumeThread((HANDLE) handle) != -1;
 }
 
 //-----------------------------------//
 
-bool ThreadSetPriority(Thread* thread, ThreadPriority threadPriority)
+bool Thread::setPriority(ThreadPriority priority)
 {
-	thread->Priority = threadPriority;
+	this->priority = priority;
 
-	int priority = 0;
+	int pri = 0;
 
-	switch(threadPriority)
+	switch(priority)
 	{
 	case ThreadPriority::Low:
-		priority = THREAD_PRIORITY_BELOW_NORMAL;
+		pri = THREAD_PRIORITY_BELOW_NORMAL;
 		break;
 	case ThreadPriority::Normal:
-		priority = THREAD_PRIORITY_NORMAL;
+		pri = THREAD_PRIORITY_NORMAL;
 		break;
 	case ThreadPriority::High:
-		priority = THREAD_PRIORITY_ABOVE_NORMAL;
+		pri = THREAD_PRIORITY_ABOVE_NORMAL;
 		break;
 	};
 
-	return ::SetThreadPriority((HANDLE) thread->Handle, priority) != 0;
+	return ::SetThreadPriority((HANDLE) handle, pri) != 0;
 }
 
 //-----------------------------------//
@@ -88,13 +89,13 @@ bool ThreadSetPriority(Thread* thread, ThreadPriority threadPriority)
 unsigned int WINAPI _ThreadMain(void* ptr)
 {
 	Thread* thread = (Thread*) ptr;
-	thread->Function(thread, thread->Userdata);
+	thread->function(thread, thread->userdata);
 
 	// _endthread automatically closes the thread handle.
 	// ::CloseHandle((HANDLE) thread->Handle);
 	
-	thread->Handle = nullptr;
-	thread->IsRunning = false;
+	thread->handle = nullptr;
+	thread->isRunning = false;
 
 	::_endthreadex(0);
 
@@ -104,34 +105,34 @@ unsigned int WINAPI _ThreadMain(void* ptr)
 
 //-----------------------------------//
 
-bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
+bool Thread::start(ThreadFunction function, void* data)
 {
-	if (!thread || !function || thread->IsRunning)
+	if (!function || isRunning)
 		return false;
 
-	thread->Function = function;
-	thread->Userdata = data;
+	this->function = function;
+	userdata = data;
 
 	// Create the thread suspended.
 	uintptr_t handle = ::_beginthreadex(nullptr,
-		0, _ThreadMain, thread, CREATE_SUSPENDED, nullptr);
+		0, _ThreadMain, this, CREATE_SUSPENDED, nullptr);
 
-	thread->Handle = (void*) handle;
+	this->handle = (void*) handle;
 
 	// State is set up, resume the thread.
-	if( thread->Handle > 0 )
+	if( this->handle > 0 )
 	{
-		thread->IsRunning = true;
-		ThreadSetPriority(thread, ThreadPriority::Normal);
-		ThreadResume(thread);
+		isRunning = true;
+		setPriority(ThreadPriority::Normal);
+		resume();
 	}
 
-	return thread->Handle != 0;
+	return this->handle != 0;
 }
 
 //-----------------------------------//
 
-static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
+static void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 {
 	struct THREADNAME_INFO
 	{
@@ -158,12 +159,10 @@ static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 
 typedef DWORD (WINAPI *GetThreadIdFn)(HANDLE);
 
-void ThreadSetName( Thread* thread, const char* name )
+void Thread::setName(const char* name)
 {
-	if( !thread ) return;
-
 	HMODULE module = GetModuleHandleA("Kernel32.dll");
-	if( module == NULL ) return;
+	if (module == NULL) return;
 
 	// GetThreadId only exists on Vista or later versions, test if it exists
 	// at runtime or the program will not run due to dynamic linking errors.
@@ -171,7 +170,7 @@ void ThreadSetName( Thread* thread, const char* name )
 	GetThreadIdFn pGetThreadId = (GetThreadIdFn) GetProcAddress(module, "GetThreadId");
 	if( pGetThreadId == NULL ) return;
 
-	SetThreadName( pGetThreadId(thread->Handle), name ); 
+	SetThreadName( pGetThreadId(handle), name ); 
 }
 
 #pragma endregion
@@ -180,31 +179,33 @@ void ThreadSetName( Thread* thread, const char* name )
 
 #pragma region Mutex
 
-struct Mutex
-{
-	CRITICAL_SECTION Handle;
-};
+
 
 #define CS_CREATE_IMMEDIATELY_ON_WIN2000 0x080000000
 #define CS_SPIN_COUNT 1500
 
 //-----------------------------------//
 
-Mutex* MutexCreate(Allocator* alloc)
+Mutex::Mutex()
 {
-	Mutex* mutex = Allocate(alloc, Mutex);
-	MutexInit(mutex);
-
-	return mutex;
+	init();
 }
 
 //-----------------------------------//
 
-void MutexInit(Mutex* mutex)
+Mutex::~Mutex()
 {
-	if (!mutex) return;
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) handle;
+	DeleteCriticalSection(cs);
+	Deallocate(handle);
+}
 
-	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
+//-----------------------------------//
+
+void Mutex::init()
+{
+	handle = AllocateHeap(CRITICAL_SECTION);
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) handle;
 	
 	BOOL result = ::InitializeCriticalSectionAndSpinCount(
 		cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
@@ -214,29 +215,17 @@ void MutexInit(Mutex* mutex)
 
 //-----------------------------------//
 
-void MutexDestroy(Mutex* mutex)
+void Mutex::lock()
 {
-	if (!mutex) return;
-
-	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
-	DeleteCriticalSection(cs);
-
-	Deallocate(mutex);
-}
-
-//-----------------------------------//
-
-void MutexLock(Mutex* mutex)
-{
-	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) handle;
 	::EnterCriticalSection(cs);
 }
 
 //-----------------------------------//
 
-void MutexUnlock(Mutex* mutex)
+void Mutex::unlock()
 {
-	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) handle;
 	::LeaveCriticalSection(cs);
 }
 
@@ -291,111 +280,62 @@ static ConditionFunctions* IntializeConditionFunctions()
 
 static ConditionFunctions* g_ConditionFunctions = IntializeConditionFunctions();
 
-struct Condition
-{
-	CONDITION_VARIABLE Handle;
-};
-
 //-----------------------------------//
 
-Condition* ConditionCreate(Allocator* alloc)
+Condition::Condition()
 {
-	Condition* cond = Allocate(alloc, Condition);
-	ConditionInit(cond);
-
-	return cond;
+	init();
 }
 
 //-----------------------------------//
 
-void ConditionDestroy(Condition* cond)
+Condition::~Condition()
 {
-	Deallocate(cond);
+	Deallocate(handle);
 }
 
 //-----------------------------------//
 
-void ConditionInit(Condition* cond)
+void Condition::init()
 {
-	if( !cond ) return;
-
-	if( !g_ConditionFunctions )
+	if (!g_ConditionFunctions)
 		return;
 
-	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
+	handle = AllocateHeap(CONDITION_VARIABLE);
 	
-	if(g_ConditionFunctions->Init)
-		g_ConditionFunctions->Init(cvar);
+	if (g_ConditionFunctions->Init)
+		g_ConditionFunctions->Init(handle);
 }
 
 //-----------------------------------//
 
-void ConditionWait(Condition* cond, Mutex* mutex)
+void Condition::wait(Mutex& mutex)
 {
-	if( !cond || !mutex ) return;
-	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) mutex.handle;
 	BOOL ret = FALSE;
 	
-	if(g_ConditionFunctions->Sleep) 
+	if(g_ConditionFunctions->Sleep)
 	{
-		ret = g_ConditionFunctions->Sleep(cvar, cs, INFINITE);
+		ret = g_ConditionFunctions->Sleep(handle, cs, INFINITE);
 		assert( ret != FALSE );
 	}
 }
 
 //-----------------------------------//
 
-void ConditionWakeOne(Condition* cond)
+void Condition::wakeOne()
 {
-	if( !cond ) return;
-	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	
 	if(g_ConditionFunctions->Wake)
-		g_ConditionFunctions->Wake(cvar);
+		g_ConditionFunctions->Wake(handle);
 }
 
 //-----------------------------------//
 
-void ConditionWakeAll(Condition* cond)
+void Condition::wakeAll()
 {
-	if( !cond ) return;
-	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	
 	if(g_ConditionFunctions->WakeAll)
-		g_ConditionFunctions->WakeAll(cvar);
-}
-
-#pragma endregion
-
-//-----------------------------------//
-
-#pragma region Atomics
-
-int32 AtomicRead(volatile Atomic* atomic)
-{
-	return ::InterlockedExchangeAdd(atomic, 0);
-}
-
-int32 AtomicWrite(volatile Atomic* atomic, int32 value)
-{
-	return ::InterlockedExchange(atomic, value);
-}
-
-int32 AtomicAdd(volatile Atomic* atomic, int32 value)
-{
-	return ::InterlockedExchangeAdd(atomic, value);
-}
-
-int32 AtomicIncrement(volatile Atomic* atomic)
-{
-	return ::InterlockedIncrement(atomic);
-}
-
-int32 AtomicDecrement(volatile Atomic* atomic)
-{
-	return ::InterlockedDecrement(atomic);
+		g_ConditionFunctions->WakeAll(handle);
 }
 
 #pragma endregion
