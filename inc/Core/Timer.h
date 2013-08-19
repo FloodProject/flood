@@ -17,19 +17,29 @@ NAMESPACE_EXTERN_BEGIN
  * the general lower-precision timers. On POSIX platforms it'll use the
  * most high-precision timer available.
  */
-
-API_CORE float TimerGetCurrentTimeMs();
-
-struct API_CORE Timer
+class API_CORE Timer
 {
-	Timer();
-	int64 time;
-};
+public:
 
-API_CORE Timer* TimerCreate(Allocator*);
-API_CORE void   TimerDestroy(Timer*);
-API_CORE void   TimerReset(Timer*);
-API_CORE float  TimerGetElapsed(Timer*);
+	Timer();
+
+	/**
+	 * Reset timer.
+	 */
+	void reset();
+	
+	/**
+	 * Get elapsed time since timer creation or last reset.
+	 */
+	float getElapsed();
+
+	/**
+	 * Get current time in miliseconds.
+	 */
+	float getCurrentTimeMs();
+
+	int64 time; //!< time of timer creation
+};
 
 //-----------------------------------//
 

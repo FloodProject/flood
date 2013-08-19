@@ -66,7 +66,14 @@ static timeval GetTime()
 
 //-----------------------------------//
 
-float TimerGetCurrentTimeMs()
+Timer::Timer()
+{
+	reset();
+}
+
+//-----------------------------------//
+
+float Timer::getCurrentTimeMs()
 {
 #ifdef PLATFORM_WINDOWS
 	int64 time = GetTime();
@@ -82,44 +89,20 @@ float TimerGetCurrentTimeMs()
 
 //-----------------------------------//
 
-Timer::Timer()
+void Timer::reset()
 {
-	TimerReset(this);
+	time = GetTime();
 }
 
 //-----------------------------------//
 
-Timer* TimerCreate(Allocator* alloc)
-{
-	Timer* timer = Allocate(alloc, Timer);
-	TimerReset(timer);
-
-	return timer;
-}
-
-//-----------------------------------//
-
-void TimerDestroy(Timer* timer)
-{
-	Deallocate(timer);
-}
-
-//-----------------------------------//
-
-void TimerReset(Timer* timer)
-{
-	timer->time = GetTime();
-}
-
-//-----------------------------------//
-
-float TimerGetElapsed(Timer* timer)
+float Timer::getElapsed()
 {
 #ifdef PLATFORM_WINDOWS
-    int64 diff = GetTime() - timer->time;
+    int64 diff = GetTime() - time;
 	return float(diff) / float(g_TicksPerSecond);
 #elif defined(PLATFORM_NACL)
-    int64 diff = GetTime() - timer->time;
+    int64 diff = GetTime() - time;
     return diff;
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);

@@ -24,7 +24,7 @@ Profiler::Profiler(const char* category, const char* name)
 
 Profiler::~Profiler()
 {
-	float time = TimerGetElapsed(&timer);
+	float time = timer.getElapsed();
 	float ms = time * 1000;
 
 	LogDebug( "%s: took %lu ms (%.5lf)", name, (uint32) ms, ms );
@@ -34,7 +34,7 @@ Profiler::~Profiler()
 
 void Profiler::reset()
 {
-	TimerReset(&timer);
+	timer.reset();
 }
 
 //-----------------------------------//
