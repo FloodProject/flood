@@ -47,11 +47,9 @@ static void LogConsoleHandler(LogEntry* entry)
 //-----------------------------------//
 
 Log::Log()
-	: timer(nullptr)
 {
 	Allocator* alloc = AllocatorGetThis();
 
-	timer = TimerCreate(alloc);
 
 	LogAddHandler(this, LogConsoleHandler);
 
@@ -64,7 +62,6 @@ Log::~Log()
 {
 	if( gs_Log == this ) LogSetDefault(nullptr);
 
-	TimerDestroy(timer);
 }
 
 //-----------------------------------//
