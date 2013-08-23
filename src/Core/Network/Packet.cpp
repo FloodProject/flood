@@ -154,12 +154,10 @@ void Packet::write(const Object* object)
 {
 	SetBitFlag(flags, PacketFlags::Binary, true);
 
-	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis(), 0);
-	serializer->stream = &ms;
+	SerializerBinary serializer(AllocatorGetThis(), 0);
+	serializer.stream = &ms;
 
-	SerializerSave(serializer, object);
-	
-	Deallocate(serializer);
+	serializer.save(object);
 }
 
 //-----------------------------------//

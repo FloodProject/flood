@@ -23,21 +23,58 @@ NAMESPACE_CORE_BEGIN
 
 struct Field;
 
-struct API_CORE SerializerBinary : public Serializer
+class API_CORE SerializerBinary : public Serializer
 {
-	MemoryStream* ms;
+public:
+
+	/**
+	 * Creates a new binary serializer.
+	 * @param allocator allocator used for this serializer
+	 * @param handleContextMap map used to map classes to their serializaton/deserialization functions
+	 */
+	SerializerBinary(Allocator* allocator, ReflectionHandleContextMap* handleContextMap);
+
+	/**
+	 * Loads an object from stream.
+	 */
+	virtual Object* load() override;
+
+	/**
+	 * Saves an object to stream.
+	 * @param obj object to save
+	 */
+	virtual bool save(const Object* obj) override;
+
+	MemoryStream* ms; //<! memory stream used for serialization/deserialization
 };
 
 //-----------------------------------//
 
-struct API_CORE SerializerJSON : public Serializer
+class API_CORE SerializerJSON : public Serializer
 {
-	// Root JSON value.
-	json_t* rootValue;
-	
-	// Stack of JSON values.
-	std::vector<json_t*> values;
-	std::vector<json_t*> arrays;
+public:
+
+	/**
+	 * Creates a new JSON serializer.
+	 * @param allocator allocator used for this serializer
+	 * @param handleContextMap map used to map classes to their serializaton/deserialization functions
+	 */
+	SerializerJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap);
+
+	/**
+	 * Loads an object from stream.
+	 */
+	virtual Object* load() override;
+
+	/**
+	 * Saves an object to stream.
+	 * @param obj object to save
+	 */
+	virtual bool save(const Object* obj) override;
+
+	json_t* rootValue; //!< Root JSON value.
+
+	std::vector<json_t*> values; //!< Stack of JSON values.
 };
 
 ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value );
