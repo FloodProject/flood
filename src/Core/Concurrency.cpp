@@ -9,6 +9,7 @@
 #include "Core/Concurrency.h"
 #include "Core/Log.h"
 #include "Core/Task.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -48,7 +49,7 @@ void Task::run()
 
 //-----------------------------------//
 
-typedef std::vector<Thread*> ThreadQueue;
+typedef Array<Thread*> ThreadQueue;
 
 TaskPool::TaskPool(int8 size)
 	: threadCount(size)

@@ -7,14 +7,18 @@
 
 #include "Engine/API.h"
 #include "Engine/Input/Keyboard.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState((int)Keys::MAX, false)
-{ }
+{
+	keyState.resize((size_t)Keys::MAX);
+	for(auto ks : keyState)
+		ks = false;
+}
 
 //-----------------------------------//
 

@@ -109,7 +109,7 @@ public:
 	GETTER(Components, const ComponentMap&, componentsMap)
 
 	// Gets the geometries components in the entity.
-	std::vector<GeometryPtr> getGeometry() const;
+	Array<GeometryPtr> getGeometry() const;
 
 	// Updates all the components of the entity.
 	virtual void update( float delta );
@@ -138,7 +138,7 @@ protected:
 	uint32 tags;
 
 	// Components of the entity.
-	std::vector<ComponentPtr> components;
+	Array<ComponentPtr> components;
 
 	// Components map of the entity.
 	ComponentMap componentsMap;

@@ -12,6 +12,7 @@
 #include "Core/Math/Hash.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -235,7 +236,7 @@ Class* ClassGetType(const Object* object)
 
 Field* ClassGetField(const Class* klass, const char* name)
 {
-	const std::vector<Field*>& fields = klass->fields;
+	const Array<Field*>& fields = klass->fields;
 	
 	for(size_t i = 0; i < fields.size(); i++)
 	{

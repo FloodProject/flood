@@ -7,6 +7,7 @@
 
 #include "Core/API.h"
 #include "Core/Plugin.h"
+#include "Core/Array.h"
 #include <algorithm> 
 
 NAMESPACE_CORE_BEGIN
@@ -61,7 +62,7 @@ static bool SortPluginsCallback(Plugin* a, Plugin* b)
 	return priorityA < priorityB;
 }
 
-void PluginsSortByPriority(std::vector<Plugin*>& plugins)
+void PluginsSortByPriority(Array<Plugin*>& plugins)
 {
 	// Sort the plugins by priority.
 	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);

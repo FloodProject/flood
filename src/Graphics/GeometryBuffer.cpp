@@ -8,6 +8,7 @@
 #include "Graphics/API.h"
 #include "Graphics/GeometryBuffer.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

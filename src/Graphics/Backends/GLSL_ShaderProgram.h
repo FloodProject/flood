@@ -21,7 +21,7 @@ NAMESPACE_GRAPHICS_BEGIN
  * GLSL implementation of shader programs.
  */
 
-typedef std::vector< GLSL_ShaderPtr > ShadersVector;
+typedef Array< GLSL_ShaderPtr > ShadersVector;
 typedef std::map< GLSL_ShaderPtr, bool > ShadersAttachMap;
 
 class API_GRAPHICS GLSL_ShaderProgram : public ShaderProgram

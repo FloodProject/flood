@@ -72,7 +72,7 @@ bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 		return false;
 	}
 	
-	std::vector<byte> buffer;
+	Array<byte> buffer;
 	uint32 size = width*height*comp; 
 	buffer.resize(size);
 	

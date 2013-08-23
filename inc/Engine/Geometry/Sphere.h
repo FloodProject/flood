@@ -29,7 +29,7 @@ public:
 protected:
 
 	// Vertex data.
-	typedef std::vector<Vector3> VertexData;
+	typedef Array<Vector3> VertexData;
 
 	// Subdivides a triangle into 4 sub-triangles.
 	void subdivide( const Vector3& v1, const Vector3& v2,

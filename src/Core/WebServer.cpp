@@ -13,7 +13,8 @@
 
 #include "Core/String.h"
 #include "Core/WebServer.h"
-#include "Core/Memory.h"
+#include "Core/Array.h"
+
 #include "mongoose.h"
 
 NAMESPACE_CORE_BEGIN

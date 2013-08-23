@@ -7,7 +7,7 @@
 
 #include "Core/API.h"
 #include "Core/ClassWatcher.h"
-#include "Core/Memory.h"
+#include "Core/Array.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Math/Hash.h"
@@ -68,7 +68,7 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 	if( !watch || !object ) return;
 
 	Class* klass = ClassGetType(object);
-	const std::vector<Field*>& fields = klass->fields;
+	const Array<Field*>& fields = klass->fields;
 
 	for(size_t i = 0; i < fields.size(); i++)
 	{

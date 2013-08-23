@@ -9,6 +9,7 @@
 #include "Resources/ResourceDatabase.h"
 #include "Resources/ResourceIndexer.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 

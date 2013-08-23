@@ -510,7 +510,7 @@ public:
 };
 
 #define TRI_EOF 0xFFFFFFFF
-typedef std::vector< uint32 > TriVector;
+typedef Array< uint32 > TriVector;
 
 class NodeAABB
 {
@@ -605,10 +605,8 @@ public:
 			// Copy the triangle indices into the leaf triangles array
 			mLeafTriangleIndex = leafTriangles.size(); // assign the array start location for these leaf triangles.
 			leafTriangles.push_back(count);
-			for (TriVector::const_iterator i=triangles.begin(); i!=triangles.end(); ++i)
-			{
-				leafTriangles.push_back( *i );
-			}
+			for (auto i : triangles)
+				leafTriangles.push_back(i);
 		}
 		else
 		{
@@ -627,9 +625,9 @@ public:
 
 			// Create two arrays; one of all triangles which intersect the 'left' half of the bounding volume node
 			// and another array that includes all triangles which intersect the 'right' half of the bounding volume node.
-			for (TriVector::const_iterator i=triangles.begin(); i!=triangles.end(); ++i)
+			for (auto i : triangles)
 			{
-				uint32 tri = (*i); 
+				uint32 tri = i;
 
 				{
 					uint32 i1 = indices[tri*3+0];

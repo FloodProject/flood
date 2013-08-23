@@ -108,7 +108,7 @@ private:
 
 public:
 
-	std::vector<Thread*> threads; //!< threads assigned to taskpool
+	Array<Thread*> threads; //!< threads assigned to taskpool
 	ConcurrentQueue<Task*> tasks; //!< tasks for taskpool to execute
 	ConcurrentQueue<TaskEvent> events; //!< task events
 	Event1<TaskEvent> onTaskEvent; //!< task event delegate

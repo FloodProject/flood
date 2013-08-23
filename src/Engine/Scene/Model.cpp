@@ -14,12 +14,13 @@
 #include "Engine/Resources/Skeleton.h"
 #include "Engine/Resources/Bone.h"
 #include "Engine/Resources/Attachment.h"
+#include "Engine/Geometry/DebugGeometry.h"
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/ShaderProgramManager.h"
 #include "Core/Math/Helpers.h"
-#include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -222,7 +223,7 @@ void Model::updateAnimations(float delta)
 		animationCurrentFadeTime = 0;
 
 		if( animations.size() >= 2 )
-			animations.erase( animations.begin() + 1 );
+			animations.remove( animations.begin() + 1 );
 	}
 
 	if( animationFadeTime > 0 )
@@ -262,7 +263,7 @@ void Model::updateAnimationBones(AnimationState& state)
 	const AnimationPtr& animation = state.animation;
 	float animationTime = state.animationTime;
 
-	std::vector<Matrix4x3>& bones = state.bonesMatrix;
+	Array<Matrix4x3>& bones = state.bonesMatrix;
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
 	KeyFramesMap::const_iterator it;
@@ -474,7 +475,7 @@ void Model::doSkinning(const GeometryBufferPtr& gb)
 void Model::setupShaderSkinning()
 {
 	// Setup matrices.
-	std::vector<Matrix4x4> matrices;
+	Array<Matrix4x4> matrices;
 	matrices.reserve( bones.size() );
 
 	for( size_t i = 0; i < bones.size(); ++i )
@@ -484,7 +485,7 @@ void Model::setupShaderSkinning()
 	}
 
 	// Send them to the uniform buffer.
-	const std::vector<RenderBatchPtr>& rends = getRenderables();
+	const Array<RenderBatchPtr>& rends = getRenderables();
 
 	for( size_t i = 0; i < rends.size(); ++i )
 	{
@@ -529,8 +530,8 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 
 	GeometryBuffer* gb = debugRenderable->getGeometryBuffer().get();
 
-	std::vector<Vector3> pos;
-	std::vector<Vector3> colors;
+	Array<Vector3> pos;
+	Array<Vector3> colors;
 
 	size_t numBones = skeleton->bones.size();
 	

@@ -101,15 +101,15 @@ protected:
 	unsigned long index;
 
 	// Mesh data structures.
-	std::vector<ms3d_vertex_t*> vertices;
-	std::vector<ms3d_triangle_t*> triangles;
-	std::vector<ms3d_group_t> groups;
-	std::vector<ms3d_material_t*> materials;
-	std::vector<ms3d_joint_t> joints;
+	Array<ms3d_vertex_t*> vertices;
+	Array<ms3d_triangle_t*> triangles;
+	Array<ms3d_group_t> groups;
+	Array<ms3d_material_t*> materials;
+	Array<ms3d_joint_t> joints;
 	String mainComment;
 
 	// Animation metadata.
-	std::vector<AnimationMetadata> metadata;
+	Array<AnimationMetadata> metadata;
 
 	// Animation FPS.
 	float animationFPS;

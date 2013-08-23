@@ -239,21 +239,21 @@ SUITE(CoreTests_Containers)
 
         size_t refcount = 0;
         for(auto& rp : ptrs)
-            refcount += rp->references;
+            refcount += rp->references.read();
 
         CHECK_EQUAL(100, refcount);
 
         Array<ptr> more_ptrs(ptrs);
         refcount = 0;
         for(auto& rp : ptrs)
-            refcount += rp->references;
+            refcount += rp->references.read();
 
         CHECK_EQUAL(200, refcount);
 
         more_ptrs.clear();
         refcount = 0;
         for(auto& rp : ptrs)
-            refcount += rp->references;
+            refcount += rp->references.read();
 
         CHECK_EQUAL(100, refcount);
 

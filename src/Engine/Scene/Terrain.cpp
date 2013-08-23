@@ -10,6 +10,7 @@
 #include "Engine/Scene/Geometry.h"
 #include "Core/Math/Helpers.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -76,8 +77,8 @@ void Terrain::addCell( int x, int y )
 	int numTiles = int(settings.NumberTiles + 1.0f);
 	int numHeights = numTiles*numTiles;
 
-	std::vector<float> heights;
-	heights.resize( numHeights, 0 );
+	Array<float> heights;
+	heights.resize( numHeights );
 
 	createCell(x, y, heights);
 }
@@ -127,7 +128,7 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
+CellPtr Terrain::createCell( int x, int y, Array<float>& heights )
 {
 	CellPtr cell = AllocateHeap(Cell, x, y);
 	cell->setSettings(settings);
@@ -162,7 +163,7 @@ CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 
 	settings.NumberTiles = heightmap->getWidth() - 1;
 
-	std::vector<float> heights;
+	Array<float> heights;
 	convertHeightmap( heightmap, heights );
 
 	return createCell(x, y, heights);
@@ -170,13 +171,13 @@ CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights )
+void Terrain::convertHeightmap( const ImagePtr& heightmap, Array<float>& heights )
 {
 	#pragma TODO("Can't handle any other pixel format right now...")
 
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );
 
-	const std::vector<byte> data = heightmap->getBuffer();
+	const Array<byte> data = heightmap->getBuffer();
 
 	for( size_t i = 0; i < data.size(); i += 4 )
 	{
@@ -244,7 +245,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 void Terrain::update( float delta )
 {
-	std::vector<CellRequest>::iterator it = requestsQueue.begin();
+	auto it = requestsQueue.begin();
 
 	while( it != requestsQueue.end() )
 	{
@@ -259,7 +260,7 @@ void Terrain::update( float delta )
 		if( heightmap->isLoaded() )
 		{
 			createCellHeightmap( x, y, heightmap );
-			it = requestsQueue.erase(it);
+			requestsQueue.remove(it);
 		}
 		else
 		{

@@ -80,7 +80,7 @@ struct ALIGN_BEGIN(1) ms3d_group_t
 	uint8 flags;
 	char name[32];
 	uint16 numGroupTriangles;
-	std::vector<uint16> triangleIndices;
+	Array<uint16> triangleIndices;
 	char materialIndex;
 	char comment[32];
 } ALIGN_END(1);
@@ -129,9 +129,9 @@ struct ALIGN_BEGIN(1) ms3d_joint_t
 	EulerAngles rotation;
 	Vector3 position;
 
-	std::vector<ms3d_keyframe_t> rotationKeys;
-	std::vector<ms3d_keyframe_t> positionKeys;
-	std::vector<ms3d_tangent_t> tangents;
+	Array<ms3d_keyframe_t> rotationKeys;
+	Array<ms3d_keyframe_t> positionKeys;
+	Array<ms3d_tangent_t> tangents;
 
 	Matrix4x3 relativeMatrix;
 	Matrix4x3 absoluteMatrix;

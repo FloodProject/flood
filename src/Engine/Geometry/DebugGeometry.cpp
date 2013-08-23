@@ -200,7 +200,7 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 		Color color;
 	};
 
-	std::vector<Vertex> vs;
+	Array<Vertex> vs;
 	vs.resize(24);
 
 	size_t i = 0;
@@ -225,11 +225,13 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 
 RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 {
-	std::vector<Vector3> vertex;
+	Array<Vector3> vertex;
 	vertex.push_back( pickRay.origin );
 	vertex.push_back( pickRay.getPoint(length) );
 
-	std::vector<Vector3> colors( 2, Color::Red );
+	Array<Vector3> colors;
+	for(size_t i = 0; i < 2; ++i)
+		colors.push_back(Color::Red);
 
 	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 	gb->set( VertexAttribute::Position, vertex );
@@ -275,7 +277,7 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 
 void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 {
-	std::vector<Vector3> pos;
+	Array<Vector3> pos;
 	ADD_BOX_FRUSTUM( 0, 1, 3, 2 ) // Front
 	ADD_BOX_FRUSTUM( 0, 1, 5, 4 ) // Top
 	ADD_BOX_FRUSTUM( 4, 5, 7, 6 ) // Back
@@ -286,7 +288,11 @@ void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 	GeometryBuffer* gb = rend->getGeometryBuffer().get();
 	gb->set( VertexAttribute::Position, pos );
 
-	std::vector<Vector3> colors( pos.size(), Color::White );
+	Array<Vector3> colors;
+	colors.resize(pos.size());
+	for(size_t i = 0; i < pos.size(); ++i)
+		colors[i] = Color::White;
+	
 	gb->set( VertexAttribute::Color, colors );
 
 	gb->forceRebuild();

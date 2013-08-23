@@ -13,6 +13,7 @@
 #include "Graphics/UniformBuffer.h"
 #include "Core/Math/Matrix4x3.h"
 #include "Core/Math/Matrix4x4.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -95,7 +96,7 @@ void UniformBuffer::setUniform( const char* name, float data )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Vector3>& vec )
+void UniformBuffer::setUniform( const char* name, const Array<Vector3>& vec )
 {
 	size_t size = sizeof(Vector3)*vec.size();
 	UniformBufferElement* element = getElement(name, size);
@@ -107,7 +108,7 @@ void UniformBuffer::setUniform( const char* name, const std::vector<Vector3>& ve
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Color>& vec )
+void UniformBuffer::setUniform( const char* name, const Array<Color>& vec )
 {
 	assert(0 && "Not implemented yet");
 
@@ -160,7 +161,7 @@ void UniformBuffer::setUniform( const char* name, const Matrix4x4& matrix )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Matrix4x4>& vec )
+void UniformBuffer::setUniform( const char* name, const Array<Matrix4x4>& vec )
 {
 	size_t size = sizeof(Matrix4x4)*vec.size();
 	UniformBufferElement* element = getElement(name, size);

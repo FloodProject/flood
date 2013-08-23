@@ -60,7 +60,7 @@ public:
 	RenderBatchPtr triangles;
 	RenderBatchPtr quads;
 
-	std::vector<RenderBatch*> renderables;
+	Array<RenderBatch*> renderables;
 };
 
 enum class DebugDrawFlags

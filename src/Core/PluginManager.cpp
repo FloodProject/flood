@@ -10,6 +10,7 @@
 #include "Core/Plugin.h"
 #include "Core/Reflection.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -78,13 +79,10 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 
 //-----------------------------------//
 
-void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
+void PluginManager::registerPlugins(const Array<Plugin*>& plugins)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
-	{
-		Plugin* plugin = plugins[i];
+	for(auto plugin : plugins)
 		registerPlugin(plugin);
-	}
 }
 
 //-----------------------------------//

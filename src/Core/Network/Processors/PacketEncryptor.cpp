@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-PacketEncryptor::PacketEncryptor(std::vector<uint8> secret)
+PacketEncryptor::PacketEncryptor(Array<uint8> secret)
 {
     aes = Allocate(AllocatorGetNetwork(), aes_context);
     this->secret = secret;

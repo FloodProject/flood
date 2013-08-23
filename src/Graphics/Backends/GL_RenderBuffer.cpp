@@ -10,6 +10,7 @@
 #include "Graphics/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -91,7 +92,7 @@ bool GL_RenderBuffer::check()
 
 //-----------------------------------//
 
-void GL_RenderBuffer::read(int8 attachment, std::vector<uint8>& data)
+void GL_RenderBuffer::read(int8 attachment, Array<uint8>& data)
 {
 	const Vector2i& size = settings.getSize();
 

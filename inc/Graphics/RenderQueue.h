@@ -66,8 +66,8 @@ struct API_GRAPHICS LightState
  * you might want to render the GUI after everything else is rendered.
  */
 
-typedef std::vector<RenderState> RenderQueue;
-typedef std::vector<LightState> LightQueue;
+typedef Array<RenderState> RenderQueue;
+typedef Array<LightState> LightQueue;
 
 struct API_GRAPHICS RenderBlock
 {

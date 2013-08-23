@@ -70,13 +70,13 @@ public:
 	ACCESSOR(PixelFormat, PixelFormat, format)
 
 	// Gets/sets the buffer containing the image data.
-	ACCESSOR(Buffer, const std::vector<byte>&, buffer)
+	ACCESSOR(Buffer, const Array<byte>&, buffer)
 
 	// Returns if the image is in a compressed format.
 	bool isCompressed() const;
 
 	// Gets the buffer containing the image data.
-	std::vector<uint8>& getBuffer() { return buffer; }
+	Array<uint8>& getBuffer() { return buffer; }
 
 	// Sets the buffer containing the image data.
 	void setBuffer(byte* data);
@@ -125,7 +125,7 @@ private:
 	PixelFormat format;
 
 	// Image data.
-	std::vector<uint8> buffer;
+	Array<uint8> buffer;
 
 };
 
@@ -148,7 +148,7 @@ public:
 
 protected:
 
-	std::vector<uint8> output;
+	Array<uint8> output;
 };
 
 //-----------------------------------//

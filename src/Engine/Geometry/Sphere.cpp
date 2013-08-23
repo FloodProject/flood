@@ -10,6 +10,7 @@
 #include "Core/Math/EulerAngles.h"
 #include "Core/Math/Helpers.h"
 #include "Core/Math/BoundingBox.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -90,7 +91,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 
 	Vector3 center = box.getCenter();
 
-	std::vector<Vector3> texCoords;
+	Array<Vector3> texCoords;
 
 	for( size_t i = 0; i < position.size(); i++ )
 	{

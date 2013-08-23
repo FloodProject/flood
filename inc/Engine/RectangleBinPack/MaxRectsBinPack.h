@@ -7,8 +7,6 @@
 */
 #pragma once
 
-#include <vector>
-
 #include "Core/Math/Rectangle.h"
 
 /** MaxRectsBinPack implements the MAXRECTS data structure and different bin packing algorithms that 
@@ -40,7 +38,7 @@ public:
 	/// @param rects The list of rectangles to insert. This vector will be destroyed in the process.
 	/// @param dst [out] This list will contain the packed rectangles. The indices will not correspond to that of rects.
 	/// @param method The rectangle placement rule to use when packing.
-	void Insert(std::vector<Vector2i> &rects, std::vector<Rectangle> &dst, FreeRectChoiceHeuristic method);
+	void Insert(Array<Vector2i> &rects, Array<Rectangle> &dst, FreeRectChoiceHeuristic method);
 
 	/// Inserts a single rectangle into the bin, possibly rotated.
 	Rectangle Insert(int width, int height, FreeRectChoiceHeuristic method);
@@ -52,8 +50,8 @@ private:
 	int binWidth;
 	int binHeight;
 
-	std::vector<Rectangle> usedRectangles;
-	std::vector<Rectangle> freeRectangles;
+	Array<Rectangle> usedRectangles;
+	Array<Rectangle> freeRectangles;
 
 	/// Computes the placement score for placing the given rectangle with the given method.
 	/// @param score1 [out] The primary placement score will be outputted here.

@@ -17,6 +17,7 @@
 #include "Engine/Input/Keyboard.h"
 #include "Engine/Input/Mouse.h"
 #include "Engine/Window/Window.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -124,7 +125,7 @@ void FirstPersonController::checkControls( float delta )
 
 	// Check keyboard movement.
 	Keyboard* keyboard = GetInputManager()->getKeyboard();
-	const std::vector< bool >& state = keyboard->getKeyState();
+	const Array< bool >& state = keyboard->getKeyState();
 
 	if( keyboard->isKeyPressed(Keys::W) )
 		moveVector +=  Vector3::UnitZ;

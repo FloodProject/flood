@@ -245,7 +245,7 @@ void HostServer::onPeerDisconnect(const PeerPtr& peer)
 	auto it = std::find(peers.begin(), peers.end(), peer);
 	assert( it != peers.end() );
 	
-	peers.erase(it);
+	peers.remove(it);
 }
 
 //-----------------------------------//

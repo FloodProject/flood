@@ -189,14 +189,18 @@ void Packet::write(byte* data, int size)
 	ms.write(data,size);
 }
 
-void Packet::write(std::vector<byte>& data)
+void Packet::write(Array<byte>& data)
 {
 	write(data.data(), data.size());
 }
 
-std::vector<byte> Packet::read() const
+Array<byte> Packet::read() const
 {
-	std::vector<uint8> vec(ms.data.begin(), ms.data.begin()+size());
+	Array<uint8> vec;
+	vec.reserve(size());
+	for(size_t i = 0; i < size(); ++i)
+		vec.push_back(ms.data[i]);
+
 	return vec;
 }
 

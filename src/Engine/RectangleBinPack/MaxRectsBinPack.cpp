@@ -61,7 +61,7 @@ Rectangle MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic
 	{
 		if (SplitFreeNode(freeRectangles[i], newNode))
 		{
-			freeRectangles.erase(freeRectangles.begin() + i);
+			freeRectangles.remove(freeRectangles.begin() + i);
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -73,7 +73,7 @@ Rectangle MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic
 	return newNode;
 }
 
-void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Rectangle> &dst, FreeRectChoiceHeuristic method)
+void MaxRectsBinPack::Insert(Array<Vector2i> &rectSizes, Array<Rectangle> &dst, FreeRectChoiceHeuristic method)
 {
 	dst.clear();
 
@@ -103,7 +103,7 @@ void MaxRectsBinPack::Insert(std::vector<Vector2i> &rectSizes, std::vector<Recta
 			return;
 
 		PlaceRect(bestNode);
-		rectSizes.erase(rectSizes.begin() + bestRectIndex);
+		rectSizes.remove(rectSizes.begin() + bestRectIndex);
 	}
 }
 
@@ -114,7 +114,7 @@ void MaxRectsBinPack::PlaceRect(const Rectangle &node)
 	{
 		if (SplitFreeNode(freeRectangles[i], node))
 		{
-			freeRectangles.erase(freeRectangles.begin() + i);
+			freeRectangles.remove(freeRectangles.begin() + i);
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -494,13 +494,13 @@ void MaxRectsBinPack::PruneFreeList()
 		{
 			if (freeRectangles[i].isContainedIn(freeRectangles[j]))
 			{
-				freeRectangles.erase(freeRectangles.begin()+i);
+				freeRectangles.remove(freeRectangles.begin()+i);
 				--i;
 				break;
 			}
 			if (freeRectangles[j].isContainedIn(freeRectangles[i]))
 			{
-				freeRectangles.erase(freeRectangles.begin()+j);
+				freeRectangles.remove(freeRectangles.begin()+j);
 				--j;
 			}
 		}

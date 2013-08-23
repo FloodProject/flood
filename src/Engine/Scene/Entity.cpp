@@ -13,6 +13,7 @@
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Tags.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
@@ -183,9 +184,9 @@ ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 
 //-----------------------------------//
 
-std::vector<GeometryPtr> Entity::getGeometry() const
+Array<GeometryPtr> Entity::getGeometry() const
 {
-	std::vector<GeometryPtr> geoms;
+	Array<GeometryPtr> geoms;
 
 	ComponentMap::const_iterator it;
 	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
@@ -207,7 +208,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 void Entity::update( float delta )
 {
 	// Update all geometry bounding boxes first.
-	const std::vector<GeometryPtr>& geoms = getGeometry();
+	const Array<GeometryPtr>& geoms = getGeometry();
 
 	for( size_t i = 0; i < geoms.size(); i++ )
 	{

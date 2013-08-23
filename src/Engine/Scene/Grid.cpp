@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Scene/Grid.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -38,8 +39,8 @@ GeometryBufferPtr Grid::buildGeometry()
 	GeometryBuffer* gb = AllocateThis(GeometryBuffer);
 
 	// Vertex data
-	std::vector< Vector3 > vertex;
-	std::vector< Vector3 > colors;
+	Array< Vector3 > vertex;
+	Array< Vector3 > colors;
 	
 	// Let's make the lines perpendicular to the X-axis.
 	float x_pos = -sizeX / 2;

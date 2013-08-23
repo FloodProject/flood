@@ -10,6 +10,7 @@
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Entity.h"
 #include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -141,10 +142,10 @@ void Particles::update(float delta)
 	int numSpawn = ceil(spawnRate * delta);
 	spawnParticles(numSpawn);
 
-	std::vector<Vector3> positions;
+	Array<Vector3> positions;
 	positions.reserve( numParticles );
 
-	std::vector<Color> colors;
+	Array<Color> colors;
 	colors.reserve( numParticles );
 
 	// Update the particles.

@@ -158,13 +158,13 @@ protected:
 	SkinningMode skinningMode;
 
 	// Animation states.
-	std::vector<AnimationState> animations;
+	Array<AnimationState> animations;
 
 	// Attachments.
-	std::vector<AttachmentPtr> attachments;
+	Array<AttachmentPtr> attachments;
 
 	// Final bones matrices.
-	std::vector<Matrix4x3> bones;
+	Array<Matrix4x3> bones;
 
 	RenderBatchPtr debugRenderable;
 

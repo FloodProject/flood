@@ -114,7 +114,7 @@ struct C : public Object
 	}
 
 	A* anA;
-	std::vector<A*> arrayA;
+	Array<A*> arrayA;
 };
 
 //-----------------------------------//
@@ -144,7 +144,7 @@ struct D : public Object
 
 	Object* object;
 	RefPtr<A> refA;
-	std::vector<RefPtr<A>> vecA;
+	Array<RefPtr<A>> vecA;
 };
 
 //-----------------------------------//
@@ -167,7 +167,7 @@ struct F : public Object
 		a.foo = 0;
 	}
 
-	std::vector<A> vecA;
+	Array<A> vecA;
 	A a;
 };
 

@@ -11,6 +11,7 @@
 #include "Engine/Scene/Transform.h"
 #include "Engine/Scene/Tags.h"
 #include "Graphics/RenderView.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -73,8 +74,8 @@ void Overlay::createGeometry()
 
 void Overlay::rebuildGeometry()
 {
-	std::vector<Vector3> pos;
-	std::vector< Color > colors;
+	Array<Vector3> pos;
+	Array< Color > colors;
 
 	pos.push_back( Vector3(borderWidth, borderWidth, -0.1f) );
 	pos.push_back( Vector3(borderWidth, size.y-borderWidth, -0.1f) );

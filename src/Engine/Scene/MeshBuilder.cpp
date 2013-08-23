@@ -10,6 +10,7 @@
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Animation.h"
 #include "Engine/Resources/Skeleton.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -50,7 +51,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
 	
 	// Construct the renderables for each mesh group.
-	const std::vector<MeshGroup>& groups = mesh->groups;
+	const Array<MeshGroup>& groups = mesh->groups;
 
 	for( size_t i = 0; i < groups.size(); i++ )
 	{

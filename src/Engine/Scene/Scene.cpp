@@ -16,6 +16,7 @@
 #include "Core/Profiler.h"
 #include "Core/Serialization.h"
 #include "Core/SerializationHelpers.h"
+#include "Core/Array.h"
 
 #include "Engine/Scene/Model.h"
 #include "Engine/Resources/Animation.h"
@@ -102,7 +103,7 @@ static bool sortRayQueryResult(const RayQueryResult& lhs, const RayQueryResult& 
 
 static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryList& list, bool all )
 {
-	const std::vector<EntityPtr>& entities = group->getEntities();
+	const Array<EntityPtr>& entities = group->getEntities();
 
 	// Do some ray casting to find a collision.
 	for( size_t i = 0; i < entities.size(); i++ )
@@ -305,7 +306,7 @@ static bool DoRayQuery( const Ray& ray,	const GeometryBuffer* gb,
 
 //-----------------------------------//
 
-static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositions)
+static bool DoSkinning(const Geometry* geo, Array<Vector3>& skinnedPositions)
 {
 	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
 	if( !isModel ) return false;
@@ -353,7 +354,7 @@ static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& entity )
 {
 	Ray entityRay = TransformRay(ray, entity);
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	const Array<GeometryPtr>& geoms = entity->getGeometry();
 	
 	const Transform* transform = entity->getTransform().get();
 	Matrix4x3 absolute = transform->getAbsoluteTransform();
@@ -374,9 +375,9 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 		if( !bound.intersects(ray, distance) )
 			continue;
 
-		const std::vector<RenderBatchPtr>& rends = geo->getRenderables();
+		const Array<RenderBatchPtr>& rends = geo->getRenderables();
 
-		std::vector<Vector3> skinnedPositions;
+		Array<Vector3> skinnedPositions;
 		bool didSkinning = DoSkinning(geo, skinnedPositions);
 
 		for( size_t j = 0; j < rends.size(); j++ )

@@ -22,6 +22,7 @@
 #include "GLSL_Shader.h"
 #include "GLSL_ShaderProgram.h"
 #include "GL_RenderBuffer.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -371,7 +372,7 @@ void RenderBackendGLES2::buildVertexBuffer(VertexBuffer* vb)
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
 	if( !gb ) return;
 
-	const std::vector<uint8>& data = gb->data;
+	const Array<uint8>& data = gb->data;
 	if( data.empty() ) return;
 	
 	bindVertexBuffer(vb);
@@ -601,7 +602,7 @@ void RenderBackendGLES2::configureTexture(Texture* tex)
 
 Image* RenderBackendGLES2::readTexture(Texture* tex)
 {
-	std::vector<byte> data;
+	Array<byte> data;
 	data.resize( tex->getExpectedSize() );
 
 	bindTexture(tex);
