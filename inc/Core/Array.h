@@ -8,10 +8,19 @@
 #pragma once
 
 #include "Core/Containers.h"
-
-#include <memory>
+#include "Core/Memory.h"
 
 NAMESPACE_CORE_BEGIN
+
+//-----------------------------------//
+
+template <typename T>
+Array<T>::Array()
+    : _allocator(AllocatorGetHeap())
+    , _size(0)
+    , _capacity(0)
+    , _data(0)
+{}
 
 //-----------------------------------//
 

@@ -20,6 +20,11 @@ template<typename T> class Array
 public:
     
     /**
+     *	Creates the Array and allocates on the default global heap.
+     */
+    Array();
+
+    /**
      *	Creates the Array.
      *	@param a allocator serving any memory requests
      */
