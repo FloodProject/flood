@@ -8,7 +8,7 @@ namespace Flood.RPC
 {
     public class Helper
     {
-        public static string ImplName(Type type, bool fullName)
+        public static string GetStubsClassName(Type type, bool fullName)
         {
             var name = type.FullName;
             if (!fullName && name.Contains('.'))
@@ -17,7 +17,7 @@ namespace Flood.RPC
                 name = names[names.Length - 1];
             }
 
-            return name.Replace("+", "_") + "Impl";
+            return name.Replace("+", "_") + "Stubs";
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             WriteLine("[Serializable]");
-            WriteLine("public class {0}", ImplName(type, false));
+            WriteLine("public class {0}", GetStubsClassName(type, false));
             WriteStartBraceIndent();
 
             // Generate fields
@@ -61,7 +61,7 @@ namespace Flood.Tools.RPCGen
             GenerateIsSet(parameters);
 
             // Generate constructor
-            WriteLine("public {0}()", ImplName(type, false));
+            WriteLine("public {0}()", GetStubsClassName(type, false));
             WriteLine("{");
             WriteLine("}");
             NewLine();
@@ -110,7 +110,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("namespace  {0}", type.Namespace);
             WriteStartBraceIndent();
 
-            WriteLine("public class {0}", ImplName(type, false));
+            WriteLine("public class {0}", GetStubsClassName(type, false));
             WriteStartBraceIndent();
 
             //GenerateInterface(type);
@@ -1102,7 +1102,7 @@ namespace Flood.Tools.RPCGen
             var implObjName = varName + "Impl";
             implObjName = implObjName.Replace(".", "");
 
-            WriteLine("var {0} = new {1}();", implObjName, ImplName(type, true));
+            WriteLine("var {0} = new {1}();", implObjName, GetStubsClassName(type, true));
             GenerateStructInit(type, varName, implObjName);
             WriteLine("{0}.Write(oprot);", implObjName);
         }
@@ -1214,7 +1214,7 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.DataObject:
                 case TType.Exception:
-                    WriteLine("var {0} = new {1}();", elemName, ImplName(type, true));
+                    WriteLine("var {0} = new {1}();", elemName, GetStubsClassName(type, true));
                     WriteLine("{0}.Read(iprot);", elemName);
 
                     var elemName2 = string.Format("_elem{0}", GenericIndex++);
@@ -1286,7 +1286,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateStructDeserialize(Type type, string varName)
         {
             var origObjName = varName+"Impl";
-            WriteLine("var {0} = new {1}();", origObjName, ImplName(type, true));
+            WriteLine("var {0} = new {1}();", origObjName, GetStubsClassName(type, true));
             WriteLine("{0}.Read(iprot);", origObjName);
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
@@ -1386,7 +1386,7 @@ namespace Flood.Tools.RPCGen
             return unmangledName + "<" + String.Join(",", genericArguments.Select(PrettyName)) + ">";
         }
 
-        private static string ImplName(Type type, bool fullName)
+        private static string GetStubsClassName(Type type, bool fullName)
         {
             var name = type.FullName;
             if (!fullName && name.Contains('.'))
@@ -1395,7 +1395,7 @@ namespace Flood.Tools.RPCGen
                 name = names[names.Length - 1];
             }
 
-            return name.Replace("+", "_") + "Impl";
+            return name.Replace("+", "_") + "Stubs";
         }
 
         /// <summary>
