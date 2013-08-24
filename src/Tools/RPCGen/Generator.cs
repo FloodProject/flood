@@ -606,13 +606,54 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
+        private static bool CheckParametersIds(MethodInfo method, out bool hasIds)
+        {
+            var @params = method.GetParameters();
+            if (@params.Length == 0)
+            {
+                hasIds = false;
+                return false;
+            }  
+
+            hasIds = Metadata.HasId(@params[0]);
+
+            for (var i = 1; i < @params.Length; i++)
+            {
+                int Id = i;
+                if (Metadata.HasId(@params[i]) != hasIds)
+                {
+                    var msg = string.Format("Method {0}.{1} need to have all or none of his parameter with the Id attribute", 
+                        method.DeclaringType.FullName, method.Name);
+                    throw new Exception(msg);
+                }
+            }
+
+            return true;
+        }
+
         private static List<Parameter> ConvertToParametersList(MethodInfo method)
         {
-            // Convert from PropertyInfo to our own struct. This makes it easier
+             // Convert from PropertyInfo to our own struct. This makes it easier
             // to use the same code for argument and result marshaling.
             var parameters = new List<Parameter>();
-            foreach (var param in method.GetParameters())
-                parameters.Add(new Parameter(param));
+
+            bool hasIds;
+            if(!CheckParametersIds(method, out hasIds))
+                return parameters;
+
+            var @params = method.GetParameters();
+
+            for (var i = 0; i < @params.Length; i++)
+            {
+                var param = @params[i];
+
+                int id = i;
+                if (hasIds)
+                    Metadata.TryGetId(param, out id);
+
+                parameters.Add(new Parameter(param.Name, param.ParameterType, id));
+            }
+                
             return parameters;
         }
         
@@ -767,11 +808,10 @@ namespace Flood.Tools.RPCGen
         /// <returns>PropertyInfo or null if not a property getter/setter</returns>
         private static PropertyInfo GetProperty(MethodInfo method)
         {
-            var retType = GetMethodReturnType(method);
-            bool takesArg = method.GetParameters().Length == 1;
-            bool hasReturn = retType != typeof(void);
-            if (takesArg == hasReturn) return null;
-            if (takesArg)
+            var argsCount = method.GetParameters().Length;
+            if (argsCount > 1)
+                return null;
+            if (argsCount == 1)
                 return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetSetMethod() == method);
 
             return method.DeclaringType.GetProperties().FirstOrDefault(prop => prop.GetGetMethod() == method);
@@ -1464,24 +1504,6 @@ namespace Flood.Tools.RPCGen
 
         private struct Parameter
         {
-            public Parameter(ParameterInfo info)
-            {
-                Name = info.Name;
-                ParameterType = info.ParameterType;
-
-                if (Generator.GetProperty((info.Member as MethodInfo)) != null)
-                {
-                    Id = 0;
-                    return;
-                }
-
-                int id;
-                if (!Metadata.TryGetId(info, out id))
-                    throw new Exception("Service Method's Parameters require an Id attribute.");
-
-                Id = id;
-            }
-
             public Parameter(FieldInfo info)
             {
                 Name = info.Name;
