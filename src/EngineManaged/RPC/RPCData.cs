@@ -19,7 +19,7 @@ namespace Flood.RPC
         Oneway = 4,
         EventSubscribe = 5,
         EventUnsubscribe = 6,
-        EventInvoke = 7
+        DelegateCall = 7,
     }
 
     public struct RPCData
