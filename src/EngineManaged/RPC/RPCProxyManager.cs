@@ -1,51 +1,8 @@
-﻿using Flood.RPC.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Flood.RPC
 {
-    public abstract class RPCProxy
-    {
-        private Dictionary<int, TaskCompletionSource<RPCData>> pendingCalls;
-        private int sequenceNumber;
-
-        protected RPCProxy()
-        {
-            pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
-        }
-
-        protected int GetNextSequenceNumber()
-        {
-            return Interlocked.Increment(ref sequenceNumber);
-        }
-
-        public abstract void InvokeEvent(RPCData data);
-
-        protected Task<RPCData> DispatchCall(RPCData data, int seqNumber)
-        {
-            var tcs = new TaskCompletionSource<RPCData>();
-            pendingCalls.Add(seqNumber, tcs);
-
-            data.Peer.Dispatch(data);
-
-            return tcs.Task;
-        }
-
-        internal void ProcessReply(RPCData reply)
-        {
-            var call = reply.Serializer.ReadProcedureCallBegin();
-            if (!pendingCalls.ContainsKey(call.SequenceNumber)) 
-            {
-                Log.Error("Received unexpected reply.");
-                return;
-            }
-
-            pendingCalls[call.SequenceNumber].SetResult(reply);
-        }
-    }
-
     public class RPCProxyManager
     {
         private Dictionary<int, RPCProxy> proxies;
