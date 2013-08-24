@@ -468,13 +468,12 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProcessMethod(MethodInfo method)
         {
-            WriteLine("public async Task<RPCData> {0}(RPCData request, ProcedureCall msg)",
+            WriteLine("public async Task {0}(RPCData request, ProcedureCall msg)",
                       GetProcedureProcessMethodName(method));
             WriteStartBraceIndent();
 
             WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
             WriteLine("args.Read(request.Serializer);");
-            WriteLine("request.Serializer.ReadProcedureCallEnd();");
             WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
 
             // If the method throws exceptions, we need to call it inside a try-catch.
@@ -517,7 +516,6 @@ namespace Flood.Tools.RPCGen
 
             }
 
-
             List<ExceptionInfo> exceptionsInfo;
             if (Metadata.TryGetThrows(method, out exceptionsInfo))
             {
@@ -536,7 +534,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("}");
             }
 
-            WriteLine("var reply = RPCData.CreateReply(request);");
+            WriteLine("var reply = RPCData.Create(request, RPCDataType.Reply);");
 
             var procedureId = GetProcedureCallId(method);
             // Create a new ProcedureCall and reply to the RPC call
@@ -544,7 +542,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("result.Write(reply.Serializer);");
             WriteLine("reply.Serializer.WriteProcedureCallEnd();");
-            WriteLine("return reply;");
+            WriteLine("reply.Dispatch();");
 
             WriteCloseBraceIndent();
         }
