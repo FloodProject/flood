@@ -252,7 +252,7 @@ static void ReflectionWalkArray(ReflectionContext* context)
 	Array<byte>& array = *(Array<byte>*) context->address;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
-	uint32 arraySize = array.size() / elementSize;
+	uint32 arraySize = array.size();
 
 	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
