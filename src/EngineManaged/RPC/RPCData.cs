@@ -86,27 +86,18 @@ namespace Flood.RPC
             data.Header.ImplId = implId;
             data.Header.ProxyId = proxyId;
             data.Header.Write();
-
+            
             return data;
         }
-        public static RPCData CreateReply(RPCData call, RPCFlags flags = RPCFlags.None)
+
+        public static RPCData Create(RPCData call, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
-            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, RPCDataType.Reply, flags);
+            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, type, flags);
         }
 
-        public static RPCData CreateCall(RPCPeer peer, int implId, int proxyId, RPCFlags flags = RPCFlags.None)
+        public static RPCData Create(RPCProxy proxy, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
-            return Create(peer, implId, proxyId, RPCDataType.Call, flags);
-        }
-
-        public static RPCData CreateEventSubscribe(RPCPeer peer, int implId, int proxyId)
-        {
-            return Create(peer, implId, proxyId, RPCDataType.EventSubscribe);
-        }
-
-        public static RPCData CreateException(RPCData call)
-        {
-            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, RPCDataType.Exception);
+            return Create(proxy.Peer, proxy.ImplId, proxy.ProxyId, type, flags);
         }
     }
 }
