@@ -146,34 +146,15 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProxy(Type type)
         {
-            Type baseType;
-            GetInheritedService(type, out baseType);
-
             Write("public class Proxy : RPCProxy, {0}", PrettyName(type));
-
-            if (baseType != null)
-                Write(" : {0}.Proxy", ImplName(baseType, true));
-            NewLine();
             WriteStartBraceIndent();
 
             // Generate client constructors
             WriteLine("public Proxy(RPCPeer peer, int implId, int proxyId)");
-            if (baseType != null)
-                Write(" : base(proxyHandler)", baseType.Name);
+            WriteLine("    : base(peer, implId, proxyId)");
             WriteStartBraceIndent();
-            WriteLine("Peer = peer;");
-            WriteLine("ImplId = implId;");
-            WriteLine("ProxyId = proxyId;");
             WriteCloseBraceIndent();
             NewLine();
-
-            if (baseType == null)
-            {
-                WriteLine("public RPCPeer Peer { get; private set; }");
-                WriteLine("public int ImplId { get; private set; }");
-                WriteLine("public int ProxyId { get; private set; }");
-                NewLine();
-            }
 
             foreach (var method in type.GetMethods())
             {
@@ -187,10 +168,6 @@ namespace Flood.Tools.RPCGen
             {
                 GenerateProxyEvent(type, @event);
             }
-
-            WriteLine("public override void InvokeEvent(RPCData data)");
-            WriteStartBraceIndent();
-            WriteCloseBraceIndent();
 
             WriteCloseBraceIndent();
             NewLine();
