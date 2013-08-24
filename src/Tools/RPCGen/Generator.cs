@@ -17,6 +17,14 @@ namespace Flood.Tools.RPCGen
     internal class Generator : TextGenerator
     {
 
+        private Dictionary<Type, string> delegateNames;
+        private int delegateCounter;
+ 
+        public Generator()
+        {
+            delegateNames = new Dictionary<Type, string>();
+        }
+
 #region Generate Data Objects
 
         public void GenerateDataObject(Type type)
@@ -140,6 +148,8 @@ namespace Flood.Tools.RPCGen
                 if (i < methods.Length - 1)
                     NewLine();
             }
+
+            GenerateDelegateClasses();
 
             WriteCloseBraceIndent();
             WriteCloseBraceIndent();
@@ -284,7 +294,7 @@ namespace Flood.Tools.RPCGen
             WriteLine(")");
             WriteStartBraceIndent();
 
-            WriteLine("var request = RPCData.CreateCall(Peer, ImplId, ProxyId);");
+            WriteLine("var request = RPCData.Create(this, RPCDataType.Call);");
 
             var flags = GetRPCDataFlags(method);
             if (flags.Count > 0)
@@ -314,17 +324,18 @@ namespace Flood.Tools.RPCGen
             var eventName = eventInfo.Name;
             var eventName2 = "_" + eventName;
 
-            WriteLine("private event {0} {1};", eventType, eventName2);
+            var @delegate = eventInfo.EventHandlerType;
+            var eventId = GetEventId(eventInfo);
 
+            WriteLine("private event {0} {1};", eventType, eventName2);
             WriteLine("public event {0} {1}", eventType, eventName);
             WriteStartBraceIndent();
             WriteLine("add");
             WriteStartBraceIndent();
             WriteLine("if({0} == null)", eventName2);
             WriteStartBraceIndent();
-            WriteLine("var eventSubscribe = RPCData.CreateEventSubscribe(Peer, ImplId, ProxyId);");
-            WriteLine("eventSubscribe.Serializer.WriteI32({0});", GetEventId(eventInfo));
-            WriteLine("Peer.Dispatch(eventSubscribe);");
+            WriteLine("var del = new {0}(Peer, ImplId, ProxyId, {1}, value);", GetDelegateClassName(@delegate), eventId);
+            WriteLine("Subscribe(del, {0});", eventId);
             WriteCloseBraceIndent();
             WriteLine("{0} += value;", eventName2);
             WriteCloseBraceIndent();
@@ -332,9 +343,6 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
             WriteLine("{0} -= value;", eventName2);
             WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
-            WriteLine("private void Invoke_{0}(RPCData data)", eventName);
-            WriteStartBraceIndent();
             WriteCloseBraceIndent();
             NewLine();
         }
@@ -549,14 +557,18 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateEventSubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}()", GetEventSubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int implId, int proxyId, int delegateId)", GetEventSubscribeMethodName(@event));
             WriteStartBraceIndent();
+
+            var @delegate = @event.EventHandlerType;
+            WriteLine("var del = new {0}(peer, implId, proxyId, delegateId);", GetDelegateClassName(@delegate));
+            WriteLine("iface_.{0} += del.InvokeRemote;", @event.Name);
             WriteCloseBraceIndent();
         }
 
         private void GenerateEventUnsubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}()", GetEventUnsubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int implId, int proxyId, int delegateId)", GetEventUnsubscribeMethodName(@event));
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
         }
@@ -734,6 +746,102 @@ namespace Flood.Tools.RPCGen
 
             // Generate write method
             GenerateServiceMethodWrite(method.Name, parameters, isResult: true);
+
+            WriteCloseBraceIndent();
+        }
+
+        #endregion
+
+        #region Delegates
+
+        private string GetDelegateClassName(Type type)
+        {
+            string name;
+            if (delegateNames.TryGetValue(type, out name))
+                return name;
+
+            name = "Delegate"+delegateCounter++;
+            delegateNames.Add(type, name);
+            return name;
+        }
+
+        private void GenerateDelegateClasses()
+        {
+            foreach(var type in delegateNames.Keys)
+            {
+                GenerateDelegateClass(type);
+            }
+        }
+
+        private void GenerateDelegateClass(Type type)
+        {
+            var className = delegateNames[type];
+
+            var methodInvoke = type.GetMethod("Invoke");
+            if(methodInvoke == null)
+                throw new Exception();
+
+            WriteLine("public class {0} : RPCDelegate", className);
+            WriteStartBraceIndent();
+            WriteLine("public {0}(RPCPeer peer, int implId, int proxyId, int delegateId, Delegate del)", className);
+            WriteLine("    : base(@peer, implId, proxyId, delegateId, del)");
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+            WriteLine("public {0}(RPCPeer peer, int implId, int proxyId, int delegateId)", className);
+            WriteLine("    : base(@peer, implId, proxyId, delegateId, null)");
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+            NewLine();
+
+            //Invoke
+            WriteLine("public override void Invoke(RPCData request)");
+            WriteStartBraceIndent();
+
+            WriteLine("var args = new Invoke_args();");
+            WriteLine("args.Read(request.Serializer);");
+            WriteLine("var result = new Invoke_result();");
+
+            if (methodInvoke.ReturnType != typeof(void))
+                Write("result.Success = ");
+
+            Write("Delegate.DynamicInvoke(");
+            var parameters = methodInvoke.GetParameters();
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                var param = parameters[i];
+                Write("args.{0}", ToTitleCase(param.Name));
+
+                if (i < parameters.Length - 1)
+                    Write(", ");
+            }
+            WriteLine(");");
+
+            WriteLine("var reply = RPCData.Create(request, RPCDataType.DelegateReply);");
+            WriteLine("reply.Serializer.WriteI32(DelegateId);");
+            WriteLine("result.Write(reply.Serializer);");
+            WriteLine("reply.Dispatch();");
+
+            WriteCloseBraceIndent();
+            NewLine();
+
+            //Delegate
+            Write("public {0} InvokeRemote(", PrettyName(methodInvoke.ReturnType));
+            GenerateParameterList(parameters);
+            WriteLine(")");
+            WriteStartBraceIndent();
+            WriteLine("var data = RPCData.Create(Peer, ImplId, ProxyId, RPCDataType.DelegateCall);");
+            WriteLine("data.Serializer.WriteI32(DelegateId);");
+            WriteLine("var args = new Invoke_args();");
+            foreach (var param in methodInvoke.GetParameters())
+                WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
+            WriteLine("args.Write(data.Serializer);");
+            WriteLine("data.Dispatch();");
+            // TODO: check event return for exception and unsubscribe.
+            WriteCloseBraceIndent();
+
+            NewLine();
+            GenerateServiceMethodArgs(methodInvoke, "Invoke_args");
+            GenerateServiceMethodResult(methodInvoke, "Invoke_result", methodInvoke.ReturnType);
 
             WriteCloseBraceIndent();
         }
