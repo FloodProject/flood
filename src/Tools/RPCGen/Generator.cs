@@ -389,23 +389,15 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProcessor(Type type)
         {
-            Type baseType;
-            GetInheritedService(type, out baseType);
-
-            WriteLine("public class Processor : {0}",
-                      baseType == null ? "SimpleProcessor" :
-                      ImplName(baseType, true) + ".Processor");
+            WriteLine("public class Impl : RPCImpl");
             WriteStartBraceIndent();
 
             WriteLine("private readonly {0} iface_;", PrettyName(type));
 
             // Generate constructor
             {
-                Write("public Processor({0} iface)", PrettyName(type));
-
-                if (baseType != null)
-                    Write(" : base(iface)");
-                NewLine();
+                WriteLine("public Impl({0} iface)", PrettyName(type));
+                WriteLine(" : base(iface)");
                 WriteStartBraceIndent();
 
                 WriteLine("iface_ = iface;");
