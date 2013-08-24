@@ -17,9 +17,17 @@ namespace Flood.RPC
         Reply = 2,
         Exception = 3,
         Oneway = 4,
+        /// Send by Proxy to add a Delegate to an Implementation event.
         EventSubscribe = 5,
+        /// Send by Proxy to remove a Delegate from an Implementation event.
         EventUnsubscribe = 6,
+        /// Send by Implementation to invoke Proxy's Delegate.
         DelegateCall = 7,
+        /// Send by Proxy to Implementation's delegate with a call result.
+        DelegateReply = 8,
+        /// Send by Implementation when Proxy's Delegate is disposed.
+        /// This allows Proxy to remove delegates that will never be invoked.
+        DelegateDispose = 9,
     }
 
     public struct RPCData
