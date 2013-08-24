@@ -129,10 +129,13 @@ namespace Flood.Tools.RPCGen
                 // Throws exeption if type is not Task
                 GetMethodReturnType(method);
 
-                GenerateServiceMethodArgs(method);
+                var argsClassName = GetProcedureArgsClassName(method);
+                GenerateServiceMethodArgs(method, argsClassName);
                 NewLine();
 
-                GenerateServiceMethodResult(method);
+                var retType = GetMethodReturnType(method);
+                var resultClassName = GetProcedureResultClassName(method);
+                GenerateServiceMethodResult(method, resultClassName, retType);
 
                 if (i < methods.Length - 1)
                     NewLine();
@@ -570,10 +573,10 @@ namespace Flood.Tools.RPCGen
             return string.Format("{0}_{1}_args", method.Name, procedureId);
         }
 
-        private void GenerateServiceMethodArgs(MethodInfo method)
+        private void GenerateServiceMethodArgs(MethodInfo method, string name)
         {
             WriteLine("[Serializable]");
-            WriteLine("public class {0}", GetProcedureArgsClassName(method));
+            WriteLine("public class {0}", name);
             WriteStartBraceIndent();
 
             // Generate private fields.
@@ -590,7 +593,7 @@ namespace Flood.Tools.RPCGen
             GenerateIsSet(parameters);
 
             // Generate constructor
-            WriteLine("public {0}()", GetProcedureArgsClassName(method));
+            WriteLine("public {0}()", name);
             WriteLine("{");
             WriteLine("}");
             NewLine();
@@ -625,15 +628,13 @@ namespace Flood.Tools.RPCGen
             return string.Format("{0}_{1}_result", method.Name, procedureId);
         }
 
-        private void GenerateServiceMethodResult(MethodInfo method)
+        private void GenerateServiceMethodResult(MethodInfo method, string name, Type retType)
         {
             WriteLine("[Serializable]");
-            WriteLine("public class {0}", GetProcedureResultClassName(method));
+            WriteLine("public class {0}", name);
             WriteStartBraceIndent();
 
             var parameters = new List<Parameter>();
-
-            var retType = GetMethodReturnType(method);
 
             var hasReturn = retType != typeof(void);
             if (hasReturn)
@@ -683,7 +684,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate constructor
-            WriteLine("public {0}()", GetProcedureResultClassName(method));
+            WriteLine("public {0}()", name);
             WriteLine("{");
             WriteLine("}");
             NewLine();
