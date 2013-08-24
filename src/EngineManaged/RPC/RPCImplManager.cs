@@ -1,68 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Flood.RPC
 {
-    class ServiceImpl
-    {
-        protected object service;
-
-        public ServiceImpl(object service, Type serviceType)
-        {
-            var serviceAssembly = serviceType.Assembly;
-
-            var implType = serviceAssembly.GetType(Helper.ImplName(serviceType, true));
-            var processorType = implType.GetNestedType("Processor");
-
-            processor = (Processor) Activator.CreateInstance(processorType, service);
-            this.service = service;
-        }
-
-        private Processor processor;
-
-        public Task<RPCData> Process(RPCData request)
-        {
-            return processor.Process(request);
-        }
-    }
-
     public class RPCImplManager
     {
-        private Dictionary<int, ServiceImpl> ServiceImpls;
+        private Dictionary<int, RPCImpl> impls;
         private int implCounter;
 
         public RPCImplManager()
         {
-            ServiceImpls = new Dictionary<int, ServiceImpl>();
+            impls = new Dictionary<int, RPCImpl>();
         }
 
-        internal void Process(RPCData call)
+        public RPCImpl this[int id]
         {
-            var serviceId = call.Header.ImplId;
+            get { return impls[id]; }
+        }
 
-            ServiceImpl serviceImpl;
-            if(!ServiceImpls.TryGetValue(serviceId, out serviceImpl))
-            {
-                Log.Error("ServiceImpl " + serviceId + " not found for peer:" + call.Peer);
-                return;
-            }
-
-            var peer = call.Peer;
-
-            var task = serviceImpl.Process(call);
-
-            task.ContinueWith( reply => {
-                peer.Dispatch(reply.Result);
-            });
+        protected int GetNextImplementationId()
+        {
+            return Interlocked.Increment(ref implCounter);
         }
 
         public int AddImplementation<T>(T service)
         {
-            var impl = new ServiceImpl(service, typeof(T));
-            var serviceId = implCounter++;
-            ServiceImpls.Add(serviceId, impl);
-            return serviceId;
+            var implId = GetNextImplementationId();
+            var seriveType = typeof(T);
+
+            var serviceAssembly = seriveType.Assembly;
+
+            var stubsType = serviceAssembly.GetType(Helper.GetStubsClassName(seriveType, true));
+            var implType = stubsType.GetNestedType("Impl");
+            var impl = (RPCImpl)Activator.CreateInstance(implType, service);
+
+            impls.Add(implId, impl);
+            return implId;
         }
     }
 }

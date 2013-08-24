@@ -30,15 +30,28 @@ namespace Flood.RPC
 
         public void Process(RPCData data)
         {
+            var implId = data.Header.ImplId;
+            var proxyId = data.Header.ProxyId;
+
             switch(data.Header.CallType)
             {
-            case RPCDataType.EventSubscribe:
             case RPCDataType.Call:
-                ImplementationManager.Process(data);
+                ImplementationManager[implId].ProcessCall(data);
+                return;
+            case RPCDataType.EventSubscribe:
+                ImplementationManager[implId].ProcessEventSubscribe(data);
+                return;
+            case RPCDataType.EventUnsubscribe:
+                ImplementationManager[implId].ProcessEventUnsubscribe(data);
                 return;
             case RPCDataType.Reply:
-            case RPCDataType.EventInvoke:
-                ProxyManager.Process(data);
+                ProxyManager[proxyId].ProcessReply(data);
+                return;
+            case RPCDataType.DelegateCall:
+                ProxyManager[proxyId].ProcessDelegateCall(data);
+                return;
+            case RPCDataType.DelegateReply:
+                ProxyManager[proxyId].ProcessDelegateReply(data);
                 return;
             default:
                 throw new NotImplementedException();
