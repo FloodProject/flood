@@ -15,20 +15,32 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-WindowSettings::WindowSettings( uint16 width, uint16 height, const String& title, bool fullscreen )
-	: Settings( width, height )
-	, title(title)
-	, fullScreen(fullscreen)
-	, handle(nullptr)
+WindowSettings::WindowSettings()
+	: Settings(0, 0)
 	, styles(WindowStyles::None)
-{ }
+	, handle(nullptr)
+{
+
+}
+
+//-----------------------------------//
+
+WindowSettings::WindowSettings(uint16 width, uint16 height, const String& title,
+		WindowStyles styles)
+	: Settings(width, height)
+	, title(title)
+	, styles(styles)
+	, handle(nullptr)
+{
+
+}
 
 //-----------------------------------//
 
 Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
-	LogInfo( "Creating render window (size: %dx%d, title: '%s')",
+	LogInfo( "Creating window (size: %dx%d, title: '%s')",
 		settings.width, settings.height, settings.title.c_str() );
 }
 

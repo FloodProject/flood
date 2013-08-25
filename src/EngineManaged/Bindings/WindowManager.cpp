@@ -32,12 +32,11 @@ Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings
     _marshal0.width = (::uint16)settings.Width;
     _marshal0.height = (::uint16)settings.Height;
     _marshal0.title = clix::marshalString<clix::E_UTF8>(settings.Title);
-    _marshal0.fullScreen = settings.FullScreen;
-    _marshal0.handle = settings.Handle.ToPointer();
+    _marshal0.handle = (void*)settings.Handle.ToPointer();
     _marshal0.styles = (::WindowStyles)settings.Styles;
     auto arg0 = _marshal0;
-    auto ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
-    return gcnew Flood::Window((::Window*)ret);
+    auto __ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
+    return gcnew Flood::Window((::Window*)__ret);
 }
 
 void Flood::WindowManager::DestroyWindows()

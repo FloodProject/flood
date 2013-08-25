@@ -18,7 +18,6 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
     Width = native->width;
     Height = native->height;
     Title = clix::marshalString<clix::E_UTF8>(native->title);
-    FullScreen = native->fullScreen;
     Handle = IntPtr(native->handle);
     Styles = (Flood::WindowStyles)native->styles;
 }
@@ -29,18 +28,16 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
     Width = __native->width;
     Height = __native->height;
     Title = clix::marshalString<clix::E_UTF8>(__native->title);
-    FullScreen = __native->fullScreen;
     Handle = IntPtr(__native->handle);
     Styles = (Flood::WindowStyles)__native->styles;
 }
 
-Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, bool fullscreen)
+Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles)
 {
-    ::WindowSettings _native((::uint16)width, (::uint16)height, clix::marshalString<clix::E_UTF8>(title), fullscreen);
+    ::WindowSettings _native((::uint16)width, (::uint16)height, clix::marshalString<clix::E_UTF8>(title), (::WindowStyles)styles);
     this->Width = _native.width;
     this->Height = _native.height;
     this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
-    this->FullScreen = _native.fullScreen;
     this->Handle = IntPtr(_native.handle);
     this->Styles = (Flood::WindowStyles)_native.styles;
 }
@@ -69,8 +66,8 @@ Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings 
     _marshal0.stencilBits = (::uint16)_0.StencilBits;
     _marshal0.antialiasLevel = (::uint16)_0.AntialiasLevel;
     auto arg0 = _marshal0;
-    auto ret = ((::Window*)NativePtr)->createContext(arg0);
-    return gcnew Flood::RenderContext((::RenderContext*)ret);
+    auto __ret = ((::Window*)NativePtr)->createContext(arg0);
+    return gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
 void Flood::Window::Update()
@@ -90,14 +87,14 @@ void Flood::Window::Show(bool visible)
 
 bool Flood::Window::PumpEvents()
 {
-    auto ret = ((::Window*)NativePtr)->pumpEvents();
-    return ret;
+    auto __ret = ((::Window*)NativePtr)->pumpEvents();
+    return __ret;
 }
 
 bool Flood::Window::IsCursorVisible()
 {
-    auto ret = ((::Window*)NativePtr)->isCursorVisible();
-    return ret;
+    auto __ret = ((::Window*)NativePtr)->isCursorVisible();
+    return __ret;
 }
 
 void Flood::Window::SetCursorPosition(int x, int y)
@@ -107,8 +104,8 @@ void Flood::Window::SetCursorPosition(int x, int y)
 
 bool Flood::Window::HasFocus()
 {
-    auto ret = ((::Window*)NativePtr)->hasFocus();
-    return ret;
+    auto __ret = ((::Window*)NativePtr)->hasFocus();
+    return __ret;
 }
 
 bool Flood::Window::Equals(System::Object^ object)
@@ -146,20 +143,20 @@ void Flood::Window::CursorCapture::set(bool value)
 
 Flood::Vector2i Flood::Window::CursorPosition::get()
 {
-    auto ret = ((::Window*)NativePtr)->getCursorPosition();
-    return Flood::Vector2i((::Vector2i*)&ret);
+    auto __ret = ((::Window*)NativePtr)->getCursorPosition();
+    return Flood::Vector2i((::Vector2i*)&__ret);
 }
 
 Flood::InputManager^ Flood::Window::Input::get()
 {
-    auto ret = ((::Window*)NativePtr)->getInput();
-    return gcnew Flood::InputManager((::InputManager*)ret);
+    auto __ret = ((::Window*)NativePtr)->getInput();
+    return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
 Flood::Settings Flood::Window::Settings::get()
 {
-    auto &ret = ((::Window*)NativePtr)->getSettings();
-    return Flood::Settings((::Settings*)&ret);
+    auto &__ret = ((::Window*)NativePtr)->getSettings();
+    return Flood::Settings((::Settings*)&__ret);
 }
 
 void Flood::Window::WindowClose::add(System::Action^ evt)
