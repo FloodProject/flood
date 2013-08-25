@@ -1,5 +1,5 @@
 
-project "EngineWeaver"
+project "Weaver"
 
     kind "SharedLib"
     language "C#"
@@ -9,7 +9,7 @@ project "EngineWeaver"
     
     files
     {
-        "EngineWeaver.lua",
+        "Weaver.lua",
         "**.cs",
     }
     

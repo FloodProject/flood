@@ -65,9 +65,9 @@ function SetupRPCGen(projectName,extension)
 end
 
 function SetupEngineWeaver(dllName)
-	dependson { "EngineWeaver" }
+	dependson { "Weaver" }
 
-	local exePath = SafePath("$(TargetDir)" .. "EngineWeaver.exe");
+	local exePath = SafePath("$(TargetDir)" .. "Weaver.exe");
 	local dllPath = SafePath("$(TargetDir)" .. dllName)
 	
 	postbuildcommands

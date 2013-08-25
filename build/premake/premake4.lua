@@ -94,8 +94,8 @@ solution "Flood"
 		dofile( srcdir .. "/Tools/PackageGen/PackageGen.lua")
 		dofile( srcdir .. "/Tools/RPCGen/RPCGen.lua")
         dofile( srcdir .. "/Tools/RPCGen.Tests/RPCGen.Tests.lua")
-		dofile( srcdir .. "/Tools/EngineWeaver/EngineWeaver.lua")
-		dofile( srcdir .. "/Tools/EngineWeaver.Tests/EngineWeaver.Tests.lua")
+		dofile( srcdir .. "/Tools/Weaver/Weaver.lua")
+		dofile( srcdir .. "/Tools/Weaver.Tests/Weaver.Tests.lua")
 
 	group "Examples"
 

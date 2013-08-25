@@ -1,5 +1,5 @@
 
-project "EngineWeaver.Tests"
+project "Weaver.Tests"
 
     kind "SharedLib"
     language "C#"
@@ -9,7 +9,7 @@ project "EngineWeaver.Tests"
     
     files
     {
-        "EngineWeaver.Tests.lua",
+        "Weaver.Tests.lua",
         "**.cs",
     }
     
@@ -17,7 +17,7 @@ project "EngineWeaver.Tests"
     {
         "System",
         "EngineManaged",
-		"EngineWeaver",
+		"Weaver",
         "Mono.Cecil",
 		path.join(depsdir,"NUnit","nunit.framework")
     }
