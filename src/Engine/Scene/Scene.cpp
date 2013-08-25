@@ -54,9 +54,9 @@ static void SerializeScene(ReflectionContext* context, ReflectionWalkType wt)
 		const Field* field = context->field;
 		context->field = ClassGetField(context->composite, "entities");
 
-		json->values.push_back(top);
+		json->values.pushBack(top);
 		context->walkCompositeField(context, wt);
-		json->values.pop_back();
+		json->values.popBack();
 
 		context->field = field;
 	}
@@ -142,7 +142,7 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 				res.entity = entity;
 				res.distance = distance;
 
-				list.push_back( res );
+				list.pushBack( res );
 
 				if( !all ) break;
 			}

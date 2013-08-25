@@ -105,7 +105,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 		group->onEntityComponentAdded(component);
 	}
 
-	components.push_back(component);
+	components.pushBack(component);
 
 	return true;
 }
@@ -197,7 +197,7 @@ Array<GeometryPtr> Entity::getGeometry() const
 			continue;
 
 		const GeometryPtr& geo = RefCast<Geometry>(component);
-		geoms.push_back(geo);
+		geoms.pushBack(geo);
 	}
 
 	return geoms;

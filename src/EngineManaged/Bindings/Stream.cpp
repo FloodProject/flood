@@ -76,7 +76,7 @@ long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::uint8)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.pushBack(_marshalElement);
     }
     auto arg0 = _tmpdata;
     auto ret = ((::Stream*)NativePtr)->read(arg0);
@@ -104,7 +104,7 @@ long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::St
     for each(System::String^ _element in lines)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmplines.push_back(_marshalElement);
+        _tmplines.pushBack(_marshalElement);
     }
     auto arg0 = _tmplines;
     auto ret = ((::Stream*)NativePtr)->readLines(arg0);

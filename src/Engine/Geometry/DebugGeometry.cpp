@@ -47,7 +47,7 @@ DebugDrawer::DebugDrawer()
 	lines->setPrimitiveType(PrimitiveType::Lines);
 	lines->setMaterial(debug);
 	lines->setRenderLayer(RenderLayer::PostTransparency);
-	renderables.push_back(lines.get());
+	renderables.pushBack(lines.get());
 
 	// Triangles
 	GeometryBufferPtr trianglesVB = AllocateThis(GeometryBuffer);
@@ -60,7 +60,7 @@ DebugDrawer::DebugDrawer()
 	triangles->setPrimitiveType(PrimitiveType::Triangles);
 	triangles->setMaterial(debug);
 	triangles->setRenderLayer(RenderLayer::PostTransparency);
-	renderables.push_back(triangles.get());
+	renderables.pushBack(triangles.get());
 
 	// Quads
 	GeometryBufferPtr quadsVB = AllocateThis(GeometryBuffer);
@@ -73,7 +73,7 @@ DebugDrawer::DebugDrawer()
 	quads->setPrimitiveType(PrimitiveType::Quads);
 	quads->setMaterial(debug);
 	quads->setRenderLayer(RenderLayer::PostTransparency);
-	renderables.push_back(quads.get());
+	renderables.pushBack(quads.get());
 
 	reset();
 }
@@ -226,12 +226,12 @@ void DebugUpdateBoudingBox( GeometryBuffer* gb, const BoundingBox& box, Color co
 RenderablePtr DebugBuildRay( const Ray& pickRay, float length )
 {
 	Array<Vector3> vertex;
-	vertex.push_back( pickRay.origin );
-	vertex.push_back( pickRay.getPoint(length) );
+	vertex.pushBack( pickRay.origin );
+	vertex.pushBack( pickRay.getPoint(length) );
 
 	Array<Vector3> colors;
 	for(size_t i = 0; i < 2; ++i)
-		colors.push_back(Color::Red);
+		colors.pushBack(Color::Red);
 
 	GeometryBuffer* gb = AllocateHeap(GeometryBuffer);
 	gb->set( VertexAttribute::Position, vertex );
@@ -270,10 +270,10 @@ RenderablePtr DebugBuildFrustum( const Frustum& box )
 //-----------------------------------//
 
 #define ADD_BOX_FRUSTUM( a, b, c, d ) \
-	pos.push_back( box.corners[a] ); \
-	pos.push_back( box.corners[b] ); \
-	pos.push_back( box.corners[c] ); \
-	pos.push_back( box.corners[d] );
+	pos.pushBack( box.corners[a] ); \
+	pos.pushBack( box.corners[b] ); \
+	pos.pushBack( box.corners[c] ); \
+	pos.pushBack( box.corners[d] );
 
 void DebugUpdateFrustum( const RenderablePtr& rend, const Frustum& box )
 {

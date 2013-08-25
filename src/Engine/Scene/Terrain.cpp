@@ -98,7 +98,7 @@ void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 	request.x = x;
 	request.y = y;
 
-	requestsQueue.push_back( request );
+	requestsQueue.pushBack( request );
 }
 
 //-----------------------------------//
@@ -134,7 +134,7 @@ CellPtr Terrain::createCell( int x, int y, Array<float>& heights )
 	cell->setSettings(settings);
 	cell->setHeights(heights);
 
-	terrainCells.push_back(cell);
+	terrainCells.pushBack(cell);
 
 	String name = StringFormat("Cell (%d,%d)", x, y);
 
@@ -188,7 +188,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, Array<float>& heights
 		float S = 255*3;
 		float height = (R/S)+(G/S)+(B/S);
 		
-		heights.push_back( height );
+		heights.pushBack( height );
 	}
 }
 

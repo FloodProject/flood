@@ -210,7 +210,7 @@ NAMESPACE_CORE_BEGIN
 	FieldSetQualifier(&fieldName, FieldQualifier::NoSerialize);
 
 #define FIELD_ALIAS(fieldName, aliasName) \
-	fieldName.aliases.push_back(#aliasName);
+	fieldName.aliases.pushBack(#aliasName);
 
 //-----------------------------------//
 

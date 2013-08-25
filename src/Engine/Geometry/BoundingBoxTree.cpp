@@ -537,7 +537,7 @@ public:
 		triangles.reserve(tcount);
 		for (uint32 i=0; i<tcount; i++)
 		{
-			triangles.push_back(i);
+			triangles.pushBack(i);
 		}
 		mBounds.setMin( vertices );
 		mBounds.setMax( vertices );
@@ -604,9 +604,9 @@ public:
 		{ 
 			// Copy the triangle indices into the leaf triangles array
 			mLeafTriangleIndex = leafTriangles.size(); // assign the array start location for these leaf triangles.
-			leafTriangles.push_back(count);
+			leafTriangles.pushBack(count);
 			for (auto i : triangles)
-				leafTriangles.push_back(i);
+				leafTriangles.pushBack(i);
 		}
 		else
 		{
@@ -648,7 +648,7 @@ public:
 						leftBounds.include(p1);
 						leftBounds.include(p2);
 						leftBounds.include(p3);
-						leftTriangles.push_back(tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
+						leftTriangles.pushBack(tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
 					}
 
 					if ( b2.containsTriangle(p1,p2,p3))
@@ -661,7 +661,7 @@ public:
 						rightBounds.include(p1);
 						rightBounds.include(p2);
 						rightBounds.include(p3);
-						rightTriangles.push_back(tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
+						rightTriangles.pushBack(tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
 					}
 				}
 			}

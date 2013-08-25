@@ -356,7 +356,7 @@ void ClassCreateChilds(const Class* klass, Allocator* alloc, Array<T*>& instance
 		T* object = (T*) ClassCreateInstance(child, alloc);
 		if(!object) continue;
 
-		instances.push_back(object);
+		instances.pushBack(object);
 	}
 }
 

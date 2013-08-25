@@ -132,7 +132,7 @@ void OggStream::reset()
 
 OGG_Loader::OGG_Loader()
 {
-	extensions.push_back("ogg");
+	extensions.pushBack("ogg");
 
 	callbacks.read_func = OggRead;
 	callbacks.seek_func = OggSeek;

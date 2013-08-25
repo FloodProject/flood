@@ -56,7 +56,7 @@ void PipelineInit()
 		Class* child = klass->childs[i];
 		
 		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
-		resourceProcessors.push_back(processor);
+		resourceProcessors.pushBack(processor);
 
 		LogInfo("Registering asset handler: %s", child->name);
 	}

@@ -109,8 +109,8 @@ void Cell::rebuildVertices()
 		float Z = offsetZ + tileSize*col;
 		float Y = heights[i] * settings->MaxHeight;
 		
-		vertex.push_back( Vector3(X, Y, Z) );
-		texCoords.push_back( Vector2(X/sizeCell, Z/sizeCell) );
+		vertex.pushBack( Vector3(X, Y, Z) );
+		texCoords.pushBack( Vector2(X/sizeCell, Z/sizeCell) );
 	}
 
 	assert( vertex.size() == numExpectedVertices );
@@ -138,14 +138,14 @@ void Cell::rebuildIndices()
 			int i = col * (numTiles + 1) + row;
 
 			// First triangle
-			indices.push_back( uint16(i) );
-			indices.push_back( uint16(i+(numTiles+1)) );
-			indices.push_back( uint16(i+1) );
+			indices.pushBack( uint16(i) );
+			indices.pushBack( uint16(i+(numTiles+1)) );
+			indices.pushBack( uint16(i+1) );
 
 			// Second triangle
-			indices.push_back( uint16(i+1) );
-			indices.push_back( uint16(i+(numTiles+1)) ) ;
-			indices.push_back( uint16(i+(numTiles+2)) );
+			indices.pushBack( uint16(i+1) );
+			indices.pushBack( uint16(i+(numTiles+1)) ) ;
+			indices.pushBack( uint16(i+(numTiles+2)) );
 		}
 	}
 
@@ -201,7 +201,7 @@ void Cell::rebuildFaceNormals()
 		const Vector3& v3 = vertexData[index(i+2) + offset];
 
 		Vector3 normal = CalculateTriangleNormal(v1, v2, v3);
-		faceNormals.push_back( normal );
+		faceNormals.pushBack( normal );
 	}
 
 	const uint numTiles = settings->NumberTiles;
@@ -281,7 +281,7 @@ void Cell::rebuildAveragedNormals()
 		average /= n;
 		average.normalize();
 
-		normals.push_back( average );
+		normals.pushBack( average );
 	}
 
 	assert( normals.size() ==  gb->getNumVertices() );

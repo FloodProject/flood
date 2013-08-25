@@ -36,7 +36,7 @@ void MaxRectsBinPack::Init(int width, int height)
 	usedRectangles.clear();
 
 	freeRectangles.clear();
-	freeRectangles.push_back(n);
+	freeRectangles.pushBack(n);
 }
 
 Rectangle MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic method)
@@ -69,7 +69,7 @@ Rectangle MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic
 
 	PruneFreeList();
 
-	usedRectangles.push_back(newNode);
+	usedRectangles.pushBack(newNode);
 	return newNode;
 }
 
@@ -122,7 +122,7 @@ void MaxRectsBinPack::PlaceRect(const Rectangle &node)
 
 	PruneFreeList();
 
-	usedRectangles.push_back(node);
+	usedRectangles.pushBack(node);
 	//		dst.push_back(bestNode); ///\todo Refactor so that this compiles.
 }
 
@@ -431,7 +431,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rectangle freeNode, const Rectangle &usedNod
 		{
 			Rectangle newNode = freeNode;
 			newNode.height = usedNode.y - newNode.y;
-			freeRectangles.push_back(newNode);
+			freeRectangles.pushBack(newNode);
 		}
 
 		// New node at the bottom side of the used node.
@@ -440,7 +440,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rectangle freeNode, const Rectangle &usedNod
 			Rectangle newNode = freeNode;
 			newNode.y = usedNode.y + usedNode.height;
 			newNode.height = freeNode.y + freeNode.height - (usedNode.y + usedNode.height);
-			freeRectangles.push_back(newNode);
+			freeRectangles.pushBack(newNode);
 		}
 	}
 
@@ -451,7 +451,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rectangle freeNode, const Rectangle &usedNod
 		{
 			Rectangle newNode = freeNode;
 			newNode.width = usedNode.x - newNode.x;
-			freeRectangles.push_back(newNode);
+			freeRectangles.pushBack(newNode);
 		}
 
 		// New node at the right side of the used node.
@@ -460,7 +460,7 @@ bool MaxRectsBinPack::SplitFreeNode(Rectangle freeNode, const Rectangle &usedNod
 			Rectangle newNode = freeNode;
 			newNode.x = usedNode.x + usedNode.width;
 			newNode.width = freeNode.x + freeNode.width - (usedNode.x + usedNode.width);
-			freeRectangles.push_back(newNode);
+			freeRectangles.pushBack(newNode);
 		}
 	}
 

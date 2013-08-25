@@ -87,7 +87,7 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 {
 	LogInfo( "Registering new engine subsystem" );
 	
-	subsystems.push_back( subsystem );
+	subsystems.pushBack( subsystem );
 }
 
 //-----------------------------------//

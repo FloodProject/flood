@@ -93,7 +93,7 @@ void ClassWatchUpdate(ClassWatch* watch, FieldWatchVector& changed)
 	{
 		FieldWatch& fw = it->second;
 		bool updated = ClassWatchUpdateField(watch, fw.field);
-		if( updated ) changed.push_back(&fw);
+		if( updated ) changed.pushBack(&fw);
 	}
 }
 

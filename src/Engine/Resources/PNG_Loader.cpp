@@ -27,7 +27,7 @@ REFLECT_CLASS_END()
 PNG_Pico_Loader::PNG_Pico_Loader()
 	: flipAxisY(false)
 {
-	extensions.push_back("png");
+	extensions.pushBack("png");
 }
 
 //-----------------------------------//

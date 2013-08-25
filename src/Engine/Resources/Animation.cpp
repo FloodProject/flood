@@ -27,7 +27,7 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 	for( size_t i = 0; i < frames.size(); i++ )
 	{	
 		const KeyFrame& frame = frames[i];
-		keyFramesVector.push_back(frame);
+		keyFramesVector.pushBack(frame);
 	}
 }
 

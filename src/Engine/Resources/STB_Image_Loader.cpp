@@ -27,10 +27,10 @@ REFLECT_CLASS_END()
 
 STB_Image_Loader::STB_Image_Loader()
 {
-	extensions.push_back("png");
-	extensions.push_back("jpg");
-	extensions.push_back("bmp");
-	extensions.push_back("tga");
+	extensions.pushBack("png");
+	extensions.pushBack("jpg");
+	extensions.pushBack("bmp");
+	extensions.pushBack("tga");
 }
 
 //-----------------------------------//

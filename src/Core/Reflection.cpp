@@ -73,7 +73,7 @@ static void RegisterClass(Class* klass)
 
 	// Register as child class in the parent class.
 	Class* parent = klass->parent;
-	if( parent ) parent->childs.push_back(klass);
+	if( parent ) parent->childs.pushBack(klass);
 
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
@@ -184,7 +184,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 void ClassAddField(Class* klass, Field* field)
 {
-	klass->fields.push_back(field);
+	klass->fields.pushBack(field);
 
 	if( ClassGetFieldById(klass, field->id) )
 	{

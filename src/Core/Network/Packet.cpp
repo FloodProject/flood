@@ -199,7 +199,7 @@ Array<byte> Packet::read() const
 	Array<uint8> vec;
 	vec.reserve(size());
 	for(size_t i = 0; i < size(); ++i)
-		vec.push_back(ms.data[i]);
+		vec.pushBack(ms.data[i]);
 
 	return vec;
 }

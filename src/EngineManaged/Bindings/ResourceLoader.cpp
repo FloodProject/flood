@@ -275,7 +275,7 @@ void Flood::ResourceLoader::Extensions1::set(System::Collections::Generic::List<
     for each(System::String^ _element in value)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::ResourceLoader*)NativePtr)->extensions = _tmpvalue;
 }

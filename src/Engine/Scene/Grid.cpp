@@ -48,20 +48,20 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
-		vertex.push_back( Vector3(x_pos, 0.0f, z_pos) );
-		vertex.push_back( Vector3(-x_pos, 0.0f, z_pos) );
+		vertex.pushBack( Vector3(x_pos, 0.0f, z_pos) );
+		vertex.pushBack( Vector3(-x_pos, 0.0f, z_pos) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( MainLineColor );
-			colors.push_back( MainLineColor );
+			colors.pushBack( MainLineColor );
+			colors.pushBack( MainLineColor );
 		}
 		else
 		{
-			colors.push_back( LineColor );
-			colors.push_back( LineColor );
+			colors.pushBack( LineColor );
+			colors.pushBack( LineColor );
 		}
 
 		z_pos += sizeZ / divZ;
@@ -73,20 +73,20 @@ GeometryBufferPtr Grid::buildGeometry()
 	
 	for( int i = 0; i < divZ+1; i++ )
 	{
-		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
-		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
+		vertex.pushBack( Vector3( x_pos, 0.0f, z_pos ) );
+		vertex.pushBack( Vector3( x_pos, 0.0f, -z_pos ) );
 
 		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( MainLineColor );
-			colors.push_back( MainLineColor );
+			colors.pushBack( MainLineColor );
+			colors.pushBack( MainLineColor );
 		}
 		else
 		{
-			colors.push_back( LineColor );
-			colors.push_back( LineColor );
+			colors.pushBack( LineColor );
+			colors.pushBack( LineColor );
 		}
 
 		x_pos += sizeX / divX;

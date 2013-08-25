@@ -55,10 +55,10 @@ void Cube::create()
 //-----------------------------------//
 
 #define ADD_BOX_FACE( a, b, c, d )				\
-	pos.push_back( a*width );					\
-	pos.push_back( b*width );					\
-	pos.push_back( c*width );					\
-	pos.push_back( d*width );
+	pos.pushBack( a*width );					\
+	pos.pushBack( b*width );					\
+	pos.pushBack( c*width );					\
+	pos.pushBack( d*width );
 
 #define v(a,b,c) Vector3(a,b,c)
 
@@ -86,35 +86,35 @@ void BuildCube( GeometryBuffer* gb, float width, float height )
 	coords.reserve(pos.size());
 	
 	// Top
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
 	// Bottom
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
 	// Front
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
 	// Back
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
 	// Left
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
 	// Right
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
 
 	// Vertex buffer setup
 	gb->set( VertexAttribute::Position, pos );

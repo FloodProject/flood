@@ -75,7 +75,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 		if( mat->isBlendingEnabled() )
 		renderable->setRenderLayer(RenderLayer::Transparency);
 
-		rends.push_back(renderable);
+		rends.pushBack(renderable);
 	}
 }
 

@@ -42,8 +42,8 @@ Array<T>::Array(const Array<T>& other)
     , _data(0)
 {
     const size_t n = other._size;
-    set_capacity(n);
-    copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
+    setCapacity(n);
+    copyRange(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
     _size = n;
 }
 
@@ -67,7 +67,7 @@ Array<T>::Array(Array&& other)
 template <typename T>
 Array<T>::~Array()
 {
-    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+    destructRange(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
     AllocatorDeallocate(_data);
 }
 
@@ -80,7 +80,7 @@ Array<T>& Array<T>::operator=(const Array<T>& other)
     {
         const size_t n = other._size;
         resize(n);
-        copy_range(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
+        copyRange(_data, other._data, n, std::integral_constant<bool, std::is_pod<T>::value>());
     }
     
     return *this;
@@ -91,7 +91,7 @@ Array<T>& Array<T>::operator=(const Array<T>& other)
 template <typename T>
 Array<T>& Array<T>::operator=(Array<T>&& other)
 {
-    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+    destructRange(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
     AllocatorDeallocate(_data);
 
     _allocator = other._allocator;
@@ -259,9 +259,9 @@ void Array<T>::resize(size_t new_size)
     if (new_size > _capacity)
         grow(new_size);
     else if (new_size > _size)
-        construct_range(_data + _size, new_size - _size, std::integral_constant<bool, std::is_pod<T>::value>());
+        constructRange(_data + _size, new_size - _size, std::integral_constant<bool, std::is_pod<T>::value>());
     else
-        destruct_range(_data + new_size, _size - new_size, std::integral_constant<bool, std::is_pod<T>::value>());
+        destructRange(_data + new_size, _size - new_size, std::integral_constant<bool, std::is_pod<T>::value>());
 
     _size = new_size;
 }
@@ -272,7 +272,7 @@ template <typename T>
 void Array<T>::reserve(size_t new_capacity)
 {
     if (new_capacity > _capacity)
-        set_capacity(new_capacity);
+        setCapacity(new_capacity);
 }
 
 //-----------------------------------//
@@ -280,7 +280,7 @@ void Array<T>::reserve(size_t new_capacity)
 template <typename T>
 void Array<T>::trim()
 {
-    set_capacity(_size);
+    setCapacity(_size);
 }
 
 //-----------------------------------//
@@ -294,7 +294,7 @@ void Array<T>::clear()
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::push_back(T const & item)
+void Array<T>::pushBack(T const & item)
 {
     if (_size + 1 > _capacity)
         grow();
@@ -304,9 +304,9 @@ void Array<T>::push_back(T const & item)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::pop_back()
+void Array<T>::popBack()
 {
-    destruct_range(_data + _size - 1, 1, std::integral_constant<bool, std::is_pod<T>::value>());
+    destructRange(_data + _size - 1, 1, std::integral_constant<bool, std::is_pod<T>::value>());
     _size--;
 }
 
@@ -323,12 +323,12 @@ void Array<T>::insert(T * pos, Iter first, Iter last)
     size_t newSize_ = size() + (last - first);
     auto newData_ = (byte*) AllocatorAllocate(_allocator, newSize_ * sizeof(T), alignof(T));
 
-    move_range((T*)newData_, _data, offset_, std::integral_constant<bool, std::is_pod<T>::value>());
+    moveRange((T*)newData_, _data, offset_, std::integral_constant<bool, std::is_pod<T>::value>());
 
     for(auto it = first; it != last; ++it)
         new (&newData_[sizeof(T) * (offset_ + (it - first))]) T(*it);
 
-    move_range((T*)(newData_ + (offset_ + (last - first)) * sizeof(T)), _data + offset_, size() - offset_, std::integral_constant<bool, std::is_pod<T>::value>());
+    moveRange((T*)(newData_ + (offset_ + (last - first)) * sizeof(T)), _data + offset_, size() - offset_, std::integral_constant<bool, std::is_pod<T>::value>());
 
     AllocatorDeallocate(_data);
     _data = (T*)newData_;
@@ -345,7 +345,7 @@ void Array<T>::remove(T const * item)
 
     for(size_t i = (item - begin()); i < size() - 1; ++i) 
         _data[i] = _data[i + 1];
-    pop_back();
+    popBack();
 }
 
 //-----------------------------------//
@@ -367,7 +367,7 @@ Allocator const * Array<T>::allocator() const
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::set_capacity(size_t new_capacity)
+void Array<T>::setCapacity(size_t new_capacity)
 {
     if (new_capacity == _capacity)
         return;
@@ -379,11 +379,11 @@ void Array<T>::set_capacity(size_t new_capacity)
     if (new_capacity > 0) {
         new_data = (T*) AllocatorAllocate(_allocator, sizeof(T) * new_capacity, alignof(T));
 
-        move_range(new_data, _data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
-        construct_range(new_data + _size, new_capacity - _size, std::integral_constant<bool, std::is_pod<T>::value>());
+        moveRange(new_data, _data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+        constructRange(new_data + _size, new_capacity - _size, std::integral_constant<bool, std::is_pod<T>::value>());
     }
 
-    destruct_range(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
+    destructRange(_data, _size, std::integral_constant<bool, std::is_pod<T>::value>());
     AllocatorDeallocate(_data);
     _data = new_data;
     _capacity = new_capacity;
@@ -397,13 +397,13 @@ void Array<T>::grow(size_t min_capacity)
     size_t new_capacity = (_capacity * 2) + 8;
     if (new_capacity < min_capacity)
         new_capacity = min_capacity;
-    set_capacity(new_capacity);
+    setCapacity(new_capacity);
 }
 
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::construct_range(T * data, size_t count, std::true_type)
+void Array<T>::constructRange(T * data, size_t count, std::true_type)
 {
 #ifdef _DEBUG
     memset(data, 0, sizeof(T) * count);
@@ -413,7 +413,7 @@ void Array<T>::construct_range(T * data, size_t count, std::true_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::construct_range(T * data, size_t count, std::false_type)
+void Array<T>::constructRange(T * data, size_t count, std::false_type)
 {
     for(size_t i = 0; i < count; ++i)
         new (data + i) T();
@@ -422,7 +422,7 @@ void Array<T>::construct_range(T * data, size_t count, std::false_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::copy_range(T * data, T * src, size_t count, std::true_type)
+void Array<T>::copyRange(T * data, T * src, size_t count, std::true_type)
 {
     memcpy(data, src, sizeof(T) * count);
 }
@@ -430,7 +430,7 @@ void Array<T>::copy_range(T * data, T * src, size_t count, std::true_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::copy_range(T * data, T * src, size_t count, std::false_type)
+void Array<T>::copyRange(T * data, T * src, size_t count, std::false_type)
 {
     for(size_t i = 0; i < count; ++i)
         new (data + i) T( *(src + i) );
@@ -439,7 +439,7 @@ void Array<T>::copy_range(T * data, T * src, size_t count, std::false_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::move_range(T * data, T * src, size_t count, std::true_type)
+void Array<T>::moveRange(T * data, T * src, size_t count, std::true_type)
 {
     memcpy(data, src, sizeof(T) * count);
 }
@@ -447,7 +447,7 @@ void Array<T>::move_range(T * data, T * src, size_t count, std::true_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::move_range(T * data, T * src, size_t count, std::false_type)
+void Array<T>::moveRange(T * data, T * src, size_t count, std::false_type)
 {
     for(size_t i = 0; i < count; ++i)
         new (data + i) T(std::move( *(src + i) ));
@@ -456,7 +456,7 @@ void Array<T>::move_range(T * data, T * src, size_t count, std::false_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::destruct_range(T * data, size_t count, std::true_type)
+void Array<T>::destructRange(T * data, size_t count, std::true_type)
 {
 #ifdef _DEBUG
     memset(data, 0, sizeof(T) * count);
@@ -466,7 +466,7 @@ void Array<T>::destruct_range(T * data, size_t count, std::true_type)
 //-----------------------------------//
 
 template <typename T>
-void Array<T>::destruct_range(T * data, size_t count, std::false_type)
+void Array<T>::destructRange(T * data, size_t count, std::false_type)
 {
     for(size_t i = 0; i < count; ++i)
         data[i].~T();

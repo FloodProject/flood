@@ -61,7 +61,7 @@ TaskPool::TaskPool(int8 size)
 	for(size_t i = 0; i < (size_t) threadCount; i++)
 	{
 		Thread* thread = AllocateHeap(Thread);
-		threads.push_back(thread);
+		threads.pushBack(thread);
 
 		ThreadFunction taskFunction;
 		taskFunction.Bind(this, &TaskPool::run);

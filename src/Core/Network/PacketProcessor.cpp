@@ -52,7 +52,7 @@ void PacketProcessors::addProcessor(PacketProcessor* packetProcessor)
     if(packetProcessor->parent)
         packetProcessor->parent->removeProcessor(packetProcessor);
 
-    processors.push_back(packetProcessor);
+    processors.pushBack(packetProcessor);
     packetProcessor->parent = this;
 }
 
@@ -64,7 +64,7 @@ void PacketProcessors::addProcessorNear(PacketProcessor* packetProcessor, Packet
     if(!insertBefore)
         it++;
 
-    processors.push_back(packetProcessor);
+    processors.pushBack(packetProcessor);
     for(size_t i = &processors.back() - it; i > 0; --i)
         std::swap(processors[i], processors[i - 1]);
     packetProcessor->parent = this;

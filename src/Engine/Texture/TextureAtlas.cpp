@@ -131,7 +131,7 @@ void TextureAtlas::resizeAtlas(uint newSize)
         rectSize.x = width+1;
         rectSize.y = height+1;
 
-        rectSizes.push_back(rectSize);
+        rectSizes.pushBack(rectSize);
     }
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);

@@ -38,7 +38,7 @@ SUITE(CoreTests_Containers)
         Array<int> v(*_a);
         CHECK_EQUAL(0, v.size());
         
-        v.push_back(3);
+        v.pushBack(3);
 
         CHECK_EQUAL(1, v.size());
         CHECK_EQUAL(3, v[0]);
@@ -48,7 +48,7 @@ SUITE(CoreTests_Containers)
     {
         // recreate first test
         Array<int> v(*_a);
-        v.push_back(3);
+        v.pushBack(3);
 
         // copy constructor
         Array<int> v2(v);
@@ -65,12 +65,12 @@ SUITE(CoreTests_Containers)
     TEST_FIXTURE(ContainerFixture, ArrayBeginEndPopBackEmpty)
     {
         Array<int> v(*_a);
-        v.push_back(3);
+        v.pushBack(3);
 
         CHECK(v.end() == v.begin() + v.size());
         CHECK_EQUAL(3, *v.begin());
 
-        v.pop_back();
+        v.popBack();
         CHECK(v.empty());
     }
 
@@ -81,14 +81,14 @@ SUITE(CoreTests_Containers)
 
         for(int i = 0; i < 3; ++i)
         {
-            v.push_back(i);
-            w.push_back(i + 10);
+            v.pushBack(i);
+            w.pushBack(i + 10);
         }
         // v : 0,1,2
         // w : 10,11,12
 
         for(int i = 0; i < 3; ++i)
-            v.push_back(i + 3);
+            v.pushBack(i + 3);
         //v : 0,1,2,3,4,5
         
         v.insert(v.begin(), w.begin(), w.end());
@@ -103,14 +103,14 @@ SUITE(CoreTests_Containers)
 
         for(int i = 0; i < 3; ++i)
         {
-            v.push_back(i);
-            w.push_back(i + 10);
+            v.pushBack(i);
+            w.pushBack(i + 10);
         }
         // v : 0,1,2
         // w : 10,11,12
 
         for(int i = 0; i < 3; ++i)
-            v.push_back(i + 3);
+            v.pushBack(i + 3);
         //v : 0,1,2,3,4,5
 
         v.insert(v.end(), w.begin(), w.end());
@@ -125,14 +125,14 @@ SUITE(CoreTests_Containers)
 
         for(int i = 0; i < 3; ++i)
         {
-            v.push_back(i);
-            w.push_back(i + 10);
+            v.pushBack(i);
+            w.pushBack(i + 10);
         }
         // v : 0,1,2
         // w : 10,11,12
 
         for(int i = 0; i < 3; ++i)
-            v.push_back(i + 3);
+            v.pushBack(i + 3);
         //v : 0,1,2,3,4,5
 
         v.insert(&v[3], w.begin(), w.end());
@@ -145,7 +145,7 @@ SUITE(CoreTests_Containers)
         Array<int> v(*_a);
 
         for (int i=0; i<100; ++i)
-            v.push_back(i);
+            v.pushBack(i);
         CHECK_EQUAL(100, v.size());
 
         v.remove(&v.front());
@@ -160,7 +160,7 @@ SUITE(CoreTests_Containers)
         Array<int> v(*_a);
 
         for (int i=0; i<100; ++i)
-            v.push_back(i);
+            v.pushBack(i);
         CHECK_EQUAL(100, v.size());
 
         v.remove(&v.back());
@@ -175,7 +175,7 @@ SUITE(CoreTests_Containers)
         Array<int> v(*_a);
 
         for (int i=0; i<100; ++i)
-            v.push_back(i);
+            v.pushBack(i);
 
         auto it = std::find(v.begin(), v.end(), 51);
         CHECK_EQUAL(51, *it);
@@ -193,11 +193,11 @@ SUITE(CoreTests_Containers)
     {
         Array<String> v(*_a);
 
-        v.push_back("Zero");
-        v.push_back(String("One"));
+        v.pushBack("Zero");
+        v.pushBack(String("One"));
 
         String s("Two");
-        v.push_back(s);
+        v.pushBack(s);
 
         CHECK_EQUAL(3, v.size());
 
@@ -234,7 +234,7 @@ SUITE(CoreTests_Containers)
         {
             auto o = (obj*)Allocate(_a, obj, String("asdfawilebufa"));
             ptr p(o);
-            ptrs.push_back(p);
+            ptrs.pushBack(p);
         }
 
         size_t refcount = 0;
@@ -265,10 +265,10 @@ SUITE(CoreTests_Containers)
     {
         Array<String> v(*_a);
 
-        v.push_back("herp");
-        v.push_back("derp");
-        v.push_back("sherp");
-        v.push_back("alerp");
+        v.pushBack("herp");
+        v.pushBack("derp");
+        v.pushBack("sherp");
+        v.pushBack("alerp");
 
         Array<String> w(std::move(v));
 

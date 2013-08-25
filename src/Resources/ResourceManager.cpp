@@ -443,7 +443,7 @@ void ResourceManager::removeUnusedResources()
 		const ResourceHandle& resource = it->second;
 
 		if( resource.Resolve()->references.read() == 1 )
-			resourcesToRemove.push_back(it->first);
+			resourcesToRemove.pushBack(it->first);
 	}
 
 	for( size_t i = 0; i < resourcesToRemove.size(); i++ )

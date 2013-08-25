@@ -185,7 +185,7 @@ void StringSplit(const String& s, char delim, Array<String>& elems)
 	String item;
 	
 	while(std::getline(ss, item, delim)) 
-		elems.push_back(item);
+		elems.pushBack(item);
 }
 
 //-----------------------------------//
@@ -409,7 +409,7 @@ static void DirArchiveEnumerate(Array<Path>& paths, Path dirPath,
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
 			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
 				name.c_str() );
-			if(!dirs) paths.push_back(path);
+			if(!dirs) paths.pushBack(path);
 			break;
 		}
 		case DT_DIR:
@@ -419,7 +419,7 @@ static void DirArchiveEnumerate(Array<Path>& paths, Path dirPath,
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
 
-			if(dirs) paths.push_back(_filePath);
+			if(dirs) paths.pushBack(_filePath);
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			
 			break;

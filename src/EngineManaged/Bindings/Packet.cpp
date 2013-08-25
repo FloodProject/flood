@@ -44,7 +44,7 @@ void Flood::Packet::Write(System::Collections::Generic::List<unsigned char>^ dat
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::byte)(::uint8)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.pushBack(_marshalElement);
     }
     auto arg0 = _tmpdata;
     ((::Packet*)NativePtr)->write(arg0);

@@ -53,7 +53,7 @@ void Noise::generate(Array<float>& noise, uint width, uint height)
 				amplitude *= persistence;
 			}
 
-			noise.push_back(total / maxAmplitude);
+			noise.pushBack(total / maxAmplitude);
 		}
 	}
 }

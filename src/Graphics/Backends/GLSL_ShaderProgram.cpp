@@ -60,7 +60,7 @@ bool GLSL_ShaderProgram::create()
 
 void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
-	shaders.push_back( shader );
+	shaders.pushBack( shader );
 	
 	bool isAttached = attached[shader];
 	

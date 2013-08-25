@@ -90,7 +90,7 @@ void PluginManager::registerPlugins(const Array<Plugin*>& plugins)
 void PluginManager::registerPlugin( Plugin* plugin )
 {
 	if( !plugin ) return;
-	plugins.push_back(plugin);
+	plugins.pushBack(plugin);
 }
 
 //-----------------------------------//

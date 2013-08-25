@@ -122,12 +122,12 @@ public:
      *	Appends the item to the back of the array.
      *	@param item item
      */
-    void push_back(T const & item);
+    void pushBack(T const & item);
 
     /**
      *	Removes the last item from the array.
      */
-    void pop_back();
+    void popBack();
 
     /**
      *	Inserts a sequence of items into the array at the specified position.
@@ -151,17 +151,17 @@ public:
     Allocator const * allocator() const;
     
 private:
-    void set_capacity(size_t new_capacity);
+    void setCapacity(size_t new_capacity);
     void grow(size_t min_capacity = 0);
 
-    void construct_range(T * data, size_t count, std::true_type);
-    void construct_range(T * data, size_t count, std::false_type);
-    void copy_range(T * data, T * src, size_t count, std::true_type);
-    void copy_range(T * data, T * src, size_t count, std::false_type);
-    void move_range(T * data, T * src, size_t count, std::true_type);
-    void move_range(T * data, T * src, size_t count, std::false_type);
-    void destruct_range(T * data, size_t count, std::true_type);
-    void destruct_range(T * data, size_t count, std::false_type);
+    void constructRange(T * data, size_t count, std::true_type);
+    void constructRange(T * data, size_t count, std::false_type);
+    void copyRange(T * data, T * src, size_t count, std::true_type);
+    void copyRange(T * data, T * src, size_t count, std::false_type);
+    void moveRange(T * data, T * src, size_t count, std::true_type);
+    void moveRange(T * data, T * src, size_t count, std::false_type);
+    void destructRange(T * data, size_t count, std::true_type);
+    void destructRange(T * data, size_t count, std::false_type);
 
 private:
     Allocator *_allocator;

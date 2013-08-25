@@ -98,7 +98,7 @@ struct C : public Object
 		for(size_t i = 0; i < NUM_AS; i++)
 		{
 			A* a = AllocateThis(A);
-			arrayA.push_back(a);
+			arrayA.pushBack(a);
 		}
 	}
 
@@ -133,7 +133,7 @@ struct D : public Object
 	{
 		object = AllocateThis(A);
 		refA = AllocateThis(A);
-		vecA.push_back(refA);
+		vecA.pushBack(refA);
 	}
 
 	~D()

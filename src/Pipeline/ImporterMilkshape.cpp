@@ -25,7 +25,7 @@ REFLECT_CLASS_END()
 
 ImporterMilkshape::ImporterMilkshape()
 {
-	extensions.push_back("ms3d");
+	extensions.pushBack("ms3d");
 }
 
 //-----------------------------------//

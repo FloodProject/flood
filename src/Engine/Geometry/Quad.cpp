@@ -42,24 +42,24 @@ GeometryBufferPtr Quad::createQuad( float width, float height )
 
 	// Vertex position data
 	Array< Vector3 > vertex;
-	vertex.push_back( Vector2(0.0f, 0.0f) );
-	vertex.push_back( Vector2(width, 0.0f) );
-	vertex.push_back( Vector2(0.0f, height) );
-	vertex.push_back( Vector2(width, height) );
+	vertex.pushBack( Vector2(0.0f, 0.0f) );
+	vertex.pushBack( Vector2(width, 0.0f) );
+	vertex.pushBack( Vector2(0.0f, height) );
+	vertex.pushBack( Vector2(width, height) );
 
 	// Vertex color data
 	Array< Vector3 > colors;
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
 
 	// Vertex tex coords data
 	Array< Vector3 > coords;
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
 
 	// Vertex buffer setup
 	gb->set( VertexAttribute::Position, vertex );

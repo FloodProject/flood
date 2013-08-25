@@ -20,7 +20,7 @@ REFLECT_CLASS_END()
 
 SceneLoader::SceneLoader()
 {
-	extensions.push_back("scene");
+	extensions.pushBack("scene");
 }
 
 //-----------------------------------//

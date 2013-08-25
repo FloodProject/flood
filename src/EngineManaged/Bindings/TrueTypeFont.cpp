@@ -86,7 +86,7 @@ void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned 
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::byte)(::uint8)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::TrueTypeFont*)NativePtr)->data = _tmpvalue;
 }

@@ -60,7 +60,7 @@ void Flood::FloodString::StringSplit(System::String^ s, char delim, System::Coll
     for each(System::String^ _element in elems)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmpelems.push_back(_marshalElement);
+        _tmpelems.pushBack(_marshalElement);
     }
     auto arg2 = _tmpelems;
     ::StringSplit(arg0, delim, arg2);

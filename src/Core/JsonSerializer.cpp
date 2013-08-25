@@ -180,12 +180,12 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* array = json_array();	
-		json->values.push_back( array );
+		json->values.pushBack( array );
 	}
 	else if(wt == ReflectionWalkType::ElementEnd)
 	{
 		json_t* element = json->values.back();
-		json->values.pop_back();
+		json->values.popBack();
 		json_array_append_new(json->values.back(), element);
 	}
 }
@@ -203,15 +203,15 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* klass = json_object();
-		json->values.push_back( klass );
+		json->values.pushBack( klass );
 	}
 	else if(wt == ReflectionWalkType::End)
 	{
 		json_t* klass = json_object();
 		json_object_set_new(klass, ctx->objectClass->name, json->values.back());
 		
-		json->values.pop_back();
-		json->values.push_back(klass);
+		json->values.popBack();
+		json->values.pushBack(klass);
 	}
 }
 
@@ -224,7 +224,7 @@ static void SerializeField(ReflectionContext* ctx, ReflectionWalkType wt)
 	if(wt == ReflectionWalkType::End)
 	{
 		json_t* field = json->values.back();
-		json->values.pop_back();
+		json->values.popBack();
 		json_object_set_new(json->values.back(), ctx->field->name, field);
 		
 		return;
@@ -242,7 +242,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType wt)
 	assert( name != nullptr );
 
 	json_t* str = json_string(name);
-	json->values.push_back(str);
+	json->values.pushBack(str);
 }
 
 //-----------------------------------//
@@ -308,7 +308,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType w
 		assert( false );
 	}
 
-	json->values.push_back(value);
+	json->values.pushBack(value);
 }
 
 //-----------------------------------//
@@ -386,7 +386,7 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	} }
 
 	SerializerJSON* json = (SerializerJSON*) context->userData;
-	json->values.pop_back();
+	json->values.popBack();
 }
 
 //-----------------------------------//
@@ -421,7 +421,7 @@ static void DeserializeArray( ReflectionContext* context )
 		for( size_t i = 0; i < size; i++ )
 		{
 			json_t* arrayValue = json_array_get(value, i);
-			json->values.push_back(arrayValue);
+			json->values.pushBack(arrayValue);
 
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i;
@@ -441,7 +441,7 @@ static void DeserializeArray( ReflectionContext* context )
 			json_t* arrayValue = json_object();
 			json_object_set(arrayValue, key, val);
 
-			json->values.push_back(arrayValue);
+			json->values.pushBack(arrayValue);
 
 			// Calculate the address of the next array element.
 			void* element = (byte*) begin + elementSize * i++;
@@ -602,9 +602,9 @@ static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 
 		context->field = newField;
 
-		json->values.push_back(fieldValue);
+		json->values.pushBack(fieldValue);
 		DeserializeField(context, ReflectionWalkType::Element);
-		json->values.pop_back();
+		json->values.popBack();
 
 		context->field = field;
 		context->composite = composite;
@@ -660,14 +660,14 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	context->composite = newClass;
 	context->object = newObject;
 
-	json->values.push_back(value);
+	json->values.pushBack(value);
 
 	if( newClass->serialize )
 		newClass->serialize(context, ReflectionWalkType::Begin);
 	else
 		DeserializeFields(context, ReflectionWalkType::Begin);
 
-	json->values.pop_back();
+	json->values.popBack();
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();
@@ -709,11 +709,11 @@ static Object* SerializeLoad( Serializer* serializer )
 	ReflectionContext* context = &serializer->deserializeContext;
 	Object* object = serializer->object;
 
-	json->values.push_back(rootValue);
+	json->values.pushBack(rootValue);
 
 	object = DeserializeComposite(context, object);
 
-	json->values.pop_back();
+	json->values.popBack();
 	assert( json->values.empty() );
 
 	json_decref(rootValue);

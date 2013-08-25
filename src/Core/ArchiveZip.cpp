@@ -182,7 +182,7 @@ void ArchiveZip::enumerate(Array<Path>& paths, bool dir)
 		bool isDir = !name.empty() && name[name.size()-1] == '/';
 
 		if( (dir && isDir) || (!dir && !isDir) )
-			paths.push_back(name);
+			paths.pushBack(name);
 	}
 }
 

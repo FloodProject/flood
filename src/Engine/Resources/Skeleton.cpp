@@ -15,7 +15,7 @@ NAMESPACE_ENGINE_BEGIN
 
 void Skeleton::addBone( const BonePtr& bone )
 {
-	bones.push_back(bone);
+	bones.pushBack(bone);
 }
 
 //-----------------------------------//

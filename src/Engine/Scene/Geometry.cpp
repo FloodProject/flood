@@ -26,7 +26,7 @@ Geometry::Geometry()
 
 void Geometry::addRenderable(const RenderBatchPtr& rend)
 {
-	renderables.push_back( rend );
+	renderables.pushBack( rend );
 }
 
 //-----------------------------------//
@@ -50,7 +50,7 @@ void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform
 		RenderState state( renderable );
 		state.modelMatrix = absoluteTransform;
 
-		queue.push_back(state);
+		queue.pushBack(state);
 	}
 }
 

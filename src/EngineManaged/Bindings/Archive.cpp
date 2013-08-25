@@ -74,7 +74,7 @@ void Flood::Archive::EnumerateFiles(System::Collections::Generic::List<System::S
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::Archive*)NativePtr)->enumerateFiles(arg0);
@@ -86,7 +86,7 @@ void Flood::Archive::EnumerateDirs(System::Collections::Generic::List<System::St
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::Archive*)NativePtr)->enumerateDirs(arg0);
@@ -222,7 +222,7 @@ void Flood::ArchiveVirtual::EnumerateFiles(System::Collections::Generic::List<Sy
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveVirtual*)NativePtr)->enumerateFiles(arg0);
@@ -234,7 +234,7 @@ void Flood::ArchiveVirtual::EnumerateDirs(System::Collections::Generic::List<Sys
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveVirtual*)NativePtr)->enumerateDirs(arg0);
@@ -292,7 +292,7 @@ void Flood::ArchiveVirtual::Mounts::set(System::Collections::Generic::List<Flood
     for each(Flood::Archive^ _element in value)
     {
         auto _marshalElement = (::Archive*)_element->NativePtr;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::ArchiveVirtual*)NativePtr)->mounts = _tmpvalue;
 }
@@ -356,7 +356,7 @@ void Flood::ArchiveDirectory::EnumerateFiles(System::Collections::Generic::List<
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveDirectory*)NativePtr)->enumerateFiles(arg0);
@@ -368,7 +368,7 @@ void Flood::ArchiveDirectory::EnumerateDirs(System::Collections::Generic::List<S
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveDirectory*)NativePtr)->enumerateDirs(arg0);
@@ -453,7 +453,7 @@ void Flood::ArchiveZip::EnumerateFiles(System::Collections::Generic::List<System
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveZip*)NativePtr)->enumerateFiles(arg0);
@@ -465,7 +465,7 @@ void Flood::ArchiveZip::EnumerateDirs(System::Collections::Generic::List<System:
     for each(System::String^ _element in paths)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmppaths.push_back(_marshalElement);
+        _tmppaths.pushBack(_marshalElement);
     }
     auto arg0 = _tmppaths;
     ((::ArchiveZip*)NativePtr)->enumerateDirs(arg0);

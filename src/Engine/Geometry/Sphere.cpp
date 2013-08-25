@@ -109,7 +109,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 		float u = std::asin(d.x) / PI + 0.5f;
 		float v = std::asin(d.y) / PI + 0.5f;
 
-		texCoords.push_back( Vector2(u, v) );
+		texCoords.pushBack( Vector2(u, v) );
 	}
 
 	gb->set( VertexAttribute::Position, position );
@@ -123,9 +123,9 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2,
 {
 	if (depth == 0)
 	{
-		pos.push_back( v1 );
-		pos.push_back( v2 );
-		pos.push_back( v3 );
+		pos.pushBack( v1 );
+		pos.pushBack( v2 );
+		pos.pushBack( v3 );
 		
 		return;
 	}

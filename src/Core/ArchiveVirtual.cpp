@@ -37,7 +37,7 @@ static void HandleWatch(Archive*, const FileWatchEvent& event);
 
 bool ArchiveVirtual::archiveMount(Archive * mount, const Path& mountPath)
 {
-	mounts.push_back(mount);
+	mounts.pushBack(mount);
 
 	// Setup archive watch callbacks.
 	mount->userdata = this;

@@ -51,7 +51,7 @@ void Group::add( const EntityPtr& entity )
 	if( !entity ) return;
 
 	entity->setParent( this );
-	entities.push_back( entity );
+	entities.pushBack( entity );
 
 	onEntityAdded(entity);
 	onEntityChanged();
@@ -112,7 +112,7 @@ void Group::fixUp()
 		
 		if( !entity )
 		{
-			invalid.push_back(entity);
+			invalid.pushBack(entity);
 			continue;
 		}
 

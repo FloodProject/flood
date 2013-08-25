@@ -160,7 +160,7 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
-	textureBuffers.push_back( tex );
+	textureBuffers.pushBack( tex );
 
 	unbind();
 }

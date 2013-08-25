@@ -350,7 +350,7 @@ void Model::setAnimation(Animation* animation)
 	state.bonesMatrix.resize(numBones);
 
 	if( animations.empty() )
-		animations.push_back(state);
+		animations.pushBack(state);
 	else
 		animations[0] = state;
 
@@ -379,7 +379,7 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 	if( animations.size() >= 2 )
 		animations[1] = animations[0];
 	else
-		animations.push_back( animations[0] );
+		animations.pushBack( animations[0] );
 		
 	setAnimation(name);
 	animationFadeTime = fadeTime;
@@ -481,7 +481,7 @@ void Model::setupShaderSkinning()
 	for( size_t i = 0; i < bones.size(); ++i )
 	{
 		const Matrix4x3& bone = bones[i];
-		matrices.push_back( Matrix4x4(bone) );
+		matrices.pushBack( Matrix4x4(bone) );
 	}
 
 	// Send them to the uniform buffer.
@@ -513,7 +513,7 @@ void Model::setAttachment(const String& boneName, const EntityPtr& node)
 	attachment->bone = bone;
 	attachment->node = node;
 
-	attachments.push_back(attachment);
+	attachments.pushBack(attachment);
 }
 
 //-----------------------------------//
@@ -547,17 +547,17 @@ void Model::onDebugDraw( DebugDrawer& debug, DebugDrawFlags debugFlags )
 		
 		parentVertex = bones[bone->indexParent]*parentVertex;
 
-		pos.push_back( bones[bone->index]*vertex );
-		colors.push_back( Color::Blue );
+		pos.pushBack( bones[bone->index]*vertex );
+		colors.pushBack( Color::Blue );
 
-		pos.push_back( parentVertex);
-		colors.push_back( Color::Blue );
+		pos.pushBack( parentVertex);
+		colors.pushBack( Color::Blue );
 	}
 
 	gb->set( VertexAttribute::Position, pos );
 	gb->set( VertexAttribute::Color, colors );
 
-	debug.renderables.push_back(debugRenderable.get());
+	debug.renderables.pushBack(debugRenderable.get());
 }
 
 //-----------------------------------//

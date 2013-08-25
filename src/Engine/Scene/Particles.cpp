@@ -166,8 +166,8 @@ void Particles::update(float delta)
 		particle.life -= float(delta);
 		particle.color.a = particle.life / maxLife;
 
-		positions.push_back( particle.position );
-		colors.push_back( particle.color );
+		positions.pushBack( particle.position );
+		colors.pushBack( particle.color );
 	}
 
 	gb->declarations.reset();
