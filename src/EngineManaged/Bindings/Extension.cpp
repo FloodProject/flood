@@ -76,7 +76,7 @@ void Flood::Extension::Instance::set(System::IntPtr object)
 
 Flood::ExtensionMetadata Flood::Extension::Metadata::get()
 {
-    auto ret = ((::Extension*)NativePtr)->getMetadata();
-    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
+    auto __ret = ((::Extension*)NativePtr)->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)__ret);
 }
 

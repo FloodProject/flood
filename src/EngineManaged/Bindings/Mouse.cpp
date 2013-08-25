@@ -146,8 +146,8 @@ Flood::Mouse::Mouse(System::IntPtr native)
 bool Flood::Mouse::IsButtonPressed(Flood::MouseButton button)
 {
     auto arg0 = (::MouseButton)button;
-    auto ret = ((::Mouse*)NativePtr)->isButtonPressed(arg0);
-    return ret;
+    auto __ret = ((::Mouse*)NativePtr)->isButtonPressed(arg0);
+    return __ret;
 }
 
 void Flood::Mouse::ProcessEvent(Flood::InputEvent^ event)
@@ -178,14 +178,14 @@ int Flood::Mouse::GetHashCode()
 
 Flood::MouseInfo^ Flood::Mouse::MouseInfo::get()
 {
-    auto &ret = ((::Mouse*)NativePtr)->getMouseInfo();
-    return gcnew Flood::MouseInfo((::MouseInfo*)&ret);
+    auto &__ret = ((::Mouse*)NativePtr)->getMouseInfo();
+    return gcnew Flood::MouseInfo((::MouseInfo*)&__ret);
 }
 
 Flood::InputDeviceType Flood::Mouse::Type::get()
 {
-    auto ret = ((::Mouse*)NativePtr)->getType();
-    return (Flood::InputDeviceType)ret;
+    auto __ret = ((::Mouse*)NativePtr)->getType();
+    return (Flood::InputDeviceType)__ret;
 }
 
 void Flood::Mouse::MouseMove::add(System::Action<Flood::MouseMoveEvent^>^ evt)

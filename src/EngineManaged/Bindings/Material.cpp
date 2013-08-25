@@ -47,8 +47,8 @@ void Flood::Material::SetShader(System::String^ name)
 
 bool Flood::Material::IsBlendingEnabled()
 {
-    auto ret = ((::Material*)NativePtr)->isBlendingEnabled();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->isBlendingEnabled();
+    return __ret;
 }
 
 void Flood::Material::SetBlending(Flood::BlendSource _0, Flood::BlendDestination _1)
@@ -75,15 +75,15 @@ void Flood::Material::SetTexture(unsigned char unit, Flood::ResourceHandle<Flood
 Flood::ResourceHandle<Flood::Image^> Flood::Material::GetTexture(unsigned char unit)
 {
     auto arg0 = (::uint8)unit;
-    auto ret = ((::Material*)NativePtr)->getTexture(arg0);
-    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+    auto __ret = ((::Material*)NativePtr)->getTexture(arg0);
+    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
     auto arg0 = (::uint8)unit;
-    auto &ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
-    return gcnew Flood::TextureUnit((::TextureUnit*)&ret);
+    auto &__ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
+    return gcnew Flood::TextureUnit((::TextureUnit*)&__ret);
 }
 
 void Flood::Material::Init()
@@ -109,20 +109,20 @@ Flood::ResourceHandle<Flood::Material^> Flood::Material::Create(Flood::Allocator
 {
     auto arg0 = (::Allocator*)_0->NativePtr;
     auto arg1 = clix::marshalString<clix::E_UTF8>(name);
-    auto ret = ::MaterialCreate(arg0, arg1);
-    return Flood::ResourceHandle<Flood::Material^>(ret.id);
+    auto __ret = ::MaterialCreate(arg0, arg1);
+    return Flood::ResourceHandle<Flood::Material^>(__ret.id);
 }
 
 Flood::ResourceGroup Flood::Material::ResourceGroup::get()
 {
-    auto ret = ((::Material*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::Material*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 
 System::String^ Flood::Material::Name::get()
 {
-    auto &ret = ((::Material*)NativePtr)->getName();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto &__ret = ((::Material*)NativePtr)->getName();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 void Flood::Material::Name::set(System::String^ value)
@@ -134,8 +134,8 @@ void Flood::Material::Name::set(System::String^ value)
 
 Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::Shader::get()
 {
-    auto &ret = ((::Material*)NativePtr)->getShader();
-    return Flood::ResourceHandle<Flood::ShaderMaterial^>(ret.id);
+    auto &__ret = ((::Material*)NativePtr)->getShader();
+    return Flood::ResourceHandle<Flood::ShaderMaterial^>(__ret.id);
 }
 
 void Flood::Material::Shader::set(Flood::ResourceHandle<Flood::ShaderMaterial^> value)
@@ -147,8 +147,8 @@ void Flood::Material::Shader::set(Flood::ResourceHandle<Flood::ShaderMaterial^> 
 
 bool Flood::Material::DepthWrite::get()
 {
-    auto ret = ((::Material*)NativePtr)->getDepthWrite();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getDepthWrite();
+    return __ret;
 }
 
 void Flood::Material::DepthWrite::set(bool value)
@@ -159,8 +159,8 @@ void Flood::Material::DepthWrite::set(bool value)
 
 bool Flood::Material::DepthTest::get()
 {
-    auto ret = ((::Material*)NativePtr)->getDepthTest();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getDepthTest();
+    return __ret;
 }
 
 void Flood::Material::DepthTest::set(bool value)
@@ -171,8 +171,8 @@ void Flood::Material::DepthTest::set(bool value)
 
 Flood::DepthCompare Flood::Material::DepthCompare::get()
 {
-    auto ret = ((::Material*)NativePtr)->getDepthCompare();
-    return (Flood::DepthCompare)ret;
+    auto __ret = ((::Material*)NativePtr)->getDepthCompare();
+    return (Flood::DepthCompare)__ret;
 }
 
 void Flood::Material::DepthCompare::set(Flood::DepthCompare value)
@@ -184,8 +184,8 @@ void Flood::Material::DepthCompare::set(Flood::DepthCompare value)
 
 Flood::Vector2 Flood::Material::DepthRange::get()
 {
-    auto ret = ((::Material*)NativePtr)->getDepthRange();
-    return Flood::Vector2((::Vector2*)&ret);
+    auto __ret = ((::Material*)NativePtr)->getDepthRange();
+    return Flood::Vector2((::Vector2*)&__ret);
 }
 
 void Flood::Material::DepthRange::set(Flood::Vector2 value)
@@ -200,8 +200,8 @@ void Flood::Material::DepthRange::set(Flood::Vector2 value)
 
 Flood::Vector2 Flood::Material::DepthOffset::get()
 {
-    auto ret = ((::Material*)NativePtr)->getDepthOffset();
-    return Flood::Vector2((::Vector2*)&ret);
+    auto __ret = ((::Material*)NativePtr)->getDepthOffset();
+    return Flood::Vector2((::Vector2*)&__ret);
 }
 
 void Flood::Material::DepthOffset::set(Flood::Vector2 value)
@@ -216,8 +216,8 @@ void Flood::Material::DepthOffset::set(Flood::Vector2 value)
 
 bool Flood::Material::AlphaTest::get()
 {
-    auto ret = ((::Material*)NativePtr)->getAlphaTest();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getAlphaTest();
+    return __ret;
 }
 
 void Flood::Material::AlphaTest::set(bool value)
@@ -228,8 +228,8 @@ void Flood::Material::AlphaTest::set(bool value)
 
 float Flood::Material::LineWidth::get()
 {
-    auto ret = ((::Material*)NativePtr)->getLineWidth();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getLineWidth();
+    return __ret;
 }
 
 void Flood::Material::LineWidth::set(float value)
@@ -240,8 +240,8 @@ void Flood::Material::LineWidth::set(float value)
 
 bool Flood::Material::LineSmoothing::get()
 {
-    auto ret = ((::Material*)NativePtr)->getLineSmoothing();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getLineSmoothing();
+    return __ret;
 }
 
 void Flood::Material::LineSmoothing::set(bool value)
@@ -252,8 +252,8 @@ void Flood::Material::LineSmoothing::set(bool value)
 
 bool Flood::Material::BackfaceCulling::get()
 {
-    auto ret = ((::Material*)NativePtr)->getBackfaceCulling();
-    return ret;
+    auto __ret = ((::Material*)NativePtr)->getBackfaceCulling();
+    return __ret;
 }
 
 void Flood::Material::BackfaceCulling::set(bool value)
@@ -264,14 +264,14 @@ void Flood::Material::BackfaceCulling::set(bool value)
 
 Flood::BlendSource Flood::Material::BlendSource::get()
 {
-    auto ret = ((::Material*)NativePtr)->getBlendSource();
-    return (Flood::BlendSource)ret;
+    auto __ret = ((::Material*)NativePtr)->getBlendSource();
+    return (Flood::BlendSource)__ret;
 }
 
 Flood::BlendDestination Flood::Material::BlendDestination::get()
 {
-    auto ret = ((::Material*)NativePtr)->getBlendDestination();
-    return (Flood::BlendDestination)ret;
+    auto __ret = ((::Material*)NativePtr)->getBlendDestination();
+    return (Flood::BlendDestination)__ret;
 }
 
 System::String^ Flood::Material::Name1::get()

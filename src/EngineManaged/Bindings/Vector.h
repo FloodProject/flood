@@ -30,33 +30,25 @@ namespace Flood
         float X;
         float Y;
         float Z;
-        bool operator==(Flood::Vector3 v);
+        static bool operator==(Flood::Vector3 __op, Flood::Vector3 v);
 
-        bool operator!=(Flood::Vector3 v);
+        static bool operator!=(Flood::Vector3 __op, Flood::Vector3 v);
 
-        bool operator<(Flood::Vector3 rhs);
+        static bool operator<(Flood::Vector3 __op, Flood::Vector3 rhs);
 
-        bool operator>(Flood::Vector3 rhs);
+        static bool operator>(Flood::Vector3 __op, Flood::Vector3 rhs);
 
-        Flood::Vector3 operator+(Flood::Vector3 v);
+        static Flood::Vector3 operator+(Flood::Vector3 __op, Flood::Vector3 v);
 
-        Flood::Vector3 operator+=(Flood::Vector3 v);
+        static Flood::Vector3 operator-(Flood::Vector3 __op);
 
-        Flood::Vector3 operator-();
+        static Flood::Vector3 operator-(Flood::Vector3 __op, Flood::Vector3 v);
 
-        Flood::Vector3 operator-(Flood::Vector3 v);
+        static Flood::Vector3 operator*(Flood::Vector3 __op, float s);
 
-        Flood::Vector3 operator-=(Flood::Vector3 v);
+        static Flood::Vector3 operator*(Flood::Vector3 __op, Flood::Vector3 v);
 
-        Flood::Vector3 operator*(float s);
-
-        Flood::Vector3 operator*(Flood::Vector3 v);
-
-        Flood::Vector3 operator*=(float s);
-
-        Flood::Vector3 operator/(float s);
-
-        Flood::Vector3 operator/=(float s);
+        static Flood::Vector3 operator/(Flood::Vector3 __op, float s);
 
         void SetZero();
 
@@ -116,33 +108,25 @@ namespace Flood
         float Y;
         float Z;
         float W;
-        bool operator==(Flood::Vector4 v);
+        static bool operator==(Flood::Vector4 __op, Flood::Vector4 v);
 
-        bool operator!=(Flood::Vector4 v);
+        static bool operator!=(Flood::Vector4 __op, Flood::Vector4 v);
 
-        bool operator<(Flood::Vector4 rhs);
+        static bool operator<(Flood::Vector4 __op, Flood::Vector4 rhs);
 
-        bool operator>(Flood::Vector4 rhs);
+        static bool operator>(Flood::Vector4 __op, Flood::Vector4 rhs);
 
-        Flood::Vector4 operator+(Flood::Vector4 v);
+        static Flood::Vector4 operator+(Flood::Vector4 __op, Flood::Vector4 v);
 
-        Flood::Vector4 operator+=(Flood::Vector4 v);
+        static Flood::Vector4 operator-(Flood::Vector4 __op);
 
-        Flood::Vector4 operator-();
+        static Flood::Vector4 operator-(Flood::Vector4 __op, Flood::Vector4 v);
 
-        Flood::Vector4 operator-(Flood::Vector4 v);
+        static Flood::Vector4 operator*(Flood::Vector4 __op, float s);
 
-        Flood::Vector4 operator-=(Flood::Vector4 v);
+        static Flood::Vector4 operator*(Flood::Vector4 __op, Flood::Vector4 v);
 
-        Flood::Vector4 operator*(float s);
-
-        Flood::Vector4 operator*(Flood::Vector4 v);
-
-        Flood::Vector4 operator*=(float s);
-
-        Flood::Vector4 operator/(float s);
-
-        Flood::Vector4 operator/=(float s);
+        static Flood::Vector4 operator/(Flood::Vector4 __op, float s);
 
         void SetZero();
 
@@ -178,27 +162,23 @@ namespace Flood
 
         float X;
         float Y;
-        bool operator==(Flood::Vector2 v);
+        static bool operator==(Flood::Vector2 __op, Flood::Vector2 v);
 
-        bool operator!=(Flood::Vector2 v);
+        static bool operator!=(Flood::Vector2 __op, Flood::Vector2 v);
 
-        bool operator<(Flood::Vector2 rhs);
+        static bool operator<(Flood::Vector2 __op, Flood::Vector2 rhs);
 
-        bool operator>(Flood::Vector2 rhs);
+        static bool operator>(Flood::Vector2 __op, Flood::Vector2 rhs);
 
-        Flood::Vector2 operator+(Flood::Vector2 v);
+        static Flood::Vector2 operator+(Flood::Vector2 __op, Flood::Vector2 v);
 
-        Flood::Vector2 operator+=(Flood::Vector2 v);
+        static Flood::Vector2 operator-(Flood::Vector2 __op);
 
-        Flood::Vector2 operator-();
+        static Flood::Vector2 operator-(Flood::Vector2 __op, Flood::Vector2 v);
 
-        Flood::Vector2 operator-(Flood::Vector2 v);
+        static Flood::Vector2 operator*(Flood::Vector2 __op, float s);
 
-        Flood::Vector2 operator-=(Flood::Vector2 v);
-
-        Flood::Vector2 operator*(float s);
-
-        Flood::Vector2 operator/(int s);
+        static Flood::Vector2 operator/(Flood::Vector2 __op, int s);
 
         void SetZero();
 
@@ -226,27 +206,23 @@ namespace Flood
 
         int X;
         int Y;
-        bool operator==(Flood::Vector2i v);
+        static bool operator==(Flood::Vector2i __op, Flood::Vector2i v);
 
-        bool operator!=(Flood::Vector2i v);
+        static bool operator!=(Flood::Vector2i __op, Flood::Vector2i v);
 
-        bool operator<(Flood::Vector2i rhs);
+        static bool operator<(Flood::Vector2i __op, Flood::Vector2i rhs);
 
-        bool operator>(Flood::Vector2i rhs);
+        static bool operator>(Flood::Vector2i __op, Flood::Vector2i rhs);
 
-        Flood::Vector2i operator+(Flood::Vector2i v);
+        static Flood::Vector2i operator+(Flood::Vector2i __op, Flood::Vector2i v);
 
-        Flood::Vector2i operator+=(Flood::Vector2i v);
+        static Flood::Vector2i operator-(Flood::Vector2i __op);
 
-        Flood::Vector2i operator-();
+        static Flood::Vector2i operator-(Flood::Vector2i __op, Flood::Vector2i v);
 
-        Flood::Vector2i operator-(Flood::Vector2i v);
+        static Flood::Vector2i operator*(Flood::Vector2i __op, int s);
 
-        Flood::Vector2i operator-=(Flood::Vector2i v);
-
-        Flood::Vector2i operator*(int s);
-
-        Flood::Vector2i operator/(int s);
+        static Flood::Vector2i operator/(Flood::Vector2i __op, int s);
 
         void Zero();
 

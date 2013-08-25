@@ -47,9 +47,9 @@ namespace Flood
 
         Flood::Matrix4x3 Transpose();
 
-        Flood::Vector3 operator*(Flood::Vector3 p);
+        static Flood::Vector3 operator*(Flood::Matrix4x3 __op, Flood::Vector3 p);
 
-        Flood::Matrix4x3 operator*(Flood::Matrix4x3 m);
+        static Flood::Matrix4x3 operator*(Flood::Matrix4x3 __op, Flood::Matrix4x3 m);
 
         static Flood::Matrix4x3 Lerp(Flood::Matrix4x3 a, Flood::Matrix4x3 b, float t);
 

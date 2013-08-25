@@ -48,35 +48,35 @@ void Flood::GeometryBuffer::Clear()
 void Flood::GeometryBuffer::Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto arg1 = (uint8*)data.ToPointer();
+    auto arg1 = (::uint8*)data.ToPointer();
     auto arg2 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1, arg2);
 }
 
 void Flood::GeometryBuffer::Set(System::IntPtr data, unsigned int size)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data.ToPointer();
     auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::Add(System::IntPtr data, unsigned int size)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data.ToPointer();
     auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->add(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::SetIndex(System::IntPtr data, unsigned int size)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data.ToPointer();
     auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->setIndex(arg0, arg1);
 }
 
 void Flood::GeometryBuffer::AddIndex(System::IntPtr data, unsigned int size)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data.ToPointer();
     auto arg1 = (::uint32)size;
     ((::GeometryBuffer*)NativePtr)->addIndex(arg0, arg1);
 }
@@ -89,23 +89,23 @@ void Flood::GeometryBuffer::AddIndex(unsigned short index)
 
 bool Flood::GeometryBuffer::IsIndexed()
 {
-    auto ret = ((::GeometryBuffer*)NativePtr)->isIndexed();
-    return ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->isIndexed();
+    return __ret;
 }
 
 System::IntPtr Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _0, unsigned int i)
 {
     auto arg0 = (::VertexAttribute)_0;
     auto arg1 = (::uint32)i;
-    auto ret = ((::GeometryBuffer*)NativePtr)->getAttribute(arg0, arg1);
-    return IntPtr(ret);
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getAttribute(arg0, arg1);
+    return IntPtr(__ret);
 }
 
 char Flood::GeometryBuffer::GetAttributeStride(Flood::VertexAttribute _0)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto ret = ((::GeometryBuffer*)NativePtr)->getAttributeStride(arg0);
-    return ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getAttributeStride(arg0);
+    return __ret;
 }
 
 void Flood::GeometryBuffer::ClearIndexes()
@@ -139,8 +139,8 @@ void Flood::GeometryBuffer::Instance::set(System::IntPtr object)
 
 Flood::BufferUsage Flood::GeometryBuffer::BufferUsage::get()
 {
-    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferUsage();
-    return (Flood::BufferUsage)ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getBufferUsage();
+    return (Flood::BufferUsage)__ret;
 }
 
 void Flood::GeometryBuffer::BufferUsage::set(Flood::BufferUsage value)
@@ -152,8 +152,8 @@ void Flood::GeometryBuffer::BufferUsage::set(Flood::BufferUsage value)
 
 Flood::BufferAccess Flood::GeometryBuffer::BufferAccess::get()
 {
-    auto ret = ((::GeometryBuffer*)NativePtr)->getBufferAccess();
-    return (Flood::BufferAccess)ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getBufferAccess();
+    return (Flood::BufferAccess)__ret;
 }
 
 void Flood::GeometryBuffer::BufferAccess::set(Flood::BufferAccess value)
@@ -165,14 +165,14 @@ void Flood::GeometryBuffer::BufferAccess::set(Flood::BufferAccess value)
 
 unsigned int Flood::GeometryBuffer::NumVertices::get()
 {
-    auto ret = ((::GeometryBuffer*)NativePtr)->getNumVertices();
-    return ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getNumVertices();
+    return __ret;
 }
 
 unsigned int Flood::GeometryBuffer::NumIndices::get()
 {
-    auto ret = ((::GeometryBuffer*)NativePtr)->getNumIndices();
-    return ret;
+    auto __ret = ((::GeometryBuffer*)NativePtr)->getNumIndices();
+    return __ret;
 }
 
 Flood::BufferUsage Flood::GeometryBuffer::Usage::get()

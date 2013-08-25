@@ -54,11 +54,11 @@ namespace Flood
 
         Flood::Matrix4x4 Transpose();
 
-        Flood::Matrix4x4 operator*(Flood::Matrix4x4 m);
+        static Flood::Matrix4x4 operator*(Flood::Matrix4x4 __op, Flood::Matrix4x4 m);
 
-        Flood::Vector3 operator*(Flood::Vector3 v);
+        static Flood::Vector3 operator*(Flood::Matrix4x4 __op, Flood::Vector3 v);
 
-        Flood::Vector4 operator*(Flood::Vector4 v);
+        static Flood::Vector4 operator*(Flood::Matrix4x4 __op, Flood::Vector4 v);
 
         static Flood::Matrix4x4 CreatePerspective(float FOV, float aspectRatio, float nearPlane, float farPlane);
 

@@ -95,8 +95,8 @@ void Flood::Log::SetDefault()
 
 Flood::Log^ Flood::Log::GetDefault()
 {
-    auto ret = ::LogGetDefault();
-    return gcnew Flood::Log((::Log*)ret);
+    auto __ret = ::LogGetDefault();
+    return gcnew Flood::Log((::Log*)__ret);
 }
 
 void Flood::Log::Info(System::String^ msg)

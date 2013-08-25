@@ -24,8 +24,8 @@ Flood::Resource::Resource(System::IntPtr native)
 
 bool Flood::Resource::IsLoaded()
 {
-    auto ret = ((::Resource*)NativePtr)->isLoaded();
-    return ret;
+    auto __ret = ((::Resource*)NativePtr)->isLoaded();
+    return __ret;
 }
 
 bool Flood::Resource::Equals(System::Object^ object)
@@ -45,8 +45,8 @@ int Flood::Resource::GetHashCode()
 Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate()
 {
     auto arg0 = (::Resource*)NativePtr;
-    auto ret = ::ResourceHandleCreate(arg0);
-    return Flood::ResourceHandle<Flood::Resource^>(ret.id);
+    auto __ret = ::ResourceHandleCreate(arg0);
+    return Flood::ResourceHandle<Flood::Resource^>(__ret.id);
 }
 
 System::IntPtr Flood::Resource::Instance::get()
@@ -61,8 +61,8 @@ void Flood::Resource::Instance::set(System::IntPtr object)
 
 System::String^ Flood::Resource::Path::get()
 {
-    auto &ret = ((::Resource*)NativePtr)->getPath();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto &__ret = ((::Resource*)NativePtr)->getPath();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 void Flood::Resource::Path::set(System::String^ value)
@@ -74,8 +74,8 @@ void Flood::Resource::Path::set(System::String^ value)
 
 Flood::ResourceStatus Flood::Resource::Status::get()
 {
-    auto ret = ((::Resource*)NativePtr)->getStatus();
-    return (Flood::ResourceStatus)ret;
+    auto __ret = ((::Resource*)NativePtr)->getStatus();
+    return (Flood::ResourceStatus)__ret;
 }
 
 void Flood::Resource::Status::set(Flood::ResourceStatus value)
@@ -87,8 +87,8 @@ void Flood::Resource::Status::set(Flood::ResourceStatus value)
 
 Flood::ResourceGroup Flood::Resource::ResourceGroup::get()
 {
-    auto ret = ((::Resource*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::Resource*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 
 System::String^ Flood::Resource::Path1::get()

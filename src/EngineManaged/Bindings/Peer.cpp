@@ -72,26 +72,26 @@ void Flood::Peer::Instance::set(System::IntPtr object)
 
 System::String^ Flood::Peer::HostName::get()
 {
-    auto ret = ((::Peer*)NativePtr)->getHostName();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::Peer*)NativePtr)->getHostName();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 System::String^ Flood::Peer::HostIP::get()
 {
-    auto ret = ((::Peer*)NativePtr)->getHostIP();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::Peer*)NativePtr)->getHostIP();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 Flood::PeerState Flood::Peer::State::get()
 {
-    auto ret = ((::Peer*)NativePtr)->getState();
-    return (Flood::PeerState)ret;
+    auto __ret = ((::Peer*)NativePtr)->getState();
+    return (Flood::PeerState)__ret;
 }
 
 Flood::Session^ Flood::Peer::Session::get()
 {
-    auto ret = ((::Peer*)NativePtr)->getSession();
-    return gcnew Flood::Session((::Session*)ret);
+    auto __ret = ((::Peer*)NativePtr)->getSession();
+    return gcnew Flood::Session((::Session*)__ret);
 }
 
 void Flood::Peer::StateChanged::add(System::Action<Flood::PeerState>^ evt)

@@ -29,8 +29,8 @@ Flood::Packet::Packet(unsigned short id)
 
 int Flood::Packet::Size()
 {
-    auto ret = ((::Packet*)NativePtr)->size();
-    return ret;
+    auto __ret = ((::Packet*)NativePtr)->size();
+    return __ret;
 }
 
 void Flood::Packet::Clear()
@@ -52,14 +52,14 @@ void Flood::Packet::Write(System::Collections::Generic::List<unsigned char>^ dat
 
 System::Collections::Generic::List<unsigned char>^ Flood::Packet::Read()
 {
-    auto ret = ((::Packet*)NativePtr)->read();
-    auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
-    for(auto _element : ret)
+    auto __ret = ((::Packet*)NativePtr)->read();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = _element;
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 bool Flood::Packet::Equals(System::Object^ object)
@@ -88,8 +88,8 @@ void Flood::Packet::Instance::set(System::IntPtr object)
 
 Flood::PacketFlags Flood::Packet::Flags::get()
 {
-    auto ret = ((::Packet*)NativePtr)->getFlags();
-    return (Flood::PacketFlags)ret;
+    auto __ret = ((::Packet*)NativePtr)->getFlags();
+    return (Flood::PacketFlags)__ret;
 }
 
 void Flood::Packet::Flags::set(Flood::PacketFlags value)
@@ -101,8 +101,8 @@ void Flood::Packet::Flags::set(Flood::PacketFlags value)
 
 Flood::PacketFlags Flood::Packet::ProcessedFlags::get()
 {
-    auto ret = ((::Packet*)NativePtr)->getProcessedFlags();
-    return (Flood::PacketFlags)ret;
+    auto __ret = ((::Packet*)NativePtr)->getProcessedFlags();
+    return (Flood::PacketFlags)__ret;
 }
 
 void Flood::Packet::ProcessedFlags::set(Flood::PacketFlags value)
@@ -114,7 +114,7 @@ void Flood::Packet::ProcessedFlags::set(Flood::PacketFlags value)
 
 unsigned short Flood::Packet::Id::get()
 {
-    auto ret = ((::Packet*)NativePtr)->getId();
-    return ret;
+    auto __ret = ((::Packet*)NativePtr)->getId();
+    return __ret;
 }
 

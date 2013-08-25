@@ -56,17 +56,15 @@ namespace Flood
         {
             Flood::EulerAngles get();
         }
-        bool operator==(Flood::Quaternion q);
+        static bool operator==(Flood::Quaternion __op, Flood::Quaternion q);
 
-        bool operator!=(Flood::Quaternion q);
+        static bool operator!=(Flood::Quaternion __op, Flood::Quaternion q);
 
         void SetIdentity();
 
         Flood::Quaternion Conjugate(Flood::Quaternion q);
 
-        Flood::Quaternion operator*(Flood::Quaternion a);
-
-        Flood::Quaternion operator*=(Flood::Quaternion a);
+        static Flood::Quaternion operator*(Flood::Quaternion __op, Flood::Quaternion a);
 
         float Magnitude();
 

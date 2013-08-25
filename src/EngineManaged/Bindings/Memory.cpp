@@ -64,49 +64,49 @@ Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
     auto arg1 = (::int32)size;
-    auto ret = ::AllocatorCreatePool(arg0, arg1);
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorCreatePool(arg0, arg1);
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
     auto arg1 = (::int32)size;
-    auto ret = ::AllocatorCreateBump(arg0, arg1);
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorCreateBump(arg0, arg1);
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateHeap()
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto ret = ::AllocatorCreateHeap(arg0);
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorCreateHeap(arg0);
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateStack()
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto ret = ::AllocatorCreateStack(arg0);
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorCreateStack(arg0);
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetHeap()
 {
-    auto ret = ::AllocatorGetHeap();
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorGetHeap();
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetStack()
 {
-    auto ret = ::AllocatorGetStack();
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto __ret = ::AllocatorGetStack();
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _0)
 {
-    auto arg0 = _0.ToPointer();
-    auto ret = ::AllocatorGetObject(arg0);
-    return gcnew Flood::Allocator((::Allocator*)ret);
+    auto arg0 = (void*)_0.ToPointer();
+    auto __ret = ::AllocatorGetObject(arg0);
+    return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 void Flood::Allocator::DumpInfo()
@@ -203,7 +203,7 @@ System::IntPtr Flood::PoolAllocator::Current::get()
 
 void Flood::PoolAllocator::Current::set(System::IntPtr value)
 {
-    ((::PoolAllocator*)NativePtr)->current = (uint8*)value.ToPointer();
+    ((::PoolAllocator*)NativePtr)->current = (::uint8*)value.ToPointer();
 }
 
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
@@ -244,7 +244,7 @@ System::IntPtr Flood::BumpAllocator::Start::get()
 
 void Flood::BumpAllocator::Start::set(System::IntPtr value)
 {
-    ((::BumpAllocator*)NativePtr)->start = (uint8*)value.ToPointer();
+    ((::BumpAllocator*)NativePtr)->start = (::uint8*)value.ToPointer();
 }
 
 System::IntPtr Flood::BumpAllocator::Current::get()
@@ -254,7 +254,7 @@ System::IntPtr Flood::BumpAllocator::Current::get()
 
 void Flood::BumpAllocator::Current::set(System::IntPtr value)
 {
-    ((::BumpAllocator*)NativePtr)->current = (uint8*)value.ToPointer();
+    ((::BumpAllocator*)NativePtr)->current = (::uint8*)value.ToPointer();
 }
 
 unsigned int Flood::BumpAllocator::Size::get()
@@ -305,6 +305,6 @@ System::IntPtr Flood::HeapAllocator::Space::get()
 
 void Flood::HeapAllocator::Space::set(System::IntPtr value)
 {
-    ((::HeapAllocator*)NativePtr)->space = value.ToPointer();
+    ((::HeapAllocator*)NativePtr)->space = (void*)value.ToPointer();
 }
 

@@ -38,25 +38,22 @@ Flood::Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned 
     this->A = _native.a;
 }
 
-bool Flood::Color::operator==(Flood::Color v)
+bool Flood::Color::operator==(Flood::Color __op, Flood::Color v)
 {
-    auto _this0 = ::Color();
-    _this0.r = (::byte)(::uint8)(*this).R;
-    _this0.g = (::byte)(::uint8)(*this).G;
-    _this0.b = (::byte)(::uint8)(*this).B;
-    _this0.a = (::byte)(::uint8)(*this).A;
     auto _marshal0 = ::Color();
-    _marshal0.r = (::byte)(::uint8)v.R;
-    _marshal0.g = (::byte)(::uint8)v.G;
-    _marshal0.b = (::byte)(::uint8)v.B;
-    _marshal0.a = (::byte)(::uint8)v.A;
+    _marshal0.r = (::byte)(::uint8)__op.R;
+    _marshal0.g = (::byte)(::uint8)__op.G;
+    _marshal0.b = (::byte)(::uint8)__op.B;
+    _marshal0.a = (::byte)(::uint8)__op.A;
     auto arg0 = _marshal0;
-    auto ret = _this0.operator==(arg0);
-    R = _this0.r;
-    G = _this0.g;
-    B = _this0.b;
-    A = _this0.a;
-    return ret;
+    auto _marshal1 = ::Color();
+    _marshal1.r = (::byte)(::uint8)v.R;
+    _marshal1.g = (::byte)(::uint8)v.G;
+    _marshal1.b = (::byte)(::uint8)v.B;
+    _marshal1.a = (::byte)(::uint8)v.A;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 == arg1;
+    return __ret;
 }
 
 bool Flood::Color::NearEqual(Flood::Color a, float tolerance)
@@ -72,27 +69,24 @@ bool Flood::Color::NearEqual(Flood::Color a, float tolerance)
     _marshal0.b = (::byte)(::uint8)a.B;
     _marshal0.a = (::byte)(::uint8)a.A;
     auto arg0 = _marshal0;
-    auto ret = _this0.nearEqual(arg0, tolerance);
+    auto __ret = _this0.nearEqual(arg0, tolerance);
     R = _this0.r;
     G = _this0.g;
     B = _this0.b;
     A = _this0.a;
-    return ret;
+    return __ret;
 }
 
-Flood::Color Flood::Color::operator*(float s)
+Flood::Color Flood::Color::operator*(Flood::Color __op, float s)
 {
-    auto _this0 = ::Color();
-    _this0.r = (::byte)(::uint8)(*this).R;
-    _this0.g = (::byte)(::uint8)(*this).G;
-    _this0.b = (::byte)(::uint8)(*this).B;
-    _this0.a = (::byte)(::uint8)(*this).A;
-    auto ret = _this0.operator*(s);
-    R = _this0.r;
-    G = _this0.g;
-    B = _this0.b;
-    A = _this0.a;
-    return Flood::Color((::Color*)&ret);
+    auto _marshal0 = ::Color();
+    _marshal0.r = (::byte)(::uint8)__op.R;
+    _marshal0.g = (::byte)(::uint8)__op.G;
+    _marshal0.b = (::byte)(::uint8)__op.B;
+    _marshal0.a = (::byte)(::uint8)__op.A;
+    auto arg0 = _marshal0;
+    auto __ret = arg0 * s;
+    return Flood::Color((::Color*)&__ret);
 }
 
 Flood::Color Flood::Color::White::get()

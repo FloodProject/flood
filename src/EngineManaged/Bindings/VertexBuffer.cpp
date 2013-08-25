@@ -66,14 +66,14 @@ unsigned char Flood::VertexElement::Size1::get()
     _this0.stride = (::int8)(*this).Stride;
     _this0.offset = (::uint32)(*this).Offset;
     _this0.size = (::uint32)(*this).Size;
-    auto ret = _this0.getSize();
+    auto __ret = _this0.getSize();
     Attribute = (Flood::VertexAttribute)_this0.attribute;
     Type = (Flood::VertexDataType)_this0.type;
     Components = _this0.components;
     Stride = _this0.stride;
     Offset = _this0.offset;
     Size = _this0.size;
-    return ret;
+    return __ret;
 }
 
 Flood::VertexDeclaration::VertexDeclaration(::VertexDeclaration* native)
@@ -124,15 +124,15 @@ void Flood::VertexDeclaration::Reset()
 Flood::VertexElement Flood::VertexDeclaration::Find(Flood::VertexAttribute _0)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto ret = ((::VertexDeclaration*)NativePtr)->find(arg0);
-    return Flood::VertexElement((::VertexElement*)ret);
+    auto __ret = ((::VertexDeclaration*)NativePtr)->find(arg0);
+    return Flood::VertexElement((::VertexElement*)__ret);
 }
 
 unsigned char Flood::VertexDeclaration::GetOffset(Flood::VertexAttribute _0)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto ret = ((::VertexDeclaration*)NativePtr)->getOffset(arg0);
-    return ret;
+    auto __ret = ((::VertexDeclaration*)NativePtr)->getOffset(arg0);
+    return __ret;
 }
 
 void Flood::VertexDeclaration::CalculateStrides()
@@ -171,8 +171,8 @@ void Flood::VertexDeclaration::Instance::set(System::IntPtr object)
 
 unsigned char Flood::VertexDeclaration::VertexSize::get()
 {
-    auto ret = ((::VertexDeclaration*)NativePtr)->getVertexSize();
-    return ret;
+    auto __ret = ((::VertexDeclaration*)NativePtr)->getVertexSize();
+    return __ret;
 }
 
 System::Collections::Generic::List<Flood::VertexElement>^ Flood::VertexDeclaration::Decls::get()
@@ -223,8 +223,8 @@ Flood::VertexBuffer::VertexBuffer()
 
 bool Flood::VertexBuffer::IsBuilt()
 {
-    auto ret = ((::VertexBuffer*)NativePtr)->isBuilt();
-    return ret;
+    auto __ret = ((::VertexBuffer*)NativePtr)->isBuilt();
+    return __ret;
 }
 
 void Flood::VertexBuffer::ForceRebuild()

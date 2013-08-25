@@ -108,7 +108,7 @@ void Flood::InputDevice::Instance::set(System::IntPtr object)
 
 Flood::InputDeviceType Flood::InputDevice::Type::get()
 {
-    auto ret = ((::InputDevice*)NativePtr)->getType();
-    return (Flood::InputDeviceType)ret;
+    auto __ret = ((::InputDevice*)NativePtr)->getType();
+    return (Flood::InputDeviceType)__ret;
 }
 

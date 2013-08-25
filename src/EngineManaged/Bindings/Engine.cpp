@@ -77,14 +77,14 @@ void Flood::Engine::Instance::set(System::IntPtr object)
 
 Flood::ResourceManager^ Flood::Engine::ResourceManager::get()
 {
-    auto ret = ((::Engine*)NativePtr)->getResourceManager();
-    return gcnew Flood::ResourceManager((::ResourceManager*)ret);
+    auto __ret = ((::Engine*)NativePtr)->getResourceManager();
+    return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
 }
 
 Flood::InputManager^ Flood::Engine::InputManager::get()
 {
-    auto ret = ((::Engine*)NativePtr)->getInputManager();
-    return gcnew Flood::InputManager((::InputManager*)ret);
+    auto __ret = ((::Engine*)NativePtr)->getInputManager();
+    return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
 void Flood::Engine::InputManager::set(Flood::InputManager^ value)
@@ -96,8 +96,8 @@ void Flood::Engine::InputManager::set(Flood::InputManager^ value)
 
 Flood::WindowManager^ Flood::Engine::WindowManager::get()
 {
-    auto ret = ((::Engine*)NativePtr)->getWindowManager();
-    return gcnew Flood::WindowManager((::WindowManager*)ret);
+    auto __ret = ((::Engine*)NativePtr)->getWindowManager();
+    return gcnew Flood::WindowManager((::WindowManager*)__ret);
 }
 
 void Flood::Engine::WindowManager::set(Flood::WindowManager^ value)
@@ -109,13 +109,13 @@ void Flood::Engine::WindowManager::set(Flood::WindowManager^ value)
 
 Flood::Log^ Flood::Engine::Logger::get()
 {
-    auto ret = ((::Engine*)NativePtr)->getLogger();
-    return gcnew Flood::Log((::Log*)ret);
+    auto __ret = ((::Engine*)NativePtr)->getLogger();
+    return gcnew Flood::Log((::Log*)__ret);
 }
 
 Flood::Engine^ Flood::FloodEngine::GetEngine()
 {
-    auto ret = ::GetEngine();
-    return gcnew Flood::Engine((::Engine*)ret);
+    auto __ret = ::GetEngine();
+    return gcnew Flood::Engine((::Engine*)__ret);
 }
 

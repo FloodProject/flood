@@ -12,8 +12,8 @@ using namespace System::Runtime::InteropServices;
 
 bool Flood::FloodNetwork::NetworkInitialize()
 {
-    auto ret = ::NetworkInitialize();
-    return ret;
+    auto __ret = ::NetworkInitialize();
+    return __ret;
 }
 
 void Flood::FloodNetwork::NetworkDeinitialize()

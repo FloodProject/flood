@@ -32,8 +32,8 @@ Flood::Keyboard::Keyboard()
 bool Flood::Keyboard::IsKeyPressed(Flood::Keys keyCode)
 {
     auto arg0 = (::Keys)keyCode;
-    auto ret = ((::Keyboard*)NativePtr)->isKeyPressed(arg0);
-    return ret;
+    auto __ret = ((::Keyboard*)NativePtr)->isKeyPressed(arg0);
+    return __ret;
 }
 
 void Flood::Keyboard::ResetKeys()
@@ -57,14 +57,14 @@ int Flood::Keyboard::GetHashCode()
 
 System::Collections::Generic::List<bool>^ Flood::Keyboard::KeyState::get()
 {
-    auto &ret = ((::Keyboard*)NativePtr)->getKeyState();
-    auto _tmpret = gcnew System::Collections::Generic::List<bool>();
-    for(auto _element : ret)
+    auto &__ret = ((::Keyboard*)NativePtr)->getKeyState();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<bool>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = _element;
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 void Flood::Keyboard::KeyPress::add(System::Action<Flood::KeyEvent^>^ evt)

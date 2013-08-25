@@ -64,8 +64,8 @@ Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
 {
     auto arg0 = (::uint16)x;
     auto arg1 = (::uint16)y;
-    auto ret = ((::RenderContext*)NativePtr)->getPixel(arg0, arg1);
-    return Flood::Color((::Color*)&ret);
+    auto __ret = ((::RenderContext*)NativePtr)->getPixel(arg0, arg1);
+    return Flood::Color((::Color*)&__ret);
 }
 
 bool Flood::RenderContext::Equals(System::Object^ object)

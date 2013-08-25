@@ -60,8 +60,8 @@ void Flood::Buffer::Instance::set(System::IntPtr object)
 
 Flood::BufferUsage Flood::Buffer::BufferUsage::get()
 {
-    auto ret = ((::Buffer*)NativePtr)->getBufferUsage();
-    return (Flood::BufferUsage)ret;
+    auto __ret = ((::Buffer*)NativePtr)->getBufferUsage();
+    return (Flood::BufferUsage)__ret;
 }
 
 void Flood::Buffer::BufferUsage::set(Flood::BufferUsage value)
@@ -73,8 +73,8 @@ void Flood::Buffer::BufferUsage::set(Flood::BufferUsage value)
 
 Flood::BufferAccess Flood::Buffer::BufferAccess::get()
 {
-    auto ret = ((::Buffer*)NativePtr)->getBufferAccess();
-    return (Flood::BufferAccess)ret;
+    auto __ret = ((::Buffer*)NativePtr)->getBufferAccess();
+    return (Flood::BufferAccess)__ret;
 }
 
 void Flood::Buffer::BufferAccess::set(Flood::BufferAccess value)
@@ -86,8 +86,8 @@ void Flood::Buffer::BufferAccess::set(Flood::BufferAccess value)
 
 Flood::GeometryBuffer^ Flood::Buffer::GeometryBuffer::get()
 {
-    auto ret = ((::Buffer*)NativePtr)->getGeometryBuffer();
-    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)ret);
+    auto __ret = ((::Buffer*)NativePtr)->getGeometryBuffer();
+    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret);
 }
 
 void Flood::Buffer::GeometryBuffer::set(Flood::GeometryBuffer^ value)

@@ -38,19 +38,19 @@ int Flood::ShaderMaterial::GetHashCode()
 
 System::String^ Flood::ShaderMaterial::VertexSource::get()
 {
-    auto ret = ((::ShaderMaterial*)NativePtr)->getVertexSource();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::ShaderMaterial*)NativePtr)->getVertexSource();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 System::String^ Flood::ShaderMaterial::FragmentSource::get()
 {
-    auto ret = ((::ShaderMaterial*)NativePtr)->getFragmentSource();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::ShaderMaterial*)NativePtr)->getFragmentSource();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 Flood::ResourceGroup Flood::ShaderMaterial::ResourceGroup::get()
 {
-    auto ret = ((::ShaderMaterial*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::ShaderMaterial*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 

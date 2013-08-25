@@ -47,8 +47,8 @@ Flood::UniformBufferElement Flood::UniformBuffer::GetElement(System::String^ nam
     auto _arg0 = clix::marshalString<clix::E_UTF8>(name);
     auto arg0 = _arg0.c_str();
     auto arg1 = (::size_t)size;
-    auto ret = ((::UniformBuffer*)NativePtr)->getElement(arg0, arg1);
-    return Flood::UniformBufferElement((::UniformBufferElement*)ret);
+    auto __ret = ((::UniformBuffer*)NativePtr)->getElement(arg0, arg1);
+    return Flood::UniformBufferElement((::UniformBufferElement*)__ret);
 }
 
 void Flood::UniformBuffer::RemoveUniform(System::String^ slot)

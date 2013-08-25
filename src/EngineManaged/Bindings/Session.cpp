@@ -55,14 +55,14 @@ void Flood::Session::Instance::set(System::IntPtr object)
 
 Flood::SessionState Flood::Session::State::get()
 {
-    auto ret = ((::Session*)NativePtr)->getState();
-    return (Flood::SessionState)ret;
+    auto __ret = ((::Session*)NativePtr)->getState();
+    return (Flood::SessionState)__ret;
 }
 
 Flood::Peer^ Flood::Session::Peer::get()
 {
-    auto ret = ((::Session*)NativePtr)->getPeer();
-    return gcnew Flood::Peer((::Peer*)ret);
+    auto __ret = ((::Session*)NativePtr)->getPeer();
+    return gcnew Flood::Peer((::Peer*)__ret);
 }
 
 void Flood::Session::StateChange::add(System::Action<Flood::SessionState>^ evt)

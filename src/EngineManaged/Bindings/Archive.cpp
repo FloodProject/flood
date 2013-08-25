@@ -35,36 +35,36 @@ Flood::Archive::Archive(System::String^ path)
 bool Flood::Archive::Open(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::Archive*)NativePtr)->open(arg0);
-    return ret;
+    auto __ret = ((::Archive*)NativePtr)->open(arg0);
+    return __ret;
 }
 
 bool Flood::Archive::Close()
 {
-    auto ret = ((::Archive*)NativePtr)->close();
-    return ret;
+    auto __ret = ((::Archive*)NativePtr)->close();
+    return __ret;
 }
 
 Flood::Stream^ Flood::Archive::OpenFile(System::String^ path, Flood::Allocator^ alloc)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
-    auto ret = ((::Archive*)NativePtr)->openFile(arg0, arg1);
-    return gcnew Flood::Stream((::Stream*)ret);
+    auto __ret = ((::Archive*)NativePtr)->openFile(arg0, arg1);
+    return gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::Archive::ExistsFile(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::Archive*)NativePtr)->existsFile(arg0);
-    return ret;
+    auto __ret = ((::Archive*)NativePtr)->existsFile(arg0);
+    return __ret;
 }
 
 bool Flood::Archive::ExistsDir(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::Archive*)NativePtr)->existsDir(arg0);
-    return ret;
+    auto __ret = ((::Archive*)NativePtr)->existsDir(arg0);
+    return __ret;
 }
 
 void Flood::Archive::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
@@ -93,15 +93,15 @@ void Flood::Archive::EnumerateDirs(System::Collections::Generic::List<System::St
 
 bool Flood::Archive::Monitor()
 {
-    auto ret = ((::Archive*)NativePtr)->monitor();
-    return ret;
+    auto __ret = ((::Archive*)NativePtr)->monitor();
+    return __ret;
 }
 
 System::String^ Flood::Archive::CombinePath(System::String^ filePath)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(filePath);
-    auto ret = ((::Archive*)NativePtr)->combinePath(arg0);
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::Archive*)NativePtr)->combinePath(arg0);
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 bool Flood::Archive::Equals(System::Object^ object)
@@ -140,7 +140,7 @@ System::IntPtr Flood::Archive::Userdata::get()
 
 void Flood::Archive::Userdata::set(System::IntPtr value)
 {
-    ((::Archive*)NativePtr)->userdata = value.ToPointer();
+    ((::Archive*)NativePtr)->userdata = (void*)value.ToPointer();
 }
 
 unsigned int Flood::Archive::WatchId::get()
@@ -183,36 +183,36 @@ Flood::ArchiveVirtual::ArchiveVirtual()
 bool Flood::ArchiveVirtual::Open(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveVirtual*)NativePtr)->open(arg0);
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->open(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveVirtual::Close()
 {
-    auto ret = ((::ArchiveVirtual*)NativePtr)->close();
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->close();
+    return __ret;
 }
 
 Flood::Stream^ Flood::ArchiveVirtual::OpenFile(System::String^ path, Flood::Allocator^ alloc)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
-    auto ret = ((::ArchiveVirtual*)NativePtr)->openFile(arg0, arg1);
-    return gcnew Flood::Stream((::Stream*)ret);
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->openFile(arg0, arg1);
+    return gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveVirtual::ExistsFile(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveVirtual*)NativePtr)->existsFile(arg0);
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->existsFile(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveVirtual::ExistsDir(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveVirtual*)NativePtr)->existsDir(arg0);
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->existsDir(arg0);
+    return __ret;
 }
 
 void Flood::ArchiveVirtual::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
@@ -241,8 +241,8 @@ void Flood::ArchiveVirtual::EnumerateDirs(System::Collections::Generic::List<Sys
 
 bool Flood::ArchiveVirtual::Monitor()
 {
-    auto ret = ((::ArchiveVirtual*)NativePtr)->monitor();
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->monitor();
+    return __ret;
 }
 
 bool Flood::ArchiveVirtual::ArchiveMount(Flood::Archive^ mount, System::String^ mountPath)
@@ -317,36 +317,36 @@ Flood::ArchiveDirectory::ArchiveDirectory(System::String^ _0)
 bool Flood::ArchiveDirectory::Open(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveDirectory*)NativePtr)->open(arg0);
-    return ret;
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->open(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveDirectory::Close()
 {
-    auto ret = ((::ArchiveDirectory*)NativePtr)->close();
-    return ret;
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->close();
+    return __ret;
 }
 
 Flood::Stream^ Flood::ArchiveDirectory::OpenFile(System::String^ path, Flood::Allocator^ alloc)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
-    auto ret = ((::ArchiveDirectory*)NativePtr)->openFile(arg0, arg1);
-    return gcnew Flood::Stream((::Stream*)ret);
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->openFile(arg0, arg1);
+    return gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveDirectory::ExistsFile(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveDirectory*)NativePtr)->existsFile(arg0);
-    return ret;
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->existsFile(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveDirectory::ExistsDir(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveDirectory*)NativePtr)->existsDir(arg0);
-    return ret;
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->existsDir(arg0);
+    return __ret;
 }
 
 void Flood::ArchiveDirectory::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
@@ -375,8 +375,8 @@ void Flood::ArchiveDirectory::EnumerateDirs(System::Collections::Generic::List<S
 
 bool Flood::ArchiveDirectory::Monitor()
 {
-    auto ret = ((::ArchiveDirectory*)NativePtr)->monitor();
-    return ret;
+    auto __ret = ((::ArchiveDirectory*)NativePtr)->monitor();
+    return __ret;
 }
 
 bool Flood::ArchiveDirectory::Equals(System::Object^ object)
@@ -414,36 +414,36 @@ Flood::ArchiveZip::ArchiveZip(System::String^ path)
 bool Flood::ArchiveZip::Open(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveZip*)NativePtr)->open(arg0);
-    return ret;
+    auto __ret = ((::ArchiveZip*)NativePtr)->open(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveZip::Close()
 {
-    auto ret = ((::ArchiveZip*)NativePtr)->close();
-    return ret;
+    auto __ret = ((::ArchiveZip*)NativePtr)->close();
+    return __ret;
 }
 
 Flood::Stream^ Flood::ArchiveZip::OpenFile(System::String^ path, Flood::Allocator^ alloc)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
-    auto ret = ((::ArchiveZip*)NativePtr)->openFile(arg0, arg1);
-    return gcnew Flood::Stream((::Stream*)ret);
+    auto __ret = ((::ArchiveZip*)NativePtr)->openFile(arg0, arg1);
+    return gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveZip::ExistsFile(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveZip*)NativePtr)->existsFile(arg0);
-    return ret;
+    auto __ret = ((::ArchiveZip*)NativePtr)->existsFile(arg0);
+    return __ret;
 }
 
 bool Flood::ArchiveZip::ExistsDir(System::String^ path)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
-    auto ret = ((::ArchiveZip*)NativePtr)->existsDir(arg0);
-    return ret;
+    auto __ret = ((::ArchiveZip*)NativePtr)->existsDir(arg0);
+    return __ret;
 }
 
 void Flood::ArchiveZip::EnumerateFiles(System::Collections::Generic::List<System::String^>^ paths)
@@ -472,8 +472,8 @@ void Flood::ArchiveZip::EnumerateDirs(System::Collections::Generic::List<System:
 
 bool Flood::ArchiveZip::Monitor()
 {
-    auto ret = ((::ArchiveZip*)NativePtr)->monitor();
-    return ret;
+    auto __ret = ((::ArchiveZip*)NativePtr)->monitor();
+    return __ret;
 }
 
 bool Flood::ArchiveZip::Equals(System::Object^ object)
@@ -497,6 +497,6 @@ System::IntPtr Flood::ArchiveZip::Handle::get()
 
 void Flood::ArchiveZip::Handle::set(System::IntPtr value)
 {
-    ((::ArchiveZip*)NativePtr)->handle = value.ToPointer();
+    ((::ArchiveZip*)NativePtr)->handle = (void*)value.ToPointer();
 }
 

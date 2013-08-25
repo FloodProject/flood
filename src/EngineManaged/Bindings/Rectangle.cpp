@@ -49,12 +49,12 @@ bool Flood::Rectangle::IsContainedIn(Flood::Rectangle rect)
     _marshal0.width = rect.Width;
     _marshal0.height = rect.Height;
     auto arg0 = _marshal0;
-    auto ret = _this0.isContainedIn(arg0);
+    auto __ret = _this0.isContainedIn(arg0);
     X = _this0.x;
     Y = _this0.y;
     Width = _this0.width;
     Height = _this0.height;
-    return ret;
+    return __ret;
 }
 
 Flood::RectangleF::RectangleF(::RectangleF* native)
@@ -96,11 +96,11 @@ bool Flood::RectangleF::IsContainedIn(Flood::RectangleF rect)
     _marshal0.width = rect.Width;
     _marshal0.height = rect.Height;
     auto arg0 = _marshal0;
-    auto ret = _this0.isContainedIn(arg0);
+    auto __ret = _this0.isContainedIn(arg0);
     X = _this0.x;
     Y = _this0.y;
     Width = _this0.width;
     Height = _this0.height;
-    return ret;
+    return __ret;
 }
 

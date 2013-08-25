@@ -99,10 +99,10 @@ Flood::ResourceStream::ResourceStream()
 
 int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
 {
-    auto arg0 = (uint8*)buffer.ToPointer();
+    auto arg0 = (::uint8*)buffer.ToPointer();
     auto arg1 = (::size_t)size;
-    auto ret = ((::ResourceStream*)NativePtr)->decode(arg0, arg1);
-    return ret;
+    auto __ret = ((::ResourceStream*)NativePtr)->decode(arg0, arg1);
+    return __ret;
 }
 
 void Flood::ResourceStream::Reset()
@@ -188,8 +188,8 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
     _marshal1.value = _0.Option.Value;
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
-    auto ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
-    return gcnew Flood::Resource((::Resource*)ret);
+    auto __ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
+    return gcnew Flood::Resource((::Resource*)__ret);
 }
 
 bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
@@ -210,8 +210,8 @@ bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
     _marshal1.value = _0.Option.Value;
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
-    auto ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
-    return ret;
+    auto __ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
+    return __ret;
 }
 
 bool Flood::ResourceLoader::Equals(System::Object^ object)
@@ -230,32 +230,32 @@ int Flood::ResourceLoader::GetHashCode()
 
 Flood::ExtensionMetadata Flood::ResourceLoader::Metadata::get()
 {
-    auto ret = ((::ResourceLoader*)NativePtr)->getMetadata();
-    return Flood::ExtensionMetadata((::ExtensionMetadata*)ret);
+    auto __ret = ((::ResourceLoader*)NativePtr)->getMetadata();
+    return Flood::ExtensionMetadata((::ExtensionMetadata*)__ret);
 }
 
 System::String^ Flood::ResourceLoader::Name::get()
 {
-    auto ret = ((::ResourceLoader*)NativePtr)->getName();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto __ret = ((::ResourceLoader*)NativePtr)->getName();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::ResourceGroup::get()
 {
-    auto ret = ((::ResourceLoader*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::ResourceLoader*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 
 System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions::get()
 {
-    auto &ret = ((::ResourceLoader*)NativePtr)->getExtensions();
-    auto _tmpret = gcnew System::Collections::Generic::List<System::String^>();
-    for(auto _element : ret)
+    auto &__ret = ((::ResourceLoader*)NativePtr)->getExtensions();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<System::String^>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions1::get()

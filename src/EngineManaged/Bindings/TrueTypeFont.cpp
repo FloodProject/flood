@@ -37,21 +37,21 @@ void Flood::TrueTypeFont::Init()
 bool Flood::TrueTypeFont::GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
     ::Glyph arg2;
-    auto ret = ((::TrueTypeFont*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
+    auto __ret = ((::TrueTypeFont*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
     glyph = Flood::Glyph((::Glyph*)&arg2);
-    return ret;
+    return __ret;
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::TrueTypeFont::CreateGlyphImage(int codepoint, int size)
 {
-    auto ret = ((::TrueTypeFont*)NativePtr)->createGlyphImage(codepoint, size);
-    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+    auto __ret = ((::TrueTypeFont*)NativePtr)->createGlyphImage(codepoint, size);
+    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 
 Flood::Vector2 Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2, int fontSize)
 {
-    auto ret = ((::TrueTypeFont*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
-    return Flood::Vector2((::Vector2*)&ret);
+    auto __ret = ((::TrueTypeFont*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
+    return Flood::Vector2((::Vector2*)&__ret);
 }
 
 bool Flood::TrueTypeFont::Equals(System::Object^ object)

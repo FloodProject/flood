@@ -27,8 +27,8 @@ Flood::Host::Host(System::IntPtr native)
 
 bool Flood::Host::DestroySocket()
 {
-    auto ret = ((::Host*)NativePtr)->destroySocket();
-    return ret;
+    auto __ret = ((::Host*)NativePtr)->destroySocket();
+    return __ret;
 }
 
 void Flood::Host::BroadcastPacket(Flood::Packet^ _0, unsigned char channel)
@@ -46,8 +46,8 @@ void Flood::Host::ProcessEvents(unsigned int timeout)
 
 bool Flood::Host::HasContext()
 {
-    auto ret = ((::Host*)NativePtr)->hasContext();
-    return ret;
+    auto __ret = ((::Host*)NativePtr)->hasContext();
+    return __ret;
 }
 
 bool Flood::Host::Equals(System::Object^ object)
@@ -146,8 +146,8 @@ bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
     _marshal0.port = (::uint16)_0.Port;
     _marshal0.channelCount = (::uint8)_0.ChannelCount;
     auto arg0 = _marshal0;
-    auto ret = ((::HostClient*)NativePtr)->connect(arg0);
-    return ret;
+    auto __ret = ((::HostClient*)NativePtr)->connect(arg0);
+    return __ret;
 }
 
 bool Flood::HostClient::Equals(System::Object^ object)
@@ -166,14 +166,14 @@ int Flood::HostClient::GetHashCode()
 
 Flood::Peer^ Flood::HostClient::Peer::get()
 {
-    auto ret = ((::HostClient*)NativePtr)->getPeer();
-    return gcnew Flood::Peer((::Peer*)ret.get());
+    auto __ret = ((::HostClient*)NativePtr)->getPeer();
+    return gcnew Flood::Peer((::Peer*)__ret.get());
 }
 
 Flood::Session^ Flood::HostClient::Session::get()
 {
-    auto ret = ((::HostClient*)NativePtr)->getSession();
-    return gcnew Flood::Session((::Session*)ret);
+    auto __ret = ((::HostClient*)NativePtr)->getSession();
+    return gcnew Flood::Session((::Session*)__ret);
 }
 
 Flood::HostServer::HostServer(::HostServer* native)
@@ -194,8 +194,8 @@ bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
     _marshal0.port = (::uint16)_0.Port;
     _marshal0.channelCount = (::uint8)_0.ChannelCount;
     auto arg0 = _marshal0;
-    auto ret = ((::HostServer*)NativePtr)->createSocket(arg0);
-    return ret;
+    auto __ret = ((::HostServer*)NativePtr)->createSocket(arg0);
+    return __ret;
 }
 
 Flood::HostServer::HostServer()
@@ -220,19 +220,19 @@ int Flood::HostServer::GetHashCode()
 
 System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::Peers::get()
 {
-    auto &ret = ((::HostServer*)NativePtr)->getPeers();
-    auto _tmpret = gcnew System::Collections::Generic::List<Flood::Peer^>();
-    for(auto _element : ret)
+    auto &__ret = ((::HostServer*)NativePtr)->getPeers();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::Peer^>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = gcnew Flood::Peer((::Peer*)_element.get());
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 Flood::SessionManager^ Flood::HostServer::SessionManager::get()
 {
-    auto &ret = ((::HostServer*)NativePtr)->getSessionManager();
-    return gcnew Flood::SessionManager((::SessionManager*)&ret);
+    auto &__ret = ((::HostServer*)NativePtr)->getSessionManager();
+    return gcnew Flood::SessionManager((::SessionManager*)&__ret);
 }
 

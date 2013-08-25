@@ -73,32 +73,32 @@ void Flood::InputManager::Instance::set(System::IntPtr object)
 
 System::Collections::Generic::List<Flood::InputDevice^>^ Flood::InputManager::Devices::get()
 {
-    auto &ret = ((::InputManager*)NativePtr)->getDevices();
-    auto _tmpret = gcnew System::Collections::Generic::List<Flood::InputDevice^>();
-    for(auto _element : ret)
+    auto &__ret = ((::InputManager*)NativePtr)->getDevices();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::InputDevice^>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = gcnew Flood::InputDevice((::InputDevice*)_element);
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 Flood::Keyboard^ Flood::InputManager::Keyboard::get()
 {
-    auto ret = ((::InputManager*)NativePtr)->getKeyboard();
-    return gcnew Flood::Keyboard((::Keyboard*)ret);
+    auto __ret = ((::InputManager*)NativePtr)->getKeyboard();
+    return gcnew Flood::Keyboard((::Keyboard*)__ret);
 }
 
 Flood::Mouse^ Flood::InputManager::Mouse::get()
 {
-    auto ret = ((::InputManager*)NativePtr)->getMouse();
-    return gcnew Flood::Mouse((::Mouse*)ret);
+    auto __ret = ((::InputManager*)NativePtr)->getMouse();
+    return gcnew Flood::Mouse((::Mouse*)__ret);
 }
 
 Flood::Window^ Flood::InputManager::Window::get()
 {
-    auto ret = ((::InputManager*)NativePtr)->getWindow();
-    return gcnew Flood::Window((::Window*)ret);
+    auto __ret = ((::InputManager*)NativePtr)->getWindow();
+    return gcnew Flood::Window((::Window*)__ret);
 }
 
 void Flood::InputManager::Window::set(Flood::Window^ value)
@@ -120,7 +120,7 @@ void Flood::FloodInputManager::InputDeinitialize()
 
 Flood::InputManager^ Flood::FloodInputManager::GetInputManager()
 {
-    auto ret = ::GetInputManager();
-    return gcnew Flood::InputManager((::InputManager*)ret);
+    auto __ret = ::GetInputManager();
+    return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 

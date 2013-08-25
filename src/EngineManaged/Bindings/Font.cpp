@@ -45,21 +45,21 @@ Flood::Font::Font(System::IntPtr native)
 bool Flood::Font::GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph)
 {
     ::Glyph arg2;
-    auto ret = ((::Font*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
+    auto __ret = ((::Font*)NativePtr)->getGlyphInfo(codepoint, size, arg2);
     glyph = Flood::Glyph((::Glyph*)&arg2);
-    return ret;
+    return __ret;
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::Font::CreateGlyphImage(int codepoint, int size)
 {
-    auto ret = ((::Font*)NativePtr)->createGlyphImage(codepoint, size);
-    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+    auto __ret = ((::Font*)NativePtr)->createGlyphImage(codepoint, size);
+    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 
 Flood::Vector2 Flood::Font::GetKerning(int codepoint1, int codepoint2, int fontSize)
 {
-    auto ret = ((::Font*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
-    return Flood::Vector2((::Vector2*)&ret);
+    auto __ret = ((::Font*)NativePtr)->getKerning(codepoint1, codepoint2, fontSize);
+    return Flood::Vector2((::Vector2*)&__ret);
 }
 
 bool Flood::Font::Equals(System::Object^ object)
@@ -78,8 +78,8 @@ int Flood::Font::GetHashCode()
 
 System::String^ Flood::Font::Name::get()
 {
-    auto &ret = ((::Font*)NativePtr)->getName();
-    return clix::marshalString<clix::E_UTF8>(ret);
+    auto &__ret = ((::Font*)NativePtr)->getName();
+    return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 void Flood::Font::Name::set(System::String^ value)
@@ -91,8 +91,8 @@ void Flood::Font::Name::set(System::String^ value)
 
 Flood::ResourceGroup Flood::Font::ResourceGroup::get()
 {
-    auto ret = ((::Font*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::Font*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 
 System::String^ Flood::Font::Name1::get()

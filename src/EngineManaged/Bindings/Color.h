@@ -27,11 +27,11 @@ namespace Flood
         unsigned char G;
         unsigned char B;
         unsigned char A;
-        bool operator==(Flood::Color v);
+        static bool operator==(Flood::Color __op, Flood::Color v);
 
         bool NearEqual(Flood::Color a, float tolerance);
 
-        Flood::Color operator*(float s);
+        static Flood::Color operator*(Flood::Color __op, float s);
 
         static property Flood::Color White
         {

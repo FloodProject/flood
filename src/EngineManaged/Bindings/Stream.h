@@ -12,7 +12,7 @@
 
 namespace Flood
 {
-    enum struct _0;
+    enum struct _1;
     enum struct StreamOpenMode;
     enum struct StreamSeekMode;
     ref class Stream;
@@ -50,7 +50,7 @@ namespace Flood
     {
     public:
 
-        enum struct _0
+        enum struct _1
         {
             EndOfStream = 0,
             InvalidState = -1

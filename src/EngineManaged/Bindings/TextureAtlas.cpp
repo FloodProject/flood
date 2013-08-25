@@ -52,17 +52,17 @@ Flood::TextureAtlas::TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixel
 bool Flood::TextureAtlas::AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle)
 {
     auto arg0 = (HandleId)imageHandle.Id;
-    auto ret = ((::TextureAtlas*)NativePtr)->addImage(arg0);
-    return ret;
+    auto __ret = ((::TextureAtlas*)NativePtr)->addImage(arg0);
+    return __ret;
 }
 
 bool Flood::TextureAtlas::GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture)
 {
     auto arg0 = (HandleId)imageHandle.Id;
     ::SubTexture arg1;
-    auto ret = ((::TextureAtlas*)NativePtr)->getImageSubTexture(arg0, arg1);
+    auto __ret = ((::TextureAtlas*)NativePtr)->getImageSubTexture(arg0, arg1);
     subTexture = Flood::SubTexture((::SubTexture*)&arg1);
-    return ret;
+    return __ret;
 }
 
 bool Flood::TextureAtlas::Equals(System::Object^ object)
@@ -91,7 +91,7 @@ void Flood::TextureAtlas::Instance::set(System::IntPtr object)
 
 Flood::ResourceHandle<Flood::Image^> Flood::TextureAtlas::AtlasImageHandle::get()
 {
-    auto ret = ((::TextureAtlas*)NativePtr)->getAtlasImageHandle();
-    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+    auto __ret = ((::TextureAtlas*)NativePtr)->getAtlasImageHandle();
+    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 

@@ -55,19 +55,19 @@ void Flood::Image::SetBuffer(System::Collections::Generic::List<unsigned char>^ 
 
 bool Flood::Image::IsCompressed()
 {
-    auto ret = ((::Image*)NativePtr)->isCompressed();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->isCompressed();
+    return __ret;
 }
 
 void Flood::Image::SetBuffer(System::IntPtr data)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::byte*)data.ToPointer();
     ((::Image*)NativePtr)->setBuffer(arg0);
 }
 
 void Flood::Image::SetBuffer(System::IntPtr data, unsigned int stride)
 {
-    auto arg0 = (uint8*)data.ToPointer();
+    auto arg0 = (::byte*)data.ToPointer();
     auto arg1 = (::uint)(::uint32)stride;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }
@@ -120,14 +120,14 @@ Flood::ResourceHandle<Flood::Image^> Flood::Image::Create(Flood::Allocator^ _0, 
     auto arg1 = (::uint32)width;
     auto arg2 = (::uint32)height;
     auto arg3 = (::PixelFormat)_1;
-    auto ret = ::ImageCreate(arg0, arg1, arg2, arg3);
-    return Flood::ResourceHandle<Flood::Image^>(ret.id);
+    auto __ret = ::ImageCreate(arg0, arg1, arg2, arg3);
+    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 
 unsigned int Flood::Image::Width::get()
 {
-    auto ret = ((::Image*)NativePtr)->getWidth();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->getWidth();
+    return __ret;
 }
 
 void Flood::Image::Width::set(unsigned int value)
@@ -139,8 +139,8 @@ void Flood::Image::Width::set(unsigned int value)
 
 unsigned int Flood::Image::Height::get()
 {
-    auto ret = ((::Image*)NativePtr)->getHeight();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->getHeight();
+    return __ret;
 }
 
 void Flood::Image::Height::set(unsigned int value)
@@ -152,8 +152,8 @@ void Flood::Image::Height::set(unsigned int value)
 
 Flood::PixelFormat Flood::Image::PixelFormat::get()
 {
-    auto ret = ((::Image*)NativePtr)->getPixelFormat();
-    return (Flood::PixelFormat)ret;
+    auto __ret = ((::Image*)NativePtr)->getPixelFormat();
+    return (Flood::PixelFormat)__ret;
 }
 
 void Flood::Image::PixelFormat::set(Flood::PixelFormat value)
@@ -165,44 +165,44 @@ void Flood::Image::PixelFormat::set(Flood::PixelFormat value)
 
 System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer::get()
 {
-    auto &ret = ((::Image*)NativePtr)->getBuffer();
-    auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
-    for(auto _element : ret)
+    auto &__ret = ((::Image*)NativePtr)->getBuffer();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = _element;
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer1::get()
 {
-    auto &ret = ((::Image*)NativePtr)->getBuffer();
-    auto _tmpret = gcnew System::Collections::Generic::List<unsigned char>();
-    for(auto _element : ret)
+    auto &__ret = ((::Image*)NativePtr)->getBuffer();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : __ret)
     {
         auto _marshalElement = _element;
-        _tmpret->Add(_marshalElement);
+        _tmp__ret->Add(_marshalElement);
     }
-    return _tmpret;
+    return _tmp__ret;
 }
 
 unsigned int Flood::Image::PixelSize::get()
 {
-    auto ret = ((::Image*)NativePtr)->getPixelSize();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->getPixelSize();
+    return __ret;
 }
 
 unsigned int Flood::Image::Size::get()
 {
-    auto ret = ((::Image*)NativePtr)->getSize();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->getSize();
+    return __ret;
 }
 
 Flood::ResourceGroup Flood::Image::ResourceGroup::get()
 {
-    auto ret = ((::Image*)NativePtr)->getResourceGroup();
-    return (Flood::ResourceGroup)ret;
+    auto __ret = ((::Image*)NativePtr)->getResourceGroup();
+    return (Flood::ResourceGroup)__ret;
 }
 
 void Flood::Image::Color::set(Flood::Color value)
@@ -219,8 +219,8 @@ void Flood::Image::Color::set(Flood::Color value)
 
 unsigned int Flood::Image::Timestamp::get()
 {
-    auto ret = ((::Image*)NativePtr)->getTimestamp();
-    return ret;
+    auto __ret = ((::Image*)NativePtr)->getTimestamp();
+    return __ret;
 }
 
 Flood::ImageWriter::ImageWriter(::ImageWriter* native)
@@ -244,8 +244,8 @@ void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
 bool Flood::ImageWriter::Convert(Flood::Image^ image)
 {
     auto arg0 = (::Image*)image->NativePtr;
-    auto ret = ((::ImageWriter*)NativePtr)->convert(arg0);
-    return ret;
+    auto __ret = ((::ImageWriter*)NativePtr)->convert(arg0);
+    return __ret;
 }
 
 Flood::ImageWriter::ImageWriter()

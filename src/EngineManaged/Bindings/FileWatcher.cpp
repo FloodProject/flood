@@ -57,9 +57,9 @@ Flood::FileWatcher::FileWatcher()
 unsigned int Flood::FileWatcher::AddWatch(System::String^ directory, System::IntPtr userdata)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(directory);
-    auto arg1 = userdata.ToPointer();
-    auto ret = ((::FileWatcher*)NativePtr)->addWatch(arg0, arg1);
-    return ret;
+    auto arg1 = (void*)userdata.ToPointer();
+    auto __ret = ((::FileWatcher*)NativePtr)->addWatch(arg0, arg1);
+    return __ret;
 }
 
 void Flood::FileWatcher::RemoveWatch(System::String^ directory)

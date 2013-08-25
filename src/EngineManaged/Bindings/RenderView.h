@@ -102,7 +102,7 @@ namespace Flood
             Flood::Matrix4x3 get();
             void set(Flood::Matrix4x3);
         }
-        bool operator<(Flood::RenderView^ view);
+        static bool operator<(Flood::RenderView^ __op, Flood::RenderView^ view);
 
         void HandleRenderTargetResize();
 

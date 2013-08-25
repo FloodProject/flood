@@ -205,20 +205,20 @@ Flood::MouseButtonEvent::MouseButtonEvent(Flood::MouseEventType eventType)
 
 bool Flood::MouseButtonEvent::IsLeftButton()
 {
-    auto ret = ((::MouseButtonEvent*)NativePtr)->isLeftButton();
-    return ret;
+    auto __ret = ((::MouseButtonEvent*)NativePtr)->isLeftButton();
+    return __ret;
 }
 
 bool Flood::MouseButtonEvent::IsRightButton()
 {
-    auto ret = ((::MouseButtonEvent*)NativePtr)->isRightButton();
-    return ret;
+    auto __ret = ((::MouseButtonEvent*)NativePtr)->isRightButton();
+    return __ret;
 }
 
 bool Flood::MouseButtonEvent::IsMiddleButton()
 {
-    auto ret = ((::MouseButtonEvent*)NativePtr)->isMiddleButton();
-    return ret;
+    auto __ret = ((::MouseButtonEvent*)NativePtr)->isMiddleButton();
+    return __ret;
 }
 
 bool Flood::MouseButtonEvent::Equals(System::Object^ object)
