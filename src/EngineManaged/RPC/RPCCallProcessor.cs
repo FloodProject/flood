@@ -14,31 +14,30 @@ namespace Flood.RPC
             pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
         }
 
-        public RPCData.Call CreateCall(int methodId, RPCPeer peer, int localId, int remoteId, bool isDelegate)
+        public int GetNextCallId()
         {
-            var id = Interlocked.Increment(ref callIdCounter);
-            return new RPCData.Call(id, methodId, peer, localId, remoteId, isDelegate);
+            return Interlocked.Increment(ref callIdCounter);
         }
 
-        public Task<RPCData> DispatchCall(RPCData.Call call)
+        public Task<RPCData> DispatchCall(int callId, RPCData data)
         {
             var tcs = new TaskCompletionSource<RPCData>();
-            pendingCalls.Add(call.Id, tcs);
+            pendingCalls.Add(callId, tcs);
 
-            call.Data.Peer.Dispatch(call.Data);
+            data.Peer.Dispatch(data);
 
             return tcs.Task;
         }
 
-        internal void ProcessReply(RPCData.Reply reply)
+        internal void SetResult(int callId, RPCData data)
         {
-            if (!pendingCalls.ContainsKey(reply.Id))
+            if (!pendingCalls.ContainsKey(callId))
             {
                 Log.Error("Received unexpected reply.");
                 return;
             }
 
-            pendingCalls[reply.Id].SetResult(reply.Data);
+            pendingCalls[callId].SetResult(data);
         }
     }
 }
