@@ -1241,6 +1241,12 @@ namespace Flood.Tools.RPCGen
                 case TType.Delegate:
                     WriteLine("var del = {0}.CreateDelegateImpl<{1}>({2}.Peer, {2}.Header.RemoteId, {3});", stubName, GetDelegateImplClassName(type), dataName, varName);
                     WriteLine("{0}.Serializer.WriteI32(del.Id);", dataName);
+                    // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
+                    break;
+                case TType.Service:
+                    WriteLine("var serviceImpl = {0}.RPCManager.GetCreateImplementation<{1}>({2});", stubName, PrettyName(type), varName);
+                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.Id);", dataName, varName);
+                    // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
                 case TType.Void:
                 default:
@@ -1435,6 +1441,10 @@ namespace Flood.Tools.RPCGen
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = ({1})del.Delegate;", varName, PrettyName(type));
+                    break;
+                case TType.Service:
+                    WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
+                    WriteLine("{0} = {1}.RPCManager.GetCreateProxy<{2}>({3}.Peer, remoteId);", varName, stubName, PrettyName(type), dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1676,6 +1686,8 @@ namespace Flood.Tools.RPCGen
                 return TType.List;
             else if (IsDelegate(type))
                 return TType.Delegate;
+            else if (Metadata.IsService(type))
+                return TType.Service;
 
             throw new NotImplementedException("Unhandle type "+type);
         }
