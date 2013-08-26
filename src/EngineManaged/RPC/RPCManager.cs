@@ -1,19 +1,23 @@
 ﻿using Flood.RPC.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Flood.RPC
 {
     public class RPCManager
     {
-        public RPCImplManager ImplementationManager { get; private set; }
-
-        public RPCProxyManager ProxyManager { get; private set; }
+        private Dictionary<int, RPCStub> stubs;
+        private int stubIdCounter;
 
         public RPCManager()
         {
-            ImplementationManager = new RPCImplManager();
-            ProxyManager = new RPCProxyManager();
+            stubs = new Dictionary<int, RPCStub>();
+        }
+
+        protected int GetNextStubId()
+        {
+            return Interlocked.Increment(ref stubIdCounter);
         }
 
         public void Process(byte[] data, RPCPeer peer)
@@ -30,43 +34,80 @@ namespace Flood.RPC
 
         public void Process(RPCData data)
         {
-            var implId = data.Header.ImplId;
-            var proxyId = data.Header.ProxyId;
+            var id = data.Header.LocalId;
+
+            var stub = stubs[id];
 
             switch(data.Header.CallType)
             {
-            case RPCDataType.Call:
-                ImplementationManager[implId].ProcessCall(data);
-                return;
-            case RPCDataType.EventSubscribe:
-                ImplementationManager[implId].ProcessEventSubscribe(data);
-                return;
-            case RPCDataType.EventUnsubscribe:
-                ImplementationManager[implId].ProcessEventUnsubscribe(data);
-                return;
-            case RPCDataType.Reply:
-                ProxyManager[proxyId].ProcessReply(data);
-                return;
-            case RPCDataType.DelegateCall:
-                ProxyManager[proxyId].ProcessDelegateCall(data);
-                return;
-            case RPCDataType.DelegateReply:
-                ProxyManager[proxyId].ProcessDelegateReply(data);
-                return;
-            default:
-                throw new NotImplementedException();
+                case RPCDataType.DelegateReply:
+                    stub.ProcessDelegateReply(RPCData.Reply.Create(data));
+                    return;
+                case RPCDataType.DelegateCall:
+                    stub.ProcessDelegateCall(RPCData.Call.Create(data));
+                    return;
+            }
+
+            var impl = stub as RPCImpl;
+            if (impl != null)
+            {
+                switch (data.Header.CallType)
+                {
+                    case RPCDataType.Call:
+                        impl.ProcessCall(RPCData.Call.Create(data));
+                        return;
+                    case RPCDataType.EventSubscribe:
+                        impl.ProcessEventSubscribe(data);
+                        return;
+                    case RPCDataType.EventUnsubscribe:
+                        impl.ProcessEventUnsubscribe(data);
+                        return;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            var proxy = (RPCProxy)stub;
+            switch (data.Header.CallType)
+            {
+                case RPCDataType.Reply:
+                    proxy.ProcessReply(RPCData.Reply.Create(data));
+                    return;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
         public int AddImplementation<T>(T service)
         {
-            return ImplementationManager.AddImplementation(service);
+            var implId = GetNextStubId();
+            var serviceType = typeof(T);
+
+            var serviceAssembly = serviceType.Assembly;
+
+            var stubsType = serviceAssembly.GetType(Helper.GetStubsClassName(serviceType, true));
+            var implType = stubsType.GetNestedType("Impl");
+            var impl = (RPCImpl)Activator.CreateInstance(implType, service, implId);
+
+            stubs.Add(implId, impl);
+            return implId;
         }
 
         public T CreateProxy<T>(RPCPeer peer, int implId)
         {
-            return ProxyManager.CreateProxy<T>(peer, implId);
-        }
+            var serviceType = typeof(T);
+            var serviceAssembly = serviceType.Assembly;
 
+            var implType = serviceAssembly.GetType(Helper.GetStubsClassName(serviceType, true));
+            var proxyType = implType.GetNestedType("Proxy");
+
+            var proxyId = GetNextStubId();
+
+            var proxy = Activator.CreateInstance(proxyType, peer, implId, proxyId);
+
+            stubs.Add(proxyId, (RPCProxy)proxy);
+
+            return (T)proxy;
+        }
     }
 }
