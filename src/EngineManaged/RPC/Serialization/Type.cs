@@ -42,7 +42,7 @@ namespace Flood.RPC.Serialization
         List = 14,
         Guid = 15,
         DateTime = 16,
-        Array = 17
-
+        Array = 17,
+        Delegate = 18,
     }
 }
