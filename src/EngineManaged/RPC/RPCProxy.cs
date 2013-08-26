@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Flood.RPC
 {
-    public abstract class RPCProxy
+    public abstract class RPCProxy : RPCStub
     {
         private Dictionary<int, TaskCompletionSource<RPCData>> pendingCalls;
+        public RPCPeer Peer { get; private set; }
+        public int RemoteId { get; private set; }
 
         /// Maps a Event id to a Delegate id.
         private Dictionary<int, int> eventIdsDelegates;
@@ -17,15 +20,11 @@ namespace Flood.RPC
         private int sequenceNumber;
         private int delegateIdCounter;
 
-        public RPCPeer Peer { get; private set; }
-        public int ImplId { get; private set; }
-        public int ProxyId { get; private set; }
-
-        protected RPCProxy(RPCPeer peer, int implId, int proxyId)
+        protected RPCProxy(RPCPeer peer, int remoteId, int id)
+            : base(id)
         {
             Peer = peer;
-            ImplId = implId;
-            ProxyId = proxyId;
+            RemoteId = remoteId;
 
             pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
             delegates = new Dictionary<int, RPCDelegate>();
