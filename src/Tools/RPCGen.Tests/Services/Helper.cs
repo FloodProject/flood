@@ -46,14 +46,13 @@ namespace RPCGen.Tests.Services
             }
         }
 
-
         /// Gets a service interface proxy for a given implementation
-        public static T GetProxy<T>(T serviceImpl)
+        public static T GetProxy<T>(T service)
         {
             var serviceManager = new RPCManager();
-            var serviceId = serviceManager.AddImplementation<T>(serviceImpl);
+            var serviceImpl = serviceManager.GetCreateImplementation<T>(service);
 
-            return serviceManager.CreateProxy<T>(new MockRPCPeer(serviceManager), serviceId);
+            return serviceManager.GetCreateProxy<T>(new MockRPCPeer(serviceManager), serviceImpl.Id);
         }
     }
 }
