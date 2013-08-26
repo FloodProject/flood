@@ -107,5 +107,65 @@ namespace Flood.RPC
         {
             return Create(proxy.Peer, proxy.Id, proxy.RemoteId, type, flags);
         }
+
+        public struct Call
+        {
+            public RPCData Data;
+            public int Id;
+            public int MethodId;
+
+            internal Call(int id, int methodId, RPCPeer peer, int localId, int remoteId, bool isDelegate)
+            {
+                Id = id;
+                MethodId = methodId;
+                var dataType = (isDelegate) ? RPCDataType.DelegateCall : RPCDataType.Call;
+                Data = RPCData.Create(peer, localId, remoteId, dataType);
+                Write(Data, Id, MethodId);
+            }
+
+            internal static Call Create(RPCData data)
+            {
+                var call = new Call();
+                call.Data = data;
+                call.Id = data.Serializer.ReadI32();
+                call.MethodId = data.Serializer.ReadI32();
+
+                return call;
+            }
+
+            public static void Write(RPCData data, int id, int methodId)
+            { 
+                data.Serializer.WriteI32(id);
+                data.Serializer.WriteI32(methodId);
+            }
+        }
+
+        public struct Reply
+        {
+            public RPCData Data;
+            public int Id;
+            public int MethodId;
+
+            public Reply(Call call)
+            {
+                Id = call.Id;
+                MethodId = call.MethodId;
+                var dataType = (call.Data.Header.CallType == RPCDataType.Call) ?
+                    RPCDataType.Reply : RPCDataType.DelegateReply;
+                Data = RPCData.Create(call.Data, dataType);
+                Data.Serializer.WriteI32(Id);
+                Data.Serializer.WriteI32(MethodId);
+            }
+
+            internal static Reply Create(RPCData data)
+            {
+                var reply = new Reply();
+                reply.Data = data;
+                reply.Id = data.Serializer.ReadI32();
+                reply.MethodId = data.Serializer.ReadI32();
+
+                return reply;
+            }
+        }
     }
 }
