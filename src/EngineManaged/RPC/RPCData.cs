@@ -114,29 +114,25 @@ namespace Flood.RPC
             public int Id;
             public int MethodId;
 
-            internal Call(int id, int methodId, RPCPeer peer, int localId, int remoteId, bool isDelegate)
+            internal Call(int id, int methodId, RPCPeer peer, int localId, int remoteId)
             {
                 Id = id;
                 MethodId = methodId;
-                var dataType = (isDelegate) ? RPCDataType.DelegateCall : RPCDataType.Call;
-                Data = RPCData.Create(peer, localId, remoteId, dataType);
-                Write(Data, Id, MethodId);
+                Data = RPCData.Create(peer, localId, remoteId, RPCDataType.Call);
+
+                Data.Serializer.WriteI32(id);
+                Data.Serializer.WriteI32(methodId);
             }
 
             internal static Call Create(RPCData data)
             {
                 var call = new Call();
                 call.Data = data;
+                
                 call.Id = data.Serializer.ReadI32();
                 call.MethodId = data.Serializer.ReadI32();
 
                 return call;
-            }
-
-            public static void Write(RPCData data, int id, int methodId)
-            { 
-                data.Serializer.WriteI32(id);
-                data.Serializer.WriteI32(methodId);
             }
         }
 
@@ -150,9 +146,8 @@ namespace Flood.RPC
             {
                 Id = call.Id;
                 MethodId = call.MethodId;
-                var dataType = (call.Data.Header.CallType == RPCDataType.Call) ?
-                    RPCDataType.Reply : RPCDataType.DelegateReply;
-                Data = RPCData.Create(call.Data, dataType);
+                Data = RPCData.Create(call.Data, RPCDataType.Reply);
+                
                 Data.Serializer.WriteI32(Id);
                 Data.Serializer.WriteI32(MethodId);
             }
@@ -161,8 +156,73 @@ namespace Flood.RPC
             {
                 var reply = new Reply();
                 reply.Data = data;
+                
                 reply.Id = data.Serializer.ReadI32();
                 reply.MethodId = data.Serializer.ReadI32();
+
+                return reply;
+            }
+        }
+
+        public struct DelegateCall
+        {
+            public RPCData Data;
+            public int Id;
+            public int LocalDelegateId;
+            public int RemoteDelegateId;
+
+            internal DelegateCall(int id, int localDelegateId, int remoteDelegateId, RPCPeer peer, int localId, int remoteId)
+            {
+                Id = id;
+                LocalDelegateId = localDelegateId;
+                RemoteDelegateId = remoteDelegateId;
+                Data = RPCData.Create(peer, localId, remoteId, RPCDataType.DelegateCall);
+                
+                Data.Serializer.WriteI32(Id);
+                Data.Serializer.WriteI32(LocalDelegateId);
+                Data.Serializer.WriteI32(RemoteDelegateId);
+            }
+
+            internal static DelegateCall Create(RPCData data)
+            {
+                var call = new DelegateCall();
+                call.Data = data;
+                
+                call.Id = data.Serializer.ReadI32();
+                call.RemoteDelegateId = data.Serializer.ReadI32();
+                call.LocalDelegateId = data.Serializer.ReadI32();
+
+                return call;
+            }
+        }
+
+        public struct DelegateReply
+        {
+            public RPCData Data;
+            public int Id;
+            public int LocalDelegateId;
+            public int RemoteDelegateId;
+
+            public DelegateReply(DelegateCall call)
+            {
+                Id = call.Id;
+                LocalDelegateId = call.LocalDelegateId;
+                RemoteDelegateId = call.RemoteDelegateId;
+                Data = RPCData.Create(call.Data, RPCDataType.DelegateReply);
+                
+                Data.Serializer.WriteI32(Id);
+                Data.Serializer.WriteI32(LocalDelegateId);
+                Data.Serializer.WriteI32(RemoteDelegateId);
+            }
+
+            internal static DelegateReply Create(RPCData data)
+            {
+                var reply = new DelegateReply();
+                reply.Data = data;
+                
+                reply.Id = data.Serializer.ReadI32();
+                reply.RemoteDelegateId = data.Serializer.ReadI32();
+                reply.LocalDelegateId = data.Serializer.ReadI32();
 
                 return reply;
             }
