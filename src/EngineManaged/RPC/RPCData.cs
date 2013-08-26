@@ -36,8 +36,8 @@ namespace Flood.RPC
         {
             Serializer serializer;
 
-            public int ImplId;
-            public int ProxyId;
+            public int RemoteId;
+            public int LocalId;
             public RPCDataType CallType;
 
             public RPCDataHeader(Serializer serializer)
@@ -48,15 +48,15 @@ namespace Flood.RPC
 
             public void Read()
             {
-                ImplId = serializer.ReadI32();
-                ProxyId = serializer.ReadI32();
+                RemoteId = serializer.ReadI32();
+                LocalId = serializer.ReadI32();
                 CallType = (RPCDataType)serializer.ReadI32();
             }
 
             public void Write()
             {
-                serializer.WriteI32(ImplId);
-                serializer.WriteI32(ProxyId);
+                serializer.WriteI32(LocalId);
+                serializer.WriteI32(RemoteId);
                 serializer.WriteI32((int)CallType);
             }
         }
@@ -85,14 +85,14 @@ namespace Flood.RPC
             Peer.Dispatch(this);
         }
 
-        public static RPCData Create(RPCPeer peer, int implId, int proxyId, RPCDataType type, RPCFlags flags = RPCFlags.None)
+        public static RPCData Create(RPCPeer peer, int localId, int remoteId, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
             var data = new RPCData(peer);
             data.Peer = peer;
             data.Flags = flags;
             data.Header.CallType = type;
-            data.Header.ImplId = implId;
-            data.Header.ProxyId = proxyId;
+            data.Header.RemoteId = remoteId;
+            data.Header.LocalId = localId;
             data.Header.Write();
             
             return data;
@@ -100,12 +100,12 @@ namespace Flood.RPC
 
         public static RPCData Create(RPCData call, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
-            return Create(call.Peer, call.Header.ImplId, call.Header.ProxyId, type, flags);
+            return Create(call.Peer, call.Header.LocalId, call.Header.RemoteId, type, flags);
         }
 
         public static RPCData Create(RPCProxy proxy, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
-            return Create(proxy.Peer, proxy.ImplId, proxy.ProxyId, type, flags);
+            return Create(proxy.Peer, proxy.Id, proxy.RemoteId, type, flags);
         }
     }
 }
