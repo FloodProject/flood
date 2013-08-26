@@ -8,11 +8,16 @@ namespace Flood.RPC
     public class RPCManager
     {
         private Dictionary<int, RPCStub> stubs;
+        private Dictionary<object, RPCImpl> impls;
+        private Dictionary<Tuple<RPCPeer, int>, RPCProxy> proxies;
+
         private int stubIdCounter;
 
         public RPCManager()
         {
             stubs = new Dictionary<int, RPCStub>();
+            impls = new Dictionary<object, RPCImpl>();
+            proxies = new Dictionary<Tuple<RPCPeer, int>, RPCProxy>();
         }
 
         protected int GetNextStubId()
@@ -78,8 +83,12 @@ namespace Flood.RPC
             }
         }
 
-        public int AddImplementation<T>(T service)
+        public RPCImpl GetCreateImplementation<T>(T service)
         {
+            RPCImpl impl;
+            if (impls.TryGetValue(service, out impl))
+                return impl;
+
             var implId = GetNextStubId();
             var serviceType = typeof(T);
 
@@ -87,16 +96,22 @@ namespace Flood.RPC
 
             var stubsType = serviceAssembly.GetType(Helper.GetStubsClassName(serviceType, true));
             var implType = stubsType.GetNestedType("Impl");
-            var impl = (RPCImpl)Activator.CreateInstance(implType, service, implId);
+            impl = (RPCImpl)Activator.CreateInstance(implType, service, implId);
 
             stubs.Add(implId, impl);
+            impls.Add(service, impl);
             impl.RPCManager = this;
 
-            return implId;
+            return impl;
         }
 
-        public T CreateProxy<T>(RPCPeer peer, int implId)
+        public T GetCreateProxy<T>(RPCPeer peer, int implId)
         {
+            var tuple = new Tuple<RPCPeer, int>(peer, implId);
+            RPCProxy proxy;
+            if (proxies.TryGetValue(tuple, out proxy))
+                return (T)(object)proxy;
+
             var serviceType = typeof(T);
             var serviceAssembly = serviceType.Assembly;
 
@@ -106,9 +121,10 @@ namespace Flood.RPC
             var proxyId = GetNextStubId();
 
             var stub = Activator.CreateInstance(proxyType, peer, implId, proxyId);
-            var proxy = (RPCProxy) stub;
+            proxy = (RPCProxy) stub;
 
             stubs.Add(proxyId, proxy);
+            proxies.Add(tuple, proxy);
             proxy.RPCManager = this;
 
             return (T)stub;
