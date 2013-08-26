@@ -7,7 +7,7 @@ using System;
 namespace Flood.RPC
 {
 
-    public abstract class RPCImpl
+    public abstract class RPCImpl : RPCStub
     {
         protected delegate Task DProcessCall(RPCData request, ProcedureCall call);
         protected delegate void DProcessSubscribe(RPCPeer peer, int implId, int proxyId, int delegateId);
@@ -36,7 +36,8 @@ namespace Flood.RPC
 
         public object Impl { get; set; }
 
-        public RPCImpl(object impl)
+        public RPCImpl(object impl, int id)
+            : base(id)
         {
             Impl = impl;
             processors = new Dictionary<int, Processors>();
