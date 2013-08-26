@@ -2,12 +2,12 @@
 using Flood.RPC;
 using Flood.RPC.Metadata;
 using NUnit.Framework;
-using RPCGen.Tests.Interfaces;
 using System.Threading.Tasks;
 
 namespace RPCGen.Tests.Services
 {
-    public class MethodOverloadTests : IMethodOverloadTests
+    [TestFixture]
+    public class MethodOverloadTests
     {
         #region Service
         [Service]
@@ -51,6 +51,7 @@ namespace RPCGen.Tests.Services
 
         #endregion
 
+        [Test]
         public void TestOverload()
         {
             var proxy = Helper.GetProxy<IService>(new Service());

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flood.RPC.Metadata;
-using RPCGen.Tests.Interfaces;
+﻿using Flood.RPC.Metadata;
 using NUnit.Framework;
+using System;
 
 namespace RPCGen.Tests.Services
 {
+    [TestFixture]
     public class ServiceEventsPrimitiveTypesTests : IPrimitiveTypesTests
     {
         #region Service
@@ -105,12 +101,14 @@ namespace RPCGen.Tests.Services
         Service impl;
         IService proxy;
 
+        [TestFixtureSetUp]
         public void SetUp()
         {
             impl = new Service();
             proxy = Helper.GetProxy<IService>(impl);
         }
 
+        [Test]
         public void TestVoid()
         {
             var wasCalled = false;
@@ -119,6 +117,7 @@ namespace RPCGen.Tests.Services
             Assert.IsTrue(wasCalled);
         }
 
+        [Test]
         public void TestByte()
         {
             byte expected;
@@ -135,6 +134,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestFloat()
         {
             float expected;
@@ -151,6 +151,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestDouble()
         {
             double expected;
@@ -167,6 +168,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestShort()
         {
             short expected;
@@ -183,6 +185,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestInt()
         {
             int expected;
@@ -199,6 +202,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestLong()
         {
             long expected;
@@ -215,6 +219,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestString()
         {
             string expected = "123456789";
@@ -225,6 +230,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestGuid()
         {
             Guid expected = new Guid("CB873FC8-6759-4F80-81BE-0EC214BAB26E");
@@ -235,6 +241,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(expected, received);
         }
 
+        [Test]
         public void TestDateTime()
         {
             DateTime expected;
