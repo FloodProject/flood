@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class ServiceParametersDelegateTests : IPrimitiveTypesTests
+    public class ProcedureParamDelegateTests : IPrimitiveTypesTests
     {
         #region Service
         [Service]

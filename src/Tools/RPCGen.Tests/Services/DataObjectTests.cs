@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class DataObjectPrimitiveTypesTests : IPrimitiveTypesTests
+    public class DataObjectTests : IPrimitiveTypesTests
     {
         #region DataObjects
 
