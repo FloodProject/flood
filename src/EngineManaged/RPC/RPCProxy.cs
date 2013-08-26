@@ -51,19 +51,20 @@ namespace Flood.RPC
             eventIdsDelegates.Remove(eventId);
         }
 
-        internal void ProcessReply(RPCData.Reply reply)
-        {
-            callProcessor.ProcessReply(reply);
-        }
-
         public RPCData.Call CreateCall(int methodId)
         {
-            return callProcessor.CreateCall(methodId, Peer, Id, RemoteId, false);
+            var callId = callProcessor.GetNextCallId();
+            return new RPCData.Call(callId, methodId, Peer, Id, RemoteId);
+        }
+
+        internal void ProcessReply(RPCData.Reply reply)
+        {
+            callProcessor.SetResult(reply.Id, reply.Data);
         }
 
         public Task<RPCData> DispatchCall(RPCData.Call call)
         {
-            return callProcessor.DispatchCall(call);
+            return callProcessor.DispatchCall(call.Id, call.Data);
         }
     }
 }
