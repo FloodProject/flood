@@ -18,7 +18,6 @@
 
 namespace
 {
-	typedef Serializer* (*SerializerCreateFunction)(Allocator*, ReflectionHandleContextMap*);
 
 	void SerializeH(ReflectionContext* context, ReflectionWalkType wt)
 	{
@@ -73,19 +72,31 @@ REFLECT_CLASS_END()
 
 SUITE(Core)
 {
-	void ExecuteSerializationTest(SerializerCreateFunction SerializerCreate, const char * ext)
+	void ExecuteSerializationTest(SerializerType type, const char * ext)
 	{
 		Allocator* alloc = AllocatorGetHeap();
 
 		ReflectionHandleContextMap handleContextMap;
-		Serializer* serializer = SerializerCreate(alloc, &handleContextMap);
+		Serializer* serializer;
+		
+		switch(type)
+		{
+		case SerializerType::Json:
+			serializer = Allocate(alloc, SerializerJSON, alloc, &handleContextMap);
+			break;
+		case SerializerType::Binary:
+			serializer = Allocate(alloc, SerializerBinary, alloc, &handleContextMap);
+			break;
+		};
 
 		B instanceB;
 		instanceB.change();
 
-		SerializerSaveObjectToFile(serializer, StringFormat("TestB.%s", ext), &instanceB);
+		Serializer::saveObjectToFile(*serializer, StringFormat("TestB.%s", ext), &instanceB);
 
-		B* loadB = (B*) SerializerLoadObjectFromFile(serializer, StringFormat("TestB.%s", ext));
+		serializer->object = nullptr;
+
+		auto loadB = (B*) Serializer::loadObjectFromFile(*serializer, StringFormat("TestB.%s", ext));
 
 		CHECK_EQUAL(instanceB.george, loadB->george);
 		CHECK_EQUAL(instanceB.bar, loadB->bar);
@@ -98,9 +109,11 @@ SUITE(Core)
 		instanceC.allocate();
 		instanceC.change();
 
-		SerializerSaveObjectToFile(serializer, StringFormat("TestC.%s", ext), &instanceC);
+		Serializer::saveObjectToFile(*serializer, StringFormat("TestC.%s", ext), &instanceC);
 
-		C* loadC = (C*) SerializerLoadObjectFromFile(serializer, StringFormat("TestC.%s", ext));
+		serializer->object = nullptr;
+
+		C* loadC = (C*) Serializer::loadObjectFromFile(*serializer, StringFormat("TestC.%s", ext));
 
 		CHECK_EQUAL(instanceC.anA->foo, loadC->anA->foo);
 		CHECK_EQUAL(instanceC.arrayA.size(), loadC->arrayA.size());
@@ -112,17 +125,21 @@ SUITE(Core)
 
 		D instanceD;
 		instanceD.allocate();
-		SerializerSaveObjectToFile(serializer, StringFormat("TestD.%s", ext), &instanceD);
+		Serializer::saveObjectToFile(*serializer, StringFormat("TestD.%s", ext), &instanceD);
 
-		D* loadD = (D*) SerializerLoadObjectFromFile(serializer, StringFormat("TestD.%s", ext));
+		serializer->object = nullptr;
+
+		D* loadD = (D*) Serializer::loadObjectFromFile(*serializer, StringFormat("TestD.%s", ext));
 		Deallocate(loadD);
 
 		F instanceF;
 		instanceF.allocate();
 		instanceF.a.foo = 42;
-		SerializerSaveObjectToFile(serializer, StringFormat("TestF.%s", ext), &instanceF);
+		Serializer::saveObjectToFile(*serializer, StringFormat("TestF.%s", ext), &instanceF);
 
-		F* loadF = (F*) SerializerLoadObjectFromFile(serializer, StringFormat("TestF.%s", ext));
+		serializer->object = nullptr;
+
+		F* loadF = (F*) Serializer::loadObjectFromFile(*serializer, StringFormat("TestF.%s", ext));
 		CHECK_EQUAL(instanceF.vecA[0].foo, loadF->vecA[0].foo);
 		CHECK_EQUAL(instanceF.vecA[1].foo, loadF->vecA[1].foo);
 		CHECK_EQUAL(instanceF.a.foo, loadF->a.foo);
@@ -133,12 +150,12 @@ SUITE(Core)
 
 	TEST(SerializeJSON)
 	{
-		ExecuteSerializationTest(SerializerCreateJSON, "json");
+		ExecuteSerializationTest(SerializerType::Json, "json");
 	}
 
 	TEST(SerializeBinary)
 	{
-		ExecuteSerializationTest(SerializerCreateBinary, "bin");
+		ExecuteSerializationTest(SerializerType::Binary, "bin");
 	}
 
 	TEST(SerializeBinaryField)
@@ -147,7 +164,7 @@ SUITE(Core)
 		MemoryStream ms(16);
 
 		ReflectionHandleContextMap handleContextMap;
-		auto bin = (SerializerBinary*) SerializerCreateBinary(alloc, &handleContextMap);
+		auto bin = (SerializerBinary*) Allocate(alloc, SerializerBinary, alloc, &handleContextMap);
 		bin->ms = &ms;
 
 		A a;
@@ -180,23 +197,27 @@ SUITE(Core)
 		Allocator* alloc = AllocatorGetHeap();
 
 		ReflectionHandleContextMap handleContextMap;
-		Serializer* serializer = SerializerCreateBinary(alloc, &handleContextMap);
+		Serializer* serializer = Allocate(alloc, SerializerBinary, alloc, &handleContextMap);
 
 		// Test custom type hook functions.
 		H instanceH;
 		instanceH.setup();
-		SerializerSaveObjectToFile(serializer, "TestH.bin", &instanceH);
+		Serializer::saveObjectToFile(*serializer, "TestH.bin", &instanceH);
 
-		H* loadH = (H*) SerializerLoadObjectFromFile(serializer, "TestH.bin");
+		serializer->object = nullptr;
+
+		H* loadH = (H*) Serializer::loadObjectFromFile(*serializer, "TestH.bin");
 		CHECK_EQUAL(instanceH.hook, loadH->hook);
 		Deallocate(loadH);
 
 		// Test custom field hook functions.
 		I instanceI;
 		instanceI.setup();
-		SerializerSaveObjectToFile(serializer, "TestI.bin", &instanceI);
+		Serializer::saveObjectToFile(*serializer, "TestI.bin", &instanceI);
 
-		I* loadI = (I*) SerializerLoadObjectFromFile(serializer, "TestI.bin");
+		serializer->object = nullptr;
+
+		I* loadI = (I*) Serializer::loadObjectFromFile(*serializer, "TestI.bin");
 		CHECK_EQUAL(instanceI.h.hook, loadI->h.hook);
 		CHECK_EQUAL(instanceI.hook + 40, loadI->hook);
 		Deallocate(loadI);
