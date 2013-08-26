@@ -89,12 +89,10 @@ bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
 
 //-----------------------------------//
 
-Serializer::Serializer()
-	: alloc(nullptr)
+Serializer::Serializer(Allocator* allocator)
+	: allocator(allocator)
 	, stream(nullptr)
 	, object(nullptr)
-	, load(nullptr)
-	, save(nullptr)
 {
 	serializeContext.loading = false;
 	deserializeContext.loading = true;
@@ -104,13 +102,6 @@ Serializer::Serializer()
 
 Serializer::~Serializer()
 {
-}
-
-//-----------------------------------//
-
-void SerializerDestroy(Serializer* serializer)
-{
-	Deallocate(serializer);
 }
 
 //-----------------------------------//
@@ -471,40 +462,12 @@ void ReflectionWalk(const Object* object, ReflectionContext* context)
 
 //-----------------------------------//
 
-Object* SerializerLoad(Serializer* serializer)
+Object* Serializer::loadObjectFromFile(Serializer& serializer, const Path& file)
 {
-	if( !serializer->load ) return nullptr;
-	if( !serializer->stream ) return nullptr;
+	FileStream stream(file.c_str(), StreamOpenMode::Read);
+	serializer.stream = (Stream *)&stream;
 
-	Object* object = serializer->load(serializer);
-	serializer->stream->close();
-
-	return object;
-}
-
-//-----------------------------------//
-
-bool SerializerSave(Serializer* serializer, const Object* object)
-{
-	if( !serializer->save ) return false;
-	if( !serializer->stream ) return false;
-	
-	serializer->save(serializer, object);
-	serializer->stream->close();
-
-	serializer->object = nullptr;
-
-	return true;
-}
-
-//-----------------------------------//
-
-Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
-{
-	FileStream stream(file.c_str(), StreamOpenMode::Read);	
-	serializer->stream = (Stream *)&stream;
-
-	Object* object = SerializerLoad(serializer);
+	Object* object = serializer.load();
 	stream.close();
 
 	return object;
@@ -512,14 +475,14 @@ Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 
 //-----------------------------------//
 
-bool SerializerSaveObjectToFile(Serializer* serializer, const Path& file, Object* object)
+bool Serializer::saveObjectToFile(Serializer& serializer, const Path& file, Object* object)
 {
 	FileStream stream(file.c_str(), StreamOpenMode::Write);
 
-	serializer->stream = (Stream *)&stream;
-	serializer->object = object;
+	serializer.stream = (Stream *)&stream;
+	serializer.object = object;
 	
-	if( !SerializerSave(serializer, object) )
+	if (!serializer.save(object))
 		return false;
 
 	stream.close();
@@ -536,7 +499,7 @@ void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 s
 {
 	const Field* field = context->field;
 
-	if( FieldIsRawPointer(field) )
+	if (FieldIsRawPointer(field))
 	{
 		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
 		array->resize(size);

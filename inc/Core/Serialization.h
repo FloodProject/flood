@@ -128,45 +128,60 @@ struct API_CORE ReflectionContext
 //-----------------------------------//
 
 class Stream;
-struct Serializer;
+class Serializer;
 
-typedef Object* (*SerializerLoadFunction)(Serializer*);
-typedef bool    (*SerializerSaveFunction)(Serializer*, const Object*);
-
-struct API_CORE Serializer
+enum SerializerType
 {
-	Serializer();
-	virtual ~Serializer();
-
-	Allocator* alloc;
-	Stream* stream;
-	Object* object;
-
-	ReflectionContext serializeContext;
-	ReflectionContext deserializeContext;
-
-	SerializerLoadFunction load;
-	SerializerSaveFunction save;
+	Json,
+	Binary
 };
 
-//-----------------------------------//
+class API_CORE Serializer
+{
+public
+	:
+	/**
+	 * Create new serializer
+	 * @param allocator allocator used for this instance 
+	 */
+	Serializer(Allocator* allocator);
+	virtual ~Serializer();
 
-// Creates a new JSON serializer.
-API_CORE Serializer* SerializerCreateJSON(Allocator*, ReflectionHandleContextMap*);
+	/**
+	 * Loads an object from stream.
+	 */
+	virtual Object* load() = 0;
 
-// Creates a new binary serializer.
-API_CORE Serializer* SerializerCreateBinary(Allocator*, ReflectionHandleContextMap*);
+	/**
+	 * Saves an object to stream.
+	 * @param obj object to save
+	 */
+	virtual bool save(const Object* obj) = 0;
 
-// Destroys the serializer.
-API_CORE void SerializerDestroy(Serializer*);
+	/**
+	 * Wrapper for file-based loading.
+	 * @param serializer serializer to perform the loading
+	 * @param file file path to create the stream from
+	 */
+	static Object* loadObjectFromFile(Serializer& serializer, 
+		const Path& file);
+	
+	/**
+	 * Wrapper for file-based saving.
+	 * @param serializer serializer to perform the saving
+	 * @param file file path to create the stream from
+	 * @param object object to save
+	 */
+	static bool saveObjectToFile(Serializer& serializer, 
+		const Path& file, Object* object);
 
-// Loads an object from a stream.
-API_CORE Object* SerializerLoad(Serializer*);
-API_CORE bool SerializerSave(Serializer*, const Object* object);
+	Allocator* allocator; //!< allocator used for the serializer instance
+	Stream* stream; //!< stream to save and load objects from
+	Object* object; //!< object being loaded or saved
 
-// Wrappers for file-based loading and saving.
-API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
-API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path&, Object* object);
+	ReflectionContext serializeContext; //!< reflection context used for serialization
+	ReflectionContext deserializeContext; //!< reflection context used for deserialization
+};
 
 //-----------------------------------//
 

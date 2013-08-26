@@ -613,7 +613,7 @@ static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, Object* newObject )
+static Object* DeserializeComposite(ReflectionContext* context, Object* newObject)
 {
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();
@@ -648,7 +648,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 		return 0;
 
 	if( !newObject )
-		newObject = (Object*) ClassCreateInstance(newClass, json->alloc);
+		newObject = (Object*) ClassCreateInstance(newClass, json->allocator);
 
 	if( !newObject ) return 0;
 
@@ -681,60 +681,56 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 
 //-----------------------------------//
 
-static Object* SerializeLoad( Serializer* serializer )
+Object* SerializerJSON::load()
 {
-	SerializerJSON* json = (SerializerJSON*) serializer;
-	
-	json->rootValue = nullptr;
-	json->values.clear();
-	json->arrays.clear();
+	rootValue = nullptr;
+	values.clear();
 
 	String text;
-	json->stream->readString(text);
-	json->stream->close();
+	stream->readString(text);
+	stream->close();
 
-	json_t* rootValue;
+	json_t* _rootValue;
 
 	LocaleSwitch locale;
-	rootValue = json_loads(text.c_str(), 0, nullptr);
+	_rootValue = json_loads(text.c_str(), 0, nullptr);
 	
-	if( !rootValue )
+	if (!_rootValue)
 	{
-		LogError("Could not parse JSON text of '%s'", json->stream->path.c_str());
+		LogError("Could not parse JSON text of '%s'", stream->path.c_str());
 		return nullptr;
 	}
 
-	json->rootValue = rootValue;
+	rootValue = _rootValue;
 	
-	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = serializer->object;
+	ReflectionContext* context = &deserializeContext;
 
-	json->values.push_back(rootValue);
+	values.push_back(rootValue);
 
 	object = DeserializeComposite(context, object);
 
-	json->values.pop_back();
-	assert( json->values.empty() );
+	values.pop_back();
+	assert(values.empty());
 
 	json_decref(rootValue);
+
+	stream->close();
 
 	return object;
 }
 
 //-----------------------------------//
 
-static bool SerializeSave( Serializer* serializer, const Object* object )
+bool SerializerJSON::save(const Object* obj)
 {
-	SerializerJSON* json = (SerializerJSON*) serializer;
+	this->rootValue = nullptr;
+	values.clear();
+	object = const_cast<Object *>(obj);
 
-	json->rootValue = nullptr;
-	json->values.clear();
-	json->arrays.clear();
-
-	ReflectionWalk(object, &json->serializeContext);
-	assert( json->values.size() == 1 );
+	ReflectionWalk(object, &serializeContext);
+	assert( values.size() == 1 );
 		
-	json_t* rootValue = json->values.back();
+	json_t* rootValue = values.back();
 
 	// Always switch to the platform independent "C" locale when writing
 	// JSON, else the library will format the data erroneously.
@@ -745,14 +741,16 @@ static bool SerializeSave( Serializer* serializer, const Object* object )
 	
 	char* dump = json_dumps(rootValue, flags);
 	
-	if( dump )
-		json->stream->writeString(dump);
+	if (dump)
+		stream->writeString(dump);
 	
-	json->stream->close();
+	stream->close();
 
 	Deallocate(dump);
 	json_decref(rootValue);
 
+	object = nullptr;
+	
 	return true;
 }
 
@@ -772,18 +770,14 @@ static void JsonDeallocate(void* p)
 }
 #endif
 
-Serializer* SerializerCreateJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap)
+SerializerJSON::SerializerJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap)
+	: Serializer(alloc)
 {
 	#pragma TODO("Hook memory allocators to JSON library")
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
-	SerializerJSON* serializer = Allocate(alloc, SerializerJSON);
-	serializer->load = SerializeLoad;
-	serializer->save = SerializeSave;
-	serializer->alloc = alloc;
-
-	ReflectionContext& sCtx = serializer->serializeContext;
-	sCtx.userData = serializer;
+	ReflectionContext& sCtx = serializeContext;
+	sCtx.userData = this;
 	sCtx.walkArray = SerializeArray;
 	sCtx.walkComposite = SerializeComposite;
 	sCtx.walkCompositeField = SerializeField;
@@ -791,13 +785,11 @@ Serializer* SerializerCreateJSON(Allocator* alloc, ReflectionHandleContextMap* h
 	sCtx.walkEnum = SerializeEnum;
 	sCtx.handleContextMap = handleContextMap;
 
-	ReflectionContext& dCtx = serializer->deserializeContext;
-	dCtx.userData = serializer;
+	ReflectionContext& dCtx = deserializeContext;
+	dCtx.userData = this;
 	dCtx.walkCompositeFields = DeserializeFields;
 	dCtx.walkCompositeField = DeserializeField;
 	sCtx.handleContextMap = handleContextMap;
-
-	return serializer;
 }
 
 //-----------------------------------//

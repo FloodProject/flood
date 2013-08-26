@@ -539,7 +539,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 
 	// Instantiate an instance of the class.
 	if( !newObject )
-		newObject = (Object*) ClassCreateInstance(newClass, bin->alloc);
+		newObject = (Object*) ClassCreateInstance(newClass, bin->allocator);
 
 	if( !newObject ) return 0;
 
@@ -573,56 +573,53 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 
 //-----------------------------------//
 
-static Object* SerializeLoad( Serializer* serializer )
+Object* SerializerBinary::load()
 {
-	SerializerBinary* bin = (SerializerBinary*) serializer;
-	if( !bin->stream ) return nullptr;
+	if(!stream) return nullptr;
 
-	int64 size = bin->stream->size();
+	int64 size = stream->size();
 	if( size == 0 ) return nullptr;
 
 	MemoryStream ms(size);
-	bin->ms = &ms;
-	bin->stream->readBuffer(bin->ms->data.data(), size);
+	this->ms = &ms;
+	stream->readBuffer(this->ms->data.data(), size);
 
-	ReflectionContext* context = &serializer->deserializeContext;
-
-	Object* object = serializer->object;
+	ReflectionContext* context = &deserializeContext;
 	object = DeserializeComposite(context, object);
 	
+	stream->close();
+
 	return object;
 }
 
 //-----------------------------------//
 
-static bool SerializeSave( Serializer* serializer, const Object* object )
+bool SerializerBinary::save(const Object* obj)
 {
-	SerializerBinary* bin = (SerializerBinary*) serializer;
-	if( !bin->stream ) return false;
+	if (!stream ) return false;
 
 	MemoryStream ms(1024);
-	bin->ms = &ms;
-
-	ReflectionWalk(object, &bin->serializeContext);
-	bin->stream->write(bin->ms->data.data(), bin->ms->position);
+	this->ms = &ms;
+	object = const_cast<Object *>(obj);
+	
+	ReflectionWalk(object, &serializeContext);
+	stream->write(this->ms->data.data(), this->ms->position);
 
 	ms.close();
+
+	stream->close();
+	object = nullptr;
 
 	return true;
 }
 
 //-----------------------------------//
 
-Serializer* SerializerCreateBinary(Allocator* alloc,
-								   ReflectionHandleContextMap* handleContextMap)
+SerializerBinary::SerializerBinary(Allocator* alloc, ReflectionHandleContextMap* handleContextMap)
+	: Serializer(alloc)
 {
-	SerializerBinary* serializer = Allocate(alloc, SerializerBinary);
-	serializer->load = SerializeLoad;
-	serializer->save = SerializeSave;
-	serializer->alloc = alloc;
-	
-	ReflectionContext& sCtx = serializer->serializeContext;
-	sCtx.userData = serializer;
+	ReflectionContext& sCtx = serializeContext;
+	sCtx.userData = this;
 	sCtx.walkComposite = SerializeComposite;
 	sCtx.walkCompositeField = SerializeField;
 	sCtx.walkPrimitive = SerializePrimitive;
@@ -630,13 +627,11 @@ Serializer* SerializerCreateBinary(Allocator* alloc,
 	sCtx.walkArray = SerializeArray;
 	sCtx.handleContextMap = handleContextMap;
 
-	ReflectionContext& dCtx = serializer->deserializeContext;
-	dCtx.userData = serializer;
+	ReflectionContext& dCtx = deserializeContext;
+	dCtx.userData = this;
 	dCtx.walkPrimitive = DeserializePrimitive;
 	dCtx.walkEnum = DeserializeEnum;
 	dCtx.handleContextMap = handleContextMap;
-
-	return serializer;
 }
 
 //-----------------------------------//
