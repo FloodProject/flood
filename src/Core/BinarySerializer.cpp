@@ -38,7 +38,7 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType wt)
 	}
 	else if(wt == ReflectionWalkType::End)
 	{
-		EncodeVariableInteger(bin->ms, FieldInvalid);
+		EncodeVariableInteger(bin->ms, Field::FieldInvalid);
 		return;
 	}
 }
@@ -57,7 +57,7 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType wt)
 	}
 	else if(wt == ReflectionWalkType::End)
 	{
-		EncodeVariableInteger(bin->ms, FieldInvalid);
+		EncodeVariableInteger(bin->ms, Field::FieldInvalid);
 		return;
 	}
 }
@@ -389,7 +389,7 @@ static void DeserializeArray( ReflectionContext* context )
 	if(size == 0) return;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
-	void* address = ClassGetFieldAddress(context->object, field);
+	void* address = Class::GetFieldAddress(context->object, field);
 	void* begin = ReflectionArrayResize(context, address, size);
 
 	uint32 n = 0;
@@ -403,7 +403,7 @@ static void DeserializeArray( ReflectionContext* context )
 	uint64 end;
 	DecodeVariableInteger(bin->ms, end);
 	
-	if( end != FieldInvalid )
+	if( end != Field::FieldInvalid )
 	{
 		LogAssert("Expected end of array");
 		return;
@@ -434,7 +434,7 @@ static void DeserializeField( ReflectionContext* context )
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
 
-		void* address = ClassGetFieldAddress(context->object, field);
+		void* address = Class::GetFieldAddress(context->object, field);
 		Object* store = FieldIsPointer(field) ? 0 : (Object*) address;
 
 		Object* object = DeserializeComposite(context, store);
@@ -477,10 +477,10 @@ void DeserializeFields( ReflectionContext* context )
 		FieldId id = (FieldId) val;
 		
 		// This marks the end of the composite.
-		if(id == FieldInvalid) break;
+		if(id == Field::FieldInvalid) break;
 
 		Class* composite = context->composite;
-		Field* newField = ClassGetFieldById(composite, id);
+		Field* newField = composite->getFieldById(id);
 		
 		if( !newField )
 		{
@@ -503,12 +503,12 @@ void DeserializeFields( ReflectionContext* context )
 static Object* DeserializeComposite( ReflectionContext* context, Object* newObject )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
-	ClassIdMap& ids = ClassGetIdMap();
+	ClassIdMap& ids = Class::GetIdMap();
 
 	// Read the class id.
 	uint64 val;
 	
-	if( !DecodeVariableInteger(bin->ms, val) )
+	if (!DecodeVariableInteger(bin->ms, val))
 		return nullptr;
 
 	ClassId id = (ClassId) val;
@@ -516,7 +516,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	// Find the class id.
 	ClassIdMap::iterator it = ids.find(id);
 
-	if( it == ids.end() )
+	if(it == ids.end())
 	{
 		LogDebug("Deserialize: Invalid class id");
 		return nullptr;
@@ -524,7 +524,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 
 	Class* newClass = it->second;
 	
-	if( !newClass )
+	if (!newClass)
 	{
 		LogDebug("Deserialize: Invalid class id");
 		return nullptr;
@@ -533,15 +533,15 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 #if 0
 	Class* fieldClass = (Class*) context->field;
 
-	if( fieldClass && !ClassInherits(fieldClass, newClass) )
+	if (fieldClass && !ClassInherits(fieldClass, newClass))
 		return 0;
 #endif
 
 	// Instantiate an instance of the class.
-	if( !newObject )
-		newObject = (Object*) ClassCreateInstance(newClass, bin->allocator);
+	if (!newObject)
+		newObject = (Object*) newClass->createInstance(bin->allocator);
 
-	if( !newObject ) return 0;
+	if (!newObject) return 0;
 
 	Class* objectClass = context->objectClass;
 	Class* composite = context->composite;
@@ -551,7 +551,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	context->composite = newClass;
 	context->object = newObject;
 
-	if( newClass->serialize )
+	if (newClass->serialize)
 	{
 		newClass->serialize(context, ReflectionWalkType::Begin);
 
@@ -561,7 +561,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	else
 		DeserializeFields(context);
 
-	if( ClassInherits(newClass, ReflectionGetType(Object)) )
+	if (newClass->inherits(ObjectGetType()))
 		newObject->fixUp();
 
 	context->object = object;

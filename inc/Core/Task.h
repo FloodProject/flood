@@ -72,7 +72,6 @@ public:
 	 */
 	void add(Task* task, uint8 priority);
 
-
 	/**
 	 * Waits on all threads to terminate.
 	 */

@@ -49,11 +49,11 @@ enum struct ReflectionWalkType : uint8
 
 //-----------------------------------//
 
-struct Type;
-struct Enum;
-struct Class;
-struct Field;
-struct Primitive;
+class Type;
+class Enum;
+class Class;
+class Field;
+class Primitive;
 struct Object;
 struct ReflectionContext;
 

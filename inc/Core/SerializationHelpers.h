@@ -21,7 +21,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct Field;
+class Field;
 
 class API_CORE SerializerBinary : public Serializer
 {

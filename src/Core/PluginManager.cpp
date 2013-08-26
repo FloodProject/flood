@@ -70,7 +70,7 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
-		if(ClassGetType(plugin) == klass) return plugin;
+		if(Class::GetType(plugin) == klass) return plugin;
 	}
 
 	return nullptr;

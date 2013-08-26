@@ -57,24 +57,24 @@ SUITE(Core)
 	{
 		Enum* enumE = EGetType();
 		CHECK(enumE);
-		CHECK_EQUAL(enumE, ReflectionFindType("E"));
+		CHECK_EQUAL(enumE, ReflectionDatabase::GetDatabase().findType("E"));
 
 		CHECK_EQUAL("E", enumE->name);
 		CHECK_EQUAL(sizeof(E), enumE->size);
 		CHECK_EQUAL((uint8)TypeKind::Enumeration, (uint8)enumE->kind);
 		CHECK_EQUAL(E::Max, enumE->values.size());
 
-		CHECK_EQUAL("F1", EnumGetValueName(enumE, E::F1));
-		CHECK_EQUAL(E::F1, EnumGetValue(enumE, "F1"));
+		CHECK_EQUAL("F1", enumE->getValueName(E::F1));
+		CHECK_EQUAL(E::F1, enumE->getValue("F1"));
 	}
 
 	TEST(ClassA)
 	{
-		Class* klassA = ReflectionGetType(A);
+		Class* klassA = AGetType();
 		CHECK(nullptr != klassA);
-		CHECK_EQUAL(klassA, ReflectionFindType("A"));
+		CHECK_EQUAL(klassA, ReflectionDatabase::GetDatabase().findType("A"));
 
-		CHECK(ReflectionIsComposite(klassA));
+		CHECK(klassA->isComposite());
 
 		A bar;
 		A* foo = AllocateHeap(A);
@@ -84,11 +84,11 @@ SUITE(Core)
 
 		Deallocate(foo);
 
-		A* instanceA = (A*) ClassCreateInstance( klassA, AllocatorGetHeap() );
+		A* instanceA = (A*) klassA->createInstance(AllocatorGetHeap());
 
-		Field* field = ClassGetField(klassA, "foo");
+		Field* field = klassA->getField("foo");
 		CHECK(nullptr != field);
-		CHECK(ReflectionIsPrimitive(field->type));
+		CHECK(field->type->isPrimitive());
 
 		FieldSet<int32>(field, instanceA, 10);
 		CHECK_EQUAL(10, instanceA->foo);
@@ -98,33 +98,33 @@ SUITE(Core)
 
 	TEST(ClassB)
 	{
-		Class* klassB = ReflectionGetType(B);
+		Class* klassB = BGetType();
 		CHECK(nullptr != klassB);
-		CHECK_EQUAL(klassB, ReflectionFindType("B"));
+		CHECK_EQUAL(klassB, ReflectionDatabase::GetDatabase().findType("B"));
 
-		CHECK(ClassInherits(klassB, AGetType()));
-		CHECK(!ClassInherits(AGetType(), klassB));
+		CHECK(klassB->inherits(AGetType()));
+		CHECK(!AGetType()->inherits(klassB));
 	}
 
 	TEST(Objects)
 	{
-		ReflectionDatabase& typedb = ReflectionGetDatabase();
+		ReflectionDatabase& typedb = ReflectionDatabase::GetDatabase();
 
-		for( auto it = typedb.types.begin(); it != typedb.types.end(); it++ )
+		for(auto it : typedb.types)
 		{
-			Type* type = it->second;
-			if( !ReflectionIsComposite(type) ) continue;
+			Type* type = it.second;
+			if (!type->isComposite()) continue;
 
 			Class* klass = (Class*) type;
 
-			if( !ClassInherits(klass, ReflectionGetType(Object)) )
+			if (!klass->inherits(ObjectGetType()))
 				continue;
 
-			if( ClassIsAbstract(klass) ) continue;
+			if (klass->isAbstract()) continue;
 
-			Object* object = (Object*) ClassCreateInstance(klass, AllocatorGetHeap());
+			Object* object = (Object*) klass->createInstance(AllocatorGetHeap());
 
-			Class* runtimeClass = ClassGetType(object);
+			Class* runtimeClass = Class::GetType(object);
 			CHECK_EQUAL(klass, runtimeClass);
 
 			Deallocate(object);

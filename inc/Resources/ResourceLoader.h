@@ -72,7 +72,7 @@ struct API_RESOURCE ResourceStream
 	Resource* prepare(ResourceLoadOptions&) OVERRIDE { return AllocateThis(T); }
 
 #define RESOURCE_LOADER_CLASS(T) \
-	Class* getResourceClass() const OVERRIDE { return ReflectionGetType(T); }
+	Class* getResourceClass() const OVERRIDE { return T##GetType(); }
 
 /**
  * Resource loaders decode resource data into a proper resource.
