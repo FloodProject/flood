@@ -15,6 +15,10 @@ namespace Flood.RPC
 
         public Delegate Delegate;
 
+        public RPCStub Stub;
+
+        private RPCCallProcessor callProcessor;
+
         public RPCDelegate()
         {
             callProcessor = new RPCCallProcessor();
@@ -26,9 +30,26 @@ namespace Flood.RPC
             RemoteId = remoteId;
             LocalId = localId;
             DelegateId = delegateId;
-            Delegate = del;
+
+            callProcessor = new RPCCallProcessor();
         }
 
-        public abstract void Invoke(RPCData data);
+        public abstract void Invoke(RPCData.Call call);
+
+        internal void ProcessReply(RPCData.Reply reply)
+        {
+            callProcessor.ProcessReply(reply);
+        }
+
+        public RPCData.Call CreateCall(int methodId)
+        {
+            return callProcessor.CreateCall(methodId, Peer, LocalId, RemoteId, true);
+        }
+
+        public Task<RPCData> DispatchCall(RPCData.Call call)
+        {
+            return callProcessor.DispatchCall(call);
+        }
     }
+
 }

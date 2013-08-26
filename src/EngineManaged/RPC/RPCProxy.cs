@@ -7,18 +7,13 @@ namespace Flood.RPC
 {
     public abstract class RPCProxy : RPCStub
     {
-        private Dictionary<int, TaskCompletionSource<RPCData>> pendingCalls;
         public RPCPeer Peer { get; private set; }
         public int RemoteId { get; private set; }
 
+        private RPCCallProcessor callProcessor;
+
         /// Maps a Event id to a Delegate id.
         private Dictionary<int, int> eventIdsDelegates;
-
-        /// Maps a Delegate id to a Delegate
-        private Dictionary<int, RPCDelegate> delegates;
-
-        private int sequenceNumber;
-        private int delegateIdCounter;
 
         protected RPCProxy(RPCPeer peer, int remoteId, int id)
             : base(id)
@@ -26,42 +21,21 @@ namespace Flood.RPC
             Peer = peer;
             RemoteId = remoteId;
 
-            pendingCalls = new Dictionary<int, TaskCompletionSource<RPCData>>();
-            delegates = new Dictionary<int, RPCDelegate>();
+            callProcessor = new RPCCallProcessor();
+
             eventIdsDelegates = new Dictionary<int, int>();
         }
 
-        protected int GetNextSequenceNumber()
+        protected void Subscribe<T>(int eventId, Delegate del)
+            where T : RPCDelegate, new()
         {
-            return Interlocked.Increment(ref sequenceNumber);
-        }
-
-        protected int GetNextDelegateId()
-        {
-            return Interlocked.Increment(ref delegateIdCounter);
-        }
-
-        protected Task<RPCData> DispatchCall(RPCData data, int seqNumber)
-        {
-            var tcs = new TaskCompletionSource<RPCData>();
-            pendingCalls.Add(seqNumber, tcs);
-
-            data.Peer.Dispatch(data);
-
-            return tcs.Task;
-        }
-
-        protected void Subscribe(RPCDelegate @delegate, int eventId)
-        {
-            var delegateId = GetNextDelegateId();
-
+            var rpcDelegate = CreateDelegate<T>(Peer, RemoteId, del);
             var data = RPCData.Create(this, RPCDataType.EventSubscribe);
             data.Serializer.WriteI32(eventId);
-            data.Serializer.WriteI32(delegateId);
+            data.Serializer.WriteI32(rpcDelegate.DelegateId);
             data.Dispatch();
 
-            delegates.Add(delegateId, @delegate);
-            eventIdsDelegates.Add(eventId, delegateId);
+            eventIdsDelegates.Add(eventId, rpcDelegate.DelegateId);
         }
 
         protected void Unsubscribe(int eventId)
@@ -77,33 +51,19 @@ namespace Flood.RPC
             eventIdsDelegates.Remove(eventId);
         }
 
-        internal void ProcessReply(RPCData reply)
+        internal void ProcessReply(RPCData.Reply reply)
         {
-            var call = reply.Serializer.ReadProcedureCallBegin();
-            if (!pendingCalls.ContainsKey(call.SequenceNumber))
-            {
-                Log.Error("Received unexpected reply.");
-                return;
-            }
-
-            pendingCalls[call.SequenceNumber].SetResult(reply);
+            callProcessor.ProcessReply(reply);
         }
 
-        internal void ProcessDelegateCall(RPCData data)
+        public RPCData.Call CreateCall(int methodId)
         {
-            var delegateId = data.Serializer.ReadI32();
-            if (!delegates.ContainsKey(delegateId))
-            {
-                Log.Error("Received unexpected delegate id to be invoked.");
-                return;
-            }
-
-            delegates[delegateId].Invoke(data);
+            return callProcessor.CreateCall(methodId, Peer, Id, RemoteId, false);
         }
 
-        internal void ProcessDelegateReply(RPCData data)
+        public Task<RPCData> DispatchCall(RPCData.Call call)
         {
-            // TODO
+            return callProcessor.DispatchCall(call);
         }
     }
 }
