@@ -88,8 +88,8 @@ SUITE(Core)
 		ArchiveVirtual archive;
 		CHECK(archive.isValid);
 
-		archive.archiveMount(archive_zip, "");
-		archive.archiveMount(archive_dir, "");
+		archive.mount(archive_zip, "");
+		archive.mount(archive_dir, "");
 
 		std::vector<Path> files;
 		archive.enumerateFiles(files);
