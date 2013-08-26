@@ -14,14 +14,12 @@ project "RPCGen.Tests"
     }
     
     excludes { "Services/*" }
-	excludes { "Interfaces/*" }
     
     links
     {
         "System",
         "RPCGen",
         "EngineManaged",
-		"RPCGen.Tests.Interfaces",
         path.join(depsdir,"NUnit","nunit.framework"),
     }
 
@@ -37,6 +35,8 @@ project "RPCGen.Tests.Services"
 	uuid "F8CDF6F2-1B2A-4540-B5C3-5ECED4937C2B"
     
     location "Services/"
+
+	SetupRPCGen("RPCGen.Tests.Services",".dll")
     
     files { "Services/**.cs" }
     
@@ -45,16 +45,5 @@ project "RPCGen.Tests.Services"
         "System",
         "EngineManaged",
         "EngineBindings",
-		"RPCGen.Tests.Interfaces",
         path.join(depsdir,"NUnit","nunit.framework"),
     }
-
-project "RPCGen.Tests.Interfaces"
-
-    kind "SharedLib"
-    language "C#"
-	uuid "3D99B14D-803E-4EC5-81E1-98E9C2057321"
-    
-    location "Interfaces/"
-    
-    files { "Interfaces/**.cs" }
