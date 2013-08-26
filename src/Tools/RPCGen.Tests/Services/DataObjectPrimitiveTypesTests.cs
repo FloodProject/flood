@@ -5,12 +5,10 @@ using Flood.RPC.Metadata;
 using NUnit.Framework;
 using System.Reflection;
 using System.Threading.Tasks;
-using RPCGen.Tests.Interfaces;
 
 namespace RPCGen.Tests.Services
 {
-    
-
+    [TestFixture]
     public class DataObjectPrimitiveTypesTests : IPrimitiveTypesTests
     {
         #region DataObjects
@@ -172,17 +170,20 @@ namespace RPCGen.Tests.Services
 
         IService service;
 
+        [TestFixtureSetUp]
         public void SetUp()
         {
             var serviceImpl = new Service();
             service = Helper.GetProxy<IService>(serviceImpl);
         }
 
+        [Test]
         public void TestVoid()
         {
             service.TestVoid();
         }
 
+        [Test]
         public void TestByte()
         {
             ByteDO d;
@@ -199,6 +200,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestFloat()
         {
             FloatDO d;
@@ -215,6 +217,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestDouble()
         {
             DoubleDO d;
@@ -231,11 +234,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
-        public void TestException()
-        {
-            throw new NotImplementedException();
-        }
-
+        [Test]
         public void TestShort()
         {
             ShortDO d;
@@ -252,6 +251,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestInt()
         {
             IntDO d;
@@ -268,6 +268,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestLong()
         {
             LongDO d;
@@ -284,6 +285,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestString()
         {
             StringDO d;
@@ -305,6 +307,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestGuid()
         {
             GuidDO d;
@@ -316,6 +319,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(d, t.Result);
         }
 
+        [Test]
         public void TestDateTime()
         {
             DateTimeDO d;

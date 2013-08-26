@@ -1,14 +1,11 @@
-﻿using System;
-using Flood;
-using Flood.RPC;
-using Flood.RPC.Metadata;
+﻿using Flood.RPC.Metadata;
 using NUnit.Framework;
-using System.Reflection;
+using System;
 using System.Threading.Tasks;
-using RPCGen.Tests.Interfaces;
 
 namespace RPCGen.Tests.Services
 {
+    [TestFixture]
     public class ServicePrimitiveTypesTests : IPrimitiveTypesTests
     {
         #region Service
@@ -103,17 +100,20 @@ namespace RPCGen.Tests.Services
 
         IService service;
 
+        [TestFixtureSetUp]
         public void SetUp()
         {
             var serviceImpl = new Service();
             service = Helper.GetProxy<IService>(serviceImpl);
         }
 
+        [Test]
         public void TestVoid()
         {
             service.TestVoid();
         }
 
+        [Test]
         public void TestByte()
         {
             byte v;
@@ -130,6 +130,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestFloat()
         {
             float v;
@@ -146,6 +147,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestDouble()
         {
             double v;
@@ -162,11 +164,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
-        public void TestException()
-        {
-            throw new NotImplementedException();
-        }
-
+        [Test]
         public void TestShort()
         {
             short v;
@@ -183,6 +181,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestInt()
         {
             int v;
@@ -199,6 +198,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestLong()
         {
             long v;
@@ -215,6 +215,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestString()
         {
             string v;
@@ -236,6 +237,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestGuid()
         {
             var v = new Guid("CB873FC8-6759-4F80-81BE-0EC214BAB26E");
@@ -245,6 +247,7 @@ namespace RPCGen.Tests.Services
             Assert.AreEqual(v, t.Result);
         }
 
+        [Test]
         public void TestDateTime()
         {
             DateTime v;
