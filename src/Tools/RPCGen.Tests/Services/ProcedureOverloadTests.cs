@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class MethodOverloadTests
+    public class ProcedureOverloadTests
     {
         #region Service
         [Service]

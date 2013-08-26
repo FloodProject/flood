@@ -5,7 +5,7 @@ using System;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class ServiceEventsPrimitiveTypesTests : IPrimitiveTypesTests
+    public class ServiceEventsTests : IPrimitiveTypesTests
     {
         #region Service
         [Service]
