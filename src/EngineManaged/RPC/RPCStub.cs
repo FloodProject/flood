@@ -29,23 +29,35 @@ namespace Flood.RPC
             delegates[call.MethodId].Invoke(call);
         }
 
-        public RPCDelegate CreateDelegate<T>(RPCPeer peer, int remoteId, Delegate del = null)
-            where T : RPCDelegate, new()
+        public RPCDelegate CreateDelegateProxy<T>(RPCPeer peer, int remoteId, int remoteDelegateId)
+            where T : RPCDelegateProxy, new()
         {
             var delegateId = Interlocked.Increment(ref delegateIdCounter);
-            var rpcDelegate = Activator.CreateInstance<T>();
-            rpcDelegate.Peer = peer;
-            rpcDelegate.LocalId = Id;
-            rpcDelegate.RemoteId = remoteId;
-            rpcDelegate.DelegateId = delegateId;
-            rpcDelegate.Stub = this;
+            var delegateProxy = Activator.CreateInstance<T>();
+            delegateProxy.Peer = peer;
+            delegateProxy.LocalId = Id;
+            delegateProxy.RemoteId = remoteId;
+            delegateProxy.Id = delegateId;
+            delegateProxy.RemoteDelegateId = remoteDelegateId;
+            delegateProxy.Stub = this;
 
-            if (del != null)
-                rpcDelegate.Delegate = del;
+            delegates.Add(delegateId, delegateProxy);
 
-            delegates.Add(delegateId, rpcDelegate);
+            return delegateProxy;
+        }
 
-            return rpcDelegate;
+        public RPCDelegate CreateDelegateImpl<T>(RPCPeer peer, int remoteId, Delegate del)
+            where T : RPCDelegateImpl, new()
+        {
+            var delegateId = Interlocked.Increment(ref delegateIdCounter);
+            var delegateImpl = Activator.CreateInstance<T>();
+            delegateImpl.Id = delegateId;
+            delegateImpl.Delegate = del;
+            delegateImpl.Stub = this;
+
+            delegates.Add(delegateId, delegateImpl);
+
+            return delegateImpl;
         }
 
         public RPCDelegate GetDelegate(int delegateId)
