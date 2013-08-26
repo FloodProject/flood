@@ -172,12 +172,15 @@ namespace Flood.Tools.RPCGen
                 if (IsEventMethod(type, method))
                     continue;
 
+                var procedureId = GetProcedureCallId(method);
+
                 GenerateProtocolMethod(method
-                    , GetProcedureCallId(method).ToString()
+                    , procedureId
                     , method.Name
                     , GetProcedureArgsClassName(method)
                     , GetProcedureResultClassName(method)
                     , "this"
+                    , "RPCData.Call"
                     , PrettyName(type));
             }
 
@@ -190,7 +193,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        private void GenerateProtocolMethod(MethodInfo method, string methodId, string methodName, string argsClassName, string resultClassName, string stubName, string methodClassName = null)
+        private void GenerateProtocolMethod(MethodInfo method, int? methodId, string methodName, string argsClassName, string resultClassName, string stubName, string callType, string methodClassName = null)
         {
             var methodPrefix = "";
             if (!string.IsNullOrEmpty(methodClassName))
@@ -209,8 +212,9 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            var sendMethodName = methodName + "Send" + methodId;
-            var receiveMethodName = methodName + "Receive" + methodId;
+            var methodIdText = (methodId.HasValue) ? methodId.Value.ToString() : "";
+            var sendMethodName = methodName + "Send" + methodIdText;
+            var receiveMethodName = methodName + "Receive" + methodIdText;
 
             Write("var call = {0}(", sendMethodName);
             for (var i = 0; i < parameters.Length; i++)
@@ -237,7 +241,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate send method
-            GenerateProtocolSend(method, parameters, methodId, sendMethodName, argsClassName, stubName);
+            GenerateProtocolSend(method, parameters, methodIdText, sendMethodName, argsClassName, stubName, callType);
 
             // Generate receive method
             GenerateProtocolReceive(method, receiveMethodName, resultClassName, stubName);
@@ -285,9 +289,9 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters, string methodId, string methodName, string argsClassName, string stubName)
+        private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters, string methodId, string methodName, string argsClassName, string stubName, string callType)
         {
-            Write("private RPCData.Call {0}(", methodName);
+            Write("private {0} {1}(", callType, methodName);
             GenerateParameterList(parameters);
             WriteLine(")");
             WriteStartBraceIndent();
@@ -327,7 +331,7 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
             WriteLine("if({0} == null)", eventName2);
             WriteStartBraceIndent();
-            WriteLine("Subscribe<{0}>({1}, value);", GetDelegateClassName(@delegate), eventId);
+            WriteLine("Subscribe<{0}>({1}, value);", GetDelegateImplClassName(@delegate), eventId);
             WriteCloseBraceIndent();
             WriteLine("{0} += value;", eventName2);
             WriteCloseBraceIndent();
@@ -543,18 +547,18 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateEventSubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int implId, int proxyId, int delegateId)", GetEventSubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventSubscribeMethodName(@event));
             WriteStartBraceIndent();
 
             var @delegate = @event.EventHandlerType;
-            WriteLine("var del = new {0}(peer, implId, proxyId, delegateId);", GetDelegateClassName(@delegate));
-            WriteLine("iface_.{0} += del.InvokeRemote;", @event.Name);
+            WriteLine("var del = CreateDelegateProxy<{0}>(peer, remoteId, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
+            WriteLine("iface_.{0} += ({1}) del.Delegate;", @event.Name, PrettyName(@delegate));
             WriteCloseBraceIndent();
         }
 
         private void GenerateEventUnsubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int implId, int proxyId, int delegateId)", GetEventUnsubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventUnsubscribeMethodName(@event));
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
         }
@@ -752,17 +756,32 @@ namespace Flood.Tools.RPCGen
             return type.IsSubclassOf(typeof(Delegate));
         }
 
-        private string GetDelegateClassName(Type type)
+        private string GetDelegateName(Type type, bool doCreate = true)
         {
             if (!IsDelegate(type))
-                throw new ArgumentException("Type "+ type+" is not a delegate"); 
-            string name;
-            if (delegateNames.TryGetValue(type, out name))
-                return name;
+                throw new ArgumentException("Type " + type + " is not a delegate");
 
-            name = "Delegate"+delegateCounter++;
-            delegateNames.Add(type, name);
+            string name;
+            if (!delegateNames.TryGetValue(type, out name))
+            {
+                if (!doCreate)
+                    throw new Exception("Unknowed delegate name for " + type.FullName);
+
+                name = "Delegate" + delegateCounter++;
+                delegateNames.Add(type, name);
+            }
+
             return name;
+        }
+
+        private string GetDelegateImplClassName(Type type, bool doCreate = true)
+        {
+            return GetDelegateName(type, doCreate) + "Impl";
+        }
+
+        private string GetDelegateProxyClassName(Type type, bool doCreate = true)
+        {
+            return GetDelegateName(type, doCreate) + "Proxy";
         }
 
         private void GenerateDelegateClasses()
@@ -775,32 +794,48 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateDelegateClass(Type type)
         {
-            var className = delegateNames[type];
 
             var methodInvoke = type.GetMethod("Invoke");
             if(methodInvoke == null)
                 throw new Exception();
 
-            WriteLine("public class {0} : RPCDelegate", className);
+            var stubName = "Stub";
+            var proxyName = GetDelegateProxyClassName(type, false);
+            var implName = GetDelegateImplClassName(type, false);
+            var argsName = GetDelegateName(type, false) + "_args";
+            var resultName = GetDelegateName(type, false) + "_result";
+
+            WriteLine("public class {0} : RPCDelegateProxy", proxyName);
             WriteStartBraceIndent();
-            WriteLine("public {0}()", className);
+            WriteLine("public {0}()", proxyName);
             WriteStartBraceIndent();
-            WriteLine("Delegate = new {0}(InvokeRemote);", PrettyName(type));
+            WriteLine("SetDelegate(new {0}(Invoke));", PrettyName(type));
             WriteCloseBraceIndent();
-            NewLine();
-            WriteLine("public {0}(RPCPeer peer, int localId, int remoteId, int delegateId)", className);
-            WriteLine("    : base(peer, localId, remoteId, delegateId)");
-           
-            WriteStartBraceIndent();
-            WriteLine("Delegate = new {0}(InvokeRemote);", PrettyName(type));
+            GenerateProtocolMethod(methodInvoke, null, "Invoke", argsName, resultName, stubName, "RPCData.DelegateCall");
             WriteCloseBraceIndent();
             NewLine();
 
+            WriteLine("public class {0} : RPCDelegateImpl", implName);
+            WriteStartBraceIndent();
+            WriteLine("public {0}()", implName);
+            WriteStartBraceIndent();
+            WriteCloseBraceIndent();
+            NewLine();
+            GenerateDelegateProxyInvoke(methodInvoke, argsName, resultName, stubName);
+            WriteCloseBraceIndent();
+            NewLine();
+
+            GenerateServiceMethodArgs(methodInvoke, argsName);
+            GenerateServiceMethodResult(methodInvoke, resultName);
+        }
+
+        private void GenerateDelegateProxyInvoke(MethodInfo methodInvoke, string argsName, string resultName, string stubName)
+        {
             //Invoke
-            WriteLine("public override void Invoke(RPCData.Call call)");
+            WriteLine("public override void Invoke(RPCData.DelegateCall call)");
             WriteStartBraceIndent();
 
-            WriteLine("var args = new Invoke_args(Stub);");
+            WriteLine("var args = new {0}({1});", argsName, stubName);
             WriteLine("args.Read(call.Data);");
 
             var returnType = methodInvoke.ReturnType;
@@ -826,19 +861,19 @@ namespace Flood.Tools.RPCGen
                 {
                     WriteLine("task.ContinueWith( t =>");
                     WriteStartBraceIndent();
-                    WriteLine("var result = new Invoke_result(Stub);");
+                    WriteLine("var result = new {0}({1});", resultName, stubName);
                     WriteLine("result.Success = t.Result;");
-                    WriteLine("var reply = new RPCData.Reply(call);");
+                    WriteLine("var reply = new RPCData.DelegateReply(call);");
                     WriteLine("result.Write(reply.Data);");
                     WriteLine("reply.Data.Dispatch();");
                     PopIndent();
                     WriteLine("});");
                 }
-               
+
             }
             else
             {
-                WriteLine("var result = new Invoke_result(Stub);");
+                WriteLine("var result = new {0}({1});", resultName, stubName);
                 if (returnType != typeof(void))
                     Write("result.Success = ({0})", PrettyName(returnType));
 
@@ -861,17 +896,6 @@ namespace Flood.Tools.RPCGen
                     WriteLine("reply.Data.Dispatch();");
                 }
             }
-
-
-            WriteCloseBraceIndent();
-            NewLine();
-
-            GenerateProtocolMethod(methodInvoke, "DelegateId", "InvokeRemote", "Invoke_args", "Invoke_result", "Stub");
-
-            NewLine();
-            GenerateServiceMethodArgs(methodInvoke, "Invoke_args");
-            GenerateServiceMethodResult(methodInvoke, "Invoke_result");
-
             WriteCloseBraceIndent();
         }
 
@@ -1215,8 +1239,8 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
                     break;
                 case TType.Delegate:
-                    WriteLine("var del = {0}.CreateDelegate<{1}>({2}.Peer, {2}.Header.RemoteId, {3});", stubName, GetDelegateClassName(type), dataName, varName);
-                    WriteLine("{0}.Serializer.WriteI32(del.DelegateId);", dataName);
+                    WriteLine("var del = {0}.CreateDelegateImpl<{1}>({2}.Peer, {2}.Header.RemoteId, {3});", stubName, GetDelegateImplClassName(type), dataName, varName);
+                    WriteLine("{0}.Serializer.WriteI32(del.Id);", dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1406,8 +1430,8 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0} = new System.DateTime({1}.Serializer.ReadI64());", varName, dataName);
                     break;
                 case TType.Delegate:
-                    WriteLine("var delegateId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("var del = {0}.CreateDelegate<{1}>({2}.Peer, {2}.Header.RemoteId);", stubName, GetDelegateClassName(type), dataName);
+                    WriteLine("var remoteDelegateId = {0}.Serializer.ReadI32();", dataName);
+                    WriteLine("var del = {0}.CreateDelegateProxy<{1}>({2}.Peer, {2}.Header.RemoteId, remoteDelegateId);", stubName, GetDelegateProxyClassName(type), dataName);
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = ({1})del.Delegate;", varName, PrettyName(type));
