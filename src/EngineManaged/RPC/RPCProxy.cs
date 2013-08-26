@@ -27,15 +27,15 @@ namespace Flood.RPC
         }
 
         protected void Subscribe<T>(int eventId, Delegate del)
-            where T : RPCDelegate, new()
+            where T : RPCDelegateImpl, new()
         {
-            var rpcDelegate = CreateDelegate<T>(Peer, RemoteId, del);
+            var rpcDelegate = CreateDelegateImpl<T>(Peer, RemoteId, del);
             var data = RPCData.Create(this, RPCDataType.EventSubscribe);
             data.Serializer.WriteI32(eventId);
-            data.Serializer.WriteI32(rpcDelegate.DelegateId);
+            data.Serializer.WriteI32(rpcDelegate.Id);
             data.Dispatch();
 
-            eventIdsDelegates.Add(eventId, rpcDelegate.DelegateId);
+            eventIdsDelegates.Add(eventId, rpcDelegate.Id);
         }
 
         protected void Unsubscribe(int eventId)
