@@ -10,7 +10,7 @@ namespace Flood.RPC
     public abstract class RPCImpl : RPCStub
     {
         protected delegate Task DProcessCall(RPCData request, ProcedureCall call);
-        protected delegate void DProcessSubscribe(RPCPeer peer, int implId, int proxyId, int delegateId);
+        protected delegate void DProcessSubscribe(RPCPeer peer, int localId, int remoteId, int delegateId);
 
         protected struct Processors
         {
@@ -74,7 +74,7 @@ namespace Flood.RPC
             if (subscribe == null)
                 throw new Exception();
 
-            subscribe(data.Peer, data.Header.ImplId, data.Header.ProxyId, delegateId);
+            subscribe(data.Peer, data.Header.LocalId,  data.Header.RemoteId, delegateId);
         }
 
         internal void ProcessEventUnsubscribe(RPCData data)
