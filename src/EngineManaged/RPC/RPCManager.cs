@@ -90,6 +90,8 @@ namespace Flood.RPC
             var impl = (RPCImpl)Activator.CreateInstance(implType, service, implId);
 
             stubs.Add(implId, impl);
+            impl.RPCManager = this;
+
             return implId;
         }
 
@@ -103,11 +105,13 @@ namespace Flood.RPC
 
             var proxyId = GetNextStubId();
 
-            var proxy = Activator.CreateInstance(proxyType, peer, implId, proxyId);
+            var stub = Activator.CreateInstance(proxyType, peer, implId, proxyId);
+            var proxy = (RPCProxy) stub;
 
-            stubs.Add(proxyId, (RPCProxy)proxy);
+            stubs.Add(proxyId, proxy);
+            proxy.RPCManager = this;
 
-            return (T)proxy;
+            return (T)stub;
         }
     }
 }

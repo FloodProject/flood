@@ -11,6 +11,7 @@ namespace Flood.RPC
         private int delegateIdCounter;
 
         public int Id { get; private set; }
+        public RPCManager RPCManager  { get; internal set; }
 
         protected RPCStub(int id)
         {
