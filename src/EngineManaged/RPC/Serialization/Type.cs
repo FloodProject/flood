@@ -44,5 +44,6 @@ namespace Flood.RPC.Serialization
         DateTime = 16,
         Array = 17,
         Delegate = 18,
+        Service = 19,
     }
 }
