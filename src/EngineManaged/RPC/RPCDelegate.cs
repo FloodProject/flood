@@ -8,12 +8,17 @@ namespace Flood.RPC
 {
     public abstract class RPCDelegate
     {
-        protected RPCPeer Peer;
-        protected int RemoteId;
-        protected int LocalId;
-        protected int DelegateId;
+        public RPCPeer Peer;
+        public int RemoteId;
+        public int LocalId;
+        public int DelegateId;
 
-        protected Delegate Delegate;
+        public Delegate Delegate;
+
+        public RPCDelegate()
+        {
+            callProcessor = new RPCCallProcessor();
+        }
 
         public RPCDelegate(RPCPeer peer, int localId, int remoteId, int delegateId)
         {
