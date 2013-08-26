@@ -158,7 +158,7 @@ void EditorFrame::createEngine()
 	
 	// Get the mount paths from the editor preferences.
 	archive = Allocate(GetResourcesAllocator(), ArchiveVirtual);
-	archive->archiveMountDirectories("Assets/", GetResourcesAllocator());
+	archive->mountDirectories("Assets/", GetResourcesAllocator());
 	
 	res->setArchive(archive);
 
