@@ -8,48 +8,57 @@ namespace Flood.RPC
 {
     public abstract class RPCDelegate
     {
-        public RPCPeer Peer;
-        public int RemoteId;
-        public int LocalId;
-        public int DelegateId;
-
-        public Delegate Delegate;
+        public int Id { get; internal set; }
+        public Delegate Delegate { get; internal set; }
 
         public RPCStub Stub;
 
+        protected RPCDelegate() { }
+    }
+
+    public abstract class RPCDelegateImpl : RPCDelegate
+    {
+        protected RPCDelegateImpl(){}
+
+        public abstract void Invoke(RPCData.DelegateCall call);
+    }
+
+    public abstract class RPCDelegateProxy : RPCDelegate
+    {
+        public RPCPeer Peer { get; internal set; }
+        public int RemoteId { get; internal set; }
+        public int LocalId { get; internal set; }
+
+        public int RemoteDelegateId { get; internal set; }
+
         private RPCCallProcessor callProcessor;
 
-        public RPCDelegate()
+        protected RPCDelegateProxy() 
         {
             callProcessor = new RPCCallProcessor();
         }
 
-        public RPCDelegate(RPCPeer peer, int localId, int remoteId, int delegateId)
+        protected void SetDelegate(Delegate @delegate)
         {
-            Peer = peer;
-            RemoteId = remoteId;
-            LocalId = localId;
-            DelegateId = delegateId;
-
-            callProcessor = new RPCCallProcessor();
+            Delegate = @delegate;
         }
 
-        public abstract void Invoke(RPCData.Call call);
-
-        internal void ProcessReply(RPCData.Reply reply)
+        public RPCData.DelegateCall CreateCall()
         {
-            callProcessor.ProcessReply(reply);
+            var callId = callProcessor.GetNextCallId();
+            return new RPCData.DelegateCall(callId, Id, RemoteDelegateId, Peer, LocalId, RemoteId);
         }
 
-        public RPCData.Call CreateCall(int methodId)
+        internal void ProcessReply(RPCData.DelegateReply reply)
         {
-            return callProcessor.CreateCall(methodId, Peer, LocalId, RemoteId, true);
+            callProcessor.SetResult(reply.Id, reply.Data);
         }
 
-        public Task<RPCData> DispatchCall(RPCData.Call call)
+        public Task<RPCData> DispatchCall(RPCData.DelegateCall call)
         {
-            return callProcessor.DispatchCall(call);
+            return callProcessor.DispatchCall(call.Id, call.Data);
         }
+        
     }
 
 }
