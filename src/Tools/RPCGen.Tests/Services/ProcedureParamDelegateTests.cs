@@ -122,9 +122,7 @@ namespace RPCGen.Tests.Services
             Task<byte> task;
 
             expected = byte.MinValue;
-            task = proxy.TestByte(async (value) => { 
-                return value; 
-            }, expected);
+            task = proxy.TestByte(async (value) => { return value; }, expected);
             Assert.IsTrue(task.Wait(100));
             Assert.AreEqual(expected, task.Result);
 
