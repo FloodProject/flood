@@ -35,7 +35,7 @@ ArchiveVirtual::~ArchiveVirtual()
 
 static void HandleWatch(Archive*, const FileWatchEvent& event);
 
-bool ArchiveVirtual::archiveMount(Archive * mount, const Path& mountPath)
+bool ArchiveVirtual::mount(Archive * mount, const Path& mountPath)
 {
 	mounts.pushBack(mount);
 
@@ -48,12 +48,12 @@ bool ArchiveVirtual::archiveMount(Archive * mount, const Path& mountPath)
 
 //-----------------------------------//
 
-void ArchiveVirtual::archiveMountDirectories(const Path& dirPath, Allocator* alloc)
+void ArchiveVirtual::mountDirectories(const Path& dirPath, Allocator* alloc)
 {
 	Archive* dir = Allocate(alloc, ArchiveDirectory, dirPath);
 	if (!dir) return;
 
-	archiveMount(dir, "");
+	mount(dir, "");
 	
 	Array<Path> dirs(*AllocatorGetHeap());
 	dir->enumerateDirs(dirs);
@@ -62,7 +62,7 @@ void ArchiveVirtual::archiveMountDirectories(const Path& dirPath, Allocator* all
 	{
 		auto& path = PathCombine(dirPath, dir);
 		Archive* ndir = Allocate(alloc, ArchiveDirectory, path);
-		archiveMount(ndir, "");
+		mount(ndir, "");
 	}
 }
 

@@ -165,14 +165,14 @@ public:
 	 * @param mount archive to mount
 	 * @param mountPath path of archive to mount
 	 */
-	bool archiveMount(Archive * mount, const Path& mountPath);
+	bool mount(Archive * mount, const Path& mountPath);
 
 	/**
 	 * Mounts a directory and its direct hierarchy.
 	 * @param dirPath path of directory to mount
 	 * @param alloc allocator to use for mounting
 	 */
-	void archiveMountDirectories(const Path& dirPath, Allocator* alloc);
+	void mountDirectories(const Path& dirPath, Allocator* alloc);
 
 private:
 	void enumerate(Array<Path>& paths, bool dir);

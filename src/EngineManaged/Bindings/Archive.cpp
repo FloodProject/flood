@@ -250,7 +250,7 @@ bool Flood::ArchiveVirtual::ArchiveMount(Flood::Archive^ mount, System::String^ 
 {
     auto arg0 = (::Archive*)mount->NativePtr;
     auto arg1 = clix::marshalString<clix::E_UTF8>(mountPath);
-    auto ret = ((::ArchiveVirtual*)NativePtr)->archiveMount(arg0, arg1);
+    auto ret = ((::ArchiveVirtual*)NativePtr)->mount(arg0, arg1);
     return ret;
 }
 
@@ -258,7 +258,7 @@ void Flood::ArchiveVirtual::ArchiveMountDirectories(System::String^ dirPath, Flo
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(dirPath);
     auto arg1 = (::Allocator*)alloc->NativePtr;
-    ((::ArchiveVirtual*)NativePtr)->archiveMountDirectories(arg0, arg1);
+    ((::ArchiveVirtual*)NativePtr)->mountDirectories(arg0, arg1);
 }
 
 bool Flood::ArchiveVirtual::Equals(System::Object^ object)
