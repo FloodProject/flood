@@ -9,7 +9,7 @@ namespace Flood.RPC
 
     public abstract class RPCImpl : RPCStub
     {
-        protected delegate Task DProcessCall(RPCData request, ProcedureCall call);
+        protected delegate Task DProcessCall(RPCData.Call call);
         protected delegate void DProcessSubscribe(RPCPeer peer, int localId, int remoteId, int delegateId);
 
         protected struct Processors
@@ -43,26 +43,22 @@ namespace Flood.RPC
             processors = new Dictionary<int, Processors>();
         }
 
-        public void ProcessCall(RPCData request)
+        public void ProcessCall(RPCData.Call call)
         {
-            ProcedureCall msg = request.Serializer.ReadProcedureCallBegin();
-            var call = processors[msg.Id].Call;
-            if (call != null)
+            var processCall = processors[call.MethodId].Call;
+            if (processCall != null)
             {
-                call(request, msg);
+                processCall(call);
             }
             else
             {
-                SerializerUtil.Skip(request.Serializer, TType.DataObject);
-                var response = RPCData.Create(request, RPCDataType.Exception);
-                RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + msg.Id + "'");
-                response.Serializer.WriteProcedureCallBegin(msg);
+                SerializerUtil.Skip(call.Data.Serializer, TType.DataObject);
+                var response = RPCData.Create(call.Data, RPCDataType.Exception);
+                RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + call.MethodId + "'");
+                response.Serializer.WriteI32(call.Id);
                 x.Write(response.Serializer);
-                response.Serializer.WriteProcedureCallEnd();
                 response.Dispatch();
             }
-
-            request.Serializer.ReadProcedureCallEnd();
         }
 
         internal void ProcessEventSubscribe(RPCData data)
