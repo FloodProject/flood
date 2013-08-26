@@ -41,10 +41,10 @@ namespace Flood.RPC
             switch(data.Header.CallType)
             {
                 case RPCDataType.DelegateReply:
-                    stub.ProcessDelegateReply(RPCData.Reply.Create(data));
+                    stub.ProcessDelegateReply(RPCData.DelegateReply.Create(data));
                     return;
                 case RPCDataType.DelegateCall:
-                    stub.ProcessDelegateCall(RPCData.Call.Create(data));
+                    stub.ProcessDelegateCall(RPCData.DelegateCall.Create(data));
                     return;
             }
 

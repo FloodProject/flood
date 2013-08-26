@@ -18,15 +18,16 @@ namespace Flood.RPC
             delegates = new Dictionary<int, RPCDelegate>();
         }
 
-        internal void ProcessDelegateCall(RPCData.Call call)
+        internal void ProcessDelegateCall(RPCData.DelegateCall call)
         {
-            if (!delegates.ContainsKey(call.MethodId))
+            if (!delegates.ContainsKey(call.LocalDelegateId))
             {
                 Log.Error("Received unexpected delegate id to be invoked.");
                 return;
             }
 
-            delegates[call.MethodId].Invoke(call);
+            var delegateImpl = (RPCDelegateImpl)delegates[call.LocalDelegateId];
+            delegateImpl.Invoke(call);
         }
 
         public RPCDelegate CreateDelegateProxy<T>(RPCPeer peer, int remoteId, int remoteDelegateId)
@@ -65,10 +66,10 @@ namespace Flood.RPC
             return delegates[delegateId];
         }
 
-        internal void ProcessDelegateReply(RPCData.Reply reply)
+        internal void ProcessDelegateReply(RPCData.DelegateReply reply)
         {
-            var del = GetDelegate(reply.MethodId);
-            del.ProcessReply(reply);
+            var delegateProxy = (RPCDelegateProxy)GetDelegate(reply.LocalDelegateId);
+            delegateProxy.ProcessReply(reply);
         }
     }
 }
