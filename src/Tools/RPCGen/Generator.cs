@@ -1347,7 +1347,7 @@ namespace Flood.Tools.RPCGen
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
 
-            WriteLine("{0}.Serializer.WriteMapBegin(new TMap(TType.{0}, TType.{1}, {2}.Count));",
+            WriteLine("{0}.Serializer.WriteMapBegin(new TMap(TType.{1}, TType.{2}, {3}.Count));",
                       dataName,
                       ConvertFromTypeToThrift(mapElemType1).ToString(),
                       ConvertFromTypeToThrift(mapElemType2).ToString(),
@@ -1475,7 +1475,7 @@ namespace Flood.Tools.RPCGen
             GenerateTypeDeserialization(arrayElemType, ToTitleCase(varName) + "[" + iterName + "]", dataName, stubName);
 
             WriteCloseBraceIndent();
-            WriteLine("{1}.Serializer.ReadArrayEnd();", dataName);
+            WriteLine("{0}.Serializer.ReadArrayEnd();", dataName);
         }
 
         /// <summary>
