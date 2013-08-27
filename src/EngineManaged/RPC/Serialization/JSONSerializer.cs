@@ -570,18 +570,6 @@ namespace Flood.RPC.Serialization
             Buffer.Write(RBRACKET, 0, RBRACKET.Length);
         }
 
-        public override void WriteProcedureCallBegin(ProcedureCall message)
-        {
-            WriteJSONArrayStart();
-            WriteJSONInteger(message.Id);
-            WriteJSONInteger(message.SequenceNumber);
-        }
-
-        public override void WriteProcedureCallEnd()
-        {
-            WriteJSONArrayEnd();
-        }
-
         public override void WriteDataObjectBegin(DataObject str)
         {
             WriteJSONObjectStart();
@@ -928,20 +916,6 @@ namespace Flood.RPC.Serialization
         {
             ReadJSONSyntaxChar(RBRACKET);
             PopContext();
-        }
-
-        public override ProcedureCall ReadProcedureCallBegin()
-        {
-            ProcedureCall message = new ProcedureCall();
-            ReadJSONArrayStart();
-            message.Id = (int)ReadJSONInteger();
-            message.SequenceNumber = (int)ReadJSONInteger();
-            return message;
-        }
-
-        public override void ReadProcedureCallEnd()
-        {
-            ReadJSONArrayEnd();
         }
 
         public override DataObject ReadDataObjectBegin()

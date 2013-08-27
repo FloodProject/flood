@@ -44,16 +44,6 @@ namespace Flood.RPC.Serialization
 
         #region Write Methods
 
-        public override void WriteProcedureCallBegin(ProcedureCall message)
-        {
-            WriteI32(message.Id);
-            WriteI32(message.SequenceNumber);
-        }
-
-        public override void WriteProcedureCallEnd()
-        {
-        }
-
         public override void WriteDataObjectBegin(DataObject struc)
         {
         }
@@ -195,19 +185,6 @@ namespace Flood.RPC.Serialization
         #endregion
 
         #region ReadMethods
-
-        public override ProcedureCall ReadProcedureCallBegin()
-        {
-            var message = new ProcedureCall();
-            message.Id = ReadI32();
-            message.SequenceNumber = ReadI32();
-
-            return message;
-        }
-
-        public override void ReadProcedureCallEnd()
-        {
-        }
 
         public override DataObject ReadDataObjectBegin()
         {

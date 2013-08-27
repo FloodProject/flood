@@ -147,16 +147,6 @@ namespace Flood.RPC.Serialization
         }
 
         /**
-        * Write a message header to the wire. Compact Protocol messages contain the
-        * protocol version so we can migrate forwards in the future if need be.
-        */
-        public override void WriteProcedureCallBegin(ProcedureCall message)
-        {
-            WriteVarint32((uint)message.Id);
-            WriteVarint32((uint)message.SequenceNumber);
-        }
-
-        /**
          * Write a struct begin. This doesn't actually put anything on the wire. We 
          * use it as an opportunity to put special placeholder markers on the field
          * stack so we can get the field id deltas correct.
@@ -374,7 +364,6 @@ namespace Flood.RPC.Serialization
         // output or purpose.
         // 
 
-        public override void WriteProcedureCallEnd() { }
         public override void WriteMapEnd() { }
         public override void WriteListEnd() { }
         public override void WriteArrayEnd() { }
@@ -463,16 +452,6 @@ namespace Flood.RPC.Serialization
         #endregion
 
         #region ReadMethods
-
-        /**
-   * Read a message header. 
-   */
-        public override ProcedureCall ReadProcedureCallBegin()
-        {
-            int messageId = (int)ReadVarint32();
-            int sequenceNumber = (int)ReadVarint32();
-            return new ProcedureCall(messageId, sequenceNumber);
-        }
 
         /**
          * Read a struct begin. There's nothing on the wire for this, but it is our
@@ -711,7 +690,6 @@ namespace Flood.RPC.Serialization
         // These methods are here for the struct to call, but don't have any wire 
         // encoding.
         //
-        public override void ReadProcedureCallEnd() { }
         public override void ReadFieldEnd() { }
         public override void ReadMapEnd() { }
         public override void ReadArrayEnd() { }
