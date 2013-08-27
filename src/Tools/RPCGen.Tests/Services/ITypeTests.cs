@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace RPCGen.Tests.Services
 {
-    public interface IPrimitiveTypesTests
+    public interface ITypeTests
     {
         void SetUp();
 
@@ -20,5 +15,8 @@ namespace RPCGen.Tests.Services
         void TestString();
         void TestGuid();
         void TestDateTime();
+        void TestMap();
+        void TestList();
+        void TestArray();
     }
 }
