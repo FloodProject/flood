@@ -999,7 +999,6 @@ namespace Flood.Tools.RPCGen
         {
             switch (ConvertFromTypeToThrift(type))
             {
-                case TType.Array:
                 case TType.List:
                 case TType.Map:
                 case TType.String:
@@ -1196,6 +1195,8 @@ namespace Flood.Tools.RPCGen
             }
         }
 
+        #endregion
+
         #region Serialization
 
         /// <summary>
@@ -1207,9 +1208,6 @@ namespace Flood.Tools.RPCGen
 
             switch (thriftType)
             {
-                case TType.Array:
-                    GenerateArraySerialize(type, varName, dataName, stubName);
-                    break;
                 case TType.List:
                     GenerateListSerialize(type, varName, dataName, stubName);
                     break;
@@ -1257,29 +1255,6 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to serialize an array
-        /// </summary>
-        private void GenerateArraySerialize(Type type, string name, string dataName, string stubName)
-        {
-            var arrayElemType = type.GetElementType();
-
-            WriteLine("{0}.Serializer.WriteArrayBegin(new TArray(TType.{1}, {2}.Length));",
-                      dataName,
-                      ConvertFromTypeToThrift(type).ToString(),
-                      ToTitleCase(name));
-
-            var iterName = string.Format("_iter{0}", GenericIndex++);
-            WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
-            WriteStartBraceIndent();
-
-            GenerateTypeSerialization(arrayElemType, iterName, dataName, stubName);
-
-            WriteCloseBraceIndent();
-
-            WriteLine("{0}.Serializer.WriteArrayEnd();", dataName);
-        }
-
-        /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
         private void GenerateStructSerialize(Type type, string varName, string dataName)
@@ -1321,12 +1296,15 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateListSerialize(Type type, string name, string dataName, string stubName)
         {
-            var listElemType = type.GetGenericArguments()[0];
+            var listElemType = (type.IsArray)? type.GetElementType() : type.GetGenericArguments()[0];
 
-            WriteLine("{0}.Serializer.WriteListBegin(new TList(TType.{1}, {2}.Count));",
+             var countName = (type.IsArray)? "Length" : "Count";
+
+            WriteLine("{0}.Serializer.WriteListBegin(new TList(TType.{1}, {2}.{3}));",
                       dataName,
                       ConvertFromTypeToThrift(type).ToString(),
-                      ToTitleCase(name));
+                      ToTitleCase(name),
+                      countName);
 
             var iterName = string.Format("_iter{0}", GenericIndex++);
             WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
@@ -1390,9 +1368,6 @@ namespace Flood.Tools.RPCGen
 
             switch (thriftType)
             {
-                case TType.Array:
-                    GenerateArrayDeserialize(type, varName, dataName, stubName);
-                    break;
                 case TType.List:
                     GenerateListDeserialize(type, varName, dataName, stubName);
                     break;
@@ -1454,31 +1429,6 @@ namespace Flood.Tools.RPCGen
         }
 
         /// <summary>
-        /// Generates the code to deserialize an array 
-        /// </summary>
-        private void GenerateArrayDeserialize(Type type, string varName, string dataName, string stubName)
-        {
-            var arrayElemType = type.GetElementType();
-
-            var arrayName = string.Format("_array{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Serializer.ReadArrayBegin();", arrayName, dataName);
-
-            WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(varName),
-                      PrettyName(arrayElemType), arrayName);
-
-            var iterName = string.Format("_i{0}", GenericIndex++);
-            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
-                      iterName, arrayName);
-
-            WriteStartBraceIndent();
-
-            GenerateTypeDeserialization(arrayElemType, ToTitleCase(varName) + "[" + iterName + "]", dataName, stubName);
-
-            WriteCloseBraceIndent();
-            WriteLine("{0}.Serializer.ReadArrayEnd();", dataName);
-        }
-
-        /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
         private void GenerateStructDeserialize(Type type, string varName, string dataName)
@@ -1499,24 +1449,37 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateListDeserialize(Type type, string name, string dataName, string stubName)
         {
-            var listElemType = type.GetGenericArguments()[0];
-
-            WriteLine("{0} = new {1}();", ToTitleCase(name),
-                      PrettyName(type));
+            var listElemType = (type.IsArray)? type.GetElementType() : type.GetGenericArguments()[0];
 
             var listName = string.Format("_list{0}", GenericIndex++);
             WriteLine("var {0} = {1}.Serializer.ReadListBegin();", listName, dataName);
 
+            if (type.IsArray)
+            {
+                WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(name), PrettyName(listElemType), listName);
+            }
+            else
+            {
+                WriteLine("{0} = new {1}();", ToTitleCase(name), PrettyName(type));
+            }
+
             var iterName = string.Format("_i{0}", GenericIndex++);
-            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
-                      iterName, listName);
+            WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})", iterName, listName);
 
             WriteStartBraceIndent();
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
 
             GenerateTypeDeserialization(listElemType, elemName, dataName, stubName, false);
-            WriteLine("{0}.Add({1});", name, elemName);
+
+            if (type.IsArray)
+            {
+                WriteLine("{0}[{1}] = {2};", name, iterName, elemName);
+            }
+            else
+            {
+                WriteLine("{0}.Add({1});", name, elemName);
+            }
 
             WriteCloseBraceIndent();
             WriteLine("{0}.Serializer.ReadListEnd();", dataName);
@@ -1561,8 +1524,6 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("{0}.Add({1}, {2});", containerName, elemName1, elemName2);
         }
-
-        #endregion
 
         #endregion
 
@@ -1668,8 +1629,6 @@ namespace Flood.Tools.RPCGen
                 return TType.I64;
             else if (type == typeof(string))
                 return TType.String;
-            else if (type.IsArray)
-                return TType.Array;
             else if (type == typeof(Guid) || typeof(Guid).IsAssignableFrom(type))
                 return TType.Guid;
             else if (type == typeof(DateTime) || typeof(DateTime).IsAssignableFrom(type))
@@ -1682,7 +1641,7 @@ namespace Flood.Tools.RPCGen
                 return TType.Exception;
             else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))
                 return TType.Map;
-            else if (IsInstanceOfGenericType(typeof(ICollection<>), type))
+            else if (IsInstanceOfGenericType(typeof(ICollection<>), type) || type.IsArray)
                 return TType.List;
             else if (IsDelegate(type))
                 return TType.Delegate;
