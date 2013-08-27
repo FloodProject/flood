@@ -146,35 +146,6 @@ function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
 end
 
-addins = {}
-addinsDepedenciesUsed = false
-
-function SetupAddin(addinName)
-    if addinsDepedenciesUsed then
-		print("WARNING: Dependencies have been already used!")
-    end
-    
-    table.insert(addins, addinName)
-    
-    targetdir (addindir)
-    SetupAddinResources()
-end
-
-function SetupAddinsAsDependencies()
-    dependson (addins)
-    addinsDepedenciesUsed = true
-end
-
-function SetupAddinResources()
-    local resources =
-    {
-        "**.addin.xml", 
-        path.join("icons","**.png")
-    }
-    
-    EmbedFiles(resources)
-end
-
 function EmbedFiles(resources)
     files (resources)
 

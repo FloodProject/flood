@@ -8,8 +8,6 @@ project "Editor.Client"
 	location "."
 	flags { "Unsafe" }
 	uuid "BDDF5511-B91A-48B1-8E88-23797D771406"
-
-	SetupAddinResources()
 	
 	files
 	{

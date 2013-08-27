@@ -14,8 +14,6 @@ function SetupWxWidgets()
 	wxWidgets.defines = { '_LIB', 'WXUSINGDLL', 'WXMONOLITHIC' }
 
 	defines { wxWidgets.defines }
-    
-    SetupAddinsAsDependencies()
 
 	local c = configuration "windows"
 		defines { "__WXMSW__" }
