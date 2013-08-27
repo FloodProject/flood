@@ -1,8 +1,6 @@
 
 project "TextAddin"
 
-    SetupAddin("TextAddin")
-
     kind "SharedLib"
     language "C#"
     
