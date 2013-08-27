@@ -1,4 +1,5 @@
-﻿using Flood.RPC.Metadata;
+﻿using System.Collections.Generic;
+using Flood.RPC.Metadata;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class ProcedureParamDelegateTests : IPrimitiveTypesTests
+    public class ProcedureParamDelegateTests : ITypeTests
     {
         #region Service
         [Service]
@@ -41,6 +42,15 @@ namespace RPCGen.Tests.Services
 
             [Id(10)]
             Task<DateTime> TestDateTime(Func<DateTime, Task<DateTime>> action, DateTime value);
+
+            [Id(11)]
+            Task<Dictionary<int, string>> TestMap(Func<Dictionary<int, string>, Task<Dictionary<int, string>>> action, Dictionary<int, string> value);
+
+            [Id(12)]
+            Task<List<int>> TestList(Func<List<int>, Task<List<int>>> action, List<int> value);
+
+            [Id(13)]
+            Task<int[]> TestArray(Func<int[], Task<int[]>> action, int[] value);
         }
 
         public class Service : IService
@@ -91,6 +101,21 @@ namespace RPCGen.Tests.Services
             }
 
             public Task<DateTime> TestDateTime(Func<DateTime, Task<DateTime>> action, DateTime value)
+            {
+                return action.Invoke(value);
+            }
+
+            public Task<Dictionary<int, string>> TestMap(Func<Dictionary<int, string>, Task<Dictionary<int, string>>> action, Dictionary<int, string> value)
+            {
+                return action.Invoke(value);
+            }
+
+            public Task<List<int>> TestList(Func<List<int>, Task<List<int>>> action, List<int> value)
+            {
+                return action.Invoke(value);
+            }
+
+            public Task<int[]> TestArray(Func<int[], Task<int[]>> action, int[] value)
             {
                 return action.Invoke(value);
             }
@@ -254,6 +279,45 @@ namespace RPCGen.Tests.Services
             task = proxy.TestDateTime(async (value) => { return value; }, expected);
             Assert.IsTrue(task.Wait(100));
             Assert.AreEqual(expected, task.Result);
+        }
+
+        [Test]
+        public void TestMap()
+        {
+            Dictionary<int, string> expected = new Dictionary<int, string>();
+            expected.Add(1,"1");
+            expected.Add(2,"2");
+            expected.Add(3,"3");
+            var task = proxy.TestMap(async (value) => { return value; }, expected);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(expected.Count, task.Result.Count);
+            Assert.AreEqual(expected[1], task.Result[1]);
+            Assert.AreEqual(expected[2], task.Result[2]);
+            Assert.AreEqual(expected[3], task.Result[3]);
+        }
+
+        [Test]
+        public void TestList()
+        {
+            List<int> expected = new List<int>{1,2,3};
+            var task = proxy.TestList(async (value) => { return value; }, expected);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(expected.Count, task.Result.Count);
+            Assert.AreEqual(expected[0], task.Result[0]);
+            Assert.AreEqual(expected[1], task.Result[1]);
+            Assert.AreEqual(expected[2], task.Result[2]);
+        }
+
+        [Test]
+        public void TestArray()
+        {
+            int[] expected = new []{1,2,3};
+            var task = proxy.TestArray(async (value) => { return value; }, expected);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(expected.Length, task.Result.Length);
+            Assert.AreEqual(expected[0], task.Result[0]);
+            Assert.AreEqual(expected[1], task.Result[1]);
+            Assert.AreEqual(expected[2], task.Result[2]);
         }
     }
 }

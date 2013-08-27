@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Flood;
 using Flood.RPC;
 using Flood.RPC.Metadata;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class DataObjectTests : IPrimitiveTypesTests
+    public class DataObjectTests : ITypeTests
     {
         #region DataObjects
 
@@ -76,6 +77,27 @@ namespace RPCGen.Tests.Services
             public DateTime Value;
         }
 
+        [DataObject("41EBBBB3-ADA1-42E9-8071-0BCF8C2B8D4A")]
+        public struct MapDO
+        {
+            [Id(0)]
+            public Dictionary<int, string> Value;
+        }
+
+        [DataObject("7A6D650C-B6C5-41C4-AE5E-C29707E5B82C")]
+        public struct ListDO
+        {
+            [Id(0)]
+            public List<int> Value;
+        }
+
+        [DataObject("52F0BDA2-4E91-40D2-9136-33B685DB2823")]
+        public struct ArrayDO
+        {
+            [Id(0)]
+            public int[] Value;
+        }
+
         #endregion
 
         #region Service 
@@ -112,6 +134,15 @@ namespace RPCGen.Tests.Services
 
             [Id(10)]
             Task<DateTimeDO> TestDateTime([Id(0)]DateTimeDO param);
+
+            [Id(11)]
+            Task<MapDO> TestMap([Id(0)]MapDO param);
+
+            [Id(12)]
+            Task<ListDO> TestList([Id(0)]ListDO param);
+
+            [Id(13)]
+            Task<ArrayDO> TestArray([Id(0)]ArrayDO param);
         }
 
         public class Service : IService
@@ -161,6 +192,21 @@ namespace RPCGen.Tests.Services
             }
 
             public async Task<DateTimeDO> TestDateTime(DateTimeDO param)
+            {
+                return param;
+            }
+
+            public async Task<MapDO> TestMap(MapDO param)
+            {
+                return param;
+            }
+
+            public async Task<ListDO> TestList(ListDO param)
+            {
+                return param;
+            }
+
+            public async Task<ArrayDO> TestArray(ArrayDO param)
             {
                 return param;
             }
@@ -339,6 +385,48 @@ namespace RPCGen.Tests.Services
             t = service.TestDateTime(d);
             Assert.IsTrue(t.Wait(1000));
             Assert.AreEqual(d, t.Result);
+        }
+
+        [Test]
+        public void TestMap()
+        {
+            MapDO d;
+            d.Value = new Dictionary<int, string>();
+            d.Value.Add(1,"1");
+            d.Value.Add(2,"2");
+            d.Value.Add(3,"3");
+            var task = service.TestMap(d);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(d.Value.Count, task.Result.Value.Count);
+            Assert.AreEqual(d.Value[1], task.Result.Value[1]);
+            Assert.AreEqual(d.Value[2], task.Result.Value[2]);
+            Assert.AreEqual(d.Value[3], task.Result.Value[3]);
+        }
+
+        [Test]
+        public void TestList()
+        {
+            ListDO d;
+            d.Value = new List<int>{1,2,3};
+            var task = service.TestList(d);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(d.Value.Count, task.Result.Value.Count);
+            Assert.AreEqual(d.Value[0], task.Result.Value[0]);
+            Assert.AreEqual(d.Value[1], task.Result.Value[1]);
+            Assert.AreEqual(d.Value[2], task.Result.Value[2]);
+        }
+
+        [Test]
+        public void TestArray()
+        {
+            ArrayDO d;
+            d.Value = new []{1,2,3};
+            var task = service.TestArray(d);
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(d.Value.Length, task.Result.Value.Length);
+            Assert.AreEqual(d.Value[0], task.Result.Value[0]);
+            Assert.AreEqual(d.Value[1], task.Result.Value[1]);
+            Assert.AreEqual(d.Value[2], task.Result.Value[2]);
         }
     }
 }

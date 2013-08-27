@@ -1,11 +1,12 @@
-﻿using Flood.RPC.Metadata;
+﻿using System.Collections.Generic;
+using Flood.RPC.Metadata;
 using NUnit.Framework;
 using System;
 
 namespace RPCGen.Tests.Services
 {
     [TestFixture]
-    public class ServiceEventsTests : IPrimitiveTypesTests
+    public class ServiceEventsTests : ITypeTests
     {
         #region Service
         [Service]
@@ -40,6 +41,15 @@ namespace RPCGen.Tests.Services
 
             [Id(10)]
             event Action<DateTime> EventDateTime;
+
+            [Id(11)]
+            event Action<Dictionary<int, string>> EventMap;
+
+            [Id(12)]
+            event Action<List<int>> EventList;
+
+            [Id(13)]
+            event Action<int[]> EventArray;
         }
 
         public class Service : IService
@@ -54,6 +64,9 @@ namespace RPCGen.Tests.Services
             public event Action<string> EventString;
             public event Action<Guid> EventGuid;
             public event Action<DateTime> EventDateTime;
+            public event Action<Dictionary<int, string>> EventMap;
+            public event Action<List<int>> EventList;
+            public event Action<int[]> EventArray;
 
             public void InvokeEventVoid()
             {
@@ -94,6 +107,18 @@ namespace RPCGen.Tests.Services
             public void InvokeEventDateTime(DateTime value)
             {
                 EventDateTime(value);
+            }
+            public void InvokeEventMap(Dictionary<int, string> value)
+            {
+                EventMap(value);
+            }
+            public void InvokeEventList(List<int> value)
+            {
+                EventList(value);
+            }
+            public void InvokeEventArray(int[] value)
+            {
+                EventArray(value);
             }
         }
         #endregion
@@ -256,6 +281,51 @@ namespace RPCGen.Tests.Services
             proxy.EventDateTime += (value) => { received = value; };
             impl.InvokeEventDateTime(expected);
             Assert.AreEqual(expected, received);
+        }
+
+        [Test]
+        public void TestMap()
+        {
+            Dictionary<int, string> expected = new Dictionary<int, string>();
+            expected.Add(1,"1");
+            expected.Add(2,"2");
+            expected.Add(3,"3");
+            Dictionary<int, string> received = null;
+            proxy.EventMap += (value) => { received = value; };
+            impl.InvokeEventMap(expected);
+            Assert.NotNull(received);
+            Assert.AreEqual(expected.Count, received.Count);
+            Assert.AreEqual(expected[1], received[1]);
+            Assert.AreEqual(expected[2], received[2]);
+            Assert.AreEqual(expected[3], received[3]);
+        }
+
+        [Test]
+        public void TestList()
+        {
+            List<int> expected = new List<int>{1,2,3};
+            List<int> received = null;
+            proxy.EventList += (value) => { received = value; };
+            impl.InvokeEventList(expected);
+            Assert.NotNull(received);
+            Assert.AreEqual(expected.Count, received.Count);
+            Assert.AreEqual(expected[0], received[0]);
+            Assert.AreEqual(expected[1], received[1]);
+            Assert.AreEqual(expected[2], received[2]);
+        }
+
+        [Test]
+        public void TestArray()
+        {
+            int[] expected = new []{1,2,3};
+            int[] received = null;
+            proxy.EventArray += (value) => { received = value; };
+            impl.InvokeEventArray(expected);
+            Assert.NotNull(received);
+            Assert.AreEqual(expected.Length, received.Length);
+            Assert.AreEqual(expected[0], received[0]);
+            Assert.AreEqual(expected[1], received[1]);
+            Assert.AreEqual(expected[2], received[2]);
         }
     }
 }
