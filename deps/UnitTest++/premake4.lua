@@ -10,8 +10,11 @@ project "UnitTest++"
   files { "src/*.cpp" }
   includedirs { "include" }
   
-  if os.is("Windows") then
+  configuration "windows"
     files { "src/Win32/*.cpp" }
-  else
+
+  configuration "not windows"
     files { "src/Posix/*.cpp" }
-  end
+
+  configuration "not vs*"
+    removeflags { "NoExceptions" }
