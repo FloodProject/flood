@@ -61,7 +61,7 @@ struct API_CORE Frustum
 public:
 
 	// Projection type.
-	enum_class(FrustumProjection) projection;
+	FrustumProjection projection;
 
 	// Projection matrix.
 	Matrix4x4 matProjection;

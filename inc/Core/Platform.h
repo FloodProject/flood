@@ -161,26 +161,6 @@ static_assert(sizeof(int32) == 4, "");
 static_assert(sizeof(int64) == 8, "");
 #endif
 
-#ifndef SWIG
-#if defined(COMPILER_MSVC)
-	#define enum_class_begin(name) enum name {
-	#define enum_class_end };
-	#define enum_class(name) name
-#elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
-	#define enum_class_begin(name) enum class name {
-	#define enum_class_end };
-	#define enum_class(name) name
-#endif
-#else
-	#define enum_class_begin(name) enum name {
-	#define enum_class_end };
-	#define enum_class(name) name
-#endif
-
-#if !defined(COMPILER_SUPPORTS_CXX11)
-	#define nullptr NULL
-#endif
-
 //---------------------------------------------------------------------//
 // Helper macros
 //---------------------------------------------------------------------//
