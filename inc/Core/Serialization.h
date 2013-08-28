@@ -22,13 +22,13 @@ NAMESPACE_CORE_BEGIN
 union API_CORE ValueContext
 {
 	bool   b;
-	sint8  i8;
+	int8   i8;
 	uint8  u8;
-	sint16 i16;
+	int16  i16;
 	uint16 u16;
-	sint32 i32;
+	int32  i32;
 	uint32 u32;
-	sint64 i64;
+	int64  i64;
 	uint64 u64;
 	float  f32;
 	Vector3P v;

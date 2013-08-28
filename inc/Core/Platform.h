@@ -128,17 +128,16 @@
 // Basic types
 //---------------------------------------------------------------------//
 
-typedef char            int8;
-typedef signed char     sint8;
-typedef unsigned char   uint8;
+#include <cstdint>
 
-typedef short           int16;
-typedef signed short    sint16;
-typedef unsigned short  uint16;
+typedef int8_t    int8;
+typedef uint8_t   uint8;
 
-typedef long            int32;
-typedef signed long     sint32;
-typedef unsigned long   uint32;
+typedef int16_t   int16;
+typedef uint16_t  uint16;
+
+typedef int32_t   int32;
+typedef uint32_t  uint32;
 
 // Transition types.
 typedef uint8 byte;
@@ -146,19 +145,10 @@ typedef uint32 uint;
 
 #if defined(COMPILER_MSVC)
 	typedef __int64 int64;
-	typedef signed __int64 sint64;
 	typedef unsigned __int64 uint64;
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	typedef long long int64;
-	typedef signed long long sint64;
 	typedef unsigned long long uint64;
-#endif
-
-#if !defined(SWIG) && !defined(COMPILER_CLANG)
-static_assert(sizeof(int8)  == 1, "");
-static_assert(sizeof(int16) == 2, "");
-static_assert(sizeof(int32) == 4, "");
-static_assert(sizeof(int64) == 8, "");
 #endif
 
 //---------------------------------------------------------------------//

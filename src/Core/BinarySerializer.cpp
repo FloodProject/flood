@@ -105,7 +105,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt
 	}
 	case PrimitiveTypeKind::Int8:
 	{
-		sint8& i = vc.i8;
+		int8& i = vc.i8;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
@@ -117,7 +117,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt
 	}
 	case PrimitiveTypeKind::Int16:
 	{
-		sint16& i = vc.i16;
+		int16& i = vc.i16;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
@@ -129,7 +129,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt
 	}
 	case PrimitiveTypeKind::Int32:
 	{
-		sint32& i = vc.i32;
+		int32& i = vc.i32;
 		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
@@ -141,7 +141,7 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt
 	}
 	case PrimitiveTypeKind::Int64:
 	{
-		sint64& i = vc.i64;
+		int64& i = vc.i64;
 		EncodeVariableInteger(bin->ms, EncodeZigZag64(i));
 		break;
 	}
@@ -205,7 +205,7 @@ static void DeserializeEnum( ReflectionContext* context, ReflectionWalkType = Re
 	if( !DecodeVariableInteger(bin->ms, val) )
 		return;
 	
-	sint32 i = DecodeZigZag32((uint32)val);
+	int32 i = DecodeZigZag32((uint32)val);
 	FieldSet(context->field, context->object, i);
 }
 
@@ -237,8 +237,8 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 	case PrimitiveTypeKind::Int8:
 	{
 		DecodeVariableInteger(ms, i);
-		vc.i8 = (sint8) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint8, vc.i8);
+		vc.i8 = (int8) DecodeZigZag32((uint32)i);
+		SetFieldValue(int8, vc.i8);
 		break;
 	}
 	case PrimitiveTypeKind::Uint8:
@@ -251,8 +251,8 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 	case PrimitiveTypeKind::Int16:
 	{
 		DecodeVariableInteger(ms, i);
-		vc.i16 = (sint16) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint16, vc.i16);
+		vc.i16 = (int16) DecodeZigZag32((uint32)i);
+		SetFieldValue(int16, vc.i16);
 		break;
 	}
 	case PrimitiveTypeKind::Uint16:
@@ -265,8 +265,8 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 	case PrimitiveTypeKind::Int32:
 	{
 		DecodeVariableInteger(ms, i);
-		vc.i32 = (sint32) DecodeZigZag32((uint32)i);
-		SetFieldValue(sint32, vc.i32);
+		vc.i32 = (int32) DecodeZigZag32((uint32)i);
+		SetFieldValue(int32, vc.i32);
 		break;
 	}
 	case PrimitiveTypeKind::Uint32:
@@ -279,8 +279,8 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 	case PrimitiveTypeKind::Int64:
 	{
 		DecodeVariableInteger(ms, i);
-		vc.i64 = (sint64) DecodeZigZag64(i);
-		SetFieldValue(sint64, vc.i64);
+		vc.i64 = (int64) DecodeZigZag64(i);
+		SetFieldValue(int64, vc.i64);
 		break;
 	}
 	case PrimitiveTypeKind::Uint64:
@@ -712,24 +712,24 @@ bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
  * efficiently encoded using the normal variable-int encoder.
  */
 
-uint32 EncodeZigZag32(sint32 n)
+uint32 EncodeZigZag32(int32 n)
 {
 	return (n << 1) ^ (n >> 31);
 }
 
-sint32 DecodeZigZag32(uint32 n)
+int32 DecodeZigZag32(uint32 n)
 {
-	return (n >> 1) ^ -(sint32)(n & 1);
+	return (n >> 1) ^ -(int32)(n & 1);
 }
 
-uint64 EncodeZigZag64(sint64 n)
+uint64 EncodeZigZag64(int64 n)
 {
 	return (n << 1) ^ (n >> 63);
 }
 
-sint64 DecodeZigZag64(uint64 n)
+int64 DecodeZigZag64(uint64 n)
 {
-	return (n >> 1) ^ -(sint64)(n & 1);
+	return (n >> 1) ^ -(int64)(n & 1);
 }
 
 //-----------------------------------//

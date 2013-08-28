@@ -120,7 +120,7 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 		vc.b = *(bool*) address;
 		break;
 	case PrimitiveTypeKind::Int8:
-		vc.i8 = *(sint8*) address;
+		vc.i8 = *(int8*) address;
 		break;
 	case PrimitiveTypeKind::Uint8:
 		vc.u8 = *(uint8*) address;
