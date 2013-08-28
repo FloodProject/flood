@@ -19,8 +19,8 @@ project "OpenAL"
 		files { "src/Alc/backends/mmdevapi.c", "src/Alc/backends/winmm.c" }
 		defines 
 		{
-			 "strcasecmp=_stricmp",
-			 "strncasecmp=_strnicmp",
+			"strcasecmp=_stricmp",
+			"strncasecmp=_strnicmp",
 			"snprintf=_snprintf",
 			"isfinite=_finite",
 			"isnan=_isnan"
@@ -37,5 +37,11 @@ project "OpenAL"
 
 	configuration "pnacl"
 		files { "src/Alc/backends/ppapi.c" }
+
+	configuration "not vs*"
+		defines { "HAVE_GCC_DESTRUCTOR" }
+
+	configuration { "not vs*", "windows" }
+		excludes { "src/Alc/backends/mmdevapi.c" } -- mingw does not ship with MMdev headers
 
 	configuration ""

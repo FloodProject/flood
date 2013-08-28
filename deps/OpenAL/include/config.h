@@ -122,7 +122,7 @@
 /* #undef HAVE_ARM_NEON_H */
 
 /* Define if we have guiddef.h */
-#if !defined(__native_client__)
+#if !defined(__native_client__) && !defined(__MINGW32__)
 #define HAVE_GUIDDEF_H
 #endif
 
