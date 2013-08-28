@@ -43,7 +43,7 @@ namespace nv
         virtual ~StdStream()
         {
             if( m_fp != NULL && m_autoclose ) {
-#if NV_OS_WIN32
+#if NV_OS_WIN32 && !defined(NV_OS_MINGW)
                 _fclose_nolock( m_fp );
 #else
                 fclose( m_fp );
@@ -142,7 +142,7 @@ namespace nv
         {
             nvDebugCheck(data != NULL);
             nvDebugCheck(m_fp != NULL);
-#if NV_OS_WIN32
+#if NV_OS_WIN32 && !defined(NV_OS_MINGW)
             return (uint)_fwrite_nolock(data, 1, len, m_fp);
 #elif NV_OS_LINUX
             return (uint)fwrite_unlocked(data, 1, len, m_fp);
@@ -192,7 +192,7 @@ namespace nv
         {
             nvDebugCheck(data != NULL);
             nvDebugCheck(m_fp != NULL);
-#if NV_OS_WIN32
+#if NV_OS_WIN32 && !defined(NV_OS_MINGW)
             return (uint)_fread_nolock(data, 1, len, m_fp);
 #elif NV_OS_LINUX
             return (uint)fread_unlocked(data, 1, len, m_fp);

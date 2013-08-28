@@ -140,6 +140,10 @@ typedef posh_i64_t  int64;
 // Aliases
 typedef uint32      uint;
 
+#ifdef NV_OS_MINGW
+#include <stddef.h>
+#include <stdint.h>
+#endif
 
 // Version string:
 #define NV_VERSION_STRING \

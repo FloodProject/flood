@@ -6,7 +6,8 @@ project "NVIDIATextureTools"
 	
 	kind "StaticLib"
 	files { "src/**.cpp" }
-	
+	SetupNativeDependencyProject()
+
 	excludes {
 		"src/nvimage/KtxFile.cpp",
 		"src/nvtt/CompressorDX11.cpp",
@@ -27,4 +28,9 @@ project "NVIDIATextureTools"
 	includedirs { "src/", "extern/poshlib/" }
 	defines { "__MMX__", "__SSE2__", "__SSE__" }
 	
-	SetupNativeDependencyProject()
+	configuration "not vs*"
+		removeflags "NoExceptions"
+		buildoptions { "-Wno-attributes", "-msse", "-msse2" }
+
+	configuration { "not vs*", "windows" }
+		defines { mingw_defines }
