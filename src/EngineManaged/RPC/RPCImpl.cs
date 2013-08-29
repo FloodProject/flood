@@ -10,7 +10,7 @@ namespace Flood.RPC
     public abstract class RPCImpl : RPCStub
     {
         protected delegate Task DProcessCall(RPCData.Call call);
-        protected delegate void DProcessSubscribe(RPCPeer peer, int remoteId, int remoteDelegateId);
+        protected delegate void DProcessSubscribe(RPCPeer peer, RPCStubId remoteId, int remoteDelegateId);
 
         protected struct Processors
         {
@@ -36,7 +36,7 @@ namespace Flood.RPC
 
         public object Impl { get; set; }
 
-        public RPCImpl(object impl, int id)
+        public RPCImpl(object impl, RPCStubId id)
             : base(id)
         {
             Impl = impl;

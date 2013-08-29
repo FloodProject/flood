@@ -161,7 +161,7 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
 
             // Generate client constructors
-            WriteLine("public Proxy(RPCPeer peer, int implId, int proxyId)");
+            WriteLine("public Proxy(RPCPeer peer, RPCStubId implId, RPCStubId proxyId)");
             WriteLine("    : base(peer, implId, proxyId)");
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
@@ -403,7 +403,7 @@ namespace Flood.Tools.RPCGen
 
             // Generate constructor
             {
-                WriteLine("public Impl({0} iface, int id)", PrettyName(type));
+                WriteLine("public Impl({0} iface, RPCStubId id)", PrettyName(type));
                 WriteLine(" : base(iface, id)");
                 WriteStartBraceIndent();
 
@@ -547,7 +547,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateEventSubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventSubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, RPCStubId remoteId, int remoteDelegateId)", GetEventSubscribeMethodName(@event));
             WriteStartBraceIndent();
 
             var @delegate = @event.EventHandlerType;
@@ -558,7 +558,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateEventUnsubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventUnsubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, RPCStubId remoteId, int remoteDelegateId)", GetEventUnsubscribeMethodName(@event));
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
         }
@@ -1243,7 +1243,7 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Service:
                     WriteLine("var serviceImpl = {0}.RPCManager.GetCreateImplementation<{1}>({2});", stubName, PrettyName(type), varName);
-                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.Id);", dataName, varName);
+                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.Id.Id);", dataName, varName);
                     // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
                 case TType.Void:
@@ -1419,7 +1419,7 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Service:
                     WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = {1}.RPCManager.GetCreateProxy<{2}>({3}.Peer, remoteId);", varName, stubName, PrettyName(type), dataName);
+                    WriteLine("{0} = {1}.RPCManager.GetService<{2}>({3}.Peer, new RPCStubId(remoteId));", varName, stubName, PrettyName(type), dataName);
                     break;
                 case TType.Void:
                 default:

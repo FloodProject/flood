@@ -33,7 +33,7 @@ namespace Flood.Network
         
         public Host()
         {
-            ServiceManager = new RPCManager();
+            ServiceManager = new RPCManager(new SessionRPCPeer(null));
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)

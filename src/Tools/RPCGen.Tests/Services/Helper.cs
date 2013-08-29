@@ -16,18 +16,20 @@ namespace RPCGen.Tests.Services
     {
         class MockRPCPeer : RPCPeer
         {
-            RPCManager manager;
+            public RPCManager Manager;
+            public int Id;
 
-            public MockRPCPeer(RPCManager mgr)
+            public MockRPCPeer(RPCManager mgr, int id)
             {
-                manager = mgr;
+                Manager = mgr;
+                Id = id;
             }
 
             public override void Dispatch(RPCData data)
             {
                 data.Serializer.Buffer.Position = 0;
                 data.Header.Read();
-                manager.Process(data);
+                Manager.Process(data);
             }
 
             public override Flood.RPC.Serialization.Serializer CreateSerializer()
@@ -37,22 +39,31 @@ namespace RPCGen.Tests.Services
 
             public override bool Equals(object other)
             {
-                return true;
+                var peer = other as MockRPCPeer;
+                if (peer == null)
+                    return true;
+
+                return peer.Id == Id;
             }
 
             public override int GetHashCode()
             {
-                return 1337;
+                return Id;
             }
         }
 
         /// Gets a service interface proxy for a given implementation
         public static T GetProxy<T>(T service)
         {
-            var serviceManager = new RPCManager();
+            var localPeer = new MockRPCPeer(null, 1);
+            var serviceManager = new RPCManager(localPeer);
+            localPeer.Manager = serviceManager;
+            
+            var remotePeer = new MockRPCPeer(serviceManager, 2);
+            
             var serviceImpl = serviceManager.GetCreateImplementation<T>(service);
 
-            return serviceManager.GetCreateProxy<T>(new MockRPCPeer(serviceManager), serviceImpl.Id);
+            return serviceManager.GetService<T>(remotePeer, serviceImpl.Id);
         }
     }
 }
