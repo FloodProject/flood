@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using EngineWeaver.Util;
 using Mono.Cecil;
 
@@ -43,6 +44,7 @@ namespace EngineWeaver
 
         public void Write(string outputAssemblyPath)
         {
+            destAssembly.Name.Name = Path.GetFileName(outputAssemblyPath);
             var writerParameters = new WriterParameters();
             writerParameters.WriteSymbols = destAssembly.MainModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
