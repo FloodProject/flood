@@ -16,4 +16,6 @@ project "PackageGen"
         "System",
         "EngineManaged",
         "EngineWeaver",
+        "RPCGen",
+        path.join(depsdir,"DotNetZip","Ionic.Zip")
     }
