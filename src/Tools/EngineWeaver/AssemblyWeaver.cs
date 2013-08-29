@@ -51,5 +51,16 @@ namespace EngineWeaver
             destAssembly.Write(outputAssemblyPath, writerParameters);
         }
 
+        public HashSet<string> GetReferences()
+        {
+            var ret = new HashSet<string>();
+            foreach (var reference in destAssembly.MainModule.AssemblyReferences)
+            {
+                ret.Add(reference.Name+".dll");
+            }
+            
+            return ret;
+        }
+
     }
 }
