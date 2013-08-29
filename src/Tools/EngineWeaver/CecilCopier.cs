@@ -156,6 +156,14 @@ namespace EngineWeaver
             return (TypeDefinition)declaringType;
         }
 
+        public void AddMethod(TypeDefinition type, MethodDefinition method)
+        {
+            if(type.Methods.Any(m => m.FullName == method.FullName))
+                return;
+
+            type.Methods.Add(method); 
+        }
+
         # region COPY METHODS
 
         private T GetLocalReference<T>(T @ref) where T : MemberReference
@@ -292,13 +300,6 @@ namespace EngineWeaver
             return ret;
         }
 
-        private void AddMethod(TypeDefinition type, MethodDefinition method)
-        {
-            if(type.Methods.Any(m => m.FullName == method.FullName))
-                return;
-
-            type.Methods.Add(method); 
-        }
 
         private EventDefinition Copy(EventDefinition def, TypeDefinition declaringType)
         {
