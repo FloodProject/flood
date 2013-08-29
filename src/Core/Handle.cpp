@@ -9,7 +9,7 @@
 #include "Core/Handle.h"
 #include "Core/Log.h"
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -89,4 +89,4 @@ ReferenceCounted* HandleFind(HandleManager* man, HandleId id)
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END

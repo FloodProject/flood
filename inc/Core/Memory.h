@@ -12,7 +12,7 @@
 // Doug Lea's malloc memory space.
 typedef void* mspace;
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -89,8 +89,6 @@ struct API_CORE HeapAllocator : public Allocator
 
 API_CORE Allocator* AllocatorCreateHeap( Allocator* );
 API_CORE Allocator* AllocatorCreateStack( Allocator* );
-
-EXTERN_END
 
 //-----------------------------------//
 

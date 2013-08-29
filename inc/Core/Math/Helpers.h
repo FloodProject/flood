@@ -9,7 +9,7 @@
 #include "Core/Math/Vector.h"
 #include <cfloat>
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -29,10 +29,6 @@ API_CORE float InterpolateLinear(float a, float b, float t);
 API_CORE float InterpolateCosine(float a, float b, float t);
 API_CORE float InterpolateCubic(float a, float b, float t);
 
-//-----------------------------------//
-
-NAMESPACE_EXTERN_END
-
 // Clamps a variable to the given range.
 template< typename T > bool MathClamp( T& var, T min = 0, T max = 1 )
 {
@@ -50,3 +46,7 @@ template< typename T > bool MathClamp( T& var, T min = 0, T max = 1 )
 
 	return false;
 }
+
+//-----------------------------------//
+
+NAMESPACE_CORE_END

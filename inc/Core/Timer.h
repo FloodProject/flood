@@ -7,7 +7,7 @@
 
 #pragma once
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -43,4 +43,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END

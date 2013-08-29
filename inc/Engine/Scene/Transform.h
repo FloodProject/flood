@@ -16,14 +16,8 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-EXTERN_BEGIN
-
 class Transform;
 API_SCENE Transform* TransformCreate( Allocator* );
-
-EXTERN_END
-
-//-----------------------------------//
 
 /**
  * Transform provide entities with position and orientation information.

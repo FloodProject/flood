@@ -15,7 +15,7 @@ struct mg_context;
 struct mg_connection;
 struct mg_request_info;
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -47,6 +47,6 @@ API_CORE void WebServerAddRoute( WebContext*, WebRoute route );
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_CORE_END
 
 #endif

@@ -10,7 +10,7 @@
 #include "Core/References.h"
 #include <map>
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -43,8 +43,6 @@ typedef scoped_ptr<HandleManager, HandleDestroyManager> HandleManagerPtr;
 	alloc, __VA_ARGS__)
 
 //-----------------------------------//
-
-EXTERN_END
 
 #ifdef COMPILER_MSVC
 #pragma warning(disable: 4550)

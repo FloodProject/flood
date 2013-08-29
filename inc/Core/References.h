@@ -15,7 +15,7 @@
 #include <type_traits>
 #endif
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -38,8 +38,6 @@ struct API_CORE NO_VTABLE ReferenceCounted
 };
 
 //-----------------------------------//
-
-EXTERN_END
 
 #ifdef ENABLE_REFERENCES_DEBUG
 

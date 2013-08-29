@@ -44,17 +44,6 @@
 #define NAMESPACE_CORE_END
 #endif
 
-#if defined(__cplusplus) || defined(SWIG)
-#define EXTERN_BEGIN extern "C" {
-#define EXTERN_END }
-#else
-#define EXTERN_BEGIN
-#define EXTERN_END
-#endif
-
-#define NAMESPACE_EXTERN_BEGIN NAMESPACE_CORE_BEGIN EXTERN_BEGIN
-#define NAMESPACE_EXTERN_END EXTERN_END NAMESPACE_CORE_END
-
 #ifndef SWIG
 
 #ifdef COMPILER_MSVC
