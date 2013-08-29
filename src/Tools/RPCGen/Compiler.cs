@@ -29,6 +29,7 @@ namespace Flood.Tools.RPCGen
     {
         private readonly string destAssemblyPath;
         public readonly List<string> GeneratedFiles;
+        public readonly List<Type> RpcTypes; 
         public bool outputDebug;
         public string outputDir;
         public Assembly assembly;
@@ -40,6 +41,7 @@ namespace Flood.Tools.RPCGen
             this.outputDir = outputDir;
             this.outputDebug = true;
             this.GeneratedFiles = new List<string>();
+            this.RpcTypes = new List<Type>();
             
             if(!ParseAssembly(destAssemblyPath, out assembly))
                 throw new ArgumentException();
@@ -89,18 +91,21 @@ namespace Flood.Tools.RPCGen
                     {
                         Debug.Assert(type.IsInterface);
                         ProcessService(type);
+                        RpcTypes.Add(type);
                     }
 
                     if (Metadata.IsDataObject(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
                         ProcessDataObject(type);
+                        RpcTypes.Add(type);
                     }
 
                     if (Metadata.IsException(type))
                     {
                         Debug.Assert(type.IsClass);
                         ProcessException(type);
+                        RpcTypes.Add(type);
                     }
                 }
             }
@@ -176,6 +181,23 @@ namespace Flood.Tools.RPCGen
             CompileIntoAssembly(destAssemblyPath, outputPath, references);
         }
 
+        public void CompileApi(string outputPath)
+        {
+            using (var emptyAssemblyPaths = new TemporaryAssemblyPaths())
+            using (var apiAssemblyPaths = new TemporaryAssemblyPaths())
+            {
+                CreateEmptyAssembly(emptyAssemblyPaths.DllPath);
+
+                var weaver = new EngineWeaver.AssemblyWeaver(emptyAssemblyPaths.DllPath);
+                weaver.CopyTypes(destAssemblyPath, RpcTypes);
+                weaver.Write(apiAssemblyPaths.DllPath);
+
+                var references = weaver.GetReferences();
+
+                CompileIntoAssembly(apiAssemblyPaths.DllPath, outputPath, references);
+            }
+        }
+
         private void CompileIntoAssembly(string destPath, string outputPath, HashSet<string> references)
         {
             outputPath = Path.GetFullPath(outputPath);
@@ -222,6 +244,27 @@ namespace Flood.Tools.RPCGen
             }
 
             return references;
+        }
+
+        private static void CreateEmptyAssembly(string outputPath)
+        {
+            var provider = new CSharpCodeProvider();
+            var cp = new CompilerParameters()
+            {
+                GenerateExecutable = false,
+                OutputAssembly = outputPath,
+                IncludeDebugInformation = true
+            };
+            var cr = provider.CompileAssemblyFromFile(cp, new string[]{});
+
+            if (cr.Errors.HasErrors)
+            {
+                var message = new StringBuilder();
+                message.Append("Error creating empty assembly.\n");
+                foreach(var error in cr.Errors)
+                    message.AppendFormat("  {0}\n",error.ToString());
+                throw new Exception(message.ToString());
+            }
         }
     }
 }
