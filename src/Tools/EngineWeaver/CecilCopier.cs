@@ -392,31 +392,6 @@ namespace EngineWeaver
             return ret;
         }
 
-        private TypeDefinition Copy(TypeDefinition def, TypeDefinition declaringType)
-        {
-            var typeCollection = (declaringType != null)? declaringType.NestedTypes : destinationModule.Types;
-            var ret = typeCollection.FirstOrDefault( t => t.FullName == def.FullName);
-            if (ret != null)
-            {
-                Log("Cannot copy existing type "+ def.FullName);
-                return ret;
-            }
-
-            ret = new TypeDefinition(def.Namespace, NamePrefix+def.Name, def.Attributes, CopyReference(def.BaseType));
-
-            typeCollection.Add(ret);
-
-            Map(def,ret);
-            types.Add(def, ret);
-
-            Log("> Type "+def.FullName+" delayed copy");
-
-            foreach(var nestedType in def.NestedTypes)
-                Copy(nestedType, ret);
-
-            return ret;
-        }
-
         private ParameterDefinition Copy(ParameterDefinition def)
         {
             var ret = new ParameterDefinition(def.Name, def.Attributes, CopyReference(def.ParameterType));
