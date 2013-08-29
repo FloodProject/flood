@@ -13,7 +13,6 @@ namespace EngineWeaver.Util
     public class CecilUtils
     {
         private static Dictionary<string, AssemblyDefinition> assemblies = new Dictionary<string, AssemblyDefinition>();
-        private static Dictionary<string, TypeDefinition> types = new Dictionary<string, TypeDefinition>();
 
         public static AssemblyDefinition GetAssemblyDef(Assembly assembly)
         {
@@ -50,23 +49,17 @@ namespace EngineWeaver.Util
             return assemblyDef;
         }
 
-        public static TypeDefinition GetTypeDef(Type type)
+        public static TypeDefinition GetTypeDef(ModuleDefinition module, Type type)
         {
-            var assemblyPath = type.Assembly.Location;
-            if(assemblyPath == null)
-                throw new NullReferenceException();
+            var typeFullName = type.FullName.Replace("+", "/");
 
-            var typePath = assemblyPath + type.FullName;
-            if(types.ContainsKey(typePath))
-                return types[typePath];
+            if (type.IsNested)
+            {
+                var declaringTypeDef = GetTypeDef(module, type.DeclaringType);
+                return declaringTypeDef.NestedTypes.First(t => t.FullName == typeFullName);
+            }
 
-            var assemblyDef = GetAssemblyDef(assemblyPath);
-
-            var module = assemblyDef.MainModule;
-            var typeDef = module.Import(type).Resolve();
-            types.Add(typePath, typeDef);
-
-            return typeDef;
+            return module.Types.First(t => t.FullName == typeFullName);;
         }
 
         public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodReference origMethod)
