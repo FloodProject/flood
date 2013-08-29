@@ -214,7 +214,7 @@ namespace EngineWeaver
                    scopeName == Path.GetFileNameWithoutExtension(destinationModule.Name);
         }
 
-        private FieldReference CopyReference(FieldReference @ref)
+        public FieldReference CopyReference(FieldReference @ref)
         {
              if(IsLocalReference(@ref.DeclaringType.Scope.Name))
                 return GetLocalReference(@ref);
@@ -223,7 +223,7 @@ namespace EngineWeaver
             return destinationModule.Import(@ref);
         }
 
-        private MethodReference CopyReference(MethodReference @ref)
+        public MethodReference CopyReference(MethodReference @ref)
         {
             if(IsLocalReference(@ref.DeclaringType.Scope.Name))
                 return GetLocalReference(@ref);
@@ -236,7 +236,7 @@ namespace EngineWeaver
             return destinationModule.Import(@ref);
         }
 
-        private TypeReference CopyReference(TypeReference @ref)
+        public TypeReference CopyReference(TypeReference @ref)
         {
             if (IsLocalReference(@ref.Scope.Name))
                 return GetLocalReference(@ref);
@@ -292,7 +292,7 @@ namespace EngineWeaver
          * COPY DEFINITIONS
          */
 
-        private FieldDefinition Copy(FieldDefinition def, TypeDefinition declaringType)
+        public FieldDefinition Copy(FieldDefinition def)
         {
             var ret = new FieldDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.FieldType));
 
@@ -303,7 +303,7 @@ namespace EngineWeaver
         }
 
 
-        private EventDefinition Copy(EventDefinition def, TypeDefinition declaringType)
+        public EventDefinition Copy(EventDefinition def)
         {
             var ret = new EventDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.EventType));
 
@@ -317,7 +317,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private PropertyDefinition Copy(PropertyDefinition def, TypeDefinition declaringType)
+        public PropertyDefinition Copy(PropertyDefinition def)
         {
             var ret = new PropertyDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.PropertyType));
             
@@ -331,7 +331,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private MethodDefinition Copy(MethodDefinition def, TypeDefinition declaringType)
+        public MethodDefinition Copy(MethodDefinition def)
         {
             var declaringType = GetDeclaringType(def);
             var ret = declaringType.Methods.FirstOrDefault(m => m.FullName == def.FullName);
@@ -346,7 +346,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private TypeDefinition Copy(TypeDefinition def)
+        public TypeDefinition Copy(TypeDefinition def)
         {
             return TypeCopy(def, false);
         }
@@ -392,7 +392,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private ParameterDefinition Copy(ParameterDefinition def)
+        public ParameterDefinition Copy(ParameterDefinition def)
         {
             var ret = new ParameterDefinition(def.Name, def.Attributes, CopyReference(def.ParameterType));
 
@@ -402,7 +402,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private VariableDefinition Copy(VariableDefinition def)
+        public VariableDefinition Copy(VariableDefinition def)
         {
             var ret = new VariableDefinition(def.Name, CopyReference(def.VariableType));
             
@@ -412,12 +412,7 @@ namespace EngineWeaver
             return ret;
         }
 
-
-        /*
-         * COPIES
-         */
-
-        private CustomAttribute Copy(CustomAttribute def)
+        public CustomAttribute Copy(CustomAttribute def)
         {
             var ret = new CustomAttribute(CopyReference(def.Constructor),def.GetBlob());
 
@@ -427,13 +422,14 @@ namespace EngineWeaver
             return ret;
         }
 
-        private CustomAttributeArgument Copy(CustomAttributeArgument def)
+        public CustomAttributeArgument Copy(CustomAttributeArgument def)
         {
             return new CustomAttributeArgument(CopyReference(def.Type), def.Value);
         }
 
-        private MethodBody Copy(MethodBody def, MethodDefinition parent)
+        public MethodBody Copy(MethodBody def)
         {
+            var parent = (MethodDefinition) CopyMap[def.Method];
             var ret = new MethodBody(parent);
 
             Log("< MethodBody ");
@@ -442,8 +438,9 @@ namespace EngineWeaver
             return ret;
         }
 
-        private MethodReturnType  Copy(MethodReturnType def, IMethodSignature parent)
+        public MethodReturnType  Copy(MethodReturnType def)
         {
+            var parent = (IMethodSignature) CopyMap[def.Method];
             var ret= new MethodReturnType(parent);
             ret.ReturnType = CopyReference(def.ReturnType);
 
@@ -453,7 +450,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private ExceptionHandler  Copy(ExceptionHandler def)
+        public ExceptionHandler  Copy(ExceptionHandler def)
         {
             var ret= new ExceptionHandler(def.HandlerType);
             if(def.CatchType != null)
@@ -465,7 +462,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private Instruction Copy(Instruction def)
+        public Instruction Copy(Instruction def)
         {
             //copy of operands is delayed to ProcessInstructions
             Instruction ret= null;
@@ -482,7 +479,7 @@ namespace EngineWeaver
             return ret;
         }
 
-        private System.Byte[] Copy(System.Byte[] value){
+        public Byte[] Copy(Byte[] value){
             return value;
         }
 
@@ -490,88 +487,87 @@ namespace EngineWeaver
 
         # region MERGE METHODS
 
-        private void MergeReference(FieldReference @ref1, FieldReference @ref2)
+        public void MergeReference(FieldReference @ref1, FieldReference @ref2)
         {
             
         }
 
-        private void MergeReference(MethodReference @ref1, MethodReference @re2)
+        public void MergeReference(MethodReference @ref1, MethodReference @re2)
         {
             
         }
 
-        private void MergeReference(PropertyReference @ref1, PropertyReference @re2)
+        public void MergeReference(PropertyReference @ref1, PropertyReference @re2)
         {
             
         }
 
-        private void MergeReference(TypeReference @ref1, TypeReference @re2)
+        public void MergeReference(TypeReference @ref1, TypeReference @re2)
         {
             
         }
 
-        private void Merge(FieldDefinition def1, FieldDefinition def2)
+        public void Merge(FieldDefinition def1, FieldDefinition def2)
         {
             MergeAll(def1,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
         }
 
-        private void Merge(EventDefinition def1, EventDefinition def2)
+        public void Merge(EventDefinition def1, EventDefinition def2)
         {
             MergeAll(def1,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
         }
 
-        private void Merge(PropertyDefinition def1, PropertyDefinition def2)
+        public void Merge(PropertyDefinition def1, PropertyDefinition def2)
         {
             MergeAll(def1,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
         }
 
-        private void Merge(MethodDefinition def1, MethodDefinition def2)
+        public void Merge(MethodDefinition def1, MethodDefinition def2)
         {
             MergeAll(def1,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
         }
 
-        private void Merge(TypeDefinition def1, TypeDefinition def2)
+        public void Merge(TypeDefinition def1, TypeDefinition def2)
         {
             MergeAll(def1,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module");
         }
 
-        private void Merge(ParameterDefinition def1, ParameterDefinition def2)
+        public void Merge(ParameterDefinition def1, ParameterDefinition def2)
         {
             MergeAll(def1,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
         }
 
-        private void Merge(VariableDefinition def1, VariableDefinition def2)
+        public void Merge(VariableDefinition def1, VariableDefinition def2)
         {
             MergeAll(def1,def2,"VariableType");
         }
 
-
-        private void Merge(CustomAttribute def1, CustomAttribute def2)
+        public void Merge(CustomAttribute def1, CustomAttribute def2)
         {
             MergeAll(def1,def2,"DeclaringType");
         }
 
-        private void Merge(GenericInstanceType def1, GenericInstanceType def2)
+        public void Merge(GenericInstanceType def1, GenericInstanceType def2)
         {
            
         }
 
-        private void Merge(Mono.Cecil.Cil.MethodBody def1, Mono.Cecil.Cil.MethodBody def2)
+        public void Merge(MethodBody def1, MethodBody def2)
         {
             MergeAll(def1,def2,"Method");
         }
 
-        private void  Merge(MethodReturnType def1, MethodReturnType def2)
+        public void  Merge(MethodReturnType def1, MethodReturnType def2)
         {
             MergeAll(def1,def2,"Method","ReturnType");
         }
 /*
-        private void  Merge(ExceptionHandler def1, ExceptionHandler def2)
+        public void  Merge(ExceptionHandler def1, ExceptionHandler def2)
         {
             MergeAll(def1,def2,def2,"CatchType");
         }
 
-        private void Merge(Instruction def, Instruction def)
+        public void Merge(Instruction def, Instruction def)
         {
             if(!instructions.Contains(def)){
                 if(def.Operand is MemberReference){
@@ -582,17 +578,17 @@ namespace EngineWeaver
         }
 */
 
-        private void  Merge(Collection<SecurityDeclaration>def1, Collection<SecurityDeclaration> def2)
+        public void  Merge(Collection<SecurityDeclaration>def1, Collection<SecurityDeclaration> def2)
         {
 
         }
 
-        private void  Merge(Collection<CustomAttribute>def1, Collection<CustomAttribute> def2)
+        public void  Merge(Collection<CustomAttribute>def1, Collection<CustomAttribute> def2)
         {
 
         }
 
-        private void  Merge(Collection<Instruction>def1, Collection<Instruction> def2)
+        public void  Merge(Collection<Instruction>def1, Collection<Instruction> def2)
         {
             //TODO dont override destination instructions always, we migth gona need prepend
             def2.Clear();
@@ -601,12 +597,12 @@ namespace EngineWeaver
             }
         }
 
-        private void  Merge(Collection<ExceptionHandler>def1, Collection<ExceptionHandler> def2)
+        public void  Merge(Collection<ExceptionHandler>def1, Collection<ExceptionHandler> def2)
         {
 
         }
 
-        private void  Merge(Collection<VariableDefinition>def1, Collection<VariableDefinition> def2)
+        public void  Merge(Collection<VariableDefinition>def1, Collection<VariableDefinition> def2)
         {
             //TODO dont override destination instructions always
             def2.Clear();
@@ -615,22 +611,22 @@ namespace EngineWeaver
             }
         }
 
-        private void  Merge(Collection<MethodReference>def1, Collection<MethodReference> def2)
+        public void  Merge(Collection<MethodReference>def1, Collection<MethodReference> def2)
         {
 
         }
 
-        private void  Merge(Collection<MethodDefinition>def1, Collection<MethodDefinition> def2)
+        public void  Merge(Collection<MethodDefinition>def1, Collection<MethodDefinition> def2)
         {
 
         }
 
-        private void  Merge(Collection<GenericParameter>def1, Collection<GenericParameter> def2)
+        public void  Merge(Collection<GenericParameter>def1, Collection<GenericParameter> def2)
         {
 
         }
 
-         private void  Merge(Collection<ParameterDefinition>def1, Collection<ParameterDefinition> def2)
+        public void  Merge(Collection<ParameterDefinition>def1, Collection<ParameterDefinition> def2)
         {
             //check if different
         }

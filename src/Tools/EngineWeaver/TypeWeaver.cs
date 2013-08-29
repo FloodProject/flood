@@ -264,7 +264,7 @@ namespace EngineWeaver
             CheckDestinationMember(destination);
             var typeChange = MergeTypeChange(origin.EventType,destination.EventType);
 
-            copier.Merge(origin,destination,OriginType);
+            copier.Merge(origin,destination);
         }
 
         public void Merge(MethodDefinition origin, MethodDefinition destination)
@@ -281,7 +281,7 @@ namespace EngineWeaver
             CheckDestinationMember(destination);
             var typeChange = MergeTypeChange(origin.PropertyType,destination.PropertyType);
            
-            copier.Merge(origin,destination,OriginType);
+            copier.Merge(origin,destination);
 
         }
         
@@ -302,7 +302,7 @@ namespace EngineWeaver
         public FieldDefinition AddDefinition(FieldDefinition def, string name = "")
         {
             CheckOriginMember(def);
-            var ret = copier.Copy(def,DestinationType);
+            var ret = copier.Copy(def);
             DestinationType.Fields.Add(ret);
             if(name != "")
                 ret.Name = name;
@@ -312,7 +312,7 @@ namespace EngineWeaver
         public EventDefinition AddDefinition(EventDefinition def, string name = "")
         {
             CheckOriginMember(def);
-            var ret = copier.Copy(def,DestinationType);
+            var ret = copier.Copy(def);
             DestinationType.Events.Add(ret);
             if(name != "")
                 ret.Name = name;
@@ -322,7 +322,7 @@ namespace EngineWeaver
         public PropertyDefinition AddDefinition(PropertyDefinition def, string name = "")
         {
             CheckOriginMember(def);
-            var ret = copier.Copy(def,DestinationType);
+            var ret = copier.Copy(def);
             DestinationType.Properties.Add(ret);
             if(name != "")
                 ret.Name = name;
@@ -332,7 +332,7 @@ namespace EngineWeaver
         public TypeDefinition AddDefinition(TypeDefinition def, string name = "")
         {
             CheckOriginMember(def);
-            var ret = (TypeDefinition)copier.Copy(def,DestinationType);
+            var ret = (TypeDefinition)copier.Copy(def);
             DestinationType.NestedTypes.Add(ret);
             if(name != "")
                 ret.Name = name;
@@ -342,7 +342,7 @@ namespace EngineWeaver
         public MethodDefinition AddDefinition(MethodDefinition def, string name = "")
         {
             CheckOriginMember(def);
-            var ret = (MethodDefinition)copier.Copy(def,DestinationType);
+            var ret = (MethodDefinition)copier.Copy(def);
             DestinationType.Methods.Add(ret);
             if(name != "")
                 ret.Name = name;
