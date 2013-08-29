@@ -146,6 +146,53 @@ function SetupManagedDependencyProject()
 	location (path.join(builddir, "deps"))
 end
 
+packages = {}
+packagesDependenciesUsed = false
+
+function SetupPackage(packageName)
+    if packagesDependenciesUsed then
+        print("WARNING: Packages have already been used!")
+    end
+    table.insert(packages, packageName)
+    
+    group("Packages/" .. packageName)
+
+    local packagetargetdir = path.join(libdir, "Packages", packageName)
+
+    -- Build events are not configuration specific so we need to use vs macros
+    -- The ability to use tokens, like %{cfg.targetdir}, will be coming in the 
+    -- next major release (which will likely be numbered 5.0) starkos
+    local vslibdir = "$(TargetDir)" .. path.join(--[[packageName--]]".." , --[[Packages--]]"..")
+    local vspackagegenexe = path.join(vslibdir, "PackageGen.exe")
+    local vspackagegencommand = vspackagegenexe .. " ".. packageName .. " $(TargetDir) "
+
+    project (packageName)
+    
+        kind "SharedLib"
+        language "C#"
+        
+        targetdir (packagetargetdir)
+        location (packageName)
+        
+        files
+        {
+            path.join(packageName,"**.cs")
+        }
+        
+        links 
+        {
+            "EngineManaged"
+        }
+
+        postbuildcommands { vspackagegencommand }
+
+end
+
+function SetupPackagesAsDependencies()
+    dependson (packages)
+    packagesDependenciesUsed = true
+end
+
 function EmbedFiles(resources)
     files (resources)
 
