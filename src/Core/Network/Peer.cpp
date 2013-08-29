@@ -90,7 +90,7 @@ String Peer::getHostName() const
 {
 	char name[256];
 	
-	if(enet_address_get_host(&peer->address, name, ARRAY_SIZE(name)) < 0)
+	if(enet_address_get_host(&peer->address, name, FLD_ARRAY_SIZE(name)) < 0)
 	{
 		LogError("Could not get hostname of network peer");
 		return "";
@@ -105,7 +105,7 @@ String Peer::getHostIP() const
 {
 	char ip[64];
 	
-	if(enet_address_get_host_ip(&peer->address, ip, ARRAY_SIZE(ip)) < 0)
+	if(enet_address_get_host_ip(&peer->address, ip, FLD_ARRAY_SIZE(ip)) < 0)
 	{
 		LogError("Could not get IP address of network peer");
 		return "";

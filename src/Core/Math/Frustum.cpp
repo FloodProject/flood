@@ -50,10 +50,10 @@ Frustum::Frustum( const Frustum& rhs )
 	, farPlane( rhs.farPlane )
 	, aspectRatio( rhs.aspectRatio )
 {
-	for(size_t i = 0; i < ARRAY_SIZE(rhs.planes); i++ )
+	for(size_t i = 0; i < FLD_ARRAY_SIZE(rhs.planes); i++ )
 		planes[i] = rhs.planes[i];
 
-	for(size_t i = 0; i < ARRAY_SIZE(rhs.corners); i++ )
+	for(size_t i = 0; i < FLD_ARRAY_SIZE(rhs.corners); i++ )
 		corners[i] = rhs.corners[i];
 }
 
@@ -148,7 +148,7 @@ void Frustum::updateCorners( const Matrix4x3& matView )
 	// a unit cube) in clip space. Check the diagram for more information:
 	// http://www.songho.ca/opengl/files/gl_projectionmatrix01.png
 
-	for(size_t i = 0; i < ARRAY_SIZE(cornerPoints); i++)
+	for(size_t i = 0; i < FLD_ARRAY_SIZE(cornerPoints); i++)
 	{
 		const Vector3& corner = cornerPoints[i];
 
@@ -163,7 +163,7 @@ bool Frustum::intersects( const BoundingBox& box ) const
 {
 	// Loop through each side of the frustum and test if the box lies outside any of them.
 	
-	for(size_t i = 0; i < ARRAY_SIZE(planes); i++)
+	for(size_t i = 0; i < FLD_ARRAY_SIZE(planes); i++)
 	{
 		const Plane& plane = planes[i];
 

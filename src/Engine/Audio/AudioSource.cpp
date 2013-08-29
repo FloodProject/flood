@@ -123,7 +123,7 @@ static bool AudioStreamQueueBuffer(ALuint source, ALuint buffer,
 
 	bool hasMoreData = true;
 
-	int size = stream.decode(data, ARRAY_SIZE(data));
+	int size = stream.decode(data, FLD_ARRAY_SIZE(data));
 	
 	if( size < BUFFER_SIZE )
 		hasMoreData = false;

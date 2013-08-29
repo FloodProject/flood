@@ -353,7 +353,7 @@ void Milkshape3D::buildGeometry()
 	}
 
 	// Setup the vertex format for the mesh.
-	static size_t numVertexElements = ARRAY_SIZE(s_MilkshapeMeshElements);
+	static size_t numVertexElements = FLD_ARRAY_SIZE(s_MilkshapeMeshElements);
 	gb->declarations.decls.reserve(numVertexElements);
 
 	for(size_t i = 0; i < numVertexElements; ++i )

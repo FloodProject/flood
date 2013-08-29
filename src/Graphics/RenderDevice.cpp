@@ -23,6 +23,7 @@
 
 #include "Core/Utilities.h"
 #include <algorithm>
+
 NAMESPACE_GRAPHICS_BEGIN
 
 //-----------------------------------//
@@ -187,7 +188,7 @@ void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 		if( !bindUniforms ) continue;
 
 		char s_TextureUniform[] = "vp_Texture0";
-		size_t s_TextureUniformSize = ARRAY_SIZE(s_TextureUniform) - 2;
+		size_t s_TextureUniformSize = FLD_ARRAY_SIZE(s_TextureUniform) - 2;
 
 		// Build the uniform string without allocating memory.
 		uint8 index = unit.unit;

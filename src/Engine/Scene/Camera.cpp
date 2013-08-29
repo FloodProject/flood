@@ -348,7 +348,7 @@ static Frustum CalculateWorldFrustum(const Transform* transform, Frustum local)
 {
 	const Matrix4x3& absolute = transform->getAbsoluteTransform();
 
-	for(size_t i = 0; i < ARRAY_SIZE(local.corners); i++)
+	for(size_t i = 0; i < FLD_ARRAY_SIZE(local.corners); i++)
 		local.corners[i] = absolute * local.corners[i];
 
 	return local;

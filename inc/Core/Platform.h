@@ -93,6 +93,7 @@
 		__pragma(warning(disable:4127)) \
 		} while(0) \
 		__pragma(warning(pop))
+	#define FLD_BUILTIN_UNREACHABLE __assume(false)
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	#define alignof __alignof__
 	#define offsetof(type, member)  __builtin_offsetof (type, member)
@@ -103,6 +104,7 @@
 	#define OVERRIDE //__attribute__((override))
 	#define MULTI_LINE_MACRO_END } while(0)
 	#define thread_local __thread
+	#define FLD_BUILTIN_UNREACHABLE __builtin_unreachable()
 #endif
 
 #if defined(COMPILER_CLANG)
@@ -161,12 +163,7 @@ typedef uint32 uint;
 #define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
 #define TODO( x )  message( __FILE__LINE__" TODO :   " #x ) 
 
-//#pragma TODO("Switch to safer sizeof macro")
-
-//((sizeof(a) / sizeof(*(a)))
-//static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
-
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+#define FLD_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 //---------------------------------------------------------------------//
 // Types and Data structures

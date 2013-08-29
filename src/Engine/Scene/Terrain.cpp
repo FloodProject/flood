@@ -222,7 +222,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
-	for( size_t i = 0; i < ARRAY_SIZE(gs_HeightmapDimensions); i++ )
+	for( size_t i = 0; i < FLD_ARRAY_SIZE(gs_HeightmapDimensions); i++ )
 	{
 		if( width == gs_HeightmapDimensions[i] ) 
 		{
