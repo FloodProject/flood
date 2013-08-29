@@ -8,14 +8,14 @@ namespace Flood.RPC
     public abstract class RPCProxy : RPCStub
     {
         public RPCPeer Peer { get; private set; }
-        public int RemoteId { get; private set; }
+        public RPCStubId RemoteId { get; private set; }
 
         private RPCCallProcessor callProcessor;
 
         /// Maps a Event id to a Delegate id.
         private Dictionary<int, int> eventIdsDelegates;
 
-        protected RPCProxy(RPCPeer peer, int remoteId, int id)
+        protected RPCProxy(RPCPeer peer, RPCStubId remoteId, RPCStubId id)
             : base(id)
         {
             Peer = peer;
