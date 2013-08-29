@@ -77,10 +77,6 @@ namespace EngineWeaver.Util
             if(value == null)
                 return default(T);
 
-            if(CopyMap.ContainsValue(value)){
-                return value;
-            }
-
             if(CopyMap.ContainsKey(value)){
                 return (T)CopyMap[value];
             }
