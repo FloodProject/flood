@@ -9,6 +9,17 @@ namespace Flood.RPC.Metadata
 
     }
 
+    [AttributeUsage(AttributeTargets.Interface)]
+    public class GlobalServiceAttribute : System.Attribute
+    {
+        public Guid Guid { get; private set; }
+
+        public GlobalServiceAttribute(string guid)
+        {
+            Guid = new Guid(guid);
+        }
+    }
+
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
     public class DataObjectAttribute : System.Attribute
     {
