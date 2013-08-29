@@ -19,6 +19,7 @@ namespace EngineWeaver
 
         private readonly List<Instruction> instructions;
         private readonly Dictionary<TypeDefinition,TypeDefinition> types;
+        private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
         public string NamePrefix { get; set; }
@@ -32,6 +33,7 @@ namespace EngineWeaver
             referenceMap = new Dictionary<MemberReference,MemberReference>();
             instructions = new List<Instruction>();
             types = new Dictionary<TypeDefinition,TypeDefinition>();
+            stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
         }
 
         public void Clear()
@@ -340,6 +342,52 @@ namespace EngineWeaver
 
             Log("< Method "+ret.FullName);
             CopyAll(def,ret,ret,"Name","DeclaringType","ReturnType","MetadataToken");
+
+            return ret;
+        }
+
+        private TypeDefinition Copy(TypeDefinition def)
+        {
+            return TypeCopy(def, false);
+        }
+
+        private TypeDefinition TypeCopy(TypeDefinition def, bool isStubType)
+        {
+            TypeDefinition declaringType = GetDeclaringType(def, false);
+            if (def.IsNested && declaringType == null)
+                declaringType = TypeCopy(def.DeclaringType, true);
+
+            var typeCollection = (declaringType == null) ? this.destinationModule.Types : declaringType.NestedTypes;
+            
+            TypeDefinition ret;
+            if (stubTypes.ContainsKey(def))
+            {
+                ret = stubTypes[def];
+            }
+            else
+            {
+                ret = typeCollection.FirstOrDefault((TypeDefinition t) => t.FullName == def.FullName);
+                if (ret != null)
+                {
+                    Log("Cannot copy existing type " + def.FullName);
+                    return ret;
+                }
+
+                var baseRef = (def.BaseType == null) ? null : this.CopyReference(def.BaseType);
+                ret = new TypeDefinition(def.Namespace, this.NamePrefix + def.Name, def.Attributes, baseRef);
+                typeCollection.Add(ret);
+
+                if (isStubType)
+                    stubTypes.Add(def, ret);
+            }
+
+            if (!isStubType)
+            {
+                types.Add(def, ret);
+                CopyMap.Add(def, ret);
+                foreach (TypeDefinition nestedType in def.NestedTypes)
+                    Copy(nestedType);
+            }
 
             return ret;
         }
