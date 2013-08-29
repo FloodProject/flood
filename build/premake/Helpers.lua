@@ -37,15 +37,19 @@ function ImportConfigs()
 end
 
 function IncludePremakeProjects(basedir)
+    IncludePremake(basedir, "premake4.lua")
+end
+
+function IncludePremake(basedir, premakefile)
     local deps = os.matchdirs(basedir)
     
     for i,dep in ipairs(deps) do
-        local fp = path.join(dep, "premake4.lua")
+        local fp = path.join(dep, premakefile)
         fp = path.join(os.getcwd(), fp)
         
         if os.isfile(fp) then
-            print(string.format(" including %s", dep))
-            include(dep)
+            print(string.format(" including %s", fp))
+            dofile(fp)
         end
     end
 end
