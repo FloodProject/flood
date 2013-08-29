@@ -1,4 +1,5 @@
 ﻿
+using Ionic.Zip;
 using Mono.Options;
 using System;
 using System.IO;
@@ -10,7 +11,8 @@ namespace Flood.Tools.PackageGen
         public bool Verbose = false;
         public bool ShowHelpText = false;
         public string OutputDir;
-        public string Assembly;
+        public string PackageName;
+        public string PackageDir;
     }
 
     public class Program
@@ -19,8 +21,8 @@ namespace Flood.Tools.PackageGen
         {
             var module = System.Diagnostics.Process.GetCurrentProcess().MainModule;
             var exeName = Path.GetFileName(module.FileName);
-            Console.WriteLine("Usage: " + exeName + " [options]+ assembly");
-            Console.WriteLine("Generates package archive from a package dll.");
+            Console.WriteLine("Usage: " + exeName + " [options]+ packageName packageDir");
+            Console.WriteLine("Generates package archive from a package directory.");
             Console.WriteLine();
             Console.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
@@ -36,7 +38,7 @@ namespace Flood.Tools.PackageGen
                     { "h|?|help",   v => options.ShowHelpText = v != null },
                 };
 
-            if (args.Length == 0 || options.ShowHelpText)
+            if (args.Length != 2 || options.ShowHelpText)
             {
                 ShowHelp(set);
                 return false;
@@ -44,7 +46,8 @@ namespace Flood.Tools.PackageGen
 
             try
             {
-                options.Assembly = set.Parse(args)[0];
+                options.PackageName = set.Parse(args)[0];
+                options.PackageDir = set.Parse(args)[1];
             }
             catch (OptionException)
             {
@@ -63,10 +66,38 @@ namespace Flood.Tools.PackageGen
             if (!ParseCommandLineOptions(args, options))
                 return 1;
 
+            if (options.OutputDir == null)
+                options.OutputDir = options.PackageDir;
+
             if (!Directory.Exists(options.OutputDir))
                 Directory.CreateDirectory(options.OutputDir);
 
-            
+            var packageDllName = options.PackageName + ".dll";
+            var packageApiDllName = options.PackageName + ".API.dll";
+            var packageArchiveName = options.PackageName + ".fld";
+            var packageDllPath = Path.Combine(options.PackageDir, packageDllName);
+            var packageApiDllPath = Path.Combine(options.PackageDir, packageApiDllName);
+            var packageArchivePath = Path.Combine(options.OutputDir, packageArchiveName);
+
+            System.Console.WriteLine("{0}", packageDllPath);
+
+            //Generate RPC classes
+            var rpcCompiler = new RPCGen.Compiler(packageDllPath, options.PackageDir);
+            rpcCompiler.Process();
+            rpcCompiler.Compile(packageDllPath);
+
+            System.Console.WriteLine("{0}", packageApiDllPath);
+
+            //Generate a PackageName.API.dll with only the PackageName.dll RPC types.
+            rpcCompiler.CompileApi(packageApiDllPath);
+
+            //Create an archive
+            using (var zip = new ZipFile())
+            {
+                zip.AddDirectory(options.OutputDir, "");
+                zip.Save(packageArchivePath);
+            }
+
             return 0;
         }
     }
