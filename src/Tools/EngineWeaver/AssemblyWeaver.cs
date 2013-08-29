@@ -1,4 +1,6 @@
-﻿using EngineWeaver.Util;
+﻿using System;
+using System.Collections.Generic;
+using EngineWeaver.Util;
 using Mono.Cecil;
 
 namespace EngineWeaver
@@ -20,6 +22,21 @@ namespace EngineWeaver
             foreach (var origType in origAssembly.MainModule.Types)
                 if(origType.BaseType != null)
                     copier.Copy(origType);
+
+            copier.Process();
+        }
+
+        public void CopyTypes(string origAssemblyPath, List<Type> types)
+        {
+            var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
+            var copier = new CecilCopier(origAssembly.MainModule, destAssembly.MainModule);
+
+            foreach (var type in types)
+            {
+                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, type);
+
+                copier.Copy(typeDef);
+            }
 
             copier.Process();
         }
