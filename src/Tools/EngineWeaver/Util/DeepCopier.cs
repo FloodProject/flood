@@ -9,8 +9,8 @@ namespace EngineWeaver.Util
 {
     public abstract class DeepCopier
     {
-        private Dictionary<Type, MethodInfo> mergeMethodInfos;
-        private Dictionary<Type, MethodInfo> copyMethodInfos;
+        private Dictionary<Type, FastInvoke.FastInvokeHandler> mergeMethodInfos;
+        private Dictionary<Type, FastInvoke.FastInvokeHandler> copyMethodInfos;
 
         public readonly Dictionary<object,object> CopyMap;
 
@@ -18,21 +18,33 @@ namespace EngineWeaver.Util
         private readonly Logger publicLog = new Logger(Logger.LogLevel.Warning);
 
         public DeepCopier(){
-            mergeMethodInfos = new Dictionary<Type, MethodInfo>();
-            copyMethodInfos = new Dictionary<Type, MethodInfo>();
+            mergeMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
+            copyMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
             CopyMap = new Dictionary<object,object>();
 
             var type = this.GetType();
-            foreach (var m in type.GetMethods(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance)){
-                if (m.Name.StartsWith("Merge") && 
-                    m.GetParameters().Count() >= 2 &&
+            foreach (var m in type.GetMethods(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance))
+            {
+
+
+                if (m.Name.StartsWith("Merge") &&
+                    m.GetParameters().Count() == 2 &&
                     m.GetParameters()[0].ParameterType == m.GetParameters()[1].ParameterType &&
                     !m.IsGenericMethod)
-                    mergeMethodInfos.Add(m.GetParameters()[1].ParameterType,m);
-                 if (m.Name.StartsWith("Copy") && 
-                    m.GetParameters().Count() >= 1 &&
+                {
+                    var mergeInvoke = FastInvoke.GetMethodInvoker(m);
+                    mergeMethodInfos.Add(m.GetParameters()[1].ParameterType, mergeInvoke);
+                }
+
+                if (m.Name.StartsWith("Copy") &&
+                    m.GetParameters().Count() == 1 &&
+                    m.GetParameters()[0].ParameterType == m.ReturnType &&
                     !m.IsGenericMethod)
-                    copyMethodInfos.Add(m.GetParameters()[0].ParameterType,m);
+                {
+                    var copyInvoke = FastInvoke.GetMethodInvoker(m);
+                    copyMethodInfos.Add(m.GetParameters()[0].ParameterType, copyInvoke);
+                }
+                    
             }
         }
 
@@ -40,9 +52,8 @@ namespace EngineWeaver.Util
             publicLog.Tabs = log.Tabs;
             publicLog.Info(msg);
         }
-        
 
-        public void Merge(object obj1, object obj2, object data = null){
+        public void Merge(object obj1, object obj2){
 
             if(obj1 == null)
                 return;
@@ -58,21 +69,12 @@ namespace EngineWeaver.Util
             if(!mergeMethodInfos.ContainsKey(type))
                 throw new NotImplementedException("Merge<"+type.FullName+">");
 
-            var m = mergeMethodInfos[type];
-            //try {
-                if(m.GetParameters().Count() == 2){
-                    m.Invoke(this, new object[]{obj1, obj2});
-                } else {
-                    m.Invoke(this, new object[]{obj1, obj2, data});
-                }
-           // } catch(Exception e){
-           //     log.Error(e.ToString());
-           // }
+            mergeMethodInfos[type].Invoke(this, new []{obj1, obj2});
 
             CopyMap.Add(obj1,obj2);
         }
 
-        public T Copy<T>(T value, object data = null)
+        public T Copy<T>(T value)
         {
             if(value == null)
                 return default(T);
@@ -87,22 +89,13 @@ namespace EngineWeaver.Util
 
             if(!copyMethodInfos.ContainsKey(type))
                 throw new NotImplementedException("Copy<"+type.FullName+">");
-            
 
-            var m = copyMethodInfos[type];
-            object copy = null;
-            if(m.GetParameters().Count() == 1){
-                copy = m.Invoke(this, new object[]{value});
-            } else {
-                copy = m.Invoke(this, new object[]{value, data});
-            }
-            if(copy == null){
-                throw new NullReferenceException();
-            }
+            var copy = copyMethodInfos[type].Invoke(this, new object[]{value});
 
-            CopyMap.Add(value,copy);
+            if(!CopyMap.ContainsKey(value))
+                CopyMap.Add(value, copy);
+
             return (T)copy;
-            
         }
 
         //TODO Order list instead of multiple iterations
@@ -126,11 +119,8 @@ namespace EngineWeaver.Util
 
 
 
-        public void MergeAll<T>(T from, T to, object data, params string[] ignores)
+        public void MergeAll<T>(T from, T to, params string[] ignores)
         {
-             if(data is string)
-                throw new ArgumentException("data cannot be string");
-
             log.Info("> Merge "+ typeof(T));
             log.Tabs++;
             var fields = GetFields(typeof(T),ignores);
@@ -165,12 +155,12 @@ namespace EngineWeaver.Util
             //Class types
             foreach(FieldInfo field in fields.ToArray()) {
                 log.Info("Merge field "+ field.Name);
-                Merge(field.GetValue(from), field.GetValue(to), data);
+                Merge(field.GetValue(from), field.GetValue(to));
                 fields.Remove(field);
             }
             foreach(PropertyInfo property in properties.ToArray()) {
                 log.Info("Merge property "+ property.Name);
-                Merge(property.GetValue(from), property.GetValue(to), data);
+                Merge(property.GetValue(from), property.GetValue(to));
                 properties.Remove(property);
             }
 
@@ -186,10 +176,10 @@ namespace EngineWeaver.Util
 
 
 
-        public void CopyAll<T>(T from, T to, object data, params string[] ignores)
+        public void CopyAll<T>(T from, T to, params string[] ignores)
         {
-            if(data is string)
-                throw new ArgumentException("data cannot be string");
+            if(!CopyMap.ContainsKey(from))
+                CopyMap.Add(from, to);
 
             log.Info("> Copy "+ typeof(T));
             log.Tabs++;
@@ -226,7 +216,7 @@ namespace EngineWeaver.Util
             //Class types
             foreach(FieldInfo field in fields.ToArray()) {
                 log.Info("Copy field "+ field.Name);
-                field.SetValue(to, Copy(field.GetValue(from), data));
+                field.SetValue(to, Copy(field.GetValue(from)));
                 fields.Remove(field);
             }
             foreach(PropertyInfo property in properties.ToArray()) {
@@ -234,7 +224,7 @@ namespace EngineWeaver.Util
                     var value = property.GetValue(from);
                     if(value != null){
                         log.Info("Copy property "+ property.Name);
-                        property.SetValue(to, Copy(value, data));
+                        property.SetValue(to, Copy(value));
                     }
                     properties.Remove(property);
                 }
@@ -249,7 +239,7 @@ namespace EngineWeaver.Util
                     log.Tabs++;
                     foreach(var el in fromList){
                         var m = el as MemberReference;
-                        var copy = Copy(el,data);
+                        var copy = Copy(el);
                         toList.Add(copy);
                     }
                     log.Tabs--;
