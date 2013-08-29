@@ -63,7 +63,7 @@ namespace EngineWeaver
             { 
                 Log("> Type "+t.Key.FullName);
                 Log("< Type "+t.Value.FullName);
-                CopyAll(t.Key,t.Value,t.Value,"Name","DeclaringType","BaseType","MetadataToken","Scope", "NestedTypes");
+                CopyAll(t.Key,t.Value,"Name","DeclaringType","BaseType","MetadataToken","Scope", "NestedTypes");
             }
             types.Clear();
         }
@@ -297,7 +297,7 @@ namespace EngineWeaver
             var ret = new FieldDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.FieldType));
 
             Log("< Field "+ret.FullName);
-            CopyAll(def,ret,declaringType,"Name","DeclaringType","FieldType","MetadataToken");
+            CopyAll(def,ret,"Name","DeclaringType","FieldType","MetadataToken");
 
             return ret;
         }
@@ -308,7 +308,7 @@ namespace EngineWeaver
             var ret = new EventDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.EventType));
 
             Log("< Event "+ret.FullName);
-            CopyAll(def,ret,declaringType,"Name","DeclaringType","EventType","MetadataToken");
+            CopyAll(def,ret,"Name","DeclaringType","EventType","MetadataToken");
 
             var declaringType = GetDeclaringType(def);
             if(ret.RemoveMethod != null) AddMethod(declaringType, ret.RemoveMethod);
@@ -322,7 +322,7 @@ namespace EngineWeaver
             var ret = new PropertyDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.PropertyType));
             
             Log("< Property "+ret.FullName);
-            CopyAll(def,ret,declaringType,"Name","DeclaringType","PropertyType","MetadataToken");
+            CopyAll(def,ret,"Name","DeclaringType","PropertyType","MetadataToken");
 
             var declaringType = GetDeclaringType(def);
             if(ret.GetMethod != null) AddMethod(declaringType, ret.GetMethod);
@@ -341,7 +341,7 @@ namespace EngineWeaver
             ret = new MethodDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.ReturnType));
 
             Log("< Method "+ret.FullName);
-            CopyAll(def,ret,ret,"Name","DeclaringType","ReturnType","MetadataToken");
+            CopyAll(def,ret,"Name","DeclaringType","ReturnType","MetadataToken");
 
             return ret;
         }
@@ -422,7 +422,7 @@ namespace EngineWeaver
             var ret = new ParameterDefinition(def.Name, def.Attributes, CopyReference(def.ParameterType));
 
             Log("< Parameter " + ret.Name);
-            CopyAll(def,ret,ret,"Method","ParameterType","MetadataToken");
+            CopyAll(def,ret,"Method","ParameterType","MetadataToken");
 
             return ret;
         }
@@ -432,7 +432,7 @@ namespace EngineWeaver
             var ret = new VariableDefinition(def.Name, CopyReference(def.VariableType));
             
             Log("< Variable " + ret.Name);
-            CopyAll(def,ret,ret,"VariableType");
+            CopyAll(def,ret,"VariableType");
 
             return ret;
         }
@@ -447,7 +447,7 @@ namespace EngineWeaver
             var ret = new CustomAttribute(CopyReference(def.Constructor),def.GetBlob());
 
             Log("< CopyAttributes ");
-            CopyAll(def,ret,ret,"DeclaringType");
+            CopyAll(def,ret,"DeclaringType");
 
             return ret;
         }
@@ -462,7 +462,7 @@ namespace EngineWeaver
             var ret = new MethodBody(parent);
 
             Log("< MethodBody ");
-            CopyAll(def,ret,ret,"Method","Scope");
+            CopyAll(def,ret,"Method","Scope");
 
             return ret;
         }
@@ -473,7 +473,7 @@ namespace EngineWeaver
             ret.ReturnType = CopyReference(def.ReturnType);
 
             Log("< MethodReturnType ");
-            CopyAll(def,ret,ret,"Method","ReturnType");
+            CopyAll(def,ret,"Method","ReturnType");
 
             return ret;
         }
@@ -485,7 +485,7 @@ namespace EngineWeaver
                 ret.CatchType = CopyReference(def.CatchType);
 
             Log("< ExceptionHandler ");
-            CopyAll(def,ret,ret,"CatchType");
+            CopyAll(def,ret,"CatchType");
 
             return ret;
         }
@@ -537,43 +537,43 @@ namespace EngineWeaver
 
         private void Merge(FieldDefinition def1, FieldDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
+            MergeAll(def1,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
         }
 
         private void Merge(EventDefinition def1, EventDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
+            MergeAll(def1,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
         }
 
         private void Merge(PropertyDefinition def1, PropertyDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
+            MergeAll(def1,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
         }
 
         private void Merge(MethodDefinition def1, MethodDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
+            MergeAll(def1,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
         }
 
         private void Merge(TypeDefinition def1, TypeDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module");
+            MergeAll(def1,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module");
         }
 
         private void Merge(ParameterDefinition def1, ParameterDefinition def2)
         {
-            MergeAll(def1,def2,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
+            MergeAll(def1,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
         }
 
         private void Merge(VariableDefinition def1, VariableDefinition def2)
         {
-            MergeAll(def1,def2,def2,"VariableType");
+            MergeAll(def1,def2,"VariableType");
         }
 
 
         private void Merge(CustomAttribute def1, CustomAttribute def2)
         {
-            MergeAll(def1,def2,def2,"DeclaringType");
+            MergeAll(def1,def2,"DeclaringType");
         }
 
         private void Merge(GenericInstanceType def1, GenericInstanceType def2)
@@ -583,12 +583,12 @@ namespace EngineWeaver
 
         private void Merge(Mono.Cecil.Cil.MethodBody def1, Mono.Cecil.Cil.MethodBody def2)
         {
-            MergeAll(def1,def2,def2,"Method");
+            MergeAll(def1,def2,"Method");
         }
 
         private void  Merge(MethodReturnType def1, MethodReturnType def2)
         {
-            MergeAll(def1,def2,def2,"Method","ReturnType");
+            MergeAll(def1,def2,"Method","ReturnType");
         }
 /*
         private void  Merge(ExceptionHandler def1, ExceptionHandler def2)
