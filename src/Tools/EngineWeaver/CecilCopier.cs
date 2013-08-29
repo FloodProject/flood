@@ -141,6 +141,20 @@ namespace EngineWeaver
             }
         }
 
+        private TypeDefinition GetDeclaringType(MemberReference member, bool throwMapException = true)
+        {
+            if(member.Module != originModule)
+                throw new ArgumentException();
+
+            if (member.DeclaringType == null)
+                return null;
+
+            object declaringType = null;
+            if(throwMapException && !CopyMap.TryGetValue(member.DeclaringType, out declaringType))
+                throw new Exception("Could not found destination TypeDefinition. Map it.");
+
+            return (TypeDefinition)declaringType;
+        }
 
         # region COPY METHODS
 
@@ -293,6 +307,7 @@ namespace EngineWeaver
             Log("< Event "+ret.FullName);
             CopyAll(def,ret,declaringType,"Name","DeclaringType","EventType","MetadataToken");
 
+            var declaringType = GetDeclaringType(def);
             if(ret.RemoveMethod != null) AddMethod(declaringType, ret.RemoveMethod);
             if(ret.AddMethod    != null) AddMethod(declaringType, ret.AddMethod);
 
@@ -306,6 +321,7 @@ namespace EngineWeaver
             Log("< Property "+ret.FullName);
             CopyAll(def,ret,declaringType,"Name","DeclaringType","PropertyType","MetadataToken");
 
+            var declaringType = GetDeclaringType(def);
             if(ret.GetMethod != null) AddMethod(declaringType, ret.GetMethod);
             if(ret.SetMethod != null) AddMethod(declaringType, ret.SetMethod);
 
@@ -314,6 +330,7 @@ namespace EngineWeaver
 
         private MethodDefinition Copy(MethodDefinition def, TypeDefinition declaringType)
         {
+            var declaringType = GetDeclaringType(def);
             var ret = declaringType.Methods.FirstOrDefault(m => m.FullName == def.FullName);
             if(ret != null)
                 return ret;
