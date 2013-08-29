@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Flood.Tools.RPCGen;
+using NUnit.Framework;
 using System;
 using System.IO;
 using System.Reflection;
@@ -32,6 +33,20 @@ namespace RPCGen.Tests
 
             var ret = Flood.Tools.RPCGen.Program.Main(args);
             Assert.AreEqual(0, ret);
+        }
+
+        [Test]
+        public void GenAPI()
+        {
+            string genDirectory = Path.Combine("..", "..", "gen", "RPCGen.Tests.API");
+            Directory.CreateDirectory(genDirectory);
+
+            var sourceDllPath = Path.GetFullPath("RPCGen.Tests.Services.dll");
+            var destDllPath = Path.Combine(genDirectory, "RPCGen.Tests.Services.dll");
+
+            var rpcCompiler = new Compiler(sourceDllPath, genDirectory);
+            rpcCompiler.Process();
+            rpcCompiler.CompileApi(destDllPath);
         }
     }
 }
