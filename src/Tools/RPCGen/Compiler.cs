@@ -13,16 +13,15 @@
  * under the License.
  */
 
+using Microsoft.CSharp;
+using RPCGen;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
 using System.Text;
-using System.Linq;
-using RPCGen;
 
 namespace Flood.Tools.RPCGen
 {
@@ -170,45 +169,32 @@ namespace Flood.Tools.RPCGen
             Console.WriteLine("Generated '{0}'", fileName);
         }
 
-        public void Compile(string outputAssemblyPath)
+        public void Compile(string outputPath)
         {
-            outputAssemblyPath = Path.GetFullPath(outputAssemblyPath);
-            var generatedAssemblyPath = Path.GetFullPath(Path.GetRandomFileName())+".dll";
+            var references = GetAssemblyReferencesPaths(assembly);
 
-            CodeDomProvider provider = new CSharpCodeProvider();
-            CompilerParameters cp = new CompilerParameters()
+            CompileIntoAssembly(destAssemblyPath, outputPath, references);
+        }
+
+        private void CompileIntoAssembly(string destPath, string outputPath, HashSet<string> references)
+        {
+            outputPath = Path.GetFullPath(outputPath);
+
+            using (var generatedAssembly = new TemporaryAssemblyPaths())
             {
-                GenerateExecutable = false,
-                OutputAssembly = generatedAssemblyPath,
-                IncludeDebugInformation = true
-            };
+                CodeDomProvider provider = new CSharpCodeProvider();
+                CompilerParameters cp = new CompilerParameters()
+                {
+                    GenerateExecutable = false,
+                    OutputAssembly = generatedAssembly.DllPath,
+                    IncludeDebugInformation = true
+                };
 
-            var dlls = new DirectoryInfo(".").GetFiles("*.dll");
-            var references = new HashSet<string>();
+                references.Add(destPath);
 
-            foreach (var assemblyName in assembly.GetReferencedAssemblies())
-            {
-                string location;
-                var dll = dlls.FirstOrDefault(fi => fi.Name == assemblyName.Name + ".dll");
-                if(dll != null)
-                    location = dll.FullName;
-                else
-                    location = Assembly.Load(assemblyName).Location;
+                foreach (var @ref in references)
+                    cp.ReferencedAssemblies.Add(@ref);
 
-                references.Add(location);
-            }
-
-            // Add an explicit reference to the EngineBindings.dll.
-            var bindings = dlls.FirstOrDefault(fi => fi.Name == "EngineBindings.dll");
-            if (bindings != null)
-                references.Add(bindings.FullName);
-
-            foreach (var @ref in references)
-                cp.ReferencedAssemblies.Add(@ref);
-
-            cp.ReferencedAssemblies.Add(destAssemblyPath);
-
-            try { 
                 CompilerResults cr = provider.CompileAssemblyFromFile(cp, GeneratedFiles.ToArray());
             
                 if (cr.Errors.HasErrors)
@@ -220,14 +206,22 @@ namespace Flood.Tools.RPCGen
                     throw new Exception(message.ToString());
                 }
 
-                var weaver = new EngineWeaver.AssemblyWeaver(destAssemblyPath);
-                weaver.AddAssembly(generatedAssemblyPath);
-                weaver.Write(outputAssemblyPath);
-                
-            } finally
-            {
-                File.Delete(generatedAssemblyPath);
+                var weaver = new EngineWeaver.AssemblyWeaver(destPath);
+                weaver.AddAssembly(generatedAssembly.DllPath);
+                weaver.Write(outputPath);
             }
+        }
+
+        private static HashSet<string>  GetAssemblyReferencesPaths(Assembly assembly)
+        {
+            var references = new HashSet<string>();
+
+            foreach (var assemblyName in assembly.GetReferencedAssemblies())
+            {
+                references.Add(assemblyName.Name + ".dll");
+            }
+
+            return references;
         }
     }
 }
