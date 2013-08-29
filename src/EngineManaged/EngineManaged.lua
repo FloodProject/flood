@@ -10,8 +10,6 @@ project "EngineManaged"
 	flags { "Unsafe" }
 	location "."
 
-	SetupRPCGen("EngineManaged",".dll")
-	
 	files
 	{
 		"EngineManaged.lua",
