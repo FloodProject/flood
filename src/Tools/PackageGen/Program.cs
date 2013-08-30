@@ -46,8 +46,8 @@ namespace Flood.Tools.PackageGen
 
             try
             {
-                options.PackageName = set.Parse(args)[0];
-                options.PackageDir = set.Parse(args)[1];
+                options.PackageName = set.Parse(args)[0].Replace("\"", "");
+                options.PackageDir = set.Parse(args)[1].Replace("\"", "");
             }
             catch (OptionException)
             {
