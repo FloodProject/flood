@@ -17,7 +17,6 @@ namespace Flood.GUI.Platform
         public static void SetCursor(Cursor cursor)
         {
             Cursor.Current = cursor;
-            throw new NotImplementedException();
         }
 
         /// <summary>
