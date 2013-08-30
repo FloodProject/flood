@@ -38,7 +38,7 @@ namespace Flood.Tools.PackageGen
                     { "h|?|help",   v => options.ShowHelpText = v != null },
                 };
 
-            if (args.Length != 2 || options.ShowHelpText)
+            if (args.Length == 0 || options.ShowHelpText)
             {
                 ShowHelp(set);
                 return false;
