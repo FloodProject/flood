@@ -94,7 +94,7 @@ namespace Flood.Tools.PackageGen
             //Create an archive
             using (var zip = new ZipFile())
             {
-                zip.AddDirectory(options.OutputDir, "");
+                zip.AddDirectory(options.PackageDir, "");
                 zip.Save(packageArchivePath);
             }
 
