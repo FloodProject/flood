@@ -187,6 +187,8 @@ function SetupPackage(packageName)
         {
             "EngineManaged"
         }
+        
+        dependson { "PackageGen" }
 
         postbuildcommands { vspackagegencommand }
 
