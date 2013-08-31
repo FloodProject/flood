@@ -152,7 +152,7 @@ end
 packages = {}
 packagesDependenciesUsed = false
 
-function SetupPackage(packageName)
+function SetupPackage(packageName, packageDependencies)
     if packagesDependenciesUsed then
         print("WARNING: Packages have already been used!")
     end
@@ -192,6 +192,13 @@ function SetupPackage(packageName)
 
         postbuildcommands { vspackagegencommand }
 
+        if packageDependencies then
+            for _, depName in ipairs(packageDependencies) do
+                local depapidllpath = path.join(libdir, "Packages", depName, depName .. ".API.dll")
+                links { depapidllpath }
+                dependson { depName }
+            end
+        end
 end
 
 function SetupPackagesAsDependencies()
