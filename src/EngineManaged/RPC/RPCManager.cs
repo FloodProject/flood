@@ -192,5 +192,10 @@ namespace Flood.RPC
 
             return (T)stub;
         }
+
+        internal bool HasGlobalService(Type type)
+        {
+            return globalServiceIds.ContainsKey(type);
+        }
     }
 }
