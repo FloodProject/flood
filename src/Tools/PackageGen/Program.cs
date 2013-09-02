@@ -74,7 +74,7 @@ namespace Flood.Tools.PackageGen
 
             var packageDllName = options.PackageName + ".dll";
             var packageApiDllName = options.PackageName + ".API.dll";
-            var packageArchiveName = options.PackageName + ".fld";
+            var packageArchiveName = options.PackageName + ".0.0.0.fld";
             var packageDllPath = Path.Combine(options.PackageDir, packageDllName);
             var packageApiDllPath = Path.Combine(options.PackageDir, packageApiDllName);
             var packageArchivePath = Path.Combine(options.OutputDir, packageArchiveName);
