@@ -621,42 +621,6 @@ namespace Flood.RPC.Serialization
             WriteJSONArrayEnd();
         }
 
-        public override void WriteArrayBegin(TArray array)
-        {
-            WriteJSONArrayStart();
-            WriteJSONString(GetTypeNameForTypeID(array.ElementType));
-            WriteJSONInteger(array.Count);
-        }
-
-        public override void WriteArrayEnd()
-        {
-            WriteJSONArrayEnd();
-        }
-
-        public override void WriteSetBegin(TSet set)
-        {
-            WriteJSONArrayStart();
-            WriteJSONString(GetTypeNameForTypeID(set.ElementType));
-            WriteJSONInteger(set.Count);
-        }
-
-        public override void WriteSetEnd()
-        {
-            WriteJSONArrayEnd();
-        }
-
-        public override void WriteCollectionBegin(TCollection collection)
-        {
-            WriteJSONArrayStart();
-            WriteJSONString(GetTypeNameForTypeID(collection.ElementType));
-            WriteJSONInteger(collection.Count);
-        }
-
-        public override void WriteCollectionEnd()
-        {
-            WriteJSONArrayEnd();
-        }
-
         public override void WriteBool(bool b)
         {
             WriteJSONInteger(b ? (long)1 : (long)0);
@@ -978,48 +942,6 @@ namespace Flood.RPC.Serialization
         }
 
         public override void ReadListEnd()
-        {
-            ReadJSONArrayEnd();
-        }
-
-        public override TArray ReadArrayBegin()
-        {
-            TArray array = new TArray();
-            ReadJSONArrayStart();
-            array.ElementType = GetTypeIDForTypeName(ReadJSONString(false));
-            array.Count = (int)ReadJSONInteger();
-            return array;
-        }
-
-        public override void ReadArrayEnd()
-        {
-            ReadJSONArrayEnd();
-        }
-
-        public override TSet ReadSetBegin()
-        {
-            TSet set = new TSet();
-            ReadJSONArrayStart();
-            set.ElementType = GetTypeIDForTypeName(ReadJSONString(false));
-            set.Count = (int)ReadJSONInteger();
-            return set;
-        }
-
-        public override void ReadSetEnd()
-        {
-            ReadJSONArrayEnd();
-        }
-
-        public override TCollection ReadCollectionBegin()
-        {
-            TCollection collection = new TCollection();
-            ReadJSONArrayStart();
-            collection.ElementType = GetTypeIDForTypeName(ReadJSONString(false));
-            collection.Count = (int)ReadJSONInteger();
-            return collection;
-        }
-
-        public override void ReadCollectionEnd()
         {
             ReadJSONArrayEnd();
         }

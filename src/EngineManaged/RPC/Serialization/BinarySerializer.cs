@@ -70,17 +70,6 @@ namespace Flood.RPC.Serialization
             WriteByte((byte)TType.Stop);
         }
 
-        public override void WriteArrayBegin(TArray array)
-        {
-            WriteByte((byte)array.ElementType);
-            WriteI32(array.Count);
-        }
-
-        public override void WriteArrayEnd()
-        {
-        }
-
-
         public override void WriteMapBegin(TMap map)
         {
             WriteByte((byte)map.KeyType);
@@ -99,26 +88,6 @@ namespace Flood.RPC.Serialization
         }
 
         public override void WriteListEnd()
-        {
-        }
-
-        public override void WriteSetBegin(TSet set)
-        {
-            WriteByte((byte)set.ElementType);
-            WriteI32(set.Count);
-        }
-
-        public override void WriteSetEnd()
-        {
-        }
-
-        public override void WriteCollectionBegin(TCollection collection)
-        {
-            WriteByte((byte)collection.ElementType);
-            WriteI32(collection.Count);
-        }
-
-        public override void WriteCollectionEnd()
         {
         }
 
@@ -239,45 +208,6 @@ namespace Flood.RPC.Serialization
         }
 
         public override void ReadListEnd()
-        {
-        }
-
-        public override TArray ReadArrayBegin()
-        {
-            TArray array = new TArray();
-            array.ElementType = (TType)ReadByte();
-            array.Count = ReadI32();
-
-            return array;
-        }
-
-        public override void ReadArrayEnd()
-        {
-        }
-
-        public override TSet ReadSetBegin()
-        {
-            TSet set = new TSet();
-            set.ElementType = (TType)ReadByte();
-            set.Count = ReadI32();
-
-            return set;
-        }
-
-        public override void ReadSetEnd()
-        {
-        }
-
-        public override TCollection ReadCollectionBegin()
-        {
-            TCollection collection = new TCollection();
-            collection.ElementType = (TType)ReadByte();
-            collection.Count = ReadI32();
-
-            return collection;
-        }
-
-        public override void ReadCollectionEnd()
         {
         }
 
