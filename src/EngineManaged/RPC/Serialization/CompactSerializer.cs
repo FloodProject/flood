@@ -248,31 +248,6 @@ namespace Flood.RPC.Serialization
             WriteCollectionBegin(list.ElementType, list.Count);
         }
 
-        /** 
-         * Write a array header.
-         */
-        public override void WriteArrayBegin(TArray array)
-        {
-            WriteCollectionBegin(array.ElementType, array.Count);
-        }
-
-
-        /**
-         * Write a set header.
-         */
-        public override void WriteSetBegin(TSet set)
-        {
-            WriteCollectionBegin(set.ElementType, set.Count);
-        }
-
-        /**
-        * Write a collection header.
-        */
-        public override void WriteCollectionBegin(TCollection collection)
-        {
-            WriteCollectionBegin(collection.ElementType, collection.Count);
-        }
-
         /**
          * Write a boolean value. Potentially, this could be a boolean field, in 
          * which case the field header info isn't written yet. If so, decide what the
@@ -366,9 +341,6 @@ namespace Flood.RPC.Serialization
 
         public override void WriteMapEnd() { }
         public override void WriteListEnd() { }
-        public override void WriteArrayEnd() { }
-        public override void WriteSetEnd() { }
-        public override void WriteCollectionEnd() { }
         public override void WriteFieldEnd() { }
 
         //
@@ -547,46 +519,6 @@ namespace Flood.RPC.Serialization
         }
 
         /**
-         * Read a array header off the wire. If the array size is 0-14, the size will 
-         * be packed into the element type header. If it's a longer array, the 4 MSB
-         * of the element type header will be 0xF, and a varint will follow with the
-         * true size.
-         */
-        public override TArray ReadArrayBegin()
-        {
-            byte size_and_type = ReadByte();
-            int size = (size_and_type >> 4) & 0x0f;
-            if (size == 15)
-            {
-                size = (int)ReadVarint32();
-            }
-            TType type = getTType(size_and_type);
-            return new TArray(type, size);
-        }
-
-        /**
-         * Read a set header off the wire. If the set size is 0-14, the size will 
-         * be packed into the element type header. If it's a longer set, the 4 MSB
-         * of the element type header will be 0xF, and a varint will follow with the
-         * true size.
-         */
-        public override TSet ReadSetBegin()
-        {
-            return new TSet(ReadListBegin());
-        }
-
-        /**
-         * Read a collection header off the wire. If the collection size is 0-14, the size will 
-         * be packed into the element type header. If it's a longer collection, the 4 MSB
-         * of the element type header will be 0xF, and a varint will follow with the
-         * true size.
-         */
-        public override TCollection ReadCollectionBegin()
-        {
-            return new TCollection(ReadListBegin());
-        }
-
-        /**
          * Read a boolean off the wire. If this is a boolean field, the value should
          * already have been Read during ReadFieldBegin, so we'll just consume the
          * pre-stored value. Otherwise, Read a byte.
@@ -692,10 +624,7 @@ namespace Flood.RPC.Serialization
         //
         public override void ReadFieldEnd() { }
         public override void ReadMapEnd() { }
-        public override void ReadArrayEnd() { }
         public override void ReadListEnd() { }
-        public override void ReadSetEnd() { }
-        public override void ReadCollectionEnd() { }
 
         //
         // Internal Reading methods
