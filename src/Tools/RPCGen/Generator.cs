@@ -37,7 +37,6 @@ namespace Flood.Tools.RPCGen
             WriteLine("namespace  {0}", type.Namespace);
             WriteStartBraceIndent();
 
-            WriteLine("[Serializable]");
             WriteLine("public class {0}", GetStubsClassName(type, false));
             WriteStartBraceIndent();
 
@@ -575,7 +574,6 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceMethodArgs(MethodInfo method, string name)
         {
-            WriteLine("[Serializable]");
             WriteLine("public class {0}", name);
             WriteStartBraceIndent();
 
@@ -674,7 +672,6 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceMethodResult(MethodInfo method, string name)
         {
-            WriteLine("[Serializable]");
             WriteLine("public class {0}", name);
             WriteStartBraceIndent();
 
@@ -720,7 +717,6 @@ namespace Flood.Tools.RPCGen
             WriteLine("public Isset __isset;");
             NewLine();
 
-            WriteLine("[Serializable]");
             WriteLine("public struct Isset");
             WriteStartBraceIndent();
             foreach (var param in parameters)
@@ -1053,7 +1049,6 @@ namespace Flood.Tools.RPCGen
             WriteLine("public Isset __isset;");
             NewLine();
 
-            WriteLine("[Serializable]");
             WriteLine("public struct Isset");
             WriteStartBraceIndent();
             foreach (var param in parameters)
