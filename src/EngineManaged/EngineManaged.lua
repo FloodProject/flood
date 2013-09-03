@@ -22,4 +22,5 @@ project "EngineManaged"
 	{
 		"EngineBindings",
 		"System",
+		path.join(depsdir,"DotNetZip","Ionic.Zip")
 	}
