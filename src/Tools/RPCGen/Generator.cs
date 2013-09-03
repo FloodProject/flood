@@ -63,15 +63,79 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate read method
-            GenerateServiceMethodRead(parameters, "stub");
+            GenerateDataObjectRead(parameters, "stub");
             NewLine();
 
             // Generate write method
-            GenerateServiceMethodWrite(parameters, "stub");
+            GenerateDataObjectWrite(parameters, "stub");
 
             WriteCloseBraceIndent();
             if (@namespace != null)
                 WriteCloseBraceIndent();
+        }
+
+         private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, string stubName)
+        {
+            parameters = ConvertToActualParameters(parameters);
+
+            WriteLine("public void Write(RPCData data)");
+            WriteStartBraceIndent();
+            WriteLine("Write(data, new []{{{0}}});", String.Join(", ", parameters.Select(p => p.Id)));
+            WriteCloseBraceIndent();
+
+            WriteLine("public void Write(RPCData data, int[] propertyIds)");
+            WriteStartBraceIndent();
+            WriteLine("data.Serializer.WriteI32(propertyIds.Length);");
+            WriteLine("foreach(var propertyId in propertyIds)");
+            WriteStartBraceIndent();
+            WriteLine("data.Serializer.WriteI32(propertyId);");
+            WriteLine("switch (propertyId)");
+            WriteStartBraceIndent();
+            foreach (var param in parameters)
+            {
+                WriteLine("case {0}:", param.Id);
+                PushIndent();
+                GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
+                WriteLine("break;");
+                PopIndent();
+            }
+            WriteLine("default:");
+            PushIndent();
+            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
+            PopIndent();
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+        }
+
+        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters, string stubName)
+        {
+            WriteLine("public void Read(RPCData data)");
+            WriteStartBraceIndent();
+
+            WriteLine("var propCount = data.Serializer.ReadI32();");
+            WriteLine("for (var i = 0; i<propCount; i++)");
+            WriteStartBraceIndent();
+            WriteLine("var propertyId = data.Serializer.ReadI32();");
+
+            WriteLine("switch (propertyId)");
+            WriteStartBraceIndent();
+            foreach (var param in parameters)
+            {
+                WriteLine("case {0}:", param.Id);
+                PushIndent();
+                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
+                WriteLine("break;");
+                PopIndent();
+            }
+            WriteLine("default:");
+            PushIndent();
+            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
+            PopIndent();
+            WriteCloseBraceIndent();
+
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
         }
 
         private List<Parameter> ConvertFieldToParametersList(Type type)
@@ -958,70 +1022,6 @@ namespace Flood.Tools.RPCGen
             WriteLine("using System.Threading.Tasks;");
 
             NewLine();
-        }
-        
-        private void GenerateServiceMethodWrite(IEnumerable<Parameter> parameters, string stubName)
-        {
-            parameters = ConvertToActualParameters(parameters);
-
-            WriteLine("public void Write(RPCData data)");
-            WriteStartBraceIndent();
-            WriteLine("Write(data, new []{{{0}}});", String.Join(", ", parameters.Select(p => p.Id)));
-            WriteCloseBraceIndent();
-
-            WriteLine("public void Write(RPCData data, int[] propertyIds)");
-            WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI32(propertyIds.Length);");
-            WriteLine("foreach(var propertyId in propertyIds)");
-            WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI32(propertyId);");
-            WriteLine("switch (propertyId)");
-            WriteStartBraceIndent();
-            foreach (var param in parameters)
-            {
-                WriteLine("case {0}:", param.Id);
-                PushIndent();
-                GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
-                WriteLine("break;");
-                PopIndent();
-            }
-            WriteLine("default:");
-            PushIndent();
-            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
-            PopIndent();
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
-        }
-
-        private void GenerateServiceMethodRead(IEnumerable<Parameter> parameters, string stubName)
-        {
-            WriteLine("public void Read(RPCData data)");
-            WriteStartBraceIndent();
-
-            WriteLine("var propCount = data.Serializer.ReadI32();");
-            WriteLine("for (var i = 0; i<propCount; i++)");
-            WriteStartBraceIndent();
-            WriteLine("var propertyId = data.Serializer.ReadI32();");
-
-            WriteLine("switch (propertyId)");
-            WriteStartBraceIndent();
-            foreach (var param in parameters)
-            {
-                WriteLine("case {0}:", param.Id);
-                PushIndent();
-                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
-                WriteLine("break;");
-                PopIndent();
-            }
-            WriteLine("default:");
-            PushIndent();
-            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
-            PopIndent();
-            WriteCloseBraceIndent();
-
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
         }
 
         #endregion
