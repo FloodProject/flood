@@ -598,6 +598,43 @@ namespace EngineWeaver
                 def2.Add(CopyReference(origTypeRef));
             }
         }
+
+        public void  Merge(Collection<TypeDefinition>def1, Collection<TypeDefinition> def2)
+        {
+            MembersMerge(def1, def2);
+        }
+
+        public void  Merge(Collection<FieldDefinition>def1, Collection<FieldDefinition> def2)
+        {
+            MembersMerge(def1, def2);
+        }
+
+        public void  Merge(Collection<PropertyDefinition>def1, Collection<PropertyDefinition> def2)
+        {
+            MembersMerge(def1, def2);
+        }
+
+        public void  Merge(Collection<EventDefinition>def1, Collection<EventDefinition> def2)
+        {
+            MembersMerge(def1, def2);
+        }
+
+        private void  MembersMerge<T>(Collection<T>def1, Collection<T> def2)
+            where T : IMemberDefinition
+        {
+            foreach (var origDef in def1)
+            {
+                var destDef = def2.SingleOrDefault(i => i.Name == origDef.Name);
+                if (destDef != null)
+                {
+                    Merge(origDef, destDef);
+                    continue;
+                }
+
+                def2.Add(Copy(origDef));
+            }
+        }
+
         public void  Merge(Collection<SecurityDeclaration>def1, Collection<SecurityDeclaration> def2)
         {
 
