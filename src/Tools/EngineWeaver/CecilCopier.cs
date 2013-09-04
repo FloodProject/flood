@@ -353,6 +353,9 @@ namespace EngineWeaver
 
         public TypeDefinition Copy(TypeDefinition def)
         {
+            if (CopyMap.ContainsKey(def))
+                return (TypeDefinition)CopyMap[def];
+
             return TypeCopy(def, false);
         }
 
