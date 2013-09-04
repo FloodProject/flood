@@ -56,6 +56,21 @@ namespace EngineWeaver
             copier.Process();
         }
 
+        public void MergeTypes(string origAssemblyPath, Dictionary<string, string> typeNames)
+        {
+            var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
+            var copier = GetCreateCopier(origAssembly.MainModule);
+
+            foreach (var typeNameKV in typeNames)
+            {
+                var origTypeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, typeNameKV.Key);
+                var destTypeDef = CecilUtils.GetTypeDef(DestinationAssembly.MainModule, typeNameKV.Value);
+                copier.Merge(origTypeDef, destTypeDef);
+            }
+
+            copier.Process();
+        }
+
         public void Write(string outputAssemblyPath)
         {
             DestinationAssembly.Name.Name = Path.GetFileName(outputAssemblyPath);
