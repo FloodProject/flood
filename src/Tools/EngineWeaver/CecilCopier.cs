@@ -617,6 +617,26 @@ namespace EngineWeaver
             }
         }
 
+        public void  Merge(Collection<MethodDefinition>def1, Collection<MethodDefinition> def2)
+        {
+            foreach (var origMethodDef in def1)
+            {
+                var destMethodName = origMethodDef.Name;
+
+                var destMethodDef = def2.SingleOrDefault(
+                    m => m.Name == destMethodName
+                         && DoMethodParametersTypeMatch(origMethodDef, m));
+
+                if (destMethodDef != null)
+                {
+                    Merge(origMethodDef, destMethodDef);
+                    continue;
+                }
+
+                def2.Add(Copy(origMethodDef));
+            }
+        }
+
         public void  Merge(Collection<SecurityDeclaration>def1, Collection<SecurityDeclaration> def2)
         {
 
@@ -655,11 +675,6 @@ namespace EngineWeaver
 
         }
 
-        public void  Merge(Collection<MethodDefinition>def1, Collection<MethodDefinition> def2)
-        {
-
-        }
-
         public void  Merge(Collection<GenericParameter>def1, Collection<GenericParameter> def2)
         {
 
@@ -672,5 +687,18 @@ namespace EngineWeaver
 
         #endregion
 
+        private bool DoMethodParametersTypeMatch(MethodDefinition method1, MethodDefinition method2)
+        {
+            if (method1.Parameters.Count != method2.Parameters.Count)
+                return false;
+
+            for (int i = 0; i < method1.Parameters.Count; i++)
+            {
+                if (method1.Parameters[i].ParameterType.FullName != method2.Parameters[i].ParameterType.FullName)
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
