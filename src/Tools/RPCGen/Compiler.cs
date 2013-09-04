@@ -13,6 +13,7 @@
  * under the License.
  */
 
+using EngineWeaver;
 using Microsoft.CSharp;
 using RPCGen;
 using System;
@@ -22,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 
 namespace Flood.Tools.RPCGen
 {
@@ -29,7 +31,9 @@ namespace Flood.Tools.RPCGen
     {
         private readonly string destAssemblyPath;
         public readonly List<string> GeneratedFiles;
-        public readonly List<Type> RpcTypes; 
+        public readonly List<Type> RpcTypes;
+        public readonly Dictionary<string, string> DataObjectsMap;
+
         public bool outputDebug;
         public string outputDir;
         public Assembly assembly;
@@ -42,7 +46,8 @@ namespace Flood.Tools.RPCGen
             this.outputDebug = true;
             this.GeneratedFiles = new List<string>();
             this.RpcTypes = new List<Type>();
-            
+            this.DataObjectsMap = new Dictionary<string, string>();
+
             if(!ParseAssembly(destAssemblyPath, out assembly))
                 throw new ArgumentException();
         }
@@ -97,8 +102,9 @@ namespace Flood.Tools.RPCGen
                     if (Metadata.IsDataObject(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
-                        ProcessDataObject(type);
+                        var dataObjectFullName = ProcessDataObject(type);
                         RpcTypes.Add(type);
+                        DataObjectsMap.Add(dataObjectFullName, type.FullName);
                     }
 
                     if (Metadata.IsException(type))
@@ -127,7 +133,7 @@ namespace Flood.Tools.RPCGen
             WriteGeneratorToFile(type, gen);
         }
 
-        private void ProcessDataObject(Type type)
+        private string ProcessDataObject(Type type)
         {
             if (outputDebug)
             {
@@ -138,9 +144,11 @@ namespace Flood.Tools.RPCGen
             }
 
             var gen = new Generator();
-            gen.GenerateDataObject(type);
+            var dataObjectFullName = gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
+
+            return dataObjectFullName;
         }
 
         private void ProcessException(Type type)
@@ -189,7 +197,8 @@ namespace Flood.Tools.RPCGen
                 CreateEmptyAssembly(emptyAssemblyPaths.DllPath);
 
                 var weaver = new EngineWeaver.AssemblyWeaver(emptyAssemblyPaths.DllPath);
-                weaver.CopyTypes(destAssemblyPath, RpcTypes);
+                var types = RpcTypes.Select(t => t.FullName);
+                weaver.CopyTypes(destAssemblyPath, types);
                 weaver.Write(apiAssemblyPaths.DllPath);
 
                 var references = weaver.GetReferences();
@@ -204,6 +213,9 @@ namespace Flood.Tools.RPCGen
 
             using (var generatedAssembly = new TemporaryAssemblyPaths())
             {
+                
+                FieldsToProperties(destPath, outputPath);
+
                 CodeDomProvider provider = new CSharpCodeProvider();
                 CompilerParameters cp = new CompilerParameters()
                 {
@@ -212,8 +224,7 @@ namespace Flood.Tools.RPCGen
                     IncludeDebugInformation = true
                 };
 
-                references.Add(destPath);
-
+                references.Add(outputPath);
                 foreach (var @ref in references)
                     cp.ReferencedAssemblies.Add(@ref);
 
@@ -228,7 +239,8 @@ namespace Flood.Tools.RPCGen
                     throw new Exception(message.ToString());
                 }
 
-                var weaver = new EngineWeaver.AssemblyWeaver(destPath);
+                var weaver = new AssemblyWeaver(outputPath);
+                weaver.MergeTypes(generatedAssembly.DllPath, DataObjectsMap);
                 weaver.AddAssembly(generatedAssembly.DllPath);
                 weaver.Write(outputPath);
             }
@@ -265,6 +277,27 @@ namespace Flood.Tools.RPCGen
                     message.AppendFormat("  {0}\n",error.ToString());
                 throw new Exception(message.ToString());
             }
+        }
+
+        private void FieldsToProperties(string assemblyPath, string outputPath)
+        {
+            var fields = new List<FieldInfo>();
+            foreach (var type in RpcTypes)
+            {
+                if (!Metadata.IsDataObject(type))
+                    continue;
+
+                foreach (var field in type.GetFields())
+                {
+                    if(Metadata.HasId(field))
+                        fields.Add(field);
+                }
+            }
+
+            var weaver = new AssemblyWeaver(assemblyPath);
+            var fieldToProperties = new FieldsToProperties(weaver);
+            fieldToProperties.ProcessFields(fields);
+            weaver.Write(outputPath);
         }
     }
 }
