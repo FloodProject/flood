@@ -588,6 +588,16 @@ namespace EngineWeaver
         }
 */
 
+        public void  Merge(Collection<TypeReference>def1, Collection<TypeReference> def2)
+        {
+            foreach (var origTypeRef in def1)
+            {
+                if (def2.Any(i => i.FullName == origTypeRef.FullName))
+                    continue;
+
+                def2.Add(CopyReference(origTypeRef));
+            }
+        }
         public void  Merge(Collection<SecurityDeclaration>def1, Collection<SecurityDeclaration> def2)
         {
 
