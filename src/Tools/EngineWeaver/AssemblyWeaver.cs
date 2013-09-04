@@ -8,17 +8,17 @@ namespace EngineWeaver
 {
     public class AssemblyWeaver
     {
-        private AssemblyDefinition destAssembly;
+        internal readonly AssemblyDefinition DestinationAssembly;
 
         public AssemblyWeaver(string destAssemblyPath)
         {
-            destAssembly = CecilUtils.GetAssemblyDef(destAssemblyPath);
+            DestinationAssembly = CecilUtils.GetAssemblyDef(destAssemblyPath);
         }
 
         public void AddAssembly(string origAssemblyPath)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = new CecilCopier(origAssembly.MainModule, destAssembly.MainModule);
+            var copier = new CecilCopier(origAssembly.MainModule, DestinationAssembly.MainModule);
 
             foreach (var origType in origAssembly.MainModule.Types)
                 if(origType.BaseType != null)
@@ -30,7 +30,7 @@ namespace EngineWeaver
         public void CopyTypes(string origAssemblyPath, List<Type> types)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = new CecilCopier(origAssembly.MainModule, destAssembly.MainModule);
+            var copier = new CecilCopier(origAssembly.MainModule, DestinationAssembly.MainModule);
 
             foreach (var type in types)
             {
@@ -44,17 +44,17 @@ namespace EngineWeaver
 
         public void Write(string outputAssemblyPath)
         {
-            destAssembly.Name.Name = Path.GetFileName(outputAssemblyPath);
+            DestinationAssembly.Name.Name = Path.GetFileName(outputAssemblyPath);
             var writerParameters = new WriterParameters();
-            writerParameters.WriteSymbols = destAssembly.MainModule.HasSymbols;
+            writerParameters.WriteSymbols = DestinationAssembly.MainModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
-            destAssembly.Write(outputAssemblyPath, writerParameters);
+            DestinationAssembly.Write(outputAssemblyPath, writerParameters);
         }
 
         public HashSet<string> GetReferences()
         {
             var ret = new HashSet<string>();
-            foreach (var reference in destAssembly.MainModule.AssemblyReferences)
+            foreach (var reference in DestinationAssembly.MainModule.AssemblyReferences)
             {
                 ret.Add(reference.Name+".dll");
             }
