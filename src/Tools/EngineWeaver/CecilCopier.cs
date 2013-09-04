@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EngineWeaver
 {
@@ -571,22 +569,6 @@ namespace EngineWeaver
         {
             MergeAll(def1,def2,"Method","ReturnType");
         }
-/*
-        public void  Merge(ExceptionHandler def1, ExceptionHandler def2)
-        {
-            MergeAll(def1,def2,def2,"CatchType");
-        }
-
-        public void Merge(Instruction def, Instruction def)
-        {
-            if(!instructions.Contains(def)){
-                if(def.Operand is MemberReference){
-                    instructions.Add(def);
-                }
-            }
-            return def;
-        }
-*/
 
         public void  Merge(Collection<TypeReference>def1, Collection<TypeReference> def2)
         {
