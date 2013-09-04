@@ -151,11 +151,16 @@ namespace EngineWeaver
             if (member.DeclaringType == null)
                 return null;
 
-            object declaringType = null;
-            if(throwMapException && !CopyMap.TryGetValue(member.DeclaringType, out declaringType))
+            if (referenceMap.ContainsKey(member.DeclaringType))
+                return (TypeDefinition) referenceMap[member.DeclaringType];
+
+            if (CopyMap.ContainsKey(member.DeclaringType))
+                return (TypeDefinition) CopyMap[member.DeclaringType];
+
+            if(throwMapException)
                 throw new Exception("Could not found destination TypeDefinition. Map it.");
 
-            return (TypeDefinition)declaringType;
+            return null;
         }
 
         public void AddMethod(TypeDefinition type, MethodDefinition method)
