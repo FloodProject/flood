@@ -537,7 +537,7 @@ namespace EngineWeaver
 
         public void Merge(TypeDefinition def1, TypeDefinition def2)
         {
-            MergeAll(def1,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module");
+            MergeAll(def1,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module", "Scope");
         }
 
         public void Merge(ParameterDefinition def1, ParameterDefinition def2)
@@ -562,7 +562,7 @@ namespace EngineWeaver
 
         public void Merge(MethodBody def1, MethodBody def2)
         {
-            MergeAll(def1,def2,"Method");
+            MergeAll(def1,def2,"Method", "Scope");
         }
 
         public void  Merge(MethodReturnType def1, MethodReturnType def2)
