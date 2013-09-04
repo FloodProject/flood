@@ -20,7 +20,7 @@ namespace Flood.RPC.Metadata
         }
     }
 
-    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class DataObjectAttribute : System.Attribute
     {
         public Guid Guid { get; private set; }
