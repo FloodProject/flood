@@ -51,15 +51,24 @@ namespace EngineWeaver.Util
 
         public static TypeDefinition GetTypeDef(ModuleDefinition module, Type type)
         {
-            var typeFullName = type.FullName.Replace("+", "/");
+            return GetTypeDef(module, GetFriendlyTypeName(type));
+        }
 
-            if (type.IsNested)
-            {
-                var declaringTypeDef = GetTypeDef(module, type.DeclaringType);
-                return declaringTypeDef.NestedTypes.First(t => t.FullName == typeFullName);
-            }
+        public static TypeDefinition GetTypeDef(ModuleDefinition module, TypeReference type)
+        {
+            return GetTypeDef(module, type.FullName);
+        }
 
-            return module.Types.First(t => t.FullName == typeFullName);;
+        public static TypeDefinition GetTypeDef(ModuleDefinition module, string typeName)
+        {
+            typeName = typeName.Replace("+", "/");
+            var typeNames = typeName.Split('/');
+
+            var type = module.Types.First(t => t.FullName == typeNames[0]);
+            for(int i = 1; i < typeNames.Length; i++)
+                type = type.NestedTypes.First(t => t.Name == typeNames[i]);
+
+            return type;
         }
 
         public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodReference origMethod)
@@ -93,12 +102,22 @@ namespace EngineWeaver.Util
 
         public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldReference origField)
         {
+            return GetTypeFieldDef(destType, origField.Name, origField.FieldType.FullName);
+        }
+
+        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldInfo fieldInfo)
+        {
+            return GetTypeFieldDef(destType, fieldInfo.Name, GetFriendlyTypeName(fieldInfo.FieldType));
+        }
+
+        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, string fieldName, string fieldType)
+        {
             foreach (var destField in destType.Fields)
             {
-                if(destField.Name != origField.Name)
+                if(destField.Name != fieldName)
                     continue;
 
-                if(destField.FieldType.FullName != origField.FieldType.FullName)
+                if(destField.FieldType.FullName != fieldType)
                     continue;
 
                 return destField;
@@ -106,5 +125,58 @@ namespace EngineWeaver.Util
 
             return null;
         }
+
+        public static PropertyReference GetTypePropertyDef(TypeDefinition destType, PropertyReference origProperty)
+        {
+            return GetTypePropertyDef(destType, origProperty.Name, origProperty.PropertyType.FullName);
+        }
+
+        public static PropertyDefinition GetTypePropertyDef(TypeDefinition destType, PropertyInfo propertyInfo)
+        {
+            return GetTypePropertyDef(destType, propertyInfo.Name, GetFriendlyTypeName(propertyInfo.PropertyType));
+        }
+
+        public static PropertyDefinition GetTypePropertyDef(TypeDefinition destType, string propertyName, string propertyType)
+        {
+            foreach (var destProperty in destType.Properties)
+            {
+                if(destProperty.Name != propertyName)
+                    continue;
+
+                if(destProperty.PropertyType.FullName != propertyType)
+                    continue;
+
+                return destProperty;
+            }
+
+            return null;
+        }
+
+        private static string GetFriendlyTypeName(Type type) {
+            if (type.IsGenericParameter)
+                return type.Name;
+
+            if (!type.IsGenericType)
+                return type.FullName;
+
+            var builder = new StringBuilder();
+            var name = type.Name;
+            builder.AppendFormat("{0}.{1}", type.Namespace, name);
+            builder.Append('<');
+            var first = true;
+            foreach (var arg in type.GetGenericArguments())
+            {
+                if (!first)
+                {
+                    builder.Append(',');
+                }
+                builder.Append(GetFriendlyTypeName(arg));
+                first = false;
+            }
+            builder.Append('>');
+            return builder.ToString();
+        }
+
+
     }
 }
