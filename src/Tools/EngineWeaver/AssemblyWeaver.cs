@@ -27,14 +27,14 @@ namespace EngineWeaver
             copier.Process();
         }
 
-        public void CopyTypes(string origAssemblyPath, List<Type> types)
+        public void CopyTypes(string origAssemblyPath, IEnumerable<string> typeNames)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
             var copier = new CecilCopier(origAssembly.MainModule, DestinationAssembly.MainModule);
 
-            foreach (var type in types)
+            foreach (var typeName in typeNames)
             {
-                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, type);
+                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, typeName);
 
                 copier.Copy(typeDef);
             }
