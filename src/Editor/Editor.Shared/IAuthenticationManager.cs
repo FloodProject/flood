@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Flood.Editor
 {
     [DataObject("B68611E4-9E95-4A83-9EB6-547375F7D67C")]
-    public struct UserId
+    public class UserId
     {
         [Id(0)]
         public long Id;
@@ -65,7 +65,7 @@ namespace Flood.Editor
  */
 
     [DataObject("3E35A72D-888E-4152-BA38-6326562FC3AD")]
-    public struct UserInfo
+    public class UserInfo
     {
         [Id(0)]
         public string Name;

@@ -15,84 +15,83 @@ namespace RPCGen.Tests.Services
         #region DataObjects
 
         [DataObject("4B781EAE-CDA6-45A7-8ADB-E4FE295D78D1")]
-        public struct ByteDO
+        public class ByteDO
         {
-            [Id(0)]
-            public byte Value;
+            [Id(0)] public byte Value { get; set; }
         }
 
         [DataObject("41327695-0E25-4801-B320-0B1D7074FDC8")]
-        public struct FloatDO
+        public class FloatDO
         {
             [Id(0)]
             public float Value;
         }
 
         [DataObject("9504185F-A0B5-4CCC-B673-CFA926558424")]
-        public struct DoubleDO
+        public class DoubleDO
         {
             [Id(0)]
-            public double Value;
+            public double Value { get; set; }
         }
 
         [DataObject("84851EB5-808C-4360-BC34-FB180446743D")]
-        public struct ShortDO
+        public class ShortDO
         {
             [Id(0)]
             public short Value;
         }
 
         [DataObject("117F25CD-5E4A-4321-A064-66FDCB86F534")]
-        public struct IntDO
+        public class IntDO
         {
             [Id(0)]
             public int Value;
         }
 
         [DataObject("F5D2E125-A44A-4CA3-86E3-CDD04D20895C")]
-        public struct LongDO
+        public class LongDO
         {
             [Id(0)]
             public long Value;
         }
 
         [DataObject("7AE92565-5623-480D-8185-778578AFDFFA")]
-        public struct StringDO
+        public class StringDO
         {
             [Id(0)]
             public string Value;
         }
 
         [DataObject("4AD9280A-8D47-4240-8AEC-4C92C8B1EC9C")]
-        public struct GuidDO
+        public class GuidDO
         {
             [Id(0)]
             public Guid Value;
         }
 
         [DataObject("01938C12-CD0E-40EF-9A9F-5A2B3E492294")]
-        public struct DateTimeDO
+        public class DateTimeDO
         {
             [Id(0)]
             public DateTime Value;
         }
 
         [DataObject("41EBBBB3-ADA1-42E9-8071-0BCF8C2B8D4A")]
-        public struct MapDO
+        public class MapDO
         {
             [Id(0)]
             public Dictionary<int, string> Value;
         }
 
         [DataObject("7A6D650C-B6C5-41C4-AE5E-C29707E5B82C")]
-        public struct ListDO
+        public class ListDO
         {
             [Id(0)]
             public List<int> Value;
         }
 
         [DataObject("52F0BDA2-4E91-40D2-9136-33B685DB2823")]
-        public struct ArrayDO
+        public class ArrayDO
         {
             [Id(0)]
             public int[] Value;
@@ -232,165 +231,165 @@ namespace RPCGen.Tests.Services
         [Test]
         public void TestByte()
         {
-            ByteDO d;
+            ByteDO d = new ByteDO();
             Task<ByteDO> t;
 
             d.Value = byte.MinValue;
             t = service.TestByte(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = byte.MaxValue;
             t = service.TestByte(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestFloat()
         {
-            FloatDO d;
+            FloatDO d = new FloatDO();
             Task<FloatDO> t;
 
             d.Value = float.MinValue;
             t = service.TestFloat(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = float.MaxValue;
             t = service.TestFloat(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestDouble()
         {
-            DoubleDO d;
+            DoubleDO d = new DoubleDO();
             Task<DoubleDO> t;
 
             d.Value = double.MinValue;
             t = service.TestDouble(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = double.MaxValue;
             t = service.TestDouble(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestShort()
         {
-            ShortDO d;
+            ShortDO d = new ShortDO();
             Task<ShortDO> t;
 
             d.Value = short.MinValue;
             t = service.TestShort(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = short.MaxValue;
             t = service.TestShort(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestInt()
         {
-            IntDO d;
+            IntDO d = new IntDO();
             Task<IntDO> t;
 
             d.Value = int.MinValue;
             t = service.TestInt(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = int.MaxValue;
             t = service.TestInt(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestLong()
         {
-            LongDO d;
+            LongDO d = new LongDO();
             Task<LongDO> t;
 
             d.Value = long.MinValue;
             t = service.TestLong(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = long.MaxValue;
             t = service.TestLong(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestString()
         {
-            StringDO d;
+            StringDO d = new StringDO();
             Task<StringDO> t;
 
             d.Value = "";
             t = service.TestString(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = "1234567890";
             t = service.TestString(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = "\01234567890";
             t = service.TestString(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestGuid()
         {
-            GuidDO d;
+            GuidDO d = new GuidDO();
             Task<GuidDO> t;
 
             d.Value = new Guid("CB873FC8-6759-4F80-81BE-0EC214BAB26E");
             t = service.TestGuid(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestDateTime()
         {
-            DateTimeDO d;
+            DateTimeDO d = new DateTimeDO();
             Task<DateTimeDO> t;
 
             d.Value = DateTime.MinValue;
             t = service.TestDateTime(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = DateTime.Now;
             t = service.TestDateTime(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
 
             d.Value = DateTime.MaxValue;
             t = service.TestDateTime(d);
             Assert.IsTrue(t.Wait(1000));
-            Assert.AreEqual(d, t.Result);
+            Assert.AreEqual(d.Value, t.Result.Value);
         }
 
         [Test]
         public void TestMap()
         {
-            MapDO d;
+            MapDO d = new MapDO();
             d.Value = new Dictionary<int, string>();
             d.Value.Add(1,"1");
             d.Value.Add(2,"2");
@@ -406,7 +405,7 @@ namespace RPCGen.Tests.Services
         [Test]
         public void TestList()
         {
-            ListDO d;
+            ListDO d = new ListDO();
             d.Value = new List<int>{1,2,3};
             var task = service.TestList(d);
             Assert.IsTrue(task.Wait(100));
@@ -419,7 +418,7 @@ namespace RPCGen.Tests.Services
         [Test]
         public void TestArray()
         {
-            ArrayDO d;
+            ArrayDO d = new ArrayDO();
             d.Value = new []{1,2,3};
             var task = service.TestArray(d);
             Assert.IsTrue(task.Wait(100));
