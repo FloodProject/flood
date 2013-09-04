@@ -51,6 +51,11 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             if (isObservable)
             {
+                WriteLine("private int propertyChangesCounter;");
+                var numBitFields = (int)Math.Ceiling((double)parameters.Count/sizeof (int));
+                for(int i = 0; i < numBitFields; i++)
+                    WriteLine("private int propertyChangedBitField{0};", i);
+
                 WriteLine("private event Action<int> propertyChanged;");
                 WriteLine("event Action<int> IObservableDataObject.PropertyChanged");
                 WriteStartBraceIndent();
@@ -58,9 +63,13 @@ namespace Flood.Tools.RPCGen
                 WriteLine("remove { propertyChanged -= value; }");
                 WriteCloseBraceIndent();
                 NewLine();
+                var paramIndex = 0;
                 foreach (var param in parameters)
                 {
                     var backingFieldName = "__" + param.Name;
+                    int bitFieldId = paramIndex / sizeof (int);
+                    int bitFieldOffset = paramIndex % sizeof (int);
+
                     WriteLine("private {0} {1};", PrettyName(param.ParameterType), backingFieldName);
                     WriteLine("public {0} {1}", PrettyName(param.ParameterType), ToTitleCase(param.Name));
                     WriteStartBraceIndent();
@@ -68,15 +77,21 @@ namespace Flood.Tools.RPCGen
                     WriteLine("set");
                     WriteStartBraceIndent();
                     WriteLine("if( value == {0})", backingFieldName);
-                    WriteLine("    return;");
+                    WriteLineIndent("return;");
                     NewLine();
                     WriteLine("{0} = value;", backingFieldName);
                     NewLine();
+                    WriteLine("if((propertyChangedBitField{0} & 1<<{1}) != 0)", bitFieldId, bitFieldOffset);
+                    WriteStartBraceIndent();
+                    WriteLine("propertyChangedBitField{0} |= 1<<{1};", bitFieldId, bitFieldOffset);
+                    WriteLine("propertyChangesCounter++;", bitFieldId, bitFieldOffset);
+                    WriteCloseBraceIndent();
                     WriteLine("if(propertyChanged != null)");
-                    WriteLine("    propertyChanged({0});", param.Id);
+                    WriteLineIndent("propertyChanged({0});", param.Id);
                     WriteCloseBraceIndent();
                     WriteCloseBraceIndent();
                     NewLine();
+                    paramIndex++;
                 }
             }
             else
@@ -98,12 +113,18 @@ namespace Flood.Tools.RPCGen
             // Generate write method
             GenerateDataObjectWrite(parameters, "Stub");
 
+            if (isObservable)
+            {
+                NewLine();
+                GenerateDataObjectWriteChanges(parameters);
+            }
+
             WriteCloseBraceIndent();
             if (@namespace != null)
                 WriteCloseBraceIndent();
         }
 
-         private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, string stubName)
+        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, string stubName)
         {
             parameters = ConvertToActualParameters(parameters);
 
@@ -164,6 +185,33 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
 
             WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+        }
+
+        private void GenerateDataObjectWriteChanges(List<Parameter> parameters)
+        {
+            WriteLine("public void WriteChanges(RPCData data)");
+            WriteStartBraceIndent();
+            WriteLine("var changedProperties = new int[propertyChangesCounter];");
+            NewLine();
+            var paramIndex = 0;
+            foreach (var param in parameters)
+            {
+                int bitFieldId = paramIndex / sizeof (int);
+                int bitFieldOffset = paramIndex % sizeof (int);
+                WriteLine("if((propertyChangedBitField{0} & 1<<{1}) != 0)", bitFieldId, bitFieldOffset);
+                WriteLineIndent("changedProperties[propertyChangesCounter--] = {0};", param.Id);
+                NewLine();
+                paramIndex++;
+            }
+
+            WriteLine("Write(data, changedProperties);");
+            NewLine();
+
+            var numBitFields = (int)Math.Ceiling((double)parameters.Count/sizeof (int));
+            for(var i = 0; i < numBitFields; i++)
+                WriteLine("propertyChangedBitField{0} = 0;", i);
+
             WriteCloseBraceIndent();
         }
 

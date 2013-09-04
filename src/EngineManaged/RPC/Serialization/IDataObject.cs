@@ -13,5 +13,6 @@ namespace Flood.RPC.Serialization
     public interface IObservableDataObject : IDataObject
     {
         event Action<int> PropertyChanged;
+        void WriteChanges(RPCData data);
     }
 }
