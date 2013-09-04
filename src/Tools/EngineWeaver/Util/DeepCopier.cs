@@ -237,11 +237,8 @@ namespace EngineWeaver.Util
                     var toList = ((IList)property.GetValue(to));
                     log.Info("> List "+ property.Name);
                     log.Tabs++;
-                    foreach(var el in fromList){
-                        var m = el as MemberReference;
-                        var copy = Copy(el);
-                        toList.Add(copy);
-                    }
+                    foreach(var el in fromList)
+                        toList.Add(Copy(el));
                     log.Tabs--;
                     properties.Remove(property);
                 }
