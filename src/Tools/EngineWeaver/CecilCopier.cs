@@ -689,6 +689,11 @@ namespace EngineWeaver
                 Merge(def1[i],def2[i]);
         }
 
+        public void  Merge(Byte[] def1, Byte[] def2)
+        {
+
+        }
+
         #endregion
 
         private bool DoMethodParametersTypeMatch(MethodDefinition method1, MethodDefinition method2)
