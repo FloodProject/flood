@@ -517,21 +517,29 @@ namespace EngineWeaver
 
         public void Merge(FieldDefinition def1, FieldDefinition def2)
         {
+            CheckEquivalentTypes(def1.FieldType, def2.FieldType);
+
             MergeAll(def1,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
         }
 
         public void Merge(EventDefinition def1, EventDefinition def2)
         {
+            CheckEquivalentTypes(def1.EventType, def2.EventType);
+
             MergeAll(def1,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(PropertyDefinition def1, PropertyDefinition def2)
         {
+            CheckEquivalentTypes(def1.PropertyType, def2.PropertyType);
+
             MergeAll(def1,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(MethodDefinition def1, MethodDefinition def2)
         {
+            CheckEquivalentTypes(def1.ReturnType, def2.ReturnType);
+
             MergeAll(def1,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
         }
 
@@ -542,11 +550,15 @@ namespace EngineWeaver
 
         public void Merge(ParameterDefinition def1, ParameterDefinition def2)
         {
+            CheckEquivalentTypes(def1.ParameterType, def2.ParameterType);
+
             MergeAll(def1,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
         }
 
         public void Merge(VariableDefinition def1, VariableDefinition def2)
         {
+            CheckEquivalentTypes(def1.VariableType, def2.VariableType);
+
             MergeAll(def1,def2,"VariableType");
         }
 
@@ -708,6 +720,23 @@ namespace EngineWeaver
             }
 
             return true;
+        }
+
+        private bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
+        {
+            
+            if (IsLocalReference(typeRef1.Scope.Name))
+            {
+                return typeRef2 == GetLocalReference(typeRef1);
+            }
+
+            return typeRef1.FullName == typeRef2.FullName;
+        }
+
+        private void CheckEquivalentTypes(TypeReference typeRef1, TypeReference typeRef2)
+        {
+            if(!AreTypesEquivalent(typeRef1, typeRef2))
+                throw new Exception("Types are not equivalent.");
         }
     }
 }
