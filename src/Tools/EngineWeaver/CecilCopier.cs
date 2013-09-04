@@ -483,6 +483,8 @@ namespace EngineWeaver
 
             ret.SequencePoint = def.SequencePoint;
 
+            CopyMap.Add(def,ret);
+
             instructions.Add(ret);
             return ret;
         }
