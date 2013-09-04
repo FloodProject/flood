@@ -71,7 +71,8 @@ namespace EngineWeaver.Util
 
             mergeMethodInfos[type].Invoke(this, new []{obj1, obj2});
 
-            CopyMap.Add(obj1,obj2);
+            if(!CopyMap.ContainsKey(obj1))
+                CopyMap.Add(obj1, obj2);
         }
 
         public T Copy<T>(T value)
@@ -117,10 +118,13 @@ namespace EngineWeaver.Util
             }).ToList();
         }
 
-
-
         public void MergeAll<T>(T from, T to, params string[] ignores)
         {
+            if(CopyMap.ContainsKey(from))
+                throw new Exception("Cannot merge object twice");
+
+            CopyMap.Add(from, to);
+
             log.Info("> Merge "+ typeof(T));
             log.Tabs++;
             var fields = GetFields(typeof(T),ignores);
