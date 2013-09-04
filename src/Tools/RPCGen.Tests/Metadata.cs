@@ -15,7 +15,7 @@ namespace RPCGen.Tests
     }
 
     [DataObject("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
-    struct DataObject
+    class DataObject
     {
         [Required, Id(1337)] 
         public int Field;
