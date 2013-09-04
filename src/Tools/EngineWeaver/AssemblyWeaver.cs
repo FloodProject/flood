@@ -9,16 +9,30 @@ namespace EngineWeaver
     public class AssemblyWeaver
     {
         internal readonly AssemblyDefinition DestinationAssembly;
+        private Dictionary<ModuleDefinition, CecilCopier> copiers; 
 
         public AssemblyWeaver(string destAssemblyPath)
         {
             DestinationAssembly = CecilUtils.GetAssemblyDef(destAssemblyPath);
+            copiers = new Dictionary<ModuleDefinition, CecilCopier>();
+        }
+
+        private CecilCopier GetCreateCopier(ModuleDefinition origModuleDef)
+        {
+            CecilCopier copier;
+            if (copiers.TryGetValue(origModuleDef, out copier))
+                return copier;
+
+            copier = new CecilCopier(origModuleDef, DestinationAssembly.MainModule);
+            copiers.Add(origModuleDef, copier);
+
+            return copier;
         }
 
         public void AddAssembly(string origAssemblyPath)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = new CecilCopier(origAssembly.MainModule, DestinationAssembly.MainModule);
+            var copier = GetCreateCopier(origAssembly.MainModule);
 
             foreach (var origType in origAssembly.MainModule.Types)
                 if(origType.BaseType != null)
@@ -30,7 +44,7 @@ namespace EngineWeaver
         public void CopyTypes(string origAssemblyPath, IEnumerable<string> typeNames)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = new CecilCopier(origAssembly.MainModule, DestinationAssembly.MainModule);
+            var copier = GetCreateCopier(origAssembly.MainModule);
 
             foreach (var typeName in typeNames)
             {
