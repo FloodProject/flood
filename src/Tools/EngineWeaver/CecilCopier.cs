@@ -682,7 +682,11 @@ namespace EngineWeaver
 
         public void  Merge(Collection<ParameterDefinition>def1, Collection<ParameterDefinition> def2)
         {
-            //check if different
+            if(def1.Count != def2.Count)
+                throw new Exception("Expecting same parameters number.");
+
+            for (int i = 0; i < def1.Count; i++)
+                Merge(def1[i],def2[i]);
         }
 
         #endregion
