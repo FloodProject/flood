@@ -26,8 +26,8 @@ namespace Flood.RPC
     public abstract class RPCDelegateProxy : RPCDelegate
     {
         public RPCPeer Peer { get; internal set; }
-        public RPCStubId RemoteId { get; internal set; }
-        public RPCStubId LocalId { get; internal set; }
+        public int RemoteId { get; internal set; }
+        public int LocalId { get; internal set; }
 
         public int RemoteDelegateId { get; internal set; }
 

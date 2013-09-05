@@ -36,8 +36,8 @@ namespace Flood.RPC
         {
             Serializer serializer;
 
-            public RPCStubId RemoteId;
-            public RPCStubId LocalId;
+            public int RemoteId;
+            public int LocalId;
             public RPCDataType CallType;
 
             public RPCDataHeader(Serializer serializer)
@@ -48,15 +48,15 @@ namespace Flood.RPC
 
             public void Read()
             {
-                RemoteId = RPCStubId.Read(serializer);
-                LocalId = RPCStubId.Read(serializer);
+                RemoteId = serializer.ReadI32();
+                LocalId = serializer.ReadI32();
                 CallType = (RPCDataType)serializer.ReadI32();
             }
 
             public void Write()
             {
-                LocalId.Write(serializer);
-                RemoteId.Write(serializer);
+                serializer.WriteI32(LocalId);
+                serializer.WriteI32(RemoteId);
                 serializer.WriteI32((int)CallType);
             }
         }
@@ -85,7 +85,7 @@ namespace Flood.RPC
             Peer.Dispatch(this);
         }
 
-        public static RPCData Create(RPCPeer peer, RPCStubId localId, RPCStubId remoteId, RPCDataType type, RPCFlags flags = RPCFlags.None)
+        public static RPCData Create(RPCPeer peer, int localId, int remoteId, RPCDataType type, RPCFlags flags = RPCFlags.None)
         {
             var data = new RPCData(peer);
             data.Peer = peer;
@@ -114,7 +114,7 @@ namespace Flood.RPC
             public int Id;
             public int MethodId;
 
-            internal Call(int id, int methodId, RPCPeer peer, RPCStubId localId, RPCStubId remoteId)
+            internal Call(int id, int methodId, RPCPeer peer, int localId, int remoteId)
             {
                 Id = id;
                 MethodId = methodId;
@@ -171,7 +171,7 @@ namespace Flood.RPC
             public int LocalDelegateId;
             public int RemoteDelegateId;
 
-            internal DelegateCall(int id, int localDelegateId, int remoteDelegateId, RPCPeer peer, RPCStubId localId, RPCStubId remoteId)
+            internal DelegateCall(int id, int localDelegateId, int remoteDelegateId, RPCPeer peer, int localId, int remoteId)
             {
                 Id = id;
                 LocalDelegateId = localDelegateId;

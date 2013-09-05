@@ -8,30 +8,69 @@ using System.Threading;
 
 namespace Flood.RPC
 {
+    
+
     public class RPCManager
     {
+        private struct GlobalServiceId
+        {
+            public readonly Guid Guid;
+            public readonly int MajorVersion;
+
+            public GlobalServiceId(Guid guid, int majorVersion)
+            {
+                Guid = guid;
+                MajorVersion = majorVersion;
+            }
+
+            public GlobalServiceId(Type type)
+            {
+                var attribute = type.GetCustomAttribute<GlobalServiceAttribute>(false);
+                if(attribute == null)
+                    throw new Exception("Type has no attribute GlobalService.");
+
+                Guid = attribute.Guid;
+                MajorVersion = type.Assembly.GetName().Version.Major;
+            }
+
+            public static GlobalServiceId Read(RPCData data)
+            {
+                var guid = data.Serializer.ReadString();
+                var majorVersion = data.Serializer.ReadI32();
+
+                return new GlobalServiceId(new Guid(guid), majorVersion);
+            }
+
+            public void Write(RPCData data)
+            {
+                data.Serializer.WriteString(Guid.ToString());
+                data.Serializer.WriteI32(MajorVersion);
+            }
+        }
+
         public RPCPeer Local { get; private set; }
 
-        private Dictionary<RPCStubId, RPCStub> stubs;
+        private Dictionary<int, RPCStub> stubs;
         private Dictionary<object, RPCImpl> impls;
-        private Dictionary<Tuple<RPCPeer, RPCStubId>, RPCProxy> proxies;
-        private Dictionary<Type, RPCStubId> globalServiceIds; 
+        private Dictionary<Tuple<RPCPeer, int>, RPCProxy> proxies;
+
+        private Dictionary<GlobalServiceId, int> globalServiceIds; 
 
         private int stubIdCounter;
 
         public RPCManager(RPCPeer local)
         {
-            stubs = new Dictionary<RPCStubId, RPCStub>();
+            stubs = new Dictionary<int, RPCStub>();
             impls = new Dictionary<object, RPCImpl>();
-            proxies = new Dictionary<Tuple<RPCPeer, RPCStubId>, RPCProxy>();
-            globalServiceIds = new Dictionary<Type, RPCStubId>();
+            proxies = new Dictionary<Tuple<RPCPeer, int>, RPCProxy>();
+            globalServiceIds = new Dictionary<GlobalServiceId, int>();
 
             Local = local;
         }
 
-        protected RPCStubId GetNextStubId()
+        protected int GetNextStubId()
         {
-            return new RPCStubId(Interlocked.Increment(ref stubIdCounter));
+            return Interlocked.Increment(ref stubIdCounter);
         }
 
         public void Process(byte[] data, RPCPeer peer)
@@ -46,9 +85,36 @@ namespace Flood.RPC
             Process(rpcData);
         }
 
+        public int GetLocalId(RPCData data)
+        {
+            var localId = data.Header.LocalId;
+            if (localId != 0)
+                return localId;
+
+            switch (data.Header.CallType)
+            {
+                case RPCDataType.Call:
+                case RPCDataType.EventSubscribe:
+                case RPCDataType.EventUnsubscribe:
+                {
+                    var globalServiceId = GlobalServiceId.Read(data);
+                    int serviceId;
+                    if (!globalServiceIds.TryGetValue(globalServiceId, out serviceId))
+                        throw new Exception("Global service unavailable.");
+
+                    var globalService = impls[serviceId];
+
+                    return globalService.Id;
+                }
+                default:
+                    var callTypeName = Enum.GetName(typeof (RPCDataType), data.Header.CallType);
+                    throw new Exception("Local id should not be zero for message type "+ callTypeName);
+            }
+        }
+
         public void Process(RPCData data)
         {
-            var id = data.Header.LocalId;
+            var id = GetLocalId(data);
 
             var stub = stubs[id];
 
@@ -92,7 +158,7 @@ namespace Flood.RPC
             }
         }
 
-        public T GetService<T>(RPCPeer peer, RPCStubId implId)
+        public T GetService<T>(RPCPeer peer, int implId)
         {
             var serviceAttribute = typeof (T).GetCustomAttribute<ServiceAttribute>(false);
             var globalServiceAttribute = typeof (T).GetCustomAttribute<GlobalServiceAttribute>(false);
@@ -114,21 +180,15 @@ namespace Flood.RPC
 
         public T GetGlobalService<T>(RPCPeer peer)
         {
-            var attribute = typeof (T).GetCustomAttribute<GlobalServiceAttribute>(false);
-            if(attribute == null)
-                throw new Exception("Type has no attribute GlobalService.");
+            var globalServiceId = new GlobalServiceId(typeof (T));
 
-            RPCStubId serviceId;
+            var serviceId = 0;
             if (peer.Equals(Local))
             {
-                if(!globalServiceIds.TryGetValue(typeof(T), out serviceId))
+                if(!globalServiceIds.TryGetValue(globalServiceId, out serviceId))
                     throw new Exception("Global service not available.");
-
-                return GetService<T>(peer, serviceId);
             }
 
-            var versionMajor = typeof (T).Assembly.GetName().Version.Major;
-            serviceId = new RPCStubId(attribute.Guid, versionMajor);
             return GetService<T>(peer, serviceId);
         }
 
@@ -144,11 +204,6 @@ namespace Flood.RPC
                 return impl;
 
             var implId = GetNextStubId();
-            if (globalServiceAttribute != null)
-            {
-                implId.Guid = globalServiceAttribute.Guid;
-                implId.VersionMajor = typeof (T).Assembly.GetName().Version.Major;
-            }
 
             var serviceType = typeof(T);
 
@@ -163,14 +218,14 @@ namespace Flood.RPC
             impl.RPCManager = this;
 
             if (globalServiceAttribute != null)
-                globalServiceIds.Add(typeof(T), impl.Id);
+                globalServiceIds.Add(new GlobalServiceId(typeof (T)), impl.Id);
 
             return impl;
         }
 
-        private T GetCreateProxy<T>(RPCPeer peer, RPCStubId implId)
+        private T GetCreateProxy<T>(RPCPeer peer, int implId)
         {
-            var tuple = new Tuple<RPCPeer, RPCStubId>(peer, implId);
+            var tuple = new Tuple<RPCPeer, int>(peer, implId);
             RPCProxy proxy;
             if (proxies.TryGetValue(tuple, out proxy))
                 return (T)(object)proxy;
@@ -195,7 +250,7 @@ namespace Flood.RPC
 
         internal bool HasGlobalService(Type type)
         {
-            return globalServiceIds.ContainsKey(type);
+            return globalServiceIds.ContainsKey(new GlobalServiceId(type));
         }
     }
 }

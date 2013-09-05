@@ -10,10 +10,10 @@ namespace Flood.RPC
         protected Dictionary<int, RPCDelegate> delegates;
         private int delegateIdCounter;
 
-        public RPCStubId Id { get; private set; }
+        public int Id { get; private set; }
         public RPCManager RPCManager  { get; internal set; }
 
-        protected RPCStub(RPCStubId id)
+        protected RPCStub(int id)
         {
             Id = id;
             delegates = new Dictionary<int, RPCDelegate>();
@@ -31,7 +31,7 @@ namespace Flood.RPC
             delegateImpl.Invoke(call);
         }
 
-        public RPCDelegate CreateDelegateProxy<T>(RPCPeer peer, RPCStubId remoteId, int remoteDelegateId)
+        public RPCDelegate CreateDelegateProxy<T>(RPCPeer peer, int remoteId, int remoteDelegateId)
             where T : RPCDelegateProxy, new()
         {
             var delegateId = Interlocked.Increment(ref delegateIdCounter);
@@ -48,7 +48,7 @@ namespace Flood.RPC
             return delegateProxy;
         }
 
-        public RPCDelegate CreateDelegateImpl<T>(RPCPeer peer, RPCStubId remoteId, Delegate del)
+        public RPCDelegate CreateDelegateImpl<T>(RPCPeer peer, int remoteId, Delegate del)
             where T : RPCDelegateImpl, new()
         {
             var delegateId = Interlocked.Increment(ref delegateIdCounter);
