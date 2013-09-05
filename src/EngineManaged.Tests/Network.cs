@@ -47,9 +47,9 @@ namespace Flood.Tests
             Assert.IsTrue(connectTask.Result);
 
             var service = new ServiceTest();
-            var serviceImpl = server.ServiceManager.GetCreateImplementation<IServiceTest>(service);
+            var serviceImpl = server.ServiceManager.ServiceManager.GetCreateImplementation<IServiceTest>(service);
 
-            var serviceProxy = client.ServiceManager.GetService<IServiceTest>(new SessionRPCPeer(client.Session), serviceImpl.Id);
+            var serviceProxy = client.ServiceManager.GetService<IServiceTest>(new SessionRPCPeer(client.Session), serviceImpl.LocalId);
             var pingTask = serviceProxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));

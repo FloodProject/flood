@@ -61,9 +61,9 @@ namespace RPCGen.Tests.Services
             
             var remotePeer = new MockRPCPeer(serviceManager, 2);
             
-            var serviceImpl = serviceManager.GetCreateImplementation<T>(service);
+            var serviceImpl = serviceManager.ServiceManager.GetCreateImplementation(service);
 
-            return serviceManager.GetService<T>(remotePeer, serviceImpl.Id);
+            return serviceManager.GetService<T>(remotePeer, serviceImpl.LocalId);
         }
     }
 }

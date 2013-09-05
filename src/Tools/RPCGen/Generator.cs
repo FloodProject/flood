@@ -103,15 +103,15 @@ namespace Flood.Tools.RPCGen
                 }
             }
 
-            WriteLine("internal RPCStub Stub;");
+            WriteLine("internal RPCManager RPCManager;");
             NewLine();
 
             // Generate read method
-            GenerateDataObjectRead(parameters, "Stub");
+            GenerateDataObjectRead(parameters);
             NewLine();
 
             // Generate write method
-            GenerateDataObjectWrite(parameters, "Stub");
+            GenerateDataObjectWrite(parameters);
 
             if (isObservable)
             {
@@ -124,7 +124,7 @@ namespace Flood.Tools.RPCGen
                 WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, string stubName)
+        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters)
         {
             parameters = ConvertToActualParameters(parameters);
 
@@ -145,7 +145,7 @@ namespace Flood.Tools.RPCGen
             {
                 WriteLine("case {0}:", param.Id);
                 PushIndent();
-                GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
+                GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data");
                 WriteLine("break;");
                 PopIndent();
             }
@@ -158,7 +158,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters, string stubName)
+        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters)
         {
             WriteLine("public void Read(RPCData data)");
             WriteStartBraceIndent();
@@ -174,7 +174,7 @@ namespace Flood.Tools.RPCGen
             {
                 WriteLine("case {0}:", param.Id);
                 PushIndent();
-                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data", stubName);
+                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
                 WriteLine("break;");
                 PopIndent();
             }
@@ -350,7 +350,6 @@ namespace Flood.Tools.RPCGen
                     , method.Name
                     , GetProcedureArgsClassName(method)
                     , GetProcedureResultClassName(method)
-                    , "this"
                     , "RPCData.Call"
                     , PrettyName(type));
             }
@@ -364,7 +363,7 @@ namespace Flood.Tools.RPCGen
             NewLine();
         }
 
-        private void GenerateProtocolMethod(MethodInfo method, int? methodId, string methodName, string argsClassName, string resultClassName, string stubName, string callType, string methodClassName = null)
+        private void GenerateProtocolMethod(MethodInfo method, int? methodId, string methodName, string argsClassName, string resultClassName, string callType, string methodClassName = null)
         {
             var methodPrefix = "";
             if (!string.IsNullOrEmpty(methodClassName))
@@ -412,13 +411,13 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate send method
-            GenerateProtocolSend(method, parameters, methodIdText, sendMethodName, argsClassName, stubName, callType);
+            GenerateProtocolSend(method, parameters, methodIdText, sendMethodName, argsClassName, callType);
 
             // Generate receive method
-            GenerateProtocolReceive(method, receiveMethodName, resultClassName, stubName);
+            GenerateProtocolReceive(method, receiveMethodName, resultClassName);
         }
 
-        private void GenerateProtocolReceive(MethodInfo method, string methodName, string resultClassName, string stubName)
+        private void GenerateProtocolReceive(MethodInfo method, string methodName, string resultClassName)
         {
             var retType = GetMethodReturnType(method);
             Write("private {0} {1}(RPCData response)", PrettyName(retType), methodName);
@@ -437,7 +436,7 @@ namespace Flood.Tools.RPCGen
             }
 
             WriteLine("var result = new {0}();", resultClassName);
-            WriteLine("result.Stub = {0};", stubName);
+            WriteLine("result.RPCManager = RPCManager;");
             WriteLine("result.Read(response);");
 
             List<ExceptionInfo> exceptionsInfo;
@@ -458,7 +457,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters, string methodId, string methodName, string argsClassName, string stubName, string callType)
+        private void GenerateProtocolSend(MethodInfo method, ParameterInfo[] parameters, string methodId, string methodName, string argsClassName, string callType)
         {
             Write("private {0} {1}(", callType, methodName);
             GenerateParameterList(parameters);
@@ -478,7 +477,7 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(method))
             {
                 WriteLine("var args = new {0}();", argsClassName);
-                WriteLine("args.Stub = {0};", stubName);
+                WriteLine("args.RPCManager = RPCManager;");
                 foreach (var param in method.GetParameters())
                     WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
                 WriteLine("args.Write(call.Data);");
@@ -652,7 +651,7 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(method))
             {
                 WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
-                WriteLine("args.Stub = this;");
+                WriteLine("args.RPCManager = RPCManager;");
                 WriteLine("args.Read(call.Data);");
             }
 
@@ -666,7 +665,7 @@ namespace Flood.Tools.RPCGen
             if (HasResultSerializer(method))
             {
                 WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
-                WriteLine("result.Stub = this;");
+                WriteLine("result.RPCManager = RPCManager;");
                 var retType = GetMethodReturnType(method);
                 if (retType != typeof(void))
                     Write("result.Success = ");
@@ -714,18 +713,18 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateEventSubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventSubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int remoteDelegateId)", GetEventSubscribeMethodName(@event));
             WriteStartBraceIndent();
 
             var @delegate = @event.EventHandlerType;
-            WriteLine("var del = CreateDelegateProxy<{0}>(peer, remoteId, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
+            WriteLine("var del = RPCManager.DelegateManager.CreateDelegateProxy<{0}>(peer, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
             WriteLine("iface_.{0} += ({1}) del.Delegate;", @event.Name, PrettyName(@delegate));
             WriteCloseBraceIndent();
         }
 
         private void GenerateEventUnsubscribeMethod(EventInfo @event)
         {
-            WriteLine("void {0}(RPCPeer peer, int remoteId, int remoteDelegateId)", GetEventUnsubscribeMethodName(@event));
+            WriteLine("void {0}(RPCPeer peer, int remoteDelegateId)", GetEventUnsubscribeMethodName(@event));
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
         }
@@ -853,7 +852,6 @@ namespace Flood.Tools.RPCGen
             if(methodInvoke == null)
                 throw new Exception();
 
-            var stubName = "Stub";
             var proxyName = GetDelegateProxyClassName(type, false);
             var implName = GetDelegateImplClassName(type, false);
             var argsName = GetDelegateName(type, false) + "_args";
@@ -865,7 +863,7 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
             WriteLine("SetDelegate(new {0}(Invoke));", PrettyName(type));
             WriteCloseBraceIndent();
-            GenerateProtocolMethod(methodInvoke, null, "Invoke", argsName, resultName, stubName, "RPCData.DelegateCall");
+            GenerateProtocolMethod(methodInvoke, null, "Invoke", argsName, resultName, "RPCData.DelegateCall");
             WriteCloseBraceIndent();
             NewLine();
 
@@ -875,14 +873,14 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
             WriteCloseBraceIndent();
             NewLine();
-            GenerateDelegateProxyInvoke(methodInvoke, argsName, resultName, stubName);
+            GenerateDelegateProxyInvoke(methodInvoke, argsName, resultName);
             WriteCloseBraceIndent();
             NewLine();
 
             GenerateMethodSerializers(methodInvoke, argsName, resultName);
         }
 
-        private void GenerateDelegateProxyInvoke(MethodInfo methodInvoke, string argsName, string resultName, string stubName)
+        private void GenerateDelegateProxyInvoke(MethodInfo methodInvoke, string argsName, string resultName)
         {
             //Invoke
             WriteLine("public override void Invoke(RPCData.DelegateCall call)");
@@ -891,7 +889,7 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(methodInvoke))
             {
                 WriteLine("var args = new {0}();", argsName);
-                WriteLine("args.Stub = {0};", stubName);
+                WriteLine("args.RPCManager = RPCManager;");
                 WriteLine("args.Read(call.Data);");
             }
 
@@ -919,7 +917,7 @@ namespace Flood.Tools.RPCGen
                     WriteLine("task.ContinueWith( t =>");
                     WriteStartBraceIndent();
                     WriteLine("var result = new {0}();", resultName);
-                    WriteLine("result.Stub = {0};", stubName);
+                    WriteLine("result.RPCManager = RPCManager;");
                     WriteLine("result.Success = t.Result;");
                     WriteLine("var reply = new RPCData.DelegateReply(call);");
                     WriteLine("result.Write(reply.Data);");
@@ -933,7 +931,7 @@ namespace Flood.Tools.RPCGen
             {
                 if (HasResultSerializer(methodInvoke))
                 {
-                    WriteLine("var result = new {0}({1});", resultName, stubName);
+                    WriteLine("var result = new {0}({1});", resultName);
                     if (returnType != typeof(void))
                         Write("result.Success = ({0})", PrettyName(returnType));
                 }
@@ -1114,21 +1112,21 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a type 
         /// </summary>
-        private void GenerateTypeSerialization(Type type, string varName, string dataName, string stubName)
+        private void GenerateTypeSerialization(Type type, string varName, string dataName)
         {
             var thriftType = ConvertFromTypeToThrift(type);
 
             switch (thriftType)
             {
                 case TType.List:
-                    GenerateListSerialize(type, varName, dataName, stubName);
+                    GenerateListSerialize(type, varName, dataName);
                     break;
                 case TType.Map:
-                    GenerateMapSerialize(type, varName, dataName, stubName);
+                    GenerateMapSerialize(type, varName, dataName);
                     break;
                 case TType.DataObject:
                 case TType.Exception:
-                    GenerateStructSerialize(type, varName, dataName, stubName);
+                    GenerateStructSerialize(type, varName, dataName);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1149,13 +1147,13 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
                     break;
                 case TType.Delegate:
-                    WriteLine("var del = {0}.CreateDelegateImpl<{1}>({2}.Peer, {2}.Header.RemoteId, {3});", stubName, GetDelegateImplClassName(type), dataName, varName);
-                    WriteLine("{0}.Serializer.WriteI32(del.Id);", dataName);
+                    WriteLine("var del = RPCManager.DelegateManager.CreateDelegateImpl<{0}>({1});", GetDelegateImplClassName(type), varName);
+                    WriteLine("{0}.Serializer.WriteI32(del.LocalId);", dataName);
                     // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
                     break;
                 case TType.Service:
-                    WriteLine("var serviceImpl = {0}.RPCManager.GetCreateImplementation<{1}>({2});", stubName, PrettyName(type), varName);
-                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.Id);", dataName, varName);
+                    WriteLine("var serviceImpl = RPCManager.ServiceManager.GetCreateImplementation<{0}>({1});", PrettyName(type), varName);
+                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.LocalId);", dataName, varName);
                     // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
                 case TType.Void:
@@ -1169,13 +1167,13 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        private void GenerateStructSerialize(Type type, string varName, string dataName, string stubName)
+        private void GenerateStructSerialize(Type type, string varName, string dataName)
         {
             var implObjName = varName + "Impl";
             implObjName = implObjName.Replace(".", "");
 
             WriteLine("var {0} = new {1}();", implObjName, GetStubsClassName(type, true));
-            WriteLine("{0}.Stub = {1};", implObjName, stubName);
+            WriteLine("{0}.RPCManager = RPCManager;", implObjName);
             GenerateStructInit(type, varName, implObjName);
             WriteLine("{0}.Write({1});", implObjName, dataName);
         }
@@ -1207,7 +1205,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a list  
         /// </summary>
-        private void GenerateListSerialize(Type type, string name, string dataName, string stubName)
+        private void GenerateListSerialize(Type type, string name, string dataName)
         {
             var listElemType = (type.IsArray)? type.GetElementType() : type.GetGenericArguments()[0];
 
@@ -1223,7 +1221,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
             WriteStartBraceIndent();
 
-            GenerateTypeSerialization(listElemType, iterName, dataName, stubName);
+            GenerateTypeSerialization(listElemType, iterName, dataName);
 
             WriteCloseBraceIndent();
 
@@ -1233,7 +1231,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a map  
         /// </summary>
-        private void GenerateMapSerialize(Type type, string name, string dataName, string stubName)
+        private void GenerateMapSerialize(Type type, string name, string dataName)
         {
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
@@ -1248,7 +1246,7 @@ namespace Flood.Tools.RPCGen
             WriteLine("foreach (var {0} in {1})", iterName, ToTitleCase(name));
             WriteStartBraceIndent();
 
-            GenerateContainerDoubleElementSerialization(mapElemType1, mapElemType2, iterName, dataName, stubName);
+            GenerateContainerDoubleElementSerialization(mapElemType1, mapElemType2, iterName, dataName);
 
             WriteCloseBraceIndent();
 
@@ -1259,10 +1257,10 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a dual element container  
         /// </summary>
-        private void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName, string dataName, string stubName)
+        private void GenerateContainerDoubleElementSerialization(Type elemType1, Type elemType2, string iterName, string dataName)
         {
-            GenerateTypeSerialization(elemType1, iterName + ".Key", dataName, stubName);
-            GenerateTypeSerialization(elemType2, iterName + ".Value", dataName, stubName);
+            GenerateTypeSerialization(elemType1, iterName + ".Key", dataName);
+            GenerateTypeSerialization(elemType2, iterName + ".Value", dataName);
         }
 
         #endregion
@@ -1272,20 +1270,20 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a single element of an array 
         /// </summary>
-        private void GenerateTypeDeserialization(Type type, string varName, string dataName, string stubName, bool varExists = true)
+        private void GenerateTypeDeserialization(Type type, string varName, string dataName, bool varExists = true)
         {
             var thriftType = ConvertFromTypeToThrift(type);
             switch (thriftType)
             {
                 case TType.List:
-                    GenerateListDeserialize(type, varName, dataName, stubName);
+                    GenerateListDeserialize(type, varName, dataName);
                     break;
                 case TType.Map:
-                    GenerateMapDeserialize(type, varName, dataName, stubName);
+                    GenerateMapDeserialize(type, varName, dataName);
                     break;
                 case TType.DataObject:
                 case TType.Exception:
-                    GenerateStructDeserialize(type, varName, dataName, stubName, varExists);
+                    GenerateStructDeserialize(type, varName, dataName, varExists);
                     break;
                 case TType.Bool:
                 case TType.Byte:
@@ -1313,14 +1311,14 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Delegate:
                     WriteLine("var remoteDelegateId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("var del = {0}.CreateDelegateProxy<{1}>({2}.Peer, {2}.Header.RemoteId, remoteDelegateId);", stubName, GetDelegateProxyClassName(type), dataName);
+                    WriteLine("var del = RPCManager.DelegateManager.CreateDelegateProxy<{0}>({1}.Peer, remoteDelegateId);", GetDelegateProxyClassName(type), dataName);
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = ({1})del.Delegate;", varName, PrettyName(type));
                     break;
                 case TType.Service:
                     WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = {1}.RPCManager.GetService<{2}>({3}.Peer, remoteId);", varName, stubName, PrettyName(type), dataName);
+                    WriteLine("{0} = RPCManager.GetService<{1}>({2}.Peer, remoteId);", varName, PrettyName(type), dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1332,11 +1330,11 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
-        private void GenerateStructDeserialize(Type type, string varName, string dataName, string stubName, bool varExists)
+        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
         {
             var origObjName = varName+"Impl";
-            WriteLine("var {0} = new {1}();", origObjName, GetStubsClassName(type, true), stubName);
-            WriteLine("{0}.Stub = {1};", origObjName, stubName);
+            WriteLine("var {0} = new {1}();", origObjName, GetStubsClassName(type, true));
+            WriteLine("{0}.RPCManager = RPCManager;", origObjName);
             WriteLine("{0}.Read({1});", origObjName, dataName);
 
             var elemName2 = string.Format("_elem{0}", GenericIndex++);
@@ -1350,7 +1348,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a list  
         /// </summary>
-        private void GenerateListDeserialize(Type type, string name, string dataName, string stubName)
+        private void GenerateListDeserialize(Type type, string name, string dataName)
         {
             var listElemType = (type.IsArray)? type.GetElementType() : type.GetGenericArguments()[0];
 
@@ -1373,7 +1371,7 @@ namespace Flood.Tools.RPCGen
 
             var elemName = string.Format("_elem{0}", GenericIndex++);
 
-            GenerateTypeDeserialization(listElemType, elemName, dataName, stubName, false);
+            GenerateTypeDeserialization(listElemType, elemName, dataName, false);
 
             if (type.IsArray)
             {
@@ -1391,7 +1389,7 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a map  
         /// </summary>
-        private void GenerateMapDeserialize(Type type, string name, string dataName, string stubName)
+        private void GenerateMapDeserialize(Type type, string name, string dataName)
         {
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
@@ -1408,7 +1406,7 @@ namespace Flood.Tools.RPCGen
 
             WriteStartBraceIndent();
 
-            GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(name), dataName, stubName);
+            GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(name), dataName);
 
             WriteCloseBraceIndent();
             WriteLine("{0}.Serializer.ReadMapEnd();", dataName);
@@ -1417,13 +1415,13 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a double element container  
         /// </summary>
-        private void GenerateContainerDoubleElementDeserialization(Type elemType1, Type elemType2, string containerName, string dataName, string stubName)
+        private void GenerateContainerDoubleElementDeserialization(Type elemType1, Type elemType2, string containerName, string dataName)
         {
             var elemName1 = string.Format("_elem{0}", GenericIndex++);
             var elemName2 = string.Format("_elem{0}", GenericIndex++);
 
-            GenerateTypeDeserialization(elemType1, elemName1, dataName, stubName, false);
-            GenerateTypeDeserialization(elemType2, elemName2, dataName, stubName, false);
+            GenerateTypeDeserialization(elemType1, elemName1, dataName, false);
+            GenerateTypeDeserialization(elemType2, elemName2, dataName, false);
 
             WriteLine("{0}.Add({1}, {2});", containerName, elemName1, elemName2);
         }
