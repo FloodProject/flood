@@ -16,7 +16,7 @@ namespace EngineWeaver
         private readonly Dictionary<MemberReference,MemberReference> referenceMap;
 
         private readonly List<Instruction> instructions;
-        private readonly Dictionary<TypeDefinition,TypeDefinition> types;
+        private readonly Dictionary<TypeDefinition,TypeDefinition> delayedCopy;
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
@@ -30,7 +30,7 @@ namespace EngineWeaver
             NamePrefix = "";
             referenceMap = new Dictionary<MemberReference,MemberReference>();
             instructions = new List<Instruction>();
-            types = new Dictionary<TypeDefinition,TypeDefinition>();
+            delayedCopy = new Dictionary<TypeDefinition,TypeDefinition>();
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
         }
 
@@ -50,20 +50,20 @@ namespace EngineWeaver
 
         public void Process()
         {
-            CopyTypes();
+            ProcessDelayed();
             CopyInstructionsOperands();
             Update();
         }
 
-        private void CopyTypes()
+        private void ProcessDelayed()
         {
-            foreach (var t in types)
+            foreach (var t in delayedCopy)
             { 
                 Log("> Type "+t.Key.FullName);
                 Log("< Type "+t.Value.FullName);
                 CopyAll(t.Key,t.Value,"Name","DeclaringType","BaseType","MetadataToken","Scope", "NestedTypes");
             }
-            types.Clear();
+            delayedCopy.Clear();
         }
 
         private void CopyInstructionsOperands()
@@ -392,7 +392,7 @@ namespace EngineWeaver
                 return ret;
             }
 
-            types.Add(def, ret);
+            delayedCopy.Add(def, ret);
             CopyMap.Add(def, ret);
 
             foreach (TypeDefinition nestedType in def.NestedTypes)
