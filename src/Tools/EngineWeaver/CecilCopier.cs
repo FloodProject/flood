@@ -628,7 +628,11 @@ namespace EngineWeaver
                     continue;
                 }
 
-                def2.Add(Copy(origDef));
+                var copy = Copy(origDef);
+
+                // Copy(TypeDefinition def) already adds def to declaring type.
+                if(!(origDef is TypeDefinition))
+                    def2.Add(copy);
             }
         }
 
