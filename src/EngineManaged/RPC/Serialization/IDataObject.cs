@@ -14,5 +14,13 @@ namespace Flood.RPC.Serialization
     {
         event Action<int> PropertyChanged;
         BitField GetResetChanges();
+        bool IsReference { get; set; }
+    }
+
+    public interface IDataObjectReference : IObservableDataObject
+    {
+        RPCPeer Peer { get; }
+        int RemoteId { get; }
+        ReferenceManager ReferenceManager { get; }
     }
 }

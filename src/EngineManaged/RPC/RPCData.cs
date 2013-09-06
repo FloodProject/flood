@@ -28,6 +28,10 @@ namespace Flood.RPC
         /// Send by Implementation when Proxy's Delegate is disposed.
         /// This allows Proxy to remove delegates that will never be invoked.
         DelegateDispose = 9,
+
+        ReferenceChanges = 10,
+        ReferenceSubscribe = 11,
+        ReferenceUnsubscribe = 12
     }
 
     public struct RPCData

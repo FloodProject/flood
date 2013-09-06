@@ -51,6 +51,20 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             if (isObservable)
             {
+                WriteLine("public class Reference : {0}, IDataObjectReference", className);
+                WriteStartBraceIndent();
+                WriteLine("public RPCPeer Peer { get; private set; }");
+                WriteLine("public int RemoteId { get; private set; }");
+                WriteLine("public ReferenceManager ReferenceManager { get; private set; }");
+                NewLine();
+                WriteLine("public Reference(RPCPeer peer, int remoteId, ReferenceManager referenceManager)");
+                WriteStartBraceIndent();
+                WriteLine("Peer = peer;");
+                WriteLine("RemoteId = remoteId;");
+                WriteLine("ReferenceManager = referenceManager;");
+                WriteCloseBraceIndent();
+                WriteCloseBraceIndent();
+                NewLine();
                 WriteLine("private event Action<int> propertyChanged;");
                 WriteLine("event Action<int> IObservableDataObject.PropertyChanged");
                 WriteStartBraceIndent();
@@ -1127,6 +1141,18 @@ namespace Flood.Tools.RPCGen
             var implObjName = varName + "Impl";
             implObjName = implObjName.Replace(".", "");
 
+            if (Metadata.IsDataObject(type))
+            {
+                WriteLine("var dataObject = (IObservableDataObject){0};", varName);
+                WriteLine("if(dataObject.IsReference)", varName);
+                WriteLineIndent("RPCManager.ReferenceManager.Publish(dataObject);");
+                NewLine();
+                WriteLine("int referenceLocalId;");
+                WriteLine("if(!RPCManager.ReferenceManager.TryGetLocalId(dataObject, out referenceLocalId))");
+                WriteLineIndent("referenceLocalId = 0;");
+                WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
+                NewLine();
+            }
             WriteLine("var {0} = new {1}();", implObjName, GetStubsClassName(type, true));
             WriteLine("{0}.RPCManager = RPCManager;", implObjName);
             GenerateStructInit(type, varName, implObjName);
@@ -1288,7 +1314,18 @@ namespace Flood.Tools.RPCGen
         private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
         {
             var origObjName = varName+"Impl";
-            WriteLine("var {0} = new {1}();", origObjName, GetStubsClassName(type, true));
+            var className = GetStubsClassName(type, true);
+
+            if (Metadata.IsDataObject(type))
+            {
+                WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
+                WriteLine("var {0} = new {1}.Reference({2}.Peer, referenceRemoteId, RPCManager.ReferenceManager);", origObjName, className, dataName);
+            }
+            else
+            {
+                WriteLine("var {0} = new {1}();", origObjName, className);
+            }
+
             WriteLine("{0}.RPCManager = RPCManager;", origObjName);
             WriteLine("{0}.Read({1});", origObjName, dataName);
 

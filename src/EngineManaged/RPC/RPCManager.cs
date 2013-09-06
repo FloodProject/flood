@@ -1,5 +1,5 @@
 ﻿using Flood.RPC.Serialization;
-using System;
+using System.Diagnostics;
 
 namespace Flood.RPC
 {
@@ -9,11 +9,13 @@ namespace Flood.RPC
 
         public ServiceManager ServiceManager { get; private set; }
         public DelegateManager DelegateManager { get; private set; }
+        public ReferenceManager ReferenceManager  { get; private set; }
 
         public RPCManager(RPCPeer local)
         {
             ServiceManager = new ServiceManager(this);
             DelegateManager = new DelegateManager(this);
+            ReferenceManager = new ReferenceManager();
 
             Local = local;
         }
@@ -44,8 +46,14 @@ namespace Flood.RPC
                 case RPCDataType.DelegateCall:
                     DelegateManager.Process(data);
                     return;
+                case RPCDataType.ReferenceChanges:
+                case RPCDataType.ReferenceSubscribe:
+                case RPCDataType.ReferenceUnsubscribe:
+                    ReferenceManager.Process(data);
+                    return;
                 default:
-                    throw new NotImplementedException();
+                    Debug.Assert(false);
+                    return;
             }
         }
 
