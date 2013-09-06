@@ -724,11 +724,13 @@ namespace EngineWeaver
 
         private bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
         {
-            
+            var pointer1 = typeRef1 as PointerType;
+            var pointer2 = typeRef2 as PointerType;
+            if (pointer1 != null && pointer2 != null)
+                return AreTypesEquivalent(pointer1.ElementType, pointer2.ElementType);
+
             if (IsLocalReference(typeRef1.Scope.Name))
-            {
                 return typeRef2 == GetLocalReference(typeRef1);
-            }
 
             return typeRef1.FullName == typeRef2.FullName;
         }
