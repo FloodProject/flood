@@ -7,12 +7,12 @@ namespace Flood.RPC.Serialization
     {
         void Read(RPCData data);
         void Write(RPCData data);
-        void Write(RPCData data, int[] propertyIds);
+        void Write(RPCData data, BitField properties);
     }
 
     public interface IObservableDataObject : IDataObject
     {
         event Action<int> PropertyChanged;
-        void WriteChanges(RPCData data);
+        BitField GetResetChanges();
     }
 }

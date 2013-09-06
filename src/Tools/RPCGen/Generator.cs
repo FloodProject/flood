@@ -51,11 +51,6 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             if (isObservable)
             {
-                WriteLine("private int propertyChangesCounter;");
-                var numBitFields = (int)Math.Ceiling((double)parameters.Count/sizeof (int));
-                for(int i = 0; i < numBitFields; i++)
-                    WriteLine("private int propertyChangedBitField{0};", i);
-
                 WriteLine("private event Action<int> propertyChanged;");
                 WriteLine("event Action<int> IObservableDataObject.PropertyChanged");
                 WriteStartBraceIndent();
@@ -63,12 +58,11 @@ namespace Flood.Tools.RPCGen
                 WriteLine("remove { propertyChanged -= value; }");
                 WriteCloseBraceIndent();
                 NewLine();
-                var paramIndex = 0;
+                WriteLine("private BitField changedProperties;");
+                NewLine();
                 foreach (var param in parameters)
                 {
                     var backingFieldName = "__" + param.Name;
-                    int bitFieldId = paramIndex / sizeof (int);
-                    int bitFieldOffset = paramIndex % sizeof (int);
 
                     WriteLine("private {0} {1};", PrettyName(param.ParameterType), backingFieldName);
                     WriteLine("public {0} {1}", PrettyName(param.ParameterType), ToTitleCase(param.Name));
@@ -81,18 +75,26 @@ namespace Flood.Tools.RPCGen
                     NewLine();
                     WriteLine("{0} = value;", backingFieldName);
                     NewLine();
-                    WriteLine("if((propertyChangedBitField{0} & 1<<{1}) != 0)", bitFieldId, bitFieldOffset);
-                    WriteStartBraceIndent();
-                    WriteLine("propertyChangedBitField{0} |= 1<<{1};", bitFieldId, bitFieldOffset);
-                    WriteLine("propertyChangesCounter++;", bitFieldId, bitFieldOffset);
-                    WriteCloseBraceIndent();
+                    WriteLine("changedProperties.SetBit({0});", param.Id);
+                    NewLine();
                     WriteLine("if(propertyChanged != null)");
                     WriteLineIndent("propertyChanged({0});", param.Id);
                     WriteCloseBraceIndent();
                     WriteCloseBraceIndent();
                     NewLine();
-                    paramIndex++;
                 }
+
+                WriteLine("public bool IsReference{ get; set; }");
+                NewLine();
+
+                WriteLine("public BitField GetResetChanges()");
+                WriteStartBraceIndent();
+                WriteLine("var bitField = changedProperties;");
+                WriteLine("changedProperties.Reset();");
+                NewLine();
+                WriteLine("return bitField;");
+                WriteCloseBraceIndent();
+                NewLine();
             }
             else
             {
@@ -106,18 +108,22 @@ namespace Flood.Tools.RPCGen
             WriteLine("internal RPCManager RPCManager;");
             NewLine();
 
-            // Generate read method
-            GenerateDataObjectRead(parameters);
+            WriteLine("private static BitField allProperties;");
+            WriteLine("static {0}()", className);
+            WriteStartBraceIndent();
+            foreach (var param in parameters)
+            {
+                WriteLine("allProperties.SetBit({0});", param.Id);
+            }
+            WriteCloseBraceIndent();
             NewLine();
 
             // Generate write method
             GenerateDataObjectWrite(parameters);
+            NewLine();
 
-            if (isObservable)
-            {
-                NewLine();
-                GenerateDataObjectWriteChanges(parameters);
-            }
+            // Generate read method
+            GenerateDataObjectRead(parameters);
 
             WriteCloseBraceIndent();
             if (@namespace != null)
@@ -130,31 +136,20 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("public void Write(RPCData data)");
             WriteStartBraceIndent();
-            WriteLine("Write(data, new []{{{0}}});", String.Join(", ", parameters.Select(p => p.Id)));
+            WriteLine("Write(data, allProperties);");
             WriteCloseBraceIndent();
             NewLine();
-            WriteLine("public void Write(RPCData data, int[] propertyIds)");
+            WriteLine("public void Write(RPCData data, BitField properties)");
             WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI32(propertyIds.Length);");
-            WriteLine("foreach(var propertyId in propertyIds)");
-            WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI32(propertyId);");
-            WriteLine("switch (propertyId)");
-            WriteStartBraceIndent();
+            WriteLine("data.Serializer.WriteI64(properties.Bits);");
             foreach (var param in parameters)
             {
-                WriteLine("case {0}:", param.Id);
-                PushIndent();
+                NewLine();
+                WriteLine("if(properties.GetBit({0}))",param.Id);
+                WriteStartBraceIndent();
                 GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data");
-                WriteLine("break;");
-                PopIndent();
+                WriteCloseBraceIndent();
             }
-            WriteLine("default:");
-            PushIndent();
-            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
-            PopIndent();
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
             WriteCloseBraceIndent();
         }
 
@@ -162,56 +157,16 @@ namespace Flood.Tools.RPCGen
         {
             WriteLine("public void Read(RPCData data)");
             WriteStartBraceIndent();
-
-            WriteLine("var propCount = data.Serializer.ReadI32();");
-            WriteLine("for (var i = 0; i<propCount; i++)");
-            WriteStartBraceIndent();
-            WriteLine("var propertyId = data.Serializer.ReadI32();");
-
-            WriteLine("switch (propertyId)");
-            WriteStartBraceIndent();
+            WriteLine("var properties = new BitField();");
+            WriteLine("properties.Bits = data.Serializer.ReadI64();");
             foreach (var param in parameters)
             {
-                WriteLine("case {0}:", param.Id);
-                PushIndent();
-                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
-                WriteLine("break;");
-                PopIndent();
-            }
-            WriteLine("default:");
-            PushIndent();
-            WriteLine("throw new Exception(\"Received unexpected property id.\");", "data");
-            PopIndent();
-            WriteCloseBraceIndent();
-
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
-        }
-
-        private void GenerateDataObjectWriteChanges(List<Parameter> parameters)
-        {
-            WriteLine("public void WriteChanges(RPCData data)");
-            WriteStartBraceIndent();
-            WriteLine("var changedProperties = new int[propertyChangesCounter];");
-            NewLine();
-            var paramIndex = 0;
-            foreach (var param in parameters)
-            {
-                int bitFieldId = paramIndex / sizeof (int);
-                int bitFieldOffset = paramIndex % sizeof (int);
-                WriteLine("if((propertyChangedBitField{0} & 1<<{1}) != 0)", bitFieldId, bitFieldOffset);
-                WriteLineIndent("changedProperties[propertyChangesCounter--] = {0};", param.Id);
                 NewLine();
-                paramIndex++;
+                WriteLine("if(properties.GetBit({0}))",param.Id);
+                WriteStartBraceIndent();
+                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
+                WriteCloseBraceIndent();
             }
-
-            WriteLine("Write(data, changedProperties);");
-            NewLine();
-
-            var numBitFields = (int)Math.Ceiling((double)parameters.Count/sizeof (int));
-            for(var i = 0; i < numBitFields; i++)
-                WriteLine("propertyChangedBitField{0} = 0;", i);
-
             WriteCloseBraceIndent();
         }
 
