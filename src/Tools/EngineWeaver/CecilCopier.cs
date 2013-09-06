@@ -351,14 +351,14 @@ namespace EngineWeaver
 
         public TypeDefinition Copy(TypeDefinition def)
         {
-            if (CopyMap.ContainsKey(def))
-                return (TypeDefinition)CopyMap[def];
-
             return TypeCopy(def, false);
         }
 
         private TypeDefinition TypeCopy(TypeDefinition def, bool isStubType)
         {
+            if (CopyMap.ContainsKey(def))
+                return (TypeDefinition)CopyMap[def];
+
             TypeDefinition declaringType = GetDeclaringType(def, false);
             if (def.IsNested && declaringType == null)
                 declaringType = TypeCopy(def.DeclaringType, true);
@@ -372,7 +372,7 @@ namespace EngineWeaver
             }
             else
             {
-                ret = typeCollection.FirstOrDefault((TypeDefinition t) => t.FullName == def.FullName);
+                ret = typeCollection.FirstOrDefault(t => t.Name == def.Name);
                 if (ret != null)
                 {
                     Log("Cannot copy existing type " + def.FullName);
@@ -382,18 +382,21 @@ namespace EngineWeaver
                 var baseRef = (def.BaseType == null) ? null : this.CopyReference(def.BaseType);
                 ret = new TypeDefinition(def.Namespace, this.NamePrefix + def.Name, def.Attributes, baseRef);
                 typeCollection.Add(ret);
-
-                if (isStubType)
-                    stubTypes.Add(def, ret);
             }
 
-            if (!isStubType)
+            if (isStubType)
             {
-                types.Add(def, ret);
-                CopyMap.Add(def, ret);
-                foreach (TypeDefinition nestedType in def.NestedTypes)
-                    Copy(nestedType);
+                if(!stubTypes.ContainsKey(def))
+                    stubTypes.Add(def, ret);
+
+                return ret;
             }
+
+            types.Add(def, ret);
+            CopyMap.Add(def, ret);
+
+            foreach (TypeDefinition nestedType in def.NestedTypes)
+                Copy(nestedType);
 
             return ret;
         }
