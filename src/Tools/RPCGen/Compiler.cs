@@ -115,6 +115,8 @@ namespace Flood.Tools.RPCGen
                     }
                 }
             }
+
+            WriteDataObjectFactory();
         }
 
         private void ProcessService(Type type)
@@ -165,6 +167,14 @@ namespace Flood.Tools.RPCGen
             gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
+        }
+
+        private void WriteDataObjectFactory()
+        {
+            var gen = new Generator();
+            gen.GenerateDataObjectFactory(RpcTypes);
+
+            WriteGeneratorToFile("DataObjectFactory", gen);
         }
 
         private void WriteGeneratorToFile(Type type, Generator gen)
@@ -295,6 +305,9 @@ namespace Flood.Tools.RPCGen
 
                 foreach (var field in type.GetFields())
                 {
+                    if (field.DeclaringType != type)
+                        continue;
+
                     if(Metadata.HasId(field))
                         fields.Add(field);
                 }

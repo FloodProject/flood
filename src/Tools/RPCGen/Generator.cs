@@ -203,6 +203,48 @@ namespace Flood.Tools.RPCGen
             return parameters;
         }
 
+        public void GenerateDataObjectFactory(List<Type> types)
+        {
+            GenerateUsings();
+
+            WriteLine("public class DataObjectFactory : IDataObjectFactory");
+            WriteStartBraceIndent();
+            WriteLine("public IObservableDataObject CreateDataObject(ushort id)");
+            WriteStartBraceIndent();
+            WriteLine("switch(id)");
+            WriteStartBraceIndent();
+            foreach (var type in types)
+            {
+                ushort id;
+                if (!Metadata.TryGetDataObjectId(type, out id))
+                    continue;
+                WriteLine("case {0}:", id);
+                WriteLineIndent("return new {0}();", GetStubsClassName(type, true));
+            }
+            WriteLine("default:");
+            WriteLineIndent("throw new NotImplementedException();");
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+            NewLine();
+            WriteLine("public  IObservableDataObject CreateDataObjectReference(ushort id, RPCPeer peer, int remoteId, ReferenceManager referenceManager)");
+            WriteStartBraceIndent();
+            WriteLine("switch(id)");
+            WriteStartBraceIndent();
+            foreach (var type in types)
+            {
+                ushort id;
+                if (!Metadata.TryGetDataObjectId(type, out id))
+                    continue;
+                WriteLine("case {0}:", id);
+                WriteLineIndent("return new {0}.Reference(peer, remoteId, referenceManager);", GetStubsClassName(type, true));
+            }
+            WriteLine("default:");
+            WriteLineIndent("throw new NotImplementedException();");
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+        }
+
 #endregion
 
 #region Generate Services

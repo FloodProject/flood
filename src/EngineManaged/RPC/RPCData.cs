@@ -31,7 +31,10 @@ namespace Flood.RPC
 
         ReferenceChanges = 10,
         ReferenceSubscribe = 11,
-        ReferenceUnsubscribe = 12
+        ReferenceUnsubscribe = 12,
+
+        ContextRequest = 13,
+        ContextResponse = 14
     }
 
     public struct RPCData

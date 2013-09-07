@@ -1,7 +1,6 @@
-﻿using Flood.RPC;
-using Flood.RPC.Serialization;
+﻿using System.Reflection;
+using Flood.RPC;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Flood.Network
@@ -20,6 +19,32 @@ namespace Flood.Network
         }
     }
 
+    public class PackageContextLoader : ContextLoader<PackageContextLoader.ContextId>
+    {
+        public class ContextId : IContextId
+        {
+            public void Write(RPCData data)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Read(RPCData data)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IContextId GetContextId(Assembly assembly)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     /// <summary>
     /// Hosts represents a node connected to the network.
     /// </summary>
@@ -33,7 +58,9 @@ namespace Flood.Network
         
         public Host()
         {
-            ServiceManager = new RPCManager(new SessionRPCPeer(null));
+            var localPeer = new SessionRPCPeer(null);
+            var contextLoader = new PackageContextLoader();
+            ServiceManager = new RPCManager(localPeer, contextLoader);
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)

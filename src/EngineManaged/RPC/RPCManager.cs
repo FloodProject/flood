@@ -10,12 +10,14 @@ namespace Flood.RPC
         public ServiceManager ServiceManager { get; private set; }
         public DelegateManager DelegateManager { get; private set; }
         public ReferenceManager ReferenceManager  { get; private set; }
+        public ContextManager ContextManager { get; private set; }
 
-        public RPCManager(RPCPeer local)
+        public RPCManager(RPCPeer local, IContextLoader contextLoader)
         {
             ServiceManager = new ServiceManager(this);
             DelegateManager = new DelegateManager(this);
             ReferenceManager = new ReferenceManager(this);
+            ContextManager = new ContextManager(this, contextLoader);
 
             Local = local;
         }
@@ -50,6 +52,10 @@ namespace Flood.RPC
                 case RPCDataType.ReferenceSubscribe:
                 case RPCDataType.ReferenceUnsubscribe:
                     ReferenceManager.Process(data);
+                    return;
+                case RPCDataType.ContextRequest:
+                case RPCDataType.ContextResponse:
+                    ContextManager.Process(data);
                     return;
                 default:
                     Debug.Assert(false);

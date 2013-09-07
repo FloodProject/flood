@@ -1,12 +1,7 @@
-﻿using Flood;
-using Flood.RPC;
+﻿using Flood.RPC;
 using Flood.RPC.Serialization;
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RPCGen.Tests.Services
@@ -14,6 +9,34 @@ namespace RPCGen.Tests.Services
 
     public class Helper
     {
+        class MockContextLoader : ContextLoader<MockContextLoader.MockContextId>
+        {
+            public struct MockContextId : IContextId
+            {
+                public string AssemblyFullName;
+
+                public void Write(RPCData data)
+                {
+                    data.Serializer.WriteString(AssemblyFullName);
+                }
+
+                public void Read(RPCData data)
+                {
+                    AssemblyFullName = data.Serializer.ReadString();
+                }
+            }
+
+            public override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IContextId GetContextId(Assembly assembly)
+            {
+                return new MockContextId { AssemblyFullName = assembly.FullName };
+            }
+        }
+
         class MockRPCPeer : RPCPeer
         {
             public RPCManager Manager;
@@ -52,18 +75,29 @@ namespace RPCGen.Tests.Services
             }
         }
 
+        private static int peerCounter = 1;
+
         /// Gets a service interface proxy for a given implementation
         public static T GetProxy<T>(T service)
         {
-            var localPeer = new MockRPCPeer(null, 1);
-            var serviceManager = new RPCManager(localPeer);
-            localPeer.Manager = serviceManager;
-            
-            var remotePeer = new MockRPCPeer(serviceManager, 2);
+            var serviceManager = CreateRPCManager();
+            var remotePeer = CreatePeer(serviceManager);
             
             var serviceImpl = serviceManager.ServiceManager.GetCreateImplementation(service);
 
             return serviceManager.GetService<T>(remotePeer, serviceImpl.LocalId);
+        }
+
+        public static RPCManager CreateRPCManager()
+        {
+            var localPeer = CreatePeer(null);
+            var contextLoader = new MockContextLoader();
+            return localPeer.Manager = new RPCManager(localPeer, contextLoader);
+        }
+
+        public static MockRPCPeer CreatePeer(RPCManager rpcManager)
+        {
+            return new MockRPCPeer(rpcManager, peerCounter++);
         }
     }
 }
