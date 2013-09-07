@@ -29,7 +29,7 @@ namespace Flood.RPC
             where T : RPCDelegateImpl, new()
         {
             var rpcDelegate = RPCManager.DelegateManager.CreateDelegateImpl<T>(del);
-            var data = RPCData.Create(this, RPCDataType.EventSubscribe);
+            var data = new RPCData(Peer, RPCManager, LocalId, RemoteId, RPCDataType.EventSubscribe);
             data.Serializer.WriteI32(eventId);
             data.Serializer.WriteI32(rpcDelegate.LocalId);
             data.Dispatch();
@@ -41,7 +41,7 @@ namespace Flood.RPC
         {
             var delegateId = eventIdsDelegates[eventId];
 
-            var data = RPCData.Create(this, RPCDataType.EventUnsubscribe);
+            var data = new RPCData(Peer, RPCManager, LocalId, RemoteId, RPCDataType.EventUnsubscribe);
             data.Serializer.WriteI32(eventId);
             data.Serializer.WriteI32(delegateId);
             data.Dispatch();
@@ -52,7 +52,7 @@ namespace Flood.RPC
         public RPCData.Call CreateCall(int methodId)
         {
             var callId = callProcessor.GetNextCallId();
-            return new RPCData.Call(callId, methodId, Peer, LocalId, RemoteId);
+            return new RPCData.Call(callId, methodId, Peer, RPCManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(RPCData.Reply reply)

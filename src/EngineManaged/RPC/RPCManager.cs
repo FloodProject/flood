@@ -15,7 +15,7 @@ namespace Flood.RPC
         {
             ServiceManager = new ServiceManager(this);
             DelegateManager = new DelegateManager(this);
-            ReferenceManager = new ReferenceManager();
+            ReferenceManager = new ReferenceManager(this);
 
             Local = local;
         }
@@ -26,7 +26,7 @@ namespace Flood.RPC
             serializer.Buffer.Write(data, 0, data.Length);
             serializer.Buffer.Position = 0;
 
-            var rpcData = new RPCData(peer, serializer);
+            var rpcData = new RPCData(peer, this, serializer);
             rpcData.Header.Read();
 
             Process(rpcData);

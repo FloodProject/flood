@@ -119,9 +119,6 @@ namespace Flood.Tools.RPCGen
                 }
             }
 
-            WriteLine("internal RPCManager RPCManager;");
-            NewLine();
-
             WriteLine("private static BitField allProperties;");
             WriteLine("static {0}()", className);
             WriteStartBraceIndent();
@@ -405,7 +402,6 @@ namespace Flood.Tools.RPCGen
             }
 
             WriteLine("var result = new {0}();", resultClassName);
-            WriteLine("result.RPCManager = RPCManager;");
             WriteLine("result.Read(response);");
 
             List<ExceptionInfo> exceptionsInfo;
@@ -446,7 +442,6 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(method))
             {
                 WriteLine("var args = new {0}();", argsClassName);
-                WriteLine("args.RPCManager = RPCManager;");
                 foreach (var param in method.GetParameters())
                     WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
                 WriteLine("args.Write(call.Data);");
@@ -620,7 +615,6 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(method))
             {
                 WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
-                WriteLine("args.RPCManager = RPCManager;");
                 WriteLine("args.Read(call.Data);");
             }
 
@@ -634,7 +628,6 @@ namespace Flood.Tools.RPCGen
             if (HasResultSerializer(method))
             {
                 WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
-                WriteLine("result.RPCManager = RPCManager;");
                 var retType = GetMethodReturnType(method);
                 if (retType != typeof(void))
                     Write("result.Success = ");
@@ -858,7 +851,6 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(methodInvoke))
             {
                 WriteLine("var args = new {0}();", argsName);
-                WriteLine("args.RPCManager = RPCManager;");
                 WriteLine("args.Read(call.Data);");
             }
 
@@ -886,7 +878,6 @@ namespace Flood.Tools.RPCGen
                     WriteLine("task.ContinueWith( t =>");
                     WriteStartBraceIndent();
                     WriteLine("var result = new {0}();", resultName);
-                    WriteLine("result.RPCManager = RPCManager;");
                     WriteLine("result.Success = t.Result;");
                     WriteLine("var reply = new RPCData.DelegateReply(call);");
                     WriteLine("result.Write(reply.Data);");
@@ -1116,12 +1107,12 @@ namespace Flood.Tools.RPCGen
                     WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
                     break;
                 case TType.Delegate:
-                    WriteLine("var del = RPCManager.DelegateManager.CreateDelegateImpl<{0}>({1});", GetDelegateImplClassName(type), varName);
+                    WriteLine("var del = {0}.RPCManager.DelegateManager.CreateDelegateImpl<{1}>({2});", dataName, GetDelegateImplClassName(type), varName);
                     WriteLine("{0}.Serializer.WriteI32(del.LocalId);", dataName);
                     // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
                     break;
                 case TType.Service:
-                    WriteLine("var serviceImpl = RPCManager.ServiceManager.GetCreateImplementation<{0}>({1});", PrettyName(type), varName);
+                    WriteLine("var serviceImpl = {0}.RPCManager.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, PrettyName(type), varName);
                     WriteLine("{0}.Serializer.WriteI32(serviceImpl.LocalId);", dataName, varName);
                     // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
@@ -1143,10 +1134,10 @@ namespace Flood.Tools.RPCGen
             {
                 WriteLine("var observable = (IObservableDataObject){0};", varName);
                 WriteLine("if(observable.IsReference)", varName);
-                WriteLineIndent("RPCManager.ReferenceManager.Publish(observable);");
+                WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
                 NewLine();
                 WriteLine("int referenceLocalId;");
-                WriteLine("if(!RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))");
+                WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
                 WriteLineIndent("referenceLocalId = 0;");
                 WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
                 NewLine();
@@ -1263,14 +1254,14 @@ namespace Flood.Tools.RPCGen
                     break;
                 case TType.Delegate:
                     WriteLine("var remoteDelegateId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("var del = RPCManager.DelegateManager.CreateDelegateProxy<{0}>({1}.Peer, remoteDelegateId);", GetDelegateProxyClassName(type), dataName);
+                    WriteLine("var del = {0}.RPCManager.DelegateManager.CreateDelegateProxy<{1}>({0}.Peer, remoteDelegateId);", dataName, GetDelegateProxyClassName(type));
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = ({1})del.Delegate;", varName, PrettyName(type));
                     break;
                 case TType.Service:
                     WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = RPCManager.GetService<{1}>({2}.Peer, remoteId);", varName, PrettyName(type), dataName);
+                    WriteLine("{0} = {1}.RPCManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, PrettyName(type), dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1291,7 +1282,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
                 if(!varExists)
                     Write("var ");
-                WriteLine("{0} = new {1}.Reference({2}.Peer, referenceRemoteId, RPCManager.ReferenceManager);", varName, className, dataName);
+                WriteLine("{0} = new {1}.Reference({2}.Peer, referenceRemoteId, {2}.RPCManager.ReferenceManager);", varName, className, dataName);
             }
             else
             {

@@ -59,13 +59,17 @@ namespace Flood.RPC
 
         private HashSet<Reference> referencesChanged;
 
-        public ReferenceManager()
+        private RPCManager RPCManager;
+
+        public ReferenceManager(RPCManager rpcManager)
         {
             referencesChanged = new HashSet<Reference>();
 
             localIdToReference = new Dictionary<int, Reference>();
             dataObjectToReference = new Dictionary<IObservableDataObject, Reference>();
             subscriptionToReference = new Dictionary<Subscription, Reference>();
+
+            RPCManager = rpcManager;
         }
 
         public void Process(RPCData data)
@@ -131,7 +135,7 @@ namespace Flood.RPC
 
                 foreach (var peer in reference.Subscribers)
                 {
-                    var peerData = RPCData.Create(peer, reference.LocalId, 0, RPCDataType.ReferenceChanges);
+                    var peerData = new RPCData(peer, RPCManager, reference.LocalId, 0, RPCDataType.ReferenceChanges);
                     // TODO: Optimize this. Dont't serialize again for each peer.
                     reference.DataObject.Write(peerData, changes);
                     peerData.Dispatch();
@@ -170,7 +174,7 @@ namespace Flood.RPC
 
             subscriptionToReference.Add(reference.Subscription, reference);
 
-            var data = RPCData.Create(peer, reference.LocalId, remoteId, RPCDataType.ReferenceSubscribe);
+            var data = new RPCData(peer, RPCManager, reference.LocalId, remoteId, RPCDataType.ReferenceSubscribe);
             data.Dispatch();
         }
 

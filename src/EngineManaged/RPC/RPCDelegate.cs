@@ -43,7 +43,7 @@ namespace Flood.RPC
         public RPCData.DelegateCall CreateCall()
         {
             var callId = callProcessor.GetNextCallId();
-            return new RPCData.DelegateCall(callId, Peer, LocalId, RemoteId);
+            return new RPCData.DelegateCall(callId, Peer, RPCManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(RPCData.DelegateReply reply)
