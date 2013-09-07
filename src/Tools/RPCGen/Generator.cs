@@ -51,7 +51,7 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             if (isObservable)
             {
-                WriteLine("public class Reference : {0}, IDataObjectReference", origClassName);
+                WriteLine("public class Reference : {0}, IDataObjectReference", className);
                 WriteStartBraceIndent();
                 WriteLine("public RPCPeer Peer { get; private set; }");
                 WriteLine("public int RemoteId { get; private set; }");
@@ -1280,9 +1280,10 @@ namespace Flood.Tools.RPCGen
             if (Metadata.IsDataObject(type))
             {
                 WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
+                WriteLine("object @ref = new {0}.Reference({1}.Peer, referenceRemoteId, {1}.RPCManager.ReferenceManager);", className, dataName);
                 if(!varExists)
                     Write("var ");
-                WriteLine("{0} = new {1}.Reference({2}.Peer, referenceRemoteId, {2}.RPCManager.ReferenceManager);", varName, className, dataName);
+                WriteLine("{0} = ({1})@ref;", varName, PrettyName(type));
             }
             else
             {
