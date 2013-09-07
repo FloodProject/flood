@@ -31,12 +31,12 @@ namespace Flood.Tools.RPCGen
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, true);
+            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type));
 
             return type.Namespace + "." + className;
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable)
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "")
         {
             if (@namespace != null)
             {
@@ -51,7 +51,7 @@ namespace Flood.Tools.RPCGen
             // Generate fields
             if (isObservable)
             {
-                WriteLine("public class Reference : {0}, IDataObjectReference", className);
+                WriteLine("public class Reference : {0}, IDataObjectReference", origClassName);
                 WriteStartBraceIndent();
                 WriteLine("public RPCPeer Peer { get; private set; }");
                 WriteLine("public int RemoteId { get; private set; }");
