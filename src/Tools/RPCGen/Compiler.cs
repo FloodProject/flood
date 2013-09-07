@@ -169,11 +169,17 @@ namespace Flood.Tools.RPCGen
 
         private void WriteGeneratorToFile(Type type, Generator gen)
         {
+            WriteGeneratorToFile(type.FullName, gen);
+        }
+
+        private void WriteGeneratorToFile(string fileName, Generator gen)
+        {
             if (string.IsNullOrEmpty(outputDir))
                 outputDir = ".";
 
             var filePath = Path.GetFullPath(outputDir);
-            var fileName = string.Format("{0}.cs", type.FullName);
+            if(!fileName.EndsWith(".cs"))
+                fileName = string.Format("{0}.cs", fileName);
 
             filePath = Path.Combine(filePath, fileName);
             File.WriteAllText(filePath, gen.ToString());
