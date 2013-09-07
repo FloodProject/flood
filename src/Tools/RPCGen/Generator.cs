@@ -1138,49 +1138,20 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateStructSerialize(Type type, string varName, string dataName)
         {
-            var implObjName = varName + "Impl";
-            implObjName = implObjName.Replace(".", "");
-
+            WriteLine("var dataObject = (IDataObject){0};", varName);
             if (Metadata.IsDataObject(type))
             {
-                WriteLine("var dataObject = (IObservableDataObject){0};", varName);
-                WriteLine("if(dataObject.IsReference)", varName);
-                WriteLineIndent("RPCManager.ReferenceManager.Publish(dataObject);");
+                WriteLine("var observable = (IObservableDataObject){0};", varName);
+                WriteLine("if(observable.IsReference)", varName);
+                WriteLineIndent("RPCManager.ReferenceManager.Publish(observable);");
                 NewLine();
                 WriteLine("int referenceLocalId;");
-                WriteLine("if(!RPCManager.ReferenceManager.TryGetLocalId(dataObject, out referenceLocalId))");
+                WriteLine("if(!RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))");
                 WriteLineIndent("referenceLocalId = 0;");
                 WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
                 NewLine();
             }
-            WriteLine("var {0} = new {1}();", implObjName, GetStubsClassName(type, true));
-            WriteLine("{0}.RPCManager = RPCManager;", implObjName);
-            GenerateStructInit(type, varName, implObjName);
-            WriteLine("{0}.Write({1});", implObjName, dataName);
-        }
-
-        /// <summary>
-        /// Generates the code to serialize a field of type struct
-        /// </summary>
-        private void GenerateStructInit(Type type, string origObjName, string destObjName, bool fromProperties = false)
-        {
-            foreach (var field in GetAllFields(type))
-            {
-                if (!Metadata.HasId(field))
-                    continue;
-
-                var origName = (fromProperties) ? ToTitleCase(field.Name) : field.Name;
-                var destName = (!fromProperties) ? ToTitleCase(field.Name) : field.Name;
-                WriteLine("{0}.{1} = {2}.{3};", destObjName, destName, origObjName, origName);
-            }
-
-            foreach (var property in GetAllProperties(type))
-            {
-                if (!Metadata.HasId(property))
-                    continue;
-
-                WriteLine("{0}.{1} = {2}.{3};", destObjName, property.Name, origObjName, property.Name);
-            }
+            WriteLine("dataObject.Write({0});", dataName);
         }
 
         /// <summary>
@@ -1313,28 +1284,23 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
         {
-            var origObjName = varName+"Impl";
             var className = GetStubsClassName(type, true);
 
             if (Metadata.IsDataObject(type))
             {
                 WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
-                WriteLine("var {0} = new {1}.Reference({2}.Peer, referenceRemoteId, RPCManager.ReferenceManager);", origObjName, className, dataName);
+                if(!varExists)
+                    Write("var ");
+                WriteLine("{0} = new {1}.Reference({2}.Peer, referenceRemoteId, RPCManager.ReferenceManager);", varName, className, dataName);
             }
             else
             {
-                WriteLine("var {0} = new {1}();", origObjName, className);
+                if(!varExists)
+                    Write("var ");
+                WriteLine("var {0} = new {1}();", varName, className);
             }
-
-            WriteLine("{0}.RPCManager = RPCManager;", origObjName);
-            WriteLine("{0}.Read({1});", origObjName, dataName);
-
-            var elemName2 = string.Format("_elem{0}", GenericIndex++);
-            WriteLine("var {0} = new {1}();", elemName2, PrettyName(type));
-            GenerateStructInit(type, origObjName, elemName2, true);
-            if (!varExists)
-                Write("var ");
-            WriteLine("{0} = {1};", varName, elemName2);
+            WriteLine("var dataObject = (IDataObject){0};", varName);
+            WriteLine("dataObject.Read({0});", dataName);
         }
 
         /// <summary>
