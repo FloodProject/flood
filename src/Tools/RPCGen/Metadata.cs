@@ -14,7 +14,7 @@ namespace RPCGen
     {
         private static bool HasAttribute(ICustomAttributeProvider info, string fullName)
         {
-            foreach (var attribute in info.GetCustomAttributes(true))
+            foreach (var attribute in info.GetCustomAttributes(false))
             {
                 if(attribute.GetType().FullName == fullName)
                     return true;
