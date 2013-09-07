@@ -127,15 +127,14 @@ namespace Flood.RPC
         {
             foreach (var reference in referencesChanged)
             {
-                var data = new RPCData();
                 var changes = reference.DataObject.GetResetChanges();
-                reference.DataObject.Write(data, changes);
 
                 foreach (var peer in reference.Subscribers)
                 {
                     var peerData = RPCData.Create(peer, reference.LocalId, 0, RPCDataType.ReferenceChanges);
-                    data.Serializer.Buffer.CopyTo(peerData.Serializer.Buffer);
-                    data.Dispatch();
+                    // TODO: Optimize this. Dont't serialize again for each peer.
+                    reference.DataObject.Write(peerData, changes);
+                    peerData.Dispatch();
                 }
             }
         }
@@ -193,11 +192,12 @@ namespace Flood.RPC
 
         public static bool Subscribe(object obj)
         {
-            var dataObject= obj as IDataObjectReference;
-            if (dataObject == null)
+            var reference = obj as IDataObjectReference;
+            var observable = obj as IObservableDataObject;
+            if (reference == null || observable == null)
                 return false;
 
-            dataObject.ReferenceManager.Subscribe(dataObject, dataObject.Peer, dataObject.RemoteId);
+            reference.ReferenceManager.Subscribe(observable, reference.Peer, reference.RemoteId);
             return true;
         }
 
