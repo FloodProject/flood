@@ -45,7 +45,9 @@ namespace Flood.Tools.RPCGen
             }
 
             var @interface = (isObservable) ? "IObservableDataObject" : "IDataObject";
-            WriteLine("public class {0} : {1}", className, @interface);
+            var structclass = (isObservable) ? "class" : "struct";
+
+            WriteLine("public {0} {1} : {2}", structclass, className, @interface);
             WriteStartBraceIndent();
 
             // Generate fields
