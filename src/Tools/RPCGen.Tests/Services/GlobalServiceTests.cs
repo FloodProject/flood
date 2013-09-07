@@ -30,7 +30,7 @@ namespace RPCGen.Tests.Services
         public void TestGlobalService()
         {
             var rpcManager = Helper.CreateRPCManager();
-            var remotePeer = Helper.CreateRemotePeer(rpcManager);
+            var remotePeer = Helper.CreatePeer(rpcManager);
 
             var globalServiceImpl = new Service();
             rpcManager.ServiceManager.GetCreateImplementation<IService>(globalServiceImpl);

@@ -37,7 +37,7 @@ namespace RPCGen.Tests.Services
             }
         }
 
-        class MockRPCPeer : RPCPeer
+        public class MockRPCPeer : RPCPeer
         {
             public RPCManager Manager;
             public int Id;
