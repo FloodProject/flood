@@ -705,12 +705,12 @@ Object* SerializerJSON::load()
 	
 	ReflectionContext* context = &deserializeContext;
 
-	json->values.pushBack(rootValue);
+	values.pushBack(rootValue);
 
 	object = DeserializeComposite(context, object);
 
-	json->values.popBack();
-	assert( json->values.empty() );
+	values.popBack();
+	assert( values.empty() );
 
 	json_decref(rootValue);
 
