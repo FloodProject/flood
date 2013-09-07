@@ -18,6 +18,21 @@ namespace Flood.RPC
                 Peer = peer;
                 RemoteId = remoteId;
             }
+
+            public override int GetHashCode()
+            {
+                return Peer.GetHashCode() ^ RemoteId.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                var subscription = obj as Subscription;
+                if (subscription == null)
+                    return false;
+
+                return subscription.RemoteId == RemoteId 
+                    && subscription.Peer == Peer;
+            }
         }
 
         private class Reference
