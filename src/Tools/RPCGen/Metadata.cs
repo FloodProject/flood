@@ -25,7 +25,8 @@ namespace RPCGen
 
         public static bool IsService(Type type)
         {
-            return HasAttribute(type, "Flood.RPC.Metadata.ServiceAttribute");
+            return HasAttribute(type, "Flood.RPC.Metadata.ServiceAttribute")
+                || HasAttribute(type, "Flood.RPC.Metadata.GlobalServiceAttribute");
         }
 
         public static bool IsDataObject(Type type)

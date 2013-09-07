@@ -14,6 +14,12 @@ namespace RPCGen.Tests
         bool Ping();
     }
 
+    [GlobalService("2633A4F6-D951-4807-BC9A-10629DD1A11C")]
+    interface IGlobalService
+    {
+        
+    }
+
     [DataObject("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
     class DataObject
     {
@@ -31,6 +37,7 @@ namespace RPCGen.Tests
         public void Service()
         {
             Assert.IsTrue(RPCGen.Metadata.IsService(typeof (IService)), "Is not a service");
+            Assert.IsTrue(RPCGen.Metadata.IsService(typeof (IGlobalService)), "Is not a service");
         }
 
         [Test]
