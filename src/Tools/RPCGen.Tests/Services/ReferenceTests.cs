@@ -14,7 +14,7 @@ namespace RPCGen.Tests.Services
     {
         #region Service
         
-        [DataObject("B5865AB2-75E2-4B29-A9C9-07385B71DE8C")]
+        [DataObject(1)]
         public class Data
         {
             [Id(1)] 

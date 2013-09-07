@@ -12,22 +12,22 @@ namespace Flood.RPC.Metadata
     [AttributeUsage(AttributeTargets.Interface)]
     public class GlobalServiceAttribute : System.Attribute
     {
-        public Guid Guid { get; private set; }
+        public ushort Id { get; private set; }
 
-        public GlobalServiceAttribute(string guid)
+        public GlobalServiceAttribute(ushort id)
         {
-            Guid = new Guid(guid);
+            Id = id;
         }
     }
 
     [AttributeUsage(AttributeTargets.Class)]
     public class DataObjectAttribute : System.Attribute
     {
-        public Guid Guid { get; private set; }
+        public ushort Id { get; private set; }
 
-        public DataObjectAttribute(string guid)
+        public DataObjectAttribute(ushort id)
         {
-            Guid = new Guid(guid);
+            Id = id;
         }
     }
 

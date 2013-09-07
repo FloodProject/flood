@@ -14,13 +14,13 @@ namespace RPCGen.Tests
         bool Ping();
     }
 
-    [GlobalService("2633A4F6-D951-4807-BC9A-10629DD1A11C")]
+    [GlobalService(1337)]
     interface IGlobalService
     {
         
     }
 
-    [DataObject("7D96CE1A-B266-44AF-9C77-85DB8479B5FB")]
+    [DataObject(1337)]
     class DataObject
     {
         [Required, Id(1337)] 
@@ -38,12 +38,20 @@ namespace RPCGen.Tests
         {
             Assert.IsTrue(RPCGen.Metadata.IsService(typeof (IService)), "Is not a service");
             Assert.IsTrue(RPCGen.Metadata.IsService(typeof (IGlobalService)), "Is not a service");
+
+            ushort id;
+            RPCGen.Metadata.TryGetGlobalServiceId(typeof(IGlobalService), out id);
+            Assert.AreEqual(1337, id, "Can not retrieve GlobalService id.");
         }
 
         [Test]
         public void DataObject()
         {
             Assert.IsTrue(RPCGen.Metadata.IsDataObject(typeof(DataObject)), "Is not a DataObject");
+
+            ushort id;
+            RPCGen.Metadata.TryGetDataObjectId(typeof(DataObject), out id);
+            Assert.AreEqual(1337, id, "Can not retrieve DataObject id.");
         }
 
         [Test]
