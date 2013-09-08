@@ -16,6 +16,7 @@ namespace Flood.RPC
 
         private Dictionary<Tuple<RPCPeer, GlobalServiceId>, RPCProxy> globalServiceProxies;
         private Dictionary<GlobalServiceId, int> localGlobalServiceIds;
+        private Dictionary<int, GlobalServiceId> stubIdToGlobalServiceId;
 
         private RPCManager RPCManager;
 
@@ -26,6 +27,7 @@ namespace Flood.RPC
             proxies = new Dictionary<Tuple<RPCPeer, int>, RPCProxy>();
             globalServiceProxies = new Dictionary<Tuple<RPCPeer, GlobalServiceId>, RPCProxy>();
             localGlobalServiceIds = new Dictionary<GlobalServiceId, int>();
+            stubIdToGlobalServiceId = new Dictionary<int, GlobalServiceId>();
 
             RPCManager = rpcMananger;
         }
@@ -33,11 +35,16 @@ namespace Flood.RPC
         internal void Process(RPCData data)
         {
             var stubId = data.Header.LocalId;
-            if (stubId == 0)
+
+            if(data.Header.CallType == RPCDataType.Call)
             {
-                var globalServiceId = GlobalServiceId.Read(data);
-                if (!localGlobalServiceIds.TryGetValue(globalServiceId, out stubId))
-                    throw new Exception("Global service unavailable.");
+                var call = RPCData.Call.Create(data);
+                if (stubId == 0)
+                    if (!localGlobalServiceIds.TryGetValue(call.GlobalServiceId, out stubId))
+                        throw new Exception("Global service unavailable.");
+
+                ((RPCImpl)stubs[stubId]).ProcessCall(call);
+                return;
             }
 
             var stub = stubs[stubId];
@@ -47,9 +54,6 @@ namespace Flood.RPC
             {
                 switch (data.Header.CallType)
                 {
-                    case RPCDataType.Call:
-                        impl.ProcessCall(RPCData.Call.Create(data));
-                        return;
                     case RPCDataType.EventSubscribe:
                         impl.ProcessEventSubscribe(data);
                         return;
@@ -129,7 +133,13 @@ namespace Flood.RPC
             if(globalServiceProxies.TryGetValue(tuple, out globalServiceProxy))
                 return (T) (object) globalServiceProxy;
 
-            return GetRemoteService<T>(peer, 0);
+            var ret = GetCreateProxy<T>(peer, 0);
+            var proxy = (RPCProxy) (object) ret;
+
+            globalServiceProxies.Add(tuple, proxy);
+            stubIdToGlobalServiceId.Add(proxy.LocalId, globalServiceId);
+
+            return ret;
         }
 
         public RPCImpl GetCreateImplementation<T>(T service)
@@ -161,6 +171,7 @@ namespace Flood.RPC
             {
                 var globalServiceId = RPCManager.ContextManager.GetGlobalServiceId(typeof(T));
                 localGlobalServiceIds.Add(globalServiceId, impl.LocalId);
+                stubIdToGlobalServiceId.Add(implId, globalServiceId);
             }
 
             return impl;
@@ -195,6 +206,15 @@ namespace Flood.RPC
         {
             var globalServiceId = RPCManager.ContextManager.GetGlobalServiceId(type);
             return localGlobalServiceIds.ContainsKey(globalServiceId);
+        }
+
+        internal GlobalServiceId GetGlobalServiceId(int stubId)
+        {
+            GlobalServiceId globalServiceId;
+            if(stubIdToGlobalServiceId.TryGetValue(stubId, out globalServiceId))
+                return globalServiceId;
+
+            throw new Exception("Global service unavailable.");
         }
     }
 }

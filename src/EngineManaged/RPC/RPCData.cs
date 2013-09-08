@@ -116,6 +116,7 @@ namespace Flood.RPC
             public RPCData Data;
             public int Id;
             public int MethodId;
+            internal GlobalServiceId GlobalServiceId;
 
             internal Call(int id, int methodId, RPCPeer peer, RPCManager rpcManager, int localId, int remoteId)
             {
@@ -125,6 +126,16 @@ namespace Flood.RPC
 
                 Data.Serializer.WriteI32(id);
                 Data.Serializer.WriteI32(methodId);
+
+                if (remoteId == 0)
+                {
+                    GlobalServiceId = rpcManager.ServiceManager.GetGlobalServiceId(localId);
+                    GlobalServiceId.Write(Data);
+                }
+                else
+                {
+                    GlobalServiceId = default(GlobalServiceId);
+                }
             }
 
             internal static Call Create(RPCData data)
@@ -134,6 +145,9 @@ namespace Flood.RPC
                 
                 call.Id = data.Serializer.ReadI32();
                 call.MethodId = data.Serializer.ReadI32();
+
+                if (data.Header.LocalId == 0)
+                    call.GlobalServiceId = GlobalServiceId.Read(data);
 
                 return call;
             }
