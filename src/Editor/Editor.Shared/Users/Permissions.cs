@@ -4,7 +4,7 @@ using Flood.RPC.Metadata;
 
 namespace Flood.Editor.Shared
 {
-    [DataObject("FA7AE0C8-9D8E-4308-A7F0-302E1F74785B")]
+    [DataObject(4)]
     public class Permissions
     {
         [Id(0)]

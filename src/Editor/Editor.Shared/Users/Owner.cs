@@ -2,7 +2,7 @@
 
 namespace Flood.Editor.Shared
 {
-    [DataObject("FDEBE89A-3011-4C5C-977B-F4373D62DF52")]
+    [DataObject(1)]
     public class Owner : ProjectUser
     {
         public Owner(User sysUser, Project proj)

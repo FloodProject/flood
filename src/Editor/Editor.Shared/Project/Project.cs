@@ -11,7 +11,7 @@ namespace Flood.Editor.Shared
         Game
     }
 
-    [DataObject("BDA5FBCD-8D57-435A-B6D0-3DF52EB71FE4")]
+    [DataObject(7)]
     public class Project
     {
         /// <summary>
