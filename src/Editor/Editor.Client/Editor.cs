@@ -28,11 +28,6 @@ namespace Flood.Editor.Client
 
             ServerManager = new ServerManager();
             ServerManager.CreateBuiltinServer();
-
-            var rpcManager = new RPCManager(new SessionRPCPeer(null));
-            var packageLoader = new PackageLoader("Packages", rpcManager);
-
-            packageLoader.LoadPackage(new PackageName("TextEditor.0.0.0"));
         }
 
         public void Dispose()
