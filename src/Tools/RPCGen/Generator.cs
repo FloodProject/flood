@@ -31,12 +31,13 @@ namespace Flood.Tools.RPCGen
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type));
+            var baseDataObject = GetBaseDataObject(type);
+            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type), baseDataObject);
 
             return type.Namespace + "." + className;
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "")
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "", Type baseDataObject = null)
         {
             if (@namespace != null)
             {
@@ -132,24 +133,28 @@ namespace Flood.Tools.RPCGen
             NewLine();
 
             // Generate write method
-            GenerateDataObjectWrite(parameters);
+            GenerateDataObjectWrite(parameters, baseDataObject);
             NewLine();
 
             // Generate read method
-            GenerateDataObjectRead(parameters);
+            GenerateDataObjectRead(parameters, baseDataObject);
 
             WriteCloseBraceIndent();
             if (@namespace != null)
                 WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters)
+        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, Type baseType)
         {
             parameters = ConvertToActualParameters(parameters);
 
             WriteLine("public void Write(RPCData data)");
             WriteStartBraceIndent();
             WriteLine("Write(data, allProperties);");
+
+            if (baseType != null)
+                WriteLine("(({0}) (object) this).Write(data);", GetStubsClassName(baseType, true));
+
             WriteCloseBraceIndent();
             NewLine();
             WriteLine("public void Write(RPCData data, BitField properties)");
@@ -166,7 +171,7 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters)
+        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters, Type baseType)
         {
             WriteLine("public void Read(RPCData data)");
             WriteStartBraceIndent();
@@ -180,6 +185,11 @@ namespace Flood.Tools.RPCGen
                 GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
                 WriteCloseBraceIndent();
             }
+            NewLine();
+
+            if (baseType != null)
+                WriteLine("(({0}) (object) this).Read(data);", GetStubsClassName(baseType, true));
+
             WriteCloseBraceIndent();
         }
 
@@ -188,7 +198,7 @@ namespace Flood.Tools.RPCGen
             var parameters = new List<Parameter>();
             foreach(var field in GetAllFields(type))
             {
-                if (!Metadata.HasId(field))
+                if (!Metadata.HasId(field) || field.DeclaringType != type)
                     continue;
 
                 parameters.Add(new Parameter(field));
@@ -196,13 +206,25 @@ namespace Flood.Tools.RPCGen
 
             foreach (var property in GetAllProperties(type))
             {
-                if (!Metadata.HasId(property))
+                if (!Metadata.HasId(property) || property.DeclaringType != type)
                     continue;
                 
                 parameters.Add(new Parameter(property));
             }
 
             return parameters;
+        }
+
+        public Type GetBaseDataObject(Type type)
+        {
+            while (type.BaseType != null)
+            {
+                type = type.BaseType;
+                if(Metadata.IsDataObject(type))
+                    return type;
+            }
+
+            return null;
         }
 
         public void GenerateDataObjectFactory(List<Type> types)
@@ -1171,21 +1193,25 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        private void GenerateStructSerialize(Type type, string varName, string dataName)
+        private void GenerateStructSerialize(Type type, string varName, string dataName, bool isBase = false)
         {
-            WriteLine("var dataObject = (IDataObject){0};", varName);
-            if (Metadata.IsDataObject(type))
+            if (!isBase)
             {
-                WriteLine("var observable = (IObservableDataObject){0};", varName);
-                WriteLine("if(observable.IsReference)", varName);
-                WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
-                NewLine();
-                WriteLine("int referenceLocalId;");
-                WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
-                WriteLineIndent("referenceLocalId = 0;");
-                WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
-                NewLine();
+                WriteLine("var dataObject = (IDataObject){0};", varName);
+                if (Metadata.IsDataObject(type))
+                {
+                    WriteLine("var observable = (IObservableDataObject){0};", varName);
+                    WriteLine("if(observable.IsReference)", varName);
+                    WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
+                    NewLine();
+                    WriteLine("int referenceLocalId;");
+                    WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
+                    WriteLineIndent("referenceLocalId = 0;");
+                    WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
+                    NewLine();
+                }
             }
+           
             WriteLine("dataObject.Write({0});", dataName);
         }
 
@@ -1317,24 +1343,27 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
-        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
+        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists, bool isBase = false)
         {
-            var className = GetStubsClassName(type, true);
-
-            if (Metadata.IsDataObject(type))
+            if (!isBase)
             {
-                WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
-                WriteLine("object @ref = new {0}.Reference({1}.Peer, referenceRemoteId, {1}.RPCManager.ReferenceManager);", className, dataName);
-                if(!varExists)
-                    Write("var ");
-                WriteLine("{0} = ({1})@ref;", varName, PrettyName(type));
+                var className = GetStubsClassName(type, true);
+                if (Metadata.IsDataObject(type))
+                {
+                    WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
+                    WriteLine("object @ref = new {0}.Reference({1}.Peer, referenceRemoteId, {1}.RPCManager.ReferenceManager);", className, dataName);
+                    if(!varExists)
+                        Write("var ");
+                    WriteLine("{0} = ({1})@ref;", varName, PrettyName(type));
+                }
+                else
+                {
+                    if(!varExists)
+                        Write("var ");
+                    WriteLine("var {0} = new {1}();", varName, className);
+                }
             }
-            else
-            {
-                if(!varExists)
-                    Write("var ");
-                WriteLine("var {0} = new {1}();", varName, className);
-            }
+            
             WriteLine("var dataObject = (IDataObject){0};", varName);
             WriteLine("dataObject.Read({0});", dataName);
         }
