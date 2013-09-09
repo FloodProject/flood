@@ -17,18 +17,11 @@
 #endif
 
 //---------------------------------------------------------------------//
-// API Exports
+// Namespaces
 //---------------------------------------------------------------------//
 
-#if defined(API_CORE_DLL) && defined(API_CORE_DLL_EXPORT)
-	#define API_CORE API_EXPORT
-#elif defined(API_CORE_DLL)
-	#define API_CORE API_IMPORT
-#else
-	#define API_CORE
-#endif
-
-#undef NAMESPACE_CORE_DEFINED
+#define FLD_NAMESPACE_BEGIN
+#define FLD_NAMESPACE_END
 
 #ifdef NAMESPACE_CORE_DEFINED
 #define NAMESPACE_CORE flood
@@ -42,6 +35,18 @@
 #else
 #define NAMESPACE_CORE_BEGIN
 #define NAMESPACE_CORE_END
+#endif
+
+//---------------------------------------------------------------------//
+// API Exports
+//---------------------------------------------------------------------//
+
+#if defined(API_CORE_DLL) && defined(API_CORE_DLL_EXPORT)
+	#define API_CORE API_EXPORT
+#elif defined(API_CORE_DLL)
+	#define API_CORE API_IMPORT
+#else
+	#define API_CORE
 #endif
 
 #ifndef SWIG
