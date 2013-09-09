@@ -38,8 +38,6 @@ public:
 	void* userdata; //!< task function arguments
 };
 
-
-
 enum class TaskState
 {
 	Added,

@@ -11,11 +11,11 @@
 #include "Core/String.h"
 #include <cstdio>
 
-NAMESPACE_CORE_BEGIN
-
 typedef struct zzip_dir ZZIP_DIR;
 typedef struct zzip_file ZZIP_FILE;
 typedef void CURL;
+
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 

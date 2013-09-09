@@ -10,8 +10,8 @@
 #ifdef ENABLE_PHYSICS_BULLET
 
 #include "Core/References.h"
-#include "Engine/Subsystem.h"
 #include "Core/Math/Vector.h"
+#include "Engine/Subsystem.h"
 
 class btCollisionConfiguration;
 class btBroadphaseInterface;
