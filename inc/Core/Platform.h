@@ -166,11 +166,21 @@ typedef uint32 uint;
 #define FLD_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 //---------------------------------------------------------------------//
-// Types and Data structures
+// Error handling
 //---------------------------------------------------------------------//
 
 #include <cassert>
-#define unreachable(s) assert("Unreachable code: " # s)
+
+/// Marks that the current location is not supposed to be reachable.
+/// Use this instead of assert(0).  It conveys intent more clearly and
+/// allows compilers to omit some unnecessary code.
+#ifdef BUILD_DEBUG
+#define fld_unreachable(msg) \
+    assert("Unreachable code: " # msg); \
+    FLD_BUILTIN_UNREACHABLE
+#else
+#define fld_unreachable(msg) FLD_BUILTIN_UNREACHABLE
+#endif
 
 //---------------------------------------------------------------------//
 // Forward-declaration Helpers

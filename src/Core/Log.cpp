@@ -133,7 +133,9 @@ static void LogProcess(Log* log, const char* msg, va_list args, LogLevel level)
 	case LogLevel::Info:
 	case LogLevel::Warn:
 	case LogLevel::Error:
-		unreachable("Invalid log level");
+		break;
+	default:
+	fld_unreachable("Invalid log level");
 	};
 }
 
