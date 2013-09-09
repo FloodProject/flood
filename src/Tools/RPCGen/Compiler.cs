@@ -237,7 +237,8 @@ namespace Flood.Tools.RPCGen
                 {
                     GenerateExecutable = false,
                     OutputAssembly = generatedAssembly.DllPath,
-                    IncludeDebugInformation = true
+                    IncludeDebugInformation = true,
+                    CompilerOptions = "/unsafe"
                 };
 
                 references.Add(outputPath);
