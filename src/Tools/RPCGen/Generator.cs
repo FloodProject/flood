@@ -1248,26 +1248,35 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to serialize a field of type struct
         /// </summary>
-        private void GenerateStructSerialize(Type type, string varName, string dataName, bool isBase = false)
+        private void GenerateStructSerialize(Type type, string varName, string dataName)
         {
-            if (!isBase)
+            if (Metadata.IsDataObject(type))
             {
-                WriteLine("var dataObject = (IDataObject){0};", varName);
-                if (Metadata.IsDataObject(type))
-                {
-                    WriteLine("var observable = (IObservableDataObject){0};", varName);
-                    WriteLine("if(observable.IsReference)", varName);
-                    WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
-                    NewLine();
-                    WriteLine("int referenceLocalId;");
-                    WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
-                    WriteLineIndent("referenceLocalId = 0;");
-                    WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
-                    NewLine();
-                }
+                WriteLine("var observable = (IObservableDataObject){0};", varName);
+                WriteLine("if(observable.IsReference)", varName);
+                WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
+                NewLine();
+                WriteLine("int referenceLocalId;");
+                WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
+                WriteLineIndent("referenceLocalId = 0;");
+                WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
+                NewLine();
+
+                WriteLine("var baseType = typeof({0});", GetTypeName(type));
+                WriteLine("ushort remoteContextId;");
+                WriteLine("ushort dataObjectId;");
+                WriteLine("var polymorphicType = {0}.RPCManager.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
+                WriteLine("var isPolymorphic = polymorphicType != baseType;");
+                WriteLine("{0}.Serializer.WriteBool(isPolymorphic);", dataName);
+                WriteLine("if(isPolymorphic)");
+                WriteStartBraceIndent();
+                WriteLine("{0}.Serializer.WriteI16((short)remoteContextId);", dataName);
+                WriteLine("{0}.Serializer.WriteI16((short)dataObjectId);", dataName);
+                WriteCloseBraceIndent();
+                NewLine();
             }
-           
-            WriteLine("dataObject.Write({0});", dataName);
+
+            WriteLine("{0}.Write({1});", varName, dataName);
         }
 
         /// <summary>
@@ -1398,29 +1407,34 @@ namespace Flood.Tools.RPCGen
         /// <summary>
         /// Generates the code to deserialize a field of type struct
         /// </summary>
-        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists, bool isBase = false)
+        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
         {
-            if (!isBase)
+            if (!varExists)
+                WriteLine("{0} {1};", GetTypeName(type), varName);
+
+            var className = GetStubsClassName(type, true);
+            if (Metadata.IsDataObject(type))
             {
-                var className = GetStubsClassName(type, true);
-                if (Metadata.IsDataObject(type))
-                {
-                    WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("object @ref = new {0}.Reference({1}.Peer, referenceRemoteId, {1}.RPCManager.ReferenceManager);", className, dataName);
-                    if(!varExists)
-                        Write("var ");
-                    WriteLine("{0} = ({1})@ref;", varName, PrettyName(type));
-                }
-                else
-                {
-                    if(!varExists)
-                        Write("var ");
-                    WriteLine("var {0} = new {1}();", varName, className);
-                }
+                WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
+                WriteLine("var isPolymorphic = {0}.Serializer.ReadBool();", dataName);
+                WriteLine("if(isPolymorphic)");
+                WriteStartBraceIndent();
+                WriteLine("var contextId = {0}.Serializer.ReadI16();", dataName);
+                WriteLine("var dataObjectId = {0}.Serializer.ReadI16();", dataName);
+                WriteLine("var dataObjectFactory = {0}.RPCManager.ContextManager.GetDataObjectFactory(contextId);", dataName);
+                WriteLine("{0} = ({1}) (object) dataObjectFactory.CreateDataObjectReference((ushort) dataObjectId, {2}.Peer, referenceRemoteId, {2}.RPCManager.ReferenceManager);", varName, GetTypeName(type), dataName);
+                WriteCloseBraceIndent();
+                WriteLine("else");
+                WriteStartBraceIndent();
+                WriteLine("{0} = ({1}) (object) new {2}.Reference({3}.Peer, referenceRemoteId, {3}.RPCManager.ReferenceManager);", varName, GetTypeName(type), className, dataName);
+                WriteCloseBraceIndent();
             }
-            
-            WriteLine("var dataObject = (IDataObject){0};", varName);
-            WriteLine("dataObject.Read({0});", dataName);
+            else
+            {
+                WriteLine(" {0} = new {1}();", varName, className);
+            }
+
+            WriteLine("{0}.Read({1});", varName, dataName);
         }
 
         /// <summary>
