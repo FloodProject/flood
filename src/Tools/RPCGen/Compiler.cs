@@ -129,7 +129,7 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Method: {0}", method.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             gen.GenerateService(type);
 
             WriteGeneratorToFile(type, gen);
@@ -145,7 +145,7 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             var dataObjectFullName = gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
@@ -163,7 +163,7 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
@@ -171,7 +171,7 @@ namespace Flood.Tools.RPCGen
 
         private void WriteDataObjectFactory()
         {
-            var gen = new Generator();
+            var gen = new Generator(assembly);
             gen.GenerateDataObjectFactory(RpcTypes);
 
             WriteGeneratorToFile("DataObjectFactory", gen);

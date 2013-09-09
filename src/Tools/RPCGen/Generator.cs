@@ -18,10 +18,14 @@ namespace Flood.Tools.RPCGen
     {
         private Dictionary<Type, string> delegateNames;
         private int delegateCounter;
+
+        private Assembly currentAssembly;
  
-        public Generator()
+        public Generator(Assembly currentAssembly)
         {
             delegateNames = new Dictionary<Type, string>();
+
+            this.currentAssembly = currentAssembly;
         }
 
 #region Generate Data Objects
