@@ -173,6 +173,32 @@ namespace Flood.RPC
             return GetCreateContext(assembly).ContextId;
         }
 
+        public Type GetPeerPolymorphicType(RPCPeer peer, Type type, Type baseType, out ushort remoteContextId, out ushort dataObjectId)
+        {
+            remoteContextId = 0;
+            dataObjectId = 0;
+
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            if (type == baseType)
+                return type;
+
+            var dataObjectAttribute = type.GetCustomAttribute<DataObjectAttribute>(false);
+            if (dataObjectAttribute != null)
+            {
+                dataObjectId = dataObjectAttribute.Id;
+
+                var context = GetCreateContext(type.Assembly);
+
+                if (context.RemoteIds != null &&
+                    context.RemoteIds.TryGetValue(peer, out remoteContextId))
+                    return type;
+            }
+
+            return GetPeerPolymorphicType(peer, type.BaseType, baseType, out remoteContextId, out dataObjectId);
+        }
+
         private ContextInfo GetCreateContext(Assembly assembly)
         {
             ContextInfo context;
