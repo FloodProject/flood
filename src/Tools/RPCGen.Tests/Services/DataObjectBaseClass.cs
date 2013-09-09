@@ -38,6 +38,7 @@ namespace RPCGen.Tests.Services
             {
                 Data.BaseNumber = baseNumber;
                 Data.Number = number;
+                ReferenceManager.Publish(Data);
                 return Data;
             }
         }
@@ -54,6 +55,28 @@ namespace RPCGen.Tests.Services
             Assert.IsTrue(task.Wait(100));
             Assert.AreEqual(task.Result.Number, 1337);
             Assert.AreEqual(task.Result.BaseNumber, 8453);
+        }
+
+        [Test]
+        public void TestDataObjectBaseRef()
+        {
+            var impl = new Service();
+            var proxy = Helper.GetProxy<IService>(impl);
+
+            var task = proxy.GetDataObject(8453, 1337);
+
+            var result = task.Result;
+            Assert.IsTrue(task.Wait(100));
+            Assert.AreEqual(1337, result.Number);
+            Assert.AreEqual(8453, result.BaseNumber);
+
+            Assert.IsTrue(ReferenceManager.Subscribe(result));
+
+            impl.Data.BaseNumber = 1;
+
+            ((RPCProxy)proxy).RPCManager.ReferenceManager.DispatchChanges();
+
+            Assert.AreEqual(1, result.BaseNumber);
         }
     }
 }
