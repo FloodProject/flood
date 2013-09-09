@@ -18,7 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 class RenderView;
 
-class API_GRAPHICS Settings
+class API_GRAPHICS FLD_VALUE_TYPE Settings
 {
 public:
 
