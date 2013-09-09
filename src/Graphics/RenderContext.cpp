@@ -72,6 +72,9 @@ void RenderContext::init()
 {
 	if( initDone ) return;
 
+	if (!backend->init())
+        return;
+
 	LogInfo( "Initializing OpenGL rendering context" );
 
 	caps = AllocateGraphics(RenderCapabilities);

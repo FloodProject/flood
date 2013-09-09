@@ -31,7 +31,7 @@ class RenderBackendGLES2 : public RenderBackend
 {
 public:
 
-	void init() OVERRIDE;
+	bool init() OVERRIDE;
 	void cleanup() OVERRIDE;
 	void checkCapabilities(RenderCapabilities*) OVERRIDE;
 	
@@ -92,7 +92,7 @@ RenderBackend* RenderCreateBackendGLES2()
 
 //-----------------------------------//
 
-void RenderBackendGLES2::init()
+bool RenderBackendGLES2::init()
 {
 	#pragma TODO("Remove GLEW and check needed extensions manually")
 
@@ -103,13 +103,15 @@ void RenderBackendGLES2::init()
 	{
 		const GLubyte* str = glewGetErrorString(status);
 		LogError( "Failed to initialize GLEW: %s", str );
-		return;
+		return false;
 	}
 
 	LogInfo( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
 
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_CULL_FACE );
+
+    return true;
 }
 
 //-----------------------------------//
