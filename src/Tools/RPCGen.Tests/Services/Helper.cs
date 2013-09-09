@@ -26,9 +26,9 @@ namespace RPCGen.Tests.Services
                 }
             }
 
-            public override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
+            public async override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
             {
-                throw new NotImplementedException();
+                return typeof(Helper).Assembly;
             }
 
             public override IContextId GetContextId(Assembly assembly)
