@@ -537,7 +537,7 @@ namespace Flood.Tools.RPCGen
             }
 
             if (retType != typeof(void))
-                WriteLineIndent("return result.Success;");
+                WriteLine("return result.Success;");
 
             WriteCloseBraceIndent();
         }
