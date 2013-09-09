@@ -500,16 +500,22 @@ namespace Flood.Editor.Client
             m_AltGr = false;
 
             mouse = inputManager.Mouse;
-            mouse.MouseMove += ProcessMouseMove;
-            mouse.MouseDrag += ProcessMouseDrag;
-            mouse.MouseButtonPress += ProcessMouseButtonPressed;
-            mouse.MouseButtonRelease += ProcessMouseButtonReleased;
-            mouse.MouseWheelMove += ProcessMouseWheel;
+            if (mouse != null)
+            {
+                mouse.MouseMove += ProcessMouseMove;
+                mouse.MouseDrag += ProcessMouseDrag;
+                mouse.MouseButtonPress += ProcessMouseButtonPressed;
+                mouse.MouseButtonRelease += ProcessMouseButtonReleased;
+                mouse.MouseWheelMove += ProcessMouseWheel;
+            }
 
             keyboard = inputManager.Keyboard;
-            keyboard.KeyPress += ProcessKeyDown;
-            keyboard.KeyRelease += ProcessKeyUp;
-            keyboard.KeyText += ProcessText;
+            if (keyboard != null)
+            {
+                keyboard.KeyPress += ProcessKeyDown;
+                keyboard.KeyRelease += ProcessKeyUp;
+                keyboard.KeyText += ProcessText;
+            }
         }
 
         ~GwenInput()
@@ -521,15 +527,21 @@ namespace Flood.Editor.Client
         {
             Log.Info("Disposing GwenInput");
 
-            mouse.MouseMove -= ProcessMouseMove;
-            mouse.MouseDrag -= ProcessMouseDrag;
-            mouse.MouseButtonPress -= ProcessMouseButtonPressed;
-            mouse.MouseButtonRelease -= ProcessMouseButtonReleased;
-            mouse.MouseWheelMove -= ProcessMouseWheel;
+            if (mouse != null)
+            {
+                mouse.MouseMove -= ProcessMouseMove;
+                mouse.MouseDrag -= ProcessMouseDrag;
+                mouse.MouseButtonPress -= ProcessMouseButtonPressed;
+                mouse.MouseButtonRelease -= ProcessMouseButtonReleased;
+                mouse.MouseWheelMove -= ProcessMouseWheel;
+            }
 
-            keyboard.KeyPress -= ProcessKeyDown;
-            keyboard.KeyRelease -= ProcessKeyUp;
-            keyboard.KeyText -= ProcessText;
+            if (keyboard != null)
+            {
+                keyboard.KeyPress -= ProcessKeyDown;
+                keyboard.KeyRelease -= ProcessKeyUp;
+                keyboard.KeyText -= ProcessText;
+            }
 
             GC.SuppressFinalize(this);
         }
