@@ -26,7 +26,7 @@ solution "Flood"
 	libdirs { libdir }
 	
 	debugdir (bindir)
-	startproject "EditorRuntime"
+	startproject "Editor"
 
 	-- Build configuration options
 
@@ -66,11 +66,12 @@ solution "Flood"
         
 	group "Editor"
 	
+		dofile( srcdir .. "/Editor/Editor/Editor.lua")
 		dofile( srcdir .. "/Editor/Editor.Client/Editor.Client.lua")
-		dofile( srcdir .. "/EditorRuntime/EditorRuntime.lua")
 		dofile( srcdir .. "/Editor/Editor.Shared/Editor.Shared.lua")
 		dofile( srcdir .. "/Editor/Editor.Server/Editor.Server.lua")
 		dofile( srcdir .. "/Editor/Editor.Tests/Editor.Tests.lua")
+		dofile( srcdir .. "/Editor/Editor.Native/Editor.Native.lua")
 
 	group "Editor/Addins"
 
