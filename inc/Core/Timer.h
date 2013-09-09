@@ -17,7 +17,7 @@ NAMESPACE_CORE_BEGIN
  * the general lower-precision timers. On POSIX platforms it'll use the
  * most high-precision timer available.
  */
-class API_CORE Timer
+class FLD_IGNORE API_CORE Timer
 {
 public:
 
