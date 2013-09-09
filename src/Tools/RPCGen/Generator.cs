@@ -31,7 +31,7 @@ namespace Flood.Tools.RPCGen
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type), type);
+            GenerateDataObjectClass(className, parameters, type.Namespace, true, GetTypeName(type), type);
 
             return type.Namespace + "." + className;
         }
@@ -98,9 +98,10 @@ namespace Flood.Tools.RPCGen
                 foreach (var param in parameters)
                 {
                     var backingFieldName = "__" + param.Name;
+                    var paramTypeName = GetTypeName(param.ParameterType);
 
-                    WriteLine("private {0} {1};", PrettyName(param.ParameterType), backingFieldName);
-                    WriteLine("public {0} {1}", PrettyName(param.ParameterType), ToTitleCase(param.Name));
+                    WriteLine("private {0} {1};", paramTypeName, backingFieldName);
+                    WriteLine("public {0} {1}", paramTypeName, ToTitleCase(param.Name));
                     WriteStartBraceIndent();
                     WriteLine("get {{ return {0}; }}", backingFieldName);
                     WriteLine("set");
@@ -137,7 +138,9 @@ namespace Flood.Tools.RPCGen
             {
                 foreach (var param in parameters)
                 {
-                    WriteLine("public {0} {1};", PrettyName(param.ParameterType), ToTitleCase(param.Name));
+                    var paramTypeName = GetTypeName(param.ParameterType);
+
+                    WriteLine("public {0} {1};", paramTypeName, ToTitleCase(param.Name));
                     NewLine();
                 }
             }
@@ -407,7 +410,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProxy(Type type)
         {
-            Write("public class Proxy : RPCProxy, {0}", PrettyName(type));
+            Write("public class Proxy : RPCProxy, {0}", GetTypeName(type));
             WriteStartBraceIndent();
 
             // Generate client constructors
@@ -430,7 +433,7 @@ namespace Flood.Tools.RPCGen
                     , GetProcedureArgsClassName(method)
                     , GetProcedureResultClassName(method)
                     , "RPCData.Call"
-                    , PrettyName(type));
+                    , GetTypeName(type));
             }
 
             foreach (var @event in type.GetEvents())
@@ -478,7 +481,7 @@ namespace Flood.Tools.RPCGen
             {
                 WriteLine("var response = await DispatchCall(call);");
                 if (method.ReturnType != typeof(Task))
-                    Write("return ");
+                    Write("return {0}", GetTypeCast(GetMethodReturnType(method)));
                 WriteLine("{0}(response);", receiveMethodName);
             }
             else
@@ -499,7 +502,7 @@ namespace Flood.Tools.RPCGen
         private void GenerateProtocolReceive(MethodInfo method, string methodName, string resultClassName)
         {
             var retType = GetMethodReturnType(method);
-            Write("private {0} {1}(RPCData response)", PrettyName(retType), methodName);
+            Write("private {0} {1}(RPCData response)", GetTypeName(retType), methodName);
             WriteStartBraceIndent();
 
             WriteLine("if (response.Header.CallType == RPCDataType.Exception)");
@@ -556,7 +559,7 @@ namespace Flood.Tools.RPCGen
             {
                 WriteLine("var args = new {0}();", argsClassName);
                 foreach (var param in method.GetParameters())
-                    WriteLine("args.{0} = {1};", ToTitleCase(param.Name), param.Name);
+                    WriteLine("args.{0} = {1} {2};", ToTitleCase(param.Name), GetTypeCastToStub(param.ParameterType), param.Name);
                 WriteLine("args.Write(call.Data);");
             }
             WriteLine("return call;");
@@ -566,7 +569,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateProxyEvent(Type type, EventInfo eventInfo)
         {
-            var eventType = PrettyName(eventInfo.EventHandlerType);
+            var eventType = GetTypeName(eventInfo.EventHandlerType);
             var eventName = eventInfo.Name;
             var eventName2 = "_" + eventName;
 
@@ -648,11 +651,11 @@ namespace Flood.Tools.RPCGen
             WriteLine("public class Impl : RPCImpl");
             WriteStartBraceIndent();
 
-            WriteLine("private readonly {0} iface_;", PrettyName(type));
+            WriteLine("private readonly {0} iface_;", GetTypeName(type));
 
             // Generate constructor
             {
-                WriteLine("public Impl({0} iface, int id)", PrettyName(type));
+                WriteLine("public Impl({0} iface, int id)", GetTypeName(type));
                 WriteLine(" : base(iface, id)");
                 WriteStartBraceIndent();
 
@@ -743,7 +746,7 @@ namespace Flood.Tools.RPCGen
                 WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
                 var retType = GetMethodReturnType(method);
                 if (retType != typeof(void))
-                    Write("result.Success = ");
+                    Write("result.Success = {0}", GetTypeCastToStub(retType));
             }
 
             // Call the service method
@@ -751,8 +754,9 @@ namespace Flood.Tools.RPCGen
             var parameters = method.GetParameters();
             for (var i = 0; i < parameters.Length; i++)
             {
+
                 var param = parameters[i];
-                Write("args.{0}", ToTitleCase(param.Name));
+                Write("{0} args.{1}", GetTypeCast(param.ParameterType), ToTitleCase(param.Name));
 
                 if (i < parameters.Length - 1)
                     Write(", ");
@@ -768,7 +772,7 @@ namespace Flood.Tools.RPCGen
                 // Write the catch part of the exception handling.
                 foreach (var exception in exceptionsInfo)
                 {
-                    WriteLine("}} catch ({0} ex{1}) {{", PrettyName(exception.Type),
+                    WriteLine("}} catch ({0} ex{1}) {{", GetTypeName(exception.Type),
                               exception.Id);
                     PushIndent();
                     WriteLine("result.Exception{0} = ex{0};", exception.Id);
@@ -793,7 +797,7 @@ namespace Flood.Tools.RPCGen
 
             var @delegate = @event.EventHandlerType;
             WriteLine("var del = RPCManager.DelegateManager.CreateDelegateProxy<{0}>(peer, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
-            WriteLine("iface_.{0} += ({1}) del.Delegate;", @event.Name, PrettyName(@delegate));
+            WriteLine("iface_.{0} += ({1}) del.Delegate;", @event.Name, GetTypeName(@delegate));
             WriteCloseBraceIndent();
         }
 
@@ -936,7 +940,7 @@ namespace Flood.Tools.RPCGen
             WriteStartBraceIndent();
             WriteLine("public {0}()", proxyName);
             WriteStartBraceIndent();
-            WriteLine("SetDelegate(new {0}(Invoke));", PrettyName(type));
+            WriteLine("SetDelegate(new {0}(Invoke));", GetTypeName(type));
             WriteCloseBraceIndent();
             GenerateProtocolMethod(methodInvoke, null, "Invoke", argsName, resultName, "RPCData.DelegateCall");
             WriteCloseBraceIndent();
@@ -972,7 +976,7 @@ namespace Flood.Tools.RPCGen
             if (IsTask(methodInvoke.ReturnType))
             {
                 if (returnType != typeof(Task))
-                    Write("var task = ({0})", PrettyName(returnType));
+                    Write("var task = ({0})", GetTypeName(returnType));
 
                 Write("Delegate.DynamicInvoke(new object[]{");
                 var parameters = methodInvoke.GetParameters();
@@ -1006,7 +1010,7 @@ namespace Flood.Tools.RPCGen
                 {
                     WriteLine("var result = new {0}({1});", resultName);
                     if (returnType != typeof(void))
-                        Write("result.Success = ({0})", PrettyName(returnType));
+                        Write("result.Success = ({0})", GetTypeName(returnType));
                 }
 
                 Write("Delegate.DynamicInvoke(new object[]{");
@@ -1225,7 +1229,7 @@ namespace Flood.Tools.RPCGen
                     // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
                     break;
                 case TType.Service:
-                    WriteLine("var serviceImpl = {0}.RPCManager.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, PrettyName(type), varName);
+                    WriteLine("var serviceImpl = {0}.RPCManager.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, GetTypeName(type), varName);
                     WriteLine("{0}.Serializer.WriteI32(serviceImpl.LocalId);", dataName, varName);
                     // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
@@ -1354,7 +1358,7 @@ namespace Flood.Tools.RPCGen
                 case TType.String:
                     var cast = "";
                     if (type.IsEnum || type == typeof(float))
-                        cast = String.Format("({0})", PrettyName(type));
+                        cast = String.Format("({0})", GetTypeName(type));
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = {1}{2}.Serializer.Read{3}();", varName, cast, dataName, thriftType.ToString());
@@ -1374,11 +1378,11 @@ namespace Flood.Tools.RPCGen
                     WriteLine("var del = {0}.RPCManager.DelegateManager.CreateDelegateProxy<{1}>({0}.Peer, remoteDelegateId);", dataName, GetDelegateProxyClassName(type));
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = ({1})del.Delegate;", varName, PrettyName(type));
+                    WriteLine("{0} = ({1})del.Delegate;", varName, GetTypeName(type));
                     break;
                 case TType.Service:
                     WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = {1}.RPCManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, PrettyName(type), dataName);
+                    WriteLine("{0} = {1}.RPCManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, GetTypeName(type), dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1427,11 +1431,11 @@ namespace Flood.Tools.RPCGen
 
             if (type.IsArray)
             {
-                WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(name), PrettyName(listElemType), listName);
+                WriteLine("{0} = new {1}[{2}.Count];", ToTitleCase(name), GetTypeName(listElemType), listName);
             }
             else
             {
-                WriteLine("{0} = new {1}();", ToTitleCase(name), PrettyName(type));
+                WriteLine("{0} = new {1}();", ToTitleCase(name), GetTypeName(type));
             }
 
             var iterName = string.Format("_i{0}", GenericIndex++);
@@ -1465,7 +1469,7 @@ namespace Flood.Tools.RPCGen
             var mapElemType2 = type.GetGenericArguments()[1];
 
             WriteLine("{0} = new {1}();", ToTitleCase(name),
-                      PrettyName(type));
+                      GetTypeName(type));
 
             var mapName = string.Format("_set{0}", GenericIndex++);
             WriteLine("var {0} = {1}.Serializer.ReadMapBegin();", mapName, dataName);
@@ -1526,6 +1530,30 @@ namespace Flood.Tools.RPCGen
             }
 
             return name.Replace("+", "_") + "Stubs";
+        }
+
+        private string GetTypeName(Type type)
+        {
+            if (type.Assembly == currentAssembly && Metadata.IsDataObject(type))
+                return GetStubsClassName(type, true);
+
+            return PrettyName(type);
+        }
+
+        private string GetTypeCast(Type type)
+        {
+            if (type.Assembly == currentAssembly && Metadata.IsDataObject(type))
+                return string.Format("({0})(object)", PrettyName(type));
+
+            return "";
+        }
+
+        private string GetTypeCastToStub(Type type)
+        {
+            if (type.Assembly == currentAssembly && Metadata.IsDataObject(type))
+                return string.Format("({0})(object)", GetTypeName(type));
+
+            return "";
         }
 
         /// <summary>
