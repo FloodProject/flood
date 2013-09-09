@@ -46,6 +46,8 @@ namespace Flood.Editor.Client.Gui
             var resMan = FloodEngine.GetEngine().ResourceManager;
             var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
             var imageHandle = resMan.LoadResource<Image>(options);
+            if (imageHandle.Id == 0)
+                return;
 
             Skin = new TexturedSkin(renderer, imageHandle, defaultFont);
             Canvas = new Canvas(Skin);
