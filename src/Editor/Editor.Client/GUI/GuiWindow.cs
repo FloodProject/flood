@@ -8,11 +8,6 @@ namespace Flood.Editor.Client.Gui
     public abstract class GuiWindow : IDisposable
     {
         /// <summary>
-        /// Native GUI window.
-        /// </summary>
-        public Window NativeWindow  { get; set; }
-
-        /// <summary>
         /// Renderer of the GUI.
         /// </summary>
         public Renderer Renderer { get; private set; }
