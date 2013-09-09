@@ -7,7 +7,7 @@
 */
 
 #include "Engine/API.h"
-#include "Engine/RectangleBinPack/MaxRectsBinPack.h"
+#include "Engine/Texture/BinPacking.h"
 
 using namespace std;
 

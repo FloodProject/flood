@@ -9,7 +9,7 @@
 
 #include "Engine/API.h"
 #include "Graphics/Resources/Image.h"
-#include "Engine/RectangleBinPack/MaxRectsBinPack.h"
+#include "Engine/Texture/BinPacking.h"
 
 NAMESPACE_ENGINE_BEGIN
 
