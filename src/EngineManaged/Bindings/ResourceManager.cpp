@@ -189,6 +189,7 @@ Flood::ResourceLoader^ Flood::ResourceManager::FindLoader(System::String^ extens
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(extension);
     auto __ret = ((::ResourceManager*)NativePtr)->findLoader(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::ResourceLoader((::ResourceLoader*)__ret);
 }
 
@@ -231,6 +232,7 @@ void Flood::ResourceManager::AsynchronousLoading::set(bool value)
 Flood::Archive^ Flood::ResourceManager::Archive::get()
 {
     auto __ret = ((::ResourceManager*)NativePtr)->getArchive();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Archive((::Archive*)__ret);
 }
 
@@ -420,6 +422,7 @@ Flood::ResourceHandle<T> Flood::ResourceManager::CreateResource()
 Flood::ResourceManager^ Flood::FloodResourceManager::GetResourceManager()
 {
     auto __ret = ::GetResourceManager();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
 }
 

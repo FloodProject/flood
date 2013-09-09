@@ -62,6 +62,7 @@ Flood::SessionState Flood::Session::State::get()
 Flood::Peer^ Flood::Session::Peer::get()
 {
     auto __ret = ((::Session*)NativePtr)->getPeer();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Peer((::Peer*)__ret);
 }
 

@@ -30,6 +30,10 @@ namespace Flood
         Keyboard(System::IntPtr native);
         Keyboard();
 
+        property Flood::InputDeviceType Type
+        {
+            Flood::InputDeviceType get();
+        }
         property System::Collections::Generic::List<bool>^ KeyState
         {
             System::Collections::Generic::List<bool>^ get();

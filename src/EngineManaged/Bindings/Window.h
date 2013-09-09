@@ -95,6 +95,30 @@ namespace Flood
             Flood::Settings get();
         }
     private:
+        delegate void _IdleDelegate();
+        _IdleDelegate^ _IdleDelegateInstance;
+        void _IdleRaise();
+        System::Action^ _Idle;
+    public:
+        event System::Action^ Idle
+        {
+            void add(System::Action^ evt);
+            void remove(System::Action^ evt);
+            void raise();
+        }
+    private:
+        delegate void _RenderDelegate();
+        _RenderDelegate^ _RenderDelegateInstance;
+        void _RenderRaise();
+        System::Action^ _Render;
+    public:
+        event System::Action^ Render
+        {
+            void add(System::Action^ evt);
+            void remove(System::Action^ evt);
+            void raise();
+        }
+    private:
         delegate void _WindowCloseDelegate();
         _WindowCloseDelegate^ _WindowCloseDelegateInstance;
         void _WindowCloseRaise();

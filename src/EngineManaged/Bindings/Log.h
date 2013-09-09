@@ -15,8 +15,6 @@ namespace Flood
     enum struct LogLevel;
     ref class Allocator;
     ref class Log;
-    ref class Mutex;
-    ref class Timer;
     value struct LogEntry;
 
     public enum struct LogLevel

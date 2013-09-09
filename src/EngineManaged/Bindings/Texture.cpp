@@ -31,8 +31,8 @@ Flood::Texture::Texture()
 void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _0)
 {
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)size.X;
-    _marshal0.y = (::int32)size.Y;
+    _marshal0.x = (::int32)(::int32_t)size.X;
+    _marshal0.y = (::int32)(::int32_t)size.Y;
     auto arg0 = _marshal0;
     auto arg1 = (::PixelFormat)_0;
     ((::Texture*)NativePtr)->allocate(arg0, arg1);
@@ -41,6 +41,7 @@ void Flood::Texture::Alloc(Flood::Vector2i size, Flood::PixelFormat _0)
 Flood::Image^ Flood::Texture::ReadImage()
 {
     auto __ret = ((::Texture*)NativePtr)->readImage();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Image((::Image*)__ret);
 }
 
@@ -117,7 +118,7 @@ unsigned int Flood::Texture::Id1::get()
 
 void Flood::Texture::Id1::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->id = (::uint32)value;
+    ((::Texture*)NativePtr)->id = (::uint32)(::uint32_t)value;
 }
 
 Flood::TextureTarget Flood::Texture::Target::get()
@@ -137,7 +138,7 @@ unsigned int Flood::Texture::Width::get()
 
 void Flood::Texture::Width::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->width = (::uint32)value;
+    ((::Texture*)NativePtr)->width = (::uint32)(::uint32_t)value;
 }
 
 unsigned int Flood::Texture::Height::get()
@@ -147,7 +148,7 @@ unsigned int Flood::Texture::Height::get()
 
 void Flood::Texture::Height::set(unsigned int value)
 {
-    ((::Texture*)NativePtr)->height = (::uint32)value;
+    ((::Texture*)NativePtr)->height = (::uint32)(::uint32_t)value;
 }
 
 Flood::PixelFormat Flood::Texture::Format::get()
@@ -256,7 +257,7 @@ unsigned char Flood::TextureUnit::Unit::get()
 
 void Flood::TextureUnit::Unit::set(unsigned char value)
 {
-    ((::TextureUnit*)NativePtr)->unit = (::uint8)value;
+    ((::TextureUnit*)NativePtr)->unit = (::uint8)(::uint8_t)value;
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::TextureUnit::Image::get()

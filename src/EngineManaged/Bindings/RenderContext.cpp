@@ -7,6 +7,7 @@
 
 #include "RenderContext.h"
 #include "Color.h"
+#include "RenderDevice.h"
 #include "RenderTarget.h"
 
 using namespace System;
@@ -62,8 +63,8 @@ void Flood::RenderContext::ResetState()
 
 Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
 {
-    auto arg0 = (::uint16)x;
-    auto arg1 = (::uint16)y;
+    auto arg0 = (::uint16)(::uint16_t)x;
+    auto arg1 = (::uint16)(::uint16_t)y;
     auto __ret = ((::RenderContext*)NativePtr)->getPixel(arg0, arg1);
     return Flood::Color((::Color*)&__ret);
 }

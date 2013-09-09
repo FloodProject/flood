@@ -27,24 +27,6 @@ Flood::InputManager::InputManager(System::IntPtr native)
 
 Flood::InputManager::InputManager()
 {
-    NativePtr = new ::InputManager();
-}
-
-void Flood::InputManager::AddDevice(Flood::InputDevice^ device)
-{
-    auto arg0 = (::InputDevice*)device->NativePtr;
-    ((::InputManager*)NativePtr)->addDevice(arg0);
-}
-
-void Flood::InputManager::ProcessEvent(Flood::InputEvent^ event)
-{
-    auto &arg0 = *(::InputEvent*)event->NativePtr;
-    ((::InputManager*)NativePtr)->processEvent(arg0);
-}
-
-void Flood::InputManager::CreateDefaultDevices()
-{
-    ((::InputManager*)NativePtr)->createDefaultDevices();
 }
 
 bool Flood::InputManager::Equals(System::Object^ object)
@@ -71,41 +53,18 @@ void Flood::InputManager::Instance::set(System::IntPtr object)
     NativePtr = (::InputManager*)object.ToPointer();
 }
 
-System::Collections::Generic::List<Flood::InputDevice^>^ Flood::InputManager::Devices::get()
-{
-    auto &__ret = ((::InputManager*)NativePtr)->getDevices();
-    auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::InputDevice^>();
-    for(auto _element : __ret)
-    {
-        auto _marshalElement = gcnew Flood::InputDevice((::InputDevice*)_element);
-        _tmp__ret->Add(_marshalElement);
-    }
-    return _tmp__ret;
-}
-
 Flood::Keyboard^ Flood::InputManager::Keyboard::get()
 {
     auto __ret = ((::InputManager*)NativePtr)->getKeyboard();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Keyboard((::Keyboard*)__ret);
 }
 
 Flood::Mouse^ Flood::InputManager::Mouse::get()
 {
     auto __ret = ((::InputManager*)NativePtr)->getMouse();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Mouse((::Mouse*)__ret);
-}
-
-Flood::Window^ Flood::InputManager::Window::get()
-{
-    auto __ret = ((::InputManager*)NativePtr)->getWindow();
-    return gcnew Flood::Window((::Window*)__ret);
-}
-
-void Flood::InputManager::Window::set(Flood::Window^ value)
-{
-    auto window = value;
-    auto arg0 = (::Window*)window->NativePtr;
-    ((::InputManager*)NativePtr)->setWindow(arg0);
 }
 
 void Flood::FloodInputManager::InputInitialize()
@@ -121,6 +80,7 @@ void Flood::FloodInputManager::InputDeinitialize()
 Flood::InputManager^ Flood::FloodInputManager::GetInputManager()
 {
     auto __ret = ::GetInputManager();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 

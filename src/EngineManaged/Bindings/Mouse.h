@@ -95,13 +95,13 @@ namespace Flood
         Mouse(System::IntPtr native);
         Mouse();
 
-        property Flood::MouseInfo^ MouseInfo
-        {
-            Flood::MouseInfo^ get();
-        }
         property Flood::InputDeviceType Type
         {
             Flood::InputDeviceType get();
+        }
+        property Flood::MouseInfo^ MouseInfo
+        {
+            Flood::MouseInfo^ get();
         }
     private:
         delegate void _MouseMoveDelegate(const ::MouseMoveEvent& _0);
@@ -188,8 +188,6 @@ namespace Flood
             void raise();
         }
         bool IsButtonPressed(Flood::MouseButton button);
-
-        virtual void ProcessEvent(Flood::InputEvent^ event) override;
 
         virtual bool Equals(System::Object^ object) override;
 

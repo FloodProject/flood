@@ -111,7 +111,7 @@ System::String^ Flood::FloodString::StringTrim(System::String^ s, System::String
 
 System::String^ Flood::FloodString::StringFromFloat(float n, unsigned char precision)
 {
-    auto arg1 = (::uint8)precision;
+    auto arg1 = (::uint8)(::uint8_t)precision;
     auto __ret = ::StringFromFloat(n, arg1);
     return clix::marshalString<clix::E_UTF8>(__ret);
 }
@@ -121,6 +121,7 @@ System::String^ Flood::FloodString::StringMatch(System::String^ s, System::Strin
     auto arg0 = clix::marshalString<clix::E_UTF8>(s);
     auto arg1 = clix::marshalString<clix::E_UTF8>(pattern);
     auto __ret = ::StringMatch(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
@@ -132,6 +133,7 @@ System::String^ Flood::FloodString::RawStringMatch(System::String^ s, unsigned i
     auto _arg2 = clix::marshalString<clix::E_UTF8>(p);
     auto arg2 = _arg2.c_str();
     auto __ret = ::RawStringMatch(arg0, arg1, arg2);
+    if (__ret == nullptr) return nullptr;
     return clix::marshalString<clix::E_UTF8>(__ret);
 }
 

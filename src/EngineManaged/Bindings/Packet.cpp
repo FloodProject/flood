@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "Packet.h"
+#include "Platform.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -23,7 +24,7 @@ Flood::Packet::Packet(System::IntPtr native)
 
 Flood::Packet::Packet(unsigned short id)
 {
-    auto arg0 = (::PacketId)(::uint16)id;
+    auto arg0 = (::PacketId)(::uint16)(::uint16_t)id;
     NativePtr = new ::Packet(arg0);
 }
 
@@ -43,7 +44,7 @@ void Flood::Packet::Write(System::Collections::Generic::List<unsigned char>^ dat
     auto _tmpdata = std::vector<::byte>();
     for each(unsigned char _element in data)
     {
-        auto _marshalElement = (::byte)(::uint8)_element;
+        auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
         _tmpdata.push_back(_marshalElement);
     }
     auto arg0 = _tmpdata;

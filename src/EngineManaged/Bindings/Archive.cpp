@@ -50,6 +50,7 @@ Flood::Stream^ Flood::Archive::OpenFile(System::String^ path, Flood::Allocator^ 
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::Archive*)NativePtr)->openFile(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Stream((::Stream*)__ret);
 }
 
@@ -150,7 +151,7 @@ unsigned int Flood::Archive::WatchId::get()
 
 void Flood::Archive::WatchId::set(unsigned int value)
 {
-    ((::Archive*)NativePtr)->watchId = (::ArchiveWatchId)(::uint32)value;
+    ((::Archive*)NativePtr)->watchId = (::ArchiveWatchId)(::uint32)(::uint32_t)value;
 }
 
 bool Flood::Archive::IsValid::get()
@@ -198,6 +199,7 @@ Flood::Stream^ Flood::ArchiveVirtual::OpenFile(System::String^ path, Flood::Allo
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveVirtual*)NativePtr)->openFile(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Stream((::Stream*)__ret);
 }
 
@@ -332,6 +334,7 @@ Flood::Stream^ Flood::ArchiveDirectory::OpenFile(System::String^ path, Flood::Al
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveDirectory*)NativePtr)->openFile(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Stream((::Stream*)__ret);
 }
 
@@ -429,6 +432,7 @@ Flood::Stream^ Flood::ArchiveZip::OpenFile(System::String^ path, Flood::Allocato
     auto arg0 = clix::marshalString<clix::E_UTF8>(path);
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveZip*)NativePtr)->openFile(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Stream((::Stream*)__ret);
 }
 

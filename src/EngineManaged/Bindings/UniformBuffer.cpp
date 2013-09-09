@@ -62,7 +62,7 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, int data)
 {
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
-    auto arg1 = (::int32)data;
+    auto arg1 = (::int32)(::int32_t)data;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }
 
@@ -99,10 +99,10 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
     for each(Flood::Color _element in vec)
     {
         auto _marshal0 = ::Color();
-        _marshal0.r = (::byte)(::uint8)_element.R;
-        _marshal0.g = (::byte)(::uint8)_element.G;
-        _marshal0.b = (::byte)(::uint8)_element.B;
-        _marshal0.a = (::byte)(::uint8)_element.A;
+        _marshal0.r = (::byte)(::uint8)(::uint8_t)_element.R;
+        _marshal0.g = (::byte)(::uint8)(::uint8_t)_element.G;
+        _marshal0.b = (::byte)(::uint8)(::uint8_t)_element.B;
+        _marshal0.a = (::byte)(::uint8)(::uint8_t)_element.A;
         auto _marshalElement = _marshal0;
         _tmpvec.push_back(_marshalElement);
     }
@@ -127,6 +127,18 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, Flood::Matrix4x3 _0)
     auto _arg0 = clix::marshalString<clix::E_UTF8>(slot);
     auto arg0 = _arg0.c_str();
     auto _marshal1 = ::Matrix4x3();
+    _marshal1.m11 = _0.M11;
+    _marshal1.m12 = _0.M12;
+    _marshal1.m13 = _0.M13;
+    _marshal1.m21 = _0.M21;
+    _marshal1.m22 = _0.M22;
+    _marshal1.m23 = _0.M23;
+    _marshal1.m31 = _0.M31;
+    _marshal1.m32 = _0.M32;
+    _marshal1.m33 = _0.M33;
+    _marshal1.tx = _0.Tx;
+    _marshal1.ty = _0.Ty;
+    _marshal1.tz = _0.Tz;
     auto arg1 = _marshal1;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
 }

@@ -15,7 +15,6 @@
 
 namespace Flood
 {
-    ref class FontInfo;
     ref class TrueTypeFont;
     value struct Glyph;
     value struct Vector2;

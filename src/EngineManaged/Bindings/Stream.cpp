@@ -73,7 +73,7 @@ long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^
     auto _tmpdata = std::vector<::uint8>();
     for each(unsigned char _element in data)
     {
-        auto _marshalElement = (::uint8)_element;
+        auto _marshalElement = (::uint8)(::uint8_t)_element;
         _tmpdata.push_back(_marshalElement);
     }
     auto arg0 = _tmpdata;

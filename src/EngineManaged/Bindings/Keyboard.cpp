@@ -55,6 +55,12 @@ int Flood::Keyboard::GetHashCode()
     return (int)NativePtr;
 }
 
+Flood::InputDeviceType Flood::Keyboard::Type::get()
+{
+    auto __ret = ((::Keyboard*)NativePtr)->getType();
+    return (Flood::InputDeviceType)__ret;
+}
+
 System::Collections::Generic::List<bool>^ Flood::Keyboard::KeyState::get()
 {
     auto &__ret = ((::Keyboard*)NativePtr)->getKeyState();

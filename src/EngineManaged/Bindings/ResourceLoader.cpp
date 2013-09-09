@@ -189,6 +189,7 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
     auto __ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Resource((::Resource*)__ret);
 }
 

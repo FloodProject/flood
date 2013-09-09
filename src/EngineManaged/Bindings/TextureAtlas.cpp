@@ -7,6 +7,7 @@
 
 #include "TextureAtlas.h"
 #include "Image.h"
+#include "Platform.h"
 #include "Rectangle.h"
 
 using namespace System;
@@ -44,7 +45,7 @@ Flood::TextureAtlas::TextureAtlas(System::IntPtr native)
 
 Flood::TextureAtlas::TextureAtlas(unsigned int maxSize, Flood::PixelFormat pixelFormat)
 {
-    auto arg0 = (::uint)(::uint32)maxSize;
+    auto arg0 = (::uint)(::uint32)(::uint32_t)maxSize;
     auto arg1 = (::PixelFormat)pixelFormat;
     NativePtr = new ::TextureAtlas(arg0, arg1);
 }

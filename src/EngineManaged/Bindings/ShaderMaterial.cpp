@@ -39,12 +39,14 @@ int Flood::ShaderMaterial::GetHashCode()
 System::String^ Flood::ShaderMaterial::VertexSource::get()
 {
     auto __ret = ((::ShaderMaterial*)NativePtr)->getVertexSource();
+    if (__ret == nullptr) return nullptr;
     return clix::marshalString<clix::E_UTF8>(__ret);
 }
 
 System::String^ Flood::ShaderMaterial::FragmentSource::get()
 {
     auto __ret = ((::ShaderMaterial*)NativePtr)->getFragmentSource();
+    if (__ret == nullptr) return nullptr;
     return clix::marshalString<clix::E_UTF8>(__ret);
 }
 

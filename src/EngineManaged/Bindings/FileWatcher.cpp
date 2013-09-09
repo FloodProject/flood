@@ -31,7 +31,7 @@ Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
 
 Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file)
 {
-    ::FileWatchEvent _native((::FileWatchEventKind)_0, (::FileWatchId)(::uint32)_1, clix::marshalString<clix::E_UTF8>(dir), clix::marshalString<clix::E_UTF8>(file));
+    ::FileWatchEvent _native((::FileWatchEventKind)_0, (::FileWatchId)(::uint32)(::uint32_t)_1, clix::marshalString<clix::E_UTF8>(dir), clix::marshalString<clix::E_UTF8>(file));
     this->Action = (Flood::FileWatchEventKind)_native.action;
     this->WatchId = _native.watchId;
     this->Dir = clix::marshalString<clix::E_UTF8>(_native.dir);
@@ -70,7 +70,7 @@ void Flood::FileWatcher::RemoveWatch(System::String^ directory)
 
 void Flood::FileWatcher::RemoveWatch(unsigned int FileWatchId)
 {
-    auto arg0 = (::FileWatchId)(::uint32)FileWatchId;
+    auto arg0 = (::FileWatchId)(::uint32)(::uint32_t)FileWatchId;
     ((::FileWatcher*)NativePtr)->removeWatch(arg0);
 }
 

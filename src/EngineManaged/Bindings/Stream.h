@@ -12,7 +12,6 @@
 
 namespace Flood
 {
-    enum struct _1;
     enum struct StreamOpenMode;
     enum struct StreamSeekMode;
     ref class Stream;

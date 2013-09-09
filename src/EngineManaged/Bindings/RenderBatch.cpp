@@ -92,7 +92,7 @@ int Flood::RenderBatch::RenderPriority::get()
 void Flood::RenderBatch::RenderPriority::set(int value)
 {
     auto v = value;
-    auto arg0 = (::int32)v;
+    auto arg0 = (::int32)(::int32_t)v;
     ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
 
@@ -169,8 +169,8 @@ Flood::RenderBatchRange Flood::RenderBatch::Range::get()
 void Flood::RenderBatch::Range::set(Flood::RenderBatchRange value)
 {
     auto _marshal0 = ::RenderBatchRange();
-    _marshal0.start = (::RenderIndexOffset)(::uint16)value.Start;
-    _marshal0.end = (::RenderIndexOffset)(::uint16)value.End;
+    _marshal0.start = (::RenderIndexOffset)(::uint16)(::uint16_t)value.Start;
+    _marshal0.end = (::RenderIndexOffset)(::uint16)(::uint16_t)value.End;
     ((::RenderBatch*)NativePtr)->range = _marshal0;
 }
 
@@ -191,7 +191,7 @@ int Flood::RenderBatch::Priority::get()
 
 void Flood::RenderBatch::Priority::set(int value)
 {
-    ((::RenderBatch*)NativePtr)->priority = (::int32)value;
+    ((::RenderBatch*)NativePtr)->priority = (::int32)(::int32_t)value;
 }
 
 Flood::PrimitiveType Flood::RenderBatch::Type::get()
@@ -248,6 +248,7 @@ Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^
 {
     auto arg0 = (::Allocator*)_0->NativePtr;
     auto __ret = ::RenderBatchCreate(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::RenderBatch((::RenderBatch*)__ret);
 }
 

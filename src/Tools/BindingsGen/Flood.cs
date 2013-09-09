@@ -27,12 +27,13 @@ namespace Flood
             var options = driver.Options;
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
-            options.GeneratorKind = LanguageGeneratorKind.CPlusPlusCLI;
+            options.GeneratorKind = LanguageGeneratorKind.CLI;
             options.OutputDir = @"../../../../src/EngineManaged/Bindings";
             options.IncludeDirs.Add(@"../../../../inc");
             options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
             options.WriteOnlyWhenChanged = true;
             options.GenerateFunctionTemplates = true;
+            options.IgnoreParseWarnings = false;
 
             SetupLibraries(options.Libraries);
             SetupHeaders(options.Headers);
@@ -81,6 +82,7 @@ namespace Flood
                     "Graphics/RenderView.h",
                     "Graphics/Texture.h",
                     "Engine/Engine.h",
+                    "Engine/PlatformManager.h",
                     "Engine/Window/Window.h",
                     "Engine/Window/WindowManager.h",
                     "Engine/Input/InputManager.h",
@@ -102,7 +104,7 @@ namespace Flood
             driver.AddTranslationUnitPass(new FindEventsPass(driver.TypeDatabase));
             driver.AddTranslationUnitPass(new GetterSetterToPropertyPass());
             driver.AddTranslationUnitPass(new FieldToPropertyPass());
-            if (driver.Options.GeneratorKind == LanguageGeneratorKind.CPlusPlusCLI)
+            if (driver.Options.IsCLIGenerator)
                 driver.AddTranslationUnitPass(new ObjectOverridesPass());
             driver.AddTranslationUnitPass(new FunctionToInstanceMethodPass());
             driver.AddTranslationUnitPass(new FunctionToStaticMethodPass());
@@ -127,6 +129,8 @@ namespace Flood
             lib.IgnoreHeadersWithName("References.h");
             lib.IgnoreHeadersWithName("Reflection.h");
             lib.IgnoreHeadersWithName("ReflectionHelpers.h");
+            lib.IgnoreHeadersWithName("Task.h");
+            lib.IgnoreHeadersWithName("Timer.h");
 
             //Core
             lib.IgnoreClassWithName("Object");
@@ -231,9 +235,6 @@ namespace Flood
 
             // Engine
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
-            lib.SetClassAsValueType("Settings");
-            lib.SetClassAsValueType("WindowSettings");
-            lib.SetEnumAsFlags("WindowStyles");
         }
 
         public void Postprocess(Library lib)

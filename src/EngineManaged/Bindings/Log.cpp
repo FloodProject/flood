@@ -96,6 +96,7 @@ void Flood::Log::SetDefault()
 Flood::Log^ Flood::Log::GetDefault()
 {
     auto __ret = ::LogGetDefault();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Log((::Log*)__ret);
 }
 

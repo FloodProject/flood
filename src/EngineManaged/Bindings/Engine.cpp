@@ -8,8 +8,11 @@
 #include "Engine.h"
 #include "InputManager.h"
 #include "Log.h"
+#include "PlatformManager.h"
+#include "RenderDevice.h"
 #include "ResourceManager.h"
 #include "Stream.h"
+#include "Subsystem.h"
 #include "WindowManager.h"
 
 using namespace System;
@@ -26,9 +29,10 @@ Flood::Engine::Engine(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::Engine::Engine()
+Flood::Engine::Engine(Flood::PlatformManager^ platform)
 {
-    NativePtr = new ::Engine();
+    auto arg0 = (::PlatformManager*)platform->NativePtr;
+    NativePtr = new ::Engine(arg0);
 }
 
 void Flood::Engine::Init()
@@ -75,15 +79,24 @@ void Flood::Engine::Instance::set(System::IntPtr object)
     NativePtr = (::Engine*)object.ToPointer();
 }
 
-Flood::ResourceManager^ Flood::Engine::ResourceManager::get()
+Flood::PlatformManager^ Flood::Engine::PlatformManager::get()
 {
-    auto __ret = ((::Engine*)NativePtr)->getResourceManager();
-    return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
+    auto __ret = ((::Engine*)NativePtr)->getPlatformManager();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::PlatformManager((::PlatformManager*)__ret);
+}
+
+void Flood::Engine::PlatformManager::set(Flood::PlatformManager^ value)
+{
+    auto v = value;
+    auto arg0 = (::PlatformManager*)v->NativePtr;
+    ((::Engine*)NativePtr)->setPlatformManager(arg0);
 }
 
 Flood::InputManager^ Flood::Engine::InputManager::get()
 {
     auto __ret = ((::Engine*)NativePtr)->getInputManager();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
@@ -97,6 +110,7 @@ void Flood::Engine::InputManager::set(Flood::InputManager^ value)
 Flood::WindowManager^ Flood::Engine::WindowManager::get()
 {
     auto __ret = ((::Engine*)NativePtr)->getWindowManager();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::WindowManager((::WindowManager*)__ret);
 }
 
@@ -107,15 +121,31 @@ void Flood::Engine::WindowManager::set(Flood::WindowManager^ value)
     ((::Engine*)NativePtr)->setWindowManager(arg0);
 }
 
+Flood::RenderDevice^ Flood::Engine::RenderDevice::get()
+{
+    auto __ret = ((::Engine*)NativePtr)->getRenderDevice();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::RenderDevice((::RenderDevice*)__ret);
+}
+
+Flood::ResourceManager^ Flood::Engine::ResourceManager::get()
+{
+    auto __ret = ((::Engine*)NativePtr)->getResourceManager();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
+}
+
 Flood::Log^ Flood::Engine::Logger::get()
 {
     auto __ret = ((::Engine*)NativePtr)->getLogger();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Log((::Log*)__ret);
 }
 
 Flood::Engine^ Flood::FloodEngine::GetEngine()
 {
     auto __ret = ::GetEngine();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Engine((::Engine*)__ret);
 }
 

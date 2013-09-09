@@ -14,12 +14,8 @@ namespace Flood
 {
     enum struct ReflectionWalkType : unsigned char;
     ref class Allocator;
-    ref class Enum;
-    ref class Field;
-    ref class Primitive;
     ref class ReflectionHandleContext;
     ref class Stream;
-    ref class Type;
 
     public enum struct ReflectionWalkType : unsigned char
     {

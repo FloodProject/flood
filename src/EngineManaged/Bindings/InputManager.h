@@ -38,10 +38,6 @@ namespace Flood
         InputManager(System::IntPtr native);
         InputManager();
 
-        property System::Collections::Generic::List<Flood::InputDevice^>^ Devices
-        {
-            System::Collections::Generic::List<Flood::InputDevice^>^ get();
-        }
         property Flood::Keyboard^ Keyboard
         {
             Flood::Keyboard^ get();
@@ -50,17 +46,6 @@ namespace Flood
         {
             Flood::Mouse^ get();
         }
-        property Flood::Window^ Window
-        {
-            Flood::Window^ get();
-            void set(Flood::Window^);
-        }
-        void AddDevice(Flood::InputDevice^ device);
-
-        void ProcessEvent(Flood::InputEvent^ event);
-
-        void CreateDefaultDevices();
-
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;

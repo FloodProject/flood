@@ -18,9 +18,9 @@ namespace Flood
     ref class Log;
     ref class PageManager;
     ref class PhysicsManager;
+    ref class PlatformManager;
     ref class RenderDevice;
     ref class ResourceManager;
-    ref class Scene;
     ref class ScriptManager;
     ref class Stream;
     ref class Subsystem;
@@ -46,11 +46,12 @@ namespace Flood
 
         Engine(::Engine* native);
         Engine(System::IntPtr native);
-        Engine();
+        Engine(Flood::PlatformManager^ platform);
 
-        property Flood::ResourceManager^ ResourceManager
+        property Flood::PlatformManager^ PlatformManager
         {
-            Flood::ResourceManager^ get();
+            Flood::PlatformManager^ get();
+            void set(Flood::PlatformManager^);
         }
         property Flood::InputManager^ InputManager
         {
@@ -61,6 +62,14 @@ namespace Flood
         {
             Flood::WindowManager^ get();
             void set(Flood::WindowManager^);
+        }
+        property Flood::RenderDevice^ RenderDevice
+        {
+            Flood::RenderDevice^ get();
+        }
+        property Flood::ResourceManager^ ResourceManager
+        {
+            Flood::ResourceManager^ get();
         }
         property Flood::Log^ Logger
         {

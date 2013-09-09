@@ -7,6 +7,7 @@
 
 #include "TrueTypeFont.h"
 #include "Font.h"
+#include "Platform.h"
 #include "Vector.h"
 
 using namespace System;
@@ -84,7 +85,7 @@ void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned 
     auto _tmpvalue = std::vector<::byte>();
     for each(unsigned char _element in value)
     {
-        auto _marshalElement = (::byte)(::uint8)_element;
+        auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
         _tmpvalue.push_back(_marshalElement);
     }
     ((::TrueTypeFont*)NativePtr)->data = _tmpvalue;

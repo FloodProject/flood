@@ -60,28 +60,28 @@ void Flood::Material::SetBlending(Flood::BlendSource _0, Flood::BlendDestination
 
 void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
 {
-    auto arg0 = (::uint8)unit;
+    auto arg0 = (::uint8)(::uint8_t)unit;
     auto arg1 = clix::marshalString<clix::E_UTF8>(name);
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
 void Flood::Material::SetTexture(unsigned char unit, Flood::ResourceHandle<Flood::Image^> image)
 {
-    auto arg0 = (::uint8)unit;
+    auto arg0 = (::uint8)(::uint8_t)unit;
     auto arg1 = (HandleId)image.Id;
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
 Flood::ResourceHandle<Flood::Image^> Flood::Material::GetTexture(unsigned char unit)
 {
-    auto arg0 = (::uint8)unit;
+    auto arg0 = (::uint8)(::uint8_t)unit;
     auto __ret = ((::Material*)NativePtr)->getTexture(arg0);
     return Flood::ResourceHandle<Flood::Image^>(__ret.id);
 }
 
 Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
-    auto arg0 = (::uint8)unit;
+    auto arg0 = (::uint8)(::uint8_t)unit;
     auto &__ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
     return gcnew Flood::TextureUnit((::TextureUnit*)&__ret);
 }

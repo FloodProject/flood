@@ -42,7 +42,7 @@ void Flood::Peer::ForceDisconnect()
 void Flood::Peer::QueuePacket(Flood::Packet^ packet, unsigned char channel)
 {
     auto arg0 = (::Packet*)packet->NativePtr;
-    auto arg1 = (::uint8)channel;
+    auto arg1 = (::uint8)(::uint8_t)channel;
     ((::Peer*)NativePtr)->queuePacket(arg0, arg1);
 }
 
@@ -91,6 +91,7 @@ Flood::PeerState Flood::Peer::State::get()
 Flood::Session^ Flood::Peer::Session::get()
 {
     auto __ret = ((::Peer*)NativePtr)->getSession();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Session((::Session*)__ret);
 }
 

@@ -87,6 +87,7 @@ void Flood::Buffer::BufferAccess::set(Flood::BufferAccess value)
 Flood::GeometryBuffer^ Flood::Buffer::GeometryBuffer::get()
 {
     auto __ret = ((::Buffer*)NativePtr)->getGeometryBuffer();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret);
 }
 
@@ -104,7 +105,7 @@ unsigned int Flood::Buffer::Id::get()
 
 void Flood::Buffer::Id::set(unsigned int value)
 {
-    ((::Buffer*)NativePtr)->id = (::BufferId)(::uint32)value;
+    ((::Buffer*)NativePtr)->id = (::BufferId)(::uint32)(::uint32_t)value;
 }
 
 Flood::BufferUsage Flood::Buffer::Usage::get()

@@ -12,12 +12,35 @@
 
 namespace Flood
 {
+    enum struct DirectoryDialogFlags;
+    enum struct FileDialogFlags;
     ref class Window;
     ref class WindowManager;
     value struct WindowSettings;
 
     /// <summary>
-    /// Window manager manages windows (Windows baby!).
+    /// Specifies flags for opening file dialogs.
+    /// </summary>
+    [System::Flags]
+    public enum struct FileDialogFlags
+    {
+        Open = 2,
+        Save = 4,
+        AllowMultipleFiles = 8
+    };
+
+    /// <summary>
+    /// Specifies flags for opening directory dialogs.
+    /// </summary>
+    [System::Flags]
+    public enum struct DirectoryDialogFlags
+    {
+        MustExist = 2
+    };
+
+    /// <summary>
+    /// Window manager is responsible for managing the native windows in the
+    /// platform. It also provides support for platform-specific dialogs.
     /// </summary>
     public ref class WindowManager : ICppInstance
     {
@@ -34,14 +57,20 @@ namespace Flood
         WindowManager(System::IntPtr native);
         WindowManager();
 
-        property System::Collections::Generic::List<Flood::Window^>^ Windows
-        {
-            System::Collections::Generic::List<Flood::Window^>^ get();
-            void set(System::Collections::Generic::List<Flood::Window^>^);
-        }
+        /// <summary>
+        /// Creates a new window.
+        /// </summary>
         virtual Flood::Window^ CreateWindow(Flood::WindowSettings settings);
 
-        void DestroyWindows();
+        /// <summary>
+        /// Opens a file selection dialog.
+        /// </summary>
+        virtual Flood::Window^ OpenFileDialog(System::String^ wildcard, Flood::FileDialogFlags flags);
+
+        /// <summary>
+        /// Opens a directory selection dialog.
+        /// </summary>
+        virtual Flood::Window^ OpenDirectoryDialog(System::String^ wildcard, Flood::DirectoryDialogFlags flags);
 
         virtual bool Equals(System::Object^ object) override;
 

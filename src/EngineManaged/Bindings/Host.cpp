@@ -34,13 +34,13 @@ bool Flood::Host::DestroySocket()
 void Flood::Host::BroadcastPacket(Flood::Packet^ _0, unsigned char channel)
 {
     auto arg0 = (::Packet*)_0->NativePtr;
-    auto arg1 = (::uint8)channel;
+    auto arg1 = (::uint8)(::uint8_t)channel;
     ((::Host*)NativePtr)->broadcastPacket(arg0, arg1);
 }
 
 void Flood::Host::ProcessEvents(unsigned int timeout)
 {
-    auto arg0 = (::uint32)timeout;
+    auto arg0 = (::uint32)(::uint32_t)timeout;
     ((::Host*)NativePtr)->processEvents(arg0);
 }
 
@@ -116,7 +116,7 @@ Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
 {
-    ::HostConnectionDetails _native(clix::marshalString<clix::E_UTF8>(address), (::uint16)port, (::uint8)channelCount);
+    ::HostConnectionDetails _native(clix::marshalString<clix::E_UTF8>(address), (::uint16)(::uint16_t)port, (::uint8)(::uint8_t)channelCount);
     this->Address = clix::marshalString<clix::E_UTF8>(_native.address);
     this->Port = _native.port;
     this->ChannelCount = _native.channelCount;
@@ -143,8 +143,8 @@ bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
     _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
-    _marshal0.port = (::uint16)_0.Port;
-    _marshal0.channelCount = (::uint8)_0.ChannelCount;
+    _marshal0.port = (::uint16)(::uint16_t)_0.Port;
+    _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;
     auto __ret = ((::HostClient*)NativePtr)->connect(arg0);
     return __ret;
@@ -173,6 +173,7 @@ Flood::Peer^ Flood::HostClient::Peer::get()
 Flood::Session^ Flood::HostClient::Session::get()
 {
     auto __ret = ((::HostClient*)NativePtr)->getSession();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Session((::Session*)__ret);
 }
 
@@ -191,8 +192,8 @@ bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
     _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
-    _marshal0.port = (::uint16)_0.Port;
-    _marshal0.channelCount = (::uint8)_0.ChannelCount;
+    _marshal0.port = (::uint16)(::uint16_t)_0.Port;
+    _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;
     auto __ret = ((::HostServer*)NativePtr)->createSocket(arg0);
     return __ret;

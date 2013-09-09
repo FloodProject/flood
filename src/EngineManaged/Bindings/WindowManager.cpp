@@ -22,26 +22,40 @@ Flood::WindowManager::WindowManager(System::IntPtr native)
     NativePtr = __native;
 }
 
-Flood::WindowManager::WindowManager()
-{
-}
-
 Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings)
 {
     auto _marshal0 = ::WindowSettings();
-    _marshal0.width = (::uint16)settings.Width;
-    _marshal0.height = (::uint16)settings.Height;
+    _marshal0.width = (::uint16)(::uint16_t)settings.Width;
+    _marshal0.height = (::uint16)(::uint16_t)settings.Height;
     _marshal0.title = clix::marshalString<clix::E_UTF8>(settings.Title);
     _marshal0.handle = (void*)settings.Handle.ToPointer();
     _marshal0.styles = (::WindowStyles)settings.Styles;
     auto arg0 = _marshal0;
     auto __ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Window((::Window*)__ret);
 }
 
-void Flood::WindowManager::DestroyWindows()
+Flood::Window^ Flood::WindowManager::OpenFileDialog(System::String^ wildcard, Flood::FileDialogFlags flags)
 {
-    ((::WindowManager*)NativePtr)->destroyWindows();
+    auto arg0 = clix::marshalString<clix::E_UTF8>(wildcard);
+    auto arg1 = (::FileDialogFlags)flags;
+    auto __ret = ((::WindowManager*)NativePtr)->openFileDialog(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::Window((::Window*)__ret);
+}
+
+Flood::Window^ Flood::WindowManager::OpenDirectoryDialog(System::String^ wildcard, Flood::DirectoryDialogFlags flags)
+{
+    auto arg0 = clix::marshalString<clix::E_UTF8>(wildcard);
+    auto arg1 = (::DirectoryDialogFlags)flags;
+    auto __ret = ((::WindowManager*)NativePtr)->openDirectoryDialog(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::Window((::Window*)__ret);
+}
+
+Flood::WindowManager::WindowManager()
+{
 }
 
 bool Flood::WindowManager::Equals(System::Object^ object)
@@ -67,26 +81,3 @@ void Flood::WindowManager::Instance::set(System::IntPtr object)
 {
     NativePtr = (::WindowManager*)object.ToPointer();
 }
-
-System::Collections::Generic::List<Flood::Window^>^ Flood::WindowManager::Windows::get()
-{
-    auto _tmpWindows = gcnew System::Collections::Generic::List<Flood::Window^>();
-    for(auto _element : ((::WindowManager*)NativePtr)->windows)
-    {
-        auto _marshalElement = gcnew Flood::Window((::Window*)_element);
-        _tmpWindows->Add(_marshalElement);
-    }
-    return _tmpWindows;
-}
-
-void Flood::WindowManager::Windows::set(System::Collections::Generic::List<Flood::Window^>^ value)
-{
-    auto _tmpvalue = std::vector<::Window*>();
-    for each(Flood::Window^ _element in value)
-    {
-        auto _marshalElement = (::Window*)_element->NativePtr;
-        _tmpvalue.push_back(_marshalElement);
-    }
-    ((::WindowManager*)NativePtr)->windows = _tmpvalue;
-}
-

@@ -28,7 +28,7 @@ Flood::Settings::Settings(System::IntPtr native)
 
 Flood::Settings::Settings(unsigned short width, unsigned short height)
 {
-    ::Settings _native((::uint16)width, (::uint16)height);
+    ::Settings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height);
     this->Width = _native.width;
     this->Height = _native.height;
 }
@@ -36,8 +36,8 @@ Flood::Settings::Settings(unsigned short width, unsigned short height)
 Flood::Vector2i Flood::Settings::Size::get()
 {
     auto _this0 = ::Settings();
-    _this0.width = (::uint16)(*this).Width;
-    _this0.height = (::uint16)(*this).Height;
+    _this0.width = (::uint16)(::uint16_t)(*this).Width;
+    _this0.height = (::uint16)(::uint16_t)(*this).Height;
     auto __ret = _this0.getSize();
     Width = _this0.width;
     Height = _this0.height;
@@ -62,6 +62,7 @@ Flood::RenderTarget::RenderTarget()
 Flood::RenderView^ Flood::RenderTarget::CreateView()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->createView();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::RenderView((::RenderView*)__ret);
 }
 
@@ -113,6 +114,7 @@ Flood::Settings Flood::RenderTarget::Settings::get()
 Flood::RenderContext^ Flood::RenderTarget::Context::get()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->getContext();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
@@ -138,6 +140,7 @@ System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::Vie
 System::IntPtr Flood::RenderTarget::UserData::get()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->getUserData();
+    if (__ret == nullptr) return System::IntPtr();
     return IntPtr(__ret);
 }
 

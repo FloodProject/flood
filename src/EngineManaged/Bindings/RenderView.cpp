@@ -67,6 +67,7 @@ void Flood::RenderView::Instance::set(System::IntPtr object)
 Flood::RenderTarget^ Flood::RenderView::RenderTarget::get()
 {
     auto __ret = ((::RenderView*)NativePtr)->getRenderTarget();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::RenderTarget((::RenderTarget*)__ret);
 }
 
@@ -87,8 +88,8 @@ void Flood::RenderView::Origin::set(Flood::Vector2i value)
 {
     auto v = value;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)v.X;
-    _marshal0.y = (::int32)v.Y;
+    _marshal0.x = (::int32)(::int32_t)v.X;
+    _marshal0.y = (::int32)(::int32_t)v.Y;
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setOrigin(arg0);
 }
@@ -103,8 +104,8 @@ void Flood::RenderView::Size::set(Flood::Vector2i value)
 {
     auto v = value;
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)v.X;
-    _marshal0.y = (::int32)v.Y;
+    _marshal0.x = (::int32)(::int32_t)v.X;
+    _marshal0.y = (::int32)(::int32_t)v.Y;
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setSize(arg0);
 }
@@ -119,10 +120,10 @@ void Flood::RenderView::ClearColor::set(Flood::Color value)
 {
     auto v = value;
     auto _marshal0 = ::Color();
-    _marshal0.r = (::byte)(::uint8)v.R;
-    _marshal0.g = (::byte)(::uint8)v.G;
-    _marshal0.b = (::byte)(::uint8)v.B;
-    _marshal0.a = (::byte)(::uint8)v.A;
+    _marshal0.r = (::byte)(::uint8)(::uint8_t)v.R;
+    _marshal0.g = (::byte)(::uint8)(::uint8_t)v.G;
+    _marshal0.b = (::byte)(::uint8)(::uint8_t)v.B;
+    _marshal0.a = (::byte)(::uint8)(::uint8_t)v.A;
     auto arg0 = _marshal0;
     ((::RenderView*)NativePtr)->setClearColor(arg0);
 }
@@ -153,8 +154,8 @@ Flood::Vector2i Flood::RenderView::Origin1::get()
 void Flood::RenderView::Origin1::set(Flood::Vector2i value)
 {
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)value.X;
-    _marshal0.y = (::int32)value.Y;
+    _marshal0.x = (::int32)(::int32_t)value.X;
+    _marshal0.y = (::int32)(::int32_t)value.Y;
     ((::RenderView*)NativePtr)->origin = _marshal0;
 }
 
@@ -166,8 +167,8 @@ Flood::Vector2i Flood::RenderView::Size1::get()
 void Flood::RenderView::Size1::set(Flood::Vector2i value)
 {
     auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)value.X;
-    _marshal0.y = (::int32)value.Y;
+    _marshal0.x = (::int32)(::int32_t)value.X;
+    _marshal0.y = (::int32)(::int32_t)value.Y;
     ((::RenderView*)NativePtr)->size = _marshal0;
 }
 
@@ -189,10 +190,10 @@ Flood::Color Flood::RenderView::ClearColor1::get()
 void Flood::RenderView::ClearColor1::set(Flood::Color value)
 {
     auto _marshal0 = ::Color();
-    _marshal0.r = (::byte)(::uint8)value.R;
-    _marshal0.g = (::byte)(::uint8)value.G;
-    _marshal0.b = (::byte)(::uint8)value.B;
-    _marshal0.a = (::byte)(::uint8)value.A;
+    _marshal0.r = (::byte)(::uint8)(::uint8_t)value.R;
+    _marshal0.g = (::byte)(::uint8)(::uint8_t)value.G;
+    _marshal0.b = (::byte)(::uint8)(::uint8_t)value.B;
+    _marshal0.a = (::byte)(::uint8)(::uint8_t)value.A;
     ((::RenderView*)NativePtr)->clearColor = _marshal0;
 }
 

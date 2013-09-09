@@ -34,7 +34,7 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles)
 {
-    ::WindowSettings _native((::uint16)width, (::uint16)height, clix::marshalString<clix::E_UTF8>(title), (::WindowStyles)styles);
+    ::WindowSettings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height, clix::marshalString<clix::E_UTF8>(title), (::WindowStyles)styles);
     this->Width = _native.width;
     this->Height = _native.height;
     this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
@@ -61,12 +61,13 @@ Flood::Window::Window(Flood::WindowSettings settings)
 Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _0)
 {
     auto _marshal0 = ::RenderContextSettings();
-    _marshal0.bitsPerPixel = (::uint16)_0.BitsPerPixel;
-    _marshal0.depthBits = (::uint16)_0.DepthBits;
-    _marshal0.stencilBits = (::uint16)_0.StencilBits;
-    _marshal0.antialiasLevel = (::uint16)_0.AntialiasLevel;
+    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_0.BitsPerPixel;
+    _marshal0.depthBits = (::uint16)(::uint16_t)_0.DepthBits;
+    _marshal0.stencilBits = (::uint16)(::uint16_t)_0.StencilBits;
+    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_0.AntialiasLevel;
     auto arg0 = _marshal0;
     auto __ret = ((::Window*)NativePtr)->createContext(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
@@ -150,6 +151,7 @@ Flood::Vector2i Flood::Window::CursorPosition::get()
 Flood::InputManager^ Flood::Window::Input::get()
 {
     auto __ret = ((::Window*)NativePtr)->getInput();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
@@ -157,6 +159,58 @@ Flood::Settings Flood::Window::Settings::get()
 {
     auto &__ret = ((::Window*)NativePtr)->getSettings();
     return Flood::Settings((::Settings*)&__ret);
+}
+
+void Flood::Window::Idle::add(System::Action^ evt)
+{
+    if (!_IdleDelegateInstance)
+    {
+        _IdleDelegateInstance = gcnew _IdleDelegate(this, &Flood::Window::_IdleRaise);
+        auto _fptr = (void (*)())Marshal::GetFunctionPointerForDelegate(_IdleDelegateInstance).ToPointer();
+        ((::Window*)NativePtr)->onIdle.Connect(_fptr);
+    }
+    _Idle = static_cast<System::Action^>(System::Delegate::Combine(_Idle, evt));
+}
+
+void Flood::Window::Idle::remove(System::Action^ evt)
+{
+    _Idle = static_cast<System::Action^>(System::Delegate::Remove(_Idle, evt));
+}
+
+void Flood::Window::Idle::raise()
+{
+    _Idle();
+}
+
+void Flood::Window::_IdleRaise()
+{
+    Idle::raise();
+}
+
+void Flood::Window::Render::add(System::Action^ evt)
+{
+    if (!_RenderDelegateInstance)
+    {
+        _RenderDelegateInstance = gcnew _RenderDelegate(this, &Flood::Window::_RenderRaise);
+        auto _fptr = (void (*)())Marshal::GetFunctionPointerForDelegate(_RenderDelegateInstance).ToPointer();
+        ((::Window*)NativePtr)->onRender.Connect(_fptr);
+    }
+    _Render = static_cast<System::Action^>(System::Delegate::Combine(_Render, evt));
+}
+
+void Flood::Window::Render::remove(System::Action^ evt)
+{
+    _Render = static_cast<System::Action^>(System::Delegate::Remove(_Render, evt));
+}
+
+void Flood::Window::Render::raise()
+{
+    _Render();
+}
+
+void Flood::Window::_RenderRaise()
+{
+    Render::raise();
 }
 
 void Flood::Window::WindowClose::add(System::Action^ evt)

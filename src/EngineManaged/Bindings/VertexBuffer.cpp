@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "VertexBuffer.h"
+#include "Buffer.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -48,7 +49,7 @@ Flood::VertexElement::VertexElement(System::IntPtr native)
 
 Flood::VertexElement::VertexElement(Flood::VertexAttribute _0, Flood::VertexDataType _1, unsigned char components)
 {
-    ::VertexElement _native((::VertexAttribute)_0, (::VertexDataType)_1, (::uint8)components);
+    ::VertexElement _native((::VertexAttribute)_0, (::VertexDataType)_1, (::uint8)(::uint8_t)components);
     this->Attribute = (Flood::VertexAttribute)_native.attribute;
     this->Type = (Flood::VertexDataType)_native.type;
     this->Components = _native.components;
@@ -62,10 +63,10 @@ unsigned char Flood::VertexElement::Size1::get()
     auto _this0 = ::VertexElement();
     _this0.attribute = (::VertexAttribute)(*this).Attribute;
     _this0.type = (::VertexDataType)(*this).Type;
-    _this0.components = (::uint8)(*this).Components;
-    _this0.stride = (::int8)(*this).Stride;
-    _this0.offset = (::uint32)(*this).Offset;
-    _this0.size = (::uint32)(*this).Size;
+    _this0.components = (::uint8)(::uint8_t)(*this).Components;
+    _this0.stride = (::int8)(::int8_t)(*this).Stride;
+    _this0.offset = (::uint32)(::uint32_t)(*this).Offset;
+    _this0.size = (::uint32)(::uint32_t)(*this).Size;
     auto __ret = _this0.getSize();
     Attribute = (Flood::VertexAttribute)_this0.attribute;
     Type = (Flood::VertexDataType)_this0.type;
@@ -98,10 +99,10 @@ void Flood::VertexDeclaration::Add(Flood::VertexElement _0)
     auto _marshal0 = ::VertexElement();
     _marshal0.attribute = (::VertexAttribute)_0.Attribute;
     _marshal0.type = (::VertexDataType)_0.Type;
-    _marshal0.components = (::uint8)_0.Components;
-    _marshal0.stride = (::int8)_0.Stride;
-    _marshal0.offset = (::uint32)_0.Offset;
-    _marshal0.size = (::uint32)_0.Size;
+    _marshal0.components = (::uint8)(::uint8_t)_0.Components;
+    _marshal0.stride = (::int8)(::int8_t)_0.Stride;
+    _marshal0.offset = (::uint32)(::uint32_t)_0.Offset;
+    _marshal0.size = (::uint32)(::uint32_t)_0.Size;
     auto arg0 = _marshal0;
     ((::VertexDeclaration*)NativePtr)->add(arg0);
 }
@@ -111,7 +112,7 @@ void Flood::VertexDeclaration::Add(Flood::VertexElementP _0)
     auto _marshal0 = ::VertexElementP();
     _marshal0.attribute = (::VertexAttribute)_0.Attribute;
     _marshal0.type = (::VertexDataType)_0.Type;
-    _marshal0.components = (::uint8)_0.Components;
+    _marshal0.components = (::uint8)(::uint8_t)_0.Components;
     auto arg0 = _marshal0;
     ((::VertexDeclaration*)NativePtr)->add(arg0);
 }
@@ -194,10 +195,10 @@ void Flood::VertexDeclaration::Decls::set(System::Collections::Generic::List<Flo
         auto _marshal0 = ::VertexElement();
         _marshal0.attribute = (::VertexAttribute)_element.Attribute;
         _marshal0.type = (::VertexDataType)_element.Type;
-        _marshal0.components = (::uint8)_element.Components;
-        _marshal0.stride = (::int8)_element.Stride;
-        _marshal0.offset = (::uint32)_element.Offset;
-        _marshal0.size = (::uint32)_element.Size;
+        _marshal0.components = (::uint8)(::uint8_t)_element.Components;
+        _marshal0.stride = (::int8)(::int8_t)_element.Stride;
+        _marshal0.offset = (::uint32)(::uint32_t)_element.Offset;
+        _marshal0.size = (::uint32)(::uint32_t)_element.Size;
         auto _marshalElement = _marshal0;
         _tmpvalue.push_back(_marshalElement);
     }

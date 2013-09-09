@@ -99,6 +99,6 @@ unsigned int Flood::KeyEvent::Unicode::get()
 
 void Flood::KeyEvent::Unicode::set(unsigned int value)
 {
-    ((::KeyEvent*)NativePtr)->unicode = (::uint32)value;
+    ((::KeyEvent*)NativePtr)->unicode = (::uint32)(::uint32_t)value;
 }
 

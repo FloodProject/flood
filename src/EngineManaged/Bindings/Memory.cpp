@@ -63,16 +63,18 @@ void Flood::Allocator::SetGroup(System::String^ group)
 Flood::Allocator^ Flood::Allocator::CreatePool(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto arg1 = (::int32)size;
+    auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreatePool(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto arg1 = (::int32)size;
+    auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreateBump(arg0, arg1);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
@@ -80,6 +82,7 @@ Flood::Allocator^ Flood::Allocator::CreateHeap()
 {
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateHeap(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
@@ -87,18 +90,21 @@ Flood::Allocator^ Flood::Allocator::CreateStack()
 {
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateStack(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetHeap()
 {
     auto __ret = ::AllocatorGetHeap();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetStack()
 {
     auto __ret = ::AllocatorGetStack();
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
@@ -106,6 +112,7 @@ Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _0)
 {
     auto arg0 = (void*)_0.ToPointer();
     auto __ret = ::AllocatorGetObject(arg0);
+    if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
@@ -264,7 +271,7 @@ unsigned int Flood::BumpAllocator::Size::get()
 
 void Flood::BumpAllocator::Size::set(unsigned int value)
 {
-    ((::BumpAllocator*)NativePtr)->size = (::uint32)value;
+    ((::BumpAllocator*)NativePtr)->size = (::uint32)(::uint32_t)value;
 }
 
 Flood::HeapAllocator::HeapAllocator(::HeapAllocator* native)

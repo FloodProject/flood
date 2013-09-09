@@ -84,7 +84,7 @@ void Flood::RenderBlock::AddState(Flood::RenderState renderState)
     _marshal1.ty = renderState.ModelMatrix.Ty;
     _marshal1.tz = renderState.ModelMatrix.Tz;
     _marshal0.modelMatrix = _marshal1;
-    _marshal0.priority = (::int32)renderState.Priority;
+    _marshal0.priority = (::int32)(::int32_t)renderState.Priority;
     auto arg0 = _marshal0;
     ((::RenderBlock*)NativePtr)->addState(arg0);
 }
@@ -153,7 +153,7 @@ void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flo
         _marshal1.ty = _element.ModelMatrix.Ty;
         _marshal1.tz = _element.ModelMatrix.Tz;
         _marshal0.modelMatrix = _marshal1;
-        _marshal0.priority = (::int32)_element.Priority;
+        _marshal0.priority = (::int32)(::int32_t)_element.Priority;
         auto _marshalElement = _marshal0;
         _tmpvalue.push_back(_marshalElement);
     }
