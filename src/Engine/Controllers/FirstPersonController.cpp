@@ -59,7 +59,8 @@ FirstPersonController::~FirstPersonController()
 void FirstPersonController::setEnabled(bool enabled)
 {
 	CameraController::setEnabled(enabled);
-	
+
+#if 0
 	Window* window = GetInputManager()->getWindow();
 	if( !window ) return;
 
@@ -73,6 +74,7 @@ void FirstPersonController::setEnabled(bool enabled)
         window->setCursorPosition(oldMousePosition.x, oldMousePosition.y);
 		relativePosition.zero();
 	}
+#endif
 }
 
 //-----------------------------------//
@@ -82,11 +84,13 @@ void FirstPersonController::_update( float delta )
 	InputManager* input = GetInputManager();
 	if( !input ) return;
 
+#if 0
 	Window* window = input->getWindow();
 	if( !window ) return;
 
 	if( window->hasFocus() )
 		checkControls( delta );
+#endif
 }
 
 //-----------------------------------//
@@ -196,6 +200,7 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( !enabled ) return;
 
+#if 0
 	Window* window = GetInputManager()->getWindow();
 	if( !window ) return;
 
@@ -228,6 +233,7 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 		break;
 	}
 	} // end switch
+#endif
 }
 
 //-----------------------------------//
@@ -268,11 +274,13 @@ void FirstPersonController::onMouseDrag( const MouseDragEvent& event )
 
 void FirstPersonController::centerCursor()
 {
+#if 0
 	Window* window = GetInputManager()->getWindow();
 	if( !window ) return;
 
 	lastPosition = window->getSettings().getSize() / 2;
 	window->setCursorPosition(lastPosition.x, lastPosition.y);
+#endif
 }
 
 //-----------------------------------//
