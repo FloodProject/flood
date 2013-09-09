@@ -21,9 +21,15 @@ NAMESPACE_ENGINE_BEGIN
 
 class API_ENGINE Keyboard : public InputDevice
 {
-public:	
+public:
 
 	Keyboard();
+
+	// Return this device as a keyboard.
+	GETTER(Type, const InputDeviceType, InputDeviceType::Keyboard)
+
+	// Processes an event (only if it's a keyboard event).
+	FLD_IGNORE virtual void processEvent(const InputEvent& event) override;
 
 	// Checks if the given key is pressed.
 	bool isKeyPressed( Keys keyCode ) const;
@@ -44,22 +50,16 @@ public:
 	Event1<const KeyEvent&> onKeyText;
 
 private:
-	
-	// Processes an event (only if it's a keyboard event).
-	virtual void processEvent( const InputEvent& event );
-
-	// Return this device as a keyboard.
-	GETTER(Type, const InputDeviceType, InputDeviceType::Keyboard)
 
 	// Handles a key press event.
-	void keyPressed( const KeyEvent& keyEvent );
+	FLD_IGNORE void keyPressed( const KeyEvent& keyEvent );
 	
 	// Handles a key release event.
-	void keyReleased( const KeyEvent& keyEvent );
-	
+	FLD_IGNORE void keyReleased( const KeyEvent& keyEvent );
+
 	// Current key state.
 	std::vector<bool> keyState;
-	
+
 	// Last key pressed.
 	Keys lastKey;
 };

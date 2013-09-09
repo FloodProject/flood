@@ -10,8 +10,6 @@
 #include "Engine/API.h"
 #include "Core/References.h"
 
-FWD_DECL_INTRUSIVE(Scene)
-
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
@@ -28,6 +26,7 @@ class PageManager;
 class InputManager;
 class ScriptManager;
 class WindowManager;
+class PlatformManager;
 
 //-----------------------------------//
 
@@ -43,7 +42,7 @@ class API_ENGINE Engine
 {
 public:
 	
-	Engine();
+	Engine(PlatformManager* platform);
 	~Engine();
 
 	// Initialize the engine subsystems.
@@ -52,22 +51,28 @@ public:
 	// Updates the main subsystems.
 	void update();
 
-	// Adds a subsystem to be managed by the engine.
-	void addSubsystem( Subsystem* const subsystem );
-
 	// Sets up the global engine logger.
 	void setupLogger();
 
 	// Gets the device.
+	GETTER(TaskPool, TaskPool*, taskPool)
+
+	// Gets/sets the platform manager.
+	ACCESSOR(PlatformManager, PlatformManager*, platformManager)
+
+	// Gets/sets the input manager.
+	ACCESSOR(InputManager, InputManager*, inputManager)
+
+	// Gets/sets the window manager.
+	ACCESSOR(WindowManager, WindowManager*, windowManager)
+
+	// Gets the render device.
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
 
 	// Gets the audio device.
 	GETTER(AudioDevice, AudioDevice*, audioDevice)
 
-	// Gets the device.
-	GETTER(TaskPool, TaskPool*, taskPool)
-
-	// Gets the scripting state.
+	// Gets the scripts manager.
 	GETTER(ScriptManager, ScriptManager*, scriptManager)
 
 	// Gets the resources manager.
@@ -76,21 +81,12 @@ public:
 	// Gets/sets the physics manager.
 	ACCESSOR(PhysicsManager, PhysicsManager*, physicsManager)
 
-	// Gets/sets the input manager.
-	ACCESSOR(InputManager, InputManager*, inputManager)
-
-	// Gets/sets the window manager.
-	ACCESSOR(WindowManager, WindowManager*, windowManager)
-
 	// Gets the main engine logger.
 	GETTER(Logger, Log*, log)
 
 	void stepFrame();
 
 protected:
-
-	// Subsystems.
-	std::vector<Subsystem*> subsystems;
 
 	// Manages background tasks.
 	TaskPool* taskPool;
@@ -101,11 +97,17 @@ protected:
 	// Log stream.
 	Stream* stream;
 
-	// Rendering device.
-	RenderDevice* renderDevice;
+	// Platform manager.
+	PlatformManager* platformManager;
+
+	// Window manager.
+	WindowManager* windowManager;
 
 	// Input manager.
 	InputManager* inputManager;
+
+	// Rendering device.
+	RenderDevice* renderDevice;
 
 	// Audio device.
 	AudioDevice* audioDevice;
@@ -118,9 +120,6 @@ protected:
 
 	// Script manager.
 	ScriptManager* scriptManager;
-
-	// Window manager.
-	WindowManager* windowManager;
 };
 
 // Gets the engine instance.

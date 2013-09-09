@@ -63,11 +63,6 @@ void Window::handleWindowClose()
 
 void Window::handleWindowFocus( bool focusLost )
 {
-	if( focusLost )
-		GetInputManager()->setWindow(nullptr);
-	else
-		GetInputManager()->setWindow(this);
-
 	onWindowFocusChange( focusLost );
 }
 

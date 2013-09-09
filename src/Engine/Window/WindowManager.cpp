@@ -10,26 +10,8 @@
 
 //-----------------------------------//
 
-WindowManager::WindowManager()
-{
-}
-
-//-----------------------------------//
-
 WindowManager::~WindowManager()
 {
 }
-
-//-----------------------------------//
-
-void WindowManager::destroyWindows()
-{
-    for(auto &it = windows.begin(); it != windows.end(); ++it)
-    {
-        Window* window = *it;
-        Deallocate(window);
-    }
-}
-
 
 //-----------------------------------//

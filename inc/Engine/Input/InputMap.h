@@ -67,7 +67,7 @@ class API_INPUT InputMap
 
 public:
 
-	InputMap( const InputManager& input );
+	InputMap(InputManager& input);
 	~InputMap();
 
 	// Creates a new input schema.

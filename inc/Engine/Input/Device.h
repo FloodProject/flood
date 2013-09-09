@@ -56,8 +56,8 @@ class API_INPUT InputDevice
 
 public:
 
-	InputDevice() {}
-	virtual ~InputDevice() {}
+	InputDevice();
+	virtual ~InputDevice();
 
 	// Processes an event.
 	virtual void processEvent( const InputEvent& event ) = 0;

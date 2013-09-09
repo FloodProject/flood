@@ -36,7 +36,6 @@ void InputDeinitialize()
 //-----------------------------------//
 
 InputManager::InputManager()
-	: window(nullptr)
 {
 	gs_InputManager = this;
 }
@@ -45,87 +44,6 @@ InputManager::InputManager()
 
 InputManager::~InputManager()
 {
-	for( size_t i = 0; i < devices.size(); i++ )
-	{
-		InputDevice* device = devices[i];
-		Deallocate(device);
-	}
-}
-
-//-----------------------------------//
-
-void InputManager::addDevice( InputDevice* device )
-{
-	if( !device )
-	{
-		LogWarn( "Tried to add an invalid input device" );
-		return;
-	}
-	
-	devices.push_back( device );
-
-	LogInfo( "Registered a new input device: '%s'",
-		EnumGetValueName(ReflectionGetType(InputDeviceType), (int32)device->getType()));
-}
-
-//-----------------------------------//
-
-Keyboard* InputManager::getKeyboard() const
-{
-	for( size_t i = 0; i < devices.size(); i++ )
-	{
-		InputDevice* device = devices[i];
-		if( device->getType() == InputDeviceType::Keyboard )
-			return static_cast<Keyboard*>( device );
-	}
-
-	return nullptr;
-}
-
-//-----------------------------------//
-
-Mouse* InputManager::getMouse() const
-{
-	for( size_t i = 0; i < devices.size(); i++ )
-	{
-		InputDevice* device = devices[i];
-		if( device->getType() == InputDeviceType::Mouse )
-			return static_cast<Mouse*>( device );
-	}
-
-	return nullptr;
-}
-
-//-----------------------------------//
-
-void InputManager::processEvent( const InputEvent& event )
-{
-	for( size_t i = 0; i < devices.size(); i++ )
-	{
-		InputDevice* device = devices[i];
-		device->processEvent( event );
-	}
-}
-
-//-----------------------------------//
-
-void InputManager::createDefaultDevices()
-{
-	addDevice( Allocate(gs_InputAllocator, Keyboard) );
-	addDevice( Allocate(gs_InputAllocator, Mouse) );
-}
-
-//-----------------------------------//
-
-void InputManager::setWindow(Window* window)
-{
-	this->window = window;
-
-	if( window == nullptr )
-	{
-		Keyboard* keyboard = GetInputManager()->getKeyboard();
-		if(keyboard) keyboard->resetKeys();
-	}
 }
 
 //-----------------------------------//

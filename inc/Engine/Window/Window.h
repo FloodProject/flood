@@ -106,6 +106,12 @@ public:
 	/// Gets the window settings.
 	GETTER(Settings, const Settings&, settings)
 
+	/// Event fired when the window message loop is idle.
+	Event0<> onIdle;
+
+	/// Event fired when the window needs a render.
+	Event0<> onRender;
+
 	/// Event fired when the window is closed.
 	Event0<> onWindowClose;
 
@@ -118,7 +124,7 @@ protected:
 	void handleWindowResize();
 
 	/// Handles the close event.
-	void handleWindowClose();   
+	void handleWindowClose();
 
 	/// Handles the focus event.
 	void handleWindowFocus( bool focusLost );

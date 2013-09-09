@@ -20,9 +20,25 @@ REFLECT_ENUM_END()
 
 //-----------------------------------//
 
+InputDevice::InputDevice()
+{
+
+}
+
+//-----------------------------------//
+
+InputDevice::~InputDevice()
+{
+
+}
+
+//-----------------------------------//
+
 InputEvent::InputEvent( InputDeviceType type )
 	: deviceType( type )
-{ }
+{
+
+}
 
 //-----------------------------------//
 

@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Engine.h"
+#include "Engine/Subsystem.h"
 
 #include "Core/Memory.h"
 #include "Core/Network/Network.h"
@@ -14,8 +15,9 @@
 #include "Resources/ResourceLoader.h"
 #include "Graphics/Texture.h"
 #include "Graphics/RenderDevice.h"
-#include "Engine/Input/InputManager.h"
+#include "Engine/PlatformManager.h"
 #include "Engine/Audio/Device.h"
+#include "Engine/Input/InputManager.h"
 #include "Engine/Paging/PageManager.h"
 #include "Engine/Physics/Physics.h"
 #include "Engine/Window/WindowManager.h"
@@ -32,10 +34,11 @@ NAMESPACE_ENGINE_BEGIN
 static Engine* gs_engineInstance;
 Engine* GetEngine() { return gs_engineInstance; }
 
-Engine::Engine()
+Engine::Engine(PlatformManager* platformManager)
 	: log(nullptr)
 	, stream(nullptr)
 	, taskPool(nullptr)
+	, platformManager(platformManager)
 	, resourceManager(nullptr)
 	, renderDevice(nullptr)
 	, inputManager(nullptr)
@@ -46,17 +49,14 @@ Engine::Engine()
 {
 	assert(gs_engineInstance == nullptr);
 	gs_engineInstance = this;
+
+	assert(platformManager && "Expected a valid platform manager");
 }
 
 //-----------------------------------//
 
 Engine::~Engine()
 {
-	for(auto& subsystem : subsystems)
-    {
-		Deallocate(subsystem);
-    }
-	
 	Deallocate(physicsManager);
 	Deallocate(scriptManager);
 	Deallocate(renderDevice);
@@ -83,22 +83,20 @@ Engine::~Engine()
 
 //-----------------------------------//
 
-void Engine::addSubsystem( Subsystem* const subsystem )
-{
-	LogInfo( "Registering new engine subsystem" );
-	
-	subsystems.push_back( subsystem );
-}
-
-//-----------------------------------//
-
 void Engine::init()
 {
+	CoreInitialize();
+
 	// Sets up the main logger.
 	setupLogger();
 
 	// Creates the task system.
 	taskPool = AllocateThis(TaskPool, 2 );
+
+	// Initialize the platform-specific subsystems.
+	platformManager->init();
+	windowManager = platformManager->getWindowManager();
+	inputManager = platformManager->getInputManager();
 
 #ifdef ENABLE_NETWORK_ENET
 	NetworkInitialize();
@@ -144,9 +142,6 @@ void Engine::setupLogger()
 
 void Engine::update()
 {
-	for(auto& subsystem : subsystems)
-		subsystem->update();
-
 	resourceManager->update();
 
 #ifdef ENABLE_SCRIPTING_LUA

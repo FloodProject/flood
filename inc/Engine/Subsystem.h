@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Engine/API.h"
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//

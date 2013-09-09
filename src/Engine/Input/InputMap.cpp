@@ -12,7 +12,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-InputMap::InputMap(const InputManager& input)
+InputMap::InputMap(InputManager& input)
 {
 	Keyboard* keyboard = input.getKeyboard();
 	keyboard->onKeyPress.Connect( this, &InputMap::onKeyPress );
