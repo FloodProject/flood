@@ -58,6 +58,12 @@ RenderDevice::~RenderDevice()
 
 //-----------------------------------//
 
+void RenderDevice::updateRenderTargets()
+{
+}
+
+//-----------------------------------//
+
 static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
 	int rA = (int) lhs.renderable->getRenderLayer();
