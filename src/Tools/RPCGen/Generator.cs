@@ -31,13 +31,12 @@ namespace Flood.Tools.RPCGen
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            var baseDataObject = GetBaseDataObject(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type), baseDataObject);
+            GenerateDataObjectClass(className, parameters, type.Namespace, true, PrettyName(type), type);
 
             return type.Namespace + "." + className;
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "", Type baseDataObject = null)
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "", Type dataObjectType = null)
         {
             if (@namespace != null)
             {
@@ -48,7 +47,17 @@ namespace Flood.Tools.RPCGen
             var @interface = (isObservable) ? "IObservableDataObject" : "IDataObject";
             var structclass = (isObservable) ? "class" : "struct";
 
-            WriteLine("public {0} {1} : {2}", structclass, className, @interface);
+            var baseDataObject = GetBaseDataObject(dataObjectType);
+
+            if (baseDataObject != null)
+            {
+                WriteLine("public {0} {1} : {2}, {3}", structclass, className, GetStubsClassName(baseDataObject, true), @interface);
+            }
+            else
+            {
+                WriteLine("public {0} {1} : {2}", structclass, className, @interface);
+            }
+            
             WriteStartBraceIndent();
 
             // Generate fields
@@ -68,13 +77,22 @@ namespace Flood.Tools.RPCGen
                 WriteCloseBraceIndent();
                 WriteCloseBraceIndent();
                 NewLine();
-                WriteLine("private event Action<int> propertyChanged;");
-                WriteLine("event Action<int> IObservableDataObject.PropertyChanged");
-                WriteStartBraceIndent();
-                WriteLine("add { propertyChanged += value; }");
-                WriteLine("remove { propertyChanged -= value; }");
-                WriteCloseBraceIndent();
-                NewLine();
+                if (baseDataObject == null)
+                {
+                    WriteLine("private event Action<Type, int> propertyChanged;");
+                    WriteLine("event Action<Type,int> IObservableDataObject.PropertyChanged");
+                    WriteStartBraceIndent();
+                    WriteLine("add { propertyChanged += value; }");
+                    WriteLine("remove { propertyChanged -= value; }");
+                    WriteCloseBraceIndent();
+                    NewLine();
+                    WriteLine("protected void OnPropertyChanged(Type type, int propertyId)");
+                    WriteStartBraceIndent();
+                    WriteLine("if(propertyChanged != null)");
+                    WriteLineIndent("propertyChanged(type, propertyId);");
+                    WriteCloseBraceIndent();
+                    NewLine();
+                }
                 WriteLine("private BitField changedProperties;");
                 NewLine();
                 foreach (var param in parameters)
@@ -94,8 +112,7 @@ namespace Flood.Tools.RPCGen
                     NewLine();
                     WriteLine("changedProperties.SetBit({0});", param.Id);
                     NewLine();
-                    WriteLine("if(propertyChanged != null)");
-                    WriteLineIndent("propertyChanged({0});", param.Id);
+                    WriteLine("OnPropertyChanged(typeof({0}), {1});", className, param.Id);
                     WriteCloseBraceIndent();
                     WriteCloseBraceIndent();
                     NewLine();
@@ -104,12 +121,15 @@ namespace Flood.Tools.RPCGen
                 WriteLine("public bool IsReference{ get; set; }");
                 NewLine();
 
-                WriteLine("public BitField GetResetChanges()");
+                WriteLine("public unsafe void GetResetChanges(BitField* bitFields)");
                 WriteStartBraceIndent();
-                WriteLine("var bitField = changedProperties;");
+                WriteLine("bitFields[0] = changedProperties;");
                 WriteLine("changedProperties.Reset();");
-                NewLine();
-                WriteLine("return bitField;");
+                if (baseDataObject != null)
+                {
+                    NewLine();
+                    WriteLine("(({0}) (object) this).GetResetChanges(bitFields++);", GetStubsClassName(baseDataObject, true));
+                }
                 WriteCloseBraceIndent();
                 NewLine();
             }
@@ -132,6 +152,9 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
             NewLine();
 
+            WriteLine("public int BaseDataObjectCount {{ get {{ return {0}; }} }}", GetBaseDataObjectCount(dataObjectType));
+            NewLine();
+
             // Generate write method
             GenerateDataObjectWrite(parameters, baseDataObject);
             NewLine();
@@ -150,23 +173,35 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("public void Write(RPCData data)");
             WriteStartBraceIndent();
-            WriteLine("Write(data, allProperties);");
-
+            WriteLine("unsafe");
+            WriteStartBraceIndent();
+            WriteLine("var bitFields = stackalloc BitField[1];");
+            WriteLine("bitFields[0] = allProperties;");
+            WriteLine("Write(data, bitFields, 1);");
+            WriteCloseBraceIndent();
             if (baseType != null)
+            {
+                NewLine();
                 WriteLine("(({0}) (object) this).Write(data);", GetStubsClassName(baseType, true));
-
+            }
             WriteCloseBraceIndent();
             NewLine();
-            WriteLine("public void Write(RPCData data, BitField properties)");
+            WriteLine("public unsafe void Write(RPCData data, BitField* properties, int bitFieldCount)");
             WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI64(properties.Bits);");
+            WriteLine("data.Serializer.WriteI64(properties[0].Bits);");
             foreach (var param in parameters)
             {
                 NewLine();
-                WriteLine("if(properties.GetBit({0}))",param.Id);
+                WriteLine("if(properties[0].GetBit({0}))",param.Id);
                 WriteStartBraceIndent();
                 GenerateTypeSerialization(param.ParameterType, ToTitleCase(param.Name), "data");
                 WriteCloseBraceIndent();
+            }
+            if (baseType != null)
+            {
+                NewLine();
+                WriteLine("if(--bitFieldCount > 0)");
+                WriteLineIndent("(({0}) (object) this).Write(data, properties++, bitFieldCount);", GetStubsClassName(baseType, true));
             }
             WriteCloseBraceIndent();
         }
@@ -185,11 +220,11 @@ namespace Flood.Tools.RPCGen
                 GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
                 WriteCloseBraceIndent();
             }
-            NewLine();
-
             if (baseType != null)
+            {
+                NewLine();
                 WriteLine("(({0}) (object) this).Read(data);", GetStubsClassName(baseType, true));
-
+            }
             WriteCloseBraceIndent();
         }
 
@@ -215,8 +250,11 @@ namespace Flood.Tools.RPCGen
             return parameters;
         }
 
-        public Type GetBaseDataObject(Type type)
+        private Type GetBaseDataObject(Type type)
         {
+            if (type == null)
+                return null;
+
             while (type.BaseType != null)
             {
                 type = type.BaseType;
@@ -225,6 +263,15 @@ namespace Flood.Tools.RPCGen
             }
 
             return null;
+        }
+
+        private int GetBaseDataObjectCount(Type type)
+        {
+            int baseDataObjectCount = 0;
+            while ((type = GetBaseDataObject(type)) != null)
+                baseDataObjectCount++;
+
+            return baseDataObjectCount;
         }
 
         public void GenerateDataObjectFactory(List<Type> types)

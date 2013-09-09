@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Flood.RPC.Serialization;
 
@@ -30,8 +32,8 @@ namespace Flood.RPC
                 if (subscription == null)
                     return false;
 
-                return subscription.RemoteId == RemoteId 
-                    && subscription.Peer == Peer;
+                return subscription.RemoteId == RemoteId
+                       && subscription.Peer == Peer;
             }
         }
 
@@ -95,7 +97,7 @@ namespace Flood.RPC
         {
             var subscription = new Subscription(data.Peer, data.Header.RemoteId);
             Reference reference;
-            if(!subscriptionToReference.TryGetValue(subscription, out reference))
+            if (!subscriptionToReference.TryGetValue(subscription, out reference))
                 throw new Exception("Reference not found.");
 
             reference.DataObject.Read(data);
@@ -106,10 +108,10 @@ namespace Flood.RPC
             var localId = data.Header.LocalId;
 
             Reference reference;
-            if(!localIdToReference.TryGetValue(localId, out reference))
+            if (!localIdToReference.TryGetValue(localId, out reference))
                 throw new Exception("No reference to subscribe to.");
 
-            if(reference.Subscribers == null)
+            if (reference.Subscribers == null)
                 reference.Subscribers = new HashSet<RPCPeer>();
 
             reference.Subscribers.Add(data.Peer);
@@ -121,23 +123,26 @@ namespace Flood.RPC
             var localId = data.Header.LocalId;
 
             Reference reference;
-            if(!localIdToReference.TryGetValue(localId, out reference))
+            if (!localIdToReference.TryGetValue(localId, out reference))
                 throw new Exception("No reference to subscribe to.");
 
             reference.Subscribers.Remove(data.Peer);
         }
 
-        public void DispatchChanges()
+        public unsafe void DispatchChanges()
         {
             foreach (var reference in referencesChanged)
             {
-                var changes = reference.DataObject.GetResetChanges();
+                var bitFieldsCount = reference.DataObject.BaseDataObjectCount + 1;
+                var bitFields = stackalloc BitField[bitFieldsCount];
+
+                reference.DataObject.GetResetChanges(bitFields);
 
                 foreach (var peer in reference.Subscribers)
                 {
                     var peerData = new RPCData(peer, RPCManager, reference.LocalId, 0, RPCDataType.ReferenceChanges);
                     // TODO: Optimize this. Dont't serialize again for each peer.
-                    reference.DataObject.Write(peerData, changes);
+                    reference.DataObject.Write(peerData, bitFields, bitFieldsCount);
                     peerData.Dispatch();
                 }
             }
@@ -159,9 +164,9 @@ namespace Flood.RPC
             if (dataObjectToReference.ContainsKey(dataObject))
                 return;
 
-            var reference =  CreateReference(dataObject);
+            var reference = CreateReference(dataObject);
 
-            dataObject.PropertyChanged += i => referencesChanged.Add(reference);
+            dataObject.PropertyChanged += (type, i) => referencesChanged.Add(reference);
         }
 
         public void Subscribe(IObservableDataObject dataObject, RPCPeer peer, int remoteId)
@@ -170,7 +175,7 @@ namespace Flood.RPC
             if (!dataObjectToReference.TryGetValue(dataObject, out reference))
                 reference = CreateReference(dataObject);
 
-            reference.Subscription = new Subscription(peer ,remoteId);
+            reference.Subscription = new Subscription(peer, remoteId);
 
             subscriptionToReference.Add(reference.Subscription, reference);
 
@@ -207,7 +212,7 @@ namespace Flood.RPC
 
         public static bool Publish(object obj)
         {
-            var dataObject= obj as IObservableDataObject;
+            var dataObject = obj as IObservableDataObject;
             if (dataObject == null)
                 return false;
 
