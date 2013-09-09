@@ -15,5 +15,5 @@ project "RPCGen"
     
     links {
         "System",
-        "EngineWeaver",
+        "Weaver",
     }
