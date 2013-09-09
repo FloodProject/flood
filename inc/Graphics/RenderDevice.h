@@ -7,8 +7,6 @@
 
 #pragma once
 
-#ifdef ENABLE_RENDERER_OPENGL
-
 #include "Core/Reflection.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Vector.h"
@@ -149,5 +147,3 @@ API_GRAPHICS RenderDevice* GetRenderDevice();
 //-----------------------------------//
 
 NAMESPACE_GRAPHICS_END
-
-#endif
