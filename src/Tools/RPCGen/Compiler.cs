@@ -212,7 +212,7 @@ namespace Flood.Tools.RPCGen
             {
                 CreateEmptyAssembly(emptyAssemblyPaths.DllPath);
 
-                var weaver = new EngineWeaver.AssemblyWeaver(emptyAssemblyPaths.DllPath);
+                var weaver = new AssemblyWeaver(emptyAssemblyPaths.DllPath);
                 var types = RpcTypes.Select(t => t.FullName);
                 weaver.CopyTypes(destAssemblyPath, types);
                 weaver.Write(apiAssemblyPaths.DllPath);
