@@ -108,8 +108,8 @@ protected:
 	Resource();
 };
 
-API_RESOURCE ReferenceCounted* ResourceHandleFind(HandleId id);
-API_RESOURCE void  ResourceHandleDestroy(HandleId id);
+FLD_IGNORE API_RESOURCE ReferenceCounted* ResourceHandleFind(HandleId id);
+FLD_IGNORE API_RESOURCE void  ResourceHandleDestroy(HandleId id);
 
 #define RESOURCE_HANDLE_TYPE(T) \
 	Handle<T, ResourceHandleFind, ResourceHandleDestroy>
