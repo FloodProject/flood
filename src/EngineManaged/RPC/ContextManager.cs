@@ -74,7 +74,7 @@ namespace Flood.RPC
             public int LocalId;
             public IContextId ContextId;
             public IDataObjectFactory DataObjectFactory;
-            public Dictionary<RPCPeer, int> RemoteIds;
+            public Dictionary<RPCPeer, ushort> RemoteIds;
         }
 
         private Dictionary<int, ContextInfo> localIdToContext;
@@ -140,14 +140,14 @@ namespace Flood.RPC
         private void ProcessContextResponse(RPCData data)
         {
             var localId = data.Header.LocalId;
-            var remoteId = data.Header.RemoteId;
+            var remoteId = (ushort) data.Header.RemoteId;
 
             ContextInfo context;
             if(!localIdToContext.TryGetValue(localId, out context))
                 throw new Exception("No local context available.");
 
             if(context.RemoteIds == null)
-                context.RemoteIds = new Dictionary<RPCPeer, int>();
+                context.RemoteIds = new Dictionary<RPCPeer, ushort>();
 
             context.RemoteIds.Add(data.Peer, remoteId);
         }
