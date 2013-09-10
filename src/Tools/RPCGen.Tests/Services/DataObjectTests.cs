@@ -14,48 +14,48 @@ namespace RPCGen.Tests.Services
     {
         #region DataObjects
 
-        [DataObject("4B781EAE-CDA6-45A7-8ADB-E4FE295D78D1")]
+        [DataObject(2)]
         public class ByteDO
         {
             [Id(0)] public byte Value { get; set; }
         }
 
-        [DataObject("41327695-0E25-4801-B320-0B1D7074FDC8")]
+        [DataObject(3)]
         public class FloatDO
         {
             [Id(0)]
             public float Value;
         }
 
-        [DataObject("9504185F-A0B5-4CCC-B673-CFA926558424")]
+        [DataObject(4)]
         public class DoubleDO
         {
             [Id(0)]
             public double Value { get; set; }
         }
 
-        [DataObject("84851EB5-808C-4360-BC34-FB180446743D")]
+        [DataObject(5)]
         public class ShortDO
         {
             [Id(0)]
             public short Value;
         }
 
-        [DataObject("117F25CD-5E4A-4321-A064-66FDCB86F534")]
+        [DataObject(6)]
         public class IntDO
         {
             [Id(0)]
             public int Value;
         }
 
-        [DataObject("F5D2E125-A44A-4CA3-86E3-CDD04D20895C")]
+        [DataObject(7)]
         public class LongDO
         {
             [Id(0)]
             public long Value;
         }
 
-        [DataObject("7AE92565-5623-480D-8185-778578AFDFFA")]
+        [DataObject(8)]
         public class StringDO
         {
             [Id(0)]
@@ -69,28 +69,28 @@ namespace RPCGen.Tests.Services
             public Guid Value;
         }
 
-        [DataObject("01938C12-CD0E-40EF-9A9F-5A2B3E492294")]
+        [DataObject(10)]
         public class DateTimeDO
         {
             [Id(0)]
             public DateTime Value;
         }
 
-        [DataObject("41EBBBB3-ADA1-42E9-8071-0BCF8C2B8D4A")]
+        [DataObject(11)]
         public class MapDO
         {
             [Id(0)]
             public Dictionary<int, string> Value;
         }
 
-        [DataObject("7A6D650C-B6C5-41C4-AE5E-C29707E5B82C")]
+        [DataObject(12)]
         public class ListDO
         {
             [Id(0)]
             public List<int> Value;
         }
 
-        [DataObject("52F0BDA2-4E91-40D2-9136-33B685DB2823")]
+        [DataObject(13)]
         public class ArrayDO
         {
             [Id(0)]

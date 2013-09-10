@@ -16,7 +16,8 @@ namespace EngineWeaver
         private readonly Dictionary<MemberReference,MemberReference> referenceMap;
 
         private readonly List<Instruction> instructions;
-        private readonly Dictionary<TypeDefinition,TypeDefinition> types;
+        private readonly Dictionary<TypeDefinition,TypeDefinition> delayedCopy;
+        private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
@@ -30,7 +31,8 @@ namespace EngineWeaver
             NamePrefix = "";
             referenceMap = new Dictionary<MemberReference,MemberReference>();
             instructions = new List<Instruction>();
-            types = new Dictionary<TypeDefinition,TypeDefinition>();
+            delayedCopy = new Dictionary<TypeDefinition,TypeDefinition>();
+            stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
         }
 
@@ -50,20 +52,20 @@ namespace EngineWeaver
 
         public void Process()
         {
-            CopyTypes();
+            ProcessDelayed();
             CopyInstructionsOperands();
             Update();
         }
 
-        private void CopyTypes()
+        private void ProcessDelayed()
         {
-            foreach (var t in types)
+            foreach (var t in delayedCopy)
             { 
                 Log("> Type "+t.Key.FullName);
                 Log("< Type "+t.Value.FullName);
                 CopyAll(t.Key,t.Value,"Name","DeclaringType","BaseType","MetadataToken","Scope", "NestedTypes");
             }
-            types.Clear();
+            delayedCopy.Clear();
         }
 
         private void CopyInstructionsOperands()
@@ -351,14 +353,14 @@ namespace EngineWeaver
 
         public TypeDefinition Copy(TypeDefinition def)
         {
-            if (CopyMap.ContainsKey(def))
-                return (TypeDefinition)CopyMap[def];
-
             return TypeCopy(def, false);
         }
 
         private TypeDefinition TypeCopy(TypeDefinition def, bool isStubType)
         {
+            if (CopyMap.ContainsKey(def))
+                return (TypeDefinition)CopyMap[def];
+
             TypeDefinition declaringType = GetDeclaringType(def, false);
             if (def.IsNested && declaringType == null)
                 declaringType = TypeCopy(def.DeclaringType, true);
@@ -372,7 +374,7 @@ namespace EngineWeaver
             }
             else
             {
-                ret = typeCollection.FirstOrDefault((TypeDefinition t) => t.FullName == def.FullName);
+                ret = typeCollection.FirstOrDefault(t => t.Name == def.Name);
                 if (ret != null)
                 {
                     Log("Cannot copy existing type " + def.FullName);
@@ -382,18 +384,21 @@ namespace EngineWeaver
                 var baseRef = (def.BaseType == null) ? null : this.CopyReference(def.BaseType);
                 ret = new TypeDefinition(def.Namespace, this.NamePrefix + def.Name, def.Attributes, baseRef);
                 typeCollection.Add(ret);
-
-                if (isStubType)
-                    stubTypes.Add(def, ret);
             }
 
-            if (!isStubType)
+            if (isStubType)
             {
-                types.Add(def, ret);
-                CopyMap.Add(def, ret);
-                foreach (TypeDefinition nestedType in def.NestedTypes)
-                    Copy(nestedType);
+                if(!stubTypes.ContainsKey(def))
+                    stubTypes.Add(def, ret);
+
+                return ret;
             }
+
+            delayedCopy.Add(def, ret);
+            CopyMap.Add(def, ret);
+
+            foreach (TypeDefinition nestedType in def.NestedTypes)
+                Copy(nestedType);
 
             return ret;
         }
@@ -625,7 +630,11 @@ namespace EngineWeaver
                     continue;
                 }
 
-                def2.Add(Copy(origDef));
+                var copy = Copy(origDef);
+
+                // Copy(TypeDefinition def) already adds def to declaring type.
+                if(!(origDef is TypeDefinition))
+                    def2.Add(copy);
             }
         }
 
@@ -724,11 +733,13 @@ namespace EngineWeaver
 
         private bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
         {
-            
+            var pointer1 = typeRef1 as PointerType;
+            var pointer2 = typeRef2 as PointerType;
+            if (pointer1 != null && pointer2 != null)
+                return AreTypesEquivalent(pointer1.ElementType, pointer2.ElementType);
+
             if (IsLocalReference(typeRef1.Scope.Name))
-            {
                 return typeRef2 == GetLocalReference(typeRef1);
-            }
 
             return typeRef1.FullName == typeRef2.FullName;
         }

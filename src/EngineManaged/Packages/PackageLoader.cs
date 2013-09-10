@@ -137,7 +137,7 @@ namespace Flood.Packages
                 if (attribute == null)
                     continue;
 
-                if(!RpcManager.HasGlobalService(type))
+                if(!RpcManager.ServiceManager.HasGlobalService(type))
                     throw new Exception("Package does not instantiate global service "+type);
             }
         }

@@ -28,6 +28,13 @@ namespace Flood.RPC
         /// Send by Implementation when Proxy's Delegate is disposed.
         /// This allows Proxy to remove delegates that will never be invoked.
         DelegateDispose = 9,
+
+        ReferenceChanges = 10,
+        ReferenceSubscribe = 11,
+        ReferenceUnsubscribe = 12,
+
+        ContextRequest = 13,
+        ContextResponse = 14
     }
 
     public struct RPCData
@@ -36,8 +43,10 @@ namespace Flood.RPC
         {
             Serializer serializer;
 
-            public RPCStubId RemoteId;
-            public RPCStubId LocalId;
+            public int RemoteId;
+
+            /// When local id is zero extra data should be serialized so local instance can be retrieved or created.
+            public int LocalId;
             public RPCDataType CallType;
 
             public RPCDataHeader(Serializer serializer)
@@ -48,15 +57,15 @@ namespace Flood.RPC
 
             public void Read()
             {
-                RemoteId = RPCStubId.Read(serializer);
-                LocalId = RPCStubId.Read(serializer);
+                RemoteId = serializer.ReadI32();
+                LocalId = serializer.ReadI32();
                 CallType = (RPCDataType)serializer.ReadI32();
             }
 
             public void Write()
             {
-                LocalId.Write(serializer);
-                RemoteId.Write(serializer);
+                serializer.WriteI32(LocalId);
+                serializer.WriteI32(RemoteId);
                 serializer.WriteI32((int)CallType);
             }
         }
@@ -64,20 +73,37 @@ namespace Flood.RPC
         public Serializer Serializer;
         public RPCFlags Flags;
         public RPCPeer Peer;
+        public RPCManager RPCManager;
 
         public RPCDataHeader Header;
 
-        public RPCData(RPCPeer peer)
-            : this(peer, peer.CreateSerializer())
-        {
-        }
-
-        public RPCData(RPCPeer peer, Serializer serializer)
-            : this()
+        public RPCData(RPCPeer peer, RPCManager rpcManager, Serializer serializer)
         {
             Serializer = serializer;
             Peer = peer;
+            RPCManager = rpcManager;
             Header = new RPCDataHeader(Serializer);
+            Flags = RPCFlags.None;
+        }
+
+        private RPCData(RPCPeer peer, RPCManager rpcManager)
+            : this(peer, rpcManager, peer.CreateSerializer())
+        {
+        }
+
+        public RPCData(RPCPeer peer, RPCManager rpcManager, int localId, int remoteId, RPCDataType type, RPCFlags flags = RPCFlags.None)
+            : this(peer, rpcManager)
+        {
+            Flags = flags;
+            Header.CallType = type;
+            Header.RemoteId = remoteId;
+            Header.LocalId = localId;
+            Header.Write();
+        }
+            
+        public RPCData(RPCData call, RPCDataType type, RPCFlags flags = RPCFlags.None)
+            : this(call.Peer, call.RPCManager ,call.Header.LocalId, call.Header.RemoteId, type, flags)
+        {
         }
 
         public void Dispatch()
@@ -85,43 +111,31 @@ namespace Flood.RPC
             Peer.Dispatch(this);
         }
 
-        public static RPCData Create(RPCPeer peer, RPCStubId localId, RPCStubId remoteId, RPCDataType type, RPCFlags flags = RPCFlags.None)
-        {
-            var data = new RPCData(peer);
-            data.Peer = peer;
-            data.Flags = flags;
-            data.Header.CallType = type;
-            data.Header.RemoteId = remoteId;
-            data.Header.LocalId = localId;
-            data.Header.Write();
-            
-            return data;
-        }
-
-        public static RPCData Create(RPCData call, RPCDataType type, RPCFlags flags = RPCFlags.None)
-        {
-            return Create(call.Peer, call.Header.LocalId, call.Header.RemoteId, type, flags);
-        }
-
-        public static RPCData Create(RPCProxy proxy, RPCDataType type, RPCFlags flags = RPCFlags.None)
-        {
-            return Create(proxy.Peer, proxy.Id, proxy.RemoteId, type, flags);
-        }
-
         public struct Call
         {
             public RPCData Data;
             public int Id;
             public int MethodId;
+            internal GlobalServiceId GlobalServiceId;
 
-            internal Call(int id, int methodId, RPCPeer peer, RPCStubId localId, RPCStubId remoteId)
+            internal Call(int id, int methodId, RPCPeer peer, RPCManager rpcManager, int localId, int remoteId)
             {
                 Id = id;
                 MethodId = methodId;
-                Data = RPCData.Create(peer, localId, remoteId, RPCDataType.Call);
+                Data = new RPCData(peer, rpcManager, localId, remoteId, RPCDataType.Call);
 
                 Data.Serializer.WriteI32(id);
                 Data.Serializer.WriteI32(methodId);
+
+                if (remoteId == 0)
+                {
+                    GlobalServiceId = rpcManager.ServiceManager.GetGlobalServiceId(localId);
+                    GlobalServiceId.Write(Data);
+                }
+                else
+                {
+                    GlobalServiceId = default(GlobalServiceId);
+                }
             }
 
             internal static Call Create(RPCData data)
@@ -131,6 +145,9 @@ namespace Flood.RPC
                 
                 call.Id = data.Serializer.ReadI32();
                 call.MethodId = data.Serializer.ReadI32();
+
+                if (data.Header.LocalId == 0)
+                    call.GlobalServiceId = GlobalServiceId.Read(data);
 
                 return call;
             }
@@ -146,7 +163,7 @@ namespace Flood.RPC
             {
                 Id = call.Id;
                 MethodId = call.MethodId;
-                Data = RPCData.Create(call.Data, RPCDataType.Reply);
+                Data = new RPCData(call.Data, RPCDataType.Reply);
                 
                 Data.Serializer.WriteI32(Id);
                 Data.Serializer.WriteI32(MethodId);
@@ -168,19 +185,13 @@ namespace Flood.RPC
         {
             public RPCData Data;
             public int Id;
-            public int LocalDelegateId;
-            public int RemoteDelegateId;
 
-            internal DelegateCall(int id, int localDelegateId, int remoteDelegateId, RPCPeer peer, RPCStubId localId, RPCStubId remoteId)
+            internal DelegateCall(int id, RPCPeer peer, RPCManager rpcManager, int localId, int remoteId)
             {
                 Id = id;
-                LocalDelegateId = localDelegateId;
-                RemoteDelegateId = remoteDelegateId;
-                Data = RPCData.Create(peer, localId, remoteId, RPCDataType.DelegateCall);
+                Data = new RPCData(peer, rpcManager, localId, remoteId, RPCDataType.DelegateCall);
                 
-                Data.Serializer.WriteI32(Id);
-                Data.Serializer.WriteI32(LocalDelegateId);
-                Data.Serializer.WriteI32(RemoteDelegateId);
+                Data.Serializer.WriteI32(id);
             }
 
             internal static DelegateCall Create(RPCData data)
@@ -189,8 +200,6 @@ namespace Flood.RPC
                 call.Data = data;
                 
                 call.Id = data.Serializer.ReadI32();
-                call.RemoteDelegateId = data.Serializer.ReadI32();
-                call.LocalDelegateId = data.Serializer.ReadI32();
 
                 return call;
             }
@@ -200,19 +209,14 @@ namespace Flood.RPC
         {
             public RPCData Data;
             public int Id;
-            public int LocalDelegateId;
-            public int RemoteDelegateId;
 
             public DelegateReply(DelegateCall call)
             {
                 Id = call.Id;
-                LocalDelegateId = call.LocalDelegateId;
-                RemoteDelegateId = call.RemoteDelegateId;
-                Data = RPCData.Create(call.Data, RPCDataType.DelegateReply);
+
+                Data = new RPCData(call.Data, RPCDataType.DelegateReply);
                 
                 Data.Serializer.WriteI32(Id);
-                Data.Serializer.WriteI32(LocalDelegateId);
-                Data.Serializer.WriteI32(RemoteDelegateId);
             }
 
             internal static DelegateReply Create(RPCData data)
@@ -221,8 +225,6 @@ namespace Flood.RPC
                 reply.Data = data;
                 
                 reply.Id = data.Serializer.ReadI32();
-                reply.RemoteDelegateId = data.Serializer.ReadI32();
-                reply.LocalDelegateId = data.Serializer.ReadI32();
 
                 return reply;
             }

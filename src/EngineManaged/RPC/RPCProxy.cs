@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Flood.RPC
@@ -8,15 +7,15 @@ namespace Flood.RPC
     public abstract class RPCProxy : RPCStub
     {
         public RPCPeer Peer { get; private set; }
-        public RPCStubId RemoteId { get; private set; }
+        public int RemoteId { get; private set; }
 
         private RPCCallProcessor callProcessor;
 
         /// Maps a Event id to a Delegate id.
         private Dictionary<int, int> eventIdsDelegates;
 
-        protected RPCProxy(RPCPeer peer, RPCStubId remoteId, RPCStubId id)
-            : base(id)
+        protected RPCProxy(RPCPeer peer, int remoteId, int localId)
+            : base(localId)
         {
             Peer = peer;
             RemoteId = remoteId;
@@ -29,32 +28,31 @@ namespace Flood.RPC
         protected void Subscribe<T>(int eventId, Delegate del)
             where T : RPCDelegateImpl, new()
         {
-            var rpcDelegate = CreateDelegateImpl<T>(Peer, RemoteId, del);
-            var data = RPCData.Create(this, RPCDataType.EventSubscribe);
+            var rpcDelegate = RPCManager.DelegateManager.CreateDelegateImpl<T>(del);
+            var data = new RPCData(Peer, RPCManager, LocalId, RemoteId, RPCDataType.EventSubscribe);
             data.Serializer.WriteI32(eventId);
-            data.Serializer.WriteI32(rpcDelegate.Id);
+            data.Serializer.WriteI32(rpcDelegate.LocalId);
             data.Dispatch();
 
-            eventIdsDelegates.Add(eventId, rpcDelegate.Id);
+            eventIdsDelegates.Add(eventId, rpcDelegate.LocalId);
         }
 
         protected void Unsubscribe(int eventId)
         {
             var delegateId = eventIdsDelegates[eventId];
 
-            var data = RPCData.Create(this, RPCDataType.EventUnsubscribe);
+            var data = new RPCData(Peer, RPCManager, LocalId, RemoteId, RPCDataType.EventUnsubscribe);
             data.Serializer.WriteI32(eventId);
             data.Serializer.WriteI32(delegateId);
             data.Dispatch();
 
-            delegates.Remove(delegateId);
             eventIdsDelegates.Remove(eventId);
         }
 
         public RPCData.Call CreateCall(int methodId)
         {
             var callId = callProcessor.GetNextCallId();
-            return new RPCData.Call(callId, methodId, Peer, Id, RemoteId);
+            return new RPCData.Call(callId, methodId, Peer, RPCManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(RPCData.Reply reply)

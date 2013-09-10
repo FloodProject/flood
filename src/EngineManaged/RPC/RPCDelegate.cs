@@ -8,10 +8,10 @@ namespace Flood.RPC
 {
     public abstract class RPCDelegate
     {
-        public int Id { get; internal set; }
+        public int LocalId { get; internal set; }
         public Delegate Delegate { get; internal set; }
 
-        public RPCStub Stub;
+        public RPCManager RPCManager;
 
         protected RPCDelegate() { }
     }
@@ -26,10 +26,7 @@ namespace Flood.RPC
     public abstract class RPCDelegateProxy : RPCDelegate
     {
         public RPCPeer Peer { get; internal set; }
-        public RPCStubId RemoteId { get; internal set; }
-        public RPCStubId LocalId { get; internal set; }
-
-        public int RemoteDelegateId { get; internal set; }
+        public int RemoteId { get; internal set; }
 
         private RPCCallProcessor callProcessor;
 
@@ -46,7 +43,7 @@ namespace Flood.RPC
         public RPCData.DelegateCall CreateCall()
         {
             var callId = callProcessor.GetNextCallId();
-            return new RPCData.DelegateCall(callId, Id, RemoteDelegateId, Peer, LocalId, RemoteId);
+            return new RPCData.DelegateCall(callId, Peer, RPCManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(RPCData.DelegateReply reply)
@@ -58,7 +55,6 @@ namespace Flood.RPC
         {
             return callProcessor.DispatchCall(call.Id, call.Data);
         }
-        
     }
 
 }

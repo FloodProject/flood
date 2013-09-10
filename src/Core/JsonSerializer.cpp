@@ -710,7 +710,7 @@ Object* SerializerJSON::load()
 	object = DeserializeComposite(context, object);
 
 	values.popBack();
-	assert( values.empty() );
+	assert(values.empty());
 
 	json_decref(rootValue);
 

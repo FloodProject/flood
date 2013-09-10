@@ -2,6 +2,9 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Flood.Network;
+using Flood.Packages;
+using Flood.RPC;
 
 namespace Flood.Editor.Client
 {

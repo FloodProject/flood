@@ -115,6 +115,8 @@ namespace Flood.Tools.RPCGen
                     }
                 }
             }
+
+            WriteDataObjectFactory();
         }
 
         private void ProcessService(Type type)
@@ -127,7 +129,7 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Method: {0}", method.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             gen.GenerateService(type);
 
             WriteGeneratorToFile(type, gen);
@@ -143,7 +145,7 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             var dataObjectFullName = gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
@@ -161,19 +163,33 @@ namespace Flood.Tools.RPCGen
                     log.Debug("  Field: {0}", field.Name);
             }
 
-            var gen = new Generator();
+            var gen = new Generator(type.Assembly);
             gen.GenerateDataObject(type);
 
             WriteGeneratorToFile(type, gen);
         }
 
+        private void WriteDataObjectFactory()
+        {
+            var gen = new Generator(assembly);
+            gen.GenerateDataObjectFactory(RpcTypes);
+
+            WriteGeneratorToFile("DataObjectFactory", gen);
+        }
+
         private void WriteGeneratorToFile(Type type, Generator gen)
+        {
+            WriteGeneratorToFile(type.FullName, gen);
+        }
+
+        private void WriteGeneratorToFile(string fileName, Generator gen)
         {
             if (string.IsNullOrEmpty(outputDir))
                 outputDir = ".";
 
             var filePath = Path.GetFullPath(outputDir);
-            var fileName = string.Format("{0}.cs", type.FullName);
+            if(!fileName.EndsWith(".cs"))
+                fileName = string.Format("{0}.cs", fileName);
 
             filePath = Path.Combine(filePath, fileName);
             File.WriteAllText(filePath, gen.ToString());
@@ -221,7 +237,8 @@ namespace Flood.Tools.RPCGen
                 {
                     GenerateExecutable = false,
                     OutputAssembly = generatedAssembly.DllPath,
-                    IncludeDebugInformation = true
+                    IncludeDebugInformation = true,
+                    CompilerOptions = "/unsafe"
                 };
 
                 references.Add(outputPath);
@@ -289,6 +306,9 @@ namespace Flood.Tools.RPCGen
 
                 foreach (var field in type.GetFields())
                 {
+                    if (field.DeclaringType != type)
+                        continue;
+
                     if(Metadata.HasId(field))
                         fields.Add(field);
                 }

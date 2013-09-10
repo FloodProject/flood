@@ -7,11 +7,22 @@ namespace Flood.RPC.Serialization
     {
         void Read(RPCData data);
         void Write(RPCData data);
-        void Write(RPCData data, int[] propertyIds);
+
+        unsafe void Write(RPCData data, BitField* bitFields, int bitFieldCount);
+        int BaseDataObjectCount { get; }
     }
 
     public interface IObservableDataObject : IDataObject
     {
-        event Action<int> PropertyChanged;
+        event Action<Type, int> PropertyChanged;
+        unsafe void GetResetChanges(BitField* bitFields);
+        bool IsReference { get; set; }
+    }
+
+    public interface IDataObjectReference : IObservableDataObject
+    {
+        RPCPeer Peer { get; }
+        int RemoteId { get; }
+        ReferenceManager ReferenceManager { get; }
     }
 }

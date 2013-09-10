@@ -10,7 +10,7 @@ namespace Flood.RPC
     public abstract class RPCImpl : RPCStub
     {
         protected delegate Task DProcessCall(RPCData.Call call);
-        protected delegate void DProcessSubscribe(RPCPeer peer, RPCStubId remoteId, int remoteDelegateId);
+        protected delegate void DProcessSubscribe(RPCPeer peer, int remoteDelegateId);
 
         protected struct Processors
         {
@@ -36,8 +36,8 @@ namespace Flood.RPC
 
         public object Impl { get; set; }
 
-        public RPCImpl(object impl, RPCStubId id)
-            : base(id)
+        public RPCImpl(object impl, int localId)
+            : base(localId)
         {
             Impl = impl;
             processors = new Dictionary<int, Processors>();
@@ -53,7 +53,7 @@ namespace Flood.RPC
             else
             {
                 SerializerUtil.Skip(call.Data.Serializer, TType.DataObject);
-                var response = RPCData.Create(call.Data, RPCDataType.Exception);
+                var response = new RPCData(call.Data, RPCDataType.Exception);
                 RPCException x = new RPCException(RPCException.ExceptionType.UnknownMethod, "Invalid method id: '" + call.MethodId + "'");
                 response.Serializer.WriteI32(call.Id);
                 x.Write(response.Serializer);
@@ -70,7 +70,7 @@ namespace Flood.RPC
             if (subscribe == null)
                 throw new Exception();
 
-            subscribe(data.Peer, data.Header.RemoteId, remoteDelegateId);
+            subscribe(data.Peer, remoteDelegateId);
         }
 
         internal void ProcessEventUnsubscribe(RPCData data)
