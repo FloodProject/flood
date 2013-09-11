@@ -11,8 +11,8 @@ namespace Flood.RPC
 {
     public interface IDataObjectFactory
     {
-        IObservableDataObject CreateDataObject(ushort id);
-        IObservableDataObject CreateDataObjectReference(ushort id, RPCPeer peer, int remoteId, ReferenceManager referenceManager);
+        IObservableDataObject CreateDataObjectReference(
+            ushort id, RPCPeer peer, int remoteId, ReferenceManager referenceManager);
     }
 
     public interface IContextId
