@@ -22,6 +22,9 @@ namespace RPCGen.Tests.Services
         [DataObject(17)]
         public class DataObject : DataObjectBase
         {
+            [Id(0)]
+            public int Number;
+
             public  override string GetText()
             {
                 return "Override";
@@ -52,6 +55,8 @@ namespace RPCGen.Tests.Services
             var impl = new Service();
             var proxy = Helper.GetProxy<IService>(impl);
 
+            impl.Data.Number = 1337;
+
             var rpcProxy = (RPCProxy) proxy;
             rpcProxy.RPCManager.ContextManager.RequestContext(rpcProxy.Peer, typeof(IService).Assembly);
 
@@ -63,7 +68,9 @@ namespace RPCGen.Tests.Services
 
             Assert.True(data is DataObject);
 
-            Assert.AreEqual("Override", data.GetText());
+            Assert.AreEqual("Override", data.GetText(), "Failed to call overrride.");
+
+            Assert.AreEqual(1337, ((DataObject) data).Number);
         }
     }
 }
