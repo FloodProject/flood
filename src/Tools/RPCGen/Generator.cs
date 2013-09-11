@@ -51,7 +51,9 @@ namespace Flood.Tools.RPCGen
             var @interface = (isObservable) ? "IObservableDataObject" : "IDataObject";
             var structclass = (isObservable) ? "class" : "struct";
 
-            var baseDataObject = GetBaseDataObject(dataObjectType);
+            var baseDataObjects = GetBaseDataObjects(dataObjectType);
+            var baseDataObjectCount = (baseDataObjects == null) ? 0 : baseDataObjects.Count;
+            var baseDataObject = (baseDataObjectCount == 0) ? null : baseDataObjects[0];
 
             if (baseDataObject != null)
             {
@@ -149,50 +151,24 @@ namespace Flood.Tools.RPCGen
                 }
             }
 
-            WriteLine("private static BitField allProperties;");
-            WriteLine("static {0}()", className);
-            WriteStartBraceIndent();
-            foreach (var param in parameters)
-            {
-                WriteLine("allProperties.SetBit({0});", param.Id);
-            }
-            WriteCloseBraceIndent();
+            WriteLine("public int BaseDataObjectCount {{ get {{ return {0}; }} }}", baseDataObjectCount);
             NewLine();
 
-            WriteLine("public int BaseDataObjectCount {{ get {{ return {0}; }} }}", GetBaseDataObjectCount(dataObjectType));
-            NewLine();
-
-            // Generate write method
-            GenerateDataObjectWrite(parameters, baseDataObject);
+            // Generate write methods
+            GenerateDataObjectWriteBitField(parameters, baseDataObject);
+            GenerateDataObjectWrite(className, baseDataObjects, isObservable);
             NewLine();
 
             // Generate read method
-            GenerateDataObjectRead(parameters, baseDataObject);
+            GenerateDataObjectRead(className, baseDataObjects, isObservable, parameters);
 
             WriteCloseBraceIndent();
             if (@namespace != null)
                 WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectWrite(IEnumerable<Parameter> parameters, Type baseType)
+        private void GenerateDataObjectWriteBitField(IEnumerable<Parameter> parameters, Type baseType)
         {
-            parameters = ConvertToActualParameters(parameters);
-
-            WriteLine("public void Write(RPCData data)");
-            WriteStartBraceIndent();
-            WriteLine("unsafe");
-            WriteStartBraceIndent();
-            WriteLine("var bitFields = stackalloc BitField[1];");
-            WriteLine("bitFields[0] = allProperties;");
-            WriteLine("Write(data, bitFields, 1);");
-            WriteCloseBraceIndent();
-            if (baseType != null)
-            {
-                NewLine();
-                WriteLine("(({0}) (object) this).Write(data);", GetStubsClassName(baseType, true));
-            }
-            WriteCloseBraceIndent();
-            NewLine();
             WriteLine("public unsafe void Write(RPCData data, BitField* properties, int bitFieldCount)");
             WriteStartBraceIndent();
             WriteLine("data.Serializer.WriteI64(properties[0].Bits);");
@@ -213,24 +189,78 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectRead(IEnumerable<Parameter> parameters, Type baseType)
+        private void GenerateDataObjectWrite(string className, List<Type> baseTypes, bool isDataObject)
         {
-            WriteLine("public void Read(RPCData data)");
-            WriteStartBraceIndent();
-            WriteLine("var properties = new BitField();");
-            WriteLine("properties.Bits = data.Serializer.ReadI64();");
-            foreach (var param in parameters)
+            GenerateDataObjectOverride("Write", className, baseTypes, isDataObject, () =>
             {
-                NewLine();
-                WriteLine("if(properties.GetBit({0}))",param.Id);
+                var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
+                var bitFieldCount = baseCount + 1;
+                WriteLine("unsafe");
                 WriteStartBraceIndent();
-                GenerateTypeDeserialization(param.ParameterType, ToTitleCase(param.Name), "data");
+                WriteLine("var bitFields = stackalloc BitField[{0}];", bitFieldCount);
+                if (bitFieldCount == 1)
+                {
+                    WriteLine("bitFields[0] = BitField.AllSet;");
+                }
+                else
+                {
+                    WriteLine("for(int i = 0; i < {0}; i++)", bitFieldCount);
+                    WriteLineIndent("bitFields[i] = BitField.AllSet;");
+                }
+                NewLine();
+                WriteLine("Write(data, bitFields, {0});", bitFieldCount);
                 WriteCloseBraceIndent();
+            });
+
+        }
+
+        private void GenerateDataObjectRead(string className, List<Type> baseTypes, bool isDataObject, IEnumerable<Parameter> parameters)
+        {
+            GenerateDataObjectOverride("Read", className, baseTypes, isDataObject, () =>
+            {
+                WriteLine("var properties = new BitField();");
+                WriteLine("properties.Bits = data.Serializer.ReadI64();");
+
+                foreach (var param in parameters)
+                {
+                    NewLine();
+                    WriteLine("if(properties.GetBit({0}))",param.Id);
+                    WriteStartBraceIndent();
+                    GenerateTypeDeserialization(param.ParameterType,ToTitleCase(param.Name),"data");
+                    WriteCloseBraceIndent();
+                }
+            });
+        }
+
+        private void GenerateDataObjectOverride(string name, string className, List<Type> baseTypes, bool isDataObject, Action printer)
+        {
+            var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
+            var modifier = (!isDataObject)? "" : (baseCount == 0) ? "virtual" : "override";
+
+            WriteLine("public {0} void {1}(RPCData data, Type baseType = null)", modifier, name);
+            WriteStartBraceIndent();
+
+            if (baseCount == 0)
+            {
+                WriteLine("if(baseType != null && baseType != typeof({0}))", className);
+                WriteLineIndent("throw new ArgumentException();");
+                NewLine();
             }
-            if (baseType != null)
+            else
+            {
+               WriteLine("if(baseType == null || baseType == this.GetType())");
+               WriteStartBraceIndent();
+            }
+
+            printer.Invoke();
+
+            if (baseCount != 0)
             {
                 NewLine();
-                WriteLine("(({0}) (object) this).Read(data);", GetStubsClassName(baseType, true));
+                WriteLine("baseType = null;");
+                WriteCloseBraceIndent();
+                NewLine();
+                WriteLine("base.{0}(data, baseType);", name);
             }
             WriteCloseBraceIndent();
         }
@@ -257,28 +287,21 @@ namespace Flood.Tools.RPCGen
             return parameters;
         }
 
-        private Type GetBaseDataObject(Type type)
+        private List<Type> GetBaseDataObjects(Type type)
         {
             if (type == null)
                 return null;
+
+            var baseTypes = new List<Type>();
 
             while (type.BaseType != null)
             {
                 type = type.BaseType;
                 if(Metadata.IsDataObject(type))
-                    return type;
+                    baseTypes.Add(type);
             }
 
-            return null;
-        }
-
-        private int GetBaseDataObjectCount(Type type)
-        {
-            int baseDataObjectCount = 0;
-            while ((type = GetBaseDataObject(type)) != null)
-                baseDataObjectCount++;
-
-            return baseDataObjectCount;
+            return baseTypes;
         }
 
         public void GenerateDataObjectFactory(List<Type> types)
@@ -287,24 +310,7 @@ namespace Flood.Tools.RPCGen
 
             WriteLine("public class DataObjectFactory : IDataObjectFactory");
             WriteStartBraceIndent();
-            WriteLine("public IObservableDataObject CreateDataObject(ushort id)");
-            WriteStartBraceIndent();
-            WriteLine("switch(id)");
-            WriteStartBraceIndent();
-            foreach (var type in types)
-            {
-                ushort id;
-                if (!Metadata.TryGetDataObjectId(type, out id))
-                    continue;
-                WriteLine("case {0}:", id);
-                WriteLineIndent("return new {0}();", GetStubsClassName(type, true));
-            }
-            WriteLine("default:");
-            WriteLineIndent("throw new NotImplementedException();");
-            WriteCloseBraceIndent();
-            WriteCloseBraceIndent();
-            NewLine();
-            WriteLine("public  IObservableDataObject CreateDataObjectReference(ushort id, RPCPeer peer, int remoteId, ReferenceManager referenceManager)");
+            WriteLine("public IObservableDataObject CreateDataObjectReference(ushort id, RPCPeer peer, int remoteId, ReferenceManager referenceManager)");
             WriteStartBraceIndent();
             WriteLine("switch(id)");
             WriteStartBraceIndent();
@@ -320,6 +326,7 @@ namespace Flood.Tools.RPCGen
             WriteLineIndent("throw new NotImplementedException();");
             WriteCloseBraceIndent();
             WriteCloseBraceIndent();
+
             WriteCloseBraceIndent();
         }
 
@@ -1250,33 +1257,36 @@ namespace Flood.Tools.RPCGen
         /// </summary>
         private void GenerateStructSerialize(Type type, string varName, string dataName)
         {
-            if (Metadata.IsDataObject(type))
+            if (!Metadata.IsDataObject(type))
             {
-                WriteLine("var observable = (IObservableDataObject){0};", varName);
-                WriteLine("if(observable.IsReference)", varName);
-                WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
-                NewLine();
-                WriteLine("int referenceLocalId;");
-                WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
-                WriteLineIndent("referenceLocalId = 0;");
-                WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
-                NewLine();
-
-                WriteLine("var baseType = typeof({0});", GetTypeName(type));
-                WriteLine("ushort remoteContextId;");
-                WriteLine("ushort dataObjectId;");
-                WriteLine("var polymorphicType = {0}.RPCManager.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
-                WriteLine("var isPolymorphic = polymorphicType != baseType;");
-                WriteLine("{0}.Serializer.WriteBool(isPolymorphic);", dataName);
-                WriteLine("if(isPolymorphic)");
-                WriteStartBraceIndent();
-                WriteLine("{0}.Serializer.WriteI16((short)remoteContextId);", dataName);
-                WriteLine("{0}.Serializer.WriteI16((short)dataObjectId);", dataName);
-                WriteCloseBraceIndent();
-                NewLine();
+                WriteLine("{0}.Write({1});", varName, dataName);
+                return;
             }
 
-            WriteLine("{0}.Write({1});", varName, dataName);
+            WriteLine("var observable = (IObservableDataObject){0};", varName);
+            WriteLine("if(observable.IsReference)", varName);
+            WriteLineIndent("{0}.RPCManager.ReferenceManager.Publish(observable);", dataName);
+            NewLine();
+            WriteLine("int referenceLocalId;");
+            WriteLine("if(!{0}.RPCManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
+            WriteLineIndent("referenceLocalId = 0;");
+            WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
+            NewLine();
+
+            WriteLine("var baseType = typeof({0});", GetTypeName(type));
+            WriteLine("ushort remoteContextId;");
+            WriteLine("ushort dataObjectId;");
+            WriteLine("var polymorphicType = {0}.RPCManager.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
+            WriteLine("var isPolymorphic = polymorphicType != baseType;");
+            WriteLine("{0}.Serializer.WriteBool(isPolymorphic);", dataName);
+            WriteLine("if(isPolymorphic)");
+            WriteStartBraceIndent();
+            WriteLine("{0}.Serializer.WriteI16((short)remoteContextId);", dataName);
+            WriteLine("{0}.Serializer.WriteI16((short)dataObjectId);", dataName);
+            WriteCloseBraceIndent();
+            NewLine();
+
+            WriteLine("{0}.Write({1}, polymorphicType);", varName, dataName);
         }
 
         /// <summary>

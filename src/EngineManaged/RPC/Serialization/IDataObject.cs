@@ -5,8 +5,8 @@ namespace Flood.RPC.Serialization
 {
     public interface IDataObject
     {
-        void Read(RPCData data);
-        void Write(RPCData data);
+        void Read(RPCData data, Type baseType = null);
+        void Write(RPCData data, Type baseType = null);
 
         unsafe void Write(RPCData data, BitField* bitFields, int bitFieldCount);
         int BaseDataObjectCount { get; }
