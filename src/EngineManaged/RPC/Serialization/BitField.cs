@@ -20,5 +20,10 @@ namespace Flood.RPC.Serialization
         {
             Bits = 0;
         }
+
+        public static BitField AllSet
+        {
+            get { return new BitField {Bits = ~0}; }
+        }
     }
 }
