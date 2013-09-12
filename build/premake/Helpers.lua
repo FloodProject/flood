@@ -185,7 +185,8 @@ function SetupPackage(packageName, packageDependencies)
         
         links 
         {
-            "EngineManaged"
+            "EngineManaged",
+            "EngineBindings"
         }
         
         dependson { "PackageGen" }
