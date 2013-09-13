@@ -7,11 +7,12 @@
 
 #pragma once
 
-#include "Engine/Scene/Component.h"
+#include "Engine/API.h"
 #include "Core/Object.h"
 #include "Core/Event.h"
 
 FWD_DECL_INTRUSIVE(Entity)
+FWD_DECL_INTRUSIVE(Component)
 FWD_DECL_INTRUSIVE(Transform)
 FWD_DECL_INTRUSIVE(Geometry)
 
@@ -86,14 +87,14 @@ public:
 	ComponentPtr getComponentFromFamily(Class* klass) const;
 
 	// Gets a component from this entity.
-	template <typename T>
+	FLD_IGNORE template <typename T>
 	RefPtr<T> getComponent() const
 	{
 		return RefCast<T>( getComponent(T::getStaticType()) );
 	}
 
 	// Gets the first found component inheriting the given type.
-	template<typename T>
+	FLD_IGNORE template<typename T>
 	RefPtr<T> getComponentFromFamily()
 	{
 		return RefCast<T>( getComponentFromFamily(T::getStaticType()) );
