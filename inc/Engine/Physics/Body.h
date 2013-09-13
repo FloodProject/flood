@@ -65,7 +65,7 @@ protected:
 	void onFieldChanged(const Field& field);
 
 	// Transform change callback.
-	void onTransform();
+	void onTransformed();
 
 	// Creates the body.
 	bool createBody();

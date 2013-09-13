@@ -97,7 +97,7 @@ public:
 	virtual void update( float delta );
 
 	// Gets fired when the transform is changed.
-	Event0<> onTransform;
+	Event0<> onTransformed;
 
 protected:
 

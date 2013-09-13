@@ -38,7 +38,7 @@ Camera::Camera()
 Camera::~Camera()
 {
 	if( !transform ) return;
-	transform->onTransform.Disconnect( this, &Camera::onTransform );
+	transform->onTransformed.Disconnect( this, &Camera::onTransformed );
 }
 
 //-----------------------------------//
@@ -110,7 +110,7 @@ void Camera::update( float )
 	if( transform ) return;
 
 	transform = getEntity()->getTransform().get();
-	transform->onTransform.Connect( this, &Camera::onTransform );
+	transform->onTransformed.Connect( this, &Camera::onTransformed );
 
 	// Update the view transform the first update.
 	updateViewTransform();
@@ -118,7 +118,7 @@ void Camera::update( float )
 
 //-----------------------------------//
 
-void Camera::onTransform()
+void Camera::onTransformed()
 {
 	updateViewTransform();
 }

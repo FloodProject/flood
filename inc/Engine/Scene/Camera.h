@@ -87,7 +87,7 @@ protected:
 	void updateViewTransform();
 
 	// Handles the transform notification.
-	void onTransform();
+	void onTransformed();
 
 	// Called when it is time to draw debug data.
 	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags ) OVERRIDE;

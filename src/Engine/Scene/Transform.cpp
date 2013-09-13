@@ -200,7 +200,7 @@ void Transform::update( float delta )
 
 	if( wasChanged )
 	{
-		onTransform();
+		onTransformed();
 		setChanged(false);
 	}
 

@@ -51,7 +51,7 @@ Body::~Body()
 	Transform* transform = getEntity()->getTransform().get();
 	
 	if(transform)
-		transform->onTransform.Disconnect( this, &Body::onTransform );
+		transform->onTransformed.Disconnect( this, &Body::onTransformed );
 
 	removeWorld();
 
@@ -68,12 +68,12 @@ void Body::update( float delta )
 	createBody();
 	
 	Transform* transform = getEntity()->getTransform().get();
-	transform->onTransform.Connect( this, &Body::onTransform);
+	transform->onTransformed.Connect( this, &Body::onTransformed);
 }
 
 //-----------------------------------//
 
-void Body::onTransform()
+void Body::onTransformed()
 {
 	if( !body ) return;
 
