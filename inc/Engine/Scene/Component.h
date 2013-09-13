@@ -56,16 +56,16 @@ public:
 	// Called just before the camera renders this component.
 	virtual void onPreRender( const Camera& camera );
 
-	// Gets if the debug.renderable is visible.
+	// Gets if the debug renderable is visible.
 	virtual bool isDebugRenderableVisible() const;
 	
-	// Sets the debug.renderable as visible.
+	// Sets the debug renderable as visible.
 	virtual void setDebugRenderableVisible( bool visible );
 
 	// Called when it is time to draw debug data.
 	virtual void onDebugDraw( DebugDrawer&, DebugDrawFlags );
 
-	// Gets/sets if the debug.renderable inherits the transform.
+	// Gets/sets if the debug renderable inherits the transform.
 	ACCESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
 
 protected:
