@@ -21,6 +21,11 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
+enum class FLD_FLAGS DebugDrawFlags : uint8
+{
+	Selected = (1 << 0)
+};
+
 /**
  * Debug drawing is used to draw debugging representations of objects
  * by components and scripts. To make this easier to the user, the
@@ -61,11 +66,6 @@ public:
 	RenderBatchPtr quads;
 
 	std::vector<RenderBatch*> renderables;
-};
-
-enum class DebugDrawFlags
-{
-	Selected = (1 << 0)
 };
 
 class GeometryBuffer;

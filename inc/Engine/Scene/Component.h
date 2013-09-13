@@ -19,7 +19,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-enum class DebugDrawFlags;
+enum class DebugDrawFlags : uint8;
 class DebugDrawer;
 
 /**
