@@ -7,15 +7,10 @@
 
 #pragma once
 
+#include "Engine/API.h"
 #include "Core/References.h"
-#include "Graphics/RenderBatch.h"
-#include "Core/Math/BoundingBox.h"
-#include "Core/Math/Frustum.h"
-#include "Core/Math/Color.h"
 
-FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(RenderBatch)
-FWD_DECL_INTRUSIVE(VertexBuffer)
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -25,6 +20,10 @@ enum class FLD_FLAGS DebugDrawFlags : uint8
 {
 	Selected = (1 << 0)
 };
+
+struct BoundingBox;
+struct Frustum;
+struct Ray;
 
 /**
  * Debug drawing is used to draw debugging representations of objects

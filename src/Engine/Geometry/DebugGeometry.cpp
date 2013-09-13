@@ -7,6 +7,9 @@
 
 #include "Engine/API.h"
 #include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Math/BoundingBox.h"
+#include "Core/Math/Frustum.h"
+#include "Core/Math/Color.h"
 #include "Graphics/GeometryBuffer.h"
 #include "Graphics/RenderBatch.h"
 #include "Engine/Scene/Geometry.h"
