@@ -15,6 +15,7 @@
 #include "Engine/Scene/Entity.h"
 #include "Engine/Audio/Device.h"
 #include "Engine/Engine.h"
+#include "Graphics/RenderBatch.h"
 
 NAMESPACE_ENGINE_BEGIN
 
