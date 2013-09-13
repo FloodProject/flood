@@ -70,19 +70,19 @@ public:
 class GeometryBuffer;
 
 // Builds debug geometry of a bounding box.
-API_ENGINE RenderBatchPtr DebugBuildBoundingBox( const BoundingBox& box );
+FLD_IGNORE API_ENGINE RenderBatchPtr DebugBuildBoundingBox( const BoundingBox& box );
 
 // Updates the debug geometry of a bounding box.
-API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox&, Color );
+FLD_IGNORE API_ENGINE void DebugUpdateBoudingBox( GeometryBuffer*, const BoundingBox&, Color );
 
 // Builds debug geometry of a ray.
-API_ENGINE RenderBatchPtr DebugBuildRay( const Ray& pickRay, float length );
+FLD_IGNORE API_ENGINE RenderBatchPtr DebugBuildRay( const Ray& pickRay, float length );
 
 // Builds debug geometry of a frustum.
-API_ENGINE RenderBatchPtr DebugBuildFrustum( const Frustum& box );
+FLD_IGNORE API_ENGINE RenderBatchPtr DebugBuildFrustum( const Frustum& box );
 
 // Updates the debug geometry of a frustum.
-API_ENGINE void DebugUpdateFrustum( const RenderBatchPtr&, const Frustum& box );
+FLD_IGNORE API_ENGINE void DebugUpdateFrustum( const RenderBatchPtr&, const Frustum& box );
 
 //-----------------------------------//
 
