@@ -23,7 +23,7 @@ enum struct PlaneIntersection
 
 //-----------------------------------//
 
-struct API_CORE Plane
+struct API_CORE FLD_VALUE_TYPE Plane
 {
 	Plane();
 
@@ -56,7 +56,7 @@ struct API_CORE Plane
 
 	// Returns if the plane intersects with the ray and also
 	// the distance from the ray origin to the plane.
-	bool intersects( const Ray& ray, float& distance ) const;
+	bool intersects( const Ray& ray, FLD_OUT float& distance ) const;
 
 	Vector3 normal;
 	float offset;

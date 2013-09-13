@@ -19,7 +19,7 @@ NAMESPACE_CORE_BEGIN
  * Axis-aligned Bounding Box.
  */
 
-struct API_CORE BoundingBox
+struct API_CORE FLD_VALUE_TYPE BoundingBox
 {
 	BoundingBox();
 	BoundingBox( const Vector3& min, const Vector3& max );
@@ -47,8 +47,8 @@ struct API_CORE BoundingBox
 	Vector3 getCorner( int index ) const;
 
 	// Intersection with a ray.
-	bool intersects( const Ray& ray, float& distance ) const;
-	
+	bool intersects( const Ray& ray, FLD_OUT float& distance ) const;
+
 	// Transforms the bounding box by a matrix.
 	BoundingBox transform( const Matrix4x3& ) const;
 
