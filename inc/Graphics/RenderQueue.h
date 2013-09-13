@@ -49,7 +49,7 @@ public:
  * Light properties that will be passed down to the renderer.
  */
 
-struct API_GRAPHICS LightState
+struct API_GRAPHICS FLD_IGNORE LightState
 {
 	Light* light;
 	Transform* transform;
