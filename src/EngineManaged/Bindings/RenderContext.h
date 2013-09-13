@@ -12,15 +12,9 @@
 
 namespace Flood
 {
-    ref class BufferManager;
-    ref class ProgramManager;
-    ref class RenderBackend;
-    ref class RenderBuffer;
-    ref class RenderCapabilities;
     ref class RenderContext;
     ref class RenderDevice;
     ref class RenderTarget;
-    ref class TextureManager;
     value struct Color;
     value struct RenderContextSettings;
     value struct Settings;

@@ -58,13 +58,13 @@ Flood::Window::Window(Flood::WindowSettings settings)
 {
 }
 
-Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _0)
+Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _1)
 {
     auto _marshal0 = ::RenderContextSettings();
-    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_0.BitsPerPixel;
-    _marshal0.depthBits = (::uint16)(::uint16_t)_0.DepthBits;
-    _marshal0.stencilBits = (::uint16)(::uint16_t)_0.StencilBits;
-    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_0.AntialiasLevel;
+    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_1.BitsPerPixel;
+    _marshal0.depthBits = (::uint16)(::uint16_t)_1.DepthBits;
+    _marshal0.stencilBits = (::uint16)(::uint16_t)_1.StencilBits;
+    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_1.AntialiasLevel;
     auto arg0 = _marshal0;
     auto __ret = ((::Window*)NativePtr)->createContext(arg0);
     if (__ret == nullptr) return nullptr;

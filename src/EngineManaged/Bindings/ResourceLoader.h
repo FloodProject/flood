@@ -121,9 +121,9 @@ namespace Flood
             System::Collections::Generic::List<System::String^>^ get();
             void set(System::Collections::Generic::List<System::String^>^);
         }
-        virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
+        virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _1);
 
-        virtual bool Decode(Flood::ResourceLoadOptions _0);
+        virtual bool Decode(Flood::ResourceLoadOptions _2);
 
         virtual bool Equals(System::Object^ object) override;
 

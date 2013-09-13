@@ -9,6 +9,7 @@
 #include "Material.h"
 #include "RenderBatch.h"
 #include "Texture.h"
+#include "Transform.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
@@ -37,19 +38,6 @@ Flood::RenderState::RenderState(Flood::RenderBatch^ renderable)
     this->Material = gcnew Flood::Material((::Material*)_native.material);
     this->ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&_native.modelMatrix);
     this->Priority = _native.priority;
-}
-
-Flood::LightState::LightState(::LightState* native)
-{
-    Depth = gcnew Flood::Texture((::Texture*)native->depth);
-    Projection = Flood::Matrix4x4((::Matrix4x4*)&native->projection);
-}
-
-Flood::LightState::LightState(System::IntPtr native)
-{
-    auto __native = (::LightState*)native.ToPointer();
-    Depth = gcnew Flood::Texture((::Texture*)__native->depth);
-    Projection = Flood::Matrix4x4((::Matrix4x4*)&__native->projection);
 }
 
 Flood::RenderBlock::RenderBlock(::RenderBlock* native)
@@ -158,48 +146,5 @@ void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flo
         _tmpvalue.push_back(_marshalElement);
     }
     ((::RenderBlock*)NativePtr)->renderables = _tmpvalue;
-}
-
-System::Collections::Generic::List<Flood::LightState>^ Flood::RenderBlock::Lights::get()
-{
-    auto _tmpLights = gcnew System::Collections::Generic::List<Flood::LightState>();
-    for(auto _element : ((::RenderBlock*)NativePtr)->lights)
-    {
-        auto _marshalElement = Flood::LightState((::LightState*)&_element);
-        _tmpLights->Add(_marshalElement);
-    }
-    return _tmpLights;
-}
-
-void Flood::RenderBlock::Lights::set(System::Collections::Generic::List<Flood::LightState>^ value)
-{
-    auto _tmpvalue = std::vector<::LightState>();
-    for each(Flood::LightState _element in value)
-    {
-        auto _marshal0 = ::LightState();
-        if (_element.Depth != nullptr)
-            _marshal0.depth = (::Texture*)_element.Depth->NativePtr;
-        auto _marshal1 = ::Matrix4x4();
-        _marshal1.m11 = _element.Projection.M11;
-        _marshal1.m12 = _element.Projection.M12;
-        _marshal1.m13 = _element.Projection.M13;
-        _marshal1.m14 = _element.Projection.M14;
-        _marshal1.m21 = _element.Projection.M21;
-        _marshal1.m22 = _element.Projection.M22;
-        _marshal1.m23 = _element.Projection.M23;
-        _marshal1.m24 = _element.Projection.M24;
-        _marshal1.m31 = _element.Projection.M31;
-        _marshal1.m32 = _element.Projection.M32;
-        _marshal1.m33 = _element.Projection.M33;
-        _marshal1.m34 = _element.Projection.M34;
-        _marshal1.tx = _element.Projection.Tx;
-        _marshal1.ty = _element.Projection.Ty;
-        _marshal1.tz = _element.Projection.Tz;
-        _marshal1.tw = _element.Projection.Tw;
-        _marshal0.projection = _marshal1;
-        auto _marshalElement = _marshal0;
-        _tmpvalue.push_back(_marshalElement);
-    }
-    ((::RenderBlock*)NativePtr)->lights = _tmpvalue;
 }
 

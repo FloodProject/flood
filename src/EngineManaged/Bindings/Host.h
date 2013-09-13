@@ -12,13 +12,10 @@
 
 namespace Flood
 {
-    ref class _ENetEvent;
-    ref class _ENetHost;
     ref class Host;
     ref class HostClient;
     ref class HostServer;
     ref class Packet;
-    ref class PacketProcessors;
     ref class Peer;
     ref class Session;
     ref class SessionManager;

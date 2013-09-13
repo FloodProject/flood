@@ -17,8 +17,6 @@ namespace Flood
     ref class Stream;
     ref class WebStream;
     ref class ZipStream;
-    ref class zzip_dir;
-    ref class zzip_file;
 
     /// <summary>
     /// Use these for different kinds of access to the streams.

@@ -14,13 +14,11 @@
 
 namespace Flood
 {
-    ref class Light;
     ref class Material;
     ref class RenderBatch;
     ref class RenderBlock;
     ref class Texture;
     ref class Transform;
-    value struct LightState;
     value struct RenderState;
 
     /// <summary>
@@ -44,19 +42,6 @@ namespace Flood
         int Priority;
     };
 
-    /// <summary>
-    /// Light properties that will be passed down to the renderer.
-    /// </summary>
-    public value struct LightState
-    {
-    public:
-
-        LightState(::LightState* native);
-        LightState(System::IntPtr native);
-        Flood::Texture^ Depth;
-        Flood::Matrix4x4 Projection;
-    };
-
     public ref class RenderBlock : ICppInstance
     {
     public:
@@ -76,11 +61,6 @@ namespace Flood
         {
             System::Collections::Generic::List<Flood::RenderState>^ get();
             void set(System::Collections::Generic::List<Flood::RenderState>^);
-        }
-        property System::Collections::Generic::List<Flood::LightState>^ Lights
-        {
-            System::Collections::Generic::List<Flood::LightState>^ get();
-            void set(System::Collections::Generic::List<Flood::LightState>^);
         }
         void AddState(Flood::RenderState renderState);
 

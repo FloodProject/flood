@@ -13,6 +13,7 @@
 namespace Flood
 {
     enum struct ReflectionWalkType : unsigned char;
+    enum struct SerializerType;
     ref class Allocator;
     ref class ReflectionHandleContext;
     ref class Stream;
@@ -24,6 +25,12 @@ namespace Flood
         Element = 2,
         ElementBegin = 3,
         ElementEnd = 4
+    };
+
+    public enum struct SerializerType
+    {
+        Json = 0,
+        Binary = 1
     };
 
     public ref class ReflectionHandleContext : ICppInstance

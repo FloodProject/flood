@@ -176,6 +176,18 @@ System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer::get()
     return _tmp__ret;
 }
 
+System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer1::get()
+{
+    auto &__ret = ((::Image*)NativePtr)->getBuffer();
+    auto _tmp__ret = gcnew System::Collections::Generic::List<unsigned char>();
+    for(auto _element : __ret)
+    {
+        auto _marshalElement = _element;
+        _tmp__ret->Add(_marshalElement);
+    }
+    return _tmp__ret;
+}
+
 unsigned int Flood::Image::PixelSize::get()
 {
     auto __ret = ((::Image*)NativePtr)->getPixelSize();

@@ -170,12 +170,12 @@ namespace Flood
         /// <summary>
         /// Mounts an archive in the virtual archive.
         /// </summary>
-        bool ArchiveMount(Flood::Archive^ mount, System::String^ mountPath);
+        bool Mount(Flood::Archive^ mount, System::String^ mountPath);
 
         /// <summary>
         /// Mounts a directory and its direct hierarchy.
         /// </summary>
-        void ArchiveMountDirectories(System::String^ dirPath, Flood::Allocator^ alloc);
+        void MountDirectories(System::String^ dirPath, Flood::Allocator^ alloc);
 
         virtual bool Equals(System::Object^ object) override;
 

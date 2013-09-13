@@ -10,7 +10,6 @@ using CppSharp.Generators.CLI;
 using CppSharp.Generators.CSharp;
 using CppSharp.Passes;
 using CppSharp.Types;
-using Type = CppSharp.AST.Type;
 
 namespace Flood
 {
@@ -62,6 +61,10 @@ namespace Flood
                     "Core/Stream.h",
                     "Core/FileWatcher.h",
                     "Core/Math/Color.h",
+                    "Core/Math/BoundingBox.h",
+                    "Core/Math/Frustum.h",
+                    "Core/Math/Plane.h",
+                    "Core/Math/Ray.h",
                     "Core/Network/Network.h",
                     "Core/Network/Host.h",
                     "Core/Network/Session.h",
@@ -81,6 +84,13 @@ namespace Flood
                     "Graphics/RenderTarget.h",
                     "Graphics/RenderView.h",
                     "Graphics/Texture.h",
+                    "Engine/Geometry/DebugGeometry.h",
+                    "Engine/Resources/Font.h",
+                    "Engine/Scene/Entity.h",
+                    "Engine/Scene/Component.h",
+                    "Engine/Scene/Transform.h",
+                    "Engine/Scene/Geometry.h",
+                    "Engine/Scene/Camera.h",
                     "Engine/Engine.h",
                     "Engine/PlatformManager.h",
                     "Engine/Window/Window.h",
@@ -338,7 +348,7 @@ namespace Flood
                 return false;
 
             TypeMap typeMap;
-            if (!typeMapDatabase.FindTypeMap(field.Type, out typeMap))
+            if (!typeMapDatabase.FindTypeMapRecursive(field.Type, out typeMap))
                 return false;
 
             if (!(typeMap is EventMap))
@@ -370,6 +380,7 @@ namespace Flood
 
             var @event = new Event()
             {
+                Access = field.Access,
                 Name = string.Join(string.Empty, names),
                 OriginalName = field.OriginalName,
                 Namespace = field.Namespace,
@@ -463,6 +474,20 @@ namespace Flood
     [TypeMap("RefPtr")]
     public class RefPtrMap : TypeMap
     {
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType = type.Arguments[0].Type;
+
+                var checker = new TypeIgnoreChecker(TypeMapDatabase);
+                pointeeType.Visit(checker);
+
+                return checker.IsIgnored;
+            }
+        }
+
         public override string CLISignature(CLITypePrinterContext ctx)
         {
             var type = Type as TemplateSpecializationType;
@@ -486,8 +511,8 @@ namespace Flood
             var type = Type as TemplateSpecializationType;
 
             Class @class;
-            if (!type.Arguments[0].Type.Type.IsTagDecl(out @class))
-                return;
+            if (!type.Arguments[0].Type.Type.Desugar().IsTagDecl(out @class))
+                throw new Exception("Cannot marshal RefPtr: unsupported type");
 
             var instance = string.Format("{0}.get()", ctx.ReturnVarName);
 

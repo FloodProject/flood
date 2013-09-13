@@ -247,15 +247,15 @@ bool Flood::ArchiveVirtual::Monitor()
     return __ret;
 }
 
-bool Flood::ArchiveVirtual::ArchiveMount(Flood::Archive^ mount, System::String^ mountPath)
+bool Flood::ArchiveVirtual::Mount(Flood::Archive^ mount, System::String^ mountPath)
 {
     auto arg0 = (::Archive*)mount->NativePtr;
     auto arg1 = clix::marshalString<clix::E_UTF8>(mountPath);
-    auto ret = ((::ArchiveVirtual*)NativePtr)->mount(arg0, arg1);
-    return ret;
+    auto __ret = ((::ArchiveVirtual*)NativePtr)->mount(arg0, arg1);
+    return __ret;
 }
 
-void Flood::ArchiveVirtual::ArchiveMountDirectories(System::String^ dirPath, Flood::Allocator^ alloc)
+void Flood::ArchiveVirtual::MountDirectories(System::String^ dirPath, Flood::Allocator^ alloc)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(dirPath);
     auto arg1 = (::Allocator*)alloc->NativePtr;

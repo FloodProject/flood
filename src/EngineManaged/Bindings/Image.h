@@ -74,6 +74,10 @@ namespace Flood
         {
             System::Collections::Generic::List<unsigned char>^ get();
         }
+        property System::Collections::Generic::List<unsigned char>^ Buffer1
+        {
+            System::Collections::Generic::List<unsigned char>^ get();
+        }
         property unsigned int PixelSize
         {
             unsigned int get();

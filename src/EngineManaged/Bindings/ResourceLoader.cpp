@@ -66,10 +66,10 @@ void Flood::ResourceLoadOptions::AddOption(int key, int value)
     _this0.sendLoadEvent = (*this).SendLoadEvent;
     _this0.asynchronousLoad = (*this).AsynchronousLoad;
     _this0.keepStreamOpen = (*this).KeepStreamOpen;
-    auto _marshal0 = ::ResourceLoadOption();
-    _marshal0.key = (*this).Option.Key;
-    _marshal0.value = (*this).Option.Value;
-    _this0.option = _marshal0;
+    auto _this0_marshal0 = ::ResourceLoadOption();
+    _this0_marshal0.key = (*this).Option.Key;
+    _this0_marshal0.value = (*this).Option.Value;
+    _this0.option = _this0_marshal0;
     _this0.addOption(key, value);
     Name = clix::marshalString<clix::E_UTF8>(_this0.name);
     Stream = gcnew Flood::Stream((::Stream*)_this0.stream);
@@ -170,22 +170,22 @@ Flood::ResourceLoader::ResourceLoader()
 {
 }
 
-Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
+Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _1)
 {
     auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
-    if (_0.Stream != nullptr)
-        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
-    if (_0.Resource != nullptr)
-        _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
-    _marshal0.group = (::ResourceGroup)_0.Group;
-    _marshal0.isHighPriority = _0.IsHighPriority;
-    _marshal0.sendLoadEvent = _0.SendLoadEvent;
-    _marshal0.asynchronousLoad = _0.AsynchronousLoad;
-    _marshal0.keepStreamOpen = _0.KeepStreamOpen;
+    _marshal0.name = clix::marshalString<clix::E_UTF8>(_1.Name);
+    if (_1.Stream != nullptr)
+        _marshal0.stream = (::Stream*)_1.Stream->NativePtr;
+    if (_1.Resource != nullptr)
+        _marshal0.resource = (::Resource*)_1.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)_1.Group;
+    _marshal0.isHighPriority = _1.IsHighPriority;
+    _marshal0.sendLoadEvent = _1.SendLoadEvent;
+    _marshal0.asynchronousLoad = _1.AsynchronousLoad;
+    _marshal0.keepStreamOpen = _1.KeepStreamOpen;
     auto _marshal1 = ::ResourceLoadOption();
-    _marshal1.key = _0.Option.Key;
-    _marshal1.value = _0.Option.Value;
+    _marshal1.key = _1.Option.Key;
+    _marshal1.value = _1.Option.Value;
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
     auto __ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
@@ -193,22 +193,22 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
     return gcnew Flood::Resource((::Resource*)__ret);
 }
 
-bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _0)
+bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _2)
 {
     auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = clix::marshalString<clix::E_UTF8>(_0.Name);
-    if (_0.Stream != nullptr)
-        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
-    if (_0.Resource != nullptr)
-        _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
-    _marshal0.group = (::ResourceGroup)_0.Group;
-    _marshal0.isHighPriority = _0.IsHighPriority;
-    _marshal0.sendLoadEvent = _0.SendLoadEvent;
-    _marshal0.asynchronousLoad = _0.AsynchronousLoad;
-    _marshal0.keepStreamOpen = _0.KeepStreamOpen;
+    _marshal0.name = clix::marshalString<clix::E_UTF8>(_2.Name);
+    if (_2.Stream != nullptr)
+        _marshal0.stream = (::Stream*)_2.Stream->NativePtr;
+    if (_2.Resource != nullptr)
+        _marshal0.resource = (::Resource*)_2.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)_2.Group;
+    _marshal0.isHighPriority = _2.IsHighPriority;
+    _marshal0.sendLoadEvent = _2.SendLoadEvent;
+    _marshal0.asynchronousLoad = _2.AsynchronousLoad;
+    _marshal0.keepStreamOpen = _2.KeepStreamOpen;
     auto _marshal1 = ::ResourceLoadOption();
-    _marshal1.key = _0.Option.Key;
-    _marshal1.value = _0.Option.Value;
+    _marshal1.key = _2.Option.Key;
+    _marshal1.value = _2.Option.Value;
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
     auto __ret = ((::ResourceLoader*)NativePtr)->decode(arg0);

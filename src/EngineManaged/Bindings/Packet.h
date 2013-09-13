@@ -13,7 +13,6 @@
 namespace Flood
 {
     enum struct PacketFlags : unsigned char;
-    ref class _ENetPacket;
     ref class Packet;
 
     [System::Flags]
