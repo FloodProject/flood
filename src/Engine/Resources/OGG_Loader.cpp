@@ -11,6 +11,7 @@
 
 #include "Engine/Resources/OGG_Loader.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -131,7 +132,7 @@ void OggStream::reset()
 
 OGG_Loader::OGG_Loader()
 {
-	extensions.push_back("ogg");
+	extensions.pushBack("ogg");
 
 	callbacks.read_func = OggRead;
 	callbacks.seek_func = OggSeek;
@@ -210,7 +211,7 @@ bool OGG_Loader::decode(ResourceLoadOptions& options)
 		return false;
 
 	// Decode the sound into a buffer now.
-	std::vector<byte>& buffer = sound->dataBuffer;
+	Array<byte>& buffer = sound->dataBuffer;
 	decodeOgg( &oggFile, buffer );
 
 	ov_clear(&oggFile);
@@ -220,7 +221,7 @@ bool OGG_Loader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
+void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, Array<byte>& buffer )
 {
 	// Decode the sound into a buffer now.
 	const size_t BUFFER_SIZE = 32768;

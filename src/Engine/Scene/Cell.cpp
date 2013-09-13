@@ -12,6 +12,7 @@
 #include "Engine/Scene/Geometry.h"
 #include "Core/Math/Helpers.h"
 #include "Core/Math/Color.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -52,7 +53,7 @@ void Cell::setSettings( const TerrainSettings& settings )
 
 //-----------------------------------//
 
-void Cell::setHeights( const std::vector<float>& heights )
+void Cell::setHeights( const Array<float>& heights )
 {
 	this->heights = heights;
 
@@ -87,8 +88,8 @@ void Cell::rebuildVertices()
 	if( heights.empty() ) return;
 
 	// Vertex data
-	std::vector<Vector3> vertex;
-	std::vector<Vector3> texCoords;
+	Array<Vector3> vertex;
+	Array<Vector3> texCoords;
 
 	int numTiles = settings->NumberTiles;
 	int sizeCell = settings->CellSize;
@@ -108,8 +109,8 @@ void Cell::rebuildVertices()
 		float Z = offsetZ + tileSize*col;
 		float Y = heights[i] * settings->MaxHeight;
 		
-		vertex.push_back( Vector3(X, Y, Z) );
-		texCoords.push_back( Vector2(X/sizeCell, Z/sizeCell) );
+		vertex.pushBack( Vector3(X, Y, Z) );
+		texCoords.pushBack( Vector2(X/sizeCell, Z/sizeCell) );
 	}
 
 	assert( vertex.size() == numExpectedVertices );
@@ -126,7 +127,7 @@ void Cell::rebuildVertices()
 void Cell::rebuildIndices()
 {
 	// Index data.
-	std::vector<uint16> indices;
+	Array<uint16> indices;
 
 	const uint32 numTiles = settings->NumberTiles;
 	
@@ -137,14 +138,14 @@ void Cell::rebuildIndices()
 			int i = col * (numTiles + 1) + row;
 
 			// First triangle
-			indices.push_back( uint16(i) );
-			indices.push_back( uint16(i+(numTiles+1)) );
-			indices.push_back( uint16(i+1) );
+			indices.pushBack( uint16(i) );
+			indices.pushBack( uint16(i+(numTiles+1)) );
+			indices.pushBack( uint16(i+1) );
 
 			// Second triangle
-			indices.push_back( uint16(i+1) );
-			indices.push_back( uint16(i+(numTiles+1)) ) ;
-			indices.push_back( uint16(i+(numTiles+2)) );
+			indices.pushBack( uint16(i+1) );
+			indices.pushBack( uint16(i+(numTiles+1)) ) ;
+			indices.pushBack( uint16(i+(numTiles+2)) );
 		}
 	}
 
@@ -200,7 +201,7 @@ void Cell::rebuildFaceNormals()
 		const Vector3& v3 = vertexData[index(i+2) + offset];
 
 		Vector3 normal = CalculateTriangleNormal(v1, v2, v3);
-		faceNormals.push_back( normal );
+		faceNormals.pushBack( normal );
 	}
 
 	const uint numTiles = settings->NumberTiles;
@@ -217,7 +218,7 @@ void Cell::rebuildFaceNormals()
 #define isRegular(x,y) ((x>=1u) && (x<=(numTiles-1u)) \
 						&& (y>=1u) && (y<=(numTiles-1u)))
 
-byte Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
+byte Cell::getNeighborFaces( uint i, Array<uint>& ns )
 {
 	const int numTiles = settings->NumberTiles;
 	uint facesPerRow = numTiles*2;
@@ -259,11 +260,11 @@ void Cell::rebuildAveragedNormals()
 	assert( vs != nullptr );
 
 	// Averaged per-vertex normals.
-	std::vector<Vector3> normals;
+	Array<Vector3> normals;
 
 	LogInfo( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
 
-	std::vector<uint> ns;
+	Array<uint> ns;
 	ns.resize(6);
 
 	uint32 numVertices = gb->getNumVertices();
@@ -280,7 +281,7 @@ void Cell::rebuildAveragedNormals()
 		average /= n;
 		average.normalize();
 
-		normals.push_back( average );
+		normals.pushBack( average );
 	}
 
 	assert( normals.size() ==  gb->getNumVertices() );

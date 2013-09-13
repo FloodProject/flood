@@ -92,10 +92,10 @@ public:
 	FLD_IGNORE void write(byte* data, int size);
 
 	// Appends new data to the packet.
-	void write(std::vector<byte>& data);
+	void write(Array<byte>& data);
 
 	// Returns a copy of the packet's data
-	std::vector<byte> read() const;
+	Array<byte> read() const;
 
 private:
 

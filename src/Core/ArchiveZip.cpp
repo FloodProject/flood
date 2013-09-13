@@ -10,6 +10,7 @@
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 #ifdef ENABLE_ARCHIVE_ZIP
 
@@ -165,7 +166,7 @@ Stream* ArchiveZip::openFile(const Path& path, Allocator* alloc)
 
 //-----------------------------------//
 
-void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
+void ArchiveZip::enumerate(Array<Path>& paths, bool dir)
 {
 	if (!isValid || !handle) return;
 
@@ -181,20 +182,20 @@ void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
 		bool isDir = !name.empty() && name[name.size()-1] == '/';
 
 		if( (dir && isDir) || (!dir && !isDir) )
-			paths.push_back(name);
+			paths.pushBack(name);
 	}
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateFiles(std::vector<Path>& paths)
+void ArchiveZip::enumerateFiles(Array<Path>& paths)
 {
 	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateDirs(std::vector<Path>& paths)
+void ArchiveZip::enumerateDirs(Array<Path>& paths)
 {
 	enumerate(paths, true);
 }
@@ -219,7 +220,7 @@ bool ArchiveZip::existsFile(const Path& path)
 
 bool ArchiveZip::existsDir(const Path& path)
 {
-	std::vector<Path> dirs;
+	Array<Path> dirs(*AllocatorGetHeap());
 	enumerateDirs(dirs);
 	Path normalized = PathNormalize(path);
 

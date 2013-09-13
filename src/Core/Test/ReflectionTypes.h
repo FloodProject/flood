@@ -98,7 +98,7 @@ struct C : public Object
 		for(size_t i = 0; i < NUM_AS; i++)
 		{
 			A* a = AllocateThis(A);
-			arrayA.push_back(a);
+			arrayA.pushBack(a);
 		}
 	}
 
@@ -114,7 +114,7 @@ struct C : public Object
 	}
 
 	A* anA;
-	std::vector<A*> arrayA;
+	Array<A*> arrayA;
 };
 
 //-----------------------------------//
@@ -133,7 +133,7 @@ struct D : public Object
 	{
 		object = AllocateThis(A);
 		refA = AllocateThis(A);
-		vecA.push_back(refA);
+		vecA.pushBack(refA);
 	}
 
 	~D()
@@ -144,7 +144,7 @@ struct D : public Object
 
 	Object* object;
 	RefPtr<A> refA;
-	std::vector<RefPtr<A>> vecA;
+	Array<RefPtr<A>> vecA;
 };
 
 //-----------------------------------//
@@ -167,7 +167,7 @@ struct F : public Object
 		a.foo = 0;
 	}
 
-	std::vector<A> vecA;
+	Array<A> vecA;
 	A a;
 };
 

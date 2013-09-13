@@ -35,7 +35,7 @@ API_AUDIO void AudioShutdown();
 API_AUDIO AudioDevice* GetAudioDevice();
 
 // Gets a list of available audio devices.
-API_AUDIO bool AudioGetDevices(std::vector<String>& devices);
+API_AUDIO bool AudioGetDevices(Array<String>& devices);
 
 // Creates an internal AL device.
 API_AUDIO AudioDevice* AudioCreateDevice(const String& device);
@@ -73,7 +73,7 @@ public:
 	~AudioDevice();
 
 	// Gets a list of available extensions.
-	bool getExtensions(std::vector<String>& extensions);
+	bool getExtensions(Array<String>& extensions);
 
 	// Creates the main context.
 	bool createMainContext();

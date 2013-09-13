@@ -47,7 +47,7 @@ protected:
 API_PIPELINE ResourceProcessor* PipelineFindProcessor(Class* type);
 
 // Maps the resource processors to the resource types.
-extern std::vector<ResourceProcessor*> resourceProcessors;
+extern Array<ResourceProcessor*> resourceProcessors;
 
 //-----------------------------------//
 

@@ -13,7 +13,8 @@
 
 #include "Core/String.h"
 #include "Core/WebServer.h"
-#include "Core/Memory.h"
+#include "Core/Array.h"
+
 #include "mongoose.h"
 
 NAMESPACE_CORE_BEGIN
@@ -99,7 +100,7 @@ void WebServerStop( WebContext* context )
 
 void WebServerAddRoute( WebContext* context, WebRoute route )
 {
-	context->routes.push_back(route);
+	context->routes.pushBack(route);
 }
 
 //-----------------------------------//

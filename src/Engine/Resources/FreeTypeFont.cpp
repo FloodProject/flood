@@ -8,7 +8,9 @@
 #include "Engine/API.h"
 #include "Engine/Resources/FreeTypeFont.h"
 
+#include "Core/Array.h"
 #include "Core/Math/Rectangle.h"
+
 #include <freetype/ftglyph.h>
 #include <freetype/freetype.h>
 #include <freetype/ftlcdfil.h>
@@ -25,6 +27,7 @@ struct FreeTypeFont::FontInfo
 
 FreeTypeFont::FreeTypeFont()
     :fontSize(0)
+    , data(*AllocatorGetHeap())
 {
     fontInfo = AllocateThis(FontInfo);
 }

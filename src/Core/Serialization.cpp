@@ -22,6 +22,8 @@
 #include "Core/Math/EulerAngles.h"
 #include "Core/Math/Color.h"
 
+#include "Core/Array.h"
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -238,10 +240,10 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 static void ReflectionWalkArray(ReflectionContext* context)
 {
 	const Field* field = context->field;
-	std::vector<byte>& array = *(std::vector<byte>*) context->address;
+	Array<byte>& array = *(Array<byte>*) context->address;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
-	uint32 arraySize = array.size() / elementSize;
+	uint32 arraySize = array.size();
 
 	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
@@ -391,7 +393,7 @@ void ReflectionWalkComposite(ReflectionContext* context)
 		context->composite = current;
 	}
 
-	const std::vector<Field*>& fields = context->composite->fields;
+	const Array<Field*>& fields = context->composite->fields;
 
 	const Field* field = context->field; 
 
@@ -492,8 +494,8 @@ bool Serializer::saveObjectToFile(Serializer& serializer, const Path& file, Obje
 
 //-----------------------------------//
 
-typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
-typedef std::vector<Object*> ObjectRawPtrArray;
+typedef Array<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
+typedef Array<Object*> ObjectRawPtrArray;
 
 void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 size )
 {

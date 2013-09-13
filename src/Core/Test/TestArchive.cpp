@@ -8,6 +8,7 @@
 #include "Core/API.h"
 #include "Core/Archive.h"
 #include "Core/Stream.h"
+#include "Core/Array.h"
 
 #include <UnitTest++.h>
 
@@ -19,7 +20,7 @@ SUITE(Core)
 		ArchiveDirectory archive("teste");
 		CHECK(archive.isValid);
 
-		std::vector<Path> files;
+		Array<Path> files(*AllocatorGetHeap());
 		archive.enumerateFiles(files);
 
 		CHECK( archive.existsFile("foo.txt") );
@@ -35,7 +36,7 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL( "foobar", text.c_str() );
 
-		std::vector<Path> dirs;
+		Array<Path> dirs(*AllocatorGetHeap());
 		archive.enumerateDirs(dirs);
 
 		CHECK( dirs.size() == 2 );
@@ -49,7 +50,7 @@ SUITE(Core)
 		ArchiveZip archive("teste.zip");
 		CHECK( archive.isValid );
 
-		std::vector<Path> files;
+		Array<Path> files(*AllocatorGetHeap());
 		archive.enumerateFiles(files);
 		CHECK( files.size() == 5 );
 
@@ -68,7 +69,7 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
-		std::vector<Path> dirs;
+		Array<Path> dirs(*AllocatorGetHeap());
 
 		archive.enumerateDirs(dirs);
 
@@ -91,7 +92,7 @@ SUITE(Core)
 		archive.mount(archive_zip, "");
 		archive.mount(archive_dir, "");
 
-		std::vector<Path> files;
+		Array<Path> files(*AllocatorGetHeap());
 		archive.enumerateFiles(files);
 		CHECK(files.size() == 5+4 );
 
@@ -110,7 +111,7 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
-		std::vector<Path> dirs;
+		Array<Path> dirs(*AllocatorGetHeap());
 		archive.enumerateDirs(dirs);
 		CHECK(dirs.size() == 5);
 		CHECK(archive.existsDir("files"));

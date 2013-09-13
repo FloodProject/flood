@@ -74,10 +74,10 @@ public:
 	void setUniform( const char* slot, float value );
 
 	// Adds a named Vector3 array uniform to the program.
-	void setUniform( const char* slot, const std::vector<Vector3>& vec );
+	void setUniform( const char* slot, const Array<Vector3>& vec );
 
 	// Adds a named color array uniform to the program.
-	void setUniform( const char* slot, const std::vector<Color>& vec );
+	void setUniform( const char* slot, const Array<Color>& vec );
 
 	// Adds a named vector uniform to the program.
 	void setUniform( const char* slot, const Vector3& vec );
@@ -89,7 +89,7 @@ public:
 	void setUniform( const char* slot, const Matrix4x4& );
 
 	// Adds a named 4x4 matrix vector uniform to the program.
-	void setUniform( const char* slot, const std::vector<Matrix4x4>& vec );
+	void setUniform( const char* slot, const Array<Matrix4x4>& vec );
 };
 
 //API_GRAPHICS UniformBuffer* UniformBufferCreate( Allocator* );

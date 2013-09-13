@@ -18,6 +18,7 @@
 #include "Core/Stream.h"
 #include "Core/Log.h"
 #include "Core/Math/Hash.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -66,7 +67,7 @@ static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 
 void ResourceIndexer::addArchive(Archive* archive)
 {
-	std::vector<Path> res;
+	Array<Path> res(*AllocatorGetHeap());
 	archive->enumerateFiles(res);
 	
 	for(auto& i : res)
@@ -120,7 +121,7 @@ void ResourceIndexer::indexResources(Task* task)
 		return;
 	}
 
-	std::vector<byte> data;
+	Array<byte> data(*AllocatorGetHeap());
 	stream.read(data);
 	stream.close();
 

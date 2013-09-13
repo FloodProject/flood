@@ -86,7 +86,7 @@ void Flood::WindowManager::Windows::set(System::Collections::Generic::List<Flood
     for each(Flood::Window^ _element in value)
     {
         auto _marshalElement = (::Window*)_element->NativePtr;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::WindowManager*)NativePtr)->windows = _tmpvalue;
 }

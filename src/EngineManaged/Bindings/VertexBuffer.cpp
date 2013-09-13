@@ -199,7 +199,7 @@ void Flood::VertexDeclaration::Decls::set(System::Collections::Generic::List<Flo
         _marshal0.offset = (::uint32)_element.Offset;
         _marshal0.size = (::uint32)_element.Size;
         auto _marshalElement = _marshal0;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::VertexDeclaration*)NativePtr)->decls = _tmpvalue;
 }

@@ -212,7 +212,7 @@ void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigne
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->data = _tmpvalue;
 }
@@ -234,7 +234,7 @@ void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<un
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.pushBack(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->indexData = _tmpvalue;
 }

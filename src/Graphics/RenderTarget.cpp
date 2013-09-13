@@ -47,7 +47,7 @@ RenderView* RenderTarget::createView()
 	RenderView* renderView = AllocateThis(RenderView);
 	renderView->setRenderTarget(this);
 	renderView->setSize(getSettings().getSize());
-	views.push_back(renderView);
+	views.pushBack(renderView);
 	
 	return renderView;
 }

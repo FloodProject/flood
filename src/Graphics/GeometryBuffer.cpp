@@ -8,6 +8,7 @@
 #include "Graphics/API.h"
 #include "Graphics/GeometryBuffer.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -58,7 +59,7 @@ uint8 VertexElement::getSize() const
 
 void VertexDeclaration::add(const VertexElement& elem)
 {
-	decls.push_back(elem);
+	decls.pushBack(elem);
 }
 
 //-----------------------------------//
@@ -66,7 +67,7 @@ void VertexDeclaration::add(const VertexElement& elem)
 void VertexDeclaration::add(const VertexElementP& pod)
 {
 	VertexElement elem(pod.attribute, pod.type, pod.components);
-	decls.push_back(elem);
+	decls.pushBack(elem);
 }
 
 //-----------------------------------//
@@ -74,7 +75,7 @@ void VertexDeclaration::add(const VertexElementP& pod)
 void VertexDeclaration::add(VertexAttribute attribute, int numComponents)
 {
 	VertexElement elem(attribute, VertexDataType::Float, numComponents);
-	decls.push_back(elem);
+	decls.pushBack(elem);
 }
 
 //-----------------------------------//

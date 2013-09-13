@@ -81,7 +81,7 @@ void Mesh::buildBounds()
 	for( size_t i = 0; i < groups.size(); i++ )
 	{
 		MeshGroup& group = groups[i];
-		const std::vector<uint16>& indices = group.indices;
+		const Array<uint16>& indices = group.indices;
 		
 		// Update the bounding box to accomodate new geometry.
 		for( size_t j = 0; j < indices.size(); j++ )

@@ -79,7 +79,7 @@ public:
 	void clearIndexes();
 
 	template<typename T>
-	void set(VertexAttribute attr, const std::vector<T>& data)
+	void set(VertexAttribute attr, const Array<T>& data)
 	{
 		if( data.empty() ) return;
 
@@ -109,10 +109,10 @@ public:
 	BufferAccess access;
 
 	// Holds the vertex data.
-	std::vector<uint8> data;
+	Array<uint8> data;
 
 	// Holds the index data.
-	std::vector<uint8> indexData;
+	Array<uint8> indexData;
 
 	// Holds the index size in bits.
 	uint8 indexSize;

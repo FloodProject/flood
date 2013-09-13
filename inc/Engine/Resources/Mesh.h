@@ -30,7 +30,7 @@ struct API_ENGINE MeshMaterial
 
 struct API_ENGINE MeshGroup
 {
-	std::vector<uint16> indices;
+	Array<uint16> indices;
 	MeshMaterial material;
 };
 
@@ -73,7 +73,7 @@ public:
 	ACCESSOR(GeometryBuffer, GeometryBufferPtr, geometryBuffer)
 
 	// Gets the animations of the mesh.
-	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
+	GETTER(Animations, const Array<AnimationPtr>&, animations)
 
 	// Gets the resource group of this resource.
 	GETTER(ResourceGroup, ResourceGroup, ResourceGroup::Meshes)
@@ -96,10 +96,10 @@ public:
 	AnimationPtr bindPose;
 
 	// Animations of the mesh.
-	std::vector<AnimationPtr> animations;
+	Array<AnimationPtr> animations;
 
 	// Groups of the mesh.
-	std::vector<MeshGroup> groups;
+	Array<MeshGroup> groups;
 
 	// Bounding volume of the mesh.
 	BoundingBox boundingVolume;

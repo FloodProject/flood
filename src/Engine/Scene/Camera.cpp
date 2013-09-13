@@ -13,6 +13,7 @@
 #include "Graphics/RenderDevice.h"
 #include "Graphics/RenderView.h"
 #include "Engine/Geometry/DebugGeometry.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -170,7 +171,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 	{
 		const Group* group = (Group*) entity;
 
-		const std::vector<EntityPtr>& entities = group->getEntities();
+		const Array<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.
 		for( size_t i = 0; i < entities.size(); i++ )
@@ -200,7 +201,7 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 	#pragma TODO("Fix multiple geometry instancing")
 
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	const Array<GeometryPtr>& geoms = entity->getGeometry();
 
 	for( size_t i = 0; i < geoms.size(); i++ )
 	{

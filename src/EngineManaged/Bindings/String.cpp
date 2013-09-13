@@ -6,8 +6,10 @@
 ************************************************************************/
 
 #include "String.h"
+#include "Core/Memory.h"
+#include "Core/Array.h"
 
-using namespace System;
+//using namespace System;
 using namespace System::Runtime::InteropServices;
 
 Flood::StringHash::StringHash(::StringHash* native)
@@ -54,11 +56,11 @@ System::String^ Flood::FloodString::StringFormat(System::String^ s)
 void Flood::FloodString::StringSplit(System::String^ s, char delim, System::Collections::Generic::List<System::String^>^ elems)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(s);
-    auto _tmpelems = std::vector<::String>();
+    auto _tmpelems = ::Array<::String>(*::AllocatorGetHeap());
     for each(System::String^ _element in elems)
     {
         auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmpelems.push_back(_marshalElement);
+        _tmpelems.pushBack(_marshalElement);
     }
     auto arg2 = _tmpelems;
     ::StringSplit(arg0, delim, arg2);

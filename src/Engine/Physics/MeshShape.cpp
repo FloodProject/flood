@@ -61,10 +61,10 @@ btTriangleIndexVertexArray* MeshShape::convertMesh()
 				continue;
 
 			GeometryBuffer gb = rend->getVertexBuffer();
-			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
+			const Array<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
 			
 			IndexBufferPtr ib = rend->getIndexBuffer();
-			const std::vector<ushort>& indices = ib->getIndices16();
+			const Array<ushort>& indices = ib->getIndices16();
 
  		//	btIndexedMesh* indexMesh = ;
 
@@ -86,7 +86,7 @@ btTriangleMesh* MeshShape::convertMesh()
 #if 0
 	btTriangleMesh* mesh = AllocateThis(btTriangleMesh, false);
 
-	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
+	const Array<GeometryPtr>& geometries = entity->getGeometry();
 
 	for( size_t i = 0; i < geometries.size(); i++ )
 	{
@@ -101,7 +101,7 @@ btTriangleMesh* MeshShape::convertMesh()
 				continue;
 
 			GeometryBuffer gb = rend->getVertexBuffer();
-			const std::vector<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
+			const Array<Vector3>& pos = vb->getAttribute( VertexAttribute::Position );
 			
 			IndexBufferPtr ib = rend->getIndexBuffer();
 
@@ -118,7 +118,7 @@ btTriangleMesh* MeshShape::convertMesh()
 			}
 			else
 			{
-				const std::vector<ushort>& ind = ib->getIndices16();
+				const Array<ushort>& ind = ib->getIndices16();
 
 				for( size_t i = 0; i < ind.size(); i += 3 )
 				{

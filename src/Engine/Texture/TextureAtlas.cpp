@@ -9,6 +9,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Texture/TextureAtlas.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -116,8 +117,8 @@ void TextureAtlas::resizeAtlas(uint newSize)
 {
     rectanglePacker.Init(newSize,newSize);
 
-    std::vector<Vector2i> rectSizes;
-    std::vector<Rectangle> newRects;
+    Array<Vector2i> rectSizes;
+    Array<Rectangle> newRects;
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
@@ -130,7 +131,7 @@ void TextureAtlas::resizeAtlas(uint newSize)
         rectSize.x = width+1;
         rectSize.y = height+1;
 
-        rectSizes.push_back(rectSize);
+        rectSizes.pushBack(rectSize);
     }
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);

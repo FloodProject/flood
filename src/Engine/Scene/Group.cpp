@@ -8,6 +8,7 @@
 #include "Engine/API.h"
 #include "Engine/Scene/Group.h"
 #include "Engine/Scene/Transform.h"
+#include "Core/Array.h"
 #include <algorithm>
 
 NAMESPACE_ENGINE_BEGIN
@@ -50,7 +51,7 @@ void Group::add( const EntityPtr& entity )
 	if( !entity ) return;
 
 	entity->setParent( this );
-	entities.push_back( entity );
+	entities.pushBack( entity );
 
 	onEntityAdded(entity);
 	onEntityChanged();
@@ -75,8 +76,7 @@ EntityPtr Group::findEntity( const String& name ) const
 
 bool Group::remove( const EntityPtr& entity )
 {
-	std::vector<EntityPtr>::iterator it;
-	it = std::find(entities.begin(), entities.end(), entity);
+	auto it = std::find(entities.begin(), entities.end(), entity);
 
 	if( it == entities.end() )
 		return false;
@@ -84,7 +84,7 @@ bool Group::remove( const EntityPtr& entity )
 	onEntityRemoved(entity);
 	onEntityChanged();
 
-	entities.erase(it);
+	entities.remove(it);
 
 	return true;
 }
@@ -104,7 +104,7 @@ void Group::update( float delta )
 
 void Group::fixUp()
 {
-	std::vector<EntityPtr> invalid;
+	Array<EntityPtr> invalid;
 
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
@@ -112,7 +112,7 @@ void Group::fixUp()
 		
 		if( !entity )
 		{
-			invalid.push_back(entity);
+			invalid.pushBack(entity);
 			continue;
 		}
 
@@ -123,7 +123,7 @@ void Group::fixUp()
 	for( size_t i = 0; i < invalid.size(); i++ )
 	{
 		auto it = std::find(entities.begin(), entities.end(), invalid[i]);
-		entities.erase(it);
+		entities.remove(it);
 	}
 }
 

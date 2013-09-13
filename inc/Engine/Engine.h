@@ -90,7 +90,7 @@ public:
 protected:
 
 	// Subsystems.
-	std::vector<Subsystem*> subsystems;
+	Array<Subsystem*> subsystems;
 
 	// Manages background tasks.
 	TaskPool* taskPool;

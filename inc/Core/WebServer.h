@@ -37,7 +37,7 @@ struct WebRoute
 struct WebContext
 {
 	mg_context* mongoose;
-	std::vector<WebRoute> routes;
+	Array<WebRoute> routes;
 };
 
 API_CORE WebContext* WebServerCreate( Allocator* );

@@ -9,6 +9,7 @@
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Pointers.h"
+#include "Core/Array.h"
 
 #include <UnitTest++.h>
 
@@ -48,7 +49,7 @@ SUITE(Core)
 		CHECK(flines.isValid);
 
 		// Read lines.
-		std::vector<String> lines;
+		Array<String> lines(*AllocatorGetHeap());
 		flines.readLines(lines);
 		CHECK_EQUAL(3, lines.size());
 		CHECK_EQUAL("foo", lines[0].c_str());

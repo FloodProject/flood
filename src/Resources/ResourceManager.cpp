@@ -16,6 +16,7 @@
 #include "Core/Archive.h"
 #include "Core/Utilities.h"
 #include "Core/Serialization.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -433,7 +434,7 @@ void ResourceManager::removeUnusedResources()
 
 	return;
 
-	std::vector<String> resourcesToRemove;
+	Array<String> resourcesToRemove;
 
 	// Search for unused resources.
 	ResourceMap::const_iterator it;
@@ -442,7 +443,7 @@ void ResourceManager::removeUnusedResources()
 		const ResourceHandle& resource = it->second;
 
 		if( resource.Resolve()->references.read() == 1 )
-			resourcesToRemove.push_back(it->first);
+			resourcesToRemove.pushBack(it->first);
 	}
 
 	for( size_t i = 0; i < resourcesToRemove.size(); i++ )
@@ -490,7 +491,7 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 	Class* klass = loader->getType();
 	LogInfo( "Registering resource loader '%s'", klass->name );
 
-	const std::vector<String>& extensions = loader->getExtensions();
+	const Array<String>& extensions = loader->getExtensions();
 	
 	for( size_t i = 0; i < extensions.size(); i++ )
 	{

@@ -12,6 +12,7 @@
 #include "Core/Math/Hash.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -72,7 +73,7 @@ static void RegisterClass(Class* klass)
 
 	// Register as child class in the parent class.
 	Class* parent = klass->parent;
-	if( parent ) parent->childs.push_back(klass);
+	if( parent ) parent->childs.pushBack(klass);
 
 	// Register the class id in the map.
 	ClassIdMap& ids = ClassGetIdMap();
@@ -183,7 +184,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 void ClassAddField(Class* klass, Field* field)
 {
-	klass->fields.push_back(field);
+	klass->fields.pushBack(field);
 
 	if( ClassGetFieldById(klass, field->id) )
 	{
@@ -235,7 +236,7 @@ Class* ClassGetType(const Object* object)
 
 Field* ClassGetField(const Class* klass, const char* name)
 {
-	const std::vector<Field*>& fields = klass->fields;
+	const Array<Field*>& fields = klass->fields;
 	
 	for(size_t i = 0; i < fields.size(); i++)
 	{

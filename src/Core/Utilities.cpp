@@ -7,6 +7,8 @@
 
 #include "Core/API.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
+#include "Core/Memory.h"
 #include "Core/String.h"
 #include "Core/Math/Hash.h"
 
@@ -177,13 +179,13 @@ String StringFormatArgs(const char* str, va_list args)
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, std::vector<String>& elems)
+void StringSplit(const String& s, char delim, Array<String>& elems)
 {
 	std::stringstream ss(s);
 	String item;
 	
 	while(std::getline(ss, item, delim)) 
-		elems.push_back(item);
+		elems.pushBack(item);
 }
 
 //-----------------------------------//
@@ -385,7 +387,7 @@ StringHash HashString(const String& s)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
+static void DirArchiveEnumerate(Array<Path>& paths, Path dirPath,
 								Path filePath, bool dirs)
 {
 	// Open directory stream.
@@ -407,7 +409,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
 			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
 				name.c_str() );
-			if(!dirs) paths.push_back(path);
+			if(!dirs) paths.pushBack(path);
 			break;
 		}
 		case DT_DIR:
@@ -417,7 +419,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
 
-			if(dirs) paths.push_back(_filePath);
+			if(dirs) paths.pushBack(_filePath);
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			
 			break;
@@ -430,14 +432,14 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 
 //-----------------------------------//
 
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
+void FileEnumerateFiles(const Path& path, Array<Path>& files)
 {
 	DirArchiveEnumerate(files, path, "", false);
 }
 
 //-----------------------------------//
 
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
+void FileEnumerateDirectories(const Path& path, Array<Path>& dirs)
 {
 	DirArchiveEnumerate(dirs, path, "", true);
 }

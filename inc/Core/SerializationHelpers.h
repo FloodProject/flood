@@ -74,7 +74,7 @@ public:
 
 	json_t* rootValue; //!< Root JSON value.
 
-	std::vector<json_t*> values; //!< Stack of JSON values.
+	Array<json_t*> values; //!< Stack of JSON values.
 };
 
 ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value );

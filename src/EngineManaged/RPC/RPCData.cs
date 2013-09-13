@@ -100,7 +100,7 @@ namespace Flood.RPC
             Header.LocalId = localId;
             Header.Write();
         }
-
+            
         public RPCData(RPCData call, RPCDataType type, RPCFlags flags = RPCFlags.None)
             : this(call.Peer, call.RPCManager ,call.Header.LocalId, call.Header.RemoteId, type, flags)
         {

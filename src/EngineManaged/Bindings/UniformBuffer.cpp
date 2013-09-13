@@ -85,7 +85,7 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
         _marshal0.y = _element.Y;
         _marshal0.z = _element.Z;
         auto _marshalElement = _marshal0;
-        _tmpvec.push_back(_marshalElement);
+        _tmpvec.pushBack(_marshalElement);
     }
     auto arg1 = _tmpvec;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
@@ -104,7 +104,7 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
         _marshal0.b = (::byte)(::uint8)_element.B;
         _marshal0.a = (::byte)(::uint8)_element.A;
         auto _marshalElement = _marshal0;
-        _tmpvec.push_back(_marshalElement);
+        _tmpvec.pushBack(_marshalElement);
     }
     auto arg1 = _tmpvec;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);
@@ -181,7 +181,7 @@ void Flood::UniformBuffer::SetUniform(System::String^ slot, System::Collections:
         _marshal0.tz = _element.Tz;
         _marshal0.tw = _element.Tw;
         auto _marshalElement = _marshal0;
-        _tmpvec.push_back(_marshalElement);
+        _tmpvec.pushBack(_marshalElement);
     }
     auto arg1 = _tmpvec;
     ((::UniformBuffer*)NativePtr)->setUniform(arg0, arg1);

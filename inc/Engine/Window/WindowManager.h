@@ -9,7 +9,6 @@
 
 #include "Engine/API.h"
 #include "Engine/Window/Window.h"
-#include <vector>
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -34,7 +33,7 @@ public:
     // Destroys all the windows.
     void destroyWindows();
 
-    std::vector<Window*> windows;
+    Array<Window*> windows;
 };
 
 //-----------------------------------//

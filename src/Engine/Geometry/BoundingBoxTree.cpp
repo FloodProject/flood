@@ -510,7 +510,7 @@ public:
 };
 
 #define TRI_EOF 0xFFFFFFFF
-typedef std::vector< uint32 > TriVector;
+typedef Array< uint32 > TriVector;
 
 class NodeAABB
 {
@@ -537,7 +537,7 @@ public:
 		triangles.reserve(tcount);
 		for (uint32 i=0; i<tcount; i++)
 		{
-			triangles.push_back(i);
+			triangles.pushBack(i);
 		}
 		mBounds.setMin( vertices );
 		mBounds.setMax( vertices );
@@ -604,11 +604,9 @@ public:
 		{ 
 			// Copy the triangle indices into the leaf triangles array
 			mLeafTriangleIndex = leafTriangles.size(); // assign the array start location for these leaf triangles.
-			leafTriangles.push_back(count);
-			for (TriVector::const_iterator i=triangles.begin(); i!=triangles.end(); ++i)
-			{
-				leafTriangles.push_back( *i );
-			}
+			leafTriangles.pushBack(count);
+			for (auto i : triangles)
+				leafTriangles.pushBack(i);
 		}
 		else
 		{
@@ -627,9 +625,9 @@ public:
 
 			// Create two arrays; one of all triangles which intersect the 'left' half of the bounding volume node
 			// and another array that includes all triangles which intersect the 'right' half of the bounding volume node.
-			for (TriVector::const_iterator i=triangles.begin(); i!=triangles.end(); ++i)
+			for (auto i : triangles)
 			{
-				uint32 tri = (*i); 
+				uint32 tri = i;
 
 				{
 					uint32 i1 = indices[tri*3+0];
@@ -650,7 +648,7 @@ public:
 						leftBounds.include(p1);
 						leftBounds.include(p2);
 						leftBounds.include(p3);
-						leftTriangles.push_back(tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
+						leftTriangles.pushBack(tri); // Add this triangle to the 'left triangles' array and revise the left triangles bounding volume
 					}
 
 					if ( b2.containsTriangle(p1,p2,p3))
@@ -663,7 +661,7 @@ public:
 						rightBounds.include(p1);
 						rightBounds.include(p2);
 						rightBounds.include(p3);
-						rightTriangles.push_back(tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
+						rightTriangles.pushBack(tri); // Add this triangle to the 'right triangles' array and revise the right triangles bounding volume.
 					}
 				}
 			}

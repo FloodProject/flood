@@ -30,7 +30,7 @@ REFLECT_CLASS_END()
 
 FreeTypeFontLoader::FreeTypeFontLoader()
 {
-	extensions.push_back("ttf");
+	extensions.pushBack("ttf");
 }
 
 //-----------------------------------//

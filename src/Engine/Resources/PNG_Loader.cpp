@@ -11,7 +11,7 @@
 
 #include "Engine/Resources/PNG_Loader.h"
 
-int decodePNG(std::vector<byte>& out_image_32bit, uint32& image_width, 
+int decodePNG(Array<byte>& out_image_32bit, uint32& image_width, 
 			  uint32& image_height, const byte* in_png, uint32 in_size);
 
 NAMESPACE_ENGINE_BEGIN
@@ -27,20 +27,20 @@ REFLECT_CLASS_END()
 PNG_Pico_Loader::PNG_Pico_Loader()
 	: flipAxisY(false)
 {
-	extensions.push_back("png");
+	extensions.pushBack("png");
 }
 
 //-----------------------------------//
 
 bool PNG_Pico_Loader::decode(ResourceLoadOptions& options)
 {
-	std::vector<byte> data;
+	Array<byte> data;
 	StreamRead((Stream*) &stream, data);
 
 	if( data.empty() ) return false;
 
 	uint32 width, height;
-	std::vector<byte> buffer;
+	Array<byte> buffer;
 	
 	decodePNG(buffer, width, height, &data[0], data.size());
 
@@ -60,7 +60,7 @@ bool PNG_Pico_Loader::decode(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-void PNG_Pico_Loader::flip( std::vector<byte>& buffer, uint32 width, uint32 height )
+void PNG_Pico_Loader::flip( Array<byte>& buffer, uint32 width, uint32 height )
 {
 	// Flip Y in place.
 	for( uint y = 0; y < height/2; y++ )

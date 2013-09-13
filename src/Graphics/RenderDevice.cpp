@@ -386,7 +386,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 		//shadowDepthTexture = shadowTextures[light];
 		//assert( shadowDepthTexture != nullptr );
 
-		std::vector< Color > colors;
+		Array< Color > colors;
 		colors.push_back( light->getDiffuseColor() );
 		colors.push_back( light->getSpecularColor() );
 		colors.push_back( light->getEmissiveColor() );

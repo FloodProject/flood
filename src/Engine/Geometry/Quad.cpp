@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Geometry/Quad.h"
+#include "Core/Array.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -40,25 +41,25 @@ GeometryBufferPtr Quad::createQuad( float width, float height )
 	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
 
 	// Vertex position data
-	std::vector< Vector3 > vertex;
-	vertex.push_back( Vector2(0.0f, 0.0f) );
-	vertex.push_back( Vector2(width, 0.0f) );
-	vertex.push_back( Vector2(0.0f, height) );
-	vertex.push_back( Vector2(width, height) );
+	Array< Vector3 > vertex;
+	vertex.pushBack( Vector2(0.0f, 0.0f) );
+	vertex.pushBack( Vector2(width, 0.0f) );
+	vertex.pushBack( Vector2(0.0f, height) );
+	vertex.pushBack( Vector2(width, height) );
 
 	// Vertex color data
-	std::vector< Vector3 > colors;
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
-	colors.push_back( Color::White );
+	Array< Vector3 > colors;
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
+	colors.pushBack( Color::White );
 
 	// Vertex tex coords data
-	std::vector< Vector3 > coords;
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+	Array< Vector3 > coords;
+	coords.pushBack( Vector2(0.0f, 1.0f) );
+	coords.pushBack( Vector2(1.0f, 0.0f) );
+	coords.pushBack( Vector2(1.0f, 1.0f) );
+	coords.pushBack( Vector2(0.0f, 1.0f) );
 
 	// Vertex buffer setup
 	gb->set( VertexAttribute::Position, vertex );

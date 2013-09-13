@@ -232,7 +232,7 @@ bool HostServer::createSocket( const HostConnectionDetails& details )
 
 void HostServer::onPeerConnect(const PeerPtr& peer)
 {
-	peers.push_back(peer);
+	peers.pushBack(peer);
 
 	auto keyExchanger = Allocate(AllocatorGetNetwork(), PacketServerKeyExchanger);
 	peer->addProcessor(keyExchanger);
@@ -245,7 +245,7 @@ void HostServer::onPeerDisconnect(const PeerPtr& peer)
 	auto it = std::find(peers.begin(), peers.end(), peer);
 	assert( it != peers.end() );
 	
-	peers.erase(it);
+	peers.remove(it);
 }
 
 //-----------------------------------//

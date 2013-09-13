@@ -14,6 +14,7 @@
 #include "Core/Network/Network.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
+#include "Core/Array.h"
 
 #include <tropicssl/dhm.h>
 #include <tropicssl/sha1.h>
@@ -52,7 +53,7 @@ enum class KeyExchangePacket : uint16
 
 //-----------------------------------//
 
-static void InitSessionHash( SessionHash& hash, const std::vector<uint8>& secret )
+static void InitSessionHash( SessionHash& hash, const Array<uint8>& secret )
 {
     sha1((unsigned char*)secret.data(), secret.size(), hash.data());
 }
@@ -143,7 +144,8 @@ bool PacketClientKeyExchanger::processServerPublicKeyPacket(Peer* peer, Packet* 
     }
 
     // Derive the shared secret
-    std::vector<uint8> secret(dhm.len);
+    Array<uint8> secret;
+    secret.resize(dhm.len);
     if (int ret = dhm_calc_secret(&dhm, secret.data(), &dhm.len)) 
     {
         LogError("dhm_calc_secret returned %d", ret);
@@ -184,7 +186,7 @@ bool PacketClientKeyExchanger::processServerSessionAckPacket(Peer* peer, Packet*
     if (packet->getId() != (PacketId)KeyExchangePacket::ServerSessionAck)
         return false;
 
-    std::vector<uint8> data = packet->read();
+    Array<uint8> data = packet->read();
     if (data.size() != sizeof(ServerSessionStatus))
     {
         LogError("Unexpected server message size.");
@@ -250,7 +252,8 @@ bool PacketServerKeyExchanger::processClientPublicKeyPacket(Peer* peer, Packet* 
     }
 
     // Derive the shared secret
-    std::vector<uint8> secret(dhm.len);
+    Array<uint8> secret;
+    secret.resize(dhm.len);
     if (int ret = dhm_calc_secret(&dhm, secret.data(), &dhm.len)) 
     {
         LogError("dhm_calc_secret returned %d", ret);
@@ -287,7 +290,7 @@ bool PacketServerKeyExchanger::processClientSessionPacket(Peer* peer, Packet* pa
         return false;
 
     HostServer* server = (HostServer*) peer->getHost();
-    std::vector<uint8> &data = packet->read();
+    Array<uint8> &data = packet->read();
     Session* session;
 
     if (data.size() != 0)

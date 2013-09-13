@@ -47,7 +47,7 @@ void Flood::Image::SetBuffer(System::Collections::Generic::List<unsigned char>^ 
     for each(unsigned char _element in v)
     {
         auto _marshalElement = (::byte)(::uint8)_element;
-        _tmpv.push_back(_marshalElement);
+        _tmpv.pushBack(_marshalElement);
     }
     auto arg0 = _tmpv;
     ((::Image*)NativePtr)->setBuffer(arg0);

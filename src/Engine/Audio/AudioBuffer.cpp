@@ -63,7 +63,7 @@ void AudioBuffer::upload(const AudioBufferDetails& details)
 
 void AudioGetBufferDataDetails(AudioBufferDetails& details, Sound* sound)
 {
-	const std::vector<byte>& soundData = sound->getBuffer();
+	const Array<byte>& soundData = sound->getBuffer();
 	
 	details.data = (uint8*) soundData.data();
 	details.size = soundData.size();

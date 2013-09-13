@@ -7,6 +7,7 @@
 
 #include "Engine/API.h"
 #include "Engine/Window/WindowManager.h"
+#include "Core/Array.h"
 
 //-----------------------------------//
 
@@ -24,10 +25,9 @@ WindowManager::~WindowManager()
 
 void WindowManager::destroyWindows()
 {
-    for(auto &it = windows.begin(); it != windows.end(); ++it)
+    for(auto w : windows)
     {
-        Window* window = *it;
-        Deallocate(window);
+        Deallocate(w);
     }
 }
 

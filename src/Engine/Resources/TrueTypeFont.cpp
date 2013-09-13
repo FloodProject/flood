@@ -21,6 +21,7 @@ struct TrueTypeFont::FontInfo
 //-----------------------------------//
 
 TrueTypeFont::TrueTypeFont()
+    : data(*AllocatorGetHeap())
 {
     fontInfo = AllocateThis(FontInfo);
 }

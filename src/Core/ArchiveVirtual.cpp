@@ -10,6 +10,7 @@
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 #ifdef ENABLE_ARCHIVE_VIRTUAL
 
@@ -19,6 +20,7 @@ NAMESPACE_CORE_BEGIN
 
 ArchiveVirtual::ArchiveVirtual() 
 	: Archive("")
+	, mounts(*AllocatorGetHeap())
 {
 }
 
@@ -35,7 +37,7 @@ static void HandleWatch(Archive*, const FileWatchEvent& event);
 
 bool ArchiveVirtual::mount(Archive * mount, const Path& mountPath)
 {
-	mounts.push_back(mount);
+	mounts.pushBack(mount);
 
 	// Setup archive watch callbacks.
 	mount->userdata = this;
@@ -53,7 +55,7 @@ void ArchiveVirtual::mountDirectories(const Path& dirPath, Allocator* alloc)
 
 	mount(dir, "");
 	
-	std::vector<Path> dirs;
+	Array<Path> dirs(*AllocatorGetHeap());
 	dir->enumerateDirs(dirs);
 
 	for(auto& dir : dirs)
@@ -107,7 +109,7 @@ Stream* ArchiveVirtual::openFile(const Path& path, Allocator* alloc)
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerate(std::vector<Path>& paths, bool dir)
+void ArchiveVirtual::enumerate(Array<Path>& paths, bool dir)
 {
 
 	for(auto& i : mounts)
@@ -121,14 +123,14 @@ void ArchiveVirtual::enumerate(std::vector<Path>& paths, bool dir)
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerateFiles(std::vector<Path>& paths)
+void ArchiveVirtual::enumerateFiles(Array<Path>& paths)
 {
 	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerateDirs(std::vector<Path>& paths)
+void ArchiveVirtual::enumerateDirs(Array<Path>& paths)
 {
 	enumerate(paths, true);
 }

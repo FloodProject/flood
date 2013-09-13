@@ -9,6 +9,7 @@
 #include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -16,6 +17,7 @@ NAMESPACE_CORE_BEGIN
 
 MemoryStream::MemoryStream(uint64 size)
 	: Stream("", StreamOpenMode::Default)
+	, data(*AllocatorGetHeap())
 {
 	init();
 	resize(size);
@@ -25,7 +27,7 @@ MemoryStream::MemoryStream(uint64 size)
 
 MemoryStream::MemoryStream()
 	: Stream("", StreamOpenMode::Default)
-
+	, data(*AllocatorGetHeap())
 {
 	init();
 }

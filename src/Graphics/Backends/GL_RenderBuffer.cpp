@@ -10,6 +10,7 @@
 #include "Graphics/Resources/Buffer.h"
 #include "GL_RenderBuffer.h"
 #include "GL.h"
+#include "Core/Array.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -91,7 +92,7 @@ bool GL_RenderBuffer::check()
 
 //-----------------------------------//
 
-void GL_RenderBuffer::read(int8 attachment, std::vector<uint8>& data)
+void GL_RenderBuffer::read(int8 attachment, Array<uint8>& data)
 {
 	const Vector2i& size = settings.getSize();
 
@@ -159,7 +160,7 @@ void GL_RenderBuffer::attachRenderTexture(const TexturePtr& tex)
 		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
-	textureBuffers.push_back( tex );
+	textureBuffers.pushBack( tex );
 
 	unbind();
 }

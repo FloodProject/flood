@@ -35,10 +35,10 @@ BulletDebugDrawer::BulletDebugDrawer()
 
 void BulletDebugDrawer::clearBuffer()
 {
-	std::vector<Vector3> pos;
+	Array<Vector3> pos;
 	gb->set(VertexAttribute::Position, pos);
 	
-	std::vector<Vector3> colors;
+	Array<Vector3> colors;
 	gb->set( VertexAttribute::Color, colors);
 }
 
@@ -47,11 +47,11 @@ void BulletDebugDrawer::clearBuffer()
 void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
 {
 #ifdef GEOMETRY_BUFFER
-	std::vector<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
+	Array<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
 	pos.push_back(Convert::fromBullet(from));
 	pos.push_back(Convert::fromBullet(to));
 
-	std::vector<Vector3>& colors = vb->getAttribute(VertexAttribute::Color);
+	Array<Vector3>& colors = vb->getAttribute(VertexAttribute::Color);
 	colors.push_back(Convert::fromBullet(color));
 	colors.push_back(Convert::fromBullet(color));
 #endif

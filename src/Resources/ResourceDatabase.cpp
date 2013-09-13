@@ -9,6 +9,7 @@
 #include "Resources/ResourceDatabase.h"
 #include "Resources/ResourceIndexer.h"
 #include "Core/Log.h"
+#include "Core/Array.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -54,7 +55,7 @@ void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 	if(resourcesCache.find(metadata.hash) != resourcesCache.end())
 		return;
 
-	resources.push_back(metadata);
+	resources.pushBack(metadata);
 	resourcesCache[metadata.hash] = metadata;
 
 	onResourceAdded(metadata);

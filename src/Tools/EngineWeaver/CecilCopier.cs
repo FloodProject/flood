@@ -18,6 +18,7 @@ namespace EngineWeaver
         private readonly List<Instruction> instructions;
         private readonly Dictionary<TypeDefinition,TypeDefinition> delayedCopy;
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
+        private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
         public string NamePrefix { get; set; }
@@ -31,6 +32,7 @@ namespace EngineWeaver
             referenceMap = new Dictionary<MemberReference,MemberReference>();
             instructions = new List<Instruction>();
             delayedCopy = new Dictionary<TypeDefinition,TypeDefinition>();
+            stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
         }
 

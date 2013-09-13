@@ -62,7 +62,7 @@ namespace RPCGen.Tests.Services
             public string Value;
         }
 
-        [DataObject(9)]
+        [DataObject("4AD9280A-8D47-4240-8AEC-4C92C8B1EC9C")]
         public class GuidDO
         {
             [Id(0)]

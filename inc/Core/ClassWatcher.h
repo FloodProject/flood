@@ -8,7 +8,6 @@
 #pragma once
 
 #include <map>
-#include <vector>
 
 NAMESPACE_CORE_BEGIN
 
@@ -33,7 +32,7 @@ struct FieldWatch
 };
 
 typedef std::map<const Field*, FieldWatch> FieldWatchMap;
-typedef std::vector<FieldWatch*> FieldWatchVector;
+typedef Array<FieldWatch*> FieldWatchVector;
 
 struct ClassWatch
 {

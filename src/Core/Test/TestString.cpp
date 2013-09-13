@@ -9,6 +9,8 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
+#include "Core/Memory.h"
+#include "Core/Array.h"
 #include <UnitTest++.h>
 
 SUITE(Core)
@@ -21,7 +23,7 @@ SUITE(Core)
 		String str = StringFormat("%d %s", 20, "simple");
 		CHECK_EQUAL("20 simple", str.c_str());
 
-		std::vector<String> elems;
+		Array<String> elems(*AllocatorGetHeap());
 		StringSplit("Foo|Bar|Spam", '|', elems);
 		CHECK_EQUAL(elems.size(), 3);
 		CHECK_EQUAL("Foo", elems[0].c_str());
