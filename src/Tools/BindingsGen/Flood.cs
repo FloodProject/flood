@@ -91,6 +91,7 @@ namespace Flood
                     "Engine/Scene/Transform.h",
                     "Engine/Scene/Geometry.h",
                     "Engine/Scene/Camera.h",
+                    "Engine/Scene/Scene.h",
                     "Engine/Engine.h",
                     "Engine/PlatformManager.h",
                     "Engine/Window/Window.h",
