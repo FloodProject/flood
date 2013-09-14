@@ -42,6 +42,9 @@ solution "Flood"
 		
 	configuration {}
 	
+	print("Searching for packages...")
+	IncludePremake(path.join(srcdir, "**"), "package.lua")
+
 	group "Native"
 	
 		dofile( srcdir .. "/Core/Core.lua")
@@ -106,6 +109,3 @@ solution "Flood"
 
         print("Searching for externals projects...")
         IncludePremakeProjects(path.join(extdir, "*"))
-
-    print("Searching for packages...")
-    IncludePremake(path.join(srcdir, "**"), "package.lua")
