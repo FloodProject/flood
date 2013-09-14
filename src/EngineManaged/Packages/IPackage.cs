@@ -1,8 +1,10 @@
 ﻿
+using Flood.RPC;
+
 namespace Flood.Packages
 {
     public interface IPackage
     {
-        void OnLoad(PackageLoader packageLoader);
+        void OnLoad(RPCManager rpcManager);
     }
 }
