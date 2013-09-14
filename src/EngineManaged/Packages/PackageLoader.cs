@@ -43,7 +43,7 @@ namespace Flood.Packages
             }
         }
 
-        public void LoadPackage(PackageName packageName)
+        public IPackage LoadPackage(PackageName packageName)
         {
             PackageName availablePackageName;
             if(!TryGetPackageName(packageName, out availablePackageName))
@@ -57,16 +57,18 @@ namespace Flood.Packages
                 var packageDllEntry = zip[packageName.Id+".dll"];
 
                 var packageAssembly = ExtractAssembly(packageDllEntry);
-                LoadPackageAssembly(packageAssembly);
+                return LoadPackageAssembly(packageAssembly);
             }
         }
 
-        private void LoadPackageAssembly(Assembly assembly)
+        private IPackage LoadPackageAssembly(Assembly assembly)
         {
             var package = GetPackageObject(assembly);
 
-            package.OnLoad(this);
+            package.OnLoad(RpcManager);
             CheckPackageGlobalServices(assembly);
+
+            return package;
         }
 
         //Gets the most recent compatible PackageName available.
