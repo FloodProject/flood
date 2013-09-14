@@ -202,9 +202,9 @@ namespace Flood.GUI.Controls
         {
             //if (m_DisposeQueue.Count > 0)
             //    System.Diagnostics.Debug.Print("Canvas.ProcessDelayedDeletes: {0} items", m_DisposeQueue.Count);
-            foreach (IDisposable control in m_DisposeQueue)
+            for (int i = 0; i < m_DisposeQueue.Count; i++)
             {
-                control.Dispose();
+                m_DisposeQueue[i].Dispose();
             }
             m_DisposeQueue.Clear();
         }

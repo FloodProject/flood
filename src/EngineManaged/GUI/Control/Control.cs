@@ -1130,11 +1130,12 @@ namespace Flood.GUI.Controls
             if (m_Children.Count > 0)
             {
                 //Now render my kids
-                foreach (Control child in m_Children)
+                for(int i = 0; i < m_Children.Count; i++)
                 {
-                    if (child.IsHidden)
+                    if (m_Children[i].IsHidden)
                         continue;
-                    child.DoRender(skin);
+
+                    m_Children[i].DoRender(skin);
                 }
             }
 
