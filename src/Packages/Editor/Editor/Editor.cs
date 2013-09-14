@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
+using Flood;
 
-namespace Flood.Editor
+namespace FLDEditor
 {
     public class Editor
     {
@@ -25,7 +26,7 @@ namespace Flood.Editor
         public RenderDevice RenderDevice;
         public RenderView MainView;
 
-        public Client.Editor Client { get; set; }
+        public EditorWindow EditorWindow { get; set; }
 
         public Editor()
         {
@@ -45,7 +46,7 @@ namespace Flood.Editor
             ResourceManager = Engine.ResourceManager;
             ResourceManager.Archive = Archive;
 
-            Client = new Client.Editor();
+            EditorWindow = new EditorWindow();
 
             WindowManager = Engine.WindowManager;
 
@@ -102,13 +103,13 @@ namespace Flood.Editor
 
         public void Update()
         {
-            Client.Update();
+            EditorWindow.Update();
         }
 
         public void Render()
         {
             var rb = new RenderBlock();
-            Client.Render(rb);
+            EditorWindow.Render(rb);
 
             RenderDevice.ActiveView = MainView;
             RenderDevice.ClearView();
@@ -119,18 +120,12 @@ namespace Flood.Editor
 
         public void Resize(Flood.Settings settings)
         {
-            Client.SetSize(settings.Width, settings.Height);
+            EditorWindow.SetSize(settings.Width, settings.Height);
         }
 
         public void Run()
         {
             PlatformManager.Update();
-        }
-
-        public static void Main(string[] args)
-        {
-            var editor = new Editor();
-            editor.Run();
         }
     }
 }
