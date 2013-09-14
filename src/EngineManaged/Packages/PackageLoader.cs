@@ -10,7 +10,7 @@ using Ionic.Zip;
 
 namespace Flood.Packages
 {
-    public class PackageLoader
+    class PackageLoader
     {
         public const string PackageExtension = ".fld";
 
