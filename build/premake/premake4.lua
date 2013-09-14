@@ -26,7 +26,7 @@ solution "Flood"
 	libdirs { libdir }
 	
 	debugdir (bindir)
-	startproject "Editor"
+	startproject "Runtime"
 
 	-- Build configuration options
 
@@ -57,6 +57,7 @@ solution "Flood"
 
 	group "Managed"
 
+		dofile( srcdir .. "/EngineManaged/Runtime/Runtime.lua")
 		dofile( srcdir .. "/EngineManaged/Bindings/EngineBindings.lua")
 		dofile( srcdir .. "/EngineManaged/Bindings.CSharp/EngineBindings.CSharp.lua")
         dofile( srcdir .. "/EngineBindings.Tests/EngineBindings.Tests.lua")
@@ -66,7 +67,6 @@ solution "Flood"
         
 	group "Editor"
 	
-		dofile( srcdir .. "/Editor/Editor/Editor.lua")
 		dofile( srcdir .. "/Editor/Editor.Shared/Editor.Shared.lua")
 		dofile( srcdir .. "/Editor/Editor.Server/Editor.Server.lua")
 		dofile( srcdir .. "/Editor/Editor.Tests/Editor.Tests.lua")
