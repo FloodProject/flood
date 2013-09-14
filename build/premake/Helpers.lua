@@ -161,14 +161,14 @@ function SetupPackage(packageName, packageDependencies)
     group("Packages/" .. packageName)
 
     local packagetargetdir = path.join(libdir, "Packages", packageName)
-    local packageworkingdir = path.join(bindir, "Packages")
 
     -- Build events are not configuration specific so we need to use vs macros
     -- The ability to use tokens, like %{cfg.targetdir}, will be coming in the 
     -- next major release (which will likely be numbered 5.0) starkos
-    local vslibdir = "$(TargetDir)" .. path.join(--[[packageName--]]".." , --[[Packages--]]"..")
+    local vspackagedir = "$(TargetDir)" .. --[[packageName--]]".."
+    local vslibdir = path.join(vspackagedir , --[[Packages--]]"..")
     local vspackagegenexe = path.join(vslibdir, "PackageGen.exe")
-    local vspackagegencommand = vspackagegenexe .. " -o=\"" .. packageworkingdir .. "\" ".. packageName .. " \"$(TargetDir)\""
+    local vspackagegencommand = vspackagegenexe .. " -o=\"" .. vspackagedir .. "\" ".. packageName .. " \"$(TargetDir)\""
 
     project (packageName)
     
