@@ -742,7 +742,8 @@ namespace Flood.GUI.Controls
             if (m_InnerPanel == child)
             {
                 m_Children.Remove(m_InnerPanel);
-                m_InnerPanel.DelayedDelete();
+                if(dispose)
+                    m_InnerPanel.DelayedDelete();
                 m_InnerPanel = null;
                 return;
             }
