@@ -67,7 +67,6 @@ solution "Flood"
 	group "Editor"
 	
 		dofile( srcdir .. "/Editor/Editor/Editor.lua")
-		dofile( srcdir .. "/Editor/Editor.Client/Editor.Client.lua")
 		dofile( srcdir .. "/Editor/Editor.Shared/Editor.Shared.lua")
 		dofile( srcdir .. "/Editor/Editor.Server/Editor.Server.lua")
 		dofile( srcdir .. "/Editor/Editor.Tests/Editor.Tests.lua")
