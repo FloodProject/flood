@@ -1,4 +1,5 @@
 ﻿using System;
+using Flood.Editor.Client.GUI.Controls;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
@@ -10,17 +11,9 @@ namespace Flood.Editor.Client.GUI
     /// </summary>
     public class Container : MultiSplitter
     {
-
         public Container(Control parent) : base(parent)
         {
-            if (PaneManager.FocusedContainer == null)
-                PaneManager.FocusedContainer = this;
-        }
-
-        protected override void OnKeyboardFocus()
-        {
-            base.OnKeyboardFocus();
-            PaneManager.FocusedContainer = this;
+            Dock = Pos.Fill;
         }
 
         public override void Think()
@@ -38,7 +31,6 @@ namespace Flood.Editor.Client.GUI
                         throw new Exception();
 
                     container.RemovePanel(sourcePaneGroup);
-
                 }
             }
 

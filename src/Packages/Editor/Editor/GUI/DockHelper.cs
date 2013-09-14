@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using FLDEditor.Services;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
@@ -12,7 +12,7 @@ namespace Flood.Editor.Client.GUI.Controls
             private Func<Package, bool> dropAction;
             private string iconId;
 
-            public DockButton(Control parent,Func<Package, bool> dropAction, string icon) : base(parent)
+            public DockButton(DockHelper parent,Func<Package, bool> dropAction, string icon) : base(parent)
             {
                 this.dropAction = dropAction;
                 SetSize(20, 20);
@@ -44,7 +44,7 @@ namespace Flood.Editor.Client.GUI.Controls
         private DockButton addRigth;
         private DockButton addCenter;
 
-        public DockHelper(Control parent) : base(parent)
+        public DockHelper(PaneGroup parent) : base(parent)
         {
             var bSize = 30;
 
@@ -61,6 +61,11 @@ namespace Flood.Editor.Client.GUI.Controls
             addCenter.SetPosition(bSize, bSize);
 
             SizeToChildren();
+        }
+
+        private PaneGroup Parent
+        {
+            get { return base.Parent as PaneGroup; }
         }
 
         private PaneGroup GetControlPaneGroup(Control control)
@@ -95,31 +100,31 @@ namespace Flood.Editor.Client.GUI.Controls
         {
             Console.WriteLine("AddUp");
 
-            PaneManager.MovePaneVertically(DraggedPane, PaneGroup, 0, true);
+            Parent.MovePaneVertically(DraggedPane, 0, true);
             return false;
         }
 
         private bool AddLeft(Package p)
         {
-            PaneManager.MovePaneHorizontally(DraggedPane, PaneGroup, 0, false);
+            Parent.MovePaneHorizontally(DraggedPane, 0, false);
             return false;
         }
 
         private bool AddDown(Package p)
         {
-            PaneManager.MovePaneVertically(DraggedPane, PaneGroup, 0, false);
+            Parent.MovePaneVertically(DraggedPane, 0, false);
             return false;
         }
 
         private bool AddRigth(Package p)
         {
-            PaneManager.MovePaneHorizontally(DraggedPane, PaneGroup, 0, true);
+            Parent.MovePaneHorizontally(DraggedPane, 0, true);
             return false;
         }
 
         private bool AddCenter(Package p)
         {
-            PaneManager.MovePane(DraggedPane, PaneGroup);
+            Parent.MovePane(DraggedPane, PaneGroup);
             return false;
         }
 

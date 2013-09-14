@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using Flood;
 using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
 
-namespace Flood.Editor.Client
+namespace FLDEditor
 {
     class ZCounter
     {
