@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Flood.GUI.Controls;
 using Flood.RPC.Metadata;
 
-namespace FLDEditor.Services
+namespace Editor.Services
 {
     [DataObject(1)]
     public class Pane

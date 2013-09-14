@@ -1,16 +1,17 @@
 ﻿
 using System;
-using FLDEditor.Services;
+using System.Threading;
+using Editor.Services;
 using Flood.GUI.Controls;
 using Flood.Packages;
 using Flood.RPC;
 
-namespace FLDEditor
+namespace Editor
 {
     public class Package : IPackage
     {
         public static PaneManager PaneManager;
-        public static Editor Editor;
+        public static EditorBase Editor;
         public static Canvas canvas;
 
         public void OnLoad(RPCManager rpcManager)
@@ -22,7 +23,7 @@ namespace FLDEditor
 
             rpcManager.ServiceManager.GetCreateImplementation<IPaneManager>(PaneManager);
 
-            Editor = new Editor();
+            Editor = new EditorBase();
 
             Editor.Run();
         }

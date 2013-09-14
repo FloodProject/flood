@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FLDEditor.Services;
+using Editor.Services;
 using Flood;
 using Flood.Editor.Client;
 using Flood.Editor.Client.GUI;
@@ -12,7 +12,7 @@ using Flood.GUI.Renderers;
 using Flood.GUI.Skins;
 using Flood.RPC;
 
-namespace FLDEditor
+namespace Editor
 {
     public class EditorWindow : IDisposable
     {

@@ -5,7 +5,7 @@ using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
 
-namespace FLDEditor
+namespace Editor
 {
     class ZCounter
     {
