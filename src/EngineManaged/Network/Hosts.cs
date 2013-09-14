@@ -21,16 +21,21 @@ namespace Flood.Network
 
     public class PackageContextLoader : ContextLoader<PackageContextLoader.ContextId>
     {
-        public class ContextId : IContextId
+        public struct ContextId : IContextId
         {
+            public string Name;
+            public int MajorVersion;
+
             public void Write(RPCData data)
             {
-                throw new NotImplementedException();
+                data.Serializer.WriteString(Name);
+                data.Serializer.WriteI32(MajorVersion);
             }
 
             public void Read(RPCData data)
             {
-                throw new NotImplementedException();
+                Name = data.Serializer.ReadString();
+                MajorVersion = data.Serializer.ReadI32();
             }
         }
 
@@ -41,7 +46,8 @@ namespace Flood.Network
 
         public override IContextId GetContextId(Assembly assembly)
         {
-            throw new NotImplementedException();
+            var assemblyName = assembly.GetName();
+            return new ContextId { Name = assemblyName.Name, MajorVersion = assemblyName.Version.Major };
         }
     }
 
