@@ -157,8 +157,6 @@ function SetupPackage(packageName, packageDependencies)
         print("WARNING: Packages have already been used!")
     end
     table.insert(packages, packageName)
-    
-    group("Packages/" .. packageName)
 
     local packagetargetdir = path.join(libdir, "Packages", packageName)
 
