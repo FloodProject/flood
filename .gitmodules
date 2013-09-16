@@ -17,3 +17,6 @@
 [submodule "deps/wxWidgets"]
 	path = deps/wxWidgets
 	url = https://github.com/FloodProject/wxWidgets.git
+[submodule "deps/FreeImage"]
+	path = deps/FreeImage
+	url = https://github.com/FloodProject/FreeImage.git
