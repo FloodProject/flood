@@ -62,7 +62,6 @@ project "Core"
 	Core.extradeps =
 	{
 		"cURL",
-		"Mongoose",
 		"ENet",
 	}
 
