@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood;
-using Flood.GUI;
+using System.Threading;
 using Flood.GUI.Controls;
 using Flood.GUI.Input;
 
-namespace Editor
+namespace Flood.GUI
 {
     class ZCounter
     {
