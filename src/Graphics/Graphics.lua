@@ -22,7 +22,7 @@ project "Graphics"
 	files
 	{
 		"Graphics.lua",
-		path.join(incdir,"Graphics/**.h"),
+		path.join(incdir,"Graphics", "**.h"),
 		"**.cpp",
 		"**.h",	
 	}
@@ -35,6 +35,7 @@ project "Graphics"
 	includedirs
 	{
 		incdir,
+		path.join(depsdir,"FreeImage", "Source"),
 	}
 
 	Graphics.libdirs =
@@ -44,6 +45,7 @@ project "Graphics"
 	Graphics.links =
 	{
 		"opengl32",
+		"FreeImage"
 	}
 
 	links { Core.name, Resources.name, Graphics.links }
