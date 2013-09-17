@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "Graphics/RenderBackend.h"
 #include "Graphics/RenderBuffer.h"
 
 NAMESPACE_GRAPHICS_BEGIN
@@ -29,7 +28,7 @@ class RenderState;
 class RenderView;
 class RenderCapabilities;
 
-class RenderBackend
+class API_GRAPHICS RenderBackend
 {
 public:
 
