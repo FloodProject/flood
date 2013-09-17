@@ -35,6 +35,8 @@ public:
 	// Reads the contents of the render buffer.
 	void read(int8 attachment, std::vector<uint8>& data) OVERRIDE;
 
+	Image* readImage(int8 attachment) OVERRIDE;
+
 	// Updates the render target (usually swaps buffers).
 	void update() OVERRIDE;
 

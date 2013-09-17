@@ -103,6 +103,19 @@ void GL_RenderBuffer::read(int8 attachment, std::vector<uint8>& data)
 
 //-----------------------------------//
 
+Image* GL_RenderBuffer::readImage(int8 attachment)
+{
+	auto image = AllocateHeap(Image, settings.width, settings.height, PixelFormat::R8G8B8A8);
+
+	std::vector<uint8> data;
+
+	read(attachment, data);
+
+	image->setBuffer(data);
+
+	return image;
+}
+
 void GL_RenderBuffer::setBufferState()
 {
 	if( colorAttach )

@@ -64,6 +64,9 @@ public:
 	// Reads the contents of the render buffer.
 	virtual void read(int8 attachment, std::vector<uint8>& data) = 0;
 
+	// Reads the contents of the render buffer.
+	virtual Image* readImage(int8 attachment) = 0;
+
 	// Creates a new render buffer with the given components.
 	virtual void createRenderBuffer( RenderBufferType ) = 0;
 
