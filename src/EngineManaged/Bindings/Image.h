@@ -139,6 +139,8 @@ namespace Flood
 
         void Save(Flood::Image^ image, Flood::Stream^ stream);
 
+        void Save(Flood::Image^ image, System::String^ filePath);
+
         bool Convert(Flood::Image^ image);
 
         virtual bool Equals(System::Object^ object) override;

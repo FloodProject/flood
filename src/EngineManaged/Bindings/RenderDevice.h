@@ -14,8 +14,10 @@ namespace Flood
 {
     enum struct RenderPipeline;
     ref class Material;
+    ref class RenderBackend;
     ref class RenderBatch;
     ref class RenderBlock;
+    ref class RenderBuffer;
     ref class RenderContext;
     ref class RenderDevice;
     ref class RenderTarget;
@@ -54,6 +56,11 @@ namespace Flood
         {
             Flood::RenderPipeline get();
             void set(Flood::RenderPipeline);
+        }
+        property Flood::RenderBackend^ Backend
+        {
+            Flood::RenderBackend^ get();
+            void set(Flood::RenderBackend^);
         }
         property Flood::RenderTarget^ RenderTarget
         {

@@ -7,7 +7,9 @@
 
 #include "RenderDevice.h"
 #include "Material.h"
+#include "RenderBackend.h"
 #include "RenderBatch.h"
+#include "RenderBuffer.h"
 #include "RenderContext.h"
 #include "RenderQueue.h"
 #include "RenderTarget.h"
@@ -90,6 +92,20 @@ void Flood::RenderDevice::Pipeline::set(Flood::RenderPipeline value)
     auto v = value;
     auto arg0 = (::RenderPipeline)v;
     ((::RenderDevice*)NativePtr)->setPipeline(arg0);
+}
+
+Flood::RenderBackend^ Flood::RenderDevice::Backend::get()
+{
+    auto __ret = ((::RenderDevice*)NativePtr)->getBackend();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::RenderBackend((::RenderBackend*)__ret);
+}
+
+void Flood::RenderDevice::Backend::set(Flood::RenderBackend^ value)
+{
+    auto v = value;
+    auto arg0 = (::RenderBackend*)v->NativePtr;
+    ((::RenderDevice*)NativePtr)->setBackend(arg0);
 }
 
 Flood::RenderTarget^ Flood::RenderDevice::RenderTarget::get()

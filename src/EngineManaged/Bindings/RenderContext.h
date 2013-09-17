@@ -12,6 +12,8 @@
 
 namespace Flood
 {
+    ref class RenderBackend;
+    ref class RenderBuffer;
     ref class RenderContext;
     ref class RenderDevice;
     ref class RenderTarget;
@@ -63,6 +65,11 @@ namespace Flood
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
+        property Flood::RenderBackend^ Backend
+        {
+            Flood::RenderBackend^ get();
+            void set(Flood::RenderBackend^);
+        }
         virtual void MakeCurrent(Flood::RenderTarget^ target);
 
         void Init();
@@ -70,6 +77,8 @@ namespace Flood
         void ResetState();
 
         Flood::Color GetPixel(unsigned short x, unsigned short y);
+
+        Flood::RenderBuffer^ CreateRenderBuffer(Flood::Settings _0);
 
         virtual bool Equals(System::Object^ object) override;
 

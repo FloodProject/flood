@@ -7,6 +7,8 @@
 
 #include "RenderContext.h"
 #include "Color.h"
+#include "RenderBackend.h"
+#include "RenderBuffer.h"
 #include "RenderDevice.h"
 #include "RenderTarget.h"
 
@@ -69,6 +71,17 @@ Flood::Color Flood::RenderContext::GetPixel(unsigned short x, unsigned short y)
     return Flood::Color((::Color*)&__ret);
 }
 
+Flood::RenderBuffer^ Flood::RenderContext::CreateRenderBuffer(Flood::Settings _0)
+{
+    auto _marshal0 = ::Settings();
+    _marshal0.width = (::uint16)(::uint16_t)_0.Width;
+    _marshal0.height = (::uint16)(::uint16_t)_0.Height;
+    auto arg0 = _marshal0;
+    auto __ret = ((::RenderContext*)NativePtr)->createRenderBuffer(arg0);
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::RenderBuffer((::RenderBuffer*)__ret);
+}
+
 bool Flood::RenderContext::Equals(System::Object^ object)
 {
     if (!object) return false;
@@ -118,5 +131,15 @@ Flood::RenderTarget^ Flood::RenderContext::CurrentTarget::get()
 void Flood::RenderContext::CurrentTarget::set(Flood::RenderTarget^ value)
 {
     ((::RenderContext*)NativePtr)->currentTarget = (::RenderTarget*)value->NativePtr;
+}
+
+Flood::RenderBackend^ Flood::RenderContext::Backend::get()
+{
+    return gcnew Flood::RenderBackend((::RenderBackend*)((::RenderContext*)NativePtr)->backend);
+}
+
+void Flood::RenderContext::Backend::set(Flood::RenderBackend^ value)
+{
+    ((::RenderContext*)NativePtr)->backend = (::RenderBackend*)value->NativePtr;
 }
 

@@ -125,7 +125,5 @@ namespace Flood
 
         virtual int GetHashCode() override;
 
-        generic<typename T>
-        void Set(Flood::VertexAttribute attr, System::Collections::Generic::List<T>^ data);
     };
 }

@@ -280,9 +280,3 @@ void Flood::GeometryBuffer::Declarations::set(Flood::VertexDeclaration^ value)
     ((::GeometryBuffer*)NativePtr)->declarations = *(::VertexDeclaration*)value->NativePtr;
 }
 
-generic<typename T>
-void Flood::GeometryBuffer::Set(Flood::VertexAttribute attr, System::Collections::Generic::List<T>^ data)
-{
-   // Not binded
-}
-

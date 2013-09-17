@@ -242,6 +242,14 @@ void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
     ((::ImageWriter*)NativePtr)->save(arg0, arg1);
 }
 
+void Flood::ImageWriter::Save(Flood::Image^ image, System::String^ filePath)
+{
+    auto arg0 = (::Image*)image->NativePtr;
+    auto _arg1 = clix::marshalString<clix::E_UTF8>(filePath);
+    auto arg1 = _arg1.c_str();
+    ((::ImageWriter*)NativePtr)->save(arg0, arg1);
+}
+
 bool Flood::ImageWriter::Convert(Flood::Image^ image)
 {
     auto arg0 = (::Image*)image->NativePtr;
