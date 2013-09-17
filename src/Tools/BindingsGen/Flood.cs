@@ -83,6 +83,8 @@ namespace Flood
                     "Graphics/RenderQueue.h",
                     "Graphics/RenderTarget.h",
                     "Graphics/RenderView.h",
+                    "Graphics/RenderBackend.h",
+                    "Graphics/RenderBuffer.h",
                     "Graphics/Texture.h",
                     "Engine/Geometry/DebugGeometry.h",
                     "Engine/Resources/Font.h",
