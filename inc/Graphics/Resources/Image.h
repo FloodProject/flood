@@ -85,7 +85,7 @@ public:
 	void setBuffer(byte* data, uint stride);
 
 	// Copies an image to the buffer containing the image data.
-	void setBuffer(Image* image, Vector2i offset  = Vector2i(0,0));
+	void setBuffer(Image* image, Vector2i offset = Vector2i(0, 0));
 
 	// Gets the number of bytes per pixel.
 	uint32 getPixelSize();
@@ -142,6 +142,9 @@ public:
 
 	// Saves the image contents to a stream.
 	void save( Image* image, Stream* stream );
+
+	// Saves the image contents to a file.
+	void save( Image* image, const char* filePath );
 
 	// Converts the image to the output format.
 	bool convert( Image* image );

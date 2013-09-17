@@ -9,6 +9,7 @@
 #include "Graphics/Resources/Image.h"
 #include "Core/Log.h"
 #include "Core/Stream.h"
+#include "FreeImage.h"
 
 //#define ENABLE_IMAGE_WRITER
 //#define ENABLE_IMAGE_LODEPNG
@@ -232,6 +233,37 @@ void ImageWriter::save( Image* image, Stream* stream )
 	StreamWrite(stream, output.data(), output.size());
 #endif
 }
+
+//-----------------------------------//
+
+void ImageWriter::save( Image* image, const char* filePath )
+{
+    if(image->getPixelFormat() != PixelFormat::R8G8B8A8)
+    {
+        LogError("Image to be saved must be of format RGBA.");
+        return;
+    }
+
+    FIBITMAP* fiBitmap = FreeImage_Allocate(image->getWidth(), image->getHeight(), image->getPixelSize()*8);
+
+    BYTE* data = FreeImage_GetBits(fiBitmap);
+
+	memcpy(data, image->getBuffer().data(), image->getSize());
+
+	auto fileFormat = FreeImage_GetFIFFromFilename(filePath);
+	if (fileFormat == FIF_UNKNOWN)
+	{
+		LogError("Could not save image of unknown format.");
+	}
+	else
+	{
+		if (!FreeImage_Save(fileFormat, fiBitmap, filePath))
+			LogError("Image could not be saved.");
+	}
+
+    FreeImage_Unload(fiBitmap);
+}
+
 
 //-----------------------------------//
 
