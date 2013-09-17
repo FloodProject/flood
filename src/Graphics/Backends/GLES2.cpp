@@ -139,10 +139,13 @@ void RenderBackendGLES2::clearRenderView(RenderView* view)
 	const Vector2i& origin = view->getOrigin();
 	const Vector2i& size = view->getSize();
 
-	//glScissor(origin.x, origin.y, size.x, size.y);
+	glScissor(origin.x, origin.y, size.x, size.y);
+	glEnable(GL_SCISSOR_TEST);
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	CheckLastErrorGL("Could not clear the render target");
+
+	glDisable(GL_SCISSOR_TEST);
 }
 
 //-----------------------------------//
