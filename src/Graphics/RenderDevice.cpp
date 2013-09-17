@@ -188,8 +188,8 @@ void RenderDevice::bindTextureUnits(const RenderState& state, bool bindUniforms)
 			renderBackend->configureTexture(texture);
 		}
 
-		renderBackend->setupTextureUnit(texture, unit);
 		renderBackend->bindTexture(texture);
+		renderBackend->setupTextureUnit(texture, unit);
 		
 		if( !bindUniforms ) continue;
 
