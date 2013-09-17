@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Flood;
-using Flood.Editor.Client;
+using Flood.GUI;
 using Flood.GUI.Controls;
 
 namespace TextAddin.Controls

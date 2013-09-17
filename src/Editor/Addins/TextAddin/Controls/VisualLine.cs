@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Flood;
-using Flood.Editor.Client;
+using Flood.GUI;
 using Flood.GUI.Controls;
 using TextAddin.Document;
 using TextAddin.Rendering;

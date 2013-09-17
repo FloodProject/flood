@@ -25,7 +25,6 @@ project "TextAddin"
         "System.XML",
         "EngineBindings",
         "EngineManaged",
-        "Editor.Client",
         "Mono.Addins"
     }
     
