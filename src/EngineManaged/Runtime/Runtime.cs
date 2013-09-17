@@ -16,7 +16,7 @@ namespace Flood.Editor
 
             packageManager = new PackageManager("Packages", rpcManager);
 
-            packageManager.GetLoadPackage(new PackageName("Editor.0.0.0"));
+            packageManager.GetLoadPackage(new PackageName("EditorPackage.0.0.0"));
 
             while (true)
             {
