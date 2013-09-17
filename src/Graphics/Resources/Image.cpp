@@ -238,9 +238,9 @@ void ImageWriter::save( Image* image, Stream* stream )
 
 void ImageWriter::save( Image* image, const char* filePath )
 {
-    if(image->getPixelFormat() != PixelFormat::R8G8B8A8)
+    if(image->getPixelFormat() != PixelFormat::B8G8R8A8)
     {
-        LogError("Image to be saved must be of format RGBA.");
+        LogError("Image to be saved must be of format BGRA.");
         return;
     }
 

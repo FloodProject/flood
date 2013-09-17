@@ -98,14 +98,14 @@ void GL_RenderBuffer::read(int8 attachment, std::vector<uint8>& data)
 	data.resize( size.x*size.y*4 );
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glReadPixels(0, 0, size.x, size.y, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+	glReadPixels(0, 0, size.x, size.y, GL_BGRA, GL_UNSIGNED_BYTE, data.data());
 }
 
 //-----------------------------------//
 
 Image* GL_RenderBuffer::readImage(int8 attachment)
 {
-	auto image = AllocateHeap(Image, settings.width, settings.height, PixelFormat::R8G8B8A8);
+	auto image = AllocateHeap(Image, settings.width, settings.height, PixelFormat::B8G8R8A8);
 
 	std::vector<uint8> data;
 
