@@ -79,7 +79,7 @@ public:
 	void clearIndexes();
 
 	template<typename T>
-	void set(VertexAttribute attr, const std::vector<T>& data)
+	FLD_IGNORE void set(VertexAttribute attr, const std::vector<T>& data)
 	{
 		if( data.empty() ) return;
 
