@@ -327,7 +327,8 @@ Color RenderBackendGLES2::getPixel(uint16 x, uint16 y)
 
 void RenderBackendGLES2::setClearColor(Color color)
 {
-	glClearColor( color.r, color.g, color.b, color.a );
+	glClearColor( color.r / 255.0f, color.g / 255.0f, color.b / 255.0f,
+		color.a / 255.0f );
 }
 
 //-----------------------------------//
