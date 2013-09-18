@@ -212,8 +212,14 @@ namespace Flood.Tools.RPCGen
             {
                 CreateEmptyAssembly(emptyAssemblyPaths.DllPath);
 
-                var weaver = new AssemblyWeaver(emptyAssemblyPaths.DllPath);
                 var types = RpcTypes.Select(t => t.FullName);
+                if (!types.Any())
+                {
+                    Console.WriteLine("No RPC types found. Generated empty '{0}'", outputPath);
+                    return;
+                }
+
+                var weaver = new AssemblyWeaver(emptyAssemblyPaths.DllPath);
                 weaver.CopyTypes(destAssemblyPath, types);
                 weaver.Write(apiAssemblyPaths.DllPath);
 
