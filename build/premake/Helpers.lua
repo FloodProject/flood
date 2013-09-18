@@ -184,6 +184,7 @@ function SetupPackage(packageName, packageDependencies)
         
         links 
         {
+            "System",
             "EngineManaged",
             "EngineBindings"
         }
