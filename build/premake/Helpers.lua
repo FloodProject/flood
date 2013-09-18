@@ -178,7 +178,8 @@ function SetupPackage(packageName, packageDependencies)
         
         files
         {
-            path.join(packageName,"**.cs")
+            path.join(packageName,"**.cs"),
+            "package.lua"
         }
         
         links 
