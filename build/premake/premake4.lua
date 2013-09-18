@@ -55,7 +55,7 @@ solution "Flood"
 
 	group "Managed"
 
-		dofile( srcdir .. "/EngineManaged/Runtime/Runtime.lua")
+		dofile( srcdir .. "/Runtime/Runtime.lua")
 		dofile( srcdir .. "/EngineManaged/Bindings/EngineBindings.lua")
 		dofile( srcdir .. "/EngineManaged/Bindings.CSharp/EngineBindings.CSharp.lua")
         dofile( srcdir .. "/EngineBindings.Tests/EngineBindings.Tests.lua")
