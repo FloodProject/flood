@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flood;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Multiline label with text chunks having different color/font.

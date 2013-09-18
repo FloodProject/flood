@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI.Controls.Property
+namespace GUI.Controls.Property
 {
     /// <summary>
     /// Text property.

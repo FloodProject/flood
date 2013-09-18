@@ -1,5 +1,7 @@
 ﻿
-namespace Flood.GUI.Controls
+using Flood;
+
+namespace GUI.Controls
 {
     /// <summary>
     /// Horizontal slider.

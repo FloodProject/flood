@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Radio button group.

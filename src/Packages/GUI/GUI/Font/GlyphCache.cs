@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Flood;
 
-namespace Flood.GUI
+namespace GUI
 {
 
     public class GlyphCache

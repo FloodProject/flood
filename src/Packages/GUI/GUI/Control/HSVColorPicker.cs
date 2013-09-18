@@ -1,7 +1,8 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
+using Flood;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// HSV color picker with "before" and "after" color boxes.

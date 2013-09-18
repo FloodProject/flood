@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Radio button.

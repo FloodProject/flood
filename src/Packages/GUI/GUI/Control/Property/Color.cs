@@ -1,8 +1,8 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
-using Flood.GUI.Input;
+using GUI.ControlInternal;
+using GUI.Input;
 
-namespace Flood.GUI.Controls.Property
+namespace GUI.Controls.Property
 {
     /// <summary>
     /// Color property.

@@ -1,7 +1,7 @@
 ﻿using System;
-using Flood.GUI.Controls;
+using GUI.Controls;
 
-namespace Flood.GUI.ControlInternal
+namespace GUI.ControlInternal
 {
     /// <summary>
     /// Scrollbar button.

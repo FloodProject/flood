@@ -1,7 +1,7 @@
 ﻿using System;
-using Flood.GUI.DragDrop;
+using GUI.DragDrop;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Titlebar for DockedTabControl.
@@ -26,7 +26,7 @@ namespace Flood.GUI.Controls
             skin.DrawTabTitleBar(this);
         }
 
-        public override void DragAndDrop_StartDragging(Package package, int x, int y)
+        public override void DragAndDrop_StartDragging(DragDrop.Package package, int x, int y)
         {
             DragAndDrop.SourceControl = Parent;
             DragAndDrop.SourceControl.DragAndDrop_StartDragging(package, x, y);

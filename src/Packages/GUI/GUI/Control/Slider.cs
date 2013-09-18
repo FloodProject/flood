@@ -1,8 +1,9 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
-using Flood.GUI.Input;
+using Flood;
+using GUI.ControlInternal;
+using GUI.Input;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Base slider.

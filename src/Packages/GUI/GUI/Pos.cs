@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI
+namespace GUI
 {
     /// <summary>
     /// Represents relative position.

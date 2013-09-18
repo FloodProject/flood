@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Flood.GUI.Controls;
-using Flood.GUI.Input;
+using Flood;
+using GUI.Controls;
+using GUI.Input;
+using GUI.Renderers;
 
-namespace Flood.GUI
+namespace GUI
 {
     class ZCounter
     {
@@ -284,7 +286,7 @@ namespace Flood.GUI
             mat.GetTextureUnit(0).WrapMode = TextureWrapMode.ClampToEdge;
         }
 
-        public static Vector2 MeasureText(System.String text, Flood.GUI.Font font)
+        public static Vector2 MeasureText(System.String text, Font font)
         {
             float curX = 0;
             var ttfont = font.EngineFont.Resolve();
@@ -309,7 +311,7 @@ namespace Flood.GUI
             return new Vector2(curX,font.Size);;
         }
 
-        public static bool GetPositionTextIndex(string text, Flood.GUI.Font font, float x, out int index)
+        public static bool GetPositionTextIndex(string text, Font font, float x, out int index)
         {
             float curX = 0;
 
@@ -341,7 +343,7 @@ namespace Flood.GUI
             return false;
         }
 
-        internal static void DrawText(GUIGeometryBuffer geometryBuffer, Flood.GUI.Font font, Vector2 position, String text, Color color)
+        internal static void DrawText(GUIGeometryBuffer geometryBuffer, Font font, Vector2 position, String text, Color color)
         {
             var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
@@ -406,7 +408,7 @@ namespace Flood.GUI
         }
     };
 
-    public class GwenRenderer : Flood.GUI.Renderers.Renderer
+    public class GwenRenderer : Renderer
     {
         private readonly ZCounter zCounter;
         private readonly GUIGeometryBuffer _guiBuffer;
@@ -448,12 +450,12 @@ namespace Flood.GUI
             _guiBuffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, imageHandle, DrawColor);
         }
 
-        public override Vector2 MeasureText(Flood.GUI.Font font, string text) 
+        public override Vector2 MeasureText(Font font, string text) 
         {
             return TextRenderer.MeasureText(text,font);
         }
 
-        public override void RenderText(Flood.GUI.Font font, Vector2i position, string text)
+        public override void RenderText(Font font, Vector2i position, string text)
         {
             position = Translate(position);
             TextRenderer.DrawText(_guiBuffer, font, new Vector2(position.X,position.Y), text, DrawColor);

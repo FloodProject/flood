@@ -1,8 +1,9 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
-using Flood.GUI.DragDrop;
+using Flood;
+using GUI.ControlInternal;
+using GUI.DragDrop;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Base for dockable containers.
@@ -197,7 +198,7 @@ namespace Flood.GUI.Controls
             return Pos.Fill;
         }
 
-        public override bool DragAndDrop_CanAcceptPackage(Package p)
+        public override bool DragAndDrop_CanAcceptPackage(DragDrop.Package p)
         {
             // A TAB button dropped 
             if (p.Name == "TabButtonMove")
@@ -210,7 +211,7 @@ namespace Flood.GUI.Controls
             return false;
         }
 
-        public override bool DragAndDrop_HandleDrop(Package p, int x, int y)
+        public override bool DragAndDrop_HandleDrop(DragDrop.Package p, int x, int y)
         {
             Vector2i pos = CanvasPosToLocal(new Vector2i(x, y));
             Pos dir = GetDroppedTabDirection(pos.X, pos.Y);
@@ -327,17 +328,17 @@ namespace Flood.GUI.Controls
             DoConsolidateCheck();
         }
 
-        public override void DragAndDrop_HoverEnter(Package p, int x, int y)
+        public override void DragAndDrop_HoverEnter(DragDrop.Package p, int x, int y)
         {
             m_DrawHover = true;
         }
 
-        public override void DragAndDrop_HoverLeave(Package p)
+        public override void DragAndDrop_HoverLeave(DragDrop.Package p)
         {
             m_DrawHover = false;
         }
 
-        public override void DragAndDrop_Hover(Package p, int x, int y)
+        public override void DragAndDrop_Hover(DragDrop.Package p, int x, int y)
         {
             Vector2i pos = CanvasPosToLocal(new Vector2i(x, y));
             Pos dir = GetDroppedTabDirection(pos.X, pos.Y);

@@ -1,8 +1,9 @@
 ﻿using System;
-using Flood.GUI.Controls;
-using Flood.GUI.Input;
+using Flood;
+using GUI.Controls;
+using GUI.Input;
 
-namespace Flood.GUI.DragDrop
+namespace GUI.DragDrop
 {
     /// <summary>
     /// Drag and drop handling.

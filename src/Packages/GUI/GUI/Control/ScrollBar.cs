@@ -1,7 +1,7 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Base class for scrollbars.

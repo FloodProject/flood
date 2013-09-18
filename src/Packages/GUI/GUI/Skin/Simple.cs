@@ -1,6 +1,7 @@
 ﻿using System;
+using Flood;
 
-namespace Flood.GUI.Skins
+namespace GUI.Skins
 {
     /// <summary>
     /// Simple skin (non-textured). Deprecated and incomplete, do not use.

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood.GUI.ControlInternal;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     public class MultiSplitter : Control
     {

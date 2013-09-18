@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Flood.GUI.Controls;
-using Flood.GUI.DragDrop;
+using Flood;
+using GUI.Controls;
+using GUI.DragDrop;
 
-namespace Flood.GUI.Input
+namespace GUI.Input
 {
     /// <summary>
     /// Input handling.

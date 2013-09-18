@@ -1,5 +1,7 @@
 ﻿
-namespace Flood.GUI.ControlInternal
+using Flood;
+
+namespace GUI.ControlInternal
 {
     /// <summary>
     /// Grab point for resizing.

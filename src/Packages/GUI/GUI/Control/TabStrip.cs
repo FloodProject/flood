@@ -1,8 +1,9 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
-using Flood.GUI.DragDrop;
+using Flood;
+using GUI.ControlInternal;
+using GUI.DragDrop;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Tab strip - groups TabButtons and allows reordering.
@@ -55,7 +56,7 @@ namespace Flood.GUI.Controls
             }
         }
 
-        public override bool DragAndDrop_HandleDrop(Package p, int x, int y)
+        public override bool DragAndDrop_HandleDrop(DragDrop.Package p, int x, int y)
         {
             Vector2i LocalPos = CanvasPosToLocal(new Vector2i(x, y));
 
@@ -83,7 +84,7 @@ namespace Flood.GUI.Controls
             return true;
         }
 
-        public override bool DragAndDrop_CanAcceptPackage(Package p)
+        public override bool DragAndDrop_CanAcceptPackage(DragDrop.Package p)
         {
             if (!m_AllowReorder)
                 return false;
@@ -153,7 +154,7 @@ namespace Flood.GUI.Controls
             base.Layout(skin);
         }
 
-        public override void DragAndDrop_HoverEnter(Package p, int x, int y)
+        public override void DragAndDrop_HoverEnter(DragDrop.Package p, int x, int y)
         {
             if (m_TabDragControl != null)
             {
@@ -165,7 +166,7 @@ namespace Flood.GUI.Controls
             m_TabDragControl.SetSize(3, Height);
         }
 
-        public override void DragAndDrop_HoverLeave(Package p)
+        public override void DragAndDrop_HoverLeave(DragDrop.Package p)
         {
             if (m_TabDragControl != null)
             {
@@ -175,7 +176,7 @@ namespace Flood.GUI.Controls
             m_TabDragControl = null;
         }
 
-        public override void DragAndDrop_Hover(Package p, int x, int y)
+        public override void DragAndDrop_Hover(DragDrop.Package p, int x, int y)
         {
             Vector2i localPos = CanvasPosToLocal(new Vector2i(x, y));
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using Flood.GUI.ControlInternal;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.

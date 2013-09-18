@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI.Controls.Layout
+namespace GUI.Controls.Layout
 {
     /// <summary>
     /// Helper control that positions its children in a specific way.

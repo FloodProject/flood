@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Flood.GUI.Anim;
-using Flood.GUI.DragDrop;
-using Flood.GUI.Input;
+using Flood;
+using GUI.Anim;
+using GUI.DragDrop;
+using GUI.Input;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Base control class.
@@ -64,7 +65,7 @@ namespace Flood.GUI.Controls
         private bool m_CacheTextureDirty;
         private bool m_CacheToTexture;
 
-        private Package m_DragAndDrop_Package;
+        private DragDrop.Package m_DragAndDrop_Package;
 
         private object m_UserData;
 
@@ -1644,7 +1645,7 @@ namespace Flood.GUI.Controls
         }
 
         // giver
-        public virtual Package DragAndDrop_GetPackage(int x, int y)
+        public virtual DragDrop.Package DragAndDrop_GetPackage(int x, int y)
         {
             return m_DragAndDrop_Package;
         }
@@ -1663,7 +1664,7 @@ namespace Flood.GUI.Controls
         {
             if (m_DragAndDrop_Package == null)
             {
-                m_DragAndDrop_Package = new Package();
+                m_DragAndDrop_Package = new DragDrop.Package();
                 m_DragAndDrop_Package.IsDraggable = draggable;
                 m_DragAndDrop_Package.Name = name;
                 m_DragAndDrop_Package.UserData = userData;
@@ -1677,7 +1678,7 @@ namespace Flood.GUI.Controls
         }
 
         // giver
-        public virtual void DragAndDrop_StartDragging(Package package, int x, int y)
+        public virtual void DragAndDrop_StartDragging(DragDrop.Package package, int x, int y)
         {
             package.HoldOffset = CanvasPosToLocal(new Vector2i(x, y));
             package.DrawControl = this;
@@ -1689,32 +1690,32 @@ namespace Flood.GUI.Controls
         }
 
         // receiver
-        public virtual bool DragAndDrop_HandleDrop(Package p, int x, int y)
+        public virtual bool DragAndDrop_HandleDrop(DragDrop.Package p, int x, int y)
         {
             DragAndDrop.SourceControl.Parent = this;
             return true;
         }
 
         // receiver
-        public virtual void DragAndDrop_HoverEnter(Package p, int x, int y)
+        public virtual void DragAndDrop_HoverEnter(DragDrop.Package p, int x, int y)
         {
 
         }
 
         // receiver
-        public virtual void DragAndDrop_HoverLeave(Package p)
+        public virtual void DragAndDrop_HoverLeave(DragDrop.Package p)
         {
 
         }
 
         // receiver
-        public virtual void DragAndDrop_Hover(Package p, int x, int y)
+        public virtual void DragAndDrop_Hover(DragDrop.Package p, int x, int y)
         {
 
         }
 
         // receiver
-        public virtual bool DragAndDrop_CanAcceptPackage(Package p)
+        public virtual bool DragAndDrop_CanAcceptPackage(DragDrop.Package p)
         {
             return false;
         }

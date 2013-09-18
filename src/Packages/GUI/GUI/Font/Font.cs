@@ -1,6 +1,7 @@
 ﻿using System;
+using Flood;
 
-namespace Flood.GUI
+namespace GUI
 {
     /// <summary>
     /// Represents font resource.

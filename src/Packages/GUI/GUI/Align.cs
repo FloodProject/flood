@@ -1,7 +1,7 @@
 ﻿using System;
-using Flood.GUI.Controls;
+using GUI.Controls;
 
-namespace Flood.GUI
+namespace GUI
 {
     /// <summary>
     /// Utility class for manipulating control's position according to its parent. Rarely needed, use control.Dock.

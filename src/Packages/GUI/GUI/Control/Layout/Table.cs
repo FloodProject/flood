@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Flood.GUI.Controls.Layout
+namespace GUI.Controls.Layout
 {
     /// <summary>
     /// Base class for multi-column tables.

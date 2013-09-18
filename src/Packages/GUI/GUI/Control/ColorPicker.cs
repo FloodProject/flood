@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood.GUI.ControlInternal;
+using Flood;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// RGBA color picker.

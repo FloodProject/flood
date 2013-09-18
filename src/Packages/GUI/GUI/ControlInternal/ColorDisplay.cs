@@ -1,6 +1,7 @@
-﻿using Flood.GUI.Controls;
+﻿using Flood;
+using GUI.Controls;
 
-namespace Flood.GUI.ControlInternal
+namespace GUI.ControlInternal
 {
     /// <summary>
     /// Color square.

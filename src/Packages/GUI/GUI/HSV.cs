@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI
+namespace GUI
 {
     public struct HSV
     {

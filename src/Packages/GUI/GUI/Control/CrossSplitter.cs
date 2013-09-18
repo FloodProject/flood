@@ -1,6 +1,6 @@
-﻿using Flood.GUI.ControlInternal;
+﻿using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Splitter control.

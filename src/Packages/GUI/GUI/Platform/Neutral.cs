@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI.Platform
+namespace GUI.Platform
 {
     /// <summary>
     /// Platform-agnostic utility functions.

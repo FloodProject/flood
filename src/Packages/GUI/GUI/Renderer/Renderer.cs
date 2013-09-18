@@ -1,6 +1,7 @@
 ﻿using System;
+using Flood;
 
-namespace Flood.GUI.Renderers
+namespace GUI.Renderers
 {
     /// <summary>
     /// Base renderer.

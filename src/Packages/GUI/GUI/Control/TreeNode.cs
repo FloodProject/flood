@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Flood.GUI.ControlInternal;
+using GUI.ControlInternal;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Tree control node.

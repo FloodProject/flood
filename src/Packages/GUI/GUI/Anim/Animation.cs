@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood.GUI.Controls;
+using GUI.Controls;
 
-namespace Flood.GUI.Anim
+namespace GUI.Anim
 {
     public class Animation
     {

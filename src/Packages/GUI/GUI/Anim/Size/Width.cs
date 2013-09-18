@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flood.GUI.Anim.Size
+namespace GUI.Anim.Size
 {
     class Width : TimedAnimation
     {

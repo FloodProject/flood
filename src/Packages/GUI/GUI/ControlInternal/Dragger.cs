@@ -1,7 +1,8 @@
-﻿using Flood.GUI.Controls;
-using Flood.GUI.Input;
+﻿using Flood;
+using GUI.Controls;
+using GUI.Input;
 
-namespace Flood.GUI.ControlInternal
+namespace GUI.ControlInternal
 {
     /// <summary>
     /// Base for controls that can be dragged by mouse.

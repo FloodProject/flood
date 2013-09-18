@@ -1,5 +1,7 @@
 ﻿
-namespace Flood.GUI.Controls.Layout
+using Flood;
+
+namespace GUI.Controls.Layout
 {
     public class Tile : Control
     {

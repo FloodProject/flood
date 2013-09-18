@@ -1,7 +1,8 @@
 ﻿using System;
-using Flood.GUI.Input;
+using Flood;
+using GUI.Input;
 
-namespace Flood.GUI.Controls
+namespace GUI.Controls
 {
     /// <summary>
     /// Linear-interpolated HSV color box.
