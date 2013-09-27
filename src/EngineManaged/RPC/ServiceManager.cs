@@ -157,9 +157,7 @@ namespace Flood.RPC
 
             var serviceType = typeof(T);
 
-            var serviceAssembly = serviceType.Assembly;
-
-            var stubsType = serviceAssembly.GetType(Helper.GetStubsClassName(serviceType, true));
+            var stubsType = GetServiceStubType(serviceType);
             var implType = stubsType.GetNestedType("Impl");
             impl = (RPCImpl)Activator.CreateInstance(implType, service, implId);
 
@@ -185,10 +183,9 @@ namespace Flood.RPC
                 return (T)(object)proxy;
 
             var serviceType = typeof(T);
-            var serviceAssembly = serviceType.Assembly;
 
-            var implType = serviceAssembly.GetType(Helper.GetStubsClassName(serviceType, true));
-            var proxyType = implType.GetNestedType("Proxy");
+            var stubsType = GetServiceStubType(serviceType);
+            var proxyType = stubsType.GetNestedType("Proxy");
 
             var proxyId = GetNextStubId();
 
@@ -200,6 +197,15 @@ namespace Flood.RPC
             proxy.RPCManager = RPCManager;
 
             return (T)stub;
+        }
+
+        private Type GetServiceStubType(Type serviceType)
+        {
+            var serviceAssembly = serviceType.Assembly;
+
+            var stubClassName = serviceType.FullName.Replace("+", "_") + "Stubs";
+
+            return serviceAssembly.GetType(stubClassName);
         }
 
         internal bool HasGlobalService(Type type)
