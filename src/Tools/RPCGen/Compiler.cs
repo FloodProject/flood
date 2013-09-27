@@ -27,68 +27,68 @@ using System.Linq;
 
 namespace Flood.Tools.RPCGen
 {
+    class GeneratorWriter
+    {
+        public String OutputDir;
+        public List<string> GeneratedFiles; 
+
+        public GeneratorWriter(string outputDir)
+        {
+            OutputDir = outputDir;
+            GeneratedFiles = new List<string>();
+
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+        }
+
+        public void WriteGeneratorToFile(Type type, Generator gen)
+        {
+            WriteGeneratorToFile(type.FullName, gen);
+        }
+
+        public void WriteGeneratorToFile(string fileName, Generator gen)
+        {
+            if (string.IsNullOrEmpty(OutputDir))
+                OutputDir = ".";
+
+            var filePath = Path.GetFullPath(OutputDir);
+            if(!fileName.EndsWith(".cs"))
+                fileName = string.Format("{0}.cs", fileName);
+
+            filePath = Path.Combine(filePath, fileName);
+            File.WriteAllText(filePath, gen.ToString());
+            GeneratedFiles.Add(filePath);
+
+            Console.WriteLine("Generated '{0}'", fileName);
+        }
+    }
+
     public class Compiler
     {
-        private readonly string destAssemblyPath;
-        public readonly List<string> GeneratedFiles;
+        public Assembly Assembly;
+        public string OutputDir;
+
+        private GeneratorWriter apiWriter;
+
         public readonly List<Type> RpcTypes;
         public readonly Dictionary<string, string> DataObjectsMap;
 
-        public bool outputDebug;
-        public string outputDir;
-        public Assembly assembly;
         Logger log = new Logger(Logger.LogLevel.Info);
 
-        public Compiler(string destAssemblyPath, string outputDir)
+        public Compiler(Assembly assembly, string outputDir)
         {
-            this.destAssemblyPath = destAssemblyPath;
-            this.outputDir = outputDir;
-            this.outputDebug = true;
-            this.GeneratedFiles = new List<string>();
-            this.RpcTypes = new List<Type>();
-            this.DataObjectsMap = new Dictionary<string, string>();
+            Assembly = assembly;
+            OutputDir = outputDir;
 
-            if(!ParseAssembly(destAssemblyPath, out assembly))
-                throw new ArgumentException();
-        }
+            apiWriter = new GeneratorWriter(Path.Combine(outputDir, "API"));
 
-        static bool ParseAssembly(string path, out Assembly assembly)
-        {
-            assembly = null;
-
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                Console.WriteLine("Error: no assembly provided");
-                return false;
-            }
-
-            try
-            {
-                var fullPath = Path.GetFullPath(path);
-                var pdbPath = Path.ChangeExtension(fullPath,".pdb");
-                var assemblyBytes = File.ReadAllBytes(fullPath);
-                if (File.Exists(pdbPath))
-                {
-                    var pdbBytes = File.ReadAllBytes(pdbPath);
-                    assembly = Assembly.Load(assemblyBytes, pdbBytes);
-                }
-                else
-                {
-                    assembly = Assembly.Load(assemblyBytes);
-                }
-            }
-            catch 
-            {
-                Console.WriteLine("Error: assembly '{0}' could not be loaded", path);
-                return false;
-            }
-
-            return true;
+            RpcTypes = new List<Type>();
+            DataObjectsMap = new Dictionary<string, string>();
         }
 
         public void Process()
         {
-            foreach(var module in assembly.GetModules())
+            foreach(var module in Assembly.GetModules())
             {
                 foreach (var type in module.GetTypes())
                 {
@@ -121,209 +121,129 @@ namespace Flood.Tools.RPCGen
 
         private void ProcessService(Type type)
         {
-            if (outputDebug)
-            {
-                log.Debug("Service: {0}", type.Name);
+            log.Debug("Service: {0}", type.Name);
 
-                foreach (var method in type.GetMethods())
-                    log.Debug("  Method: {0}", method.Name);
-            }
+            foreach (var method in type.GetMethods())
+                log.Debug("  Method: {0}", method.Name);
 
             var gen = new Generator(type.Assembly);
             gen.GenerateService(type);
 
-            WriteGeneratorToFile(type, gen);
+            apiWriter.WriteGeneratorToFile(type, gen);
         }
 
         private string ProcessDataObject(Type type)
         {
-            if (outputDebug)
-            {
-                log.Debug("DataObject: {0}", type.Name);
+            log.Debug("DataObject: {0}", type.Name);
 
-                foreach (var field in type.GetFields())
-                    log.Debug("  Field: {0}", field.Name);
-            }
+            foreach (var field in type.GetFields())
+                log.Debug("  Field: {0}", field.Name);
 
             var gen = new Generator(type.Assembly);
             var dataObjectFullName = gen.GenerateDataObject(type);
 
-            WriteGeneratorToFile(type, gen);
+            apiWriter.WriteGeneratorToFile(type, gen);
 
             return dataObjectFullName;
         }
 
         private void ProcessException(Type type)
         {
-            if (outputDebug)
-            {
-                log.Debug("Exception: {0}", type.Name);
+            log.Debug("Exception: {0}", type.Name);
 
-                foreach (var field in type.GetFields())
-                    log.Debug("  Field: {0}", field.Name);
-            }
+            foreach (var field in type.GetFields())
+                log.Debug("  Field: {0}", field.Name);
 
             var gen = new Generator(type.Assembly);
             gen.GenerateDataObject(type);
 
-            WriteGeneratorToFile(type, gen);
+            apiWriter.WriteGeneratorToFile(type, gen);
         }
 
         private void WriteDataObjectFactory()
         {
-            var gen = new Generator(assembly);
+            var gen = new Generator(Assembly);
             gen.GenerateDataObjectFactory(RpcTypes);
 
-            WriteGeneratorToFile("DataObjectFactory", gen);
+            apiWriter.WriteGeneratorToFile("DataObjectFactory", gen);
         }
 
-        private void WriteGeneratorToFile(Type type, Generator gen)
+        public void Compile(string dllPath)
         {
-            WriteGeneratorToFile(type.FullName, gen);
-        }
+            FieldsToProperties(dllPath);
 
-        private void WriteGeneratorToFile(string fileName, Generator gen)
-        {
-            if (string.IsNullOrEmpty(outputDir))
-                outputDir = ".";
+            var apiPath = Path.ChangeExtension(dllPath, "API.dll");
 
-            var filePath = Path.GetFullPath(outputDir);
-            if(!fileName.EndsWith(".cs"))
-                fileName = string.Format("{0}.cs", fileName);
+            var references = AssemblyWeaver.GetReferences(dllPath);
+            references.Remove(Path.GetFileName(apiPath));
 
-            filePath = Path.Combine(filePath, fileName);
-            File.WriteAllText(filePath, gen.ToString());
-            GeneratedFiles.Add(filePath);
-
-            Console.WriteLine("Generated '{0}'", fileName);
-        }
-
-        public void Compile(string outputPath)
-        {
-            var references = GetAssemblyReferencesPaths(assembly);
-
-            CompileIntoAssembly(destAssemblyPath, outputPath, references);
-        }
-
-        public void CompileApi(string outputPath)
-        {
-            using (var emptyAssemblyPaths = new TemporaryAssemblyPaths())
-            using (var apiAssemblyPaths = new TemporaryAssemblyPaths())
+            using (var apiGenPaths = new TemporaryAssemblyPaths())
             {
-                CreateEmptyAssembly(emptyAssemblyPaths.DllPath);
+                var apiReferences = references.Where(s => s.EndsWith(".API.dll")).ToList();
+                apiReferences.Add("EngineManaged.dll");
 
-                var types = RpcTypes.Select(t => t.FullName);
-                if (!types.Any())
-                {
-                    Console.WriteLine("No RPC types found. Generated empty '{0}'", outputPath);
-                    return;
-                }
+                //Create empty API assembly
+                CompileIntoAssembly(apiPath, new string[]{}, new List<string>());
 
-                var weaver = new AssemblyWeaver(emptyAssemblyPaths.DllPath);
-                weaver.CopyTypes(destAssemblyPath, types);
-                weaver.Write(apiAssemblyPaths.DllPath);
+                //Create assembly with required types by the generated API assembly
+                var weaver = new AssemblyWeaver();
+                weaver.CopyTypes(dllPath, RpcTypes);
+                weaver.Write(apiPath);
 
-                var references = weaver.GetReferences();
+                //API generated assembly
+                var apiGenReferences = apiReferences.ToList();
+                apiGenReferences.Add(apiPath);
+                CompileIntoAssembly(apiGenPaths.DllPath, apiGenReferences, apiWriter.GeneratedFiles);
 
-                CompileIntoAssembly(apiAssemblyPaths.DllPath, outputPath, references);
-            }
-        }
-
-        private void CompileIntoAssembly(string destPath, string outputPath, HashSet<string> references)
-        {
-            outputPath = Path.GetFullPath(outputPath);
-
-            using (var generatedAssembly = new TemporaryAssemblyPaths())
-            {
-                
-                FieldsToProperties(destPath, outputPath);
-
-                CodeDomProvider provider = new CSharpCodeProvider();
-                CompilerParameters cp = new CompilerParameters()
-                {
-                    GenerateExecutable = false,
-                    OutputAssembly = generatedAssembly.DllPath,
-                    IncludeDebugInformation = true,
-                    CompilerOptions = "/unsafe"
-                };
-
-                references.Add(outputPath);
-                foreach (var @ref in references)
-                    cp.ReferencedAssemblies.Add(@ref);
-
-                CompilerResults cr = provider.CompileAssemblyFromFile(cp, GeneratedFiles.ToArray());
-            
-                if (cr.Errors.HasErrors)
-                {
-                    var message = new StringBuilder();
-                    message.Append("Error compiling generated files.\n");
-                    foreach(var error in cr.Errors)
-                        message.AppendFormat("  {0}\n",error.ToString());
-                    throw new Exception(message.ToString());
-                }
-
-                var weaver = new AssemblyWeaver(outputPath);
-                weaver.MergeTypes(generatedAssembly.DllPath, DataObjectsMap);
-                weaver.AddAssembly(generatedAssembly.DllPath);
-                weaver.Write(outputPath);
-            }
-        }
-
-        private static HashSet<string>  GetAssemblyReferencesPaths(Assembly assembly)
-        {
-            var references = new HashSet<string>();
-
-            foreach (var assemblyName in assembly.GetReferencedAssemblies())
-            {
-                references.Add(assemblyName.Name + ".dll");
+                //Add API generated assembly to API assembly
+                weaver = new AssemblyWeaver(apiPath);
+                //Merge some generated files.
+                weaver.MergeTypes(apiGenPaths.DllPath, DataObjectsMap);
+                //Add all the other generated types.
+                weaver.CopyAssembly(apiGenPaths.DllPath);
+                weaver.Write(apiPath);
             }
 
-            return references;
+            var typeFowarder = new TypeFowarder(dllPath);
+            typeFowarder.FowardTypes(apiPath, RpcTypes);
+            typeFowarder.Write(dllPath);
         }
 
-        private static void CreateEmptyAssembly(string outputPath)
+        private void CompileIntoAssembly(string outputPath, IEnumerable<string> references, List<string> files)
         {
-            var provider = new CSharpCodeProvider();
-            var cp = new CompilerParameters()
+            CodeDomProvider provider = new CSharpCodeProvider();
+            CompilerParameters cp = new CompilerParameters()
             {
                 GenerateExecutable = false,
                 OutputAssembly = outputPath,
-                IncludeDebugInformation = true
+                IncludeDebugInformation = true,
+                CompilerOptions = "/unsafe"
             };
-            var cr = provider.CompileAssemblyFromFile(cp, new string[]{});
+
+            foreach (var @ref in references)
+                cp.ReferencedAssemblies.Add(@ref);
+
+            CompilerResults cr = provider.CompileAssemblyFromFile(cp, files.ToArray());
 
             if (cr.Errors.HasErrors)
             {
                 var message = new StringBuilder();
-                message.Append("Error creating empty assembly.\n");
+                message.Append("Error compiling generated files.\n");
                 foreach(var error in cr.Errors)
                     message.AppendFormat("  {0}\n",error.ToString());
                 throw new Exception(message.ToString());
             }
         }
 
-        private void FieldsToProperties(string assemblyPath, string outputPath)
+        private void FieldsToProperties(string assemblyPath)
         {
-            var fields = new List<FieldInfo>();
-            foreach (var type in RpcTypes)
-            {
-                if (!Metadata.IsDataObject(type))
-                    continue;
+            var fields = RpcTypes.Where(Metadata.IsDataObject).SelectMany(t => 
+                    t.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)
+                    ).Where(Metadata.HasId);
 
-                foreach (var field in type.GetFields())
-                {
-                    if (field.DeclaringType != type)
-                        continue;
-
-                    if(Metadata.HasId(field))
-                        fields.Add(field);
-                }
-            }
-
-            var weaver = new AssemblyWeaver(assemblyPath);
-            var fieldToProperties = new FieldsToProperties(weaver);
-            fieldToProperties.ProcessFields(fields);
-            weaver.Write(outputPath);
+            var fieldToProperties = new FieldsToProperties(assemblyPath);
+            fieldToProperties.ProcessFields(fields.ToList());
+            fieldToProperties.Write(assemblyPath);
         }
     }
 }

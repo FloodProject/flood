@@ -13,6 +13,7 @@
  * under the License.
  */
 
+using System.Reflection;
 using Mono.Options;
 using System;
 using System.IO;
@@ -85,20 +86,66 @@ namespace Flood.Tools.RPCGen
             if (!Directory.Exists(options.OutputDir))
                 Directory.CreateDirectory(options.OutputDir);
 
+            if(!Generate(options.Assembly, options.OutputDir))
+                return 1;
+
+            return 0;
+        }
+
+        public static bool Generate(string assemblyPath, string outputDir)
+        {
             try
             {
-                var compiler = new Compiler(options.Assembly, options.OutputDir);
+                Assembly assembly;
+                if(!LoadAssembly(assemblyPath, out assembly))
+                    throw new Exception("Could not load assembly "+assemblyPath);
+
+                var compiler = new Compiler(assembly, outputDir);
                 compiler.Process();
-                compiler.Compile(options.Assembly);
+                compiler.Compile(assemblyPath);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                return 1;
+                return false;
             }
-            
-            return 0;
+
+            return true;
+        }
+
+        private static bool LoadAssembly(string path, out Assembly assembly)
+        {
+            assembly = null;
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Console.WriteLine("Error: no assembly provided");
+                return false;
+            }
+
+            try
+            {
+                var fullPath = Path.GetFullPath(path);
+                var pdbPath = Path.ChangeExtension(fullPath,".pdb");
+                var assemblyBytes = File.ReadAllBytes(fullPath);
+                if (File.Exists(pdbPath))
+                {
+                    var pdbBytes = File.ReadAllBytes(pdbPath);
+                    assembly = Assembly.Load(assemblyBytes, pdbBytes);
+                }
+                else
+                {
+                    assembly = Assembly.Load(assemblyBytes);
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Error: assembly '{0}' could not be loaded", path);
+                return false;
+            }
+
+            return true;
         }
     }
 }
