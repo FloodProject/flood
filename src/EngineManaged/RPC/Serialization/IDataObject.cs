@@ -19,7 +19,7 @@ namespace Flood.RPC.Serialization
         bool IsReference { get; set; }
     }
 
-    public interface IDataObjectReference : IObservableDataObject
+    public interface IDataObjectReference
     {
         RPCPeer Peer { get; }
         int RemoteId { get; }
