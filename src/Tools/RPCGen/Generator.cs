@@ -35,12 +35,12 @@ namespace Flood.Tools.RPCGen
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, true, GetTypeName(type), type);
+            GenerateDataObjectClass(className, parameters, type.Namespace, false, GetTypeName(type), type);
 
             return type.Namespace + "." + className;
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isObservable, string origClassName = "", Type dataObjectType = null)
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, string origClassName = "", Type dataObjectType = null)
         {
             if (@namespace != null)
             {
@@ -48,8 +48,7 @@ namespace Flood.Tools.RPCGen
                 WriteStartBraceIndent();
             }
 
-            var @interface = (isObservable) ? "IObservableDataObject" : "IDataObject";
-            var structclass = (isObservable) ? "class" : "struct";
+            var structclass = (isValueType) ? "struct" : "class";
 
             var baseDataObjects = GetBaseDataObjects(dataObjectType);
             var baseDataObjectCount = (baseDataObjects == null) ? 0 : baseDataObjects.Count;
@@ -57,17 +56,18 @@ namespace Flood.Tools.RPCGen
 
             if (baseDataObject != null)
             {
-                WriteLine("public {0} {1} : {2}, {3}", structclass, className, GetStubsClassName(baseDataObject, true), @interface);
+                WriteLine("public {0} {1} : {2}", structclass, className, GetStubsClassName(baseDataObject, true));
             }
             else
             {
+                var @interface = (isValueType) ? "IDataObject" : "IObservableDataObject";
                 WriteLine("public {0} {1} : {2}", structclass, className, @interface);
             }
-            
+
             WriteStartBraceIndent();
 
             // Generate fields
-            if (isObservable)
+            if (!isValueType)
             {
                 WriteLine("public class Reference : {0}, IDataObjectReference", className);
                 WriteStartBraceIndent();
@@ -156,11 +156,11 @@ namespace Flood.Tools.RPCGen
 
             // Generate write methods
             GenerateDataObjectWriteBitField(parameters, baseDataObject);
-            GenerateDataObjectWrite(className, baseDataObjects, isObservable);
+            GenerateDataObjectWrite(className, baseDataObjects, isValueType);
             NewLine();
 
             // Generate read method
-            GenerateDataObjectRead(className, baseDataObjects, isObservable, parameters);
+            GenerateDataObjectRead(className, baseDataObjects, isValueType, parameters);
 
             WriteCloseBraceIndent();
             if (@namespace != null)
@@ -189,9 +189,9 @@ namespace Flood.Tools.RPCGen
             WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectWrite(string className, List<Type> baseTypes, bool isDataObject)
+        private void GenerateDataObjectWrite(string className, List<Type> baseTypes, bool isValueType)
         {
-            GenerateDataObjectOverride("Write", className, baseTypes, isDataObject, () =>
+            GenerateDataObjectOverride("Write", className, baseTypes, isValueType, () =>
             {
                 var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
                 var bitFieldCount = baseCount + 1;
@@ -214,9 +214,9 @@ namespace Flood.Tools.RPCGen
 
         }
 
-        private void GenerateDataObjectRead(string className, List<Type> baseTypes, bool isDataObject, IEnumerable<Parameter> parameters)
+        private void GenerateDataObjectRead(string className, List<Type> baseTypes, bool isValueType, IEnumerable<Parameter> parameters)
         {
-            GenerateDataObjectOverride("Read", className, baseTypes, isDataObject, () =>
+            GenerateDataObjectOverride("Read", className, baseTypes, isValueType, () =>
             {
                 WriteLine("var properties = new BitField();");
                 WriteLine("properties.Bits = data.Serializer.ReadI64();");
@@ -232,10 +232,10 @@ namespace Flood.Tools.RPCGen
             });
         }
 
-        private void GenerateDataObjectOverride(string name, string className, List<Type> baseTypes, bool isDataObject, Action printer)
+        private void GenerateDataObjectOverride(string name, string className, List<Type> baseTypes, bool isValueType, Action printer)
         {
             var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
-            var modifier = (!isDataObject)? "" : (baseCount == 0) ? "virtual" : "override";
+            var modifier = (isValueType)? "" : (baseCount == 0) ? "virtual" : "override";
 
             WriteLine("public {0} void {1}(RPCData data, Type baseType = null)", modifier, name);
             WriteStartBraceIndent();
@@ -380,7 +380,7 @@ namespace Flood.Tools.RPCGen
             if (HasArgsSerializer(method))
             {
                 var argsParameters = ConvertToParametersList(method);
-                GenerateDataObjectClass(argsClassName, argsParameters, null, false);
+                GenerateDataObjectClass(argsClassName, argsParameters, null, true);
             }
 
             if (!HasResultSerializer(method))
@@ -403,7 +403,7 @@ namespace Flood.Tools.RPCGen
             }
 
             NewLine();
-            GenerateDataObjectClass(resultClassName, resultParams, null, false);
+            GenerateDataObjectClass(resultClassName, resultParams, null, true);
         }
 
         private bool HasArgsSerializer(MethodInfo method)
@@ -421,7 +421,7 @@ namespace Flood.Tools.RPCGen
 
         private void GenerateServiceProxy(Type type)
         {
-            Write("public class Proxy : RPCProxy, {0}", GetTypeName(type));
+            WriteLine("public class Proxy : RPCProxy, {0}", GetTypeName(type));
             WriteStartBraceIndent();
 
             // Generate client constructors
