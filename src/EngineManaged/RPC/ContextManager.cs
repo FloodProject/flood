@@ -156,6 +156,7 @@ namespace Flood.RPC
         {
             var context = GetCreateContext(assembly);
             var request = new RPCData(peer, RPCManager, context.LocalId, 0, RPCDataType.ContextRequest);
+            context.ContextId.Write(request);
             request.Dispatch();
         }
 
