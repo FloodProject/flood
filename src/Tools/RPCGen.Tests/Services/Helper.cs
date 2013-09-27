@@ -28,7 +28,7 @@ namespace RPCGen.Tests.Services
 
             public async override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
             {
-                return typeof(Helper).Assembly;
+                return Assembly.Load(((MockContextId)contextId).AssemblyFullName);
             }
 
             public override IContextId GetContextId(Assembly assembly)
