@@ -1,95 +1,109 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using EngineWeaver.Util;
+using Microsoft.CSharp;
 using Mono.Cecil;
 
 namespace EngineWeaver
 {
     public class AssemblyWeaver
     {
-        internal readonly AssemblyDefinition DestinationAssembly;
-        private Dictionary<ModuleDefinition, CecilCopier> copiers; 
+        internal readonly ModuleDefinition TargetModule;
 
-        public AssemblyWeaver(string destAssemblyPath)
+        internal CecilCopier Copier;
+
+        public AssemblyWeaver()
+            : this(CecilUtils.CreateEmptyAssemblyDef())
         {
-            DestinationAssembly = CecilUtils.GetAssemblyDef(destAssemblyPath);
-            copiers = new Dictionary<ModuleDefinition, CecilCopier>();
         }
 
-        private CecilCopier GetCreateCopier(ModuleDefinition origModuleDef)
+        public AssemblyWeaver(string targetAssemblyPath)
+            : this(CecilUtils.GetAssemblyDef(targetAssemblyPath))
         {
-            CecilCopier copier;
-            if (copiers.TryGetValue(origModuleDef, out copier))
-                return copier;
-
-            copier = new CecilCopier(origModuleDef, DestinationAssembly.MainModule);
-            copiers.Add(origModuleDef, copier);
-
-            return copier;
         }
 
-        public void AddAssembly(string origAssemblyPath)
+        private AssemblyWeaver(AssemblyDefinition targetAssemblyDef)
+        {
+            TargetModule = targetAssemblyDef.MainModule;
+            Copier = new CecilCopier(targetAssemblyDef.MainModule);
+
+            AddSearchDirectory(Directory.GetCurrentDirectory());
+        }
+
+        public void CopyAssembly(string origAssemblyPath)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = GetCreateCopier(origAssembly.MainModule);
 
             foreach (var origType in origAssembly.MainModule.Types)
-                if(origType.BaseType != null)
-                    copier.Copy(origType);
+                Copier.Copy(origType);
 
-            copier.Process();
+            Copier.Process();
         }
 
-        public void CopyTypes(string origAssemblyPath, IEnumerable<string> typeNames)
+        public void CopyTypes(string origAssemblyPath, IEnumerable<Type> types, bool areStubTypes = false)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = GetCreateCopier(origAssembly.MainModule);
 
-            foreach (var typeName in typeNames)
+            foreach (var type in types)
             {
-                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, typeName);
+                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, type);
 
-                copier.Copy(typeDef);
+                Copier.Copy(typeDef, areStubTypes);
             }
 
-            copier.Process();
+            Copier.Process();
         }
 
-        public void MergeTypes(string origAssemblyPath, Dictionary<string, string> typeNames)
+        public void MergeTypes(string origAssemblyPath, Dictionary<string, string> types)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
-            var copier = GetCreateCopier(origAssembly.MainModule);
 
-            foreach (var typeNameKV in typeNames)
+            foreach (var typeKV in types)
             {
-                var origTypeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, typeNameKV.Key);
-                var destTypeDef = CecilUtils.GetTypeDef(DestinationAssembly.MainModule, typeNameKV.Value);
-                copier.Merge(origTypeDef, destTypeDef);
+                var origTypeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, typeKV.Key);
+                var destTypeDef = CecilUtils.GetTypeDef(TargetModule, typeKV.Value);
+
+                Copier.Merge(origTypeDef, destTypeDef);
             }
 
-            copier.Process();
+            Copier.Process();
         }
 
         public void Write(string outputAssemblyPath)
         {
-            DestinationAssembly.Name.Name = Path.GetFileName(outputAssemblyPath);
+            var fileName = Path.GetFileNameWithoutExtension(outputAssemblyPath);
+            TargetModule.Assembly.Name.Name = fileName;
             var writerParameters = new WriterParameters();
-            writerParameters.WriteSymbols = DestinationAssembly.MainModule.HasSymbols;
+            writerParameters.WriteSymbols = TargetModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
-            DestinationAssembly.Write(outputAssemblyPath, writerParameters);
+            TargetModule.Assembly.Write(outputAssemblyPath, writerParameters);
         }
 
-        public HashSet<string> GetReferences()
+        public static HashSet<string> GetReferences(string assemblyPath)
         {
+            var assemblyDef = CecilUtils.GetAssemblyDef(assemblyPath);
+
             var ret = new HashSet<string>();
-            foreach (var reference in DestinationAssembly.MainModule.AssemblyReferences)
+            foreach (var reference in assemblyDef.MainModule.AssemblyReferences)
             {
-                ret.Add(reference.Name+".dll");
+                var name = reference.Name;
+
+                if (Path.GetExtension(reference.Name) != ".dll")
+                    name += ".dll";
+
+                ret.Add(name);
             }
             
             return ret;
         }
 
+        public void AddSearchDirectory(string directory)
+        {
+            ((DefaultAssemblyResolver)TargetModule.AssemblyResolver).AddSearchDirectory(directory);
+        }
     }
 }

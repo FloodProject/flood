@@ -1,114 +1,154 @@
-﻿using EngineWeaver.Util;
+﻿using System.Reflection;
+using EngineWeaver.Util;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using Weaver.Util;
+using MethodBody = Mono.Cecil.Cil.MethodBody;
+using TypeAttributes = Mono.Cecil.TypeAttributes;
 
 namespace EngineWeaver
 {
-    public class CecilCopier : DeepCopier
+    public class CecilKey : CopyKey
     {
-        private ModuleDefinition originModule;
-        private ModuleDefinition destinationModule;
-        private readonly Dictionary<MemberReference,MemberReference> referenceMap;
+        public override bool Equals(object obj)
+        {
+            var key = obj as CecilKey;
+            if (key == null)
+                return false;
 
-        private readonly List<Instruction> instructions;
-        private readonly Dictionary<TypeDefinition,TypeDefinition> delayedCopy;
+            var memberRef = Value as MemberReference;
+            if (memberRef != null && !(memberRef is GenericParameter))
+            {
+                var memberKeyRef = key.Value as MemberReference;
+                if( memberKeyRef == null ||
+                    !CecilUtils.AreScopesEqual(memberKeyRef, memberRef) ||
+                    memberKeyRef.FullName != memberRef.FullName)
+                    return false;
+
+                if (memberKeyRef is TypeReference)
+                {
+                    if (!(memberRef is TypeReference))
+                        return false;
+                }
+                else if (memberKeyRef is FieldReference)
+                {
+                    if (!(memberRef is FieldReference))
+                        return false;
+                }
+                else if (memberKeyRef is PropertyReference)
+                {
+                    if (!(memberRef is PropertyReference))
+                        return false;
+                }
+                else if (memberKeyRef is EventReference)
+                {
+                    if (!(memberRef is EventReference))
+                        return false;
+                }
+                else if (memberKeyRef is MethodReference)
+                {
+                    var methodKeyRef = (MethodReference)memberKeyRef;
+                    var methodRef = memberRef as MethodReference;
+
+                    if (methodRef == null)
+                        return false;
+
+                    return CecilUtils.DoMethodParametersTypeMatch(methodKeyRef, methodRef);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+
+                return true;
+            }
+
+            return Value.Equals(key.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = 0;
+
+            var memberRef = Value as MemberReference;
+            if (memberRef != null)
+                hash ^= memberRef.FullName.GetHashCode();
+
+            return hash != 0 ? hash : Value.GetHashCode();
+        }
+    }
+
+    public class CecilCopier : DeepCopier<CecilKey>
+    {
+        private ModuleDefinition destinationModule;
+
+        private readonly List<IDelayedCopy> delayedCopies;
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
         public string NamePrefix { get; set; }
 
-        public CecilCopier(ModuleDefinition originModule, ModuleDefinition destinationModule)
+        private TypeReference objectTypeRef;
+
+        public CecilCopier(ModuleDefinition destinationModule)
         {
-            this.originModule = originModule;
             this.destinationModule = destinationModule;
             
             NamePrefix = "";
-            referenceMap = new Dictionary<MemberReference,MemberReference>();
-            instructions = new List<Instruction>();
-            delayedCopy = new Dictionary<TypeDefinition,TypeDefinition>();
+
+            delayedCopies = new List<IDelayedCopy>();
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
+
+            objectTypeRef = destinationModule.Import(typeof (object));
         }
 
-        public void Clear()
+        protected override bool IsValidCopyValue(object value)
         {
-            CopyMap.Clear();
-            referenceMap.Clear();
+            var memberRef = value as MemberReference;
+            if (memberRef != null)
+                return memberRef.Module == null || memberRef.Module == destinationModule;
+
+            return true;
         }
 
-        public void Map(MemberReference origin,MemberReference destination)
+        protected override bool SkipCopy(object from, out object copy)
         {
-            if(origin.Module != originModule || destination.Module != destinationModule)
-                throw new ArgumentException();
+            var typeDef = from as TypeDefinition;
+            if (typeDef != null && stubTypes.ContainsKey(typeDef))
+            {
+                copy = null;
+                return false; //Replace stub
+            }
 
-            referenceMap.Add(origin,destination);
+            return base.SkipCopy(from, out copy);
         }
 
         public void Process()
         {
             ProcessDelayed();
-            CopyInstructionsOperands();
             Update();
+        }
+
+        private void AddDelayedCopy<T>(T from, T to, DelayedCopy<T>.CopyDelegate action)
+        {
+            delayedCopies.Add(new DelayedCopy<T>(from, to, action));
         }
 
         private void ProcessDelayed()
         {
-            foreach (var t in delayedCopy)
-            { 
-                Log("> Type "+t.Key.FullName);
-                Log("< Type "+t.Value.FullName);
-                CopyAll(t.Key,t.Value,"Name","DeclaringType","BaseType","MetadataToken","Scope", "NestedTypes");
+            while (delayedCopies.Any())
+            {
+                var array = delayedCopies.ToArray();
+                delayedCopies.Clear();
+                foreach (var copy in array)
+                    copy.Copy();
             }
-            delayedCopy.Clear();
-        }
-
-        private void CopyInstructionsOperands()
-        {
-
-            foreach(var i in instructions){
-                if(i.Operand == null){
-                    continue;
-                }
-                if(i.Operand.GetType().IsValueType || i.Operand is String){
-                    continue;
-                }
-                if(i.Operand is TypeReference){
-                    i.Operand = CopyReference((TypeReference)i.Operand);
-                    continue;
-                }
-                if(i.Operand is MethodReference){
-                    i.Operand = CopyReference((MethodReference)i.Operand);
-                    continue;
-                }
-                if(i.Operand is FieldReference){
-                    i.Operand = CopyReference((FieldReference)i.Operand);
-                    continue;
-                }
-                if(i.Operand is VariableReference   ||
-                   i.Operand is ParameterDefinition ||
-                   i.Operand is Instruction)
-                {
-                    i.Operand = CopyMap[i.Operand];
-                    continue;
-                }
-                var operandI = i.Operand as Instruction[];
-                if (operandI != null) //i.e: switch
-                {
-                    var l = new Instruction[operandI.Length];
-                    for(var k = 0; k <  operandI.Length; k++)
-                        l[k] = (Instruction) CopyMap[operandI[k]];
-                    i.Operand = l;
-                    continue;
-                }
-               
-                throw new NotImplementedException("No handling for operands of type "+i.Operand.GetType());
-            }
-
-            instructions.Clear();
         }
 
         private void Update()
@@ -143,17 +183,12 @@ namespace EngineWeaver
 
         private TypeDefinition GetDeclaringType(MemberReference member, bool throwMapException = true)
         {
-            if(member.Module != originModule)
-                throw new ArgumentException();
-
             if (member.DeclaringType == null)
                 return null;
 
-            if (referenceMap.ContainsKey(member.DeclaringType))
-                return (TypeDefinition) referenceMap[member.DeclaringType];
-
-            if (CopyMap.ContainsKey(member.DeclaringType))
-                return (TypeDefinition) CopyMap[member.DeclaringType];
+            TypeReference localDeclaringType;
+            if (TryGetLocalReference(member.DeclaringType, out localDeclaringType))
+                return (TypeDefinition) localDeclaringType;
 
             if(throwMapException)
                 throw new Exception("Could not found destination TypeDefinition. Map it.");
@@ -171,146 +206,339 @@ namespace EngineWeaver
 
         # region COPY METHODS
 
-        private T GetLocalReference<T>(T @ref) where T : MemberReference
+        private bool TryGetLocalReference(TypeReference @ref, out TypeReference localRef)
         {
-            if(CopyMap.ContainsKey(@ref))
-                return  (T)CopyMap[@ref];
-            if(referenceMap.ContainsKey(@ref))
-                return  (T)referenceMap[@ref];
+            MemberReference @out;
+            var ret = TryGetLocalReference(@ref, out @out);
+            localRef = (TypeReference) @out;
+            return ret;
+        }
 
+        private bool TryGetLocalReference(MethodReference @ref, out MethodReference localRef)
+        {
+            MemberReference @out;
+            var ret = TryGetLocalReference(@ref, out @out);
+            localRef = (MethodReference) @out;
+            return ret;
+        }
+
+        private bool TryGetLocalReference(FieldReference @ref, out FieldReference localRef)
+        {
+            MemberReference @out;
+            var ret = TryGetLocalReference(@ref, out @out);
+            localRef = (FieldReference) @out;
+            return ret;
+        }
+
+        private bool TryGetLocalReference(MemberReference @ref, out MemberReference localRef) 
+        {
+            if (TryGetCopy(@ref, out localRef))
+            {
+                UpdateScope(localRef);
+                return true;
+            }
+
+            if(@ref.FullName.Contains("Reference"))
+                Console.WriteLine();
+
+            if (CecilUtils.GetScope(@ref).Name == destinationModule.Assembly.Name.Name)
+            {
+                localRef = CecilUtils.GetMemberDef(destinationModule, @ref);
+            }
+            else
+            {
+                TypeReference localDeclaringType;
+                if (@ref.DeclaringType == null ||
+                    !TryGetLocalReference(@ref.DeclaringType, out localDeclaringType))
+                    return false;
+
+                if (CecilUtils.AreScopesEqual(localDeclaringType, @ref.DeclaringType))
+                    return false;
+
+                var remoteDef = CecilUtils.GetMemberDef(localDeclaringType.Resolve(), @ref);
+                localRef = CecilUtils.GetReference(destinationModule, remoteDef);
+            }
+
+            //Try to find local copy
+            MemberReference localRefCopy;
+            if (TryGetCopy(localRef, out localRefCopy))
+                localRef = localRefCopy;
+
+            UpdateScope(localRef);
+
+            return true;
+        }
+
+        #region CopyReference
+
+        public MemberReference CopyReference(MemberReference @ref)
+        {
             if (@ref is TypeReference)
-            {
-                var typeRef = destinationModule.GetType(@ref.FullName);
-                if(typeRef != null) 
-                    return (T)(MemberReference)typeRef;
-            }
+                return CopyReference((TypeReference) @ref);
 
-            var destTypeDef = destinationModule.GetType(@ref.DeclaringType.FullName);
-            if (destTypeDef != null)
-            {
-                var origMethodRef = @ref as MethodReference;
-                if (origMethodRef != null)
-                {
-                    var destMethodDef = CecilUtils.GetTypeMethodDef(destTypeDef, origMethodRef);
-                    if(destMethodDef != null) 
-                        return (T)(MemberReference)destMethodDef;
-                }
+            if (@ref is MethodReference)
+                return CopyReference((MethodReference) @ref);
 
-                var origFieldRef = @ref as FieldReference;
-                if (origFieldRef != null)
-                {
-                    var destFieldDef = CecilUtils.GetTypeFieldDef(destTypeDef, origFieldRef);
-                    if(destFieldDef != null) 
-                        return (T)(MemberReference)destFieldDef;
-                }
-            }
+            if (@ref is FieldReference)
+                return CopyReference((FieldReference) @ref);
 
-            throw new Exception("Cannot find Field "+@ref.FullName+". Try to Copy/Merge/TMap it first.");
-        }
-
-        private bool IsLocalReference(string scopeName)
-        {
-            if(Path.GetExtension(scopeName) == ".dll")
-                scopeName = Path.GetFileNameWithoutExtension(scopeName);
-
-            return scopeName ==  Path.GetFileNameWithoutExtension(originModule.Name) || 
-                   scopeName == Path.GetFileNameWithoutExtension(destinationModule.Name);
-        }
-
-        public FieldReference CopyReference(FieldReference @ref)
-        {
-             if(IsLocalReference(@ref.DeclaringType.Scope.Name))
-                return GetLocalReference(@ref);
-
-            Log("Importing "+@ref.FullName+ " from "+ @ref.DeclaringType.Scope.Name);
-            return destinationModule.Import(@ref);
-        }
-
-        public MethodReference CopyReference(MethodReference @ref)
-        {
-            if(IsLocalReference(@ref.DeclaringType.Scope.Name))
-                return GetLocalReference(@ref);
-
-            Log("Importing "+@ref.FullName+ " from "+ @ref.DeclaringType.Scope.Name);
-
-            // Fix bad imports of generic arguments.
-            CheckGenericArguments(@ref);
-
-            return destinationModule.Import(@ref);
+            throw new NotImplementedException();
         }
 
         public TypeReference CopyReference(TypeReference @ref)
         {
-            if (IsLocalReference(@ref.Scope.Name))
-                return GetLocalReference(@ref);
+            if (@ref is GenericParameter)
+                return Copy((GenericParameter)@ref);
 
-            Log("Importing " + @ref.FullName + " from " + @ref.Scope.Name);
+            if (@ref is GenericInstanceType)
+                return Copy((GenericInstanceType)@ref);
 
-            // Fix bad imports of generic arguments.
-            CheckGenericArguments(@ref);
+            if (@ref is ArrayType)
+                return Copy((ArrayType)@ref);
 
-            return destinationModule.Import(@ref);
+            if (@ref is PointerType)
+                return Copy((PointerType)@ref);
+
+            if (@ref is ByReferenceType)
+                return Copy((ByReferenceType)@ref);
+
+            return Copy(@ref);
         }
 
-        private void CheckGenericArguments(TypeReference typeRef)
+        public MethodReference CopyReference(MethodReference @ref)
         {
-            if (typeRef == null)
-                return;
+            if (@ref is GenericInstanceMethod)
+                return Copy((GenericInstanceMethod) @ref);
 
-            var genericTypeRef = typeRef as GenericInstanceType;
-            if (genericTypeRef != null)
-            {
-                for (int i = 0; i < genericTypeRef.GenericArguments.Count; i++)
-                {
-                    var genericArgument = genericTypeRef.GenericArguments[i];
-                    if (genericArgument is GenericParameter) continue;
-                    genericTypeRef.GenericArguments[i] = CopyReference(genericArgument);
-                }
-            }
-
-            CheckGenericArguments(typeRef.DeclaringType as GenericInstanceType);
+            return Copy(@ref);
         }
 
-        private void CheckGenericArguments(MethodReference methodRef)
+        public FieldReference CopyReference(FieldReference @ref)
         {
-            if (methodRef == null)
-                return;
+            FieldReference ret;
+            if (TryGetLocalReference(@ref, out ret))
+                return ret;
 
-            var genericMethodRef = methodRef as GenericInstanceMethod;
-            if (genericMethodRef != null)
+            ret = new FieldReference(@ref.Name, @ref.FieldType);
+
+            CopyAll(@ref, ret, "FieldType", "DeclaringType");
+
+            if (@ref.DeclaringType != null)
+                ret.DeclaringType = CopyReference(@ref.DeclaringType);
+
+            ret.FieldType = CopyReference(@ref.FieldType);
+
+            UpdateScope(ret.DeclaringType);
+
+            return ret;
+        }
+
+        public MethodReference Copy(MethodReference @ref)
+        {
+            MethodReference ret;
+            if (TryGetLocalReference(@ref, out ret))
+                return ret;
+
+            ret = new MethodReference(@ref.Name, CopyReference(@ref.ReturnType), CopyReference(@ref.DeclaringType));
+
+            CopyAll(@ref, ret, "MethodReturnType", "ReturnType", "DeclaringType");
+
+            UpdateScope(ret.DeclaringType);
+
+            return ret;
+        }
+
+        public GenericInstanceMethod Copy(GenericInstanceMethod @ref)
+        {
+            var methodRef = CopyReference(@ref.ElementMethod);
+            var ret = new GenericInstanceMethod(methodRef);
+
+            for (int i = 0; i < @ref.GenericArguments.Count; i++)
             {
-                for (int i = 0; i < genericMethodRef.GenericArguments.Count; i++)
-                {
-                    var genericArgument = genericMethodRef.GenericArguments[i];
-                    if (genericArgument is GenericParameter) continue;
-                    genericMethodRef.GenericArguments[i] = CopyReference(genericArgument);
-                }
+                var genericArgument = @ref.GenericArguments[i];
+                ret.GenericArguments.Add(CopyReference(genericArgument));
             }
 
-            CheckGenericArguments(methodRef.ReturnType as GenericInstanceType);
-            CheckGenericArguments(methodRef.DeclaringType as GenericInstanceType);
+            return ret;
+        }
+
+        public TypeReference Copy(TypeReference @ref)
+        {
+            TypeReference ret;
+            if (TryGetLocalReference(@ref, out ret))
+                return ret;
+
+            ret = new TypeReference(@ref.Namespace, @ref.Name, destinationModule, @ref.Scope);
+
+            CopyAll(@ref, ret, "Module", "Scope", "DeclaringType");
+
+            if(@ref.DeclaringType != null)
+                ret.DeclaringType = CopyReference(@ref.DeclaringType);
+
+            ret.Scope = CopyScope(@ref.Scope);
+            UpdateScope(ret);
+
+            var field = ret.GetType().GetField("etype", BindingFlags.NonPublic | BindingFlags.Instance);
+            var etype = field.GetValue(@ref);
+            field.SetValue(ret, etype);
+
+            return ret;
+        }
+
+        public GenericParameter Copy(GenericParameter @ref)
+        {
+            GenericParameter ret;
+            if (TryGetCopy(@ref, out ret))
+                return ret;
+
+            ret = new GenericParameter(@ref.Position, @ref.Type, destinationModule);
+
+            SetCopy(@ref, ret);
+
+            ret.Name = @ref.Name;
+
+            AddDelayedCopy(@ref, ret,
+                (originObject, destObject) =>
+                    {
+                        var owner = (@ref.Type == GenericParameterType.Type)
+                            ? (object) CopyReference((TypeReference) @ref.Owner)
+                            : CopyReference((MethodReference) @ref.Owner);
+
+                        var field = ret.GetType().GetField("owner", BindingFlags.NonPublic | BindingFlags.Instance);
+                        field.SetValue(ret, owner);
+                    });
+
+            return ret;
+        }
+
+        public GenericInstanceType Copy(GenericInstanceType @ref)
+        {
+            var typeRef = CopyReference(@ref.ElementType);
+            var ret = new GenericInstanceType(typeRef);
+
+            foreach (var genericArgument in @ref.GenericArguments)
+                ret.GenericArguments.Add(CopyReference(genericArgument));
+
+            return ret;
+        }
+
+        public ArrayType Copy(ArrayType @ref)
+        {
+            var typeRef = CopyReference(@ref.ElementType);
+            var ret = new ArrayType(typeRef);
+
+            ret.Dimensions.Clear();
+            foreach (var dim in @ref.Dimensions)
+                ret.Dimensions.Add(new ArrayDimension(dim.LowerBound, dim.UpperBound));
+
+            return ret;
+        }
+
+        public PointerType Copy(PointerType @ref)
+        {
+            var typeRef = CopyReference(@ref.ElementType);
+
+            return new PointerType(typeRef);
+        }
+
+        public ByReferenceType Copy(ByReferenceType @ref)
+        {
+            var typeRef = CopyReference(@ref.ElementType);
+
+            return new ByReferenceType(typeRef);
+        }
+
+        #endregion
+
+        private IMetadataScope CopyScope(IMetadataScope scope)
+        {
+            string scopeName = scope.Name;
+            Version scopeVersion;
+
+            //Avoid self reference
+            if (scopeName == destinationModule.Name ||
+                scopeName == destinationModule.Assembly.Name.Name)
+                return scope;
+
+            switch (scope.MetadataScopeType) {
+            case MetadataScopeType.AssemblyNameReference:
+                scopeVersion = ((AssemblyNameReference) scope).Version;
+                break;
+            case MetadataScopeType.ModuleDefinition:
+                scopeVersion = (((ModuleDefinition) scope).Assembly.Name).Version;
+                break;
+            default:
+                throw new NotImplementedException ();
+            }
+
+            if(scopeName.EndsWith(".dll"))
+                scopeName = Path.GetFileNameWithoutExtension(scopeName);
+
+            var assemblyName = destinationModule.AssemblyReferences.FirstOrDefault(
+                reference => reference.Name == scopeName && reference.Version == scopeVersion);
+
+            if (assemblyName != null)
+                return assemblyName;
+
+            var ret = new AssemblyNameReference(scopeName, scopeVersion);
+
+            if(scope.MetadataScopeType == MetadataScopeType.AssemblyNameReference)
+                CopyAll(((AssemblyNameReference) scope),ret, "Name","Version");
+
+            destinationModule.AssemblyReferences.Add(ret);
+
+            return ret;
+        }
+
+        private void UpdateScope(MemberReference memberRef)
+        {
+            if (memberRef is TypeReference)
+            {
+                UpdateScope((TypeReference) memberRef);
+                return;
+            }
+
+            if (memberRef.DeclaringType != null)
+                UpdateScope(memberRef.DeclaringType);
+        }
+
+        private void UpdateScope(TypeReference typeRef)
+        {
+            var typeSpec = typeRef as TypeSpecification;
+            if (typeSpec != null)
+                typeRef = typeSpec.ElementType;
+
+            typeRef.Scope = CopyScope(typeRef.Scope);
+
+            if (typeRef.DeclaringType != null)
+            {
+                if (typeRef.Scope.Name!= typeRef.DeclaringType.Scope.Name)
+                    throw new Exception("Declaring type has diferent scope name.");
+
+                UpdateScope(typeRef.DeclaringType);
+            }
         }
 
         /*
          * COPY DEFINITIONS
          */
 
+        [MemoizeCopy]
         public FieldDefinition Copy(FieldDefinition def)
         {
             var ret = new FieldDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.FieldType));
+            ret.DeclaringType = GetDeclaringType(def);
 
-            Log("< Field "+ret.FullName);
             CopyAll(def,ret,"Name","DeclaringType","FieldType","MetadataToken");
 
             return ret;
         }
 
-
+        [MemoizeCopy]
         public EventDefinition Copy(EventDefinition def)
         {
             var ret = new EventDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.EventType));
 
-            Log("< Event "+ret.FullName);
             CopyAll(def,ret,"Name","DeclaringType","EventType","MetadataToken");
 
             var declaringType = GetDeclaringType(def);
@@ -320,11 +548,11 @@ namespace EngineWeaver
             return ret;
         }
 
+        [MemoizeCopy]
         public PropertyDefinition Copy(PropertyDefinition def)
         {
             var ret = new PropertyDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.PropertyType));
-            
-            Log("< Property "+ret.FullName);
+
             CopyAll(def,ret,"Name","DeclaringType","PropertyType","MetadataToken");
 
             var declaringType = GetDeclaringType(def);
@@ -334,37 +562,59 @@ namespace EngineWeaver
             return ret;
         }
 
+        [MemoizeCopy]
         public MethodDefinition Copy(MethodDefinition def)
         {
+            Copy(def.DeclaringType, true);
+
             var declaringType = GetDeclaringType(def);
-            var ret = declaringType.Methods.FirstOrDefault(m => m.FullName == def.FullName);
-            if(ret != null)
+
+            var ret = declaringType.Methods.FirstOrDefault(
+                m => m.FullName == def.FullName && 
+                     CecilUtils.DoMethodParametersTypeMatch(m, def));
+            if (ret != null)
+            {
+                Warn("Equivalent method already exists using it instead: "+def.FullName);
                 return ret;
+            }
+
+            if(def.FullName.Contains("RPCGen.Tests.Services.DataObjectBaseClass.IService.GetDataObject"))
+                Console.WriteLine();
 
             ret = new MethodDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.ReturnType));
 
-            Log("< Method "+ret.FullName);
-            CopyAll(def,ret,"Name","DeclaringType","ReturnType","MetadataToken");
+            //ReturnType derive form MethodReturnType
+            CopyAll(def,ret,"Name","DeclaringType", "MetadataToken", "Overrides", "ReturnType");
+
+            AddDelayedCopy(def, ret,
+                (originObject, destObject) =>
+                    {
+                        foreach (var @override in def.Overrides)
+                            ret.Overrides.Add(CopyReference(@override));
+                    });
 
             return ret;
         }
 
+        [MemoizeCopy]
         public TypeDefinition Copy(TypeDefinition def)
         {
-            return TypeCopy(def, false);
+            return Copy(def, false);
         }
 
-        private TypeDefinition TypeCopy(TypeDefinition def, bool isStubType)
+        [MemoizeCopy]
+        public TypeDefinition Copy(TypeDefinition def, bool isStubType)
         {
-            if (CopyMap.ContainsKey(def))
-                return (TypeDefinition)CopyMap[def];
+            TypeReference typeRef;
+            if (TryGetCopy(def, out typeRef))
+                return typeRef as TypeDefinition;
 
             TypeDefinition declaringType = GetDeclaringType(def, false);
             if (def.IsNested && declaringType == null)
-                declaringType = TypeCopy(def.DeclaringType, true);
+                declaringType = Copy(def.DeclaringType, true);
 
             var typeCollection = (declaringType == null) ? this.destinationModule.Types : declaringType.NestedTypes;
-            
+
             TypeDefinition ret;
             if (stubTypes.ContainsKey(def))
             {
@@ -375,13 +625,19 @@ namespace EngineWeaver
                 ret = typeCollection.FirstOrDefault(t => t.Name == def.Name);
                 if (ret != null)
                 {
-                    Log("Cannot copy existing type " + def.FullName);
+                    Warn("Type already exists merging: " + def.FullName);
+                    Merge(def, ret);
                     return ret;
                 }
 
-                var baseRef = (def.BaseType == null) ? null : this.CopyReference(def.BaseType);
-                ret = new TypeDefinition(def.Namespace, this.NamePrefix + def.Name, def.Attributes, baseRef);
+                var baseType = ((def.Attributes & TypeAttributes.Interface) != 0)? null :objectTypeRef;
+
+                ret = new TypeDefinition(def.Namespace, this.NamePrefix + def.Name, def.Attributes, baseType);
+                ret.DeclaringType = declaringType;
+
                 typeCollection.Add(ret);
+
+                SetCopy(def, ret);
             }
 
             if (isStubType)
@@ -389,89 +645,119 @@ namespace EngineWeaver
                 if(!stubTypes.ContainsKey(def))
                     stubTypes.Add(def, ret);
 
+                Log("< Type Stub "+def.FullName);
+
                 return ret;
             }
 
-            delayedCopy.Add(def, ret);
-            CopyMap.Add(def, ret);
+            if (stubTypes.ContainsKey(def))
+                stubTypes.Remove(def);
+
+            Log("< Type Delayed "+def.FullName);
 
             foreach (TypeDefinition nestedType in def.NestedTypes)
                 Copy(nestedType);
 
+            AddDelayedCopy(def, ret,
+                (originObject, destObject) =>
+                    {
+                        CopyAll(def,ret,"Name","DeclaringType","MetadataToken","Scope", "NestedTypes", "BaseType", "Interfaces");
+
+                        if(def.BaseType != null)
+                            ret.BaseType = CopyReference(def.BaseType);
+
+                        foreach (var @interface in def.Interfaces)
+                            ret.Interfaces.Add(CopyReference(@interface));
+                    });
+
             return ret;
         }
 
+        [MemoizeCopy]
         public ParameterDefinition Copy(ParameterDefinition def)
         {
             var ret = new ParameterDefinition(def.Name, def.Attributes, CopyReference(def.ParameterType));
 
-            Log("< Parameter " + ret.Name);
-            CopyAll(def,ret,"Method","ParameterType","MetadataToken");
+            CopyAll(def,ret, "ParameterType", "MetadataToken");
+
+            var field = ret.GetType().GetField("constant", BindingFlags.NonPublic | BindingFlags.Instance);
+            var constant = field.GetValue(def);
+            field.SetValue(ret, constant);
 
             return ret;
         }
 
+        [MemoizeCopy]
         public VariableDefinition Copy(VariableDefinition def)
         {
             var ret = new VariableDefinition(def.Name, CopyReference(def.VariableType));
-            
-            Log("< Variable " + ret.Name);
+
             CopyAll(def,ret,"VariableType");
 
             return ret;
         }
 
+        [MemoizeCopy]
         public CustomAttribute Copy(CustomAttribute def)
         {
-            var ret = new CustomAttribute(CopyReference(def.Constructor),def.GetBlob());
+            var ret = new CustomAttribute(CopyReference(def.Constructor), def.GetBlob());
 
-            Log("< CopyAttributes ");
-            CopyAll(def,ret,"DeclaringType");
+            CopyAll(def,ret, "Constructor");
 
             return ret;
         }
 
+        [MemoizeCopy]
         public CustomAttributeArgument Copy(CustomAttributeArgument def)
         {
             return new CustomAttributeArgument(CopyReference(def.Type), def.Value);
         }
 
+        [MemoizeCopy]
         public MethodBody Copy(MethodBody def)
         {
-            var parent = (MethodDefinition) CopyMap[def.Method];
+            var parent = (MethodDefinition) GetCopy(def.Method);
             var ret = new MethodBody(parent);
 
-            Log("< MethodBody ");
-            CopyAll(def,ret,"Method","Scope");
+            CopyAll(def,ret,"Method","Scope", "Instructions", "ExceptionHandlers");
+
+            AddDelayedCopy(def, ret,
+                (originObject, destObject) =>
+                    {
+                        destObject.Instructions.Clear();
+
+                        var instructions = new Dictionary<Instruction, Instruction>();
+                        foreach (var instruction in originObject.Instructions)
+                        {
+                            var copy = Copy(instruction);
+                            instructions.Add(instruction, copy);
+                            destObject.Instructions.Add(copy);
+                        }
+
+                        UpdateInstructionsOperand(instructions);
+
+                        foreach (var exHandler in originObject.ExceptionHandlers)
+                            destObject.ExceptionHandlers.Add(Copy(exHandler, instructions));
+                    });
 
             return ret;
         }
 
-        public MethodReturnType  Copy(MethodReturnType def)
+        [MemoizeCopy]
+        public MethodReturnType Copy(MethodReturnType def)
         {
-            var parent = (IMethodSignature) CopyMap[def.Method];
-            var ret= new MethodReturnType(parent);
+            var parent = (MethodReference) GetCopy(def.Method);
+
+            var ret = new MethodReturnType(parent);
+
             ret.ReturnType = CopyReference(def.ReturnType);
 
-            Log("< MethodReturnType ");
-            CopyAll(def,ret,"Method","ReturnType");
+            CopyAll(def,ret,"Method", "ReturnType");
 
             return ret;
         }
 
-        public ExceptionHandler  Copy(ExceptionHandler def)
-        {
-            var ret= new ExceptionHandler(def.HandlerType);
-            if(def.CatchType != null)
-                ret.CatchType = CopyReference(def.CatchType);
-
-            Log("< ExceptionHandler ");
-            CopyAll(def,ret,"CatchType");
-
-            return ret;
-        }
-
-        public Instruction Copy(Instruction def)
+        private Instruction Copy(Instruction def)
         {
             //copy of operands is delayed to ProcessInstructions
             Instruction ret= null;
@@ -484,9 +770,73 @@ namespace EngineWeaver
 
             ret.SequencePoint = def.SequencePoint;
 
-            CopyMap.Add(def,ret);
+            return ret;
+        }
 
-            instructions.Add(ret);
+        private void UpdateInstructionsOperand(Dictionary<Instruction, Instruction> instructionMap)
+        {
+            foreach (var i in instructionMap.Values)
+            {
+                if (i.Operand == null)
+                    continue;
+
+                if (i.Operand.GetType().IsValueType || i.Operand is String)
+                    continue;
+
+                if (i.Operand is TypeReference)
+                {
+                    var ret = CopyReference((TypeReference) i.Operand);
+                    i.Operand = ret;
+                    continue;
+                }
+                if (i.Operand is MethodReference)
+                {
+                    i.Operand = CopyReference((MethodReference) i.Operand);
+                    continue;
+                }
+                if (i.Operand is FieldReference)
+                {
+                    i.Operand = CopyReference((FieldReference) i.Operand);
+                    continue;
+                }
+                if (i.Operand is VariableReference ||
+                    i.Operand is ParameterDefinition)
+                {
+                    i.Operand = GetCopy(i.Operand);
+                    continue;
+                }
+                if(i.Operand is Instruction)
+                {
+                    i.Operand = instructionMap[(Instruction)i.Operand];
+                    continue;
+                }
+                var operandI = i.Operand as Instruction[];
+                if (operandI != null) //i.e: switch
+                {
+                    var l = new Instruction[operandI.Length];
+                    for (var k = 0; k < operandI.Length; k++)
+                        l[k] = instructionMap[operandI[k]];
+                    i.Operand = l;
+                    continue;
+                }
+
+                throw new NotImplementedException("No handling for operands of type " + i.Operand.GetType());
+            }
+        }
+
+        private ExceptionHandler  Copy(ExceptionHandler def, Dictionary<Instruction, Instruction> instructionMap)
+        {
+            var ret= new ExceptionHandler(def.HandlerType);
+            if(def.CatchType != null)
+                ret.CatchType = CopyReference(def.CatchType);
+
+            CopyAll(def,ret,"CatchType", "TryStart", "TryEnd", "HandlerStart", "HandlerEnd");
+
+            ret.TryStart = instructionMap[def.TryStart];
+            ret.TryEnd = instructionMap[def.TryEnd];
+            ret.HandlerStart = instructionMap[def.HandlerStart];
+            ret.HandlerEnd = instructionMap[def.HandlerEnd];
+
             return ret;
         }
 
@@ -520,47 +870,72 @@ namespace EngineWeaver
 
         public void Merge(FieldDefinition def1, FieldDefinition def2)
         {
-            CheckEquivalentTypes(def1.FieldType, def2.FieldType);
+            CecilUtils.CheckEquivalentTypes(def1.FieldType, def2.FieldType);
 
             MergeAll(def1,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
         }
 
         public void Merge(EventDefinition def1, EventDefinition def2)
         {
-            CheckEquivalentTypes(def1.EventType, def2.EventType);
+            CecilUtils.CheckEquivalentTypes(def1.EventType, def2.EventType);
 
             MergeAll(def1,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(PropertyDefinition def1, PropertyDefinition def2)
         {
-            CheckEquivalentTypes(def1.PropertyType, def2.PropertyType);
+            CecilUtils.CheckEquivalentTypes(def1.PropertyType, def2.PropertyType);
 
             MergeAll(def1,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(MethodDefinition def1, MethodDefinition def2)
         {
-            CheckEquivalentTypes(def1.ReturnType, def2.ReturnType);
+            CecilUtils.CheckEquivalentTypes(def1.ReturnType, def2.ReturnType);
 
             MergeAll(def1,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(TypeDefinition def1, TypeDefinition def2)
         {
-            MergeAll(def1,def2,"Name","DeclaringType","BaseType","MetadataToken", "Module", "Scope");
+            MergeAll(def1,def2,"Name","DeclaringType", "MetadataToken", "Module", "Scope", "BaseType");
+
+            AddDelayedCopy(def1, def2, 
+                (originObject, destObject) =>
+                    {
+                        var hasType1BaseClass = originObject.BaseType != null && originObject.BaseType.FullName != "System.Object";
+                        var hasType2BaseClass = destObject.BaseType != null && destObject.BaseType.FullName != "System.Object";
+                        if (hasType1BaseClass && hasType2BaseClass)
+                        {
+                            TypeReference destObjectBaseRef;
+                            if (!TryGetLocalReference(destObject.BaseType, out destObjectBaseRef))
+                                destObjectBaseRef = destObject.BaseType;
+
+                            TypeReference origObjectBaseRef;
+                            if (!TryGetLocalReference(originObject.BaseType, out origObjectBaseRef))
+                                origObjectBaseRef = originObject.BaseType;
+
+                            if(!CecilUtils.AreTypesEquivalent(origObjectBaseRef, destObjectBaseRef))
+                                throw new Exception("Cannot merge classes with diferent base types.");
+                        }
+
+                        if (hasType1BaseClass && !hasType2BaseClass)
+                        {
+                            destObject.BaseType = CopyReference(originObject.BaseType);
+                        }
+                    });
         }
 
         public void Merge(ParameterDefinition def1, ParameterDefinition def2)
         {
-            CheckEquivalentTypes(def1.ParameterType, def2.ParameterType);
+            CecilUtils.CheckEquivalentTypes(def1.ParameterType, def2.ParameterType);
 
             MergeAll(def1,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
         }
 
         public void Merge(VariableDefinition def1, VariableDefinition def2)
         {
-            CheckEquivalentTypes(def1.VariableType, def2.VariableType);
+            CecilUtils.CheckEquivalentTypes(def1.VariableType, def2.VariableType);
 
             MergeAll(def1,def2,"VariableType");
         }
@@ -577,7 +952,7 @@ namespace EngineWeaver
 
         public void Merge(MethodBody def1, MethodBody def2)
         {
-            MergeAll(def1,def2,"Method", "Scope");
+            MergeAll(def1,def2,"Method", "Scope", "ThisParameter");
         }
 
         public void  Merge(MethodReturnType def1, MethodReturnType def2)
@@ -589,7 +964,7 @@ namespace EngineWeaver
         {
             foreach (var origTypeRef in def1)
             {
-                if (def2.Any(i => i.FullName == origTypeRef.FullName))
+                if (def2.Any(i => CecilUtils.AreTypesEquivalent(i,origTypeRef)))
                     continue;
 
                 def2.Add(CopyReference(origTypeRef));
@@ -642,9 +1017,16 @@ namespace EngineWeaver
             {
                 var destMethodName = origMethodDef.Name;
 
+                var count = def2.Count(
+                    m => m.Name == destMethodName
+                         && CecilUtils.DoMethodParametersTypeMatch(origMethodDef, m));
+
+                if(count > 1)
+                    System.Diagnostics.Debugger.Break();
+
                 var destMethodDef = def2.SingleOrDefault(
                     m => m.Name == destMethodName
-                         && DoMethodParametersTypeMatch(origMethodDef, m));
+                         && CecilUtils.DoMethodParametersTypeMatch(origMethodDef, m));
 
                 if (destMethodDef != null)
                 {
@@ -668,11 +1050,20 @@ namespace EngineWeaver
 
         public void  Merge(Collection<Instruction>def1, Collection<Instruction> def2)
         {
-            //TODO dont override destination instructions always, we migth gona need prepend
-            def2.Clear();
-            foreach(var i in def1){
-                def2.Add(Copy(i));
-            }
+            AddDelayedCopy(def1, def2,
+                (originObject, destObject) =>
+                    {
+                        destObject.Clear();
+                        var instructionMap = new Dictionary<Instruction, Instruction>();
+                        foreach(var i in originObject)
+                        {
+                            var copy = Copy(i);
+                            instructionMap.Add(i, copy);
+                            destObject.Add(copy);
+                        }
+
+                        UpdateInstructionsOperand(instructionMap);
+                    });
         }
 
         public void  Merge(Collection<ExceptionHandler>def1, Collection<ExceptionHandler> def2)
@@ -682,9 +1073,11 @@ namespace EngineWeaver
 
         public void  Merge(Collection<VariableDefinition>def1, Collection<VariableDefinition> def2)
         {
+            var variables = def1.ToList();
+
             //TODO dont override destination instructions always
             def2.Clear();
-            foreach(var v in def1){
+            foreach(var v in variables){
                 def2.Add(Copy(v));
             }
         }
@@ -712,40 +1105,6 @@ namespace EngineWeaver
         {
 
         }
-
         #endregion
-
-        private bool DoMethodParametersTypeMatch(MethodDefinition method1, MethodDefinition method2)
-        {
-            if (method1.Parameters.Count != method2.Parameters.Count)
-                return false;
-
-            for (int i = 0; i < method1.Parameters.Count; i++)
-            {
-                if (method1.Parameters[i].ParameterType.FullName != method2.Parameters[i].ParameterType.FullName)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
-        {
-            var pointer1 = typeRef1 as PointerType;
-            var pointer2 = typeRef2 as PointerType;
-            if (pointer1 != null && pointer2 != null)
-                return AreTypesEquivalent(pointer1.ElementType, pointer2.ElementType);
-
-            if (IsLocalReference(typeRef1.Scope.Name))
-                return typeRef2 == GetLocalReference(typeRef1);
-
-            return typeRef1.FullName == typeRef2.FullName;
-        }
-
-        private void CheckEquivalentTypes(TypeReference typeRef1, TypeReference typeRef2)
-        {
-            if(!AreTypesEquivalent(typeRef1, typeRef2))
-                throw new Exception("Types are not equivalent.");
-        }
     }
 }

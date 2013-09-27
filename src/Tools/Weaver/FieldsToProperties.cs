@@ -3,6 +3,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System.Collections.Generic;
 using System.Reflection;
+
 using FieldAttributes = Mono.Cecil.FieldAttributes;
 using ParameterAttributes = Mono.Cecil.ParameterAttributes;
 using PropertyAttributes = Mono.Cecil.PropertyAttributes;
@@ -11,23 +12,20 @@ namespace EngineWeaver
 {
     public class FieldsToProperties
     {
-        public readonly AssemblyWeaver AssemblyWeaver;
-        private Dictionary<FieldReference, PropertyDefinition> fieldProperties;
+        private readonly AssemblyWeaver weaver;
+        private readonly Dictionary<FieldReference, PropertyDefinition> fieldProperties;
 
-        public FieldsToProperties(AssemblyWeaver assemblyWeaver)
+        public FieldsToProperties(string assemblyPath)
         {
-            AssemblyWeaver = assemblyWeaver;
+            weaver = new AssemblyWeaver(assemblyPath);
+            fieldProperties = new Dictionary<FieldReference, PropertyDefinition>();
         }
 
         public void ProcessFields(List<FieldInfo> fields)
         {
-            fieldProperties = new Dictionary<FieldReference, PropertyDefinition>();
-
-            var moduleDef = AssemblyWeaver.DestinationAssembly.MainModule;
-
             foreach (var field in fields)
             {
-                var typeDef = CecilUtils.GetTypeDef(moduleDef, field.DeclaringType);
+                var typeDef = CecilUtils.GetTypeDef(weaver.TargetModule, field.DeclaringType);
                 var fieldDef = CecilUtils.GetTypeFieldDef(typeDef, field);
 
                 var propertyDef = AddProperty(typeDef, fieldDef.Name, fieldDef.FieldType);
@@ -36,11 +34,18 @@ namespace EngineWeaver
                     propertyDef.CustomAttributes.Add(attribute);
 
                 fieldProperties.Add(fieldDef, propertyDef);
-                typeDef.Fields.Remove(fieldDef);
             }
+        }
 
-            foreach(var type in moduleDef.Types)
+        public void Write(string outputPath)
+        {
+            foreach(var type in weaver.TargetModule.Types)
                 ProcessTypeInstructions(type);
+
+            foreach (var field in fieldProperties.Keys)
+                field.DeclaringType.Resolve().Fields.Remove(field.Resolve());
+
+            weaver.Write(outputPath);
         }
 
         private void ProcessTypeInstructions(TypeDefinition type)

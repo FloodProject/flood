@@ -7,12 +7,29 @@ using System.Reflection;
 
 namespace EngineWeaver.Util
 {
-    public abstract class DeepCopier
+    public abstract class CopyKey
+    {
+        protected CopyKey()
+        {
+        }
+
+        public object Value { get; set; } 
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class MemoizeCopyAttribute : Attribute
+    {
+    }
+
+    public abstract class DeepCopier<K>
+        where K : CopyKey, new()
     {
         private Dictionary<Type, FastInvoke.FastInvokeHandler> mergeMethodInfos;
         private Dictionary<Type, FastInvoke.FastInvokeHandler> copyMethodInfos;
+        private HashSet<Type> typesWithMemoization;
 
-        public readonly Dictionary<object,object> CopyMap;
+        private readonly Dictionary<K,object> CopyMap;
+        
 
         private readonly Logger log = new Logger(Logger.LogLevel.Warning);
         private readonly Logger publicLog = new Logger(Logger.LogLevel.Warning);
@@ -20,13 +37,13 @@ namespace EngineWeaver.Util
         public DeepCopier(){
             mergeMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
             copyMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
-            CopyMap = new Dictionary<object,object>();
+            typesWithMemoization = new HashSet<Type>();
+
+            CopyMap = new Dictionary<K,object>();
 
             var type = this.GetType();
-            foreach (var m in type.GetMethods(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance))
+            foreach (var m in type.GetMethods(BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance))
             {
-
-
                 if (m.Name.StartsWith("Merge") &&
                     m.GetParameters().Count() == 2 &&
                     m.GetParameters()[0].ParameterType == m.GetParameters()[1].ParameterType &&
@@ -36,15 +53,18 @@ namespace EngineWeaver.Util
                     mergeMethodInfos.Add(m.GetParameters()[1].ParameterType, mergeInvoke);
                 }
 
-                if (m.Name.StartsWith("Copy") &&
+                if (m.Name.Equals("Copy") &&
                     m.GetParameters().Count() == 1 &&
                     m.GetParameters()[0].ParameterType == m.ReturnType &&
                     !m.IsGenericMethod)
                 {
                     var copyInvoke = FastInvoke.GetMethodInvoker(m);
-                    copyMethodInfos.Add(m.GetParameters()[0].ParameterType, copyInvoke);
+                    var paramType = m.GetParameters()[0].ParameterType;
+                    copyMethodInfos.Add(paramType, copyInvoke);
+
+                    if (m.GetCustomAttribute<MemoizeCopyAttribute>() != null)
+                        typesWithMemoization.Add(paramType);
                 }
-                    
             }
         }
 
@@ -53,13 +73,95 @@ namespace EngineWeaver.Util
             publicLog.Info(msg);
         }
 
-        public void Merge(object obj1, object obj2){
+        public void Warn(string msg){
+            publicLog.Tabs = log.Tabs;
+            publicLog.Warning(msg);
+        }
 
+        public virtual void Clear()
+        {
+            CopyMap.Clear();
+        }
+
+        public T GetCopy<T>(T key)
+        {
+            if(!IsValidCopyKey(key))
+                throw new ArgumentException("key");
+
+            T copy;
+            if(!TryGetCopy<T>(key, out copy))
+                throw new Exception("Key not found.");
+
+            return copy;
+        }
+
+        public bool TryGetCopy<T>(T key, out T copy)
+        {
+            if(!IsValidCopyKey(key))
+                throw new ArgumentException("key");
+
+            copy = default(T);
+            var found = false;
+
+            object objKey = key;
+            object objValue;
+            while (CopyMap.TryGetValue(new K {Value = objKey}, out objValue))
+            {
+                found = true;
+                copy = (T) objValue;
+
+                if (objKey == objValue) 
+                    break;
+
+                //Find copies of copies
+                objKey = objValue; 
+            }
+
+            return found;
+        }
+
+        public void SetCopy<T>(T key, T copy)
+        {
+            if(!IsValidCopyKey(key))
+                throw new ArgumentException("key");
+
+            if(!IsValidCopyValue(copy))
+                throw new ArgumentException("copy");
+
+            CopyMap.Add(new K {Value = key}, copy);
+        }
+
+        public bool ContainsCopy(object key)
+        {
+            if(!IsValidCopyKey(key))
+                throw new ArgumentException("key");
+
+            return CopyMap.ContainsKey(new K {Value = key});
+        }
+
+        protected virtual bool IsValidCopyKey(object key)
+        {
+            return true;
+        }
+
+        protected virtual bool IsValidCopyValue(object value)
+        {
+            return true;
+        }
+
+        protected virtual bool SkipCopy(object from, out object copy)
+        {
+            return TryGetCopy(from, out copy);
+        }
+
+        public void Merge(object obj1, object obj2)
+        {
             if(obj1 == null)
                 return;
 
-            if(CopyMap.ContainsKey(obj1) || 
-               CopyMap.ContainsKey(obj2))
+            var obj1Key = new K {Value = obj1};
+
+            if(CopyMap.ContainsKey(obj1Key))
                 return;
             
             var type = obj1.GetType();
@@ -71,38 +173,52 @@ namespace EngineWeaver.Util
 
             mergeMethodInfos[type].Invoke(this, new []{obj1, obj2});
 
-            if(!CopyMap.ContainsKey(obj1))
-                CopyMap.Add(obj1, obj2);
+            if(!CopyMap.ContainsKey(obj1Key))
+                CopyMap.Add(obj1Key, obj2);
         }
 
         public T Copy<T>(T value)
         {
-            if(value == null)
+            if (value == null)
                 return default(T);
 
-            if(CopyMap.ContainsKey(value)){
-                return (T)CopyMap[value];
+            return (T) Copy(value, typeof(T), null);
+        }
+
+        private object Copy(object value, Type type, MemberInfo source)
+        {
+            if(value == null)
+                return null;
+
+            if (value.GetType() != type)
+            {
+                var sourceMsg = (source == null) ? "" : "\nCheck " + FullName(source);
+                var msg = string.Format("Cannot copy {0} as {1}{2}", 
+                    FullName(value.GetType()), FullName(type),sourceMsg);
+                throw new Exception(msg);
             }
 
-            var type = value.GetType();
-            while(!type.IsPublic)
-                type = type.BaseType;
+            object copy;
+            if (SkipCopy(value, out copy))
+                return copy;
 
             if(!copyMethodInfos.ContainsKey(type))
                 throw new NotImplementedException("Copy<"+type.FullName+">");
 
-            var copy = copyMethodInfos[type].Invoke(this, new object[]{value});
+            var method = copyMethodInfos[type];
+            copy = method.Invoke(this, new object[]{value});
 
-            if(!CopyMap.ContainsKey(value))
-                CopyMap.Add(value, copy);
+            if(typesWithMemoization.Contains(type) &&
+               !ContainsCopy(value))
+                SetCopy(value, copy);
 
-            return (T)copy;
+            return copy;
         }
 
         //TODO Order list instead of multiple iterations
         private List<FieldInfo> GetFields(Type type, params string[] ignores){
             var allFields= type.GetFields(BindingFlags.Public| BindingFlags.Instance);
-            return allFields.Where( f => {
+            return allFields.Where( f =>{
                 if(!ignores.Contains(f.Name)) return true;
                 log.Info("Ignoring field " + f.Name);
                 return false;
@@ -120,15 +236,14 @@ namespace EngineWeaver.Util
 
         public void MergeAll<T>(T from, T to, params string[] ignores)
         {
-            if(CopyMap.ContainsKey(from))
-                throw new Exception("Cannot merge object twice");
+            if(typesWithMemoization.Contains(typeof(T)) &&
+               !ContainsCopy(from))
+                SetCopy(from, to);
 
-            CopyMap.Add(from, to);
-
-            log.Info("> Merge "+ typeof(T));
+            log.Info("> Merge "+ typeof(T)+ " "+ from);
             log.Tabs++;
-            var fields = GetFields(typeof(T),ignores);
-            var properties = GetProperties(typeof(T),ignores);
+            var fields = GetFields(typeof(T), ignores);
+            var properties = GetProperties(typeof(T), ignores);
 
             //ValueTypes
             foreach(FieldInfo field in fields.ToArray()) {
@@ -178,18 +293,17 @@ namespace EngineWeaver.Util
             log.Tabs--;
         }
 
-
-
         public void CopyAll<T>(T from, T to, params string[] ignores)
         {
-            if(!CopyMap.ContainsKey(from))
-                CopyMap.Add(from, to);
+            if(typesWithMemoization.Contains(typeof(T)) &&
+               !ContainsCopy(from))
+                SetCopy(from, to);
 
-            log.Info("> Copy "+ typeof(T));
+            log.Info("> Copy "+ typeof(T)+ " "+ from);
             log.Tabs++;
 
-            var fields = GetFields(typeof(T),ignores);
-            var properties = GetProperties(typeof(T),ignores);
+            var fields = GetFields(typeof(T), ignores);
+            var properties = GetProperties(typeof(T), ignores);
 
             //ValueTypes
             foreach(FieldInfo field in fields.ToArray()) {
@@ -220,7 +334,7 @@ namespace EngineWeaver.Util
             //Class types
             foreach(FieldInfo field in fields.ToArray()) {
                 log.Info("Copy field "+ field.Name);
-                field.SetValue(to, Copy(field.GetValue(from)));
+                field.SetValue(to, Copy(field.GetValue(from), field.FieldType, field));
                 fields.Remove(field);
             }
             foreach(PropertyInfo property in properties.ToArray()) {
@@ -228,7 +342,7 @@ namespace EngineWeaver.Util
                     var value = property.GetValue(from);
                     if(value != null){
                         log.Info("Copy property "+ property.Name);
-                        property.SetValue(to, Copy(value));
+                        property.SetValue(to, Copy(value, property.PropertyType, property));
                     }
                     properties.Remove(property);
                 }
@@ -241,8 +355,11 @@ namespace EngineWeaver.Util
                     var toList = ((IList)property.GetValue(to));
                     log.Info("> List "+ property.Name);
                     log.Tabs++;
-                    foreach(var el in fromList)
-                        toList.Add(Copy(el));
+                    foreach (var el in fromList)
+                    {
+                        log.Info(el.ToString());
+                        toList.Add(Copy(el, property.PropertyType.GetGenericArguments()[0], property));
+                    }
                     log.Tabs--;
                     properties.Remove(property);
                 }
@@ -258,6 +375,21 @@ namespace EngineWeaver.Util
             log.Tabs--;
         }
 
+        private string FullName(MemberInfo member)
+        {
+            if (member == null)
+                return "";
 
+            var name = member.Name;
+
+            var typeInfo = member as TypeInfo;
+            if (typeInfo != null && !string.IsNullOrEmpty(typeInfo.Namespace))
+                return ((TypeInfo) member).Namespace +"."+ name;
+
+            if (member.DeclaringType == null)
+                return name;
+
+            return string.Join(".", FullName(member.DeclaringType), member.Name);
+        }
     }
 }
