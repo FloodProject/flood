@@ -73,23 +73,12 @@ namespace Flood.Tools.PackageGen
                 Directory.CreateDirectory(options.OutputDir);
 
             var packageDllName = options.PackageName + ".dll";
-            var packageApiDllName = options.PackageName + ".API.dll";
             var packageArchiveName = options.PackageName + ".0.0.0.fld";
             var packageDllPath = Path.Combine(options.PackageDir, packageDllName);
-            var packageApiDllPath = Path.Combine(options.PackageDir, packageApiDllName);
             var packageArchivePath = Path.Combine(options.OutputDir, packageArchiveName);
 
-            System.Console.WriteLine("{0}", packageDllPath);
-
             //Generate RPC classes
-            var rpcCompiler = new RPCGen.Compiler(packageDllPath, options.PackageDir);
-            rpcCompiler.Process();
-            rpcCompiler.Compile(packageDllPath);
-
-            System.Console.WriteLine("{0}", packageApiDllPath);
-
-            //Generate a PackageName.API.dll with only the PackageName.dll RPC types.
-            rpcCompiler.CompileApi(packageApiDllPath);
+            RPCGen.Program.Generate(packageDllPath, options.PackageDir);
 
             //Create an archive
             using (var zip = new ZipFile())
