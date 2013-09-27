@@ -1,8 +1,6 @@
-﻿using Flood.Tools.RPCGen;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace RPCGen.Tests
 {
@@ -13,17 +11,22 @@ namespace RPCGen.Tests
         public void MainTest()
         {
             string genDirectory = Path.Combine("..", "..", "gen", "RPCGen.Tests");
+
             Directory.CreateDirectory(genDirectory);
 
-            var sourceDllPath = Path.GetFullPath("RPCGen.Tests.Services.dll");
-            var destDllPath = Path.Combine(genDirectory, "RPCGen.Tests.Services.dll");
-            var sourcePdbPath = Path.GetFullPath("RPCGen.Tests.Services.pdb");
-            var destPdbPath = Path.Combine(genDirectory, "RPCGen.Tests.Services.pdb");
+            var assemblyName = "RPCGen.Tests.Services";
+            var assemblyDll = assemblyName + ".dll";
+            var assemblyPdb = assemblyName + ".pdb";
 
-            System.IO.File.Copy(sourceDllPath, destDllPath, true);
+            var sourceDllPath = Path.GetFullPath(assemblyDll);
+            var destDllPath = Path.Combine(genDirectory, assemblyDll);
+            var sourcePdbPath = Path.GetFullPath(assemblyPdb);
+            var destPdbPath = Path.Combine(genDirectory, assemblyPdb);
+
+            File.Copy(sourceDllPath, destDllPath, true);
 
             if (File.Exists(sourcePdbPath))
-                System.IO.File.Copy(sourcePdbPath, destPdbPath, true);
+                File.Copy(sourcePdbPath, destPdbPath, true);
 
             var args = new string[]
             {
