@@ -1,14 +1,11 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using EngineWeaver.Util;
-using Microsoft.CSharp;
 using Mono.Cecil;
 
-namespace EngineWeaver
+namespace Weaver
 {
     public class AssemblyWeaver
     {

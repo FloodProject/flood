@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace EngineWeaver.Util
+namespace Weaver.Util
 {
     internal class Logger
     {

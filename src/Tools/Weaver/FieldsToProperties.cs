@@ -1,4 +1,4 @@
-﻿using EngineWeaver.Util;
+﻿using Weaver.Util;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using FieldAttributes = Mono.Cecil.FieldAttributes;
 using ParameterAttributes = Mono.Cecil.ParameterAttributes;
 using PropertyAttributes = Mono.Cecil.PropertyAttributes;
 
-namespace EngineWeaver
+namespace Weaver
 {
     public class FieldsToProperties
     {

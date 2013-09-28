@@ -13,7 +13,7 @@
  * under the License.
  */
 
-using EngineWeaver;
+using Weaver;
 using Microsoft.CSharp;
 using RPCGen;
 using System;

@@ -1,11 +1,10 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EngineWeaver.Util
+namespace Weaver.Util
 {
     public abstract class CopyKey
     {

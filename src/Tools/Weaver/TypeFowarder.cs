@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
-using EngineWeaver.Util;
+using Weaver.Util;
 using Mono.Cecil;
 using System.Collections.Generic;
 
-namespace EngineWeaver
+namespace Weaver
 {
     public class TypeFowarder
     {
