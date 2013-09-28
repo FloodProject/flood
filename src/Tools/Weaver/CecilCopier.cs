@@ -83,6 +83,30 @@ namespace Weaver
         }
     }
 
+    public interface IError
+    {
+        
+    }
+
+    public class UnexpectedImport : IError
+    {
+        public IMetadataScope Scope;
+        public MemberReference Member;
+        public object Source;
+        
+        public UnexpectedImport(IMetadataScope scope, MemberReference member, object source)
+        {
+            Scope = scope;
+            Member = member;
+            Source = source;
+        }
+
+        public override string ToString()
+        {
+            return "UnexpectedImport: " + Scope.Name + " Reference:"+Member.FullName+ " source:"+Source;
+        }
+    }
+
     public class CecilCopier : DeepCopier<CecilKey>
     {
         private ModuleDefinition destinationModule;
@@ -94,6 +118,11 @@ namespace Weaver
 
         private TypeReference objectTypeRef;
 
+        //Options
+        public bool canImport = false;
+
+        public List<IError> errors;
+
         public CecilCopier(ModuleDefinition destinationModule)
         {
             this.destinationModule = destinationModule;
@@ -103,6 +132,8 @@ namespace Weaver
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
 
             objectTypeRef = destinationModule.Import(typeof (object));
+
+            errors = new List<IError>();
         }
 
         protected override bool IsValidCopyValue(object value)
@@ -356,7 +387,7 @@ namespace Weaver
             if(@ref.DeclaringType != null)
                 ret.DeclaringType = CopyReference(@ref.DeclaringType);
 
-            ret.Scope = CopyScope(@ref.Scope);
+            ret.Scope = CopyScope(@ref.Scope, @ref);
             UpdateScope(ret);
 
             var field = ret.GetType().GetField("etype", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -431,7 +462,7 @@ namespace Weaver
 
         #endregion
 
-        private IMetadataScope CopyScope(IMetadataScope scope)
+        private IMetadataScope CopyScope(IMetadataScope scope, MemberReference member)
         {
             string scopeName = scope.Name;
             Version scopeVersion;
@@ -461,6 +492,12 @@ namespace Weaver
             if (assemblyName != null)
                 return assemblyName;
 
+            if (!canImport)
+            {
+                errors.Add(new UnexpectedImport(scope, member, GetCurrentCopy(typeof(IMemberDefinition))));
+                return scope;
+            }
+
             var ret = new AssemblyNameReference(scopeName, scopeVersion);
 
             if(scope.MetadataScopeType == MetadataScopeType.AssemblyNameReference)
@@ -489,7 +526,7 @@ namespace Weaver
             if (typeSpec != null)
                 typeRef = typeSpec.ElementType;
 
-            typeRef.Scope = CopyScope(typeRef.Scope);
+            typeRef.Scope = CopyScope(typeRef.Scope, typeRef);
 
             if (typeRef.DeclaringType != null)
             {

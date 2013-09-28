@@ -39,6 +39,7 @@ namespace Weaver
                 Copier.Copy(origType);
 
             Copier.Process();
+            CheckErrors();
         }
 
         public void CopyTypes(string origAssemblyPath, IEnumerable<Type> types, bool areStubTypes = false)
@@ -53,6 +54,7 @@ namespace Weaver
             }
 
             Copier.Process();
+            CheckErrors();
         }
 
         public void MergeTypes(string origAssemblyPath, Dictionary<string, string> types)
@@ -68,6 +70,7 @@ namespace Weaver
             }
 
             Copier.Process();
+            CheckErrors();
         }
 
         public void Write(string outputAssemblyPath)
@@ -78,6 +81,22 @@ namespace Weaver
             writerParameters.WriteSymbols = TargetModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
             TargetModule.Assembly.Write(outputAssemblyPath, writerParameters);
+        }
+
+        private void CheckErrors()
+        {
+            if (Copier.errors.Count == 0)
+                return;
+
+            var msg = new StringBuilder();
+            msg.AppendLine("Errors found.");
+
+            foreach (var error in Copier.errors)
+            {
+                msg.AppendLine(error.ToString());
+            }
+            
+            throw new Exception(msg.ToString());
         }
 
         public static HashSet<string> GetReferences(string assemblyPath)
