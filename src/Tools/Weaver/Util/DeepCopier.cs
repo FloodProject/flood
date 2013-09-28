@@ -12,7 +12,24 @@ namespace Weaver.Util
         {
         }
 
-        public object Value { get; set; } 
+        public object Value { get; set; }
+    }
+
+    public class CopyNode
+    {
+        public CopyNode Previous { get; private set; }
+        public object Value { get; private set; }
+
+        public CopyNode(object value)
+        {
+            Value = value;
+        }
+
+        public CopyNode(object value, CopyNode previous)
+        {
+            Value = value;
+            Previous = previous;
+        }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -28,7 +45,8 @@ namespace Weaver.Util
         private HashSet<Type> typesWithMemoization;
 
         private readonly Dictionary<K,object> CopyMap;
-        
+
+        private CopyNode CopyCurrent;
 
         private readonly List<IDelayedCopy> delayedCopies;
 
@@ -42,6 +60,7 @@ namespace Weaver.Util
             typesWithMemoization = new HashSet<Type>();
 
             CopyMap = new Dictionary<K,object>();
+            CopyCurrent = null;
 
             delayedCopies = new List<IDelayedCopy>();
 
@@ -164,6 +183,34 @@ namespace Weaver.Util
             return CopyMap.ContainsKey(new K {Value = key});
         }
 
+        public object GetCurrentCopy(params Type[] filterTypes)
+        {
+            if (!filterTypes.Any())
+                return CopyCurrent.Value;
+
+            var node = CopyCurrent;
+            while (node != null)
+            {
+                var nodeType = node.Value.GetType();
+                if (filterTypes.Any(t => t.IsAssignableFrom(nodeType)))
+                    return node.Value;
+
+                node = node.Previous;
+            }
+
+            return null;
+        }
+
+        protected void PushCopy(object copy)
+        {
+            CopyCurrent = new CopyNode(copy, CopyCurrent);
+        }
+
+        protected void PopCopy()
+        {
+            CopyCurrent = CopyCurrent.Previous;
+        }
+
         protected virtual bool IsValidCopyKey(object key)
         {
             return true;
@@ -188,7 +235,9 @@ namespace Weaver.Util
 
             if(CopyMap.ContainsKey(obj1Key))
                 return;
-            
+
+            PushCopy(obj1);
+
             var type = obj1.GetType();
             while(!type.IsPublic)
                 type = type.BaseType;
@@ -197,6 +246,8 @@ namespace Weaver.Util
                 throw new NotImplementedException("Merge<"+type.FullName+">");
 
             mergeMethodInfos[type].Invoke(this, new []{obj1, obj2});
+
+            PopCopy();
 
             if(!CopyMap.ContainsKey(obj1Key))
                 CopyMap.Add(obj1Key, obj2);
@@ -227,11 +278,15 @@ namespace Weaver.Util
             if (SkipCopy(value, out copy))
                 return copy;
 
+            PushCopy(value);
+
             if(!copyMethodInfos.ContainsKey(type))
                 throw new NotImplementedException("Copy<"+type.FullName+">");
 
             var method = copyMethodInfos[type];
             copy = method.Invoke(this, new object[]{value});
+
+            PopCopy();
 
             if(typesWithMemoization.Contains(type) &&
                !ContainsCopy(value))

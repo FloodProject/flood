@@ -4,12 +4,17 @@ namespace Weaver.Util
     interface IDelayedCopy
     {
         void Copy();
+
+        CopyNode CopyParent { get; set; }
     }
-    class DelayedCopy<T> : IDelayedCopy
+
+    public class DelayedCopy<T> : IDelayedCopy
     {
         private readonly T originObject;
         private readonly T destObject;
         private readonly CopyDelegate action;
+
+        public CopyNode CopyParent { get; set; }
 
         public delegate void CopyDelegate(T originObject, T destObject);
 
