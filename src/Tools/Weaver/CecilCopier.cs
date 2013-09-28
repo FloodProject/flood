@@ -510,7 +510,9 @@ namespace Weaver
             var ret = new FieldDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.FieldType));
             ret.DeclaringType = GetDeclaringType(def);
 
-            CopyAll(def,ret,"Name","DeclaringType","FieldType","MetadataToken");
+            CopyAll(def,ret.Constant,"Name","DeclaringType","FieldType","MetadataToken", "Constant");
+
+            ret.Constant = def.Constant;
 
             return ret;
         }
@@ -659,7 +661,7 @@ namespace Weaver
         {
             var ret = new ParameterDefinition(def.Name, def.Attributes, CopyReference(def.ParameterType));
 
-            CopyAll(def,ret, "ParameterType", "MetadataToken");
+            CopyAll(def,ret, "ParameterType", "MetadataToken", "Constant");
 
             var field = ret.GetType().GetField("constant", BindingFlags.NonPublic | BindingFlags.Instance);
             var constant = field.GetValue(def);
