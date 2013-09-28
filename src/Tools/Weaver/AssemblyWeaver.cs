@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using EngineWeaver.Util;
 using Mono.Cecil;
+using Weaver.Util;
 
 namespace Weaver
 {

@@ -7,7 +7,7 @@ using Mono.Cecil;
 using Mono.Cecil.Pdb;
 using System.IO;
 
-namespace EngineWeaver.Util
+namespace Weaver.Util
 {
     public class CecilUtils
     {
