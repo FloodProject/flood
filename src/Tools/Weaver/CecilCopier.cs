@@ -815,10 +815,17 @@ namespace Weaver
 
             CopyAll(def,ret,"CatchType", "TryStart", "TryEnd", "HandlerStart", "HandlerEnd");
 
-            ret.TryStart = instructionMap[def.TryStart];
-            ret.TryEnd = instructionMap[def.TryEnd];
-            ret.HandlerStart = instructionMap[def.HandlerStart];
-            ret.HandlerEnd = instructionMap[def.HandlerEnd];
+            if(def.TryStart != null)
+                ret.TryStart = instructionMap[def.TryStart];
+
+            if(def.TryEnd != null)
+                ret.TryEnd = instructionMap[def.TryEnd];
+            
+            if(def.HandlerStart != null)
+                ret.HandlerStart = instructionMap[def.HandlerStart];
+
+            if(def.HandlerEnd != null)
+                ret.HandlerEnd = instructionMap[def.HandlerEnd];
 
             return ret;
         }
