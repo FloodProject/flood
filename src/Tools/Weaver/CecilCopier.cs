@@ -87,7 +87,6 @@ namespace Weaver
     {
         private ModuleDefinition destinationModule;
 
-        private readonly List<IDelayedCopy> delayedCopies;
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
         //Member prefix name
@@ -101,7 +100,6 @@ namespace Weaver
             
             NamePrefix = "";
 
-            delayedCopies = new List<IDelayedCopy>();
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
 
             objectTypeRef = destinationModule.Import(typeof (object));
@@ -132,22 +130,6 @@ namespace Weaver
         {
             ProcessDelayed();
             Update();
-        }
-
-        private void AddDelayedCopy<T>(T from, T to, DelayedCopy<T>.CopyDelegate action)
-        {
-            delayedCopies.Add(new DelayedCopy<T>(from, to, action));
-        }
-
-        private void ProcessDelayed()
-        {
-            while (delayedCopies.Any())
-            {
-                var array = delayedCopies.ToArray();
-                delayedCopies.Clear();
-                foreach (var copy in array)
-                    copy.Copy();
-            }
         }
 
         private void Update()

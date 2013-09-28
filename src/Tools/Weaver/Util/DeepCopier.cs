@@ -30,15 +30,20 @@ namespace Weaver.Util
         private readonly Dictionary<K,object> CopyMap;
         
 
+        private readonly List<IDelayedCopy> delayedCopies;
+
         private readonly Logger log = new Logger(Logger.LogLevel.Warning);
         private readonly Logger publicLog = new Logger(Logger.LogLevel.Warning);
 
-        public DeepCopier(){
+        public DeepCopier()
+        {
             mergeMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
             copyMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
             typesWithMemoization = new HashSet<Type>();
 
             CopyMap = new Dictionary<K,object>();
+
+            delayedCopies = new List<IDelayedCopy>();
 
             var type = this.GetType();
             foreach (var m in type.GetMethods(BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance))
@@ -75,6 +80,27 @@ namespace Weaver.Util
         public void Warn(string msg){
             publicLog.Tabs = log.Tabs;
             publicLog.Warning(msg);
+        }
+
+        protected void AddDelayedCopy<T>(T from, T to, DelayedCopy<T>.CopyDelegate action)
+        {
+            var delayedCopy = new DelayedCopy<T>(from, to, action);
+            delayedCopy.CopyParent = CopyCurrent;
+            delayedCopies.Add(delayedCopy);
+        }
+
+        protected void ProcessDelayed()
+        {
+            while (delayedCopies.Any())
+            {
+                var array = delayedCopies.ToArray();
+                delayedCopies.Clear();
+                foreach (var copy in array)
+                {
+                    CopyCurrent = copy.CopyParent;
+                    copy.Copy();
+                }
+            }
         }
 
         public virtual void Clear()
