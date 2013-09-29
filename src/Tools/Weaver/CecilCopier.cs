@@ -548,7 +548,8 @@ namespace Weaver
 
             CopyAll(def,ret.Constant,"Name","DeclaringType","FieldType","MetadataToken", "Constant");
 
-            ret.Constant = def.Constant;
+            if(def.HasConstant)
+                ret.Constant = def.Constant;
 
             return ret;
         }
@@ -699,9 +700,8 @@ namespace Weaver
 
             CopyAll(def,ret, "ParameterType", "MetadataToken", "Constant");
 
-            var field = ret.GetType().GetField("constant", BindingFlags.NonPublic | BindingFlags.Instance);
-            var constant = field.GetValue(def);
-            field.SetValue(ret, constant);
+            if(def.HasConstant)
+                ret.Constant = def.Constant;
 
             return ret;
         }
