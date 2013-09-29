@@ -177,6 +177,8 @@ namespace Flood.Tools.RPCGen
             var references = AssemblyWeaver.GetReferences(dllPath);
             references.Remove(Path.GetFileName(apiPath));
 
+            var apiTypes = ReferenceCollector.CollectReferences(dllPath, RpcTypes);
+
             using (var apiGenPaths = new TemporaryAssemblyPaths())
             {
                 var apiReferences = references.Where(s => s.EndsWith(".API.dll")).ToList();
@@ -187,7 +189,11 @@ namespace Flood.Tools.RPCGen
 
                 //Create assembly with required types by the generated API assembly
                 var weaver = new AssemblyWeaver();
-                weaver.CopyTypes(dllPath, RpcTypes);
+                weaver.AddReference(dllPath, "EngineManaged");
+                weaver.AddReference(dllPath, "EngineBindings");
+                weaver.AddReference(dllPath, "System");
+                weaver.AddReference(dllPath, "System.Core");
+                weaver.CopyTypes(dllPath, apiTypes);
                 weaver.Write(apiPath);
 
                 //API generated assembly
@@ -205,7 +211,7 @@ namespace Flood.Tools.RPCGen
             }
 
             var typeFowarder = new TypeFowarder(dllPath);
-            typeFowarder.FowardTypes(apiPath, RpcTypes);
+            typeFowarder.FowardTypes(apiPath, apiTypes);
             typeFowarder.Write(dllPath);
         }
 
