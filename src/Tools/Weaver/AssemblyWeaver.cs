@@ -112,6 +112,28 @@ namespace Weaver
             TargetModule.Assembly.Write(outputAssemblyPath, writerParameters);
         }
 
+        public void AddReference(string fromAssemblyPath, string referenceName)
+        {
+            var directory = Path.GetDirectoryName(fromAssemblyPath);
+            AddSearchDirectory(directory);
+
+            var assembly = CecilUtils.GetAssemblyDef(fromAssemblyPath);
+
+            var reference = assembly.MainModule.AssemblyReferences.Single(r => r.Name == referenceName);
+
+            TargetModule.AssemblyReferences.Add(reference);
+        }
+
+        public void AddReference(string assemblyPath)
+        {
+            var directory = Path.GetDirectoryName(assemblyPath);
+            AddSearchDirectory(directory);
+
+            var assembly = CecilUtils.GetAssemblyDef(assemblyPath);
+
+            TargetModule.AssemblyReferences.Add(assembly.Name);
+        }
+
         private void CheckErrors()
         {
             if(Copier.Errors.Any())
