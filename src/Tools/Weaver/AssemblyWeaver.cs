@@ -137,7 +137,7 @@ namespace Weaver
         private void CheckErrors()
         {
             if(Copier.Errors.Any())
-                throw new AssemblyWeaverException(Copier.errors);
+                throw new AssemblyWeaverException(Copier.Errors);
         }
 
         public static HashSet<string> GetReferences(string assemblyPath)

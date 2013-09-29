@@ -120,7 +120,7 @@ namespace Weaver
         //Options
         public bool canImport = false;
 
-        public List<IError> errors;
+        public List<IError> Errors;
 
         public CecilCopier(ModuleDefinition destinationModule)
         {
@@ -132,7 +132,7 @@ namespace Weaver
 
             objectTypeRef = destinationModule.Import(typeof (object));
 
-            errors = new List<IError>();
+            Errors = new List<IError>();
         }
 
         protected override bool IsValidCopyValue(object value)
@@ -493,7 +493,7 @@ namespace Weaver
 
             if (!canImport)
             {
-                errors.Add(new UnexpectedImport(scope, member, GetCurrentCopy(typeof(IMemberDefinition))));
+                Errors.Add(new UnexpectedImport(scope, member, GetCurrentCopy(typeof(IMemberDefinition))));
                 return scope;
             }
 
