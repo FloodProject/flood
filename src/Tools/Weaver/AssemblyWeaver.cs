@@ -8,6 +8,30 @@ using Weaver.Util;
 
 namespace Weaver
 {
+    public class AssemblyWeaverException : Exception
+    {
+        public List<IError> Errors;
+        
+        public AssemblyWeaverException(List<IError> errors)
+            : base(GetErrorMeassage(errors))
+        {
+            Errors = errors;
+        }
+
+        private static string GetErrorMeassage(List<IError> errors)
+        {
+             var msg = new StringBuilder();
+            msg.AppendLine("Errors found.");
+
+            foreach (var error in errors)
+            {
+                msg.AppendLine(error.ToString());
+            }
+
+            return msg.ToString();
+        }
+    }
+
     public class AssemblyWeaver
     {
         internal readonly ModuleDefinition TargetModule;
@@ -90,18 +114,8 @@ namespace Weaver
 
         private void CheckErrors()
         {
-            if (Copier.errors.Count == 0)
-                return;
-
-            var msg = new StringBuilder();
-            msg.AppendLine("Errors found.");
-
-            foreach (var error in Copier.errors)
-            {
-                msg.AppendLine(error.ToString());
-            }
-            
-            throw new Exception(msg.ToString());
+            if(Copier.Errors.Any())
+                throw new AssemblyWeaverException(Copier.errors);
         }
 
         public static HashSet<string> GetReferences(string assemblyPath)
