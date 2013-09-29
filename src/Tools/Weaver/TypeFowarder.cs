@@ -32,6 +32,8 @@ namespace Weaver
             var attributeCtorRef = weaver.TargetModule.Import(attributeCtor);
             var systemTypeRef = weaver.TargetModule.Import(typeof(Type));
 
+            weaver.AddReference(toAssemblyPath);
+
             foreach (var type in types)
             {
                 if(fowardedTypes.Contains(type))
