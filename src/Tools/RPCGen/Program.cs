@@ -94,6 +94,8 @@ namespace Flood.Tools.RPCGen
 
         public static bool Generate(string assemblyPath, string outputDir)
         {
+            assemblyPath = Path.GetFullPath(assemblyPath);
+
             try
             {
                 Assembly assembly;
