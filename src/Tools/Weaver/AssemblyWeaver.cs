@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Mono.Cecil;
 using Weaver.Util;
@@ -34,6 +35,10 @@ namespace Weaver
         public void CopyAssembly(string origAssemblyPath)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
+
+            foreach (var reference in origAssembly.MainModule.AssemblyReferences)
+                if(!TargetModule.AssemblyReferences.Any(r => r.Name == reference.Name && r.Version == reference.Version))
+                    TargetModule.AssemblyReferences.Add(reference);
 
             foreach (var origType in origAssembly.MainModule.Types)
                 Copier.Copy(origType);
