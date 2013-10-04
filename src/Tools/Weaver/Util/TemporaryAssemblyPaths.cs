@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace RPCGen
+namespace Weaver.Util
 {
     public sealed class TemporaryAssemblyPaths : IDisposable 
     {
