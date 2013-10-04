@@ -24,6 +24,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using Weaver.Util;
 
 namespace Flood.Tools.RPCGen
 {
@@ -199,7 +200,7 @@ namespace Flood.Tools.RPCGen
                 //API generated assembly
                 var apiGenReferences = apiReferences.ToList();
                 apiGenReferences.Add(apiPath);
-                CompileIntoAssembly(apiGenPaths.DllPath, apiGenReferences, apiWriter.GeneratedFiles);
+                DotNetCompiler.CompileIntoAssembly(apiGenPaths.DllPath, apiGenReferences, apiWriter.GeneratedFiles);
 
                 //Add API generated assembly to API assembly
                 weaver = new AssemblyWeaver(apiPath);
@@ -213,32 +214,6 @@ namespace Flood.Tools.RPCGen
             var typeFowarder = new TypeFowarder(dllPath);
             typeFowarder.FowardTypes(apiPath, apiTypes);
             typeFowarder.Write(dllPath);
-        }
-
-        private void CompileIntoAssembly(string outputPath, IEnumerable<string> references, List<string> files)
-        {
-            CodeDomProvider provider = new CSharpCodeProvider();
-            CompilerParameters cp = new CompilerParameters()
-            {
-                GenerateExecutable = false,
-                OutputAssembly = outputPath,
-                IncludeDebugInformation = true,
-                CompilerOptions = "/unsafe"
-            };
-
-            foreach (var @ref in references)
-                cp.ReferencedAssemblies.Add(@ref);
-
-            CompilerResults cr = provider.CompileAssemblyFromFile(cp, files.ToArray());
-
-            if (cr.Errors.HasErrors)
-            {
-                var message = new StringBuilder();
-                message.Append("Error compiling generated files.\n");
-                foreach(var error in cr.Errors)
-                    message.AppendFormat("  {0}\n",error.ToString());
-                throw new Exception(message.ToString());
-            }
         }
 
         private void FieldsToProperties(string assemblyPath)
