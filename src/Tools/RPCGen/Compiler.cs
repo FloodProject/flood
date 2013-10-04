@@ -13,6 +13,7 @@
  * under the License.
  */
 
+using System.Runtime.CompilerServices;
 using Weaver;
 using RPCGen;
 using System;
@@ -206,6 +207,9 @@ namespace Flood.Tools.RPCGen
                 weaver.MergeTypes(apiGenPaths.DllPath, DataObjectsMap);
                 //Add all the other generated types.
                 weaver.CopyAssembly(apiGenPaths.DllPath);
+                //Add attribute InternalsVisibleToAttribute
+                var dllName = Path.GetFileNameWithoutExtension(dllPath);
+                weaver.AddAttribute(typeof(InternalsVisibleToAttribute), new []{typeof(string)}, new object[]{dllName});
                 weaver.Write(apiPath);
             }
 
