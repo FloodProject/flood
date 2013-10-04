@@ -282,6 +282,18 @@ namespace Weaver
 
         #region CopyReference
 
+        public ModuleReference CopyReference(ModuleReference @ref)
+        {
+            var ret = destinationModule.ModuleReferences.SingleOrDefault(m => m.Name == @ref.Name);
+            if (ret != null)
+                return ret;
+
+            ret =  new ModuleReference(@ref.Name);
+            destinationModule.ModuleReferences.Add(ret);
+
+            return ret;
+        }
+
         public MemberReference CopyReference(MemberReference @ref)
         {
             if (@ref is TypeReference)
