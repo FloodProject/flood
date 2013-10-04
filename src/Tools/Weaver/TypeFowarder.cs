@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Weaver.Util;
 using Mono.Cecil;
 using System.Collections.Generic;
@@ -27,11 +28,6 @@ namespace Weaver
 
             var toAssembly = CecilUtils.GetAssemblyDef(toAssemblyPath);
 
-            var attributeType = typeof (System.Runtime.CompilerServices.TypeForwardedToAttribute);
-            var attributeCtor = attributeType.GetConstructor(new []{typeof (Type)});
-            var attributeCtorRef = weaver.TargetModule.Import(attributeCtor);
-            var systemTypeRef = weaver.TargetModule.Import(typeof(Type));
-
             weaver.AddReference(toAssemblyPath);
 
             foreach (var type in types)
@@ -51,10 +47,7 @@ namespace Weaver
                 weaver.Copier.SetCopy(fromTypeRef, toTypeRef);
 
                 //Add TypeForwardedToAttribute
-                var attributeArgument = new CustomAttributeArgument(systemTypeRef, toTypeRef);
-                var forwardAttribute = new CustomAttribute(attributeCtorRef);
-                forwardAttribute.ConstructorArguments.Add(attributeArgument); 
-                weaver.TargetModule.Assembly.CustomAttributes.Add(forwardAttribute);
+                weaver.AddAttribute(typeof(TypeForwardedToAttribute), new [] {typeof (Type)}, new object[]{toTypeRef});
             }
         }
 
