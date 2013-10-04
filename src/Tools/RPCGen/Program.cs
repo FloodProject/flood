@@ -95,6 +95,18 @@ namespace Flood.Tools.RPCGen
         public static bool Generate(string assemblyPath, string outputDir)
         {
             assemblyPath = Path.GetFullPath(assemblyPath);
+            var assembliesDir = Path.GetDirectoryName(assemblyPath);
+
+            AppDomain.CurrentDomain.AssemblyResolve += 
+                (sender, args) =>
+                    {
+                        var assemblyName = new AssemblyName(args.Name);
+                        var path = Path.Combine(assembliesDir, assemblyName.Name + ".dll");
+                        if(File.Exists(path))
+                            return Assembly.LoadFrom(path);
+
+                        return null;
+                    };
 
             try
             {
