@@ -13,6 +13,8 @@ namespace Weaver.Util
         }
 
         public object Value { get; set; }
+
+        public object Copier { get; set; }
     }
 
     public class CopyNode
@@ -149,7 +151,7 @@ namespace Weaver.Util
 
             object objKey = key;
             object objValue;
-            while (CopyMap.TryGetValue(new K {Value = objKey}, out objValue))
+            while (CopyMap.TryGetValue(new K {Value = objKey, Copier = this}, out objValue))
             {
                 found = true;
                 copy = (T) objValue;
@@ -172,7 +174,7 @@ namespace Weaver.Util
             if(!IsValidCopyValue(copy))
                 throw new ArgumentException("copy");
 
-            CopyMap.Add(new K {Value = key}, copy);
+            CopyMap.Add(new K {Value = key, Copier = this}, copy);
         }
 
         public bool ContainsCopy(object key)
@@ -180,7 +182,7 @@ namespace Weaver.Util
             if(!IsValidCopyKey(key))
                 throw new ArgumentException("key");
 
-            return CopyMap.ContainsKey(new K {Value = key});
+            return CopyMap.ContainsKey(new K {Value = key, Copier = this});
         }
 
         public object GetCurrentCopy(params Type[] filterTypes)
@@ -231,7 +233,7 @@ namespace Weaver.Util
             if(obj1 == null)
                 return;
 
-            var obj1Key = new K {Value = obj1};
+            var obj1Key = new K {Value = obj1, Copier = this};
 
             if(CopyMap.ContainsKey(obj1Key))
                 return;
