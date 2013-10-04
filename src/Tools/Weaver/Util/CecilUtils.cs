@@ -294,22 +294,14 @@ namespace Weaver.Util
             return scope1.Name == scope2.Name;
         }
 
-        public static bool DoMethodParametersTypeMatch(MethodReference method1, MethodReference method2)
+        public static bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2, Func<TypeReference, TypeReference> typeMapper = null)
         {
-            if (method1.Parameters.Count != method2.Parameters.Count)
-                return false;
-
-            for (int i = 0; i < method1.Parameters.Count; i++)
+            if (typeMapper != null)
             {
-                if (!AreTypesEquivalent(method1.Parameters[i].ParameterType, method2.Parameters[i].ParameterType))
-                    return false;
+                typeRef1 = typeMapper(typeRef1);
+                typeRef2 = typeMapper(typeRef2);
             }
 
-            return true;
-        }
-
-        public static bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
-        {
             var pointer1 = typeRef1 as PointerType;
             var pointer2 = typeRef2 as PointerType;
             if (pointer1 != null && pointer2 != null)
@@ -318,13 +310,25 @@ namespace Weaver.Util
             if (!AreScopesEqual(typeRef1,typeRef2))
                 return false;
 
-            return typeRef1.FullName == typeRef2.FullName;
-        }
+            if(typeRef1.IsGenericInstance != typeRef2.IsGenericInstance)
+                return false;
 
-        public static void CheckEquivalentTypes(TypeReference typeRef1, TypeReference typeRef2)
-        {
-            if(!AreTypesEquivalent(typeRef1, typeRef2))
-                throw new Exception("Types are not equivalent.");
+            if (typeRef1.IsGenericInstance)
+            {
+                var type1Generic = (GenericInstanceType) typeRef1;
+                var type2Generic = (GenericInstanceType) typeRef2;
+
+                if (type1Generic.GenericArguments.Count != type2Generic.GenericArguments.Count)
+                    return false;
+
+                for (int i = 0; i < type1Generic.GenericArguments.Count; i++)
+                    if (!AreTypesEquivalent(type1Generic.GenericArguments[i], type2Generic.GenericArguments[i], typeMapper))
+                        return false;
+
+                return type1Generic.ElementType.FullName == type2Generic.ElementType.FullName;
+            }
+
+            return typeRef1.FullName == typeRef2.FullName;
         }
     }
 }
