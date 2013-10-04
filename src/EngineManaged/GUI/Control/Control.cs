@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flood;
+using Flood.RPC.Metadata;
 using GUI.Anim;
 using GUI.DragDrop;
 using GUI.Input;
@@ -11,6 +12,7 @@ namespace GUI.Controls
     /// <summary>
     /// Base control class.
     /// </summary>
+    [DataObject(1)]
     public class Control : IDisposable
     {
         // this REALLY needs to be replaced with control-specific events
@@ -22,6 +24,7 @@ namespace GUI.Controls
 
         private bool m_Disposed;
 
+        [Id(1)]
         private Control m_Parent;
 
         /// <summary>

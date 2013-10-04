@@ -1,4 +1,5 @@
 ﻿using System;
+using Flood.RPC.Metadata;
 using GUI.ControlInternal;
 
 namespace GUI.Controls
@@ -6,6 +7,7 @@ namespace GUI.Controls
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.
     /// </summary>
+    [DataObject(3)]
     public class TabControl : Control
     {
         private readonly TabStrip m_TabStrip;

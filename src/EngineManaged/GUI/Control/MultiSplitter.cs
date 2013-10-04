@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flood.RPC.Metadata;
 using GUI.ControlInternal;
 
 namespace GUI.Controls
 {
+    [DataObject(2)]
     public class MultiSplitter : Control
     {
-        
         public class Splitter : Dragger
         {
             public int Space { get; set; }
