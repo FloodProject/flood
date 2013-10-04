@@ -14,15 +14,12 @@
  */
 
 using Weaver;
-using Microsoft.CSharp;
 using RPCGen;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Linq;
 using Weaver.Util;
 
@@ -183,10 +180,6 @@ namespace Flood.Tools.RPCGen
             using (var apiGenPaths = new TemporaryAssemblyPaths())
             {
                 var apiReferences = references.Where(s => s.EndsWith(".API.dll")).ToList();
-                apiReferences.Add("EngineManaged.dll");
-
-                //Create empty API assembly
-                CompileIntoAssembly(apiPath, new string[]{}, new List<string>());
 
                 //Create assembly with required types by the generated API assembly
                 var weaver = new AssemblyWeaver();
