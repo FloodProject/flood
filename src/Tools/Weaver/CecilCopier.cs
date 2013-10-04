@@ -788,6 +788,15 @@ namespace Weaver
             return ret;
         }
 
+        public PInvokeInfo Copy(PInvokeInfo def)
+        {
+            var ret = new PInvokeInfo(def.Attributes, def.EntryPoint, CopyReference(def.Module));
+
+            CopyAll(def, ret, "Module");
+
+            return ret;
+        }
+
         private Instruction Copy(Instruction def)
         {
             //copy of operands is delayed to ProcessInstructions
