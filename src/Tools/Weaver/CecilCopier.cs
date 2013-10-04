@@ -57,7 +57,7 @@ namespace Weaver
                     if (methodRef == null)
                         return false;
 
-                    return CecilUtils.DoMethodParametersTypeMatch(methodKeyRef, methodRef);
+                    return ((CecilCopier)Copier).DoMethodParametersTypeMatch(methodKeyRef, methodRef);
                 }
                 else
                 {
@@ -248,9 +248,6 @@ namespace Weaver
                 UpdateScope(localRef);
                 return true;
             }
-
-            if(@ref.FullName.Contains("Reference"))
-                Console.WriteLine();
 
             if (CecilUtils.GetScope(@ref).Name == destinationModule.Assembly.Name.Name)
             {
@@ -603,15 +600,12 @@ namespace Weaver
 
             var ret = declaringType.Methods.FirstOrDefault(
                 m => m.FullName == def.FullName && 
-                     CecilUtils.DoMethodParametersTypeMatch(m, def));
+                     DoMethodParametersTypeMatch(m, def));
             if (ret != null)
             {
                 Warn("Equivalent method already exists using it instead: "+def.FullName);
                 return ret;
             }
-
-            if(def.FullName.Contains("RPCGen.Tests.Services.DataObjectBaseClass.IService.GetDataObject"))
-                Console.WriteLine();
 
             ret = new MethodDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.ReturnType));
 
@@ -917,28 +911,28 @@ namespace Weaver
 
         public void Merge(FieldDefinition def1, FieldDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.FieldType, def2.FieldType);
+            CheckEquivalentTypes(def1.FieldType, def2.FieldType);
 
             MergeAll(def1,def2,"Name","DeclaringType","FieldType","MetadataToken", "Module");
         }
 
         public void Merge(EventDefinition def1, EventDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.EventType, def2.EventType);
+            CheckEquivalentTypes(def1.EventType, def2.EventType);
 
             MergeAll(def1,def2,"Name","DeclaringType","EventType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(PropertyDefinition def1, PropertyDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.PropertyType, def2.PropertyType);
+            CheckEquivalentTypes(def1.PropertyType, def2.PropertyType);
 
             MergeAll(def1,def2,"Name","DeclaringType","PropertyType","MetadataToken", "Module", "Attributes");
         }
 
         public void Merge(MethodDefinition def1, MethodDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.ReturnType, def2.ReturnType);
+            CheckEquivalentTypes(def1.ReturnType, def2.ReturnType);
 
             MergeAll(def1,def2,"Name","DeclaringType","ReturnType","MetadataToken", "Module", "Attributes");
         }
@@ -975,14 +969,14 @@ namespace Weaver
 
         public void Merge(ParameterDefinition def1, ParameterDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.ParameterType, def2.ParameterType);
+            CheckEquivalentTypes(def1.ParameterType, def2.ParameterType);
 
             MergeAll(def1,def2,"Name", "Method","ParameterType","MetadataToken", "Module");
         }
 
         public void Merge(VariableDefinition def1, VariableDefinition def2)
         {
-            CecilUtils.CheckEquivalentTypes(def1.VariableType, def2.VariableType);
+            CheckEquivalentTypes(def1.VariableType, def2.VariableType);
 
             MergeAll(def1,def2,"VariableType");
         }
@@ -1066,14 +1060,14 @@ namespace Weaver
 
                 var count = def2.Count(
                     m => m.Name == destMethodName
-                         && CecilUtils.DoMethodParametersTypeMatch(origMethodDef, m));
+                         && DoMethodParametersTypeMatch(origMethodDef, m));
 
                 if(count > 1)
                     System.Diagnostics.Debugger.Break();
 
                 var destMethodDef = def2.SingleOrDefault(
                     m => m.Name == destMethodName
-                         && CecilUtils.DoMethodParametersTypeMatch(origMethodDef, m));
+                         && DoMethodParametersTypeMatch(origMethodDef, m));
 
                 if (destMethodDef != null)
                 {
@@ -1153,5 +1147,36 @@ namespace Weaver
 
         }
         #endregion
+
+        private TypeReference TypeMap(TypeReference type)
+        {
+            TypeReference copy;
+            return TryGetCopy(type, out copy) ? copy : type;
+        }
+
+        internal bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2)
+        {
+            return CecilUtils.AreTypesEquivalent(typeRef1, typeRef2, TypeMap);
+        }
+
+        internal void CheckEquivalentTypes(TypeReference typeRef1, TypeReference typeRef2)
+        {
+            if(!AreTypesEquivalent(typeRef1, typeRef2))
+                throw new Exception("Types are not equivalent.");
+        }
+
+        internal bool DoMethodParametersTypeMatch(MethodReference method1, MethodReference method2)
+        {
+            if (method1.Parameters.Count != method2.Parameters.Count)
+                return false;
+
+            for (int i = 0; i < method1.Parameters.Count; i++)
+            {
+                if (!AreTypesEquivalent(method1.Parameters[i].ParameterType, method2.Parameters[i].ParameterType))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
