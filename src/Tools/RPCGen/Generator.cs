@@ -463,10 +463,10 @@ namespace Flood.Tools.RPCGen
                 methodPrefix = methodClassName+".";
 
             if (!IsTask(method.ReturnType) && method.ReturnType != typeof(void))
-                throw new Exception();
+                throw new Exception("Method return type must be a Task");
 
             Write((IsTask(method.ReturnType))? "async " : "public ");
-            Write("{0} {1}{2}(", PrettyName(method.ReturnType), methodPrefix, methodName);
+            Write("{0} {1}{2}(", GetTypeName(method.ReturnType, false), methodPrefix, methodName);
 
             var parameters = method.GetParameters();
             GenerateParameterList(parameters);
@@ -645,7 +645,7 @@ namespace Flood.Tools.RPCGen
             for (var i = 0; i < parameters.Count; i++)
             {
                 var param = parameters[i];
-                Write("{0} {1}", PrettyName(param.ParameterType),
+                Write("{0} {1}", GetTypeName(param.ParameterType, false),
                       param.Name);
 
                 if (i < parameters.Count - 1)
@@ -1532,22 +1532,6 @@ namespace Flood.Tools.RPCGen
 
         #region Type Conversion 
 
-        /// Returns a c# string representation o a type
-        private static string PrettyName(Type type)
-        {
-            if (type.GetGenericArguments().Length == 0)
-            {
-                if (type == typeof(void))
-                    return "void";
-
-                return type.FullName.Replace("+",".");
-            }
-            var genericArguments = type.GetGenericArguments();
-            var typeDefeninition = type.Name;
-            var unmangledName = typeDefeninition.Substring(0, typeDefeninition.IndexOf("`"));
-            return unmangledName + "<" + String.Join(",", genericArguments.Select(PrettyName)) + ">";
-        }
-
         private static string GetStubsClassName(Type type, bool fullName)
         {
             var name = type.FullName;
@@ -1560,18 +1544,28 @@ namespace Flood.Tools.RPCGen
             return name.Replace("+", "_") + "Stubs";
         }
 
-        private string GetTypeName(Type type)
+        private string GetTypeName(Type type, bool replaceWithStubs = true)
         {
-            if (type.Assembly == currentAssembly && Metadata.IsDataObject(type))
+            if (replaceWithStubs && type.Assembly == currentAssembly && Metadata.IsDataObject(type))
                 return GetStubsClassName(type, true);
 
-            return PrettyName(type);
+            if (type.GetGenericArguments().Length == 0)
+            {
+                if (type == typeof(void))
+                    return "void";
+
+                return type.FullName.Replace("+",".");
+            }
+
+            var genericArguments = type.GetGenericArguments();
+            var unmangledName = type.Name.Substring(0, type.Name.IndexOf("`"));
+            return unmangledName + "<" + String.Join(",", genericArguments.Select(t => GetTypeName(t, replaceWithStubs))) + ">";
         }
 
         private string GetTypeCast(Type type)
         {
             if (type.Assembly == currentAssembly && Metadata.IsDataObject(type))
-                return string.Format("({0})(object)", PrettyName(type));
+                return string.Format("({0})(object)", GetTypeName(type, false));
 
             return "";
         }
