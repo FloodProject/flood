@@ -183,15 +183,20 @@ namespace Flood.Tools.RPCGen
 
                 //Create assembly with required types by the generated API assembly
                 var weaver = new AssemblyWeaver();
+
                 weaver.AddReference(dllPath, "EngineManaged");
                 weaver.AddReference(dllPath, "EngineBindings");
                 weaver.AddReference(dllPath, "System");
                 weaver.AddReference(dllPath, "System.Core");
+                foreach (var apiReference in apiReferences)
+                     weaver.AddReference(dllPath, Path.GetFileNameWithoutExtension(apiReference));
+
                 weaver.CopyTypes(dllPath, apiTypes);
                 weaver.Write(apiPath);
 
                 //API generated assembly
                 var apiGenReferences = apiReferences.ToList();
+                apiGenReferences.Add("EngineManaged.dll");
                 apiGenReferences.Add(apiPath);
                 DotNetCompiler.CompileIntoAssembly(apiGenPaths.DllPath, apiGenReferences, apiWriter.GeneratedFiles);
 
