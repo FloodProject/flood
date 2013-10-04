@@ -13,9 +13,12 @@ namespace Weaver.Util
     {
         public static AssemblyDefinition CreateEmptyAssemblyDef()
         {
-            var assemblyName = new AssemblyNameDefinition(Path.GetRandomFileName(), new Version(0, 0, 0));
+            using (var dllPaths = new TemporaryAssemblyPaths())
+            {
+                DotNetCompiler.CompileIntoAssembly(dllPaths.DllPath, new List<string>(), new List<string>());
 
-            return AssemblyDefinition.CreateAssembly(assemblyName, assemblyName.Name, ModuleKind.Dll);
+                return GetAssemblyDef(dllPaths.DllPath);
+            }
         }
 
         public static AssemblyDefinition GetAssemblyDef(Assembly assembly)
