@@ -104,8 +104,12 @@ namespace Weaver
 
         public void Write(string outputAssemblyPath)
         {
-            var fileName = Path.GetFileNameWithoutExtension(outputAssemblyPath);
-            TargetModule.Assembly.Name.Name = fileName;
+            var fileName = Path.GetFileName(outputAssemblyPath);
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(outputAssemblyPath);
+
+            TargetModule.Name = fileName;
+            TargetModule.Assembly.Name.Name = fileNameNoExt;
+
             var writerParameters = new WriterParameters();
             writerParameters.WriteSymbols = TargetModule.HasSymbols;
             writerParameters.SymbolWriterProvider = new Mono.Cecil.Pdb.PdbWriterProvider();
