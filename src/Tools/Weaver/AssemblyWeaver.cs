@@ -138,6 +138,22 @@ namespace Weaver
             TargetModule.AssemblyReferences.Add(assembly.Name);
         }
 
+        public void AddAttribute(Type attributeType, Type[] ctorParamTypes, object[] paramArguments)
+        {
+            var internalAttributeCtor = attributeType.GetConstructor(ctorParamTypes);
+            var internalAttributeCtorRef = TargetModule.Import(internalAttributeCtor);
+            var internalAttribute = new CustomAttribute(internalAttributeCtorRef);
+
+            for (int i = 0; i < ctorParamTypes.Count(); i++)
+            {
+                var paramType = internalAttributeCtorRef.Parameters[i].ParameterType;
+                var internalAttributeArgument = new CustomAttributeArgument(paramType, paramArguments[i]);
+                internalAttribute.ConstructorArguments.Add(internalAttributeArgument); 
+            }
+
+            TargetModule.Assembly.CustomAttributes.Add(internalAttribute);
+        }
+
         private void CheckErrors()
         {
             if(Copier.Errors.Any())
