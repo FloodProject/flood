@@ -725,9 +725,16 @@ namespace Weaver
         [MemoizeCopy]
         public CustomAttribute Copy(CustomAttribute def)
         {
-            var ret = new CustomAttribute(CopyReference(def.Constructor), def.GetBlob());
+            var ret = new CustomAttribute(def.Constructor, def.GetBlob());
 
             CopyAll(def,ret, "Constructor");
+
+            //Constructor can only be copied after the methods have been processed.
+            AddDelayedCopy(def, ret,
+                           (originObject, destObject) =>
+                               {
+                                   destObject.Constructor = CopyReference(originObject.Constructor);
+                               });
 
             return ret;
         }
