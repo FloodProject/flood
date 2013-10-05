@@ -167,11 +167,11 @@ namespace Flood.Tools.RPCGen
             apiWriter.WriteGeneratorToFile("DataObjectFactory", gen);
         }
 
-        public void Compile(string dllPath)
+        public void Compile(string dllPath, bool createApi)
         {
             FieldsToProperties(dllPath);
 
-            var apiPath = Path.ChangeExtension(dllPath, "API.dll");
+            var apiPath = (createApi)? Path.ChangeExtension(dllPath, "API.dll") : dllPath;
 
             var references = AssemblyWeaver.GetReferences(dllPath);
             references.Remove(Path.GetFileName(apiPath));
@@ -181,24 +181,30 @@ namespace Flood.Tools.RPCGen
             using (var apiGenPaths = new TemporaryAssemblyPaths())
             {
                 var apiReferences = references.Where(s => s.EndsWith(".API.dll")).ToList();
-
-                //Create assembly with required types by the generated API assembly
-                var weaver = new AssemblyWeaver();
-
-                weaver.AddReference(dllPath, "EngineManaged");
-                weaver.AddReference(dllPath, "EngineBindings");
-                weaver.AddReference(dllPath, "System");
-                weaver.AddReference(dllPath, "System.Core");
-                foreach (var apiReference in apiReferences)
-                     weaver.AddReference(dllPath, Path.GetFileNameWithoutExtension(apiReference));
-
-                weaver.CopyTypes(dllPath, apiTypes);
-                weaver.Write(apiPath);
-
-                //API generated assembly
                 var apiGenReferences = apiReferences.ToList();
                 apiGenReferences.Add("EngineManaged.dll");
-                apiGenReferences.Add(apiPath);
+
+                AssemblyWeaver weaver;
+
+                if (createApi)
+                {
+                    //Create assembly with required types by the generated API assembly
+                    weaver = new AssemblyWeaver();
+
+                    weaver.AddReference(dllPath, "EngineManaged");
+                    weaver.AddReference(dllPath, "EngineBindings");
+                    weaver.AddReference(dllPath, "System");
+                    weaver.AddReference(dllPath, "System.Core");
+                    foreach (var apiReference in apiReferences)
+                        weaver.AddReference(dllPath, Path.GetFileNameWithoutExtension(apiReference));
+
+                    weaver.CopyTypes(dllPath, apiTypes);
+                    weaver.Write(apiPath);
+
+                    apiGenReferences.Add(apiPath);
+                }
+
+                //API generated assembly
                 DotNetCompiler.CompileIntoAssembly(apiGenPaths.DllPath, apiGenReferences, apiWriter.GeneratedFiles);
 
                 //Add API generated assembly to API assembly
@@ -207,11 +213,19 @@ namespace Flood.Tools.RPCGen
                 weaver.MergeTypes(apiGenPaths.DllPath, DataObjectsMap);
                 //Add all the other generated types.
                 weaver.CopyAssembly(apiGenPaths.DllPath);
-                //Add attribute InternalsVisibleToAttribute
-                var dllName = Path.GetFileNameWithoutExtension(dllPath);
-                weaver.AddAttribute(typeof(InternalsVisibleToAttribute), new []{typeof(string)}, new object[]{dllName});
+
+                if (createApi)
+                {
+                    //Add attribute InternalsVisibleToAttribute
+                    var dllName = Path.GetFileNameWithoutExtension(dllPath);
+                    weaver.AddAttribute(typeof(InternalsVisibleToAttribute), new []{typeof(string)}, new object[]{dllName});
+                }
+
                 weaver.Write(apiPath);
             }
+
+            if (!createApi) 
+                return;
 
             var typeFowarder = new TypeFowarder(dllPath);
             typeFowarder.FowardTypes(apiPath, apiTypes);

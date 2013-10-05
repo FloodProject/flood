@@ -22,6 +22,7 @@ namespace Flood.Tools.RPCGen
 {
     public class Options
     {
+        public bool CreateApi = false;
         public bool Verbose = false;
         public bool ShowHelpText = false;
         public bool OutputDebug = false;
@@ -48,6 +49,7 @@ namespace Flood.Tools.RPCGen
             var set = new OptionSet()
                 {
                     // Compiler options
+                    { "a|api", "Separate rpc code into an API dll.", v => options.CreateApi = true },
                     { "ns|namespace=", v => options.OutputNamespace = v },
                     { "o|outdir=", v => options.OutputDir = v },
                     { "debug", v => options.OutputDebug = true },
@@ -86,13 +88,13 @@ namespace Flood.Tools.RPCGen
             if (!Directory.Exists(options.OutputDir))
                 Directory.CreateDirectory(options.OutputDir);
 
-            if(!Generate(options.Assembly, options.OutputDir))
+            if(!Generate(options.Assembly, options.OutputDir, options.CreateApi))
                 return 1;
 
             return 0;
         }
 
-        public static bool Generate(string assemblyPath, string outputDir)
+        public static bool Generate(string assemblyPath, string outputDir, bool createAPI)
         {
             assemblyPath = Path.GetFullPath(assemblyPath);
             var assembliesDir = Path.GetDirectoryName(assemblyPath);
@@ -116,7 +118,7 @@ namespace Flood.Tools.RPCGen
 
                 var compiler = new Compiler(assembly, outputDir);
                 compiler.Process();
-                compiler.Compile(assemblyPath);
+                compiler.Compile(assemblyPath, createAPI);
             }
             catch (Exception e)
             {
