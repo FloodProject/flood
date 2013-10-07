@@ -19,10 +19,15 @@ namespace Flood.Tools.RPCGen
         private int delegateCounter;
 
         private Assembly currentAssembly;
+
+        public readonly List<MemberClone> MemberClones;
+        public readonly Dictionary<MemberSignature, MemberOptions> MemberOptions;
  
         public Generator(Assembly currentAssembly)
         {
             delegateNames = new Dictionary<Type, string>();
+            MemberClones = new List<MemberClone>();
+            MemberOptions = new Dictionary<MemberSignature, MemberOptions>();
 
             this.currentAssembly = currentAssembly;
         }
@@ -105,16 +110,42 @@ namespace Flood.Tools.RPCGen
                     var backingFieldName = "__" + param.Name;
                     var paramTypeName = GetTypeName(param.ParameterType);
 
-                    WriteLine("private {0} {1};", paramTypeName, backingFieldName);
+                    if (param.IsImplementedProperty)
+                    {
+                        var declaringTypeFullName = GetTypeName(dataObjectType, false);
+
+                        WriteLine("private {0} {1} {{ get; set; }}", paramTypeName, backingFieldName);
+
+                        var typeSig = new TypeSignature(param.ParameterType);
+                        var declaringTypeSig = TypeSignature.Parse(declaringTypeFullName);
+
+                        MemberClones.Add(new MemberClone 
+                        {
+                            OriginMember = new PropertySignature(declaringTypeSig, typeSig, param.Name), 
+                            Name = backingFieldName,
+                            Visibility = Visibility.Private
+                        });
+
+                        var setParams = new List<ParameterSignature> {new ParameterSignature(typeSig, "value")};
+                        var getMethodSig = new MethodSignature(typeSig, declaringTypeSig, "get_"+backingFieldName, new List<ParameterSignature>());
+                        var setMethodSig = new MethodSignature(new TypeSignature(typeof(void)), declaringTypeSig, "set_"+backingFieldName, setParams);
+                        MemberOptions.Add(getMethodSig, Weaver.MemberOptions.UseOriginInstructions);
+                        MemberOptions.Add(setMethodSig, Weaver.MemberOptions.UseOriginInstructions);
+                    }
+                    else
+                    {
+                        WriteLine("private {0} {1};", paramTypeName, backingFieldName);
+                    }
+
                     WriteLine("public {0} {1}", paramTypeName, ToTitleCase(param.Name));
                     WriteStartBraceIndent();
                     WriteLine("get {{ return {0}; }}", backingFieldName);
                     WriteLine("set");
                     WriteStartBraceIndent();
+                    WriteLine("{0} = value;", backingFieldName);
+                    NewLine();
                     WriteLine("if( value == {0})", backingFieldName);
                     WriteLineIndent("return;");
-                    NewLine();
-                    WriteLine("{0} = value;", backingFieldName);
                     NewLine();
                     WriteLine("changedProperties.SetBit({0});", param.Id);
                     NewLine();
@@ -1687,6 +1718,7 @@ namespace Flood.Tools.RPCGen
                     throw new Exception("DataObject's Fields require an Id attribute.");
 
                 Id = id;
+                IsImplementedProperty = false;
             }
 
             public Parameter(PropertyInfo info)
@@ -1699,6 +1731,7 @@ namespace Flood.Tools.RPCGen
                     throw new Exception("DataObject's Properties require an Id attribute.");
 
                 Id = id;
+                IsImplementedProperty = IsPropertyImplemented(info);
             }
 
             public Parameter(string  name, Type type, int id)
@@ -1706,10 +1739,21 @@ namespace Flood.Tools.RPCGen
                 Name = name;
                 ParameterType = type;           
                 Id = id;
+                IsImplementedProperty = false;
             }
+
+            public static bool IsPropertyImplemented(PropertyInfo property)
+            {
+                var backingFieldName = "<" + property.Name + ">k__BackingField";
+                var fields = property.DeclaringType.GetFields(BindingFlags.Instance|BindingFlags.NonPublic);
+
+                return fields.All(f => f.Name != backingFieldName);
+            }
+
             public string Name;
             public Type ParameterType;
             public int Id;
+            public bool IsImplementedProperty; 
         }
 
         #endregion

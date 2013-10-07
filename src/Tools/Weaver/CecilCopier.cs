@@ -12,6 +12,29 @@ using TypeAttributes = Mono.Cecil.TypeAttributes;
 
 namespace Weaver
 {
+    [Flags]
+    public enum MemberOptions
+    {
+        None = 0,
+        //using destination instructions is the detault
+        UseOriginInstructions, 
+    }
+
+    public enum Visibility
+    {
+        Private,
+        Public,
+        Protected,
+        Internal
+    }
+
+    public struct MemberClone
+    {
+        public MemberSignature OriginMember;
+        public string Name;
+        public Visibility Visibility;
+    }
+
     public class CecilKey : CopyKey
     {
         public override bool Equals(object obj)
@@ -112,6 +135,8 @@ namespace Weaver
 
         private readonly Dictionary<TypeDefinition, TypeDefinition> stubTypes;
 
+        private readonly Dictionary<MemberReference, MemberOptions> memberOptions; 
+
         //Member prefix name
         public string NamePrefix { get; set; }
 
@@ -131,6 +156,7 @@ namespace Weaver
             NamePrefix = "";
 
             stubTypes = new Dictionary<TypeDefinition, TypeDefinition>();
+            memberOptions = new Dictionary<MemberReference, MemberOptions>();
 
             objectTypeRef = destinationModule.Import(typeof (object));
 
@@ -194,6 +220,25 @@ namespace Weaver
             }
         }
 
+        public void AddMemberOptions(MemberReference member, MemberOptions options)
+        {
+            if (memberOptions.ContainsKey(member))
+            {
+                memberOptions[member] |= options;
+                return;
+            }
+
+            memberOptions.Add(member, options);
+        }
+
+        public MemberOptions GetMemberOptions(MemberReference member)
+        {
+            if (memberOptions.ContainsKey(member))
+                return memberOptions[member];
+
+            return MemberOptions.None;
+        }
+
         private TypeDefinition GetDeclaringType(MemberReference member, bool throwMapException = true)
         {
             if (member.DeclaringType == null)
@@ -251,7 +296,7 @@ namespace Weaver
                 return true;
             }
 
-            if (CecilUtils.GetScope(@ref).Name == destinationModule.Assembly.Name.Name)
+            if (CecilUtils.GetScopeName(@ref) == destinationModule.Assembly.Name.Name)
             {
                 localRef = CecilUtils.GetMemberDef(destinationModule, @ref);
             }
@@ -265,7 +310,10 @@ namespace Weaver
                 if (CecilUtils.AreScopesEqual(localDeclaringType, @ref.DeclaringType))
                     return false;
 
-                var remoteDef = CecilUtils.GetMemberDef(localDeclaringType.Resolve(), @ref);
+                var remoteDef = CecilUtils.GetMemberDef(localDeclaringType.Resolve(), @ref, true);
+                if(remoteDef == null)
+                    return false;
+
                 localRef = CecilUtils.GetReference(destinationModule, remoteDef);
             }
 
@@ -638,16 +686,6 @@ namespace Weaver
         [MemoizeCopy]
         public TypeDefinition Copy(TypeDefinition def, bool isStubType)
         {
-            TypeReference typeRef;
-            if (TryGetCopy(def, out typeRef))
-                return typeRef as TypeDefinition;
-
-            TypeDefinition declaringType = GetDeclaringType(def, false);
-            if (def.IsNested && declaringType == null)
-                declaringType = Copy(def.DeclaringType, true);
-
-            var typeCollection = (declaringType == null) ? this.destinationModule.Types : declaringType.NestedTypes;
-
             TypeDefinition ret;
             if (stubTypes.ContainsKey(def))
             {
@@ -655,6 +693,16 @@ namespace Weaver
             }
             else
             {
+                TypeReference typeRef;
+                if (TryGetLocalReference(def, out typeRef))
+                    return typeRef as TypeDefinition;
+
+                TypeDefinition declaringType = GetDeclaringType(def, false);
+                if (def.IsNested && declaringType == null)
+                    declaringType = Copy(def.DeclaringType, true);
+
+                var typeCollection = (declaringType == null) ? this.destinationModule.Types : declaringType.NestedTypes;
+
                 ret = typeCollection.FirstOrDefault(t => t.Name == def.Name);
                 if (ret != null)
                 {
@@ -1085,7 +1133,9 @@ namespace Weaver
 
                 if (destMethodDef != null)
                 {
+                    PushCopy(origMethodDef);
                     Merge(origMethodDef, destMethodDef);
+                    PopCopy();
                     continue;
                 }
 
@@ -1108,6 +1158,15 @@ namespace Weaver
             AddDelayedCopy(def1, def2,
                 (originObject, destObject) =>
                     {
+                        var methodRef = GetParentCopy<MethodReference>();
+
+                        if (GetMemberOptions(methodRef).HasFlag(MemberOptions.UseOriginInstructions))
+                        {
+                            var tmp = originObject;
+                            originObject = destObject;
+                            destObject = tmp;
+                        }
+
                         destObject.Clear();
                         var instructionMap = new Dictionary<Instruction, Instruction>();
                         foreach(var i in originObject)
@@ -1128,6 +1187,15 @@ namespace Weaver
 
         public void  Merge(Collection<VariableDefinition>def1, Collection<VariableDefinition> def2)
         {
+            var methodRef = GetParentCopy<MethodReference>();
+
+            if (GetMemberOptions(methodRef).HasFlag(MemberOptions.UseOriginInstructions))
+            {
+                var tmp = def1;
+                def1 = def2;
+                def2 = tmp;
+            }
+
             var variables = def1.ToList();
 
             //TODO dont override destination instructions always

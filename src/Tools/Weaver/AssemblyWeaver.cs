@@ -102,6 +102,55 @@ namespace Weaver
             CheckErrors();
         }
 
+        public void CloneMembers(List<MemberClone> clones)
+        {
+            foreach (var clone in clones)
+            {
+                var memberRef = CecilUtils.GetMember(TargetModule, clone.OriginMember);
+
+                var propertyRef = memberRef as PropertyReference;
+                if (propertyRef != null)
+                {
+                    var propertyDef = propertyRef.Resolve();
+
+                    var clone1 = clone;
+                    Copier.InitCopy = (origin, copy) =>
+                    {
+                        if (origin == propertyDef)
+                            ((PropertyReference) copy).Name = clone1.Name;
+
+                        if ( origin == propertyDef.GetMethod)
+                            ((MethodReference) copy).Name = "get_" + clone1.Name;
+
+                        if (origin == propertyDef.SetMethod)
+                            ((MethodReference) copy).Name = "set_" + clone1.Name;
+                    };
+
+                    Copier.IsMemoizationEnabled = false;
+                    var @ref = Copier.Copy<PropertyDefinition>(propertyDef);
+                    Copier.IsMemoizationEnabled = true;
+                    Copier.InitCopy = null;
+
+                    var declaringTypeDef = CecilUtils.GetMemberDef(TargetModule, propertyRef.DeclaringType.Resolve());
+                    declaringTypeDef.Properties.Add(@ref);
+                    continue;
+                }
+
+                throw new NotImplementedException();
+            }
+
+            Copier.Process();
+        }
+
+        public void AddMemberOptions(Dictionary<MemberSignature,MemberOptions> options)
+        {
+            foreach (var optionsKV in options)
+            {
+                var memberRef = CecilUtils.GetMember(TargetModule, optionsKV.Key);
+                Copier.AddMemberOptions(memberRef, optionsKV.Value);
+            }
+        }
+
         public void Write(string outputAssemblyPath)
         {
             var fileName = Path.GetFileName(outputAssemblyPath);

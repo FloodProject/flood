@@ -72,6 +72,9 @@ namespace Flood.Tools.RPCGen
         public readonly List<Type> RpcTypes;
         public readonly Dictionary<TypeSignature, TypeSignature> DataObjectsMap;
 
+        public readonly List<MemberClone> MemberClones;
+        public readonly Dictionary<MemberSignature, MemberOptions> MemberOptions;
+
         Logger log = new Logger(Logger.LogLevel.Info);
 
         public Compiler(Assembly assembly, string outputDir)
@@ -83,6 +86,9 @@ namespace Flood.Tools.RPCGen
 
             RpcTypes = new List<Type>();
             DataObjectsMap = new Dictionary<TypeSignature, TypeSignature>();
+
+            MemberClones = new List<MemberClone>();
+            MemberOptions = new Dictionary<MemberSignature, MemberOptions>();
         }
 
         public void Process()
@@ -140,6 +146,12 @@ namespace Flood.Tools.RPCGen
 
             var gen = new Generator(type.Assembly);
             var dataObjectFullName = gen.GenerateDataObject(type);
+
+            foreach (var clone in gen.MemberClones)
+                MemberClones.Add(clone);
+
+            foreach (var optionKV in gen.MemberOptions)
+                MemberOptions.Add(optionKV.Key, optionKV.Value);
 
             apiWriter.WriteGeneratorToFile(type, gen);
 
@@ -209,6 +221,8 @@ namespace Flood.Tools.RPCGen
 
                 //Add API generated assembly to API assembly
                 weaver = new AssemblyWeaver(apiPath);
+                weaver.CloneMembers(MemberClones);
+                weaver.AddMemberOptions(MemberOptions);
                 //Merge some generated files.
                 weaver.MergeTypes(apiGenPaths.DllPath, DataObjectsMap);
                 //Add all the other generated types.
