@@ -21,6 +21,7 @@ namespace Weaver.Util
     {
         public CopyNode Previous { get; private set; }
         public object Value { get; private set; }
+        public object Copy;
 
         public CopyNode(object value)
         {
@@ -329,6 +330,9 @@ namespace Weaver.Util
                 PushCopy(from);
                 pushed = true;
             }
+
+            CopyCurrent.Copy = to;
+
             if (IsMemoizationEnabled &&
                 typesWithMemoization.Contains(typeof(T)) &&
                 !ContainsCopy(from))
@@ -398,6 +402,9 @@ namespace Weaver.Util
                 PushCopy(from);
                 pushed = true;
             }
+
+            CopyCurrent.Copy = to;
+
             if(typesWithMemoization.Contains(typeof(T)) &&
                !ContainsCopy(from))
                 SetCopy(from, to);
