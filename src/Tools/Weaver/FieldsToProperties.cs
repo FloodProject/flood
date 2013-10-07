@@ -25,8 +25,8 @@ namespace Weaver
         {
             foreach (var field in fields)
             {
-                var typeDef = CecilUtils.GetTypeDef(weaver.TargetModule, field.DeclaringType);
-                var fieldDef = CecilUtils.GetTypeFieldDef(typeDef, field);
+                var typeDef = CecilUtils.GetTypeDef(weaver.TargetModule, new TypeSignature(field.DeclaringType));
+                var fieldDef = CecilUtils.GetTypeFieldDef(typeDef, new FieldSignature(field));
 
                 var propertyDef = AddProperty(typeDef, fieldDef.Name, fieldDef.FieldType);
 

@@ -41,7 +41,7 @@ namespace Weaver
                 if(type.Assembly != assembly)
                     throw new Exception("Expected types of same assembly.");
 
-                var typeDef = CecilUtils.GetTypeDef(origAssemblyDef.MainModule, type);
+                var typeDef = CecilUtils.GetTypeDef(origAssemblyDef.MainModule, new TypeSignature(type));
 
                 copier.Copy(typeDef, false);
             }

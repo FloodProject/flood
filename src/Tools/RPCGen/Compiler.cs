@@ -70,7 +70,7 @@ namespace Flood.Tools.RPCGen
         private GeneratorWriter apiWriter;
 
         public readonly List<Type> RpcTypes;
-        public readonly Dictionary<string, string> DataObjectsMap;
+        public readonly Dictionary<TypeSignature, TypeSignature> DataObjectsMap;
 
         Logger log = new Logger(Logger.LogLevel.Info);
 
@@ -82,7 +82,7 @@ namespace Flood.Tools.RPCGen
             apiWriter = new GeneratorWriter(Path.Combine(outputDir, "API"));
 
             RpcTypes = new List<Type>();
-            DataObjectsMap = new Dictionary<string, string>();
+            DataObjectsMap = new Dictionary<TypeSignature, TypeSignature>();
         }
 
         public void Process()
@@ -103,7 +103,7 @@ namespace Flood.Tools.RPCGen
                         Debug.Assert(type.IsValueType || type.IsClass);
                         var dataObjectFullName = ProcessDataObject(type);
                         RpcTypes.Add(type);
-                        DataObjectsMap.Add(dataObjectFullName, type.FullName);
+                        DataObjectsMap.Add(dataObjectFullName, new TypeSignature(type));
                     }
 
                     if (Metadata.IsException(type))
@@ -131,7 +131,7 @@ namespace Flood.Tools.RPCGen
             apiWriter.WriteGeneratorToFile(type, gen);
         }
 
-        private string ProcessDataObject(Type type)
+        private TypeSignature ProcessDataObject(Type type)
         {
             log.Debug("DataObject: {0}", type.Name);
 

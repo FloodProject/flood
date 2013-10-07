@@ -77,7 +77,7 @@ namespace Weaver
 
             foreach (var type in types)
             {
-                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, type);
+                var typeDef = CecilUtils.GetTypeDef(origAssembly.MainModule, new TypeSignature(type));
 
                 Copier.Copy(typeDef, areStubTypes);
             }
@@ -86,7 +86,7 @@ namespace Weaver
             CheckErrors();
         }
 
-        public void MergeTypes(string origAssemblyPath, Dictionary<string, string> types)
+        public void MergeTypes(string origAssemblyPath, Dictionary<TypeSignature, TypeSignature> types)
         {
             var origAssembly = CecilUtils.GetAssemblyDef(origAssemblyPath);
 

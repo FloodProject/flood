@@ -6,6 +6,7 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Pdb;
 using System.IO;
+using Mono.Collections.Generic;
 
 namespace Weaver.Util
 {
@@ -53,78 +54,32 @@ namespace Weaver.Util
             return assemblyDef;
         }
 
-        public static TypeDefinition GetTypeDef(ModuleDefinition module, Type type, bool doReturnNull = false)
+        public static TypeDefinition GetTypeDef(ModuleDefinition module, TypeSignature typeSignature, bool doReturnNull = false)
         {
-            return GetTypeDef(module, GetFriendlyTypeName(type), doReturnNull);
+            if (typeSignature.DeclaringType == null)
+                return GetTypeDef(module.Types, typeSignature, doReturnNull);
+
+            var declaringType = GetTypeDef(module, typeSignature.DeclaringType, doReturnNull);
+            return GetTypeDef(declaringType.NestedTypes, typeSignature, doReturnNull);
         }
 
-        public static TypeDefinition GetTypeDef(ModuleDefinition module, TypeReference type, bool doReturnNull = false)
+        private static TypeDefinition GetTypeDef(Collection<TypeDefinition> types, TypeSignature typeSignature, bool doReturnNull = false)
         {
-            return GetTypeDef(module, type.FullName, doReturnNull);
+            foreach (var type in types)
+                if (new TypeSignature(type) == typeSignature)
+                    return type;
+
+            if (!doReturnNull)
+                throw new Exception("Type not found.");
+
+            return null;
         }
 
-        public static TypeDefinition GetTypeDef(ModuleDefinition module, string typeName, bool doReturnNull = false)
-        {
-            typeName = typeName.Replace("+", "/");
-            var typeNames = typeName.Split('/');
-
-            var type = module.Types.FirstOrDefault(t => t.FullName == typeNames[0]);
-            for (int i = 1; i < typeNames.Length && type != null; i++)
-                type = GetTypeDef(type, typeNames[i], doReturnNull);
-
-            return type;
-        }
-
-        public static TypeDefinition GetTypeDef(TypeDefinition type, string typeName, bool doReturnNull = false)
-        {
-            type = type.NestedTypes.FirstOrDefault(t => t.Name == typeName);
-
-            if(type != null || doReturnNull)
-                return type;
-
-            throw new Exception("Type not found.");
-        }
-
-        public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodInfo origMethod)
-        {
-            var origMethodParams = origMethod.GetParameters().Select(p => GetFriendlyTypeName(p.ParameterType));
-
-            return GetTypeMethodDef(destType, origMethod.Name, origMethodParams.ToList());
-        }
-
-        public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodReference origMethod)
-        {
-            var origMethodParams = origMethod.Parameters.Select(p => p.ParameterType.FullName);
-
-            return GetTypeMethodDef(destType, origMethod.Name, origMethodParams.ToList());
-        }
-
-        public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, string origMethodName,
-                                                        List<string> origMethodParams, bool doReturnNull = false)
+        public static MethodDefinition GetTypeMethodDef(TypeDefinition destType, MethodSignature method, bool doReturnNull = false)
         {
             foreach (var destMethod in destType.Methods)
-            {
-                if (destMethod.Name != origMethodName)
-                    continue;
-
-                if (destMethod.Parameters.Count != origMethodParams.Count)
-                    continue;
-
-                var @continue = false;
-                for (var i = 0; i < destMethod.Parameters.Count; i++)
-                {
-                    if (destMethod.Parameters[i].ParameterType.FullName != origMethodParams[i])
-                    {
-                        @continue = true;
-                        break;
-                    }
-                }
-
-                if (@continue)
-                    continue;
-
-                return destMethod;
-            }
+                if (new MethodSignature(destMethod) == method)
+                    return destMethod;
 
             if (!doReturnNull)
                 throw new Exception("Method not found.");
@@ -132,28 +87,11 @@ namespace Weaver.Util
             return null;
         }
 
-        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldReference origField)
-        {
-            return GetTypeFieldDef(destType, origField.Name, origField.FieldType.FullName);
-        }
-
-        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldInfo fieldInfo)
-        {
-            return GetTypeFieldDef(destType, fieldInfo.Name, GetFriendlyTypeName(fieldInfo.FieldType));
-        }
-
-        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, string fieldName, string fieldType, bool doReturnNull = false)
+        public static FieldDefinition GetTypeFieldDef(TypeDefinition destType, FieldSignature field, bool doReturnNull = false)
         {
             foreach (var destField in destType.Fields)
-            {
-                if (destField.Name != fieldName)
-                    continue;
-
-                if (destField.FieldType.FullName != fieldType)
-                    continue;
-
-                return destField;
-            }
+                if (new FieldSignature(destField) == field)
+                    return destField;
 
             if (!doReturnNull)
                 throw new Exception("Field not found.");
@@ -161,29 +99,14 @@ namespace Weaver.Util
             return null;
         }
 
-        public static PropertyReference GetTypePropertyDef(TypeDefinition destType, PropertyReference origProperty)
-        {
-            return GetTypePropertyDef(destType, origProperty.Name, origProperty.PropertyType.FullName);
-        }
-
-        public static PropertyDefinition GetTypePropertyDef(TypeDefinition destType, PropertyInfo propertyInfo)
-        {
-            return GetTypePropertyDef(destType, propertyInfo.Name, GetFriendlyTypeName(propertyInfo.PropertyType));
-        }
-
-        public static PropertyDefinition GetTypePropertyDef(TypeDefinition destType, string propertyName,
-                                                            string propertyType)
+        public static PropertyDefinition GetTypePropertyDef(TypeDefinition destType, PropertySignature property, bool doReturnNull = false)
         {
             foreach (var destProperty in destType.Properties)
-            {
-                if (destProperty.Name != propertyName)
-                    continue;
+                if (new PropertySignature(destProperty) == property)
+                    return destProperty;
 
-                if (destProperty.PropertyType.FullName != propertyType)
-                    continue;
-
-                return destProperty;
-            }
+            if (!doReturnNull)
+                throw new Exception("Property not found.");
 
             return null;
         }
@@ -194,43 +117,62 @@ namespace Weaver.Util
             var memberRef = (MemberReference) @ref;
 
             if (memberRef is TypeReference)
-                return (T)(MemberReference) GetTypeDef(module, (TypeReference) memberRef);
+                return (T)(MemberReference) GetTypeDef(module, new TypeSignature((TypeReference)memberRef));
 
             if (memberRef.DeclaringType == null)
                 throw new NullReferenceException("memberRef.DeclaringType is null.");
 
-            var destTypeDef = GetTypeDef(module, memberRef.DeclaringType);
+            var destTypeDef = GetTypeDef(module, new TypeSignature(memberRef.DeclaringType));
 
             return (T) GetMemberDef(destTypeDef, memberRef);
         }
 
-        public static T GetMemberDef<T>(TypeDefinition declaringType, T @ref)
+        public static T GetMemberDef<T>(TypeDefinition declaringType, T @ref, bool doReturnNull = false)
             where T : MemberReference
         {
             var memberRef = (MemberReference) @ref;
 
             if (memberRef is TypeReference)
-                return (T)(MemberReference)GetTypeDef(declaringType, memberRef.Name);
+                return (T)(MemberReference)GetTypeDef(declaringType.NestedTypes, new TypeSignature((TypeReference)memberRef), doReturnNull);
 
             if (memberRef is FieldReference)
-                return (T)(MemberReference) GetTypeFieldDef(declaringType, (FieldReference) memberRef);
+                return (T)(MemberReference) GetTypeFieldDef(declaringType, new FieldSignature((FieldReference) memberRef));
 
             if (memberRef is PropertyReference)
-                return (T)(MemberReference) GetTypePropertyDef(declaringType, (PropertyReference) memberRef);
+                return (T)(MemberReference) GetTypePropertyDef(declaringType, new PropertySignature((PropertyReference) memberRef));
 
             if (memberRef is MethodReference)
-                return (T)(MemberReference) GetTypeMethodDef(declaringType, (MethodReference) memberRef);
+                return (T)(MemberReference) GetTypeMethodDef(declaringType, new MethodSignature((MethodReference) memberRef));
 
             throw new NotImplementedException();
         }
 
-        public static MemberReference GetReference(ModuleDefinition module, MemberReference @ref, bool addAssemblyReference = false)
+        public static MemberReference GetMember(ModuleDefinition module, MemberSignature memberSignature, bool doReturnNull = false)
         {
+            if(memberSignature is TypeSignature)
+                return GetTypeDef(module, (TypeSignature)memberSignature, doReturnNull);
+
+            var declaringType = GetTypeDef(module, memberSignature.DeclaringType);
+
+            if(memberSignature is FieldSignature)
+                return GetTypeFieldDef(declaringType, (FieldSignature) memberSignature, doReturnNull);
+
+            if(memberSignature is PropertySignature)
+                return GetTypePropertyDef(declaringType, (PropertySignature) memberSignature, doReturnNull);
+
+            if(memberSignature is MethodSignature)
+                return GetTypeMethodDef(declaringType, (MethodSignature) memberSignature, doReturnNull);
+
+            throw new NotImplementedException();
+        }
+
+        public static MemberReference GetReference(ModuleDefinition module, object @ref, bool addAssemblyReference = false)
+        {
+            MemberReference ret;
+
             List<AssemblyNameReference> assemblyNames = null;
             if (!addAssemblyReference)
                 assemblyNames = module.AssemblyReferences.ToList();
-
-            MemberReference ret;
 
             if (@ref is TypeReference)
                 ret = module.Import((TypeReference) @ref);
@@ -238,6 +180,12 @@ namespace Weaver.Util
                 ret = module.Import((FieldReference) @ref);
             else if (@ref is MethodReference)
                 ret = module.Import((MethodReference) @ref);
+            else if (@ref is Type)
+                ret = module.Import((Type) @ref);
+            else if (@ref is FieldInfo)
+                ret = module.Import((FieldInfo) @ref);
+            else if (@ref is MethodBase)
+                ret = module.Import((MethodBase) @ref);
             else
                 throw new NotImplementedException();
 
@@ -284,6 +232,16 @@ namespace Weaver.Util
                 return typeRef.Scope;
 
             return memberRef.DeclaringType.Scope;
+        }
+
+        public static string GetScopeName(MemberReference memberRef)
+        {
+            var scope = GetScope(memberRef);
+            var name = scope.Name;
+            if (name.EndsWith(".dll"))
+                name = name.Substring(0, name.Length - 4);
+
+            return name;
         }
 
         public static bool AreScopesEqual(MemberReference member1, MemberReference member2)

@@ -37,8 +37,8 @@ namespace Weaver
 
                 fowardedTypes.Add(type);
 
-                var fromTypeDef = CecilUtils.GetTypeDef(fromModule, type);
-                var toTypeDef = CecilUtils.GetTypeDef(toAssembly.MainModule, type);
+                var fromTypeDef = CecilUtils.GetTypeDef(fromModule, new TypeSignature(type));
+                var toTypeDef = CecilUtils.GetTypeDef(toAssembly.MainModule, new TypeSignature(type));
 
                 var fromTypeRef = CecilUtils.GetReference(fromModule, fromTypeDef);
                 var toTypeRef = CecilUtils.GetReference(weaver.TargetModule, toTypeDef);

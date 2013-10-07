@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Flood.RPC.Serialization;
 using RPCGen;
+using Weaver;
+using Weaver.Util;
 
 [assembly: InternalsVisibleToAttribute("Flood.Tools.RPCGen.Tests.GeneratorTests")]
 namespace Flood.Tools.RPCGen
@@ -30,17 +29,17 @@ namespace Flood.Tools.RPCGen
 
 #region Generate Data Objects
 
-        public string GenerateDataObject(Type type)
+        public TypeSignature GenerateDataObject(Type type)
         {
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
-            GenerateDataObjectClass(className, parameters, type.Namespace, false, GetTypeName(type), type);
+            GenerateDataObjectClass(className, parameters, type.Namespace, false, type);
 
-            return type.Namespace + "." + className;
+            return new TypeSignature(type.Namespace, className);
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, string origClassName = "", Type dataObjectType = null)
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, Type dataObjectType = null)
         {
             if (@namespace != null)
             {
