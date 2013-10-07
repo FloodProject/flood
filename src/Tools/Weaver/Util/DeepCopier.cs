@@ -218,6 +218,23 @@ namespace Weaver.Util
             CopyCurrent = CopyCurrent.Previous;
         }
 
+        protected T GetParentCopy<T>(bool doReturnNull = false)
+        {
+            var node = CopyCurrent;
+            while (node != null)
+            {
+                if (node.Value is T)
+                    return (T) node.Copy;
+
+                node = node.Previous;
+            }
+
+            if(!doReturnNull)
+                throw new Exception("Can not found parent copy of type "+ typeof(T));
+
+            return default(T);
+        }
+
         protected virtual bool IsValidCopyKey(object key)
         {
             return true;
