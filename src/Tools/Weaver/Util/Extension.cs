@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
+using Weaver;
 
 
 internal static class StringExtensions
@@ -49,5 +51,29 @@ internal static class CecilExtensions
             properties.AddRange(GetProperties(type.BaseType.Resolve()));
 
         return properties;
+    }
+
+    public static void SetAccessModifier(this MethodDefinition method, AccessModifiers access)
+    {
+        method.Attributes &= ~(MethodAttributes.Family | MethodAttributes.Assembly |
+                                MethodAttributes.Private | MethodAttributes.Public);
+
+        switch (access)
+        {
+            case AccessModifiers.Protected:
+                method.Attributes |= MethodAttributes.Family;
+                return;
+            case AccessModifiers.Internal:
+                method.Attributes |= MethodAttributes.Assembly;
+                return;
+            case AccessModifiers.Private:
+                method.Attributes |= MethodAttributes.Private;
+                return;
+            case AccessModifiers.Public:
+                method.Attributes |= MethodAttributes.Public;
+                return;
+            default:
+                throw new Exception();
+        }
     }
 }
