@@ -123,7 +123,7 @@ namespace Flood.Tools.RPCGen
                         {
                             OriginMember = new PropertySignature(declaringTypeSig, typeSig, param.Name), 
                             Name = backingFieldName,
-                            Visibility = Visibility.Private
+                            AccessModifier = AccessModifiers.Private
                         });
 
                         var setParams = new List<ParameterSignature> {new ParameterSignature(typeSig, "value")};

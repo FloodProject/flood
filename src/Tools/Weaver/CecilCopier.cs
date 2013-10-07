@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Weaver.Util;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
 using MethodBody = Mono.Cecil.Cil.MethodBody;
 using TypeAttributes = Mono.Cecil.TypeAttributes;
 
@@ -20,7 +21,7 @@ namespace Weaver
         UseOriginInstructions, 
     }
 
-    public enum Visibility
+    public enum AccessModifiers
     {
         Private,
         Public,
@@ -32,7 +33,7 @@ namespace Weaver
     {
         public MemberSignature OriginMember;
         public string Name;
-        public Visibility Visibility;
+        public AccessModifiers AccessModifier;
     }
 
     public class CecilKey : CopyKey
