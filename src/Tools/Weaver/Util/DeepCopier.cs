@@ -323,6 +323,12 @@ namespace Weaver.Util
 
         public void MergeAll<T>(T from, T to, params string[] ignores)
         {
+            var pushed = false;
+            if (CopyCurrent == null || !CopyCurrent.Value.Equals(from))
+            {
+                PushCopy(from);
+                pushed = true;
+            }
             if (IsMemoizationEnabled &&
                 typesWithMemoization.Contains(typeof(T)) &&
                 !ContainsCopy(from))
@@ -379,10 +385,19 @@ namespace Weaver.Util
                  log.Info("Cant merge property "+ property.Name);
              }
             log.Tabs--;
+
+            if(pushed)
+                PopCopy();
         }
 
         public void CopyAll<T>(T from, T to, params string[] ignores)
         {
+            var pushed = false;
+            if (CopyCurrent == null || !CopyCurrent.Value.Equals(from))
+            {
+                PushCopy(from);
+                pushed = true;
+            }
             if(typesWithMemoization.Contains(typeof(T)) &&
                !ContainsCopy(from))
                 SetCopy(from, to);
@@ -461,6 +476,9 @@ namespace Weaver.Util
                 log.Info("Cant copy property "+ property.Name);
             }
             log.Tabs--;
+
+            if(pushed)
+                PopCopy();
         }
 
         private string FullName(MemberInfo member)
