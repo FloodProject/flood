@@ -131,6 +131,9 @@ namespace Weaver
                     Copier.IsMemoizationEnabled = true;
                     Copier.InitCopy = null;
 
+                    @ref.GetMethod.SetAccessModifier(clone.AccessModifier);
+                    @ref.SetMethod.SetAccessModifier(clone.AccessModifier);
+
                     var declaringTypeDef = CecilUtils.GetMemberDef(TargetModule, propertyRef.DeclaringType.Resolve());
                     declaringTypeDef.Properties.Add(@ref);
                     continue;
