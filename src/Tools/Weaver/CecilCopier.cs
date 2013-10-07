@@ -117,6 +117,8 @@ namespace Weaver
 
         private TypeReference objectTypeRef;
 
+        public Action<object, object> InitCopy;
+
         //Options
         public bool canImport = false;
 
@@ -582,6 +584,9 @@ namespace Weaver
         {
             var ret = new PropertyDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.PropertyType));
 
+            if (InitCopy != null)
+                InitCopy(def, ret);
+
             CopyAll(def,ret,"Name","DeclaringType","PropertyType","MetadataToken");
 
             var declaringType = GetDeclaringType(def);
@@ -596,18 +601,20 @@ namespace Weaver
         {
             Copy(def.DeclaringType, true);
 
-            var declaringType = GetDeclaringType(def);
+            var ret = new MethodDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.ReturnType));
 
-            var ret = declaringType.Methods.FirstOrDefault(
-                m => m.FullName == def.FullName && 
-                     DoMethodParametersTypeMatch(m, def));
-            if (ret != null)
+            if(InitCopy != null)
+                InitCopy(def, ret);
+
+            // check for existing method
+            var r = GetDeclaringType(def).Methods.FirstOrDefault(
+                m => m.FullName == ret.FullName && 
+                     DoMethodParametersTypeMatch(m, ret));
+            if (r != null)
             {
-                Warn("Equivalent method already exists using it instead: "+def.FullName);
-                return ret;
+                Warn("Equivalent method already exists using it instead: "+r.FullName);
+                return r;
             }
-
-            ret = new MethodDefinition(NamePrefix+def.Name, def.Attributes, CopyReference(def.ReturnType));
 
             //ReturnType derive form MethodReturnType
             CopyAll(def,ret,"Name","DeclaringType", "MetadataToken", "Overrides", "ReturnType");
