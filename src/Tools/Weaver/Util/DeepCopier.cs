@@ -55,6 +55,8 @@ namespace Weaver.Util
         private readonly Logger log = new Logger(Logger.LogLevel.Warning);
         private readonly Logger publicLog = new Logger(Logger.LogLevel.Warning);
 
+        public bool IsMemoizationEnabled;
+
         public DeepCopier()
         {
             mergeMethodInfos = new Dictionary<Type, FastInvoke.FastInvokeHandler>();
@@ -65,6 +67,8 @@ namespace Weaver.Util
             CopyCurrent = null;
 
             delayedCopies = new List<IDelayedCopy>();
+
+            IsMemoizationEnabled = true;
 
             var type = this.GetType();
             foreach (var m in type.GetMethods(BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance))
@@ -290,8 +294,9 @@ namespace Weaver.Util
 
             PopCopy();
 
-            if(typesWithMemoization.Contains(type) &&
-               !ContainsCopy(value))
+            if (IsMemoizationEnabled &&
+                typesWithMemoization.Contains(type) &&
+                !ContainsCopy(value))
                 SetCopy(value, copy);
 
             return copy;
@@ -318,8 +323,9 @@ namespace Weaver.Util
 
         public void MergeAll<T>(T from, T to, params string[] ignores)
         {
-            if(typesWithMemoization.Contains(typeof(T)) &&
-               !ContainsCopy(from))
+            if (IsMemoizationEnabled &&
+                typesWithMemoization.Contains(typeof(T)) &&
+                !ContainsCopy(from))
                 SetCopy(from, to);
 
             log.Info("> Merge "+ typeof(T)+ " "+ from);
