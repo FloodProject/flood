@@ -74,7 +74,7 @@ namespace RemotingGen.Tests.Services
 
             impl.Data.BaseNumber = 1;
 
-            ((ServiceProxy)proxy).MessageProcessor.ReferenceManager.DispatchChanges();
+            ((ServiceProxy)proxy).RemotingManager.ReferenceManager.DispatchChanges();
 
             Assert.AreEqual(1, result.BaseNumber);
         }

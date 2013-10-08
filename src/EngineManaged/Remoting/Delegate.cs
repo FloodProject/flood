@@ -8,7 +8,7 @@ namespace Flood.Remoting
         public int LocalId { get; internal set; }
         public Delegate Delegate { get; internal set; }
 
-        public MessageProcessor MessageProcessor;
+        public RemotingManager remotingManager;
 
         protected RemotingDelegate() { }
     }
@@ -40,7 +40,7 @@ namespace Flood.Remoting
         public Message.DelegateCall CreateCall()
         {
             var callId = callProcessor.GetNextCallId();
-            return new Message.DelegateCall(callId, Peer, MessageProcessor, LocalId, RemoteId);
+            return new Message.DelegateCall(callId, Peer, remotingManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(Message.DelegateReply reply)

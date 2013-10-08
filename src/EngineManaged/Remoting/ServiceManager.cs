@@ -18,9 +18,9 @@ namespace Flood.Remoting
         private Dictionary<GlobalServiceId, int> localGlobalServiceIds;
         private Dictionary<int, GlobalServiceId> stubIdToGlobalServiceId;
 
-        private MessageProcessor MessageProcessor;
+        private RemotingManager remotingManager;
 
-        public ServiceManager(MessageProcessor messageProcessor)
+        public ServiceManager(RemotingManager remotingManager)
         {
             stubs = new Dictionary<int, ServiceStub>();
             impls = new Dictionary<object, ServiceImpl>();
@@ -29,7 +29,7 @@ namespace Flood.Remoting
             localGlobalServiceIds = new Dictionary<GlobalServiceId, int>();
             stubIdToGlobalServiceId = new Dictionary<int, GlobalServiceId>();
 
-            MessageProcessor = messageProcessor;
+            this.remotingManager = remotingManager;
         }
 
         internal void Process(Message data)
@@ -112,7 +112,7 @@ namespace Flood.Remoting
             if (globalServiceAttribute == null)
                 throw new Exception("Type has no attribute Service or GlobalService.");
 
-            var globalServiceId = MessageProcessor.ContextManager.GetGlobalServiceId(typeof(T));
+            var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(typeof(T));
 
             int serviceId;
             if(!localGlobalServiceIds.TryGetValue(globalServiceId, out serviceId))
@@ -127,7 +127,7 @@ namespace Flood.Remoting
             if (globalServiceAttribute == null)
                 throw new Exception("Type has no attribute Service or GlobalService.");
 
-            var globalServiceId = MessageProcessor.ContextManager.GetGlobalServiceId(typeof(T));
+            var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(typeof(T));
             var tuple = new Tuple<RemotingPeer, GlobalServiceId>(peer, globalServiceId);
             ServiceProxy globalServiceProxy;
             if(globalServiceProxies.TryGetValue(tuple, out globalServiceProxy))
@@ -163,11 +163,11 @@ namespace Flood.Remoting
 
             stubs.Add(implId, impl);
             impls.Add(service, impl);
-            impl.MessageProcessor = MessageProcessor;
+            impl.RemotingManager = remotingManager;
 
             if (globalServiceAttribute != null)
             {
-                var globalServiceId = MessageProcessor.ContextManager.GetGlobalServiceId(typeof(T));
+                var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(typeof(T));
                 localGlobalServiceIds.Add(globalServiceId, impl.LocalId);
                 stubIdToGlobalServiceId.Add(implId, globalServiceId);
             }
@@ -194,7 +194,7 @@ namespace Flood.Remoting
 
             stubs.Add(proxyId, proxy);
             proxies.Add(tuple, proxy);
-            proxy.MessageProcessor = MessageProcessor;
+            proxy.RemotingManager = remotingManager;
 
             return (T)stub;
         }
@@ -210,7 +210,7 @@ namespace Flood.Remoting
 
         internal bool HasGlobalService(Type type)
         {
-            var globalServiceId = MessageProcessor.ContextManager.GetGlobalServiceId(type);
+            var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(type);
             return localGlobalServiceIds.ContainsKey(globalServiceId);
         }
 

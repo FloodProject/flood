@@ -28,8 +28,8 @@ namespace Flood.Remoting
         protected void Subscribe<T>(int eventId, Delegate del)
             where T : RemotingDelegateImpl, new()
         {
-            var rpcDelegate = MessageProcessor.DelegateManager.CreateDelegateImpl<T>(del);
-            var data = new Message(Peer, MessageProcessor, LocalId, RemoteId, MessageType.EventSubscribe);
+            var rpcDelegate = RemotingManager.DelegateManager.CreateDelegateImpl<T>(del);
+            var data = new Message(Peer, RemotingManager, LocalId, RemoteId, MessageType.EventSubscribe);
             data.Serializer.WriteI32(eventId);
             data.Serializer.WriteI32(rpcDelegate.LocalId);
             data.Dispatch();
@@ -41,7 +41,7 @@ namespace Flood.Remoting
         {
             var delegateId = eventIdsDelegates[eventId];
 
-            var data = new Message(Peer, MessageProcessor, LocalId, RemoteId, MessageType.EventUnsubscribe);
+            var data = new Message(Peer, RemotingManager, LocalId, RemoteId, MessageType.EventUnsubscribe);
             data.Serializer.WriteI32(eventId);
             data.Serializer.WriteI32(delegateId);
             data.Dispatch();
@@ -52,7 +52,7 @@ namespace Flood.Remoting
         public Message.Call CreateCall(int methodId)
         {
             var callId = callProcessor.GetNextCallId();
-            return new Message.Call(callId, methodId, Peer, MessageProcessor, LocalId, RemoteId);
+            return new Message.Call(callId, methodId, Peer, RemotingManager, LocalId, RemoteId);
         }
 
         internal void ProcessReply(Message.Reply reply)

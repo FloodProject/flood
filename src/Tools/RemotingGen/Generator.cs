@@ -834,7 +834,7 @@ namespace RemotingGen
             WriteStartBraceIndent();
 
             var @delegate = @event.EventHandlerType;
-            WriteLine("var del = MessageProcessor.DelegateManager.CreateDelegateProxy<{0}>(peer, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
+            WriteLine("var del = RemotingManager.DelegateManager.CreateDelegateProxy<{0}>(peer, remoteDelegateId);", GetDelegateProxyClassName(@delegate));
             WriteLine("iface_.{0} += ({1}) del.Delegate;", @event.Name, GetTypeName(@delegate));
             WriteCloseBraceIndent();
         }
@@ -1262,12 +1262,12 @@ namespace RemotingGen
                     WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
                     break;
                 case TType.Delegate:
-                    WriteLine("var del = {0}.MessageProcessor.DelegateManager.CreateDelegateImpl<{1}>({2});", dataName, GetDelegateImplClassName(type), varName);
+                    WriteLine("var del = {0}.RemotingManager.DelegateManager.CreateDelegateImpl<{1}>({2});", dataName, GetDelegateImplClassName(type), varName);
                     WriteLine("{0}.Serializer.WriteI32(del.LocalId);", dataName);
                     // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
                     break;
                 case TType.Service:
-                    WriteLine("var serviceImpl = {0}.MessageProcessor.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, GetTypeName(type), varName);
+                    WriteLine("var serviceImpl = {0}.RemotingManager.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, GetTypeName(type), varName);
                     WriteLine("{0}.Serializer.WriteI32(serviceImpl.LocalId);", dataName, varName);
                     // TODO: Serialize Peer so we can create proxies to other peer's services.
                     break;
@@ -1292,10 +1292,10 @@ namespace RemotingGen
 
             WriteLine("var observable = (IObservableDataObject){0};", varName);
             WriteLine("if(observable.IsReference)", varName);
-            WriteLineIndent("{0}.MessageProcessor.ReferenceManager.Publish(observable);", dataName);
+            WriteLineIndent("{0}.RemotingManager.ReferenceManager.Publish(observable);", dataName);
             NewLine();
             WriteLine("int referenceLocalId;");
-            WriteLine("if(!{0}.MessageProcessor.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
+            WriteLine("if(!{0}.RemotingManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
             WriteLineIndent("referenceLocalId = 0;");
             WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
             NewLine();
@@ -1303,7 +1303,7 @@ namespace RemotingGen
             WriteLine("var baseType = typeof({0});", GetTypeName(type));
             WriteLine("ushort remoteContextId;");
             WriteLine("ushort dataObjectId;");
-            WriteLine("var polymorphicType = {0}.MessageProcessor.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
+            WriteLine("var polymorphicType = {0}.RemotingManager.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
             WriteLine("var isPolymorphic = polymorphicType != baseType;");
             WriteLine("{0}.Serializer.WriteBool(isPolymorphic);", dataName);
             WriteLine("if(isPolymorphic)");
@@ -1425,14 +1425,14 @@ namespace RemotingGen
                     break;
                 case TType.Delegate:
                     WriteLine("var remoteDelegateId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("var del = {0}.MessageProcessor.DelegateManager.CreateDelegateProxy<{1}>({0}.Peer, remoteDelegateId);", dataName, GetDelegateProxyClassName(type));
+                    WriteLine("var del = {0}.RemotingManager.DelegateManager.CreateDelegateProxy<{1}>({0}.Peer, remoteDelegateId);", dataName, GetDelegateProxyClassName(type));
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = ({1})del.Delegate;", varName, GetTypeName(type));
                     break;
                 case TType.Service:
                     WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = {1}.MessageProcessor.ServiceManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, GetTypeName(type), dataName);
+                    WriteLine("{0} = {1}.RemotingManager.ServiceManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, GetTypeName(type), dataName);
                     break;
                 case TType.Void:
                 default:
@@ -1458,12 +1458,12 @@ namespace RemotingGen
                 WriteStartBraceIndent();
                 WriteLine("var contextId = {0}.Serializer.ReadI16();", dataName);
                 WriteLine("var dataObjectId = {0}.Serializer.ReadI16();", dataName);
-                WriteLine("var dataObjectFactory = {0}.MessageProcessor.ContextManager.GetDataObjectFactory(contextId);", dataName);
-                WriteLine("{0} = ({1}) (object) dataObjectFactory.CreateDataObjectReference((ushort) dataObjectId, {2}.Peer, referenceRemoteId, {2}.MessageProcessor.ReferenceManager);", varName, GetTypeName(type), dataName);
+                WriteLine("var dataObjectFactory = {0}.RemotingManager.ContextManager.GetDataObjectFactory(contextId);", dataName);
+                WriteLine("{0} = ({1}) (object) dataObjectFactory.CreateDataObjectReference((ushort) dataObjectId, {2}.Peer, referenceRemoteId, {2}.RemotingManager.ReferenceManager);", varName, GetTypeName(type), dataName);
                 WriteCloseBraceIndent();
                 WriteLine("else");
                 WriteStartBraceIndent();
-                WriteLine("{0} = ({1}) (object) new {2}.Reference({3}.Peer, referenceRemoteId, {3}.MessageProcessor.ReferenceManager);", varName, GetTypeName(type), className, dataName);
+                WriteLine("{0} = ({1}) (object) new {2}.Reference({3}.Peer, referenceRemoteId, {3}.RemotingManager.ReferenceManager);", varName, GetTypeName(type), className, dataName);
                 WriteCloseBraceIndent();
             }
             else

@@ -72,26 +72,26 @@ namespace Flood.Remoting
         public Serializer Serializer;
         public MessageFlags Flags;
         public RemotingPeer Peer;
-        public MessageProcessor MessageProcessor;
+        public RemotingManager RemotingManager;
 
         public DataHeader Header;
 
-        public Message(RemotingPeer peer, MessageProcessor messageProcessor, Serializer serializer)
+        public Message(RemotingPeer peer, RemotingManager remotingManager, Serializer serializer)
         {
             Serializer = serializer;
             Peer = peer;
-            MessageProcessor = messageProcessor;
+            RemotingManager = remotingManager;
             Header = new DataHeader(Serializer);
             Flags = MessageFlags.None;
         }
 
-        private Message(RemotingPeer peer, MessageProcessor messageProcessor)
-            : this(peer, messageProcessor, peer.CreateSerializer())
+        private Message(RemotingPeer peer, RemotingManager remotingManager)
+            : this(peer, remotingManager, peer.CreateSerializer())
         {
         }
 
-        public Message(RemotingPeer peer, MessageProcessor messageProcessor, int localId, int remoteId, MessageType type, MessageFlags flags = MessageFlags.None)
-            : this(peer, messageProcessor)
+        public Message(RemotingPeer peer, RemotingManager remotingManager, int localId, int remoteId, MessageType type, MessageFlags flags = MessageFlags.None)
+            : this(peer, remotingManager)
         {
             Flags = flags;
             Header.CallType = type;
@@ -101,7 +101,7 @@ namespace Flood.Remoting
         }
 
         public Message(Message call, MessageType type, MessageFlags flags = MessageFlags.None)
-            : this(call.Peer, call.MessageProcessor ,call.Header.LocalId, call.Header.RemoteId, type, flags)
+            : this(call.Peer, call.RemotingManager ,call.Header.LocalId, call.Header.RemoteId, type, flags)
         {
         }
 
@@ -117,18 +117,18 @@ namespace Flood.Remoting
             public int MethodId;
             internal GlobalServiceId GlobalServiceId;
 
-            internal Call(int id, int methodId, RemotingPeer peer, MessageProcessor messageProcessor, int localId, int remoteId)
+            internal Call(int id, int methodId, RemotingPeer peer, RemotingManager remotingManager, int localId, int remoteId)
             {
                 Id = id;
                 MethodId = methodId;
-                Data = new Message(peer, messageProcessor, localId, remoteId, MessageType.Call);
+                Data = new Message(peer, remotingManager, localId, remoteId, MessageType.Call);
 
                 Data.Serializer.WriteI32(id);
                 Data.Serializer.WriteI32(methodId);
 
                 if (remoteId == 0)
                 {
-                    GlobalServiceId = messageProcessor.ServiceManager.GetGlobalServiceId(localId);
+                    GlobalServiceId = remotingManager.ServiceManager.GetGlobalServiceId(localId);
                     GlobalServiceId.Write(Data);
                 }
                 else
@@ -185,10 +185,10 @@ namespace Flood.Remoting
             public Message Data;
             public int Id;
 
-            internal DelegateCall(int id, RemotingPeer peer, MessageProcessor messageProcessor, int localId, int remoteId)
+            internal DelegateCall(int id, RemotingPeer peer, RemotingManager remotingManager, int localId, int remoteId)
             {
                 Id = id;
-                Data = new Message(peer, messageProcessor, localId, remoteId, MessageType.DelegateCall);
+                Data = new Message(peer, remotingManager, localId, remoteId, MessageType.DelegateCall);
                 
                 Data.Serializer.WriteI32(id);
             }

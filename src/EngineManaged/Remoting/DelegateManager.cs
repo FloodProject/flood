@@ -9,13 +9,13 @@ namespace Flood.Remoting
         protected Dictionary<int, RemotingDelegate> delegates;
         private int delegateIdCounter;
 
-        public MessageProcessor MessageProcessor  { get; private set; }
+        public RemotingManager remotingManager  { get; private set; }
 
-        public DelegateManager(MessageProcessor messageProcessor)
+        public DelegateManager(RemotingManager remotingManager)
         {
             delegates = new Dictionary<int, RemotingDelegate>();
 
-            MessageProcessor = messageProcessor;
+            this.remotingManager = remotingManager;
         }
 
         internal void Process(Message data)
@@ -52,7 +52,7 @@ namespace Flood.Remoting
             delegateProxy.Peer = peer;
             delegateProxy.LocalId = Interlocked.Increment(ref delegateIdCounter);
             delegateProxy.RemoteId = remoteId;
-            delegateProxy.MessageProcessor = MessageProcessor;
+            delegateProxy.remotingManager = remotingManager;
 
             delegates.Add(delegateProxy.LocalId, delegateProxy);
 
@@ -65,7 +65,7 @@ namespace Flood.Remoting
             var delegateImpl = Activator.CreateInstance<T>();
             delegateImpl.LocalId = Interlocked.Increment(ref delegateIdCounter);
             delegateImpl.Delegate = del;
-            delegateImpl.MessageProcessor = MessageProcessor;
+            delegateImpl.remotingManager = remotingManager;
 
             delegates.Add(delegateImpl.LocalId, delegateImpl);
 

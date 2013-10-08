@@ -58,7 +58,7 @@ namespace RemotingGen.Tests.Services
             impl.Data.Number = 1337;
 
             var ServiceProxy = (ServiceProxy) proxy;
-            ServiceProxy.MessageProcessor.ContextManager.RequestContext(ServiceProxy.Peer, typeof(IService).Assembly);
+            ServiceProxy.RemotingManager.ContextManager.RequestContext(ServiceProxy.Peer, typeof(IService).Assembly);
 
             var task = proxy.GetDataObject();
 

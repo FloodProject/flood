@@ -60,13 +60,12 @@ namespace Flood.Network
 
         protected Flood.Host host;
 
-        public MessageProcessor ServiceManager { get; private set; }
+        public RemotingManager ServiceManager { get; private set; }
         
         public Host()
         {
-            var localPeer = new SessionRemotingPeer(null);
             var contextLoader = new PackageContextLoader();
-            ServiceManager = new MessageProcessor(localPeer, contextLoader);
+            ServiceManager = new RemotingManager(contextLoader);
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)

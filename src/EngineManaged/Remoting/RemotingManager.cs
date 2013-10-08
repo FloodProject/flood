@@ -3,23 +3,19 @@ using Flood.Remoting.Serialization;
 
 namespace Flood.Remoting
 {
-    public class MessageProcessor
+    public class RemotingManager
     {
-        public RemotingPeer Local { get; private set; }
-
         public ServiceManager ServiceManager { get; private set; }
         public DelegateManager DelegateManager { get; private set; }
         public ReferenceManager ReferenceManager  { get; private set; }
         public ContextManager ContextManager { get; private set; }
 
-        public MessageProcessor(RemotingPeer local, IContextLoader contextLoader)
+        public RemotingManager(IContextLoader contextLoader)
         {
             ServiceManager = new ServiceManager(this);
             DelegateManager = new DelegateManager(this);
             ReferenceManager = new ReferenceManager(this);
             ContextManager = new ContextManager(this, contextLoader);
-
-            Local = local;
         }
 
         public void Process(byte[] data, RemotingPeer peer)

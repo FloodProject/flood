@@ -1,6 +1,5 @@
 ﻿using Flood.Remoting;
 using Flood.Remoting.Serialization;
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -39,10 +38,10 @@ namespace RemotingGen.Tests.Services
 
         public class MockMessagePeer : RemotingPeer
         {
-            public MessageProcessor Manager;
+            public RemotingManager Manager;
             public int Id;
 
-            public MockMessagePeer(MessageProcessor mgr, int id)
+            public MockMessagePeer(RemotingManager mgr, int id)
             {
                 Manager = mgr;
                 Id = id;
@@ -88,16 +87,16 @@ namespace RemotingGen.Tests.Services
             return messageProcessor.ServiceManager.GetService<T>(remotePeer, serviceImpl.LocalId);
         }
 
-        public static MessageProcessor CreateMessageProcessor()
+        public static RemotingManager CreateMessageProcessor()
         {
             var localPeer = CreatePeer(null);
             var contextLoader = new MockContextLoader();
-            return localPeer.Manager = new MessageProcessor(localPeer, contextLoader);
+            return localPeer.Manager = new RemotingManager(localPeer, contextLoader);
         }
 
-        public static MockMessagePeer CreatePeer(MessageProcessor messageProcessor)
+        public static MockMessagePeer CreatePeer(RemotingManager remotingManager)
         {
-            return new MockMessagePeer(messageProcessor, peerCounter++);
+            return new MockMessagePeer(remotingManager, peerCounter++);
         }
     }
 }

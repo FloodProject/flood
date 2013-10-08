@@ -61,7 +61,7 @@ namespace RemotingGen.Tests.Services
 
             impl.Data.Number = 1337;
 
-            ((ServiceProxy) proxy).MessageProcessor.ReferenceManager.DispatchChanges();
+            ((ServiceProxy) proxy).RemotingManager.ReferenceManager.DispatchChanges();
 
             Assert.AreEqual(1337, data.Number);
         }

@@ -59,9 +59,9 @@ namespace Flood.Remoting
 
         private HashSet<Reference> referencesChanged;
 
-        private MessageProcessor MessageProcessor;
+        private RemotingManager remotingManager;
 
-        public ReferenceManager(MessageProcessor messageProcessor)
+        public ReferenceManager(RemotingManager remotingManager)
         {
             referencesChanged = new HashSet<Reference>();
 
@@ -69,7 +69,7 @@ namespace Flood.Remoting
             dataObjectToReference = new Dictionary<IObservableDataObject, Reference>();
             subscriptionToReference = new Dictionary<Subscription, Reference>();
 
-            MessageProcessor = messageProcessor;
+            this.remotingManager = remotingManager;
         }
 
         public void Process(Message data)
@@ -138,7 +138,7 @@ namespace Flood.Remoting
 
                 foreach (var peer in reference.Subscribers)
                 {
-                    var peerData = new Message(peer, MessageProcessor, reference.LocalId, 0, MessageType.ReferenceChanges);
+                    var peerData = new Message(peer, remotingManager, reference.LocalId, 0, MessageType.ReferenceChanges);
                     // TODO: Optimize this. Dont't serialize again for each peer.
                     reference.DataObject.Write(peerData, bitFields, bitFieldsCount);
                     peerData.Dispatch();
@@ -177,7 +177,7 @@ namespace Flood.Remoting
 
             subscriptionToReference.Add(reference.Subscription, reference);
 
-            var data = new Message(peer, MessageProcessor, reference.LocalId, remoteId, MessageType.ReferenceSubscribe);
+            var data = new Message(peer, remotingManager, reference.LocalId, remoteId, MessageType.ReferenceSubscribe);
             data.Dispatch();
         }
 

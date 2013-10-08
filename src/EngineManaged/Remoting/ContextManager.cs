@@ -54,7 +54,7 @@ namespace Flood.Remoting
 
         public static GlobalServiceId Read(Message data)
         {
-            var contexId = data.MessageProcessor.ContextManager.ReadContextId(data);
+            var contexId = data.RemotingManager.ContextManager.ReadContextId(data);
             var id = (ushort)data.Serializer.ReadI16();
 
             return new GlobalServiceId(contexId, id);
@@ -83,17 +83,17 @@ namespace Flood.Remoting
 
         private int localIdCounter;
 
-        private MessageProcessor MessageProcessor;
+        private RemotingManager remotingManager;
         private IContextLoader Loader;
 
-        public ContextManager(MessageProcessor messageProcessor, IContextLoader loader)
+        public ContextManager(RemotingManager remotingManager, IContextLoader loader)
         {
             localIdToContext = new Dictionary<int, ContextInfo>();
             contextIdToContext = new Dictionary<IContextId, ContextInfo>();
             assemblyToContext = new Dictionary<Assembly, ContextInfo>();
             localIdCounter = 1;
 
-            MessageProcessor = messageProcessor;
+            this.remotingManager = remotingManager;
             Loader = loader;
         }
 
@@ -127,13 +127,13 @@ namespace Flood.Remoting
                         throw new Exception("Context could not be loaded.");
 
                     var cxt = GetCreateContext(t.Result);
-                    var res = new Message(data.Peer, MessageProcessor, cxt.LocalId, remoteId, MessageType.ContextResponse);
+                    var res = new Message(data.Peer, remotingManager, cxt.LocalId, remoteId, MessageType.ContextResponse);
                     res.Dispatch();
                 });
                 return;
             }
 
-            var response = new Message(data.Peer, MessageProcessor, context.LocalId, remoteId, MessageType.ContextResponse);
+            var response = new Message(data.Peer, remotingManager, context.LocalId, remoteId, MessageType.ContextResponse);
             response.Dispatch();
         }
 
@@ -155,7 +155,7 @@ namespace Flood.Remoting
         public void RequestContext(RemotingPeer peer, Assembly assembly)
         {
             var context = GetCreateContext(assembly);
-            var request = new Message(peer, MessageProcessor, context.LocalId, 0, MessageType.ContextRequest);
+            var request = new Message(peer, remotingManager, context.LocalId, 0, MessageType.ContextRequest);
             context.ContextId.Write(request);
             request.Dispatch();
         }

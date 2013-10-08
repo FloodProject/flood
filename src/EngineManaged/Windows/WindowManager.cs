@@ -1,7 +1,6 @@
 ﻿
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Flood;
 using Flood.Remoting.Metadata;
 
 namespace Flood.Windows
@@ -33,7 +32,7 @@ namespace Flood.Windows
             windows.Add(windowName, window);
 
             var windowSettings = new WindowSettings(1000, 700, windowName, WindowStyles.TopLevel);
-            var nativeWindow = application.WindowManager.CreateWindow(windowSettings);
+            var nativeWindow = application.NativeWindowManager.CreateWindow(windowSettings);
             window.Init(nativeWindow, application.RenderDevice);
 
             return window;

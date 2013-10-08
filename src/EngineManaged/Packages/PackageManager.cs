@@ -1,10 +1,5 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flood.Packages;
-using Flood.RPC;
 
 namespace Flood.Packages
 {
@@ -14,10 +9,10 @@ namespace Flood.Packages
 
         private PackageLoader packageLoader;
 
-        public PackageManager(string packageFolder, RPCManager rpcManager)
+        public PackageManager(PackageLoader packageLoader)
         {
             Packages = new Dictionary<PackageName, IPackage>();
-            packageLoader = new PackageLoader(packageFolder, rpcManager);
+            this.packageLoader = packageLoader;
         }
 
         public IPackage GetLoadPackage(PackageName name)
