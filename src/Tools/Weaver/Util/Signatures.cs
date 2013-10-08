@@ -108,7 +108,7 @@ namespace Weaver.Util
 
         public override string ToString()
         {
-            if (Namespace == null)
+            if (DeclaringType != null)
                 return base.ToString();
 
             return string.Format("{0}.{1}", Namespace, Name);
@@ -120,11 +120,17 @@ namespace Weaver.Util
             if (type == null)
                 return false;
 
+            if (DeclaringType != null)
+                return base.Equals(obj);
+
             return type.Namespace == Namespace && base.Equals(obj);
         }
 
         public override int GetHashCode()
         {
+            if (DeclaringType != null)
+                return base.GetHashCode();
+
             return Namespace.GetHashCode() ^ base.GetHashCode();
         }
 
