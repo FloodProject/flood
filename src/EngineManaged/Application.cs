@@ -72,9 +72,13 @@ namespace Flood
             return false;
         }
 
-        public void Update()
+        public void Run()
         {
-            PlatformManager.Update();
+            while (true)
+            {
+                PlatformManager.Update();
+                System.Threading.Thread.Sleep(1);
+            }
         }
     }
 }
