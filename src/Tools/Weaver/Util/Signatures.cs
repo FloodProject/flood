@@ -75,9 +75,77 @@ namespace Weaver.Util
         }
     }
 
+    public class TypeSignatureCollection
+    {
+        public readonly TypeSignature[] Types;
+
+        public TypeSignatureCollection(IList<Type> types)
+        {
+            Types = new TypeSignature[types.Count()];
+            for (int i = 0; i < types.Count(); i++)
+                Types[i] = new TypeSignature(types[i]);
+        }
+
+        public TypeSignatureCollection(IList<TypeReference> types)
+        {
+            Types = new TypeSignature[types.Count()];
+            for (int i = 0; i < types.Count(); i++)
+                Types[i] = new TypeSignature(types[i]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(",", Types.Select(t => t.ToString()));
+        }
+
+        public override bool Equals(object obj)
+        {
+            var types = obj as TypeSignatureCollection;
+            if (types == null)
+                return false;
+
+            if (types.Types.Count() != Types.Count())
+                return false;
+
+            for (var i = 0; i < Types.Count(); i++)
+                if (types.Types[i] != Types[i])
+                    return false;
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = 0;
+            var i = 0;
+
+            foreach (var type in Types)
+                hash ^= i++.GetHashCode() ^ type.GetHashCode();
+
+            return hash;
+        }
+
+        public static bool operator ==(TypeSignatureCollection m1, TypeSignatureCollection m2)
+        {
+            if (ReferenceEquals(m1, m2))
+                return true;
+
+            if (((object) m1 == null) || ((object) m2 == null))
+                return false;
+
+            return m1.Equals(m2);
+        }
+
+        public static bool operator !=(TypeSignatureCollection m1, TypeSignatureCollection m2)
+        {
+            return !(m1==m2);
+        }
+    }
+
     public class TypeSignature : MemberSignature
     {
         public readonly string Namespace;
+        public readonly TypeSignatureCollection GenericTypeArguments;
 
         public TypeSignature(TypeSignature declaringType, string name)
             : base(declaringType, name)
@@ -95,12 +163,19 @@ namespace Weaver.Util
             : base((type.DeclaringType == null)? null : new TypeSignature(type.DeclaringType), type.Name)
         {
             Namespace = type.Namespace;
+
+            var typeGen = type as GenericInstanceType;
+            if (typeGen != null)
+                GenericTypeArguments = new TypeSignatureCollection(typeGen.GenericArguments);
         }
 
         public TypeSignature(Type type)
             : base((type.DeclaringType == null)? null : new TypeSignature(type.DeclaringType), type.Name)
         {
             Namespace = type.Namespace;
+
+            if(type.GenericTypeArguments.Any())
+                GenericTypeArguments = new TypeSignatureCollection(type.GenericTypeArguments);
         }
 
         public static readonly string  typeSeparator = "/";
@@ -111,13 +186,20 @@ namespace Weaver.Util
             if (DeclaringType != null)
                 return base.ToString();
 
-            return string.Format("{0}.{1}", Namespace, Name);
+            var genericArgs = "";
+            if (GenericTypeArguments != null && GenericTypeArguments.Types.Count() > 0)
+                genericArgs = string.Format("<{0}>", GenericTypeArguments);
+
+            return string.Format("{0}.{1}{2}", Namespace, Name, genericArgs);
         }
 
         public override bool Equals(object obj)
         {
             var type = obj as TypeSignature;
             if (type == null)
+                return false;
+
+            if (type.GenericTypeArguments != GenericTypeArguments)
                 return false;
 
             if (DeclaringType != null)
@@ -128,10 +210,15 @@ namespace Weaver.Util
 
         public override int GetHashCode()
         {
-            if (DeclaringType != null)
-                return base.GetHashCode();
+            var hash = 0;
 
-            return Namespace.GetHashCode() ^ base.GetHashCode();
+            if (GenericTypeArguments != null)
+                hash = GenericTypeArguments.GetHashCode();
+
+            if (DeclaringType != null || Namespace == null)
+                return hash ^ base.GetHashCode();
+
+            return hash ^ Namespace.GetHashCode() ^ base.GetHashCode();
         }
 
         public static bool operator ==(TypeSignature m1, TypeSignature m2)
