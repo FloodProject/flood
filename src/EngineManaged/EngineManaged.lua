@@ -10,6 +10,8 @@ project "EngineManaged"
 	flags { "Unsafe" }
 	location "."
 
+	SetupRemotingGen("EngineManaged", ".dll")
+
 	files
 	{
 		"EngineManaged.lua",

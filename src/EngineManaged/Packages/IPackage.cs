@@ -1,11 +1,11 @@
 ﻿
-using Flood.RPC;
+using Flood.Remoting;
 
 namespace Flood.Packages
 {
     public interface IPackage
     {
-        void OnLoad(RPCManager rpcManager);
+        void OnLoad(MessageProcessor messageProcessor);
 
         void Update();
     }

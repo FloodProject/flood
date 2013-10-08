@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
 using GUI.ControlInternal;
 
 namespace GUI.Controls

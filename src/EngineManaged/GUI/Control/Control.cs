@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flood;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
+using Flood.Remoting.Serialization;
 using GUI.Anim;
 using GUI.DragDrop;
 using GUI.Input;
@@ -24,7 +25,6 @@ namespace GUI.Controls
 
         private bool m_Disposed;
 
-        [Id(1)]
         private Control m_Parent;
 
         /// <summary>
@@ -122,6 +122,7 @@ namespace GUI.Controls
         /// <summary>
         /// The logical parent. It's usually what you expect, the control you've parented it to.
         /// </summary>
+        [Id(1)]
         public Control Parent
         {
             get { return m_Parent; }

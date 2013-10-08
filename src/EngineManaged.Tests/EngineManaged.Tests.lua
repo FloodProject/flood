@@ -7,7 +7,7 @@ project "EngineManaged.Tests"
 	
 	location "."
 	
-	SetupRPCGen("EngineManaged.Tests",".dll")
+	SetupRemotingGen("EngineManaged.Tests",".dll")
 
 	files
 	{

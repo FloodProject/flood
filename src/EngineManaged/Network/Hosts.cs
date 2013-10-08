@@ -1,6 +1,6 @@
-﻿using System;
-using System.Reflection;
-using Flood.RPC;
+﻿using System.Reflection;
+using Flood.Remoting;
+using System;
 using System.Threading.Tasks;
 
 namespace Flood.Network
@@ -26,20 +26,20 @@ namespace Flood.Network
             public string Name;
             public int MajorVersion;
 
-            public void Write(RPCData data)
+            public void Write(Message data)
             {
                 data.Serializer.WriteString(Name);
                 data.Serializer.WriteI32(MajorVersion);
             }
 
-            public void Read(RPCData data)
+            public void Read(Message data)
             {
                 Name = data.Serializer.ReadString();
                 MajorVersion = data.Serializer.ReadI32();
             }
         }
 
-        public override Task<Assembly> LoadContext(RPCPeer peer, IContextId contextId)
+        public override Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId)
         {
             throw new NotImplementedException();
         }
@@ -60,18 +60,18 @@ namespace Flood.Network
 
         protected Flood.Host host;
 
-        public RPCManager ServiceManager { get; private set; }
+        public MessageProcessor ServiceManager { get; private set; }
         
         public Host()
         {
-            var localPeer = new SessionRPCPeer(null);
+            var localPeer = new SessionRemotingPeer(null);
             var contextLoader = new PackageContextLoader();
-            ServiceManager = new RPCManager(localPeer, contextLoader);
+            ServiceManager = new MessageProcessor(localPeer, contextLoader);
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)
         {
-            var peer = new SessionRPCPeer(session);
+            var peer = new SessionRemotingPeer(session);
 
             ServiceManager.Process(packet.Read().ToArray(), peer);
         }

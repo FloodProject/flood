@@ -1,6 +1,6 @@
 ﻿
 using System.Collections.Generic;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
 
 namespace Flood.Windows
 {

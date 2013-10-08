@@ -1,5 +1,5 @@
-﻿using Flood.RPC;
-using Flood.RPC.Serialization;
+﻿using Flood.Remoting;
+using Flood.Remoting.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Flood.Network
 {
-    public class SessionRPCPeer : RPCPeer
+    public class SessionRemotingPeer : RemotingPeer
     {
         public Session Session { get; private set; }
 
-        public SessionRPCPeer(Session session)
+        public SessionRemotingPeer(Session session)
         {
             Session = session;
         }
 
-        public override void Dispatch(RPCData data)
+        public override void Dispatch(Message data)
         {
             var bytes = data.Serializer.Buffer.ReadAllBytes();
 
@@ -28,14 +28,14 @@ namespace Flood.Network
             Session.Peer.QueuePacket(packet, 0);
         }
 
-        public override RPC.Serialization.Serializer CreateSerializer()
+        public override Remoting.Serialization.Serializer CreateSerializer()
         {
             return new BinarySerializer();
         }
 
         public override bool Equals(object other)
         {
-            var s2 = other as SessionRPCPeer;
+            var s2 = other as SessionRemotingPeer;
             if (s2 == null)
                 return false;
 
@@ -47,17 +47,17 @@ namespace Flood.Network
             return Session.GetHashCode();
         }
 
-        private static PacketFlags ConvertFlags(RPCFlags flags)
+        private static PacketFlags ConvertFlags(MessageFlags flags)
         {
             switch (flags)
             {
-                case RPCFlags.None:
+                case MessageFlags.None:
                     return 0;
-                case RPCFlags.Encrypted:
+                case MessageFlags.Encrypted:
                     return PacketFlags.Encrypted;
-                case RPCFlags.Signed:
+                case MessageFlags.Signed:
                     return PacketFlags.Signed;
-                case RPCFlags.Compressed:
+                case MessageFlags.Compressed:
                     return PacketFlags.Compressed;
                 default:
                     throw new NotImplementedException();

@@ -2,7 +2,7 @@
 using System.Threading;
 using Flood.Network;
 using Flood.Packages;
-using Flood.RPC;
+using Flood.Remoting;
 
 namespace Flood.Editor
 {
@@ -12,12 +12,9 @@ namespace Flood.Editor
 
         public static void Main(string[] args)
         {
-            var rpcManager = new RPCManager(new SessionRPCPeer(null), new PackageContextLoader());
+            var messageProcessor = new MessageProcessor(new SessionRemotingPeer(null), new PackageContextLoader());
 
-            packageManager = new PackageManager("Packages", rpcManager);
-
-            packageManager.GetLoadPackage(new PackageName("EditorPackage.0.0.0"));
-
+            packageManager = new PackageManager("Packages", messageProcessor);
             while (true)
             {
                 packageManager.UpdatePackages();

@@ -1,4 +1,4 @@
-﻿using Flood.RPC.Metadata;
+﻿using Flood.Remoting.Metadata;
 
 namespace Flood.Editor.Shared
 {

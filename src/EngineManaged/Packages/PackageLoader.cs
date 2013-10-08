@@ -1,11 +1,9 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Flood.RPC;
-using Flood.RPC.Metadata;
+using Flood.Remoting;
+using Flood.Remoting.Metadata;
 using Ionic.Zip;
 
 namespace Flood.Packages
@@ -15,15 +13,15 @@ namespace Flood.Packages
         public const string PackageExtension = ".fld";
 
         public string PackageFolder { get; private set; }
-        public RPCManager RpcManager { get; private set; }
+        public MessageProcessor MessageProcessor { get; private set; }
 
         private HashSet<PackageName> availablePackages;
 
-        public PackageLoader(string packageFolder, RPCManager rpcManager)
+        public PackageLoader(string packageFolder, MessageProcessor messageProcessor)
         {
             packageFolder = Path.GetFullPath(packageFolder);
             PackageFolder = packageFolder;
-            RpcManager = rpcManager;
+            MessageProcessor = messageProcessor;
 
             availablePackages = new HashSet<PackageName>();
             Init();
@@ -65,7 +63,7 @@ namespace Flood.Packages
         {
             var package = GetPackageObject(assembly);
 
-            package.OnLoad(RpcManager);
+            package.OnLoad(MessageProcessor);
             CheckPackageGlobalServices(assembly);
 
             return package;
@@ -139,7 +137,7 @@ namespace Flood.Packages
                 if (attribute == null)
                     continue;
 
-                if(!RpcManager.ServiceManager.HasGlobalService(type))
+                if(!messageProcessor.ServiceManager.HasGlobalService(type))
                     throw new Exception("Package does not instantiate global service "+type);
             }
         }

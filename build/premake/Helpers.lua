@@ -53,27 +53,15 @@ function IncludePremake(basedir, premakefile)
     end
 end
 
-function SetupRPCGen(projectName,extension)
-	dependson { "RPCGen" }
+function SetupRemotingGen(projectName,extension)
+	dependson { "RemotingGen" }
 
-	local exePath = SafePath("$(TargetDir)" .. "RPCGen.exe")
+	local exePath = SafePath("$(TargetDir)" .. "RemotingGen.exe")
 	local outPath = SafePath(path.join(gendir,projectName))
 	local dllPath = SafePath("$(TargetDir)" .. projectName .. extension)
 	local command = exePath .. " -o=" .. outPath .. " " .. dllPath;
     
 	postbuildcommands { command }
-end
-
-function SetupEngineWeaver(dllName)
-	dependson { "Weaver" }
-
-	local exePath = SafePath("$(TargetDir)" .. "Weaver.exe");
-	local dllPath = SafePath("$(TargetDir)" .. dllName)
-	
-	postbuildcommands
-	{
-		exePath .. dllPath
-	}
 end
 
 function SetupLibPaths(lib)

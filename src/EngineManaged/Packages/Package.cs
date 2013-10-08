@@ -1,4 +1,5 @@
-﻿using Flood.RPC.Metadata;
+﻿using System;
+using Flood.Remoting.Metadata;
 using System.Collections.Generic;
 
 namespace Flood.Packages
@@ -20,6 +21,11 @@ namespace Flood.Packages
         public int Minor;
 
         public int Patch;
+
+        public PackageVersion(Version version)
+            :this(version.Major, version.Minor, version.Build)
+        {
+        }
 
         public PackageVersion(int major, int minor, int patch)
         {

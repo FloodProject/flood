@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flood;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
 
 namespace Flood.Windows
 {

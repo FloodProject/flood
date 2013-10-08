@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Flood.Editor.Shared;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
 using System;
 using System.Collections.Generic;
 

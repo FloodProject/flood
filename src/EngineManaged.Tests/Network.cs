@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Flood.Network;
 using NUnit.Framework;
-using Flood.RPC.Metadata;
+using Flood.Remoting.Metadata;
 using System.Threading;
 
 namespace Flood.Tests
@@ -49,7 +49,7 @@ namespace Flood.Tests
             var service = new ServiceTest();
             var serviceImpl = server.ServiceManager.ServiceManager.GetCreateImplementation<IServiceTest>(service);
 
-            var serviceProxy = client.ServiceManager.GetService<IServiceTest>(new SessionRPCPeer(client.Session), serviceImpl.LocalId);
+            var serviceProxy = client.ServiceManager.GetService<IServiceTest>(new SessionRemotingPeer(client.Session), serviceImpl.LocalId);
             var pingTask = serviceProxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));

@@ -15,7 +15,6 @@ project "PackageGen"
     links {
         "System",
         "EngineManaged",
-        "EngineWeaver",
-        "RPCGen",
+        "RemotingGen",
         path.join(depsdir,"DotNetZip","Ionic.Zip")
     }
