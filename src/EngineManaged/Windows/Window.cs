@@ -78,7 +78,7 @@ namespace Flood.Windows
             nativeWindow.Update();
         }
 
-        public void Resize(Settings settings)
+        private void Resize(Settings settings)
         {
             foreach (var appRenderable in Renderables)
                 appRenderable.Resize(settings.Width, settings.Height);
