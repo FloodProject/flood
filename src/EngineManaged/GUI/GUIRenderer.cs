@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using Flood;
 using GUI.Controls;
 using GUI.Input;
@@ -267,36 +266,22 @@ namespace GUI
 
     public class TextRenderer
     {
-        static readonly Flood.TextureAtlas textureAtlas;
-        static readonly GlyphCache glyphCache;
-
-        private static readonly ResourceHandle<Material> textMaterial; 
+        private static readonly GlyphManager glyphManager;
 
         static TextRenderer()
         {
-            textureAtlas = new TextureAtlas(512,PixelFormat.R8G8B8);
-            glyphCache = new GlyphCache();
-
-            textMaterial = Material.Create(Allocator.GetHeap(), "TextMaterial");
-            var mat = textMaterial.Resolve();
-            mat.BackfaceCulling = false;
-            mat.SetBlending(BlendSource.SourceAlpha, BlendDestination.InverseSourceAlpha);
-            mat.SetShader("Text");
-            mat.SetTexture(0, textureAtlas.AtlasImageHandle);
-            mat.GetTextureUnit(0).WrapMode = TextureWrapMode.ClampToEdge;
+            glyphManager = new GlyphManager();
         }
 
         public static Vector2 MeasureText(System.String text, Font font)
         {
             float curX = 0;
-            var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
 
                 Glyph glyph;
-                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
-                if (!foundGlyph)
+                if (!glyphManager.TryGetGlyphInfo(font, c, out glyph))
                 {
                     Log.Warn("Glyph not found for character " + c);
                     continue;
@@ -304,7 +289,7 @@ namespace GUI
 
                 curX += glyph.Advance;
                 if(i < text.Length - 1) 
-                    curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
+                    curX += glyphManager.GetKerning(font, text[i], text[i + 1]).X;
 
             }
 
@@ -315,14 +300,12 @@ namespace GUI
         {
             float curX = 0;
 
-            var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
 
                 Glyph glyph;
-                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
-                if (!foundGlyph)
+                if (!glyphManager.TryGetGlyphInfo(font, c, out glyph))
                 {
                     Log.Warn("Glyph not found for character " + c);
                     continue;
@@ -330,7 +313,7 @@ namespace GUI
 
                 curX += glyph.Advance;
                 if(i < text.Length - 1) 
-                   curX += ttfont.GetKerning(text[i], text[i + 1], font.Size).X;
+                   curX += glyphManager.GetKerning(font, text[i], text[i + 1]).X;
 
                 if(curX >= x)
                 {
@@ -345,62 +328,36 @@ namespace GUI
 
         internal static void DrawText(GUIGeometryBuffer geometryBuffer, Font font, Vector2 position, String text, Color color)
         {
-            var ttfont = font.EngineFont.Resolve();
             for(var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
 
                 Glyph glyph;
-                var foundGlyph = ttfont.GetGlyphInfo(c, font.Size, out glyph);
-                if (!foundGlyph)
+                if (!glyphManager.TryGetGlyphInfo(font, c, out glyph))
                 {
                     Log.Warn("Glyph not found for character " + c);
                     continue;
                 }
 
-                bool drawSubtexture = true;
                 SubTexture subTexture;
-                if(!glyphCache.TryGetGlyph(font, c, out subTexture))
-                {
-                    var imageHandle = ttfont.CreateGlyphImage(c, font.Size);
-                    if (imageHandle.Id == ResourceHandle<Resource>.Invalid)
-                    {
-                        drawSubtexture = false;
-                    }
-                    else
-                    {
-                        var subTextureFound = textureAtlas.GetImageSubTexture(imageHandle, out subTexture);
-                        if (!subTextureFound)
-                        {
-                            textureAtlas.AddImage(imageHandle);
-                            subTextureFound = textureAtlas.GetImageSubTexture(imageHandle, out subTexture);
-                            if (subTextureFound)
-                            {
-                                glyphCache.AddGlyph(font, c, subTexture);
-                            }
-                            else
-                            {
-                                Log.Warn("subTexture not Found\n");
-                                continue;
-                            }
-                        }
-                    }
-                }
+                ResourceHandle<Material> material;
 
-                if (drawSubtexture)
+                if (glyphManager.TryGetGlyphImage(font, c, out subTexture, out material))
                 {
-
                     var renderRect = new RectangleF(
                         position.X + glyph.XOffset, 
                         position.Y + glyph.BaseLineOffset, 
                         glyph.Width,
                         glyph.Height);
 
-                    geometryBuffer.AddRectangle(renderRect,subTexture.LeftTopUV,subTexture.RightTopUV,subTexture.RightBottomUV,subTexture.LeftBottomUV,textMaterial,color);
+                    geometryBuffer.AddRectangle(renderRect,
+                        subTexture.LeftTopUV, subTexture.RightTopUV, 
+                        subTexture.RightBottomUV, subTexture.LeftBottomUV,
+                        material, color);
                 }
 
                 if (i < text.Length-1){
-                    var kern = ttfont.GetKerning(text[i], text[i+1], font.Size);
+                    var kern = glyphManager.GetKerning(font, text[i], text[i+1]);
                     position.X += glyph.Advance + kern.X;
                     position.Y += kern.Y;
                 }
