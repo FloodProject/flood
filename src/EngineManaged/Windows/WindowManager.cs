@@ -42,7 +42,7 @@ namespace Flood.Windows
             return window;
         }
 
-        public void Render()
+        internal void Render()
         {
             foreach (var window in windows.Values)
                 window.Render();

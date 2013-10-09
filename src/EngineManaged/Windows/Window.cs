@@ -67,7 +67,7 @@ namespace Flood.Windows
             nativeWindow.Update();
         }
 
-        public void Render()
+        internal void Render()
         {
             var rb = new RenderBlock();
 
