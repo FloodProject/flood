@@ -29,11 +29,11 @@ namespace Flood.Windows
         internal RenderContext RenderContext;
 
         [Id(1)]
-        public List<WindowRenderable> Renderables;
+        private List<WindowRenderable> renderables;
 
         internal Window()
         {
-            Renderables = new List<WindowRenderable>();
+            renderables = new List<WindowRenderable>();
         }
 
         internal void Init(Flood.Window window, RenderDevice renderDevice, RenderContext renderContext)
@@ -61,11 +61,17 @@ namespace Flood.Windows
             window.Show(true);
         }
 
+        public void AddRenderable(WindowRenderable renderable)
+        {
+            renderable.Resize(nativeWindow.Settings.Width, nativeWindow.Settings.Height);
+            renderables.Add(renderable);
+        }
+
         internal void Render()
         {
             var rb = new RenderBlock();
 
-            foreach (var appRenderable in Renderables)
+            foreach (var appRenderable in renderables)
                 appRenderable.Render(rb);
 
             RenderContext.MakeCurrent(nativeWindow);
@@ -80,7 +86,7 @@ namespace Flood.Windows
 
         private void Resize(Settings settings)
         {
-            foreach (var appRenderable in Renderables)
+            foreach (var appRenderable in renderables)
                 appRenderable.Resize(settings.Width, settings.Height);
         }
     }
