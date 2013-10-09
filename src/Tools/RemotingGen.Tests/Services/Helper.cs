@@ -8,7 +8,7 @@ namespace RemotingGen.Tests.Services
 
     public class Helper
     {
-        class MockContextLoader : ContextLoader<MockContextLoader.MockContextId>
+        class MockContextLoader : IContextLoader
         {
             public struct MockContextId : IContextId
             {
@@ -25,15 +25,21 @@ namespace RemotingGen.Tests.Services
                 }
             }
 
-            public async override Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId)
+            public async Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId)
             {
                 return Assembly.Load(((MockContextId)contextId).AssemblyFullName);
             }
 
-            public override IContextId GetContextId(Assembly assembly)
+            public IContextId GetContextId(Assembly assembly)
             {
                 return new MockContextId { AssemblyFullName = assembly.FullName };
             }
+
+            public IContextId ReadContextId(Message data)
+            {
+                throw new System.NotImplementedException();
+            }
+
         }
 
         public class MockMessagePeer : RemotingPeer
@@ -91,7 +97,7 @@ namespace RemotingGen.Tests.Services
         {
             var localPeer = CreatePeer(null);
             var contextLoader = new MockContextLoader();
-            return localPeer.Manager = new RemotingManager(localPeer, contextLoader);
+            return localPeer.Manager = new RemotingManager(contextLoader);
         }
 
         public static MockMessagePeer CreatePeer(RemotingManager remotingManager)

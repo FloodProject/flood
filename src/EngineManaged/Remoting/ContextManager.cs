@@ -28,19 +28,6 @@ namespace Flood.Remoting
         IContextId GetContextId(Assembly assembly);
     }
 
-    public abstract class ContextLoader<T> : IContextLoader where T : IContextId, new()
-    {
-        public IContextId ReadContextId(Message data)
-        {
-            var contextId = new T();
-            contextId.Read(data);
-            return contextId;
-        }
-
-        public abstract Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId);
-        public abstract IContextId GetContextId(Assembly assembly);
-    }
-
     struct GlobalServiceId
     {
         public readonly IContextId ContextId;
