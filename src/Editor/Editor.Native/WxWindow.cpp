@@ -27,6 +27,11 @@ WxWindow::WxWindow(const WindowSettings& settings, wxWindow* window,
 	setUserData(this);
 	window->SetClientData(this);
 	window->Bind(wxEVT_IDLE, &WxWindow::processIdle, this);
+
+	canvas = new WxGLCanvas(window);
+	canvas->SetSize(window->GetSize());
+	canvas->input = inputManager;
+	canvas->startFrameLoop();
 }
 
 //-----------------------------------//
@@ -45,11 +50,6 @@ WxWindow::~WxWindow()
 RenderContext* WxWindow::createContext(const RenderContextSettings& settings)
 {
 	if (!window) return false;
-
-	canvas = new WxGLCanvas(window);
-	canvas->SetSize(window->GetSize());
-	canvas->input = inputManager;
-	canvas->startFrameLoop();
 
 	context = AllocateThis(WxRenderContext, canvas);
 	return context.get();
