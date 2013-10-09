@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Flood.Modules;
 
-namespace EngineManaged.Modules
+namespace Flood.Modules
 {
     public class ModuleLibrary
     {
         interface IModuleLocation
         {
-            Stream Stream { get; }
+            System.IO.Stream Stream { get; }
         }
 
         class FileModuleLocation : IModuleLocation
@@ -23,7 +22,7 @@ namespace EngineManaged.Modules
                 FilePath = filePath;
             }
 
-            public Stream Stream
+            public System.IO.Stream Stream
             {
                 get { return File.OpenRead(FilePath); }
             }
@@ -61,7 +60,7 @@ namespace EngineManaged.Modules
             }
         }
 
-        public Stream GetModuleStream(ModuleId module)
+        public System.IO.Stream GetModuleStream(ModuleId module)
         {
             IModuleLocation location;
             if(!moduleLocations.TryGetValue(module, out location))
