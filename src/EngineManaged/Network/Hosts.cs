@@ -28,19 +28,18 @@ namespace Flood.Network
 
         protected Flood.Host host;
 
-        public RemotingManager ServiceManager { get; private set; }
+        public RemotingManager RemotingManager { get; private set; }
         
-        public Host()
+        public Host(RemotingManager remotingManager)
         {
-            var contextLoader = new PackageContextLoader();
-            ServiceManager = new RemotingManager(contextLoader);
+            RemotingManager = remotingManager;
         }
 
         protected void OnPacket(Session session, Packet packet, int channel)
         {
             var peer = new SessionRemotingPeer(session);
 
-            ServiceManager.Process(packet.Read().ToArray(), peer);
+            RemotingManager.Process(packet.Read().ToArray(), peer);
         }
 
         public void Update()
@@ -57,7 +56,8 @@ namespace Flood.Network
     /// </summary>
     public class Server : Host
     {
-        public Server(HostEndPoint endPoint)
+        public Server(RemotingManager remotingManager, HostEndPoint endPoint)
+            : base(remotingManager)
         {
             // TODO: remove this from here.
             FloodNetwork.NetworkInitialize();
@@ -82,6 +82,10 @@ namespace Flood.Network
     /// </summary>
     public class Client : Host
     {
+        public Client(RemotingManager remotingManager)
+            : base(remotingManager)
+        {}
+
         public async Task<bool> Connect(HostEndPoint endPoint, int timeout = 1000)
         {
             // TODO: remove this from here.
