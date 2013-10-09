@@ -1,12 +1,18 @@
 ﻿
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
+using Flood.Modules;
+using Flood.Network;
+using Flood.Remoting;
+using Flood.Remoting.Metadata;
+using Flood.Windows;
 
 namespace Flood
 {
-    class Application
+    public class Application
     {
         [SuppressUnmanagedCodeSecurity]
         [DllImport("Editor.Native.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -18,10 +24,16 @@ namespace Flood
         public ArchiveVirtual Archive { get; set; }
 
         public PlatformManager PlatformManager { get; set; }
-        public WindowManager WindowManager { get; set; }
+        public WindowManager NativeWindowManager { get; set; }
 
         public RenderDevice RenderDevice;
         public RenderView MainView;
+
+        public RemotingManager RemotingManager;
+
+        public ModuleManager ModuleManager;
+
+        public Windows.WindowManager WindowManager;
 
         public Application()
         {
@@ -41,9 +53,20 @@ namespace Flood
             ResourceManager = Engine.ResourceManager;
             ResourceManager.Archive = Archive;
 
-            WindowManager = Engine.WindowManager;
+            NativeWindowManager = Engine.WindowManager;
 
             RenderDevice = Engine.RenderDevice;
+
+            ModuleManager = new ModuleManager();
+
+            RemotingManager = new RemotingManager(ModuleManager);
+
+            ModuleManager.Init(RemotingManager.ServiceManager);
+
+            //Initiate global services
+            WindowManager = new Windows.WindowManager(this);
+
+            RemotingManager.ServiceManager.GetCreateImplementation<IWindowManager>(WindowManager);
         }
 
         private const string AssetsDirectory = "bin/Assets/";
