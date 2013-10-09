@@ -195,6 +195,8 @@ namespace Flood.Remoting
                 return context;
 
             var contextType = assembly.GetType("DataObjectFactory");
+            if(contextType == null)
+                throw new Exception("Missing DataObjectFactory. Run RemotingGen on assembly.");
 
             context = new ContextInfo
             {
