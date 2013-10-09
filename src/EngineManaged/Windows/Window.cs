@@ -56,15 +56,9 @@ namespace Flood.Windows
             view = window.CreateView();
             view.ClearColor = Color.Red;
 
-            window.Idle += Update;
             window.Render += Render;
             window.TargetResize += Resize;
             window.Show(true);
-        }
-
-        private void Update()
-        {
-            nativeWindow.Update();
         }
 
         internal void Render()
@@ -80,6 +74,8 @@ namespace Flood.Windows
             device.ClearView();
 
             device.Render(rb);
+
+            nativeWindow.Update();
         }
 
         public void Resize(Settings settings)
