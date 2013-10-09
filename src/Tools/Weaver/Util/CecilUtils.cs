@@ -228,7 +228,7 @@ namespace Weaver.Util
         public static IMetadataScope GetScope(MemberReference memberRef)
         {
             var typeRef = memberRef as TypeReference;
-            if (memberRef is TypeReference)
+            if (typeRef != null)
                 return typeRef.Scope;
 
             return memberRef.DeclaringType.Scope;
