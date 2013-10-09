@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Weaver.Util;
-using MethodAttributes = Mono.Cecil.MethodAttributes;
 using MethodBody = Mono.Cecil.Cil.MethodBody;
 using TypeAttributes = Mono.Cecil.TypeAttributes;
 
@@ -1159,9 +1158,10 @@ namespace Weaver
             AddDelayedCopy(def1, def2,
                 (originObject, destObject) =>
                     {
-                        var methodRef = GetParentCopy<MethodReference>();
+                        var methodDef = GetParentCopy<MethodDefinition>();
 
-                        if (GetMemberOptions(methodRef).HasFlag(MemberOptions.UseOriginInstructions))
+                        if (GetMemberOptions(methodDef).HasFlag(MemberOptions.UseOriginInstructions) ||
+                            methodDef.IsConstructor)
                         {
                             var tmp = originObject;
                             originObject = destObject;
