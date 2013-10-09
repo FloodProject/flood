@@ -15,10 +15,6 @@ namespace Flood.Windows
         {
         }
 
-        public virtual void Update()
-        {
-        }
-
         public virtual void Resize(int width, int height)
         {
         }
@@ -27,6 +23,7 @@ namespace Flood.Windows
     [DataObject(5)]
     public class Window
     {
+        private Flood.Window nativeWindow;
         private RenderDevice device;
         private RenderView view;
 
@@ -40,6 +37,7 @@ namespace Flood.Windows
 
         internal void Init(Flood.Window window, RenderDevice renderDevice)
         {
+            nativeWindow = window;
             device = renderDevice;
 
             var context = window.CreateContext(new RenderContextSettings());
@@ -58,8 +56,7 @@ namespace Flood.Windows
 
         private void Update()
         {
-            foreach (var appRenderable in Renderables)
-                appRenderable.Update();
+            nativeWindow.Update();
         }
 
         public void Render()
