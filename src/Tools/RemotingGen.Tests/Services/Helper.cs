@@ -25,7 +25,7 @@ namespace RemotingGen.Tests.Services
                 }
             }
 
-            public async Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId)
+            public async Task<Assembly> LoadContext(IContextId contextId)
             {
                 return Assembly.Load(((MockContextId)contextId).AssemblyFullName);
             }

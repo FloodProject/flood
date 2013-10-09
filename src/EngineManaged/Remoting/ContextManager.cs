@@ -24,7 +24,7 @@ namespace Flood.Remoting
     public interface IContextLoader
     {
         IContextId ReadContextId(Message data);
-        Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId);
+        Task<Assembly> LoadContext(IContextId contextId);
         IContextId GetContextId(Assembly assembly);
     }
 
@@ -107,7 +107,8 @@ namespace Flood.Remoting
             ContextInfo context;
             if (!contextIdToContext.TryGetValue(contextId, out context))
             {
-                var task = Loader.LoadContext(data.Peer, contextId);
+                //TODO: check data.Peer permissions
+                var task = Loader.LoadContext(contextId);
                 task.ContinueWith(t =>
                 {
                     if(t.Result == null)
