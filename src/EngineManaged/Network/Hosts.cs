@@ -19,38 +19,6 @@ namespace Flood.Network
         }
     }
 
-    public class PackageContextLoader : ContextLoader<PackageContextLoader.ContextId>
-    {
-        public struct ContextId : IContextId
-        {
-            public string Name;
-            public int MajorVersion;
-
-            public void Write(Message data)
-            {
-                data.Serializer.WriteString(Name);
-                data.Serializer.WriteI32(MajorVersion);
-            }
-
-            public void Read(Message data)
-            {
-                Name = data.Serializer.ReadString();
-                MajorVersion = data.Serializer.ReadI32();
-            }
-        }
-
-        public override Task<Assembly> LoadContext(RemotingPeer peer, IContextId contextId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IContextId GetContextId(Assembly assembly)
-        {
-            var assemblyName = assembly.GetName();
-            return new ContextId { Name = assemblyName.Name, MajorVersion = assemblyName.Version.Major };
-        }
-    }
-
     /// <summary>
     /// Hosts represents a node connected to the network.
     /// </summary>
