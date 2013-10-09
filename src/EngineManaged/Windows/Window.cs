@@ -26,6 +26,7 @@ namespace Flood.Windows
         private Flood.Window nativeWindow;
         private RenderDevice device;
         private RenderView view;
+        internal RenderContext RenderContext;
 
         [Id(1)]
         public List<WindowRenderable> Renderables;
@@ -35,12 +36,22 @@ namespace Flood.Windows
             Renderables = new List<WindowRenderable>();
         }
 
-        internal void Init(Flood.Window window, RenderDevice renderDevice)
+        internal void Init(Flood.Window window, RenderDevice renderDevice, RenderContext renderContext)
         {
             nativeWindow = window;
             device = renderDevice;
 
-            var context = window.CreateContext(new RenderContextSettings());
+            if (renderContext == null)
+            {
+                RenderContext = window.CreateContext(new RenderContextSettings());
+                window.MakeCurrent();
+                RenderContext.Init();
+            }
+            else
+            {
+                RenderContext = renderContext;
+                nativeWindow.Context = RenderContext;
+            }
 
             view = window.CreateView();
             view.ClearColor = Color.Red;
@@ -49,9 +60,6 @@ namespace Flood.Windows
             window.Render += Render;
             window.TargetResize += Resize;
             window.Show(true);
-
-            window.MakeCurrent();
-            context.Init();
         }
 
         private void Update()
@@ -66,11 +74,12 @@ namespace Flood.Windows
             foreach (var appRenderable in Renderables)
                 appRenderable.Render(rb);
 
+            RenderContext.MakeCurrent(nativeWindow);
+
             device.ActiveView = view;
             device.ClearView();
 
             device.Render(rb);
-            //Application.Instance.Engine.StepFrame();
         }
 
         public void Resize(Settings settings)

@@ -12,10 +12,11 @@ namespace Flood.Windows
         Task<Window> GetCreateWindow([Id(1)]string windowName);
     }
 
-    class WindowManager : IWindowManager
+    public class WindowManager : IWindowManager
     {
         private Dictionary<string, Window> windows;
         private Application application;
+        private RenderContext renderContext;
 
         public WindowManager(Application application)
         {
@@ -29,13 +30,22 @@ namespace Flood.Windows
                 return windows[windowName];
 
             var window = new Window();
-            windows.Add(windowName, window);
 
             var windowSettings = new WindowSettings(1000, 700, windowName, WindowStyles.TopLevel);
             var nativeWindow = application.NativeWindowManager.CreateWindow(windowSettings);
-            window.Init(nativeWindow, application.RenderDevice);
+            window.Init(nativeWindow, application.RenderDevice, renderContext);
 
+            if (windows.Count == 0)
+                renderContext = window.RenderContext;
+
+            windows.Add(windowName, window);
             return window;
+        }
+
+        public void Render()
+        {
+            foreach (var window in windows.Values)
+                window.Render();
         }
     }
 }
