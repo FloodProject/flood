@@ -47,7 +47,14 @@ WxPlatform::~WxPlatform()
 
 void WxPlatform::update()
 {
-    wxTheApp->OnRun();
+    if(wxTheApp->Pending())
+    {
+        wxTheApp->Dispatch();
+    }
+    else
+    {
+        wxTheApp->ProcessIdle();
+    }
 }
 
 //-----------------------------------//
