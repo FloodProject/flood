@@ -7,7 +7,7 @@ using GUI.Skins;
 
 namespace GUI
 {
-    class GuiRenderable : WindowRenderable, IDisposable
+    public class GuiRenderable : WindowRenderable, IDisposable
     {
         public GwenRenderer GuiRenderer { get; private set; }
 
