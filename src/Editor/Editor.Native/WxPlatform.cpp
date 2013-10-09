@@ -6,6 +6,9 @@
 ************************************************************************/
 
 #include "WxPlatform.h"
+#include "wx/app.h"
+#include "wx/evtloop.h"
+#include "wx/apptrait.h"
 
 FLD_NAMESPACE_BEGIN
 
@@ -26,6 +29,8 @@ void WxPlatform::init()
         return;
 
     wxTheApp->OnInit();
+
+    wxEventLoopBase::SetActive(wxTheApp->GetTraits()->CreateEventLoop());
 
     wxImage::AddHandler( new wxPNGHandler() );
 }
