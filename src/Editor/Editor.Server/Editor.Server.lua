@@ -18,7 +18,6 @@ project "Editor.Server"
 	links
 	{
 		"System",
-		"ServerManaged",
 		"EngineBindings",
 		"EngineManaged",
 		"Editor.Shared",

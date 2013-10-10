@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Flood.Server;
 using Flood.Editor.Shared;
 using System;
 using System.Collections.Generic;
@@ -12,15 +11,14 @@ namespace Flood.Editor.Server
         const int TimerInterval = 5000;
 
         readonly Dictionary<Guid, Project> projects;
-        readonly IDatabaseManager database;
 
         Timer timer;
         bool databaseModified;
 
-        public ProjectManager(IDatabaseManager db)
+        public ProjectManager()
         {
             projects = new Dictionary<Guid, Project>();
-            database = db;
+
             databaseModified = false;
 
             LoadProjectsFromDatabase();
@@ -32,15 +30,7 @@ namespace Flood.Editor.Server
         /// </summary>
         private void TimerEvent(object sender, ElapsedEventArgs e)
         {
-            try
-            {
-                if (databaseModified)
-                    database.SaveChanges();
-                databaseModified = false;
-            }
-            catch(SessionNotOpenException sessionNotOpenException)
-            {
-            }
+            
         }
 
         /// <summary>
@@ -48,14 +38,7 @@ namespace Flood.Editor.Server
         /// </summary>
         private void UpdateDatabase(Project proj)
         {
-            try
-            {
-                database.Store(proj, proj.Id);
-                databaseModified = true;
-            }
-            catch (SessionNotOpenException sessionNotOpenException)
-            {
-            }
+           
         }
 
         /// <summary>
@@ -74,10 +57,7 @@ namespace Flood.Editor.Server
         /// </summary>
         private void LoadProjectsFromDatabase()
         {
-            database.StartSession();
-            List<Project> projs = database.LoadAll<Project>();
-            foreach (var project in projs)
-                projects.Add(project.Id, project);
+            
         }
 
         /// <summary>
@@ -193,7 +173,7 @@ namespace Flood.Editor.Server
 
             if (didRemove)
             {
-                database.Delete<Project>(id);
+                //database.Delete<Project>(id);
                 databaseModified = true;
                 ProjectRemoved(this, project);
             }

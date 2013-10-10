@@ -1,25 +1,25 @@
 using Flood.Network;
 using System;
+using Flood.Remoting;
 
 namespace Flood.Editor.Server
 {
     /// <summary>
     /// Represents the editor server.
     /// </summary>
-    public class EditorServer : Flood.Server.Server
+    public class EditorServer : Network.Server
     {
         public UserManager UserManager { get; set; }
         public ProjectManager ProjectManager { get; set; }
 
-        public EditorServer(HostEndPoint endPoint)
-            : base(endPoint)
+        public EditorServer(RemotingManager remotingManager, HostEndPoint endPoint)
+            : base(remotingManager, endPoint)
         {
-            var serviceManager = Host.ServiceManager;
 
             UserManager = new UserManager();
             //serviceManager.AddImplementation<IUserManager>(UserManager);
 
-            ProjectManager = new ProjectManager(Database);
+            ProjectManager = new ProjectManager();
             //serviceManager.AddImplementation<IProjectManager>(ProjectManager);
         }
 
