@@ -33,6 +33,7 @@ namespace Weaver
         public MemberSignature OriginMember;
         public string Name;
         public AccessModifiers AccessModifier;
+        public bool NoCustomAttributes;
     }
 
     public class CecilKey : CopyKey

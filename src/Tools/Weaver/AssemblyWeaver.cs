@@ -131,6 +131,9 @@ namespace Weaver
                     Copier.IsMemoizationEnabled = true;
                     Copier.InitCopy = null;
 
+                    if(clone.NoCustomAttributes)
+                        @ref.CustomAttributes.Clear();
+
                     @ref.GetMethod.SetAccessModifier(clone.AccessModifier);
                     @ref.SetMethod.SetAccessModifier(clone.AccessModifier);
 
