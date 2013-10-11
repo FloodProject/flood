@@ -44,6 +44,14 @@ namespace Flood.Modules
             loadedModules = new Dictionary<ModuleId, Assembly>();
 
             ModuleLibrary = new ModuleLibrary();
+
+            AppDomain.CurrentDomain.AssemblyResolve +=
+                (sender, args) =>
+                    {
+                        var assemblyName = new AssemblyName(args.Name);
+                        var moduleId = GetModuleId(assemblyName);
+                        return GetLoadedAssembly(moduleId);
+                    };
         }
 
         public void Init(ServiceManager serviceManager)
