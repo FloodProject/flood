@@ -1561,7 +1561,7 @@ namespace RemotingGen
 
         #region Type Conversion 
 
-        private static string GetStubsClassName(Type type, bool fullName)
+        private string GetStubsClassName(Type type, bool fullName)
         {
             var name = type.FullName;
             if (!fullName && name.Contains('.'))
@@ -1570,7 +1570,12 @@ namespace RemotingGen
                 name = names[names.Length - 1];
             }
 
-            return name.Replace("+", "_") + "Stubs";
+            name = name.Replace("+", "_");
+            
+            if(type.Assembly.FullName == currentAssembly.FullName)
+                name += "Stubs";
+
+            return name;
         }
 
         private string GetTypeName(Type type, bool replaceWithStubs = true)
