@@ -118,7 +118,7 @@ namespace RemotingGen
 
                         MemberClones.Add(new MemberClone 
                         {
-                            OriginMember = new PropertySignature(declaringTypeSig, typeSig, param.Name), 
+                            OriginMember = new PropertySignature(typeSig, declaringTypeSig, param.Name), 
                             Name = backingFieldName,
                             AccessModifier = AccessModifiers.Private
                         });
@@ -126,6 +126,7 @@ namespace RemotingGen
                         var setParams = new List<ParameterSignature> {new ParameterSignature(typeSig, "value")};
                         var getMethodSig = new MethodSignature(typeSig, declaringTypeSig, "get_"+backingFieldName, new List<ParameterSignature>());
                         var setMethodSig = new MethodSignature(new TypeSignature(typeof(void)), declaringTypeSig, "set_"+backingFieldName, setParams);
+
                         MemberOptions.Add(getMethodSig, Weaver.MemberOptions.UseOriginInstructions);
                         MemberOptions.Add(setMethodSig, Weaver.MemberOptions.UseOriginInstructions);
                     }

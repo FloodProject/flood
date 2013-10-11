@@ -343,18 +343,18 @@ namespace Weaver.Util
     {
         public readonly TypeSignature PropertyType;
 
-        public PropertySignature(TypeSignature declaringType, TypeSignature propertyType, string name)
+        public PropertySignature(TypeSignature propertyType, TypeSignature declaringType, string name)
             : base(declaringType, name)
         {
             PropertyType = propertyType;
         }
 
         public PropertySignature(PropertyReference property)
-            :this(new TypeSignature(property.DeclaringType), new TypeSignature(property.PropertyType), property.Name)
+            :this(new TypeSignature(property.PropertyType), new TypeSignature(property.DeclaringType), property.Name)
         {}
 
         public PropertySignature(PropertyInfo property)
-            :this(new TypeSignature(property.DeclaringType), new TypeSignature(property.PropertyType), property.Name)
+            :this(new TypeSignature(property.PropertyType), new TypeSignature(property.DeclaringType), property.Name)
         {}
 
         public override string ToString()
