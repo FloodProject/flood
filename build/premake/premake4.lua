@@ -61,8 +61,7 @@ solution "Flood"
         dofile( srcdir .. "/EngineBindings.Tests/EngineBindings.Tests.lua")
 		dofile( srcdir .. "/EngineManaged/EngineManaged.lua")
 		dofile( srcdir .. "/EngineManaged.Tests/EngineManaged.Tests.lua")
-		dofile( srcdir .. "/ServerManaged/ServerManaged.lua")
-        
+
 	group "Editor"
 
 		dofile( srcdir .. "/Editor/Editor.Client/Editor.Client.lua")
