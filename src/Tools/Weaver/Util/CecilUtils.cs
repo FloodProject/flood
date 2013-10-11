@@ -236,7 +236,11 @@ namespace Weaver.Util
 
         public static string GetScopeName(MemberReference memberRef)
         {
-            var scope = GetScope(memberRef);
+            return GetScopeName(GetScope(memberRef));
+        }
+
+        public static string GetScopeName(IMetadataScope scope)
+        {
             var name = scope.Name;
             if (name.EndsWith(".dll"))
                 name = name.Substring(0, name.Length - 4);
@@ -246,10 +250,12 @@ namespace Weaver.Util
 
         public static bool AreScopesEqual(MemberReference member1, MemberReference member2)
         {
-            var scope1 = GetScope(member1);
-            var scope2 = GetScope(member2);
+            return AreScopesEqual(GetScope(member1), GetScope(member2));
+        }
 
-            return scope1.Name == scope2.Name;
+        public static bool AreScopesEqual(IMetadataScope scope1, IMetadataScope scope2)
+        {
+            return GetScopeName(scope1) == GetScopeName(scope2);
         }
 
         public static bool AreTypesEquivalent(TypeReference typeRef1, TypeReference typeRef2, Func<TypeReference, TypeReference> typeMapper = null)

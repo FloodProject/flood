@@ -522,12 +522,10 @@ namespace Weaver
 
         private IMetadataScope CopyScope(IMetadataScope scope, MemberReference member)
         {
-            string scopeName = scope.Name;
             Version scopeVersion;
 
             //Avoid self reference
-            if (scopeName == destinationModule.Name ||
-                scopeName == destinationModule.Assembly.Name.Name)
+            if (CecilUtils.AreScopesEqual(scope, destinationModule))
                 return scope;
 
             switch (scope.MetadataScopeType) {
@@ -541,8 +539,7 @@ namespace Weaver
                 throw new NotImplementedException ();
             }
 
-            if(scopeName.EndsWith(".dll"))
-                scopeName = Path.GetFileNameWithoutExtension(scopeName);
+            var scopeName = CecilUtils.GetScopeName(scope);
 
             var assemblyName = destinationModule.AssemblyReferences.FirstOrDefault(
                 reference => reference.Name == scopeName && reference.Version == scopeVersion);
