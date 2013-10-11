@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Flood.Modules;
 using Flood.Network;
+using Flood.Remoting;
 using NUnit.Framework;
 using Flood.Remoting.Metadata;
 using System.Threading;
@@ -30,15 +32,19 @@ namespace Flood.Tests
         {
             const ushort ServerPort = 13337;
 
+            var moduleManager = new ModuleManager();
+            var remotingManager = new RemotingManager(moduleManager);
+            moduleManager.Init(remotingManager.ServiceManager);
+
             var endPoint = new HostEndPoint("localhost", ServerPort);
 
             // Start the server and setup our service.
-            var server = new Server(endPoint);
+            var server = new Server(remotingManager, endPoint);
             var serverThread = new Thread(Process);
             serverThread.Start(server);
 
             // Start the client and connect to the service.
-            var client = new Client();
+            var client = new Client(remotingManager);
             var clientThread = new Thread(Process);
             clientThread.Start(client);
 
@@ -47,9 +53,9 @@ namespace Flood.Tests
             Assert.IsTrue(connectTask.Result);
 
             var service = new ServiceTest();
-            var serviceImpl = server.ServiceManager.ServiceManager.GetCreateImplementation<IServiceTest>(service);
+            var serviceImpl = server.RemotingManager.ServiceManager.GetCreateImplementation<IServiceTest>(service);
 
-            var serviceProxy = client.ServiceManager.GetService<IServiceTest>(new SessionRemotingPeer(client.Session), serviceImpl.LocalId);
+            var serviceProxy = client.RemotingManager.ServiceManager.GetService<IServiceTest>(new SessionRemotingPeer(client.Session), serviceImpl.LocalId);
             var pingTask = serviceProxy.Ping();
 
             Assert.IsTrue(pingTask.Wait(1000));
