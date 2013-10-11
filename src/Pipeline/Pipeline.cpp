@@ -51,11 +51,10 @@ void PipelineInit()
 
 	Class* klass = ResourceProcessorGetType();
 	
-	for( size_t i = 0; i < klass->childs.size(); i++ )
+	for(auto& child : klass->childs)
 	{
-		Class* child = klass->childs[i];
-		
-		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
+		auto processor = (ResourceProcessor*) 
+			child->createInstance(AllocatorGetHeap());
 		resourceProcessors.push_back(processor);
 
 		LogInfo("Registering asset handler: %s", child->name);
@@ -66,9 +65,8 @@ void PipelineInit()
 
 void PipelineCleanup()
 {
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	for(auto& processor : resourceProcessors)
 	{
-		ResourceProcessor* processor = resourceProcessors[i];
 		Deallocate(processor);
 	}
 
@@ -79,13 +77,8 @@ void PipelineCleanup()
 
 ResourceProcessor* PipelineFindProcessor(Class* type)
 {
-	for( size_t i = 0; i < resourceProcessors.size(); i++ )
-	{
-		ResourceProcessor* processor = resourceProcessors[i];
-		
-		bool isProcessor = ClassInherits(type, processor->GetResourceType());
-		if( isProcessor ) return processor;
-	}
+	for(auto& processor : resourceProcessors)
+		if (type->inherits(processor->GetResourceType())) return processor;
 
 	return nullptr;
 }

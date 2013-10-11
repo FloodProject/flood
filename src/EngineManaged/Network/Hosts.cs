@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Flood.RPC;
-using System;
 using System.Threading.Tasks;
 
 namespace Flood.Network

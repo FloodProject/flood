@@ -22,6 +22,31 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
+bool ReflectionDatabase::registerType(Type* type)
+{
+	if (!type) return false;
+
+	const char* name = type->name;
+
+	if (types.find(name) != types.end())
+	{
+		LogAssert("Type '%s' already exists in the database", name);
+		return false;
+	}
+
+	types[name] = type;
+
+	if(!type->isComposite())
+		return true;
+
+	Class* klass = (Class*) type;
+	klass->registerClass();
+
+	return true;
+}
+
+//-----------------------------------//
+
 Type::Type()
 {
 }
@@ -35,28 +60,34 @@ Type::Type(TypeKind kind, const char* name, uint16 size)
 
 //-----------------------------------//
 
-bool ReflectionIsPrimitive(const Type* type)
+Type::~Type()
 {
-	return type && type->kind == TypeKind::Primitive;
 }
 
 //-----------------------------------//
 
-bool ReflectionIsComposite(const Type* type)
+bool Type::isPrimitive()
 {
-	return type && type->kind == TypeKind::Composite;
+	return kind == TypeKind::Primitive;
 }
 
 //-----------------------------------//
 
-bool ReflectionIsEnum(const Type* type)
+bool Type::isComposite()
 {
-	return type && type->kind == TypeKind::Enumeration;
+	return kind == TypeKind::Composite;
 }
 
 //-----------------------------------//
 
-ReflectionDatabase& ReflectionGetDatabase()
+bool Type::isEnum()
+{
+	return kind == TypeKind::Enumeration;
+}
+
+//-----------------------------------//
+
+ReflectionDatabase& ReflectionDatabase::GetDatabase()
 {
 	static ReflectionDatabase s_ReflectionDatabase;
 	return s_ReflectionDatabase;
@@ -64,147 +95,98 @@ ReflectionDatabase& ReflectionGetDatabase()
 
 //-----------------------------------//
 
-static void RegisterClass(Class* klass)
+Type* ReflectionDatabase::findType(const char* name)
 {
-	klass->id = ClassCalculateId(klass);
+	TypeMap::iterator it = types.find(name);
+	if (it == types.end()) return nullptr;
+
+	return it->second;
+}
+
+//-----------------------------------//
+
+bool Type::isEqual(const Type* type) const
+{
+	return this == type;
+}
+
+//-----------------------------------//
+
+bool Type::operator==(const Type& type) const
+{
+	return this == &type;
+}
+
+//-----------------------------------//
+
+Class::Class()
+	 : parent(nullptr)
+	 , create_fn(nullptr)
+{
+}
+
+//-----------------------------------//
+
+Class* Class::getParent()
+{
+	return parent;
+} 
+
+//-----------------------------------//
+
+bool Class::hasParent()
+{
+	return parent != nullptr;
+} 
+
+//-----------------------------------//
+
+void Class::registerClass()
+{
+	id = calculateId();
 
 	//LogDebug("Registering class: '%s' with id '%u'", klass->name, klass->id);
 
 	// Register as child class in the parent class.
-	Class* parent = klass->parent;
-	if( parent ) parent->childs.push_back(klass);
+	if (parent) parent->childs.push_back(this);
 
 	// Register the class id in the map.
-	ClassIdMap& ids = ClassGetIdMap();
+	ClassIdMap& ids = Class::GetIdMap();
 
-	if( ids.find(klass->id) != ids.end() )
+	if( ids.find(id) != ids.end() )
 	{
-		LogError("Class with the same id already exists: '%s'", klass->name);
+		LogError("Class with the same id already exists: '%s'", name);
 		return;
 	}
 
-	ids[klass->id] = klass;
+	ids[id] = this;
 }
 
 //-----------------------------------//
 
-bool ReflectionDatabaseRegisterType(ReflectionDatabase* db, Type* type)
+void Class::addField(Field* field)
 {
-	if( !db || !type ) return false;
+	fields.push_back(field);
 
-	const char* name = type->name;
-
-	if( db->types.find(name) != db->types.end() )
-	{
-		LogAssert("Type '%s' already exists in the database", name);
-		return false;
-	}
-
-	db->types[name] = type;
-
-	if( !ReflectionIsComposite(type) )
-		return true;
-
-	Class* klass = (Class*) type;
-	RegisterClass(klass);
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool ReflectionRegisterType(Type* type)
-{
-	ReflectionDatabase& db = ReflectionGetDatabase();
-	return ReflectionDatabaseRegisterType(&db, type);
-}
-
-//-----------------------------------//
-
-Type* ReflectionFindType(const char* name)
-{
-	ReflectionDatabase& db = ReflectionGetDatabase();
-	
-	TypeMap::iterator it = db.types.find(name);
-	if( it == db.types.end() ) return nullptr;
-
-	return it->second;
-}
-
-//-----------------------------------//
-
-bool ReflectionIsEqual(const Type* t1, const Type* t2)
-{
-	return t1 == t2;
-}
-
-//-----------------------------------//
-
-void EnumAddValue(Enum* enumeration, const char* name, int32 value)
-{
-	if( !enumeration ) return;
-
-	EnumValuesMap& values = enumeration->values;
-	values[name] = value;
-}
-
-//-----------------------------------//
-
-int32 EnumGetValue(Enum* enumeration, const char* name)
-{
-	if( !enumeration ) return -1;
-	EnumValuesMap& values = enumeration->values;
-	
-	EnumValuesMap::iterator it = values.find(name);
-	if( it == values.end() ) return -1;
-	
-	return it->second;
-}
-
-//-----------------------------------//
-
-const char* EnumGetValueName(Enum* enumeration, int32 value)
-{
-	if( !enumeration ) return nullptr;
-	EnumValuesMap& values = enumeration->values;
-	
-	EnumValuesMap::iterator it = values.begin();
-	
-	for(; it != values.end(); ++it)
-	{
-		const char* name = it->first;
-		if( value == it->second ) return name;
-	}
-
-	return nullptr;
-}
-
-//-----------------------------------//
-
-void ClassAddField(Class* klass, Field* field)
-{
-	klass->fields.push_back(field);
-
-	if( ClassGetFieldById(klass, field->id) )
+	if (getFieldById(field->id))
 	{
 		LogAssert("Duplicate id found for field '%s' in '%s'",
-			field->name, klass->name);
+			field->name, name);
 		return;
 	}
 
-	if( field->id == FieldInvalid )
+	if( field->id == Field::FieldInvalid )
 	{
 		LogAssert("Field id in '%s' is reserved", field->id);
 		return;
 	}
 
-	ClassFieldIdMap& fieldIds = klass->fieldIds;
 	fieldIds[field->id] = field;
 }
 
 //-----------------------------------//
 
-ClassIdMap& ClassGetIdMap()
+ClassIdMap& Class::GetIdMap()
 {
 	static ClassIdMap s_ClassIds;
 	return s_ClassIds;
@@ -212,69 +194,57 @@ ClassIdMap& ClassGetIdMap()
 
 //-----------------------------------//
 
-Class* ClassGetById(ClassId id)
+Class* Class::getById(ClassId id)
 {
-	ClassIdMap& classIds = ClassGetIdMap();
+	ClassIdMap& classIds = GetIdMap();
 	ClassIdMap::iterator it = classIds.find(id);
 
-	if( it == classIds.end() )
-		return nullptr;
-
-	return it->second;
+	return (it == classIds.end())? nullptr : it->second;
 }
 
 //-----------------------------------//
 
-Class* ClassGetType(const Object* object)
+Class* Class::GetType(const Object* object)
 {
-	if( !object ) return nullptr;
+	if (!object ) return nullptr;
 	return object->getType();
 }
 
 //-----------------------------------//
 
-Field* ClassGetField(const Class* klass, const char* name)
+Field* Class::getField(const char* name)
 {
-	const std::vector<Field*>& fields = klass->fields;
-	
-	for(size_t i = 0; i < fields.size(); i++)
+	for(auto& field : fields)
 	{
-		Field* field = fields[i];
 		if(strcmp(field->name, name) == 0) return field;
 
-		for(size_t u = 0; u < field->aliases.size(); u++)
-		{
-			const char* alias = field->aliases[u];
+		for(auto& alias : field->aliases)
 			if(strcmp(alias, name) == 0) return field;
-		}
 	}
 
-	Class* parent = klass->parent;
-	if(!parent) return nullptr;
+	if (!parent) return nullptr;
 	
-	return ClassGetField(parent, name);
+	return parent->getField(name);
 }
 
 //-----------------------------------//
 
-Field* ClassGetFieldById(Class* klass, FieldId id)
+Field* Class::getFieldById(FieldId id)
 {
-	ClassFieldIdMap& fieldIds = klass->fieldIds;
-
 	ClassFieldIdMap::iterator it = fieldIds.find(id);
 
-	if( it != fieldIds.end() )
+	if (it != fieldIds.end())
 		return it->second;
 
-	if( klass->parent )
-		return ClassGetFieldById(klass->parent, id);
+	if (parent)
+		return parent->getFieldById(id);
 	else
 		return nullptr;
 }
 
 //-----------------------------------//
 
-void* ClassGetFieldAddress(const void* object, const Field* field)
+void* Class::GetFieldAddress(const void* object, const Field* field)
 {
 	if( !object || !field ) return nullptr;
 	
@@ -283,47 +253,43 @@ void* ClassGetFieldAddress(const void* object, const Field* field)
 
 //-----------------------------------//
 
-bool ClassInherits(const Class* klass, const Class* test)
+bool Class::inherits(const Class* test)
 {
-	bool equals = ReflectionIsEqual(klass, test);
+	bool equals = isEqual(test);
 
-	if( klass->parent == nullptr )
+	if (!parent)
 		return equals;
 
-	return equals || ClassInherits(klass->parent, test);
+	return equals || parent->inherits(test);
 }
 
 //-----------------------------------//
 
-void* ClassCreateInstance(const Class* klass, Allocator* alloc)
+void* Class::createInstance(Allocator* allocator)
 {
-	if( !klass ) return nullptr;
-
-	if( ClassIsAbstract(klass) )
+	if (isAbstract())
 	{
-		LogAssert("Could not create instance of abstract class '%s'", klass->name);
+		LogAssert("Could not create instance of abstract class '%s'", name);
 		return nullptr;
 	}
 	
-	void* object = klass->create_fn(alloc);
+	void* object = create_fn(allocator);
 	return object;
 }
 
 //-----------------------------------//
 
-ClassId ClassCalculateId(const Class* klass)
+ClassId Class::calculateId()
 {
-	uint32 hash = HashMurmur2(0xBEEF, (uint8*) klass->name, strlen(klass->name));
+	uint32 hash = HashMurmur2(0xBEEF, (uint8*) name, strlen(name));
 	return (ClassId) hash;
 }
 
 //-----------------------------------//
 
-bool ClassIsAbstract(const Class* klass)
+bool Class::isAbstract()
 {
-	if( !klass ) return false;
-	
-	return klass->create_fn == nullptr;
+	return create_fn == nullptr;
 }
 
 //-----------------------------------//
@@ -345,26 +311,37 @@ Field::Field()
 
 //-----------------------------------//
 
-bool FieldHasQualifier(const Field* field, FieldQualifier qual)
+bool Field::hasQualifier(FieldQualifier qual) const
 {
-	if( !field ) return false;
-	return ((uint16)field->qualifiers & (uint16)qual) != 0;
+	return ((uint16)qualifiers & (uint16)qual) != 0;
 }
 
 //-----------------------------------//
 
-void FieldSetQualifier(Field* field, FieldQualifier qual)
+void Field::setQualifier(FieldQualifier qual)
 {
-	if( !field ) return;
-	*((uint16*)&field->qualifiers) |= (uint16)qual;
+	*((uint16*)&qualifiers) |= (uint16)qual;
 }
 
 //-----------------------------------//
 
-void FieldSetSetter(Field* field, FieldSetterFunction fn)
+void Field::setSetter(FieldSetterFunction fn)
 {
-	if( !field ) return;
-	field->setter = fn;
+	setter = fn;
+}
+
+//-----------------------------------//
+
+Primitive::Primitive()
+{
+}
+
+//-----------------------------------//
+
+Primitive::Primitive(PrimitiveTypeKind kind, 
+					 const char* name, uint16 size)
+	: Type(TypeKind::Primitive, name, size), kind(kind)
+{
 }
 
 //-----------------------------------//
@@ -386,7 +363,7 @@ PrimitiveBuiltins::PrimitiveBuiltins()
 	, p_Quaternion(PrimitiveTypeKind::Quaternion, "Quaternion", sizeof(Quaternion))
 {}
 
-PrimitiveBuiltins& PrimitiveGetBuiltins()
+PrimitiveBuiltins& PrimitiveBuiltins::GetBuiltins()
 {
 	static PrimitiveBuiltins g_PrimitiveBuiltins;
 	return g_PrimitiveBuiltins;
@@ -395,21 +372,53 @@ PrimitiveBuiltins& PrimitiveGetBuiltins()
 //-----------------------------------//
 
 // Specializations for all known primitive types.
-template<> Primitive* GetPrimitiveFromType<bool>() { return &PrimitiveGetBuiltins().p_bool; }
-template<> Primitive* GetPrimitiveFromType<int8>() { return &PrimitiveGetBuiltins().p_int8; }
-template<> Primitive* GetPrimitiveFromType<uint8>() { return &PrimitiveGetBuiltins().p_uint8; }
-template<> Primitive* GetPrimitiveFromType<int16>() { return &PrimitiveGetBuiltins().p_int16; }
-template<> Primitive* GetPrimitiveFromType<uint16>() { return &PrimitiveGetBuiltins().p_uint16; }
-template<> Primitive* GetPrimitiveFromType<int32>() { return &PrimitiveGetBuiltins().p_int32; }
-template<> Primitive* GetPrimitiveFromType<uint32>() { return &PrimitiveGetBuiltins().p_uint32; }
-template<> Primitive* GetPrimitiveFromType<int64>() { return &PrimitiveGetBuiltins().p_int64; }
-template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveGetBuiltins().p_uint64; }
-template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveGetBuiltins().p_float; }
-template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveGetBuiltins().p_string; }
-template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveGetBuiltins().p_string; }
-template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveGetBuiltins().p_Vector3; }
-template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveGetBuiltins().p_Color; }
-template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveGetBuiltins().p_Quaternion; }
+template<> Primitive* GetPrimitiveFromType<bool>() { return &PrimitiveBuiltins::GetBuiltins().p_bool; }
+template<> Primitive* GetPrimitiveFromType<int8>() { return &PrimitiveBuiltins::GetBuiltins().p_int8; }
+template<> Primitive* GetPrimitiveFromType<uint8>() { return &PrimitiveBuiltins::GetBuiltins().p_uint8; }
+template<> Primitive* GetPrimitiveFromType<int16>() { return &PrimitiveBuiltins::GetBuiltins().p_int16; }
+template<> Primitive* GetPrimitiveFromType<uint16>() { return &PrimitiveBuiltins::GetBuiltins().p_uint16; }
+template<> Primitive* GetPrimitiveFromType<int32>() { return &PrimitiveBuiltins::GetBuiltins().p_int32; }
+template<> Primitive* GetPrimitiveFromType<uint32>() { return &PrimitiveBuiltins::GetBuiltins().p_uint32; }
+template<> Primitive* GetPrimitiveFromType<int64>() { return &PrimitiveBuiltins::GetBuiltins().p_int64; }
+template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveBuiltins::GetBuiltins().p_uint64; }
+template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveBuiltins::GetBuiltins().p_float; }
+template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveBuiltins::GetBuiltins().p_Vector3; }
+template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveBuiltins::GetBuiltins().p_Color; }
+template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveBuiltins::GetBuiltins().p_Quaternion; }
+
+//-----------------------------------//
+
+void Enum::addValue(const char* name, int32 value)
+{
+	values[name] = value;
+}
+
+//-----------------------------------//
+
+int32 Enum::getValue(const char* name)
+{
+	EnumValuesMap::iterator it = values.find(name);
+	if (it == values.end()) return -1;
+	
+	return it->second;
+}
+
+//-----------------------------------//
+
+const char* Enum::getValueName(int32 value)
+{
+	EnumValuesMap::iterator it = values.begin();
+	
+	for(; it != values.end(); ++it)
+	{
+		const char* name = it->first;
+		if( value == it->second ) return name;
+	}
+
+	return nullptr;
+}
 
 //-----------------------------------//
 

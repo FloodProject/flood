@@ -25,7 +25,7 @@ namespace
 
 		if(context->loading)
 		{
-			context->primitive = &PrimitiveGetBuiltins().p_uint32;
+			context->primitive = &PrimitiveBuiltins::GetBuiltins().p_uint32;
 			context->walkPrimitive(context, wt);
 			h->hook = context->valueContext.u32;
 		}
@@ -35,7 +35,7 @@ namespace
 
 			// Serialize a custom integer value.
 			context->valueContext.u32 = h->hook;
-			context->primitive = &PrimitiveGetBuiltins().p_uint32;;
+			context->primitive = &PrimitiveBuiltins::GetBuiltins().p_uint32;;
 			context->walkPrimitive(context, wt);
 
 			context->walkComposite(context, ReflectionWalkType::End);
@@ -45,7 +45,7 @@ namespace
 	void SerializeHookI(ReflectionContext* context, ReflectionWalkType wt)
 	{
 		I* i = (I*) context->object;
-		context->primitive = &PrimitiveGetBuiltins().p_uint32;;
+		context->primitive = &PrimitiveBuiltins::GetBuiltins().p_uint32;;
 
 		if(context->loading)
 		{
@@ -169,15 +169,15 @@ SUITE(Core)
 
 		A a;
 		a.foo = 33;
-		Class* classA = ClassGetType(&a);
+		Class* classA = Class::GetType(&a);
 
 		ReflectionContext& context = bin->serializeContext;
 		context.object = &a;
-		context.field = ClassGetField(classA, "foo");
+		context.field = classA->getField("foo");
 		CHECK(nullptr != context.field);
 
 		ReflectionWalkCompositeField(&context);
-		EncodeVariableInteger(bin->ms, FieldInvalid);
+		EncodeVariableInteger(bin->ms, Field::FieldInvalid);
 
 		a.foo = 22;
 

@@ -15,8 +15,8 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 struct Object;
-struct Class;
-struct Field;
+class Class;
+class Field;
 
 /**
  * Class watchers can be used to check for changes in reflected classes.

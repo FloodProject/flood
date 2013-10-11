@@ -209,7 +209,7 @@ void Image::SetModified()
 
 void Image::log() const
 {
-	const char* desc = EnumGetValueName(PixelFormatGetType(), (int32)format);
+	const char* desc = PixelFormatGetType()->getValueName((int32)format);
 	LogInfo( "Image has pixel format '%s' and size %dx%d", desc, width, height );
 }
 

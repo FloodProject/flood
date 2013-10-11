@@ -36,7 +36,7 @@ bool ClassWatchUpdateField(ClassWatch* watch, const Field* field)
 {
 	FieldWatch& fw = watch->fields[field];
 
-	byte* min = (byte*) ClassGetFieldAddress(fw.object, field);
+	byte* min = (byte*) Class::GetFieldAddress(fw.object, field);
 	byte* max = min + field->size;
 
 	size_t size = max - min;
@@ -67,7 +67,7 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 {
 	if( !watch || !object ) return;
 
-	Class* klass = ClassGetType(object);
+	Class* klass = Class::GetType(object);
 	const std::vector<Field*>& fields = klass->fields;
 
 	for(size_t i = 0; i < fields.size(); i++)

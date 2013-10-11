@@ -69,20 +69,17 @@ bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
 								    Class* klass, ReflectionHandleContext& ctx)
 {
 	assert(handleContextMap && "Expected a valid context map");
-	if (!handleContextMap ) return false;
+	if (!handleContextMap) return false;
 
 	auto it = handleContextMap->find(klass);
 	
-	if( it != handleContextMap->end() )
+	if (it != handleContextMap->end())
 	{
 		ctx = it->second;
 		return true;
 	}
-	else if( ClassHasParent(klass) )
-	{
-		Class* parent = ClassGetParent(klass);
-		return ReflectionFindHandleContext(handleContextMap, parent, ctx);
-	}
+	else if (klass->hasParent())
+		return ReflectionFindHandleContext(handleContextMap, klass->getParent(), ctx);
 
 	return false;
 }
@@ -172,7 +169,7 @@ static void ReflectionWalkEnum(ReflectionContext* context)
 	if( !context->walkEnum ) return;
 
 	ValueContext& vc = context->valueContext;
-	vc.i32 = *(int32*) ClassGetFieldAddress(context->object, context->field);
+	vc.i32 = *(int32*) Class::GetFieldAddress(context->object, context->field);
 
 	context->walkEnum(context, ReflectionWalkType::Element);
 }
@@ -261,8 +258,8 @@ static void ReflectionWalkArray(ReflectionContext* context)
 		context->object = (Object*) context->elementAddress;
 		context->type = field->type;
 
-		bool isObject = ClassInherits((Class*) context->type, ObjectGetType());
-		if( isObject ) context->type = ClassGetType(context->object);
+		bool isObject = ((Class*) context->type)->inherits(ObjectGetType());
+		if( isObject ) context->type = Class::GetType(context->object);
 
 		if( isObject && !context->type )
 		{
@@ -316,11 +313,11 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	Type* type = context->type;
 	Object* object = context->object;
 
- 	context->address = ClassGetFieldAddress(context->object, field);
+ 	context->address = Class::GetFieldAddress(context->object, field);
 	context->elementAddress = context->address;
 	context->type = field->type;
 
-	if( ReflectionIsComposite(field->type) )
+	if (field->type->isComposite())
 		context->object = (Object*) context->address;
 
 	ReflectionWalkFunction handleSerialize = nullptr;
@@ -330,7 +327,7 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
-	if (ReflectionIsComposite(field->type))
+	if (field->type->isComposite())
 		HandleFindSerializeFunction(context, (Class*) field->type);
 
 	// Check for custom handle serialize functions.
@@ -351,7 +348,7 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 		Object* object = context->object;
 		Type* type = context->type;
 
-		context->type = ClassGetType(context->object);
+		context->type = Class::GetType(context->object);
 		ReflectionWalkType(context, context->type);
 
 		context->type = type;
@@ -378,14 +375,14 @@ void ReflectionWalkComposite(ReflectionContext* context)
 {
 	bool isTopComposite = context->composite == context->objectClass;
 
-	if( isTopComposite )
+	if (isTopComposite)
 		context->walkComposite(context, ReflectionWalkType::Begin);
 
-	if( ClassHasParent(context->composite) )
+	if (context->composite->hasParent())
 	{
 		Class* current = context->composite;
 		
-		context->composite = ClassGetParent(current);
+		context->composite = current->getParent();
 		ReflectionWalkComposite(context);
 		
 		context->composite = current;
@@ -450,7 +447,7 @@ void ReflectionWalk(const Object* object, ReflectionContext* context)
 {
 	if( !context ) return;
 
-	Class* objectClass = ClassGetType(object);
+	Class* objectClass = Class::GetType(object);
 	if( !objectClass ) return;
 
 	context->object = (Object*) object;

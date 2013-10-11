@@ -14,7 +14,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct Class;
+class Class;
 
 /**
  * Objects are the root class for types using the reflection services.
@@ -42,7 +42,7 @@ struct API_CORE NO_VTABLE Object : public ReferenceCounted
 	// Returns if this type inherits from the given type.
 	template<typename T> bool inherits()
 	{
-		return ClassInherits(getType(), T::getStaticType());
+		return getType()->inherits(T::getStaticType());
 	}
 
 	virtual ~Object() {}
@@ -54,11 +54,11 @@ protected:
 
 #define REFLECT_DECLARE_STATIC_CLASS(className) \
 	public: \
-	static Class* getStaticType() { return ReflectionGetType(className); }
+	static Class* getStaticType() { return className##GetType(); }
 
 #define REFLECT_DECLARE_OBJECT(className) \
 	public: \
-	virtual Class* getType() const OVERRIDE { return ReflectionGetType(className); } \
+	virtual Class* getType() const OVERRIDE { return className##GetType(); } \
 	REFLECT_DECLARE_STATIC_CLASS(className) \
 	REFLECT_DECLARE_CLASS_FRIEND(className)
 

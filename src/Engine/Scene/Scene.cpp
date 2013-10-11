@@ -108,11 +108,11 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		Entity* entity = entities[i].get();
-		if( !entity ) continue;
+		if (!entity) continue;
 
 		Class* klass = entity->getType();
 
-		if( ClassInherits(klass, ReflectionGetType(Group)) )
+		if (klass->inherits(GroupGetType()) )
 		{
 			const Group* group = (const Group*) entity;
 
@@ -307,7 +307,7 @@ static bool DoRayQuery( const Ray& ray,	const GeometryBuffer* gb,
 
 static bool DoSkinning(const Geometry* geo, std::vector<Vector3>& skinnedPositions)
 {
-	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
+	bool isModel = geo->getType()->inherits(ModelGetType());
 	if( !isModel ) return false;
 
 	Model* model = (Model*) geo;
