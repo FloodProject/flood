@@ -9,8 +9,10 @@ namespace Flood.Editor
         public static void Main(string[] args)
         {
             var app = new Application();
-            
-            app.ModuleManager.ModuleLibrary.AddDirectory(Directory.GetCurrentDirectory());
+
+            var moduleDir = Path.Combine(Directory.GetCurrentDirectory(), "Modules");
+            app.ModuleManager.ModuleLibrary.AddDirectory(moduleDir);
+
             app.ModuleManager.LoadModule(new ModuleId("Editor.Client", 0));
 
             app.Run();
