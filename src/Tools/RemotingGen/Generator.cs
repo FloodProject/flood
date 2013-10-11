@@ -140,10 +140,10 @@ namespace RemotingGen
                     WriteLine("get {{ return {0}; }}", backingFieldName);
                     WriteLine("set");
                     WriteStartBraceIndent();
-                    WriteLine("{0} = value;", backingFieldName);
-                    NewLine();
                     WriteLine("if( value == {0})", backingFieldName);
                     WriteLineIndent("return;");
+                    NewLine();
+                    WriteLine("{0} = value;", backingFieldName);
                     NewLine();
                     WriteLine("changedProperties.SetBit({0});", param.Id);
                     NewLine();
