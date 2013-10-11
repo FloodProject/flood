@@ -14,6 +14,7 @@ namespace Flood.Editor
             app.ModuleManager.ModuleLibrary.AddDirectory(moduleDir);
 
             app.ModuleManager.LoadModule(new ModuleId("Editor.Client", 0));
+            app.ModuleManager.LoadModule(new ModuleId("TextAddin", 0));
 
             app.Run();
         }
