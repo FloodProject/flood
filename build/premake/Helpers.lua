@@ -53,15 +53,22 @@ function IncludePremake(basedir, premakefile)
     end
 end
 
-function SetupRemotingGen(projectName,extension)
+function SetupRemotingGen(projectName,extension,exePath)
 	dependson { "RemotingGen" }
 
-	local exePath = SafePath("$(TargetDir)" .. "RemotingGen.exe")
+	if not exePath then
+		exePath = SafePath("$(TargetDir)RemotingGen.exe")
+	end
 	local outPath = SafePath(path.join(gendir,projectName))
 	local dllPath = SafePath("$(TargetDir)" .. projectName .. extension)
 	local command = exePath .. " -o=" .. outPath .. " " .. dllPath;
     
 	postbuildcommands { command }
+end
+
+function SetupModule(projectName)
+    SetupRemotingGen(projectName,".dll", path.join("$(TargetDir)..","RemotingGen.exe"))
+    targetdir (path.join(libdir, "Modules"))
 end
 
 function SetupLibPaths(lib)

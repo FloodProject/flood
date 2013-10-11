@@ -7,7 +7,7 @@ project "Editor.Client"
 	
 	location "."
 
-	SetupRemotingGen("Editor.Client", ".dll")
+	SetupModule("Editor.Client")
 	
 	files
 	{

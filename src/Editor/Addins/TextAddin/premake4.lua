@@ -11,6 +11,8 @@ project "TextAddin"
         "**.xsd"
     }
 
+    SetupModule("TextAddin")
+
     files
     {
         "premake4.lua",
