@@ -120,7 +120,8 @@ namespace RemotingGen
                         {
                             OriginMember = new PropertySignature(typeSig, declaringTypeSig, param.Name), 
                             Name = backingFieldName,
-                            AccessModifier = AccessModifiers.Private
+                            AccessModifier = AccessModifiers.Private,
+                            NoCustomAttributes = true
                         });
 
                         var setParams = new List<ParameterSignature> {new ParameterSignature(typeSig, "value")};
