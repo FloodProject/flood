@@ -20,7 +20,7 @@ namespace TextAddin.Controls
         {
             KeyboardInputEnabled = true;
 
-            SetTextAnchor(1);
+            SetTextAnchor(0);
         }
 
         private void SetTextAnchor(int line, int column)
