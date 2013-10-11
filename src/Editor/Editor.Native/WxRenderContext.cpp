@@ -160,7 +160,7 @@ void WxGLCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 		//onRender();
 	
 		// Swaps the front and back buffers.
-		window->update();
+		//window->update();
 	}
 }
 
