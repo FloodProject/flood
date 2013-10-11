@@ -25,13 +25,11 @@ project "TextAddin"
         "System.XML",
         "EngineBindings",
         "EngineManaged",
-        "Mono.Addins"
     }
     
     linksnotcopied
     {
         "EngineBindings",
         "EngineManaged",
-        "Editor.Client",
-        "Mono.Addins"
+        "Editor.Client"
     }
