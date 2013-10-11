@@ -78,7 +78,7 @@ namespace Flood.Tools.PackageGen
             var packageArchivePath = Path.Combine(options.OutputDir, packageArchiveName);
 
             //Generate RPC classes
-            if (!RPCGen.Program.Generate(packageDllPath, options.PackageDir))
+            if (!RemotingGen.Program.Generate(packageDllPath, options.PackageDir, false))
                 return 1;
 
             //Create an archive
