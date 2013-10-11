@@ -1,47 +1,13 @@
-﻿using Flood.Remoting;
+﻿using Flood.Modules;
+using Flood.Remoting;
 using Flood.Remoting.Serialization;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RemotingGen.Tests.Services
 {
-
     public class Helper
     {
-        class MockContextLoader : IContextLoader
-        {
-            public struct MockContextId : IContextId
-            {
-                public string AssemblyFullName;
-
-                public void Write(Message data)
-                {
-                    data.Serializer.WriteString(AssemblyFullName);
-                }
-
-                public void Read(Message data)
-                {
-                    AssemblyFullName = data.Serializer.ReadString();
-                }
-            }
-
-            public async Task<Assembly> LoadContext(IContextId contextId)
-            {
-                return Assembly.Load(((MockContextId)contextId).AssemblyFullName);
-            }
-
-            public IContextId GetContextId(Assembly assembly)
-            {
-                return new MockContextId { AssemblyFullName = assembly.FullName };
-            }
-
-            public IContextId ReadContextId(Message data)
-            {
-                throw new System.NotImplementedException();
-            }
-
-        }
-
         public class MockMessagePeer : RemotingPeer
         {
             public RemotingManager Manager;
@@ -95,9 +61,11 @@ namespace RemotingGen.Tests.Services
 
         public static RemotingManager CreateMessageProcessor()
         {
-            var localPeer = CreatePeer(null);
-            var contextLoader = new MockContextLoader();
-            return localPeer.Manager = new RemotingManager(contextLoader);
+            var contextLoader = new ModuleManager();
+            var remotingManager = new RemotingManager(contextLoader);
+            contextLoader.Init(remotingManager.ServiceManager);
+
+            return remotingManager;
         }
 
         public static MockMessagePeer CreatePeer(RemotingManager remotingManager)
