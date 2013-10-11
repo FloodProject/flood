@@ -15,11 +15,11 @@ namespace Editor.Services
         public Control Control;
     }
 
-    //[GlobalService(1)]
+    [GlobalService(1)]
     public interface IPaneManager
     {
         [Id(1)]
-        Task AddPane(Pane pane);
+        Task AddPane([Id(1)]Pane pane);
     }
 
     // Implementation of global service IPaneManager
