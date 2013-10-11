@@ -61,8 +61,7 @@ namespace Flood.Modules
 
         IContextId IContextLoader.GetContextId(Assembly assembly)
         {
-            var assemblyName = assembly.GetName();
-            return new ModuleId { Name = assemblyName.Name, MajorVersion = assemblyName.Version.Major };
+            return GetModuleId(assembly);
         }
 
         async Task<Assembly> IContextLoader.LoadContext(IContextId contextId)
@@ -125,6 +124,16 @@ namespace Flood.Modules
                 if(!serviceManager.HasGlobalService(type))
                     throw new Exception("Context does not instantiate global service "+type);
             }
+        }
+
+        private static ModuleId GetModuleId(Assembly assembly)
+        {
+            return GetModuleId(assembly.GetName());
+        }
+
+        private static ModuleId GetModuleId(AssemblyName assemblyName)
+        {
+            return new ModuleId { Name = assemblyName.Name, MajorVersion = assemblyName.Version.Major };
         }
     }
 }
