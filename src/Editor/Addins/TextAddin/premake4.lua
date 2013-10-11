@@ -25,6 +25,7 @@ project "TextAddin"
         "System.XML",
         "EngineBindings",
         "EngineManaged",
+        "Editor.Client"
     }
     
     linksnotcopied
