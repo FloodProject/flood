@@ -72,7 +72,7 @@ void Camera::updateViewTransform()
 
 void Camera::updateFrustum()
 {
-	if( !activeView ) return;
+	if (!activeView) return;
 
 	// Update frustum matrices.
 	frustum.aspectRatio = activeView->getAspectRatio();
@@ -85,7 +85,7 @@ void Camera::updateFrustum()
 
 void Camera::setView( RenderView* view )
 {
-	if( !view ) return;
+	if (!view) return;
 
 	activeView = view;
 	activeView->viewMatrix = viewMatrix;
@@ -98,12 +98,12 @@ void Camera::setView( RenderView* view )
 
 void Camera::update( float )
 {
-	if( !activeView ) return;
+	if (!activeView) return;
 
 	drawer.reset();
 	bool frustumUpdated = false;
 
-	if( !frustumUpdated)
+	if (!frustumUpdated)
 		updateFrustum();
 
 	// Only run the following code once.
@@ -141,12 +141,12 @@ void Camera::render( const Scene* scene )
 
 void Camera::render( RenderBlock& block, bool clearView )
 {
-	if( !activeView ) return;
+	if (!activeView) return;
 	
 	RenderDevice* renderDevice = GetRenderDevice();
 	renderDevice->setActiveView( activeView );
 
-	if( clearView )
+	if (clearView)
 		renderDevice->clearView();
 
 	block.renderables.insert(
@@ -161,19 +161,19 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 void Camera::cull( RenderBlock& block, const Entity* entity )
 {
-	if( !entity ) return;
+	if (!entity) return;
 
 	// Try to see if this is a Group-derived node.
 	Class* klass = entity->getType();
 	
-	if( ClassInherits(klass, ReflectionGetType(Group)) )
+	if (klass->inherits(GroupGetType()))
 	{
 		const Group* group = (Group*) entity;
 
 		const std::vector<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.
-		for( size_t i = 0; i < entities.size(); i++ )
+		for (size_t i = 0; i < entities.size(); i++)
 		{
 			const Entity* child = entities[i].get();
 			cull( block, child );

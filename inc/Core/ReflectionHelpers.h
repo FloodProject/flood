@@ -36,10 +36,10 @@ NAMESPACE_CORE_BEGIN
 		_enum.kind = TypeKind::Enumeration; \
 
 #define ENUM(value) \
- EnumAddValue(&_enum, TOSTRING(value), (int32) This::value);
+ _enum.addValue(TOSTRING(value), (int32) This::value);
 
 #define REFLECT_ENUM_END() \
-	ReflectionRegisterType(&_enum); \
+	ReflectionDatabase::GetDatabase().registerType(&_enum); \
 	return &_enum; }
 
 //-----------------------------------//
@@ -91,7 +91,7 @@ NAMESPACE_CORE_BEGIN
 	klass.parent = parentName##GetType();
 
 #define REFLECT_CLASS_END() \
-	ReflectionRegisterType(&klass); \
+	ReflectionDatabase::GetDatabase().registerType(&klass); \
 	return &klass; } \
 
 //-----------------------------------//
@@ -135,7 +135,7 @@ NAMESPACE_CORE_BEGIN
 	fieldName.offset = offsetof(This, fieldName); \
 	fieldName.name = TOSTRING(fieldName); \
 	fieldName.id = fieldId; \
-	ClassAddField(&klass, &fieldName);
+	klass.addField(&fieldName);
 
 #define FIELD_SET_SERIALIZER(fieldName, fn) \
 	fieldName.serialize = fn;
@@ -148,14 +148,14 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual) \
 	static Field fieldName; \
 	fieldName.type = fieldType##GetType(); \
-	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual); \
+	fieldName.setQualifier(FieldQualifier::pointerQual); \
 	fieldName.pointer_size = sizeof(pointerType); \
 	FIELD_COMMON(fieldId, pointerType, fieldName)
 
 #define FIELD_CLASS_PTR_SETTER(fieldId, fieldType, pointerType, fieldName, pointerQual, setterName) \
 	FIELD_SETTER_CLASS(pointerType, fieldName, setterName) \
 	FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual) \
-	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
+	fieldName.setSetter(FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_ENUM(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
@@ -165,33 +165,33 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_ENUM_SETTER(fieldId, fieldType, fieldName, setterName) \
 	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_ENUM(fieldId, fieldType, fieldName) \
-	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
+	fieldName.setSetter(FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_VECTOR(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
-	FieldSetQualifier(&fieldName, FieldQualifier::Array); \
-	fieldName.type = ReflectionGetType(fieldType); \
+	fieldName.setQualifier(FieldQualifier::Array); \
+	fieldName.type = fieldType##GetType(); \
 	FIELD_RESIZER_CLASS(fieldType, fieldName) \
 	fieldName.resize = FIELD_RESIZER_NAME(fieldName); \
 	FIELD_COMMON(fieldId, fieldType, fieldName)
 
 #define FIELD_VECTOR_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual ) \
 	static Field fieldName; \
-	FieldSetQualifier(&fieldName, FieldQualifier::Array); \
-	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual); \
+	fieldName.setQualifier(FieldQualifier::Array); \
+	fieldName.setQualifier(FieldQualifier::pointerQual); \
 	fieldName.pointer_size = sizeof(pointerType); \
-	fieldName.type = ReflectionGetType(fieldType); \
+	fieldName.type = fieldType##GetType(); \
 	FIELD_COMMON(fieldId, fieldType, fieldName) \
 
 #define FIELD_PRIMITIVE(fieldId, fieldType, fieldName) \
 	static Field fieldName; \
-	fieldName.type = &PrimitiveGetBuiltins().p_##fieldType; \
+	fieldName.type = &PrimitiveBuiltins::GetBuiltins().p_##fieldType; \
 	FIELD_COMMON(fieldId, fieldType, fieldName)
 
 #define FIELD_PRIMITIVE_SETTER(fieldId, fieldType, fieldName, setterName) \
 	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_PRIMITIVE(fieldId, fieldType, fieldName) \
-	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
+	fieldName.setSetter(FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType) \
 	static Field fieldName; \
@@ -201,13 +201,13 @@ NAMESPACE_CORE_BEGIN
 #define FIELD_PRIMITIVE_SETTER_CUSTOM(fieldId, fieldType, fieldName, primType, setterName) \
 	FIELD_SETTER_CLASS(fieldType, fieldName, setterName) \
 	FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType) \
-	FieldSetSetter(&fieldName, FIELD_SETTER_NAME(fieldName));
+	fieldName.setSetter(FIELD_SETTER_NAME(fieldName));
 
 #define FIELD_READONLY(fieldName) \
-	FieldSetQualifier(&fieldName, FieldQualifier::ReadOnly);
+	fieldName.setQualifier(FieldQualifier::ReadOnly);
 
 #define FIELD_NO_SERIALIZE(fieldName) \
-	FieldSetQualifier(&fieldName, FieldQualifier::NoSerialize);
+	fieldName.setQualifier(FieldQualifier::NoSerialize);
 
 #define FIELD_ALIAS(fieldName, aliasName) \
 	fieldName.aliases.push_back(#aliasName);

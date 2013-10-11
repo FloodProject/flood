@@ -109,7 +109,7 @@ static void ResourceHandleSerialize(
 	Resource* resource = (Resource*) context->object;
 	
 	context->valueContext.s = &resource->path;
-	context->primitive = &PrimitiveGetBuiltins().p_string;
+	context->primitive = &PrimitiveBuiltins::GetBuiltins().p_string;
 	context->walkPrimitive(context, wt);
 }
 
@@ -139,7 +139,7 @@ ResourceManager::ResourceManager()
 		gs_ResourceHandleManager = handleManager;
 
 	ReflectionHandleContext context;
-	context.type = ReflectionGetType(Resource);
+	context.type = ResourceGetType();
 	context.handles = gs_ResourceHandleManager;
 	context.serialize = ResourceHandleSerialize;
 	context.deserialize = ResourceHandleFind;
@@ -533,7 +533,7 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 		const ResourceLoaderPtr& loader = it->second;
 		Class* resourceClass = loader->getResourceClass();
 		
-		if(ClassInherits(resourceClass, klass))
+		if(resourceClass->inherits(klass))
 			return loader.get();
 	}
 
@@ -544,17 +544,15 @@ ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
 
 void ResourceManager::setupResourceLoaders(Class* klass)
 {
-	for( size_t i = 0; i < klass->childs.size(); i++ )
+	for(auto& child : klass->childs)
 	{
-		Class* child = klass->childs[i];
-
-		if( !child->childs.empty() )
+		if (!child->childs.empty())
 			setupResourceLoaders(child);
 	
-		if( ClassIsAbstract(child ) ) continue;
+		if (child->isAbstract()) continue;
 
-		auto loader = (ResourceLoader*) ClassCreateInstance(
-			child, GetResourcesAllocator());
+		auto loader = (ResourceLoader*) 
+			child->createInstance(GetResourcesAllocator());
 
 		registerLoader( loader );
 	}

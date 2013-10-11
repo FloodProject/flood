@@ -238,7 +238,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType wt)
 	SerializerJSON* json = (SerializerJSON*) ctx->userData;
 	
 	ValueContext& vc = ctx->valueContext;
-	const char* name = EnumGetValueName(ctx->enume, vc.i32);
+	const char* name = ctx->enume->getValueName(vc.i32);
 	assert( name != nullptr );
 
 	json_t* str = json_string(name);
@@ -319,7 +319,7 @@ static void DeserializeEnum( ReflectionContext* context )
 	json_t* value = json->values.back();
 
 	const char* name = json_string_value(value);
-	int32 enumValue = EnumGetValue(context->enume, name);
+	int32 enumValue = context->enume->getValue(name);
 	FieldSet<int32>(context->field, context->object, enumValue);
 }
 
@@ -413,7 +413,7 @@ static void DeserializeArray( ReflectionContext* context )
 
 	if( size == 0 ) return;
 
-	void* address = ClassGetFieldAddress(context->object, field);
+	void* address = Class::GetFieldAddress(context->object, field);
 	void* begin = ReflectionArrayResize(context, address, size);
 
 	if( isArray )
@@ -548,12 +548,12 @@ static void DeserializeField( ReflectionContext* context, ReflectionWalkType wt 
 		{
 			Object* object = DeserializeComposite(context, 0);
 			
-			void* address = ClassGetFieldAddress(context->object, field);
+			void* address = Class::GetFieldAddress(context->object, field);
 			PointerSetObject(field, address, object);
 		}
 		else
 		{
-			void* address = ClassGetFieldAddress(context->object, field);
+			void* address = Class::GetFieldAddress(context->object, field);
 			Object* object = DeserializeComposite(context, (Object*) address);
 		}
 
@@ -590,7 +590,7 @@ static void DeserializeFields( ReflectionContext* context, ReflectionWalkType )
 		Class* composite = context->composite;
 		const Field* field = context->field;
 
-		Field* newField = ClassGetField(composite, key);
+		Field* newField = composite->getField(key);
 		
 		if( !newField )
 		{
@@ -618,7 +618,7 @@ static Object* DeserializeComposite(ReflectionContext* context, Object* newObjec
 	SerializerJSON* json = (SerializerJSON*) context->userData;
 	json_t* value = json->values.back();
 
-	if( !json_is_object(value) ) return 0;
+	if (!json_is_object(value)) return 0;
 
 	void* iter = json_object_iter(value);
 	const char* key = json_object_iter_key(iter);
@@ -629,28 +629,28 @@ static Object* DeserializeComposite(ReflectionContext* context, Object* newObjec
 	#pragma TODO("Remove JSON class compatibility check")
 
 	// Use explicit class if object has one to handle polymorphism.
-	Class* explicitClass = (Class*) ReflectionFindType(key);
+	Class* explicitClass = (Class*) ReflectionDatabase::GetDatabase().findType(key);
 	
 	// If there is no field class, require an explicit class.
-	if( !newClass && !explicitClass )
+	if (!newClass && !explicitClass)
 		return 0;
 	
 	if( !newClass ) newClass = explicitClass;
 
 	// Test if the class is compatible with the field we are dealing with.
-	if( explicitClass && ClassInherits(explicitClass, newClass) )
+	if (explicitClass && explicitClass->inherits(newClass))
 	{
 		newClass = explicitClass;
 		value = iterValue;
 	}
 
-	if( !newClass || ClassIsAbstract(newClass) )
+	if (!newClass || newClass->isAbstract())
 		return 0;
 
-	if( !newObject )
-		newObject = (Object*) ClassCreateInstance(newClass, json->allocator);
+	if (!newObject)
+		newObject = (Object*) newClass->createInstance(json->allocator);
 
-	if( !newObject ) return 0;
+	if (!newObject) return 0;
 
 	Class* objectClass = context->objectClass;
 	Class* composite = context->composite;
@@ -662,14 +662,14 @@ static Object* DeserializeComposite(ReflectionContext* context, Object* newObjec
 
 	json->values.push_back(value);
 
-	if( newClass->serialize )
+	if (newClass->serialize)
 		newClass->serialize(context, ReflectionWalkType::Begin);
 	else
 		DeserializeFields(context, ReflectionWalkType::Begin);
 
 	json->values.pop_back();
 
-	if( ClassInherits(newClass, ReflectionGetType(Object)) )
+	if (newClass->inherits(ObjectGetType()))
 		newObject->fixUp();
 
 	context->object = object;

@@ -75,7 +75,7 @@ Entity::~Entity()
 
 static bool IsGroup(Entity* entity)
 {
-	return entity && ClassInherits(ClassGetType(entity), GroupGetType());
+	return entity && Class::GetType(entity)->inherits(GroupGetType());
 }
 
 //-----------------------------------//
@@ -111,15 +111,15 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
-bool Entity::removeComponent( const ComponentPtr& component )
+bool Entity::removeComponent(const ComponentPtr& component)
 {
-	if( !component ) return false;
+	if (!component) return false;
 	
 	Class* type = component->getType();
 
 	ComponentMap::iterator it = componentsMap.find(type);
 	
-	if( it == componentsMap.end() )
+	if (it == componentsMap.end())
 		return false;
 
 	componentsMap.erase(it);
@@ -127,13 +127,13 @@ bool Entity::removeComponent( const ComponentPtr& component )
 	onComponentRemoved(component);
 	sendEvents();
 
-	if( IsGroup(parent) )
+	if (IsGroup(parent))
 	{
 		Group* group = (Group*) parent;
 		group->onEntityComponentRemoved(component);
 	}
 
-	if( ClassInherits(type, ReflectionGetType(Geometry)) )
+	if (type->inherits(GeometryGetType()))
 		getTransform()->markBoundingVolumeDirty();
 
 	return true;
@@ -143,9 +143,9 @@ bool Entity::removeComponent( const ComponentPtr& component )
 
 ComponentPtr Entity::getComponent(const char* name) const
 {
-	Type* type = ReflectionFindType(name);
+	Type* type = ReflectionDatabase::GetDatabase().findType(name);
 
-	if( !ReflectionIsComposite(type) )
+	if (!type->isComposite())
 		return nullptr;
 
 	return getComponent((Class*) type);
@@ -174,7 +174,7 @@ ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 		const ComponentPtr& component = it->second;
 		Class* componentClass = component->getType();
 
-		if( ClassInherits(componentClass, klass) )
+		if (componentClass->inherits(klass))
 			return component;
 	}
 
@@ -192,7 +192,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 	{
 		const ComponentPtr& component = it->second;
 
-		if( !ClassInherits(component->getType(), ReflectionGetType(Geometry)) )
+		if( !component->getType()->inherits(GeometryGetType()) )
 			continue;
 
 		const GeometryPtr& geo = RefCast<Geometry>(component);
@@ -258,7 +258,7 @@ void Entity::sendEvents()
 
 	Class* type =  parent->getType();
 
-	if( !ClassInherits(type, ReflectionGetType(Group)) )
+	if( !type->inherits(GroupGetType()) )
 		return;
 
 	Group* group = (Group*) parent;
