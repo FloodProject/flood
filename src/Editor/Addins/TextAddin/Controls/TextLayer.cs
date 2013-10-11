@@ -24,7 +24,7 @@ namespace TextAddin.Controls
             elementGenerators = new ObserveAddRemoveCollection<VisualLineElementGenerator>(ElementGenerator_Added, ElementGenerator_Removed);
             lineTransformers = new ObserveAddRemoveCollection<IVisualLineTransformer>(LineTransformer_Added, LineTransformer_Removed);
 
-            heightTree = new HeightTree(textDocument,Skin.DefaultFont.Size);
+            heightTree = new HeightTree(textDocument, 16); //TODO Skin.DefaultFont.Size
             lines = new Dictionary<DocumentLine, VisualLine>();
 
             GlobalTextRunProperties = new TextRunProperties { Foreground = Color.Black};
