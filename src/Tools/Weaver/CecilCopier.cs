@@ -998,7 +998,7 @@ namespace Weaver
 
         public void Merge(TypeDefinition def1, TypeDefinition def2)
         {
-            MergeAll(def1,def2,"Name","DeclaringType", "MetadataToken", "Module", "Scope", "BaseType");
+            SetCopy(def1, def2);
 
             AddDelayedCopy(def1, def2, 
                 (originObject, destObject) =>
@@ -1019,10 +1019,7 @@ namespace Weaver
                                 throw new Exception("Cannot merge classes with diferent base types.");
                         }
 
-                        if (hasType1BaseClass && !hasType2BaseClass)
-                        {
-                            destObject.BaseType = CopyReference(originObject.BaseType);
-                        }
+                        MergeAll(def1,def2,"Name","DeclaringType", "MetadataToken", "Module", "Scope");
                     });
         }
 
