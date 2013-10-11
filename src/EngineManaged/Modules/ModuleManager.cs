@@ -1,10 +1,9 @@
-﻿
+﻿using Flood.Remoting;
+using Flood.Remoting.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Flood.Remoting;
-using Flood.Remoting.Metadata;
 
 namespace Flood.Modules
 {
@@ -78,8 +77,14 @@ namespace Flood.Modules
             if (loadedModules.TryGetValue(moduleId, out assembly))
                 return assembly;
 
-            var stream = ModuleLibrary.GetModuleStream(moduleId);
-            assembly = Assembly.Load(stream.ReadAllBytes());
+            assembly = GetLoadedAssembly(moduleId);
+            if (assembly == null)
+            {
+                var stream = ModuleLibrary.GetModuleStream(moduleId);
+                assembly = Assembly.Load(stream.ReadAllBytes());
+            }
+
+            loadedModules.Add(moduleId, assembly);
 
             var module = CreateModuleObject(assembly);
             module.OnLoad(serviceManager);
@@ -134,6 +139,18 @@ namespace Flood.Modules
         private static ModuleId GetModuleId(AssemblyName assemblyName)
         {
             return new ModuleId { Name = assemblyName.Name, MajorVersion = assemblyName.Version.Major };
+        }
+
+        private static Assembly GetLoadedAssembly(ModuleId moduleId)
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var assemblyModuleId = GetModuleId(assembly);
+                if (moduleId.Equals(assemblyModuleId))
+                    return assembly;
+            }
+
+            return null;
         }
     }
 }
