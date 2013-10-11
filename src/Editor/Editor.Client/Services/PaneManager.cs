@@ -8,13 +8,11 @@ namespace Editor.Services
     [DataObject(1)]
     public class Pane
     {
-        //[Id(1)] 
+        [Id(1)] 
         public string Title;
 
-        public virtual Control CreateControl(Control parent)
-        {
-            return new Button(parent);
-        }
+        [Id(2)]
+        public Control Control;
     }
 
     //[GlobalService(1)]

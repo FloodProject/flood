@@ -23,7 +23,7 @@ namespace Flood.Editor.Client.GUI
 
         public void AddPane(Pane pane)
         {
-            var tabButton = AddPage(pane.Title, pane.CreateControl(this));
+            var tabButton = AddPage(pane.Title, pane.Control);
             paneButtons.Add(pane,tabButton);
         }
 
