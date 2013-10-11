@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flood;
 
-namespace GUI
+namespace Flood.GUI
 {
     class GlyphManager
     {

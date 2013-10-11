@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Flood.GUI.ControlInternal;
 using Flood.Remoting.Metadata;
-using GUI.ControlInternal;
+using System;
+using System.Collections.Generic;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     [DataObject(2)]
     public class MultiSplitter : Control

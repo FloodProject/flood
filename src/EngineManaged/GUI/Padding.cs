@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Represents inner spacing.

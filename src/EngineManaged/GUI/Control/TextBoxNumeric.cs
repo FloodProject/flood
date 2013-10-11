@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Numeric text box - accepts only float numbers.

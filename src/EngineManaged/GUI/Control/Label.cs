@@ -1,8 +1,7 @@
-﻿using System;
-using Flood;
-using GUI.ControlInternal;
+﻿using Flood.GUI.ControlInternal;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Static text label.

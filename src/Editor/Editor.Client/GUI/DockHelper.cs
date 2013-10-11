@@ -1,7 +1,7 @@
 ﻿using System;
-using GUI.Controls;
-using GUI.DragDrop;
-using GUI.Skins;
+using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
+using Flood.GUI.Skins;
 
 namespace Flood.Editor.Client.GUI.Controls
 {

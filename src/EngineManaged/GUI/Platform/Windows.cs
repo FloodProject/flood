@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Win32;
 
 // todo: compile/run only on windows
 
-namespace GUI.Platform
+namespace Flood.GUI.Platform
 {
     /// <summary>
     /// Windows-specific utility functions.

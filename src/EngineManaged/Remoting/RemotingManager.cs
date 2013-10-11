@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Flood.Remoting.Serialization;
+﻿using Flood.Remoting.Serialization;
+using System.Diagnostics;
 
 namespace Flood.Remoting
 {

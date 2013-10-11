@@ -17,7 +17,6 @@
  * under the License.
  */
 
-using System;
 
 namespace Flood.Remoting.Serialization
 {

@@ -1,6 +1,6 @@
-﻿using GUI.Controls;
+﻿using Flood.GUI.Controls;
 
-namespace GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Tooltip handling.

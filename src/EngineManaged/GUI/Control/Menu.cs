@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flood.GUI.ControlInternal;
+using System;
 using System.Linq;
-using GUI.ControlInternal;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Popup menu.

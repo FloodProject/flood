@@ -1,11 +1,10 @@
 ﻿
-using System;
-using Flood;
+using Flood.GUI.Controls;
+using Flood.GUI.Skins;
 using Flood.Windows;
-using GUI.Controls;
-using GUI.Skins;
+using System;
 
-namespace GUI
+namespace Flood.GUI
 {
     public class GuiRenderable : WindowRenderable, IDisposable
     {

@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace GUI.Controls.Property
+﻿
+namespace Flood.GUI.Controls.Property
 {
     /// <summary>
     /// Checkable property.

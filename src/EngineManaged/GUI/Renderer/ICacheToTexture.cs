@@ -1,5 +1,5 @@
 ﻿
-namespace GUI.Renderers
+namespace Flood.GUI.Renderers
 {
     public interface ICacheToTexture
     {

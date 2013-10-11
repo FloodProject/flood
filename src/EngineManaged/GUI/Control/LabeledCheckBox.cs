@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// CheckBox with label.

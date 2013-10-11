@@ -1,8 +1,7 @@
-﻿using System;
-using Flood;
-using GUI.Input;
+﻿using Flood.GUI.Input;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// HSV hue selector.

@@ -1,10 +1,9 @@
 ﻿//#define DEBUG_TEXT_MEASURE
 
+using Flood.GUI.Controls;
 using System;
-using Flood;
-using GUI.Controls;
 
-namespace GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Displays text. Always sized to contents.

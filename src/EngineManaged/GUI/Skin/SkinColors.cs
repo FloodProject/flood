@@ -1,7 +1,6 @@
 ﻿
-using Flood;
 
-namespace GUI.Skins
+namespace Flood.GUI.Skins
 {
     /// <summary>
     /// UI colors used by skins.

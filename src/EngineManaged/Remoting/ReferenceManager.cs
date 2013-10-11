@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flood.Remoting.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Flood.Remoting.Serialization;
 
 namespace Flood.Remoting
 {

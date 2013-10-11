@@ -1,7 +1,6 @@
 ﻿using System;
-using Flood;
 
-namespace GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Single table row.

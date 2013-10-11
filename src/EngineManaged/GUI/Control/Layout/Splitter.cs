@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GUI.Controls.Layout
+namespace Flood.GUI.Controls.Layout
 {
     /// <summary>
     /// Base splitter class.

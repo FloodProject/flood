@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Flood;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base for controls whose interior can be scrolled.

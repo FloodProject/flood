@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Flood;
 
-namespace GUI
+namespace Flood.GUI
 {
     /// <summary>
     /// Misc utility functions.

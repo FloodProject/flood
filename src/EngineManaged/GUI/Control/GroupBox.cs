@@ -1,5 +1,5 @@
 ﻿
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Group box (container).

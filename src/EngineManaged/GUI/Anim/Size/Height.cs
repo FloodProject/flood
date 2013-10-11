@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace GUI.Anim.Size
+﻿
+namespace Flood.GUI.Anim.Size
 {
     class Height : TimedAnimation
     {

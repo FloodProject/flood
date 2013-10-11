@@ -1,7 +1,6 @@
 ﻿
-using Flood;
 
-namespace GUI.Skins.Texturing
+namespace Flood.GUI.Skins.Texturing
 {
     /// <summary>
     /// Single textured element.

@@ -1,7 +1,6 @@
-﻿using Flood;
-using GUI.Skins.Texturing;
+﻿using Flood.GUI.Skins.Texturing;
 
-namespace GUI.Skins
+namespace Flood.GUI.Skins
 {
     #region UI element textures
     public struct SkinTextures

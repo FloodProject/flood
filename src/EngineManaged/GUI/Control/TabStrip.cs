@@ -1,9 +1,8 @@
-﻿using System;
-using Flood;
-using GUI.ControlInternal;
-using GUI.DragDrop;
+﻿using Flood.GUI.ControlInternal;
+using Flood.GUI.DragDrop;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Tab strip - groups TabButtons and allows reordering.

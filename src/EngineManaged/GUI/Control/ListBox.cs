@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Flood.GUI.Controls.Layout;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GUI.Controls.Layout;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// ListBox control.

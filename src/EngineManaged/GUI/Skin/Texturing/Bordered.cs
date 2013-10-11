@@ -1,7 +1,6 @@
 ﻿
-using Flood;
 
-namespace GUI.Skins.Texturing
+namespace Flood.GUI.Skins.Texturing
 {
     public struct SubRect
     {

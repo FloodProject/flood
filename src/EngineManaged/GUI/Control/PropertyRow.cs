@@ -1,7 +1,7 @@
-﻿using System;
-using GUI.ControlInternal;
+﻿using Flood.GUI.ControlInternal;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Single property row.

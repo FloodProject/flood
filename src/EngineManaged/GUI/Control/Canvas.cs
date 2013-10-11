@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Flood.GUI.Anim;
+using Flood.GUI.DragDrop;
+using Flood.GUI.Input;
+using System;
 using System.Collections.Generic;
-using Flood;
-using GUI.Anim;
-using GUI.DragDrop;
-using GUI.Input;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Canvas control. It should be the root parent for all other controls.

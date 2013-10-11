@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Flood.GUI.Controls;
+using Flood.GUI.Input;
+using Flood.GUI.Renderers;
+using System;
 using System.Collections.Generic;
-using Flood;
-using GUI.Controls;
-using GUI.Input;
-using GUI.Renderers;
 
-namespace GUI
+namespace Flood.GUI
 {
     class ZCounter
     {

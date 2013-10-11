@@ -1,7 +1,6 @@
 ﻿
-using Flood;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Image container.

@@ -1,7 +1,6 @@
-﻿using Flood;
-using GUI.ControlInternal;
+﻿using Flood.GUI.ControlInternal;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base resizable control.

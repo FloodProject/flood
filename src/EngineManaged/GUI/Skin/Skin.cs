@@ -1,7 +1,6 @@
 ﻿using System;
-using Flood;
 
-namespace GUI.Skins
+namespace Flood.GUI.Skins
 {
     /// <summary>
     /// Base skin.

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flood.GUI.ControlInternal;
 using Flood.Remoting.Metadata;
-using GUI.ControlInternal;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Control with multiple tabs that can be reordered and dragged.

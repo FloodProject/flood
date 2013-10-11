@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GUI.Anim
+namespace Flood.GUI.Anim
 {
     // Timed animation. Provides a useful base for animations.
     public class TimedAnimation : Animation

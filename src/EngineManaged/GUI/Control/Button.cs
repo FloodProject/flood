@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using Flood;
-using GUI.Input;
+﻿using Flood.GUI.Input;
+using System;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Button control.

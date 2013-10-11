@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace GUI
+﻿
+namespace Flood.GUI
 {
     public struct HSV
     {

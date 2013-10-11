@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Flood;
-using GUI.Controls;
+﻿using Flood.GUI.Controls;
 
-namespace GUI.Input
+namespace Flood.GUI.Input
 {
     /// <summary>
     /// Keyboard state.

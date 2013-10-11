@@ -1,8 +1,7 @@
-﻿using System;
-using Flood;
-using GUI.Controls;
+﻿using Flood.GUI.Controls;
+using System;
 
-namespace GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Property button.

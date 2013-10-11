@@ -3,8 +3,8 @@ using Editor.Services;
 using Flood.Editor.Client.GUI;
 using Flood.Modules;
 using Flood.Windows;
-using GUI;
-using GUI.Controls;
+using Flood.GUI;
+using Flood.GUI.Controls;
 
 namespace Editor.Client
 {

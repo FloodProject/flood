@@ -1,7 +1,6 @@
-﻿using Flood;
-using GUI.Controls.Layout;
+﻿using Flood.GUI.Controls.Layout;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// List box row (selectable).

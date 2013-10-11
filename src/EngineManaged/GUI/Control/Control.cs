@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Flood;
+﻿using Flood.GUI.Anim;
+using Flood.GUI.DragDrop;
+using Flood.GUI.Input;
 using Flood.Remoting.Metadata;
 using Flood.Remoting.Serialization;
-using GUI.Anim;
-using GUI.DragDrop;
-using GUI.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base control class.

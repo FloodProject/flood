@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Flood.GUI.ControlInternal;
+using System;
 using System.Linq;
-using Flood;
-using GUI.ControlInternal;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Movable window with title bar.

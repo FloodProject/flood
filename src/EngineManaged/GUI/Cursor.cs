@@ -1,5 +1,5 @@
 ﻿
-namespace GUI
+namespace Flood.GUI
 {
     public class Cursor
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Editor.Services;
 using Flood.Editor.Client.GUI.Controls;
-using GUI;
-using GUI.Controls;
-using GUI.DragDrop;
+using Flood.GUI;
+using Flood.GUI.Controls;
+using Flood.GUI.DragDrop;
 
 namespace Flood.Editor.Client.GUI
 {

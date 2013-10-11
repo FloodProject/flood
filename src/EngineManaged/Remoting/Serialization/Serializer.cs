@@ -21,7 +21,6 @@
  * details.
  */
 
-using System.IO;
 using System.Text;
 
 namespace Flood.Remoting.Serialization

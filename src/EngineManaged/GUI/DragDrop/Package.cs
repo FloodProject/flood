@@ -1,8 +1,7 @@
-﻿using System;
-using Flood;
-using GUI.Controls;
+﻿using Flood.GUI.Controls;
+using System;
 
-namespace GUI.DragDrop
+namespace Flood.GUI.DragDrop
 {
     public class Package
     {

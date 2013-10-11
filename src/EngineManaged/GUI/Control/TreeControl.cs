@@ -1,7 +1,5 @@
-﻿using System;
-using Flood;
-
-namespace GUI.Controls
+﻿
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Tree control.

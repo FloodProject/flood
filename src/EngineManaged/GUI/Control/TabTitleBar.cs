@@ -1,7 +1,6 @@
-﻿using System;
-using GUI.DragDrop;
+﻿using Flood.GUI.DragDrop;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Titlebar for DockedTabControl.

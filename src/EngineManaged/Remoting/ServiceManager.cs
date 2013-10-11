@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flood.Remoting.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Flood.Remoting.Metadata;
 
 namespace Flood.Remoting
 {
@@ -93,6 +93,9 @@ namespace Flood.Remoting
                 throw new Exception("Local service implementation not found.");
 
             var impl = (ServiceImpl)stub;
+
+            var ass = AppDomain.CurrentDomain.GetAssemblies();
+
             return (T) impl.Impl;
         }
 

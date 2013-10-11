@@ -1,11 +1,11 @@
 ﻿
+using Flood.Remoting.Metadata;
+using Flood.Remoting.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Flood.Remoting.Metadata;
-using Flood.Remoting.Serialization;
 
 namespace Flood.Remoting
 {
@@ -66,7 +66,6 @@ namespace Flood.Remoting
 
         private Dictionary<int, ContextInfo> localIdToContext;
         private Dictionary<IContextId, ContextInfo> contextIdToContext;
-        private Dictionary<Assembly, ContextInfo> assemblyToContext;
 
         private int localIdCounter;
 
@@ -77,7 +76,6 @@ namespace Flood.Remoting
         {
             localIdToContext = new Dictionary<int, ContextInfo>();
             contextIdToContext = new Dictionary<IContextId, ContextInfo>();
-            assemblyToContext = new Dictionary<Assembly, ContextInfo>();
             localIdCounter = 1;
 
             this.remotingManager = remotingManager;
@@ -190,8 +188,10 @@ namespace Flood.Remoting
 
         private ContextInfo GetCreateContext(Assembly assembly)
         {
+            var contextId = Loader.GetContextId(assembly);
+
             ContextInfo context;
-            if (assemblyToContext.TryGetValue(assembly, out context))
+            if (contextIdToContext.TryGetValue(contextId, out context))
                 return context;
 
             var contextType = assembly.GetType("DataObjectFactory");
@@ -207,7 +207,6 @@ namespace Flood.Remoting
 
             localIdToContext.Add(context.LocalId, context);
             contextIdToContext.Add(context.ContextId, context);
-            assemblyToContext.Add(assembly, context);
 
             return context;
         }

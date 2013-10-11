@@ -1,7 +1,6 @@
-﻿using System;
-using GUI.Input;
+﻿using Flood.GUI.Input;
 
-namespace GUI.Controls
+namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Tab header.

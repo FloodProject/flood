@@ -1,7 +1,6 @@
-﻿using System;
-using GUI.Controls;
+﻿using Flood.GUI.Controls;
 
-namespace GUI.ControlInternal
+namespace Flood.GUI.ControlInternal
 {
     /// <summary>
     /// Slider bar.
