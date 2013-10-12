@@ -16,7 +16,9 @@ namespace Flood.Editor.Client.GUI
         private readonly Dictionary<Pane,TabButton> paneButtons = new Dictionary<Pane,TabButton>();
         private DockHelper dockHelper;
 
-        public PaneGroup(Container parent) : base(parent)
+        private PaneManager paneManager;
+
+        public PaneGroup(Container parent, PaneManager paneManager) : base(parent)
         {
             AllowReorder = true;
         }
@@ -47,6 +49,11 @@ namespace Flood.Editor.Client.GUI
         internal void HideDockHelper()
         {
             dockHelper.IsHidden = true;
+        }
+
+        protected override void OnKeyboardFocus()
+        {
+            paneManager.Focus = this;
         }
 
         public override bool DragAndDrop_CanAcceptPackage(Package p)
@@ -92,7 +99,7 @@ namespace Flood.Editor.Client.GUI
                 container = childContainer;
             }
 
-            var paneGroup = new PaneGroup(container);
+            var paneGroup = new PaneGroup(container, paneManager);
             paneGroup.AddPage(pane);
             container.InsertPanel(paneGroup,this,!moveRight);
             
@@ -118,7 +125,7 @@ namespace Flood.Editor.Client.GUI
                 container = childContainer;
             }
 
-            var paneGroup = new PaneGroup(container);
+            var paneGroup = new PaneGroup(container, paneManager);
             container.InsertPanel(paneGroup,this,moveUp);
             paneGroup.AddPage(pane);
         }

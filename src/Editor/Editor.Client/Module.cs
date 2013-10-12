@@ -1,34 +1,28 @@
-﻿
-using Editor.Services;
-using Flood.Editor.Client.GUI;
-using Flood.Modules;
-using Flood.Windows;
+﻿using Editor.Services;
 using Flood.GUI;
-using Flood.GUI.Controls;
+using Flood.Modules;
+using Flood.Remoting;
+using Flood.Windows;
 
 namespace Editor.Client
 {
     class Module : IModule
     {
-        public void OnLoad(Flood.Remoting.ServiceManager serviceManager)
+        public void OnLoad(ServiceManager serviceManager)
         {
             var windowManager = serviceManager.GetGlobalService<IWindowManager>();
-
             var editorWindowTask = windowManager.GetCreateWindow("Editor");
             editorWindowTask.Wait();
             var editorWindow = editorWindowTask.Result;
 
             var gui = new GuiRenderable();
-
             editorWindow.AddRenderable(gui);
 
-            var container = new Container(gui.Canvas);
-            
-            var paneGroup = new PaneGroup(container);
-            container.InsertPanel(paneGroup);
+            var paneManager = new PaneManager(gui.Canvas);
+            serviceManager.GetCreateImplementation<IPaneManager>(paneManager);
 
-            paneGroup.AddPane(new Pane{Title = "Pane1"});
-            paneGroup.AddPane(new Pane{Title = "Pane2"});
+            paneManager.AddPane(new Pane {Title = "Pane1"});
+            paneManager.AddPane(new Pane {Title = "Pane2"});
         }
 
         public void Update()
