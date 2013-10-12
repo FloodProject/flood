@@ -15,13 +15,12 @@ namespace TextAddin
             var textDocument = new TextDocument();
             var textView = new TextView(null, textDocument);
 
-            var pane = new Pane() {Title = "CodeEdit", control = textView};
+            var pane = new Pane { Title = "CodeEdit", Control = textView };
             paneManager.AddPane(pane);
         }
 
         public void Update()
         {
-            throw new System.NotImplementedException();
         }
     }
 }
