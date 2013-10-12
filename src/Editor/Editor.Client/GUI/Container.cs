@@ -12,7 +12,6 @@ namespace Flood.Editor.Client.GUI
     {
         public Container(Control parent) : base(parent)
         {
-            Dock = Pos.Fill;
         }
 
         public override void Think()
