@@ -52,9 +52,9 @@ enum class KeyExchangePacket : uint16
 
 //-----------------------------------//
 
-static void InitSessionHash( SessionHash& hash, const std::vector<uint8>& secret )
+static void InitSessionHash( SessionHash& hash, const Vector<uint8>& secret )
 {
-    sha1((unsigned char*)secret.data(), secret.size(), hash.data());
+    sha1((unsigned char*)secret.Buffer(), secret.Size(), hash.data());
 }
 
 //-----------------------------------//
@@ -143,8 +143,8 @@ bool PacketClientKeyExchanger::processServerPublicKeyPacket(Peer* peer, Packet* 
     }
 
     // Derive the shared secret
-    std::vector<uint8> secret(dhm.len);
-    if (int ret = dhm_calc_secret(&dhm, secret.data(), &dhm.len)) 
+    Vector<uint8> secret(dhm.len);
+    if (int ret = dhm_calc_secret(&dhm, secret.Buffer(), &dhm.len)) 
     {
         LogError("dhm_calc_secret returned %d", ret);
         return false;
@@ -184,14 +184,14 @@ bool PacketClientKeyExchanger::processServerSessionAckPacket(Peer* peer, Packet*
     if (packet->getId() != (PacketId)KeyExchangePacket::ServerSessionAck)
         return false;
 
-    std::vector<uint8> data = packet->read();
-    if (data.size() != sizeof(ServerSessionStatus))
+    Vector<uint8> data = packet->read();
+    if (data.Size() != sizeof(ServerSessionStatus))
     {
         LogError("Unexpected server message size.");
         return false;
     }
 
-    if ((data.data())[0] == (uint8) ServerSessionStatus::Accepted)
+    if ((data.Buffer())[0] == (uint8) ServerSessionStatus::Accepted)
         return true;
 
     return false;
@@ -236,7 +236,7 @@ bool PacketServerKeyExchanger::processClientPublicKeyPacket(Peer* peer, Packet* 
         return false;
 
     // Receive client's public value
-    if (int ret = dhm_read_public(&dhm, packet->read().data(), dhm.len)) 
+    if (int ret = dhm_read_public(&dhm, packet->read().Buffer(), dhm.len)) 
     {
         LogError("dhm_read_public returned %d", ret);
         return false;
@@ -250,8 +250,8 @@ bool PacketServerKeyExchanger::processClientPublicKeyPacket(Peer* peer, Packet* 
     }
 
     // Derive the shared secret
-    std::vector<uint8> secret(dhm.len);
-    if (int ret = dhm_calc_secret(&dhm, secret.data(), &dhm.len)) 
+    Vector<uint8> secret(dhm.len);
+	if (int ret = dhm_calc_secret(&dhm, secret.Buffer(), &dhm.len)) 
     {
         LogError("dhm_calc_secret returned %d", ret);
         return false;
@@ -287,17 +287,17 @@ bool PacketServerKeyExchanger::processClientSessionPacket(Peer* peer, Packet* pa
         return false;
 
     HostServer* server = (HostServer*) peer->getHost();
-    std::vector<uint8> &data = packet->read();
+    Vector<uint8> &data = packet->read();
     Session* session;
 
-    if (data.size() != 0)
+    if (data.Size() != 0)
     {
         SessionHash oldHash;
 
-        if (oldHash.size() != data.size())
+        if (oldHash.size() != data.Size())
             return false;
 
-        memcpy(oldHash.data(), data.data(), data.size());
+        memcpy(oldHash.data(), data.Buffer(), data.Size());
 
         session = server->getSessionManager().getSession(oldHash);
 

@@ -21,7 +21,7 @@ class PacketEncryptor : public PacketProcessor
 {
 public:
 
-    PacketEncryptor(std::vector<uint8> secret);
+    PacketEncryptor(Vector<uint8> secret);
     ~PacketEncryptor();
 
     bool processInPacket(Peer* peer, Packet* packet, int channelId) OVERRIDE;
@@ -30,7 +30,7 @@ public:
 private:
 
     aes_context* aes;
-    std::vector<uint8> secret;
+    Vector<uint8> secret;
     uint8 iv [16];
 
 };

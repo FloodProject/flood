@@ -53,7 +53,7 @@ void ArchiveVirtual::mountDirectories(const Path& dirPath, Allocator* alloc)
 
 	mount(dir, "");
 	
-	std::vector<Path> dirs;
+	Vector<Path> dirs;
 	dir->enumerateDirs(dirs);
 
 	for(auto& dir : dirs)
@@ -82,7 +82,7 @@ bool ArchiveVirtual::close()
 		Deallocate(marchive);
 	}
 
-	mounts.clear();
+	mounts.Clear();
 
 	return true;
 }

@@ -58,7 +58,7 @@ public:
 
 private:
 
-    std::vector<PacketProcessor*> processors;
+    Vector<PacketProcessor*> processors;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( PacketProcessors )

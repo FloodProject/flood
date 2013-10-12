@@ -432,7 +432,7 @@ namespace RemotingGen
             var throwsException = Metadata.TryGetThrows(method, out exceptionsInfos);
             if (throwsException != null)
             {
-                 foreach (var exceptionsInfo in exceptionsInfos)
+                foreach (var exceptionsInfo in exceptionsInfos)
                 {
                     var exceptionName = "Exception" + exceptionsInfo.Id;
                     resultParams.Add(new Parameter {Name = exceptionName, ParameterType = exceptionsInfo.Type});

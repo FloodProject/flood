@@ -73,13 +73,13 @@ public:
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) = 0;
+	virtual void enumerateFiles(Vector<Path>& paths) = 0;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) = 0;
+	virtual void enumerateDirs(Vector<Path>& paths) = 0;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -147,13 +147,13 @@ public:
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Vector<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Vector<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -176,11 +176,11 @@ public:
 
 private:
 
-	void enumerate(std::vector<Path>& paths, bool dir);
+	void enumerate(Vector<Path>& paths, bool dir);
 
 public:
 
-	std::vector<Archive*> mounts; //!< mounted archives
+	Vector<Archive*> mounts; //!< mounted archives
 };
 
 //-----------------------------------//
@@ -234,13 +234,13 @@ public:
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Vector<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Vector<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -299,13 +299,13 @@ public:
 	 * Enumerates all the files in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateFiles(std::vector<Path>& paths) override;
+	virtual void enumerateFiles(Vector<Path>& paths) override;
 	
 	/**
 	 * Enumerates all the directories in the archive.
 	 * @param paths vector to store results
 	 */
-	virtual void enumerateDirs(std::vector<Path>& paths) override;
+	virtual void enumerateDirs(Vector<Path>& paths) override;
 
 	/**
 	 * Sets up and updates the watching functionality for the archive.
@@ -314,7 +314,7 @@ public:
 
 private:
 
-	void enumerate(std::vector<Path>& paths, bool dir);
+	void enumerate(Vector<Path>& paths, bool dir);
 
 public:
 

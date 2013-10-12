@@ -9,6 +9,7 @@
 #include "Core/Math/Noise.h"
 #include "Core/Math/Helpers.h"
 #include "Core/Log.h"
+#include "Core/Containers/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -24,11 +25,11 @@ Noise::Noise( int seed )
 
 //-----------------------------------//
 
-void Noise::generate(std::vector<float>& noise, uint width, uint height)
+void Noise::generate(Vector<float>& noise, uint width, uint height)
 {
-	assert( noise.empty() );
+	assert( noise.Empty() );
 
-	noise.reserve(width*height);
+	noise.Reserve(width*height);
 	
 	for (uint y = 0; y < height; y++)
 	{
@@ -52,7 +53,7 @@ void Noise::generate(std::vector<float>& noise, uint width, uint height)
 				amplitude *= persistence;
 			}
 
-			noise.push_back(total / maxAmplitude);
+			noise.Push(total / maxAmplitude);
 		}
 	}
 }

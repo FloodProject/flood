@@ -69,16 +69,16 @@ Stream* ArchiveDirectory::openFile(const Path& file, Allocator* alloc)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
+static void DirArchiveEnumerate(Vector<String>&, Path, Path, bool);
 
-void  ArchiveDirectory::enumerateFiles(std::vector<Path>& paths)
+void  ArchiveDirectory::enumerateFiles(Vector<Path>& paths)
 {
 	FileEnumerateFiles(path, paths);
 }
 
 //-----------------------------------//
 
-void ArchiveDirectory::enumerateDirs(std::vector<Path>& paths)
+void ArchiveDirectory::enumerateDirs(Vector<Path>& paths)
 {
 	FileEnumerateDirectories(path, paths);
 }
@@ -96,7 +96,7 @@ bool ArchiveDirectory::existsFile(const Path& path)
 
 bool ArchiveDirectory::existsDir(const Path& path)
 {
-	std::vector<Path> dirs;
+	Vector<Path> dirs;
 	enumerateDirs(dirs);
 	Path normalizedPath = PathNormalize(path);
 

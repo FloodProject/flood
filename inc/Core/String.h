@@ -12,7 +12,7 @@
 #include <sstream>
 #include <cstdarg>
 #include <cstring>
-#include <vector>
+#include "Core/Containers/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -40,7 +40,7 @@ API_CORE String StringFormat(const char* s, ...);
 API_CORE String StringFormatArgs(const char* s, va_list args);
 
 // Splits a string (tokenizes) into sub-string separated by given elements.
-API_CORE void StringSplit(const String& s, char delim, std::vector<String>& elems);
+API_CORE void StringSplit(const String& s, char delim, Vector<String>& elems);
 
 // Converts a wide string in UTF-16 to a UTF-8 string.
 API_CORE String StringFromWideString(const StringWide& ws);
