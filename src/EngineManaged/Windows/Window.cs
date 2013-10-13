@@ -23,9 +23,9 @@ namespace Flood.Windows
     [DataObject(5)]
     public class Window
     {
-        private Flood.Window nativeWindow;
-        private RenderDevice device;
-        private RenderView view;
+        internal Flood.Window nativeWindow;
+        internal RenderDevice device;
+        internal RenderView view;
         internal RenderContext RenderContext;
 
         [Id(1)]
