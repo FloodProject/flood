@@ -24,6 +24,8 @@ namespace Flood.GUI
         public void Dispose()
         {
             GuiRenderer.Dispose();
+            Skin.Dispose();
+            Canvas.Dispose();
         }
 
         void InitializeGui()
