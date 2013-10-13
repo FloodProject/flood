@@ -96,9 +96,15 @@ namespace Flood
         {
             while (true)
             {
-                PlatformManager.Update();
+                RunStep();
                 System.Threading.Thread.Sleep(1);
             }
+        }
+
+        internal void RunStep()
+        {
+            PlatformManager.Update();
+            WindowManager.Render();
         }
     }
 }
