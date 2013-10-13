@@ -14,6 +14,8 @@ namespace Flood.GUI
 
         public Canvas Canvas { get; private set; }
 
+        public Skin Skin { get; private set; }
+
         public GuiRenderable()
         {
             InitializeGui();
@@ -37,8 +39,8 @@ namespace Flood.GUI
             if (imageHandle.Id == 0)
                 return;
 
-            var skin = new TexturedSkin(GuiRenderer, imageHandle, defaultFont);
-            Canvas = new Canvas(skin);
+            Skin = new TexturedSkin(GuiRenderer, imageHandle, defaultFont);
+            Canvas = new Canvas(Skin);
 
             Input = new GwenInput(FloodEngine.GetEngine().InputManager);
             Input.Initialize(Canvas);
