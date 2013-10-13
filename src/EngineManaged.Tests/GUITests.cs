@@ -13,7 +13,7 @@ namespace Flood.Tests
         [TestFixtureSetUp]
         public void Setup()
         {
-            GUI = new GUI("DefaultSkin.png", "Vera.ttf", 16);
+            GUI = new GUI();
         }
 
         [TestFixtureTearDown]
@@ -25,14 +25,14 @@ namespace Flood.Tests
         [Test]
         public void TestButton()
         {
-            using (var canvas = new Canvas(GUI.Skin))
-            {
-                var control = new Button(canvas);
-                control.Text = "Button";
+            var canvas = GUI.guiRenderable.Canvas;
 
-                GUI.AssertUnchanged(canvas, "button1");
-            }
+            canvas.Children.Clear();
+
+            var control = new Button(canvas);
+            control.Text = "Button";
+
+            GUI.AssertUnchanged("button1");
         }
-
     }
 }

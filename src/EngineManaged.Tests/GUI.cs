@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Security;
 using Flood.GUI;
 using Flood.GUI.Controls;
-using Flood.GUI.Skins;
 using NUnit.Framework;
 
 namespace Flood.Tests
@@ -13,136 +10,51 @@ namespace Flood.Tests
     class GUI : IDisposable
     {
         private const string StoredValuesDirectory = "../../GUITests";
-        private const string AssetsDirectory = "bin/Assets/";
 
-        [SuppressUnmanagedCodeSecurity]
-        [DllImport("Editor.Native.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr CreateWxPlatformManager();
+        private static Application app;
 
-        private Engine Engine { get; set; }
+        public Windows.Window window;
+        public GuiRenderable guiRenderable;
 
-        private PlatformManager PlatformManager { get; set; }
-        private WindowManager WindowManager { get; set; }
-        private Window MainWindow { get; set; }
-        private ArchiveVirtual Archive { get; set; }
-        private ResourceManager ResourceManager { get; set; }
-
-        private RenderDevice RenderDevice;
-        private RenderView MainView;
-
-        private GwenRenderer Renderer;
-
-        public Skin Skin;
-
-        public GUI(string textureName, string defaultFontName, int defaultFontSize)
+        public GUI()
         {
-            PlatformManager = new PlatformManager(CreateWxPlatformManager());
+            app = new Application();
 
-            Engine = new Engine(PlatformManager);
-            Engine.Init();
+            var windowTask = app.WindowManager.GetCreateWindow("Test");
+            windowTask.Wait();
+            window = windowTask.Result;
 
-            // Search for the location of the main assets folder.
-            string assetsPath;
-            if (!SearchForAssetsDirectory(out assetsPath))
-                throw new Exception("Editor assets were not found");
-
-            Archive = new ArchiveVirtual();
-            Archive.MountDirectories(assetsPath, Allocator.GetHeap());
-
-            ResourceManager = Engine.ResourceManager;
-            ResourceManager.Archive = Archive;
-
-            WindowManager = Engine.WindowManager;
-
-            MainWindow = CreateWindow();
-            var context = MainWindow.CreateContext(new RenderContextSettings());
-
-            MainView = MainWindow.CreateView();
-            MainView.ClearColor = Color.Red;
-
-            MainWindow.MakeCurrent();
-            context.Init();
-
-            RenderDevice = Engine.RenderDevice;
-            RenderDevice.ActiveView = MainView;
-
-            var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
-            var imageHandle = ResourceManager.LoadResource<Image>(options);
-            if (imageHandle.Id == 0)
-                return;
-
-            Renderer = new GwenRenderer();
-            Skin = new TexturedSkin(Renderer, imageHandle, new Flood.GUI.Font(defaultFontName, defaultFontSize));
-
-            if (!Directory.Exists(StoredValuesDirectory))
-                Directory.CreateDirectory(StoredValuesDirectory);
+            guiRenderable = new GuiRenderable();
+            window.AddRenderable(guiRenderable);
         }
 
-        private bool SearchForAssetsDirectory(out string path)
+        private void Render(string outputPath)
         {
-            var currentDirectory = Directory.GetCurrentDirectory();
-
-            while (true)
-            {
-                var fullPath = Path.Combine(currentDirectory, AssetsDirectory);
-
-                if (Directory.Exists(fullPath))
-                {
-                    path = fullPath;
-                    return true;
-                }
-
-                var parentDirectory = Directory.GetParent(currentDirectory);
-                if (parentDirectory == null) break;
-
-                currentDirectory = parentDirectory.FullName;
-            }
-
-            path = null;
-            return false;
-        }
-
-        private Window CreateWindow()
-        {
-            var settings = new WindowSettings(1, 1, "GUI", WindowStyles.TopLevel);
-
-            return WindowManager.CreateWindow(settings);
-        }
-
-        private void Render(Canvas canvas, string outputPath)
-        {
-            canvas.RenderCanvas();
-
             var width = 0;
             var height = 0;
-            foreach (var control in canvas.Children)
+            foreach (var control in guiRenderable.Canvas.Children)
                 RenderBounds(control, ref width, ref height);
 
+            app.RunStep();
+
             var imageSettings = new Settings { Height = (ushort)height, Width = (ushort)width };
-            var renderBuffer = RenderDevice.Backend.CreateRenderBuffer(imageSettings);
+            var renderBuffer = app.RenderDevice.Backend.CreateRenderBuffer(imageSettings);
             renderBuffer.CreateRenderBuffer(RenderBufferType.Color);
             renderBuffer.CreateRenderBuffer(RenderBufferType.Depth);
 
-            renderBuffer.Context = MainWindow.Context;
-            MainView.RenderTarget = renderBuffer;
-            MainView.Size = new Vector2i(width, height);
-            canvas.SetSize(width, height);
+            renderBuffer.Context = window.RenderContext;
+            window.view.RenderTarget = renderBuffer;
+            window.view.Size = new Vector2i(width, height);
+            guiRenderable.Canvas.SetSize(width, height);
 
-            RenderDevice.ActiveView = MainView;
+            window.device.ActiveView = window.view;
 
             if (!renderBuffer.Check())
                 throw new Exception("Error creating render buffer");
 
             renderBuffer.Bind();
 
-            var rb = new RenderBlock();
-
-            Renderer.Render(rb);
-
-            RenderDevice.ClearView();
-
-            RenderDevice.Render(rb);
-            Engine.StepFrame();
+            window.Render();
 
             var image = renderBuffer.ReadImage(1);
 
@@ -161,24 +73,24 @@ namespace Flood.Tests
                 height = control.Bottom;
         }
 
-        public void AssertUnchanged(Canvas canvas, string assertId, string assertMessage = "")
+        public void AssertUnchanged(string assertId, string assertMessage = "")
         {
-            var renderChanged = HasRenderChanged(canvas, assertId);
-            var serializationChanged = HasSerializationChanged(canvas, assertId);
+            var renderChanged = HasRenderChanged(assertId);
+            var serializationChanged = HasSerializationChanged(assertId);
 
             Assert.IsFalse(renderChanged, assertId+" render changed. "+assertMessage);
             Assert.IsFalse(serializationChanged, assertId+" serialization changed. "+assertMessage);
         }
 
         #region Assert Render
-        private bool HasRenderChanged(Canvas canvas, string assertId)
+        private bool HasRenderChanged(string assertId)
         {
             var baseDirectory = Path.GetFullPath(StoredValuesDirectory);
             var resultImagePath = Path.Combine(baseDirectory, assertId + "_result.png");
             var expectedImagePath = Path.Combine(baseDirectory, assertId + "_expected.png");
             var diffImagePath = Path.Combine(baseDirectory, assertId + "_diff.png");
 
-            Render(canvas, resultImagePath);
+            Render(resultImagePath);
 
             if (!File.Exists(expectedImagePath))
             {
@@ -222,7 +134,7 @@ namespace Flood.Tests
         #endregion
 
         #region Assert Serialization
-        private static bool HasSerializationChanged(Control control, string assertId)
+        private static bool HasSerializationChanged(string assertId)
         {
             return false;
         }
@@ -230,8 +142,7 @@ namespace Flood.Tests
 
         public void Dispose()
         {
-            Skin.Dispose();
-            Renderer.Dispose();
+            guiRenderable.Dispose();
         }
     }
 }
