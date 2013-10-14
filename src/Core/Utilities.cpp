@@ -108,16 +108,9 @@ String StringFromFloat( float n, byte precision )
 
 #ifdef PLATFORM_WINDOWS
 
-String StringFromWideString(const std::wstring &wstr)
+UTF8String StringFromWideString(const WString &wstr)
 {
-	// Convert a Unicode string to an ASCII string
-	String strTo;
-	char *szTo = new char[wstr.length() + 1];
-	szTo[wstr.size()] = '\0';
-	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
-		(int)wstr.length(), nullptr, nullptr);
-	strTo = szTo;
-	delete[] szTo;
+	UTF8String strTo(wstr);
 	return strTo;
 }
 
@@ -127,29 +120,22 @@ String StringFromWideString(const std::wstring &wstr)
 
 #ifdef PLATFORM_WINDOWS
 
-std::wstring StringToWideString(const String &str)
+WString StringToWideString(const UTF8String &str)
 {
-	// Convert an ASCII string to a Unicode String
-	std::wstring wstrTo;
-	wchar_t *wszTo = new wchar_t[str.length() + 1];
-	wszTo[str.size()] = L'\0';
-	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
-		(int)str.length());
-	wstrTo = wszTo;
-	delete[] wszTo;
-	return wstrTo;
+	WString ret(str);
+	return ret;
 }
 
 #endif
 
 //-----------------------------------//
 
-String StringFormat(const char* str, ...)
+UTF8String StringFormat(const char* str, ...)
 {
 	va_list args;
 	va_start(args, str);
 
-	String formatted = StringFormatArgs(str, args);
+	UTF8String formatted = StringFormatArgs(str, args);
 
 	va_end(args);
 
@@ -158,7 +144,7 @@ String StringFormat(const char* str, ...)
 
 //-----------------------------------//
 
-String StringFormatArgs(const char* str, va_list args)
+UTF8String StringFormatArgs(const char* str, va_list args)
 {
 	const int BUF_MAX_SIZE = 16384;
 	char buf[BUF_MAX_SIZE];
@@ -172,12 +158,12 @@ String StringFormatArgs(const char* str, va_list args)
 	assert( n >= 0 ); // check for output error
 	assert( n < BUF_MAX_SIZE ); // check for truncation
 
-	return String(buf);
+	return UTF8String(buf);
 }
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, Vector<String>& elems)
+void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems)
 {
 	std::stringstream ss(s);
 	String item;

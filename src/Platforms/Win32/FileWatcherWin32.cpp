@@ -230,7 +230,7 @@ FileWatchId FileWatcherWin32::addWatch(const UTF8String& directory, void* userda
 
 //-----------------------------------//
 
-void FileWatcherWin32::removeWatch(const String& directory)
+void FileWatcherWin32::removeWatch(const UTF8String& directory)
 {
 	FileWatchMap::iterator iter = mWatches.begin();
 	FileWatchMap::iterator end = mWatches.end();
@@ -269,7 +269,7 @@ void FileWatcherWin32::update()
 //-----------------------------------//
 
 void FileWatcherWin32::handleAction(FileWatchStruct* watch,
-									const std::wstring& filename, uint32 action)
+									const WString& filename, uint32 action)
 {
 	FileWatchEventKind fwAction;
 
@@ -295,7 +295,7 @@ void FileWatcherWin32::handleAction(FileWatchStruct* watch,
 
 	// Convert wide string to regular string.
 	// TODO: handle Unicode properly.
-	const String& file = StringFromWideString(filename);
+	const UTF8String& file = StringFromWideString(filename);
 
 	FileWatchEvent event( fwAction, watch->mWatchid, watch->mDirName, file);
 	event.userdata = watch->mCustomData;

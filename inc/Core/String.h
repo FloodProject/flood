@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 //typedef std::string String;
-typedef std::wstring StringWide;
+//typedef std::wstring StringWide;
 
 struct API_CORE StringHash
 {
@@ -44,10 +44,10 @@ API_CORE UTF8String StringFormatArgs(const char* s, va_list args);
 API_CORE void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems);
 
 // Converts a wide string in UTF-16 to a UTF-8 string.
-API_CORE UTF8String StringFromWideString(const StringWide& ws);
+API_CORE UTF8String StringFromWideString(const WString& ws);
 
 // Converts an UTF-8 encoded string to a UTF-16 wide string.
-API_CORE StringWide StringToWideString(const UTF8String& s);
+API_CORE WString StringToWideString(const UTF8String& s);
 
 // Converts between caseness of the string.
 API_CORE UTF8String StringToLowerCase(const UTF8String& s);
