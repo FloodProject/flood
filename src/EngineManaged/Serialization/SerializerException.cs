@@ -21,27 +21,46 @@
  * details.
  */
 
+using System;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
-    public enum TType : byte
+    public class SerializerException : Exception
     {
-        Stop = 0,
-        Void = 1,
-        Bool = 2,
-        Byte = 3,
-        Double = 4,
-        Exception = 5,
-        I16 = 6,
-        I32 = 8,
-        I64 = 10,
-        String = 11,
-        DataObject = 12,
-        Map = 13,
-        List = 14,
-        Guid = 15,
-        DateTime = 16,
-        Delegate = 17,
-        Service = 18,
+        public const int UNKNOWN = 0;
+        public const int INVALID_DATA = 1;
+        public const int NEGATIVE_SIZE = 2;
+        public const int SIZE_LIMIT = 3;
+        public const int BAD_VERSION = 4;
+        public const int NOT_IMPLEMENTED= 5;
+
+        protected int type_ = UNKNOWN;
+
+        public SerializerException()
+            : base()
+        {
+        }
+
+        public SerializerException(int type)
+            : base()
+        {
+            type_ = type;
+        }
+
+        public SerializerException(int type, String message)
+            : base(message)
+        {
+            type_ = type;
+        }
+
+        public SerializerException(String message)
+            : base(message)
+        {
+        }
+
+        public int getType()
+        {
+            return type_;
+        }
     }
 }

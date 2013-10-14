@@ -1,5 +1,5 @@
 ﻿using Flood.Remoting;
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +25,7 @@ namespace Flood.Network
             Session.Peer.QueuePacket(packet, 0);
         }
 
-        public override Remoting.Serialization.Serializer CreateSerializer()
+        public override Serialization.Serializer CreateSerializer()
         {
             return new BinarySerializer();
         }

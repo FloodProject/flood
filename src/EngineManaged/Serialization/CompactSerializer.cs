@@ -25,12 +25,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     public class CompactSerializer : Serializer
     {
         private static DataObject ANONYMOUS_STRUCT = new DataObject("");
-        private static Field TSTOP = new Field("", TType.Stop, (short)0);
+        private static Field TSTOP = new Field("", DataType.Stop, (short)0);
 
         private static byte[] ttypeToCompactType = new byte[16];
 
@@ -78,17 +78,17 @@ namespace Flood.Remoting.Serialization
         public CompactSerializer(System.IO.Stream stream)
             :base(stream)
         {
-            ttypeToCompactType[(int)TType.Stop] = Types.STOP;
-            ttypeToCompactType[(int)TType.Bool] = Types.BOOLEAN_TRUE;
-            ttypeToCompactType[(int)TType.Byte] = Types.BYTE;
-            ttypeToCompactType[(int)TType.I16] = Types.I16;
-            ttypeToCompactType[(int)TType.I32] = Types.I32;
-            ttypeToCompactType[(int)TType.I64] = Types.I64;
-            ttypeToCompactType[(int)TType.Double] = Types.DOUBLE;
-            ttypeToCompactType[(int)TType.String] = Types.BINARY;
-            ttypeToCompactType[(int)TType.List] = Types.LIST;
-            ttypeToCompactType[(int)TType.Map] = Types.MAP;
-            ttypeToCompactType[(int)TType.DataObject] = Types.DATA_OBJECT;
+            ttypeToCompactType[(int)DataType.Stop] = Types.STOP;
+            ttypeToCompactType[(int)DataType.Bool] = Types.BOOLEAN_TRUE;
+            ttypeToCompactType[(int)DataType.Byte] = Types.BYTE;
+            ttypeToCompactType[(int)DataType.I16] = Types.I16;
+            ttypeToCompactType[(int)DataType.I32] = Types.I32;
+            ttypeToCompactType[(int)DataType.I64] = Types.I64;
+            ttypeToCompactType[(int)DataType.Double] = Types.DOUBLE;
+            ttypeToCompactType[(int)DataType.String] = Types.BINARY;
+            ttypeToCompactType[(int)DataType.List] = Types.LIST;
+            ttypeToCompactType[(int)DataType.Map] = Types.MAP;
+            ttypeToCompactType[(int)DataType.DataObject] = Types.DATA_OBJECT;
         }
 
         public void reset()
@@ -175,7 +175,7 @@ namespace Flood.Remoting.Serialization
          */
         public override void WriteFieldBegin(Field field)
         {
-            if (field.Type == TType.Bool)
+            if (field.Type == DataType.Bool)
             {
                 // we want to possibly include the value, so we'll wait.
                 booleanField_ = field;
@@ -351,7 +351,7 @@ namespace Flood.Remoting.Serialization
          * Abstract method for writing the start of lists and sets. List and sets on 
          * the wire differ only by the type indicator.
          */
-        protected void WriteCollectionBegin(TType elemType, int size)
+        protected void WriteCollectionBegin(DataType elemType, int size)
         {
             if (size <= 14)
             {
@@ -514,7 +514,7 @@ namespace Flood.Remoting.Serialization
             {
                 size = (int)ReadVarint32();
             }
-            TType type = getTType(size_and_type);
+            DataType type = getTType(size_and_type);
             return new TList(type, size);
         }
 
@@ -719,44 +719,44 @@ namespace Flood.Remoting.Serialization
 
         /**
          * Given a TCompactProtocol.Types constant, convert it to its corresponding 
-         * TType value.
+         * DataType value.
          */
-        private TType getTType(byte type)
+        private DataType getTType(byte type)
         {
             switch ((byte)(type & 0x0f))
             {
                 case Types.STOP:
-                    return TType.Stop;
+                    return DataType.Stop;
                 case Types.BOOLEAN_FALSE:
                 case Types.BOOLEAN_TRUE:
-                    return TType.Bool;
+                    return DataType.Bool;
                 case Types.BYTE:
-                    return TType.Byte;
+                    return DataType.Byte;
                 case Types.I16:
-                    return TType.I16;
+                    return DataType.I16;
                 case Types.I32:
-                    return TType.I32;
+                    return DataType.I32;
                 case Types.I64:
-                    return TType.I64;
+                    return DataType.I64;
                 case Types.DOUBLE:
-                    return TType.Double;
+                    return DataType.Double;
                 case Types.BINARY:
-                    return TType.String;
+                    return DataType.String;
                 case Types.LIST:
-                    return TType.List;
+                    return DataType.List;
                 case Types.MAP:
-                    return TType.Map;
+                    return DataType.Map;
                 case Types.DATA_OBJECT:
-                    return TType.DataObject;
+                    return DataType.DataObject;
                 default:
                     throw new SerializerException("don't know what type: " + (byte)(type & 0x0f));
             }
         }
 
         /**
-         * Given a TType value, find the appropriate TCompactProtocol.Types constant.
+         * Given a DataType value, find the appropriate TCompactProtocol.Types constant.
          */
-        private byte getCompactType(TType ttype)
+        private byte getCompactType(DataType ttype)
         {
             return ttypeToCompactType[(int)ttype];
         }

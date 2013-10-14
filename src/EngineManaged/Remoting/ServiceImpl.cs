@@ -1,4 +1,4 @@
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -51,7 +51,7 @@ namespace Flood.Remoting
             }
             else
             {
-                SerializerUtil.Skip(call.Data.Serializer, TType.DataObject);
+                SerializerUtil.Skip(call.Data.Serializer, DataType.DataObject);
                 var response = new Message(call.Data, MessageType.Exception);
                 RemotingException x = new RemotingException(RemotingException.ExceptionType.UnknownMethod, "Invalid method id: '" + call.MethodId + "'");
                 response.Serializer.WriteI32(call.Id);

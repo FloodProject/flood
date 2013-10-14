@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     public class BinarySerializer : Serializer
     {
@@ -67,7 +67,7 @@ namespace Flood.Remoting.Serialization
 
         public override void WriteFieldStop()
         {
-            WriteByte((byte)TType.Stop);
+            WriteByte((byte)DataType.Stop);
         }
 
         public override void WriteMapBegin(TMap map)
@@ -167,9 +167,9 @@ namespace Flood.Remoting.Serialization
         public override Field ReadFieldBegin()
         {
             Field field = new Field();
-            field.Type = (TType)ReadByte();
+            field.Type = (DataType)ReadByte();
 
-            if (field.Type != TType.Stop)
+            if (field.Type != DataType.Stop)
             {
                 field.ID = ReadI16();
                 field.Name = ReadString();
@@ -187,8 +187,8 @@ namespace Flood.Remoting.Serialization
         public override TMap ReadMapBegin()
         {
             TMap map = new TMap();
-            map.KeyType = (TType)ReadByte();
-            map.ValueType = (TType)ReadByte();
+            map.KeyType = (DataType)ReadByte();
+            map.ValueType = (DataType)ReadByte();
             map.Count = ReadI32();
 
             return map;
@@ -201,7 +201,7 @@ namespace Flood.Remoting.Serialization
         public override TList ReadListBegin()
         {
             TList list = new TList();
-            list.ElementType = (TType)ReadByte();
+            list.ElementType = (DataType)ReadByte();
             list.Count = ReadI32();
 
             return list;

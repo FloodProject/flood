@@ -22,30 +22,22 @@
  */
 
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
-    public struct TList
+    public struct DataObject
     {
-        private TType elementType;
-        private int count;
+        private string name;
 
-        public TList(TType elementType, int count)
+        public DataObject(string name)
             :this()
         {
-            this.elementType = elementType;
-            this.count = count;
+            this.name = name;
         }
 
-        public TType ElementType
+        public string Name
         {
-            get { return elementType; }
-            set { elementType = value; }
-        }
-
-        public int Count
-        {
-            get { return count; }
-            set { count = value; }
+            get { return name; }
+            set { name = value; }
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿
 using System;
+using Flood.Remoting;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     public interface IDataObject
     {
-        void Read(Message data, Type baseType = null);
-        void Write(Message data, Type baseType = null);
+        void Read(Serializer data, Type baseType = null, object customData = null);
+        void Write(Serializer data, Type baseType = null, object customData = null);
 
-        unsafe void Write(Message data, BitField* bitFields, int bitFieldCount);
+        unsafe void Write(Serializer data, BitField* bitFields, int bitFieldCount, object customData = null);
         int BaseDataObjectCount { get; }
     }
 

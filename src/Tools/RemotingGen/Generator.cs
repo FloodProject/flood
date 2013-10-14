@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using Weaver;
 using Weaver.Util;
 
@@ -43,7 +43,7 @@ namespace RemotingGen
             return new TypeSignature(type.Namespace, className);
         }
 
-        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, Type dataObjectType = null)
+        private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, Type dataObjecDataType = null)
         {
             if (@namespace != null)
             {
@@ -53,7 +53,7 @@ namespace RemotingGen
 
             var structclass = (isValueType) ? "struct" : "class";
 
-            var baseDataObjects = GetBaseDataObjects(dataObjectType);
+            var baseDataObjects = GetBaseDataObjects(dataObjecDataType);
             var baseDataObjectCount = (baseDataObjects == null) ? 0 : baseDataObjects.Count;
             var baseDataObject = (baseDataObjectCount == 0) ? null : baseDataObjects[0];
 
@@ -114,7 +114,7 @@ namespace RemotingGen
                         WriteLine("private {0} {1} {{ get; set; }}", paramTypeName, backingFieldName);
 
                         var typeSig = new TypeSignature(param.ParameterType);
-                        var declaringTypeSig = new TypeSignature(dataObjectType);
+                        var declaringTypeSig = new TypeSignature(dataObjecDataType);
 
                         MemberClones.Add(new MemberClone 
                         {
@@ -198,9 +198,9 @@ namespace RemotingGen
 
         private void GenerateDataObjectWriteBitField(IEnumerable<Parameter> parameters, Type baseType)
         {
-            WriteLine("public unsafe void Write(Message data, BitField* properties, int bitFieldCount)");
+            WriteLine("public unsafe void Write(Serializer data, BitField* properties, int bitFieldCount, object customData = null)");
             WriteStartBraceIndent();
-            WriteLine("data.Serializer.WriteI64(properties[0].Bits);");
+            WriteLine("data.WriteI64(properties[0].Bits);");
             foreach (var param in parameters)
             {
                 NewLine();
@@ -248,7 +248,7 @@ namespace RemotingGen
             GenerateDataObjectOverride("Read", className, baseTypes, isValueType, () =>
             {
                 WriteLine("var properties = new BitField();");
-                WriteLine("properties.Bits = data.Serializer.ReadI64();");
+                WriteLine("properties.Bits = data.ReadI64();");
 
                 foreach (var param in parameters)
                 {
@@ -266,7 +266,7 @@ namespace RemotingGen
             var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
             var modifier = (isValueType)? "" : (baseCount == 0) ? "virtual" : "override";
 
-            WriteLine("public {0} void {1}(Message data, Type baseType = null)", modifier, name);
+            WriteLine("public {0} void {1}(Serializer data, Type baseType = null, object customData = null)", modifier, name);
             WriteStartBraceIndent();
 
             if (baseCount == 0)
@@ -415,10 +415,10 @@ namespace RemotingGen
             if (!HasResultSerializer(method))
                 return;
 
-            var retType = GetMethodReturnType(method);
+            var reDataType = GetMethodReturnType(method);
             var resultParams = new List<Parameter>();
-            if(retType != typeof (void))
-                resultParams.Add(new Parameter {Name = "success", ParameterType = retType});
+            if(reDataType != typeof (void))
+                resultParams.Add(new Parameter {Name = "success", ParameterType = reDataType});
 
             List<ExceptionInfo> exceptionsInfos;
             var throwsException = Metadata.TryGetThrows(method, out exceptionsInfos);
@@ -541,8 +541,8 @@ namespace RemotingGen
 
         private void GenerateProtocolReceive(MethodInfo method, string methodName, string resultClassName)
         {
-            var retType = GetMethodReturnType(method);
-            Write("private {0} {1}(Message response)", GetTypeName(retType), methodName);
+            var reDataType = GetMethodReturnType(method);
+            Write("private {0} {1}(Message response)", GetTypeName(reDataType), methodName);
             WriteStartBraceIndent();
 
             WriteLine("if (response.Header.CallType == MessageType.Exception)");
@@ -572,7 +572,7 @@ namespace RemotingGen
                 }
             }
 
-            if (retType != typeof(void))
+            if (reDataType != typeof(void))
                 WriteLine("return result.Success;");
 
             WriteCloseBraceIndent();
@@ -609,15 +609,15 @@ namespace RemotingGen
 
         private void GenerateProxyEvent(Type type, EventInfo eventInfo)
         {
-            var eventType = GetTypeName(eventInfo.EventHandlerType);
+            var evenDataType = GetTypeName(eventInfo.EventHandlerType);
             var eventName = eventInfo.Name;
             var eventName2 = "_" + eventName;
 
             var @delegate = eventInfo.EventHandlerType;
             var eventId = GetEventId(eventInfo);
 
-            WriteLine("private event {0} {1};", eventType, eventName2);
-            WriteLine("public event {0} {1}", eventType, eventName);
+            WriteLine("private event {0} {1};", evenDataType, eventName2);
+            WriteLine("public event {0} {1}", evenDataType, eventName);
             WriteStartBraceIndent();
             WriteLine("add");
             WriteStartBraceIndent();
@@ -784,9 +784,9 @@ namespace RemotingGen
             if (HasResultSerializer(method))
             {
                 WriteLine("var result = new {0}();", GetProcedureResultClassName(method));
-                var retType = GetMethodReturnType(method);
-                if (retType != typeof(void))
-                    Write("result.Success = {0}", GetTypeCastToStub(retType));
+                var reDataType = GetMethodReturnType(method);
+                if (reDataType != typeof(void))
+                    Write("result.Success = {0}", GetTypeCastToStub(reDataType));
             }
 
             // Call the service method
@@ -1175,9 +1175,9 @@ namespace RemotingGen
         {
             switch (ConvertFromTypeToThrift(type))
             {
-                case TType.List:
-                case TType.Map:
-                case TType.String:
+                case DataType.List:
+                case DataType.Map:
+                case DataType.String:
                     return true;
                 default:
                     return false;
@@ -1216,7 +1216,7 @@ namespace RemotingGen
             WriteLine("using Flood;");
             WriteLine("using Flood.Remoting;");
             WriteLine("using Flood.Remoting.Metadata;");
-            WriteLine("using Flood.Remoting.Serialization;");
+            WriteLine("using Flood.Serialization;");
             WriteLine("using System.Threading.Tasks;");
 
             NewLine();
@@ -1231,49 +1231,42 @@ namespace RemotingGen
         /// </summary>
         private void GenerateTypeSerialization(Type type, string varName, string dataName)
         {
-            var thriftType = ConvertFromTypeToThrift(type);
+            var thrifDataType = ConvertFromTypeToThrift(type);
 
-            switch (thriftType)
+            switch (thrifDataType)
             {
-                case TType.List:
+                case DataType.List:
                     GenerateListSerialize(type, varName, dataName);
                     break;
-                case TType.Map:
+                case DataType.Map:
                     GenerateMapSerialize(type, varName, dataName);
                     break;
-                case TType.DataObject:
-                case TType.Exception:
+                case DataType.DataObject:
+                case DataType.Exception:
                     GenerateStructSerialize(type, varName, dataName);
                     break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
+                case DataType.Bool:
+                case DataType.Byte:
+                case DataType.Double:
+                case DataType.I16:
+                case DataType.I32:
+                case DataType.I64:
+                case DataType.String:
                     var enumCast = "";
                     if (type.IsEnum)
                         enumCast = String.Format("({0})", Enum.GetUnderlyingType(type).ToString());
-                    WriteLine("{0}.Serializer.Write{1}({2}{3});", dataName, thriftType.ToString(), enumCast, varName);
+                    WriteLine("{0}.Serializer.Write{1}({2}{3});", dataName, thrifDataType.ToString(), enumCast, varName);
                     break;
-                case TType.Guid:
+                case DataType.Guid:
                     WriteLine("{0}.Serializer.WriteString({1}.ToString());", dataName, varName);
                     break;
-                case TType.DateTime:
+                case DataType.DateTime:
                     WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
                     break;
-                case TType.Delegate:
-                    WriteLine("var del = {0}.RemotingManager.DelegateManager.CreateDelegateImpl<{1}>({2});", dataName, GetDelegateImplClassName(type), varName);
-                    WriteLine("{0}.Serializer.WriteI32(del.LocalId);", dataName);
-                    // TODO: Serialize Peer and RemoteId so we can create delegate proxies to other peer's delegates.
+                case DataType.Custom:
+                    WriteLine("{0}.Serializer.WriteCustom({1}, customData);", dataName, varName);
                     break;
-                case TType.Service:
-                    WriteLine("var serviceImpl = {0}.RemotingManager.ServiceManager.GetCreateImplementation<{1}>({2});", dataName, GetTypeName(type), varName);
-                    WriteLine("{0}.Serializer.WriteI32(serviceImpl.LocalId);", dataName, varName);
-                    // TODO: Serialize Peer so we can create proxies to other peer's services.
-                    break;
-                case TType.Void:
+                case DataType.Void:
                 default:
                     System.Diagnostics.Debugger.Break();
                     throw new NotImplementedException();
@@ -1327,7 +1320,7 @@ namespace RemotingGen
 
              var countName = (type.IsArray)? "Length" : "Count";
 
-            WriteLine("{0}.Serializer.WriteListBegin(new TList(TType.{1}, {2}.{3}));",
+            WriteLine("{0}.Serializer.WriteListBegin(new TList(DataType.{1}, {2}.{3}));",
                       dataName,
                       ConvertFromTypeToThrift(type).ToString(),
                       ToTitleCase(name),
@@ -1352,7 +1345,7 @@ namespace RemotingGen
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
 
-            WriteLine("{0}.Serializer.WriteMapBegin(new TMap(TType.{1}, TType.{2}, {3}.Count));",
+            WriteLine("{0}.Serializer.WriteMapBegin(new TMap(DataType.{1}, DataType.{2}, {3}.Count));",
                       dataName,
                       ConvertFromTypeToThrift(mapElemType1).ToString(),
                       ConvertFromTypeToThrift(mapElemType2).ToString(),
@@ -1388,55 +1381,49 @@ namespace RemotingGen
         /// </summary>
         private void GenerateTypeDeserialization(Type type, string varName, string dataName, bool varExists = true)
         {
-            var thriftType = ConvertFromTypeToThrift(type);
-            switch (thriftType)
+            var thrifDataType = ConvertFromTypeToThrift(type);
+            switch (thrifDataType)
             {
-                case TType.List:
+                case DataType.List:
                     GenerateListDeserialize(type, varName, dataName);
                     break;
-                case TType.Map:
+                case DataType.Map:
                     GenerateMapDeserialize(type, varName, dataName);
                     break;
-                case TType.DataObject:
-                case TType.Exception:
+                case DataType.DataObject:
+                case DataType.Exception:
                     GenerateStructDeserialize(type, varName, dataName, varExists);
                     break;
-                case TType.Bool:
-                case TType.Byte:
-                case TType.Double:
-                case TType.I16:
-                case TType.I32:
-                case TType.I64:
-                case TType.String:
+                case DataType.Bool:
+                case DataType.Byte:
+                case DataType.Double:
+                case DataType.I16:
+                case DataType.I32:
+                case DataType.I64:
+                case DataType.String:
                     var cast = "";
                     if (type.IsEnum || type == typeof(float))
                         cast = String.Format("({0})", GetTypeName(type));
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = {1}{2}.Serializer.Read{3}();", varName, cast, dataName, thriftType.ToString());
+                    WriteLine("{0} = {1}{2}.Serializer.Read{3}();", varName, cast, dataName, thrifDataType.ToString());
                     break;
-                case TType.Guid:
+                case DataType.Guid:
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = new System.Guid({1}.Serializer.ReadString());", varName, dataName);
                     break;
-                case TType.DateTime:
+                case DataType.DateTime:
                     if (!varExists)
                         Write("var ");
                     WriteLine("{0} = new System.DateTime({1}.Serializer.ReadI64());", varName, dataName);
                     break;
-                case TType.Delegate:
-                    WriteLine("var remoteDelegateId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("var del = {0}.RemotingManager.DelegateManager.CreateDelegateProxy<{1}>({0}.Peer, remoteDelegateId);", dataName, GetDelegateProxyClassName(type));
+                case DataType.Custom:
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = ({1})del.Delegate;", varName, GetTypeName(type));
+                    WriteLine("{0}.Serializer.ReadCustom({1}, customData);", dataName, varName);
                     break;
-                case TType.Service:
-                    WriteLine("var remoteId = {0}.Serializer.ReadI32();", dataName);
-                    WriteLine("{0} = {1}.RemotingManager.ServiceManager.GetService<{2}>({3}.Peer, remoteId);", varName, dataName, GetTypeName(type), dataName);
-                    break;
-                case TType.Void:
+                case DataType.Void:
                 default:
                     throw new NotImplementedException();
             }
@@ -1664,46 +1651,42 @@ namespace RemotingGen
         }
 
         /// <summary>
-        /// Converts from regular type to equivalent TType.
+        /// Converts from regular type to equivalent DataType.
         /// </summary>
-        internal static TType ConvertFromTypeToThrift(Type type)
+        internal static DataType ConvertFromTypeToThrift(Type type)
         {
             if (type == typeof(void))
-                return TType.Void;
+                return DataType.Void;
             else if (type == typeof(bool))
-                return TType.Bool;
+                return DataType.Bool;
             else if (type == typeof(byte))
-                return TType.Byte;
+                return DataType.Byte;
             else if (type == typeof(double) || type == typeof(float))
-                return TType.Double;
+                return DataType.Double;
             else if (type == typeof(short))
-                return TType.I16;
+                return DataType.I16;
             else if (type == typeof(int))
-                return TType.I32;
+                return DataType.I32;
             else if (type == typeof(long))
-                return TType.I64;
+                return DataType.I64;
             else if (type == typeof(string))
-                return TType.String;
+                return DataType.String;
             else if (type == typeof(Guid) || typeof(Guid).IsAssignableFrom(type))
-                return TType.Guid;
+                return DataType.Guid;
             else if (type == typeof(DateTime) || typeof(DateTime).IsAssignableFrom(type))
-                return TType.DateTime;
+                return DataType.DateTime;
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
             else if (Metadata.IsDataObject(type))
-                return TType.DataObject;
+                return DataType.DataObject;
             else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
-                return TType.Exception;
+                return DataType.Exception;
             else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))
-                return TType.Map;
+                return DataType.Map;
             else if (IsInstanceOfGenericType(typeof(ICollection<>), type) || type.IsArray)
-                return TType.List;
-            else if (IsDelegate(type))
-                return TType.Delegate;
-            else if (Metadata.IsService(type))
-                return TType.Service;
-
-            throw new NotImplementedException("Unhandle type "+type);
+                return DataType.List;
+            else 
+                return DataType.Custom;
         }
 
         #endregion

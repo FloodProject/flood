@@ -21,46 +21,39 @@
  * details.
  */
 
-using System;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
-    public class SerializerException : Exception
+    public struct TMap
     {
-        public const int UNKNOWN = 0;
-        public const int INVALID_DATA = 1;
-        public const int NEGATIVE_SIZE = 2;
-        public const int SIZE_LIMIT = 3;
-        public const int BAD_VERSION = 4;
-        public const int NOT_IMPLEMENTED= 5;
+        private DataType keyType;
+        private DataType valueType;
+        private int count;
 
-        protected int type_ = UNKNOWN;
-
-        public SerializerException()
-            : base()
+        public TMap(DataType keyType, DataType valueType, int count)
+            :this()
         {
+            this.keyType = keyType;
+            this.valueType = valueType;
+            this.count = count;
         }
 
-        public SerializerException(int type)
-            : base()
+        public DataType KeyType
         {
-            type_ = type;
+            get { return keyType; }
+            set { keyType = value; }
         }
 
-        public SerializerException(int type, String message)
-            : base(message)
+        public DataType ValueType
         {
-            type_ = type;
+            get { return valueType; }
+            set { valueType = value; }
         }
 
-        public SerializerException(String message)
-            : base(message)
+        public int Count
         {
-        }
-
-        public int getType()
-        {
-            return type_;
+            get { return count; }
+            set { count = value; }
         }
     }
 }

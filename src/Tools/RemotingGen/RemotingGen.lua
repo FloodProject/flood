@@ -10,7 +10,7 @@ project "RemotingGen"
     {
         "**.cs",
         "RemotingGen.lua",
-        path.join(srcdir, "EngineManaged/Remoting/Serialization/Type.cs")
+        path.join(srcdir, "EngineManaged/Serialization/DataType.cs")
     }
     
     links {

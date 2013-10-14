@@ -22,42 +22,42 @@
  */
 
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     public static class SerializerUtil
     {
-        public static void Skip(Serializer prot, TType type)
+        public static void Skip(Serializer prot, DataType type)
         {
             switch (type)
             {
-                case TType.Bool:
+                case DataType.Bool:
                     prot.ReadBool();
                     break;
-                case TType.Byte:
+                case DataType.Byte:
                     prot.ReadByte();
                     break;
-                case TType.I16:
+                case DataType.I16:
                     prot.ReadI16();
                     break;
-                case TType.I32:
+                case DataType.I32:
                     prot.ReadI32();
                     break;
-                case TType.I64:
+                case DataType.I64:
                     prot.ReadI64();
                     break;
-                case TType.Double:
+                case DataType.Double:
                     prot.ReadDouble();
                     break;
-                case TType.String:
+                case DataType.String:
                     // Don't try to decode the string, just skip it.
                     prot.ReadBinary();
                     break;
-                case TType.DataObject:
+                case DataType.DataObject:
                     prot.ReadDataObjectBegin();
                     while (true)
                     {
                         Field field = prot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
+                        if (field.Type == DataType.Stop)
                         {
                             break;
                         }
@@ -66,7 +66,7 @@ namespace Flood.Remoting.Serialization
                     }
                     prot.ReadDataObjectEnd();
                     break;
-                case TType.Map:
+                case DataType.Map:
                     TMap map = prot.ReadMapBegin();
                     for (int i = 0; i < map.Count; i++)
                     {
@@ -75,7 +75,7 @@ namespace Flood.Remoting.Serialization
                     }
                     prot.ReadMapEnd();
                     break;
-                case TType.List:
+                case DataType.List:
                     TList list = prot.ReadListBegin();
                     for (int i = 0; i < list.Count; i++)
                     {

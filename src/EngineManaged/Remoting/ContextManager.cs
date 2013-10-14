@@ -1,6 +1,6 @@
 ﻿
 using Flood.Remoting.Metadata;
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

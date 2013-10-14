@@ -1,4 +1,4 @@
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using System;
 
 namespace Flood.Remoting
@@ -33,7 +33,7 @@ namespace Flood.Remoting
             while (true)
             {
                 field = iprot.ReadFieldBegin();
-                if (field.Type == TType.Stop)
+                if (field.Type == DataType.Stop)
                 {
                     break;
                 }
@@ -41,7 +41,7 @@ namespace Flood.Remoting
                 switch (field.ID)
                 {
                     case 1:
-                        if (field.Type == TType.String)
+                        if (field.Type == DataType.String)
                         {
                             message = iprot.ReadString();
                         }
@@ -51,7 +51,7 @@ namespace Flood.Remoting
                         }
                         break;
                     case 2:
-                        if (field.Type == TType.I32)
+                        if (field.Type == DataType.I32)
                         {
                             type = (ExceptionType)iprot.ReadI32();
                         }
@@ -83,7 +83,7 @@ namespace Flood.Remoting
             if (!String.IsNullOrEmpty(Message))
             {
                 field.Name = "message";
-                field.Type = TType.String;
+                field.Type = DataType.String;
                 field.ID = 1;
                 oprot.WriteFieldBegin(field);
                 oprot.WriteString(Message);
@@ -91,7 +91,7 @@ namespace Flood.Remoting
             }
 
             field.Name = "type";
-            field.Type = TType.I32;
+            field.Type = DataType.I32;
             field.ID = 2;
             oprot.WriteFieldBegin(field);
             oprot.WriteI32((int)type);

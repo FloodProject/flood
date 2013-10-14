@@ -22,38 +22,44 @@
  */
 
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
-    public struct TMap
+    public struct Field
     {
-        private TType keyType;
-        private TType valueType;
-        private int count;
+        private string name;
+        private DataType type;
+        private short id;
 
-        public TMap(TType keyType, TType valueType, int count)
+        public Field(string name, DataType type, short id)
             :this()
         {
-            this.keyType = keyType;
-            this.valueType = valueType;
-            this.count = count;
+            this.name = name;
+            this.type = type;
+            this.id = id;
         }
 
-        public TType KeyType
+        public string Name
         {
-            get { return keyType; }
-            set { keyType = value; }
+            get { return name; }
+            set { name = value; }
         }
 
-        public TType ValueType
+        public DataType Type
         {
-            get { return valueType; }
-            set { valueType = value; }
+            get { return type; }
+            set { type = value; }
         }
 
-        public int Count
+        public short ID
         {
-            get { return count; }
-            set { count = value; }
+            get { return id; }
+            set { id = value; }
+        }
+
+        public string ClassName
+        {
+            get;
+            set; 
         }
     }
 }

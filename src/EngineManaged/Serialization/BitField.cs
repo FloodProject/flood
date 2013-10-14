@@ -1,5 +1,5 @@
 ﻿
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     public struct BitField
     {

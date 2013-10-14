@@ -18,7 +18,7 @@
  */
 
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     internal static class Base64Utils
     {

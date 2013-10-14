@@ -23,7 +23,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace Flood.Remoting.Serialization
+namespace Flood.Serialization
 {
     /// <summary>
     /// JSON protocol implementation for thrift.
@@ -75,29 +75,29 @@ namespace Flood.Remoting.Serialization
         private static byte[] NAME_LIST = new byte[] { (byte)'l', (byte)'s', (byte)'t' };
         private static byte[] NAME_SET = new byte[] { (byte)'s', (byte)'e', (byte)'t' };
 
-        private static byte[] GetTypeNameForTypeID(TType typeID)
+        private static byte[] GetTypeNameForTypeID(DataType typeID)
         {
             switch (typeID)
             {
-                case TType.Bool:
+                case DataType.Bool:
                     return NAME_BOOL;
-                case TType.Byte:
+                case DataType.Byte:
                     return NAME_BYTE;
-                case TType.I16:
+                case DataType.I16:
                     return NAME_I16;
-                case TType.I32:
+                case DataType.I32:
                     return NAME_I32;
-                case TType.I64:
+                case DataType.I64:
                     return NAME_I64;
-                case TType.Double:
+                case DataType.Double:
                     return NAME_DOUBLE;
-                case TType.String:
+                case DataType.String:
                     return NAME_STRING;
-                case TType.DataObject:
+                case DataType.DataObject:
                     return NAME_STRUCT;
-                case TType.Map:
+                case DataType.Map:
                     return NAME_MAP;
-                case TType.List:
+                case DataType.List:
                     return NAME_LIST;
                 default:
                     throw new SerializerException(SerializerException.NOT_IMPLEMENTED,
@@ -105,54 +105,54 @@ namespace Flood.Remoting.Serialization
             }
         }
 
-        private static TType GetTypeIDForTypeName(byte[] name)
+        private static DataType GetTypeIDForTypeName(byte[] name)
         {
-            TType result = TType.Stop;
+            DataType result = DataType.Stop;
             if (name.Length > 1)
             {
                 switch (name[0])
                 {
                     case (byte)'d':
-                        result = TType.Double;
+                        result = DataType.Double;
                         break;
                     case (byte)'i':
                         switch (name[1])
                         {
                             case (byte)'8':
-                                result = TType.Byte;
+                                result = DataType.Byte;
                                 break;
                             case (byte)'1':
-                                result = TType.I16;
+                                result = DataType.I16;
                                 break;
                             case (byte)'3':
-                                result = TType.I32;
+                                result = DataType.I32;
                                 break;
                             case (byte)'6':
-                                result = TType.I64;
+                                result = DataType.I64;
                                 break;
                         }
                         break;
                     case (byte)'l':
-                        result = TType.List;
+                        result = DataType.List;
                         break;
                     case (byte)'m':
-                        result = TType.Map;
+                        result = DataType.Map;
                         break;
                     case (byte)'r':
-                        result = TType.DataObject;
+                        result = DataType.DataObject;
                         break;
                     case (byte)'s':
                         if (name[1] == (byte)'t')
                         {
-                            result = TType.String;
+                            result = DataType.String;
                         }
                         break;
                     case (byte)'t':
-                        result = TType.Bool;
+                        result = DataType.Bool;
                         break;
                 }
             }
-            if (result == TType.Stop)
+            if (result == DataType.Stop)
             {
                 throw new SerializerException(SerializerException.NOT_IMPLEMENTED,
                                              "Unrecognized type");
@@ -899,7 +899,7 @@ namespace Flood.Remoting.Serialization
             byte ch = reader.Peek();
             if (ch == RBRACE[0])
             {
-                field.Type = TType.Stop;
+                field.Type = DataType.Stop;
             }
             else
             {

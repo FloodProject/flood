@@ -1,6 +1,6 @@
 ﻿using Flood.Modules;
 using Flood.Remoting;
-using Flood.Remoting.Serialization;
+using Flood.Serialization;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -26,7 +26,7 @@ namespace RemotingGen.Tests.Services
                 Manager.Process(data);
             }
 
-            public override Flood.Remoting.Serialization.Serializer CreateSerializer()
+            public override Flood.Serialization.Serializer CreateSerializer()
             {
                 return new BinarySerializer();
             }

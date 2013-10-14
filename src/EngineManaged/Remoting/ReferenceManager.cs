@@ -1,4 +1,4 @@
-﻿using Flood.Remoting.Serialization;
+﻿using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -98,7 +98,7 @@ namespace Flood.Remoting
             if (!subscriptionToReference.TryGetValue(subscription, out reference))
                 throw new Exception("Reference not found.");
 
-            reference.DataObject.Read(data);
+            reference.DataObject.Read(data.Serializer, null, data);
         }
 
         private void ProcessSubscribe(Message data)
@@ -140,7 +140,7 @@ namespace Flood.Remoting
                 {
                     var peerData = new Message(peer, remotingManager, reference.LocalId, 0, MessageType.ReferenceChanges);
                     // TODO: Optimize this. Dont't serialize again for each peer.
-                    reference.DataObject.Write(peerData, bitFields, bitFieldsCount);
+                    reference.DataObject.Write(peerData.Serializer, bitFields, bitFieldsCount, peerData);
                     peerData.Dispatch();
                 }
             }

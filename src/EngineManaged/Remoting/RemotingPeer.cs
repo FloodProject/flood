@@ -1,4 +1,4 @@
-﻿using Flood.Remoting.Serialization;
+﻿using Flood.Serialization;
 using System;
 
 namespace Flood.Remoting
