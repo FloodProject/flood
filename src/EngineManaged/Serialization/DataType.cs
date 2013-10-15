@@ -8,16 +8,14 @@ namespace Flood.Serialization
         Bool = 2,
         Byte = 3,
         Double = 4,
-        Exception = 5,
-        I16 = 6,
-        I32 = 8,
-        I64 = 10,
-        String = 11,
-        DataObject = 12,
-        Map = 13,
-        List = 14,
-        Guid = 15,
-        DateTime = 16,
-        Custom = 17
+        I16 = 5,
+        I32 = 6,
+        I64 = 7,
+        String = 8,
+        Map = 9,
+        List = 10,
+        Guid = 11,
+        DateTime = 12,
+        Custom = 13
     }
 }

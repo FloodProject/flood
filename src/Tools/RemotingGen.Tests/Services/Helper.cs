@@ -28,7 +28,10 @@ namespace RemotingGen.Tests.Services
 
             public override Flood.Serialization.Serializer CreateSerializer()
             {
-                return new BinarySerializer();
+                var serializer = new BinarySerializer();
+                serializer.CustomSerializer = new RemotingSerializer();
+
+                return serializer;
             }
 
             public override bool Equals(object other)

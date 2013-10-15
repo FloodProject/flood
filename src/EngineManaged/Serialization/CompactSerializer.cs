@@ -88,7 +88,6 @@ namespace Flood.Serialization
             ttypeToCompactType[(int)DataType.String] = Types.BINARY;
             ttypeToCompactType[(int)DataType.List] = Types.LIST;
             ttypeToCompactType[(int)DataType.Map] = Types.MAP;
-            ttypeToCompactType[(int)DataType.DataObject] = Types.DATA_OBJECT;
         }
 
         public void reset()
@@ -746,8 +745,6 @@ namespace Flood.Serialization
                     return DataType.List;
                 case Types.MAP:
                     return DataType.Map;
-                case Types.DATA_OBJECT:
-                    return DataType.DataObject;
                 default:
                     throw new SerializerException("don't know what type: " + (byte)(type & 0x0f));
             }

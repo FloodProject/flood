@@ -15,7 +15,6 @@
 
 using System.Runtime.CompilerServices;
 using Weaver;
-using RemotingGen;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,6 +61,28 @@ namespace RemotingGen
         }
     }
 
+    public class GenerationContext
+    {
+        public readonly List<Type> DataObjects;
+        public readonly List<Type> Delegates;
+
+        public readonly List<MemberClone> MemberClones;
+        public readonly Dictionary<MemberSignature, MemberOptions> MemberOptions;
+
+        public readonly Dictionary<TypeSignature, TypeSignature> DataObjectsMap;
+
+        public GenerationContext()
+        {
+            DataObjects = new List<Type>();
+            Delegates = new List<Type>();
+
+            MemberClones = new List<MemberClone>();
+            MemberOptions = new Dictionary<MemberSignature, MemberOptions>();
+
+            DataObjectsMap = new Dictionary<TypeSignature, TypeSignature>();
+        }
+    }
+
     public class Compiler
     {
         public Assembly Assembly;
@@ -69,11 +90,8 @@ namespace RemotingGen
 
         private GeneratorWriter apiWriter;
 
+        public readonly GenerationContext GenerationContext;
         public readonly List<Type> RpcTypes;
-        public readonly Dictionary<TypeSignature, TypeSignature> DataObjectsMap;
-
-        public readonly List<MemberClone> MemberClones;
-        public readonly Dictionary<MemberSignature, MemberOptions> MemberOptions;
 
         Logger log = new Logger(Logger.LogLevel.Info);
 
@@ -82,13 +100,10 @@ namespace RemotingGen
             Assembly = assembly;
             OutputDir = outputDir;
 
-            apiWriter = new GeneratorWriter(Path.Combine(outputDir, "API"));
-
+            GenerationContext = new GenerationContext();
             RpcTypes = new List<Type>();
-            DataObjectsMap = new Dictionary<TypeSignature, TypeSignature>();
 
-            MemberClones = new List<MemberClone>();
-            MemberOptions = new Dictionary<MemberSignature, MemberOptions>();
+            apiWriter = new GeneratorWriter(Path.Combine(outputDir, "API"));
         }
 
         public void Process()
@@ -107,9 +122,8 @@ namespace RemotingGen
                     if (Metadata.IsDataObject(type))
                     {
                         Debug.Assert(type.IsValueType || type.IsClass);
-                        var dataObjectFullName = ProcessDataObject(type);
+                        ProcessDataObject(type);
                         RpcTypes.Add(type);
-                        DataObjectsMap.Add(dataObjectFullName, new TypeSignature(type));
                     }
 
                     if (Metadata.IsException(type))
@@ -121,6 +135,7 @@ namespace RemotingGen
                 }
             }
 
+            WriteDelegates();
             WriteDataObjectFactory();
         }
 
@@ -131,31 +146,23 @@ namespace RemotingGen
             foreach (var method in type.GetMethods())
                 log.Debug("  Method: {0}", method.Name);
 
-            var gen = new Generator(type.Assembly);
+            var gen = new Generator(type.Assembly, GenerationContext);
             gen.GenerateService(type);
 
             apiWriter.WriteGeneratorToFile(type, gen);
         }
 
-        private TypeSignature ProcessDataObject(Type type)
+        private void ProcessDataObject(Type type)
         {
             log.Debug("DataObject: {0}", type.Name);
 
             foreach (var field in type.GetFields())
                 log.Debug("  Field: {0}", field.Name);
 
-            var gen = new Generator(type.Assembly);
-            var dataObjectFullName = gen.GenerateDataObject(type);
-
-            foreach (var clone in gen.MemberClones)
-                MemberClones.Add(clone);
-
-            foreach (var optionKV in gen.MemberOptions)
-                MemberOptions.Add(optionKV.Key, optionKV.Value);
+            var gen = new Generator(type.Assembly, GenerationContext);
+            gen.GenerateDataObject(type);
 
             apiWriter.WriteGeneratorToFile(type, gen);
-
-            return dataObjectFullName;
         }
 
         private void ProcessException(Type type)
@@ -165,7 +172,7 @@ namespace RemotingGen
             foreach (var field in type.GetFields())
                 log.Debug("  Field: {0}", field.Name);
 
-            var gen = new Generator(type.Assembly);
+            var gen = new Generator(type.Assembly, GenerationContext);
             gen.GenerateDataObject(type);
 
             apiWriter.WriteGeneratorToFile(type, gen);
@@ -173,10 +180,18 @@ namespace RemotingGen
 
         private void WriteDataObjectFactory()
         {
-            var gen = new Generator(Assembly);
-            gen.GenerateDataObjectFactory(RpcTypes);
+            var gen = new Generator(Assembly, GenerationContext);
+            gen.GenerateDataObjectFactory();
 
             apiWriter.WriteGeneratorToFile("DataObjectFactory", gen);
+        }
+
+        private void WriteDelegates()
+        {
+            var gen = new Generator(Assembly, GenerationContext);
+            gen.GenerateDelegateClasses();
+
+            apiWriter.WriteGeneratorToFile("Delegates", gen);
         }
 
         public void Compile(string dllPath, bool createApi)
@@ -220,10 +235,10 @@ namespace RemotingGen
 
                 //Add API generated assembly to API assembly
                 weaver = new AssemblyWeaver(apiPath);
-                weaver.CloneMembers(MemberClones);
-                weaver.AddMemberOptions(MemberOptions);
+                weaver.CloneMembers(GenerationContext.MemberClones);
+                weaver.AddMemberOptions(GenerationContext.MemberOptions);
                 //Merge some generated files.
-                weaver.MergeTypes(apiGenPaths.DllPath, DataObjectsMap);
+                weaver.MergeTypes(apiGenPaths.DllPath, GenerationContext.DataObjectsMap);
                 //Add all the other generated types.
                 weaver.CopyAssembly(apiGenPaths.DllPath);
 

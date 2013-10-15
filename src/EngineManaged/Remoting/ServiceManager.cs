@@ -94,19 +94,22 @@ namespace Flood.Remoting
 
             var impl = (ServiceImpl)stub;
 
-            var ass = AppDomain.CurrentDomain.GetAssemblies();
-
             return (T) impl.Impl;
         }
 
         public T GetService<T>(RemotingPeer peer, int implId)
         {
-            var serviceAttribute = typeof (T).GetCustomAttribute<ServiceAttribute>(false);
-            var globalServiceAttribute = typeof (T).GetCustomAttribute<GlobalServiceAttribute>(false);
+            return (T) GetService(typeof (T), peer, implId);
+        }
+
+        public object GetService(Type serviceType, RemotingPeer peer, int implId)
+        {
+            var serviceAttribute = serviceType.GetCustomAttribute<ServiceAttribute>(false);
+            var globalServiceAttribute = serviceType.GetCustomAttribute<GlobalServiceAttribute>(false);
             if (serviceAttribute == null && globalServiceAttribute == null)
                 throw new Exception("Type has no attribute Service or GlobalService.");
 
-            return GetCreateProxy<T>(peer, implId);
+            return GetCreateProxy(serviceType, peer, implId);
         }
 
         public T GetGlobalService<T>()
@@ -136,19 +139,24 @@ namespace Flood.Remoting
             if(globalServiceProxies.TryGetValue(tuple, out globalServiceProxy))
                 return (T) (object) globalServiceProxy;
 
-            var ret = GetCreateProxy<T>(peer, 0);
-            var proxy = (ServiceProxy) (object) ret;
+            var ret = GetCreateProxy(typeof(T), peer, 0);
+            var proxy = (ServiceProxy) ret;
 
             globalServiceProxies.Add(tuple, proxy);
             stubIdToGlobalServiceId.Add(proxy.LocalId, globalServiceId);
 
-            return ret;
+            return (T)ret;
         }
 
         public ServiceImpl GetCreateImplementation<T>(T service)
         {
-            var serviceAttribute = typeof (T).GetCustomAttribute<ServiceAttribute>(false);
-            var globalServiceAttribute = typeof (T).GetCustomAttribute<GlobalServiceAttribute>(false);
+            return GetCreateImplementation(typeof (T), service);
+        }
+
+        public ServiceImpl GetCreateImplementation(Type serviceType, object service)
+        {
+            var serviceAttribute = serviceType.GetCustomAttribute<ServiceAttribute>(false);
+            var globalServiceAttribute = serviceType.GetCustomAttribute<GlobalServiceAttribute>(false);
             if (serviceAttribute == null && globalServiceAttribute == null)
                 throw new Exception("Type has no attribute Service or GlobalService.");
 
@@ -157,8 +165,6 @@ namespace Flood.Remoting
                 return impl;
 
             var implId = GetNextStubId();
-
-            var serviceType = typeof(T);
 
             var stubsType = GetServiceStubType(serviceType);
             var implType = stubsType.GetNestedType("Impl");
@@ -170,7 +176,7 @@ namespace Flood.Remoting
 
             if (globalServiceAttribute != null)
             {
-                var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(typeof(T));
+                var globalServiceId = remotingManager.ContextManager.GetGlobalServiceId(serviceType);
                 localGlobalServiceIds.Add(globalServiceId, impl.LocalId);
                 stubIdToGlobalServiceId.Add(implId, globalServiceId);
             }
@@ -178,14 +184,12 @@ namespace Flood.Remoting
             return impl;
         }
 
-        private T GetCreateProxy<T>(RemotingPeer peer, int implId)
+        private object GetCreateProxy(Type serviceType, RemotingPeer peer, int implId)
         {
             var tuple = new Tuple<RemotingPeer, int>(peer, implId);
             ServiceProxy proxy;
             if (proxies.TryGetValue(tuple, out proxy))
-                return (T)(object)proxy;
-
-            var serviceType = typeof(T);
+                return proxy;
 
             var stubsType = GetServiceStubType(serviceType);
             var proxyType = stubsType.GetNestedType("Proxy");
@@ -199,7 +203,7 @@ namespace Flood.Remoting
             proxies.Add(tuple, proxy);
             proxy.RemotingManager = remotingManager;
 
-            return (T)stub;
+            return stub;
         }
 
         private Type GetServiceStubType(Type serviceType)
@@ -224,6 +228,21 @@ namespace Flood.Remoting
                 return globalServiceId;
 
             throw new Exception("Global service unavailable.");
+        }
+
+        public static bool IsService(Type serviceType)
+        {
+            var serviceAttribute = serviceType.GetCustomAttribute<ServiceAttribute>(false);
+            var globalServiceAttribute = serviceType.GetCustomAttribute<GlobalServiceAttribute>(false);
+
+            return serviceAttribute != null || globalServiceAttribute != null;
+        }
+
+        public static bool IsGlobalService(Type serviceType)
+        {
+            var globalServiceAttribute = serviceType.GetCustomAttribute<GlobalServiceAttribute>(false);
+
+            return globalServiceAttribute != null;
         }
     }
 }

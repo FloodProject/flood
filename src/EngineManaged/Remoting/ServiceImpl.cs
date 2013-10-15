@@ -51,7 +51,6 @@ namespace Flood.Remoting
             }
             else
             {
-                SerializerUtil.Skip(call.Data.Serializer, DataType.DataObject);
                 var response = new Message(call.Data, MessageType.Exception);
                 RemotingException x = new RemotingException(RemotingException.ExceptionType.UnknownMethod, "Invalid method id: '" + call.MethodId + "'");
                 response.Serializer.WriteI32(call.Id);

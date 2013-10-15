@@ -48,28 +48,56 @@ namespace Flood.Remoting
         public RemotingDelegate CreateDelegateProxy<T>(RemotingPeer peer, int remoteId)
             where T : RemotingDelegateProxy, new()
         {
-            var delegateProxy = Activator.CreateInstance<T>();
+            var delegateProxy = (RemotingDelegateProxy)Activator.CreateInstance(typeof(T));
+            Init(delegateProxy, peer, remoteId);
+
+            return delegateProxy;
+        }
+
+        public RemotingDelegate CreateDelegateProxy(IContextId contextId, Type type, RemotingPeer peer, int remoteId)
+        {
+            var factory = remotingManager.ContextManager.GetDataObjectFactory(contextId);
+            var delegateProxy = factory.CreateDelegateProxy(type);
+            Init(delegateProxy, peer, remoteId);
+
+            return delegateProxy;
+        }
+
+        private void Init(RemotingDelegateProxy delegateProxy, RemotingPeer peer, int remoteId)
+        {
             delegateProxy.Peer = peer;
             delegateProxy.LocalId = Interlocked.Increment(ref delegateIdCounter);
             delegateProxy.RemoteId = remoteId;
             delegateProxy.remotingManager = remotingManager;
 
             delegates.Add(delegateProxy.LocalId, delegateProxy);
-
-            return delegateProxy;
         }
 
         public RemotingDelegate CreateDelegateImpl<T>(Delegate del)
             where T : RemotingDelegateImpl, new()
         {
-            var delegateImpl = Activator.CreateInstance<T>();
+            var delegateImpl = (RemotingDelegateImpl) Activator.CreateInstance<T>();
+            Init(delegateImpl, del);
+
+            return delegateImpl;
+        }
+
+        public RemotingDelegate CreateDelegateImpl(IContextId contextId, Delegate del)
+        {
+            var factory = remotingManager.ContextManager.GetDataObjectFactory(contextId);
+            var delegateImpl = factory.CreateDelegateImpl(del.GetType());
+            Init(delegateImpl, del);
+
+            return delegateImpl;
+        }
+
+        private void Init(RemotingDelegateImpl delegateImpl, Delegate del)
+        {
             delegateImpl.LocalId = Interlocked.Increment(ref delegateIdCounter);
             delegateImpl.Delegate = del;
             delegateImpl.remotingManager = remotingManager;
 
             delegates.Add(delegateImpl.LocalId, delegateImpl);
-
-            return delegateImpl;
         }
 
         public RemotingDelegate GetDelegate(int delegateId)

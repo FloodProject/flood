@@ -61,19 +61,15 @@ namespace Flood.Serialization
     (byte)'"', (byte)'\\', (byte)'\b', (byte)'\f', (byte)'\n', (byte)'\r', (byte)'\t',
   };
 
-        private const int DEF_STRING_SIZE = 16;
-
         private static byte[] NAME_BOOL = new byte[] { (byte)'t', (byte)'f' };
         private static byte[] NAME_BYTE = new byte[] { (byte)'i', (byte)'8' };
         private static byte[] NAME_I16 = new byte[] { (byte)'i', (byte)'1', (byte)'6' };
         private static byte[] NAME_I32 = new byte[] { (byte)'i', (byte)'3', (byte)'2' };
         private static byte[] NAME_I64 = new byte[] { (byte)'i', (byte)'6', (byte)'4' };
         private static byte[] NAME_DOUBLE = new byte[] { (byte)'d', (byte)'b', (byte)'l' };
-        private static byte[] NAME_STRUCT = new byte[] { (byte)'r', (byte)'e', (byte)'c' };
         private static byte[] NAME_STRING = new byte[] { (byte)'s', (byte)'t', (byte)'r' };
         private static byte[] NAME_MAP = new byte[] { (byte)'m', (byte)'a', (byte)'p' };
         private static byte[] NAME_LIST = new byte[] { (byte)'l', (byte)'s', (byte)'t' };
-        private static byte[] NAME_SET = new byte[] { (byte)'s', (byte)'e', (byte)'t' };
 
         private static byte[] GetTypeNameForTypeID(DataType typeID)
         {
@@ -93,8 +89,6 @@ namespace Flood.Serialization
                     return NAME_DOUBLE;
                 case DataType.String:
                     return NAME_STRING;
-                case DataType.DataObject:
-                    return NAME_STRUCT;
                 case DataType.Map:
                     return NAME_MAP;
                 case DataType.List:
@@ -137,9 +131,6 @@ namespace Flood.Serialization
                         break;
                     case (byte)'m':
                         result = DataType.Map;
-                        break;
-                    case (byte)'r':
-                        result = DataType.DataObject;
                         break;
                     case (byte)'s':
                         if (name[1] == (byte)'t')

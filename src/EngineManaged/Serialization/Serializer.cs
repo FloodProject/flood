@@ -1,13 +1,34 @@
+using System;
+using System.Reflection;
 using System.Text;
 
 namespace Flood.Serialization
 {
     using Stream = System.IO.Stream;
 
+    public struct CustomData
+    {
+        // The assembly requesting serialization.
+        public readonly Assembly RequestingAssembly;
+
+        // Base type of the data to serialize.
+        public readonly Type Type;
+
+        // Data CustomSerializer specific data.
+        public readonly object Data;
+
+        public CustomData(Assembly requestingAssembly, Type type, object data)
+        {
+            RequestingAssembly = requestingAssembly;
+            Type = type;
+            Data = data;
+        }
+    }
+
     public interface ICustomSerializer
     {
-        T Read<T>(Serializer serializer, object customData);
-        void Write<T>(Serializer serializer, T value, object customData);
+        object Read(Serializer serializer, CustomData customData);
+        void Write(Serializer serializer, object value, CustomData customData);
     }
 
     public abstract class Serializer
@@ -40,10 +61,13 @@ namespace Flood.Serialization
             WriteBinary(Encoding.UTF8.GetBytes(s));
         }
         public abstract void WriteBinary(byte[] b);
-        public void WriteCustom<T>(T value, object customData = null)
+
+        public void WriteCustom(object value, CustomData customData)
         {
             if(CustomSerializer != null)
                 CustomSerializer.Write(this, value, customData);
+
+            Log.Error("No custom serializer available.");
         }
 
         public abstract DataObject ReadDataObjectBegin();
@@ -65,12 +89,15 @@ namespace Flood.Serialization
             return Encoding.UTF8.GetString(buf, 0, buf.Length);
         }
         public abstract byte[] ReadBinary();
-        public T ReadCustom<T>(object customData = null)
+
+        public object ReadCustom(CustomData customData)
         {
             if(CustomSerializer != null)
-                return CustomSerializer.Read<T>(this, customData);
+                return CustomSerializer.Read(this, customData);
 
-            return default(T);
+            Log.Error("No custom serializer available.");
+
+            return null;
         }
     }
 }

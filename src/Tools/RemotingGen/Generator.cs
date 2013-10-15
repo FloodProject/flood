@@ -14,33 +14,30 @@ namespace RemotingGen
 {
     internal class Generator : TextGenerator
     {
-        private Dictionary<Type, string> delegateNames;
-        private int delegateCounter;
-
         private Assembly currentAssembly;
 
-        public readonly List<MemberClone> MemberClones;
-        public readonly Dictionary<MemberSignature, MemberOptions> MemberOptions;
+
+        private GenerationContext GenerationContext;
  
-        public Generator(Assembly currentAssembly)
+        public Generator(Assembly currentAssembly, GenerationContext generationContext)
         {
-            delegateNames = new Dictionary<Type, string>();
-            MemberClones = new List<MemberClone>();
-            MemberOptions = new Dictionary<MemberSignature, MemberOptions>();
+
+            GenerationContext = generationContext;
 
             this.currentAssembly = currentAssembly;
         }
 
 #region Generate Data Objects
 
-        public TypeSignature GenerateDataObject(Type type)
+        public void GenerateDataObject(Type type)
         {
             GenerateUsings();
             var className = GetStubsClassName(type, false);
             var parameters = ConvertFieldToParametersList(type);
             GenerateDataObjectClass(className, parameters, type.Namespace, false, type);
 
-            return new TypeSignature(type.Namespace, className);
+            GenerationContext.DataObjects.Add(type);
+            GenerationContext.DataObjectsMap.Add(new TypeSignature(type.Namespace, className), new TypeSignature(type));
         }
 
         private void GenerateDataObjectClass(string className, List<Parameter> parameters, string @namespace, bool isValueType, Type dataObjecDataType = null)
@@ -116,7 +113,7 @@ namespace RemotingGen
                         var typeSig = new TypeSignature(param.ParameterType);
                         var declaringTypeSig = new TypeSignature(dataObjecDataType);
 
-                        MemberClones.Add(new MemberClone 
+                        GenerationContext.MemberClones.Add(new MemberClone 
                         {
                             OriginMember = new PropertySignature(typeSig, declaringTypeSig, param.Name), 
                             Name = backingFieldName,
@@ -128,8 +125,8 @@ namespace RemotingGen
                         var getMethodSig = new MethodSignature(typeSig, declaringTypeSig, "get_"+backingFieldName, new List<ParameterSignature>());
                         var setMethodSig = new MethodSignature(new TypeSignature(typeof(void)), declaringTypeSig, "set_"+backingFieldName, setParams);
 
-                        MemberOptions.Add(getMethodSig, Weaver.MemberOptions.UseOriginInstructions);
-                        MemberOptions.Add(setMethodSig, Weaver.MemberOptions.UseOriginInstructions);
+                        GenerationContext.MemberOptions.Add(getMethodSig, Weaver.MemberOptions.UseOriginInstructions);
+                        GenerationContext.MemberOptions.Add(setMethodSig, Weaver.MemberOptions.UseOriginInstructions);
                     }
                     else
                     {
@@ -176,6 +173,10 @@ namespace RemotingGen
                     var paramTypeName = GetTypeName(param.ParameterType);
 
                     WriteLine("public {0} {1};", paramTypeName, ToTitleCase(param.Name));
+
+                    if(IsDelegate(param.ParameterType))
+                        GenerationContext.Delegates.Add(param.ParameterType);
+
                     NewLine();
                 }
             }
@@ -185,11 +186,11 @@ namespace RemotingGen
 
             // Generate write methods
             GenerateDataObjectWriteBitField(parameters, baseDataObject);
-            GenerateDataObjectWrite(className, baseDataObjects, isValueType);
+            GenerateDataObjectWrite(className, baseDataObjectCount > 0, isValueType);
             NewLine();
 
             // Generate read method
-            GenerateDataObjectRead(className, baseDataObjects, isValueType, parameters);
+            GenerateDataObjectRead(className,  baseDataObjectCount > 0, isValueType, parameters);
 
             WriteCloseBraceIndent();
             if (@namespace != null)
@@ -213,39 +214,27 @@ namespace RemotingGen
             {
                 NewLine();
                 WriteLine("if(--bitFieldCount > 0)");
-                WriteLineIndent("(({0}) (object) this).Write(data, properties++, bitFieldCount);", GetStubsClassName(baseType, true));
+                WriteLineIndent("(({0}) (object) this).Write(data, properties++, bitFieldCount, customData);", GetStubsClassName(baseType, true));
             }
             WriteCloseBraceIndent();
         }
 
-        private void GenerateDataObjectWrite(string className, List<Type> baseTypes, bool isValueType)
+        private void GenerateDataObjectWrite(string className, bool hasBaseType, bool isValueType)
         {
-            GenerateDataObjectOverride("Write", className, baseTypes, isValueType, () =>
+            GenerateDataObjectOverride("Write", className, hasBaseType, isValueType, () =>
             {
-                var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
-                var bitFieldCount = baseCount + 1;
                 WriteLine("unsafe");
                 WriteStartBraceIndent();
-                WriteLine("var bitFields = stackalloc BitField[{0}];", bitFieldCount);
-                if (bitFieldCount == 1)
-                {
-                    WriteLine("bitFields[0] = BitField.AllSet;");
-                }
-                else
-                {
-                    WriteLine("for(int i = 0; i < {0}; i++)", bitFieldCount);
-                    WriteLineIndent("bitFields[i] = BitField.AllSet;");
-                }
-                NewLine();
-                WriteLine("Write(data, bitFields, {0});", bitFieldCount);
+                WriteLine("var bitField = BitField.AllSet;");
+                WriteLine("Write(data, &bitField, 1, customData);");
                 WriteCloseBraceIndent();
             });
 
         }
 
-        private void GenerateDataObjectRead(string className, List<Type> baseTypes, bool isValueType, IEnumerable<Parameter> parameters)
+        private void GenerateDataObjectRead(string className, bool hasBaseType, bool isValueType, IEnumerable<Parameter> parameters)
         {
-            GenerateDataObjectOverride("Read", className, baseTypes, isValueType, () =>
+            GenerateDataObjectOverride("Read", className, hasBaseType, isValueType, () =>
             {
                 WriteLine("var properties = new BitField();");
                 WriteLine("properties.Bits = data.ReadI64();");
@@ -261,15 +250,14 @@ namespace RemotingGen
             });
         }
 
-        private void GenerateDataObjectOverride(string name, string className, List<Type> baseTypes, bool isValueType, Action printer)
+        private void GenerateDataObjectOverride(string name, string className, bool hasBaseType, bool isValueType, Action printer)
         {
-            var baseCount = (baseTypes == null) ? 0 : baseTypes.Count;
-            var modifier = (isValueType)? "" : (baseCount == 0) ? "virtual" : "override";
+            var modifier = (isValueType)? "" : (hasBaseType) ? "override" : "virtual";
 
             WriteLine("public {0} void {1}(Serializer data, Type baseType = null, object customData = null)", modifier, name);
             WriteStartBraceIndent();
 
-            if (baseCount == 0)
+            if (!hasBaseType)
             {
                 WriteLine("if(baseType != null && baseType != typeof({0}))", className);
                 WriteLineIndent("throw new ArgumentException();");
@@ -277,13 +265,13 @@ namespace RemotingGen
             }
             else
             {
-               WriteLine("if(baseType == null || baseType == this.GetType())");
+               WriteLine("if(baseType == null || baseType == typeof({0}))", className);
                WriteStartBraceIndent();
             }
 
             printer.Invoke();
 
-            if (baseCount != 0)
+            if (hasBaseType)
             {
                 NewLine();
                 WriteLine("baseType = null;");
@@ -333,27 +321,49 @@ namespace RemotingGen
             return baseTypes;
         }
 
-        public void GenerateDataObjectFactory(List<Type> types)
+        public void GenerateDataObjectFactory()
         {
             GenerateUsings();
 
             WriteLine("public class DataObjectFactory : IDataObjectFactory");
             WriteStartBraceIndent();
+
             WriteLine("public IObservableDataObject CreateDataObjectReference(ushort id, RemotingPeer peer, int remoteId, ReferenceManager referenceManager)");
             WriteStartBraceIndent();
             WriteLine("switch(id)");
             WriteStartBraceIndent();
-            foreach (var type in types)
+            foreach (var dataObject in GenerationContext.DataObjects)
             {
                 ushort id;
-                if (!Metadata.TryGetDataObjectId(type, out id))
-                    continue;
+                if(!Metadata.TryGetDataObjectId(dataObject, out id))
+                    throw new Exception();
+
                 WriteLine("case {0}:", id);
-                WriteLineIndent("return new {0}.Reference(peer, remoteId, referenceManager);", GetStubsClassName(type, true));
+                WriteLineIndent("return new {0}.Reference(peer, remoteId, referenceManager);", GetStubsClassName(dataObject, true));
             }
             WriteLine("default:");
             WriteLineIndent("throw new NotImplementedException();");
             WriteCloseBraceIndent();
+            WriteCloseBraceIndent();
+
+            WriteLine("public RemotingDelegateImpl CreateDelegateImpl(Type delegateType)");
+            WriteStartBraceIndent();
+            foreach (var delegateType in GenerationContext.Delegates)
+            {
+                WriteLine("if(delegateType == typeof({0}))", GetTypeName(delegateType));
+                WriteLineIndent("return new {0}();", GetDelegateImplClassName(delegateType, false));
+            }
+            WriteLine("throw new NotImplementedException();");
+            WriteCloseBraceIndent();
+
+            WriteLine("public RemotingDelegateProxy CreateDelegateProxy(Type delegateType)");
+            WriteStartBraceIndent();
+            foreach (var delegateType in GenerationContext.Delegates)
+            {
+                WriteLine("if(delegateType == typeof({0}))", GetTypeName(delegateType));
+                WriteLineIndent("return new {0}();", GetDelegateProxyClassName(delegateType, false));
+            }
+            WriteLine("throw new NotImplementedException();");
             WriteCloseBraceIndent();
 
             WriteCloseBraceIndent();
@@ -396,8 +406,6 @@ namespace RemotingGen
                 if (i < methods.Length - 1)
                     NewLine();
             }
-
-            GenerateDelegateClasses();
 
             WriteCloseBraceIndent();
             WriteCloseBraceIndent();
@@ -558,7 +566,7 @@ namespace RemotingGen
             }
 
             WriteLine("var result = new {0}();", resultClassName);
-            WriteLine("result.Read(response);");
+            WriteLine("result.Read(response.Serializer, null, response);");
 
             List<ExceptionInfo> exceptionsInfo;
             if (Metadata.TryGetThrows(method, out exceptionsInfo))
@@ -600,7 +608,7 @@ namespace RemotingGen
                 WriteLine("var args = new {0}();", argsClassName);
                 foreach (var param in method.GetParameters())
                     WriteLine("args.{0} = {1} {2};", ToTitleCase(param.Name), GetTypeCastToStub(param.ParameterType), param.Name);
-                WriteLine("args.Write(call.Data);");
+                WriteLine("args.Write(call.Data.Serializer, null, call.Data);");
             }
             WriteLine("return call;");
             WriteCloseBraceIndent();
@@ -771,7 +779,7 @@ namespace RemotingGen
             if (HasArgsSerializer(method))
             {
                 WriteLine("var args = new {0}();", GetProcedureArgsClassName(method));
-                WriteLine("args.Read(call.Data);");
+                WriteLine("args.Read(call.Data.Serializer, null, call.Data);");
             }
 
             // If the method throws exceptions, we need to call it inside a try-catch.
@@ -824,7 +832,7 @@ namespace RemotingGen
 
             WriteLine("var reply = new Message.Reply(call);");
             if (HasResultSerializer(method))
-                WriteLine("result.Write(reply.Data);");
+                WriteLine("result.Write(reply.Data.Serializer, null, reply.Data);");
             WriteLine("reply.Data.Dispatch();");
 
             WriteCloseBraceIndent();
@@ -933,17 +941,18 @@ namespace RemotingGen
             if (!IsDelegate(type))
                 throw new ArgumentException("Type " + type + " is not a delegate");
 
-            string name;
-            if (!delegateNames.TryGetValue(type, out name))
+            if (GenerationContext.Delegates.Contains(type))
             {
-                if (!doCreate)
-                    throw new Exception("Unknowed delegate name for " + type.FullName);
-
-                name = "Delegate" + delegateCounter++;
-                delegateNames.Add(type, name);
+                var index = GenerationContext.Delegates.IndexOf(type);
+                return "Delegate" + index;
             }
 
-            return name;
+            if (!doCreate)
+                throw new Exception("Unknowed delegate name for " + type.FullName);
+
+            GenerationContext.Delegates.Add(type);
+
+            return "Delegate" + (GenerationContext.Delegates.Count-1);
         }
 
         private string GetDelegateImplClassName(Type type, bool doCreate = true)
@@ -956,9 +965,11 @@ namespace RemotingGen
             return GetDelegateName(type, doCreate) + "Proxy";
         }
 
-        private void GenerateDelegateClasses()
+        public void GenerateDelegateClasses()
         {
-            foreach(var type in delegateNames.Keys)
+            GenerateUsings();
+
+            foreach(var type in GenerationContext.Delegates)
             {
                 GenerateDelegateClass(type);
             }
@@ -976,7 +987,7 @@ namespace RemotingGen
             var argsName = GetDelegateName(type, false) + "_args";
             var resultName = GetDelegateName(type, false) + "_result";
 
-            WriteLine("public class {0} : RemotingDelegateProxy", proxyName);
+            WriteLine("class {0} : RemotingDelegateProxy", proxyName);
             WriteStartBraceIndent();
             WriteLine("public {0}()", proxyName);
             WriteStartBraceIndent();
@@ -986,7 +997,7 @@ namespace RemotingGen
             WriteCloseBraceIndent();
             NewLine();
 
-            WriteLine("public class {0} : RemotingDelegateImpl", implName);
+            WriteLine("class {0} : RemotingDelegateImpl", implName);
             WriteStartBraceIndent();
             WriteLine("public {0}()", implName);
             WriteStartBraceIndent();
@@ -1008,7 +1019,7 @@ namespace RemotingGen
             if (HasArgsSerializer(methodInvoke))
             {
                 WriteLine("var args = new {0}();", argsName);
-                WriteLine("args.Read(call.Data);");
+                WriteLine("args.Read(call.Data.Serializer, null, call.Data);");
             }
 
             var returnType = methodInvoke.ReturnType;
@@ -1037,7 +1048,7 @@ namespace RemotingGen
                     WriteLine("var result = new {0}();", resultName);
                     WriteLine("result.Success = t.Result;");
                     WriteLine("var reply = new Message.DelegateReply(call);");
-                    WriteLine("result.Write(reply.Data);");
+                    WriteLine("result.Write(reply.Data.Serializer, null, reply.Data);");
                     WriteLine("reply.Data.Dispatch();");
                     PopIndent();
                     WriteLine("});");
@@ -1068,7 +1079,7 @@ namespace RemotingGen
                 if (returnType != typeof(void))
                 {
                     WriteLine("var reply = new Message.Reply(call);");
-                    WriteLine("result.Write(reply.Data);");
+                    WriteLine("result.Write(reply.Data.Serializer, null, reply.Data);");
                     WriteLine("reply.Data.Dispatch();");
                 }
             }
@@ -1241,10 +1252,6 @@ namespace RemotingGen
                 case DataType.Map:
                     GenerateMapSerialize(type, varName, dataName);
                     break;
-                case DataType.DataObject:
-                case DataType.Exception:
-                    GenerateStructSerialize(type, varName, dataName);
-                    break;
                 case DataType.Bool:
                 case DataType.Byte:
                 case DataType.Double:
@@ -1255,16 +1262,17 @@ namespace RemotingGen
                     var enumCast = "";
                     if (type.IsEnum)
                         enumCast = String.Format("({0})", Enum.GetUnderlyingType(type).ToString());
-                    WriteLine("{0}.Serializer.Write{1}({2}{3});", dataName, thrifDataType.ToString(), enumCast, varName);
+                    WriteLine("{0}.Write{1}({2}{3});", dataName, thrifDataType.ToString(), enumCast, varName);
                     break;
                 case DataType.Guid:
-                    WriteLine("{0}.Serializer.WriteString({1}.ToString());", dataName, varName);
+                    WriteLine("{0}.WriteString({1}.ToString());", dataName, varName);
                     break;
                 case DataType.DateTime:
-                    WriteLine("{0}.Serializer.WriteI64({1}.Ticks);", dataName, varName);
+                    WriteLine("{0}.WriteI64({1}.Ticks);", dataName, varName);
                     break;
                 case DataType.Custom:
-                    WriteLine("{0}.Serializer.WriteCustom({1}, customData);", dataName, varName);
+                    WriteLine("var c = new CustomData(this.GetType().Assembly ,typeof({0}), customData);", GetTypeName(type));
+                    WriteLine("{0}.WriteCustom({1}, c);", dataName, varName);
                     break;
                 case DataType.Void:
                 default:
@@ -1272,43 +1280,6 @@ namespace RemotingGen
                     throw new NotImplementedException();
             }
 
-        }
-
-        /// <summary>
-        /// Generates the code to serialize a field of type struct
-        /// </summary>
-        private void GenerateStructSerialize(Type type, string varName, string dataName)
-        {
-            if (!Metadata.IsDataObject(type))
-            {
-                WriteLine("{0}.Write({1});", varName, dataName);
-                return;
-            }
-
-            WriteLine("var observable = (IObservableDataObject){0};", varName);
-            WriteLine("if(observable.IsReference)", varName);
-            WriteLineIndent("{0}.RemotingManager.ReferenceManager.Publish(observable);", dataName);
-            NewLine();
-            WriteLine("int referenceLocalId;");
-            WriteLine("if(!{0}.RemotingManager.ReferenceManager.TryGetLocalId(observable, out referenceLocalId))", dataName);
-            WriteLineIndent("referenceLocalId = 0;");
-            WriteLine("{0}.Serializer.WriteI32(referenceLocalId);", dataName);
-            NewLine();
-
-            WriteLine("var baseType = typeof({0});", GetTypeName(type));
-            WriteLine("ushort remoteContextId;");
-            WriteLine("ushort dataObjectId;");
-            WriteLine("var polymorphicType = {0}.RemotingManager.ContextManager.GetPeerPolymorphicType({0}.Peer, {1}.GetType(), baseType, out remoteContextId, out dataObjectId);", dataName, varName);
-            WriteLine("var isPolymorphic = polymorphicType != baseType;");
-            WriteLine("{0}.Serializer.WriteBool(isPolymorphic);", dataName);
-            WriteLine("if(isPolymorphic)");
-            WriteStartBraceIndent();
-            WriteLine("{0}.Serializer.WriteI16((short)remoteContextId);", dataName);
-            WriteLine("{0}.Serializer.WriteI16((short)dataObjectId);", dataName);
-            WriteCloseBraceIndent();
-            NewLine();
-
-            WriteLine("{0}.Write({1}, polymorphicType);", varName, dataName);
         }
 
         /// <summary>
@@ -1320,7 +1291,7 @@ namespace RemotingGen
 
              var countName = (type.IsArray)? "Length" : "Count";
 
-            WriteLine("{0}.Serializer.WriteListBegin(new TList(DataType.{1}, {2}.{3}));",
+            WriteLine("{0}.WriteListBegin(new TList(DataType.{1}, {2}.{3}));",
                       dataName,
                       ConvertFromTypeToThrift(type).ToString(),
                       ToTitleCase(name),
@@ -1334,7 +1305,7 @@ namespace RemotingGen
 
             WriteCloseBraceIndent();
 
-            WriteLine("{0}.Serializer.WriteListEnd();", dataName);
+            WriteLine("{0}.WriteListEnd();", dataName);
         }
 
         /// <summary>
@@ -1345,7 +1316,7 @@ namespace RemotingGen
             var mapElemType1 = type.GetGenericArguments()[0];
             var mapElemType2 = type.GetGenericArguments()[1];
 
-            WriteLine("{0}.Serializer.WriteMapBegin(new TMap(DataType.{1}, DataType.{2}, {3}.Count));",
+            WriteLine("{0}.WriteMapBegin(new TMap(DataType.{1}, DataType.{2}, {3}.Count));",
                       dataName,
                       ConvertFromTypeToThrift(mapElemType1).ToString(),
                       ConvertFromTypeToThrift(mapElemType2).ToString(),
@@ -1359,7 +1330,7 @@ namespace RemotingGen
 
             WriteCloseBraceIndent();
 
-            WriteLine("{0}.Serializer.WriteMapEnd();", dataName);
+            WriteLine("{0}.WriteMapEnd();", dataName);
 
         }
 
@@ -1390,10 +1361,6 @@ namespace RemotingGen
                 case DataType.Map:
                     GenerateMapDeserialize(type, varName, dataName);
                     break;
-                case DataType.DataObject:
-                case DataType.Exception:
-                    GenerateStructDeserialize(type, varName, dataName, varExists);
-                    break;
                 case DataType.Bool:
                 case DataType.Byte:
                 case DataType.Double:
@@ -1406,61 +1373,29 @@ namespace RemotingGen
                         cast = String.Format("({0})", GetTypeName(type));
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = {1}{2}.Serializer.Read{3}();", varName, cast, dataName, thrifDataType.ToString());
+                    WriteLine("{0} = {1}{2}.Read{3}();", varName, cast, dataName, thrifDataType.ToString());
                     break;
                 case DataType.Guid:
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = new System.Guid({1}.Serializer.ReadString());", varName, dataName);
+                    WriteLine("{0} = new System.Guid({1}.ReadString());", varName, dataName);
                     break;
                 case DataType.DateTime:
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0} = new System.DateTime({1}.Serializer.ReadI64());", varName, dataName);
+                    WriteLine("{0} = new System.DateTime({1}.ReadI64());", varName, dataName);
                     break;
                 case DataType.Custom:
+                    WriteLine("var c = new CustomData(this.GetType().Assembly ,typeof({0}), customData);", GetTypeName(type));
                     if (!varExists)
                         Write("var ");
-                    WriteLine("{0}.Serializer.ReadCustom({1}, customData);", dataName, varName);
+                    WriteLine("{0} = ({1}){2}.ReadCustom(c);", varName, GetTypeName(type), dataName);
                     break;
                 case DataType.Void:
                 default:
                     throw new NotImplementedException();
             }
 
-        }
-
-        /// <summary>
-        /// Generates the code to deserialize a field of type struct
-        /// </summary>
-        private void GenerateStructDeserialize(Type type, string varName, string dataName, bool varExists)
-        {
-            if (!varExists)
-                WriteLine("{0} {1};", GetTypeName(type), varName);
-
-            var className = GetStubsClassName(type, true);
-            if (Metadata.IsDataObject(type))
-            {
-                WriteLine("var referenceRemoteId = {0}.Serializer.ReadI32();", dataName);
-                WriteLine("var isPolymorphic = {0}.Serializer.ReadBool();", dataName);
-                WriteLine("if(isPolymorphic)");
-                WriteStartBraceIndent();
-                WriteLine("var contextId = {0}.Serializer.ReadI16();", dataName);
-                WriteLine("var dataObjectId = {0}.Serializer.ReadI16();", dataName);
-                WriteLine("var dataObjectFactory = {0}.RemotingManager.ContextManager.GetDataObjectFactory(contextId);", dataName);
-                WriteLine("{0} = ({1}) (object) dataObjectFactory.CreateDataObjectReference((ushort) dataObjectId, {2}.Peer, referenceRemoteId, {2}.RemotingManager.ReferenceManager);", varName, GetTypeName(type), dataName);
-                WriteCloseBraceIndent();
-                WriteLine("else");
-                WriteStartBraceIndent();
-                WriteLine("{0} = ({1}) (object) new {2}.Reference({3}.Peer, referenceRemoteId, {3}.RemotingManager.ReferenceManager);", varName, GetTypeName(type), className, dataName);
-                WriteCloseBraceIndent();
-            }
-            else
-            {
-                WriteLine(" {0} = new {1}();", varName, className);
-            }
-
-            WriteLine("{0}.Read({1});", varName, dataName);
         }
 
         /// <summary>
@@ -1471,7 +1406,7 @@ namespace RemotingGen
             var listElemType = (type.IsArray)? type.GetElementType() : type.GetGenericArguments()[0];
 
             var listName = string.Format("_list{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Serializer.ReadListBegin();", listName, dataName);
+            WriteLine("var {0} = {1}.ReadListBegin();", listName, dataName);
 
             if (type.IsArray)
             {
@@ -1501,7 +1436,7 @@ namespace RemotingGen
             }
 
             WriteCloseBraceIndent();
-            WriteLine("{0}.Serializer.ReadListEnd();", dataName);
+            WriteLine("{0}.ReadListEnd();", dataName);
         }
 
         /// <summary>
@@ -1516,7 +1451,7 @@ namespace RemotingGen
                       GetTypeName(type));
 
             var mapName = string.Format("_set{0}", GenericIndex++);
-            WriteLine("var {0} = {1}.Serializer.ReadMapBegin();", mapName, dataName);
+            WriteLine("var {0} = {1}.ReadMapBegin();", mapName, dataName);
 
             var iterName = string.Format("_i{0}", GenericIndex++);
             WriteLine("for (var {0} = 0; {0} < {1}.Count; ++{0})",
@@ -1527,7 +1462,7 @@ namespace RemotingGen
             GenerateContainerDoubleElementDeserialization(mapElemType1, mapElemType2, ToTitleCase(name), dataName);
 
             WriteCloseBraceIndent();
-            WriteLine("{0}.Serializer.ReadMapEnd();", dataName);
+            WriteLine("{0}.ReadMapEnd();", dataName);
         }
 
         /// <summary>
@@ -1677,10 +1612,6 @@ namespace RemotingGen
                 return DataType.DateTime;
             else if (type.IsEnum)
                 return ConvertFromTypeToThrift(Enum.GetUnderlyingType(type));
-            else if (Metadata.IsDataObject(type))
-                return DataType.DataObject;
-            else if (type == typeof(Exception) || type.IsSubclassOf(typeof(Exception)))
-                return DataType.Exception;
             else if (IsInstanceOfGenericType(typeof(IDictionary<,>), type))
                 return DataType.Map;
             else if (IsInstanceOfGenericType(typeof(ICollection<>), type) || type.IsArray)

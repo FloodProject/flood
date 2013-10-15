@@ -13,6 +13,9 @@ namespace Flood.Remoting
     {
         IObservableDataObject CreateDataObjectReference(
             ushort id, RemotingPeer peer, int remoteId, ReferenceManager referenceManager);
+
+        RemotingDelegateImpl CreateDelegateImpl(Type delegateType);
+        RemotingDelegateProxy CreateDelegateProxy(Type delegateType);
     }
 
     public interface IContextId
@@ -150,6 +153,15 @@ namespace Flood.Remoting
         {
             ContextInfo context;
             if (!localIdToContext.TryGetValue(localId, out context))
+                throw new Exception("Context not found.");
+
+            return context.DataObjectFactory;
+        }
+
+        public IDataObjectFactory GetDataObjectFactory(IContextId contextId)
+        {
+            ContextInfo context;
+            if (!contextIdToContext.TryGetValue(contextId, out context))
                 throw new Exception("Context not found.");
 
             return context.DataObjectFactory;
