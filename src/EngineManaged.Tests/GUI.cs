@@ -90,6 +90,8 @@ namespace Flood.Tests
             var expectedImagePath = Path.Combine(baseDirectory, assertId + "_expected.png");
             var diffImagePath = Path.Combine(baseDirectory, assertId + "_diff.png");
 
+            Directory.CreateDirectory(baseDirectory);
+
             Render(resultImagePath);
 
             if (!File.Exists(expectedImagePath))
