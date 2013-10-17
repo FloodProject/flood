@@ -91,15 +91,15 @@ void SystemSleep( int64 time )
 int StringCompareInsensitive(const String& s1, const String& s2)
 {
 #ifdef PLATFORM_WINDOWS
-	return _stricmp(s1.c_str(), s2.c_str());
+	return _stricmp(s1.CString(), s2.CString());
 #else
-	return strcasecmp(s1.c_str(), s2.c_str());
+	return strcasecmp(s1.CString(), s2.CString());
 #endif
 }
 
 //-----------------------------------//
 
-String StringFromFloat( float n, byte precision )
+UTF8String StringFromFloat( float n, byte precision )
 {
 	return StringFormat("%#.*f", precision, n );
 }
@@ -165,19 +165,15 @@ UTF8String StringFormatArgs(const char* str, va_list args)
 
 void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems)
 {
-	std::stringstream ss(s);
-	String item;
-	
-	while(std::getline(ss, item, delim)) 
-		elems.Push(item);
+	s.Split(delim, elems);
 }
 
 //-----------------------------------//
 
-String StringTrim(const String& s, const char* trim)
+UTF8String StringTrim(const UTF8String& s, const char* trim)
 {
-	String::size_type first = s.find_first_not_of(trim);
-	
+	UTF8String Trim(trim);
+	unsigned first = s.Find(Trim);
 	if( first == String::npos ) return "";
 
 	return s.substr(first, s.find_last_not_of(trim) - first + 1);
