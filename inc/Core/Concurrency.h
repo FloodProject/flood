@@ -189,7 +189,7 @@ struct API_CORE Condition
  * @note type T must be castable to int32
  * On Windows this should be aligned to 32-bits.
  */
-template<typename T> class ALIGN_BEGIN(32) Atomic
+template<typename T> class Atomic
 {
 public:
 
@@ -276,7 +276,7 @@ public:
 private:
 
 	mutable T atomic; //!< atomic variable
-} ALIGN_END(32);
+};
 
 //-----------------------------------//
 
