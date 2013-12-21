@@ -48,13 +48,17 @@ private:
     void addImage(ImageHandle newImageHandle, Rectangle newRect);
 
     static const uint DefaultSize = 512;
-    
+
     uint atlasSize;
     uint atlasMaxSize;
     MaxRectsBinPack rectanglePacker;
 
-    struct CompareHandle {
-		    bool operator()(const ImageHandle& h1,const ImageHandle& h2) const { return h1.id < h2.id; }
+    struct CompareHandle
+    {
+        bool operator()(const ImageHandle& h1, const ImageHandle& h2) const
+        {
+            return h1.id < h2.id;
+        }
     };
 
     std::map<ImageHandle, SubTexture, CompareHandle> imageSubTextures;
