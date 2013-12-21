@@ -26,13 +26,14 @@ namespace Flood
             var options = driver.Options;
             options.LibraryName = "Engine";
             options.OutputNamespace = "Flood";
-            options.GeneratorKind = LanguageGeneratorKind.CLI;
+            options.GeneratorKind = GeneratorKind.CLI;
             options.OutputDir = @"../../../../src/EngineManaged/Bindings";
             options.IncludeDirs.Add(@"../../../../inc");
             options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
             options.WriteOnlyWhenChanged = true;
             options.GenerateFunctionTemplates = true;
-            options.IgnoreParseWarnings = false;
+            options.IgnoreParseWarnings = true;
+            options.Verbose = false;
 
             SetupLibraries(options.Libraries);
             SetupHeaders(options.Headers);
@@ -59,6 +60,7 @@ namespace Flood
                     "Core/Serialization.h",
                     "Core/Archive.h",
                     "Core/Stream.h",
+                    "Core/String.h",
                     "Core/FileWatcher.h",
                     "Core/Math/Color.h",
                     "Core/Math/BoundingBox.h",
@@ -89,6 +91,7 @@ namespace Flood
                     "Engine/Geometry/DebugGeometry.h",
                     "Engine/Resources/Font.h",
                     "Engine/Scene/Entity.h",
+                    "Engine/Scene/Group.h",
                     "Engine/Scene/Component.h",
                     "Engine/Scene/Transform.h",
                     "Engine/Scene/Geometry.h",
@@ -129,7 +132,7 @@ namespace Flood
 
         #region Processing
 
-        public void Preprocess(Driver driver, Library lib)
+        public void Preprocess(Driver driver, ASTContext lib)
         {
             lib.IgnoreHeadersWithName("API.h");
             lib.IgnoreHeadersWithName("Concurrency.h");
@@ -250,7 +253,7 @@ namespace Flood
             lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
         }
 
-        public void Postprocess(Library lib)
+        public void Postprocess(Driver driver, ASTContext lib)
         {
             Driver.Generator.OnUnitGenerated += ProcessUnit;
         }
@@ -281,6 +284,9 @@ namespace Flood
     {
         public override bool VisitDeclaration(Declaration decl)
         {
+            if (AlreadyVisited(decl))
+                return false;
+
             var expansions = decl.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_IGNORE" &&
@@ -304,6 +310,9 @@ namespace Flood
 
         public override bool VisitParameterDecl(Parameter parameter)
         {
+            if (!VisitDeclaration(parameter))
+                return false;
+
             var expansions = parameter.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_OUT"))
@@ -317,6 +326,9 @@ namespace Flood
 
         public override bool VisitEnumDecl(Enumeration @enum)
         {
+            if (!VisitDeclaration(@enum))
+                return false;
+
             var expansions = @enum.PreprocessedEntities.OfType<MacroExpansion>();
 
             if (expansions.Any(e => e.Text == "FLD_FLAGS"))
@@ -347,6 +359,9 @@ namespace Flood
 
         public override bool VisitFieldDecl(Field field)
         {
+            if (!VisitDeclaration(field))
+                return false;
+
             if(field.Ignore)
                 return false;
 
@@ -632,7 +647,8 @@ namespace Flood
             ctx.Return.Write("{0}({1}.id)", CLISignature(null), ctx.ReturnVarName);
         }
 
-        public override void CLITypeReference(CLITypeReferenceCollector collector, ASTRecord<Declaration> loc)
+        public override void CLITypeReference(CLITypeReferenceCollector collector,
+            ASTRecord<Declaration> loc)
         {
             if(!(Declaration is ClassTemplate))
                 return;
@@ -647,8 +663,8 @@ namespace Flood
 
             Debug.Assert(loc.Parent != null);
 
-            var type = loc.Parent.Object as CppSharp.AST.Type;
-            var templateType = type.Desugar() as TemplateSpecializationType;
+            var typeRecord = loc.FindAncestor<TemplateSpecializationType>();
+            var templateType = typeRecord.Object as TemplateSpecializationType;
             var tag = templateType.Arguments[0].Type.Type as TagType;
             if(tag == null)
                 return; // TODO Fix this
