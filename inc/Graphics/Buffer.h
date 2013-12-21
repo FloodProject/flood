@@ -23,7 +23,6 @@ NAMESPACE_GRAPHICS_BEGIN
  * by the client's application (GL to application), and "copy" means the data
  * will be used both drawing and reading (GL to GL).
  */
-
 enum struct BufferUsage : uint8
 {
 	Static,  // Content rarely changes
@@ -38,7 +37,6 @@ enum struct BufferUsage : uint8
  * buffer. These help the engine make better decisions about where to
  * store the buffers, which leads to better rendering performance.
  */
-
 enum struct BufferAccess : uint8
 {
 	Read,     // Read content only
@@ -50,15 +48,14 @@ enum struct BufferAccess : uint8
 
 class GeometryBuffer;
 
+typedef uint32 BufferId;
+
 /**
  * Represents a buffer of data stored in memory. They mainly store
  * rendering data given to the render API. The buffers may be stored 
  * in different kinds of memory, like system RAM or video RAM,
  * depending on the usage and type flags that they are  created with. 
  */
-
-typedef uint32 BufferId;
-
 class API_GRAPHICS Buffer : public ReferenceCounted
 {
 public:

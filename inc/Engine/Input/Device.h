@@ -18,7 +18,6 @@ NAMESPACE_ENGINE_BEGIN
 /**
  * Different types of input devices.
  */
-
 enum struct InputDeviceType
 {
 	Keyboard,
@@ -33,7 +32,6 @@ REFLECT_DECLARE_ENUM(InputDeviceType)
 /**
  * Base struct for input events.
  */
-
 struct API_INPUT InputEvent
 {
 	DECLARE_UNCOPYABLE(InputEvent)
@@ -49,7 +47,6 @@ public:
 /**
  * Input device.
  */
-
 class API_INPUT InputDevice
 {
 	DECLARE_UNCOPYABLE(InputDevice)

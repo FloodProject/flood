@@ -18,7 +18,6 @@ NAMESPACE_ENGINE_BEGIN
  * When interacting with the Keyboard class you should always use
  * these values.
  */
-
 enum class Keys
 {
 	// Alphabet keys
@@ -146,7 +145,6 @@ enum class Keys
 /**
  * Different types of keyboard events.
  */
-
 enum class KeyboardEventType
 {
 	// Occurs when a keyboard key is pressed
@@ -166,7 +164,6 @@ enum class KeyboardEventType
  * special keys are pressed (handy for testing shortcuts). Finally
  * it also needs to know if it's a key press or release event.
  */
-
 struct API_ENGINE KeyEvent : public InputEvent
 {
 	friend class Keyboard;
