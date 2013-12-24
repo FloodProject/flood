@@ -14,7 +14,10 @@ namespace Flood
 {
     enum struct PacketFlags : unsigned char;
     ref class Packet;
+}
 
+namespace Flood
+{
     [System::Flags]
     public enum struct PacketFlags : unsigned char
     {
@@ -45,15 +48,18 @@ namespace Flood
             Flood::PacketFlags get();
             void set(Flood::PacketFlags);
         }
+
         property Flood::PacketFlags ProcessedFlags
         {
             Flood::PacketFlags get();
             void set(Flood::PacketFlags);
         }
+
         property unsigned short Id
         {
             unsigned short get();
         }
+
         int Size();
 
         void Clear();
@@ -65,6 +71,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

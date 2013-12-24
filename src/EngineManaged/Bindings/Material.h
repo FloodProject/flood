@@ -23,7 +23,10 @@ namespace Flood
     enum struct ResourceGroup;
     ref class Allocator;
     ref class TextureUnit;
+}
 
+namespace Flood
+{
     public enum struct BlendSource
     {
         Zero = 0,
@@ -75,139 +78,125 @@ namespace Flood
         {
             Flood::ResourceGroup get();
         }
+
         property System::String^ Name
         {
             System::String^ get();
             void set(System::String^);
         }
+
         property Flood::ResourceHandle<Flood::ShaderMaterial^> Shader
         {
             Flood::ResourceHandle<Flood::ShaderMaterial^> get();
             void set(Flood::ResourceHandle<Flood::ShaderMaterial^>);
         }
+
         property bool DepthWrite
         {
             bool get();
             void set(bool);
         }
+
         property bool DepthTest
         {
             bool get();
             void set(bool);
         }
+
         property Flood::DepthCompare DepthCompare
         {
             Flood::DepthCompare get();
             void set(Flood::DepthCompare);
         }
+
         property Flood::Vector2 DepthRange
         {
             Flood::Vector2 get();
             void set(Flood::Vector2);
         }
+
         property Flood::Vector2 DepthOffset
         {
             Flood::Vector2 get();
             void set(Flood::Vector2);
         }
+
         property bool AlphaTest
         {
             bool get();
             void set(bool);
         }
+
         property float LineWidth
         {
             float get();
             void set(float);
         }
+
         property bool LineSmoothing
         {
             bool get();
             void set(bool);
         }
+
         property bool BackfaceCulling
         {
             bool get();
             void set(bool);
         }
+
         property Flood::BlendSource BlendSource
         {
             Flood::BlendSource get();
         }
+
         property Flood::BlendDestination BlendDestination
         {
             Flood::BlendDestination get();
         }
+
         property System::String^ Name1
         {
             System::String^ get();
             void set(System::String^);
         }
+
         property Flood::ResourceHandle<Flood::ShaderMaterial^> Shader1
         {
             Flood::ResourceHandle<Flood::ShaderMaterial^> get();
             void set(Flood::ResourceHandle<Flood::ShaderMaterial^>);
         }
+
         property bool CullBackfaces
         {
             bool get();
             void set(bool);
         }
-        property Flood::DepthCompare DepthCompare1
-        {
-            Flood::DepthCompare get();
-            void set(Flood::DepthCompare);
-        }
-        property bool DepthTest1
-        {
-            bool get();
-            void set(bool);
-        }
-        property bool DepthWrite1
-        {
-            bool get();
-            void set(bool);
-        }
-        property Flood::Vector2 DepthRange1
-        {
-            Flood::Vector2 get();
-            void set(Flood::Vector2);
-        }
-        property Flood::Vector2 DepthOffset1
-        {
-            Flood::Vector2 get();
-            void set(Flood::Vector2);
-        }
-        property bool AlphaTest1
-        {
-            bool get();
-            void set(bool);
-        }
+
         property bool LineSmooth
         {
             bool get();
             void set(bool);
         }
-        property float LineWidth1
-        {
-            float get();
-            void set(float);
-        }
+
         property Flood::BlendSource Source
         {
             Flood::BlendSource get();
             void set(Flood::BlendSource);
         }
+
         property Flood::BlendDestination Destination
         {
             Flood::BlendDestination get();
             void set(Flood::BlendDestination);
         }
+
         property bool _isBlendingEnabled
         {
             bool get();
             void set(bool);
         }
+
         void SetShader(System::String^ name);
 
         bool IsBlendingEnabled();

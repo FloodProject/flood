@@ -14,7 +14,10 @@ namespace Flood
 {
     value struct Rectangle;
     value struct RectangleF;
+}
 
+namespace Flood
+{
     public value struct Rectangle
     {
     public:
@@ -31,7 +34,6 @@ namespace Flood
         /// Returns true if this rectangle is contained in rect.
         /// </summary>
         bool IsContainedIn(Flood::Rectangle rect);
-
     };
 
     public value struct RectangleF
@@ -50,6 +52,5 @@ namespace Flood
         /// Returns true if this rectangle is contained in rect.
         /// </summary>
         bool IsContainedIn(Flood::RectangleF rect);
-
     };
 }

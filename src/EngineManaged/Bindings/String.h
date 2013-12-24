@@ -13,7 +13,10 @@
 namespace Flood
 {
     value struct StringHash;
+}
 
+namespace Flood
+{
     public value struct StringHash
     {
     public:
@@ -21,7 +24,6 @@ namespace Flood
         StringHash(::StringHash* native);
         StringHash(System::IntPtr native);
         StringHash(System::String^ str, unsigned int size);
-
         unsigned int Hash;
     };
 

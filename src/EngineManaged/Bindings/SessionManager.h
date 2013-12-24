@@ -14,7 +14,10 @@ namespace Flood
 {
     ref class Session;
     ref class SessionManager;
+}
 
+namespace Flood
+{
     public ref class SessionManager : ICppInstance
     {
     public:
@@ -57,6 +60,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

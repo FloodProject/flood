@@ -753,6 +753,16 @@ Flood::Vector2 Flood::Vector2::operator/(Flood::Vector2 __op, int s)
     return Flood::Vector2((::Vector2*)&__ret);
 }
 
+Flood::Vector2::operator Flood::Vector3(Flood::Vector2 __op)
+{
+    auto _marshal0 = ::Vector2();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    auto arg0 = _marshal0;
+    auto __ret = (::Vector3) arg0;
+    return Flood::Vector3((::Vector3*)&__ret);
+}
+
 void Flood::Vector2::SetZero()
 {
     auto _this0 = ::Vector2();
@@ -796,6 +806,16 @@ Flood::Vector2i::Vector2i(int x, int y)
     ::Vector2i _native((::int32)(::int32_t)x, (::int32)(::int32_t)y);
     this->X = _native.x;
     this->Y = _native.y;
+}
+
+Flood::Vector2i::operator Flood::Vector3(Flood::Vector2i __op)
+{
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (::int32)(::int32_t)__op.X;
+    _marshal0.y = (::int32)(::int32_t)__op.Y;
+    auto arg0 = _marshal0;
+    auto __ret = (::Vector3) arg0;
+    return Flood::Vector3((::Vector3*)&__ret);
 }
 
 bool Flood::Vector2i::operator==(Flood::Vector2i __op, Flood::Vector2i v)

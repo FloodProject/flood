@@ -94,9 +94,9 @@ API_CORE Path PathGetSeparator();
 API_CORE Path PathCombine(Path base, Path extra);
 
 //-----------------------------------//
-	
+
 // Converts a number to a string.
-template< typename T >
+template< typename T > FLD_IGNORE
 NAMESPACE_CORE::String StringFromNumber(const T& t)
 {
 	std::ostringstream oss;
@@ -108,7 +108,7 @@ NAMESPACE_CORE::String StringFromNumber(const T& t)
 }
 
 // Converts a string to a number.
-template< typename T >
+template< typename T > FLD_IGNORE
 T StringToNumber(const NAMESPACE_CORE::String& s)
 {
 	std::stringstream ss(s);
@@ -119,7 +119,7 @@ T StringToNumber(const NAMESPACE_CORE::String& s)
 	return num;
 }
 
-struct RawStringCompare
+struct FLD_IGNORE RawStringCompare
 {
 	bool operator()(char const* a, char const* b)
 	{

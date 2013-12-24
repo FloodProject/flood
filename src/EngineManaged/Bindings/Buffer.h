@@ -16,7 +16,10 @@ namespace Flood
     enum struct BufferUsage : unsigned char;
     ref class Buffer;
     ref class GeometryBuffer;
+}
 
+namespace Flood
+{
     /// <summary>
     /// "Static" means the data in VBO will not be changed (specified once and used
     /// many times), "dynamic" means the data will be changed frequently (specified
@@ -45,6 +48,12 @@ namespace Flood
         ReadWrite = 2
     };
 
+    /// <summary>
+    /// Represents a buffer of data stored in memory. They mainly store rendering
+    /// data given to the render API. The buffers may be stored in different kinds
+    /// of memory, like system RAM or video RAM, depending on the usage and type
+    /// flags that they are created with.
+    /// </summary>
     public ref class Buffer : ICppInstance
     {
     public:
@@ -67,39 +76,45 @@ namespace Flood
             Flood::BufferUsage get();
             void set(Flood::BufferUsage);
         }
+
         property Flood::BufferAccess BufferAccess
         {
             Flood::BufferAccess get();
             void set(Flood::BufferAccess);
         }
+
         property Flood::GeometryBuffer^ GeometryBuffer
         {
             Flood::GeometryBuffer^ get();
             void set(Flood::GeometryBuffer^);
         }
+
         property unsigned int Id
         {
             unsigned int get();
             void set(unsigned int);
         }
+
         property Flood::BufferUsage Usage
         {
             Flood::BufferUsage get();
             void set(Flood::BufferUsage);
         }
+
         property Flood::BufferAccess Access
         {
             Flood::BufferAccess get();
             void set(Flood::BufferAccess);
         }
+
         property Flood::GeometryBuffer^ Gb
         {
             Flood::GeometryBuffer^ get();
             void set(Flood::GeometryBuffer^);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

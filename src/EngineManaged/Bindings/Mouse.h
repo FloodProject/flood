@@ -22,7 +22,10 @@ namespace Flood
     ref class MouseInfo;
     ref class MouseMoveEvent;
     ref class MouseWheelEvent;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Holds the mouse state.
     /// </summary>
@@ -46,45 +49,52 @@ namespace Flood
             short get();
             void set(short);
         }
+
         property short Y
         {
             short get();
             void set(short);
         }
+
         property bool InsideWindow
         {
             bool get();
             void set(bool);
         }
+
         property bool LeftButton
         {
             bool get();
             void set(bool);
         }
+
         property bool RightButton
         {
             bool get();
             void set(bool);
         }
+
         property bool MiddleButton
         {
             bool get();
             void set(bool);
         }
+
         property bool Aux1Button
         {
             bool get();
             void set(bool);
         }
+
         property bool Aux2Button
         {
             bool get();
             void set(bool);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class Mouse : Flood::InputDevice
@@ -99,10 +109,12 @@ namespace Flood
         {
             Flood::InputDeviceType get();
         }
+
         property Flood::MouseInfo^ MouseInfo
         {
             Flood::MouseInfo^ get();
         }
+
     private:
         delegate void _MouseMoveDelegate(const ::MouseMoveEvent& _0);
         _MouseMoveDelegate^ _MouseMoveDelegateInstance;
@@ -192,6 +204,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

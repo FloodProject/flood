@@ -20,7 +20,10 @@ namespace Flood
     value struct Color;
     value struct RenderContextSettings;
     value struct Settings;
+}
 
+namespace Flood
+{
     public value struct RenderContextSettings
     {
     public:
@@ -55,21 +58,25 @@ namespace Flood
         {
             void set(Flood::RenderTarget^);
         }
+
         property bool InitDone
         {
             bool get();
             void set(bool);
         }
+
         property Flood::RenderTarget^ CurrentTarget
         {
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
+
         property Flood::RenderBackend^ Backend
         {
             Flood::RenderBackend^ get();
             void set(Flood::RenderBackend^);
         }
+
         virtual void MakeCurrent(Flood::RenderTarget^ target);
 
         void Init();
@@ -83,6 +90,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

@@ -16,7 +16,10 @@ namespace Flood
     value struct Matrix4x4;
     value struct Vector3;
     value struct Vector4;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Implements a 4x4 transformation matrix that can represent the full range of
     /// types of operations that can be used in computer graphics. Usually you just

@@ -17,7 +17,10 @@ namespace Flood
     ref class Image;
     ref class RenderBuffer;
     ref class Texture;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Render buffers need to have renderable attachments. These attachments can
     /// be of different types depending on your needs. This enum works like a
@@ -51,6 +54,7 @@ namespace Flood
         {
             Flood::Settings get();
         }
+
         virtual void MakeCurrent() override;
 
         virtual void Bind();
@@ -74,6 +78,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

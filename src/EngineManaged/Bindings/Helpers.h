@@ -12,6 +12,10 @@
 
 namespace Flood
 {
+}
+
+namespace Flood
+{
     public ref class FloodHelpers
     {
     public:

@@ -16,7 +16,10 @@ namespace Flood
     value struct BoundingBox;
     value struct Matrix4x3;
     value struct Ray;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Axis-aligned Bounding Box.
     /// </summary>
@@ -34,6 +37,7 @@ namespace Flood
         {
             Flood::Vector3 get();
         }
+
         void Add(Flood::Vector3 vertex);
 
         void Add(Flood::BoundingBox box);
@@ -49,6 +53,5 @@ namespace Flood
         bool Intersects(Flood::Ray ray, [System::Runtime::InteropServices::Out] float% distance);
 
         Flood::BoundingBox Transform(Flood::Matrix4x3 _0);
-
     };
 }

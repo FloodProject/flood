@@ -6,10 +6,8 @@
 ************************************************************************/
 
 #include "Material.h"
-#include "Image.h"
 #include "Memory.h"
 #include "Resource.h"
-#include "ShaderMaterial.h"
 #include "Texture.h"
 
 using namespace System;
@@ -304,72 +302,6 @@ void Flood::Material::CullBackfaces::set(bool value)
     ((::Material*)NativePtr)->cullBackfaces = value;
 }
 
-Flood::DepthCompare Flood::Material::DepthCompare1::get()
-{
-    return (Flood::DepthCompare)((::Material*)NativePtr)->depthCompare;
-}
-
-void Flood::Material::DepthCompare1::set(Flood::DepthCompare value)
-{
-    ((::Material*)NativePtr)->depthCompare = (::DepthCompare)value;
-}
-
-bool Flood::Material::DepthTest1::get()
-{
-    return ((::Material*)NativePtr)->depthTest;
-}
-
-void Flood::Material::DepthTest1::set(bool value)
-{
-    ((::Material*)NativePtr)->depthTest = value;
-}
-
-bool Flood::Material::DepthWrite1::get()
-{
-    return ((::Material*)NativePtr)->depthWrite;
-}
-
-void Flood::Material::DepthWrite1::set(bool value)
-{
-    ((::Material*)NativePtr)->depthWrite = value;
-}
-
-Flood::Vector2 Flood::Material::DepthRange1::get()
-{
-    return Flood::Vector2((::Vector2*)&((::Material*)NativePtr)->depthRange);
-}
-
-void Flood::Material::DepthRange1::set(Flood::Vector2 value)
-{
-    auto _marshal0 = ::Vector2();
-    _marshal0.x = value.X;
-    _marshal0.y = value.Y;
-    ((::Material*)NativePtr)->depthRange = _marshal0;
-}
-
-Flood::Vector2 Flood::Material::DepthOffset1::get()
-{
-    return Flood::Vector2((::Vector2*)&((::Material*)NativePtr)->depthOffset);
-}
-
-void Flood::Material::DepthOffset1::set(Flood::Vector2 value)
-{
-    auto _marshal0 = ::Vector2();
-    _marshal0.x = value.X;
-    _marshal0.y = value.Y;
-    ((::Material*)NativePtr)->depthOffset = _marshal0;
-}
-
-bool Flood::Material::AlphaTest1::get()
-{
-    return ((::Material*)NativePtr)->alphaTest;
-}
-
-void Flood::Material::AlphaTest1::set(bool value)
-{
-    ((::Material*)NativePtr)->alphaTest = value;
-}
-
 bool Flood::Material::LineSmooth::get()
 {
     return ((::Material*)NativePtr)->lineSmooth;
@@ -378,16 +310,6 @@ bool Flood::Material::LineSmooth::get()
 void Flood::Material::LineSmooth::set(bool value)
 {
     ((::Material*)NativePtr)->lineSmooth = value;
-}
-
-float Flood::Material::LineWidth1::get()
-{
-    return ((::Material*)NativePtr)->lineWidth;
-}
-
-void Flood::Material::LineWidth1::set(float value)
-{
-    ((::Material*)NativePtr)->lineWidth = value;
 }
 
 Flood::BlendSource Flood::Material::Source::get()

@@ -20,7 +20,10 @@ namespace Flood
     ref class Session;
     ref class SessionManager;
     value struct HostConnectionDetails;
+}
 
+namespace Flood
+{
     public ref class Host : ICppInstance
     {
     public:
@@ -57,7 +60,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public value struct HostConnectionDetails
@@ -67,7 +69,6 @@ namespace Flood
         HostConnectionDetails(::HostConnectionDetails* native);
         HostConnectionDetails(System::IntPtr native);
         HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount);
-
         System::String^ Address;
         unsigned short Port;
         unsigned char ChannelCount;
@@ -85,16 +86,17 @@ namespace Flood
         {
             Flood::Peer^ get();
         }
+
         property Flood::Session^ Session
         {
             Flood::Session^ get();
         }
+
         bool Connect(Flood::HostConnectionDetails _0);
 
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class HostServer : Flood::Host
@@ -109,15 +111,16 @@ namespace Flood
         {
             System::Collections::Generic::List<Flood::Peer^>^ get();
         }
+
         property Flood::SessionManager^ SessionManager
         {
             Flood::SessionManager^ get();
         }
+
         bool CreateSocket(Flood::HostConnectionDetails _0);
 
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

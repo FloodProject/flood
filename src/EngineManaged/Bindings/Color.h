@@ -14,7 +14,10 @@ namespace Flood
 {
     value struct Color;
     value struct Vector3;
+}
 
+namespace Flood
+{
     public value struct Color
     {
     public:
@@ -33,38 +36,48 @@ namespace Flood
 
         static Flood::Color operator*(Flood::Color __op, float s);
 
+        static operator Flood::Vector3(Flood::Color __op);
+
         static property Flood::Color White
         {
             Flood::Color get();
         }
+
         static property Flood::Color Black
         {
             Flood::Color get();
         }
+
         static property Flood::Color LightGrey
         {
             Flood::Color get();
         }
+
         static property Flood::Color Red
         {
             Flood::Color get();
         }
+
         static property Flood::Color Green
         {
             Flood::Color get();
         }
+
         static property Flood::Color Blue
         {
             Flood::Color get();
         }
+
         static property Flood::Color NavyBlue
         {
             Flood::Color get();
         }
+
         static property Flood::Color SkyBlue
         {
             Flood::Color get();
         }
+
         static property Flood::Color Yellow
         {
             Flood::Color get();

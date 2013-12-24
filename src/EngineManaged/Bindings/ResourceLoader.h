@@ -21,7 +21,10 @@ namespace Flood
     value struct ExtensionMetadata;
     value struct ResourceLoadOption;
     value struct ResourceLoadOptions;
+}
 
+namespace Flood
+{
     public value struct ResourceLoadOption
     {
     public:
@@ -48,7 +51,6 @@ namespace Flood
         bool KeepStreamOpen;
         Flood::ResourceLoadOption Option;
         void AddOption(int key, int value);
-
     };
 
     public ref class ResourceStream : ICppInstance
@@ -71,11 +73,13 @@ namespace Flood
             Flood::Stream^ get();
             void set(Flood::Stream^);
         }
+
         property Flood::ResourceLoader^ Loader
         {
             Flood::ResourceLoader^ get();
             void set(Flood::ResourceLoader^);
         }
+
         virtual int Decode(System::IntPtr buffer, unsigned int size);
 
         virtual void Reset();
@@ -83,7 +87,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -104,23 +107,28 @@ namespace Flood
         {
             Flood::ExtensionMetadata get();
         }
+
         property System::String^ Name
         {
             System::String^ get();
         }
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
         }
+
         property System::Collections::Generic::List<System::String^>^ Extensions
         {
             System::Collections::Generic::List<System::String^>^ get();
         }
+
         property System::Collections::Generic::List<System::String^>^ Extensions1
         {
             System::Collections::Generic::List<System::String^>^ get();
             void set(System::Collections::Generic::List<System::String^>^);
         }
+
         virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _1);
 
         virtual bool Decode(Flood::ResourceLoadOptions _2);
@@ -128,6 +136,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

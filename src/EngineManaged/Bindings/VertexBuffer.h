@@ -19,7 +19,10 @@ namespace Flood
     ref class VertexDeclaration;
     value struct VertexElement;
     value struct VertexElementP;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Attribute of a vertex element.
     /// </summary>
@@ -103,11 +106,13 @@ namespace Flood
         {
             unsigned char get();
         }
+
         property System::Collections::Generic::List<Flood::VertexElement>^ Decls
         {
             System::Collections::Generic::List<Flood::VertexElement>^ get();
             void set(System::Collections::Generic::List<Flood::VertexElement>^);
         }
+
         void Add(Flood::VertexAttribute _0, int numComponents);
 
         void Add(Flood::VertexElement _0);
@@ -125,7 +130,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class VertexBuffer : Flood::Buffer
@@ -141,6 +145,7 @@ namespace Flood
             bool get();
             void set(bool);
         }
+
         bool IsBuilt();
 
         void ForceRebuild();
@@ -148,6 +153,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

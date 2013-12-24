@@ -16,7 +16,10 @@ namespace Flood
     ref class BumpAllocator;
     ref class HeapAllocator;
     ref class PoolAllocator;
+}
 
+namespace Flood
+{
     public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ _0, int size, int align);
 
     public delegate void MemoryFreeFunction(Flood::Allocator^ _1, System::IntPtr object);
@@ -41,26 +44,12 @@ namespace Flood
         Allocator(System::IntPtr native);
         Allocator();
 
-        property Flood::MemoryAllocateFunction^ Allocate
-        {
-            Flood::MemoryAllocateFunction^ get();
-            void set(Flood::MemoryAllocateFunction^);
-        }
-        property Flood::MemoryFreeFunction^ Deallocate
-        {
-            Flood::MemoryFreeFunction^ get();
-            void set(Flood::MemoryFreeFunction^);
-        }
-        property Flood::MemoryResetFunction^ Reset
-        {
-            Flood::MemoryResetFunction^ get();
-            void set(Flood::MemoryResetFunction^);
-        }
         property System::String^ Group
         {
             System::String^ get();
             void set(System::String^);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
@@ -86,7 +75,6 @@ namespace Flood
         static Flood::Allocator^ GetObject(System::IntPtr _0);
 
         static void DumpInfo();
-
     };
 
     /// <summary>
@@ -107,10 +95,10 @@ namespace Flood
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -131,20 +119,22 @@ namespace Flood
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         property System::IntPtr Current
         {
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         property unsigned int Size
         {
             unsigned int get();
             void set(unsigned int);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -165,9 +155,9 @@ namespace Flood
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

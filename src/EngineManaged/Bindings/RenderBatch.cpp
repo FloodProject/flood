@@ -7,8 +7,6 @@
 
 #include "RenderBatch.h"
 #include "GeometryBuffer.h"
-#include "IndexBuffer.h"
-#include "Material.h"
 #include "Memory.h"
 #include "RenderQueue.h"
 #include "RenderView.h"
@@ -58,6 +56,14 @@ bool Flood::RenderBatch::Equals(System::Object^ object)
 int Flood::RenderBatch::GetHashCode()
 {
     return (int)NativePtr;
+}
+
+Flood::RenderBatch^ Flood::RenderBatch::RenderBatchCreate(Flood::Allocator^ _0)
+{
+    auto arg0 = (::Allocator*)_0->NativePtr;
+    auto __ret = ::RenderBatchCreate(arg0);
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::RenderBatch((::RenderBatch*)__ret);
 }
 
 System::IntPtr Flood::RenderBatch::Instance::get()
@@ -242,13 +248,5 @@ Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::Material1::get()
 void Flood::RenderBatch::Material1::set(Flood::ResourceHandle<Flood::Material^> value)
 {
     ((::RenderBatch*)NativePtr)->material = (HandleId)value.Id;
-}
-
-Flood::RenderBatch^ Flood::FloodRenderBatch::RenderBatchCreate(Flood::Allocator^ _0)
-{
-    auto arg0 = (::Allocator*)_0->NativePtr;
-    auto __ret = ::RenderBatchCreate(arg0);
-    if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderBatch((::RenderBatch*)__ret);
 }
 

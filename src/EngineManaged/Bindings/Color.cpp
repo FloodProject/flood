@@ -6,7 +6,7 @@
 ************************************************************************/
 
 #include "Color.h"
-#include "Platform.h"
+#include "RenderContext.h"
 #include "Vector.h"
 
 using namespace System;
@@ -87,6 +87,18 @@ Flood::Color Flood::Color::operator*(Flood::Color __op, float s)
     auto arg0 = _marshal0;
     auto __ret = arg0 * s;
     return Flood::Color((::Color*)&__ret);
+}
+
+Flood::Color::operator Flood::Vector3(Flood::Color __op)
+{
+    auto _marshal0 = ::Color();
+    _marshal0.r = (::byte)(::uint8)(::uint8_t)__op.R;
+    _marshal0.g = (::byte)(::uint8)(::uint8_t)__op.G;
+    _marshal0.b = (::byte)(::uint8)(::uint8_t)__op.B;
+    _marshal0.a = (::byte)(::uint8)(::uint8_t)__op.A;
+    auto arg0 = _marshal0;
+    auto __ret = (::Vector3) arg0;
+    return Flood::Vector3((::Vector3*)&__ret);
 }
 
 Flood::Color Flood::Color::White::get()

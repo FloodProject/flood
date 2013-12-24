@@ -15,7 +15,10 @@ namespace Flood
     value struct EulerAngles;
     value struct Quaternion;
     value struct Vector3;
+}
 
+namespace Flood
+{
     public value struct Quaternion
     {
     public:
@@ -36,26 +39,32 @@ namespace Flood
         {
             void set(float);
         }
+
         property float ToRotateAboutY
         {
             void set(float);
         }
+
         property float ToRotateAboutZ
         {
             void set(float);
         }
+
         property float RotationAngle
         {
             float get();
         }
+
         property Flood::Vector3 RotationAxis
         {
             Flood::Vector3 get();
         }
+
         property Flood::EulerAngles EulerAngles
         {
             Flood::EulerAngles get();
         }
+
         static bool operator==(Flood::Quaternion __op, Flood::Quaternion q);
 
         static bool operator!=(Flood::Quaternion __op, Flood::Quaternion q);

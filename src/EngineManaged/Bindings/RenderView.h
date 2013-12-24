@@ -18,7 +18,10 @@ namespace Flood
 {
     ref class RenderTarget;
     ref class RenderView;
+}
 
+namespace Flood
+{
     /// <summary>
     /// A view is a region in a render target that can be rendered into. It has an
     /// associated renderer that will render into the view.
@@ -43,65 +46,60 @@ namespace Flood
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
+
         property Flood::Vector2i Origin
         {
             Flood::Vector2i get();
             void set(Flood::Vector2i);
         }
+
         property Flood::Vector2i Size
         {
             Flood::Vector2i get();
             void set(Flood::Vector2i);
         }
+
         property Flood::Color ClearColor
         {
             Flood::Color get();
             void set(Flood::Color);
         }
+
         property int DepthPriority
         {
             int get();
             void set(int);
         }
+
         property float AspectRatio
         {
             float get();
         }
-        property Flood::Vector2i Origin1
-        {
-            Flood::Vector2i get();
-            void set(Flood::Vector2i);
-        }
-        property Flood::Vector2i Size1
-        {
-            Flood::Vector2i get();
-            void set(Flood::Vector2i);
-        }
+
         property Flood::RenderTarget^ Target
         {
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
+
         property Flood::Color ClearColor1
         {
             Flood::Color get();
             void set(Flood::Color);
         }
-        property int DepthPriority1
-        {
-            int get();
-            void set(int);
-        }
+
         property Flood::Matrix4x4 ProjectionMatrix
         {
             Flood::Matrix4x4 get();
             void set(Flood::Matrix4x4);
         }
+
         property Flood::Matrix4x3 ViewMatrix
         {
             Flood::Matrix4x3 get();
             void set(Flood::Matrix4x3);
         }
+
         static bool operator<(Flood::RenderView^ __op, Flood::RenderView^ view);
 
         void HandleRenderTargetResize();
@@ -109,6 +107,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

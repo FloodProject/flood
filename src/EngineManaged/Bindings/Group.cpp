@@ -7,7 +7,6 @@
 
 #include "Group.h"
 #include "Component.h"
-#include "Entity.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

@@ -69,6 +69,13 @@ int Flood::Engine::GetHashCode()
     return (int)NativePtr;
 }
 
+Flood::Engine^ Flood::Engine::GetEngine()
+{
+    auto __ret = ::GetEngine();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::Engine((::Engine*)__ret);
+}
+
 System::IntPtr Flood::Engine::Instance::get()
 {
     return System::IntPtr(NativePtr);
@@ -140,12 +147,5 @@ Flood::Log^ Flood::Engine::Logger::get()
     auto __ret = ((::Engine*)NativePtr)->getLogger();
     if (__ret == nullptr) return nullptr;
     return gcnew Flood::Log((::Log*)__ret);
-}
-
-Flood::Engine^ Flood::FloodEngine::GetEngine()
-{
-    auto __ret = ::GetEngine();
-    if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Engine((::Engine*)__ret);
 }
 

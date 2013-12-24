@@ -7,7 +7,6 @@
 
 #include "TrueTypeFont.h"
 #include "Font.h"
-#include "Platform.h"
 #include "Vector.h"
 
 using namespace System;

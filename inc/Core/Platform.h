@@ -219,3 +219,4 @@ typedef uint32 uint;
 #define FLD_FLAGS
 #define FLD_HASHCODE
 #define FLD_EQUALS
+#define FLD_READONLY

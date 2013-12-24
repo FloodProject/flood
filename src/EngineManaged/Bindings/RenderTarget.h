@@ -17,7 +17,10 @@ namespace Flood
     ref class RenderView;
     value struct Settings;
     value struct Vector2i;
+}
 
+namespace Flood
+{
     public value struct Settings
     {
     public:
@@ -53,20 +56,24 @@ namespace Flood
         {
             Flood::Settings get();
         }
+
         property Flood::RenderContext^ Context
         {
             Flood::RenderContext^ get();
             void set(Flood::RenderContext^);
         }
+
         property System::Collections::Generic::List<Flood::RenderView^>^ Views
         {
             System::Collections::Generic::List<Flood::RenderView^>^ get();
         }
+
         property System::IntPtr UserData
         {
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
     private:
         delegate void _TargetResizeDelegate(const ::Settings& _0);
         _TargetResizeDelegate^ _TargetResizeDelegateInstance;
@@ -90,6 +97,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

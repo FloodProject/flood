@@ -12,10 +12,16 @@
 
 namespace Flood
 {
+    ref class Allocator;
+}
+
+namespace Flood
+{
     public ref class FloodNetwork
     {
     public:
         static bool NetworkInitialize();
         static void NetworkDeinitialize();
+        static Flood::Allocator^ AllocatorGetNetwork();
     };
 }

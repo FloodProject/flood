@@ -33,7 +33,7 @@ namespace Flood
             options.WriteOnlyWhenChanged = true;
             options.GenerateFunctionTemplates = true;
             options.IgnoreParseWarnings = true;
-            options.Verbose = false;
+            options.Verbose = true;
 
             SetupLibraries(options.Libraries);
             SetupHeaders(options.Headers);
@@ -116,12 +116,14 @@ namespace Flood
                                               | RenameTargets.Field;
 
             driver.AddTranslationUnitPass(new CaseRenamePass(renameTargets, RenameCasePattern.UpperCamelCase));
-            driver.AddTranslationUnitPass(new CheckMacroPass());
+            driver.AddTranslationUnitPass(new CheckMacroPass("FLD"));
             driver.AddTranslationUnitPass(new FindEventsPass(driver.TypeDatabase));
             driver.AddTranslationUnitPass(new GetterSetterToPropertyPass());
             driver.AddTranslationUnitPass(new FieldToPropertyPass());
+
             if (driver.Options.IsCLIGenerator)
                 driver.AddTranslationUnitPass(new ObjectOverridesPass());
+
             driver.AddTranslationUnitPass(new FunctionToInstanceMethodPass());
             driver.AddTranslationUnitPass(new FunctionToStaticMethodPass());
 
@@ -132,125 +134,137 @@ namespace Flood
 
         #region Processing
 
-        public void Preprocess(Driver driver, ASTContext lib)
+        public void Preprocess(Driver driver, ASTContext ctx)
         {
-            lib.IgnoreHeadersWithName("API.h");
-            lib.IgnoreHeadersWithName("Concurrency.h");
-            lib.IgnoreHeadersWithName("ConcurrentQueue.h");
-            lib.IgnoreHeadersWithName("Delegate.h");
-            lib.IgnoreHeadersWithName("Event.h");
-            lib.IgnoreHeadersWithName("Handle.h");
-            lib.IgnoreHeadersWithName("Object.h");
-            lib.IgnoreHeadersWithName("Pointers.h");
-            lib.IgnoreHeadersWithName("References.h");
-            lib.IgnoreHeadersWithName("Reflection.h");
-            lib.IgnoreHeadersWithName("ReflectionHelpers.h");
-            lib.IgnoreHeadersWithName("Task.h");
-            lib.IgnoreHeadersWithName("Timer.h");
+            ctx.IgnoreHeadersWithName("API.h");
+            ctx.IgnoreHeadersWithName("Concurrency.h");
+            ctx.IgnoreHeadersWithName("ConcurrentQueue.h");
+            ctx.IgnoreHeadersWithName("Delegate.h");
+            ctx.IgnoreHeadersWithName("Event.h");
+            ctx.IgnoreHeadersWithName("Handle.h");
+            ctx.IgnoreHeadersWithName("Object.h");
+            ctx.IgnoreHeadersWithName("Pointers.h");
+            ctx.IgnoreHeadersWithName("References.h");
+            ctx.IgnoreHeadersWithName("Reflection.h");
+            ctx.IgnoreHeadersWithName("ReflectionHelpers.h");
+            ctx.IgnoreHeadersWithName("Task.h");
+            ctx.IgnoreHeadersWithName("Timer.h");
 
             //Core
-            lib.IgnoreClassWithName("Object");
-            lib.IgnoreClassWithName("Class");
-            lib.IgnoreClassWithName("ReferenceCounted");
-            lib.IgnoreClassWithName("HandleManager");
+            ctx.IgnoreClassWithName("Object");
+            ctx.IgnoreClassWithName("Class");
+            ctx.IgnoreClassWithName("ReferenceCounted");
+            ctx.IgnoreClassWithName("HandleManager");
 
-            lib.IgnoreClassWithName("Delegate0");
-            lib.IgnoreClassWithName("Delegate1");
-            lib.IgnoreClassWithName("Delegate2");
+            ctx.IgnoreClassWithName("Delegate0");
+            ctx.IgnoreClassWithName("Delegate1");
+            ctx.IgnoreClassWithName("Delegate2");
 
-            lib.IgnoreClassWithName("TaskPool");
-            lib.IgnoreClassWithName("ConcurrentQueue");
+            ctx.IgnoreClassWithName("TaskPool");
+            ctx.IgnoreClassWithName("ConcurrentQueue");
 
-            lib.SetClassAsValueType("StringHash");
-            lib.IgnoreClassWithName("RawStringCompare");
+            ctx.SetClassAsValueType("StringHash");
+            ctx.IgnoreClassWithName("RawStringCompare");
 
-            lib.SetClassAsValueType("LogEntry");
-            lib.IgnoreFunctionWithName("LogCreate");
+            ctx.SetClassAsValueType("LogEntry");
+            ctx.IgnoreFunctionWithName("LogCreate");
 
-            lib.IgnoreFunctionWithName("AllocatorAllocate");
-            lib.IgnoreFunctionWithName("AllocatorDeallocate");
-            lib.SetNameOfFunction("AllocatorReset", "AllocatorResetMemory");
+            ctx.IgnoreFunctionWithName("AllocatorAllocate");
+            ctx.IgnoreFunctionWithName("AllocatorDeallocate");
+            ctx.SetNameOfFunction("AllocatorReset", "AllocatorResetMemory");
 
-            lib.IgnoreClassWithName("StreamFuncs");
-            lib.IgnoreClassWithName("FileStream");
-            lib.SetClassAsValueType("FileWatchEvent");
+            ctx.IgnoreClassWithName("StreamFuncs");
+            ctx.IgnoreClassWithName("FileStream");
+            ctx.SetClassAsValueType("FileWatchEvent");
 
-            lib.IgnoreFunctionWithPattern(".+GetType");
-            lib.IgnoreFunctionWithName("ClassGetIdMap");
+            ctx.IgnoreFunctionWithPattern(".+GetType");
+            ctx.IgnoreFunctionWithName("ClassGetIdMap");
 
-            lib.IgnoreFunctionWithName("ReflectionSetHandleContext");
-            lib.IgnoreFunctionWithName("SerializerCreateJSON");
-            lib.IgnoreFunctionWithName("SerializerCreateBinary");
-            lib.IgnoreClassWithName("ReflectionContext");
-            lib.IgnoreClassWithName("ValueContext");
+            ctx.IgnoreFunctionWithName("ReflectionSetHandleContext");
+            ctx.IgnoreFunctionWithName("SerializerCreateJSON");
+            ctx.IgnoreFunctionWithName("SerializerCreateBinary");
+            ctx.IgnoreClassWithName("ReflectionContext");
+            ctx.IgnoreClassWithName("ValueContext");
 
-            lib.SetClassAsValueType("ExtensionMetadata");
+            ctx.SetClassAsValueType("ExtensionMetadata");
 
-            lib.IgnoreClassWithName("MemoryStream");
-            lib.IgnoreClassWithName("Serializer");
-            lib.IgnoreClassWithName("Thread");
+            ctx.IgnoreClassWithName("MemoryStream");
+            ctx.IgnoreClassWithName("Serializer");
+            ctx.IgnoreClassWithName("Thread");
 
             // Math
-            lib.SetClassAsValueType("ColorP");
-            lib.SetClassAsValueType("Color");
-            lib.SetClassAsValueType("Vector2P");
-            lib.SetClassAsValueType("Vector2");
-            lib.SetClassAsValueType("Vector2i");
-            lib.SetClassAsValueType("Vector3P");
-            lib.SetClassAsValueType("Vector3");
-            lib.SetClassAsValueType("Vector4");
-            lib.SetClassAsValueType("EulerAngles");
-            lib.SetClassAsValueType("QuaternionP");
-            lib.SetClassAsValueType("Quaternion");
-            lib.SetClassAsValueType("Matrix4x3");
-            lib.SetClassAsValueType("Matrix4x4");
+            ctx.SetClassAsValueType("ColorP");
+            ctx.SetClassAsValueType("Color");
+            ctx.SetClassAsValueType("Vector2P");
+            ctx.SetClassAsValueType("Vector2");
+            ctx.SetClassAsValueType("Vector2i");
+            ctx.SetClassAsValueType("Vector3P");
+            ctx.SetClassAsValueType("Vector3");
+            ctx.SetClassAsValueType("Vector4");
+            ctx.SetClassAsValueType("EulerAngles");
+            ctx.SetClassAsValueType("QuaternionP");
+            ctx.SetClassAsValueType("Quaternion");
+            ctx.SetClassAsValueType("Matrix4x3");
+            ctx.SetClassAsValueType("Matrix4x4");
 
-            lib.CopyClassFields("ColorP", "Color");
-            lib.CopyClassFields("Vector2P", "Vector2");
-            lib.CopyClassFields("Vector3P", "Vector3");
-            lib.CopyClassFields("QuaternionP", "Quaternion");
+            ctx.CopyClassFields("ColorP", "Color");
+            ctx.CopyClassFields("Vector2P", "Vector2");
+            ctx.CopyClassFields("Vector3P", "Vector3");
+            ctx.CopyClassFields("QuaternionP", "Quaternion");
 
-            lib.IgnoreClassWithName("ColorP");
-            lib.IgnoreClassWithName("Vector2P");
-            lib.IgnoreClassWithName("Vector3P");
-            lib.IgnoreClassWithName("QuaternionP");
+            ctx.IgnoreClassWithName("ColorP");
+            ctx.IgnoreClassWithName("Vector2P");
+            ctx.IgnoreClassWithName("Vector3P");
+            ctx.IgnoreClassWithName("QuaternionP");
 
-            lib.SetNameOfClassMethod("Matrix4x3", "identity", "setIdentity");
-            lib.SetNameOfClassMethod("Matrix4x4", "identity", "setIdentity");
-            lib.SetNameOfClassMethod("Quaternion", "identity", "setIdentity");
-            lib.SetNameOfClassMethod("Vector2", "zero", "setZero");
-            lib.SetNameOfClassMethod("Vector3", "zero", "setZero");
-            lib.SetNameOfClassMethod("Vector4", "zero", "setZero");
+            ctx.SetNameOfClassMethod("Matrix4x3", "identity", "setIdentity");
+            ctx.SetNameOfClassMethod("Matrix4x4", "identity", "setIdentity");
+            ctx.SetNameOfClassMethod("Quaternion", "identity", "setIdentity");
+            ctx.SetNameOfClassMethod("Vector2", "zero", "setZero");
+            ctx.SetNameOfClassMethod("Vector3", "zero", "setZero");
+            ctx.SetNameOfClassMethod("Vector4", "zero", "setZero");
 
             // Resources
-            lib.IgnoreFunctionWithName("ResourcesInitialize");
-            lib.IgnoreFunctionWithName("ResourcesDeinitialize");
+            ctx.IgnoreFunctionWithName("ResourcesInitialize");
+            ctx.IgnoreFunctionWithName("ResourcesDeinitialize");
             //lib.SetClassAsValueType("ResourceEvent");
-            lib.SetClassAsValueType("ResourceLoadOption");
-            lib.SetClassAsValueType("ResourceLoadOptions");
-            lib.SetNameOfClassMethod("Texture", "allocate", "alloc");
-            lib.ExcludeFromPass("ResourceHandleCreate", typeof (FunctionToInstanceMethodPass));
+            ctx.SetClassAsValueType("ResourceLoadOption");
+            ctx.SetClassAsValueType("ResourceLoadOptions");
+            ctx.SetNameOfClassMethod("Texture", "allocate", "alloc");
+            ctx.ExcludeFromPass("ResourceHandleCreate", typeof (FunctionToInstanceMethodPass));
+
+            // Set generic type constraints on template methods
+            var resourceManager = ctx.FindClass("ResourceManager").First();
+            foreach (var template in resourceManager.Templates)
+            {
+                for (var i = 0; i < template.Parameters.Count; ++i)
+                {
+                    var param = template.Parameters[i];
+                    param.Constraint = "Flood::Resource";
+                    template.Parameters[i] = param;
+                }
+            }
 
             // Graphics
-            lib.SetClassAsValueType("RenderContextSettings");
-            lib.SetClassAsValueType("RenderBatchRange");
-            lib.SetClassAsValueType("VertexElementP");
-            lib.SetClassAsValueType("VertexElement");
-            lib.SetClassAsValueType("UniformBufferElement");
-            lib.SetClassAsValueType("RenderState");
-            lib.SetClassAsValueType("LightState");
-            lib.IgnoreHeadersWithName("MaxRectsBinPack.h");
-            lib.IgnoreClassWithName("MaxRectsBinPack");
-            lib.IgnoreClassWithName("CompareHandle");
-            lib.SetClassAsValueType("Glyph");
-            lib.SetClassAsValueType("Rectangle");
-            lib.SetClassAsValueType("RectangleF");
-            lib.SetClassAsValueType("SubTexture");
-            lib.SetMethodParameterUsage("TextureAtlas", "getImageSubTexture", 2, ParameterUsage.Out);
-            lib.SetMethodParameterUsage("Font", "getGlyphInfo", 3, ParameterUsage.Out);
+            ctx.SetClassAsValueType("RenderContextSettings");
+            ctx.SetClassAsValueType("RenderBatchRange");
+            ctx.SetClassAsValueType("VertexElementP");
+            ctx.SetClassAsValueType("VertexElement");
+            ctx.SetClassAsValueType("UniformBufferElement");
+            ctx.SetClassAsValueType("RenderState");
+            ctx.SetClassAsValueType("LightState");
+            ctx.IgnoreHeadersWithName("MaxRectsBinPack.h");
+            ctx.IgnoreClassWithName("MaxRectsBinPack");
+            ctx.IgnoreClassWithName("CompareHandle");
+            ctx.SetClassAsValueType("Glyph");
+            ctx.SetClassAsValueType("Rectangle");
+            ctx.SetClassAsValueType("RectangleF");
+            ctx.SetClassAsValueType("SubTexture");
+            ctx.SetMethodParameterUsage("TextureAtlas", "getImageSubTexture", 2, ParameterUsage.Out);
+            ctx.SetMethodParameterUsage("Font", "getGlyphInfo", 3, ParameterUsage.Out);
 
             // Engine
-            lib.IgnoreClassMethodWithName("Engine", "addSubsystem");
+            ctx.IgnoreClassMethodWithName("Engine", "addSubsystem");
         }
 
         public void Postprocess(Driver driver, ASTContext lib)
@@ -279,74 +293,6 @@ namespace Flood
     }
 
     #region Passes
-
-    class CheckMacroPass : TranslationUnitPass
-    {
-        public override bool VisitDeclaration(Declaration decl)
-        {
-            if (AlreadyVisited(decl))
-                return false;
-
-            var expansions = decl.PreprocessedEntities.OfType<MacroExpansion>();
-
-            if (expansions.Any(e => e.Text == "FLD_IGNORE" &&
-                                    e.Location != MacroLocation.ClassBody &&
-                                    e.Location != MacroLocation.FunctionBody &&
-                                    e.Location != MacroLocation.FunctionParameters))
-                decl.ExplicityIgnored = true;
-
-            return true;
-        }
-
-        public override bool VisitClassDecl(Class @class)
-        {
-            var expansions = @class.PreprocessedEntities.OfType<MacroExpansion>();
-
-            if (expansions.Any(e => e.Text == "FLD_VALUE_TYPE"))
-                @class.Type = ClassType.ValueType;
-
-            return base.VisitClassDecl(@class);
-        }
-
-        public override bool VisitParameterDecl(Parameter parameter)
-        {
-            if (!VisitDeclaration(parameter))
-                return false;
-
-            var expansions = parameter.PreprocessedEntities.OfType<MacroExpansion>();
-
-            if (expansions.Any(e => e.Text == "FLD_OUT"))
-                parameter.Usage = ParameterUsage.Out;
-
-            if (expansions.Any(e => e.Text == "FLD_IN_OUT"))
-                parameter.Usage = ParameterUsage.InOut;
-
-            return true;
-        }
-
-        public override bool VisitEnumDecl(Enumeration @enum)
-        {
-            if (!VisitDeclaration(@enum))
-                return false;
-
-            var expansions = @enum.PreprocessedEntities.OfType<MacroExpansion>();
-
-            if (expansions.Any(e => e.Text == "FLD_FLAGS"))
-                @enum.SetFlags();
-
-            return true;
-        }
-
-        public override bool VisitMethodDecl(Method method)
-        {
-            var expansions = method.PreprocessedEntities.OfType<MacroExpansion>();
-
-            if (expansions.Any(e => e.Text == "FLD_HASHCODE" || e.Text == "FLD_EQUALS"))
-                method.ExplicityIgnored = true;
-
-            return base.VisitMethodDecl(method);
-        }
-    }
 
     class FindEventsPass : TranslationUnitPass
     {

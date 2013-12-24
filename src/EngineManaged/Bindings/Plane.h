@@ -16,7 +16,10 @@ namespace Flood
     enum struct PlaneIntersection;
     value struct Plane;
     value struct Ray;
+}
 
+namespace Flood
+{
     public enum struct PlaneIntersection
     {
         OnPlane = 0,
@@ -45,6 +48,5 @@ namespace Flood
         Flood::Vector3 Project(Flood::Vector3 vec);
 
         bool Intersects(Flood::Ray ray, [System::Runtime::InteropServices::Out] float% distance);
-
     };
 }

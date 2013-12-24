@@ -16,7 +16,10 @@ namespace Flood
     ref class InputManager;
     ref class PlatformManager;
     ref class WindowManager;
+}
 
+namespace Flood
+{
     /// <summary>
     /// This class is a platform abstraction layer responsible to provide instances
     /// for platform-dependent engine subsytems like the window and input managers.
@@ -34,10 +37,12 @@ namespace Flood
         {
             Flood::WindowManager^ get();
         }
+
         property Flood::InputManager^ InputManager
         {
             Flood::InputManager^ get();
         }
+
         /// <summary>
         /// Initialization callback.
         /// </summary>
@@ -51,6 +56,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

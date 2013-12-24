@@ -16,7 +16,10 @@ namespace Flood
     ref class Packet;
     ref class Peer;
     ref class Session;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Enumerates all the states a network session can be.
     /// </summary>
@@ -51,10 +54,12 @@ namespace Flood
         {
             Flood::SessionState get();
         }
+
         property Flood::Peer^ Peer
         {
             Flood::Peer^ get();
         }
+
     private:
         delegate void _StateChangeDelegate(::SessionState _0);
         _StateChangeDelegate^ _StateChangeDelegateInstance;
@@ -68,20 +73,19 @@ namespace Flood
             void raise(Flood::SessionState _0);
         }
     private:
-        delegate void _PacketDelegate(const ::PacketPtr& _1, int _0);
+        delegate void _PacketDelegate(const ::PacketPtr& _1, int _2);
         _PacketDelegate^ _PacketDelegateInstance;
-        void _PacketRaise(const ::PacketPtr& _1, int _0);
+        void _PacketRaise(const ::PacketPtr& _1, int _2);
         System::Action<Flood::Packet^, int>^ _Packet;
     public:
         event System::Action<Flood::Packet^, int>^ Packet
         {
             void add(System::Action<Flood::Packet^, int>^ evt);
             void remove(System::Action<Flood::Packet^, int>^ evt);
-            void raise(Flood::Packet^ _1, int _0);
+            void raise(Flood::Packet^ _1, int _2);
         }
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

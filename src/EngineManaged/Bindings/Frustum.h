@@ -19,7 +19,10 @@ namespace Flood
     value struct Frustum;
     value struct Matrix4x3;
     value struct Plane;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Projection types.
     /// </summary>
@@ -52,6 +55,5 @@ namespace Flood
         void UpdateCorners(Flood::Matrix4x3 matView);
 
         bool Intersects(Flood::BoundingBox box);
-
     };
 }

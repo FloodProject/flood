@@ -12,6 +12,7 @@
 #include "RenderDevice.h"
 #include "RenderQueue.h"
 #include "RenderView.h"
+#include "Scene.h"
 #include "Transform.h"
 
 using namespace System;
@@ -32,6 +33,12 @@ Flood::Camera::Camera()
     : Flood::Component((::Component*)nullptr)
 {
     NativePtr = new ::Camera();
+}
+
+void Flood::Camera::Render(Flood::Scene^ scene)
+{
+    auto arg0 = (::Scene*)scene->NativePtr;
+    ((::Camera*)NativePtr)->render(arg0);
 }
 
 void Flood::Camera::Render(Flood::RenderBlock^ block, bool clearView)

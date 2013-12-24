@@ -17,7 +17,10 @@ namespace Flood
     ref class Allocator;
     ref class ReflectionHandleContext;
     ref class Stream;
+}
 
+namespace Flood
+{
     public enum struct ReflectionWalkType : unsigned char
     {
         Begin = 0,
@@ -51,6 +54,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

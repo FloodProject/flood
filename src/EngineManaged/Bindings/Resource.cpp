@@ -101,16 +101,6 @@ void Flood::Resource::Path1::set(System::String^ value)
     ((::Resource*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
 }
 
-Flood::ResourceStatus Flood::Resource::Status1::get()
-{
-    return (Flood::ResourceStatus)((::Resource*)NativePtr)->status;
-}
-
-void Flood::Resource::Status1::set(Flood::ResourceStatus value)
-{
-    ((::Resource*)NativePtr)->status = (::ResourceStatus)value;
-}
-
 Flood::ResourceStream^ Flood::Resource::Stream::get()
 {
     return gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);

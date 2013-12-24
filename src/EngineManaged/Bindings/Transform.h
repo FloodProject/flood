@@ -21,7 +21,10 @@ namespace Flood
     ref class Allocator;
     ref class DebugDrawer;
     ref class Transform;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Transform provide entities with position and orientation information. They
     /// can be used to scale, rotate and translate entities in the scene, and keep
@@ -40,41 +43,50 @@ namespace Flood
             Flood::Vector3 get();
             void set(Flood::Vector3);
         }
+
         property Flood::Vector3 Scale
         {
             Flood::Vector3 get();
             void set(Flood::Vector3);
         }
+
         property Flood::Quaternion Rotation
         {
             Flood::Quaternion get();
             void set(Flood::Quaternion);
         }
+
         property Flood::Matrix4x3 RotationMatrix
         {
             Flood::Matrix4x3 get();
         }
+
         property Flood::Matrix4x3 AbsoluteTransform
         {
             Flood::Matrix4x3 get();
             void set(Flood::Matrix4x3);
         }
+
         property Flood::Matrix4x3 LocalTransform
         {
             Flood::Matrix4x3 get();
         }
+
         property Flood::Vector3 WorldPosition
         {
             Flood::Vector3 get();
         }
+
         property Flood::BoundingBox BoundingVolume
         {
             Flood::BoundingBox get();
         }
+
         property Flood::BoundingBox WorldBoundingVolume
         {
             Flood::BoundingBox get();
         }
+
     private:
         delegate void _TransformedDelegate();
         _TransformedDelegate^ _TransformedDelegateInstance;
@@ -104,6 +116,5 @@ namespace Flood
         virtual int GetHashCode() override;
 
         static Flood::Transform^ Create(Flood::Allocator^ _0);
-
     };
 }

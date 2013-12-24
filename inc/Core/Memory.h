@@ -100,7 +100,8 @@ API_CORE Allocator* AllocatorCreateStack( Allocator* );
 // Calls the object contructor using placement new.
 #define AllocateConstruct(Type, Object, ...) ::new (Object) Type(__VA_ARGS__)
 
-template<typename T> T* AllocateObject(Allocator* alloc)
+template<typename T> FLD_IGNORE
+T* AllocateObject(Allocator* alloc)
 {
 	T* object = (T*) AllocatorAllocate(alloc, sizeof(T), alignof(T));
 	return object;
@@ -114,7 +115,8 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 #define AllocateThis(Type, ...) Allocate(AllocatorGetThis(), Type, __VA_ARGS__)
 #define AllocateHeap(Type, ...) Allocate(AllocatorGetHeap(), Type, __VA_ARGS__)
 
-template<typename T> void DeallocateObject(const T* object)
+template<typename T> FLD_IGNORE
+void DeallocateObject(const T* object)
 {
 	// Calls the object destructor.
 	if(object) object->~T();

@@ -17,7 +17,10 @@ namespace Flood
     ref class Stream;
     ref class WebStream;
     ref class ZipStream;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Use these for different kinds of access to the streams.
     /// </summary>
@@ -47,12 +50,6 @@ namespace Flood
     {
     public:
 
-        enum struct _1
-        {
-            EndOfStream = 0,
-            InvalidState = -1
-        };
-
         property ::Stream* NativePtr;
         property System::IntPtr Instance
         {
@@ -66,16 +63,19 @@ namespace Flood
         {
             long long get();
         }
+
         property System::String^ Path
         {
             System::String^ get();
             void set(System::String^);
         }
+
         property Flood::StreamOpenMode Mode
         {
             Flood::StreamOpenMode get();
             void set(Flood::StreamOpenMode);
         }
+
         /// <summary>
         /// Opens the stream.
         /// </summary>
@@ -144,7 +144,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class WebStream : Flood::Stream
@@ -163,11 +162,13 @@ namespace Flood
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         property bool IsPerformDone
         {
             bool get();
             void set(bool);
         }
+
         /// <summary>
         /// Opens the stream.
         /// </summary>
@@ -201,7 +202,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class ZipStream : Flood::Stream
@@ -214,6 +214,7 @@ namespace Flood
         {
             long long get();
         }
+
         /// <summary>
         /// Opens the stream.
         /// </summary>
@@ -242,6 +243,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

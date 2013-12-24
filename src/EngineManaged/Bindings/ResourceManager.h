@@ -21,7 +21,10 @@ namespace Flood
     ref class Stream;
     value struct FileWatchEvent;
     value struct ResourceLoadOptions;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Event fired whenever an operation on the resource happens. This can be
     /// useful to know when monitoring for changes, for example in editors.
@@ -46,20 +49,22 @@ namespace Flood
             Flood::Resource^ get();
             void set(Flood::Resource^);
         }
+
         property Flood::Resource^ OldResource
         {
             Flood::Resource^ get();
             void set(Flood::Resource^);
         }
+
         property Flood::ResourceHandle<Flood::Resource^> Handle
         {
             Flood::ResourceHandle<Flood::Resource^> get();
             void set(Flood::ResourceHandle<Flood::Resource^>);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -88,11 +93,13 @@ namespace Flood
             bool get();
             void set(bool);
         }
+
         property Flood::Archive^ Archive
         {
             Flood::Archive^ get();
             void set(Flood::Archive^);
         }
+
     private:
         delegate void _ResourcePreparedDelegate(const ::ResourceEvent& _0);
         _ResourcePreparedDelegate^ _ResourcePreparedDelegateInstance;
@@ -176,19 +183,16 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
+
+        static Flood::ResourceManager^ GetResourceManager();
+
         generic<typename T> where T : Flood::Resource
         Flood::ResourceHandle<T> GetResource(System::String^ name);
+
         generic<typename T> where T : Flood::Resource
         Flood::ResourceHandle<T> LoadResource(System::String^ name);
+
         generic<typename T> where T : Flood::Resource
         Flood::ResourceHandle<T> LoadResource(Flood::ResourceLoadOptions options);
-        generic<typename T> where T : Flood::Resource
-        Flood::ResourceHandle<T> CreateResource();
-    };
-
-    public ref class FloodResourceManager
-    {
-    public:
-        static Flood::ResourceManager^ GetResourceManager();
     };
 }

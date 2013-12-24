@@ -14,7 +14,10 @@ namespace Flood
 {
     ref class Extension;
     value struct ExtensionMetadata;
+}
 
+namespace Flood
+{
     public value struct ExtensionMetadata
     {
     public:
@@ -50,6 +53,7 @@ namespace Flood
         {
             Flood::ExtensionMetadata get();
         }
+
         virtual void OnInit();
 
         virtual void OnCleanup();
@@ -57,6 +61,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

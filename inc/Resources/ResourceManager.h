@@ -160,7 +160,7 @@ public:
 		return HandleCast<T>(res);
 	}
 
-	template <typename T>
+	template <typename T> FLD_IGNORE
 	RESOURCE_HANDLE_TYPE(T) createResource()
 	{
 		ResourceHandle res = ResourceHandleCreate(AllocateHeap(T));

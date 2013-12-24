@@ -15,7 +15,11 @@
 namespace Flood
 {
     enum struct ResourceGroup;
+    ref class ShaderMaterial;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Shaders are used to program the GPU programmable rendering pipeline. It is
     /// a set of software instructions that instruct how to calculate each vertex
@@ -33,17 +37,19 @@ namespace Flood
         {
             System::String^ get();
         }
+
         property System::String^ FragmentSource
         {
             System::String^ get();
         }
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

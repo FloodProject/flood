@@ -46,11 +46,35 @@ bool Flood::Component::IsDebugRenderableVisible()
     return __ret;
 }
 
+void Flood::Component::OnPreRender1(Flood::Camera^ camera)
+{
+    auto &arg0 = *(::Camera*)camera->NativePtr;
+    ((::Component*)NativePtr)->onPreRender(arg0);
+}
+
+bool Flood::Component::IsDebugRenderableVisible1()
+{
+    auto __ret = ((::Component*)NativePtr)->isDebugRenderableVisible();
+    return __ret;
+}
+
 void Flood::Component::OnDebugDraw(Flood::DebugDrawer^ _0, Flood::DebugDrawFlags _1)
 {
     auto &arg0 = *(::DebugDrawer*)_0->NativePtr;
     auto arg1 = (::DebugDrawFlags)_1;
     ((::Component*)NativePtr)->onDebugDraw(arg0, arg1);
+}
+
+void Flood::Component::OnPreRender2(Flood::Camera^ camera)
+{
+    auto &arg0 = *(::Camera*)camera->NativePtr;
+    ((::Component*)NativePtr)->onPreRender(arg0);
+}
+
+bool Flood::Component::IsDebugRenderableVisible2()
+{
+    auto __ret = ((::Component*)NativePtr)->isDebugRenderableVisible();
+    return __ret;
 }
 
 bool Flood::Component::Equals(System::Object^ object)

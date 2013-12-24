@@ -16,9 +16,12 @@ namespace Flood
     enum struct InputDeviceType;
     enum struct Keys;
     ref class InputEvent;
-    ref class Keyboard;
     ref class KeyEvent;
+    ref class Keyboard;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Keyboard device.
     /// </summary>
@@ -34,10 +37,12 @@ namespace Flood
         {
             Flood::InputDeviceType get();
         }
+
         property System::Collections::Generic::List<bool>^ KeyState
         {
             System::Collections::Generic::List<bool>^ get();
         }
+
     private:
         delegate void _KeyPressDelegate(const ::KeyEvent& _0);
         _KeyPressDelegate^ _KeyPressDelegateInstance;
@@ -81,6 +86,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

@@ -17,7 +17,10 @@ namespace Flood
     ref class Entity;
     ref class Geometry;
     ref class Transform;
+}
 
+namespace Flood
+{
     /// <summary>
     /// An entity represents a game object, a container of game components. The
     /// components provide behaviour to the entity. An entity can be tagged, which
@@ -47,23 +50,28 @@ namespace Flood
             System::String^ get();
             void set(System::String^);
         }
+
         property bool Visible
         {
             void set(bool);
         }
+
         property Flood::Entity^ Parent
         {
             Flood::Entity^ get();
             void set(Flood::Entity^);
         }
+
         property Flood::Transform^ Transform
         {
             Flood::Transform^ get();
         }
+
         property System::Collections::Generic::List<Flood::Geometry^>^ Geometry
         {
             System::Collections::Generic::List<Flood::Geometry^>^ get();
         }
+
     private:
         delegate void _ComponentAddedDelegate(const ::ComponentPtr& _0);
         _ComponentAddedDelegate^ _ComponentAddedDelegateInstance;
@@ -111,6 +119,5 @@ namespace Flood
         virtual int GetHashCode() override;
 
         static Flood::Entity^ Create(Flood::Allocator^ _0);
-
     };
 }

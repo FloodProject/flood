@@ -71,6 +71,13 @@ int Flood::RenderDevice::GetHashCode()
     return (int)NativePtr;
 }
 
+Flood::RenderDevice^ Flood::RenderDevice::GetRenderDevice()
+{
+    auto __ret = ::GetRenderDevice();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::RenderDevice((::RenderDevice*)__ret);
+}
+
 System::IntPtr Flood::RenderDevice::Instance::get()
 {
     return System::IntPtr(NativePtr);
@@ -148,12 +155,5 @@ void Flood::RenderDevice::ActiveView::set(Flood::RenderView^ value)
     auto view = value;
     auto arg0 = (::RenderView*)view->NativePtr;
     ((::RenderDevice*)NativePtr)->setActiveView(arg0);
-}
-
-Flood::RenderDevice^ Flood::FloodRenderDevice::GetRenderDevice()
-{
-    auto __ret = ::GetRenderDevice();
-    if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderDevice((::RenderDevice*)__ret);
 }
 

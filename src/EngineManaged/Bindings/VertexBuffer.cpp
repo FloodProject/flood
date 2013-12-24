@@ -6,7 +6,6 @@
 ************************************************************************/
 
 #include "VertexBuffer.h"
-#include "Buffer.h"
 
 using namespace System;
 using namespace System::Runtime::InteropServices;

@@ -84,7 +84,7 @@ public:
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& );
 
 	// Entities of the scene.
-	Group entities;
+	FLD_READONLY Group entities;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Scene );

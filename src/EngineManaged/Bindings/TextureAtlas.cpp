@@ -7,7 +7,6 @@
 
 #include "TextureAtlas.h"
 #include "Image.h"
-#include "Platform.h"
 #include "Rectangle.h"
 
 using namespace System;

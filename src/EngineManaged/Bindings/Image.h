@@ -21,7 +21,10 @@ namespace Flood
     ref class Stream;
     value struct Color;
     value struct Vector2i;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Possible pixel formats for an image.
     /// </summary>
@@ -60,45 +63,54 @@ namespace Flood
             unsigned int get();
             void set(unsigned int);
         }
+
         property unsigned int Height
         {
             unsigned int get();
             void set(unsigned int);
         }
+
         property Flood::PixelFormat PixelFormat
         {
             Flood::PixelFormat get();
             void set(Flood::PixelFormat);
         }
+
         property System::Collections::Generic::List<unsigned char>^ Buffer
         {
             System::Collections::Generic::List<unsigned char>^ get();
+            void set(System::Collections::Generic::List<unsigned char>^);
         }
+
         property System::Collections::Generic::List<unsigned char>^ Buffer1
         {
             System::Collections::Generic::List<unsigned char>^ get();
         }
+
         property unsigned int PixelSize
         {
             unsigned int get();
         }
+
         property unsigned int Size
         {
             unsigned int get();
         }
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
         }
+
         property Flood::Color Color
         {
             void set(Flood::Color);
         }
+
         property unsigned int Timestamp
         {
             unsigned int get();
         }
-        void SetBuffer(System::Collections::Generic::List<unsigned char>^ v);
 
         bool IsCompressed();
 
@@ -119,7 +131,6 @@ namespace Flood
         virtual int GetHashCode() override;
 
         static Flood::ResourceHandle<Flood::Image^> Create(Flood::Allocator^ _0, unsigned int width, unsigned int height, Flood::PixelFormat _1);
-
     };
 
     public ref class ImageWriter : ICppInstance
@@ -146,6 +157,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

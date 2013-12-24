@@ -16,7 +16,10 @@ namespace Flood
     value struct Vector2i;
     value struct Vector3;
     value struct Vector4;
+}
 
+namespace Flood
+{
     public value struct Vector3
     {
     public:
@@ -74,18 +77,22 @@ namespace Flood
         {
             Flood::Vector3 get();
         }
+
         static property Flood::Vector3 One
         {
             Flood::Vector3 get();
         }
+
         static property Flood::Vector3 UnitX
         {
             Flood::Vector3 get();
         }
+
         static property Flood::Vector3 UnitY
         {
             Flood::Vector3 get();
         }
+
         static property Flood::Vector3 UnitZ
         {
             Flood::Vector3 get();
@@ -134,18 +141,22 @@ namespace Flood
         {
             Flood::Vector4 get();
         }
+
         static property Flood::Vector4 UnitX
         {
             Flood::Vector4 get();
         }
+
         static property Flood::Vector4 UnitY
         {
             Flood::Vector4 get();
         }
+
         static property Flood::Vector4 UnitZ
         {
             Flood::Vector4 get();
         }
+
         static property Flood::Vector4 UnitW
         {
             Flood::Vector4 get();
@@ -180,16 +191,20 @@ namespace Flood
 
         static Flood::Vector2 operator/(Flood::Vector2 __op, int s);
 
+        static operator Flood::Vector3(Flood::Vector2 __op);
+
         void SetZero();
 
         static property Flood::Vector2 Zero
         {
             Flood::Vector2 get();
         }
+
         static property Flood::Vector2 UnitX
         {
             Flood::Vector2 get();
         }
+
         static property Flood::Vector2 UnitY
         {
             Flood::Vector2 get();
@@ -206,6 +221,8 @@ namespace Flood
 
         int X;
         int Y;
+        static operator Flood::Vector3(Flood::Vector2i __op);
+
         static bool operator==(Flood::Vector2i __op, Flood::Vector2i v);
 
         static bool operator!=(Flood::Vector2i __op, Flood::Vector2i v);
@@ -225,6 +242,5 @@ namespace Flood
         static Flood::Vector2i operator/(Flood::Vector2i __op, int s);
 
         void Zero();
-
     };
 }

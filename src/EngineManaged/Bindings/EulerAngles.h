@@ -14,7 +14,10 @@ namespace Flood
 {
     value struct EulerAngles;
     value struct Vector3;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Representation of an orientation as a set of Euler angles that can be
     /// transformed into and back in a rotation matrix and quaternions.
@@ -33,6 +36,5 @@ namespace Flood
         void Rotate(float x, float y, float z);
 
         void Identity();
-
     };
 }

@@ -43,6 +43,23 @@ int Flood::InputManager::GetHashCode()
     return (int)NativePtr;
 }
 
+void Flood::InputManager::InputInitialize()
+{
+    ::InputInitialize();
+}
+
+void Flood::InputManager::InputDeinitialize()
+{
+    ::InputDeinitialize();
+}
+
+Flood::InputManager^ Flood::InputManager::GetInputManager()
+{
+    auto __ret = ::GetInputManager();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::InputManager((::InputManager*)__ret);
+}
+
 System::IntPtr Flood::InputManager::Instance::get()
 {
     return System::IntPtr(NativePtr);
@@ -65,22 +82,5 @@ Flood::Mouse^ Flood::InputManager::Mouse::get()
     auto __ret = ((::InputManager*)NativePtr)->getMouse();
     if (__ret == nullptr) return nullptr;
     return gcnew Flood::Mouse((::Mouse*)__ret);
-}
-
-void Flood::FloodInputManager::InputInitialize()
-{
-    ::InputInitialize();
-}
-
-void Flood::FloodInputManager::InputDeinitialize()
-{
-    ::InputDeinitialize();
-}
-
-Flood::InputManager^ Flood::FloodInputManager::GetInputManager()
-{
-    auto __ret = ::GetInputManager();
-    if (__ret == nullptr) return nullptr;
-    return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 

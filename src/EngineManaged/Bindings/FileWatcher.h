@@ -15,7 +15,10 @@ namespace Flood
     enum struct FileWatchEventKind;
     ref class FileWatcher;
     value struct FileWatchEvent;
+}
 
+namespace Flood
+{
     public enum struct FileWatchEventKind
     {
         Added = 0,
@@ -31,7 +34,6 @@ namespace Flood
         FileWatchEvent(::FileWatchEvent* native);
         FileWatchEvent(System::IntPtr native);
         FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file);
-
         Flood::FileWatchEventKind Action;
         unsigned int WatchId;
         System::String^ Dir;
@@ -81,6 +83,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

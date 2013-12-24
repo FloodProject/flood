@@ -19,7 +19,10 @@ namespace Flood
     ref class ArchiveZip;
     ref class Stream;
     value struct FileWatchEvent;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Archives are a structured collection of files. The most common archive
     /// implementations are ZIP archive files and OS filesystem directories.
@@ -48,21 +51,25 @@ namespace Flood
         {
             System::String^ get();
         }
+
         property System::IntPtr Userdata
         {
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         property unsigned int WatchId
         {
             unsigned int get();
             void set(unsigned int);
         }
+
         property bool IsValid
         {
             bool get();
             void set(bool);
         }
+
         /// <summary>
         /// Opens the archive.
         /// </summary>
@@ -111,7 +118,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class ArchiveVirtual : Flood::Archive
@@ -127,6 +133,7 @@ namespace Flood
             System::Collections::Generic::List<Flood::Archive^>^ get();
             void set(System::Collections::Generic::List<Flood::Archive^>^);
         }
+
         /// <summary>
         /// Opens the archive.
         /// </summary>
@@ -180,7 +187,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class ArchiveDirectory : Flood::Archive
@@ -237,7 +243,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class ArchiveZip : Flood::Archive
@@ -256,6 +261,7 @@ namespace Flood
             System::IntPtr get();
             void set(System::IntPtr);
         }
+
         /// <summary>
         /// Opens the archive.
         /// </summary>
@@ -299,6 +305,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

@@ -20,7 +20,10 @@ namespace Flood
     value struct RenderContextSettings;
     value struct Vector2i;
     value struct WindowSettings;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Represents window styles as bit-flags.
     /// </summary>
@@ -48,7 +51,6 @@ namespace Flood
         WindowSettings(::WindowSettings* native);
         WindowSettings(System::IntPtr native);
         WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles);
-
         unsigned short Width;
         unsigned short Height;
         System::String^ Title;
@@ -74,26 +76,32 @@ namespace Flood
         {
             void set(System::String^);
         }
+
         property bool CursorVisible
         {
             void set(bool);
         }
+
         property bool CursorCapture
         {
             void set(bool);
         }
+
         property Flood::Vector2i CursorPosition
         {
             Flood::Vector2i get();
         }
+
         property Flood::InputManager^ Input
         {
             Flood::InputManager^ get();
         }
+
         property Flood::Settings Settings
         {
             Flood::Settings get();
         }
+
     private:
         delegate void _IdleDelegate();
         _IdleDelegate^ _IdleDelegateInstance;
@@ -185,6 +193,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

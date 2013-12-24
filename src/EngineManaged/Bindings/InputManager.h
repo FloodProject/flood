@@ -18,7 +18,10 @@ namespace Flood
     ref class Keyboard;
     ref class Mouse;
     ref class Window;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Manages a set of input devices.
     /// </summary>
@@ -41,21 +44,20 @@ namespace Flood
         {
             Flood::Keyboard^ get();
         }
+
         property Flood::Mouse^ Mouse
         {
             Flood::Mouse^ get();
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
 
-    };
-
-    public ref class FloodInputManager
-    {
-    public:
         static void InputInitialize();
+
         static void InputDeinitialize();
+
         static Flood::InputManager^ GetInputManager();
     };
 }

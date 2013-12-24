@@ -15,7 +15,10 @@ namespace Flood
     enum struct InputDeviceType;
     ref class InputDevice;
     ref class InputEvent;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Different types of input devices.
     /// </summary>
@@ -49,10 +52,10 @@ namespace Flood
             Flood::InputDeviceType get();
             void set(Flood::InputDeviceType);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -77,11 +80,11 @@ namespace Flood
         {
             Flood::InputDeviceType get();
         }
+
         virtual void ProcessEvent(Flood::InputEvent^ event);
 
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

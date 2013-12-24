@@ -21,7 +21,10 @@ namespace Flood
     value struct Frustum;
     value struct Ray;
     value struct Vector3;
+}
 
+namespace Flood
+{
     [System::Flags]
     public enum struct DebugDrawFlags : unsigned char
     {
@@ -54,31 +57,37 @@ namespace Flood
         {
             void set(Flood::Color);
         }
+
         property Flood::Color CurrentColor
         {
             Flood::Color get();
             void set(Flood::Color);
         }
+
         property Flood::RenderBatch^ Lines
         {
             Flood::RenderBatch^ get();
             void set(Flood::RenderBatch^);
         }
+
         property Flood::RenderBatch^ Triangles
         {
             Flood::RenderBatch^ get();
             void set(Flood::RenderBatch^);
         }
+
         property Flood::RenderBatch^ Quads
         {
             Flood::RenderBatch^ get();
             void set(Flood::RenderBatch^);
         }
+
         property System::Collections::Generic::List<Flood::RenderBatch^>^ Renderables
         {
             System::Collections::Generic::List<Flood::RenderBatch^>^ get();
             void set(System::Collections::Generic::List<Flood::RenderBatch^>^);
         }
+
         void DrawBox(Flood::BoundingBox box);
 
         void DrawRay(Flood::Ray ray, float length);
@@ -92,6 +101,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

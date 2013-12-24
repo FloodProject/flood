@@ -19,7 +19,10 @@ namespace Flood
     ref class TextureAtlas;
     value struct Rectangle;
     value struct SubTexture;
+}
 
+namespace Flood
+{
     public value struct SubTexture
     {
     public:
@@ -52,6 +55,7 @@ namespace Flood
         {
             Flood::ResourceHandle<Flood::Image^> get();
         }
+
         bool AddImage(Flood::ResourceHandle<Flood::Image^> imageHandle);
 
         bool GetImageSubTexture(Flood::ResourceHandle<Flood::Image^> imageHandle, [System::Runtime::InteropServices::Out] Flood::SubTexture% subTexture);
@@ -59,6 +63,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

@@ -20,7 +20,10 @@ namespace Flood
     ref class Texture;
     ref class Transform;
     value struct RenderState;
+}
 
+namespace Flood
+{
     /// <summary>
     /// This contains all the rendering state information that is needed by the
     /// rendering device to properly render the associated.renderable. This should
@@ -35,7 +38,6 @@ namespace Flood
         RenderState(::RenderState* native);
         RenderState(System::IntPtr native);
         RenderState(Flood::RenderBatch^ renderable);
-
         Flood::RenderBatch^ Renderable;
         Flood::Material^ Material;
         Flood::Matrix4x3 ModelMatrix;
@@ -62,11 +64,11 @@ namespace Flood
             System::Collections::Generic::List<Flood::RenderState>^ get();
             void set(System::Collections::Generic::List<Flood::RenderState>^);
         }
+
         void AddState(Flood::RenderState renderState);
 
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

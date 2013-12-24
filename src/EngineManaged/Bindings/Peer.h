@@ -17,7 +17,10 @@ namespace Flood
     ref class Packet;
     ref class Peer;
     ref class Session;
+}
 
+namespace Flood
+{
     public enum struct PeerState
     {
         Disconnected = 0,
@@ -44,18 +47,22 @@ namespace Flood
         {
             System::String^ get();
         }
+
         property System::String^ HostIP
         {
             System::String^ get();
         }
+
         property Flood::PeerState State
         {
             Flood::PeerState get();
         }
+
         property Flood::Session^ Session
         {
             Flood::Session^ get();
         }
+
     private:
         delegate void _StateChangedDelegate(::PeerState _0);
         _StateChangedDelegate^ _StateChangedDelegateInstance;
@@ -77,6 +84,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

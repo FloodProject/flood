@@ -23,9 +23,13 @@ namespace Flood
     ref class RenderBlock;
     ref class RenderDevice;
     ref class RenderView;
+    ref class Scene;
     ref class Transform;
     value struct Ray;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Represents a view from a specific point in the world. Has an associated
     /// projection type, like ortographic or perspective and also holds a frustum
@@ -44,28 +48,36 @@ namespace Flood
         {
             Flood::Vector3 get();
         }
+
         property Flood::Matrix4x3 ViewMatrix
         {
             Flood::Matrix4x3 get();
         }
+
         property Flood::RenderView^ View
         {
             Flood::RenderView^ get();
             void set(Flood::RenderView^);
         }
+
         property Flood::Frustum Frustum
         {
             Flood::Frustum get();
         }
+
         property Flood::Frustum Frustum1
         {
             Flood::Frustum get();
         }
+
         property Flood::DebugDrawer^ Drawer
         {
             Flood::DebugDrawer^ get();
             void set(Flood::DebugDrawer^);
         }
+
+        void Render(Flood::Scene^ scene);
+
         void Render(Flood::RenderBlock^ block, bool clearView);
 
         void Cull(Flood::RenderBlock^ queue, Flood::Entity^ entity);
@@ -81,6 +93,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

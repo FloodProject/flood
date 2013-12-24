@@ -24,7 +24,10 @@ namespace Flood
     ref class RenderBatch;
     value struct Frustum;
     value struct Ray;
+}
 
+namespace Flood
+{
     public ref class RayQueryResult : ICppInstance
     {
     public:
@@ -45,15 +48,16 @@ namespace Flood
             Flood::Entity^ get();
             void set(Flood::Entity^);
         }
+
         property float Distance
         {
             float get();
             void set(float);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     public ref class RayTriangleQueryResult : Flood::RayQueryResult
@@ -69,30 +73,34 @@ namespace Flood
             Flood::Geometry^ get();
             void set(Flood::Geometry^);
         }
+
         property Flood::RenderBatch^ Renderable
         {
             Flood::RenderBatch^ get();
             void set(Flood::RenderBatch^);
         }
+
         property Flood::Vector3 IntersectionLocal
         {
             Flood::Vector3 get();
             void set(Flood::Vector3);
         }
+
         property Flood::Vector3 IntersectionWorld
         {
             Flood::Vector3 get();
             void set(Flood::Vector3);
         }
+
         property Flood::Vector3 IntersectionUV
         {
             Flood::Vector3 get();
             void set(Flood::Vector3);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -114,10 +122,12 @@ namespace Flood
         {
             Flood::ResourceGroup get();
         }
+
         property Flood::Group^ Entities
         {
             Flood::Group^ get();
         }
+
         void Update(float delta);
 
         bool DoRayBoxQuery(Flood::Ray ray, Flood::RayQueryResult^ res);
@@ -133,6 +143,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

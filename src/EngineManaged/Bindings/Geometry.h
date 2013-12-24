@@ -18,7 +18,10 @@ namespace Flood
     ref class RenderBatch;
     ref class Transform;
     value struct RenderState;
+}
 
+namespace Flood
+{
     /// <summary>
     /// This component holds geometry data for rendering. It can hold multiple
     /// renderable objects, each with different materials. When the camera node
@@ -37,14 +40,17 @@ namespace Flood
         {
             System::Collections::Generic::List<Flood::RenderBatch^>^ get();
         }
+
         property Flood::BoundingBox BoundingVolume
         {
             Flood::BoundingBox get();
         }
+
         property Flood::BoundingBox WorldBoundingVolume
         {
             Flood::BoundingBox get();
         }
+
         void AddRenderable(Flood::RenderBatch^ renderable);
 
         virtual void AppendRenderables(System::Collections::Generic::List<Flood::RenderState>^ queue, Flood::Transform^ transform);
@@ -58,6 +64,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

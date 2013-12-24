@@ -24,7 +24,10 @@ namespace Flood
     ref class UniformBuffer;
     value struct RenderBatchRange;
     value struct RenderState;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Type of primitive of the RenderBatch.
     /// </summary>
@@ -98,85 +101,95 @@ namespace Flood
             Flood::RenderLayer get();
             void set(Flood::RenderLayer);
         }
+
         property int RenderPriority
         {
             int get();
             void set(int);
         }
+
         property Flood::GeometryBuffer^ GeometryBuffer
         {
             Flood::GeometryBuffer^ get();
             void set(Flood::GeometryBuffer^);
         }
+
         property Flood::UniformBuffer^ UniformBuffer
         {
             Flood::UniformBuffer^ get();
             void set(Flood::UniformBuffer^);
         }
+
         property Flood::ResourceHandle<Flood::Material^> Material
         {
             Flood::ResourceHandle<Flood::Material^> get();
             void set(Flood::ResourceHandle<Flood::Material^>);
         }
+
         property Flood::PrimitiveRasterMode PrimitiveRasterMode
         {
             Flood::PrimitiveRasterMode get();
             void set(Flood::PrimitiveRasterMode);
         }
+
         property Flood::PrimitiveType PrimitiveType
         {
             Flood::PrimitiveType get();
             void set(Flood::PrimitiveType);
         }
+
         property Flood::RenderBatchRange Range
         {
             Flood::RenderBatchRange get();
             void set(Flood::RenderBatchRange);
         }
+
         property Flood::RenderLayer Stage
         {
             Flood::RenderLayer get();
             void set(Flood::RenderLayer);
         }
+
         property int Priority
         {
             int get();
             void set(int);
         }
+
         property Flood::PrimitiveType Type
         {
             Flood::PrimitiveType get();
             void set(Flood::PrimitiveType);
         }
+
         property Flood::PrimitiveRasterMode Mode
         {
             Flood::PrimitiveRasterMode get();
             void set(Flood::PrimitiveRasterMode);
         }
+
         property Flood::GeometryBuffer^ Gb
         {
             Flood::GeometryBuffer^ get();
             void set(Flood::GeometryBuffer^);
         }
+
         property Flood::UniformBuffer^ Ub
         {
             Flood::UniformBuffer^ get();
             void set(Flood::UniformBuffer^);
         }
+
         property Flood::ResourceHandle<Flood::Material^> Material1
         {
             Flood::ResourceHandle<Flood::Material^> get();
             void set(Flood::ResourceHandle<Flood::Material^>);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
 
-    };
-
-    public ref class FloodRenderBatch
-    {
-    public:
         static Flood::RenderBatch^ RenderBatchCreate(Flood::Allocator^ _0);
     };
 }

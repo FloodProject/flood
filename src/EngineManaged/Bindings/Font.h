@@ -18,7 +18,10 @@ namespace Flood
     enum struct ResourceGroup;
     value struct Glyph;
     value struct Vector2;
+}
 
+namespace Flood
+{
     /// <summary>
     /// A glyph is the information about a character/symbol in a font file. This
     /// structure stores more specifically information related to its position and
@@ -58,15 +61,18 @@ namespace Flood
             System::String^ get();
             void set(System::String^);
         }
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
         }
+
         property System::String^ Name1
         {
             System::String^ get();
             void set(System::String^);
         }
+
         virtual bool GetGlyphInfo(int codepoint, int size, [System::Runtime::InteropServices::Out] Flood::Glyph% glyph);
 
         virtual Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size);
@@ -76,6 +82,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

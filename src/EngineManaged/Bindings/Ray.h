@@ -14,7 +14,10 @@
 namespace Flood
 {
     value struct Ray;
+}
 
+namespace Flood
+{
     /// <summary>
     /// A ray is an infinite line starting at origin and going in some direction.
     /// </summary>
@@ -29,6 +32,5 @@ namespace Flood
         Flood::Vector3 Origin;
         Flood::Vector3 Direction;
         Flood::Vector3 GetPoint(float distance);
-
     };
 }

@@ -24,7 +24,10 @@ namespace Flood
     ref class RenderView;
     ref class Texture;
     value struct RenderState;
+}
 
+namespace Flood
+{
     /// <summary>
     /// There are a couple rendering pipelines. You can choose each one depending
     /// on the hardware functionality (shaders don't exist on some old or mobile
@@ -57,26 +60,31 @@ namespace Flood
             Flood::RenderPipeline get();
             void set(Flood::RenderPipeline);
         }
+
         property Flood::RenderBackend^ Backend
         {
             Flood::RenderBackend^ get();
             void set(Flood::RenderBackend^);
         }
+
         property Flood::RenderTarget^ RenderTarget
         {
             Flood::RenderTarget^ get();
             void set(Flood::RenderTarget^);
         }
+
         property Flood::RenderContext^ ActiveContext
         {
             Flood::RenderContext^ get();
             void set(Flood::RenderContext^);
         }
+
         property Flood::RenderView^ ActiveView
         {
             Flood::RenderView^ get();
             void set(Flood::RenderView^);
         }
+
         void Render(Flood::RenderBlock^ queue);
 
         void UpdateRenderTargets();
@@ -89,11 +97,6 @@ namespace Flood
 
         virtual int GetHashCode() override;
 
-    };
-
-    public ref class FloodRenderDevice
-    {
-    public:
         static Flood::RenderDevice^ GetRenderDevice();
     };
 }

@@ -16,7 +16,10 @@ namespace Flood
     ref class Allocator;
     ref class Log;
     value struct LogEntry;
+}
 
+namespace Flood
+{
     public enum struct LogLevel
     {
         Info = 0,
@@ -91,6 +94,5 @@ namespace Flood
         static void Debug(System::String^ msg);
 
         static void Assert(System::String^ msg);
-
     };
 }

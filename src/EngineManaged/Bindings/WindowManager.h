@@ -17,7 +17,10 @@ namespace Flood
     ref class Window;
     ref class WindowManager;
     value struct WindowSettings;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Specifies flags for opening file dialogs.
     /// </summary>
@@ -75,6 +78,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

@@ -24,7 +24,10 @@ namespace Flood
     value struct Color;
     value struct RenderState;
     value struct Settings;
+}
 
+namespace Flood
+{
     public ref class RenderBackend : ICppInstance
     {
     public:
@@ -44,14 +47,17 @@ namespace Flood
         {
             void set(Flood::Color);
         }
+
         property Flood::RenderView^ upRenderView
         {
             void set(Flood::RenderView^);
         }
+
         property Flood::VertexBuffer^ upVertexBuffer
         {
             void set(Flood::VertexBuffer^);
         }
+
         virtual bool Init();
 
         virtual void Cleanup();
@@ -109,6 +115,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

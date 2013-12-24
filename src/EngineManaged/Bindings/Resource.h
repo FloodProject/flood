@@ -16,7 +16,10 @@ namespace Flood
     enum struct ResourceGroup;
     enum struct ResourceStatus;
     ref class ResourceStream;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Resources can be loaded in a background task. In that case the caller will
     /// still receive a resource but it won't be fully loaded. It will only be
@@ -76,30 +79,30 @@ namespace Flood
             System::String^ get();
             void set(System::String^);
         }
+
         property Flood::ResourceStatus Status
         {
             Flood::ResourceStatus get();
             void set(Flood::ResourceStatus);
         }
+
         property Flood::ResourceGroup ResourceGroup
         {
             Flood::ResourceGroup get();
         }
+
         property System::String^ Path1
         {
             System::String^ get();
             void set(System::String^);
         }
-        property Flood::ResourceStatus Status1
-        {
-            Flood::ResourceStatus get();
-            void set(Flood::ResourceStatus);
-        }
+
         property Flood::ResourceStream^ Stream
         {
             Flood::ResourceStream^ get();
             void set(Flood::ResourceStream^);
         }
+
         /// <summary>
         /// Gets if the resource is fully loaded.
         /// </summary>
@@ -110,6 +113,5 @@ namespace Flood
         virtual int GetHashCode() override;
 
         Flood::ResourceHandle<Flood::Resource^> HandleCreate();
-
     };
 }

@@ -19,7 +19,10 @@ namespace Flood
     value struct Matrix4x4;
     value struct UniformBufferElement;
     value struct Vector3;
+}
 
+namespace Flood
+{
     public enum struct UniformDataType : unsigned char
     {
         Scalar_F = 0,
@@ -95,6 +98,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

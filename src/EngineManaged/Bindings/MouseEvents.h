@@ -21,7 +21,10 @@ namespace Flood
     ref class MouseInfo;
     ref class MouseMoveEvent;
     ref class MouseWheelEvent;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Different types of mouse buttons.
     /// </summary>
@@ -67,10 +70,10 @@ namespace Flood
             Flood::MouseEventType get();
             void set(Flood::MouseEventType);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -90,15 +93,16 @@ namespace Flood
             short get();
             void set(short);
         }
+
         property short Y
         {
             short get();
             void set(short);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -118,30 +122,34 @@ namespace Flood
             short get();
             void set(short);
         }
+
         property short Dy
         {
             short get();
             void set(short);
         }
+
         property short X
         {
             short get();
             void set(short);
         }
+
         property short Y
         {
             short get();
             void set(short);
         }
+
         property Flood::MouseInfo^ Info
         {
             Flood::MouseInfo^ get();
             void set(Flood::MouseInfo^);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -162,16 +170,19 @@ namespace Flood
             short get();
             void set(short);
         }
+
         property short Y
         {
             short get();
             void set(short);
         }
+
         property Flood::MouseButton Button
         {
             Flood::MouseButton get();
             void set(Flood::MouseButton);
         }
+
         bool IsLeftButton();
 
         bool IsRightButton();
@@ -181,7 +192,6 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 
     /// <summary>
@@ -202,9 +212,9 @@ namespace Flood
             short get();
             void set(short);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

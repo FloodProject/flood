@@ -131,36 +131,6 @@ void Flood::Allocator::Instance::set(System::IntPtr object)
     NativePtr = (::Allocator*)object.ToPointer();
 }
 
-Flood::MemoryAllocateFunction^ Flood::Allocator::Allocate::get()
-{
-    return safe_cast<Flood::MemoryAllocateFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->allocate), Flood::MemoryAllocateFunction::typeid));
-}
-
-void Flood::Allocator::Allocate::set(Flood::MemoryAllocateFunction^ value)
-{
-    ((::Allocator*)NativePtr)->allocate = static_cast<::MemoryAllocateFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
-}
-
-Flood::MemoryFreeFunction^ Flood::Allocator::Deallocate::get()
-{
-    return safe_cast<Flood::MemoryFreeFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->deallocate), Flood::MemoryFreeFunction::typeid));
-}
-
-void Flood::Allocator::Deallocate::set(Flood::MemoryFreeFunction^ value)
-{
-    ((::Allocator*)NativePtr)->deallocate = static_cast<::MemoryFreeFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
-}
-
-Flood::MemoryResetFunction^ Flood::Allocator::Reset::get()
-{
-    return safe_cast<Flood::MemoryResetFunction^>(System::Runtime::InteropServices::Marshal::GetDelegateForFunctionPointer(IntPtr(((::Allocator*)NativePtr)->reset), Flood::MemoryResetFunction::typeid));
-}
-
-void Flood::Allocator::Reset::set(Flood::MemoryResetFunction^ value)
-{
-    ((::Allocator*)NativePtr)->reset = static_cast<::MemoryResetFunction>(System::Runtime::InteropServices::Marshal::GetFunctionPointerForDelegate(value).ToPointer());
-}
-
 System::String^ Flood::Allocator::Group::get()
 {
     return clix::marshalString<clix::E_UTF8>(((::Allocator*)NativePtr)->group);

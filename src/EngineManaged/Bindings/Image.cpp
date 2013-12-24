@@ -8,7 +8,6 @@
 #include "Image.h"
 #include "Color.h"
 #include "Memory.h"
-#include "Platform.h"
 #include "Resource.h"
 #include "Stream.h"
 #include "Vector.h"
@@ -40,18 +39,6 @@ Flood::Image::Image(unsigned int width, unsigned int height, Flood::PixelFormat 
     auto arg1 = (::uint32)(::uint32_t)height;
     auto arg2 = (::PixelFormat)format;
     NativePtr = new ::Image(arg0, arg1, arg2);
-}
-
-void Flood::Image::SetBuffer(System::Collections::Generic::List<unsigned char>^ v)
-{
-    auto _tmpv = std::vector<::byte>();
-    for each(unsigned char _element in v)
-    {
-        auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
-        _tmpv.push_back(_marshalElement);
-    }
-    auto arg0 = _tmpv;
-    ((::Image*)NativePtr)->setBuffer(arg0);
 }
 
 bool Flood::Image::IsCompressed()
@@ -174,6 +161,19 @@ System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer::get()
         _tmp__ret->Add(_marshalElement);
     }
     return _tmp__ret;
+}
+
+void Flood::Image::Buffer::set(System::Collections::Generic::List<unsigned char>^ value)
+{
+    auto v = value;
+    auto _tmpv = std::vector<::byte>();
+    for each(unsigned char _element in v)
+    {
+        auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
+        _tmpv.push_back(_marshalElement);
+    }
+    auto arg0 = _tmpv;
+    ((::Image*)NativePtr)->setBuffer(arg0);
 }
 
 System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer1::get()

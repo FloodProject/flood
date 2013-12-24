@@ -111,16 +111,6 @@ unsigned int Flood::Texture::ExpectedSize::get()
     return __ret;
 }
 
-unsigned int Flood::Texture::Id1::get()
-{
-    return ((::Texture*)NativePtr)->id;
-}
-
-void Flood::Texture::Id1::set(unsigned int value)
-{
-    ((::Texture*)NativePtr)->id = (::uint32)(::uint32_t)value;
-}
-
 Flood::TextureTarget Flood::Texture::Target::get()
 {
     return (Flood::TextureTarget)((::Texture*)NativePtr)->target;

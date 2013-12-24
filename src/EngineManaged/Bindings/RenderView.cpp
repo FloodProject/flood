@@ -146,32 +146,6 @@ float Flood::RenderView::AspectRatio::get()
     return __ret;
 }
 
-Flood::Vector2i Flood::RenderView::Origin1::get()
-{
-    return Flood::Vector2i((::Vector2i*)&((::RenderView*)NativePtr)->origin);
-}
-
-void Flood::RenderView::Origin1::set(Flood::Vector2i value)
-{
-    auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)(::int32_t)value.X;
-    _marshal0.y = (::int32)(::int32_t)value.Y;
-    ((::RenderView*)NativePtr)->origin = _marshal0;
-}
-
-Flood::Vector2i Flood::RenderView::Size1::get()
-{
-    return Flood::Vector2i((::Vector2i*)&((::RenderView*)NativePtr)->size);
-}
-
-void Flood::RenderView::Size1::set(Flood::Vector2i value)
-{
-    auto _marshal0 = ::Vector2i();
-    _marshal0.x = (::int32)(::int32_t)value.X;
-    _marshal0.y = (::int32)(::int32_t)value.Y;
-    ((::RenderView*)NativePtr)->size = _marshal0;
-}
-
 Flood::RenderTarget^ Flood::RenderView::Target::get()
 {
     return gcnew Flood::RenderTarget((::RenderTarget*)((::RenderView*)NativePtr)->target);
@@ -195,16 +169,6 @@ void Flood::RenderView::ClearColor1::set(Flood::Color value)
     _marshal0.b = (::byte)(::uint8)(::uint8_t)value.B;
     _marshal0.a = (::byte)(::uint8)(::uint8_t)value.A;
     ((::RenderView*)NativePtr)->clearColor = _marshal0;
-}
-
-int Flood::RenderView::DepthPriority1::get()
-{
-    return ((::RenderView*)NativePtr)->depthPriority;
-}
-
-void Flood::RenderView::DepthPriority1::set(int value)
-{
-    ((::RenderView*)NativePtr)->depthPriority = value;
 }
 
 Flood::Matrix4x4 Flood::RenderView::ProjectionMatrix::get()

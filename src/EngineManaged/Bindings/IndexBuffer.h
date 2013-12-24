@@ -15,7 +15,10 @@ namespace Flood
 {
     ref class GeometryBuffer;
     ref class IndexBuffer;
+}
 
+namespace Flood
+{
     public ref class IndexBuffer : Flood::Buffer
     {
     public:
@@ -29,9 +32,9 @@ namespace Flood
             bool get();
             void set(bool);
         }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }

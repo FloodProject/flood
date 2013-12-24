@@ -21,7 +21,10 @@ namespace Flood
     ref class Stream;
     ref class Subsystem;
     ref class WindowManager;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Main engine class. This is a utility class that instantiates all the other
     /// engine classes and provides suitable methods to get/set them. It is also
@@ -49,28 +52,34 @@ namespace Flood
             Flood::PlatformManager^ get();
             void set(Flood::PlatformManager^);
         }
+
         property Flood::InputManager^ InputManager
         {
             Flood::InputManager^ get();
             void set(Flood::InputManager^);
         }
+
         property Flood::WindowManager^ WindowManager
         {
             Flood::WindowManager^ get();
             void set(Flood::WindowManager^);
         }
+
         property Flood::RenderDevice^ RenderDevice
         {
             Flood::RenderDevice^ get();
         }
+
         property Flood::ResourceManager^ ResourceManager
         {
             Flood::ResourceManager^ get();
         }
+
         property Flood::Log^ Logger
         {
             Flood::Log^ get();
         }
+
         void Init();
 
         void Update();
@@ -83,11 +92,6 @@ namespace Flood
 
         virtual int GetHashCode() override;
 
-    };
-
-    public ref class FloodEngine
-    {
-    public:
         static Flood::Engine^ GetEngine();
     };
 }

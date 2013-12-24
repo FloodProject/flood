@@ -14,9 +14,11 @@
 namespace Flood
 {
     ref class Component;
-    ref class Entity;
     ref class Group;
+}
 
+namespace Flood
+{
     /// <summary>
     /// Groups are nodes that have the special property of being able to be
     /// attached to each other. If you attach a node to another node, they will be
@@ -37,6 +39,7 @@ namespace Flood
         {
             System::Collections::Generic::List<Flood::Entity^>^ get();
         }
+
     private:
         delegate void _EntityAddedDelegate(const ::EntityPtr& _0);
         _EntityAddedDelegate^ _EntityAddedDelegateInstance;
@@ -108,6 +111,5 @@ namespace Flood
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;
-
     };
 }
