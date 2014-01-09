@@ -546,7 +546,7 @@ void ResourceManager::setupResourceLoaders(Class* klass)
 {
 	for(auto& child : klass->childs)
 	{
-		if (!child->childs.empty())
+		if( !child->childs.Empty() )
 			setupResourceLoaders(child);
 	
 		if (child->isAbstract()) continue;

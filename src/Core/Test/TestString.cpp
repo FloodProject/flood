@@ -21,9 +21,9 @@ SUITE(Core)
 		String str = StringFormat("%d %s", 20, "simple");
 		CHECK_EQUAL("20 simple", str.c_str());
 
-		std::vector<String> elems;
+		Vector<String> elems;
 		StringSplit("Foo|Bar|Spam", '|', elems);
-		CHECK_EQUAL(elems.size(), 3);
+		CHECK_EQUAL(elems.Size(), 3);
 		CHECK_EQUAL("Foo", elems[0].c_str());
 		CHECK_EQUAL("Bar", elems[1].c_str());
 		CHECK_EQUAL("Spam", elems[2].c_str());

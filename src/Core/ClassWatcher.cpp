@@ -68,9 +68,9 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 	if( !watch || !object ) return;
 
 	Class* klass = Class::GetType(object);
-	const std::vector<Field*>& fields = klass->fields;
+	const Vector<Field*>& fields = klass->fields;
 
-	for(size_t i = 0; i < fields.size(); i++)
+	for(size_t i = 0; i < fields.Size(); i++)
 	{
 		const Field* field = fields[i];
 

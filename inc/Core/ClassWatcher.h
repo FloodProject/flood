@@ -33,7 +33,7 @@ struct FieldWatch
 };
 
 typedef std::map<const Field*, FieldWatch> FieldWatchMap;
-typedef std::vector<FieldWatch*> FieldWatchVector;
+typedef Vector<FieldWatch*> FieldWatchVector;
 
 struct ClassWatch
 {

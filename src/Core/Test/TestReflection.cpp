@@ -141,16 +141,16 @@ SUITE(Core)
 		FieldWatchVector watches;
 		ClassWatchUpdate(watch, watches);
 
-		CHECK_EQUAL(0, watches.size());
+		CHECK_EQUAL(0, watches.Size());
 
 		instanceB.change();
 
 		ClassWatchUpdate(watch, watches);
-		CHECK_EQUAL(4, watches.size());
+		CHECK_EQUAL(4, watches.Size());
 
-		watches.clear();
+		watches.Clear();
 		ClassWatchUpdate(watch, watches);
-		CHECK_EQUAL(0, watches.size());
+		CHECK_EQUAL(0, watches.Size());
 
 		Deallocate(watch);
 	}

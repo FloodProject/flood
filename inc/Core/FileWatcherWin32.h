@@ -55,10 +55,10 @@ public:
 	virtual ~FileWatcherWin32();
 
 	/// Add a directory watch
-	FileWatchId addWatch(const String& directory, void* userdata) OVERRIDE;
+	FileWatchId addWatch(const UTF8String& directory, void* userdata) OVERRIDE;
 
 	/// Remove a directory watch. This is a brute force lazy search O(nlogn).
-	void removeWatch(const String& directory) OVERRIDE;
+	void removeWatch(const UTF8String& directory) OVERRIDE;
 
 	/// Remove a directory watch. This is a map lookup O(logn).
 	void removeWatch(FileWatchId FileWatchId) OVERRIDE;

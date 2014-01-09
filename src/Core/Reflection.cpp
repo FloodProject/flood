@@ -215,6 +215,7 @@ Class* Class::GetType(const Object* object)
 Field* Class::getField(const char* name)
 {
 	for(auto& field : fields)
+
 	{
 		if(strcmp(field->name, name) == 0) return field;
 

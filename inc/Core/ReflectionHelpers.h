@@ -118,9 +118,9 @@ NAMESPACE_CORE_BEGIN
 
 #define FIELD_RESIZER(fieldType, fieldName) \
 	static void* Resize##fieldName (void* obj, size_t size) { \
-		std::vector<fieldType>* array = (std::vector<fieldType>*) obj; \
-		array->resize(size); \
-		return &array->front(); \
+		Vector<fieldType>* array = (Vector<fieldType>*) obj; \
+		array->Resize(size); \
+		return &array->Front(); \
 	}
 
 #define FIELD_RESIZER_CLASS(fieldType, fieldName) \

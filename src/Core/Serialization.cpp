@@ -235,10 +235,10 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 static void ReflectionWalkArray(ReflectionContext* context)
 {
 	const Field* field = context->field;
-	std::vector<byte>& array = *(std::vector<byte>*) context->address;
+	Vector<byte>& array = *(Vector<byte>*) context->address;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
-	uint32 arraySize = array.size() / elementSize;
+	uint32 arraySize = array.Size() / elementSize;
 
 	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
@@ -388,11 +388,11 @@ void ReflectionWalkComposite(ReflectionContext* context)
 		context->composite = current;
 	}
 
-	const std::vector<Field*>& fields = context->composite->fields;
+	const Vector<Field*>& fields = context->composite->fields;
 
 	const Field* field = context->field; 
 
-	for( size_t i = 0; i < fields.size(); i++ )
+	for( size_t i = 0; i < fields.Size(); i++ )
 	{
 		context->field = fields[i];
 		ReflectionWalkCompositeField(context);
@@ -489,8 +489,8 @@ bool Serializer::saveObjectToFile(Serializer& serializer, const Path& file, Obje
 
 //-----------------------------------//
 
-typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
-typedef std::vector<Object*> ObjectRawPtrArray;
+typedef Vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
+typedef Vector<Object*> ObjectRawPtrArray;
 
 void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 size )
 {
@@ -499,14 +499,14 @@ void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 s
 	if (FieldIsRawPointer(field))
 	{
 		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
-		array->resize(size);
-		return &array->front();
+		array->Resize(size);
+		return &array->Front();
 	}
 	else if( FieldIsRefPointer(field) )
 	{
 		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
-		array->resize(size);
-		return &array->front();
+		array->Resize(size);
+		return &array->Front();
 	}
 #if 0
 	else if( FieldIsSharedPointer(field) )

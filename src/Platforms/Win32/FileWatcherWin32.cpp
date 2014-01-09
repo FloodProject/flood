@@ -202,10 +202,10 @@ FileWatcherWin32::~FileWatcherWin32()
 
 //-----------------------------------//
 
-FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
+FileWatchId FileWatcherWin32::addWatch(const UTF8String& directory, void* userdata)
 {
-	std::wstring wdir( directory.begin(), directory.end() );
-	FileWatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
+	WString wdir(directory);
+	FileWatchStruct* watch = CreateWatch( wdir.CString(), FILE_NOTIFY_CHANGE_LAST_WRITE
 		| FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
 	
 	if(!watch)
@@ -216,11 +216,11 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 
 	FileWatchId watchid = ++mLastWatchID;
 
-	size_t len = directory.length()+1;
+	size_t len = directory.Length()+1;
 	watch->mWatchid = watchid;
 	watch->mWatcher = this;
 	watch->mDirName = new char[len];
-	strcpy_s(watch->mDirName, len, directory.c_str());
+	strcpy_s(watch->mDirName, len, directory.CString());
 	watch->mCustomData = userdata;
 
 	mWatches.insert(std::make_pair(watchid, watch));

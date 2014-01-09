@@ -98,6 +98,8 @@ public:
 
 	uint16 size; //!< Size of the type.
 
+	Vector<TypeAttribute> attributes;//!< Attributes of the type.
+
 	ReflectionWalkFunction serialize; //!< Custom walk function.
 
 };
@@ -259,11 +261,11 @@ public:
 
 	ClassCreateFunction create_fn; //!< Factory function.
 
-	std::vector<Field*> fields; //!< Keeps track of the type fields.
+	Vector<Field*> fields; //!< Keeps track of the type fields.
 
 	ClassFieldIdMap fieldIds; //!< Keeps track of the type fields by id.
 
-	std::vector<Class*> childs; //!< Keeps track of the childs of the class.
+	Vector<Class*> childs; //!< Keeps track of the childs of the class.
 
 };
 
@@ -473,7 +475,7 @@ void FieldSet( const Field* field, void* object, const T& value )
  * @param instances out vector with resulting children
  */
 template<typename T>
-void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& instances)
+void ClassCreateChilds(const Class* klass, Allocator* alloc, Vector<T*>& instances)
 {
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{

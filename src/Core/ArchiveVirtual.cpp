@@ -35,7 +35,7 @@ static void HandleWatch(Archive*, const FileWatchEvent& event);
 
 bool ArchiveVirtual::mount(Archive * mount, const Path& mountPath)
 {
-	mounts.push_back(mount);
+	mounts.Push(mount);
 
 	// Setup archive watch callbacks.
 	mount->userdata = this;
@@ -91,7 +91,7 @@ bool ArchiveVirtual::close()
 
 Stream* ArchiveVirtual::openFile(const Path& path, Allocator* alloc)
 {
-	if (mounts.empty()) return nullptr;
+	if (mounts.Empty()) return nullptr;
 
 	Stream* stream = nullptr;
 
@@ -107,7 +107,7 @@ Stream* ArchiveVirtual::openFile(const Path& path, Allocator* alloc)
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerate(std::vector<Path>& paths, bool dir)
+void ArchiveVirtual::enumerate(Vector<Path>& paths, bool dir)
 {
 
 	for(auto& i : mounts)
@@ -121,14 +121,14 @@ void ArchiveVirtual::enumerate(std::vector<Path>& paths, bool dir)
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerateFiles(std::vector<Path>& paths)
+void ArchiveVirtual::enumerateFiles(Vector<Path>& paths)
 {
 	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-void ArchiveVirtual::enumerateDirs(std::vector<Path>& paths)
+void ArchiveVirtual::enumerateDirs(Vector<Path>& paths)
 {
 	enumerate(paths, true);
 }

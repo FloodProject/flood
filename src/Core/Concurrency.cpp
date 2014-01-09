@@ -48,7 +48,7 @@ void Task::run()
 
 //-----------------------------------//
 
-typedef std::vector<Thread*> ThreadQueue;
+typedef Vector<Thread*> ThreadQueue;
 
 TaskPool::TaskPool(int8 size)
 	: threadCount(size)

@@ -177,13 +177,13 @@ String StringFormatArgs(const char* str, va_list args)
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, std::vector<String>& elems)
+void StringSplit(const String& s, char delim, Vector<String>& elems)
 {
 	std::stringstream ss(s);
 	String item;
 	
 	while(std::getline(ss, item, delim)) 
-		elems.push_back(item);
+		elems.Push(item);
 }
 
 //-----------------------------------//
@@ -385,7 +385,7 @@ StringHash HashString(const String& s)
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
+static void DirArchiveEnumerate(Vector<String>& paths, Path dirPath,
 								Path filePath, bool dirs)
 {
 	// Open directory stream.
@@ -407,7 +407,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 			Path sep = filePath.empty() ? "" : PathGetSeparator();
 			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
 				name.c_str() );
-			if(!dirs) paths.push_back(path);
+			if(!dirs) paths.Push(path);
 			break;
 		}
 		case DT_DIR:
@@ -417,7 +417,7 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
 
-			if(dirs) paths.push_back(_filePath);
+			if(dirs) paths.Push(_filePath);
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			
 			break;
@@ -430,14 +430,14 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 
 //-----------------------------------//
 
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
+void FileEnumerateFiles(const Path& path, Vector<Path>& files)
 {
 	DirArchiveEnumerate(files, path, "", false);
 }
 
 //-----------------------------------//
 
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
+void FileEnumerateDirectories(const Path& path, Vector<Path>& dirs)
 {
 	DirArchiveEnumerate(dirs, path, "", true);
 }

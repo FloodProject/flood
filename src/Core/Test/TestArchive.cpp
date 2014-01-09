@@ -19,7 +19,7 @@ SUITE(Core)
 		ArchiveDirectory archive("teste");
 		CHECK(archive.isValid);
 
-		std::vector<Path> files;
+		Vector<Path> files;
 		archive.enumerateFiles(files);
 
 		CHECK( archive.existsFile("foo.txt") );
@@ -35,10 +35,10 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL( "foobar", text.c_str() );
 
-		std::vector<Path> dirs;
+		Vector<Path> dirs;
 		archive.enumerateDirs(dirs);
 
-		CHECK( dirs.size() == 2 );
+		CHECK( dirs.Size() == 2 );
 		CHECK( archive.existsDir("foo"));
 		CHECK( !archive.existsDir("foo/bar") );
 		CHECK( !archive.existsDir("foo/spam") );
@@ -49,7 +49,7 @@ SUITE(Core)
 		ArchiveZip archive("teste.zip");
 		CHECK( archive.isValid );
 
-		std::vector<Path> files;
+		Vector<Path> files;
 		archive.enumerateFiles(files);
 		CHECK( files.size() == 5 );
 
@@ -68,11 +68,11 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
-		std::vector<Path> dirs;
+		Vector<Path> dirs;
 
 		archive.enumerateDirs(dirs);
 
-		CHECK( dirs.size() == 3 );
+		CHECK( dirs.Size() == 3 );
 		CHECK( archive.existsDir("files") );
 		CHECK( !archive.existsDir("dunno") );
 	}
@@ -91,9 +91,9 @@ SUITE(Core)
 		archive.mount(archive_zip, "");
 		archive.mount(archive_dir, "");
 
-		std::vector<Path> files;
+		Vector<Path> files;
 		archive.enumerateFiles(files);
-		CHECK(files.size() == 5+4 );
+		CHECK(files.Size() == 5+4 );
 
 		CHECK(archive.existsFile("foo.txt"));
 		CHECK(archive.existsFile("bar.txt"));
@@ -110,9 +110,9 @@ SUITE(Core)
 		Deallocate(stream);
 		CHECK_EQUAL("foobar", text.c_str());
 
-		std::vector<Path> dirs;
+		Vector<Path> dirs;
 		archive.enumerateDirs(dirs);
-		CHECK(dirs.size() == 5);
+		CHECK(dirs.Size() == 5);
 		CHECK(archive.existsDir("files"));
 		CHECK(!archive.existsDir("dunno"));
 		CHECK(archive.existsDir("foo"));

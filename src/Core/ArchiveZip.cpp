@@ -165,7 +165,7 @@ Stream* ArchiveZip::openFile(const Path& path, Allocator* alloc)
 
 //-----------------------------------//
 
-void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
+void ArchiveZip::enumerate(Vector<Path>& paths, bool dir)
 {
 	if (!isValid || !handle) return;
 
@@ -181,20 +181,20 @@ void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
 		bool isDir = !name.empty() && name[name.size()-1] == '/';
 
 		if( (dir && isDir) || (!dir && !isDir) )
-			paths.push_back(name);
+			paths.Push(name);
 	}
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateFiles(std::vector<Path>& paths)
+void ArchiveZip::enumerateFiles(Vector<Path>& paths)
 {
 	enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateDirs(std::vector<Path>& paths)
+void ArchiveZip::enumerateDirs(Vector<Path>& paths)
 {
 	enumerate(paths, true);
 }
@@ -219,7 +219,7 @@ bool ArchiveZip::existsFile(const Path& path)
 
 bool ArchiveZip::existsDir(const Path& path)
 {
-	std::vector<Path> dirs;
+	Vector<Path> dirs;
 	enumerateDirs(dirs);
 	Path normalized = PathNormalize(path);
 

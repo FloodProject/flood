@@ -61,7 +61,7 @@ static bool SortPluginsCallback(Plugin* a, Plugin* b)
 	return priorityA < priorityB;
 }
 
-void PluginsSortByPriority(std::vector<Plugin*>& plugins)
+void PluginsSortByPriority(Vector<Plugin*>& plugins)
 {
 	// Sort the plugins by priority.
 	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);

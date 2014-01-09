@@ -76,17 +76,17 @@ void Stream::resize(int64 size)
 
 //-----------------------------------//
 
-int64 Stream::read(std::vector<uint8>& data) const
+int64 Stream::read(Vector<uint8>& data) const
 {
 	int64 length = size();
 
 	if( length < 0 ) return 0;
 
-	data.resize( (size_t) length );
+	data.Resize( (size_t) length );
 
-	if( data.empty() ) return 0;
+	if( data.Empty() ) return 0;
 
-	return readBuffer(&data.front(), data.size());
+	return readBuffer(&data.Front(), data.Size());
 }
 
 //-----------------------------------//
@@ -100,7 +100,7 @@ int64 Stream::readBuffer(void* buffer, int64 size) const
 
 int64 Stream::readString(String& text) const
 {
-	std::vector<uint8> data;
+	Vector<uint8> data;
 	int64 size = read(data);
 	text.assign( data.begin(), data.end() );
 	return size;
@@ -108,7 +108,7 @@ int64 Stream::readString(String& text) const
 
 //-----------------------------------//
 
-int64 Stream::readLines(std::vector<String>& lines) const
+int64 Stream::readLines(Vector<String>& lines) const
 {
 	String text;
 	int64 size = readString(text);
@@ -116,7 +116,7 @@ int64 Stream::readLines(std::vector<String>& lines) const
 	StringSplit(text, '\n', lines);
 	
 	// Erase extra line endings.
-	for( size_t i = 0; i < lines.size(); i++ )
+	for( size_t i = 0; i < lines.Size(); i++ )
 	{
 		String& line = lines[i];
 		size_t last = line.size() - 1;

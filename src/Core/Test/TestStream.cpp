@@ -48,9 +48,9 @@ SUITE(Core)
 		CHECK(flines.isValid);
 
 		// Read lines.
-		std::vector<String> lines;
+		Vector<String> lines;
 		flines.readLines(lines);
-		CHECK_EQUAL(3, lines.size());
+		CHECK_EQUAL(3, lines.Size());
 		CHECK_EQUAL("foo", lines[0].c_str());
 		CHECK_EQUAL("bar", lines[1].c_str());
 		CHECK_EQUAL("spam", lines[2].c_str());
