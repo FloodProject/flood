@@ -10,9 +10,9 @@
 #include "Core/Memory.h"
 
 #ifdef PLATFORM_WINDOWS
-	#include "Core/FileWatcherWin32.h"
+    #include "Core/FileWatcherWin32.h"
 #else
-	#include "Core/FileWatcherNull.h"
+    #include "Core/FileWatcherNull.h"
 #endif
 
 #ifdef API_CORE_DLL_EXPORT
@@ -25,16 +25,16 @@ static FileWatcher* gs_FileWatcher = nullptr;
 
 FileWatcher* GetFileWatcher()
 {
-	assert(gs_FileWatcher && "Expected a valid instance");
-	return gs_FileWatcher;
+    assert(gs_FileWatcher && "Expected a valid instance");
+    return gs_FileWatcher;
 }
 
 static void InitializeFileWatcher()
 {
-	LogInfo("Creating the file watcher");
+    LogInfo("Creating the file watcher");
 
 #ifdef PLATFORM_WINDOWS
-	gs_FileWatcher = AllocateHeap(FileWatcherWin32);
+    gs_FileWatcher = AllocateHeap(FileWatcherWin32);
 #else
     gs_FileWatcher = AllocateHeap(FileWatcherNull);
 #endif
@@ -42,17 +42,17 @@ static void InitializeFileWatcher()
 
 void DeinitializeFileWatcher()
 {
-	Deallocate(gs_FileWatcher);
+    Deallocate(gs_FileWatcher);
 }
 
 void CoreInitialize()
 {
-	InitializeFileWatcher();
+    InitializeFileWatcher();
 }
 
 void CoreDeinitialize()
 {
-	DeinitializeFileWatcher();
+    DeinitializeFileWatcher();
 }
 
 NAMESPACE_CORE_END
