@@ -16,24 +16,24 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_ENUM(EmitterType)
-	ENUM(Box)
-	ENUM(Sphere)
-	ENUM(Mesh)
+    ENUM(Box)
+    ENUM(Sphere)
+    ENUM(Mesh)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Particles, Geometry)
-	FIELD_ENUM(4, EmitterType, emitter)
-	FIELD_PRIMITIVE(5, float, spawnRate)
-	FIELD_PRIMITIVE(6, float, fadeRate)
-	FIELD_PRIMITIVE(7, float, size)
-	FIELD_PRIMITIVE(8, float, minLife)
-	FIELD_PRIMITIVE(9, float, maxLife)
-	FIELD_PRIMITIVE(10, Vector3, minVelocity)
-	FIELD_PRIMITIVE(11, Vector3, maxVelocity)
-	FIELD_PRIMITIVE(12, float, minScale)
-	FIELD_PRIMITIVE(13, float, maxScale)
-	FIELD_PRIMITIVE(14, Vector3, attenuation)
-	FIELD_CLASS_PTR_SETTER(15, Image, ImageHandle, image, Handle, Image)
+    FIELD_ENUM(4, EmitterType, emitter)
+    FIELD_PRIMITIVE(5, float, spawnRate)
+    FIELD_PRIMITIVE(6, float, fadeRate)
+    FIELD_PRIMITIVE(7, float, size)
+    FIELD_PRIMITIVE(8, float, minLife)
+    FIELD_PRIMITIVE(9, float, maxLife)
+    FIELD_PRIMITIVE(10, Vector3, minVelocity)
+    FIELD_PRIMITIVE(11, Vector3, maxVelocity)
+    FIELD_PRIMITIVE(12, float, minScale)
+    FIELD_PRIMITIVE(13, float, maxScale)
+    FIELD_PRIMITIVE(14, Vector3, attenuation)
+    FIELD_CLASS_PTR_SETTER(15, Image, ImageHandle, image, Handle, Image)
 REFLECT_CLASS_END()
 
 const int MAX_PARTICLES = 512;
@@ -41,142 +41,142 @@ const int MAX_PARTICLES = 512;
 //-----------------------------------//
 
 Particles::Particles()
-	: emitter(EmitterType::Box)
-	, size(10)
-	, spawnRate(20)
-	, fadeRate(60)
-	, minLife(1)
-	, maxLife(2)
-	, minScale(1)
-	, maxScale(20)
-	, minVelocity(0, 0, 0)
-	, maxVelocity(0, 1, 0)
-	, attenuation(1, 0, 0)
-	, numParticles(0)
+    : emitter(EmitterType::Box)
+    , size(10)
+    , spawnRate(20)
+    , fadeRate(60)
+    , minLife(1)
+    , maxLife(2)
+    , minScale(1)
+    , maxScale(20)
+    , minVelocity(0, 0, 0)
+    , maxVelocity(0, 1, 0)
+    , attenuation(1, 0, 0)
+    , numParticles(0)
 {
-	createGeometry();
+    createGeometry();
 }
 
 //-----------------------------------//
 
 void Particles::setImage(const ImageHandle& newImage)
 {
-	image = newImage;
+    image = newImage;
 
-	Material* pMaterial = material.Resolve();
-	
-	if( pMaterial )
-		pMaterial->setTexture(0, image);
+    Material* pMaterial = material.Resolve();
+    
+    if( pMaterial )
+        pMaterial->setTexture(0, image);
 }
 
 //-----------------------------------//
 
 void Particles::resetParticle(Particle& particle)
 {
-	particle.position.x = MathFloatRandom(0.0f, 1.0f);
-	particle.position.y = MathFloatRandom(0.0f, 1.0f);
-	particle.position.z = MathFloatRandom(0.0f, 1.0f);
-		
-	particle.velocity.x = MathFloatRandom(minVelocity.x, maxVelocity.x);
-	particle.velocity.y = MathFloatRandom(minVelocity.y, maxVelocity.y);
-	particle.velocity.z = MathFloatRandom(minVelocity.z, maxVelocity.z);
+    particle.position.x = MathFloatRandom(0.0f, 1.0f);
+    particle.position.y = MathFloatRandom(0.0f, 1.0f);
+    particle.position.z = MathFloatRandom(0.0f, 1.0f);
+        
+    particle.velocity.x = MathFloatRandom(minVelocity.x, maxVelocity.x);
+    particle.velocity.y = MathFloatRandom(minVelocity.y, maxVelocity.y);
+    particle.velocity.z = MathFloatRandom(minVelocity.z, maxVelocity.z);
 
-	particle.color = Color::White;
-	particle.life = MathFloatRandom(minLife, maxLife);
-	particle.alive = false;
+    particle.color = Color::White;
+    particle.life = MathFloatRandom(minLife, maxLife);
+    particle.alive = false;
 }
 
 //-----------------------------------//
 
 void Particles::spawnParticles(int numSpawn)
 {
-	for(size_t i = 0; i < numParticles && numSpawn; i++)
-	{
-		Particle& particle = particles[i];
+    for(size_t i = 0; i < numParticles && numSpawn; i++)
+    {
+        Particle& particle = particles[i];
 
-		if( particle.alive ) continue;
+        if( particle.alive ) continue;
 
-		resetParticle(particle);
-		particle.alive = true;
+        resetParticle(particle);
+        particle.alive = true;
 
-		numSpawn--;
-	}
+        numSpawn--;
+    }
 }
 
 //-----------------------------------//
 
 void Particles::createGeometry()
 {
-	gb = AllocateThis(GeometryBuffer);
-	gb->setBufferAccess(BufferAccess::Write);
-	gb->setBufferUsage(BufferUsage::Dynamic);
-	
-	material = MaterialCreate(AllocatorGetHeap(), "ParticlesMaterial");
+    gb = AllocateThis(GeometryBuffer);
+    gb->setBufferAccess(BufferAccess::Write);
+    gb->setBufferUsage(BufferUsage::Dynamic);
+    
+    material = MaterialCreate(AllocatorGetHeap(), "ParticlesMaterial");
 
-	Material* pMaterial = material.Resolve();
-	pMaterial->setDepthWrite(false);
-	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
-	pMaterial->setShader("Tex");
+    Material* pMaterial = material.Resolve();
+    pMaterial->setDepthWrite(false);
+    pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
+    pMaterial->setShader("Tex");
 
-	RenderBatchPtr renderable = AllocateHeap(RenderBatch);
-	renderable->setPrimitiveType(PrimitiveType::Points);
-	renderable->setGeometryBuffer(gb);
-	renderable->setMaterial(material);
-	renderable->setRenderLayer(RenderLayer::Transparency);
+    RenderBatchPtr renderable = AllocateHeap(RenderBatch);
+    renderable->setPrimitiveType(PrimitiveType::Points);
+    renderable->setGeometryBuffer(gb);
+    renderable->setMaterial(material);
+    renderable->setRenderLayer(RenderLayer::Transparency);
 
-	renderable->onPreRender.Bind( this, &Particles::onPreRender );
-	renderable->onPostRender.Bind( this, &Particles::onPostRender );
-	
-	addRenderable(renderable);
+    renderable->onPreRender.Bind( this, &Particles::onPreRender );
+    renderable->onPostRender.Bind( this, &Particles::onPostRender );
+    
+    addRenderable(renderable);
 
-	particles.resize(MAX_PARTICLES);
+    particles.Resize(MAX_PARTICLES);
 }
 
 //-----------------------------------//
 
 void Particles::update(float delta)
 {
-	numParticles = particles.size();
+    numParticles = particles.Size();
 
-	int numSpawn = ceil(spawnRate * delta);
-	spawnParticles(numSpawn);
+    int numSpawn = ceil(spawnRate * delta);
+    spawnParticles(numSpawn);
 
-	std::vector<Vector3> positions;
-	positions.reserve( numParticles );
+    Vector<Vector3> positions;
+    positions.Reserve( numParticles );
 
-	std::vector<Color> colors;
-	colors.reserve( numParticles );
+    Vector<Color> colors;
+    colors.Reserve( numParticles );
 
-	// Update the particles.
-	for(size_t i = 0; i < numParticles; i++)
-	{
-		Particle& particle = particles[i];
+    // Update the particles.
+    for(size_t i = 0; i < numParticles; i++)
+    {
+        Particle& particle = particles[i];
 
-		if( !particle.alive )
-			continue;
+        if( !particle.alive )
+            continue;
 
-		if( particle.life <= 0 )
-		{
-			particle.alive = false;
-			continue;
-		}
+        if( particle.life <= 0 )
+        {
+            particle.alive = false;
+            continue;
+        }
 
-		particle.position += particle.velocity;
-		particle.life -= float(delta);
-		particle.color.a = particle.life / maxLife;
+        particle.position += particle.velocity;
+        particle.life -= float(delta);
+        particle.color.a = particle.life / maxLife;
 
-		positions.push_back( particle.position );
-		colors.push_back( particle.color );
-	}
+        positions.Push( particle.position );
+        colors.Push( particle.color );
+    }
 
-	gb->declarations.reset();
-	gb->clear();
+    gb->declarations.reset();
+    gb->clear();
 
-	gb->set(VertexAttribute::Position, positions);
-	gb->set(VertexAttribute::Color, colors);
-	gb->forceRebuild();
+    gb->set(VertexAttribute::Position, positions);
+    gb->set(VertexAttribute::Color, colors);
+    gb->forceRebuild();
 
-	//updateDebugRenderable();
+    //updateDebugRenderable();
 }
 
 //-----------------------------------//
@@ -184,40 +184,40 @@ void Particles::update(float delta)
 void Particles::onPreRender(RenderView*, const RenderState&)
 {
 #if 0
-	glEnable(GL_POINT_SPRITE);
-	
-	glPointSize(size);
-	glPointParameterfv( GL_POINT_DISTANCE_ATTENUATION, &attenuation.x );
-	glPointParameterf( GL_POINT_SIZE_MIN, minScale );
-	glPointParameterf( GL_POINT_SIZE_MAX, maxScale );
-	glPointParameterf( GL_POINT_FADE_THRESHOLD_SIZE, fadeRate );
-	//glTexEnvi( GL_POINT_SPRITE, GL_COORD_REPLACE, true );
+    glEnable(GL_POINT_SPRITE);
+    
+    glPointSize(size);
+    glPointParameterfv( GL_POINT_DISTANCE_ATTENUATION, &attenuation.x );
+    glPointParameterf( GL_POINT_SIZE_MIN, minScale );
+    glPointParameterf( GL_POINT_SIZE_MAX, maxScale );
+    glPointParameterf( GL_POINT_FADE_THRESHOLD_SIZE, fadeRate );
+    //glTexEnvi( GL_POINT_SPRITE, GL_COORD_REPLACE, true );
 #endif
 
-	#pragma TODO("Enable point sprite extensions for the render")
+    #pragma TODO("Enable point sprite extensions for the render")
 }
 
 //-----------------------------------//
 
 void Particles::onPostRender(RenderView*, const RenderState&)
 {
-	//glDisable(GL_POINT_SPRITE);
+    //glDisable(GL_POINT_SPRITE);
 }
 
 //-----------------------------------//
 
 void Particles::updateDebugRenderable() const
 {
-	if( !debugRenderable )
-		return;
+    if( !debugRenderable )
+        return;
 }
 
 //-----------------------------------//
 
 RenderBatchPtr Particles::createDebuRenderable() const
 {
-	assert( !debugRenderable );
-	return nullptr;
+    assert( !debugRenderable );
+    return nullptr;
 }
 
 //-----------------------------------//

@@ -132,7 +132,7 @@ protected:
 	ImageHandle image;
 
 	// Particles.
-	std::vector<Particle> particles;
+	Vector<Particle> particles;
 
 	// Number of active particles.
 	uint numParticles;

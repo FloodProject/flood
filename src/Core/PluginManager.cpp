@@ -102,7 +102,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 	if( !plugin ) return;
 	
 	PluginMetadata metadata = plugin->getMetadata();
-	LogInfo( "Enabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Enabling plugin: %s", metadata.name.CString() );
 
 	plugin->enabled = true;
 	plugin->onPluginEnable();
@@ -118,7 +118,7 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	if( !plugin->isEnabled() ) return;
 
 	PluginMetadata metadata = plugin->getMetadata();
-	LogInfo( "Disabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Disabling plugin: %s", metadata.name.CString() );
 
 	onPluginDisableEvent(plugin);
 

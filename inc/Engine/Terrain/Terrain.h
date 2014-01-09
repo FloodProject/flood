@@ -92,13 +92,13 @@ public:
 	CellPtr getCell( int x, int y );
 
 	// Gets the cells of the terrain.
-	GETTER(Cells, const std::vector<CellPtr>&, terrainCells)
+	GETTER(Cells, const Vector<CellPtr>&, terrainCells)
 
 	// Gets a cell from its world space coords.
 	Vector2i getCoords( const Vector3& point );
 
 	// Converts the heightmap to a vector of heights.
-	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );
+	void convertHeightmap( const ImagePtr& heightmap, Vector<float>& heights );
 
 	// Valides the heightmap (checks if it has valid dimensions).
 	bool validateHeightmap( const ImagePtr& heightmap );
@@ -109,16 +109,16 @@ public:
 protected:
 
 	// Creates a new cell of terrain with the given heights.
-	CellPtr createCell(int x, int y, std::vector<float>& heights);
+	CellPtr createCell(int x, int y, Vector<float>& heights);
 
 	// Creates a new cell of terrain with a given heightmap.
 	CellPtr createCellHeightmap( int x, int y, const ImagePtr& heightmap );
 
 	// Cells of the terrain.
-	std::vector<CellPtr> terrainCells;
+	Vector<CellPtr> terrainCells;
 
 	// Holds temporary cell creation requests.
-	std::vector<CellRequest> requestsQueue;
+	Vector<CellRequest> requestsQueue;
 
 	// Terrain settings.
 	TerrainSettings settings;

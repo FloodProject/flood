@@ -30,21 +30,21 @@ REFLECT_CLASS_END()
 
 TrueTypeFontLoader::TrueTypeFontLoader()
 {
-	//Using OpenTypeFontLoader
-	//extensions.push_back("ttf");
+    //Using OpenTypeFontLoader
+    //extensions.Push("ttf");
 }
 
 //-----------------------------------//
 
 bool TrueTypeFontLoader::decode(ResourceLoadOptions& options)
 {
-	TrueTypeFont* font = (TrueTypeFont*) options.resource;
+    TrueTypeFont* font = (TrueTypeFont*) options.resource;
 
-	options.stream->read(font->data);
+    options.stream->read(font->data);
 
-	font->init();
+    font->init();
 
-	return true;
+    return true;
 }
 
 //-----------------------------------//

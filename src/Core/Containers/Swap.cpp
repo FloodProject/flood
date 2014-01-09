@@ -36,6 +36,7 @@ template<> void Swap<VectorBase>(VectorBase& first, VectorBase& second)
 {
     first.Swap(second);
 }
+
 template<> void Swap<HashBase>(HashBase& first, HashBase& second)
 {
     first.Swap(second);

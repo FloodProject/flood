@@ -36,20 +36,37 @@ public:
     Pair()
     {
     }
-    
-    /// Construct with values.
+
+    /**
+     * Construct with values.
+     * @param first first element of the pair
+     * @param second second element of the pair
+     */
     Pair(const T& first, const U& second) :
         first(first),
         second(second)
     {
     }
-    
-    /// Test for equality with another pair.
+
+    /**
+     * Test for equality than with another pair.
+     * @param rhs pair to compare to
+     * @return whether pair is equal to rhs
+     */
     bool operator == (const Pair<T, U>& rhs) const { return first == rhs.first && second == rhs.second; }
-    /// Test for inequality with another pair.
+
+    /**
+     * Test for inequality than with another pair.
+     * @param rhs pair to compare to
+     * @return whether pair is different from rhs
+     */
     bool operator != (const Pair<T, U>& rhs) const { return first != rhs.first || second != rhs.second; }
-    
-    /// Test for less than with another pair.
+
+    /**
+     * Test for lesser than with another pair.
+     * @param rhs pair to compare to
+     * @return whether pair is lesser than rhs
+     */
     bool operator < (const Pair<T, U>& rhs) const
     {
         if (first < rhs.first)
@@ -58,8 +75,12 @@ public:
             return false;
         return second < rhs.second;
     }
-    
-    /// Test for greater than with another pair.
+
+    /**
+     * Test for greater than with another pair.
+     * @param rhs pair to compare to
+     * @return whether pair is greater than rhs
+     */
     bool operator > (const Pair<T, U>& rhs) const
     {
         if (first > rhs.first)
@@ -68,18 +89,24 @@ public:
             return false;
         return second > rhs.second;
     }
-    
-    /// Return hash value for HashSet & HashMap.
+
+    /**
+     * Get hash value.
+     * @return hash value for HashSet & HashMap.
+     */
     unsigned ToHash() const { return (MakeHash(first) & 0xffff) | (MakeHash(second) << 16); }
-    
-    /// First value.
-    T first;
-    /// Second value.
-    U second;
+
+    T first; //!< First value.
+    U second; //!< Second value.
 };
 
-/// Construct a pair.
-template <class T, class U> Pair<T, U> MakePair(const T& first, const U& second)
+/**
+ * Construct a pair.
+ * @param first first element of the pair
+ * @param second second element of the pair
+ * @return pair
+ */
+ template <class T, class U> Pair<T, U> MakePair(const T& first, const U& second)
 {
     return Pair<T, U>(first, second);
 }

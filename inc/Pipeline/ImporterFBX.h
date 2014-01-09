@@ -34,38 +34,38 @@ API_PIPELINE REFLECT_DECLARE_CLASS(ImporterFBX)
 
 class API_PIPELINE ImporterFBX : public ResourceImporter
 {
-	REFLECT_DECLARE_OBJECT(ImporterFBX)
+    REFLECT_DECLARE_OBJECT(ImporterFBX)
 
 public:
 
-	ImporterFBX();
-	~ImporterFBX();
+    ImporterFBX();
+    ~ImporterFBX();
 
-	// Gets metadata about this extension.
-	ExtensionMetadata* getMetadata() OVERRIDE;
+    // Gets metadata about this extension.
+    ExtensionMetadata* getMetadata() OVERRIDE;
 
-	// Creates the resource with no data.
-	RESOURCE_LOADER_PREPARE(Mesh)
+    // Creates the resource with no data.
+    RESOURCE_LOADER_PREPARE(Mesh)
 
-	// Gets the class of the resource.
-	RESOURCE_LOADER_CLASS(Mesh)
+    // Gets the class of the resource.
+    RESOURCE_LOADER_CLASS(Mesh)
 
-	// Decodes a FBX scene.
-	bool decode(ResourceLoadOptions& options) OVERRIDE;
+    // Decodes a FBX scene.
+    bool decode(ResourceLoadOptions& options) OVERRIDE;
 
-	// Converts an FBX mesh.
-	bool buildMesh(FBXFILESDK_NAMESPACE::KFbxMesh*, Mesh* mesh);
+    // Converts an FBX mesh.
+    bool buildMesh(FBXFILESDK_NAMESPACE::KFbxMesh*, Mesh* mesh);
 
-	// Gets the name of this codec.
-	GETTER(Name, const String, "FBX")
+    // Gets the name of this codec.
+    GETTER(Name, const String, "FBX")
 
-	// Overrides this to return the right resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+    // Overrides this to return the right resource group.
+    GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
-	float scaleFactor;
+    float scaleFactor;
 
-	//FBXFILESDK_NAMESPACE::KFbxSdkManager* fbxSDK;
-	FBXFILESDK_NAMESPACE::KFbxIOSettings* fbxIO;
+    //FBXFILESDK_NAMESPACE::KFbxSdkManager* fbxSDK;
+    FBXFILESDK_NAMESPACE::KFbxIOSettings* fbxIO;
 };
 
 //-----------------------------------//

@@ -71,9 +71,9 @@ bool ReflectionFindHandleContext( ReflectionHandleContextMap* handleContextMap,
 	assert(handleContextMap && "Expected a valid context map");
 	if (!handleContextMap) return false;
 
-	auto it = handleContextMap->find(klass);
+    auto it = handleContextMap->Find(klass);
 	
-	if (it != handleContextMap->end())
+    if( it != handleContextMap->End() )
 	{
 		ctx = it->second;
 		return true;
@@ -238,7 +238,7 @@ static void ReflectionWalkArray(ReflectionContext* context)
 	Vector<byte>& array = *(Vector<byte>*) context->address;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
-	uint32 arraySize = array.Size() / elementSize;
+    uint32 arraySize = array.Size();
 
 	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
@@ -461,7 +461,7 @@ void ReflectionWalk(const Object* object, ReflectionContext* context)
 
 Object* Serializer::loadObjectFromFile(Serializer& serializer, const Path& file)
 {
-	FileStream stream(file.c_str(), StreamOpenMode::Read);
+    FileStream stream(file, StreamOpenMode::Read);
 	serializer.stream = (Stream *)&stream;
 
 	Object* object = serializer.load();
@@ -474,7 +474,7 @@ Object* Serializer::loadObjectFromFile(Serializer& serializer, const Path& file)
 
 bool Serializer::saveObjectToFile(Serializer& serializer, const Path& file, Object* object)
 {
-	FileStream stream(file.c_str(), StreamOpenMode::Write);
+    FileStream stream(file, StreamOpenMode::Write);
 
 	serializer.stream = (Stream *)&stream;
 	serializer.object = object;

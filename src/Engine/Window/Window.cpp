@@ -41,7 +41,7 @@ Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
 	LogInfo( "Creating window (size: %dx%d, title: '%s')",
-		settings.width, settings.height, settings.title.c_str() );
+		settings.width, settings.height, settings.title.CString() );
 }
 
 //-----------------------------------//

@@ -42,7 +42,7 @@ public:
 	EntityPtr findEntity( const String& name ) const;
 
 	// Gets the entities of the group.
-	GETTER(Entities, const std::vector<EntityPtr>&, entities)
+	GETTER(Entities, const Vector<EntityPtr>&, entities)
 
 	// Updates the group.
 	virtual void update( float delta ) OVERRIDE;
@@ -64,7 +64,7 @@ public:
 protected:
 
 	// Holds the entities of the group.
-	std::vector<EntityPtr> entities;
+	Vector<EntityPtr> entities;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Group );

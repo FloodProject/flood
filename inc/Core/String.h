@@ -33,9 +33,6 @@ struct API_CORE StringHash
 // Hashes the string and returns its hash.
 API_CORE StringHash HashString(const UTF8String&);
 
-// Compares a string in a case insensitive way.
-API_CORE int StringCompareInsensitive(const UTF8String& s1, const UTF8String& s2);
-
 // Formats the string according to the 'printf' style format string.
 API_CORE UTF8String StringFormat(const char* s, ...);
 API_CORE UTF8String StringFormatArgs(const char* s, va_list args);
@@ -49,13 +46,7 @@ API_CORE UTF8String StringFromWideString(const WString& ws);
 // Converts an UTF-8 encoded string to a UTF-16 wide string.
 API_CORE WString StringToWideString(const UTF8String& s);
 
-// Converts between caseness of the string.
-API_CORE UTF8String StringToLowerCase(const UTF8String& s);
-API_CORE UTF8String StringToUpperCase(const UTF8String& s);
 
-// Replaces a match in the string by another string.
-API_CORE void StringReplace(UTF8String& s, const UTF8String& from, const UTF8String& to);
-	
 // Strips the string of the given characters.
 API_CORE UTF8String StringTrim(const UTF8String& s, const char* trim);
 

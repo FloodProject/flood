@@ -12,6 +12,7 @@
 #include "Core/Network/Network.h"
 #include "Core/Log.h"
 #include "Core/Utilities.h"
+#include "Core/Containers/Vector.h"
 
 #include <tropicssl/aes.h>
 #include <tropicssl/sha1.h>
@@ -28,7 +29,7 @@ PacketProcessors::~PacketProcessors()
 
 bool PacketProcessors::processInPacket(Peer* peer, Packet* packet, int channelId)
 {
-    for (auto it = processors.rbegin(); it != processors.rend(); it++) 
+    for (auto it = processors.end()-1; it >= processors.begin(); --it) 
     {
         if(!(*it)->processInPacket(peer, packet,channelId))
             return false;
@@ -51,7 +52,7 @@ void PacketProcessors::addProcessor(PacketProcessor* packetProcessor)
     if(packetProcessor->parent)
         packetProcessor->parent->removeProcessor(packetProcessor);
 
-    processors.push_back(packetProcessor);
+    processors.Push(packetProcessor);
     packetProcessor->parent = this;
 }
 
@@ -63,7 +64,7 @@ void PacketProcessors::addProcessorNear(PacketProcessor* packetProcessor, Packet
     if(!insertBefore)
         it++;
 
-    processors.insert(it, packetProcessor);
+    processors.Insert(it, packetProcessor);
     packetProcessor->parent = this;
 }
 
@@ -71,7 +72,7 @@ void PacketProcessors::removeProcessor(PacketProcessor* packetProcessor)
 {
     auto it = std::find(processors.begin(), processors.end(), packetProcessor);
     if( it != processors.end() )
-        processors.erase(it);
+        processors.Erase(it);
 }
 
 NAMESPACE_CORE_END

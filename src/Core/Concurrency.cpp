@@ -55,12 +55,12 @@ TaskPool::TaskPool(int8 size)
 	, isWaiting(false)
 	, isStopping(false)
 {
-	threads.reserve(threadCount);
+	threads.Reserve(threadCount);
 
 	for(size_t i = 0; i < (size_t) threadCount; i++)
 	{
 		Thread* thread = AllocateHeap(Thread);
-		threads.push_back(thread);
+		threads.Push(thread);
 
 		ThreadFunction taskFunction;
 		taskFunction.Bind(this, &TaskPool::run);
@@ -69,7 +69,7 @@ TaskPool::TaskPool(int8 size)
 		thread->setName("Task Pool");
 	}
 
-	LogInfo("Created task pool with '%d' threads", threads.size());
+	LogInfo("Created task pool with '%d' threads", threads.Size());
 }
 
 //-----------------------------------//

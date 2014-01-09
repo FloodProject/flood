@@ -9,40 +9,40 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
+#include "Core/Containers/Str.h"
 #include <UnitTest++.h>
 
 SUITE(Core)
 {
 	TEST(Strings)
 	{
-		int ret = StringCompareInsensitive("Test Compare CASES", "test compare cases"); 
+		int ret = String::Compare("Test Compare CASES", "test compare cases", false); 
 		CHECK_EQUAL(ret, 0);
 
 		String str = StringFormat("%d %s", 20, "simple");
-		CHECK_EQUAL("20 simple", str.c_str());
+		CHECK_EQUAL("20 simple", str.CString());
 
-		Vector<String> elems;
-		StringSplit("Foo|Bar|Spam", '|', elems);
+		Vector<String> elems = String::Split("Foo|Bar|Spam", '|');
 		CHECK_EQUAL(elems.Size(), 3);
-		CHECK_EQUAL("Foo", elems[0].c_str());
-		CHECK_EQUAL("Bar", elems[1].c_str());
-		CHECK_EQUAL("Spam", elems[2].c_str());
+		CHECK_EQUAL("Foo", elems[0].CString());
+		CHECK_EQUAL("Bar", elems[1].CString());
+		CHECK_EQUAL("Spam", elems[2].CString());
 
-		str = StringToLowerCase("Foo");
-		CHECK_EQUAL("foo", str.c_str());
+		str = String("Foo").ToLower();
+		CHECK_EQUAL("foo", str.CString());
 
-		str = StringToUpperCase("Foo");
-		CHECK_EQUAL("FOO", str.c_str());
+		str = String("Foo").ToUpper();
+		CHECK_EQUAL("FOO", str.CString());
 
 		str = "Testing <match>";
-		StringReplace(str, "<match>", "rocks");
-		CHECK_EQUAL("Testing rocks", str.c_str());
+		str.Replace("<match>", "rocks");
+		CHECK_EQUAL("Testing rocks", str.CString());
 
 		str = StringFromFloat(1.3371230f, 3);
-		CHECK_EQUAL("1.337", str.c_str());
+		CHECK_EQUAL("1.337", str.CString());
 
 		str = StringTrim("       Trim       ", " ");
-		CHECK_EQUAL("Trim", str.c_str());
+		CHECK_EQUAL("Trim", str.CString());
 	}
 
 	TEST(Paths)
@@ -87,9 +87,9 @@ SUITE(Core)
 		CHECK_EQUAL(path, Path("/Path/To/../File"));
 
 #ifdef PLATFORM_WINDOWS
-		CHECK_EQUAL("\\", PathGetSeparator().c_str());
+		CHECK_EQUAL("\\", PathGetSeparator().CString());
 #else
-		CHECK_EQUAL("/", PathGetSeparator().c_str());
+		CHECK_EQUAL("/", PathGetSeparator().CString());
 #endif
 
 		// TODO: Add path combine tests.

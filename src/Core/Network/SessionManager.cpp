@@ -27,45 +27,45 @@ SessionManager::~SessionManager()
 
 void SessionManager::addSession(const SessionPtr& session)
 {
-	if( !session ) return;
+    if( !session ) return;
 
-	SessionHash* hash = session->getHash();
-	assert(hash && sessions.find(*hash) == sessions.end());
+    SessionHash* hash = session->getHash();
+    assert(hash && sessions.Find(*hash) == sessions.End());
 
-	sessions[*hash] = session;
+    sessions[*hash] = session;
 
-	onSessionAdded(session);
+    onSessionAdded(session);
 }
 
 //-----------------------------------//
 
 void SessionManager::removeSession(const SessionPtr& session)
 {
-	if( !session ) return;
+    if( !session ) return;
 
-	SessionHash* hash = session->getHash();
-	assert(hash);
+    SessionHash* hash = session->getHash();
+    assert(hash);
 
-	auto it = sessions.find(*hash);
-	
-	if( it == sessions.end() )
-		return;
+    auto it = sessions.Find(*hash);
+    
+    if (it == sessions.End())
+        return;
 
-	sessions.erase(it);
+    sessions.Erase(it);
 
-	onSessionRemoved(session);
+    onSessionRemoved(session);
 }
 
 //-----------------------------------//
 
 Session* SessionManager::getSession(const SessionHash& hash) const
 {
-	auto it = sessions.find(hash);
+    auto it = sessions.Find(hash);
 
-	if( it == sessions.end() )
-		return nullptr;
+    if (it == sessions.End())
+        return nullptr;
 
-	return it->second.get();
+    return it->second.get();
 }
 
 NAMESPACE_CORE_END

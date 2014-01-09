@@ -62,7 +62,7 @@ SUITE(Core)
 		CHECK_EQUAL("E", enumE->name);
 		CHECK_EQUAL(sizeof(E), enumE->size);
 		CHECK_EQUAL((uint8)TypeKind::Enumeration, (uint8)enumE->kind);
-		CHECK_EQUAL(E::Max, enumE->values.size());
+		CHECK_EQUAL(E::Max, enumE->values.Size());
 
 		CHECK_EQUAL("F1", enumE->getValueName(E::F1));
 		CHECK_EQUAL(E::F1, enumE->getValue("F1"));

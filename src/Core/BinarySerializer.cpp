@@ -163,6 +163,12 @@ static void SerializePrimitive(ReflectionContext* context, ReflectionWalkType wt
 		EncodeString(bin->ms, s);
 		break;
 	}
+    case PrimitiveTypeKind::UTF8String:
+    {
+        UTF8String& s = *vc.us;
+        EncodeUTF8String(bin->ms, s);
+        break;
+    }
 	case PrimitiveTypeKind::Color:
 	{
 		ColorP& c = vc.c;
@@ -332,6 +338,13 @@ static void DeserializePrimitive( ReflectionContext* context, ReflectionWalkType
 		SetFieldValue(String, val);
 		break;
 	}
+    case PrimitiveTypeKind::UTF8String:
+    {
+        UTF8String val;
+        DecodeUTF8String(ms, val);
+        SetFieldValue(UTF8String, val);
+        break;
+    }
 	default:
 		LogAssert("Unknown primitive type");
 	}
@@ -395,7 +408,7 @@ static void DeserializeArray( ReflectionContext* context )
 	uint32 n = 0;
 	while( n < size )
 	{
-		// Calculate the address of the next array element.
+        /// Calculate the address of the next array element.
 		void* element = (byte*) begin + elementSize * n++;
 		DeserializeArrayElement(context, element);
 	}
@@ -476,7 +489,7 @@ void DeserializeFields( ReflectionContext* context )
 	{
 		FieldId id = (FieldId) val;
 		
-		// This marks the end of the composite.
+        /// This marks the end of the composite.
 		if(id == Field::FieldInvalid) break;
 
 		Class* composite = context->composite;
@@ -505,7 +518,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ClassIdMap& ids = Class::GetIdMap();
 
-	// Read the class id.
+    /// Read the class id.
 	uint64 val;
 	
 	if (!DecodeVariableInteger(bin->ms, val))
@@ -513,10 +526,10 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 
 	ClassId id = (ClassId) val;
 	
-	// Find the class id.
-	ClassIdMap::iterator it = ids.find(id);
+    /// Find the class id.
+    ClassIdMap::Iterator it = ids.Find(id);
 
-	if(it == ids.end())
+    if( it == ids.End() )
 	{
 		LogDebug("Deserialize: Invalid class id");
 		return nullptr;
@@ -537,7 +550,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 		return 0;
 #endif
 
-	// Instantiate an instance of the class.
+    /// Instantiate an instance of the class.
 	if (!newObject)
 		newObject = (Object*) newClass->createInstance(bin->allocator);
 
@@ -555,7 +568,7 @@ static Object* DeserializeComposite( ReflectionContext* context, Object* newObje
 	{
 		newClass->serialize(context, ReflectionWalkType::Begin);
 
-		// This reads the end marker of the class.
+        /// This reads the end marker of the class.
 		DeserializeFields(context);
 	}
 	else
@@ -582,7 +595,7 @@ Object* SerializerBinary::load()
 
 	MemoryStream ms(size);
 	this->ms = &ms;
-	stream->readBuffer(this->ms->data.data(), size);
+    stream->readBuffer(this->ms->data.Buffer(), size);
 
 	ReflectionContext* context = &deserializeContext;
 	object = DeserializeComposite(context, object);
@@ -603,7 +616,7 @@ bool SerializerBinary::save(const Object* obj)
 	object = const_cast<Object *>(obj);
 	
 	ReflectionWalk(object, &serializeContext);
-	stream->write(this->ms->data.data(), this->ms->position);
+    stream->write(this->ms->data.Buffer(), this->ms->position);
 
 	ms.close();
 
@@ -642,8 +655,8 @@ void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
 {
 	ms->position += n;
 
-	// Do some debug bounds checking.
-	if(ms->position > ms->data.size())
+    /// Do some debug bounds checking.
+    if(ms->position > ms->data.Size())
 	{
 		LogAssert("Check the bounds of the buffer");
 	}
@@ -771,8 +784,7 @@ float DecodeFloat(MemoryStream* ms)
 
 void EncodeString(MemoryStream* ms, const String& s)
 {
-	EncodeVariableInteger(ms, s.size());
-	ms->writeString(s);
+    EncodeVariableInteger(ms, s.Length());
 }
 
 bool DecodeString(MemoryStream* ms, String& s)
@@ -782,14 +794,34 @@ bool DecodeString(MemoryStream* ms, String& s)
 	if( !DecodeVariableInteger(ms, size) )
 		return false;
 
-	s.resize((size_t)size);
-	memcpy((void*) s.data(), StreamIndex(ms), (size_t)size);
+    s.Resize((size_t)size);
+    memcpy((void*) s.CString(), StreamIndex(ms), (size_t)size);
 
 	StreamAdvanceIndex(ms, size);
 	return true;
 }
 
 //-----------------------------------//
+
+void EncodeUTF8String(MemoryStream* ms, const UTF8String& s)
+{
+    EncodeVariableInteger(ms, s.ByteLength());
+    ms->writeUTF8String(s);
+}
+
+bool DecodeUTF8String(MemoryStream* ms, UTF8String& s)
+{
+    uint64 size;
+    
+    if( !DecodeVariableInteger(ms, size) )
+        return false;
+
+    s.ByteResize((size_t)size);
+    memcpy((void*) s.CStringPtr(), StreamIndex(ms), (size_t)size);
+
+    StreamAdvanceIndex(ms, size);
+    return true;
+}
 
 NAMESPACE_CORE_END
 

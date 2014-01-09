@@ -20,10 +20,10 @@ NAMESPACE_GRAPHICS_BEGIN
 //-----------------------------------//
 
 ProgramManager::ProgramManager(RenderBackend* backend)
-	: backend(backend)
+    : backend(backend)
 {
-	GetResourceManager()->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
-	GetResourceManager()->onResourceReloaded.Connect( this, &ProgramManager::onReload );
+    GetResourceManager()->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
+    GetResourceManager()->onResourceReloaded.Connect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//
@@ -31,115 +31,115 @@ ProgramManager::ProgramManager(RenderBackend* backend)
 ProgramManager::~ProgramManager()
 {
 #if 0
-	ShaderProgramsMap::iterator it;
+    ShaderProgramsMap::iterator it;
 
-	for( it = programs.begin(); it != programs.end(); it++ )
-	{
-		ShaderProgram* program = it->second.get();
-		if( !program ) continue;
+    for( it = programs.begin(); it != programs.end(); it++ )
+    {
+        ShaderProgram* program = it->second.get();
+        if( !program ) continue;
 
-		assert( ReferenceGetCount(program) == 1 );
-	}
+        assert( ReferenceGetCount(program) == 1 );
+    }
 #endif
 
-	GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
-	GetResourceManager()->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
+    GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
+    GetResourceManager()->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//
 
 ShaderProgram* ProgramManager::createProgram( const ShaderMaterial* shader )
 {
-	// If the program was not yet found, then we need to create it.
-	ShaderProgram* program = backend->createProgram();
-	
-	program->getVertexShader()->setText( shader->getVertexSource() );
-	program->getFragmentShader()->setText( shader->getFragmentSource() );
+    // If the program was not yet found, then we need to create it.
+    ShaderProgram* program = backend->createProgram();
+    
+    program->getVertexShader()->setText( shader->getVertexSource() );
+    program->getFragmentShader()->setText( shader->getFragmentSource() );
 
-	// Force the recompilation of all shaders in the program.
-	program->forceRecompile();
+    // Force the recompilation of all shaders in the program.
+    program->forceRecompile();
 
-	return program;
+    return program;
 }
 
 //-----------------------------------//
 
 ShaderProgram* ProgramManager::getProgram( const ShaderMaterial* shader, bool precompile )
 {
-	if( !shader ) return nullptr;
+    if( !shader ) return nullptr;
 
-	ShaderProgramsMap::iterator it = programs.find(shader);
+    ShaderProgramsMap::Iterator it = programs.Find(shader);
 
-	if( it != programs.end() )
-	{
-		ShaderProgram* program = it->second.get();
-		return program;
-	}
+    if( it != programs.End() )
+    {
+        ShaderProgram* program = it->second.get();
+        return program;
+    }
 
-	ShaderProgram* program = createProgram(shader);
-	registerProgram(shader, program);
+    ShaderProgram* program = createProgram(shader);
+    registerProgram(shader, program);
 
-	return program;
+    return program;
 }
 
 //-----------------------------------//
 
 bool ProgramManager::registerProgram( const ShaderMaterial* shader, ShaderProgram* program )
 {
-	if( programs.find(shader) != programs.end() )
-	{
-		LogWarn( "Shader '%s' already registered", shader->getPath().c_str() );
-		return false;
-	}
+    if( programs.Find(shader) != programs.End() )
+    {
+        LogWarn( "Shader '%s' already registered", shader->getPath().CString() );
+        return false;
+    }
 
-	programs[shader] = program;
-	return true;
+    programs[shader] = program;
+    return true;
 }
 
 //-----------------------------------//
 
 void ProgramManager::onLoad( const ResourceEvent& event )
 {
-	Resource* resource = event.handle.Resolve();
+    Resource* resource = event.handle.Resolve();
 
-	if( resource->getResourceGroup() != ResourceGroup::Shaders )
-		return;
+    if( resource->getResourceGroup() != ResourceGroup::Shaders )
+        return;
 
-	ShaderMaterial* shader = (ShaderMaterial*) resource;
-	getProgram(shader);
+    ShaderMaterial* shader = (ShaderMaterial*) resource;
+    getProgram(shader);
 
-	LogInfo("Loaded shader '%s'", shader->getPath().c_str() );
+    LogInfo("Loaded shader '%s'", shader->getPath().CString() );
 }
 
 //-----------------------------------//
 
 void ProgramManager::onReload( const ResourceEvent& event )
 {
-	Resource* resource = event.handle.Resolve();
+    Resource* resource = event.handle.Resolve();
 
-	if( resource->getResourceGroup() != ResourceGroup::Shaders )
-		return;
+    if( resource->getResourceGroup() != ResourceGroup::Shaders )
+        return;
 
-	ShaderMaterial* oldShader = (ShaderMaterial*) event.oldResource;
+    ShaderMaterial* oldShader = (ShaderMaterial*) event.oldResource;
 
-	#pragma TODO("Handle reloading of unregistered resources")
-	
-	ShaderProgramsMap::iterator it = programs.find(oldShader);
-	assert( it != programs.end() );
-	
-	ShaderProgramPtr program = it->second; // We need to hold the ref.
-	programs.erase(it);
+    #pragma TODO("Handle reloading of unregistered resources")
+    
+    ShaderProgramsMap::Iterator it = programs.Find(oldShader);
+    assert( it != programs.End() );
+    
+    ShaderProgramPtr program = it->second; // We need to hold the ref.
+    programs.Erase(it);
 
-	ShaderMaterial* shader = (ShaderMaterial*) event.resource;
-	programs[shader] = program;
+    ShaderMaterial* shader = (ShaderMaterial*) event.resource;
+    programs[shader] = program;
 
-	LogDebug( "Reloading shader '%s'", shader->getPath().c_str() );
+    LogDebug( "Reloading shader '%s'", shader->getPath().CString() );
 
-	program->getVertexShader()->setText( shader->getVertexSource() );
-	program->getFragmentShader()->setText( shader->getFragmentSource() );
+    program->getVertexShader()->setText( shader->getVertexSource() );
+    program->getFragmentShader()->setText( shader->getFragmentSource() );
 
-	// Force the recompilation of all shader programs.
-	program->forceRecompile();
+    // Force the recompilation of all shader programs.
+    program->forceRecompile();
 }
 
 //-----------------------------------//

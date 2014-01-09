@@ -24,32 +24,32 @@ REFLECT_CLASS_END()
 
 ImporterMilkshape::ImporterMilkshape()
 {
-	extensions.push_back("ms3d");
+    extensions.Push("ms3d");
 }
 
 //-----------------------------------//
 
 ExtensionMetadata* ImporterMilkshape::getMetadata()
 {
-	static ExtensionMetadata s_ExtensionMetadata =
-	{
-		"Milkshape3D",
-		"Imports a MS3D mesh."
-	};
+    static ExtensionMetadata s_ExtensionMetadata =
+    {
+        "Milkshape3D",
+        "Imports a MS3D mesh."
+    };
 
-	return &s_ExtensionMetadata;
+    return &s_ExtensionMetadata;
 }
 
 //-----------------------------------//
 
 bool ImporterMilkshape::decode(ResourceLoadOptions& options)
 {
-	Mesh* mesh = static_cast<Mesh*>(options.resource);
-	
-	Milkshape3D milkshape;
-	milkshape.setMesh(mesh);
+    Mesh* mesh = static_cast<Mesh*>(options.resource);
+    
+    Milkshape3D milkshape;
+    milkshape.setMesh(mesh);
 
-	return milkshape.load(*options.stream);
+    return milkshape.load(*options.stream);
 }
 
 //-----------------------------------//

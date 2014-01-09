@@ -47,7 +47,7 @@ DynamicLibrary::~DynamicLibrary()
 
 bool DynamicLibrary::load()
 {
-	_handle = (DynLibHandle) DYNLIB_LOAD(_name.c_str());
+	_handle = (DynLibHandle) DYNLIB_LOAD(_name.CString());
 	return _handle != 0;
 }
 
@@ -55,7 +55,7 @@ bool DynamicLibrary::load()
 
 void* DynamicLibrary::getSymbol(const String& symbol)
 {
-	return (void*) DYNLIB_GETSYM(_handle, symbol.c_str()); 
+	return (void*) DYNLIB_GETSYM(_handle, symbol.CString()); 
 }
 
 //-----------------------------------//

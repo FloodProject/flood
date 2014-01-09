@@ -10,6 +10,7 @@
 #include "Core/API.h"
 #include "Core/Network/PacketProcessor.h"
 #include "Core/References.h"
+#include "Core/Containers/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 

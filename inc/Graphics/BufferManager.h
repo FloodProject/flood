@@ -10,6 +10,7 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/VertexBuffer.h"
 #include "Graphics/IndexBuffer.h"
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -23,7 +24,7 @@ struct BufferEntry
 	IndexBufferPtr ib;
 };
 
-typedef std::map<const GeometryBuffer*, BufferEntry> BuffersMap;
+typedef HashMap<const GeometryBuffer*, BufferEntry> BuffersMap;
 typedef std::pair<const String&, BufferPtr> BuffersPair;
 
 class RenderBackend;

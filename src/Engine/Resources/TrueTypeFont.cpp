@@ -36,7 +36,7 @@ TrueTypeFont::~TrueTypeFont()
 
 void TrueTypeFont::init()
 {
-    stbtt_InitFont(&fontInfo->font, data.data(), 0);
+    stbtt_InitFont(&fontInfo->font, data.Buffer(), 0);
 }
 
 //-----------------------------------//

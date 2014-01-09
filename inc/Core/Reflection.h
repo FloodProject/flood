@@ -9,7 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
-#include <map>
+#include "Core/containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -104,7 +104,7 @@ public:
 
 };
 
-typedef std::map<const char*, Type*, RawStringCompare> TypeMap;
+typedef HashMap<const char*, Type*> TypeMap;
 
 //-----------------------------------//
 
@@ -149,8 +149,8 @@ typedef uint8 FieldId;
 
 typedef void* (*ClassCreateFunction)(Allocator*);
 
-typedef std::map<FieldId, Field*> ClassFieldIdMap;
-typedef std::map<ClassId, Class*> ClassIdMap;
+typedef HashMap<FieldId, Field*> ClassFieldIdMap;
+typedef HashMap<ClassId, Class*> ClassIdMap;
 
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
@@ -352,6 +352,7 @@ enum struct PrimitiveTypeKind : uint8
 	Uint64,
 	Float,
 	String,
+    UTF8String,
 	Color,
 	Vector3,
 	Quaternion,
@@ -406,7 +407,7 @@ public:
 
 //-----------------------------------//
 
-typedef std::map<const char*, int32, RawStringCompare> EnumValuesMap;
+typedef HashMap<const char*, int32> EnumValuesMap;
 typedef std::pair<const char*, int32> EnumValuesPair;
 
 class API_CORE Enum : public Type
@@ -490,7 +491,7 @@ void ClassCreateChilds(const Class* klass, Allocator* alloc, Vector<T*>& instanc
 		T* object = (T*) child->createInstance(alloc);
 		if(!object) continue;
 
-		instances.push_back(object);
+        instances.Push(object);
 	}
 }
 

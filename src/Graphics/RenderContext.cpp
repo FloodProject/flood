@@ -99,11 +99,11 @@ void RenderContext::init()
 
 void RenderContext::showCapabilities(RenderCapabilities* card) 
 {
-	if( card->name.empty() ) return;
+	if( card->name.Empty() ) return;
 
-	LogInfo( "Graphics card: %s", card->name.c_str() );
-	LogInfo( "OpenGL version: %s", card->driverVersion.c_str() );
-	LogInfo( "OpenGL shading language: %s", card->shadingLanguageVersion.c_str() );
+	LogInfo( "Graphics card: %s", card->name.CString() );
+	LogInfo( "OpenGL version: %s", card->driverVersion.CString() );
+	LogInfo( "OpenGL shading language: %s", card->shadingLanguageVersion.CString() );
 	
 	LogInfo("Supports vertex buffers: ", card->supportsVertexBuffers ? "yes" : "no" );
 	LogInfo( "Max texture size: %dx%d", card->maxTextureSize, card->maxTextureSize );

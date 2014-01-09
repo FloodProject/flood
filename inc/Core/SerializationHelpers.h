@@ -27,25 +27,25 @@ class API_CORE SerializerBinary : public Serializer
 {
 public:
 
-	/**
-	 * Creates a new binary serializer.
-	 * @param allocator allocator used for this serializer
-	 * @param handleContextMap map used to map classes to their serializaton/deserialization functions
-	 */
-	SerializerBinary(Allocator* allocator, ReflectionHandleContextMap* handleContextMap);
+    /**
+     * Creates a new binary serializer.
+     * @param allocator allocator used for this serializer
+     * @param handleContextMap map used to map classes to their serializaton/deserialization functions
+     */
+    SerializerBinary(Allocator* allocator, ReflectionHandleContextMap* handleContextMap);
 
-	/**
-	 * Loads an object from stream.
-	 */
-	virtual Object* load() override;
+    /**
+     * Loads an object from stream.
+     */
+    virtual Object* load() override;
 
-	/**
-	 * Saves an object to stream.
-	 * @param obj object to save
-	 */
-	virtual bool save(const Object* obj) override;
+    /**
+     * Saves an object to stream.
+     * @param obj object to save
+     */
+    virtual bool save(const Object* obj) override;
 
-	MemoryStream* ms; //<! memory stream used for serialization/deserialization
+    MemoryStream* ms; //<! memory stream used for serialization/deserialization
 };
 
 //-----------------------------------//
@@ -54,27 +54,27 @@ class API_CORE SerializerJSON : public Serializer
 {
 public:
 
-	/**
-	 * Creates a new JSON serializer.
-	 * @param allocator allocator used for this serializer
-	 * @param handleContextMap map used to map classes to their serializaton/deserialization functions
-	 */
-	SerializerJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap);
+    /**
+     * Creates a new JSON serializer.
+     * @param allocator allocator used for this serializer
+     * @param handleContextMap map used to map classes to their serializaton/deserialization functions
+     */
+    SerializerJSON(Allocator* alloc, ReflectionHandleContextMap* handleContextMap);
 
-	/**
-	 * Loads an object from stream.
-	 */
-	virtual Object* load() override;
+    /**
+     * Loads an object from stream.
+     */
+    virtual Object* load() override;
 
-	/**
-	 * Saves an object to stream.
-	 * @param obj object to save
-	 */
-	virtual bool save(const Object* obj) override;
+    /**
+     * Saves an object to stream.
+     * @param obj object to save
+     */
+    virtual bool save(const Object* obj) override;
 
-	json_t* rootValue; //!< Root JSON value.
+    json_t* rootValue; //!< Root JSON value.
 
-	Vector<json_t*> values; //!< Stack of JSON values.
+    Vector<json_t*> values; //!< Stack of JSON values.
 };
 
 ValueContext ConvertValueToPrimitive( PrimitiveTypeKind kind, json_t* value );
@@ -87,26 +87,26 @@ API_CORE void DeserializeFields( ReflectionContext* context );
 template<typename T>
 static void PointerSetObject( const Field* field, void* address, T* object )
 {
-	if( FieldIsRawPointer(field) )
-	{
-		T** raw = (T**) address;
-		*raw = object;
-	}
-	else if( FieldIsRefPointer(field) )
-	{
-		T* ref = (T*) object;
-		RefPtr<T>* ref_obj = (RefPtr<T>*) address;
-		ref_obj->reset(ref);
-	}
-	else if( FieldIsHandle(field) )
-	{
-		assert(0 && "Not implemented");
-	}
-	else
-	{
-		assert(0 && "Not implemented");
-		//memcpy(element, object, size);
-	}
+    if( FieldIsRawPointer(field) )
+    {
+        T** raw = (T**) address;
+        *raw = object;
+    }
+    else if( FieldIsRefPointer(field) )
+    {
+        T* ref = (T*) object;
+        RefPtr<T>* ref_obj = (RefPtr<T>*) address;
+        ref_obj->reset(ref);
+    }
+    else if( FieldIsHandle(field) )
+    {
+        assert(0 && "Not implemented");
+    }
+    else
+    {
+        assert(0 && "Not implemented");
+        //memcpy(element, object, size);
+    }
 }
 
 //-----------------------------------//
@@ -138,6 +138,8 @@ void EncodeFloat(MemoryStream* ms, float val);
 float DecodeFloat(MemoryStream* ms);
 void EncodeString(MemoryStream* ms, const String& s);
 bool DecodeString(MemoryStream* ms, String& s);
+void EncodeUTF8String(MemoryStream* ms, const UTF8String& s);
+bool DecodeUTF8String(MemoryStream* ms, UTF8String& s);
 
 // Array helpers.
 void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );

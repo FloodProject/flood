@@ -111,7 +111,7 @@ struct API_GRAPHICS VertexDeclaration
 	// Calculates the strides of the elements.
 	void calculateStrides();
 
-	std::vector<VertexElement> decls;
+	Vector<VertexElement> decls;
 };
 
 //-----------------------------------//

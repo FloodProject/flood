@@ -25,14 +25,10 @@
 
 NAMESPACE_CORE_BEGIN
 
-unsigned char* VectorBase::AllocateHeapBuffer(unsigned size)
+unsigned char* VectorBase::AllocateBuffer(unsigned size)
 {
-	return static_cast<unsigned char*>(AllocatorAllocate(AllocatorGetHeap(), sizeof(unsigned char) * size, 0));
-}
-
-unsigned char* VectorBase::AllocateStackBuffer(unsigned size)
-{
-	return static_cast<unsigned char*>(AllocatorAllocate(AllocatorGetStack(), sizeof(unsigned char) * size, 0));
+    return static_cast<unsigned char*>(AllocatorAllocate(AllocatorGetHeap(),
+        sizeof(unsigned char) * size, 0));
 }
 
 NAMESPACE_CORE_END

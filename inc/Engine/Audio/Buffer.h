@@ -32,10 +32,10 @@ API_AUDIO void AudioBufferSound(AudioBuffer* buffer, Sound* sound);
 
 struct AudioBufferDetails
 {
-	uint8* data;
-	size_t size;
-	int frequency;
-	int format;
+    uint8* data;
+    size_t size;
+    int frequency;
+    int format;
 };
 
 // Gets the buffer data details for a sound.
@@ -52,34 +52,34 @@ API_AUDIO void AudioGetBufferDataDetails(AudioBufferDetails& details,
 
 class API_AUDIO AudioBuffer : public ReferenceCounted
 {
-	DECLARE_UNCOPYABLE(AudioBuffer)
-	friend class AudioSource;
+    DECLARE_UNCOPYABLE(AudioBuffer)
+    friend class AudioSource;
 
 public:
 
-	AudioBuffer( AudioDevice* device );
-	~AudioBuffer();
+    AudioBuffer( AudioDevice* device );
+    ~AudioBuffer();
 
-	// Gets the id of this buffer.
-	GETTER(Id, ALuint, id)
+    // Gets the id of this buffer.
+    GETTER(Id, ALuint, id)
 
-	// Gets if the buffer is uploaded.
-	GETTER(Uploaded, bool, uploaded)
+    // Gets if the buffer is uploaded.
+    GETTER(Uploaded, bool, uploaded)
 
-	// Uploads the the buffer data in the source.
-	void upload(const AudioBufferDetails& details);
+    // Uploads the the buffer data in the source.
+    void upload(const AudioBufferDetails& details);
 
-	// Holds a pointer to the audio device.
-	AudioDevice* device;
-	
-	// Holds if the buffer has been uploaded.
-	bool uploaded;
+    // Holds a pointer to the audio device.
+    AudioDevice* device;
+    
+    // Holds if the buffer has been uploaded.
+    bool uploaded;
 
-	// Holds the buffer id from OpenAL.
-	ALuint id;
+    // Holds the buffer id from OpenAL.
+    ALuint id;
 
-	// Event is sent when buffer is uploaded.
-	Event1<AudioBuffer*> onBufferUploaded;
+    // Event is sent when buffer is uploaded.
+    Event1<AudioBuffer*> onBufferUploaded;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioBuffer );

@@ -32,7 +32,7 @@ Window* WxWindowManager::createWindow(const WindowSettings& settings)
 
     if ((int)settings.styles & (int)WindowStyles::TopLevel)
     {
-        nativeWindow = new wxFrame(/*parent=*/0, wxID_ANY, settings.title,
+        nativeWindow = new wxFrame(/*parent=*/0, wxID_ANY, settings.title.CString(),
             wxDefaultPosition, wxSize(settings.width, settings.height),
             ConvertToWxStyles(settings.styles), wxFrameNameStr);
 

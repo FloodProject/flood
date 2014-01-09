@@ -515,15 +515,269 @@ namespace Flood
         }
     }
 
-    [TypeMap("Path")]
     [TypeMap("String")]
-    public class String : CppSharp.Types.Std.String
+    public class String : TypeMap
     {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+    }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
+    }
+
+    [TypeMap("Path")]
+    [TypeMap("UTF8String")]
+    public class UTF8String : TypeMap
+    {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalUTF8String({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
     }
 
     [TypeMap("StringWide")]
-    public class StringWide : CppSharp.Types.Std.WString
+    [TypeMap("WString")]
+    public class StringWide : TypeMap
     {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+    }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalWString({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
+    }
+
+    [TypeMap("HashMap")]
+    public class HashMap : TypeMap
+    {
+
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType1 = type.Arguments[0].Type;
+                var pointeeType2 = type.Arguments[1].Type;
+
+                var checker1 = new TypeIgnoreChecker(TypeMapDatabase);
+                var checker2 = new TypeIgnoreChecker(TypeMapDatabase);
+
+                pointeeType1.Visit(checker1);
+                pointeeType2.Visit(checker2);
+
+                return checker1.IsIgnored || checker2.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::Dictionary<{0}, {1}>^",
+                type.Arguments[0].Type, type.Arguments[1].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalHashMap({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalDictionary({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.Dictionary<{0}, {1}>",
+                type.Arguments[0].Type, type.Arguments[1].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    [TypeMap("HashSet")]
+    public class HashSet : TypeMap
+    {
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType = type.Arguments[0].Type;
+
+                var checker = new TypeIgnoreChecker(TypeMapDatabase);
+                pointeeType.Visit(checker);
+
+                return checker.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::HashSet<{0}>^",
+                type.Arguments[0].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalHashSet({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalHashSet({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.HashSet<{0}>",
+                type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    [TypeMap("Vector")]
+    public class Vector : TypeMap
+    {
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType = type.Arguments[0].Type;
+
+                var checker = new TypeIgnoreChecker(TypeMapDatabase);
+                pointeeType.Visit(checker);
+
+                return checker.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::List<{0}>^",
+                type.Arguments[0].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalVector({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("ContainerMarshaller::marshalList({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.List<{0}>",
+                type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     [TypeMap("Event0")]

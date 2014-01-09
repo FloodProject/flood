@@ -40,7 +40,7 @@ bool PacketEncryptor::processInPacket(Peer* peer, Packet* packet, int channelId)
 
     auto stream = packet->getMemoryStream();
 	int size = stream->getPosition();
-    uint8* data = stream->data.data();
+	uint8* data = stream->data.Buffer();
 
     // Decrypt
     aes_setkey_dec(aes, secret.Buffer(), secret.Size());
@@ -67,7 +67,7 @@ bool PacketEncryptor::processOutPacket(Peer* peer, Packet* packet, int channelId
 
     // Encrypt
 	int size = stream->getPosition();
-    uint8* data = stream->data.data();
+    uint8* data = stream->data.Buffer();
     aes_setkey_enc(aes, secret.Buffer(), secret.Size());
     aes_crypt_cbc(aes, AES_ENCRYPT, size, iv, data, data);
 

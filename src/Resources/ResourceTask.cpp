@@ -35,13 +35,13 @@ void ResourceTaskRun(Task* task)
 	if( !decoded )
 	{
 		resource->setStatus( ResourceStatus::Error );
-		LogWarn("Error decoding resource '%s'", path.c_str());
+		LogWarn("Error decoding resource '%s'", path.CString());
 		goto cleanup;
 	}
 
 	resource->setStatus( ResourceStatus::Loaded );
 
-	LogInfo("Loaded resource '%s'", path.c_str());
+	LogInfo("Loaded resource '%s'", path.CString());
 
 	if( options->sendLoadEvent )
 	{

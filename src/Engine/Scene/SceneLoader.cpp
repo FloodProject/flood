@@ -21,47 +21,47 @@ REFLECT_CLASS_END()
 
 SceneLoader::SceneLoader()
 {
-	extensions.push_back("scene");
+    extensions.Push("scene");
 }
 
 //-----------------------------------//
 
 static Serializer* GetSerializerForStream(const Stream& stream)
 {
-	const String& ext = PathGetFileExtension(stream.path);
+    const String& ext = PathGetFileExtension(stream.path);
 
-	if(ext == "json")
-		return AllocateHeap(SerializerJSON, AllocatorGetHeap(), 0);
-	else if(ext == "bin")
-		return AllocateHeap(SerializerBinary, AllocatorGetHeap(), 0);
+    if(ext == "json")
+        return AllocateHeap(SerializerJSON, AllocatorGetHeap(), 0);
+    else if(ext == "bin")
+        return AllocateHeap(SerializerBinary, AllocatorGetHeap(), 0);
 
-	return AllocateHeap(SerializerJSON, AllocatorGetHeap(), 0);
+    return AllocateHeap(SerializerJSON, AllocatorGetHeap(), 0);
 }
 
 //-----------------------------------//
 
 bool SceneLoader::decode(ResourceLoadOptions& options)
 {
-	Serializer* serializer = GetSerializerForStream(*options.stream);
-	if( !serializer ) return false;
+    Serializer* serializer = GetSerializerForStream(*options.stream);
+    if( !serializer ) return false;
 
-	Scene* scene = (Scene*) options.resource;
+    Scene* scene = (Scene*) options.resource;
 
-	serializer->stream = options.stream;
-	serializer->object = scene;
+    serializer->stream = options.stream;
+    serializer->object = scene;
 
-	Object* object = serializer->load();
-	
-	if( !object )
-	{
-		Deallocate(serializer);
-		return false;
-	}
+    Object* object = serializer->load();
+    
+    if( !object )
+    {
+        Deallocate(serializer);
+        return false;
+    }
 
-	assert( object == scene );
-	Deallocate(serializer);
+    assert( object == scene );
+    Deallocate(serializer);
 
-	return true;
+    return true;
 }
 
 //-----------------------------------//

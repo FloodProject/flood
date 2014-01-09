@@ -28,10 +28,10 @@ NAMESPACE_CORE_BEGIN
 void HashBase::AllocateBuckets(unsigned size, unsigned numBuckets)
 {
     if (this->ptrs)
-		Deallocate(this->ptrs);
+        Deallocate(this->ptrs);
     
-	HashNodeBase** ptrs = static_cast<HashNodeBase**>(AllocatorAllocate(AllocatorGetHeap(), 
-		(numBuckets + 2)*sizeof(HashNodeBase*), 0));
+    HashNodeBase** ptrs = static_cast<HashNodeBase**>(AllocatorAllocate(AllocatorGetHeap(), 
+        (numBuckets + 2)*sizeof(HashNodeBase*), 0));
     unsigned* data = reinterpret_cast<unsigned*>(ptrs);
     data[0] = size;
     data[1] = numBuckets;
@@ -42,7 +42,7 @@ void HashBase::AllocateBuckets(unsigned size, unsigned numBuckets)
 
 void HashBase::ResetPtrs()
 {
-    // Reset bucket pointers
+    /// Reset bucket pointers
     if (!ptrs)
         return;
     

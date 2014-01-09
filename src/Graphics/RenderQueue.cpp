@@ -20,19 +20,19 @@ RenderState::RenderState()
 //-----------------------------------//
 
 RenderState::RenderState(RenderBatch* batch)
-	: renderable( batch )
-	, material( batch->getMaterial().Resolve() )
-	, priority( batch->getRenderPriority() )
+    : renderable( batch )
+    , material( batch->getMaterial().Resolve() )
+    , priority( batch->getRenderPriority() )
 {
 }
 
 //-----------------------------------//
 
 RenderState::RenderState(const RenderState& rhs)
-	: renderable( rhs.renderable )
-	, modelMatrix( rhs.modelMatrix )
-	, material( rhs.material )
-	, priority( rhs.priority )
+    : renderable( rhs.renderable )
+    , modelMatrix( rhs.modelMatrix )
+    , material( rhs.material )
+    , priority( rhs.priority )
 {
 }
 
@@ -40,7 +40,7 @@ RenderState::RenderState(const RenderState& rhs)
 
 void RenderBlock::addState(RenderState renderState)
 {
-    renderables.push_back(renderState);
+    renderables.Push(renderState);
 }
 
 NAMESPACE_GRAPHICS_END

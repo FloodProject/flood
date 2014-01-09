@@ -69,7 +69,7 @@ protected:
 	CameraWeakPtr weakCamera;
 
 	// Holds the loaded pages.
-	std::vector<Page*> pages;
+	Vector<Page*> pages;
 };
 
 //-----------------------------------//

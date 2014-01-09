@@ -116,9 +116,9 @@ SUITE(Core)
 		C* loadC = (C*) Serializer::loadObjectFromFile(*serializer, StringFormat("TestC.%s", ext));
 
 		CHECK_EQUAL(instanceC.anA->foo, loadC->anA->foo);
-		CHECK_EQUAL(instanceC.arrayA.size(), loadC->arrayA.size());
+		CHECK_EQUAL(instanceC.arrayA.Size(), loadC->arrayA.Size());
 
-		for(size_t i = 0; i < instanceC.arrayA.size(); i++)
+		for(size_t i = 0; i < instanceC.arrayA.Size(); i++)
 			CHECK_EQUAL(instanceC.arrayA[i]->foo, loadC->arrayA[i]->foo);
 
 		Deallocate(loadC);

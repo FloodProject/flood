@@ -33,7 +33,11 @@
 
 NAMESPACE_CORE_BEGIN
 
-/// Perform insertion sort on an array.
+/**
+ * Perform insertion sort on an array.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ */
 template <class T> void InsertionSort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end)
 {
     for (RandomAccessIterator<T> i = begin + 1; i < end; ++i)
@@ -49,7 +53,12 @@ template <class T> void InsertionSort(RandomAccessIterator<T> begin, RandomAcces
     }
 }
 
-/// Perform insertion sort on an array using a compare function.
+/**
+ * Perform insertion sort on an array using a compare function.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ * @param compare comparison function
+ */
 template <class T, class U> void InsertionSort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end, U compare)
 {
     for (RandomAccessIterator<T> i = begin + 1; i < end; ++i)
@@ -65,19 +74,24 @@ template <class T, class U> void InsertionSort(RandomAccessIterator<T> begin, Ra
     }
 }
 
-/// Perform quick sort initial pass on an array. Does not sort fully.
+/**
+ * Perform quick sort initial pass on an array.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ * @remark does not sort fully
+ */
 template <class T> void InitialQuickSort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end)
 {
     while (end - begin > QUICKSORT_THRESHOLD)
     {
-        // Choose the pivot by median
+        /// Choose the pivot by median
         RandomAccessIterator<T> pivot = begin + ((end - begin) / 2);
         if (*begin < *pivot && *(end - 1) < *begin)
             pivot = begin;
         else if (*(end - 1) < *pivot && *begin < *(end - 1))
             pivot = end - 1;
-        
-        // Partition and sort recursively
+
+        /// Partition and sort recursively
         RandomAccessIterator<T> i = begin - 1;
         RandomAccessIterator<T> j = end;
         T pivotValue = *pivot;
@@ -90,25 +104,31 @@ template <class T> void InitialQuickSort(RandomAccessIterator<T> begin, RandomAc
             else
                 break;
         }
-        
+
         InitialQuickSort(begin, j + 1);
         begin = j + 1;
     }
 }
 
-/// Perform quick sort initial pass on an array using a compare function. Does not sort fully.
+/**
+ * Perform quick sort initial pass on an array using a compare function.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ * @param compare comparison function
+ * @remark does not sort fully
+ */
 template <class T, class U> void InitialQuickSort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end, U compare)
 {
     while (end - begin > QUICKSORT_THRESHOLD)
     {
-        // Choose the pivot by median
+        /// Choose the pivot by median
         RandomAccessIterator<T> pivot = begin + ((end - begin) / 2);
         if (compare(*begin, *pivot) && compare(*(end - 1), *begin))
             pivot = begin;
         else if (compare(*(end - 1), *pivot) && compare(*begin, *(end - 1)))
             pivot = end - 1;
         
-        // Partition and sort recursively
+        /// Partition and sort recursively
         RandomAccessIterator<T> i = begin - 1;
         RandomAccessIterator<T> j = end;
         T pivotValue = *pivot;
@@ -127,14 +147,23 @@ template <class T, class U> void InitialQuickSort(RandomAccessIterator<T> begin,
     }
 }
 
-/// Sort in ascending order using quicksort for initial passes, then an insertion sort to finalize.
+/**
+ * Sort in ascending order using quicksort for initial passes, then an insertion sort to finalize.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ */
 template <class T> void Sort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end)
 {
     InitialQuickSort(begin, end);
     InsertionSort(begin, end);
 }
 
-/// Sort in ascending order using quicksort for initial passes, then an insertion sort to finalize, using a compare function.
+/**
+ * Sort in ascending order using quicksort for initial passes, then an insertion sort to finalize, using a compare function.
+ * @param begin iterator to the beginning of the array
+ * @param end iterator to the end of the array
+ * @param compare comparison function
+ */
 template <class T, class U> void Sort(RandomAccessIterator<T> begin, RandomAccessIterator<T> end, U compare)
 {
     InitialQuickSort(begin, end, compare);

@@ -28,7 +28,7 @@
 #include <cassert>
 
 /// Hash set template class.
-template <class T> class HashSet : public HashBase
+ template <class T> class HashSet : public HashBase
 {
 public:
     /// Hash set node.
@@ -38,24 +38,38 @@ public:
         Node()
         {
         }
-        
-        /// Construct with key.
+
+        /**
+         * Construct with key.
+         * @param key key value 
+         */
         Node(const T& key) :
             key(key)
         {
         }
         
-        /// Key.
-        T key;
         
-        /// Return next node.
+        T key; //!< Key.
+
+        /**
+         * Return next node.
+         * @return pointer to next node
+         */
         Node* Next() const { return static_cast<Node*>(next); }
-        /// Return previous node.
+
+        /**
+         * Return previous node.
+         * @return pointer to previous node
+         */
         Node* Prev() const { return static_cast<Node*>(prev); }
-        /// Return next node in the bucket.
+
+        /**
+         * Return next node in the bucket.
+         * @return pointer to next node in the bucket
+         */
         Node* Down() const { return static_cast<Node*>(down); }
     };
-    
+
     /// Hash set node iterator.
     struct Iterator : public HashIteratorBase
     {
@@ -63,142 +77,226 @@ public:
         Iterator()
         {
         }
-        
-        /// Construct with a node pointer.
+
+        /**
+         * Construct with a node pointer.
+         * @param ptr node pointer
+         */
         Iterator(Node* ptr) :
             HashIteratorBase(ptr)
         {
         }
-        
-        /// Preincrement the pointer.
+
+        /**
+         * Preincrement the pointer.
+         * @return next iterator
+         */
         Iterator& operator ++ () { GotoNext(); return *this; }
-        /// Postincrement the pointer.
+
+        /**
+         * Postincrement the pointer.
+         * @return current iterator
+         */
         Iterator operator ++ (int) { Iterator it = *this; GotoNext(); return it; }
-        /// Predecrement the pointer.
+
+        /**
+         * Predecrement the pointer.
+         * @return previous iterator
+         */
         Iterator& operator -- () { GotoPrev(); return *this; }
-        /// Postdecrement the pointer.
+
+        /**
+         * Postdecrement the pointer.
+         * @return current iterator
+         */
         Iterator operator -- (int) { Iterator it = *this; GotoPrev(); return it; }
-        
-        /// Point to the key.
+
+        /**
+         * Pointer to the key.
+         * @return key pointer
+         */
         const T* operator -> () const { return &(static_cast<Node*>(ptr))->key; }
-        /// Dereference the key.
+
+        /**
+         * Dereference the key.
+         * @return key
+         */
         const T& operator * () const { return (static_cast<Node*>(ptr))->key; }
     };
-    
-    /// Hash set node const iterator.
+
+     /// Hash set node const iterator.
     struct ConstIterator : public HashIteratorBase
     {
         /// Construct.
         ConstIterator()
         {
         }
-        
-        /// Construct with a node pointer.
-        ConstIterator(Node* ptr) :
+
+        /**
+         * Construct with a node pointer.
+         * @param ptr node pointer
+         */
+         ConstIterator(Node* ptr) :
             HashIteratorBase(ptr)
         {
         }
-        
-        /// Construct from a non-const iterator.
-        ConstIterator(const Iterator& rhs) :
+
+        /**
+         * Construct from a non-const iterator.
+         * @param rhs iterator
+         */
+         ConstIterator(const Iterator& rhs) :
             HashIteratorBase(rhs.ptr)
         {
         }
-        
-        /// Assign from a non-const iterator.
+
+        /**
+         * Assign from a non-const iterator.
+         * @param rhs iterator
+         * @return current iterator
+         */
         ConstIterator& operator = (const Iterator& rhs) { ptr = rhs.ptr; return *this; }
-        /// Preincrement the pointer.
+
+        /**
+         * Preincrement the pointer.
+         * @return next iterator
+         */
         ConstIterator& operator ++ () { GotoNext(); return *this; }
-        /// Postincrement the pointer.
+
+        /**
+         * Postincrement the pointer.
+         * @return current iterator
+         */
         ConstIterator operator ++ (int) { ConstIterator it = *this; GotoNext(); return it; }
-        /// Predecrement the pointer.
+
+        /**
+         * Predecrement the pointer.
+         * @return previous iterator
+         */
         ConstIterator& operator -- () { GotoPrev(); return *this; }
-        /// Postdecrement the pointer.
+
+        /**
+         * Postdecrement the pointer.
+         * @return current iterator
+         */
         ConstIterator operator -- (int) { ConstIterator it = *this; GotoPrev(); return it; }
-        
-        /// Point to the key.
+
+        /**
+         * Pointer to the key.
+         * @return key pointer
+         */
         const T* operator -> () const { return &(static_cast<Node*>(ptr))->key; }
-        /// Dereference the key.
+
+        /**
+         * Dereference the key.
+         * @return key
+         */
         const T& operator * () const { return (static_cast<Node*>(ptr))->key; }
     };
-    
+
     /// Construct empty.
     HashSet()
     {
-        // Reserve the tail node
+        /// Reserve the tail node
         allocator = AllocatorGetHeap();
         head = tail = ReserveNode();
     }
-    
-    /// Construct from another hash set.
+
+    /**
+     * Construct from another hash set.
+     * @param set hash set to construct from
+     */
     HashSet(const HashSet<T>& set)
     {
-        // Reserve the tail node
+        /// Reserve the tail node
         allocator = AllocatorGetHeap();
         head = tail = ReserveNode();
         *this = set;
     }
 
-	/// Move construct from another hash set.
+    /**
+     * Move construct from another hash set.
+     * @param set hash set to move construct from
+     */
     HashSet(HashSet<T>&& set)
     {
-		allocator = set.allocator;
-		ptrs = set.ptrs;
-		head = set.head;
-		tail = set.tail;
+        allocator = set.allocator;
+        ptrs = set.ptrs;
+        head = set.head;
+        tail = set.tail;
 
-		set.allocator = nullptr;
-		set.ptrs = nullptr;
-		set.head = nullptr;
-		set.tail = nullptr;
+        set.allocator = nullptr;
+        set.ptrs = nullptr;
+        set.head = nullptr;
+        set.tail = nullptr;
     }
-    
-    /// Destruct.
+
+     /// Destruct.
     ~HashSet()
     {
         Clear();
         FreeNode(Tail());
     }
-    
-    /// Assign a hash set.
+
+    /**
+     * Assign a hash set.
+     * @param rhs hash set to assign from
+     * @return resulting hash set
+     */
     HashSet& operator = (const HashSet<T>& rhs)
     {
         Clear();
         Insert(rhs);
         return *this;
     }
-	
-	/// Move assign a hash set.
+
+    /**
+     * Move assign a hash set.
+     * @param rhs hash set to move assign from
+     * @return resulting hash set
+     */
     HashSet& operator = (HashSet<T>&& rhs)
     {
         Clear();
-		allocator = rhs.allocator;
-		ptrs = rhs.ptrs;
-		head = rhs.head;
-		tail = rhs.tail;
+        allocator = rhs.allocator;
+        ptrs = rhs.ptrs;
+        head = rhs.head;
+        tail = rhs.tail;
 
-		rhs.allocator = nullptr;
-		rhs.ptrs = nullptr;
-		rhs.head = nullptr;
-		rhs.tail = nullptr;
+        rhs.allocator = nullptr;
+        rhs.ptrs = nullptr;
+        rhs.head = nullptr;
+        rhs.tail = nullptr;
         return *this;
     }
-    
-    /// Add-assign a value.
+
+    /**
+     * Add-assign a value.
+     * @param rhs value to add assign
+     * @return resulting hash set
+     */
     HashSet& operator += (const T& rhs)
     {
         Insert(rhs);
         return *this;
     }
-    
-    /// Add-assign a hash set.
+
+    /**
+     * Add-assign a hash set.
+     * @param rhs hash set to add assign
+     * @return resulting hash set
+     */
     HashSet& operator += (const HashSet<T>& rhs)
     {
         Insert(rhs);
         return *this;
     }
-    
-    /// Test for equality with another hash set.
+
+    /**
+     * Test for equality with another hash set.
+     * @param rhs hash set to compare with
+     * @return whether sets are equal
+     */
     bool operator == (const HashSet<T>& rhs) const
     {
         if (rhs.Size() != Size())
@@ -214,8 +312,12 @@ public:
         
         return true;
     }
-    
-    /// Test for inequality with another hash set.
+
+    /**
+     * Test for inequality with another hash set.
+     * @param rhs hash set to compare with
+     * @return whether sets are different
+     */
     bool operator != (const HashSet<T>& rhs) const
     {
         if (rhs.Size() != Size())
@@ -231,11 +333,15 @@ public:
         
         return false;
     }
-    
-    /// Insert a key. Return an iterator to it.
+
+    /**
+     * Insert a key.
+     * @param key key to insert
+     * @return an iterator to it
+     */
     Iterator Insert(const T& key)
     {
-        // If no pointers yet, allocate with minimum bucket count
+        /// If no pointers yet, allocate with minimum bucket count
         if (!ptrs)
         {
             AllocateBuckets(Size(), MIN_BUCKETS);
@@ -252,7 +358,7 @@ public:
         newNode->down = Ptrs()[hashKey];
         Ptrs()[hashKey] = newNode;
         
-        // Rehash if the maximum load factor has been exceeded
+        /// Rehash if the maximum load factor has been exceeded
         if (Size() > NumBuckets() * MAX_LOAD_FACTOR)
         {
             AllocateBuckets(Size(), NumBuckets() << 1);
@@ -261,8 +367,11 @@ public:
         
         return Iterator(newNode);
     }
-    
-    /// Insert a set.
+
+    /**
+     * Insert a set.
+     * @param set hash set to insert
+     */
     void Insert(const HashSet<T>& set)
     {
         ConstIterator it = set.Begin();
@@ -270,14 +379,22 @@ public:
         while (it != end)
             Insert(*it++);
     }
-    
-    /// Insert a key by iterator. Return iterator to the value.
+
+    /**
+     * Insert a key by iterator.
+     * @param it key iterator
+     * @return an iterator to the value
+     */
     Iterator Insert(const ConstIterator& it)
     {
         return Iterator(InsertNode(*it));
     }
-    
-    /// Erase a key. Return true if was found.
+
+    /**
+     * Erase a key.
+     * @param key key to erase
+     * @return true if key was found
+     */
     bool Erase(const T& key)
     {
         if (!ptrs)
@@ -298,8 +415,12 @@ public:
         EraseNode(node);
         return true;
     }
-    
-    /// Erase a key by iterator. Return iterator to the next key.
+
+    /**
+     * Erase a key by iterator.
+     * @param it key iterator
+     * @return iterator to the next key
+     */
     Iterator Erase(const Iterator& it)
     {
         if (!ptrs || !it.ptr)
@@ -328,7 +449,7 @@ public:
         EraseNode(node);
         return Iterator(next);
     }
-    
+
     /// Clear the set.
     void Clear()
     {
@@ -346,7 +467,7 @@ public:
         
         ResetPtrs();
     }
-    
+
     /// Sort keys. After sorting the set can be iterated in order until new elements are inserted.
     void Sort()
     {
@@ -377,8 +498,12 @@ public:
         
         Deallocate(ptrs);
     }
-    
-    /// Rehash to a specific bucket count, which must be a power of two. Return true if successful.
+
+    /**
+     * Rehash to a specific bucket count, which must be a power of two. 
+     * @param numBuckets number of buckets to rehash to
+     * @return true if successful
+     */
     bool Rehash(unsigned numBuckets)
     {
         if (numBuckets == NumBuckets())
@@ -386,7 +511,7 @@ public:
         if (!numBuckets || numBuckets < Size() / MAX_LOAD_FACTOR)
             return false;
         
-        // Check for being power of two
+        /// Check for being power of two
         unsigned check = numBuckets;
         while (!(check & 1))
             check >>= 1;
@@ -397,8 +522,12 @@ public:
         Rehash();
         return true;
     }
-    
-    /// Return iterator to the key, or end iterator if not found.
+
+    /**
+     * Find a key.
+     * @param key key to find
+     * @return iterator to the key, or end iterator if not found
+     */
     Iterator Find(const T& key)
     {
         if (!ptrs)
@@ -411,8 +540,12 @@ public:
         else
             return End();
     }
-    
-    /// Return const iterator to the key, or end iterator if not found.
+
+    /**
+     * Find a key.
+     * @param key key to find
+     * @return const iterator to the key, or end iterator if not found
+     */
     ConstIterator Find(const T& key) const
     {
         if (!ptrs)
@@ -425,8 +558,12 @@ public:
         else
             return End();
     }
-    
-    /// Return whether contains a key.
+
+    /**
+     * Check if set contains a key.
+     * @param key key to check
+     * @return whether set contains the key
+     */
     bool Contains(const T& key) const
     {
         if (!ptrs)
@@ -435,18 +572,41 @@ public:
         unsigned hashKey = Hash(key);
         return FindNode(key, hashKey) != 0;
     }
-    
-    /// Return iterator to the beginning.
+
+    /**
+     * Get first iterator.
+     * @return iterator to the beginning
+     */
     Iterator Begin() { return Iterator(Head()); }
-    /// Return iterator to the beginning.
+
+    /**
+     * Get first iterator.
+     * @return iterator to the beginning
+     */
     ConstIterator Begin() const { return ConstIterator(Head()); }
-    /// Return iterator to the end.
+
+    /**
+     * Get last iterator.
+     * @return iterator to the end
+     */
     Iterator End() { return Iterator(Tail()); }
-    /// Return iterator to the end.
+
+    /**
+     * Get last iterator.
+     * @return iterator to the end
+     */
     ConstIterator End() const { return ConstIterator(Tail()); }
-    /// Return first key.
+
+    /**
+     * Get first set key.
+     * @return first key
+     */
     const T& Front() const { return *Begin(); }
-    /// Return last key.
+
+    /**
+     * Get last set key.
+     * @return last key
+     */
     const T& Back() const { return *(--End()); }
     
 private:
@@ -454,7 +614,7 @@ private:
     Node* Head() const { return static_cast<Node*>(head); }
     /// Return the tail node.
     Node* Tail() const { return static_cast<Node*>(tail); }
-    
+
     /// Find a node from the buckets. Do not call if the buckets have not been allocated.
     Node* FindNode(const T& key, unsigned hashKey) const
     {
@@ -465,15 +625,15 @@ private:
                 return node;
             node = node->Down();
         }
-        
+
         return 0;
     }
-    
+
     /// Find a node and the previous node from the buckets. Do not call if the buckets have not been allocated.
     Node* FindNode(const T& key, unsigned hashKey, Node*& previous) const
     {
         previous = 0;
-        
+
         Node* node = static_cast<Node*>(Ptrs()[hashKey]);
         while (node)
         {
@@ -482,16 +642,16 @@ private:
             previous = node;
             node = node->Down();
         }
-        
+
         return 0;
     }
-    
+
     /// Insert a node into the list. Return the new node.
     Node* InsertNode(Node* dest, const T& key)
     {
         if (!dest)
             return 0;
-        
+
         Node* newNode = ReserveNode(key);
         Node* prev = dest->Prev();
         newNode->next = dest;
@@ -499,59 +659,59 @@ private:
         if (prev)
             prev->next = newNode;
         dest->prev = newNode;
-        
-        // Reassign the head node if necessary
+
+        /// Reassign the head node if necessary
         if (dest == Head())
             head = newNode;
-        
+
         SetSize(Size() + 1);
-        
+
         return newNode;
     }
-    
+
     /// Erase a node from the list. Return pointer to the next element, or to the end if could not erase.
     Node* EraseNode(Node* node)
     {
-        // The tail node can not be removed
+        /// The tail node can not be removed
         if (!node || node == tail)
             return Tail();
-        
+
         Node* prev = node->Prev();
         Node* next = node->Next();
         if (prev)
             prev->next = next;
         next->prev = prev;
-        
-        // Reassign the head node if necessary
+
+        /// Reassign the head node if necessary
         if (node == Head())
             head = next;
-        
+
         FreeNode(node);
         SetSize(Size() - 1);
-        
+
         return next;
     }
     
     /// Reserve a node.
     Node* ReserveNode()
     {
-		assert(allocator);
+        assert(allocator);
         return static_cast<Node*>(Allocate(allocator, Node));
-	}
-    
+    }
+
     /// Reserve a node with specified key.
     Node* ReserveNode(const T& key)
     {
-		assert(allocator);
-		return static_cast<Node*>(Allocate(allocator, Node, key));
+        assert(allocator);
+        return static_cast<Node*>(Allocate(allocator, Node, key));
     }
-    
+
     /// Free a node.
     void FreeNode(Node* node)
     {
-		Deallocate(node);
+        Deallocate(node);
     }
-    
+
     /// Rehash the buckets.
     void Rehash()
     {
@@ -563,7 +723,7 @@ private:
             Ptrs()[hashKey] = node;
         }
     }
-    
+
     /// Compare two nodes.
     static bool CompareNodes(Node*& lhs, Node*& rhs) { return lhs->key < rhs->key; }
 

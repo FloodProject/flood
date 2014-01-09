@@ -52,7 +52,7 @@ public:
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Bone );
 //TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Bone );
 
-typedef std::vector<BonePtr> BonesVector;
+typedef Vector<BonePtr> BonesVector;
 
 //-----------------------------------//
 

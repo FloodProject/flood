@@ -39,9 +39,9 @@ BufferEntry* BufferManager::getBuffer(const GeometryBuffer* gb)
 {
 	if( !gb ) return nullptr;
 
-	auto it = buffers.find(gb);
+	auto it = buffers.Find(gb);
 
-	if( it != buffers.end() )
+	if( it != buffers.End() )
 	{
 		// Buffers already allocated.
 		return &it->second;

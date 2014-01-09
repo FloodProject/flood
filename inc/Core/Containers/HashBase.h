@@ -39,13 +39,10 @@ struct HashNodeBase
         next(nullptr)
     {
     }
-    
-    /// Next node in the bucket.
-    HashNodeBase* down;
-    /// Previous node.
-    HashNodeBase* prev;
-    /// Next node.
-    HashNodeBase* next;
+
+    HashNodeBase* down; //!< Next node in the bucket.
+    HashNodeBase* prev; //!< Previous node.
+    HashNodeBase* next; //!< Next node.
 };
 
 /// Hash set/map iterator base class.
@@ -56,47 +53,56 @@ struct HashIteratorBase
         ptr(nullptr)
     {
     }
-    
-    /// Construct with a node pointer.
+
+    /**
+     * Construct with a node pointer.
+     * @param ptr pointer to node to construct from
+     */
     explicit HashIteratorBase(HashNodeBase* ptr) :
         ptr(ptr)
     {
     }
-    
-    /// Test for equality with another iterator.
+
+    /**
+     * Test for equality with another iterator.
+     * @param rhs iterator to compare with
+     * @return whether iterators are equal
+     */
     bool operator == (const HashIteratorBase& rhs) const { return ptr == rhs.ptr; }
-    /// Test for inequality with another iterator.
+
+    /**
+     * Test for inequality with another iterator.
+     * @param rhs iterator to compare with
+     * @return whether iterators are different
+     */
     bool operator != (const HashIteratorBase& rhs) const { return ptr != rhs.ptr; }
-    
+
     /// Go to the next node.
     void GotoNext()
     {
         if (ptr)
             ptr = ptr->next;
     }
-    
+
     /// Go to the previous node.
     void GotoPrev()
     {
         if (ptr)
             ptr = ptr->prev;
     }
-    
-    /// Node pointer.
-    HashNodeBase* ptr;
+
+    HashNodeBase* ptr; //!< Node pointer.
 };
 
 /// Hash set/map base class.
 class API_CORE HashBase
 {
-	template <class T, class U> 
-	friend class HashMap;
+    template <class T, class U> 
+    friend class HashMap;
 
 public:
-    /// Initial amount of buckets.
-    static const unsigned MIN_BUCKETS = 8;
-    /// Maximum load factor.
-    static const unsigned MAX_LOAD_FACTOR = 4;
+    static const unsigned MIN_BUCKETS = 8; //!< Initial amount of buckets.
+    static const unsigned MAX_LOAD_FACTOR = 4; //!< Maximum load factor.
     
     /// Construct.
     HashBase() :
@@ -110,8 +116,11 @@ public:
     {
         Deallocate(ptrs);
     }
-    
-    /// Swap with another hash set or map.
+
+    /**
+     * Swap with another hash set or map.
+     * @param rhs hash set or map to swap with
+     */
     void Swap(HashBase& rhs)
     {
         ::Swap(head, rhs.head);
@@ -119,32 +128,53 @@ public:
         ::Swap(ptrs, rhs.ptrs);
         ::Swap(allocator, rhs.allocator);
     }
-    
-    /// Return number of elements.
+
+    /**
+     * Get number of elements.
+     * @return number of elements
+     */
     unsigned Size() const { return ptrs ? (reinterpret_cast<unsigned*>(ptrs))[0] : 0; }
-    /// Return number of buckets.
+
+    /**
+     * Get number of buckets.
+     * @return number of buckets
+     */
     unsigned NumBuckets() const { return ptrs ? (reinterpret_cast<unsigned*>(ptrs))[1] : 0; }
-    /// Return whether has no elements.
+
+    /**
+     * Check if container is empty.
+     * @return whether container has no elements
+     */
     bool Empty() const { return Size() == 0; }
     
 protected:
-    /// Allocate bucket head pointers + room for size and bucket count variables.
+
+    /**
+     * Allocate bucket head pointers + room for size and bucket count variables.
+     * @param size size to allocate
+     * @param numBuckets number of buckets
+     */
     void AllocateBuckets(unsigned size, unsigned numBuckets);
+
     /// Reset bucket head pointers.
     void ResetPtrs();
-    /// Set new size.
+
+    /**
+     * Set new size.
+     * @param size new size
+     */
     void SetSize(unsigned size) { if (ptrs) (reinterpret_cast<unsigned*>(ptrs))[0] = size; }
-    /// Return bucket head pointers.
+
+    /**
+     *  Get bucket head pointers.
+     *  @return bucket head pointers
+     */
     HashNodeBase** Ptrs() const { return ptrs ? ptrs + 2 : 0; }
     
-    /// List head node pointer.
-    HashNodeBase* head;
-    /// List tail node pointer.
-    HashNodeBase* tail;
-    /// Bucket head pointers.
-    HashNodeBase** ptrs;
-    /// Node allocator.
-    Allocator* allocator;
+    HashNodeBase* head; //!< List head node pointer.
+    HashNodeBase* tail; //!< List tail node pointer.
+    HashNodeBase** ptrs; //!< Bucket head pointers.
+    Allocator* allocator; //!< Node allocator.
 };
 
 NAMESPACE_CORE_END

@@ -184,7 +184,7 @@ void WxWindow::setTitle(const String& title)
 {
 	// Our canvas has no title to set, the best we can do is to
 	// set the title as the help text of the wxWidgets control.
-	canvas->SetHelpText( title );
+    canvas->SetHelpText( title.CString() );
 }
 
 //-----------------------------------//

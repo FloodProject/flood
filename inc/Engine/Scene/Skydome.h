@@ -107,7 +107,7 @@ protected:
 	int32 cloudsNoiseSeed;
 
 	// Unprocessed clouds noise.
-	std::vector<float> cloudsNoise;
+	Vector<float> cloudsNoise;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;

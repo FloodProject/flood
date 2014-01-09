@@ -23,13 +23,13 @@ API_PIPELINE REFLECT_DECLARE_CLASS(ResourceImporter)
 
 class API_PIPELINE NO_VTABLE ResourceImporter : public ResourceLoader
 {
-	DECLARE_UNCOPYABLE(ResourceImporter)
-	REFLECT_DECLARE_OBJECT(ResourceImporter)
+    DECLARE_UNCOPYABLE(ResourceImporter)
+    REFLECT_DECLARE_OBJECT(ResourceImporter)
 
 public:
 
-	ResourceImporter();
-	virtual ~ResourceImporter();
+    ResourceImporter();
+    virtual ~ResourceImporter();
 };
 
 //-----------------------------------//

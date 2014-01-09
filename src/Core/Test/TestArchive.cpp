@@ -33,7 +33,7 @@ SUITE(Core)
 		String text;
 		stream->readString(text);
 		Deallocate(stream);
-		CHECK_EQUAL( "foobar", text.c_str() );
+		CHECK_EQUAL( "foobar", text.CString() );
 
 		Vector<Path> dirs;
 		archive.enumerateDirs(dirs);
@@ -51,7 +51,7 @@ SUITE(Core)
 
 		Vector<Path> files;
 		archive.enumerateFiles(files);
-		CHECK( files.size() == 5 );
+		CHECK( files.Size() == 5 );
 
 		CHECK( archive.existsFile("LeaksReport.txt") );
 		CHECK( archive.existsFile("Log.html") );
@@ -66,7 +66,7 @@ SUITE(Core)
 		String text;
 		stream->readString(text);
 		Deallocate(stream);
-		CHECK_EQUAL("foobar", text.c_str());
+		CHECK_EQUAL("foobar", text.CString());
 
 		Vector<Path> dirs;
 
@@ -108,7 +108,7 @@ SUITE(Core)
 		String text;
 		stream->readString(text);
 		Deallocate(stream);
-		CHECK_EQUAL("foobar", text.c_str());
+		CHECK_EQUAL("foobar", text.CString());
 
 		Vector<Path> dirs;
 		archive.enumerateDirs(dirs);

@@ -29,75 +29,75 @@ class API_CORE Archive
 {
 public:
 
-	Archive();
+    Archive();
 
-	virtual ~Archive();
+    virtual ~Archive();
 
-	/**
-	 * Creates the archive.
-	 * @param path path to open archive from
-	 */
-	Archive(const Path& path);
+    /**
+     * Creates the archive.
+     * @param path path to open archive from
+     */
+    Archive(const Path& path);
 
-	/**
-	 * Opens the archive.
-	 * @param path path to open archive from
-	 */
-	virtual bool open(const Path& path) = 0;
+    /**
+     * Opens the archive.
+     * @param path path to open archive from
+     */
+    virtual bool open(const Path& path) = 0;
 
-	/**
-	 * Closes the archive.
-	 */
-	virtual bool close() = 0;
+    /**
+     * Closes the archive.
+     */
+    virtual bool close() = 0;
 
-	/**
-	 * Opens a file from the archive.
-	 * @param path file path
-	 * @param alloc stream allocator
-	 */
-	virtual Stream * openFile(const Path& path, Allocator* alloc) = 0;
+    /**
+     * Opens a file from the archive.
+     * @param path file path
+     * @param alloc stream allocator
+     */
+    virtual Stream * openFile(const Path& path, Allocator* alloc) = 0;
 
-	/**
-	 * Checks if a file exists.
-	 * @param path file path
-	 */
-	virtual bool existsFile(const Path& path) = 0;
+    /**
+     * Checks if a file exists.
+     * @param path file path
+     */
+    virtual bool existsFile(const Path& path) = 0;
 
-	/**
-	 * Checks if a directory exists.
-	 * @param path directory path
-	 */
-	virtual bool existsDir(const Path& path) = 0;;
+    /**
+     * Checks if a directory exists.
+     * @param path directory path
+     */
+    virtual bool existsDir(const Path& path) = 0;;
 
-	/**
-	 * Enumerates all the files in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateFiles(Vector<Path>& paths) = 0;
-	
-	/**
-	 * Enumerates all the directories in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateDirs(Vector<Path>& paths) = 0;
+    /**
+     * Enumerates all the files in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateFiles(Vector<Path>& paths) = 0;
+    
+    /**
+     * Enumerates all the directories in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateDirs(Vector<Path>& paths) = 0;
 
-	/**
-	 * Sets up and updates the watching functionality for the archive.
-	 */
-	virtual bool monitor() = 0;
+    /**
+     * Sets up and updates the watching functionality for the archive.
+     */
+    virtual bool monitor() = 0;
 
-	/**
-	 * Combines the path of a file to get the full path to an archive file.
-	 * @param filePath path of the file to be combined
-	 */
-	Path combinePath(const Path& filePath);
+    /**
+     * Combines the path of a file to get the full path to an archive file.
+     * @param filePath path of the file to be combined
+     */
+    Path combinePath(const Path& filePath);
 
-	const Path path; //!< archive file path
-	
-	void*  userdata;
-	ArchiveWatchEvent watch; //!< watch event
-	ArchiveWatchId watchId; //!< watch id
-	bool isValid;
+    const Path path; //!< archive file path
+    
+    void*  userdata;
+    ArchiveWatchEvent watch; //!< watch event
+    ArchiveWatchId watchId; //!< watch id
+    bool isValid;
 };
 
 //-----------------------------------//
@@ -106,81 +106,81 @@ class API_CORE ArchiveVirtual : public Archive
 {
 public:
 
-	ArchiveVirtual();
+    ArchiveVirtual();
 
-	/**
-	 * @note calls @see close()
-	 */
-	virtual ~ArchiveVirtual();
+    /**
+     * @note calls @see close()
+     */
+    virtual ~ArchiveVirtual();
 
-	/**
-	 * Opens the archive.
-	 * @param path path to open archive from
-	 */
-	virtual bool open(const Path& path) override;
+    /**
+     * Opens the archive.
+     * @param path path to open archive from
+     */
+    virtual bool open(const Path& path) override;
 
-	/**
-	 * Closes the archive.
-	 */
-	virtual bool close() override;
+    /**
+     * Closes the archive.
+     */
+    virtual bool close() override;
 
-	/**
-	 * Opens a file from the archive.
-	 * @param path file path
-	 * @param alloc stream allocator
-	 */
-	virtual Stream * openFile(const Path& path, Allocator* alloc) override;
+    /**
+     * Opens a file from the archive.
+     * @param path file path
+     * @param alloc stream allocator
+     */
+    virtual Stream * openFile(const Path& path, Allocator* alloc) override;
 
-	/**
-	 * Checks if a file exists.
-	 * @param path file path
-	 */
-	virtual bool existsFile(const Path& path) override;
+    /**
+     * Checks if a file exists.
+     * @param path file path
+     */
+    virtual bool existsFile(const Path& path) override;
 
-	/**
-	 * Checks if a directory exists.
-	 * @param path directory path
-	 */
-	virtual bool existsDir(const Path& path) override;;
+    /**
+     * Checks if a directory exists.
+     * @param path directory path
+     */
+    virtual bool existsDir(const Path& path) override;;
 
-	/**
-	 * Enumerates all the files in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateFiles(Vector<Path>& paths) override;
-	
-	/**
-	 * Enumerates all the directories in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateDirs(Vector<Path>& paths) override;
+    /**
+     * Enumerates all the files in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateFiles(Vector<Path>& paths) override;
+    
+    /**
+     * Enumerates all the directories in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateDirs(Vector<Path>& paths) override;
 
-	/**
-	 * Sets up and updates the watching functionality for the archive.
-	 */
-	virtual bool monitor() override;
+    /**
+     * Sets up and updates the watching functionality for the archive.
+     */
+    virtual bool monitor() override;
 
-	/**
-	 * Mounts an archive in the virtual archive.
-	 * @param mount archive to mount
-	 * @param mountPath path of archive to mount
-	 */
-	bool mount(Archive * mount, const Path& mountPath);
+    /**
+     * Mounts an archive in the virtual archive.
+     * @param mount archive to mount
+     * @param mountPath path of archive to mount
+     */
+    bool mount(Archive * mount, const Path& mountPath);
 
-	/**
-	 * Mounts a directory and its direct hierarchy.
-	 * @param dirPath path of directory to mount
-	 * @param alloc alocator to use for mounting
-	 */
-	void mountDirectories(const Path& dirPath, Allocator* alloc);
+    /**
+     * Mounts a directory and its direct hierarchy.
+     * @param dirPath path of directory to mount
+     * @param alloc alocator to use for mounting
+     */
+    void mountDirectories(const Path& dirPath, Allocator* alloc);
 
 private:
 
-	void enumerate(Vector<Path>& paths, bool dir);
+    void enumerate(Vector<Path>& paths, bool dir);
 
 public:
 
-	Vector<Archive*> mounts; //!< mounted archives
+    Vector<Archive*> mounts; //!< mounted archives
 };
 
 //-----------------------------------//
@@ -189,63 +189,63 @@ class API_CORE ArchiveDirectory : public Archive
 {
 public:
 
-	/**
-	 * Creates the archive from a directory.
-	 * @param path path to open archive from
-	 */
-	ArchiveDirectory(const Path&);
+    /**
+     * Creates the archive from a directory.
+     * @param path path to open archive from
+     */
+    ArchiveDirectory(const Path&);
 
-	/**
-	 * @note calls @see close()
-	 */
-	virtual ~ArchiveDirectory();
+    /**
+     * @note calls @see close()
+     */
+    virtual ~ArchiveDirectory();
 
-	/**
-	 * Opens the archive.
-	 * @param path path to open archive from
-	 */
-	virtual bool open(const Path& path) override;
+    /**
+     * Opens the archive.
+     * @param path path to open archive from
+     */
+    virtual bool open(const Path& path) override;
 
-	/**
-	 * Closes the archive.
-	 */
-	virtual bool close() override;
+    /**
+     * Closes the archive.
+     */
+    virtual bool close() override;
 
-	/**
-	 * Opens a file from the archive.
-	 * @param path file path
-	 * @param alloc stream allocator
-	 */
-	virtual Stream * openFile(const Path& path, Allocator* alloc) override;
+    /**
+     * Opens a file from the archive.
+     * @param path file path
+     * @param alloc stream allocator
+     */
+    virtual Stream * openFile(const Path& path, Allocator* alloc) override;
 
-	/**
-	 * Checks if a file exists.
-	 * @param path file path
-	 */
-	virtual bool existsFile(const Path& path) override;
+    /**
+     * Checks if a file exists.
+     * @param path file path
+     */
+    virtual bool existsFile(const Path& path) override;
 
-	/**
-	 * Checks if a directory exists.
-	 * @param path directory path
-	 */
-	virtual bool existsDir(const Path& path) override;;
+    /**
+     * Checks if a directory exists.
+     * @param path directory path
+     */
+    virtual bool existsDir(const Path& path) override;;
 
-	/**
-	 * Enumerates all the files in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateFiles(Vector<Path>& paths) override;
-	
-	/**
-	 * Enumerates all the directories in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateDirs(Vector<Path>& paths) override;
+    /**
+     * Enumerates all the files in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateFiles(Vector<Path>& paths) override;
+    
+    /**
+     * Enumerates all the directories in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateDirs(Vector<Path>& paths) override;
 
-	/**
-	 * Sets up and updates the watching functionality for the archive.
-	 */
-	virtual bool monitor() override;
+    /**
+     * Sets up and updates the watching functionality for the archive.
+     */
+    virtual bool monitor() override;
 };
 
 //-----------------------------------//
@@ -254,71 +254,71 @@ class API_CORE ArchiveZip : public Archive
 {
 public:
 
-	/**
-	 * Creates the archive from a ZIP.
-	 * @param path path to open archive from
-	 */
-	ArchiveZip(const Path& path);
+    /**
+     * Creates the archive from a ZIP.
+     * @param path path to open archive from
+     */
+    ArchiveZip(const Path& path);
 
-	/**
-	 * @note calls @see close()
-	 */
-	virtual ~ArchiveZip();
+    /**
+     * @note calls @see close()
+     */
+    virtual ~ArchiveZip();
 
-	/**
-	 * Opens the archive.
-	 * @param path path to open archive from
-	 */
-	virtual bool open(const Path& path) override;
+    /**
+     * Opens the archive.
+     * @param path path to open archive from
+     */
+    virtual bool open(const Path& path) override;
 
-	/**
-	 * Closes the archive.
-	 */
-	virtual bool close() override;
+    /**
+     * Closes the archive.
+     */
+    virtual bool close() override;
 
-	/**
-	 * Opens a file from the archive.
-	 * @param path file path
-	 * @param alloc stream allocator
-	 */
-	virtual Stream * openFile(const Path& path, Allocator* alloc) override;
+    /**
+     * Opens a file from the archive.
+     * @param path file path
+     * @param alloc stream allocator
+     */
+    virtual Stream * openFile(const Path& path, Allocator* alloc) override;
 
-	/**
-	 * Checks if a file exists.
-	 * @param path file path
-	 */
-	virtual bool existsFile(const Path& path) override;
+    /**
+     * Checks if a file exists.
+     * @param path file path
+     */
+    virtual bool existsFile(const Path& path) override;
 
-	/**
-	 * Checks if a directory exists.
-	 * @param path directory path
-	 */
-	virtual bool existsDir(const Path& path) override;;
+    /**
+     * Checks if a directory exists.
+     * @param path directory path
+     */
+    virtual bool existsDir(const Path& path) override;;
 
-	/**
-	 * Enumerates all the files in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateFiles(Vector<Path>& paths) override;
-	
-	/**
-	 * Enumerates all the directories in the archive.
-	 * @param paths vector to store results
-	 */
-	virtual void enumerateDirs(Vector<Path>& paths) override;
+    /**
+     * Enumerates all the files in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateFiles(Vector<Path>& paths) override;
+    
+    /**
+     * Enumerates all the directories in the archive.
+     * @param paths vector to store results
+     */
+    virtual void enumerateDirs(Vector<Path>& paths) override;
 
-	/**
-	 * Sets up and updates the watching functionality for the archive.
-	 */
-	virtual bool monitor() override;
+    /**
+     * Sets up and updates the watching functionality for the archive.
+     */
+    virtual bool monitor() override;
 
 private:
 
-	void enumerate(Vector<Path>& paths, bool dir);
+    void enumerate(Vector<Path>& paths, bool dir);
 
 public:
 
-	void* handle; //!< zip handle
+    void* handle; //!< zip handle
 };
 
 //-----------------------------------//

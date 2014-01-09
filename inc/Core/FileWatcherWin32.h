@@ -34,7 +34,7 @@
 #ifdef PLATFORM_WINDOWS
 
 #include "Core/FileWatcher.h"
-#include <map>
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -43,7 +43,7 @@ NAMESPACE_CORE_BEGIN
 struct FileWatchStruct;
 
 /// type for a map from FileWatchId to FileWatchStruct pointer
-typedef std::map<FileWatchId, FileWatchStruct*> FileWatchMap;
+typedef HashMap<FileWatchId, FileWatchStruct*> FileWatchMap;
 
 /// Implementation for Win32 based on ReadDirectoryChangesW.
 /// @class FileWatcherWin32

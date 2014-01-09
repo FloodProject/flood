@@ -173,47 +173,11 @@ void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems)
 UTF8String StringTrim(const UTF8String& s, const char* trim)
 {
 	UTF8String Trim(trim);
-	unsigned first = s.Find(Trim);
-	if( first == String::npos ) return "";
-
-	return s.substr(first, s.find_last_not_of(trim) - first + 1);
-}
-
-//-----------------------------------//
-
-String StringToLowerCase(const String& str)
-{
-	String data(str);
-	std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+	unsigned first = s.FindFirstNotOf(Trim);
+	unsigned last = s.FindLastNotOf(Trim);
+	if (first == UTF8String::NPOS) return "";
 	
-	return data;
-}
-
-//-----------------------------------//
-
-String StringToUpperCase(const String& str)
-{
-	String data(str);
-	std::transform(data.begin(), data.end(), data.begin(), ::toupper);
-	
-	return data;
-}
-
-//-----------------------------------//
-
-void StringReplace(String& source, const String& from, const String& to)
-{
-	String::size_type pos = 0;
-
-	while(true)
-	{
-		pos = source.find(from, pos);
-		
-		if( pos == String::npos )
-			return;
-		
-		source.replace( pos++, from.size(), to );
-	}
+	return s.Substring(first, last - first + 1);
 }
 
 //-----------------------------------//
@@ -223,12 +187,12 @@ Path PathGetFileBase(const Path& path)
 	Path filePath = PathGetFile(path);
 
 	// Check if it has a file extension.
-	size_t ch = filePath.find_last_of(".");
+	size_t ch = filePath.FindLast(".");
 
-	if( ch == String::npos ) return "";
+	if( ch == UTF8String::NPOS ) return "";
 
 	// Return the file extension.
-	return filePath.substr( 0, ch );
+	return filePath.Substring( 0, ch );
 }
 
 //-----------------------------------//
@@ -236,45 +200,45 @@ Path PathGetFileBase(const Path& path)
 Path PathGetFileExtension(const Path& path)
 {
 	// Check if it has a file extension.
-	size_t ch = path.find_last_of(".");
+	size_t ch = path.FindLast(".");
 
-	if( ch == String::npos ) 
+	if( ch == UTF8String::NPOS ) 
 		return "";
 
 	// Return the file extension.
-	return path.substr( ++ch );
+	return path.Substring( ++ch );
 }
 
 //-----------------------------------//
 
 Path PathGetBase(const Path& path)
 {
-	size_t ch = path.find_last_of("/");
+	size_t ch = path.FindLast("/");
 
-	if( ch == String::npos )
-		ch = path.find_last_of("\\");
+	if( ch == UTF8String::NPOS )
+		ch = path.FindLast("\\");
 
-	if( ch == String::npos )
+	if( ch == UTF8String::NPOS )
 		return path;
 
 	// Return the file extension.
-	return path.substr( 0, ++ch );
+	return path.Substring( 0, ++ch );
 }
 
 //-----------------------------------//
 
 Path PathGetFile(const Path& path)
 {
-	size_t ch = path.find_last_of("/");
+	size_t ch = path.FindLast("/");
 
-	if( ch == String::npos )
-		ch = path.find_last_of("\\");
+	if( ch == UTF8String::NPOS )
+		ch = path.FindLast("\\");
 
-	if( ch == String::npos )
+	if( ch == UTF8String::NPOS )
 		return path;
 
 	// Return the file part.
-	return path.substr( ++ch );
+	return path.Substring( ++ch );
 }
 
 //-----------------------------------//
@@ -283,15 +247,15 @@ Path PathNormalize(const Path& path)
 {
 	Path norm = path;
 
-	StringReplace(norm, "\\", "/");
-	StringReplace(norm, "//", "/");
-	StringReplace(norm, "/\\", "/");
-	StringReplace(norm, "\\/", "/");
+	norm.Replace("\\", "/");
+	norm.Replace("//", "/");
+	norm.Replace("/\\", "/");
+	norm.Replace("\\/", "/");
 
 	// These transformations are unsafe.
 #if 0
-	StringReplace(norm, "../", "");
-	StringReplace(norm, "./", "");
+	norm.Replace("../", "");
+	norm.Replace("./", "");
 #endif
 
 	return norm;
@@ -307,7 +271,7 @@ Path PathGetCurrentDir()
 #else
 	getcwd(buf, FLD_ARRAY_SIZE(buf));
 #endif
-	return String(buf);
+	return UTF8String(buf);
 }
 
 //-----------------------------------//
@@ -331,15 +295,15 @@ Path PathCombine(Path base, Path extra)
 	extra = StringTrim(extra, "\\");
 	extra = StringTrim(extra, "/");
 
-	if( base.empty() ) return extra;
+	if( base.Empty() ) return extra;
 
 	const Path& sep = PathGetSeparator();
 
-	StringReplace(base, "\\", sep);
-	StringReplace(base, "/", sep);
+	base.Replace("\\", sep);
+	base.Replace("/", sep);
 
-	StringReplace(extra, "\\", sep);
-	StringReplace(extra, "/", sep);
+	extra.Replace("\\", sep);
+	extra.Replace("/", sep);
 
 	return base + PathGetSeparator() + extra;
 }
@@ -360,18 +324,18 @@ StringHash::StringHash(const char* str, size_t size)
 
 //-----------------------------------//
 
-StringHash HashString(const String& s)
+StringHash HashString(const UTF8String& s)
 {
-	return StringHash(s.data(), s.size());
+	return StringHash(s.CString(), s.ByteLength());
 }
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(Vector<String>& paths, Path dirPath,
+static void DirArchiveEnumerate(Vector<UTF8String>& paths, Path dirPath,
 								Path filePath, bool dirs)
 {
 	// Open directory stream.
-	DIR* dir = opendir( dirPath.c_str() );
+	DIR* dir = opendir(dirPath.CString());
 	if( !dir ) return;
 
 	dirent* entry = nullptr;
@@ -386,15 +350,15 @@ static void DirArchiveEnumerate(Vector<String>& paths, Path dirPath,
 		{
 		case DT_REG:
 		{
-			Path sep = filePath.empty() ? "" : PathGetSeparator();
-			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
-				name.c_str() );
+			Path sep = filePath.Empty() ? "" : PathGetSeparator();
+			Path path = StringFormat("%s%s%s", filePath.CString(), sep.CString(),
+				name.CString() );
 			if(!dirs) paths.Push(path);
 			break;
 		}
 		case DT_DIR:
 		{
-			if(!name.empty() && name[0] == '.') continue;
+			if(!name.Empty() && name[0] == '.') continue;
 		
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
@@ -429,9 +393,9 @@ void FileEnumerateDirectories(const Path& path, Vector<Path>& dirs)
 bool FileExists(const Path& path)
 {
 #ifdef COMPILER_MSVC
-	return _access(path.c_str(), F_OK) == 0;
+	return _access(path.CString(), F_OK) == 0;
 #else
-	return access(path.c_str(), F_OK) == 0;
+	return access(path.CString(), F_OK) == 0;
 #endif
 }
 

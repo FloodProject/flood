@@ -55,7 +55,7 @@ void PipelineInit()
 	{
 		auto processor = (ResourceProcessor*) 
 			child->createInstance(AllocatorGetHeap());
-		resourceProcessors.push_back(processor);
+        resourceProcessors.Push(processor);
 
 		LogInfo("Registering asset handler: %s", child->name);
 	}
@@ -70,7 +70,7 @@ void PipelineCleanup()
 		Deallocate(processor);
 	}
 
-	resourceProcessors.clear();
+    resourceProcessors.Clear();
 }
 
 //-----------------------------------//
@@ -99,7 +99,7 @@ void showResourceLoaders()
 
 	Class& type = ResourceLoader::getStaticType();
 	
-	for( size_t i = 0; i < type.childs.size(); i++ )
+    for( size_t i = 0; i < type.childs.Size(); i++ )
 	{
 		Class& child = *type.childs[i];
 		printf("\t%s\n", child.name.c_str());
@@ -114,7 +114,7 @@ void showResourceProcessors()
 
 	Class& type = ResourceProcessor::getStaticType();
 	
-	for( size_t i = 0; i < type.childs.size(); i++ )
+    for( size_t i = 0; i < type.childs.Size(); i++ )
 	{
 		Class& child = *type.childs[i];
 		printf("\t%s\n", child.name.c_str());

@@ -29,7 +29,11 @@ class HashBase;
 class String;
 class VectorBase;
 
-/// Swap two values.
+/**
+ * Swap two values.
+ * @param first first value to be swapped
+ * @param second second value to be swapped
+ */
 template<class T> inline void Swap(T& first, T& second)
 {
     T temp = first;
@@ -37,8 +41,25 @@ template<class T> inline void Swap(T& first, T& second)
     second = temp;
 }
 
+/**
+ * Swap two hash bases.
+ * @param first first hash base to swap
+ * @param second second hash base to swap
+ */
 template<> void Swap<HashBase>(HashBase& first, HashBase& second);
+
+/**
+ * Swap two strings.
+ * @param first first string to swap
+ * @param second second string to swap
+ */
 template<> void Swap<String>(String& first, String& second);
+
+/**
+ * Swap two vector bases.
+ * @param first first vector base to swap
+ * @param second second vector base to swap
+ */
 template<> void Swap<VectorBase>(VectorBase& first, VectorBase& second);
 
 NAMESPACE_CORE_END

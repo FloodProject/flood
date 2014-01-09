@@ -20,11 +20,11 @@
 //---------------------------------------------------------------------//
 
 #if defined(API_PIPELINE_DLL) && defined(API_PIPELINE_DLL_EXPORT)
-	#define API_PIPELINE API_EXPORT
+    #define API_PIPELINE API_EXPORT
 #elif defined(API_PIPELINE_DLL)
-	#define API_PIPELINE API_IMPORT
+    #define API_PIPELINE API_IMPORT
 #else
-	#define API_PIPELINE
+    #define API_PIPELINE
 #endif
 
 #define NAMESPACE_PIPELINE_BEGIN NAMESPACE_CORE_BEGIN

@@ -9,6 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/References.h"
+#include "Core/Containers/Vector.h"
 
 FWD_DECL_INTRUSIVE(Peer)
 FWD_DECL_INTRUSIVE(Packet)

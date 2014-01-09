@@ -14,86 +14,86 @@
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
-	
+    
 static MaterialHandle MeshBuildMaterial(Mesh* mesh, const MeshGroup& group)
 {
-	const MeshMaterial& matMesh = group.material;
+    const MeshMaterial& matMesh = group.material;
 
-	MaterialHandle handle = MaterialCreate(AllocatorGetHeap(), matMesh.name);
-	Material* material = handle.Resolve();
+    MaterialHandle handle = MaterialCreate(AllocatorGetHeap(), matMesh.name);
+    Material* material = handle.Resolve();
 
-	if( !matMesh.texture.empty() )
-	{
-		material->setShader("VertexLit");
+    if( !matMesh.texture.Empty() )
+    {
+        material->setShader("VertexLit");
 
-		String path = PathNormalize(matMesh.texture);
-		material->setTexture( 0, path );
-	}
+        String path = PathNormalize(matMesh.texture);
+        material->setTexture( 0, path );
+    }
 
-	if( matMesh.alpha )
-	{
-		#pragma TODO("Use alpha testing when alpha values are fully transparent.")
-		material->setAlphaTest(true);
-		//mat->setBlending( BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
-	}
+    if( matMesh.alpha )
+    {
+        #pragma TODO("Use alpha testing when alpha values are fully transparent.")
+        material->setAlphaTest(true);
+        //mat->setBlending( BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
+    }
 
-	if( mesh->isAnimated() )
-		material->setShader("VertexLitSkinned");
+    if( mesh->isAnimated() )
+        material->setShader("VertexLitSkinned");
 
-	return handle;
+    return handle;
 }
 
 //-----------------------------------//
 
 static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
 {
-	GeometryBuffer* gb = mesh->getGeometryBuffer().get();
-	
-	// Construct the renderables for each mesh group.
-	const std::vector<MeshGroup>& groups = mesh->groups;
+    GeometryBuffer* gb = mesh->getGeometryBuffer().get();
+    
+    // Construct the renderables for each mesh group.
+    const Vector<MeshGroup>& groups = mesh->groups;
 
-	for( size_t i = 0; i < groups.size(); i++ )
-	{
-		const MeshGroup& group = groups[i];
+    for( size_t i = 0; i < groups.Size(); i++ )
+    {
+        const MeshGroup& group = groups[i];
 
-		uint32 numIndices = group.indices.size();
-		if( numIndices == 0 ) continue;
+        uint32 numIndices = group.indices.Size();
+        if( numIndices == 0 ) continue;
 
-		// Gets a material for the group.
-		MaterialHandle material = MeshBuildMaterial(mesh, group);
+        // Gets a material for the group.
+        MaterialHandle material = MeshBuildMaterial(mesh, group);
 
-		gb->addIndex((uint8*)&group.indices.front(), numIndices*sizeof(uint16));
+        gb->addIndex((uint8*)&group.indices.Front(), numIndices*sizeof(uint16));
 
-		RenderBatch* renderable = AllocateHeap(RenderBatch);
-		renderable->setPrimitiveType( PrimitiveType::Triangles );
-		renderable->setGeometryBuffer(gb);
-		renderable->setMaterial(material);
+        RenderBatch* renderable = AllocateHeap(RenderBatch);
+        renderable->setPrimitiveType( PrimitiveType::Triangles );
+        renderable->setGeometryBuffer(gb);
+        renderable->setMaterial(material);
 
-		Material* mat = material.Resolve();
-		
-		if( mat->isBlendingEnabled() )
-		renderable->setRenderLayer(RenderLayer::Transparency);
+        Material* mat = material.Resolve();
+        
+        if( mat->isBlendingEnabled() )
+        renderable->setRenderLayer(RenderLayer::Transparency);
 
-		rends.push_back(renderable);
-	}
+        rends.Push(renderable);
+    }
 }
 
 //-----------------------------------//
 
 bool MeshBuild(Mesh* mesh, RenderablesVector& rends)
 {
-	if( !mesh ) return false;
+    if( !mesh ) return false;
 
-	if( !mesh->isBuilt() )
-	{
-		mesh->buildBounds();
-		mesh->setupInitialVertices();
-		mesh->built = true;
-	}
+    if( !mesh->isBuilt() )
+    {
+        mesh->buildBounds();
+        mesh->setupInitialVertices();
+        mesh->built = true;
+    }
 
-	MeshBuildGeometry(mesh, rends);
+    MeshBuildGeometry(mesh, rends);
 
-	return true;
+    return true;
 }
 
 //-----------------------------------//

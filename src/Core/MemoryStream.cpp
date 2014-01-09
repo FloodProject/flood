@@ -35,7 +35,7 @@ MemoryStream::MemoryStream()
 MemoryStream::~MemoryStream()
 {
 	if( !close() )
-		LogDebug("Error closing memory stream: %s", path.c_str());
+		LogDebug("Error closing memory stream: %s", path.CString());
 }
 
 //-----------------------------------//
@@ -45,7 +45,7 @@ void MemoryStream::init()
 	position = 0;
 	buffer = nullptr;
 	useRawBuffer = false;
-	data.clear();
+	data.Clear();
 }
 
 //-----------------------------------//
@@ -72,14 +72,14 @@ bool MemoryStream::close()
 
 //-----------------------------------//
 
-int64 MemoryStream::read(void* buffer, uint64 size) const
+uint64 MemoryStream::read(void* buffer, uint64 size) const
 {
 	if(size < 0) return -1;
 
 	if(!useRawBuffer)
 	{
 		int64 left = this->size() - position;
-		if(size > left) size = left;
+		if((int64)size > left) size = left;
 	}
 
 	uint8* cur = this->buffer + position;
@@ -91,19 +91,19 @@ int64 MemoryStream::read(void* buffer, uint64 size) const
 
 //-----------------------------------//
 
-int64 MemoryStream::write(void* buffer, uint64 size)
+uint64 MemoryStream::write(void* buffer, uint64 size)
 {
 	if(size <= 0) return -1;
 
 	if(!useRawBuffer)
 	{
 		int64 newSize = position + size;
-		bool needsResize = newSize > data.size();
+		bool needsResize = newSize > data.Size();
 	
 		if(needsResize)
 			resize(newSize);
 
-		if(data.empty()) return 0;
+		if(data.Empty()) return 0;
 	}
 
 	uint8* cur = this->buffer + position;
@@ -115,7 +115,7 @@ int64 MemoryStream::write(void* buffer, uint64 size)
 
 //-----------------------------------//
 
-int64 MemoryStream::getPosition() const
+uint64 MemoryStream::getPosition() const
 {
 	return position;
 }
@@ -142,7 +142,7 @@ void MemoryStream::setPosition(int64 offset, StreamSeekMode mode)
 
 uint64 MemoryStream::size() const
 {
-	return data.size();
+	return data.Size();
 }
 
 //-----------------------------------//
@@ -151,8 +151,8 @@ void MemoryStream::resize(int64 size)
 {
 	if( size <= 0 ) return;
 
-	data.resize((size_t)size);
-	buffer = data.data();
+	data.Resize((size_t)size);
+	buffer = data.Buffer();
 }
 
 //-----------------------------------//

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <map>
-#include <vector>
+#include "Core/Containers/Vector.h"
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -26,18 +26,18 @@ class Field;
 
 struct FieldWatch
 {
-	void* userdata;
-	const void* object;
-	const Field* field;
-	uint32 hash;
+    void* userdata;
+    const void* object;
+    const Field* field;
+    uint32 hash;
 };
 
-typedef std::map<const Field*, FieldWatch> FieldWatchMap;
+typedef HashMap<const Field*, FieldWatch> FieldWatchMap;
 typedef Vector<FieldWatch*> FieldWatchVector;
 
 struct ClassWatch
 {
-	FieldWatchMap fields;
+    FieldWatchMap fields;
 };
 
 // Creates a new class watch.

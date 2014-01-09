@@ -21,30 +21,31 @@ NAMESPACE_CORE_BEGIN
 
 union API_CORE ValueContext
 {
-	bool   b;
-	int8   i8;
-	uint8  u8;
-	int16  i16;
-	uint16 u16;
-	int32  i32;
-	uint32 u32;
-	int64  i64;
-	uint64 u64;
-	float  f32;
-	Vector3P v;
-	ColorP c;
-	QuaternionP q;
-	String* s;
-	const char* cs;
+    bool   b;
+    int8   i8;
+    uint8  u8;
+    int16  i16;
+    uint16 u16;
+    int32  i32;
+    uint32 u32;
+    int64  i64;
+    uint64 u64;
+    float  f32;
+    Vector3P v;
+    ColorP c;
+    QuaternionP q;
+    String* s;
+    UTF8String* us;
+    const char* cs;
 };
 
 enum struct ReflectionWalkType : uint8
 {
-	Begin,
-	End,
-	Element,
-	ElementBegin,
-	ElementEnd,
+    Begin,
+    End,
+    Element,
+    ElementBegin,
+    ElementEnd,
 };
 
 //-----------------------------------//
@@ -78,51 +79,51 @@ typedef HandleId (*ReflectionDeserializeHandleFn)(const char*);
 
 struct API_CORE ReflectionHandleContext
 {
-	Class* type;
-	HandleManager* handles;
-	ReflectionWalkFunction serialize;
-	ReflectionDeserializeHandleFn deserialize;
+    Class* type;
+    HandleManager* handles;
+    ReflectionWalkFunction serialize;
+    ReflectionDeserializeHandleFn deserialize;
 };
 
-typedef std::map<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
+typedef HashMap<Class*, ReflectionHandleContext> ReflectionHandleContextMap;
 
 API_CORE void ReflectionSetHandleContext(
-	ReflectionHandleContextMap*, ReflectionHandleContext context);
+    ReflectionHandleContextMap*, ReflectionHandleContext context);
 
 API_CORE bool ReflectionFindHandleContext(
-	ReflectionHandleContextMap*, Class* klass, ReflectionHandleContext& ctx);
+    ReflectionHandleContextMap*, Class* klass, ReflectionHandleContext& ctx);
 
 //-----------------------------------//
 
 struct API_CORE ReflectionContext
 {
-	ReflectionContext();
+    ReflectionContext();
 
-	bool loading;
-	void* userData;
-	
-	Object* object;
-	Class* objectClass;
+    bool loading;
+    void* userData;
+    
+    Object* object;
+    Class* objectClass;
 
-	Type* type;
-	Primitive* primitive;
-	Class* composite;
-	Enum*  enume;
+    Type* type;
+    Primitive* primitive;
+    Class* composite;
+    Enum*  enume;
 
-	ValueContext valueContext;
-	ReflectionHandleContextMap* handleContextMap;
+    ValueContext valueContext;
+    ReflectionHandleContextMap* handleContextMap;
 
-	const Field* field;
-	void* address;
-	void* elementAddress;
-	uint32 arraySize;
+    const Field* field;
+    void* address;
+    void* elementAddress;
+    uint32 arraySize;
 
-	ReflectionWalkFunction walkComposite;
-	ReflectionWalkFunction walkCompositeField;
-	ReflectionWalkFunction walkCompositeFields;
-	ReflectionWalkFunction walkPrimitive;
-	ReflectionWalkFunction walkEnum;
-	ReflectionWalkFunction walkArray;
+    ReflectionWalkFunction walkComposite;
+    ReflectionWalkFunction walkCompositeField;
+    ReflectionWalkFunction walkCompositeFields;
+    ReflectionWalkFunction walkPrimitive;
+    ReflectionWalkFunction walkEnum;
+    ReflectionWalkFunction walkArray;
 };
 
 //-----------------------------------//
@@ -132,55 +133,55 @@ class Serializer;
 
 enum SerializerType
 {
-	Json,
-	Binary
+    Json,
+    Binary
 };
 
 class API_CORE Serializer
 {
 public
-	:
-	/**
-	 * Create new serializer
-	 * @param allocator allocator used for this instance 
-	 */
-	Serializer(Allocator* allocator);
-	virtual ~Serializer();
+    :
+    /**
+     * Create new serializer
+     * @param allocator allocator used for this instance 
+     */
+    Serializer(Allocator* allocator);
+    virtual ~Serializer();
 
-	/**
-	 * Loads an object from stream.
-	 */
-	virtual Object* load() = 0;
+    /**
+     * Loads an object from stream.
+     */
+    virtual Object* load() = 0;
 
-	/**
-	 * Saves an object to stream.
-	 * @param obj object to save
-	 */
-	virtual bool save(const Object* obj) = 0;
+    /**
+     * Saves an object to stream.
+     * @param obj object to save
+     */
+    virtual bool save(const Object* obj) = 0;
 
-	/**
-	 * Wrapper for file-based loading.
-	 * @param serializer serializer to perform the loading
-	 * @param file file path to create the stream from
-	 */
-	static Object* loadObjectFromFile(Serializer& serializer, 
-		const Path& file);
-	
-	/**
-	 * Wrapper for file-based saving.
-	 * @param serializer serializer to perform the saving
-	 * @param file file path to create the stream from
-	 * @param object object to save
-	 */
-	static bool saveObjectToFile(Serializer& serializer, 
-		const Path& file, Object* object);
+    /**
+     * Wrapper for file-based loading.
+     * @param serializer serializer to perform the loading
+     * @param file file path to create the stream from
+     */
+    static Object* loadObjectFromFile(Serializer& serializer, 
+        const Path& file);
+    
+    /**
+     * Wrapper for file-based saving.
+     * @param serializer serializer to perform the saving
+     * @param file file path to create the stream from
+     * @param object object to save
+     */
+    static bool saveObjectToFile(Serializer& serializer, 
+        const Path& file, Object* object);
 
-	Allocator* allocator; //!< allocator used for the serializer instance
-	Stream* stream; //!< stream to save and load objects from
-	Object* object; //!< object being loaded or saved
+    Allocator* allocator; //!< allocator used for the serializer instance
+    Stream* stream; //!< stream to save and load objects from
+    Object* object; //!< object being loaded or saved
 
-	ReflectionContext serializeContext; //!< reflection context used for serialization
-	ReflectionContext deserializeContext; //!< reflection context used for deserialization
+    ReflectionContext serializeContext; //!< reflection context used for serialization
+    ReflectionContext deserializeContext; //!< reflection context used for deserialization
 };
 
 //-----------------------------------//

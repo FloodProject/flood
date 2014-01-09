@@ -54,7 +54,7 @@ enum class KeyExchangePacket : uint16
 
 static void InitSessionHash( SessionHash& hash, const Vector<uint8>& secret )
 {
-    sha1((unsigned char*)secret.Buffer(), secret.Size(), hash.data());
+    sha1((unsigned char*)secret.Buffer(), secret.Size(), hash.Buffer());
 }
 
 //-----------------------------------//
@@ -135,8 +135,8 @@ bool PacketClientKeyExchanger::processServerPublicKeyPacket(Peer* peer, Packet* 
 
     // Read server's DH parameters
     auto buf = packet->read();
-    uint8 *p = buf.data();
-    if (int ret = dhm_read_params(&dhm, &p, p + buf.size())) 
+	uint8 *p = buf.Buffer();
+    if (int ret = dhm_read_params(&dhm, &p, p + buf.Size())) 
     {
         LogError("dhm_read_params returned %d", ret);
         return false;
@@ -173,7 +173,7 @@ void PacketClientKeyExchanger::sendClientSessionPacket(Peer* peer, int channelId
     PacketPtr packet = PacketCreate((PacketId)KeyExchangePacket::ClientSession);
 
     if (hash)
-        packet->write(hash->data(), hash->size());
+        packet->write(hash->Buffer(), hash->Size());
 
     packet->setFlags(PacketFlags::Encrypted);
     peer->queuePacket(packet, channelId);
@@ -294,10 +294,10 @@ bool PacketServerKeyExchanger::processClientSessionPacket(Peer* peer, Packet* pa
     {
         SessionHash oldHash;
 
-        if (oldHash.size() != data.Size())
+        if (oldHash.Size() != data.Size())
             return false;
 
-        memcpy(oldHash.data(), data.Buffer(), data.Size());
+        memcpy(oldHash.Buffer(), data.Buffer(), data.Size());
 
         session = server->getSessionManager().getSession(oldHash);
 
