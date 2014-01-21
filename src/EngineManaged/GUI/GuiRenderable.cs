@@ -35,7 +35,7 @@ namespace Flood.GUI
             var textureName = "DefaultSkin.png";
             var defaultFont = new Font("Vera.ttf", 16);
 
-            var resMan = FloodEngine.GetEngine().ResourceManager;
+            var resMan = Engine.GetEngine().ResourceManager;
             var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
             var imageHandle = resMan.LoadResource<Image>(options);
             if (imageHandle.Id == 0)
@@ -44,7 +44,7 @@ namespace Flood.GUI
             Skin = new TexturedSkin(GuiRenderer, imageHandle, defaultFont);
             Canvas = new Canvas(Skin);
 
-            Input = new GwenInput(FloodEngine.GetEngine().InputManager);
+            Input = new GwenInput(Engine.GetEngine().InputManager);
             Input.Initialize(Canvas);
         }
 

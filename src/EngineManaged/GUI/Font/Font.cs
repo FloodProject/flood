@@ -43,7 +43,7 @@ namespace Flood.GUI
         public Font(String faceName, int size = 10)
         {
             var ttf = (faceName.EndsWith(".ttf")) ? faceName : faceName + ".ttf";
-            EngineFont = FloodResourceManager.GetResourceManager().LoadResource<Flood.Font>(ttf);
+            EngineFont = ResourceManager.GetResourceManager().LoadResource<Flood.Font>(ttf);
             FaceName = faceName;
             Size = size;
             Smooth = false;
