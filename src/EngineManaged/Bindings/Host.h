@@ -9,6 +9,8 @@
 
 #include "CppSharp.h"
 #include <Core/Network/Host.h>
+#include "ContainerConverter.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

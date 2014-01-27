@@ -33,7 +33,8 @@
 NAMESPACE_CORE_BEGIN
 
 /// Hash map template class.
-template <class T, class U> class HashMap : public HashBase
+template <class T, class U, class HashFunctions = Hash>
+class HashMap : public HashBase
 {
 public:
     /// Hash map key-value pair with const key.
@@ -661,7 +662,19 @@ public:
      * Get first iterator.
      * @return iterator to the beginning
      */
+    Iterator begin() { return Iterator(Head()); }
+
+    /**
+     * Get first iterator.
+     * @return iterator to the beginning
+     */
     ConstIterator Begin() const { return ConstIterator(Head()); }
+
+    /**
+     * Get first iterator.
+     * @return iterator to the beginning
+     */
+    ConstIterator begin() const { return ConstIterator(Head()); }
 
     /**
      * Get last iterator.
@@ -673,7 +686,19 @@ public:
      * Get last iterator.
      * @return iterator to the end
      */
+    Iterator end() { return Iterator(Tail()); }
+
+    /**
+     * Get last iterator.
+     * @return iterator to the end
+     */
     ConstIterator End() const { return ConstIterator(Tail()); }
+
+    /**
+     * Get last iterator.
+     * @return iterator to the end
+     */
+    ConstIterator end() const { return ConstIterator(Tail()); }
 
     /**
      * Get first map key.
@@ -699,7 +724,7 @@ private:
         Node* node = static_cast<Node*>(Ptrs()[hashKey]);
         while (node)
         {
-            if (node->pair.first == key)
+            if (HashFunctions::Equals(node->pair.first, key))
                 return node;
             node = node->Down();
         }
@@ -715,7 +740,7 @@ private:
         Node* node = static_cast<Node*>(Ptrs()[hashKey]);
         while (node)
         {
-            if (node->pair.first == key)
+            if (HashFunctions::Equals(node->pair.first, key))
                 return node;
             previous = node;
             node = node->Down();
@@ -748,6 +773,7 @@ private:
         }
 
         Node* newNode = InsertNode(Tail(), key, value);
+        /// runs through same bucket values
         newNode->down = Ptrs()[hashKey];
         Ptrs()[hashKey] = newNode;
 
@@ -843,7 +869,7 @@ private:
     static bool CompareNodes(Node*& lhs, Node*& rhs) { return lhs->pair.first < rhs->pair.first; }
 
     /// Compute a hash based on the key and the bucket size
-    unsigned Hash(const T& key) const { return MakeHash(key) & (NumBuckets() - 1); }
+    unsigned Hash(const T& key) const { return HashFunctions::MakeHash(key) & (NumBuckets() - 1); }
 };
 
 NAMESPACE_CORE_END

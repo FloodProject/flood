@@ -9,8 +9,10 @@
 
 #include "CppSharp.h"
 #include <Resources/ResourceManager.h>
+#include "ContainerConverter.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
+#include "StringConverter.h"
 
 namespace Flood
 {
@@ -87,6 +89,16 @@ namespace Flood
         ResourceManager(::ResourceManager* native);
         ResourceManager(System::IntPtr native);
         ResourceManager();
+
+        property System::Collections::Generic::Dictionary<System::String^, Flood::ResourceHandle<Flood::Resource^>>^ Resources
+        {
+            System::Collections::Generic::Dictionary<System::String^, Flood::ResourceHandle<Flood::Resource^>>^ get();
+        }
+
+        property System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^>^ ResourceLoaders
+        {
+            System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^>^ get();
+        }
 
         property bool AsynchronousLoading
         {

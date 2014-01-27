@@ -75,7 +75,7 @@ bool ShaderLoader::decode(ResourceLoadOptions& options)
     if( offsetFragment == String::NPOS )
         LogWarn( "No fragment shader found in '%s'", shader->path.CString() );
     else
-        shader->fragment = text.Substring(offsetFragment + gs_FragmentBlock.Length(), String::NPOS);
+        shader->fragment = text.Substring(offsetFragment + gs_FragmentBlock.Length());
 
     return true;
 }

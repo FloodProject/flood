@@ -73,13 +73,13 @@ void Flood::Peer::Instance::set(System::IntPtr object)
 System::String^ Flood::Peer::HostName::get()
 {
     auto __ret = ((::Peer*)NativePtr)->getHostName();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return StringMarshaller::marshalString(__ret);
 }
 
 System::String^ Flood::Peer::HostIP::get()
 {
     auto __ret = ((::Peer*)NativePtr)->getHostIP();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return StringMarshaller::marshalString(__ret);
 }
 
 Flood::PeerState Flood::Peer::State::get()

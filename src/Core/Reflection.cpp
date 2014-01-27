@@ -28,7 +28,7 @@ bool ReflectionDatabase::registerType(Type* type)
 
 	const char* name = type->name;
 
-	if (types.find(name) != types.end())
+	if (types.Find(name) != types.End())
 	{
 		LogAssert("Type '%s' already exists in the database", name);
 		return false;
@@ -97,8 +97,8 @@ ReflectionDatabase& ReflectionDatabase::GetDatabase()
 
 Type* ReflectionDatabase::findType(const char* name)
 {
-	TypeMap::iterator it = types.find(name);
-	if (it == types.end()) return nullptr;
+	TypeMap::Iterator it = types.Find(name);
+	if (it == types.End()) return nullptr;
 
 	return it->second;
 }
@@ -374,22 +374,22 @@ PrimitiveBuiltins& PrimitiveBuiltins::GetBuiltins()
 //-----------------------------------//
 
 // Specializations for all known primitive types.
-template<> Primitive* GetPrimitiveFromType<bool>() { return &PrimitiveGetBuiltins().p_bool; }
-template<> Primitive* GetPrimitiveFromType<int8>() { return &PrimitiveGetBuiltins().p_int8; }
-template<> Primitive* GetPrimitiveFromType<uint8>() { return &PrimitiveGetBuiltins().p_uint8; }
-template<> Primitive* GetPrimitiveFromType<int16>() { return &PrimitiveGetBuiltins().p_int16; }
-template<> Primitive* GetPrimitiveFromType<uint16>() { return &PrimitiveGetBuiltins().p_uint16; }
-template<> Primitive* GetPrimitiveFromType<int32>() { return &PrimitiveGetBuiltins().p_int32; }
-template<> Primitive* GetPrimitiveFromType<uint32>() { return &PrimitiveGetBuiltins().p_uint32; }
-template<> Primitive* GetPrimitiveFromType<int64>() { return &PrimitiveGetBuiltins().p_int64; }
-template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveGetBuiltins().p_uint64; }
-template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveGetBuiltins().p_float; }
-template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveGetBuiltins().p_string; }
-template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveGetBuiltins().p_string; }
-template<> Primitive* GetPrimitiveFromType<UTF8String>() { return &PrimitiveGetBuiltins().p_utf8string; }
-template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveGetBuiltins().p_Vector3; }
-template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveGetBuiltins().p_Color; }
-template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveGetBuiltins().p_Quaternion; }
+template<> Primitive* GetPrimitiveFromType<bool>() { return &PrimitiveBuiltins::GetBuiltins().p_bool; }
+template<> Primitive* GetPrimitiveFromType<int8>() { return &PrimitiveBuiltins::GetBuiltins().p_int8; }
+template<> Primitive* GetPrimitiveFromType<uint8>() { return &PrimitiveBuiltins::GetBuiltins().p_uint8; }
+template<> Primitive* GetPrimitiveFromType<int16>() { return &PrimitiveBuiltins::GetBuiltins().p_int16; }
+template<> Primitive* GetPrimitiveFromType<uint16>() { return &PrimitiveBuiltins::GetBuiltins().p_uint16; }
+template<> Primitive* GetPrimitiveFromType<int32>() { return &PrimitiveBuiltins::GetBuiltins().p_int32; }
+template<> Primitive* GetPrimitiveFromType<uint32>() { return &PrimitiveBuiltins::GetBuiltins().p_uint32; }
+template<> Primitive* GetPrimitiveFromType<int64>() { return &PrimitiveBuiltins::GetBuiltins().p_int64; }
+template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveBuiltins::GetBuiltins().p_uint64; }
+template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveBuiltins::GetBuiltins().p_float; }
+template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<UTF8String>() { return &PrimitiveBuiltins::GetBuiltins().p_utf8string; }
+template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveBuiltins::GetBuiltins().p_Vector3; }
+template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveBuiltins::GetBuiltins().p_Color; }
+template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveBuiltins::GetBuiltins().p_Quaternion; }
 
 //-----------------------------------//
 
@@ -402,7 +402,7 @@ void Enum::addValue(const char* name, int32 value)
 
 int32 Enum::getValue(const char* name)
 {
-	EnumValuesMap::iterator it = values.Find(name);
+	EnumValuesMap::Iterator it = values.Find(name);
 	if (it == values.End()) return -1;
 	
 	return it->second;
@@ -412,7 +412,7 @@ int32 Enum::getValue(const char* name)
 
 const char* Enum::getValueName(int32 value)
 {
-	EnumValuesMap::iterator it = values.Begin();
+	EnumValuesMap::Iterator it = values.Begin();
 	
 	for(; it != values.End(); ++it)
 	{

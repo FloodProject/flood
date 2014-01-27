@@ -38,7 +38,7 @@ class WString;
 class UTF8String;
 
 /// String class.
-class API_CORE FLD_IGNORE String
+class API_CORE FLD_IGNORE_GEN String
 {
 public:
     friend class String;
@@ -1160,7 +1160,7 @@ inline std::ostream& operator<< (std::ostream& os, const String& rhs)
 class UTF8String;
 
 /// Wide character string. Only meant for converting from String and passing to the operating system where necessary.
-class API_CORE WString
+class API_CORE FLD_IGNORE_GEN WString
 {
 public:
     /// Construct empty.
@@ -1245,7 +1245,7 @@ private:
     unsigned bytes; //!< String byte length.
 };
 
-class API_CORE FLD_IGNORE UTF8String
+class API_CORE FLD_IGNORE_GEN UTF8String
 {
 public:
 
@@ -2138,7 +2138,7 @@ public:
      * @param b byte to append
      * @return resulting string
      */
-    UTF8String& Append(const byte b) {return AuxAppend((char)b + "");}
+    UTF8String& Append(const byte b) {return AuxAppend(UTF8String((char)b).CString());}
 
     /**
      * Return a UTF8 substring from position to end.

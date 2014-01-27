@@ -52,11 +52,11 @@ void Flood::RenderBuffer::Update()
 void Flood::RenderBuffer::Read(char attachment, System::Collections::Generic::List<unsigned char>^ data)
 {
     auto arg0 = (::int8)(::int8_t)attachment;
-    auto _tmpdata = std::vector<::uint8>();
+    auto _tmpdata = Vector<::uint8>();
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.Push(_marshalElement);
     }
     auto arg1 = _tmpdata;
     ((::RenderBuffer*)NativePtr)->read(arg0, arg1);

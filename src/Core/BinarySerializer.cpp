@@ -785,6 +785,7 @@ float DecodeFloat(MemoryStream* ms)
 void EncodeString(MemoryStream* ms, const String& s)
 {
     EncodeVariableInteger(ms, s.Length());
+    ms->writeString(s);
 }
 
 bool DecodeString(MemoryStream* ms, String& s)

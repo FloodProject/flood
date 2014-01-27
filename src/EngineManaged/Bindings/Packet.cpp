@@ -40,11 +40,11 @@ void Flood::Packet::Clear()
 
 void Flood::Packet::Write(System::Collections::Generic::List<unsigned char>^ data)
 {
-    auto _tmpdata = std::vector<::byte>();
+    auto _tmpdata = Vector<::byte>();
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.Push(_marshalElement);
     }
     auto arg0 = _tmpdata;
     ((::Packet*)NativePtr)->write(arg0);

@@ -94,11 +94,11 @@ public:
 
             declarations.add(decl);
 
-            add((uint8*)&data.Front(), sizeInBytes);
+            add((uint8*)data.Buffer(), sizeInBytes);
         }
         else
         {
-            set(attr, (uint8*)&data.Front(), sizeInBytes);
+            set(attr, (uint8*)data.Buffer(), sizeInBytes);
         }
     }
     

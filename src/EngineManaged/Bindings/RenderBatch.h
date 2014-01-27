@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Graphics/RenderBatch.h>
+#include "ContainerConverter.h"
 #include "Material.h"
 #include "ResourceHandle.h"
 

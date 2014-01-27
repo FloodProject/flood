@@ -53,18 +53,18 @@ SUITE(Core)
 
     TEST(HashMap_Keys)
     {
-        HashMap<int, String> map;
+        HashMap<int, int> map;
 
-        String str = "";
         for(int i = 0; i < 100; ++i)
         {   
-            map[i] = str += "s";
+            map[i] = i;
         }
-        str = "";
 
         for(int i = 0; i < 100; ++i)
         {   
-            CHECK_EQUAL(map[i],  str += "s");
+            CHECK_EQUAL(map[i],  i);
+            if(map[i] != i)
+                i++;
         }
 
         Vector<int> keys = map.Keys();
@@ -136,6 +136,31 @@ SUITE(Core)
         map.Clear();
         CHECK_EQUAL(map.Size(), 0);
         CHECK(map.Empty());
+    }
+
+    TEST(HashMap_Insert)
+    {
+        HashMap<const char*, int> map;
+        map["Object"] = 12;
+        CHECK_EQUAL(map.Size(), 1);
+        CHECK(map.Contains("Object"));
+
+        map["Extension"] = 13;
+        CHECK_EQUAL(map.Size(), 2);
+        CHECK(map.Contains("Object"));
+        CHECK(map.Contains("Extension"));
+
+        map["FrustrumProjection"] = 14;
+        CHECK_EQUAL(map.Size(), 3);
+        CHECK(map.Contains("Object"));
+        CHECK(map.Contains("Extension"));
+        CHECK(map.Contains("FrustrumProjection"));
+
+        map["FrustrumProjection"] = 16;
+        CHECK_EQUAL(map.Size(), 3);
+        CHECK(map.Contains("Object"));
+        CHECK(map.Contains("Extension"));
+        CHECK(map.Contains("FrustrumProjection"));
     }
 
     TEST(Vector_Stack)
@@ -392,12 +417,12 @@ SUITE(Core)
         CHECK_EQUAL(vec2[2], 2);
         
         Vector<int> vec3(vec1.Buffer(), 2);
-        CHECK_EQUAL(vec2.Size(), 2);
-        CHECK_EQUAL(vec2[0], 2);
-        CHECK_EQUAL(vec2[1], 2);
+        CHECK_EQUAL(vec3.Size(), 2);
+        CHECK_EQUAL(vec3[0], 2);
+        CHECK_EQUAL(vec3[1], 2);
 
         Vector<int> vec4(5);
-        CHECK_EQUAL(vec2.Size(), 5);
+        CHECK_EQUAL(vec4.Size(), 5);
     }
 
     TEST(Vector_Resize)
@@ -414,8 +439,8 @@ SUITE(Core)
         CHECK_EQUAL(vec1[0], "foo");
         CHECK_EQUAL(vec1[1], "foo");
         CHECK_EQUAL(vec1[2], "foo");
+        CHECK_EQUAL(vec1[3], "bar");
         CHECK_EQUAL(vec1[4], "bar");
-        CHECK_EQUAL(vec1[5], "bar");
 
         vec1.Resize(3);
         CHECK_EQUAL(vec1.Size(), 3);

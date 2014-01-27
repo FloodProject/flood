@@ -102,7 +102,7 @@ void UniformBuffer::setUniform( const char* name, const Vector<Vector3>& vec )
 	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
 	element->count = vec.Size();
-	memcpy(&element->data, &vec.Front(), size);
+	memcpy(&element->data, vec.Buffer(), size);
 }
 
 //-----------------------------------//
@@ -167,7 +167,7 @@ void UniformBuffer::setUniform( const char* name, const Vector<Matrix4x4>& vec )
 	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
 	element->count = vec.Size();
-	memcpy(&element->data, &vec.Front(), size);
+    memcpy(&element->data, vec.Buffer(), size);
 }
 
 //-----------------------------------//

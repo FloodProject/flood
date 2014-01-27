@@ -109,7 +109,7 @@ static void ResourceHandleSerialize(
 	Resource* resource = (Resource*) context->object;
 	
     context->valueContext.us = &resource->path;
-    context->primitive = &PrimitiveGetBuiltins().p_utf8string;
+    context->primitive = &PrimitiveBuiltins::GetBuiltins().p_utf8string;
 	context->walkPrimitive(context, wt);
 }
 

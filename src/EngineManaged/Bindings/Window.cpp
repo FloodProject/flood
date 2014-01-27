@@ -17,7 +17,7 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
     Width = native->width;
     Height = native->height;
-    Title = clix::marshalString<clix::E_UTF8>(native->title);
+    Title = StringMarshaller::marshalString(native->title);
     Handle = IntPtr(native->handle);
     Styles = (Flood::WindowStyles)native->styles;
 }
@@ -27,17 +27,17 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
     auto __native = (::WindowSettings*)native.ToPointer();
     Width = __native->width;
     Height = __native->height;
-    Title = clix::marshalString<clix::E_UTF8>(__native->title);
+    Title = StringMarshaller::marshalString(__native->title);
     Handle = IntPtr(__native->handle);
     Styles = (Flood::WindowStyles)__native->styles;
 }
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles)
 {
-    ::WindowSettings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height, clix::marshalString<clix::E_UTF8>(title), (::WindowStyles)styles);
+    ::WindowSettings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height, StringMarshaller::marshalString(title), (::WindowStyles)styles);
     this->Width = _native.width;
     this->Height = _native.height;
-    this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
+    this->Title = StringMarshaller::marshalString(_native.title);
     this->Handle = IntPtr(_native.handle);
     this->Styles = (Flood::WindowStyles)_native.styles;
 }
@@ -126,7 +126,7 @@ int Flood::Window::GetHashCode()
 void Flood::Window::Title::set(System::String^ value)
 {
     auto title = value;
-    auto arg0 = clix::marshalString<clix::E_UTF8>(title);
+    auto arg0 = StringMarshaller::marshalString(title);
     ((::Window*)NativePtr)->setTitle(arg0);
 }
 

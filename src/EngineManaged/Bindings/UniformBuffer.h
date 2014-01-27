@@ -9,6 +9,8 @@
 
 #include "CppSharp.h"
 #include <Graphics/UniformBuffer.h>
+#include "ContainerConverter.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

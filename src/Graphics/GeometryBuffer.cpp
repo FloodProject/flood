@@ -290,7 +290,7 @@ float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const
 	{
 		uint8 elemSize = elem->getSize();
 
-		const uint8* loc = &data.Front() + elem->offset + (elemSize * i);
+        const uint8* loc = data.Buffer() + elem->offset + (elemSize * i);
 		return (float*) loc;
 	}
 
@@ -300,7 +300,7 @@ float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const
 
 	// TODO: Check the bounds and return null in that case too.
 
-	const uint8* loc = &data.Front() + (totalSize * i) + localOffset;
+	const uint8* loc = data.Buffer() + (totalSize * i) + localOffset;
 	return (float*) loc;
 }
 

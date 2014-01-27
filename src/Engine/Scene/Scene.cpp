@@ -233,7 +233,7 @@ static bool DoRayQueryIndexed( const Ray& ray, const GeometryBuffer* gb,
 {
 	int32 indexSizeBytes = gb->indexSize / 8;
 	
-    uint16* indices = (uint16*) &gb->indexData.Front();
+    uint16* indices = (uint16*) gb->indexData.Buffer();
     uint32 numIndices = gb->indexData.Size() / indexSizeBytes;
 
 	uint8* texCoords = (uint8*) gb->getAttribute(VertexAttribute::TexCoord0, 0);

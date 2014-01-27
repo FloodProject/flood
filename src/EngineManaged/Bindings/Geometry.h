@@ -11,6 +11,7 @@
 #include <Engine/Scene/Geometry.h>
 #include "BoundingBox.h"
 #include "Component.h"
+#include "ContainerConverter.h"
 
 namespace Flood
 {

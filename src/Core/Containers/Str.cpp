@@ -483,32 +483,31 @@ void String::Swap(String& str)
 
 String String::Substring(unsigned pos) const
 {
-    if (pos < length)
-    {
-        String ret;
-        ret.Resize(length - pos);
-        CopyChars(ret.buffer, buffer + pos, ret.length);
-        
-        return ret;
-    }
-    else
+    if (pos >= length)
         return String();
+
+    String ret;
+    ret.Resize(length - pos);
+    CopyChars(ret.buffer, buffer + pos, ret.length);
+        
+    return ret;
+
+
+
 }
 
 String String::Substring(unsigned pos, unsigned length) const
 {
-    if (pos < this->length)
-    {
-        String ret;
-        if (pos + length > this->length)
-            length = this->length - pos;
-        ret.Resize(length);
-        CopyChars(ret.buffer, buffer + pos, ret.length);
-        
-        return ret;
-    }
-    else
+    if (pos >= this->length)
         return String();
+
+    String ret;
+    if (pos + length > this->length)
+        length = this->length - pos;
+    ret.Resize(length);
+    CopyChars(ret.buffer, buffer + pos, ret.length);
+
+    return ret;
 }
 
 String String::Trimmed() const

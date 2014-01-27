@@ -13,6 +13,7 @@
 
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
+#define ALLOCATOR_DEFAULT_GROUP_ID 0;
 
 #ifdef PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
@@ -62,13 +63,22 @@ static bool AllocatorSimulateLowMemory = false;
 struct AllocationGroup
 {
     AllocationGroup();
+    AllocationGroup(const char * name);
 
     int64 freed;
     int64 total;
+    const char * name;
 };
 
 AllocationGroup::AllocationGroup()
-    : freed(0), total(0)
+    : freed(0)
+    , total(0)
+{
+}
+AllocationGroup::AllocationGroup(const char * name)
+    : freed(0)
+    , total(0)
+    , name(name)
 {
 }
 
@@ -81,13 +91,13 @@ struct AllocationMetadata
     AllocationMetadata(); 
 
     int32 size;
-    const char* group;
+    int8 group;
     Allocator* allocator;
     int32 pattern;
 };
 
 AllocationMetadata::AllocationMetadata()
-    : size(0), group(nullptr), allocator(nullptr)
+    : size(0), group(0), allocator(nullptr)
 {
 }
 
@@ -97,11 +107,19 @@ static const int32 MEMORY_PATTERN = 0xDEADBEEF;
 
 // TODO: Do not use STL in this low level code.
 
-typedef HashMap<const char*, AllocationGroup> MemoryGroupMap;
+typedef Vector<AllocationGroup, 32> MemoryGroupVector;
 
-static MemoryGroupMap& GetMemoryGroupMap()
+static void InitGroups(MemoryGroupVector &memoryGroups)
 {
-    static MemoryGroupMap memoryGroups;
+    char * gen = ALLOCATOR_DEFAULT_GROUP;
+    memoryGroups.Push(AllocationGroup(gen));
+}
+
+static MemoryGroupVector& GetMemoryGroupVector()
+{
+    static MemoryGroupVector memoryGroups;
+    if(memoryGroups.Empty())
+        InitGroups(memoryGroups);
     return memoryGroups;
 }
 
@@ -109,7 +127,7 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 {
     if(!metadata) return;
 
-    MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
+    MemoryGroupVector& memoryGroups = GetMemoryGroupVector();
     memoryGroups[metadata->group].total += alloc ? metadata->size : 0;
     memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
 }
@@ -151,21 +169,20 @@ void AllocatorSetGroup( Allocator* alloc, const char* group )
 
 void AllocatorDumpInfo()
 {
-    MemoryGroupMap& groups = GetMemoryGroupMap();
+    MemoryGroupVector& groups = GetMemoryGroupVector();
     if (groups.Empty()) return;
 
     LogDebug("-----------------------------------------------------");
     LogDebug("Memory stats");
     LogDebug("-----------------------------------------------------");
 
-    MemoryGroupMap::Iterator it;
-    for(it = groups.Begin(); it != groups.End(); ++it)
+    MemoryGroupVector::Iterator it;
+    for(it = groups.begin(); it != groups.end(); ++it)
     {
-        const char* id = it->first;
-        AllocationGroup& group = it->second;
+        AllocationGroup& group = *it;
         
         const char* fs = "%s\t| total freed: %I64d bytes, total allocated: %I64d bytes";
-        String format = String(StringFormat(fs, id, group.freed, group.total ));
+        String format = String(StringFormat(fs, group.name, group.freed, group.total ));
 
         LogDebug( format.CString() );
     }
@@ -225,7 +242,7 @@ static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 
     AllocationMetadata* metadata = (AllocationMetadata*) instance;
     metadata->size = size;
-    metadata->group = alloc->group;
+    metadata->group = alloc->id;
     metadata->allocator = alloc;
     metadata->pattern = MEMORY_PATTERN;
 
@@ -273,6 +290,7 @@ static Allocator* GetDefaultHeapAllocator()
     heap.deallocate = HeapDellocate;
     heap.reset = nullptr;
     heap.group = ALLOCATOR_DEFAULT_GROUP;
+    heap.id = ALLOCATOR_DEFAULT_GROUP_ID;
 
     return &heap;
 }
@@ -329,6 +347,7 @@ static Allocator* GetDefaultStackAllocator()
     stack.allocate = StackAllocate;
     stack.deallocate = StackDellocate;
     stack.group = ALLOCATOR_DEFAULT_GROUP;
+    stack.id = ALLOCATOR_DEFAULT_GROUP_ID;
     return &stack;
 }
 

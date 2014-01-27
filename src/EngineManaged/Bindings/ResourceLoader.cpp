@@ -28,7 +28,7 @@ Flood::ResourceLoadOption::ResourceLoadOption(System::IntPtr native)
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
-    Name = clix::marshalString<clix::E_UTF8>(native->name);
+    Name = StringMarshaller::marshalString(native->name);
     Stream = gcnew Flood::Stream((::Stream*)native->stream);
     Resource = gcnew Flood::Resource((::Resource*)native->resource);
     Group = (Flood::ResourceGroup)native->group;
@@ -42,7 +42,7 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
     auto __native = (::ResourceLoadOptions*)native.ToPointer();
-    Name = clix::marshalString<clix::E_UTF8>(__native->name);
+    Name = StringMarshaller::marshalString(__native->name);
     Stream = gcnew Flood::Stream((::Stream*)__native->stream);
     Resource = gcnew Flood::Resource((::Resource*)__native->resource);
     Group = (Flood::ResourceGroup)__native->group;
@@ -56,7 +56,7 @@ Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 void Flood::ResourceLoadOptions::AddOption(int key, int value)
 {
     auto _this0 = ::ResourceLoadOptions();
-    _this0.name = clix::marshalString<clix::E_UTF8>((*this).Name);
+    _this0.name = StringMarshaller::marshalUTF8String((*this).Name);
     if ((*this).Stream != nullptr)
         _this0.stream = (::Stream*)(*this).Stream->NativePtr;
     if ((*this).Resource != nullptr)
@@ -71,7 +71,7 @@ void Flood::ResourceLoadOptions::AddOption(int key, int value)
     _this0_marshal0.value = (*this).Option.Value;
     _this0.option = _this0_marshal0;
     _this0.addOption(key, value);
-    Name = clix::marshalString<clix::E_UTF8>(_this0.name);
+    Name = StringMarshaller::marshalString(_this0.name);
     Stream = gcnew Flood::Stream((::Stream*)_this0.stream);
     Resource = gcnew Flood::Resource((::Resource*)_this0.resource);
     Group = (Flood::ResourceGroup)_this0.group;
@@ -173,7 +173,7 @@ Flood::ResourceLoader::ResourceLoader()
 Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _1)
 {
     auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = clix::marshalString<clix::E_UTF8>(_1.Name);
+    _marshal0.name = StringMarshaller::marshalUTF8String(_1.Name);
     if (_1.Stream != nullptr)
         _marshal0.stream = (::Stream*)_1.Stream->NativePtr;
     if (_1.Resource != nullptr)
@@ -196,7 +196,7 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _1)
 bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _2)
 {
     auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = clix::marshalString<clix::E_UTF8>(_2.Name);
+    _marshal0.name = StringMarshaller::marshalUTF8String(_2.Name);
     if (_2.Stream != nullptr)
         _marshal0.stream = (::Stream*)_2.Stream->NativePtr;
     if (_2.Resource != nullptr)
@@ -238,7 +238,7 @@ Flood::ExtensionMetadata Flood::ResourceLoader::Metadata::get()
 System::String^ Flood::ResourceLoader::Name::get()
 {
     auto __ret = ((::ResourceLoader*)NativePtr)->getName();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return StringMarshaller::marshalString(__ret);
 }
 
 Flood::ResourceGroup Flood::ResourceLoader::ResourceGroup::get()
@@ -253,7 +253,7 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Exte
     auto _tmp__ret = gcnew System::Collections::Generic::List<System::String^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
+        auto _marshalElement = StringMarshaller::marshalString(_element);
         _tmp__ret->Add(_marshalElement);
     }
     return _tmp__ret;
@@ -264,7 +264,7 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Exte
     auto _tmpExtensions = gcnew System::Collections::Generic::List<System::String^>();
     for(auto _element : ((::ResourceLoader*)NativePtr)->extensions)
     {
-        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
+        auto _marshalElement = StringMarshaller::marshalString(_element);
         _tmpExtensions->Add(_marshalElement);
     }
     return _tmpExtensions;
@@ -272,11 +272,11 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Exte
 
 void Flood::ResourceLoader::Extensions1::set(System::Collections::Generic::List<System::String^>^ value)
 {
-    auto _tmpvalue = std::vector<::String>();
+    auto _tmpvalue = Vector<::String>();
     for each(System::String^ _element in value)
     {
-        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmpvalue.push_back(_marshalElement);
+        auto _marshalElement = StringMarshaller::marshalString(_element);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::ResourceLoader*)NativePtr)->extensions = _tmpvalue;
 }

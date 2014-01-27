@@ -225,11 +225,11 @@ bool Flood::Scene::DoRayBoxQuery(Flood::Ray ray, System::Collections::Generic::L
     _marshal2.z = ray.Direction.Z;
     _marshal0.direction = _marshal2;
     auto arg0 = _marshal0;
-    auto _tmplist = std::vector<::RayQueryResult>();
+    auto _tmplist = Vector<::RayQueryResult>();
     for each(Flood::RayQueryResult^ _element in list)
     {
         auto _marshalElement = *(::RayQueryResult*)_element->NativePtr;
-        _tmplist.push_back(_marshalElement);
+        _tmplist.Push(_marshalElement);
     }
     auto arg1 = _tmplist;
     auto __ret = ((::Scene*)NativePtr)->doRayBoxQuery(arg0, arg1, all);
@@ -268,11 +268,11 @@ bool Flood::Scene::DoRayVolumeQuery(Flood::Frustum volume, System::Collections::
     _marshal2.z = volume.OrthoSize.Z;
     _marshal0.orthoSize = _marshal2;
     auto arg0 = _marshal0;
-    auto _tmplist = std::vector<::RayQueryResult>();
+    auto _tmplist = Vector<::RayQueryResult>();
     for each(Flood::RayQueryResult^ _element in list)
     {
         auto _marshalElement = *(::RayQueryResult*)_element->NativePtr;
-        _tmplist.push_back(_marshalElement);
+        _tmplist.Push(_marshalElement);
     }
     auto arg1 = _tmplist;
     auto __ret = ((::Scene*)NativePtr)->doRayVolumeQuery(arg0, arg1, all);

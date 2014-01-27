@@ -9,7 +9,9 @@
 
 #include "CppSharp.h"
 #include <Engine/Scene/Group.h>
+#include "ContainerConverter.h"
 #include "Entity.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

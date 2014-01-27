@@ -59,8 +59,8 @@ typedef HashMap<String, UniformBufferElement*> UniformBufferElements;
 class API_GRAPHICS UniformBuffer : public ReferenceCounted
 {
 public:
-
-	UniformBufferElements elements;
+    // Todo: fix bindings generator so that FLD_IGNORE is not needed here
+	FLD_IGNORE UniformBufferElements elements;
 
 	// Gets the uniform if it exists or creates a new one.
 	UniformBufferElement* getElement(const char* name, size_t size);

@@ -62,7 +62,7 @@ static void MeshBuildGeometry(Mesh* mesh, RenderablesVector& rends)
         // Gets a material for the group.
         MaterialHandle material = MeshBuildMaterial(mesh, group);
 
-        gb->addIndex((uint8*)&group.indices.Front(), numIndices*sizeof(uint16));
+        gb->addIndex((uint8*)group.indices.Buffer(), numIndices*sizeof(uint16));
 
         RenderBatch* renderable = AllocateHeap(RenderBatch);
         renderable->setPrimitiveType( PrimitiveType::Triangles );

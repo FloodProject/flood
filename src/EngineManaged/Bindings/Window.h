@@ -10,6 +10,7 @@
 #include "CppSharp.h"
 #include <Engine/Window/Window.h>
 #include "RenderTarget.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

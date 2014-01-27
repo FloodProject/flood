@@ -166,11 +166,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer::get()
 void Flood::Image::Buffer::set(System::Collections::Generic::List<unsigned char>^ value)
 {
     auto v = value;
-    auto _tmpv = std::vector<::byte>();
+    auto _tmpv = Vector<::byte>();
     for each(unsigned char _element in v)
     {
         auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
-        _tmpv.push_back(_marshalElement);
+        _tmpv.Push(_marshalElement);
     }
     auto arg0 = _tmpv;
     ((::Image*)NativePtr)->setBuffer(arg0);
@@ -245,8 +245,8 @@ void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
 void Flood::ImageWriter::Save(Flood::Image^ image, System::String^ filePath)
 {
     auto arg0 = (::Image*)image->NativePtr;
-    auto _arg1 = clix::marshalString<clix::E_UTF8>(filePath);
-    auto arg1 = _arg1.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(filePath);
+    auto arg1 = ____temp.c_str();
     ((::ImageWriter*)NativePtr)->save(arg0, arg1);
 }
 

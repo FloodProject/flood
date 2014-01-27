@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Core/Network/SessionManager.h>
+#include "ContainerConverter.h"
 
 namespace Flood
 {

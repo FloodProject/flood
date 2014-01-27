@@ -28,7 +28,7 @@
 #include <cassert>
 
 /// Hash set template class.
- template <class T> class HashSet : public HashBase
+template <class T, class HashFunctions = Hash> class HashSet : public HashBase
 {
 public:
     /// Hash set node.
@@ -621,7 +621,7 @@ private:
         Node* node = static_cast<Node*>(Ptrs()[hashKey]);
         while (node)
         {
-            if (node->key == key)
+            if (HashFunctions::Equals(node->key, key))
                 return node;
             node = node->Down();
         }
@@ -637,7 +637,7 @@ private:
         Node* node = static_cast<Node*>(Ptrs()[hashKey]);
         while (node)
         {
-            if (node->key == key)
+            if (HashFunctions::Equals(node->key, key))
                 return node;
             previous = node;
             node = node->Down();
@@ -728,6 +728,6 @@ private:
     static bool CompareNodes(Node*& lhs, Node*& rhs) { return lhs->key < rhs->key; }
 
     /// Compute a hash based on the key and the bucket size
-    unsigned Hash(const T& key) const { return MakeHash(key) & (NumBuckets() - 1); }
+    unsigned Hash(const T& key) const { return HashFunctions::MakeHash(key) & (NumBuckets() - 1); }
 };
 

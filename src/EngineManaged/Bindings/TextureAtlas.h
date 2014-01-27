@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Engine/Texture/TextureAtlas.h>
+#include "ContainerConverter.h"
 #include "Image.h"
 #include "ResourceHandle.h"
 #include "Vector.h"

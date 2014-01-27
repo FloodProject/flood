@@ -97,7 +97,7 @@ struct HashIteratorBase
 /// Hash set/map base class.
 class API_CORE HashBase
 {
-    template <class T, class U> 
+    template <class T, class U, class HashFunctions> 
     friend class HashMap;
 
 public:

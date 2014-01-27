@@ -9,10 +9,12 @@
 
 #include "CppSharp.h"
 #include <Graphics/Resources/Material.h>
+#include "ContainerConverter.h"
 #include "Image.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "ShaderMaterial.h"
+#include "StringConverter.h"
 #include "Vector.h"
 
 namespace Flood
@@ -153,6 +155,12 @@ namespace Flood
         property Flood::BlendDestination BlendDestination
         {
             Flood::BlendDestination get();
+        }
+
+        property System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ TextureUnits
+        {
+            System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ get();
+            void set(System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^);
         }
 
         property System::String^ Name1

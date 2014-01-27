@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Graphics/Resources/Image.h>
+#include "ContainerConverter.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
 

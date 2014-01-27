@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Graphics/Texture.h>
+#include "ContainerConverter.h"
 #include "Image.h"
 #include "ResourceHandle.h"
 

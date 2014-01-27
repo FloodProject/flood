@@ -101,7 +101,7 @@ void Flood::Host::_SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int 
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)
 {
-    Address = clix::marshalString<clix::E_UTF8>(native->address);
+    Address = StringMarshaller::marshalString(native->address);
     Port = native->port;
     ChannelCount = native->channelCount;
 }
@@ -109,15 +109,15 @@ Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* nat
 Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 {
     auto __native = (::HostConnectionDetails*)native.ToPointer();
-    Address = clix::marshalString<clix::E_UTF8>(__native->address);
+    Address = StringMarshaller::marshalString(__native->address);
     Port = __native->port;
     ChannelCount = __native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
 {
-    ::HostConnectionDetails _native(clix::marshalString<clix::E_UTF8>(address), (::uint16)(::uint16_t)port, (::uint8)(::uint8_t)channelCount);
-    this->Address = clix::marshalString<clix::E_UTF8>(_native.address);
+    ::HostConnectionDetails _native(StringMarshaller::marshalString(address), (::uint16)(::uint16_t)port, (::uint8)(::uint8_t)channelCount);
+    this->Address = StringMarshaller::marshalString(_native.address);
     this->Port = _native.port;
     this->ChannelCount = _native.channelCount;
 }
@@ -142,7 +142,7 @@ Flood::HostClient::HostClient()
 bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
-    _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
+    _marshal0.address = StringMarshaller::marshalString(_0.Address);
     _marshal0.port = (::uint16)(::uint16_t)_0.Port;
     _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;
@@ -191,7 +191,7 @@ Flood::HostServer::HostServer(System::IntPtr native)
 bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
-    _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
+    _marshal0.address = StringMarshaller::marshalString(_0.Address);
     _marshal0.port = (::uint16)(::uint16_t)_0.Port;
     _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;

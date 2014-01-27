@@ -451,7 +451,7 @@ void RenderBackendGLES2::buildIndexBuffer(IndexBuffer* ib)
 
 	bindIndexBuffer(ib);
 
-	const GLvoid* data = &gb->indexData.Front();
+	const GLvoid* data = gb->indexData.Buffer();
 
 	// Reserve space for all the buffer elements.
 	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());

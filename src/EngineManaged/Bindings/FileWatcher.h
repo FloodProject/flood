@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Core/FileWatcher.h>
+#include "StringConverter.h"
 
 namespace Flood
 {

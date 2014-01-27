@@ -47,7 +47,7 @@ typedef Delegate2<Thread*, void*> ThreadFunction;
  * execution. All threads of a process share its virtual address space
  * and system resources.
  */
-class API_CORE Thread
+class FLD_IGNORE API_CORE Thread
 {
 public:
 
@@ -104,7 +104,7 @@ public:
  * use of a common resource, such as a global variable, by pieces of 
  * computer code called critical sections.
  */
-struct API_CORE Mutex
+struct FLD_IGNORE API_CORE Mutex
 {
 	Mutex();
 	~Mutex();
@@ -141,7 +141,7 @@ struct API_CORE Mutex
  * condition such that one or all of the threads that are waiting on the 
  * condition variable become active.
  */
-struct API_CORE Condition
+struct FLD_IGNORE API_CORE Condition
 {
 	Condition();
 	~Condition();

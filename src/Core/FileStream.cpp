@@ -53,12 +53,15 @@ bool FileStream::open()
 	}
 
 #ifdef COMPILER_MSVC
-	fopen_s(&fileHandle, path.CString(), mode);
+    errno_t err;
+    err = fopen_s(&fileHandle, path.CString(), mode);
+    isValid = err == 0;
 #else
 	fileHandle = fopen(path.CString(), mode);
+    isValid = fileHandle != nullptr;
 #endif
 
-	isValid = fileHandle != nullptr;
+
 	return isValid;
 }
 

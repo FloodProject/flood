@@ -9,7 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
-#include "Core/containers/HashMap.h"
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -97,8 +97,6 @@ public:
 	const char* name; //!< Name of the type.
 
 	uint16 size; //!< Size of the type.
-
-	Vector<TypeAttribute> attributes;//!< Attributes of the type.
 
 	ReflectionWalkFunction serialize; //!< Custom walk function.
 
@@ -316,7 +314,7 @@ public:
 	Type* type; //!< field type
 	FieldId id; //!< field id
 	const char* name; //!< field name
-	std::vector<const char*> aliases; //!< field aliases
+	Vector<const char*> aliases; //!< field aliases
 	uint16 size; //!< field size
 	uint16 offset; //!< field offset
 	uint16 pointer_size; //!< field pointer size 
@@ -399,6 +397,7 @@ public:
 	Primitive p_float; //!< float primitive
 	Primitive p_double; //!< double primitive
 	Primitive p_string; //!< string primitive
+	Primitive p_utf8string; //!< utf8 string primitive
 	Primitive p_Vector3; //!< vector3 primitive
 	Primitive p_Color; //!< color primitive
 	Primitive p_Quaternion; //!< quaternion primitive
