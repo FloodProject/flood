@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Core/String.h>
-#include "ContainerConverter.h"
 #include "StringConverter.h"
 
 namespace Flood

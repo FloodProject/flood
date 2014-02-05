@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Resources/ResourceManager.h>
-#include "ContainerConverter.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "StringConverter.h"

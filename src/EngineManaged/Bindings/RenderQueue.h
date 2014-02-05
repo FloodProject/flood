@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Graphics/RenderQueue.h>
-#include "ContainerConverter.h"
 #include "Matrix4x3.h"
 #include "Matrix4x4.h"
 

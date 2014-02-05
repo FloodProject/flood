@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Graphics/RenderDevice.h>
-#include "ContainerConverter.h"
 
 namespace Flood
 {

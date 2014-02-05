@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Resources/ResourceLoader.h>
-#include "ContainerConverter.h"
 #include "Extension.h"
 #include "StringConverter.h"
 

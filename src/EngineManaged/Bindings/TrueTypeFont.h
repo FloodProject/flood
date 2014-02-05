@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Engine/Resources/TrueTypeFont.h>
-#include "ContainerConverter.h"
 #include "Font.h"
 #include "Image.h"
 #include "ResourceHandle.h"

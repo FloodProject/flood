@@ -9,7 +9,6 @@
 
 #include "CppSharp.h"
 #include <Engine/Scene/Scene.h>
-#include "ContainerConverter.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "Vector.h"

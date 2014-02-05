@@ -448,7 +448,7 @@ namespace Flood
     }
 
     #endregion
-
+    
     #region Type Maps
     [TypeMap("RefPtr")]
     public class RefPtrMap : TypeMap
@@ -977,18 +977,6 @@ ASTRecord<Declaration> loc)
         {
             throw new System.NotImplementedException();
         }
-
-        public override void CLITypeReference(CLITypeReferenceCollector collector,
-ASTRecord<Declaration> loc)
-        {
-            var typeRef = collector.GetTypeReference(Declaration);
-            typeRef.Include = new Include()
-            {
-                File = "ContainerConverter.h",
-                Kind = Include.IncludeKind.Quoted,
-                InHeader = true
-            };
-        }
     }
 
     [TypeMap("HashSet")]
@@ -1110,18 +1098,6 @@ ASTRecord<Declaration> loc)
         {
             throw new System.NotImplementedException();
         }
-
-        public override void CLITypeReference(CLITypeReferenceCollector collector,
-ASTRecord<Declaration> loc)
-        {
-            var typeRef = collector.GetTypeReference(Declaration);
-            typeRef.Include = new Include()
-            {
-                File = "ContainerConverter.h",
-                Kind = Include.IncludeKind.Quoted,
-                InHeader = true
-            };
-        }
     }
 
     [TypeMap("Vector")]
@@ -1242,18 +1218,6 @@ ASTRecord<Declaration> loc)
         public override void CSharpMarshalToManaged(MarshalContext ctx)
         {
             throw new System.NotImplementedException();
-        }
-
-        public override void CLITypeReference(CLITypeReferenceCollector collector,
-    ASTRecord<Declaration> loc)
-        {
-            var typeRef = collector.GetTypeReference(Declaration);
-            typeRef.Include = new Include()
-            {
-                File = "ContainerConverter.h",
-                Kind = Include.IncludeKind.Quoted,
-                InHeader = true
-            };
         }
 
     }
