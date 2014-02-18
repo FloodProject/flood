@@ -87,7 +87,7 @@ bool Flood::Camera::Equals(System::Object^ object)
     auto obj = dynamic_cast<Camera^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Camera::GetHashCode()

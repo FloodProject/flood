@@ -120,7 +120,7 @@ bool Flood::GeometryBuffer::Equals(System::Object^ object)
     auto obj = dynamic_cast<GeometryBuffer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::GeometryBuffer::GetHashCode()
@@ -128,12 +128,12 @@ int Flood::GeometryBuffer::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::GeometryBuffer::Instance::get()
+System::IntPtr Flood::GeometryBuffer::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::GeometryBuffer::Instance::set(System::IntPtr object)
+void Flood::GeometryBuffer::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::GeometryBuffer*)object.ToPointer();
 }
@@ -198,13 +198,13 @@ void Flood::GeometryBuffer::Access::set(Flood::BufferAccess value)
 
 System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::Data::get()
 {
-    auto _tmpData = gcnew System::Collections::Generic::List<unsigned char>();
+    auto _tmp__Data = gcnew System::Collections::Generic::List<unsigned char>();
     for(auto _element : ((::GeometryBuffer*)NativePtr)->data)
     {
         auto _marshalElement = _element;
-        _tmpData->Add(_marshalElement);
+        _tmp__Data->Add(_marshalElement);
     }
-    return _tmpData;
+    return _tmp__Data;
 }
 
 void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigned char>^ value)
@@ -220,13 +220,13 @@ void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigne
 
 System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::IndexData::get()
 {
-    auto _tmpIndexData = gcnew System::Collections::Generic::List<unsigned char>();
+    auto _tmp__IndexData = gcnew System::Collections::Generic::List<unsigned char>();
     for(auto _element : ((::GeometryBuffer*)NativePtr)->indexData)
     {
         auto _marshalElement = _element;
-        _tmpIndexData->Add(_marshalElement);
+        _tmp__IndexData->Add(_marshalElement);
     }
-    return _tmpIndexData;
+    return _tmp__IndexData;
 }
 
 void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<unsigned char>^ value)

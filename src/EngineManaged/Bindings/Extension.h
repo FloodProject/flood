@@ -24,9 +24,28 @@ namespace Flood
 
         ExtensionMetadata(::ExtensionMetadata* native);
         ExtensionMetadata(System::IntPtr native);
-        System::String^ Name;
-        System::String^ Description;
-        int Priority;
+        property System::String^ Name
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property System::String^ Description
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property int Priority
+        {
+            int get();
+            void set(int);
+        }
+
+        private:
+        System::String^ __Name;
+        System::String^ __Description;
+        int __Priority;
     };
 
     /// <summary>
@@ -39,7 +58,7 @@ namespace Flood
     public:
 
         property ::Extension* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

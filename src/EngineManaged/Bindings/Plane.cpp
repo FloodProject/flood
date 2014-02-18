@@ -14,14 +14,14 @@ using namespace System::Runtime::InteropServices;
 Flood::Plane::Plane(::Plane* native)
 {
     Normal = Flood::Vector3((::Vector3*)&native->normal);
-    Offset = native->offset;
+    __Offset = native->offset;
 }
 
 Flood::Plane::Plane(System::IntPtr native)
 {
     auto __native = (::Plane*)native.ToPointer();
     Normal = Flood::Vector3((::Vector3*)&__native->normal);
-    Offset = __native->offset;
+    __Offset = __native->offset;
 }
 
 Flood::Plane::Plane(Flood::Vector3 normal, Flood::Vector3 point)
@@ -61,7 +61,7 @@ void Flood::Plane::Normalize()
     _this0.offset = (*this).Offset;
     _this0.normalize();
     Normal = Flood::Vector3((::Vector3*)&_this0.normal);
-    Offset = _this0.offset;
+    __Offset = _this0.offset;
 }
 
 float Flood::Plane::Distance(Flood::Vector3 point)
@@ -80,7 +80,7 @@ float Flood::Plane::Distance(Flood::Vector3 point)
     auto arg0 = _marshal0;
     auto __ret = _this0.distance(arg0);
     Normal = Flood::Vector3((::Vector3*)&_this0.normal);
-    Offset = _this0.offset;
+    __Offset = _this0.offset;
     return __ret;
 }
 
@@ -95,7 +95,7 @@ float Flood::Plane::Distance(float x, float y, float z)
     _this0.offset = (*this).Offset;
     auto __ret = _this0.distance(x, y, z);
     Normal = Flood::Vector3((::Vector3*)&_this0.normal);
-    Offset = _this0.offset;
+    __Offset = _this0.offset;
     return __ret;
 }
 
@@ -115,7 +115,7 @@ Flood::Vector3 Flood::Plane::Project(Flood::Vector3 vec)
     auto arg0 = _marshal0;
     auto __ret = _this0.project(arg0);
     Normal = Flood::Vector3((::Vector3*)&_this0.normal);
-    Offset = _this0.offset;
+    __Offset = _this0.offset;
     return Flood::Vector3((::Vector3*)&__ret);
 }
 
@@ -144,7 +144,17 @@ bool Flood::Plane::Intersects(Flood::Ray ray, [System::Runtime::InteropServices:
     auto __ret = _this0.intersects(arg0, arg1);
     distance = arg1;
     Normal = Flood::Vector3((::Vector3*)&_this0.normal);
-    Offset = _this0.offset;
+    __Offset = _this0.offset;
     return __ret;
+}
+
+float Flood::Plane::Offset::get()
+{
+    return __Offset;
+}
+
+void Flood::Plane::Offset::set(float value)
+{
+    __Offset = value;
 }
 

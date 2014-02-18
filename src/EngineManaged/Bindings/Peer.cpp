@@ -52,7 +52,7 @@ bool Flood::Peer::Equals(System::Object^ object)
     auto obj = dynamic_cast<Peer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Peer::GetHashCode()
@@ -60,12 +60,12 @@ int Flood::Peer::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Peer::Instance::get()
+System::IntPtr Flood::Peer::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Peer::Instance::set(System::IntPtr object)
+void Flood::Peer::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Peer*)object.ToPointer();
 }

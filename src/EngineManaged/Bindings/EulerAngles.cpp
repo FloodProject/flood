@@ -13,17 +13,17 @@ using namespace System::Runtime::InteropServices;
 
 Flood::EulerAngles::EulerAngles(::EulerAngles* native)
 {
-    X = native->x;
-    Y = native->y;
-    Z = native->z;
+    __X = native->x;
+    __Y = native->y;
+    __Z = native->z;
 }
 
 Flood::EulerAngles::EulerAngles(System::IntPtr native)
 {
     auto __native = (::EulerAngles*)native.ToPointer();
-    X = __native->x;
-    Y = __native->y;
-    Z = __native->z;
+    __X = __native->x;
+    __Y = __native->y;
+    __Z = __native->z;
 }
 
 Flood::EulerAngles::EulerAngles(float x, float y, float z)
@@ -41,9 +41,9 @@ void Flood::EulerAngles::Rotate(float x, float y, float z)
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     _this0.rotate(x, y, z);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
 }
 
 void Flood::EulerAngles::Identity()
@@ -53,8 +53,38 @@ void Flood::EulerAngles::Identity()
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     _this0.identity();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
+}
+
+float Flood::EulerAngles::X::get()
+{
+    return __X;
+}
+
+void Flood::EulerAngles::X::set(float value)
+{
+    __X = value;
+}
+
+float Flood::EulerAngles::Y::get()
+{
+    return __Y;
+}
+
+void Flood::EulerAngles::Y::set(float value)
+{
+    __Y = value;
+}
+
+float Flood::EulerAngles::Z::get()
+{
+    return __Z;
+}
+
+void Flood::EulerAngles::Z::set(float value)
+{
+    __Z = value;
 }
 

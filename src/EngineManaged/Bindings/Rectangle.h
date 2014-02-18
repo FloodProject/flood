@@ -26,14 +26,40 @@ namespace Flood
         Rectangle(System::IntPtr native);
         Rectangle(int x, int y, int width, int height);
 
-        int X;
-        int Y;
-        int Width;
-        int Height;
+        property int X
+        {
+            int get();
+            void set(int);
+        }
+
+        property int Y
+        {
+            int get();
+            void set(int);
+        }
+
+        property int Width
+        {
+            int get();
+            void set(int);
+        }
+
+        property int Height
+        {
+            int get();
+            void set(int);
+        }
+
         /// <summary>
         /// Returns true if this rectangle is contained in rect.
         /// </summary>
         bool IsContainedIn(Flood::Rectangle rect);
+
+        private:
+        int __X;
+        int __Y;
+        int __Width;
+        int __Height;
     };
 
     public value struct RectangleF
@@ -44,13 +70,39 @@ namespace Flood
         RectangleF(System::IntPtr native);
         RectangleF(float x, float y, float width, float height);
 
-        float X;
-        float Y;
-        float Width;
-        float Height;
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Width
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Height
+        {
+            float get();
+            void set(float);
+        }
+
         /// <summary>
         /// Returns true if this rectangle is contained in rect.
         /// </summary>
         bool IsContainedIn(Flood::RectangleF rect);
+
+        private:
+        float __X;
+        float __Y;
+        float __Width;
+        float __Height;
     };
 }

@@ -63,7 +63,7 @@ bool Flood::RenderDevice::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderDevice^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderDevice::GetHashCode()
@@ -78,12 +78,12 @@ Flood::RenderDevice^ Flood::RenderDevice::GetRenderDevice()
     return gcnew Flood::RenderDevice((::RenderDevice*)__ret);
 }
 
-System::IntPtr Flood::RenderDevice::Instance::get()
+System::IntPtr Flood::RenderDevice::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderDevice::Instance::set(System::IntPtr object)
+void Flood::RenderDevice::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderDevice*)object.ToPointer();
 }

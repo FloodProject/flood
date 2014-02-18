@@ -68,7 +68,7 @@ bool Flood::Packet::Equals(System::Object^ object)
     auto obj = dynamic_cast<Packet^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Packet::GetHashCode()
@@ -76,12 +76,12 @@ int Flood::Packet::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Packet::Instance::get()
+System::IntPtr Flood::Packet::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Packet::Instance::set(System::IntPtr object)
+void Flood::Packet::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Packet*)object.ToPointer();
 }

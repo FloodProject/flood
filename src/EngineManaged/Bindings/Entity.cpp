@@ -99,7 +99,7 @@ bool Flood::Entity::Equals(System::Object^ object)
     auto obj = dynamic_cast<Entity^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Entity::GetHashCode()
@@ -115,12 +115,12 @@ Flood::Entity^ Flood::Entity::Create(Flood::Allocator^ _0)
     return gcnew Flood::Entity((::Entity*)__ret);
 }
 
-System::IntPtr Flood::Entity::Instance::get()
+System::IntPtr Flood::Entity::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Entity::Instance::set(System::IntPtr object)
+void Flood::Entity::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Entity*)object.ToPointer();
 }
@@ -218,13 +218,13 @@ void Flood::Entity::ComponentRemoved::remove(System::Action<Flood::Component^>^ 
     _ComponentRemoved = static_cast<System::Action<Flood::Component^>^>(System::Delegate::Remove(_ComponentRemoved, evt));
 }
 
-void Flood::Entity::ComponentRemoved::raise(Flood::Component^ _1)
+void Flood::Entity::ComponentRemoved::raise(Flood::Component^ _0)
 {
-    _ComponentRemoved(_1);
+    _ComponentRemoved(_0);
 }
 
-void Flood::Entity::_ComponentRemovedRaise(const ::ComponentPtr& _1)
+void Flood::Entity::_ComponentRemovedRaise(const ::ComponentPtr& _0)
 {
-    ComponentRemoved::raise(gcnew Flood::Component((::Component*)_1.get()));
+    ComponentRemoved::raise(gcnew Flood::Component((::Component*)_0.get()));
 }
 

@@ -31,10 +31,6 @@ namespace Flood
 
         Quaternion(Flood::EulerAngles angles);
 
-        float X;
-        float Y;
-        float Z;
-        float W;
         property float ToRotateAboutX
         {
             void set(float);
@@ -65,6 +61,30 @@ namespace Flood
             Flood::EulerAngles get();
         }
 
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Z
+        {
+            float get();
+            void set(float);
+        }
+
+        property float W
+        {
+            float get();
+            void set(float);
+        }
+
         static bool operator==(Flood::Quaternion __op, Flood::Quaternion q);
 
         static bool operator!=(Flood::Quaternion __op, Flood::Quaternion q);
@@ -91,5 +111,11 @@ namespace Flood
         {
             Flood::Quaternion get();
         }
+
+        private:
+        float __X;
+        float __Y;
+        float __Z;
+        float __W;
     };
 }

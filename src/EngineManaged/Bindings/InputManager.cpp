@@ -35,7 +35,7 @@ bool Flood::InputManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<InputManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::InputManager::GetHashCode()
@@ -60,12 +60,12 @@ Flood::InputManager^ Flood::InputManager::GetInputManager()
     return gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
-System::IntPtr Flood::InputManager::Instance::get()
+System::IntPtr Flood::InputManager::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::InputManager::Instance::set(System::IntPtr object)
+void Flood::InputManager::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::InputManager*)object.ToPointer();
 }

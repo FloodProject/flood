@@ -22,9 +22,9 @@ namespace Flood
 {
     public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ _0, int size, int align);
 
-    public delegate void MemoryFreeFunction(Flood::Allocator^ _1, System::IntPtr object);
+    public delegate void MemoryFreeFunction(Flood::Allocator^ _0, System::IntPtr object);
 
-    public delegate void MemoryResetFunction(Flood::Allocator^ _2);
+    public delegate void MemoryResetFunction(Flood::Allocator^ _0);
 
     /// <summary>
     /// Interface for a custom memory allocator.
@@ -34,7 +34,7 @@ namespace Flood
     public:
 
         property ::Allocator* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

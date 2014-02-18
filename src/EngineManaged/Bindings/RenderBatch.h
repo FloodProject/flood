@@ -77,8 +77,21 @@ namespace Flood
 
         RenderBatchRange(::RenderBatchRange* native);
         RenderBatchRange(System::IntPtr native);
-        unsigned short Start;
-        unsigned short End;
+        property unsigned short Start
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short End
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        private:
+        unsigned short __Start;
+        unsigned short __End;
     };
 
     public ref class RenderBatch : ICppInstance
@@ -86,7 +99,7 @@ namespace Flood
     public:
 
         property ::RenderBatch* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

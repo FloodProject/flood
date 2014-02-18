@@ -29,12 +29,26 @@ namespace Flood
         Settings(System::IntPtr native);
         Settings(unsigned short width, unsigned short height);
 
-        unsigned short Width;
-        unsigned short Height;
         property Flood::Vector2i Size
         {
             Flood::Vector2i get();
         }
+
+        property unsigned short Width
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short Height
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        private:
+        unsigned short __Width;
+        unsigned short __Height;
     };
 
     public ref class RenderTarget : ICppInstance
@@ -42,7 +56,7 @@ namespace Flood
     public:
 
         property ::RenderTarget* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

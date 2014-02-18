@@ -13,17 +13,47 @@ using namespace System::Runtime::InteropServices;
 
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
-    Time = native->time;
-    Message = clix::marshalString<clix::E_UTF8>(native->message);
-    Level = (Flood::LogLevel)native->level;
+    __Time = native->time;
+    __Message = clix::marshalString<clix::E_UTF8>(native->message);
+    __Level = (Flood::LogLevel)native->level;
 }
 
 Flood::LogEntry::LogEntry(System::IntPtr native)
 {
     auto __native = (::LogEntry*)native.ToPointer();
-    Time = __native->time;
-    Message = clix::marshalString<clix::E_UTF8>(__native->message);
-    Level = (Flood::LogLevel)__native->level;
+    __Time = __native->time;
+    __Message = clix::marshalString<clix::E_UTF8>(__native->message);
+    __Level = (Flood::LogLevel)__native->level;
+}
+
+float Flood::LogEntry::Time::get()
+{
+    return __Time;
+}
+
+void Flood::LogEntry::Time::set(float value)
+{
+    __Time = value;
+}
+
+System::String^ Flood::LogEntry::Message::get()
+{
+    return __Message;
+}
+
+void Flood::LogEntry::Message::set(System::String^ value)
+{
+    __Message = value;
+}
+
+Flood::LogLevel Flood::LogEntry::Level::get()
+{
+    return __Level;
+}
+
+void Flood::LogEntry::Level::set(Flood::LogLevel value)
+{
+    __Level = value;
 }
 
 Flood::Log::Log(::Log* native)
@@ -48,7 +78,7 @@ bool Flood::Log::Equals(System::Object^ object)
     auto obj = dynamic_cast<Log^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Log::GetHashCode()
@@ -135,12 +165,12 @@ void Flood::Log::Assert(System::String^ msg)
     ::LogAssert(arg0);
 }
 
-System::IntPtr Flood::Log::Instance::get()
+System::IntPtr Flood::Log::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Log::Instance::set(System::IntPtr object)
+void Flood::Log::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Log*)object.ToPointer();
 }

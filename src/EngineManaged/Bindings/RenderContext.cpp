@@ -17,19 +17,59 @@ using namespace System::Runtime::InteropServices;
 
 Flood::RenderContextSettings::RenderContextSettings(::RenderContextSettings* native)
 {
-    BitsPerPixel = native->bitsPerPixel;
-    DepthBits = native->depthBits;
-    StencilBits = native->stencilBits;
-    AntialiasLevel = native->antialiasLevel;
+    __BitsPerPixel = native->bitsPerPixel;
+    __DepthBits = native->depthBits;
+    __StencilBits = native->stencilBits;
+    __AntialiasLevel = native->antialiasLevel;
 }
 
 Flood::RenderContextSettings::RenderContextSettings(System::IntPtr native)
 {
     auto __native = (::RenderContextSettings*)native.ToPointer();
-    BitsPerPixel = __native->bitsPerPixel;
-    DepthBits = __native->depthBits;
-    StencilBits = __native->stencilBits;
-    AntialiasLevel = __native->antialiasLevel;
+    __BitsPerPixel = __native->bitsPerPixel;
+    __DepthBits = __native->depthBits;
+    __StencilBits = __native->stencilBits;
+    __AntialiasLevel = __native->antialiasLevel;
+}
+
+unsigned short Flood::RenderContextSettings::BitsPerPixel::get()
+{
+    return __BitsPerPixel;
+}
+
+void Flood::RenderContextSettings::BitsPerPixel::set(unsigned short value)
+{
+    __BitsPerPixel = value;
+}
+
+unsigned short Flood::RenderContextSettings::DepthBits::get()
+{
+    return __DepthBits;
+}
+
+void Flood::RenderContextSettings::DepthBits::set(unsigned short value)
+{
+    __DepthBits = value;
+}
+
+unsigned short Flood::RenderContextSettings::StencilBits::get()
+{
+    return __StencilBits;
+}
+
+void Flood::RenderContextSettings::StencilBits::set(unsigned short value)
+{
+    __StencilBits = value;
+}
+
+unsigned short Flood::RenderContextSettings::AntialiasLevel::get()
+{
+    return __AntialiasLevel;
+}
+
+void Flood::RenderContextSettings::AntialiasLevel::set(unsigned short value)
+{
+    __AntialiasLevel = value;
 }
 
 Flood::RenderContext::RenderContext(::RenderContext* native)
@@ -88,7 +128,7 @@ bool Flood::RenderContext::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderContext^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderContext::GetHashCode()
@@ -96,12 +136,12 @@ int Flood::RenderContext::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RenderContext::Instance::get()
+System::IntPtr Flood::RenderContext::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderContext::Instance::set(System::IntPtr object)
+void Flood::RenderContext::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderContext*)object.ToPointer();
 }

@@ -30,11 +30,31 @@ namespace Flood
         EulerAngles(System::IntPtr native);
         EulerAngles(float x, float y, float z);
 
-        float X;
-        float Y;
-        float Z;
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Z
+        {
+            float get();
+            void set(float);
+        }
+
         void Rotate(float x, float y, float z);
 
         void Identity();
+
+        private:
+        float __X;
+        float __Y;
+        float __Z;
     };
 }

@@ -51,10 +51,35 @@ namespace Flood
 
         UniformBufferElement(::UniformBufferElement* native);
         UniformBufferElement(System::IntPtr native);
-        System::String^ Name;
-        Flood::UniformDataType Type;
-        unsigned short Count;
-        cli::array<unsigned char>^ Data;
+        property System::String^ Name
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property Flood::UniformDataType Type
+        {
+            Flood::UniformDataType get();
+            void set(Flood::UniformDataType);
+        }
+
+        property unsigned short Count
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property cli::array<unsigned char>^ Data
+        {
+            cli::array<unsigned char>^ get();
+            void set(cli::array<unsigned char>^);
+        }
+
+        private:
+        System::String^ __Name;
+        Flood::UniformDataType __Type;
+        unsigned short __Count;
+        cli::array<unsigned char>^ __Data;
     };
 
     /// <summary>
@@ -65,7 +90,7 @@ namespace Flood
     public:
 
         property ::UniformBuffer* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

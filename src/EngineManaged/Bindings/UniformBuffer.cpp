@@ -16,19 +16,59 @@ using namespace System::Runtime::InteropServices;
 
 Flood::UniformBufferElement::UniformBufferElement(::UniformBufferElement* native)
 {
-    Name = clix::marshalString<clix::E_UTF8>(native->name);
-    Type = (Flood::UniformDataType)native->type;
-    Count = native->count;
-    Data = nullptr;
+    __Name = clix::marshalString<clix::E_UTF8>(native->name);
+    __Type = (Flood::UniformDataType)native->type;
+    __Count = native->count;
+    __Data = nullptr;
 }
 
 Flood::UniformBufferElement::UniformBufferElement(System::IntPtr native)
 {
     auto __native = (::UniformBufferElement*)native.ToPointer();
-    Name = clix::marshalString<clix::E_UTF8>(__native->name);
-    Type = (Flood::UniformDataType)__native->type;
-    Count = __native->count;
-    Data = nullptr;
+    __Name = clix::marshalString<clix::E_UTF8>(__native->name);
+    __Type = (Flood::UniformDataType)__native->type;
+    __Count = __native->count;
+    __Data = nullptr;
+}
+
+System::String^ Flood::UniformBufferElement::Name::get()
+{
+    return __Name;
+}
+
+void Flood::UniformBufferElement::Name::set(System::String^ value)
+{
+    __Name = value;
+}
+
+Flood::UniformDataType Flood::UniformBufferElement::Type::get()
+{
+    return __Type;
+}
+
+void Flood::UniformBufferElement::Type::set(Flood::UniformDataType value)
+{
+    __Type = value;
+}
+
+unsigned short Flood::UniformBufferElement::Count::get()
+{
+    return __Count;
+}
+
+void Flood::UniformBufferElement::Count::set(unsigned short value)
+{
+    __Count = value;
+}
+
+cli::array<unsigned char>^ Flood::UniformBufferElement::Data::get()
+{
+    return __Data;
+}
+
+void Flood::UniformBufferElement::Data::set(cli::array<unsigned char>^ value)
+{
+    __Data = value;
 }
 
 Flood::UniformBuffer::UniformBuffer(::UniformBuffer* native)
@@ -210,7 +250,7 @@ bool Flood::UniformBuffer::Equals(System::Object^ object)
     auto obj = dynamic_cast<UniformBuffer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::UniformBuffer::GetHashCode()
@@ -218,12 +258,12 @@ int Flood::UniformBuffer::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::UniformBuffer::Instance::get()
+System::IntPtr Flood::UniformBuffer::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::UniformBuffer::Instance::set(System::IntPtr object)
+void Flood::UniformBuffer::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::UniformBuffer*)object.ToPointer();
 }

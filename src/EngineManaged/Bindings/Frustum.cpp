@@ -15,24 +15,24 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Frustum::Frustum(::Frustum* native)
 {
-    Projection = (Flood::FrustumProjection)native->projection;
+    __Projection = (Flood::FrustumProjection)native->projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&native->matProjection);
-    FieldOfView = native->fieldOfView;
-    NearPlane = native->nearPlane;
-    FarPlane = native->farPlane;
-    AspectRatio = native->aspectRatio;
+    __FieldOfView = native->fieldOfView;
+    __NearPlane = native->nearPlane;
+    __FarPlane = native->farPlane;
+    __AspectRatio = native->aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&native->orthoSize);
 }
 
 Flood::Frustum::Frustum(System::IntPtr native)
 {
     auto __native = (::Frustum*)native.ToPointer();
-    Projection = (Flood::FrustumProjection)__native->projection;
+    __Projection = (Flood::FrustumProjection)__native->projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&__native->matProjection);
-    FieldOfView = __native->fieldOfView;
-    NearPlane = __native->nearPlane;
-    FarPlane = __native->farPlane;
-    AspectRatio = __native->aspectRatio;
+    __FieldOfView = __native->fieldOfView;
+    __NearPlane = __native->nearPlane;
+    __FarPlane = __native->farPlane;
+    __AspectRatio = __native->aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&__native->orthoSize);
 }
 
@@ -68,12 +68,12 @@ void Flood::Frustum::UpdateProjection()
     _this0_marshal1.z = (*this).OrthoSize.Z;
     _this0.orthoSize = _this0_marshal1;
     _this0.updateProjection();
-    Projection = (Flood::FrustumProjection)_this0.projection;
+    __Projection = (Flood::FrustumProjection)_this0.projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&_this0.matProjection);
-    FieldOfView = _this0.fieldOfView;
-    NearPlane = _this0.nearPlane;
-    FarPlane = _this0.farPlane;
-    AspectRatio = _this0.aspectRatio;
+    __FieldOfView = _this0.fieldOfView;
+    __NearPlane = _this0.nearPlane;
+    __FarPlane = _this0.farPlane;
+    __AspectRatio = _this0.aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&_this0.orthoSize);
 }
 
@@ -123,12 +123,12 @@ void Flood::Frustum::UpdatePlanes(Flood::Matrix4x3 matView)
     _marshal0.tz = matView.Tz;
     auto arg0 = _marshal0;
     _this0.updatePlanes(arg0);
-    Projection = (Flood::FrustumProjection)_this0.projection;
+    __Projection = (Flood::FrustumProjection)_this0.projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&_this0.matProjection);
-    FieldOfView = _this0.fieldOfView;
-    NearPlane = _this0.nearPlane;
-    FarPlane = _this0.farPlane;
-    AspectRatio = _this0.aspectRatio;
+    __FieldOfView = _this0.fieldOfView;
+    __NearPlane = _this0.nearPlane;
+    __FarPlane = _this0.farPlane;
+    __AspectRatio = _this0.aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&_this0.orthoSize);
 }
 
@@ -178,12 +178,12 @@ void Flood::Frustum::UpdateCorners(Flood::Matrix4x3 matView)
     _marshal0.tz = matView.Tz;
     auto arg0 = _marshal0;
     _this0.updateCorners(arg0);
-    Projection = (Flood::FrustumProjection)_this0.projection;
+    __Projection = (Flood::FrustumProjection)_this0.projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&_this0.matProjection);
-    FieldOfView = _this0.fieldOfView;
-    NearPlane = _this0.nearPlane;
-    FarPlane = _this0.farPlane;
-    AspectRatio = _this0.aspectRatio;
+    __FieldOfView = _this0.fieldOfView;
+    __NearPlane = _this0.nearPlane;
+    __FarPlane = _this0.farPlane;
+    __AspectRatio = _this0.aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&_this0.orthoSize);
 }
 
@@ -231,13 +231,63 @@ bool Flood::Frustum::Intersects(Flood::BoundingBox box)
     _marshal0.max = _marshal2;
     auto arg0 = _marshal0;
     auto __ret = _this0.intersects(arg0);
-    Projection = (Flood::FrustumProjection)_this0.projection;
+    __Projection = (Flood::FrustumProjection)_this0.projection;
     MatProjection = Flood::Matrix4x4((::Matrix4x4*)&_this0.matProjection);
-    FieldOfView = _this0.fieldOfView;
-    NearPlane = _this0.nearPlane;
-    FarPlane = _this0.farPlane;
-    AspectRatio = _this0.aspectRatio;
+    __FieldOfView = _this0.fieldOfView;
+    __NearPlane = _this0.nearPlane;
+    __FarPlane = _this0.farPlane;
+    __AspectRatio = _this0.aspectRatio;
     OrthoSize = Flood::Vector3((::Vector3*)&_this0.orthoSize);
     return __ret;
+}
+
+Flood::FrustumProjection Flood::Frustum::Projection::get()
+{
+    return __Projection;
+}
+
+void Flood::Frustum::Projection::set(Flood::FrustumProjection value)
+{
+    __Projection = value;
+}
+
+float Flood::Frustum::FieldOfView::get()
+{
+    return __FieldOfView;
+}
+
+void Flood::Frustum::FieldOfView::set(float value)
+{
+    __FieldOfView = value;
+}
+
+float Flood::Frustum::NearPlane::get()
+{
+    return __NearPlane;
+}
+
+void Flood::Frustum::NearPlane::set(float value)
+{
+    __NearPlane = value;
+}
+
+float Flood::Frustum::FarPlane::get()
+{
+    return __FarPlane;
+}
+
+void Flood::Frustum::FarPlane::set(float value)
+{
+    __FarPlane = value;
+}
+
+float Flood::Frustum::AspectRatio::get()
+{
+    return __AspectRatio;
+}
+
+void Flood::Frustum::AspectRatio::set(float value)
+{
+    __AspectRatio = value;
 }
 

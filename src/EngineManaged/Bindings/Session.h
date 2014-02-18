@@ -40,7 +40,7 @@ namespace Flood
     public:
 
         property ::Session* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -73,16 +73,16 @@ namespace Flood
             void raise(Flood::SessionState _0);
         }
     private:
-        delegate void _PacketDelegate(const ::PacketPtr& _1, int _2);
+        delegate void _PacketDelegate(const ::PacketPtr& _0, int _1);
         _PacketDelegate^ _PacketDelegateInstance;
-        void _PacketRaise(const ::PacketPtr& _1, int _2);
+        void _PacketRaise(const ::PacketPtr& _0, int _1);
         System::Action<Flood::Packet^, int>^ _Packet;
     public:
         event System::Action<Flood::Packet^, int>^ Packet
         {
             void add(System::Action<Flood::Packet^, int>^ evt);
             void remove(System::Action<Flood::Packet^, int>^ evt);
-            void raise(Flood::Packet^ _1, int _2);
+            void raise(Flood::Packet^ _0, int _1);
         }
         virtual bool Equals(System::Object^ object) override;
 

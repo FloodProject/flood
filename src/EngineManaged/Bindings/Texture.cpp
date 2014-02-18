@@ -62,7 +62,7 @@ bool Flood::Texture::Equals(System::Object^ object)
     auto obj = dynamic_cast<Texture^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Texture::GetHashCode()
@@ -70,12 +70,12 @@ int Flood::Texture::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Texture::Instance::get()
+System::IntPtr Flood::Texture::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Texture::Instance::set(System::IntPtr object)
+void Flood::Texture::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Texture*)object.ToPointer();
 }
@@ -183,7 +183,7 @@ bool Flood::TextureUnit::Equals(System::Object^ object)
     auto obj = dynamic_cast<TextureUnit^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::TextureUnit::GetHashCode()
@@ -191,12 +191,12 @@ int Flood::TextureUnit::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::TextureUnit::Instance::get()
+System::IntPtr Flood::TextureUnit::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::TextureUnit::Instance::set(System::IntPtr object)
+void Flood::TextureUnit::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::TextureUnit*)object.ToPointer();
 }

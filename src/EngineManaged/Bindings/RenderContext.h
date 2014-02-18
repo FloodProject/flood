@@ -30,10 +30,35 @@ namespace Flood
 
         RenderContextSettings(::RenderContextSettings* native);
         RenderContextSettings(System::IntPtr native);
-        unsigned short BitsPerPixel;
-        unsigned short DepthBits;
-        unsigned short StencilBits;
-        unsigned short AntialiasLevel;
+        property unsigned short BitsPerPixel
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short DepthBits
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short StencilBits
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short AntialiasLevel
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        private:
+        unsigned short __BitsPerPixel;
+        unsigned short __DepthBits;
+        unsigned short __StencilBits;
+        unsigned short __AntialiasLevel;
     };
 
     /// <summary>
@@ -44,7 +69,7 @@ namespace Flood
     public:
 
         property ::RenderContext* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

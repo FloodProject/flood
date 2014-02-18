@@ -44,7 +44,7 @@ bool Flood::PlatformManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<PlatformManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::PlatformManager::GetHashCode()

@@ -23,7 +23,7 @@ namespace Flood
     public:
 
         property ::SessionManager* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -46,16 +46,16 @@ namespace Flood
             void raise(Flood::Session^ _0);
         }
     private:
-        delegate void _SessionRemovedDelegate(const ::SessionPtr& _1);
+        delegate void _SessionRemovedDelegate(const ::SessionPtr& _0);
         _SessionRemovedDelegate^ _SessionRemovedDelegateInstance;
-        void _SessionRemovedRaise(const ::SessionPtr& _1);
+        void _SessionRemovedRaise(const ::SessionPtr& _0);
         System::Action<Flood::Session^>^ _SessionRemoved;
     public:
         event System::Action<Flood::Session^>^ SessionRemoved
         {
             void add(System::Action<Flood::Session^>^ evt);
             void remove(System::Action<Flood::Session^>^ evt);
-            void raise(Flood::Session^ _1);
+            void raise(Flood::Session^ _0);
         }
         virtual bool Equals(System::Object^ object) override;
 

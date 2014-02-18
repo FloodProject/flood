@@ -35,22 +35,102 @@ namespace Flood
         Matrix4x4(System::IntPtr native);
         Matrix4x4(Flood::Matrix4x3 _0);
 
-        float M11;
-        float M12;
-        float M13;
-        float M14;
-        float M21;
-        float M22;
-        float M23;
-        float M24;
-        float M31;
-        float M32;
-        float M33;
-        float M34;
-        float Tx;
-        float Ty;
-        float Tz;
-        float Tw;
+        property float M11
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M12
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M13
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M14
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M21
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M22
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M23
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M24
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M31
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M32
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M33
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M34
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Tx
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Ty
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Tz
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Tw
+        {
+            float get();
+            void set(float);
+        }
+
         void SetIdentity();
 
         Flood::Matrix4x4 Inverse();
@@ -71,5 +151,23 @@ namespace Flood
         {
             Flood::Matrix4x4 get();
         }
+
+        private:
+        float __M11;
+        float __M12;
+        float __M13;
+        float __M14;
+        float __M21;
+        float __M22;
+        float __M23;
+        float __M24;
+        float __M31;
+        float __M32;
+        float __M33;
+        float __M34;
+        float __Tx;
+        float __Ty;
+        float __Tz;
+        float __Tw;
     };
 }

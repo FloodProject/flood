@@ -95,7 +95,7 @@ bool Flood::RenderBuffer::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderBuffer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderBuffer::GetHashCode()

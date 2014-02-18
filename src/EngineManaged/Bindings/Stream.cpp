@@ -130,7 +130,7 @@ bool Flood::Stream::Equals(System::Object^ object)
     auto obj = dynamic_cast<Stream^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Stream::GetHashCode()
@@ -138,12 +138,12 @@ int Flood::Stream::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Stream::Instance::get()
+System::IntPtr Flood::Stream::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Stream::Instance::set(System::IntPtr object)
+void Flood::Stream::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Stream*)object.ToPointer();
 }
@@ -239,7 +239,7 @@ bool Flood::WebStream::Equals(System::Object^ object)
     auto obj = dynamic_cast<WebStream^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::WebStream::GetHashCode()
@@ -317,7 +317,7 @@ bool Flood::ZipStream::Equals(System::Object^ object)
     auto obj = dynamic_cast<ZipStream^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ZipStream::GetHashCode()

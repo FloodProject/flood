@@ -38,7 +38,12 @@ namespace Flood
         Plane(Flood::Vector3 normal, float distance);
 
         Flood::Vector3 Normal;
-        float Offset;
+        property float Offset
+        {
+            float get();
+            void set(float);
+        }
+
         void Normalize();
 
         float Distance(Flood::Vector3 point);
@@ -48,5 +53,8 @@ namespace Flood
         Flood::Vector3 Project(Flood::Vector3 vec);
 
         bool Intersects(Flood::Ray ray, [System::Runtime::InteropServices::Out] float% distance);
+
+        private:
+        float __Offset;
     };
 }

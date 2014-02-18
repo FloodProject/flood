@@ -60,7 +60,7 @@ bool Flood::TrueTypeFont::Equals(System::Object^ object)
     auto obj = dynamic_cast<TrueTypeFont^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::TrueTypeFont::GetHashCode()
@@ -70,13 +70,13 @@ int Flood::TrueTypeFont::GetHashCode()
 
 System::Collections::Generic::List<unsigned char>^ Flood::TrueTypeFont::Data::get()
 {
-    auto _tmpData = gcnew System::Collections::Generic::List<unsigned char>();
+    auto _tmp__Data = gcnew System::Collections::Generic::List<unsigned char>();
     for(auto _element : ((::TrueTypeFont*)NativePtr)->data)
     {
         auto _marshalElement = _element;
-        _tmpData->Add(_marshalElement);
+        _tmp__Data->Add(_marshalElement);
     }
-    return _tmpData;
+    return _tmp__Data;
 }
 
 void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned char>^ value)

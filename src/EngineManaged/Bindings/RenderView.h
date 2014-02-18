@@ -31,7 +31,7 @@ namespace Flood
     public:
 
         property ::RenderView* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -59,12 +59,6 @@ namespace Flood
             void set(Flood::Vector2i);
         }
 
-        property Flood::Color ClearColor
-        {
-            Flood::Color get();
-            void set(Flood::Color);
-        }
-
         property int DepthPriority
         {
             int get();
@@ -82,7 +76,7 @@ namespace Flood
             void set(Flood::RenderTarget^);
         }
 
-        property Flood::Color ClearColor1
+        property Flood::Color ClearColor
         {
             Flood::Color get();
             void set(Flood::Color);

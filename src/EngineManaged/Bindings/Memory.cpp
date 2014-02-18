@@ -32,7 +32,7 @@ bool Flood::Allocator::Equals(System::Object^ object)
     auto obj = dynamic_cast<Allocator^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Allocator::GetHashCode()
@@ -121,12 +121,12 @@ void Flood::Allocator::DumpInfo()
     ::AllocatorDumpInfo();
 }
 
-System::IntPtr Flood::Allocator::Instance::get()
+System::IntPtr Flood::Allocator::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Allocator::Instance::set(System::IntPtr object)
+void Flood::Allocator::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Allocator*)object.ToPointer();
 }
@@ -165,7 +165,7 @@ bool Flood::PoolAllocator::Equals(System::Object^ object)
     auto obj = dynamic_cast<PoolAllocator^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::PoolAllocator::GetHashCode()
@@ -206,7 +206,7 @@ bool Flood::BumpAllocator::Equals(System::Object^ object)
     auto obj = dynamic_cast<BumpAllocator^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::BumpAllocator::GetHashCode()
@@ -267,7 +267,7 @@ bool Flood::HeapAllocator::Equals(System::Object^ object)
     auto obj = dynamic_cast<HeapAllocator^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::HeapAllocator::GetHashCode()

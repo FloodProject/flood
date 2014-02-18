@@ -56,28 +56,28 @@ namespace Flood
             void raise(Flood::KeyEvent^ _0);
         }
     private:
-        delegate void _KeyReleaseDelegate(const ::KeyEvent& _1);
+        delegate void _KeyReleaseDelegate(const ::KeyEvent& _0);
         _KeyReleaseDelegate^ _KeyReleaseDelegateInstance;
-        void _KeyReleaseRaise(const ::KeyEvent& _1);
+        void _KeyReleaseRaise(const ::KeyEvent& _0);
         System::Action<Flood::KeyEvent^>^ _KeyRelease;
     public:
         event System::Action<Flood::KeyEvent^>^ KeyRelease
         {
             void add(System::Action<Flood::KeyEvent^>^ evt);
             void remove(System::Action<Flood::KeyEvent^>^ evt);
-            void raise(Flood::KeyEvent^ _1);
+            void raise(Flood::KeyEvent^ _0);
         }
     private:
-        delegate void _KeyTextDelegate(const ::KeyEvent& _2);
+        delegate void _KeyTextDelegate(const ::KeyEvent& _0);
         _KeyTextDelegate^ _KeyTextDelegateInstance;
-        void _KeyTextRaise(const ::KeyEvent& _2);
+        void _KeyTextRaise(const ::KeyEvent& _0);
         System::Action<Flood::KeyEvent^>^ _KeyText;
     public:
         event System::Action<Flood::KeyEvent^>^ KeyText
         {
             void add(System::Action<Flood::KeyEvent^>^ evt);
             void remove(System::Action<Flood::KeyEvent^>^ evt);
-            void raise(Flood::KeyEvent^ _2);
+            void raise(Flood::KeyEvent^ _0);
         }
         bool IsKeyPressed(Flood::Keys keyCode);
 

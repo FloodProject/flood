@@ -12,17 +12,17 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Vector3::Vector3(::Vector3* native)
 {
-    X = native->x;
-    Y = native->y;
-    Z = native->z;
+    __X = native->x;
+    __Y = native->y;
+    __Z = native->z;
 }
 
 Flood::Vector3::Vector3(System::IntPtr native)
 {
     auto __native = (::Vector3*)native.ToPointer();
-    X = __native->x;
-    Y = __native->y;
-    Z = __native->z;
+    __X = __native->x;
+    __Y = __native->y;
+    __Z = __native->z;
 }
 
 Flood::Vector3::Vector3(float v)
@@ -193,9 +193,9 @@ void Flood::Vector3::SetZero()
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     _this0.zero();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
 }
 
 float Flood::Vector3::Length()
@@ -205,9 +205,9 @@ float Flood::Vector3::Length()
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     auto __ret = _this0.length();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return __ret;
 }
 
@@ -218,9 +218,9 @@ float Flood::Vector3::LengthSquared()
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     auto __ret = _this0.lengthSquared();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return __ret;
 }
 
@@ -236,9 +236,9 @@ float Flood::Vector3::Dot(Flood::Vector3 v)
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.dot(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return __ret;
 }
 
@@ -254,9 +254,9 @@ Flood::Vector3 Flood::Vector3::Cross(Flood::Vector3 v)
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.cross(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return Flood::Vector3((::Vector3*)&__ret);
 }
 
@@ -272,9 +272,9 @@ float Flood::Vector3::Distance(Flood::Vector3 v)
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.distance(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return __ret;
 }
 
@@ -290,9 +290,9 @@ Flood::Vector3 Flood::Vector3::Project(Flood::Vector3 v)
     _marshal0.z = v.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.project(arg0);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return Flood::Vector3((::Vector3*)&__ret);
 }
 
@@ -308,9 +308,9 @@ Flood::Vector3 Flood::Vector3::Lerp(Flood::Vector3 vec, float blend)
     _marshal0.z = vec.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.lerp(arg0, blend);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return Flood::Vector3((::Vector3*)&__ret);
 }
 
@@ -326,9 +326,9 @@ Flood::Vector3 Flood::Vector3::Serp(Flood::Vector3 vec, float t)
     _marshal0.z = vec.Z;
     auto arg0 = _marshal0;
     auto __ret = _this0.serp(arg0, t);
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return Flood::Vector3((::Vector3*)&__ret);
 }
 
@@ -339,10 +339,40 @@ Flood::Vector3 Flood::Vector3::Normalize()
     _this0.y = (*this).Y;
     _this0.z = (*this).Z;
     auto __ret = _this0.normalize();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
     return Flood::Vector3((::Vector3*)&__ret);
+}
+
+float Flood::Vector3::X::get()
+{
+    return __X;
+}
+
+void Flood::Vector3::X::set(float value)
+{
+    __X = value;
+}
+
+float Flood::Vector3::Y::get()
+{
+    return __Y;
+}
+
+void Flood::Vector3::Y::set(float value)
+{
+    __Y = value;
+}
+
+float Flood::Vector3::Z::get()
+{
+    return __Z;
+}
+
+void Flood::Vector3::Z::set(float value)
+{
+    __Z = value;
 }
 
 Flood::Vector3 Flood::Vector3::Zero::get()
@@ -372,19 +402,19 @@ Flood::Vector3 Flood::Vector3::UnitZ::get()
 
 Flood::Vector4::Vector4(::Vector4* native)
 {
-    X = native->x;
-    Y = native->y;
-    Z = native->z;
-    W = native->w;
+    __X = native->x;
+    __Y = native->y;
+    __Z = native->z;
+    __W = native->w;
 }
 
 Flood::Vector4::Vector4(System::IntPtr native)
 {
     auto __native = (::Vector4*)native.ToPointer();
-    X = __native->x;
-    Y = __native->y;
-    Z = __native->z;
-    W = __native->w;
+    __X = __native->x;
+    __Y = __native->y;
+    __Z = __native->z;
+    __W = __native->w;
 }
 
 Flood::Vector4::Vector4(float v)
@@ -588,10 +618,50 @@ void Flood::Vector4::SetZero()
     _this0.z = (*this).Z;
     _this0.w = (*this).W;
     _this0.zero();
-    X = _this0.x;
-    Y = _this0.y;
-    Z = _this0.z;
-    W = _this0.w;
+    __X = _this0.x;
+    __Y = _this0.y;
+    __Z = _this0.z;
+    __W = _this0.w;
+}
+
+float Flood::Vector4::X::get()
+{
+    return __X;
+}
+
+void Flood::Vector4::X::set(float value)
+{
+    __X = value;
+}
+
+float Flood::Vector4::Y::get()
+{
+    return __Y;
+}
+
+void Flood::Vector4::Y::set(float value)
+{
+    __Y = value;
+}
+
+float Flood::Vector4::Z::get()
+{
+    return __Z;
+}
+
+void Flood::Vector4::Z::set(float value)
+{
+    __Z = value;
+}
+
+float Flood::Vector4::W::get()
+{
+    return __W;
+}
+
+void Flood::Vector4::W::set(float value)
+{
+    __W = value;
 }
 
 Flood::Vector4 Flood::Vector4::Zero::get()
@@ -621,15 +691,15 @@ Flood::Vector4 Flood::Vector4::UnitW::get()
 
 Flood::Vector2::Vector2(::Vector2* native)
 {
-    X = native->x;
-    Y = native->y;
+    __X = native->x;
+    __Y = native->y;
 }
 
 Flood::Vector2::Vector2(System::IntPtr native)
 {
     auto __native = (::Vector2*)native.ToPointer();
-    X = __native->x;
-    Y = __native->y;
+    __X = __native->x;
+    __Y = __native->y;
 }
 
 Flood::Vector2::Vector2(float x, float y)
@@ -769,8 +839,28 @@ void Flood::Vector2::SetZero()
     _this0.x = (*this).X;
     _this0.y = (*this).Y;
     _this0.zero();
-    X = _this0.x;
-    Y = _this0.y;
+    __X = _this0.x;
+    __Y = _this0.y;
+}
+
+float Flood::Vector2::X::get()
+{
+    return __X;
+}
+
+void Flood::Vector2::X::set(float value)
+{
+    __X = value;
+}
+
+float Flood::Vector2::Y::get()
+{
+    return __Y;
+}
+
+void Flood::Vector2::Y::set(float value)
+{
+    __Y = value;
 }
 
 Flood::Vector2 Flood::Vector2::Zero::get()
@@ -790,15 +880,15 @@ Flood::Vector2 Flood::Vector2::UnitY::get()
 
 Flood::Vector2i::Vector2i(::Vector2i* native)
 {
-    X = native->x;
-    Y = native->y;
+    __X = native->x;
+    __Y = native->y;
 }
 
 Flood::Vector2i::Vector2i(System::IntPtr native)
 {
     auto __native = (::Vector2i*)native.ToPointer();
-    X = __native->x;
-    Y = __native->y;
+    __X = __native->x;
+    __Y = __native->y;
 }
 
 Flood::Vector2i::Vector2i(int x, int y)
@@ -939,7 +1029,27 @@ void Flood::Vector2i::Zero()
     _this0.x = (::int32)(::int32_t)(*this).X;
     _this0.y = (::int32)(::int32_t)(*this).Y;
     _this0.zero();
-    X = _this0.x;
-    Y = _this0.y;
+    __X = _this0.x;
+    __Y = _this0.y;
+}
+
+int Flood::Vector2i::X::get()
+{
+    return __X;
+}
+
+void Flood::Vector2i::X::set(int value)
+{
+    __X = value;
+}
+
+int Flood::Vector2i::Y::get()
+{
+    return __Y;
+}
+
+void Flood::Vector2i::Y::set(int value)
+{
+    __Y = value;
 }
 

@@ -43,12 +43,12 @@ int Flood::Session::GetHashCode()
     return ((::Session*)NativePtr)->hashCode();
 }
 
-System::IntPtr Flood::Session::Instance::get()
+System::IntPtr Flood::Session::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Session::Instance::set(System::IntPtr object)
+void Flood::Session::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Session*)object.ToPointer();
 }
@@ -108,13 +108,13 @@ void Flood::Session::Packet::remove(System::Action<Flood::Packet^, int>^ evt)
     _Packet = static_cast<System::Action<Flood::Packet^, int>^>(System::Delegate::Remove(_Packet, evt));
 }
 
-void Flood::Session::Packet::raise(Flood::Packet^ _1, int _2)
+void Flood::Session::Packet::raise(Flood::Packet^ _0, int _1)
 {
-    _Packet(_1, _2);
+    _Packet(_0, _1);
 }
 
-void Flood::Session::_PacketRaise(const ::PacketPtr& _1, int _2)
+void Flood::Session::_PacketRaise(const ::PacketPtr& _0, int _1)
 {
-    Packet::raise(gcnew Flood::Packet((::Packet*)_1.get()), _2);
+    Packet::raise(gcnew Flood::Packet((::Packet*)_0.get()), _1);
 }
 

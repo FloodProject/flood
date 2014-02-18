@@ -34,7 +34,7 @@ namespace Flood
     public:
 
         property ::MouseInfo* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -128,52 +128,52 @@ namespace Flood
             void raise(Flood::MouseMoveEvent^ _0);
         }
     private:
-        delegate void _MouseDragDelegate(const ::MouseDragEvent& _1);
+        delegate void _MouseDragDelegate(const ::MouseDragEvent& _0);
         _MouseDragDelegate^ _MouseDragDelegateInstance;
-        void _MouseDragRaise(const ::MouseDragEvent& _1);
+        void _MouseDragRaise(const ::MouseDragEvent& _0);
         System::Action<Flood::MouseDragEvent^>^ _MouseDrag;
     public:
         event System::Action<Flood::MouseDragEvent^>^ MouseDrag
         {
             void add(System::Action<Flood::MouseDragEvent^>^ evt);
             void remove(System::Action<Flood::MouseDragEvent^>^ evt);
-            void raise(Flood::MouseDragEvent^ _1);
+            void raise(Flood::MouseDragEvent^ _0);
         }
     private:
-        delegate void _MouseButtonPressDelegate(const ::MouseButtonEvent& _2);
+        delegate void _MouseButtonPressDelegate(const ::MouseButtonEvent& _0);
         _MouseButtonPressDelegate^ _MouseButtonPressDelegateInstance;
-        void _MouseButtonPressRaise(const ::MouseButtonEvent& _2);
+        void _MouseButtonPressRaise(const ::MouseButtonEvent& _0);
         System::Action<Flood::MouseButtonEvent^>^ _MouseButtonPress;
     public:
         event System::Action<Flood::MouseButtonEvent^>^ MouseButtonPress
         {
             void add(System::Action<Flood::MouseButtonEvent^>^ evt);
             void remove(System::Action<Flood::MouseButtonEvent^>^ evt);
-            void raise(Flood::MouseButtonEvent^ _2);
+            void raise(Flood::MouseButtonEvent^ _0);
         }
     private:
-        delegate void _MouseButtonReleaseDelegate(const ::MouseButtonEvent& _3);
+        delegate void _MouseButtonReleaseDelegate(const ::MouseButtonEvent& _0);
         _MouseButtonReleaseDelegate^ _MouseButtonReleaseDelegateInstance;
-        void _MouseButtonReleaseRaise(const ::MouseButtonEvent& _3);
+        void _MouseButtonReleaseRaise(const ::MouseButtonEvent& _0);
         System::Action<Flood::MouseButtonEvent^>^ _MouseButtonRelease;
     public:
         event System::Action<Flood::MouseButtonEvent^>^ MouseButtonRelease
         {
             void add(System::Action<Flood::MouseButtonEvent^>^ evt);
             void remove(System::Action<Flood::MouseButtonEvent^>^ evt);
-            void raise(Flood::MouseButtonEvent^ _3);
+            void raise(Flood::MouseButtonEvent^ _0);
         }
     private:
-        delegate void _MouseWheelMoveDelegate(const ::MouseWheelEvent& _4);
+        delegate void _MouseWheelMoveDelegate(const ::MouseWheelEvent& _0);
         _MouseWheelMoveDelegate^ _MouseWheelMoveDelegateInstance;
-        void _MouseWheelMoveRaise(const ::MouseWheelEvent& _4);
+        void _MouseWheelMoveRaise(const ::MouseWheelEvent& _0);
         System::Action<Flood::MouseWheelEvent^>^ _MouseWheelMove;
     public:
         event System::Action<Flood::MouseWheelEvent^>^ MouseWheelMove
         {
             void add(System::Action<Flood::MouseWheelEvent^>^ evt);
             void remove(System::Action<Flood::MouseWheelEvent^>^ evt);
-            void raise(Flood::MouseWheelEvent^ _4);
+            void raise(Flood::MouseWheelEvent^ _0);
         }
     private:
         delegate void _MouseEnterDelegate();

@@ -15,7 +15,7 @@
 
 public interface class ICppInstance
 {
-  property System::IntPtr Instance
+  property System::IntPtr __Instance
   {
     System::IntPtr get();
     void set(System::IntPtr);

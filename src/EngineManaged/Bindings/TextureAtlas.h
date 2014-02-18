@@ -33,7 +33,14 @@ namespace Flood
         Flood::Vector2 RightTopUV;
         Flood::Vector2 RightBottomUV;
         Flood::Vector2 LeftBottomUV;
-        Flood::TextureAtlas^ Atlas;
+        property Flood::TextureAtlas^ Atlas
+        {
+            Flood::TextureAtlas^ get();
+            void set(Flood::TextureAtlas^);
+        }
+
+        private:
+        Flood::TextureAtlas^ __Atlas;
     };
 
     public ref class TextureAtlas : ICppInstance
@@ -41,7 +48,7 @@ namespace Flood
     public:
 
         property ::TextureAtlas* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

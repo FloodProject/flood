@@ -64,7 +64,7 @@ bool Flood::WindowManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<WindowManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::WindowManager::GetHashCode()
@@ -72,12 +72,12 @@ int Flood::WindowManager::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::WindowManager::Instance::get()
+System::IntPtr Flood::WindowManager::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::WindowManager::Instance::set(System::IntPtr object)
+void Flood::WindowManager::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::WindowManager*)object.ToPointer();
 }

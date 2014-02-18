@@ -95,7 +95,7 @@ bool Flood::Material::Equals(System::Object^ object)
     auto obj = dynamic_cast<Material^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Material::GetHashCode()

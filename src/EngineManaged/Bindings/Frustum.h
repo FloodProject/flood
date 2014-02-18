@@ -41,12 +41,37 @@ namespace Flood
 
         Frustum(::Frustum* native);
         Frustum(System::IntPtr native);
-        Flood::FrustumProjection Projection;
+        property Flood::FrustumProjection Projection
+        {
+            Flood::FrustumProjection get();
+            void set(Flood::FrustumProjection);
+        }
+
         Flood::Matrix4x4 MatProjection;
-        float FieldOfView;
-        float NearPlane;
-        float FarPlane;
-        float AspectRatio;
+        property float FieldOfView
+        {
+            float get();
+            void set(float);
+        }
+
+        property float NearPlane
+        {
+            float get();
+            void set(float);
+        }
+
+        property float FarPlane
+        {
+            float get();
+            void set(float);
+        }
+
+        property float AspectRatio
+        {
+            float get();
+            void set(float);
+        }
+
         Flood::Vector3 OrthoSize;
         void UpdateProjection();
 
@@ -55,5 +80,12 @@ namespace Flood
         void UpdateCorners(Flood::Matrix4x3 matView);
 
         bool Intersects(Flood::BoundingBox box);
+
+        private:
+        Flood::FrustumProjection __Projection;
+        float __FieldOfView;
+        float __NearPlane;
+        float __FarPlane;
+        float __AspectRatio;
     };
 }

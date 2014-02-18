@@ -33,7 +33,7 @@ bool Flood::InputEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<InputEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::InputEvent::GetHashCode()
@@ -41,12 +41,12 @@ int Flood::InputEvent::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::InputEvent::Instance::get()
+System::IntPtr Flood::InputEvent::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::InputEvent::Instance::set(System::IntPtr object)
+void Flood::InputEvent::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::InputEvent*)object.ToPointer();
 }
@@ -88,7 +88,7 @@ bool Flood::InputDevice::Equals(System::Object^ object)
     auto obj = dynamic_cast<InputDevice^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::InputDevice::GetHashCode()
@@ -96,12 +96,12 @@ int Flood::InputDevice::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::InputDevice::Instance::get()
+System::IntPtr Flood::InputDevice::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::InputDevice::Instance::set(System::IntPtr object)
+void Flood::InputDevice::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::InputDevice*)object.ToPointer();
 }

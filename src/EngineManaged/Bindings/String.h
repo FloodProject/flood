@@ -24,7 +24,15 @@ namespace Flood
         StringHash(::StringHash* native);
         StringHash(System::IntPtr native);
         StringHash(System::String^ str, unsigned int size);
-        unsigned int Hash;
+
+        property unsigned int Hash
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+
+        private:
+        unsigned int __Hash;
     };
 
     public ref class FloodString

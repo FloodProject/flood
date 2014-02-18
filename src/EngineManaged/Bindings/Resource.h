@@ -66,7 +66,7 @@ namespace Flood
     public:
 
         property ::Resource* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

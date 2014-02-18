@@ -34,7 +34,7 @@ bool Flood::KeyEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<KeyEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::KeyEvent::GetHashCode()

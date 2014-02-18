@@ -33,7 +33,7 @@ bool Flood::SessionManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<SessionManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::SessionManager::GetHashCode()
@@ -41,12 +41,12 @@ int Flood::SessionManager::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::SessionManager::Instance::get()
+System::IntPtr Flood::SessionManager::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::SessionManager::Instance::set(System::IntPtr object)
+void Flood::SessionManager::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::SessionManager*)object.ToPointer();
 }
@@ -92,13 +92,13 @@ void Flood::SessionManager::SessionRemoved::remove(System::Action<Flood::Session
     _SessionRemoved = static_cast<System::Action<Flood::Session^>^>(System::Delegate::Remove(_SessionRemoved, evt));
 }
 
-void Flood::SessionManager::SessionRemoved::raise(Flood::Session^ _1)
+void Flood::SessionManager::SessionRemoved::raise(Flood::Session^ _0)
 {
-    _SessionRemoved(_1);
+    _SessionRemoved(_0);
 }
 
-void Flood::SessionManager::_SessionRemovedRaise(const ::SessionPtr& _1)
+void Flood::SessionManager::_SessionRemovedRaise(const ::SessionPtr& _0)
 {
-    SessionRemoved::raise(gcnew Flood::Session((::Session*)_1.get()));
+    SessionRemoved::raise(gcnew Flood::Session((::Session*)_0.get()));
 }
 

@@ -29,7 +29,7 @@ namespace Flood
     public:
 
         property ::Host* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -69,9 +69,29 @@ namespace Flood
         HostConnectionDetails(::HostConnectionDetails* native);
         HostConnectionDetails(System::IntPtr native);
         HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount);
-        System::String^ Address;
-        unsigned short Port;
-        unsigned char ChannelCount;
+
+        property System::String^ Address
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property unsigned short Port
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned char ChannelCount
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        private:
+        System::String^ __Address;
+        unsigned short __Port;
+        unsigned char __ChannelCount;
     };
 
     public ref class HostClient : Flood::Host

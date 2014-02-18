@@ -14,43 +14,43 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Matrix4x4::Matrix4x4(::Matrix4x4* native)
 {
-    M11 = native->m11;
-    M12 = native->m12;
-    M13 = native->m13;
-    M14 = native->m14;
-    M21 = native->m21;
-    M22 = native->m22;
-    M23 = native->m23;
-    M24 = native->m24;
-    M31 = native->m31;
-    M32 = native->m32;
-    M33 = native->m33;
-    M34 = native->m34;
-    Tx = native->tx;
-    Ty = native->ty;
-    Tz = native->tz;
-    Tw = native->tw;
+    __M11 = native->m11;
+    __M12 = native->m12;
+    __M13 = native->m13;
+    __M14 = native->m14;
+    __M21 = native->m21;
+    __M22 = native->m22;
+    __M23 = native->m23;
+    __M24 = native->m24;
+    __M31 = native->m31;
+    __M32 = native->m32;
+    __M33 = native->m33;
+    __M34 = native->m34;
+    __Tx = native->tx;
+    __Ty = native->ty;
+    __Tz = native->tz;
+    __Tw = native->tw;
 }
 
 Flood::Matrix4x4::Matrix4x4(System::IntPtr native)
 {
     auto __native = (::Matrix4x4*)native.ToPointer();
-    M11 = __native->m11;
-    M12 = __native->m12;
-    M13 = __native->m13;
-    M14 = __native->m14;
-    M21 = __native->m21;
-    M22 = __native->m22;
-    M23 = __native->m23;
-    M24 = __native->m24;
-    M31 = __native->m31;
-    M32 = __native->m32;
-    M33 = __native->m33;
-    M34 = __native->m34;
-    Tx = __native->tx;
-    Ty = __native->ty;
-    Tz = __native->tz;
-    Tw = __native->tw;
+    __M11 = __native->m11;
+    __M12 = __native->m12;
+    __M13 = __native->m13;
+    __M14 = __native->m14;
+    __M21 = __native->m21;
+    __M22 = __native->m22;
+    __M23 = __native->m23;
+    __M24 = __native->m24;
+    __M31 = __native->m31;
+    __M32 = __native->m32;
+    __M33 = __native->m33;
+    __M34 = __native->m34;
+    __Tx = __native->tx;
+    __Ty = __native->ty;
+    __Tz = __native->tz;
+    __Tw = __native->tw;
 }
 
 Flood::Matrix4x4::Matrix4x4(Flood::Matrix4x3 _0)
@@ -107,22 +107,22 @@ void Flood::Matrix4x4::SetIdentity()
     _this0.tz = (*this).Tz;
     _this0.tw = (*this).Tw;
     _this0.identity();
-    M11 = _this0.m11;
-    M12 = _this0.m12;
-    M13 = _this0.m13;
-    M14 = _this0.m14;
-    M21 = _this0.m21;
-    M22 = _this0.m22;
-    M23 = _this0.m23;
-    M24 = _this0.m24;
-    M31 = _this0.m31;
-    M32 = _this0.m32;
-    M33 = _this0.m33;
-    M34 = _this0.m34;
-    Tx = _this0.tx;
-    Ty = _this0.ty;
-    Tz = _this0.tz;
-    Tw = _this0.tw;
+    __M11 = _this0.m11;
+    __M12 = _this0.m12;
+    __M13 = _this0.m13;
+    __M14 = _this0.m14;
+    __M21 = _this0.m21;
+    __M22 = _this0.m22;
+    __M23 = _this0.m23;
+    __M24 = _this0.m24;
+    __M31 = _this0.m31;
+    __M32 = _this0.m32;
+    __M33 = _this0.m33;
+    __M34 = _this0.m34;
+    __Tx = _this0.tx;
+    __Ty = _this0.ty;
+    __Tz = _this0.tz;
+    __Tw = _this0.tw;
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::Inverse()
@@ -145,22 +145,22 @@ Flood::Matrix4x4 Flood::Matrix4x4::Inverse()
     _this0.tz = (*this).Tz;
     _this0.tw = (*this).Tw;
     auto __ret = _this0.inverse();
-    M11 = _this0.m11;
-    M12 = _this0.m12;
-    M13 = _this0.m13;
-    M14 = _this0.m14;
-    M21 = _this0.m21;
-    M22 = _this0.m22;
-    M23 = _this0.m23;
-    M24 = _this0.m24;
-    M31 = _this0.m31;
-    M32 = _this0.m32;
-    M33 = _this0.m33;
-    M34 = _this0.m34;
-    Tx = _this0.tx;
-    Ty = _this0.ty;
-    Tz = _this0.tz;
-    Tw = _this0.tw;
+    __M11 = _this0.m11;
+    __M12 = _this0.m12;
+    __M13 = _this0.m13;
+    __M14 = _this0.m14;
+    __M21 = _this0.m21;
+    __M22 = _this0.m22;
+    __M23 = _this0.m23;
+    __M24 = _this0.m24;
+    __M31 = _this0.m31;
+    __M32 = _this0.m32;
+    __M33 = _this0.m33;
+    __M34 = _this0.m34;
+    __Tx = _this0.tx;
+    __Ty = _this0.ty;
+    __Tz = _this0.tz;
+    __Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&__ret);
 }
 
@@ -184,22 +184,22 @@ Flood::Matrix4x4 Flood::Matrix4x4::Transpose()
     _this0.tz = (*this).Tz;
     _this0.tw = (*this).Tw;
     auto __ret = _this0.transpose();
-    M11 = _this0.m11;
-    M12 = _this0.m12;
-    M13 = _this0.m13;
-    M14 = _this0.m14;
-    M21 = _this0.m21;
-    M22 = _this0.m22;
-    M23 = _this0.m23;
-    M24 = _this0.m24;
-    M31 = _this0.m31;
-    M32 = _this0.m32;
-    M33 = _this0.m33;
-    M34 = _this0.m34;
-    Tx = _this0.tx;
-    Ty = _this0.ty;
-    Tz = _this0.tz;
-    Tw = _this0.tw;
+    __M11 = _this0.m11;
+    __M12 = _this0.m12;
+    __M13 = _this0.m13;
+    __M14 = _this0.m14;
+    __M21 = _this0.m21;
+    __M22 = _this0.m22;
+    __M23 = _this0.m23;
+    __M24 = _this0.m24;
+    __M31 = _this0.m31;
+    __M32 = _this0.m32;
+    __M33 = _this0.m33;
+    __M34 = _this0.m34;
+    __Tx = _this0.tx;
+    __Ty = _this0.ty;
+    __Tz = _this0.tz;
+    __Tw = _this0.tw;
     return Flood::Matrix4x4((::Matrix4x4*)&__ret);
 }
 
@@ -314,6 +314,166 @@ Flood::Matrix4x4 Flood::Matrix4x4::CreateOrthographic(float left, float right, f
 {
     auto __ret = ::Matrix4x4::createOrthographic(left, right, bottom, top, nearPlane, farPlane);
     return Flood::Matrix4x4((::Matrix4x4*)&__ret);
+}
+
+float Flood::Matrix4x4::M11::get()
+{
+    return __M11;
+}
+
+void Flood::Matrix4x4::M11::set(float value)
+{
+    __M11 = value;
+}
+
+float Flood::Matrix4x4::M12::get()
+{
+    return __M12;
+}
+
+void Flood::Matrix4x4::M12::set(float value)
+{
+    __M12 = value;
+}
+
+float Flood::Matrix4x4::M13::get()
+{
+    return __M13;
+}
+
+void Flood::Matrix4x4::M13::set(float value)
+{
+    __M13 = value;
+}
+
+float Flood::Matrix4x4::M14::get()
+{
+    return __M14;
+}
+
+void Flood::Matrix4x4::M14::set(float value)
+{
+    __M14 = value;
+}
+
+float Flood::Matrix4x4::M21::get()
+{
+    return __M21;
+}
+
+void Flood::Matrix4x4::M21::set(float value)
+{
+    __M21 = value;
+}
+
+float Flood::Matrix4x4::M22::get()
+{
+    return __M22;
+}
+
+void Flood::Matrix4x4::M22::set(float value)
+{
+    __M22 = value;
+}
+
+float Flood::Matrix4x4::M23::get()
+{
+    return __M23;
+}
+
+void Flood::Matrix4x4::M23::set(float value)
+{
+    __M23 = value;
+}
+
+float Flood::Matrix4x4::M24::get()
+{
+    return __M24;
+}
+
+void Flood::Matrix4x4::M24::set(float value)
+{
+    __M24 = value;
+}
+
+float Flood::Matrix4x4::M31::get()
+{
+    return __M31;
+}
+
+void Flood::Matrix4x4::M31::set(float value)
+{
+    __M31 = value;
+}
+
+float Flood::Matrix4x4::M32::get()
+{
+    return __M32;
+}
+
+void Flood::Matrix4x4::M32::set(float value)
+{
+    __M32 = value;
+}
+
+float Flood::Matrix4x4::M33::get()
+{
+    return __M33;
+}
+
+void Flood::Matrix4x4::M33::set(float value)
+{
+    __M33 = value;
+}
+
+float Flood::Matrix4x4::M34::get()
+{
+    return __M34;
+}
+
+void Flood::Matrix4x4::M34::set(float value)
+{
+    __M34 = value;
+}
+
+float Flood::Matrix4x4::Tx::get()
+{
+    return __Tx;
+}
+
+void Flood::Matrix4x4::Tx::set(float value)
+{
+    __Tx = value;
+}
+
+float Flood::Matrix4x4::Ty::get()
+{
+    return __Ty;
+}
+
+void Flood::Matrix4x4::Ty::set(float value)
+{
+    __Ty = value;
+}
+
+float Flood::Matrix4x4::Tz::get()
+{
+    return __Tz;
+}
+
+void Flood::Matrix4x4::Tz::set(float value)
+{
+    __Tz = value;
+}
+
+float Flood::Matrix4x4::Tw::get()
+{
+    return __Tw;
+}
+
+void Flood::Matrix4x4::Tw::set(float value)
+{
+    __Tw = value;
 }
 
 Flood::Matrix4x4 Flood::Matrix4x4::Identity::get()

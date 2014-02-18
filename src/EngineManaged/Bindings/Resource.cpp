@@ -34,7 +34,7 @@ bool Flood::Resource::Equals(System::Object^ object)
     auto obj = dynamic_cast<Resource^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Resource::GetHashCode()
@@ -49,12 +49,12 @@ Flood::ResourceHandle<Flood::Resource^> Flood::Resource::HandleCreate()
     return Flood::ResourceHandle<Flood::Resource^>(__ret.id);
 }
 
-System::IntPtr Flood::Resource::Instance::get()
+System::IntPtr Flood::Resource::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Resource::Instance::set(System::IntPtr object)
+void Flood::Resource::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Resource*)object.ToPointer();
 }

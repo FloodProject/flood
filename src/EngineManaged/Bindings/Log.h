@@ -29,7 +29,7 @@ namespace Flood
         Assert = 4
     };
 
-    public delegate void LogFunction(Flood::LogEntry _2);
+    public delegate void LogFunction(Flood::LogEntry _0);
 
     public value struct LogEntry
     {
@@ -37,9 +37,28 @@ namespace Flood
 
         LogEntry(::LogEntry* native);
         LogEntry(System::IntPtr native);
-        float Time;
-        System::String^ Message;
-        Flood::LogLevel Level;
+        property float Time
+        {
+            float get();
+            void set(float);
+        }
+
+        property System::String^ Message
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property Flood::LogLevel Level
+        {
+            Flood::LogLevel get();
+            void set(Flood::LogLevel);
+        }
+
+        private:
+        float __Time;
+        System::String^ __Message;
+        Flood::LogLevel __Level;
     };
 
     public ref class Log : ICppInstance
@@ -47,7 +66,7 @@ namespace Flood
     public:
 
         property ::Log* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

@@ -34,7 +34,7 @@ bool Flood::ReflectionHandleContext::Equals(System::Object^ object)
     auto obj = dynamic_cast<ReflectionHandleContext^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ReflectionHandleContext::GetHashCode()
@@ -42,12 +42,12 @@ int Flood::ReflectionHandleContext::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::ReflectionHandleContext::Instance::get()
+System::IntPtr Flood::ReflectionHandleContext::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::ReflectionHandleContext::Instance::set(System::IntPtr object)
+void Flood::ReflectionHandleContext::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::ReflectionHandleContext*)object.ToPointer();
 }

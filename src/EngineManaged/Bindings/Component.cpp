@@ -83,7 +83,7 @@ bool Flood::Component::Equals(System::Object^ object)
     auto obj = dynamic_cast<Component^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Component::GetHashCode()
@@ -91,12 +91,12 @@ int Flood::Component::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Component::Instance::get()
+System::IntPtr Flood::Component::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Component::Instance::set(System::IntPtr object)
+void Flood::Component::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Component*)object.ToPointer();
 }

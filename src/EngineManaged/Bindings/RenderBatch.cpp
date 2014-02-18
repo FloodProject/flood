@@ -17,15 +17,35 @@ using namespace System::Runtime::InteropServices;
 
 Flood::RenderBatchRange::RenderBatchRange(::RenderBatchRange* native)
 {
-    Start = native->start;
-    End = native->end;
+    __Start = native->start;
+    __End = native->end;
 }
 
 Flood::RenderBatchRange::RenderBatchRange(System::IntPtr native)
 {
     auto __native = (::RenderBatchRange*)native.ToPointer();
-    Start = __native->start;
-    End = __native->end;
+    __Start = __native->start;
+    __End = __native->end;
+}
+
+unsigned short Flood::RenderBatchRange::Start::get()
+{
+    return __Start;
+}
+
+void Flood::RenderBatchRange::Start::set(unsigned short value)
+{
+    __Start = value;
+}
+
+unsigned short Flood::RenderBatchRange::End::get()
+{
+    return __End;
+}
+
+void Flood::RenderBatchRange::End::set(unsigned short value)
+{
+    __End = value;
 }
 
 Flood::RenderBatch::RenderBatch(::RenderBatch* native)
@@ -50,7 +70,7 @@ bool Flood::RenderBatch::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderBatch^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderBatch::GetHashCode()
@@ -66,12 +86,12 @@ Flood::RenderBatch^ Flood::RenderBatch::RenderBatchCreate(Flood::Allocator^ _0)
     return gcnew Flood::RenderBatch((::RenderBatch*)__ret);
 }
 
-System::IntPtr Flood::RenderBatch::Instance::get()
+System::IntPtr Flood::RenderBatch::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderBatch::Instance::set(System::IntPtr object)
+void Flood::RenderBatch::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderBatch*)object.ToPointer();
 }

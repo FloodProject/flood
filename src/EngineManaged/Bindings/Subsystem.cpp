@@ -32,7 +32,7 @@ bool Flood::Subsystem::Equals(System::Object^ object)
     auto obj = dynamic_cast<Subsystem^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Subsystem::GetHashCode()
@@ -40,12 +40,12 @@ int Flood::Subsystem::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Subsystem::Instance::get()
+System::IntPtr Flood::Subsystem::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Subsystem::Instance::set(System::IntPtr object)
+void Flood::Subsystem::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Subsystem*)object.ToPointer();
 }

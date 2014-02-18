@@ -18,7 +18,7 @@ Flood::SubTexture::SubTexture(::SubTexture* native)
     RightTopUV = Flood::Vector2((::Vector2*)&native->rightTopUV);
     RightBottomUV = Flood::Vector2((::Vector2*)&native->rightBottomUV);
     LeftBottomUV = Flood::Vector2((::Vector2*)&native->leftBottomUV);
-    Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)native->atlas);
+    __Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)native->atlas);
 }
 
 Flood::SubTexture::SubTexture(System::IntPtr native)
@@ -28,7 +28,17 @@ Flood::SubTexture::SubTexture(System::IntPtr native)
     RightTopUV = Flood::Vector2((::Vector2*)&__native->rightTopUV);
     RightBottomUV = Flood::Vector2((::Vector2*)&__native->rightBottomUV);
     LeftBottomUV = Flood::Vector2((::Vector2*)&__native->leftBottomUV);
-    Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)__native->atlas);
+    __Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)__native->atlas);
+}
+
+Flood::TextureAtlas^ Flood::SubTexture::Atlas::get()
+{
+    return __Atlas;
+}
+
+void Flood::SubTexture::Atlas::set(Flood::TextureAtlas^ value)
+{
+    __Atlas = value;
 }
 
 Flood::TextureAtlas::TextureAtlas(::TextureAtlas* native)
@@ -71,7 +81,7 @@ bool Flood::TextureAtlas::Equals(System::Object^ object)
     auto obj = dynamic_cast<TextureAtlas^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::TextureAtlas::GetHashCode()
@@ -79,12 +89,12 @@ int Flood::TextureAtlas::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::TextureAtlas::Instance::get()
+System::IntPtr Flood::TextureAtlas::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::TextureAtlas::Instance::set(System::IntPtr object)
+void Flood::TextureAtlas::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::TextureAtlas*)object.ToPointer();
 }

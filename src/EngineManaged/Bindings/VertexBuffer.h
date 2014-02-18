@@ -59,9 +59,28 @@ namespace Flood
 
         VertexElementP(::VertexElementP* native);
         VertexElementP(System::IntPtr native);
-        Flood::VertexAttribute Attribute;
-        Flood::VertexDataType Type;
-        unsigned char Components;
+        property Flood::VertexAttribute Attribute
+        {
+            Flood::VertexAttribute get();
+            void set(Flood::VertexAttribute);
+        }
+
+        property Flood::VertexDataType Type
+        {
+            Flood::VertexDataType get();
+            void set(Flood::VertexDataType);
+        }
+
+        property unsigned char Components
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        private:
+        Flood::VertexAttribute __Attribute;
+        Flood::VertexDataType __Type;
+        unsigned char __Components;
     };
 
     public value struct VertexElement
@@ -72,16 +91,54 @@ namespace Flood
         VertexElement(System::IntPtr native);
         VertexElement(Flood::VertexAttribute _0, Flood::VertexDataType _1, unsigned char components);
 
-        Flood::VertexAttribute Attribute;
-        Flood::VertexDataType Type;
-        unsigned char Components;
-        char Stride;
-        unsigned int Offset;
-        unsigned int Size;
-        property unsigned char Size1
+        property Flood::VertexAttribute Attribute
+        {
+            Flood::VertexAttribute get();
+            void set(Flood::VertexAttribute);
+        }
+
+        property Flood::VertexDataType Type
+        {
+            Flood::VertexDataType get();
+            void set(Flood::VertexDataType);
+        }
+
+        property unsigned char Components
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        property unsigned char Size
         {
             unsigned char get();
         }
+
+        property char Stride
+        {
+            char get();
+            void set(char);
+        }
+
+        property unsigned int Offset
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+
+        property unsigned int Size1
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+
+        private:
+        Flood::VertexAttribute __Attribute;
+        Flood::VertexDataType __Type;
+        unsigned char __Components;
+        char __Stride;
+        unsigned int __Offset;
+        unsigned int __Size;
     };
 
     /// <summary>
@@ -92,7 +149,7 @@ namespace Flood
     public:
 
         property ::VertexDeclaration* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

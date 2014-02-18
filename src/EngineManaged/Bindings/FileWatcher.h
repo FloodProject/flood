@@ -34,11 +34,43 @@ namespace Flood
         FileWatchEvent(::FileWatchEvent* native);
         FileWatchEvent(System::IntPtr native);
         FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file);
-        Flood::FileWatchEventKind Action;
-        unsigned int WatchId;
-        System::String^ Dir;
-        System::String^ Filename;
-        System::IntPtr Userdata;
+
+        property Flood::FileWatchEventKind Action
+        {
+            Flood::FileWatchEventKind get();
+            void set(Flood::FileWatchEventKind);
+        }
+
+        property unsigned int WatchId
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+
+        property System::String^ Dir
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property System::String^ Filename
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property System::IntPtr Userdata
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
+
+        private:
+        Flood::FileWatchEventKind __Action;
+        unsigned int __WatchId;
+        System::String^ __Dir;
+        System::String^ __Filename;
+        System::IntPtr __Userdata;
     };
 
     /// <summary>
@@ -50,7 +82,7 @@ namespace Flood
     public:
 
         property ::FileWatcher* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

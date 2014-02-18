@@ -14,21 +14,71 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Glyph::Glyph(::Glyph* native)
 {
-    XOffset = native->xOffset;
-    BaseLineOffset = native->baseLineOffset;
-    Advance = native->advance;
-    Width = native->width;
-    Height = native->height;
+    __XOffset = native->xOffset;
+    __BaseLineOffset = native->baseLineOffset;
+    __Advance = native->advance;
+    __Width = native->width;
+    __Height = native->height;
 }
 
 Flood::Glyph::Glyph(System::IntPtr native)
 {
     auto __native = (::Glyph*)native.ToPointer();
-    XOffset = __native->xOffset;
-    BaseLineOffset = __native->baseLineOffset;
-    Advance = __native->advance;
-    Width = __native->width;
-    Height = __native->height;
+    __XOffset = __native->xOffset;
+    __BaseLineOffset = __native->baseLineOffset;
+    __Advance = __native->advance;
+    __Width = __native->width;
+    __Height = __native->height;
+}
+
+float Flood::Glyph::XOffset::get()
+{
+    return __XOffset;
+}
+
+void Flood::Glyph::XOffset::set(float value)
+{
+    __XOffset = value;
+}
+
+float Flood::Glyph::BaseLineOffset::get()
+{
+    return __BaseLineOffset;
+}
+
+void Flood::Glyph::BaseLineOffset::set(float value)
+{
+    __BaseLineOffset = value;
+}
+
+float Flood::Glyph::Advance::get()
+{
+    return __Advance;
+}
+
+void Flood::Glyph::Advance::set(float value)
+{
+    __Advance = value;
+}
+
+float Flood::Glyph::Width::get()
+{
+    return __Width;
+}
+
+void Flood::Glyph::Width::set(float value)
+{
+    __Width = value;
+}
+
+float Flood::Glyph::Height::get()
+{
+    return __Height;
+}
+
+void Flood::Glyph::Height::set(float value)
+{
+    __Height = value;
 }
 
 Flood::Font::Font(::Font* native)
@@ -68,7 +118,7 @@ bool Flood::Font::Equals(System::Object^ object)
     auto obj = dynamic_cast<Font^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Font::GetHashCode()

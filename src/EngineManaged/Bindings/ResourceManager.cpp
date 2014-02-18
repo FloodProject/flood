@@ -36,7 +36,7 @@ bool Flood::ResourceEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<ResourceEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ResourceEvent::GetHashCode()
@@ -44,12 +44,12 @@ int Flood::ResourceEvent::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::ResourceEvent::Instance::get()
+System::IntPtr Flood::ResourceEvent::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::ResourceEvent::Instance::set(System::IntPtr object)
+void Flood::ResourceEvent::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::ResourceEvent*)object.ToPointer();
 }
@@ -240,7 +240,7 @@ bool Flood::ResourceManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<ResourceManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ResourceManager::GetHashCode()
@@ -255,12 +255,12 @@ Flood::ResourceManager^ Flood::ResourceManager::GetResourceManager()
     return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
 }
 
-System::IntPtr Flood::ResourceManager::Instance::get()
+System::IntPtr Flood::ResourceManager::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::ResourceManager::Instance::set(System::IntPtr object)
+void Flood::ResourceManager::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::ResourceManager*)object.ToPointer();
 }
@@ -333,14 +333,14 @@ void Flood::ResourceManager::ResourceLoaded::remove(System::Action<Flood::Resour
     _ResourceLoaded = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceLoaded, evt));
 }
 
-void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent^ _1)
+void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent^ _0)
 {
-    _ResourceLoaded(_1);
+    _ResourceLoaded(_0);
 }
 
-void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _1)
+void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _0)
 {
-    ResourceLoaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_1));
+    ResourceLoaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceRemoved::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -359,14 +359,14 @@ void Flood::ResourceManager::ResourceRemoved::remove(System::Action<Flood::Resou
     _ResourceRemoved = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceRemoved, evt));
 }
 
-void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent^ _2)
+void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent^ _0)
 {
-    _ResourceRemoved(_2);
+    _ResourceRemoved(_0);
 }
 
-void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _2)
+void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _0)
 {
-    ResourceRemoved::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_2));
+    ResourceRemoved::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceReloaded::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -385,14 +385,14 @@ void Flood::ResourceManager::ResourceReloaded::remove(System::Action<Flood::Reso
     _ResourceReloaded = static_cast<System::Action<Flood::ResourceEvent^>^>(System::Delegate::Remove(_ResourceReloaded, evt));
 }
 
-void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent^ _3)
+void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent^ _0)
 {
-    _ResourceReloaded(_3);
+    _ResourceReloaded(_0);
 }
 
-void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _3)
+void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _0)
 {
-    ResourceReloaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_3));
+    ResourceReloaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceLoaderRegistered::add(System::Action<Flood::ResourceLoader^>^ evt)
@@ -411,13 +411,13 @@ void Flood::ResourceManager::ResourceLoaderRegistered::remove(System::Action<Flo
     _ResourceLoaderRegistered = static_cast<System::Action<Flood::ResourceLoader^>^>(System::Delegate::Remove(_ResourceLoaderRegistered, evt));
 }
 
-void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoader^ _4)
+void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoader^ _0)
 {
-    _ResourceLoaderRegistered(_4);
+    _ResourceLoaderRegistered(_0);
 }
 
-void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _4)
+void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _0)
 {
-    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_4));
+    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
 }
 

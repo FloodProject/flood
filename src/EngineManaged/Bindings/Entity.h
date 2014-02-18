@@ -33,7 +33,7 @@ namespace Flood
     public:
 
         property ::Entity* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -85,16 +85,16 @@ namespace Flood
             void raise(Flood::Component^ _0);
         }
     private:
-        delegate void _ComponentRemovedDelegate(const ::ComponentPtr& _1);
+        delegate void _ComponentRemovedDelegate(const ::ComponentPtr& _0);
         _ComponentRemovedDelegate^ _ComponentRemovedDelegateInstance;
-        void _ComponentRemovedRaise(const ::ComponentPtr& _1);
+        void _ComponentRemovedRaise(const ::ComponentPtr& _0);
         System::Action<Flood::Component^>^ _ComponentRemoved;
     public:
         event System::Action<Flood::Component^>^ ComponentRemoved
         {
             void add(System::Action<Flood::Component^>^ evt);
             void remove(System::Action<Flood::Component^>^ evt);
-            void raise(Flood::Component^ _1);
+            void raise(Flood::Component^ _0);
         }
         bool IsVisible();
 

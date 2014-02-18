@@ -40,7 +40,7 @@ bool Flood::Buffer::Equals(System::Object^ object)
     auto obj = dynamic_cast<Buffer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Buffer::GetHashCode()
@@ -48,12 +48,12 @@ int Flood::Buffer::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Buffer::Instance::get()
+System::IntPtr Flood::Buffer::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Buffer::Instance::set(System::IntPtr object)
+void Flood::Buffer::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Buffer*)object.ToPointer();
 }

@@ -33,11 +33,42 @@ namespace Flood
 
         Glyph(::Glyph* native);
         Glyph(System::IntPtr native);
-        float XOffset;
-        float BaseLineOffset;
-        float Advance;
-        float Width;
-        float Height;
+        property float XOffset
+        {
+            float get();
+            void set(float);
+        }
+
+        property float BaseLineOffset
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Advance
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Width
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Height
+        {
+            float get();
+            void set(float);
+        }
+
+        private:
+        float __XOffset;
+        float __BaseLineOffset;
+        float __Advance;
+        float __Width;
+        float __Height;
     };
 
     /// <summary>

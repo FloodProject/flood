@@ -34,7 +34,7 @@ namespace Flood
     public:
 
         property ::ResourceEvent* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -78,7 +78,7 @@ namespace Flood
     public:
 
         property ::ResourceManager* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -113,52 +113,52 @@ namespace Flood
             void raise(Flood::ResourceEvent^ _0);
         }
     private:
-        delegate void _ResourceLoadedDelegate(const ::ResourceEvent& _1);
+        delegate void _ResourceLoadedDelegate(const ::ResourceEvent& _0);
         _ResourceLoadedDelegate^ _ResourceLoadedDelegateInstance;
-        void _ResourceLoadedRaise(const ::ResourceEvent& _1);
+        void _ResourceLoadedRaise(const ::ResourceEvent& _0);
         System::Action<Flood::ResourceEvent^>^ _ResourceLoaded;
     public:
         event System::Action<Flood::ResourceEvent^>^ ResourceLoaded
         {
             void add(System::Action<Flood::ResourceEvent^>^ evt);
             void remove(System::Action<Flood::ResourceEvent^>^ evt);
-            void raise(Flood::ResourceEvent^ _1);
+            void raise(Flood::ResourceEvent^ _0);
         }
     private:
-        delegate void _ResourceRemovedDelegate(const ::ResourceEvent& _2);
+        delegate void _ResourceRemovedDelegate(const ::ResourceEvent& _0);
         _ResourceRemovedDelegate^ _ResourceRemovedDelegateInstance;
-        void _ResourceRemovedRaise(const ::ResourceEvent& _2);
+        void _ResourceRemovedRaise(const ::ResourceEvent& _0);
         System::Action<Flood::ResourceEvent^>^ _ResourceRemoved;
     public:
         event System::Action<Flood::ResourceEvent^>^ ResourceRemoved
         {
             void add(System::Action<Flood::ResourceEvent^>^ evt);
             void remove(System::Action<Flood::ResourceEvent^>^ evt);
-            void raise(Flood::ResourceEvent^ _2);
+            void raise(Flood::ResourceEvent^ _0);
         }
     private:
-        delegate void _ResourceReloadedDelegate(const ::ResourceEvent& _3);
+        delegate void _ResourceReloadedDelegate(const ::ResourceEvent& _0);
         _ResourceReloadedDelegate^ _ResourceReloadedDelegateInstance;
-        void _ResourceReloadedRaise(const ::ResourceEvent& _3);
+        void _ResourceReloadedRaise(const ::ResourceEvent& _0);
         System::Action<Flood::ResourceEvent^>^ _ResourceReloaded;
     public:
         event System::Action<Flood::ResourceEvent^>^ ResourceReloaded
         {
             void add(System::Action<Flood::ResourceEvent^>^ evt);
             void remove(System::Action<Flood::ResourceEvent^>^ evt);
-            void raise(Flood::ResourceEvent^ _3);
+            void raise(Flood::ResourceEvent^ _0);
         }
     private:
-        delegate void _ResourceLoaderRegisteredDelegate(const ::ResourceLoader& _4);
+        delegate void _ResourceLoaderRegisteredDelegate(const ::ResourceLoader& _0);
         _ResourceLoaderRegisteredDelegate^ _ResourceLoaderRegisteredDelegateInstance;
-        void _ResourceLoaderRegisteredRaise(const ::ResourceLoader& _4);
+        void _ResourceLoaderRegisteredRaise(const ::ResourceLoader& _0);
         System::Action<Flood::ResourceLoader^>^ _ResourceLoaderRegistered;
     public:
         event System::Action<Flood::ResourceLoader^>^ ResourceLoaderRegistered
         {
             void add(System::Action<Flood::ResourceLoader^>^ evt);
             void remove(System::Action<Flood::ResourceLoader^>^ evt);
-            void raise(Flood::ResourceLoader^ _4);
+            void raise(Flood::ResourceLoader^ _0);
         }
         Flood::ResourceHandle<Flood::Resource^> GetResource(System::String^ name);
 

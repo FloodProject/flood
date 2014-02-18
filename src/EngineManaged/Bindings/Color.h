@@ -26,10 +26,30 @@ namespace Flood
         Color(System::IntPtr native);
         Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
-        unsigned char R;
-        unsigned char G;
-        unsigned char B;
-        unsigned char A;
+        property unsigned char R
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        property unsigned char G
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        property unsigned char B
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
+        property unsigned char A
+        {
+            unsigned char get();
+            void set(unsigned char);
+        }
+
         static bool operator==(Flood::Color __op, Flood::Color v);
 
         bool NearEqual(Flood::Color a, float tolerance);
@@ -82,5 +102,11 @@ namespace Flood
         {
             Flood::Color get();
         }
+
+        private:
+        unsigned char __R;
+        unsigned char __G;
+        unsigned char __B;
+        unsigned char __A;
     };
 }

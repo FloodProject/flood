@@ -12,17 +12,47 @@ using namespace System::Runtime::InteropServices;
 
 Flood::ExtensionMetadata::ExtensionMetadata(::ExtensionMetadata* native)
 {
-    Name = clix::marshalString<clix::E_UTF8>(native->name);
-    Description = clix::marshalString<clix::E_UTF8>(native->description);
-    Priority = native->priority;
+    __Name = clix::marshalString<clix::E_UTF8>(native->name);
+    __Description = clix::marshalString<clix::E_UTF8>(native->description);
+    __Priority = native->priority;
 }
 
 Flood::ExtensionMetadata::ExtensionMetadata(System::IntPtr native)
 {
     auto __native = (::ExtensionMetadata*)native.ToPointer();
-    Name = clix::marshalString<clix::E_UTF8>(__native->name);
-    Description = clix::marshalString<clix::E_UTF8>(__native->description);
-    Priority = __native->priority;
+    __Name = clix::marshalString<clix::E_UTF8>(__native->name);
+    __Description = clix::marshalString<clix::E_UTF8>(__native->description);
+    __Priority = __native->priority;
+}
+
+System::String^ Flood::ExtensionMetadata::Name::get()
+{
+    return __Name;
+}
+
+void Flood::ExtensionMetadata::Name::set(System::String^ value)
+{
+    __Name = value;
+}
+
+System::String^ Flood::ExtensionMetadata::Description::get()
+{
+    return __Description;
+}
+
+void Flood::ExtensionMetadata::Description::set(System::String^ value)
+{
+    __Description = value;
+}
+
+int Flood::ExtensionMetadata::Priority::get()
+{
+    return __Priority;
+}
+
+void Flood::ExtensionMetadata::Priority::set(int value)
+{
+    __Priority = value;
 }
 
 Flood::Extension::Extension(::Extension* native)
@@ -56,7 +86,7 @@ bool Flood::Extension::Equals(System::Object^ object)
     auto obj = dynamic_cast<Extension^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Extension::GetHashCode()
@@ -64,12 +94,12 @@ int Flood::Extension::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Extension::Instance::get()
+System::IntPtr Flood::Extension::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Extension::Instance::set(System::IntPtr object)
+void Flood::Extension::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Extension*)object.ToPointer();
 }

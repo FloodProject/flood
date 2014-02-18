@@ -111,7 +111,7 @@ bool Flood::Archive::Equals(System::Object^ object)
     auto obj = dynamic_cast<Archive^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Archive::GetHashCode()
@@ -119,12 +119,12 @@ int Flood::Archive::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Archive::Instance::get()
+System::IntPtr Flood::Archive::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Archive::Instance::set(System::IntPtr object)
+void Flood::Archive::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Archive*)object.ToPointer();
 }
@@ -268,7 +268,7 @@ bool Flood::ArchiveVirtual::Equals(System::Object^ object)
     auto obj = dynamic_cast<ArchiveVirtual^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ArchiveVirtual::GetHashCode()
@@ -278,13 +278,13 @@ int Flood::ArchiveVirtual::GetHashCode()
 
 System::Collections::Generic::List<Flood::Archive^>^ Flood::ArchiveVirtual::Mounts::get()
 {
-    auto _tmpMounts = gcnew System::Collections::Generic::List<Flood::Archive^>();
+    auto _tmp__Mounts = gcnew System::Collections::Generic::List<Flood::Archive^>();
     for(auto _element : ((::ArchiveVirtual*)NativePtr)->mounts)
     {
         auto _marshalElement = gcnew Flood::Archive((::Archive*)_element);
-        _tmpMounts->Add(_marshalElement);
+        _tmp__Mounts->Add(_marshalElement);
     }
-    return _tmpMounts;
+    return _tmp__Mounts;
 }
 
 void Flood::ArchiveVirtual::Mounts::set(System::Collections::Generic::List<Flood::Archive^>^ value)
@@ -388,7 +388,7 @@ bool Flood::ArchiveDirectory::Equals(System::Object^ object)
     auto obj = dynamic_cast<ArchiveDirectory^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ArchiveDirectory::GetHashCode()
@@ -486,7 +486,7 @@ bool Flood::ArchiveZip::Equals(System::Object^ object)
     auto obj = dynamic_cast<ArchiveZip^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ArchiveZip::GetHashCode()

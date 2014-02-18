@@ -31,13 +31,13 @@ namespace Flood
         BoundingBox(System::IntPtr native);
         BoundingBox(Flood::Vector3 min, Flood::Vector3 max);
 
-        Flood::Vector3 Min;
-        Flood::Vector3 Max;
         property Flood::Vector3 Center
         {
             Flood::Vector3 get();
         }
 
+        Flood::Vector3 Min;
+        Flood::Vector3 Max;
         void Add(Flood::Vector3 vertex);
 
         void Add(Flood::BoundingBox box);

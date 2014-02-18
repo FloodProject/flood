@@ -38,10 +38,30 @@ namespace Flood
         RenderState(::RenderState* native);
         RenderState(System::IntPtr native);
         RenderState(Flood::RenderBatch^ renderable);
-        Flood::RenderBatch^ Renderable;
-        Flood::Material^ Material;
+
+        property Flood::RenderBatch^ Renderable
+        {
+            Flood::RenderBatch^ get();
+            void set(Flood::RenderBatch^);
+        }
+
+        property Flood::Material^ Material
+        {
+            Flood::Material^ get();
+            void set(Flood::Material^);
+        }
+
         Flood::Matrix4x3 ModelMatrix;
-        int Priority;
+        property int Priority
+        {
+            int get();
+            void set(int);
+        }
+
+        private:
+        Flood::RenderBatch^ __Renderable;
+        Flood::Material^ __Material;
+        int __Priority;
     };
 
     public ref class RenderBlock : ICppInstance
@@ -49,7 +69,7 @@ namespace Flood
     public:
 
         property ::RenderBlock* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

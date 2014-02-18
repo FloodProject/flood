@@ -46,7 +46,7 @@ bool Flood::RenderView::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderView^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderView::GetHashCode()
@@ -54,12 +54,12 @@ int Flood::RenderView::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RenderView::Instance::get()
+System::IntPtr Flood::RenderView::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderView::Instance::set(System::IntPtr object)
+void Flood::RenderView::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderView*)object.ToPointer();
 }
@@ -110,24 +110,6 @@ void Flood::RenderView::Size::set(Flood::Vector2i value)
     ((::RenderView*)NativePtr)->setSize(arg0);
 }
 
-Flood::Color Flood::RenderView::ClearColor::get()
-{
-    auto &__ret = ((::RenderView*)NativePtr)->getClearColor();
-    return Flood::Color((::Color*)&__ret);
-}
-
-void Flood::RenderView::ClearColor::set(Flood::Color value)
-{
-    auto v = value;
-    auto _marshal0 = ::Color();
-    _marshal0.r = (::byte)(::uint8)(::uint8_t)v.R;
-    _marshal0.g = (::byte)(::uint8)(::uint8_t)v.G;
-    _marshal0.b = (::byte)(::uint8)(::uint8_t)v.B;
-    _marshal0.a = (::byte)(::uint8)(::uint8_t)v.A;
-    auto arg0 = _marshal0;
-    ((::RenderView*)NativePtr)->setClearColor(arg0);
-}
-
 int Flood::RenderView::DepthPriority::get()
 {
     auto __ret = ((::RenderView*)NativePtr)->getDepthPriority();
@@ -156,12 +138,12 @@ void Flood::RenderView::Target::set(Flood::RenderTarget^ value)
     ((::RenderView*)NativePtr)->target = (::RenderTarget*)value->NativePtr;
 }
 
-Flood::Color Flood::RenderView::ClearColor1::get()
+Flood::Color Flood::RenderView::ClearColor::get()
 {
     return Flood::Color((::Color*)&((::RenderView*)NativePtr)->clearColor);
 }
 
-void Flood::RenderView::ClearColor1::set(Flood::Color value)
+void Flood::RenderView::ClearColor::set(Flood::Color value)
 {
     auto _marshal0 = ::Color();
     _marshal0.r = (::byte)(::uint8)(::uint8_t)value.R;

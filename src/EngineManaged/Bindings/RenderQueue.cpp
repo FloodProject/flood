@@ -16,19 +16,19 @@ using namespace System::Runtime::InteropServices;
 
 Flood::RenderState::RenderState(::RenderState* native)
 {
-    Renderable = gcnew Flood::RenderBatch((::RenderBatch*)native->renderable);
-    Material = gcnew Flood::Material((::Material*)native->material);
+    __Renderable = gcnew Flood::RenderBatch((::RenderBatch*)native->renderable);
+    __Material = gcnew Flood::Material((::Material*)native->material);
     ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&native->modelMatrix);
-    Priority = native->priority;
+    __Priority = native->priority;
 }
 
 Flood::RenderState::RenderState(System::IntPtr native)
 {
     auto __native = (::RenderState*)native.ToPointer();
-    Renderable = gcnew Flood::RenderBatch((::RenderBatch*)__native->renderable);
-    Material = gcnew Flood::Material((::Material*)__native->material);
+    __Renderable = gcnew Flood::RenderBatch((::RenderBatch*)__native->renderable);
+    __Material = gcnew Flood::Material((::Material*)__native->material);
     ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&__native->modelMatrix);
-    Priority = __native->priority;
+    __Priority = __native->priority;
 }
 
 Flood::RenderState::RenderState(Flood::RenderBatch^ renderable)
@@ -38,6 +38,36 @@ Flood::RenderState::RenderState(Flood::RenderBatch^ renderable)
     this->Material = gcnew Flood::Material((::Material*)_native.material);
     this->ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&_native.modelMatrix);
     this->Priority = _native.priority;
+}
+
+Flood::RenderBatch^ Flood::RenderState::Renderable::get()
+{
+    return __Renderable;
+}
+
+void Flood::RenderState::Renderable::set(Flood::RenderBatch^ value)
+{
+    __Renderable = value;
+}
+
+Flood::Material^ Flood::RenderState::Material::get()
+{
+    return __Material;
+}
+
+void Flood::RenderState::Material::set(Flood::Material^ value)
+{
+    __Material = value;
+}
+
+int Flood::RenderState::Priority::get()
+{
+    return __Priority;
+}
+
+void Flood::RenderState::Priority::set(int value)
+{
+    __Priority = value;
 }
 
 Flood::RenderBlock::RenderBlock(::RenderBlock* native)
@@ -88,7 +118,7 @@ bool Flood::RenderBlock::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderBlock^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderBlock::GetHashCode()
@@ -96,25 +126,25 @@ int Flood::RenderBlock::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RenderBlock::Instance::get()
+System::IntPtr Flood::RenderBlock::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderBlock::Instance::set(System::IntPtr object)
+void Flood::RenderBlock::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderBlock*)object.ToPointer();
 }
 
 System::Collections::Generic::List<Flood::RenderState>^ Flood::RenderBlock::Renderables::get()
 {
-    auto _tmpRenderables = gcnew System::Collections::Generic::List<Flood::RenderState>();
+    auto _tmp__Renderables = gcnew System::Collections::Generic::List<Flood::RenderState>();
     for(auto _element : ((::RenderBlock*)NativePtr)->renderables)
     {
         auto _marshalElement = Flood::RenderState((::RenderState*)&_element);
-        _tmpRenderables->Add(_marshalElement);
+        _tmp__Renderables->Add(_marshalElement);
     }
-    return _tmpRenderables;
+    return _tmp__Renderables;
 }
 
 void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flood::RenderState>^ value)

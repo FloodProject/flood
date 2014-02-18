@@ -43,7 +43,7 @@ namespace Flood
     public:
 
         property ::DebugDrawer* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);

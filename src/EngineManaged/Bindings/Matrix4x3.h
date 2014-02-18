@@ -30,18 +30,78 @@ namespace Flood
 
         Matrix4x3(::Matrix4x3* native);
         Matrix4x3(System::IntPtr native);
-        float M11;
-        float M12;
-        float M13;
-        float M21;
-        float M22;
-        float M23;
-        float M31;
-        float M32;
-        float M33;
-        float Tx;
-        float Ty;
-        float Tz;
+        property float M11
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M12
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M13
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M21
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M22
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M23
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M31
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M32
+        {
+            float get();
+            void set(float);
+        }
+
+        property float M33
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Tx
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Ty
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Tz
+        {
+            float get();
+            void set(float);
+        }
+
         void SetIdentity();
 
         float Determinant();
@@ -74,5 +134,19 @@ namespace Flood
         {
             Flood::Matrix4x3 get();
         }
+
+        private:
+        float __M11;
+        float __M12;
+        float __M13;
+        float __M21;
+        float __M22;
+        float __M23;
+        float __M31;
+        float __M32;
+        float __M33;
+        float __Tx;
+        float __Ty;
+        float __Tz;
     };
 }

@@ -15,15 +15,15 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Settings::Settings(::Settings* native)
 {
-    Width = native->width;
-    Height = native->height;
+    __Width = native->width;
+    __Height = native->height;
 }
 
 Flood::Settings::Settings(System::IntPtr native)
 {
     auto __native = (::Settings*)native.ToPointer();
-    Width = __native->width;
-    Height = __native->height;
+    __Width = __native->width;
+    __Height = __native->height;
 }
 
 Flood::Settings::Settings(unsigned short width, unsigned short height)
@@ -39,9 +39,29 @@ Flood::Vector2i Flood::Settings::Size::get()
     _this0.width = (::uint16)(::uint16_t)(*this).Width;
     _this0.height = (::uint16)(::uint16_t)(*this).Height;
     auto __ret = _this0.getSize();
-    Width = _this0.width;
-    Height = _this0.height;
+    __Width = _this0.width;
+    __Height = _this0.height;
     return Flood::Vector2i((::Vector2i*)&__ret);
+}
+
+unsigned short Flood::Settings::Width::get()
+{
+    return __Width;
+}
+
+void Flood::Settings::Width::set(unsigned short value)
+{
+    __Width = value;
+}
+
+unsigned short Flood::Settings::Height::get()
+{
+    return __Height;
+}
+
+void Flood::Settings::Height::set(unsigned short value)
+{
+    __Height = value;
 }
 
 Flood::RenderTarget::RenderTarget(::RenderTarget* native)
@@ -87,7 +107,7 @@ bool Flood::RenderTarget::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderTarget^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderTarget::GetHashCode()
@@ -95,12 +115,12 @@ int Flood::RenderTarget::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RenderTarget::Instance::get()
+System::IntPtr Flood::RenderTarget::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderTarget::Instance::set(System::IntPtr object)
+void Flood::RenderTarget::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderTarget*)object.ToPointer();
 }

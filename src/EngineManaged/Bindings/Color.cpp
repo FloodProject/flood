@@ -6,7 +6,6 @@
 ************************************************************************/
 
 #include "Color.h"
-#include "RenderContext.h"
 #include "Vector.h"
 
 using namespace System;
@@ -14,19 +13,19 @@ using namespace System::Runtime::InteropServices;
 
 Flood::Color::Color(::Color* native)
 {
-    R = native->r;
-    G = native->g;
-    B = native->b;
-    A = native->a;
+    __R = native->r;
+    __G = native->g;
+    __B = native->b;
+    __A = native->a;
 }
 
 Flood::Color::Color(System::IntPtr native)
 {
     auto __native = (::Color*)native.ToPointer();
-    R = __native->r;
-    G = __native->g;
-    B = __native->b;
-    A = __native->a;
+    __R = __native->r;
+    __G = __native->g;
+    __B = __native->b;
+    __A = __native->a;
 }
 
 Flood::Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
@@ -70,10 +69,10 @@ bool Flood::Color::NearEqual(Flood::Color a, float tolerance)
     _marshal0.a = (::byte)(::uint8)(::uint8_t)a.A;
     auto arg0 = _marshal0;
     auto __ret = _this0.nearEqual(arg0, tolerance);
-    R = _this0.r;
-    G = _this0.g;
-    B = _this0.b;
-    A = _this0.a;
+    __R = _this0.r;
+    __G = _this0.g;
+    __B = _this0.b;
+    __A = _this0.a;
     return __ret;
 }
 
@@ -99,6 +98,46 @@ Flood::Color::operator Flood::Vector3(Flood::Color __op)
     auto arg0 = _marshal0;
     auto __ret = (::Vector3) arg0;
     return Flood::Vector3((::Vector3*)&__ret);
+}
+
+unsigned char Flood::Color::R::get()
+{
+    return __R;
+}
+
+void Flood::Color::R::set(unsigned char value)
+{
+    __R = value;
+}
+
+unsigned char Flood::Color::G::get()
+{
+    return __G;
+}
+
+void Flood::Color::G::set(unsigned char value)
+{
+    __G = value;
+}
+
+unsigned char Flood::Color::B::get()
+{
+    return __B;
+}
+
+void Flood::Color::B::set(unsigned char value)
+{
+    __B = value;
+}
+
+unsigned char Flood::Color::A::get()
+{
+    return __A;
+}
+
+void Flood::Color::A::set(unsigned char value)
+{
+    __A = value;
 }
 
 Flood::Color Flood::Color::White::get()

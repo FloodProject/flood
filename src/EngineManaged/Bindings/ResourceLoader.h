@@ -31,8 +31,21 @@ namespace Flood
 
         ResourceLoadOption(::ResourceLoadOption* native);
         ResourceLoadOption(System::IntPtr native);
-        int Key;
-        int Value;
+        property int Key
+        {
+            int get();
+            void set(int);
+        }
+
+        property int Value
+        {
+            int get();
+            void set(int);
+        }
+
+        private:
+        int __Key;
+        int __Value;
     };
 
     public value struct ResourceLoadOptions
@@ -41,16 +54,66 @@ namespace Flood
 
         ResourceLoadOptions(::ResourceLoadOptions* native);
         ResourceLoadOptions(System::IntPtr native);
-        System::String^ Name;
-        Flood::Stream^ Stream;
-        Flood::Resource^ Resource;
-        Flood::ResourceGroup Group;
-        bool IsHighPriority;
-        bool SendLoadEvent;
-        bool AsynchronousLoad;
-        bool KeepStreamOpen;
+        property System::String^ Name
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property Flood::Stream^ Stream
+        {
+            Flood::Stream^ get();
+            void set(Flood::Stream^);
+        }
+
+        property Flood::Resource^ Resource
+        {
+            Flood::Resource^ get();
+            void set(Flood::Resource^);
+        }
+
+        property Flood::ResourceGroup Group
+        {
+            Flood::ResourceGroup get();
+            void set(Flood::ResourceGroup);
+        }
+
+        property bool IsHighPriority
+        {
+            bool get();
+            void set(bool);
+        }
+
+        property bool SendLoadEvent
+        {
+            bool get();
+            void set(bool);
+        }
+
+        property bool AsynchronousLoad
+        {
+            bool get();
+            void set(bool);
+        }
+
+        property bool KeepStreamOpen
+        {
+            bool get();
+            void set(bool);
+        }
+
         Flood::ResourceLoadOption Option;
         void AddOption(int key, int value);
+
+        private:
+        System::String^ __Name;
+        Flood::Stream^ __Stream;
+        Flood::Resource^ __Resource;
+        Flood::ResourceGroup __Group;
+        bool __IsHighPriority;
+        bool __SendLoadEvent;
+        bool __AsynchronousLoad;
+        bool __KeepStreamOpen;
     };
 
     public ref class ResourceStream : ICppInstance
@@ -58,7 +121,7 @@ namespace Flood
     public:
 
         property ::ResourceStream* NativePtr;
-        property System::IntPtr Instance
+        property System::IntPtr __Instance
         {
             virtual System::IntPtr get();
             virtual void set(System::IntPtr instance);
@@ -129,9 +192,9 @@ namespace Flood
             void set(System::Collections::Generic::List<System::String^>^);
         }
 
-        virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _1);
+        virtual Flood::Resource^ Prepare(Flood::ResourceLoadOptions _0);
 
-        virtual bool Decode(Flood::ResourceLoadOptions _2);
+        virtual bool Decode(Flood::ResourceLoadOptions _1);
 
         virtual bool Equals(System::Object^ object) override;
 

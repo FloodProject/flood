@@ -39,7 +39,7 @@ bool Flood::RayQueryResult::Equals(System::Object^ object)
     auto obj = dynamic_cast<RayQueryResult^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RayQueryResult::GetHashCode()
@@ -47,12 +47,12 @@ int Flood::RayQueryResult::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RayQueryResult::Instance::get()
+System::IntPtr Flood::RayQueryResult::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RayQueryResult::Instance::set(System::IntPtr object)
+void Flood::RayQueryResult::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RayQueryResult*)object.ToPointer();
 }
@@ -100,7 +100,7 @@ bool Flood::RayTriangleQueryResult::Equals(System::Object^ object)
     auto obj = dynamic_cast<RayTriangleQueryResult^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RayTriangleQueryResult::GetHashCode()
@@ -324,7 +324,7 @@ bool Flood::Scene::Equals(System::Object^ object)
     auto obj = dynamic_cast<Scene^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Scene::GetHashCode()

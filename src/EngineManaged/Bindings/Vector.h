@@ -30,9 +30,24 @@ namespace Flood
 
         Vector3(float a, float b, float c);
 
-        float X;
-        float Y;
-        float Z;
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Z
+        {
+            float get();
+            void set(float);
+        }
+
         static bool operator==(Flood::Vector3 __op, Flood::Vector3 v);
 
         static bool operator!=(Flood::Vector3 __op, Flood::Vector3 v);
@@ -97,6 +112,11 @@ namespace Flood
         {
             Flood::Vector3 get();
         }
+
+        private:
+        float __X;
+        float __Y;
+        float __Z;
     };
 
     public value struct Vector4
@@ -111,10 +131,30 @@ namespace Flood
 
         Vector4(Flood::Vector3 v, float d);
 
-        float X;
-        float Y;
-        float Z;
-        float W;
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Z
+        {
+            float get();
+            void set(float);
+        }
+
+        property float W
+        {
+            float get();
+            void set(float);
+        }
+
         static bool operator==(Flood::Vector4 __op, Flood::Vector4 v);
 
         static bool operator!=(Flood::Vector4 __op, Flood::Vector4 v);
@@ -161,6 +201,12 @@ namespace Flood
         {
             Flood::Vector4 get();
         }
+
+        private:
+        float __X;
+        float __Y;
+        float __Z;
+        float __W;
     };
 
     public value struct Vector2
@@ -171,8 +217,18 @@ namespace Flood
         Vector2(System::IntPtr native);
         Vector2(float x, float y);
 
-        float X;
-        float Y;
+        property float X
+        {
+            float get();
+            void set(float);
+        }
+
+        property float Y
+        {
+            float get();
+            void set(float);
+        }
+
         static bool operator==(Flood::Vector2 __op, Flood::Vector2 v);
 
         static bool operator!=(Flood::Vector2 __op, Flood::Vector2 v);
@@ -209,6 +265,10 @@ namespace Flood
         {
             Flood::Vector2 get();
         }
+
+        private:
+        float __X;
+        float __Y;
     };
 
     public value struct Vector2i
@@ -219,8 +279,18 @@ namespace Flood
         Vector2i(System::IntPtr native);
         Vector2i(int x, int y);
 
-        int X;
-        int Y;
+        property int X
+        {
+            int get();
+            void set(int);
+        }
+
+        property int Y
+        {
+            int get();
+            void set(int);
+        }
+
         static operator Flood::Vector3(Flood::Vector2i __op);
 
         static bool operator==(Flood::Vector2i __op, Flood::Vector2i v);
@@ -242,5 +312,9 @@ namespace Flood
         static Flood::Vector2i operator/(Flood::Vector2i __op, int s);
 
         void Zero();
+
+        private:
+        int __X;
+        int __Y;
     };
 }

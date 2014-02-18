@@ -94,7 +94,7 @@ bool Flood::Image::Equals(System::Object^ object)
     auto obj = dynamic_cast<Image^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Image::GetHashCode()
@@ -268,7 +268,7 @@ bool Flood::ImageWriter::Equals(System::Object^ object)
     auto obj = dynamic_cast<ImageWriter^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::ImageWriter::GetHashCode()
@@ -276,12 +276,12 @@ int Flood::ImageWriter::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::ImageWriter::Instance::get()
+System::IntPtr Flood::ImageWriter::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::ImageWriter::Instance::set(System::IntPtr object)
+void Flood::ImageWriter::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::ImageWriter*)object.ToPointer();
 }

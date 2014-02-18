@@ -66,7 +66,7 @@ bool Flood::Group::Equals(System::Object^ object)
     auto obj = dynamic_cast<Group^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Group::GetHashCode()
@@ -128,14 +128,14 @@ void Flood::Group::EntityRemoved::remove(System::Action<Flood::Entity^>^ evt)
     _EntityRemoved = static_cast<System::Action<Flood::Entity^>^>(System::Delegate::Remove(_EntityRemoved, evt));
 }
 
-void Flood::Group::EntityRemoved::raise(Flood::Entity^ _1)
+void Flood::Group::EntityRemoved::raise(Flood::Entity^ _0)
 {
-    _EntityRemoved(_1);
+    _EntityRemoved(_0);
 }
 
-void Flood::Group::_EntityRemovedRaise(const ::EntityPtr& _1)
+void Flood::Group::_EntityRemovedRaise(const ::EntityPtr& _0)
 {
-    EntityRemoved::raise(gcnew Flood::Entity((::Entity*)_1.get()));
+    EntityRemoved::raise(gcnew Flood::Entity((::Entity*)_0.get()));
 }
 
 void Flood::Group::EntityComponentAdded::add(System::Action<Flood::Component^>^ evt)
@@ -154,14 +154,14 @@ void Flood::Group::EntityComponentAdded::remove(System::Action<Flood::Component^
     _EntityComponentAdded = static_cast<System::Action<Flood::Component^>^>(System::Delegate::Remove(_EntityComponentAdded, evt));
 }
 
-void Flood::Group::EntityComponentAdded::raise(Flood::Component^ _2)
+void Flood::Group::EntityComponentAdded::raise(Flood::Component^ _0)
 {
-    _EntityComponentAdded(_2);
+    _EntityComponentAdded(_0);
 }
 
-void Flood::Group::_EntityComponentAddedRaise(const ::ComponentPtr& _2)
+void Flood::Group::_EntityComponentAddedRaise(const ::ComponentPtr& _0)
 {
-    EntityComponentAdded::raise(gcnew Flood::Component((::Component*)_2.get()));
+    EntityComponentAdded::raise(gcnew Flood::Component((::Component*)_0.get()));
 }
 
 void Flood::Group::EntityComponentRemoved::add(System::Action<Flood::Component^>^ evt)
@@ -180,14 +180,14 @@ void Flood::Group::EntityComponentRemoved::remove(System::Action<Flood::Componen
     _EntityComponentRemoved = static_cast<System::Action<Flood::Component^>^>(System::Delegate::Remove(_EntityComponentRemoved, evt));
 }
 
-void Flood::Group::EntityComponentRemoved::raise(Flood::Component^ _3)
+void Flood::Group::EntityComponentRemoved::raise(Flood::Component^ _0)
 {
-    _EntityComponentRemoved(_3);
+    _EntityComponentRemoved(_0);
 }
 
-void Flood::Group::_EntityComponentRemovedRaise(const ::ComponentPtr& _3)
+void Flood::Group::_EntityComponentRemovedRaise(const ::ComponentPtr& _0)
 {
-    EntityComponentRemoved::raise(gcnew Flood::Component((::Component*)_3.get()));
+    EntityComponentRemoved::raise(gcnew Flood::Component((::Component*)_0.get()));
 }
 
 void Flood::Group::EntityChanged::add(System::Action^ evt)

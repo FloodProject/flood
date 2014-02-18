@@ -61,7 +61,7 @@ bool Flood::Engine::Equals(System::Object^ object)
     auto obj = dynamic_cast<Engine^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Engine::GetHashCode()
@@ -76,12 +76,12 @@ Flood::Engine^ Flood::Engine::GetEngine()
     return gcnew Flood::Engine((::Engine*)__ret);
 }
 
-System::IntPtr Flood::Engine::Instance::get()
+System::IntPtr Flood::Engine::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Engine::Instance::set(System::IntPtr object)
+void Flood::Engine::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Engine*)object.ToPointer();
 }

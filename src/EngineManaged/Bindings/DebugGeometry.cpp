@@ -122,7 +122,7 @@ bool Flood::DebugDrawer::Equals(System::Object^ object)
     auto obj = dynamic_cast<DebugDrawer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::DebugDrawer::GetHashCode()
@@ -130,12 +130,12 @@ int Flood::DebugDrawer::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::DebugDrawer::Instance::get()
+System::IntPtr Flood::DebugDrawer::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::DebugDrawer::Instance::set(System::IntPtr object)
+void Flood::DebugDrawer::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::DebugDrawer*)object.ToPointer();
 }
@@ -199,13 +199,13 @@ void Flood::DebugDrawer::Quads::set(Flood::RenderBatch^ value)
 
 System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::DebugDrawer::Renderables::get()
 {
-    auto _tmpRenderables = gcnew System::Collections::Generic::List<Flood::RenderBatch^>();
+    auto _tmp__Renderables = gcnew System::Collections::Generic::List<Flood::RenderBatch^>();
     for(auto _element : ((::DebugDrawer*)NativePtr)->renderables)
     {
         auto _marshalElement = gcnew Flood::RenderBatch((::RenderBatch*)_element);
-        _tmpRenderables->Add(_marshalElement);
+        _tmp__Renderables->Add(_marshalElement);
     }
-    return _tmpRenderables;
+    return _tmp__Renderables;
 }
 
 void Flood::DebugDrawer::Renderables::set(System::Collections::Generic::List<Flood::RenderBatch^>^ value)

@@ -35,7 +35,7 @@ bool Flood::MouseEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<MouseEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::MouseEvent::GetHashCode()
@@ -76,7 +76,7 @@ bool Flood::MouseMoveEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<MouseMoveEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::MouseMoveEvent::GetHashCode()
@@ -127,7 +127,7 @@ bool Flood::MouseDragEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<MouseDragEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::MouseDragEvent::GetHashCode()
@@ -227,7 +227,7 @@ bool Flood::MouseButtonEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<MouseButtonEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::MouseButtonEvent::GetHashCode()
@@ -288,7 +288,7 @@ bool Flood::MouseWheelEvent::Equals(System::Object^ object)
     auto obj = dynamic_cast<MouseWheelEvent^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::MouseWheelEvent::GetHashCode()

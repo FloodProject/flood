@@ -51,11 +51,48 @@ namespace Flood
         WindowSettings(::WindowSettings* native);
         WindowSettings(System::IntPtr native);
         WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles);
-        unsigned short Width;
-        unsigned short Height;
-        System::String^ Title;
-        System::IntPtr Handle;
-        Flood::WindowStyles Styles;
+
+        property Flood::Vector2i Size
+        {
+            Flood::Vector2i get();
+        }
+
+        property unsigned short Width
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property unsigned short Height
+        {
+            unsigned short get();
+            void set(unsigned short);
+        }
+
+        property System::String^ Title
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property System::IntPtr Handle
+        {
+            System::IntPtr get();
+            void set(System::IntPtr);
+        }
+
+        property Flood::WindowStyles Styles
+        {
+            Flood::WindowStyles get();
+            void set(Flood::WindowStyles);
+        }
+
+        private:
+        unsigned short __Width;
+        unsigned short __Height;
+        System::String^ __Title;
+        System::IntPtr __Handle;
+        Flood::WindowStyles __Styles;
     };
 
     /// <summary>
@@ -153,7 +190,7 @@ namespace Flood
         /// <summary>
         /// Creates a new render context.
         /// </summary>
-        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _1);
+        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
 
         /// <summary>
         /// Updates the window content.

@@ -56,7 +56,7 @@ bool Flood::Host::Equals(System::Object^ object)
     auto obj = dynamic_cast<Host^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Host::GetHashCode()
@@ -64,12 +64,12 @@ int Flood::Host::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::Host::Instance::get()
+System::IntPtr Flood::Host::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::Host::Instance::set(System::IntPtr object)
+void Flood::Host::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::Host*)object.ToPointer();
 }
@@ -101,17 +101,17 @@ void Flood::Host::_SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int 
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)
 {
-    Address = clix::marshalString<clix::E_UTF8>(native->address);
-    Port = native->port;
-    ChannelCount = native->channelCount;
+    __Address = clix::marshalString<clix::E_UTF8>(native->address);
+    __Port = native->port;
+    __ChannelCount = native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 {
     auto __native = (::HostConnectionDetails*)native.ToPointer();
-    Address = clix::marshalString<clix::E_UTF8>(__native->address);
-    Port = __native->port;
-    ChannelCount = __native->channelCount;
+    __Address = clix::marshalString<clix::E_UTF8>(__native->address);
+    __Port = __native->port;
+    __ChannelCount = __native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
@@ -120,6 +120,36 @@ Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, uns
     this->Address = clix::marshalString<clix::E_UTF8>(_native.address);
     this->Port = _native.port;
     this->ChannelCount = _native.channelCount;
+}
+
+System::String^ Flood::HostConnectionDetails::Address::get()
+{
+    return __Address;
+}
+
+void Flood::HostConnectionDetails::Address::set(System::String^ value)
+{
+    __Address = value;
+}
+
+unsigned short Flood::HostConnectionDetails::Port::get()
+{
+    return __Port;
+}
+
+void Flood::HostConnectionDetails::Port::set(unsigned short value)
+{
+    __Port = value;
+}
+
+unsigned char Flood::HostConnectionDetails::ChannelCount::get()
+{
+    return __ChannelCount;
+}
+
+void Flood::HostConnectionDetails::ChannelCount::set(unsigned char value)
+{
+    __ChannelCount = value;
 }
 
 Flood::HostClient::HostClient(::HostClient* native)
@@ -156,7 +186,7 @@ bool Flood::HostClient::Equals(System::Object^ object)
     auto obj = dynamic_cast<HostClient^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::HostClient::GetHashCode()
@@ -211,7 +241,7 @@ bool Flood::HostServer::Equals(System::Object^ object)
     auto obj = dynamic_cast<HostServer^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::HostServer::GetHashCode()

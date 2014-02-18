@@ -256,7 +256,7 @@ bool Flood::RenderBackend::Equals(System::Object^ object)
     auto obj = dynamic_cast<RenderBackend^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::RenderBackend::GetHashCode()
@@ -264,12 +264,12 @@ int Flood::RenderBackend::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::RenderBackend::Instance::get()
+System::IntPtr Flood::RenderBackend::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::RenderBackend::Instance::set(System::IntPtr object)
+void Flood::RenderBackend::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::RenderBackend*)object.ToPointer();
 }

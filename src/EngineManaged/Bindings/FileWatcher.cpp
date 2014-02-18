@@ -12,21 +12,21 @@ using namespace System::Runtime::InteropServices;
 
 Flood::FileWatchEvent::FileWatchEvent(::FileWatchEvent* native)
 {
-    Action = (Flood::FileWatchEventKind)native->action;
-    WatchId = native->watchId;
-    Dir = clix::marshalString<clix::E_UTF8>(native->dir);
-    Filename = clix::marshalString<clix::E_UTF8>(native->filename);
-    Userdata = IntPtr(native->userdata);
+    __Action = (Flood::FileWatchEventKind)native->action;
+    __WatchId = native->watchId;
+    __Dir = clix::marshalString<clix::E_UTF8>(native->dir);
+    __Filename = clix::marshalString<clix::E_UTF8>(native->filename);
+    __Userdata = IntPtr(native->userdata);
 }
 
 Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
 {
     auto __native = (::FileWatchEvent*)native.ToPointer();
-    Action = (Flood::FileWatchEventKind)__native->action;
-    WatchId = __native->watchId;
-    Dir = clix::marshalString<clix::E_UTF8>(__native->dir);
-    Filename = clix::marshalString<clix::E_UTF8>(__native->filename);
-    Userdata = IntPtr(__native->userdata);
+    __Action = (Flood::FileWatchEventKind)__native->action;
+    __WatchId = __native->watchId;
+    __Dir = clix::marshalString<clix::E_UTF8>(__native->dir);
+    __Filename = clix::marshalString<clix::E_UTF8>(__native->filename);
+    __Userdata = IntPtr(__native->userdata);
 }
 
 Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file)
@@ -37,6 +37,56 @@ Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int
     this->Dir = clix::marshalString<clix::E_UTF8>(_native.dir);
     this->Filename = clix::marshalString<clix::E_UTF8>(_native.filename);
     this->Userdata = IntPtr(_native.userdata);
+}
+
+Flood::FileWatchEventKind Flood::FileWatchEvent::Action::get()
+{
+    return __Action;
+}
+
+void Flood::FileWatchEvent::Action::set(Flood::FileWatchEventKind value)
+{
+    __Action = value;
+}
+
+unsigned int Flood::FileWatchEvent::WatchId::get()
+{
+    return __WatchId;
+}
+
+void Flood::FileWatchEvent::WatchId::set(unsigned int value)
+{
+    __WatchId = value;
+}
+
+System::String^ Flood::FileWatchEvent::Dir::get()
+{
+    return __Dir;
+}
+
+void Flood::FileWatchEvent::Dir::set(System::String^ value)
+{
+    __Dir = value;
+}
+
+System::String^ Flood::FileWatchEvent::Filename::get()
+{
+    return __Filename;
+}
+
+void Flood::FileWatchEvent::Filename::set(System::String^ value)
+{
+    __Filename = value;
+}
+
+System::IntPtr Flood::FileWatchEvent::Userdata::get()
+{
+    return __Userdata;
+}
+
+void Flood::FileWatchEvent::Userdata::set(System::IntPtr value)
+{
+    __Userdata = value;
 }
 
 Flood::FileWatcher::FileWatcher(::FileWatcher* native)
@@ -85,7 +135,7 @@ bool Flood::FileWatcher::Equals(System::Object^ object)
     auto obj = dynamic_cast<FileWatcher^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::FileWatcher::GetHashCode()
@@ -93,12 +143,12 @@ int Flood::FileWatcher::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::FileWatcher::Instance::get()
+System::IntPtr Flood::FileWatcher::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::FileWatcher::Instance::set(System::IntPtr object)
+void Flood::FileWatcher::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::FileWatcher*)object.ToPointer();
 }

@@ -53,40 +53,40 @@ namespace Flood
             void raise(Flood::Entity^ _0);
         }
     private:
-        delegate void _EntityRemovedDelegate(const ::EntityPtr& _1);
+        delegate void _EntityRemovedDelegate(const ::EntityPtr& _0);
         _EntityRemovedDelegate^ _EntityRemovedDelegateInstance;
-        void _EntityRemovedRaise(const ::EntityPtr& _1);
+        void _EntityRemovedRaise(const ::EntityPtr& _0);
         System::Action<Flood::Entity^>^ _EntityRemoved;
     public:
         event System::Action<Flood::Entity^>^ EntityRemoved
         {
             void add(System::Action<Flood::Entity^>^ evt);
             void remove(System::Action<Flood::Entity^>^ evt);
-            void raise(Flood::Entity^ _1);
+            void raise(Flood::Entity^ _0);
         }
     private:
-        delegate void _EntityComponentAddedDelegate(const ::ComponentPtr& _2);
+        delegate void _EntityComponentAddedDelegate(const ::ComponentPtr& _0);
         _EntityComponentAddedDelegate^ _EntityComponentAddedDelegateInstance;
-        void _EntityComponentAddedRaise(const ::ComponentPtr& _2);
+        void _EntityComponentAddedRaise(const ::ComponentPtr& _0);
         System::Action<Flood::Component^>^ _EntityComponentAdded;
     public:
         event System::Action<Flood::Component^>^ EntityComponentAdded
         {
             void add(System::Action<Flood::Component^>^ evt);
             void remove(System::Action<Flood::Component^>^ evt);
-            void raise(Flood::Component^ _2);
+            void raise(Flood::Component^ _0);
         }
     private:
-        delegate void _EntityComponentRemovedDelegate(const ::ComponentPtr& _3);
+        delegate void _EntityComponentRemovedDelegate(const ::ComponentPtr& _0);
         _EntityComponentRemovedDelegate^ _EntityComponentRemovedDelegateInstance;
-        void _EntityComponentRemovedRaise(const ::ComponentPtr& _3);
+        void _EntityComponentRemovedRaise(const ::ComponentPtr& _0);
         System::Action<Flood::Component^>^ _EntityComponentRemoved;
     public:
         event System::Action<Flood::Component^>^ EntityComponentRemoved
         {
             void add(System::Action<Flood::Component^>^ evt);
             void remove(System::Action<Flood::Component^>^ evt);
-            void raise(Flood::Component^ _3);
+            void raise(Flood::Component^ _0);
         }
     private:
         delegate void _EntityChangedDelegate();
