@@ -157,17 +157,16 @@ System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::Vie
     return _tmp__ret;
 }
 
-System::IntPtr Flood::RenderTarget::UserData::get()
+void* Flood::RenderTarget::UserData::get()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->getUserData();
-    if (__ret == nullptr) return System::IntPtr();
-    return IntPtr(__ret);
+    return __ret;
 }
 
-void Flood::RenderTarget::UserData::set(System::IntPtr value)
+void Flood::RenderTarget::UserData::set(void* value)
 {
     auto v = value;
-    auto arg0 = (void*)v.ToPointer();
+    auto arg0 = (void*)v;
     ((::RenderTarget*)NativePtr)->setUserData(arg0);
 }
 

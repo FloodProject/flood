@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "WindowManager.h"
+#include "Menu.h"
 #include "Window.h"
 
 using namespace System;
@@ -28,12 +29,26 @@ Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings
     _marshal0.width = (::uint16)(::uint16_t)settings.Width;
     _marshal0.height = (::uint16)(::uint16_t)settings.Height;
     _marshal0.title = clix::marshalString<clix::E_UTF8>(settings.Title);
-    _marshal0.handle = (void*)settings.Handle.ToPointer();
+    _marshal0.handle = (void*)settings.Handle;
     _marshal0.styles = (::WindowStyles)settings.Styles;
     auto arg0 = _marshal0;
     auto __ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
     if (__ret == nullptr) return nullptr;
     return gcnew Flood::Window((::Window*)__ret);
+}
+
+Flood::MenuBar^ Flood::WindowManager::CreateMenuBar()
+{
+    auto __ret = ((::WindowManager*)NativePtr)->createMenuBar();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::MenuBar((::MenuBar*)__ret);
+}
+
+Flood::Menu^ Flood::WindowManager::CreateMenu()
+{
+    auto __ret = ((::WindowManager*)NativePtr)->createMenu();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::Menu((::Menu*)__ret);
 }
 
 Flood::Window^ Flood::WindowManager::OpenFileDialog(System::String^ wildcard, Flood::FileDialogFlags flags)

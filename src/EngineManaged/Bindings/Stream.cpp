@@ -33,17 +33,17 @@ bool Flood::Stream::Close()
     return __ret;
 }
 
-long long Flood::Stream::Read(System::IntPtr buffer, unsigned long long size)
+long long Flood::Stream::Read(void* buffer, unsigned long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
     auto __ret = ((::Stream*)NativePtr)->read(arg0, arg1);
     return __ret;
 }
 
-long long Flood::Stream::Write(System::IntPtr buffer, unsigned long long size)
+long long Flood::Stream::Write(void* buffer, unsigned long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
     auto __ret = ((::Stream*)NativePtr)->write(arg0, arg1);
     return __ret;
@@ -81,9 +81,9 @@ long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^
     return __ret;
 }
 
-long long Flood::Stream::ReadBuffer(System::IntPtr buffer, long long size)
+long long Flood::Stream::ReadBuffer(void* buffer, long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::int64)size;
     auto __ret = ((::Stream*)NativePtr)->readBuffer(arg0, arg1);
     return __ret;
@@ -109,9 +109,9 @@ long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::St
     return __ret;
 }
 
-long long Flood::Stream::Write1(System::IntPtr buf, unsigned long long size)
+long long Flood::Stream::Write(unsigned char* buf, unsigned long long size)
 {
-    auto arg0 = (::uint8*)buf.ToPointer();
+    auto arg0 = (::uint8*)buf;
     auto arg1 = (::uint64)size;
     auto __ret = ((::Stream*)NativePtr)->write(arg0, arg1);
     return __ret;
@@ -205,17 +205,17 @@ bool Flood::WebStream::Close()
     return __ret;
 }
 
-long long Flood::WebStream::Read(System::IntPtr buffer, unsigned long long size)
+long long Flood::WebStream::Read(void* buffer, unsigned long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
     auto __ret = ((::WebStream*)NativePtr)->read(arg0, arg1);
     return __ret;
 }
 
-long long Flood::WebStream::Write(System::IntPtr buffer, unsigned long long size)
+long long Flood::WebStream::Write(void* buffer, unsigned long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
     auto __ret = ((::WebStream*)NativePtr)->write(arg0, arg1);
     return __ret;
@@ -247,14 +247,14 @@ int Flood::WebStream::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::WebStream::Handle::get()
+void* Flood::WebStream::Handle::get()
 {
-    return IntPtr(((::WebStream*)NativePtr)->handle);
+    return ((::WebStream*)NativePtr)->handle;
 }
 
-void Flood::WebStream::Handle::set(System::IntPtr value)
+void Flood::WebStream::Handle::set(void* value)
 {
-    ((::WebStream*)NativePtr)->handle = (::CURL*)value.ToPointer();
+    ((::WebStream*)NativePtr)->handle = (::CURL*)value;
 }
 
 bool Flood::WebStream::IsPerformDone::get()
@@ -290,9 +290,9 @@ bool Flood::ZipStream::Close()
     return __ret;
 }
 
-long long Flood::ZipStream::Read(System::IntPtr buffer, unsigned long long size)
+long long Flood::ZipStream::Read(void* buffer, unsigned long long size)
 {
-    auto arg0 = (void*)buffer.ToPointer();
+    auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
     auto __ret = ((::ZipStream*)NativePtr)->read(arg0, arg1);
     return __ret;

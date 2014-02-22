@@ -7,6 +7,7 @@
 
 #include "Window.h"
 #include "InputManager.h"
+#include "Menu.h"
 #include "RenderContext.h"
 #include "Vector.h"
 
@@ -18,7 +19,7 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
     __Width = native->width;
     __Height = native->height;
     __Title = clix::marshalString<clix::E_UTF8>(native->title);
-    __Handle = IntPtr(native->handle);
+    __Handle = native->handle;
     __Styles = (Flood::WindowStyles)native->styles;
 }
 
@@ -28,7 +29,7 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
     __Width = __native->width;
     __Height = __native->height;
     __Title = clix::marshalString<clix::E_UTF8>(__native->title);
-    __Handle = IntPtr(__native->handle);
+    __Handle = __native->handle;
     __Styles = (Flood::WindowStyles)__native->styles;
 }
 
@@ -38,7 +39,7 @@ Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short heigh
     this->Width = _native.width;
     this->Height = _native.height;
     this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
-    this->Handle = IntPtr(_native.handle);
+    this->Handle = _native.handle;
     this->Styles = (Flood::WindowStyles)_native.styles;
 }
 
@@ -48,13 +49,13 @@ Flood::Vector2i Flood::WindowSettings::Size::get()
     _this0.width = (::uint16)(::uint16_t)(*this).Width;
     _this0.height = (::uint16)(::uint16_t)(*this).Height;
     _this0.title = clix::marshalString<clix::E_UTF8>((*this).Title);
-    _this0.handle = (void*)(*this).Handle.ToPointer();
+    _this0.handle = (void*)(*this).Handle;
     _this0.styles = (::WindowStyles)(*this).Styles;
     auto __ret = _this0.getSize();
     __Width = _this0.width;
     __Height = _this0.height;
     __Title = clix::marshalString<clix::E_UTF8>(_this0.title);
-    __Handle = IntPtr(_this0.handle);
+    __Handle = _this0.handle;
     __Styles = (Flood::WindowStyles)_this0.styles;
     return Flood::Vector2i((::Vector2i*)&__ret);
 }
@@ -89,12 +90,12 @@ void Flood::WindowSettings::Title::set(System::String^ value)
     __Title = value;
 }
 
-System::IntPtr Flood::WindowSettings::Handle::get()
+void* Flood::WindowSettings::Handle::get()
 {
     return __Handle;
 }
 
-void Flood::WindowSettings::Handle::set(System::IntPtr value)
+void Flood::WindowSettings::Handle::set(void* value)
 {
     __Handle = value;
 }
@@ -213,6 +214,20 @@ Flood::Vector2i Flood::Window::CursorPosition::get()
 {
     auto __ret = ((::Window*)NativePtr)->getCursorPosition();
     return Flood::Vector2i((::Vector2i*)&__ret);
+}
+
+Flood::MenuBar^ Flood::Window::MenuBar::get()
+{
+    auto __ret = ((::Window*)NativePtr)->getMenuBar();
+    if (__ret == nullptr) return nullptr;
+    return gcnew Flood::MenuBar((::MenuBar*)__ret);
+}
+
+void Flood::Window::MenuBar::set(Flood::MenuBar^ value)
+{
+    auto menuBar = value;
+    auto arg0 = (::MenuBar*)menuBar->NativePtr;
+    ((::Window*)NativePtr)->setMenuBar(arg0);
 }
 
 Flood::InputManager^ Flood::Window::Input::get()

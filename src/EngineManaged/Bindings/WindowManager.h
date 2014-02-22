@@ -14,6 +14,8 @@ namespace Flood
 {
     enum struct DirectoryDialogFlags;
     enum struct FileDialogFlags;
+    ref class Menu;
+    ref class MenuBar;
     ref class Window;
     ref class WindowManager;
     value struct WindowSettings;
@@ -64,6 +66,16 @@ namespace Flood
         /// Creates a new window.
         /// </summary>
         virtual Flood::Window^ CreateWindow(Flood::WindowSettings settings);
+
+        /// <summary>
+        /// Creates a new menu bar.
+        /// </summary>
+        virtual Flood::MenuBar^ CreateMenuBar();
+
+        /// <summary>
+        /// Creates a new menu bar.
+        /// </summary>
+        virtual Flood::Menu^ CreateMenu();
 
         /// <summary>
         /// Opens a file selection dialog.

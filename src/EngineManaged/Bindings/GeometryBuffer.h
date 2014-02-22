@@ -116,21 +116,21 @@ namespace Flood
 
         void Clear();
 
-        void Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size);
+        void Set(Flood::VertexAttribute _0, unsigned char* data, unsigned int size);
 
-        void Set(System::IntPtr data, unsigned int size);
+        void Set(unsigned char* data, unsigned int size);
 
-        void Add(System::IntPtr data, unsigned int size);
+        void Add(unsigned char* data, unsigned int size);
 
-        void SetIndex(System::IntPtr data, unsigned int size);
+        void SetIndex(unsigned char* data, unsigned int size);
 
-        void AddIndex(System::IntPtr data, unsigned int size);
+        void AddIndex(unsigned char* data, unsigned int size);
 
         void AddIndex(unsigned short index);
 
         bool IsIndexed();
 
-        System::IntPtr GetAttribute(Flood::VertexAttribute _0, unsigned int i);
+        float* GetAttribute(Flood::VertexAttribute _0, unsigned int i);
 
         char GetAttributeStride(Flood::VertexAttribute _0);
 

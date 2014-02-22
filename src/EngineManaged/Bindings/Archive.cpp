@@ -134,14 +134,14 @@ System::String^ Flood::Archive::Path::get()
     return clix::marshalString<clix::E_UTF8>(((::Archive*)NativePtr)->path);
 }
 
-System::IntPtr Flood::Archive::Userdata::get()
+void* Flood::Archive::Userdata::get()
 {
-    return IntPtr(((::Archive*)NativePtr)->userdata);
+    return ((::Archive*)NativePtr)->userdata;
 }
 
-void Flood::Archive::Userdata::set(System::IntPtr value)
+void Flood::Archive::Userdata::set(void* value)
 {
-    ((::Archive*)NativePtr)->userdata = (void*)value.ToPointer();
+    ((::Archive*)NativePtr)->userdata = (void*)value;
 }
 
 unsigned int Flood::Archive::WatchId::get()
@@ -494,13 +494,13 @@ int Flood::ArchiveZip::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::ArchiveZip::Handle::get()
+void* Flood::ArchiveZip::Handle::get()
 {
-    return IntPtr(((::ArchiveZip*)NativePtr)->handle);
+    return ((::ArchiveZip*)NativePtr)->handle;
 }
 
-void Flood::ArchiveZip::Handle::set(System::IntPtr value)
+void Flood::ArchiveZip::Handle::set(void* value)
 {
-    ((::ArchiveZip*)NativePtr)->handle = (void*)value.ToPointer();
+    ((::ArchiveZip*)NativePtr)->handle = (void*)value;
 }
 

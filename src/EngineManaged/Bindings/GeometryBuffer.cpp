@@ -45,38 +45,38 @@ void Flood::GeometryBuffer::Clear()
     ((::GeometryBuffer*)NativePtr)->clear();
 }
 
-void Flood::GeometryBuffer::Set(Flood::VertexAttribute _0, System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::Set(Flood::VertexAttribute _0, unsigned char* data, unsigned int size)
 {
     auto arg0 = (::VertexAttribute)_0;
-    auto arg1 = (::uint8*)data.ToPointer();
+    auto arg1 = (::uint8*)data;
     auto arg2 = (::uint32)(::uint32_t)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1, arg2);
 }
 
-void Flood::GeometryBuffer::Set(System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::Set(unsigned char* data, unsigned int size)
 {
-    auto arg0 = (::uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data;
     auto arg1 = (::uint32)(::uint32_t)size;
     ((::GeometryBuffer*)NativePtr)->set(arg0, arg1);
 }
 
-void Flood::GeometryBuffer::Add(System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::Add(unsigned char* data, unsigned int size)
 {
-    auto arg0 = (::uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data;
     auto arg1 = (::uint32)(::uint32_t)size;
     ((::GeometryBuffer*)NativePtr)->add(arg0, arg1);
 }
 
-void Flood::GeometryBuffer::SetIndex(System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::SetIndex(unsigned char* data, unsigned int size)
 {
-    auto arg0 = (::uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data;
     auto arg1 = (::uint32)(::uint32_t)size;
     ((::GeometryBuffer*)NativePtr)->setIndex(arg0, arg1);
 }
 
-void Flood::GeometryBuffer::AddIndex(System::IntPtr data, unsigned int size)
+void Flood::GeometryBuffer::AddIndex(unsigned char* data, unsigned int size)
 {
-    auto arg0 = (::uint8*)data.ToPointer();
+    auto arg0 = (::uint8*)data;
     auto arg1 = (::uint32)(::uint32_t)size;
     ((::GeometryBuffer*)NativePtr)->addIndex(arg0, arg1);
 }
@@ -93,13 +93,12 @@ bool Flood::GeometryBuffer::IsIndexed()
     return __ret;
 }
 
-System::IntPtr Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _0, unsigned int i)
+float* Flood::GeometryBuffer::GetAttribute(Flood::VertexAttribute _0, unsigned int i)
 {
     auto arg0 = (::VertexAttribute)_0;
     auto arg1 = (::uint32)(::uint32_t)i;
     auto __ret = ((::GeometryBuffer*)NativePtr)->getAttribute(arg0, arg1);
-    if (__ret == nullptr) return System::IntPtr();
-    return IntPtr(__ret);
+    return __ret;
 }
 
 char Flood::GeometryBuffer::GetAttributeStride(Flood::VertexAttribute _0)

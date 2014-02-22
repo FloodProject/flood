@@ -59,10 +59,10 @@ namespace Flood
             void set(System::String^);
         }
 
-        property System::IntPtr Userdata
+        property void* Userdata
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
         private:
@@ -70,7 +70,7 @@ namespace Flood
         unsigned int __WatchId;
         System::String^ __Dir;
         System::String^ __Filename;
-        System::IntPtr __Userdata;
+        void* __Userdata;
     };
 
     /// <summary>
@@ -104,7 +104,7 @@ namespace Flood
             void remove(System::Action<Flood::FileWatchEvent>^ evt);
             void raise(Flood::FileWatchEvent _0);
         }
-        virtual unsigned int AddWatch(System::String^ directory, System::IntPtr userdata);
+        virtual unsigned int AddWatch(System::String^ directory, void* userdata);
 
         virtual void RemoveWatch(System::String^ directory);
 

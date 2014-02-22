@@ -143,7 +143,7 @@ namespace Flood
             void set(Flood::ResourceLoader^);
         }
 
-        virtual int Decode(System::IntPtr buffer, unsigned int size);
+        virtual int Decode(unsigned char* buffer, unsigned int size);
 
         virtual void Reset();
 

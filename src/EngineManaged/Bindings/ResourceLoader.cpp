@@ -197,9 +197,9 @@ Flood::ResourceStream::ResourceStream()
 {
 }
 
-int Flood::ResourceStream::Decode(System::IntPtr buffer, unsigned int size)
+int Flood::ResourceStream::Decode(unsigned char* buffer, unsigned int size)
 {
-    auto arg0 = (::uint8*)buffer.ToPointer();
+    auto arg0 = (::uint8*)buffer;
     auto arg1 = (::size_t)size;
     auto __ret = ((::ResourceStream*)NativePtr)->decode(arg0, arg1);
     return __ret;

@@ -47,15 +47,15 @@ bool Flood::Image::IsCompressed()
     return __ret;
 }
 
-void Flood::Image::SetBuffer(System::IntPtr data)
+void Flood::Image::SetBuffer(unsigned char* data)
 {
-    auto arg0 = (::byte*)data.ToPointer();
+    auto arg0 = (::byte*)data;
     ((::Image*)NativePtr)->setBuffer(arg0);
 }
 
-void Flood::Image::SetBuffer(System::IntPtr data, unsigned int stride)
+void Flood::Image::SetBuffer(unsigned char* data, unsigned int stride)
 {
-    auto arg0 = (::byte*)data.ToPointer();
+    auto arg0 = (::byte*)data;
     auto arg1 = (::uint)(::uint32)(::uint32_t)stride;
     ((::Image*)NativePtr)->setBuffer(arg0, arg1);
 }

@@ -82,10 +82,10 @@ namespace Flood
             System::Collections::Generic::List<Flood::RenderView^>^ get();
         }
 
-        property System::IntPtr UserData
+        property void* UserData
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
     private:

@@ -20,9 +20,9 @@ namespace Flood
 
 namespace Flood
 {
-    public delegate System::IntPtr MemoryAllocateFunction(Flood::Allocator^ _0, int size, int align);
+    public delegate void* MemoryAllocateFunction(Flood::Allocator^ _0, int size, int align);
 
-    public delegate void MemoryFreeFunction(Flood::Allocator^ _0, System::IntPtr object);
+    public delegate void MemoryFreeFunction(Flood::Allocator^ _0, void* object);
 
     public delegate void MemoryResetFunction(Flood::Allocator^ _0);
 
@@ -72,7 +72,7 @@ namespace Flood
 
         static Flood::Allocator^ GetStack();
 
-        static Flood::Allocator^ GetObject(System::IntPtr _0);
+        static Flood::Allocator^ GetObject(void* _0);
 
         static void DumpInfo();
     };
@@ -90,10 +90,10 @@ namespace Flood
         PoolAllocator(System::IntPtr native);
         PoolAllocator();
 
-        property System::IntPtr Current
+        property unsigned char* Current
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            unsigned char* get();
+            void set(unsigned char*);
         }
 
         virtual bool Equals(System::Object^ object) override;
@@ -114,16 +114,16 @@ namespace Flood
         BumpAllocator(System::IntPtr native);
         BumpAllocator();
 
-        property System::IntPtr Start
+        property unsigned char* Start
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            unsigned char* get();
+            void set(unsigned char*);
         }
 
-        property System::IntPtr Current
+        property unsigned char* Current
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            unsigned char* get();
+            void set(unsigned char*);
         }
 
         property unsigned int Size
@@ -150,10 +150,10 @@ namespace Flood
         HeapAllocator(System::IntPtr native);
         HeapAllocator();
 
-        property System::IntPtr Space
+        property void* Space
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
         virtual bool Equals(System::Object^ object) override;

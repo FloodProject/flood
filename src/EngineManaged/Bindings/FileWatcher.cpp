@@ -16,7 +16,7 @@ Flood::FileWatchEvent::FileWatchEvent(::FileWatchEvent* native)
     __WatchId = native->watchId;
     __Dir = clix::marshalString<clix::E_UTF8>(native->dir);
     __Filename = clix::marshalString<clix::E_UTF8>(native->filename);
-    __Userdata = IntPtr(native->userdata);
+    __Userdata = native->userdata;
 }
 
 Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
@@ -26,7 +26,7 @@ Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
     __WatchId = __native->watchId;
     __Dir = clix::marshalString<clix::E_UTF8>(__native->dir);
     __Filename = clix::marshalString<clix::E_UTF8>(__native->filename);
-    __Userdata = IntPtr(__native->userdata);
+    __Userdata = __native->userdata;
 }
 
 Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file)
@@ -36,7 +36,7 @@ Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int
     this->WatchId = _native.watchId;
     this->Dir = clix::marshalString<clix::E_UTF8>(_native.dir);
     this->Filename = clix::marshalString<clix::E_UTF8>(_native.filename);
-    this->Userdata = IntPtr(_native.userdata);
+    this->Userdata = _native.userdata;
 }
 
 Flood::FileWatchEventKind Flood::FileWatchEvent::Action::get()
@@ -79,12 +79,12 @@ void Flood::FileWatchEvent::Filename::set(System::String^ value)
     __Filename = value;
 }
 
-System::IntPtr Flood::FileWatchEvent::Userdata::get()
+void* Flood::FileWatchEvent::Userdata::get()
 {
     return __Userdata;
 }
 
-void Flood::FileWatchEvent::Userdata::set(System::IntPtr value)
+void Flood::FileWatchEvent::Userdata::set(void* value)
 {
     __Userdata = value;
 }
@@ -104,10 +104,10 @@ Flood::FileWatcher::FileWatcher()
 {
 }
 
-unsigned int Flood::FileWatcher::AddWatch(System::String^ directory, System::IntPtr userdata)
+unsigned int Flood::FileWatcher::AddWatch(System::String^ directory, void* userdata)
 {
     auto arg0 = clix::marshalString<clix::E_UTF8>(directory);
-    auto arg1 = (void*)userdata.ToPointer();
+    auto arg1 = (void*)userdata;
     auto __ret = ((::FileWatcher*)NativePtr)->addWatch(arg0, arg1);
     return __ret;
 }

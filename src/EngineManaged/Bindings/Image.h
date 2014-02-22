@@ -114,9 +114,9 @@ namespace Flood
 
         bool IsCompressed();
 
-        void SetBuffer(System::IntPtr data);
+        void SetBuffer(unsigned char* data);
 
-        void SetBuffer(System::IntPtr data, unsigned int stride);
+        void SetBuffer(unsigned char* data, unsigned int stride);
 
         void SetBuffer(Flood::Image^ image, Flood::Vector2i offset);
 

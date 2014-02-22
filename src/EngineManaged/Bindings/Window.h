@@ -15,6 +15,7 @@ namespace Flood
 {
     enum struct WindowStyles;
     ref class InputManager;
+    ref class MenuBar;
     ref class RenderContext;
     ref class Window;
     value struct RenderContextSettings;
@@ -75,10 +76,10 @@ namespace Flood
             void set(System::String^);
         }
 
-        property System::IntPtr Handle
+        property void* Handle
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
         property Flood::WindowStyles Styles
@@ -91,7 +92,7 @@ namespace Flood
         unsigned short __Width;
         unsigned short __Height;
         System::String^ __Title;
-        System::IntPtr __Handle;
+        void* __Handle;
         Flood::WindowStyles __Styles;
     };
 
@@ -127,6 +128,12 @@ namespace Flood
         property Flood::Vector2i CursorPosition
         {
             Flood::Vector2i get();
+        }
+
+        property Flood::MenuBar^ MenuBar
+        {
+            Flood::MenuBar^ get();
+            void set(Flood::MenuBar^);
         }
 
         property Flood::InputManager^ Input

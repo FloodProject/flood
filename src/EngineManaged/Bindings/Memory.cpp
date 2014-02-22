@@ -108,9 +108,9 @@ Flood::Allocator^ Flood::Allocator::GetStack()
     return gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
-Flood::Allocator^ Flood::Allocator::GetObject(System::IntPtr _0)
+Flood::Allocator^ Flood::Allocator::GetObject(void* _0)
 {
-    auto arg0 = (void*)_0.ToPointer();
+    auto arg0 = (void*)_0;
     auto __ret = ::AllocatorGetObject(arg0);
     if (__ret == nullptr) return nullptr;
     return gcnew Flood::Allocator((::Allocator*)__ret);
@@ -173,14 +173,14 @@ int Flood::PoolAllocator::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::PoolAllocator::Current::get()
+unsigned char* Flood::PoolAllocator::Current::get()
 {
-    return IntPtr(((::PoolAllocator*)NativePtr)->current);
+    return ((::PoolAllocator*)NativePtr)->current;
 }
 
-void Flood::PoolAllocator::Current::set(System::IntPtr value)
+void Flood::PoolAllocator::Current::set(unsigned char* value)
 {
-    ((::PoolAllocator*)NativePtr)->current = (::uint8*)value.ToPointer();
+    ((::PoolAllocator*)NativePtr)->current = (::uint8*)value;
 }
 
 Flood::BumpAllocator::BumpAllocator(::BumpAllocator* native)
@@ -214,24 +214,24 @@ int Flood::BumpAllocator::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::BumpAllocator::Start::get()
+unsigned char* Flood::BumpAllocator::Start::get()
 {
-    return IntPtr(((::BumpAllocator*)NativePtr)->start);
+    return ((::BumpAllocator*)NativePtr)->start;
 }
 
-void Flood::BumpAllocator::Start::set(System::IntPtr value)
+void Flood::BumpAllocator::Start::set(unsigned char* value)
 {
-    ((::BumpAllocator*)NativePtr)->start = (::uint8*)value.ToPointer();
+    ((::BumpAllocator*)NativePtr)->start = (::uint8*)value;
 }
 
-System::IntPtr Flood::BumpAllocator::Current::get()
+unsigned char* Flood::BumpAllocator::Current::get()
 {
-    return IntPtr(((::BumpAllocator*)NativePtr)->current);
+    return ((::BumpAllocator*)NativePtr)->current;
 }
 
-void Flood::BumpAllocator::Current::set(System::IntPtr value)
+void Flood::BumpAllocator::Current::set(unsigned char* value)
 {
-    ((::BumpAllocator*)NativePtr)->current = (::uint8*)value.ToPointer();
+    ((::BumpAllocator*)NativePtr)->current = (::uint8*)value;
 }
 
 unsigned int Flood::BumpAllocator::Size::get()
@@ -275,13 +275,13 @@ int Flood::HeapAllocator::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::HeapAllocator::Space::get()
+void* Flood::HeapAllocator::Space::get()
 {
-    return IntPtr(((::HeapAllocator*)NativePtr)->space);
+    return ((::HeapAllocator*)NativePtr)->space;
 }
 
-void Flood::HeapAllocator::Space::set(System::IntPtr value)
+void Flood::HeapAllocator::Space::set(void* value)
 {
-    ((::HeapAllocator*)NativePtr)->space = (void*)value.ToPointer();
+    ((::HeapAllocator*)NativePtr)->space = (void*)value;
 }
 

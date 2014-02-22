@@ -52,10 +52,10 @@ namespace Flood
             System::String^ get();
         }
 
-        property System::IntPtr Userdata
+        property void* Userdata
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
         property unsigned int WatchId
@@ -256,10 +256,10 @@ namespace Flood
         /// </summary>
         ArchiveZip(System::String^ path);
 
-        property System::IntPtr Handle
+        property void* Handle
         {
-            System::IntPtr get();
-            void set(System::IntPtr);
+            void* get();
+            void set(void*);
         }
 
         /// <summary>
