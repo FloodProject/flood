@@ -216,6 +216,8 @@ typedef uint32 uint;
 #define FLD_OUT
 #define FLD_IN_OUT
 #define FLD_IGNORE
+#define FLD_IGNORE_GEN
+#define FLD_IGNORE_FILE
 #define FLD_FLAGS
 #define FLD_HASHCODE
 #define FLD_EQUALS
