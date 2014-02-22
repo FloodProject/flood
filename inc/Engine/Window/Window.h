@@ -39,10 +39,8 @@ enum class FLD_FLAGS WindowStyles
 /** 
  * Represents window settings.
  */
-class API_ENGINE FLD_VALUE_TYPE WindowSettings : public Settings
+struct API_ENGINE FLD_VALUE_TYPE WindowSettings : public Settings
 {
-public:
-
 	WindowSettings();
 	WindowSettings(uint16 width, uint16 height, const String& title,
 		WindowStyles styles);
