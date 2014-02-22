@@ -1,5 +1,5 @@
 ﻿
-using Editor.Services;
+using Flood.Editor.Services;
 using Flood.Modules;
 using TextAddin.Controls;
 using TextAddin.Document;
