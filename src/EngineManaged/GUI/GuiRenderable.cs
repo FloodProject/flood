@@ -39,7 +39,7 @@ namespace Flood.GUI
             var options = new ResourceLoadOptions {Name = textureName, AsynchronousLoad = false};
             var imageHandle = resMan.LoadResource<Image>(options);
             if (imageHandle.Id == 0)
-                return;
+                throw new Exception("Could not load GUI texture: " + textureName);
 
             Skin = new TexturedSkin(GuiRenderer, imageHandle, defaultFont);
             Canvas = new Canvas(Skin);
