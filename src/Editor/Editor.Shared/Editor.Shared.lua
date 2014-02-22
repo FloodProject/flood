@@ -1,6 +1,3 @@
-EditorShared = {}
-EditorShared.name = "Editor.Shared"
-
 project "Editor.Shared"
 
 	kind "SharedLib"
