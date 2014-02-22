@@ -36,12 +36,14 @@ namespace Flood.Modules
         public readonly ModuleLibrary ModuleLibrary;
 
         private Dictionary<ModuleId, Assembly> loadedModules;
+        private List<IModule> modules;
 
         private ServiceManager serviceManager;
 
         public ModuleManager()
         {
             loadedModules = new Dictionary<ModuleId, Assembly>();
+            modules = new List<IModule>();
 
             ModuleLibrary = new ModuleLibrary();
 
@@ -96,6 +98,7 @@ namespace Flood.Modules
 
             var module = CreateModuleObject(assembly);
             module.OnLoad(serviceManager);
+            modules.Add(module);
 
             CheckGlobalServices(assembly);
 
