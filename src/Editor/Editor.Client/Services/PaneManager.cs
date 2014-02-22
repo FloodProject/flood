@@ -1,12 +1,12 @@
 ﻿
+using Flood.Remoting.Metadata;
+using Flood.GUI;
+using Flood.GUI.Controls;
+using Flood.Editor.Client.GUI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Flood.Editor.Client.GUI;
-using Flood.GUI;
-using Flood.Remoting.Metadata;
-using Flood.GUI.Controls;
 
-namespace Editor.Services
+namespace Flood.Editor.Services
 {
     [DataObject(1)]
     public class Pane
@@ -28,13 +28,12 @@ namespace Editor.Services
     // Implementation of global service IPaneManager
     public class PaneManager : IPaneManager
     {
-        private Container container;
-        private LinkedList<PaneGroup> FocusedGroup;
+        private readonly Container container;
+        private readonly LinkedList<PaneGroup> FocusedGroup;
 
         public PaneManager(Canvas canvas)
         {
-            container = new Container(canvas);
-            container.Dock = Pos.Fill;
+            container = new Container(canvas) { Dock = Pos.Fill };
 
             FocusedGroup = new LinkedList<PaneGroup>();
         }
