@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Editor.Services;
+using Flood.Editor.Services;
 using Flood.Editor.Client.GUI.Controls;
-using Flood.GUI;
 using Flood.GUI.Controls;
 using Flood.GUI.DragDrop;
 
@@ -70,7 +69,7 @@ namespace Flood.Editor.Client.GUI
         }
 
         /// <summary>
-        /// Move pane from the current PaneGroup to the targetPaneGroup. 
+        /// Move pane from the current PaneGroup to the targetPaneGroup.
         /// </summary>
         /// <param name="pane">Pane to be moved</param>
         /// <param name="targetPaneGroup"></param>
@@ -80,12 +79,13 @@ namespace Flood.Editor.Client.GUI
         }
 
         /// <summary>
-        /// Move pane to a container relative to targetPaneGroup. 
+        /// Move pane to a container relative to targetPaneGroup.
         /// </summary>
         /// <param name="pane">Pane to be moved</param>
-        /// <param name="depth">Refer a parent container of targetPaneGroup, each depth is one parent container away. 
-        /// Depth 0 add a PaneContainer in the same container if the container is horizontal, if not
-        /// adds the movedPane to a new child vertical container</param>
+        /// <param name="depth">Refer a parent container of targetPaneGroup, each
+        /// depth is one parent container away. Depth 0 add a PaneContainer in the
+        /// same container if the container is horizontal, if not adds the movedPane
+        /// to a new child vertical container</param>
         /// <param name="moveRight"> True to move pane to the rigth of PaneGroup </param>
         internal void MovePaneHorizontally(TabButton pane, uint depth, bool moveRight)
         {
@@ -109,9 +109,10 @@ namespace Flood.Editor.Client.GUI
         /// Move pane to a container relative to targetPaneGroup. 
         /// </summary>
         /// <param name="pane">Pane to be moved</param>
-        /// <param name="depth">Refer a parent container of targetPaneGroup, each depth is one parent container away. 
-        /// Depth 0 add a PaneContainer in the same container if the container is vertical, if not
-        /// adds the pane to a new child horizontal container</param>
+        /// <param name="depth">Refer a parent container of targetPaneGroup, each
+        /// depth is one parent container away. Depth 0 add a PaneContainer in the
+        /// same container if the container is vertical, if not adds the pane to a
+        /// new child horizontal container</param>
         /// <param name="moveUp"> True to move pane above PaneGroup </param>
         internal void MovePaneVertically(TabButton pane, uint depth, bool moveUp)
         {
