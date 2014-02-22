@@ -54,6 +54,8 @@ public:
 
 //-----------------------------------//
 
+class MenuBar;
+
 /**
  * Represents onscreen display areas in the target window system.
  */
@@ -99,6 +101,12 @@ public:
 
 	/// Gets if the window has focus.
 	virtual bool hasFocus() { return false; }
+
+	/// Gets the menu bar attached to the window.
+	virtual MenuBar* getMenuBar() = 0;
+
+	/// Sets the menu bar attached to the window.
+	virtual void setMenuBar(MenuBar* menuBar) = 0;
 
 	/// Gets the input manager.
 	virtual InputManager* getInput() { return nullptr; }

@@ -99,6 +99,7 @@ namespace Flood
                     "Engine/Scene/Scene.h",
                     "Engine/Engine.h",
                     "Engine/PlatformManager.h",
+                    "Engine/Window/Menu.h",
                     "Engine/Window/Window.h",
                     "Engine/Window/WindowManager.h",
                     "Engine/Input/InputManager.h",

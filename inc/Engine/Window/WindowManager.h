@@ -15,6 +15,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 class Window;
+class MenuBar;
+class Menu;
 
 /**
  * Specifies flags for opening file dialogs.
@@ -46,6 +48,12 @@ public:
 
     /// Creates a new window.
     virtual Window* createWindow(const WindowSettings& settings) = 0;
+
+    /// Creates a new menu bar.
+    virtual MenuBar* createMenuBar() = 0;
+
+    /// Creates a new menu bar.
+    virtual Menu* createMenu() = 0;
 
     /// Opens a file selection dialog.
     virtual Window* openFileDialog(const String& wildcard,
