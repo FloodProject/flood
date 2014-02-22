@@ -17,6 +17,8 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
+class WxMenuBar;
+
 /**
  * Window implementation using the wxWidgets GUI framework (wxGLCanvas).
  * This will be used to integrate engine rendering into wxWidgets-based
@@ -51,9 +53,6 @@ public:
 	// Makes this the current OpenGL context.
 	void makeCurrent() OVERRIDE;
 
-	// Gets if the window has focus.
-	bool hasFocus() OVERRIDE;
-
 	// Sets the title of the window.
 	void setTitle(const String& title) OVERRIDE;
 
@@ -74,6 +73,15 @@ public:
 
 	// Sets the cursor visible if the priority matches.
 	void setCursorVisiblePriority(bool state, int32 priority);
+
+	// Gets if the window has focus.
+	bool hasFocus() OVERRIDE;
+
+	// Gets the menu bar attached to the window.
+	MenuBar* getMenuBar() OVERRIDE;
+
+	// Sets the menu bar attached to the window.
+	void setMenuBar(MenuBar* menuBar) OVERRIDE;
 
 	// Gets the cursor priority.
 	GETTER(CursorPriority, int32, cursorPriority)
@@ -98,6 +106,9 @@ public:
 
 	// Cursor priority.
 	int32 cursorPriority;
+
+	/// Menu bar associated with this window.
+	WxMenuBar* menuBar;
 };
 
 //-----------------------------------//

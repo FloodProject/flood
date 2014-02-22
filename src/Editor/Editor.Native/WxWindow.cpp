@@ -9,6 +9,7 @@
 #include "WxWindow.h"
 #include "WxRenderContext.h"
 #include "WxPlatform.h"
+#include "WxMenu.h"
 #include <wx/glcanvas.h>
 
 NAMESPACE_EDITOR_BEGIN
@@ -23,6 +24,7 @@ WxWindow::WxWindow(const WindowSettings& settings, wxWindow* window,
 	, cursorVisible(true)
 	, cursorPriority(0)
 	, inputManager(inputManager)
+	, menuBar(0)
 {
 	setUserData(this);
 	window->SetClientData(this);
@@ -185,6 +187,28 @@ void WxWindow::setTitle(const String& title)
 	// Our canvas has no title to set, the best we can do is to
 	// set the title as the help text of the wxWidgets control.
 	canvas->SetHelpText( title );
+}
+
+//-----------------------------------//
+
+MenuBar* WxWindow::getMenuBar()
+{
+	return menuBar;
+}
+
+//-----------------------------------//
+
+void WxWindow::setMenuBar(MenuBar* menu)
+{
+	auto frame = wxDynamicCast(window, wxFrame);
+	if (!frame)
+	{
+		assert("Only frames can have menu bars");
+		return;
+	}
+
+	this->menuBar = (WxMenuBar*) menu;
+	frame->SetMenuBar(menuBar->menuBar);
 }
 
 //-----------------------------------//

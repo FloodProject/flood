@@ -23,16 +23,18 @@ WxPlatform::WxPlatform()
 
 void WxPlatform::init()
 {
-    wxApp::SetInstance(new WxApp());
+    wxApp::SetInstance(new wxApp());
 
-    if (!wxEntryStart(0, 0))
+    int argc = 0;
+    if (!wxEntryStart(argc, /*argv=*/(char**)0))
         return;
 
     wxTheApp->OnInit();
 
-    wxEventLoopBase::SetActive(wxTheApp->GetTraits()->CreateEventLoop());
+    auto eventLoop = wxTheApp->GetTraits()->CreateEventLoop();
+    wxEventLoopBase::SetActive(eventLoop);
 
-    wxImage::AddHandler( new wxPNGHandler() );
+    wxImage::AddHandler(new wxPNGHandler());
 }
 
 //-----------------------------------//
@@ -47,14 +49,10 @@ WxPlatform::~WxPlatform()
 
 void WxPlatform::update()
 {
-    if(wxTheApp->Pending())
-    {
+    if (wxTheApp->Pending())
         wxTheApp->Dispatch();
-    }
     else
-    {
         wxTheApp->ProcessIdle();
-    }
 }
 
 //-----------------------------------//

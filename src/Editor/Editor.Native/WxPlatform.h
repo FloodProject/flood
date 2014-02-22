@@ -18,8 +18,6 @@ FLD_NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-class WxApp : public wxApp { };
-
 class WxPlatform;
 
 class API_EDITOR WxWindowManager : public WindowManager
@@ -27,7 +25,10 @@ class API_EDITOR WxWindowManager : public WindowManager
 public:
 
     WxWindowManager(WxPlatform* platform);
+
     Window* createWindow(const WindowSettings& settings) override;
+    MenuBar* createMenuBar() override;
+    Menu* createMenu() override;
 
     Window* openFileDialog(
         const String& wildcard, FileDialogFlags style) override;

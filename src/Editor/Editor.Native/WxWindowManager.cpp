@@ -10,6 +10,7 @@
 #include "WxPlatform.h"
 #include "WxRenderContext.h"
 #include "WxWindow.h"
+#include "WxMenu.h"
 #include <wx/menu.h>
 
 //-----------------------------------//
@@ -35,16 +36,24 @@ Window* WxWindowManager::createWindow(const WindowSettings& settings)
         nativeWindow = new wxFrame(/*parent=*/0, wxID_ANY, settings.title,
             wxDefaultPosition, wxSize(settings.width, settings.height),
             ConvertToWxStyles(settings.styles), wxFrameNameStr);
-
-        auto menuBar = new wxMenuBar();
-        auto menu = new wxMenu("Foo");
-        menuBar->Append(menu, "Foo");
-
-        ((wxFrame*)nativeWindow)->SetMenuBar(menuBar);
     }
 
     auto window = new WxWindow(settings, nativeWindow, &platform->inputManager);
     return window;
+}
+
+//-----------------------------------//
+
+MenuBar* WxWindowManager::createMenuBar()
+{
+    return new WxMenuBar(new wxMenuBar());
+}
+
+//-----------------------------------//
+
+Menu* WxWindowManager::createMenu()
+{
+    return new WxMenu(new wxMenu());
 }
 
 //-----------------------------------//
