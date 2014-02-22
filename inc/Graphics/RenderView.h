@@ -43,7 +43,7 @@ public:
 	ACCESSOR(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the view.
-	ACCESSOR(ClearColor, const Color&, clearColor)
+	FLD_IGNORE ACCESSOR(ClearColor, const Color&, clearColor)
 
 	// Gets/sets the depth (Z-order) priority of the view.
 	ACCESSOR(DepthPriority, int, depthPriority)
