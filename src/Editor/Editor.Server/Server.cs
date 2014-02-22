@@ -1,5 +1,5 @@
-using Flood.Network;
 using System;
+using Flood.Network;
 using Flood.Remoting;
 
 namespace Flood.Editor.Server
@@ -15,7 +15,6 @@ namespace Flood.Editor.Server
         public EditorServer(RemotingManager remotingManager, HostEndPoint endPoint)
             : base(remotingManager, endPoint)
         {
-
             UserManager = new UserManager();
             //serviceManager.AddImplementation<IUserManager>(UserManager);
 
