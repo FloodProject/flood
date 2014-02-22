@@ -178,15 +178,15 @@ namespace Flood.GUI
             AddQuad(v1, v2, v3, v4, structSize, materialHandle);
         }
 
-        protected void AddQuad(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr v4, uint structSize, ResourceHandle<Material> materialHandle)
+        protected unsafe void AddQuad(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr v4, uint structSize, ResourceHandle<Material> materialHandle)
         {
             var batchInfo = GetCreateBatchInfo(materialHandle);
             batchInfo.Ranges.Add((int) gb.NumVertices);
 
-            gb.Add(v1, structSize);
-            gb.Add(v2, structSize);
-            gb.Add(v3, structSize);
-            gb.Add(v4, structSize);
+            gb.Add((byte*)v1.ToPointer(), structSize);
+            gb.Add((byte*)v2.ToPointer(), structSize);
+            gb.Add((byte*)v3.ToPointer(), structSize);
+            gb.Add((byte*)v4.ToPointer(), structSize);
         }
 
         public void Render(RenderBlock rb)
@@ -195,7 +195,7 @@ namespace Flood.GUI
             {
                 if (batch.Ranges.Count > 0)
                 {
-                    RenderBatchRange newRange;
+                    var newRange = new RenderBatchRange();
                     newRange.Start = (ushort)gb.NumIndices;
 
                     foreach (var range in batch.Ranges)
