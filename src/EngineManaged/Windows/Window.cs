@@ -37,7 +37,8 @@ namespace Flood.Windows
             renderables = new List<WindowRenderable>();
         }
 
-        internal void Init(Flood.Window window, RenderDevice renderDevice, RenderContext renderContext)
+        internal void Init(Flood.Window window, RenderDevice renderDevice,
+            RenderContext renderContext)
         {
             nativeWindow = window;
             device = renderDevice;
@@ -62,7 +63,8 @@ namespace Flood.Windows
 
         public void AddRenderable(WindowRenderable renderable)
         {
-            renderable.Resize(nativeWindow.Settings.Width, nativeWindow.Settings.Height);
+            renderable.Resize(nativeWindow.Settings.Width,
+                nativeWindow.Settings.Height);
             renderables.Add(renderable);
         }
 
