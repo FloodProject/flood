@@ -54,11 +54,9 @@ namespace Flood.Windows
             }
 
             view = window.CreateView();
-            view.ClearColor = Color.Red;
 
             window.Render += Render;
             window.TargetResize += Resize;
-            window.Show(true);
         }
 
         public void AddRenderable(WindowRenderable renderable)
