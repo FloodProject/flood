@@ -1,5 +1,4 @@
-﻿
-using Flood.Remoting.Metadata;
+﻿using Flood.Remoting.Metadata;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +21,12 @@ namespace Flood.Windows
         {
             this.application = application;
             windows = new Dictionary<string, Window>();
+        }
+
+        public Window GetWindow(string windowName)
+        {
+            return windows.ContainsKey(windowName) ?
+                windows[windowName] : null;
         }
 
         public async Task<Window> GetCreateWindow(string windowName)
