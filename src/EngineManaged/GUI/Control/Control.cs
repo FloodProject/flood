@@ -2,7 +2,6 @@
 using Flood.GUI.DragDrop;
 using Flood.GUI.Input;
 using Flood.Remoting.Metadata;
-using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +10,8 @@ namespace Flood.GUI.Controls
 {
     /// <summary>
     /// Base control class.
+    /// A control is generally a small window which processes user input
+    /// and/or displays one or more item of data.
     /// </summary>
     [DataObject(1)]
     public class Control : IDisposable
@@ -21,6 +22,8 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="control">Event source.</param>
         public delegate void GwenEventHandler(Control control);
+
+        #region Properties
 
         private bool m_Disposed;
 
@@ -33,8 +36,9 @@ namespace Flood.GUI.Controls
         private Control m_ActualParent;
 
         /// <summary>
-        /// If the innerpanel exists our children will automatically become children of that 
-        /// instead of us - allowing us to move them all around by moving that panel (useful for scrolling etc).
+        /// If the innerpanel exists our children will automatically become children
+        /// of that instead of us - allowing us to move them all around by moving
+        /// that panel (useful for scrolling etc).
         /// </summary>
         protected Control m_InnerPanel;
 
@@ -412,6 +416,10 @@ namespace Flood.GUI.Controls
         public Color MarginOutlineColor { get; set; }
         public Color BoundsOutlineColor { get; set; }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Control"/> class.
         /// </summary>
@@ -500,6 +508,8 @@ namespace Flood.GUI.Controls
             GetCanvas().AddDelayedDelete(this);
         }
 
+        #endregion
+
         public override string ToString()
         {
             if (this is MenuItem)
@@ -525,169 +535,21 @@ namespace Flood.GUI.Controls
         }
 
         /// <summary>
-        /// Enables the control.
+        /// Closes all menus recursively.
         /// </summary>
-        public void Enable()
+        public virtual void CloseMenus()
         {
-            IsDisabled = false;
-        }
+            //Debug.Print("Base.CloseMenus: {0}", this);
 
-        /// <summary>
-        /// Disables the control.
-        /// </summary>
-        public void Disable()
-        {
-            IsDisabled = true;
-        }
-
-        /// <summary>
-        /// Default accelerator handler.
-        /// </summary>
-        /// <param name="control">Event source.</param>
-        private void DefaultAcceleratorHandler(Control control)
-        {
-            OnAccelerator();
-        }
-
-        /// <summary>
-        /// Default accelerator handler.
-        /// </summary>
-        protected virtual void OnAccelerator()
-        {
-
-        }
-
-        /// <summary>
-        /// Hides the control.
-        /// </summary>
-        public virtual void Hide()
-        {
-            IsHidden = true;
-        }
-
-        /// <summary>
-        /// Shows the control.
-        /// </summary>
-        public virtual void Show()
-        {
-            IsHidden = false;
-        }
-
-        /// <summary>
-        /// Creates a tooltip for the control.
-        /// </summary>
-        /// <param name="text">Tooltip text.</param>
-        public virtual void SetToolTipText(String text)
-        {
-            Label tooltip = new Label(this);
-            tooltip.AutoSizeToContents = true;
-            tooltip.Text = text;
-            tooltip.TextColorOverride = Skin.Colors.TooltipText;
-            tooltip.Padding = new Padding(5, 3, 5, 3);
-            tooltip.SizeToContents();
-
-            ToolTip = tooltip;
-        }
-
-        /// <summary>
-        /// Invalidates the control's children (relayout/repaint).
-        /// </summary>
-        /// <param name="recursive">Determines whether the operation should be carried recursively.</param>
-        protected virtual void InvalidateChildren(bool recursive = false)
-        {
-            foreach (Control child in m_Children)
+            // todo: not very efficient with the copying and recursive closing, maybe store currently open menus somewhere (canvas)?
+            var childrenCopy = m_Children.FindAll(x => true);
+            foreach (Control child in childrenCopy)
             {
-                child.Invalidate();
-                if (recursive)
-                    child.InvalidateChildren(true);
-            }
-
-            if (m_InnerPanel != null)
-            {
-                foreach (Control child in m_InnerPanel.m_Children)
-                {
-                    child.Invalidate();
-                    if (recursive)
-                        child.InvalidateChildren(true);
-                }
+                child.CloseMenus();
             }
         }
 
-        /// <summary>
-        /// Invalidates the control.
-        /// </summary>
-        /// <remarks>
-        /// Causes layout, repaint, invalidates cached texture.
-        /// </remarks>
-        public virtual void Invalidate()
-        {
-            m_NeedsLayout = true;
-            m_CacheTextureDirty = true;
-        }
-
-        /// <summary>
-        /// Sends the control to the bottom of paren't visibility stack.
-        /// </summary>
-        public virtual void SendToBack()
-        {
-            if (m_ActualParent == null)
-                return;
-            if (m_ActualParent.m_Children.Count == 0)
-                return;
-            if (m_ActualParent.m_Children.First() == this)
-                return;
-
-            m_ActualParent.m_Children.Remove(this);
-            m_ActualParent.m_Children.Insert(0, this);
-
-            InvalidateParent();
-        }
-
-        /// <summary>
-        /// Brings the control to the top of paren't visibility stack.
-        /// </summary>
-        public virtual void BringToFront()
-        {
-            if (m_ActualParent == null)
-                return;
-            if (m_ActualParent.m_Children.Last() == this)
-                return;
-
-            m_ActualParent.m_Children.Remove(this);
-            m_ActualParent.m_Children.Add(this);
-            InvalidateParent();
-            Redraw();
-        }
-
-        public virtual void BringNextToControl(Control child, bool behind)
-        {
-            if (null == m_ActualParent)
-                return;
-
-            m_ActualParent.m_Children.Remove(this);
-
-            // todo: validate
-            int idx = m_ActualParent.m_Children.IndexOf(child);
-            if (idx == m_ActualParent.m_Children.Count - 1)
-            {
-                BringToFront();
-                return;
-            }
-
-            if (behind)
-            {
-                ++idx;
-
-                if (idx == m_ActualParent.m_Children.Count)
-                {
-                    BringToFront();
-                    return;
-                }
-            }
-
-            m_ActualParent.m_Children.Insert(idx, this);
-            InvalidateParent();
-        }
+        #region Child management
 
         /// <summary>
         /// Finds a child by name.
@@ -746,7 +608,7 @@ namespace Flood.GUI.Controls
             if (m_InnerPanel == child)
             {
                 m_Children.Remove(m_InnerPanel);
-                if(dispose)
+                if (dispose)
                     m_InnerPanel.DelayedDelete();
                 m_InnerPanel = null;
                 return;
@@ -760,7 +622,7 @@ namespace Flood.GUI.Controls
 
             m_Children.Remove(child);
             OnChildRemoved(child);
-            
+
             if (dispose)
                 child.DelayedDelete();
         }
@@ -792,6 +654,187 @@ namespace Flood.GUI.Controls
         {
             Invalidate();
         }
+
+        /// <summary>
+        /// Checks if the given control is a child of this instance.
+        /// </summary>
+        /// <param name="child">Control to examine.</param>
+        /// <returns>True if the control is out child.</returns>
+        public bool IsChild(Control child)
+        {
+            return m_Children.Contains(child);
+        }
+
+        #endregion
+
+        #region Bounds
+
+        /// <summary>
+        /// Copies Bounds to RenderBounds.
+        /// </summary>
+        protected virtual void UpdateRenderBounds()
+        {
+            m_RenderBounds.X = 0;
+            m_RenderBounds.Y = 0;
+
+            m_RenderBounds.Width = m_Bounds.Width;
+            m_RenderBounds.Height = m_Bounds.Height;
+        }
+
+        /// <summary>
+        /// Sets the control bounds.
+        /// </summary>
+        /// <param name="bounds">New bounds.</param>
+        /// <returns>True if bounds changed.</returns>
+        public virtual bool SetBounds(Rectangle bounds)
+        {
+            return SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+        }
+
+        /// <summary>
+        /// Sets the control bounds.
+        /// </summary>
+        /// <param name="x">X.</param>
+        /// <param name="y">Y.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <returns>
+        /// True if bounds changed.
+        /// </returns>
+        public virtual bool SetBounds(float x, float y, float width, float height)
+        {
+            return SetBounds((int)x, (int)y, (int)width, (int)height);
+        }
+
+        /// <summary>
+        /// Sets the control bounds.
+        /// </summary>
+        /// <param name="x">X position.</param>
+        /// <param name="y">Y position.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <returns>
+        /// True if bounds changed.
+        /// </returns>
+        public virtual bool SetBounds(int x, int y, int width, int height)
+        {
+            if (m_Bounds.X == x &&
+                m_Bounds.Y == y &&
+                m_Bounds.Width == width &&
+                m_Bounds.Height == height)
+                return false;
+
+            Rectangle oldBounds = Bounds;
+
+            m_Bounds.X = x;
+            m_Bounds.Y = y;
+
+            m_Bounds.Width = width;
+            m_Bounds.Height = height;
+
+            OnBoundsChanged(oldBounds);
+
+            if (BoundsChanged != null)
+                BoundsChanged.Invoke(this);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Handler invoked when control's bounds change.
+        /// </summary>
+        /// <param name="oldBounds">Old bounds.</param>
+        protected virtual void OnBoundsChanged(Rectangle oldBounds)
+        {
+            //Anything that needs to update on size changes
+            //Iterate my children and tell them I've changed
+            //
+            if (Parent != null)
+                Parent.OnChildBoundsChanged(oldBounds, this);
+
+
+            if (m_Bounds.Width != oldBounds.Width || m_Bounds.Height != oldBounds.Height)
+            {
+                Invalidate();
+            }
+
+            Redraw();
+            UpdateRenderBounds();
+        }
+
+        /// <summary>
+        /// Handler invoked when control's scale changes.
+        /// </summary>
+        protected virtual void OnScaleChanged()
+        {
+            foreach (Control child in m_Children)
+            {
+                child.OnScaleChanged();
+            }
+        }
+
+        /// <summary>
+        /// Handler invoked when control children's bounds change.
+        /// </summary>
+        protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Control child)
+        {
+
+        }
+
+        #endregion
+
+        #region Sizing
+
+        /// <summary>
+        /// Sets the control size.
+        /// </summary>
+        /// <param name="width">New width.</param>
+        /// <param name="height">New height.</param>
+        /// <returns>True if bounds changed.</returns>
+        public virtual bool SetSize(int width, int height)
+        {
+            return SetBounds(X, Y, width, height);
+        }
+
+        /// <summary>
+        /// Resizes the control to fit its children.
+        /// </summary>
+        /// <param name="width">Determines whether to change control's width.</param>
+        /// <param name="height">Determines whether to change control's height.</param>
+        /// <returns>True if bounds changed.</returns>
+        public virtual bool SizeToChildren(bool width = true, bool height = true)
+        {
+            var size = GetChildrenSize();
+            size.X += Padding.Right;
+            size.Y += Padding.Bottom;
+            return SetSize(width ? size.X : Width, height ? size.Y : Height);
+        }
+
+        /// <summary>
+        /// Returns the total width and height of all children.
+        /// </summary>
+        /// <remarks>Default implementation returns maximum size of children since the layout is unknown.
+        /// Implement this in derived compound controls to properly return their size.</remarks>
+        /// <returns></returns>
+        public virtual Vector2i GetChildrenSize()
+        {
+            var size = new Vector2i(0, 0);
+
+            foreach (Control child in m_Children)
+            {
+                if (child.IsHidden)
+                    continue;
+
+                size.X = Math.Max(size.X, child.Right);
+                size.Y = Math.Max(size.Y, child.Bottom);
+            }
+
+            return size;
+        }
+
+        #endregion
+
+        #region Positioning
 
         /// <summary>
         /// Moves the control by a specific amount.
@@ -857,76 +900,6 @@ namespace Flood.GUI.Controls
         }
 
         /// <summary>
-        /// Sets the control size.
-        /// </summary>
-        /// <param name="width">New width.</param>
-        /// <param name="height">New height.</param>
-        /// <returns>True if bounds changed.</returns>
-        public virtual bool SetSize(int width, int height)
-        {
-            return SetBounds(X, Y, width, height);
-        }
-
-        /// <summary>
-        /// Sets the control bounds.
-        /// </summary>
-        /// <param name="bounds">New bounds.</param>
-        /// <returns>True if bounds changed.</returns>
-        public virtual bool SetBounds(Rectangle bounds)
-        {
-            return SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
-        }
-
-        /// <summary>
-        /// Sets the control bounds.
-        /// </summary>
-        /// <param name="x">X.</param>
-        /// <param name="y">Y.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="height">Height.</param>
-        /// <returns>
-        /// True if bounds changed.
-        /// </returns>
-        public virtual bool SetBounds(float x, float y, float width, float height)
-        {
-            return SetBounds((int)x, (int)y, (int)width, (int)height);
-        }
-
-        /// <summary>
-        /// Sets the control bounds.
-        /// </summary>
-        /// <param name="x">X position.</param>
-        /// <param name="y">Y position.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="height">Height.</param>
-        /// <returns>
-        /// True if bounds changed.
-        /// </returns>
-        public virtual bool SetBounds(int x, int y, int width, int height)
-        {
-            if (m_Bounds.X == x &&
-                m_Bounds.Y == y &&
-                m_Bounds.Width == width &&
-                m_Bounds.Height == height)
-                return false;
-
-            Rectangle oldBounds = Bounds;
-
-            m_Bounds.X = x;
-            m_Bounds.Y = y;
-
-            m_Bounds.Width = width;
-            m_Bounds.Height = height;
-
-            OnBoundsChanged(oldBounds);
-
-            if (BoundsChanged != null)
-                BoundsChanged.Invoke(this);
-
-            return true;
-        }
-
-        /// <summary>
         /// Positions the control inside its parent.
         /// </summary>
         /// <param name="pos">Target position.</param>
@@ -951,441 +924,6 @@ namespace Flood.GUI.Controls
                 y = (int)(padding.Top + ypadding + (h - Height - padding.Bottom - padding.Top) * 0.5f);
 
             SetPosition(x, y);
-        }
-
-        /// <summary>
-        /// Handler invoked when control's bounds change.
-        /// </summary>
-        /// <param name="oldBounds">Old bounds.</param>
-        protected virtual void OnBoundsChanged(Rectangle oldBounds)
-        {
-            //Anything that needs to update on size changes
-            //Iterate my children and tell them I've changed
-            //
-            if (Parent != null)
-                Parent.OnChildBoundsChanged(oldBounds, this);
-
-
-            if (m_Bounds.Width != oldBounds.Width || m_Bounds.Height != oldBounds.Height)
-            {
-                Invalidate();
-            }
-
-            Redraw();
-            UpdateRenderBounds();
-        }
-
-        /// <summary>
-        /// Handler invoked when control's scale changes.
-        /// </summary>
-        protected virtual void OnScaleChanged()
-        {
-            foreach (Control child in m_Children)
-            {
-                child.OnScaleChanged();
-            }
-        }
-
-        /// <summary>
-        /// Handler invoked when control children's bounds change.
-        /// </summary>
-        protected virtual void OnChildBoundsChanged(Rectangle oldChildBounds, Control child)
-        {
-
-        }
-
-        /// <summary>
-        /// Renders the control using specified skin.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        protected virtual void Render(Skins.Skin skin)
-        {
-        }
-
-        /// <summary>
-        /// Renders the control to a cache using specified skin.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        /// <param name="master">Root parent.</param>
-        protected virtual void DoCacheRender(Skins.Skin skin, Control master)
-        {
-            Renderers.Renderer render = skin.Renderer;
-            Renderers.ICacheToTexture cache = render.CTT;
-
-            if (cache == null)
-                return;
-
-            Vector2i oldRenderOffset = render.RenderOffset;
-            Rectangle oldRegion = render.ClipRegion;
-
-            if (this != master)
-            {
-                render.AddRenderOffset(Bounds);
-                render.AddClipRegion(Bounds);
-            }
-            else
-            {
-                render.RenderOffset = new Vector2i(0,0);
-                render.ClipRegion = new Rectangle(0, 0, Width, Height);
-            }
-
-            if (m_CacheTextureDirty && render.ClipRegionVisible)
-            {
-                render.StartClip();
-
-                if (ShouldCacheToTexture)
-                    cache.SetupCacheTexture(this);
-
-                //Render myself first
-                //var old = render.ClipRegion;
-                //render.ClipRegion = Bounds;
-                //var old = render.RenderOffset;
-                //render.RenderOffset = new Point(Bounds.X, Bounds.Y);
-                Render(skin);
-                //render.RenderOffset = old;
-                //render.ClipRegion = old;
-
-                if (m_Children.Count > 0)
-                {
-                    //Now render my kids
-                    foreach (Control child in m_Children)
-                    {
-                        if (child.IsHidden)
-                            continue;
-                        child.DoCacheRender(skin, master);
-                    }
-                }
-
-                if (ShouldCacheToTexture)
-                {
-                    cache.FinishCacheTexture(this);
-                    m_CacheTextureDirty = false;
-                }
-            }
-
-            render.ClipRegion = oldRegion;
-            render.StartClip();
-            render.RenderOffset = oldRenderOffset;
-
-            if (ShouldCacheToTexture)
-                cache.DrawCachedControlTexture(this);
-        }
-
-        /// <summary>
-        /// Rendering logic implementation.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        internal virtual void DoRender(Skins.Skin skin)
-        {
-            // If this control has a different skin, 
-            // then so does its children.
-            if (m_Skin != null)
-                skin = m_Skin;
-
-            // Do think
-            Think();
-
-            Renderers.Renderer render = skin.Renderer;
-
-            if (render.CTT != null && ShouldCacheToTexture)
-            {
-                DoCacheRender(skin, this);
-                return;
-            }
-
-            RenderRecursive(skin, Bounds);
-
-            if (DrawDebugOutlines)
-                skin.DrawDebugOutlines(this);
-        }
-
-        /// <summary>
-        /// Recursive rendering logic.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        /// <param name="clipRect">Clipping rectangle.</param>
-        protected virtual void RenderRecursive(Skins.Skin skin, Rectangle clipRect)
-        {
-            Renderers.Renderer render = skin.Renderer;
-            Vector2i oldRenderOffset = render.RenderOffset;
-
-            render.AddRenderOffset(clipRect);
-
-            RenderUnder(skin);
-
-            Rectangle oldRegion = render.ClipRegion;
-
-            if (ShouldClip)
-            {
-                render.AddClipRegion(clipRect);
-
-                if (!render.ClipRegionVisible)
-                {
-                    render.RenderOffset = oldRenderOffset;
-                    render.ClipRegion = oldRegion;
-                    return;
-                }
-
-                render.StartClip();
-            }
-
-            //Render myself first
-            Render(skin);
-
-            if (m_Children.Count > 0)
-            {
-                //Now render my kids
-                for(int i = 0; i < m_Children.Count; i++)
-                {
-                    if (m_Children[i].IsHidden)
-                        continue;
-
-                    m_Children[i].DoRender(skin);
-                }
-            }
-
-            render.ClipRegion = oldRegion;
-            render.StartClip();
-            RenderOver(skin);
-
-            RenderFocus(skin);
-
-            render.RenderOffset = oldRenderOffset;
-        }
-
-        /// <summary>
-        /// Sets the control's skin.
-        /// </summary>
-        /// <param name="skin">New skin.</param>
-        /// <param name="doChildren">Deterines whether to change children skin.</param>
-        public virtual void SetSkin(Skins.Skin skin, bool doChildren = false)
-        {
-            if (m_Skin == skin)
-                return;
-            m_Skin = skin;
-            Invalidate();
-            Redraw();
-            OnSkinChanged(skin);
-
-            if (doChildren)
-            {
-                foreach (Control child in m_Children)
-                {
-                    child.SetSkin(skin, true);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handler invoked when control's skin changes.
-        /// </summary>
-        /// <param name="newSkin">New skin.</param>
-        protected virtual void OnSkinChanged(Skins.Skin newSkin)
-        {
-
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse wheel event.
-        /// </summary>
-        /// <param name="delta">Scroll delta.</param>
-        protected virtual bool OnMouseWheeled(int delta)
-        {
-            if (m_ActualParent != null)
-                return m_ActualParent.OnMouseWheeled(delta);
-
-            return false;
-        }
-
-        /// <summary>
-        /// Invokes mouse wheeled event (used by input system).
-        /// </summary>
-        internal bool InputMouseWheeled(int delta)
-        {
-            return OnMouseWheeled(delta);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse moved event.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <param name="dx">X change.</param>
-        /// <param name="dy">Y change.</param>
-        protected virtual void OnMouseMoved(int x, int y, int dx, int dy)
-        {
-
-        }
-
-        /// <summary>
-        /// Invokes mouse moved event (used by input system).
-        /// </summary>
-        internal void InputMouseMoved(int x, int y, int dx, int dy)
-        {
-            OnMouseMoved(x, y, dx,  dy);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse click (left) event.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <param name="down">If set to <c>true</c> mouse button is down.</param>
-        protected virtual void OnMouseClickedLeft(int x, int y, bool down)
-        {
-
-        }
-
-        /// <summary>
-        /// Invokes left mouse click event (used by input system).
-        /// </summary>
-        internal void InputMouseClickedLeft(int x, int y, bool down)
-        {
-            OnMouseClickedLeft(x, y, down);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse click (right) event.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <param name="down">If set to <c>true</c> mouse button is down.</param>
-        protected virtual void OnMouseClickedRight(int x, int y, bool down)
-        {
-
-        }
-
-        /// <summary>
-        /// Invokes right mouse click event (used by input system).
-        /// </summary>
-        internal void InputMouseClickedRight(int x, int y, bool down)
-        {
-            OnMouseClickedRight(x, y, down);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse double click (left) event.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        protected virtual void OnMouseDoubleClickedLeft(int x, int y)
-        {
-            OnMouseClickedLeft(x, y, true); // [omeg] should this be called?
-        }
-
-        /// <summary>
-        /// Invokes left double mouse click event (used by input system).
-        /// </summary>
-        internal void InputMouseDoubleClickedLeft(int x, int y)
-        {
-            OnMouseDoubleClickedLeft(x, y);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse double click (right) event.
-        /// </summary>
-        /// <param name="x">X coordinate.</param>
-        /// <param name="y">Y coordinate.</param>
-        protected virtual void OnMouseDoubleClickedRight(int x, int y)
-        {
-            OnMouseClickedRight(x, y, true); // [omeg] should this be called?
-        }
-
-        /// <summary>
-        /// Invokes right double mouse click event (used by input system).
-        /// </summary>
-        internal void InputMouseDoubleClickedRight(int x, int y)
-        {
-            OnMouseDoubleClickedRight(x, y);
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse cursor entering control's bounds.
-        /// </summary>
-        protected virtual void OnMouseEntered()
-        {
-            if (HoverEnter != null)
-                HoverEnter.Invoke(this);
-
-            if (ToolTip != null)
-                GUI.ToolTip.Enable(this);
-            else if (Parent != null && Parent.ToolTip != null)
-                GUI.ToolTip.Enable(Parent);
-
-            Redraw();
-        }
-
-        /// <summary>
-        /// Invokes mouse enter event (used by input system).
-        /// </summary>
-        internal void InputMouseEntered()
-        {
-            OnMouseEntered();
-        }
-
-        /// <summary>
-        /// Handler invoked on mouse cursor leaving control's bounds.
-        /// </summary>
-        protected virtual void OnMouseLeft()
-        {
-            if (HoverLeave != null)
-                HoverLeave.Invoke(this);
-
-            if (ToolTip != null)
-                GUI.ToolTip.Disable(this);
-
-            Redraw();
-        }
-
-        /// <summary>
-        /// Invokes mouse leave event (used by input system).
-        /// </summary>
-        internal void InputMouseLeft()
-        {
-            OnMouseLeft();
-        }
-
-        /// <summary>
-        /// Focuses the control.
-        /// </summary>
-        public virtual void Focus()
-        {
-            if (InputHandler.KeyboardFocus == this)
-                return;
-
-            if (InputHandler.KeyboardFocus != null)
-                InputHandler.KeyboardFocus.OnLostKeyboardFocus();
-
-            InputHandler.KeyboardFocus = this;
-            OnKeyboardFocus();
-            Redraw();
-        }
-
-        /// <summary>
-        /// Unfocuses the control.
-        /// </summary>
-        public virtual void Blur()
-        {
-            if (InputHandler.KeyboardFocus != this)
-                return;
-
-            InputHandler.KeyboardFocus = null;
-            OnLostKeyboardFocus();
-            Redraw();
-        }
-
-        /// <summary>
-        /// Control has been clicked - invoked by input system. Windows use it to propagate activation.
-        /// </summary>
-        public virtual void Touch()
-        {
-            if (Parent != null)
-                Parent.OnChildTouched(this);
-        }
-
-        protected virtual void OnChildTouched(Control control)
-        {
-            Touch();
         }
 
         /// <summary>
@@ -1416,6 +954,65 @@ namespace Flood.GUI.Controls
 
             return this;
         }
+
+        /// <summary>
+        /// Converts local coordinates to canvas coordinates.
+        /// </summary>
+        /// <param name="pnt">Local coordinates.</param>
+        /// <returns>Canvas coordinates.</returns>
+        public virtual Vector2i LocalPosToCanvas(Vector2i pnt)
+        {
+            if (m_Parent != null)
+            {
+                int x = pnt.X + X;
+                int y = pnt.Y + Y;
+
+                // If our parent has an innerpanel and we're a child of it
+                // add its offset onto us.
+                //
+                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
+                {
+                    x += m_Parent.m_InnerPanel.X;
+                    y += m_Parent.m_InnerPanel.Y;
+                }
+
+                return m_Parent.LocalPosToCanvas(new Vector2i(x, y));
+            }
+
+            return pnt;
+        }
+
+        /// <summary>
+        /// Converts canvas coordinates to local coordinates.
+        /// </summary>
+        /// <param name="pnt">Canvas coordinates.</param>
+        /// <returns>Local coordinates.</returns>
+        public virtual Vector2i CanvasPosToLocal(Vector2i pnt)
+        {
+            if (m_Parent != null)
+            {
+                int x = pnt.X - X;
+                int y = pnt.Y - Y;
+
+                // If our parent has an innerpanel and we're a child of it
+                // add its offset onto us.
+                //
+                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
+                {
+                    x -= m_Parent.m_InnerPanel.X;
+                    y -= m_Parent.m_InnerPanel.Y;
+                }
+
+
+                return m_Parent.CanvasPosToLocal(new Vector2i(x, y));
+            }
+
+            return pnt;
+        }
+
+        #endregion
+
+        #region Layout
 
         /// <summary>
         /// Lays out the control's interior according to alignment, padding, dock etc.
@@ -1548,96 +1145,64 @@ namespace Flood.GUI.Controls
         }
 
         /// <summary>
-        /// Checks if the given control is a child of this instance.
+        /// Function invoked after layout.
         /// </summary>
-        /// <param name="child">Control to examine.</param>
-        /// <returns>True if the control is out child.</returns>
-        public bool IsChild(Control child)
+        /// <param name="skin">Skin to use.</param>
+        protected virtual void PostLayout(Skins.Skin skin)
         {
-            return m_Children.Contains(child);
+
         }
 
         /// <summary>
-        /// Converts local coordinates to canvas coordinates.
+        /// Invalidates control's parent.
         /// </summary>
-        /// <param name="pnt">Local coordinates.</param>
-        /// <returns>Canvas coordinates.</returns>
-        public virtual Vector2i LocalPosToCanvas(Vector2i pnt)
+        public void InvalidateParent()
         {
             if (m_Parent != null)
             {
-                int x = pnt.X + X;
-                int y = pnt.Y + Y;
-
-                // If our parent has an innerpanel and we're a child of it
-                // add its offset onto us.
-                //
-                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
-                {
-                    x += m_Parent.m_InnerPanel.X;
-                    y += m_Parent.m_InnerPanel.Y;
-                }
-
-                return m_Parent.LocalPosToCanvas(new Vector2i(x, y));
+                m_Parent.Invalidate();
             }
-
-            return pnt;
         }
 
         /// <summary>
-        /// Converts canvas coordinates to local coordinates.
+        /// Invalidates the control's children (relayout/repaint).
         /// </summary>
-        /// <param name="pnt">Canvas coordinates.</param>
-        /// <returns>Local coordinates.</returns>
-        public virtual Vector2i CanvasPosToLocal(Vector2i pnt)
+        /// <param name="recursive">Determines whether the operation should be carried recursively.</param>
+        protected virtual void InvalidateChildren(bool recursive = false)
         {
-            if (m_Parent != null)
+            foreach (Control child in m_Children)
             {
-                int x = pnt.X - X;
-                int y = pnt.Y - Y;
-
-                // If our parent has an innerpanel and we're a child of it
-                // add its offset onto us.
-                //
-                if (m_Parent.m_InnerPanel != null && m_Parent.m_InnerPanel.IsChild(this))
-                {
-                    x -= m_Parent.m_InnerPanel.X;
-                    y -= m_Parent.m_InnerPanel.Y;
-                }
-
-
-                return m_Parent.CanvasPosToLocal(new Vector2i(x, y));
+                child.Invalidate();
+                if (recursive)
+                    child.InvalidateChildren(true);
             }
 
-            return pnt;
-        }
-
-        /// <summary>
-        /// Closes all menus recursively.
-        /// </summary>
-        public virtual void CloseMenus()
-        {
-            //Debug.Print("Base.CloseMenus: {0}", this);
-
-            // todo: not very efficient with the copying and recursive closing, maybe store currently open menus somewhere (canvas)?
-            var childrenCopy = m_Children.FindAll(x => true);
-            foreach (Control child in childrenCopy)
+            if (m_InnerPanel != null)
             {
-                child.CloseMenus();
+                foreach (Control child in m_InnerPanel.m_Children)
+                {
+                    child.Invalidate();
+                    if (recursive)
+                        child.InvalidateChildren(true);
+                }
             }
         }
 
         /// <summary>
-        /// Copies Bounds to RenderBounds.
+        /// Invalidates the control.
         /// </summary>
-        protected virtual void UpdateRenderBounds()
+        /// <remarks>
+        /// Causes layout, repaint, invalidates cached texture.
+        /// </remarks>
+        public virtual void Invalidate()
         {
-            m_RenderBounds.X = 0;
-            m_RenderBounds.Y = 0;
-
-            m_RenderBounds.Width = m_Bounds.Width;
-            m_RenderBounds.Height = m_Bounds.Height;
+            m_NeedsLayout = true;
+            m_CacheTextureDirty = true;
         }
+
+        #endregion
+
+        #region Cursors
 
         /// <summary>
         /// Sets mouse cursor to current cursor.
@@ -1646,6 +1211,480 @@ namespace Flood.GUI.Controls
         {
             Platform.Neutral.SetCursor(m_Cursor);
         }
+
+        #endregion
+
+        #region Status
+
+        /// <summary>
+        /// Enables the control.
+        /// </summary>
+        public void Enable()
+        {
+            IsDisabled = false;
+        }
+
+        /// <summary>
+        /// Disables the control.
+        /// </summary>
+        public void Disable()
+        {
+            IsDisabled = true;
+        }
+
+        /// <summary>
+        /// Hides the control.
+        /// </summary>
+        public virtual void Hide()
+        {
+            IsHidden = true;
+        }
+
+        /// <summary>
+        /// Shows the control.
+        /// </summary>
+        public virtual void Show()
+        {
+            IsHidden = false;
+        }
+
+        #endregion
+
+        #region Focus
+
+        /// <summary>
+        /// Focuses the control.
+        /// </summary>
+        public virtual void Focus()
+        {
+            if (InputHandler.KeyboardFocus == this)
+                return;
+
+            if (InputHandler.KeyboardFocus != null)
+                InputHandler.KeyboardFocus.OnLostKeyboardFocus();
+
+            InputHandler.KeyboardFocus = this;
+            OnKeyboardFocus();
+            Redraw();
+        }
+
+        /// <summary>
+        /// Unfocuses the control.
+        /// </summary>
+        public virtual void Blur()
+        {
+            if (InputHandler.KeyboardFocus != this)
+                return;
+
+            InputHandler.KeyboardFocus = null;
+            OnLostKeyboardFocus();
+            Redraw();
+        }
+
+        /// <summary>
+        /// Handler for gaining keyboard focus.
+        /// </summary>
+        protected virtual void OnKeyboardFocus()
+        {
+
+        }
+
+        /// <summary>
+        /// Handler for losing keyboard focus.
+        /// </summary>
+        protected virtual void OnLostKeyboardFocus()
+        {
+
+        }
+
+        #endregion
+
+        #region Z-order
+
+        /// <summary>
+        /// Sends the control to the bottom of paren't visibility stack.
+        /// </summary>
+        public virtual void SendToBack()
+        {
+            if (m_ActualParent == null)
+                return;
+            if (m_ActualParent.m_Children.Count == 0)
+                return;
+            if (m_ActualParent.m_Children.First() == this)
+                return;
+
+            m_ActualParent.m_Children.Remove(this);
+            m_ActualParent.m_Children.Insert(0, this);
+
+            InvalidateParent();
+        }
+
+        /// <summary>
+        /// Brings the control to the top of paren't visibility stack.
+        /// </summary>
+        public virtual void BringToFront()
+        {
+            if (m_ActualParent == null)
+                return;
+            if (m_ActualParent.m_Children.Last() == this)
+                return;
+
+            m_ActualParent.m_Children.Remove(this);
+            m_ActualParent.m_Children.Add(this);
+            InvalidateParent();
+            Redraw();
+        }
+
+        #endregion
+
+        #region Tab order
+
+        public virtual void BringNextToControl(Control child, bool behind)
+        {
+            if (null == m_ActualParent)
+                return;
+
+            m_ActualParent.m_Children.Remove(this);
+
+            // todo: validate
+            int idx = m_ActualParent.m_Children.IndexOf(child);
+            if (idx == m_ActualParent.m_Children.Count - 1)
+            {
+                BringToFront();
+                return;
+            }
+
+            if (behind)
+            {
+                ++idx;
+
+                if (idx == m_ActualParent.m_Children.Count)
+                {
+                    BringToFront();
+                    return;
+                }
+            }
+
+            m_ActualParent.m_Children.Insert(idx, this);
+            InvalidateParent();
+        }
+
+        #endregion
+
+        #region Rendering
+
+        /// <summary>
+        /// Renders the control using specified skin.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        protected virtual void Render(Skins.Skin skin)
+        {
+        }
+
+        /// <summary>
+        /// Renders the control to a cache using specified skin.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        /// <param name="master">Root parent.</param>
+        protected virtual void DoCacheRender(Skins.Skin skin, Control master)
+        {
+            Renderers.Renderer render = skin.Renderer;
+            Renderers.ICacheToTexture cache = render.CTT;
+
+            if (cache == null)
+                return;
+
+            Vector2i oldRenderOffset = render.RenderOffset;
+            Rectangle oldRegion = render.ClipRegion;
+
+            if (this != master)
+            {
+                render.AddRenderOffset(Bounds);
+                render.AddClipRegion(Bounds);
+            }
+            else
+            {
+                render.RenderOffset = new Vector2i(0, 0);
+                render.ClipRegion = new Rectangle(0, 0, Width, Height);
+            }
+
+            if (m_CacheTextureDirty && render.ClipRegionVisible)
+            {
+                render.StartClip();
+
+                if (ShouldCacheToTexture)
+                    cache.SetupCacheTexture(this);
+
+                //Render myself first
+                //var old = render.ClipRegion;
+                //render.ClipRegion = Bounds;
+                //var old = render.RenderOffset;
+                //render.RenderOffset = new Point(Bounds.X, Bounds.Y);
+                Render(skin);
+                //render.RenderOffset = old;
+                //render.ClipRegion = old;
+
+                if (m_Children.Count > 0)
+                {
+                    //Now render my kids
+                    foreach (Control child in m_Children)
+                    {
+                        if (child.IsHidden)
+                            continue;
+                        child.DoCacheRender(skin, master);
+                    }
+                }
+
+                if (ShouldCacheToTexture)
+                {
+                    cache.FinishCacheTexture(this);
+                    m_CacheTextureDirty = false;
+                }
+            }
+
+            render.ClipRegion = oldRegion;
+            render.StartClip();
+            render.RenderOffset = oldRenderOffset;
+
+            if (ShouldCacheToTexture)
+                cache.DrawCachedControlTexture(this);
+        }
+
+        /// <summary>
+        /// Rendering logic implementation.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        internal virtual void DoRender(Skins.Skin skin)
+        {
+            // If this control has a different skin, 
+            // then so does its children.
+            if (m_Skin != null)
+                skin = m_Skin;
+
+            // Do think
+            Think();
+
+            Renderers.Renderer render = skin.Renderer;
+
+            if (render.CTT != null && ShouldCacheToTexture)
+            {
+                DoCacheRender(skin, this);
+                return;
+            }
+
+            RenderRecursive(skin, Bounds);
+
+            if (DrawDebugOutlines)
+                skin.DrawDebugOutlines(this);
+        }
+
+        /// <summary>
+        /// Recursive rendering logic.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        /// <param name="clipRect">Clipping rectangle.</param>
+        protected virtual void RenderRecursive(Skins.Skin skin, Rectangle clipRect)
+        {
+            Renderers.Renderer render = skin.Renderer;
+            Vector2i oldRenderOffset = render.RenderOffset;
+
+            render.AddRenderOffset(clipRect);
+
+            RenderUnder(skin);
+
+            Rectangle oldRegion = render.ClipRegion;
+
+            if (ShouldClip)
+            {
+                render.AddClipRegion(clipRect);
+
+                if (!render.ClipRegionVisible)
+                {
+                    render.RenderOffset = oldRenderOffset;
+                    render.ClipRegion = oldRegion;
+                    return;
+                }
+
+                render.StartClip();
+            }
+
+            //Render myself first
+            Render(skin);
+
+            if (m_Children.Count > 0)
+            {
+                //Now render my kids
+                for (int i = 0; i < m_Children.Count; i++)
+                {
+                    if (m_Children[i].IsHidden)
+                        continue;
+
+                    m_Children[i].DoRender(skin);
+                }
+            }
+
+            render.ClipRegion = oldRegion;
+            render.StartClip();
+            RenderOver(skin);
+
+            RenderFocus(skin);
+
+            render.RenderOffset = oldRenderOffset;
+        }
+
+        /// <summary>
+        /// Called during rendering.
+        /// </summary>
+        public virtual void Think()
+        {
+
+        }
+
+        #endregion
+
+        #region Styles
+
+        /// <summary>
+        /// Sets the control's skin.
+        /// </summary>
+        /// <param name="skin">New skin.</param>
+        /// <param name="doChildren">Deterines whether to change children skin.</param>
+        public virtual void SetSkin(Skins.Skin skin, bool doChildren = false)
+        {
+            if (m_Skin == skin)
+                return;
+            m_Skin = skin;
+            Invalidate();
+            Redraw();
+            OnSkinChanged(skin);
+
+            if (doChildren)
+            {
+                foreach (Control child in m_Children)
+                {
+                    child.SetSkin(skin, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handler invoked when control's skin changes.
+        /// </summary>
+        /// <param name="newSkin">New skin.</param>
+        protected virtual void OnSkinChanged(Skins.Skin newSkin)
+        {
+
+        }
+
+        #endregion
+
+        #region Drawing
+
+        /// <summary>
+        /// Re-renders the control, invalidates cached texture.
+        /// </summary>
+        public virtual void Redraw()
+        {
+            UpdateColors();
+            m_CacheTextureDirty = true;
+            if (m_Parent != null)
+                m_Parent.Redraw();
+        }
+
+        /// <summary>
+        /// Updates control colors.
+        /// </summary>
+        /// <remarks>
+        /// Used in composite controls like lists to differentiate row colors etc.
+        /// </remarks>
+        public virtual void UpdateColors()
+        {
+            
+        }
+
+        #endregion
+
+        #region Accelerators
+
+        /// <summary>
+        /// Default accelerator handler.
+        /// </summary>
+        protected virtual void OnAccelerator()
+        {
+
+        }
+
+        /// <summary>
+        /// Handles keyboard accelerator.
+        /// </summary>
+        /// <param name="accelerator">Accelerator text.</param>
+        /// <returns>True if handled.</returns>
+        internal virtual bool HandleAccelerator(String accelerator)
+        {
+            if (InputHandler.KeyboardFocus == this || !AccelOnlyFocus)
+            {
+                if (m_Accelerators.ContainsKey(accelerator))
+                {
+                    m_Accelerators[accelerator].Invoke(this);
+                    return true;
+                }
+            }
+
+            return m_Children.Any(child => child.HandleAccelerator(accelerator));
+        }
+
+        /// <summary>
+        /// Adds keyboard accelerator.
+        /// </summary>
+        /// <param name="accelerator">Accelerator text.</param>
+        /// <param name="handler">Handler.</param>
+        public void AddAccelerator(String accelerator, GwenEventHandler handler)
+        {
+            accelerator = accelerator.Trim().ToUpperInvariant();
+            m_Accelerators[accelerator] = handler;
+        }
+
+        /// <summary>
+        /// Default accelerator handler.
+        /// </summary>
+        /// <param name="control">Event source.</param>
+        private void DefaultAcceleratorHandler(Control control)
+        {
+            OnAccelerator();
+        }
+
+        /// <summary>
+        /// Adds keyboard accelerator with a default handler.
+        /// </summary>
+        /// <param name="accelerator">Accelerator text.</param>
+        public void AddAccelerator(String accelerator)
+        {
+            m_Accelerators[accelerator] = DefaultAcceleratorHandler;
+        }
+
+        #endregion
+
+        #region Context-sensitive help
+
+        /// <summary>
+        /// Creates a tooltip for the control.
+        /// </summary>
+        /// <param name="text">Tooltip text.</param>
+        public virtual void SetToolTipText(String text)
+        {
+            Label tooltip = new Label(this);
+            tooltip.AutoSizeToContents = true;
+            tooltip.Text = text;
+            tooltip.TextColorOverride = Skin.Colors.TooltipText;
+            tooltip.Padding = new Padding(5, 3, 5, 3);
+            tooltip.SizeToContents();
+
+            ToolTip = tooltip;
+        }
+
+        #endregion
+
+        #region Drag and drop
 
         // giver
         public virtual DragDrop.Package DragAndDrop_GetPackage(int x, int y)
@@ -1723,122 +1762,84 @@ namespace Flood.GUI.Controls
             return false;
         }
 
+        #endregion
+
+        #region Clipboard events
+
         /// <summary>
-        /// Resizes the control to fit its children.
+        /// Handler for Paste event.
         /// </summary>
-        /// <param name="width">Determines whether to change control's width.</param>
-        /// <param name="height">Determines whether to change control's height.</param>
-        /// <returns>True if bounds changed.</returns>
-        public virtual bool SizeToChildren(bool width = true, bool height = true)
+        /// <param name="from">Source control.</param>
+        protected virtual void OnPaste(Control from)
         {
-            var size = GetChildrenSize();
-            size.X += Padding.Right;
-            size.Y += Padding.Bottom;
-            return SetSize(width ? size.X : Width, height ? size.Y : Height);
         }
 
         /// <summary>
-        /// Returns the total width and height of all children.
+        /// Handler for Copy event.
         /// </summary>
-        /// <remarks>Default implementation returns maximum size of children since the layout is unknown.
-        /// Implement this in derived compound controls to properly return their size.</remarks>
-        /// <returns></returns>
-        public virtual Vector2i GetChildrenSize()
+        /// <param name="from">Source control.</param>
+        protected virtual void OnCopy(Control from)
         {
-            var size = new Vector2i(0,0);
-
-            foreach (Control child in m_Children)
-            {
-                if (child.IsHidden)
-                    continue;
-
-                size.X = Math.Max(size.X, child.Right);
-                size.Y = Math.Max(size.Y, child.Bottom);
-            }
-
-            return size;
         }
 
         /// <summary>
-        /// Handles keyboard accelerator.
+        /// Handler for Cut event.
         /// </summary>
-        /// <param name="accelerator">Accelerator text.</param>
+        /// <param name="from">Source control.</param>
+        protected virtual void OnCut(Control from)
+        {
+        }
+
+        /// <summary>
+        /// Handler for Select All event.
+        /// </summary>
+        /// <param name="from">Source control.</param>
+        protected virtual void OnSelectAll(Control from)
+        {
+        }
+
+        internal void InputCopy(Control from)
+        {
+            OnCopy(from);
+        }
+
+        internal void InputPaste(Control from)
+        {
+            OnPaste(from);
+        }
+
+        internal void InputCut(Control from)
+        {
+            OnCut(from);
+        }
+
+        internal void InputSelectAll(Control from)
+        {
+            OnSelectAll(from);
+        }
+
+        #endregion
+
+        #region Text input events
+
+        /// <summary>
+        /// Handler for character input event.
+        /// </summary>
+        /// <param name="chr">Character typed.</param>
         /// <returns>True if handled.</returns>
-        internal virtual bool HandleAccelerator(String accelerator)
+        protected virtual bool OnChar(Char chr)
         {
-            if (InputHandler.KeyboardFocus == this || !AccelOnlyFocus)
-            {
-                if (m_Accelerators.ContainsKey(accelerator))
-                {
-                    m_Accelerators[accelerator].Invoke(this);
-                    return true;
-                }
-            }
-
-            return m_Children.Any(child => child.HandleAccelerator(accelerator));
+            return false;
         }
 
-        /// <summary>
-        /// Adds keyboard accelerator.
-        /// </summary>
-        /// <param name="accelerator">Accelerator text.</param>
-        /// <param name="handler">Handler.</param>
-        public void AddAccelerator(String accelerator, GwenEventHandler handler)
+        internal bool InputChar(Char chr)
         {
-            accelerator = accelerator.Trim().ToUpperInvariant();
-            m_Accelerators[accelerator] = handler;
+            return OnChar(chr);
         }
 
-        /// <summary>
-        /// Adds keyboard accelerator with a default handler.
-        /// </summary>
-        /// <param name="accelerator">Accelerator text.</param>
-        public void AddAccelerator(String accelerator)
-        {
-            m_Accelerators[accelerator] = DefaultAcceleratorHandler;
-        }
+        #endregion
 
-        /// <summary>
-        /// Function invoked after layout.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        protected virtual void PostLayout(Skins.Skin skin)
-        {
-
-        }
-
-        /// <summary>
-        /// Re-renders the control, invalidates cached texture.
-        /// </summary>
-        public virtual void Redraw()
-        {
-            UpdateColors();
-            m_CacheTextureDirty = true;
-            if (m_Parent != null)
-                m_Parent.Redraw();
-        }
-
-        /// <summary>
-        /// Updates control colors.
-        /// </summary>
-        /// <remarks>
-        /// Used in composite controls like lists to differentiate row colors etc.
-        /// </remarks>
-        public virtual void UpdateColors()
-        {
-            
-        }
-
-        /// <summary>
-        /// Invalidates control's parent.
-        /// </summary>
-        public void InvalidateParent()
-        {
-            if (m_Parent != null)
-            {
-                m_Parent.Invalidate();
-            }
-        }
+        #region Keyboard events
 
         /// <summary>
         /// Handler for keyboard events.
@@ -1986,57 +1987,187 @@ namespace Flood.GUI.Controls
         /// <returns>True if handled.</returns>
         protected virtual bool OnKeyEscape(bool down) { return false; }
 
-        /// <summary>
-        /// Handler for Paste event.
-        /// </summary>
-        /// <param name="from">Source control.</param>
-        protected virtual void OnPaste(Control from)
-        {
-        }
+        #endregion
+
+        #region Mouse events
 
         /// <summary>
-        /// Handler for Copy event.
+        /// Handler invoked on mouse wheel event.
         /// </summary>
-        /// <param name="from">Source control.</param>
-        protected virtual void OnCopy(Control from)
+        /// <param name="delta">Scroll delta.</param>
+        protected virtual bool OnMouseWheeled(int delta)
         {
-        }
+            if (m_ActualParent != null)
+                return m_ActualParent.OnMouseWheeled(delta);
 
-        /// <summary>
-        /// Handler for Cut event.
-        /// </summary>
-        /// <param name="from">Source control.</param>
-        protected virtual void OnCut(Control from)
-        {
+            return false;
         }
 
         /// <summary>
-        /// Handler for Select All event.
+        /// Invokes mouse wheeled event (used by input system).
         /// </summary>
-        /// <param name="from">Source control.</param>
-        protected virtual void OnSelectAll(Control from)
+        internal bool InputMouseWheeled(int delta)
         {
+            return OnMouseWheeled(delta);
         }
 
-        internal void InputCopy(Control from)
+        /// <summary>
+        /// Handler invoked on mouse moved event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="dx">X change.</param>
+        /// <param name="dy">Y change.</param>
+        protected virtual void OnMouseMoved(int x, int y, int dx, int dy)
         {
-            OnCopy(from);
+
         }
 
-        internal void InputPaste(Control from)
+        /// <summary>
+        /// Invokes mouse moved event (used by input system).
+        /// </summary>
+        internal void InputMouseMoved(int x, int y, int dx, int dy)
         {
-            OnPaste(from);
+            OnMouseMoved(x, y, dx, dy);
         }
 
-        internal void InputCut(Control from)
+        /// <summary>
+        /// Handler invoked on mouse click (left) event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="down">If set to <c>true</c> mouse button is down.</param>
+        protected virtual void OnMouseClickedLeft(int x, int y, bool down)
         {
-            OnCut(from);
+
         }
 
-        internal void InputSelectAll(Control from)
+        /// <summary>
+        /// Invokes left mouse click event (used by input system).
+        /// </summary>
+        internal void InputMouseClickedLeft(int x, int y, bool down)
         {
-            OnSelectAll(from);
+            OnMouseClickedLeft(x, y, down);
         }
+
+        /// <summary>
+        /// Handler invoked on mouse click (right) event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="down">If set to <c>true</c> mouse button is down.</param>
+        protected virtual void OnMouseClickedRight(int x, int y, bool down)
+        {
+
+        }
+
+        /// <summary>
+        /// Invokes right mouse click event (used by input system).
+        /// </summary>
+        internal void InputMouseClickedRight(int x, int y, bool down)
+        {
+            OnMouseClickedRight(x, y, down);
+        }
+
+        /// <summary>
+        /// Handler invoked on mouse double click (left) event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        protected virtual void OnMouseDoubleClickedLeft(int x, int y)
+        {
+            OnMouseClickedLeft(x, y, true); // [omeg] should this be called?
+        }
+
+        /// <summary>
+        /// Invokes left double mouse click event (used by input system).
+        /// </summary>
+        internal void InputMouseDoubleClickedLeft(int x, int y)
+        {
+            OnMouseDoubleClickedLeft(x, y);
+        }
+
+        /// <summary>
+        /// Handler invoked on mouse double click (right) event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        protected virtual void OnMouseDoubleClickedRight(int x, int y)
+        {
+            OnMouseClickedRight(x, y, true); // [omeg] should this be called?
+        }
+
+        /// <summary>
+        /// Invokes right double mouse click event (used by input system).
+        /// </summary>
+        internal void InputMouseDoubleClickedRight(int x, int y)
+        {
+            OnMouseDoubleClickedRight(x, y);
+        }
+
+        /// <summary>
+        /// Handler invoked on mouse cursor entering control's bounds.
+        /// </summary>
+        protected virtual void OnMouseEntered()
+        {
+            if (HoverEnter != null)
+                HoverEnter.Invoke(this);
+
+            if (ToolTip != null)
+                GUI.ToolTip.Enable(this);
+            else if (Parent != null && Parent.ToolTip != null)
+                GUI.ToolTip.Enable(Parent);
+
+            Redraw();
+        }
+
+        /// <summary>
+        /// Invokes mouse enter event (used by input system).
+        /// </summary>
+        internal void InputMouseEntered()
+        {
+            OnMouseEntered();
+        }
+
+        /// <summary>
+        /// Handler invoked on mouse cursor leaving control's bounds.
+        /// </summary>
+        protected virtual void OnMouseLeft()
+        {
+            if (HoverLeave != null)
+                HoverLeave.Invoke(this);
+
+            if (ToolTip != null)
+                GUI.ToolTip.Disable(this);
+
+            Redraw();
+        }
+
+        /// <summary>
+        /// Invokes mouse leave event (used by input system).
+        /// </summary>
+        internal void InputMouseLeft()
+        {
+            OnMouseLeft();
+        }
+
+        /// <summary>
+        /// Control has been clicked - invoked by input system. Windows use it to propagate activation.
+        /// </summary>
+        public virtual void Touch()
+        {
+            if (Parent != null)
+                Parent.OnChildTouched(this);
+        }
+
+        protected virtual void OnChildTouched(Control control)
+        {
+            Touch();
+        }
+
+        #endregion
+
+        #region Render events
 
         /// <summary>
         /// Renders the focus overlay.
@@ -2070,44 +2201,9 @@ namespace Flood.GUI.Controls
 
         }
 
-        /// <summary>
-        /// Called during rendering.
-        /// </summary>
-        public virtual void Think()
-        {
+        #endregion
 
-        }
-
-        /// <summary>
-        /// Handler for gaining keyboard focus.
-        /// </summary>
-        protected virtual void OnKeyboardFocus()
-        {
-
-        }
-
-        /// <summary>
-        /// Handler for losing keyboard focus.
-        /// </summary>
-        protected virtual void OnLostKeyboardFocus()
-        {
-
-        }
-
-        /// <summary>
-        /// Handler for character input event.
-        /// </summary>
-        /// <param name="chr">Character typed.</param>
-        /// <returns>True if handled.</returns>
-        protected virtual bool OnChar(Char chr)
-        {
-            return false;
-        }
-
-        internal bool InputChar(Char chr)
-        {
-            return OnChar(chr);
-        }
+        #region Animation
 
         public virtual void Anim_WidthIn(float length, float delay = 0.0f, float ease = 1.0f)
         {
@@ -2130,5 +2226,7 @@ namespace Flood.GUI.Controls
         {
             Animation.Add(this, new Anim.Size.Height(Height, 0, length, hide, delay, ease));
         }
+
+        #endregion
     }
 }
