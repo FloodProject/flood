@@ -99,7 +99,7 @@ namespace Flood.GUI.Controls
             SetSize(100, 10);
             Alignment = Pos.Left | Pos.Top;
 
-            m_AutoSizeToContents = false;
+            m_AutoSizeToContents = true;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@ namespace Flood.GUI.Controls
         public RadioButton(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetSize(15, 15);
             MouseInputEnabled = true;
             IsTabable = false;

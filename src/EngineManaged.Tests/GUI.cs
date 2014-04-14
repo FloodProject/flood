@@ -90,10 +90,16 @@ namespace Flood.Tests
         {
             var width = 0;
             var height = 0;
-            foreach (var control in guiRenderable.Canvas.Children)
-                RenderBounds(control, ref width, ref height);
+
+            // current layout algorithm is bugged,
+            // multiple passes are neccessary to render properly
+            for (int i = 0; i < 5; i++)
+                guiRenderable.Canvas.Update();
 
             app.RunStep();
+
+            foreach (var control in guiRenderable.Canvas.Children)
+                RenderBounds(control, ref width, ref height);
 
             var imageSettings = new Settings { Height = (ushort)height, Width = (ushort)width };
             var renderBuffer = app.RenderDevice.Backend.CreateRenderBuffer(imageSettings);
@@ -196,6 +202,10 @@ namespace Flood.Tests
             public int Y;
             public int Width;
             public int Height;
+            public int MinWidth;
+            public int MinHeight;
+            public int MaxWidth;
+            public int MaxHeight;
             public bool IsHidden;
             public bool Focused;
             public List<GUIDumpData> Children;
@@ -221,6 +231,10 @@ namespace Flood.Tests
                 Y = rootControl.Y,
                 Width = rootControl.Width,
                 Height = rootControl.Height,
+                MinWidth = rootControl.MinimumSize.X,
+                MinHeight = rootControl.MinimumSize.Y,
+                MaxWidth = rootControl.MaximumSize.X,
+                MaxHeight = rootControl.MaximumSize.Y,
                 IsHidden = rootControl.IsHidden,
                 Focused = rootControl.HasFocus,
             };

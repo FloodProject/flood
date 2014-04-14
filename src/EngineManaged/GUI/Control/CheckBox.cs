@@ -29,6 +29,7 @@ namespace Flood.GUI.Controls
         public CheckBox(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetSize(15, 15);
             //m_Checked = true; // [omeg] why?!
             //Toggle();

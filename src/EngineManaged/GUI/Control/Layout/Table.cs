@@ -18,6 +18,11 @@ namespace Flood.GUI.Controls.Layout
         private readonly int[] m_ColumnWidth;
 
         /// <summary>
+        /// Determines whether this control shold be processed by a sizer.
+        /// </summary>
+        public override bool IsRenderable { get { return false; } }
+
+        /// <summary>
         /// Column count (default 1).
         /// </summary>
         public int ColumnCount { get { return m_ColumnCount; } set { SetColumnCount(value); Invalidate(); } }

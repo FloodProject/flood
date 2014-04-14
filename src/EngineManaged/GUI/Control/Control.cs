@@ -16,6 +16,7 @@ namespace Flood.GUI.Controls
     [DataObject(1)]
     public class Control : IDisposable
     {
+        public const int SizeNotSet = -1;
         // this REALLY needs to be replaced with control-specific events
         /// <summary>
         /// Delegate used for all control event handlers.
@@ -232,9 +233,22 @@ namespace Flood.GUI.Controls
                     return;
 
                 m_Padding = value;
+                UpdatePaddingFlags(value);
                 Invalidate();
                 InvalidateParent();
             }
+        }
+
+        /// <summary>
+        /// Helper method to update padding flags when padding changes.
+        /// </summary>
+        private void UpdatePaddingFlags(Padding padding)
+        {
+            PaddingFlags = 0;
+            PaddingFlags |= padding.Top > 0 ? PaddingFlags.Top : 0;
+            PaddingFlags |= padding.Bottom > 0 ? PaddingFlags.Bottom : 0;
+            PaddingFlags |= padding.Right > 0 ? PaddingFlags.Right : 0;
+            PaddingFlags |= padding.Left > 0 ? PaddingFlags.Left : 0;
         }
 
         /// <summary>
@@ -247,11 +261,23 @@ namespace Flood.GUI.Controls
             {
                 if (m_Margin == value)
                     return;
-
+                UpdateMarginFlags(value);
                 m_Margin = value;
                 Invalidate();
                 InvalidateParent();
             }
+        }
+
+        /// <summary>
+        /// Helper method to update margin flags when margin changes.
+        /// </summary>
+        private void UpdateMarginFlags(Margin margin)
+        {
+            MarginFlags = 0;
+            MarginFlags |= margin.Top > 0 ? MarginFlags.Top : 0;
+            MarginFlags |= margin.Bottom > 0 ? MarginFlags.Bottom : 0;
+            MarginFlags |= margin.Right > 0 ? MarginFlags.Right : 0;
+            MarginFlags |= margin.Left > 0 ? MarginFlags.Left : 0;
         }
 
         /// <summary>
@@ -345,12 +371,22 @@ namespace Flood.GUI.Controls
         public Vector2i MinimumSize { get { return m_MinimumSize; } set { m_MinimumSize = value; } }
 
         /// <summary>
+        /// Best size.
+        /// </summary>
+        public Vector2i BestSize { get { return m_BestSize; } set { m_BestSize = value; } }
+
+        /// <summary>
         /// Size restriction.
         /// </summary>
         public Vector2i MaximumSize { get { return m_MaximumSize; } set { m_MaximumSize = value; } }
 
-        private Vector2i m_MinimumSize = new Vector2i(1, 1);
-        private Vector2i m_MaximumSize = new Vector2i(MaxCoord, MaxCoord);
+        //Todo : Check if min & max size need to be at commented values or if it can work at -1,-1
+        //private Vector2i m_MinimumSize = new Vector2i(1, 1);
+        //private Vector2i m_MaximumSize = new Vector2i(MaxCoord, MaxCoord);
+        private Vector2i m_MinimumSize = new Vector2i(SizeNotSet, SizeNotSet);
+        private Vector2i m_MaximumSize = new Vector2i(SizeNotSet, SizeNotSet);
+        private Vector2i m_BestSize = new Vector2i(SizeNotSet, SizeNotSet);
+
 
         /// <summary>
         /// Determines whether hover should be drawn during rendering.
@@ -393,6 +429,9 @@ namespace Flood.GUI.Controls
         public int Height { get { return m_Bounds.Height; } set { SetSize(Width, value); } }
         public int Bottom { get { return m_Bounds.GetBottom() + m_Margin.Bottom; } }
         public int Right { get { return m_Bounds.GetRight() + m_Margin.Right; } }
+
+        // todo: check if there's no loss of precision here because of resizes
+        public float AspectRatio { get { return ((float)Width)/Height; } }
 
         /// <summary>
         /// Determines whether margin, padding and bounds outlines for the control will be drawn. Applied recursively to all children.
@@ -495,7 +534,7 @@ namespace Flood.GUI.Controls
 #if DEBUG
         ~Control()
         {
-            throw new InvalidOperationException(String.Format("IDisposable object finalized [{1:X}]: {0}", this, GetHashCode()));
+            //throw new InvalidOperationException(String.Format("IDisposable object finalized [{1:X}]: {0}", this, GetHashCode()));
             //Debug.Print(String.Format("IDisposable object finalized: {0}", GetType()));
         }
 #endif
@@ -591,6 +630,28 @@ namespace Flood.GUI.Controls
             }
 
             m_Children.Add(child);
+            OnChildAdded(child);
+
+            child.m_ActualParent = this;
+        }
+
+        /// <summary>
+        /// Attaches specified control as a child of this one.
+        /// </summary>
+        /// <remarks>
+        /// If InnerPanel is not null, it will become the parent.
+        /// </remarks>
+        /// <param name="child">Control to be added as a child.</param>
+        /// <param name="index">Position where to insert child</param>
+        public virtual void InsertChild(Control child, int index)
+        {
+            if (m_InnerPanel != null)
+            {
+                m_InnerPanel.InsertChild(child, index);
+                return;
+            }
+
+            m_Children.Insert(index, child);
             OnChildAdded(child);
 
             child.m_ActualParent = this;
@@ -1028,8 +1089,9 @@ namespace Flood.GUI.Controls
         /// Recursively lays out the control's interior according to alignment, margin, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        protected virtual void RecurseLayout(Skins.Skin skin)
+        protected virtual void RecurseLayout(Skins.Skin skin, int level = 0 )
         {
+            Console.WriteLine("{0}+ {1} W: {2} H: {3}", new string(' ', level), this.GetType().Name, Bounds.Width, Bounds.Height);
             if (m_Skin != null)
                 skin = m_Skin;
             if (IsHidden)
@@ -1054,59 +1116,10 @@ namespace Flood.GUI.Controls
                 if (child.IsHidden)
                     continue;
 
-                Pos dock = child.Dock;
+                if (AdjustDocking(child, bounds)) continue;
 
-                if (0 != (dock & Pos.Fill))
-                    continue;
+                child.RecurseLayout(skin, level + 1);
 
-                if (0 != (dock & Pos.Top))
-                {
-                    Margin margin = child.Margin;
-
-                    child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
-                                    bounds.Width - margin.Left - margin.Right, child.Height);
-
-                    int height = margin.Top + margin.Bottom + child.Height;
-                    bounds.Y += height;
-                    bounds.Height -= height;
-                }
-
-                if (0 != (dock & Pos.Left))
-                {
-                    Margin margin = child.Margin;
-
-                    child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top, child.Width,
-                                      bounds.Height - margin.Top - margin.Bottom);
-
-                    int width = margin.Left + margin.Right + child.Width;
-                    bounds.X += width;
-                    bounds.Width -= width;
-                }
-
-                if (0 != (dock & Pos.Right))
-                {
-                    // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
-                    Margin margin = child.Margin;
-
-                    child.SetBounds((bounds.X + bounds.Width) - child.Width - margin.Right, bounds.Y + margin.Top,
-                                      child.Width, bounds.Height - margin.Top - margin.Bottom);
-
-                    int width = margin.Left + margin.Right + child.Width;
-                    bounds.Width -= width;
-                }
-
-                if (0 != (dock & Pos.Bottom))
-                {
-                    // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
-                    Margin margin = child.Margin;
-
-                    child.SetBounds(bounds.X + margin.Left,
-                                      (bounds.Y + bounds.Height) - child.Height - margin.Bottom,
-                                      bounds.Width - margin.Left - margin.Right, child.Height);
-                    bounds.Height -= child.Height + margin.Bottom + margin.Top;
-                }
-
-                child.RecurseLayout(skin);
             }
 
             m_InnerBounds = bounds;
@@ -1118,14 +1131,14 @@ namespace Flood.GUI.Controls
             {
                 Pos dock = child.Dock;
 
-                if (!(0 != (dock & Pos.Fill)))
+                if (0 == (dock & Pos.Fill))
                     continue;
 
                 Margin margin = child.Margin;
 
                 child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
                                   bounds.Width - margin.Left - margin.Right, bounds.Height - margin.Top - margin.Bottom);
-                child.RecurseLayout(skin);
+                child.RecurseLayout(skin, level + 1);
             }
 
             PostLayout(skin);
@@ -1142,6 +1155,66 @@ namespace Flood.GUI.Controls
             {
                 GetCanvas().NextTab = null;
             }
+
+            Console.WriteLine("{0}- {1} W: {2} H: {3}", new string(' ', level), this.GetType().Name, Bounds.Width, Bounds.Height);
+
+        }
+
+        private bool AdjustDocking(Control child, Rectangle bounds)
+        {
+            Pos dock = child.Dock;
+
+            if (0 != (dock & Pos.Fill))
+                return true;
+
+            // Adjust child position and dimensions according to margin and dock type
+            if (0 != (dock & Pos.Top))
+            {
+                Margin margin = child.Margin;
+
+                child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top,
+                                bounds.Width - margin.Left - margin.Right, child.Height);
+
+                int height = margin.Top + margin.Bottom + child.Height;
+                bounds.Y += height;
+                bounds.Height -= height;
+            }
+
+            if (0 != (dock & Pos.Left))
+            {
+                Margin margin = child.Margin;
+
+                child.SetBounds(bounds.X + margin.Left, bounds.Y + margin.Top, child.Width,
+                                bounds.Height - margin.Top - margin.Bottom);
+
+                int width = margin.Left + margin.Right + child.Width;
+                bounds.X += width;
+                bounds.Width -= width;
+            }
+
+            if (0 != (dock & Pos.Right))
+            {
+                // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
+                Margin margin = child.Margin;
+
+                child.SetBounds((bounds.X + bounds.Width) - child.Width - margin.Right, bounds.Y + margin.Top,
+                                child.Width, bounds.Height - margin.Top - margin.Bottom);
+
+                int width = margin.Left + margin.Right + child.Width;
+                bounds.Width -= width;
+            }
+
+            if (0 != (dock & Pos.Bottom))
+            {
+                // TODO: THIS MARGIN CODE MIGHT NOT BE FULLY FUNCTIONAL
+                Margin margin = child.Margin;
+
+                child.SetBounds(bounds.X + margin.Left,
+                                (bounds.Y + bounds.Height) - child.Height - margin.Bottom,
+                                bounds.Width - margin.Left - margin.Right, child.Height);
+                bounds.Height -= child.Height + margin.Bottom + margin.Top;
+            }
+            return false;
         }
 
         /// <summary>
@@ -1199,6 +1272,108 @@ namespace Flood.GUI.Controls
             m_NeedsLayout = true;
             m_CacheTextureDirty = true;
         }
+
+        public virtual void SetDimension(Vector2i pos, Vector2i size)
+        {
+            if ((Expansion & ExpansionFlags.Shaped) != ExpansionFlags.NotSet)
+            {
+                int rWidth = (int)(size.Y * AspectRatio);
+                if (rWidth > size.X)
+                {
+                    int rHeight = (int)(size.Y / AspectRatio);
+                    if ((Alignment & AlignmentFlags.CenterVertical) != AlignmentFlags.NotSet)
+                        pos.Y += (size.Y - rHeight) / 2;
+                    else if ((Alignment & AlignmentFlags.Bottom) != AlignmentFlags.NotSet)
+                        pos.Y += (size.Y - rHeight);
+                    size.Y = rHeight;
+                }
+                else if (rWidth < size.X)
+                {
+                    if ((Alignment & AlignmentFlags.CenterHorizontal) != AlignmentFlags.NotSet)
+                        pos.X += (size.X - rWidth) / 2;
+                    else if ((Alignment & AlignmentFlags.Bottom) != AlignmentFlags.NotSet)
+                        pos.X += (size.X - rWidth);
+                    size.X = rWidth;
+                }
+            }
+            SetBounds(pos.X, pos.Y, size.X, size.Y);
+        }
+
+        public virtual Vector2i GetMinSizeWithBorder()
+        {
+            SetBestSize();
+            var minW = (MinimumSize.X == SizeNotSet) ? BestSize.X : MinimumSize.X;
+            var minH = (MinimumSize.Y == SizeNotSet) ? BestSize.Y : MinimumSize.Y;
+            var width = minW + Margin.Left + Margin.Right;
+            var height = minH + Margin.Top + Margin.Bottom;
+            return new Vector2i(width, height);
+        }
+
+        public virtual bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
+        {
+            if (size > 0)
+            {
+                if (direction == BoxOrientation.Horizontal)
+                {
+                    if ((MarginFlags & MarginFlags.Left) != MarginFlags.NotSet)
+                        size -= Margin.Left;
+                    if ((MarginFlags & MarginFlags.Right) != MarginFlags.NotSet)
+                        size -= Margin.Right;
+                    if ((PaddingFlags & PaddingFlags.Left) != PaddingFlags.NotSet)
+                        size -= Padding.Left;
+                    if ((PaddingFlags & PaddingFlags.Right) != PaddingFlags.NotSet)
+                        size -= Padding.Right;
+
+                }
+                else if (direction == BoxOrientation.Vertical)
+                {
+                    if ((MarginFlags & MarginFlags.Top) != MarginFlags.NotSet)
+                        size -= Margin.Top;
+                    if ((MarginFlags & MarginFlags.Bottom) != MarginFlags.NotSet)
+                        size -= Margin.Bottom;
+                    if ((PaddingFlags & PaddingFlags.Top) != PaddingFlags.NotSet)
+                        size -= Padding.Top;
+                    if ((PaddingFlags & PaddingFlags.Bottom) != PaddingFlags.NotSet)
+                        size -= Padding.Bottom;
+                }
+
+            }
+
+            bool didUse = false;
+            foreach(var ctrl in Children)
+                if(ctrl.InformFirstDirection(direction, size, availableOtherDir))
+                    didUse = true;
+
+            return didUse;
+        }
+
+        protected virtual void SetBestSize()
+        {
+            //todo: figure out if there's any way to get a better best size
+            BestSize = new Vector2i(Width, Height);
+        }
+
+        public virtual Vector2i GetMaxSizeWithBorder()
+        {
+            var width = MaximumSize.X + Margin.Left + Margin.Right;
+            var height = MaximumSize.Y + Margin.Top + Margin.Bottom;
+            return new Vector2i(width, height);
+        }
+
+        public MarginFlags MarginFlags { get; private set; }
+        public PaddingFlags PaddingFlags { get; private set; }
+
+        /// <summary>
+        /// Determines whether this control shold be processed by a sizer.
+        /// </summary>
+        public virtual bool IsRenderable { get { return true; } }
+
+
+        //TODO : set all these properties
+        public int Proportion { get; set; }
+        public ExpansionFlags Expansion { get; set; }
+        public AlignmentFlags Alignment { get; set; }
+
 
         #endregion
 

@@ -29,6 +29,7 @@ namespace Flood.GUI.Controls
         public ComboBox(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetSize(100, 20);
             m_Menu = new Menu(this);
             m_Menu.IsHidden = true;

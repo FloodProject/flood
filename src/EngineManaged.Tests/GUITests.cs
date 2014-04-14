@@ -1,4 +1,7 @@
-﻿using Flood.GUI.Controls;
+﻿using System;
+using Flood.GUI;
+using Flood.GUI.Controls;
+using Flood.GUI.Controls.Containers;
 using NUnit.Framework;
 
 namespace Flood.Tests
@@ -368,8 +371,6 @@ namespace Flood.Tests
         public void TestStatusBar()
         {
             var control = new StatusBar(canvas) { Text = "StatusBar" };
-            var but = new Button(canvas) { Text = "button" };
-            control.AddControl(but, true);
 
             GUI.Test(control, "StatusBar1");
         }
@@ -470,6 +471,81 @@ namespace Flood.Tests
             var control = new WindowControl(canvas, "WindowControl");
 
             GUI.Test(control, "WindowControl1");
+        }
+        
+        [Test]
+        public void TestBoxSizer1()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+
+            GUI.Test(boxPanel, "BoxSizer1_BeforeLayout");
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer1_AfterLayout");
+            boxPanel.Orientation = BoxOrientation.Horizontal;
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer1_OrientationChanged");
+            
+        }
+    
+
+        [Test]
+        public void TestBoxSizer2()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+
+            boxPanel.Orientation = BoxOrientation.Horizontal;
+            boxPanel.Layout();
+            
+            new Button(boxPanel) { Text = "ExtraButton" };
+
+            GUI.Test(boxPanel, "BoxSizer2_BeforeRedimension");
+            
+            boxPanel.Redimension();
+
+            GUI.Test(boxPanel, "BoxSizer2_BeforeLayout");
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer2_AfterLayout");
+        }
+        
+        [Test]
+        public void TestBoxSizer3()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            GUI.Test(boxPanel, "BoxSizer3_BeforeSwap");
+            boxPanel.SwapChildren(1, 4);
+            GUI.Test(boxPanel, "BoxSizer3_AfterSwap");
+        }
+        
+        [Test]
+        public void TestBoxSizer4()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+
+            GUI.Test(boxPanel, "BoxSizer4_BeforeRemoval");
+            boxPanel.RemoveChild(2, true);
+            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval1");
+            boxPanel.RemoveChild(2, false);
+            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval2");
         }
     }
 
