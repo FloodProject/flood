@@ -36,15 +36,23 @@ namespace Flood.Tests
             window.AddRenderable(guiRenderable);
         }
 
+        public void ResetRenderable()
+        {
+            window.RemoveRenderable(guiRenderable);
+            guiRenderable.Dispose();
+            guiRenderable = new GuiRenderable();
+            window.AddRenderable(guiRenderable);
+        }
+
         #region Common testing logic
 
         public void Test(Control control, string assertId, string assertMessage = "")
         {
             var renderChanged = HasRenderChanged(control, assertId);
+            var serializationChanged = HasSerializationChanged(control, assertId);
+
             NUnit.Framework.Assert.IsFalse(renderChanged,
                 assertId + " render changed. " + assertMessage);
-
-            var serializationChanged = HasSerializationChanged(control, assertId);
             NUnit.Framework.Assert.IsFalse(serializationChanged,
                 assertId + " serialization changed. " + assertMessage);
         }
@@ -90,11 +98,6 @@ namespace Flood.Tests
         {
             var width = 0;
             var height = 0;
-
-            // current layout algorithm is bugged,
-            // multiple passes are neccessary to render properly
-            for (int i = 0; i < 5; i++)
-                guiRenderable.Canvas.Update();
 
             app.RunStep();
 

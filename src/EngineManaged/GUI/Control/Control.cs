@@ -790,8 +790,8 @@ namespace Flood.GUI.Controls
             m_Bounds.X = x;
             m_Bounds.Y = y;
 
-            m_Bounds.Width = width;
-            m_Bounds.Height = height;
+            m_Bounds.Width = ClampWidth(width);
+            m_Bounds.Height = ClampHeight(height);
 
             OnBoundsChanged(oldBounds);
 
@@ -799,6 +799,24 @@ namespace Flood.GUI.Controls
                 BoundsChanged.Invoke(this);
 
             return true;
+        }
+
+        private int ClampWidth(int width)
+        {
+            if (MinimumSize.X != SizeNotSet && width < MinimumSize.X)
+                return MinimumSize.X;
+            if (MaximumSize.X != SizeNotSet && width > MaximumSize.X)
+                return MaximumSize.X;
+            return width;
+        }
+
+        private int ClampHeight(int height)
+        {
+            if (MinimumSize.Y != SizeNotSet && height < MinimumSize.Y)
+                return MinimumSize.Y;
+            if (MaximumSize.Y != SizeNotSet && height > MaximumSize.Y)
+                return MaximumSize.Y;
+            return height;
         }
 
         /// <summary>
@@ -1099,7 +1117,7 @@ namespace Flood.GUI.Controls
 
             if (m_NeedsLayout)
             {
-                m_NeedsLayout = false;
+                //m_NeedsLayout = false;
                 Layout(skin);
             }
 
@@ -1116,7 +1134,7 @@ namespace Flood.GUI.Controls
                 if (child.IsHidden)
                     continue;
 
-                if (AdjustDocking(child, bounds)) continue;
+                if (AdjustDocking(child, ref bounds)) continue;
 
                 child.RecurseLayout(skin, level + 1);
 
@@ -1141,6 +1159,12 @@ namespace Flood.GUI.Controls
                 child.RecurseLayout(skin, level + 1);
             }
 
+            if (m_NeedsLayout)
+            {
+                m_NeedsLayout = false;
+                Layout(skin);
+            }
+
             PostLayout(skin);
 
             if (IsTabable)
@@ -1160,7 +1184,7 @@ namespace Flood.GUI.Controls
 
         }
 
-        private bool AdjustDocking(Control child, Rectangle bounds)
+        private bool AdjustDocking(Control child, ref Rectangle bounds)
         {
             Pos dock = child.Dock;
 

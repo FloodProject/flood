@@ -104,6 +104,7 @@ namespace Flood.GUI.Controls
         public ListBox(Control parent)
             : base(parent)
         {
+            SetSize(100, 200);
             m_SelectedRows = new List<TableRow>();
 
             EnableScroll(false, true);
@@ -221,6 +222,7 @@ namespace Flood.GUI.Controls
 
             return row;
         }
+
 
         /// <summary>
         /// Sets the column width (in pixels).

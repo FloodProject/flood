@@ -28,6 +28,7 @@ namespace Flood.Tests
         [SetUp]
         public void TestSetup()
         {
+            GUI.ResetRenderable();
             canvas = GUI.guiRenderable.Canvas;
             canvas.Children.Clear();
         }
@@ -81,6 +82,7 @@ namespace Flood.Tests
             cat2.Add("but2-2");
             cat2.Add("but2-3");
             cat2.Add("but2-4");
+            control.SizeToContents();
 
             GUI.Test(control, "CollapsibleList1");
         }
@@ -245,7 +247,6 @@ namespace Flood.Tests
             control.AddItem("item3");
             control.AddDivider();
             control.AddItem("item4");
-            control.SizeToChildren();
 
             GUI.Test(control, "Menu1");
         }
@@ -488,9 +489,7 @@ namespace Flood.Tests
             boxPanel.Orientation = BoxOrientation.Horizontal;
             boxPanel.Layout();
             GUI.Test(boxPanel, "BoxSizer1_OrientationChanged");
-            
         }
-    
 
         [Test]
         public void TestBoxSizer2()

@@ -67,6 +67,10 @@ namespace Flood.Windows
                 nativeWindow.Settings.Height);
             renderables.Add(renderable);
         }
+        public void RemoveRenderable(WindowRenderable renderable)
+        {
+            renderables.Remove(renderable);
+        }
 
         internal void Render()
         {

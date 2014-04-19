@@ -46,7 +46,7 @@ namespace Flood.GUI.Controls
             m_List = parent;
 
             Padding = new Padding(1, 0, 1, 5);
-            SetSize(512, 512);
+            //SetSize(512, 512);
         }
 
         /// <summary>
@@ -99,6 +99,28 @@ namespace Flood.GUI.Controls
 
             if (Selected != null)
                 Selected.Invoke(this);
+        }
+
+        /// <summary>
+        /// Returns the total width and height of all children.
+        /// </summary>
+        /// <remarks>Default implementation returns maximum size of children since the layout is unknown.
+        /// Implement this in derived compound controls to properly return their size.</remarks>
+        /// <returns></returns>
+        public override Vector2i GetChildrenSize()
+        {
+            var size = new Vector2i(0, 0);
+
+            foreach (Control child in Children)
+            {
+                if (child.IsHidden)
+                    continue;
+
+                size.X = Math.Max(size.X, child.Right);
+                size.Y += child.Bottom - child.Y;
+            }
+
+            return size;
         }
 
         /// <summary>

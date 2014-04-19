@@ -27,6 +27,7 @@ namespace Flood.GUI.Controls
         public ResizableControl(Control parent)
             : base(parent)
         {
+            SetSize(100, 30);
             m_Resizer = new Resizer[10];
             MinimumSize = new Vector2i(5, 5);
             m_ClampMovement = false;
