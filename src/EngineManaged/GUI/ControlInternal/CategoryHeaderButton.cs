@@ -16,7 +16,7 @@ namespace Flood.GUI.ControlInternal
         {
             ShouldDrawBackground = false;
             IsToggle = true;
-            Alignment = Pos.Center;
+            TextAlignment = Pos.Center;
             TextPadding = new Padding(3, 0, 3, 0);
         }
 

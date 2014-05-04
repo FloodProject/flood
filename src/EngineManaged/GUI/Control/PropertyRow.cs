@@ -54,7 +54,7 @@ namespace Flood.GUI.Controls
         {
             PropertyRowLabel label = new PropertyRowLabel(this);
             label.Dock = Pos.Left;
-            label.Alignment = Pos.Left | Pos.Top;
+            label.TextAlignment = Pos.Left | Pos.Top;
             label.Margin = new Margin(2, 2, 0, 0);
             m_Label = label;
 

@@ -16,7 +16,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Text alignment.
         /// </summary>
-        public Pos Alignment { get { return m_Align; } set { m_Align = value; Invalidate(); } }
+        public Pos TextAlignment { get { return m_Align; } set { m_Align = value; Invalidate(); } }
 
         /// <summary>
         /// Text.
@@ -97,7 +97,7 @@ namespace Flood.GUI.Controls
 
             MouseInputEnabled = false;
             SetSize(100, 10);
-            Alignment = Pos.Left | Pos.Top;
+            TextAlignment = Pos.Left | Pos.Top;
 
             m_AutoSizeToContents = true;
         }

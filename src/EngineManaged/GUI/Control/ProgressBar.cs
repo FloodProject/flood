@@ -55,7 +55,7 @@ namespace Flood.GUI.Controls
             TextPadding = Padding.Three;
             IsHorizontal = true;
 
-            Alignment = Pos.Center;
+            TextAlignment = Pos.Center;
             m_Progress = 0;
             m_AutoLabel = true;
         }

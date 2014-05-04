@@ -64,7 +64,7 @@ namespace Flood.GUI.Controls
             height += m_TitleBar.Height;
 
             m_Caption = new Label(m_TitleBar);
-            m_Caption.Alignment = Pos.Left | Pos.CenterV;
+            m_Caption.TextAlignment = Pos.Left | Pos.CenterV;
             m_Caption.Text = caption;
             m_Caption.Dock = Pos.Left;
             m_Caption.Padding = new Padding(8, 0, 0, 0);

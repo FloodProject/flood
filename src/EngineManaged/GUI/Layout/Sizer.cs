@@ -5,6 +5,16 @@ using Flood.GUI.Controls.Containers;
 
 namespace Flood.GUI
 {
+
+    public class NullParentException: GuiException
+    {
+        
+    }
+
+    public class GuiException: ApplicationException
+    {
+        
+    }
     /// <summary>
     /// Margin flags. Indicates which margins are set.
     /// </summary>
@@ -45,10 +55,10 @@ namespace Flood.GUI
     [Flags]
     public enum ExpansionFlags
     {
-        NotSet = 0,
-        Expand = 1,
-        Shaped = 2,
-        Fit = 4
+        NotSet = 1,
+        Expand = 2,
+        Shaped = 4,
+        Fit = 8
     }
 
 
@@ -58,14 +68,14 @@ namespace Flood.GUI
     [Flags]
     public enum AlignmentFlags
     {
-        NotSet = 0,
         Center = 1 << 0,
         Left = 1 << 1,
         Right = 1 << 2,
         Top = 1 << 3,
         Bottom = 1 << 4,
         CenterVertical = 1 << 5,
-        CenterHorizontal = 1 << 6
+        CenterHorizontal = 1 << 6,
+        NotSet = 1 << 7
     }
 
     /// <summary>
@@ -118,7 +128,7 @@ namespace Flood.GUI
         /// <summary>
         /// <see cref="WeakReference"/> to the <see cref="Panel"/> associated to this <see cref="Sizer"/>.
         /// </summary>
-        private WeakReference m_panel;
+        protected WeakReference m_panel;
 
         /// <summary>
         /// Gets or sets the associated <see cref="Panel"/>.

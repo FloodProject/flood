@@ -39,7 +39,7 @@ namespace Flood.GUI.Controls
             DownArrow arrow = new DownArrow(this);
             m_Button = arrow;
 
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
             Text = String.Empty;
             Margin = new Margin(3, 0, 0, 0);
 

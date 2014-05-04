@@ -15,7 +15,7 @@ namespace Flood.GUI.ControlInternal
         /// <param name="parent">Parent control.</param>
         public CategoryButton(Control parent) : base(parent)
         {
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
             m_Alt = false;
             IsToggle = true;
             TextPadding = new Padding(3, 0, 3, 0);

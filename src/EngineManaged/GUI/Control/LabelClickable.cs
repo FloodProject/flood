@@ -14,7 +14,7 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             IsToggle = false;
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
         }
 
         /// <summary>

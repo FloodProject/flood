@@ -18,7 +18,7 @@ namespace Flood.GUI.Controls
             Dock = Pos.Bottom;
             Padding = Padding.Two;
             //Text = "Status Bar"; // [omeg] todo i18n
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
         }
 
         /// <summary>

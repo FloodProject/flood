@@ -465,6 +465,8 @@ namespace Flood.GUI.Controls
         /// <param name="parent">Parent control.</param>
         public Control(Control parent)
         {
+            Expansion = ExpansionFlags.NotSet;
+            Alignment = AlignmentFlags.NotSet;
             m_Children = new List<Control>();
             m_Accelerators = new Dictionary<string, GwenEventHandler>();
 
@@ -1299,23 +1301,23 @@ namespace Flood.GUI.Controls
 
         public virtual void SetDimension(Vector2i pos, Vector2i size)
         {
-            if ((Expansion & ExpansionFlags.Shaped) != ExpansionFlags.NotSet)
+            if (Expansion == ExpansionFlags.Shaped)
             {
                 int rWidth = (int)(size.Y * AspectRatio);
                 if (rWidth > size.X)
                 {
                     int rHeight = (int)(size.Y / AspectRatio);
-                    if ((Alignment & AlignmentFlags.CenterVertical) != AlignmentFlags.NotSet)
+                    if (Alignment == AlignmentFlags.CenterVertical)
                         pos.Y += (size.Y - rHeight) / 2;
-                    else if ((Alignment & AlignmentFlags.Bottom) != AlignmentFlags.NotSet)
+                    else if (Alignment == AlignmentFlags.Bottom)
                         pos.Y += (size.Y - rHeight);
                     size.Y = rHeight;
                 }
                 else if (rWidth < size.X)
                 {
-                    if ((Alignment & AlignmentFlags.CenterHorizontal) != AlignmentFlags.NotSet)
+                    if (Alignment == AlignmentFlags.CenterHorizontal)
                         pos.X += (size.X - rWidth) / 2;
-                    else if ((Alignment & AlignmentFlags.Bottom) != AlignmentFlags.NotSet)
+                    else if (Alignment == AlignmentFlags.Bottom)
                         pos.X += (size.X - rWidth);
                     size.X = rWidth;
                 }
@@ -1331,6 +1333,14 @@ namespace Flood.GUI.Controls
             var width = minW + Margin.Left + Margin.Right;
             var height = minH + Margin.Top + Margin.Bottom;
             return new Vector2i(width, height);
+        }
+        
+        public virtual void ReduceToMinSize()
+        {
+            SetBestSize();
+            var minW = (MinimumSize.X == SizeNotSet) ? BestSize.X : MinimumSize.X;
+            var minH = (MinimumSize.Y == SizeNotSet) ? BestSize.Y : MinimumSize.Y;
+            SetSize(minW, minH);
         }
 
         public virtual bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
@@ -1395,8 +1405,10 @@ namespace Flood.GUI.Controls
 
         //TODO : set all these properties
         public int Proportion { get; set; }
-        public ExpansionFlags Expansion { get; set; }
-        public AlignmentFlags Alignment { get; set; }
+        private ExpansionFlags m_Expansion;
+        public ExpansionFlags Expansion { get { return m_Expansion; } set { m_Expansion = value; Invalidate(); } }
+        private AlignmentFlags m_Align;
+        public AlignmentFlags Alignment { get { return m_Align; } set { m_Align = value; Invalidate(); } }
 
 
         #endregion

@@ -49,7 +49,7 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             DragAndDrop_SetPackage(true, "TabButtonMove");
-            Alignment = Pos.Top | Pos.Left;
+            TextAlignment = Pos.Top | Pos.Left;
             TextPadding = new Padding(5, 3, 3, 3);
             Padding = Padding.Two;
             KeyboardInputEnabled = true;

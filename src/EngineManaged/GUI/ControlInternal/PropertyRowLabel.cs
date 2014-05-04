@@ -16,7 +16,7 @@ namespace Flood.GUI.ControlInternal
         public PropertyRowLabel(PropertyRow parent)
             : base(parent)
         {
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
             m_PropertyRow = parent;
         }
 

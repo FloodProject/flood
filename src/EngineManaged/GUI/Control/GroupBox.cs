@@ -21,7 +21,7 @@ namespace Flood.GUI.Controls
             KeyboardInputEnabled = true;
 
             TextPadding = new Padding(10, 0, 10, 0);
-            Alignment = Pos.Top | Pos.Left;
+            TextAlignment = Pos.Top | Pos.Left;
             Invalidate();
 
             m_InnerPanel = new Control(this);
