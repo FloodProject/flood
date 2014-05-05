@@ -890,6 +890,100 @@ namespace Flood.Tests
 
             GUI.Test(gridPanel1, "GridSizer12_2GridPanels");
         }
+
+        [Test]
+        public void TestRelativePositionSizer1()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel1");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer2()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel2");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer3()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Shaped);
+            relativePositionPanel.Width = 200;
+            relativePositionPanel.Height = 100;
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel3_shaped");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer4()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Shaped);
+            relativePositionPanel.Width = 300;
+            relativePositionPanel.Height = 50;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel4_shaped_overflow");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer5()
+        {
+            canvas.Width = 200;
+            canvas.Height = 40;
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Expand);
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel5_expand_overflow");
+        }
     }
 
 }

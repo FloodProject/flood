@@ -1334,6 +1334,13 @@ namespace Flood.GUI.Controls
             var height = minH + Margin.Top + Margin.Bottom;
             return new Vector2i(width, height);
         }
+
+        public virtual Vector2i GetSizeWithBorder()
+        {
+            var width = Width + Margin.Left + Margin.Right;
+            var height = Height + Margin.Top + Margin.Bottom;
+            return new Vector2i(width, height);
+        }
         
         public virtual void ReduceToMinSize()
         {
