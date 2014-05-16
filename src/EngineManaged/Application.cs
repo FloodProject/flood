@@ -63,7 +63,7 @@ namespace Flood
             //Initiate global services
             WindowManager = new Windows.WindowManager(this);
 
-            RemotingManager.ServiceManager.GetCreateImplementation<IWindowManager>(WindowManager);
+            //RemotingManager.ServiceManager.GetCreateImplementation<IWindowManager>(WindowManager);
         }
 
         private const string AssetsDirectory = "bin/Assets/";

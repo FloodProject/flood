@@ -1356,33 +1356,33 @@ namespace Flood.GUI.Controls
             {
                 if (direction == BoxOrientation.Horizontal)
                 {
-                    if ((MarginFlags & MarginFlags.Left) != MarginFlags.NotSet)
+                    if ((MarginFlags & MarginFlags.Left) != 0)
                         size -= Margin.Left;
-                    if ((MarginFlags & MarginFlags.Right) != MarginFlags.NotSet)
+                    if ((MarginFlags & MarginFlags.Right) != 0)
                         size -= Margin.Right;
-                    if ((PaddingFlags & PaddingFlags.Left) != PaddingFlags.NotSet)
+                    if ((PaddingFlags & PaddingFlags.Left) != 0)
                         size -= Padding.Left;
-                    if ((PaddingFlags & PaddingFlags.Right) != PaddingFlags.NotSet)
+                    if ((PaddingFlags & PaddingFlags.Right) != 0)
                         size -= Padding.Right;
 
                 }
                 else if (direction == BoxOrientation.Vertical)
                 {
-                    if ((MarginFlags & MarginFlags.Top) != MarginFlags.NotSet)
+                    if ((MarginFlags & MarginFlags.Top) != 0)
                         size -= Margin.Top;
-                    if ((MarginFlags & MarginFlags.Bottom) != MarginFlags.NotSet)
+                    if ((MarginFlags & MarginFlags.Bottom) != 0)
                         size -= Margin.Bottom;
-                    if ((PaddingFlags & PaddingFlags.Top) != PaddingFlags.NotSet)
+                    if ((PaddingFlags & PaddingFlags.Top) != 0)
                         size -= Padding.Top;
-                    if ((PaddingFlags & PaddingFlags.Bottom) != PaddingFlags.NotSet)
+                    if ((PaddingFlags & PaddingFlags.Bottom) != 0)
                         size -= Padding.Bottom;
                 }
 
             }
 
             bool didUse = false;
-            foreach(var ctrl in Children)
-                if(ctrl.InformFirstDirection(direction, size, availableOtherDir))
+            foreach (var ctrl in Children)
+                if (ctrl.InformFirstDirection(direction, size, availableOtherDir))
                     didUse = true;
 
             return didUse;

@@ -1,0 +1,69 @@
+﻿using System;
+using Flood.GUIv2.Controls.Layout;
+
+namespace Flood.GUIv2.Controls
+{
+    /// <summary>
+    /// List box row (selectable).
+    /// </summary>
+    public class ListBoxRow : TableRow
+    {
+        private bool m_Selected;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListBoxRow"/> class.
+        /// </summary>
+        /// <param name="parent">Parent control.</param>
+        public ListBoxRow(Control parent)
+            : base(parent)
+        {
+            MouseInputEnabled = true;
+            IsSelected = false;
+        }
+
+        /// <summary>
+        /// Indicates whether the control is selected.
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return m_Selected; }
+            set
+            {
+                m_Selected = value;
+                // TODO: Get these values from the skin.
+                if (value)
+                    SetTextColor(Color.White);
+                else
+                    SetTextColor(Color.Black);
+            }
+        }
+
+        /// <summary>
+        /// Renders the control using specified skin.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        public override void Render(Skins.Skin skin)
+        {
+            throw new NotImplementedException();
+
+            skin.DrawListBoxLine(this, IsSelected, EvenRow);
+        }
+
+        /// <summary>
+        /// Handler invoked on mouse click (left) event.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="down">If set to <c>true</c> mouse button is down.</param>
+        public override void OnMouseClickedLeft(int x, int y, bool down)
+        {
+            throw new NotImplementedException();
+
+            if (down)
+            {
+                //IsSelected = true; // [omeg] ListBox manages that
+                OnRowSelected();
+            }
+        }
+    }
+}

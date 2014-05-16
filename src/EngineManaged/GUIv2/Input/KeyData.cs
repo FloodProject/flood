@@ -1,0 +1,23 @@
+﻿using Flood.GUIv2.Controls;
+
+namespace Flood.GUIv2.Input
+{
+    /// <summary>
+    /// Keyboard state.
+    /// </summary>
+    public class KeyData
+    {
+        public readonly bool [] KeyState;
+        public readonly float [] NextRepeat;
+        public IControl Target;
+        public bool LeftMouseDown;
+        public bool RightMouseDown;
+
+        public KeyData()
+        {
+            KeyState = new bool[(int)Keys.MAX];
+            NextRepeat = new float[(int)Keys.MAX];
+            // everything is initialized to 0 by default
+        }
+    }
+}
