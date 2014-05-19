@@ -10,6 +10,11 @@
 #include "Core/API.h"
 #include <cmath>
 
+#define SQR(x) x*x
+#define NORM2(x, y) SQR(x) + SQR(y)
+#define NORM3(x, y, z) SQR(x) + SQR(y) + SQR(z)
+#define NORM4(x, y, z, w) SQR(x) + SQR(y) + SQR(z) + SQR(w)
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -33,8 +38,10 @@ struct API_CORE Vector3 : public Vector3P
 	// Relational.
 	bool operator == (const Vector3& v) const { return (x == v.x) && (y == v.y) && (z == v.z); }
 	bool operator != (const Vector3& v) const { return (x != v.x) || (y != v.y) || (z != v.z); }
-	bool operator < ( const Vector3& rhs ) const { return (x < rhs.x) && (y < rhs.y) && (z < rhs.z); }
-	bool operator > ( const Vector3& rhs ) const { return (x > rhs.x) && (y > rhs.y) && (z > rhs.z); }
+    bool operator < ( const Vector3& rhs ) const { return NORM3(x,y,z) < NORM3(rhs.x, rhs.y, rhs.z); }
+    bool operator <= ( const Vector3& rhs ) const { return NORM3(x,y,z) <= NORM3(rhs.x, rhs.y, rhs.z); }
+	bool operator > ( const Vector3& rhs ) const { return NORM3(x,y,z) > NORM3(rhs.x, rhs.y, rhs.z); }
+	bool operator >= ( const Vector3& rhs ) const { return NORM3(x,y,z) >= NORM3(rhs.x, rhs.y, rhs.z); }
 
 	// Addition.
 	Vector3 operator + (const Vector3& v) const { return Vector3(x+v.x, y+v.y, z+v.z); }
@@ -128,8 +135,10 @@ struct API_CORE Vector4
 	// Relational.
 	bool operator == (const Vector4& v) const { return (x == v.x) && (y == v.y) && (z == v.z) && (w == v.w); }
 	bool operator != (const Vector4& v) const { return (x != v.x) || (y != v.y) || (z != v.z) || (w != v.w); }
-	bool operator < ( const Vector4& rhs ) const { return (x < rhs.x) && (y < rhs.y) && (z < rhs.z) && (w < rhs.w); }
-	bool operator > ( const Vector4& rhs ) const { return (x > rhs.x) && (y > rhs.y) && (z > rhs.z) && (w > rhs.w); }
+    bool operator < ( const Vector4& rhs ) const { return NORM4(x,y,z,w) < NORM4(rhs.x, rhs.y, rhs.z, rhs.w); }
+    bool operator <= ( const Vector4& rhs ) const { return NORM4(x,y,z,w) <= NORM4(rhs.x, rhs.y, rhs.z, rhs.w); }
+	bool operator > ( const Vector4& rhs ) const { return NORM4(x,y,z,w) > NORM4(rhs.x, rhs.y, rhs.z, rhs.w); }
+	bool operator >= ( const Vector4& rhs ) const { return NORM4(x,y,z,w) >= NORM4(rhs.x, rhs.y, rhs.z, rhs.w); }
 
 	// Addition.
 	Vector4 operator + (const Vector4& v) const { return Vector4(x+v.x, y+v.y, z+v.z, w+v.w); }
@@ -179,8 +188,10 @@ struct API_CORE Vector2 : public Vector2P
 	// Relational.
 	bool operator == (const Vector2& v) const { return (x == v.x) && (y == v.y); }
 	bool operator != (const Vector2& v) const { return (x != v.x) || (y != v.y); }
-	bool operator < ( const Vector2& rhs ) const { return (x < rhs.x) && (y < rhs.y); }
-	bool operator > ( const Vector2& rhs ) const { return (x > rhs.x) && (y > rhs.y); }
+    bool operator < ( const Vector2& rhs ) const { return NORM2(x,y) < NORM2(rhs.x, rhs.y); }
+    bool operator <= ( const Vector2& rhs ) const { return NORM2(x,y) <= NORM2(rhs.x, rhs.y); }
+	bool operator > ( const Vector2& rhs ) const { return NORM2(x,y) > NORM2(rhs.x, rhs.y); }
+	bool operator >= ( const Vector2& rhs ) const { return NORM2(x,y) >= NORM2(rhs.x, rhs.y); }
 
 	// Addition.
 	Vector2 operator + (const Vector2& v) const { return Vector2(x+v.x, y+v.y); }	
@@ -228,8 +239,10 @@ struct API_CORE Vector2i
 	// Relational.
 	bool operator == (const Vector2i& v) const { return (x == v.x) && (y == v.y); }
 	bool operator != (const Vector2i& v) const { return (x != v.x) || (y != v.y); }
-	bool operator < ( const Vector2i& rhs ) const { return (x < rhs.x) && (y < rhs.y); }
-	bool operator > ( const Vector2i& rhs ) const { return (x > rhs.x) && (y > rhs.y); }
+    bool operator < ( const Vector2& rhs ) const { return NORM2(x,y) < NORM2(rhs.x, rhs.y); }
+    bool operator <= ( const Vector2& rhs ) const { return NORM2(x,y) <= NORM2(rhs.x, rhs.y); }
+	bool operator > ( const Vector2& rhs ) const { return NORM2(x,y) > NORM2(rhs.x, rhs.y); }
+	bool operator >= ( const Vector2& rhs ) const { return NORM2(x,y) >= NORM2(rhs.x, rhs.y); }
 
 	// Addition.
 	Vector2i operator + (const Vector2i& v) const { return Vector2i(x+v.x, y+v.y); }	
