@@ -111,7 +111,7 @@ namespace Flood.Tests
             window.view.ClearColor = Color.White;
             window.view.RenderTarget = renderBuffer;
             window.view.Size = new Vector2i(width, height);
-            guiRenderable.Canvas.SetSize(width, height);
+            //guiRenderable.Canvas.SetSize(width, height);
 
             window.device.ActiveView = window.view;
 
@@ -203,11 +203,22 @@ namespace Flood.Tests
             public int Y;
             public int Width;
             public int Height;
+            public int BestWidth;
+            public int BestHeight;
             public int MinWidth;
             public int MinHeight;
             public int MaxWidth;
             public int MaxHeight;
+            public int MarginRight;
+            public int MarginTop;
+            public int MarginLeft;
+            public int MarginBottom;
             public bool IsHidden;
+            public bool IsExpandHorizontal;
+            public bool IsExpandVertical;
+            public bool IsFillHorizontal;
+            public bool IsFillVertical;
+            public bool IsFit;
             public bool Focused;
             public List<GUIDumpData> Children;
         }
@@ -232,11 +243,22 @@ namespace Flood.Tests
                                Y = rootControl.Y,
                                Width = rootControl.Width,
                                Height = rootControl.Height,
+                               BestWidth = rootControl.BestSize.X,
+                               BestHeight = rootControl.BestSize.Y,
                                MinWidth = rootControl.MinimumSize.X,
                                MinHeight = rootControl.MinimumSize.Y,
                                MaxWidth = rootControl.MaximumSize.X,
                                MaxHeight = rootControl.MaximumSize.Y,
+                               MarginRight = rootControl.Margin.Right,
+                               MarginTop = rootControl.Margin.Top,
+                               MarginLeft = rootControl.Margin.Left,
+                               MarginBottom = rootControl.Margin.Bottom,
                                IsHidden = rootControl.IsHidden,
+                               IsExpandHorizontal = rootControl.IsExpandHorizontal,
+                               IsExpandVertical = rootControl.IsExpandVertical,
+                               IsFillHorizontal = rootControl.IsFillHorizontal,
+                               IsFillVertical = rootControl.IsFillVertical,
+                               IsFit = rootControl.IsFit,
                                Focused = rootControl.HasFocus,
                            };
 

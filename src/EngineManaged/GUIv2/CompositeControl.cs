@@ -10,7 +10,7 @@ using Flood.GUIv2.Skins;
 
 namespace Flood.GUIv2
 {
-    public abstract class CompositeControl : IControl, IDisposable
+    public abstract class CompositeControl : IControl, IDisposable, IPanel
     {
         private bool m_Disposed;
 
@@ -60,7 +60,7 @@ namespace Flood.GUIv2
 
         #region panel wrapping
 
-        //todo: remove this when control serialization is working and test don't need it anymore
+        //todo: remove this when control serialization is working and tests don't need it anymore
         public List<IControl> Children
         {
             get { return Panel.Children; }
@@ -76,8 +76,11 @@ namespace Flood.GUIv2
         public virtual void OnCanvasChanged(Canvas canvas)
         {
             m_Skin = canvas.Skin;
+            InvalidateParent();
             Panel.OnCanvasChanged(canvas);
         }
+
+        public bool ShouldPreLayout { get { return Panel.ShouldPreLayout; } set { Panel.ShouldPreLayout = value; } }
 
         public IControl Parent
         {
@@ -86,6 +89,8 @@ namespace Flood.GUIv2
             {
                 if (value != null && Parent != null)
                     throw new Exception("Parent should be null.");
+                if (!(value is IPanel))
+                    throw new Exception("Parent should be IPanel.");
 
                 var oldCanvas = GetCanvas();
                 m_Parent = value;
@@ -99,7 +104,7 @@ namespace Flood.GUIv2
             }
         }
 
-        protected Skins.Skin m_Skin;
+        protected Skin m_Skin;
         public virtual Skin Skin { get { return m_Skin; } }
 
         public IControl ToolTip { get { return Panel.ToolTip; } set { Panel.ToolTip = value; } }
@@ -191,19 +196,18 @@ namespace Flood.GUIv2
         }
 
         public MarginFlags MarginFlags { get { return Panel.MarginFlags; } }
-        public PaddingFlags PaddingFlags { get { return Panel.PaddingFlags; } }
-        public bool IsRenderable { get; private set; }
+
         public int Proportion
         {
             get { return Panel.Proportion; }
             set { Panel.Proportion = value; }
         }
-        public ExpansionFlags Expansion
+        public virtual ExpansionFlags Expansion
         {
             get { return Panel.Expansion; }
             set { Panel.Expansion = value; }
         }
-        public AlignmentFlags Alignment
+        public virtual AlignmentFlags Alignment
         {
             get { return Panel.Alignment; }
             set { Panel.Alignment = value; }
@@ -226,12 +230,18 @@ namespace Flood.GUIv2
         public Vector2i BestSize { get { return Panel.BestSize; } set { Panel.BestSize = value; } }
 
         public Vector2i MaximumSize { get { return Panel.MaximumSize; } set { Panel.MaximumSize = value; } }
+        
+        public void Shape(Vector2i size)
+        {
+            Panel.Shape(size);
+        }
+
         public bool ShouldDrawHover { get { return Panel.ShouldDrawHover; } }
 
         public virtual bool AccelOnlyFocus { get { return false; } }
         public virtual bool NeedsInputChars { get { return false; } }
 
-        public bool IsVisible { get; private set; }
+        public bool IsVisible { get { return Panel.IsVisible; } }
         public int X
         {
             get { return Panel.X; }
@@ -242,6 +252,7 @@ namespace Flood.GUIv2
             get { return Panel.Y; }
             set { Panel.Y = value; }
         }
+
         public int Width
         {
             get { return Panel.Width; }
@@ -263,6 +274,9 @@ namespace Flood.GUIv2
 
         public int RenderHeight { get { return Panel.RenderHeight; } }
         public int RenderWidth { get { return Panel.RenderWidth; } }
+        public int VerticalMargins { get { return Panel.VerticalMargins; } }
+        public int HorizontalMargins { get { return Panel.HorizontalMargins; } }
+        public Vector2i MarginSizes { get { return Panel.MarginSizes; } }
 
         public float AspectRatio
         {
@@ -351,15 +365,21 @@ namespace Flood.GUIv2
         public override string ToString()
         {
             if (this is Controls.MenuItem)
-                return "[MenuItem: " + (this as Controls.MenuItem).Text + "]";
+            {
+                var menuItem = this as Controls.MenuItem;
+                if (menuItem != null) return "[MenuItem: " + menuItem.Text + "]";
+            }
             if (this is Label)
-                return "[Label: " + (this as Label).Text + "]";
+            {
+                var label = this as Label;
+                if (label != null) return "[Label: " + label.Text + "]";
+            }
             return GetType().ToString();
         }
 
         public virtual Canvas GetCanvas()
         {
-            IControl canvas = Parent;
+            var canvas = Parent;
             if (canvas == null)
                 return null;
 
@@ -709,11 +729,6 @@ namespace Flood.GUIv2
             Panel.ReduceToMinSize();
         }
 
-        public virtual bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            return Panel.InformFirstDirection(direction, size, availableOtherDir);
-        }
-
         public Vector2i GetMaxSizeWithBorder()
         {
             return Panel.GetMaxSizeWithBorder();
@@ -797,15 +812,25 @@ namespace Flood.GUIv2
             Panel.Redraw();
         }
 
-        public virtual void Layout(Skin skin)
+        public virtual void PreLayout(Skin skin)
+        {
+            Panel.PreLayout(skin);
+        }
+
+        public void Layout(Skin skin)
         {
             Panel.Layout(skin);
         }
 
-        public void RecurseLayout(Skin skin, int level = 0)
-        {
-            Panel.RecurseLayout(skin, level);
-        }
+        public Vector2i LayoutMinSize { get { return Panel.LayoutMinSize; } }
+        public Vector2i LayoutBestSize { get { return Panel.LayoutBestSize; } }
+        public Vector2i LayoutMaxSize { get { return Panel.LayoutMaxSize; } }
+
+        public bool IsExpandHorizontal { get { return Panel.IsExpandHorizontal; } set { Panel.IsExpandHorizontal = value; } }
+        public bool IsExpandVertical { get { return Panel.IsExpandVertical; } set { Panel.IsExpandVertical = value; } }
+        public bool IsFillHorizontal { get { return Panel.IsFillHorizontal; } set { Panel.IsFillHorizontal = value; } }
+        public bool IsFillVertical { get { return Panel.IsFillVertical; } set { Panel.IsFillVertical = value; } }
+        public bool IsFit { get { return Panel.IsFit; } set { Panel.IsFit = value; } }
 
         public void PostLayout(Skin skin)
         {
@@ -838,8 +863,9 @@ namespace Flood.GUIv2
 
         public void InvalidateParent()
         {
-            if (Parent != null)
-                Parent.Invalidate();
+            var parent = Parent as IPanel;
+            if (parent != null)
+                parent.Invalidate();
         }
 
         public void SetDimension(Vector2i pos, Vector2i size)
@@ -884,7 +910,7 @@ namespace Flood.GUIv2
 
         #region render
 
-        public virtual void Render(Skins.Skin skin)
+        public void Render(Skin skin)
         {
         }
         public void DoCacheRender(Skin skin, IControl master)
@@ -910,5 +936,27 @@ namespace Flood.GUIv2
         }
         
         #endregion
+
+        public void LayoutSizes()
+        {
+            Panel.LayoutSizes();
+        }
+
+        public void RecursiveLayoutSizes(Skin skin)
+        {
+            Panel.RecursiveLayoutSizes(skin);
+        }
+
+        public void LayoutAssign()
+        {
+            Panel.LayoutAssign();
+        }
+
+        public void RecursiveLayoutAssign()
+        {
+            Panel.RecursiveLayoutAssign();
+        }
+
+        public bool NeedsLayout { get { return Panel.NeedsLayout; } set { Panel.NeedsLayout = value; } }
     }
 }

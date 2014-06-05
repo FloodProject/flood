@@ -29,18 +29,18 @@ namespace Flood.GUIv2.Controls
             m_TitleBar.IsHidden = true;
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            TabStrip.IsHidden = (TabCount <= 1);
-            UpdateTitleBar();
-            base.Layout(skin);
-        }
+        //    TabStrip.IsHidden = (TabCount <= 1);
+        //    UpdateTitleBar();
+        //    base.Layout(skin);
+        //}
 
         private void UpdateTitleBar()
         {

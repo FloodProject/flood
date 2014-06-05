@@ -81,11 +81,6 @@ namespace Flood.GUIv2.Controls
             IsTabable = true;
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Handler for Right Arrow keyboard event.
         /// </summary>

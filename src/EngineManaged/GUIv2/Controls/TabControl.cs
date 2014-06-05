@@ -116,29 +116,31 @@ namespace Flood.GUIv2.Controls
         /// <param name="button">Page to add. (well, it's a TabButton which is a parent to the page).</param>
         public void AddPage(TabButton button)
         {
-            Control page = button.Page;
-            page.Parent = this;
-            page.IsHidden = true;
-            page.Margin = new Margin(6, 6, 6, 6);
-            //page.Dock = Pos.Fill;
+            //todo: uncomment this when this becomes a composite control
 
-            button.Parent = m_TabStrip;
-            button.Alignment = AlignmentFlags.Left;
-            button.SizeToContents();
-            if (button.TabControl != null)
-                button.TabControl.UnsubscribeTabEvent(button);
-            button.TabControl = this;
-            button.Clicked += OnTabPressed;
+            //Control page = button.Page;
+            //page.Parent = this;
+            //page.IsHidden = true;
+            //page.Margin = new Margin(6, 6, 6, 6);
+            ////page.Dock = Pos.Fill;
 
-            if (null == m_CurrentButton)
-            {
-                button.Press();
-            }
+            //button.Parent = m_TabStrip;
+            //button.Alignment = AlignmentFlags.Left;
+            //button.SizeToContents();
+            //if (button.TabControl != null)
+            //    button.TabControl.UnsubscribeTabEvent(button);
+            //button.TabControl = this;
+            //button.Clicked += OnTabPressed;
 
-            if (TabAdded != null)
-                TabAdded.Invoke(this);
+            //if (null == m_CurrentButton)
+            //{
+            //    button.Press();
+            //}
 
-            Invalidate();
+            //if (TabAdded != null)
+            //    TabAdded.Invoke(this);
+
+            //Invalidate();
         }
 
         public void RemovePage(TabButton button)
@@ -170,35 +172,37 @@ namespace Flood.GUIv2.Controls
         /// <param name="control">Event source (TabButton).</param>
         internal virtual void OnTabPressed(IControl control)
         {
-            TabButton button = control as TabButton;
-            if (null == button) return;
+            //todo: uncomment this when this becomes a composite control
 
-            Control page = button.Page;
-            if (null == page) return;
+            //TabButton button = control as TabButton;
+            //if (null == button) return;
 
-            if (m_CurrentButton == button)
-                return;
+            //Control page = button.Page;
+            //if (null == page) return;
 
-            if (null != m_CurrentButton)
-            {
-                Control page2 = m_CurrentButton.Page;
-                if (page2 != null)
-                {
-                    page2.IsHidden = true;
-                }
-                m_CurrentButton.Redraw();
-                m_CurrentButton = null;
-            }
+            //if (m_CurrentButton == button)
+            //    return;
 
-            m_CurrentButton = button;
+            //if (null != m_CurrentButton)
+            //{
+            //    Control page2 = m_CurrentButton.Page;
+            //    if (page2 != null)
+            //    {
+            //        page2.IsHidden = true;
+            //    }
+            //    m_CurrentButton.Redraw();
+            //    m_CurrentButton = null;
+            //}
 
-            if (TabSelected != null)
-                TabSelected.Invoke(m_CurrentButton);
+            //m_CurrentButton = button;
 
-            page.IsHidden = false;
+            //if (TabSelected != null)
+            //    TabSelected.Invoke(m_CurrentButton);
 
-            m_TabStrip.Invalidate();
-            Invalidate();
+            //page.IsHidden = false;
+
+            //m_TabStrip.Invalidate();
+            //Invalidate();
         }
 
         /// <summary>
@@ -213,26 +217,23 @@ namespace Flood.GUIv2.Controls
             HandleOverflow();
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Handler for tab removing.
         /// </summary>
         /// <param name="button"></param>
         internal virtual void OnLoseTab(TabButton button)
         {
-            if (m_CurrentButton == button)
-                m_CurrentButton = null;
+            //todo: uncomment this when this becomes a composite control
 
-            //TODO: Select a tab if any exist.
+            //if (m_CurrentButton == button)
+            //    m_CurrentButton = null;
 
-            if (TabRemoved != null)
-                TabRemoved.Invoke(this);
+            ////TODO: Select a tab if any exist.
 
-            Invalidate();
+            //if (TabRemoved != null)
+            //    TabRemoved.Invoke(this);
+
+            //Invalidate();
         }
 
         /// <summary>

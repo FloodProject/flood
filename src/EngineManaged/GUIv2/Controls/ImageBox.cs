@@ -6,17 +6,16 @@ namespace Flood.GUIv2.Controls
     /// <summary>
     /// Image container.
     /// </summary>
-    public class ImagePanel : Control
+    public class ImageBox : Control
     {
         private ResourceHandle<Image> imageHandle;
         private readonly float[] m_uv;
         private Color m_DrawColor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImagePanel"/> class.
+        /// Initializes a new instance of the <see cref="ImageBox"/> class.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
-        public ImagePanel()
+        public ImageBox()
         {
             m_uv = new float[4];
             SetUV(0, 0, 1, 1);
@@ -33,15 +32,6 @@ namespace Flood.GUIv2.Controls
             m_uv[1] = v1;
             m_uv[2] = u2;
             m_uv[3] = v2;
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            var oldWidth= Width;
-            var oldHeight= Height;
-            SizeToContents();
-
-            return oldWidth > Width || oldHeight > Height;
         }
 
         /// <summary>
@@ -66,6 +56,7 @@ namespace Flood.GUIv2.Controls
             float texh = imageHandle.Resolve().Height;
 
             SetSize((int)texw, (int)texh);
+            Shape(new Vector2i((int)texw, (int)texh));
         }
 
         public void SetImage(ResourceHandle<Image> imageHandle)

@@ -11,20 +11,46 @@ namespace Flood.GUIv2.Controls
     /// </summary>
     public class Button : CompositeControl
     {
-        private bool m_Depressed;
-        private bool m_Toggle;
-        private bool m_ToggleStatus;
-        private bool m_CenterImage;
-        private ImagePanel m_Image;
 
+        public override AlignmentFlags Alignment
+        {
+            get { return Panel.Alignment; }
+            set 
+            { 
+                Panel.Alignment = value;
+                m_Box.Alignment = value;
+            }
+        }
+        public override ExpansionFlags Expansion
+        {
+            get { return Panel.Expansion; }
+            set
+            {
+                Panel.Expansion = value;
+                m_Box.Expansion = value == ExpansionFlags.Fit ? value : ExpansionFlags.Expand;
+            }
+        }
 
+        private readonly ImageBox m_Image;
         private readonly Text m_Text;
-
+        private readonly ButtonBackground m_Background;
+        private readonly BoxPanel m_Box;
+        
         /// <summary>
         /// Text alignment.
         /// </summary>
         public AlignmentFlags TextAlignment { get { return m_Text.Alignment; } set { m_Text.Alignment = value; Invalidate(); } }
+        
+        /// <summary>
+        /// Image alignment.
+        /// </summary>
+        public AlignmentFlags ImageAlignment { get { return m_Image.Alignment; } set { m_Image.Alignment = value; Invalidate(); } }
 
+        /// <summary>
+        /// Button elements orientation.
+        /// </summary>
+        public Orientation ButtonOrientation { get { return m_Box.Orientation; } set { m_Box.Orientation = value; Invalidate(); } }
+        
         /// <summary>
         /// Text.
         /// </summary>
@@ -43,11 +69,11 @@ namespace Flood.GUIv2.Controls
             }
         }
 
-        public override void OnCanvasChanged(Canvas canvas)
-        {
-            base.OnCanvasChanged(canvas);
-            Layout(Skin);
-        }
+        //public override void OnCanvasChanged(Canvas canvas)
+        //{
+        //    base.OnCanvasChanged(canvas);
+        //    Layout(Skin);
+        //}
 
         /// <summary>
         /// Text color.
@@ -64,6 +90,19 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public String TextOverride { get { return m_Text.TextOverride; } set { m_Text.TextOverride = value; } }
 
+        private bool m_Order;
+        public bool TextFirst 
+        { 
+            get { return m_Order; } 
+            set 
+            { 
+                if(value == m_Order)
+                    return;
+                m_Order = value;
+                m_Box.SwapChildren(0, 1);
+                m_Box.Invalidate();
+            }
+        } 
         /// <summary>
         /// Width of the text (in pixels).
         /// </summary>
@@ -133,12 +172,12 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public bool IsDepressed
         {
-            get { return m_Depressed; }
+            get { return m_Background.IsDepressed; }
             set
             {
-                if (m_Depressed == value) 
+                if (m_Background.IsDepressed == value) 
                     return;
-                m_Depressed = value; 
+                m_Background.IsDepressed = value; 
                 Redraw();
             }
         }
@@ -146,25 +185,25 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Indicates whether the button is toggleable.
         /// </summary>
-        public bool IsToggle { get { return m_Toggle; } set { m_Toggle = value; } }
+        public bool IsToggle { get { return m_Background.IsToggle; } set { m_Background.IsToggle = value; } }
 
         /// <summary>
         /// Determines the button's toggle state.
         /// </summary>
         public bool ToggleState
         {
-            get { return m_ToggleStatus; }
+            get { return m_Background.ToggleState; }
             set
             {
-                if (!m_Toggle) return;
-                if (m_ToggleStatus == value) return;
+                if (!m_Background.IsToggle) return;
+                if (m_Background.ToggleState == value) return;
 
-                m_ToggleStatus = value;
+                m_Background.ToggleState = value;
 
                 if (Toggled != null)
                     Toggled.Invoke(this);
 
-                if (m_ToggleStatus)
+                if (m_Background.ToggleState)
                 {
                     if (ToggledOn != null)
                         ToggledOn.Invoke(this);
@@ -182,11 +221,23 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Control constructor.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
         public Button()
             : base(new DockPanel())
         {
-            SetSize(100, 20);
+            m_Box = new BoxPanel(Orientation.Horizontal, ExpansionFlags.FitExpand);
+            m_Background = new ButtonBackground() {Expansion = ExpansionFlags.Fill};
+            m_Text = new Text();
+            m_Text.Hide();
+            m_Image = new ImageBox();
+            m_Image.Hide();
+            
+            m_Box.AddChild(m_Image);
+            m_Box.AddChild(m_Text);
+            
+            Panel.AddChild(m_Background);
+            Panel.AddChild(m_Box);
+
+            //SetSize(100, 20);
             MouseInputEnabled = true;
             TextAlignment = AlignmentFlags.Center;
             TextMargin = Margin.Three;
@@ -203,13 +254,26 @@ namespace Flood.GUIv2.Controls
                 return;
 
             m_Text.String = str;
+            if(string.IsNullOrEmpty(str))
+                m_Text.Hide();
+            else
+                m_Text.Show();
+
             SizeToContents();
+        }
+
+        public virtual void SizeToContents()
+        {
+            if (Skin == null)
+                return;
+            PreLayout(Skin);
+            InvalidateParent();
         }
 
         /// <summary>
         /// Toggles the button.
         /// </summary>
-        public virtual void Toggle()
+        public void Toggle()
         {
             ToggleState = !ToggleState;
         }
@@ -217,27 +281,9 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// "Clicks" the button.
         /// </summary>
-        public virtual void Press(IControl control = null)
+        public void Press(IControl control = null)
         {
             OnClicked();
-        }
-
-        /// <summary>
-        /// Renders the control using specified skin.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            if (ShouldDrawBackground)
-            {
-                bool drawDepressed = IsDepressed && IsHovered;
-                if (IsToggle)
-                    drawDepressed = drawDepressed || ToggleState;
-
-                bool bDrawHovered = IsHovered && ShouldDrawHover;
-
-                skin.DrawButton(this, drawDepressed, bDrawHovered, IsDisabled);
-            }
         }
 
         /// <summary>
@@ -258,7 +304,7 @@ namespace Flood.GUIv2.Controls
             }
             else
             {
-                if (IsHovered && m_Depressed)
+                if (IsHovered && IsDepressed)
                 {
                     OnClicked();
                 }
@@ -291,69 +337,37 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="textureName">Texture name. Null to remove.</param>
         /// <param name="center">Determines whether the image should be centered.</param>
-        public void SetImage(String textureName, bool center = false)
+        public void SetImage(String textureName, AlignmentFlags position = AlignmentFlags.NotSet)
         {
-
-            if (String.IsNullOrEmpty(textureName))
-            {
-                if (m_Image != null)
-                    m_Image.Dispose();
-                m_Image = null;
-                return;
-            }
-
-            if (m_Image == null)
-            {
-                m_Image = new ImagePanel(this);
-            }
-
-            //m_Image.Texture.Image = new Image();
-            throw new NotImplementedException();
-
-            m_Image.SizeToContents();
-            m_Image.SetPosition(2, 2);
-            m_CenterImage = center;
-
-            TextMargin = new Margin(m_Image.Right + 2, TextMargin.Top, TextMargin.Right, TextMargin.Bottom);
+            var resMan = Engine.GetEngine().ResourceManager;
+            var options = new ResourceLoadOptions { Name = textureName, AsynchronousLoad = false };
+            var imageHandle = resMan.LoadResource<Image>(options);
+            if (imageHandle.Id == 0)
+                throw new Exception("Could not load GUI texture: " + textureName);
+            SetImage(imageHandle, position);
         }
 
         /// <summary>
         /// Sets the button's image.
         /// </summary>
-        /// <param name="image">Image bitmap.</param>
-        /// <param name="center">Determines whether the image should be centered.</param>
-        public virtual void SetImage(ResourceHandle<Image> imageHandle, bool center = false)
+        /// <param name="imageHandle">Image bitmap. Set id to invalid to remove.</param>
+        /// <param name="position">Determines image alignment.</param>
+        public void SetImage(ResourceHandle<Image> imageHandle, AlignmentFlags position = AlignmentFlags.NotSet)
         {
-            throw new NotImplementedException();
-            
-            //if (m_Image == null)
-            //{
-            //    m_Image = new ImagePanel(this);
-            //}
-
-            //m_Image.SetImage(imageHandle);
-
-            //m_Image.SizeToContents( );
-            //m_Image.SetPosition(Math.Max(Padding.Left, 2), 2);
-            //m_CenterImage = center;
-
-            //TextMargin = new Padding(m_Image.Right + 2, TextMargin.Top, TextMargin.Right, TextMargin.Bottom);
-        }
-
-        /// <summary>
-        /// Sizes to contents.
-        /// </summary>
-        public override void SizeToContents()
-        {
-            base.SizeToContents();
-            if (m_Image != null)
+            if(imageHandle.Id == ResourceHandle<Image>.Invalid)
             {
-                int height = m_Image.Height + 4;
-                if (Height < height)
-                {
-                    Height = height;
-                }
+                m_Image.Hide();
+                SizeToContents();
+                return;
             }
+
+            m_Image.Show();
+            m_Image.SetImage(imageHandle);
+
+            m_Image.SizeToContents();
+            m_Image.Margin = Margin.Two;
+            m_Image.Alignment = position;
+            SizeToContents();
         }
 
         /// <summary>
@@ -377,23 +391,6 @@ namespace Flood.GUIv2.Controls
         //{
         //    OnClicked();
         //}
-
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //base.Layout(skin);
-            //if (m_Image != null)
-            //{
-            //    Align.CenterVertically(m_Image);
-
-            //    if (m_CenterImage)
-            //        Align.CenterHorizontally(m_Image);
-            //}
-        }
 
         /// <summary>
         /// Updates control colors.
@@ -428,7 +425,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="y">Y coordinate.</param>
         public override void OnMouseDoubleClickedLeft(int x, int y)
         {
-            throw new NotImplementedException();
             OnMouseClickedLeft(x, y, true);
             if (DoubleClickedLeft != null)
                 DoubleClickedLeft.Invoke(this);

@@ -54,21 +54,23 @@ namespace Flood.GUIv2.Controls
         /// <param name="font">Font to use.</param>
         public void AddText(String text, Color color, Font font = null)
         {
-            if (String.IsNullOrEmpty(text))
-                return;
+            //todo: uncomment this when this becomes a composite control
 
-            var lines = text.Split(newline, StringSplitOptions.None);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (i > 0)
-                    AddLineBreak();
+            //if (String.IsNullOrEmpty(text))
+            //    return;
 
-                TextBlock block = new TextBlock { Type = BlockType.Text, Text = lines[i], Color = color, Font = font };
+            //var lines = text.Split(newline, StringSplitOptions.None);
+            //for (int i = 0; i < lines.Length; i++)
+            //{
+            //    if (i > 0)
+            //        AddLineBreak();
 
-                m_TextBlocks.Add(block);
-                m_NeedsRebuild = true;
-                Invalidate();
-            }
+            //    TextBlock block = new TextBlock { Type = BlockType.Text, Text = lines[i], Color = color, Font = font };
+
+            //    m_TextBlocks.Add(block);
+            //    m_NeedsRebuild = true;
+            //    Invalidate();
+            //}
         }
 
         /// <summary>
@@ -233,32 +235,28 @@ namespace Flood.GUIv2.Controls
             Rebuild();
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //base.Layout(skin);
-            //if (m_NeedsRebuild)
-            //    Rebuild();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    //base.Layout(skin);
+        //    //if (m_NeedsRebuild)
+        //    //    Rebuild();
 
-            //// align bottoms. this is still not ideal, need to take font metrics into account.
-            //Control prev = null;
-            //foreach (Control child in Children)
-            //{
-            //    if (prev != null && child.Y == prev.Y)
-            //    {
-            //        Align.PlaceRightBottom(child, prev);
-            //    }
-            //    prev = child;
-            //}
-        }
+        //    //// align bottoms. this is still not ideal, need to take font metrics into account.
+        //    //Control prev = null;
+        //    //foreach (Control child in Children)
+        //    //{
+        //    //    if (prev != null && child.Y == prev.Y)
+        //    //    {
+        //    //        Align.PlaceRightBottom(child, prev);
+        //    //    }
+        //    //    prev = child;
+        //    //}
+        //}
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

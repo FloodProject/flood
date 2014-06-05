@@ -77,9 +77,11 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public void CenterPanels()
         {
-            m_HVal = 0.5f;
-            m_VVal = 0.5f;
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //m_HVal = 0.5f;
+            //m_VVal = 0.5f;
+            //Invalidate();
         }
 
         /// <summary>
@@ -123,20 +125,26 @@ namespace Flood.GUIv2.Controls
 
         protected void OnCenterMoved(IControl control)
         {
-            CalculateValueCenter();
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //CalculateValueCenter();
+            //Invalidate();
         }
 
         protected void OnVerticalMoved(IControl control)
         {
-            m_VVal = CalculateValueVertical();
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //m_VVal = CalculateValueVertical();
+            //Invalidate();
         }
 
         protected void OnHorizontalMoved(IControl control)
         {
-            m_HVal = CalculateValueHorizontal();
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //m_HVal = CalculateValueHorizontal();
+            //Invalidate();
         }
 
         private void CalculateValueCenter()
@@ -155,45 +163,40 @@ namespace Flood.GUIv2.Controls
             return m_HSplitter.X / (float)(Width - m_HSplitter.Width);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            m_VSplitter.SetSize(Width, m_BarSize);
-            m_HSplitter.SetSize(m_BarSize, Height);
-            m_CSplitter.SetSize(m_BarSize, m_BarSize);
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    m_VSplitter.SetSize(Width, m_BarSize);
+        //    m_HSplitter.SetSize(m_BarSize, Height);
+        //    m_CSplitter.SetSize(m_BarSize, m_BarSize);
 
-            UpdateVSplitter();
-            UpdateHSplitter();
-            UpdateCSplitter();
+        //    UpdateVSplitter();
+        //    UpdateHSplitter();
+        //    UpdateCSplitter();
 
-            if (m_ZoomedSection == -1)
-            {
-                if (m_Sections[0] != null)
-                    m_Sections[0].SetBounds(0, 0, m_HSplitter.X, m_VSplitter.Y);
+        //    if (m_ZoomedSection == -1)
+        //    {
+        //        if (m_Sections[0] != null)
+        //            m_Sections[0].SetBounds(0, 0, m_HSplitter.X, m_VSplitter.Y);
 
-                if (m_Sections[1] != null)
-                    m_Sections[1].SetBounds(m_HSplitter.X + m_BarSize, 0, Width - (m_HSplitter.X + m_BarSize), m_VSplitter.Y);
+        //        if (m_Sections[1] != null)
+        //            m_Sections[1].SetBounds(m_HSplitter.X + m_BarSize, 0, Width - (m_HSplitter.X + m_BarSize), m_VSplitter.Y);
 
-                if (m_Sections[2] != null)
-                    m_Sections[2].SetBounds(0, m_VSplitter.Y + m_BarSize, m_HSplitter.X, Height - (m_VSplitter.Y + m_BarSize));
+        //        if (m_Sections[2] != null)
+        //            m_Sections[2].SetBounds(0, m_VSplitter.Y + m_BarSize, m_HSplitter.X, Height - (m_VSplitter.Y + m_BarSize));
 
-                if (m_Sections[3] != null)
-                    m_Sections[3].SetBounds(m_HSplitter.X + m_BarSize, m_VSplitter.Y + m_BarSize, Width - (m_HSplitter.X + m_BarSize), Height - (m_VSplitter.Y + m_BarSize));
-            }
-            else
-            {
-                //This should probably use Fill docking instead
-                m_Sections[m_ZoomedSection].SetBounds(0, 0, Width, Height);
-            }
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
-        }
+        //        if (m_Sections[3] != null)
+        //            m_Sections[3].SetBounds(m_HSplitter.X + m_BarSize, m_VSplitter.Y + m_BarSize, Width - (m_HSplitter.X + m_BarSize), Height - (m_VSplitter.Y + m_BarSize));
+        //    }
+        //    else
+        //    {
+        //        //This should probably use Fill docking instead
+        //        m_Sections[m_ZoomedSection].SetBounds(0, 0, Width, Height);
+        //    }
+        //}
 
         /// <summary>
         /// Assigns a control to the specific inner section.
@@ -202,15 +205,17 @@ namespace Flood.GUIv2.Controls
         /// <param name="panel">Control to assign.</param>
         public void SetPanel(int index, Control panel)
         {
-            m_Sections[index] = panel;
+            //todo: uncomment this when this becomes a composite control
 
-            if (panel != null)
-            {
-                panel.Alignment = AlignmentFlags.NotSet;
-                panel.Parent = this;
-            }
+            //m_Sections[index] = panel;
 
-            Invalidate();
+            //if (panel != null)
+            //{
+            //    panel.Alignment = AlignmentFlags.NotSet;
+            //    panel.Parent = this;
+            //}
+
+            //Invalidate();
         }
 
         /// <summary>
@@ -249,20 +254,22 @@ namespace Flood.GUIv2.Controls
         /// <param name="section">Panel index (0-3).</param>
         public void Zoom(int section)
         {
-            UnZoom();
+            //todo: uncomment this when this becomes a composite control
 
-            if (m_Sections[section] != null)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (i != section && m_Sections[i] != null)
-                        m_Sections[i].IsHidden = true;
-                }
-                m_ZoomedSection = section;
+            //UnZoom();
 
-                Invalidate();
-            }
-            OnZoomChanged();
+            //if (m_Sections[section] != null)
+            //{
+            //    for (int i = 0; i < 4; i++)
+            //    {
+            //        if (i != section && m_Sections[i] != null)
+            //            m_Sections[i].IsHidden = true;
+            //    }
+            //    m_ZoomedSection = section;
+
+            //    Invalidate();
+            //}
+            //OnZoomChanged();
         }
 
         /// <summary>
@@ -270,16 +277,18 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public void UnZoom()
         {
-            m_ZoomedSection = -1;
+            //todo: uncomment this when this becomes a composite control
 
-            for (int i = 0; i < 4; i++)
-            {
-                if (m_Sections[i] != null)
-                    m_Sections[i].IsHidden = false;
-            }
+            //m_ZoomedSection = -1;
 
-            Invalidate();
-            OnZoomChanged();
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    if (m_Sections[i] != null)
+            //        m_Sections[i].IsHidden = false;
+            //}
+
+            //Invalidate();
+            //OnZoomChanged();
         }
     }
 }

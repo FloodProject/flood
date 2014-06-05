@@ -37,11 +37,11 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            skin.DrawStatusBar(this);
-        }
+        //    skin.DrawStatusBar(this);
+        //}
     }
 }

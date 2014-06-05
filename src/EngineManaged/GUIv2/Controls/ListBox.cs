@@ -87,7 +87,16 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Column count of table rows.
         /// </summary>
-        public int ColumnCount { get { return m_Table.ColumnCount; } set { m_Table.ColumnCount = value; Invalidate(); } }
+        public int ColumnCount
+        {
+            get { return m_Table.ColumnCount; } 
+            set
+            {
+                //todo: uncomment this when this becomes a composite control
+
+                //m_Table.ColumnCount = value; Invalidate();
+            }
+        }
 
         /// <summary>
         /// Invoked when a row has been selected.
@@ -239,8 +248,10 @@ namespace Flood.GUIv2.Controls
         /// <param name="width">Column width.</param>
         public void SetColumnWidth(int column, int width)
         {
-            m_Table.SetColumnWidth(column, width);
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //m_Table.SetColumnWidth(column, width);
+            //Invalidate();
         }
 
         /// <summary>
@@ -318,20 +329,22 @@ namespace Flood.GUIv2.Controls
             m_OldAlignment = m_Table.Alignment;
             m_OldExpansion = m_Table.Expansion;
             m_Table.Alignment = AlignmentFlags.NotSet;
-            m_Table.Expansion = ExpansionFlags.NotSet;
+            m_Table.Expansion = ExpansionFlags.Shaped;
             m_Table.SizeToContents(0); // autosize without constraints
         }
 
         private void TableResized(IControl control)
         {
-            if (m_SizeToContents)
-            {
-                SetSize(m_Table.Width, m_Table.Height);
-                m_SizeToContents = false;
-                m_Table.Expansion = m_OldExpansion;
-                m_Table.Alignment = m_OldAlignment;
-                Invalidate();
-            }
+            //todo: uncomment this when this becomes a composite control
+
+            //if (m_SizeToContents)
+            //{
+            //    SetSize(m_Table.Width, m_Table.Height);
+            //    m_SizeToContents = false;
+            //    m_Table.Expansion = m_OldExpansion;
+            //    m_Table.Alignment = m_OldAlignment;
+            //    Invalidate();
+            //}
         }
     }
 }

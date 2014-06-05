@@ -158,35 +158,35 @@ namespace Flood.GUIv2.Controls
             //    (int)(m_ToggleButton.Y + m_ToggleButton.Height * 0.5f), bottom, m_TreeControl == Parent); // IsRoot
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //if (m_ToggleButton != null)
-            //{
-            //    if (m_Title != null)
-            //    {
-            //        m_ToggleButton.SetPosition(0, (m_Title.Height - m_ToggleButton.Height)*0.5f);
-            //    }
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    //if (m_ToggleButton != null)
+        //    //{
+        //    //    if (m_Title != null)
+        //    //    {
+        //    //        m_ToggleButton.SetPosition(0, (m_Title.Height - m_ToggleButton.Height)*0.5f);
+        //    //    }
 
-            //    if (m_InnerPanel.Children.Count == 0)
-            //    {
-            //        m_ToggleButton.Hide();
-            //        m_ToggleButton.ToggleState = false;
-            //        m_InnerPanel.Hide();
-            //    }
-            //    else
-            //    {
-            //        m_ToggleButton.Show();
-            //        m_InnerPanel.SizeToChildren(false, true);
-            //    }
-            //}
+        //    //    if (m_InnerPanel.Children.Count == 0)
+        //    //    {
+        //    //        m_ToggleButton.Hide();
+        //    //        m_ToggleButton.ToggleState = false;
+        //    //        m_InnerPanel.Hide();
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        m_ToggleButton.Show();
+        //    //        m_InnerPanel.SizeToChildren(false, true);
+        //    //    }
+        //    //}
 
-            //base.Layout(skin);
-        }
+        //    //base.Layout(skin);
+        //}
 
         /// <summary>
         /// Function invoked after layout.
@@ -199,11 +199,6 @@ namespace Flood.GUIv2.Controls
             //{
             //    InvalidateParent();
             //}
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -28,6 +28,8 @@ namespace Flood.GUIv2
 
         void OnCanvasChanged(Canvas canvas);
 
+        bool ShouldPreLayout { get; set; }
+
         /// <summary>
         /// The logical parent. It's usually what you expect, the control you've parented it to.
         /// </summary>
@@ -155,6 +157,12 @@ namespace Flood.GUIv2
         Vector2i MaximumSize { get; set; }
 
         /// <summary>
+        /// Shapes the control to the specified size.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        void Shape(Vector2i size);
+
+        /// <summary>
         /// Determines whether hover should be drawn during rendering.
         /// </summary>
         bool ShouldDrawHover { get; }
@@ -191,8 +199,18 @@ namespace Flood.GUIv2
         /// Width plus horizontal margins.
         /// </summary>
         int RenderWidth { get; }
+        
+        /// <summary>
+        /// Vertical margins.
+        /// </summary>
+        int VerticalMargins { get; }
 
-        float AspectRatio { get; }
+        /// <summary>
+        /// Horizontal margins.
+        /// </summary>
+        int HorizontalMargins { get; }
+
+        Vector2i MarginSizes { get; }
 
         /// <summary>
         /// Determines whether margin, padding and bounds outlines for the control will be drawn. Applied recursively to all children.
@@ -203,15 +221,9 @@ namespace Flood.GUIv2
         Color MarginOutlineColor { get; set; }
         Color BoundsOutlineColor { get; set; }
         MarginFlags MarginFlags { get; }
-        PaddingFlags PaddingFlags { get; }
-
-        /// <summary>
-        /// Determines whether this control shold be processed by a sizer.
-        /// </summary>
-        bool IsRenderable { get; }
 
         int Proportion { get; set; }
-        ExpansionFlags Expansion { get; set; }
+        ExpansionFlags Expansion { get; }
         AlignmentFlags Alignment { get; set; }
 
         /// <summary>
@@ -353,14 +365,46 @@ namespace Flood.GUIv2
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        void Layout(Skins.Skin skin = null);
+        void PreLayout(Skins.Skin skin = null);
 
         /// <summary>
-        /// Recursively lays out the control's interior according to alignment, margin, padding, dock etc.
+        /// Lays out the control's interior according to alignment, margin, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        /// <param name="level">Recursion depth.</param>
-        void RecurseLayout(Skins.Skin skin, int level = 0);
+        void Layout(Skins.Skin skin);
+
+        Vector2i LayoutMinSize { get; }
+
+        Vector2i LayoutBestSize { get; }
+
+        Vector2i LayoutMaxSize { get; }
+
+        /// <summary>
+        /// Defines if the control tries to take the maximum vertical space available or not.
+        /// </summary>
+        bool IsExpandVertical { get; set; }
+
+        /// <summary>
+        /// Defines if the control tries to take the maximum horizontal space available or not.
+        /// </summary>
+        bool IsExpandHorizontal { get; set; }
+
+        /// <summary>
+        /// Defines if the control tries to expand to take only the 
+        /// width of its parent
+        /// </summary>
+        bool IsFillHorizontal { get; set; }
+
+        /// <summary>
+        /// Defines if the control tries to expand to take only the 
+        /// height of its parent
+        /// </summary>
+        bool IsFillVertical { get; set; }
+
+        /// <summary>
+        /// Defines if control sizes itself in function of its children
+        /// </summary>
+        bool IsFit { get; set; }
 
         /// <summary>
         /// Function invoked after layout.
@@ -373,34 +417,20 @@ namespace Flood.GUIv2
         /// </summary>
         void InvalidateParent();
 
-        /// <summary>
-        /// Invalidates the control's children (relayout/repaint).
-        /// </summary>
-        /// <param name="recursive">Determines whether the operation should be carried recursively.</param>
-        void InvalidateChildren(bool recursive = false);
-
-        /// <summary>
-        /// Invalidates the control.
-        /// </summary>
-        /// <remarks>
-        /// Causes layout, repaint, invalidates cached texture.
-        /// </remarks>
-        void Invalidate();
-
         void SetDimension(Vector2i pos, Vector2i size);
         Vector2i GetMinSizeWithBorder();
         Vector2i GetSizeWithBorder();
         void ReduceToMinSize();
 
-        /// <summary>
-        /// Informs the control regarding the size available in the minor direction of
-        /// an enveloping BoxPanel so it can call its sizer to redimension itself.
-        /// </summary>
-        /// <param name="direction">The minor direction.</param>
-        /// <param name="size">The size available in the minor boxPanel direction.</param>
-        /// <param name="availableOtherDir">The available size in the major boxPanel dir.</param>
-        /// <returns>Whether any size reduction was achieved.</returns>
-        bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir);
+        ///// <summary>
+        ///// Informs the control regarding the size available in the minor direction of
+        ///// an enveloping BoxPanel so it can call its sizer to redimension itself.
+        ///// </summary>
+        ///// <param name="direction">The minor direction.</param>
+        ///// <param name="size">The size available in the minor boxPanel direction.</param>
+        ///// <param name="availableOtherDir">The available size in the major boxPanel dir.</param>
+        ///// <returns>Whether any size reduction was achieved.</returns>
+        //bool InformFirstDirection(Orientation direction, int size, int availableOtherDir);
         
         Vector2i GetMaxSizeWithBorder();
 

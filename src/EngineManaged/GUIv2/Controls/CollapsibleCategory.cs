@@ -156,12 +156,12 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            skin.DrawCategoryInner(this, m_HeaderButton.ToggleState);
-            base.Render(skin);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    skin.DrawCategoryInner(this, m_HeaderButton.ToggleState);
+        //    base.Render(skin);
+        //}
 
         /// <summary>
         /// Unselects all entries.
@@ -209,9 +209,5 @@ namespace Flood.GUIv2.Controls
         //    //}
         //}
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

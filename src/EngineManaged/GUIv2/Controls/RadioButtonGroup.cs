@@ -115,7 +115,7 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public override void SizeToContents()
         {
-            RecurseLayout(Skin); // options are docked so positions are not updated until layout runs
+            Layout(Skin); // options are docked so positions are not updated until layout runs
             //base.SizeToContents();
             int width = 0;
             int height = 0;

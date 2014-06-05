@@ -65,9 +65,9 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.DrawProgressBar(this, m_Horizontal, m_Progress);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.DrawProgressBar(this, m_Horizontal, m_Progress);
+        //}
     }
 }

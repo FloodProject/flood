@@ -96,71 +96,66 @@ namespace Flood.GUIv2.Controls
             return false;
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            //Vector2i largestTab = new Vector2i(5, 5);
+        //    //Vector2i largestTab = new Vector2i(5, 5);
 
-            //int num = 0;
-            //foreach (var child in Children)
-            //{
-            //    TabButton button = child as TabButton;
-            //    if (null == button) continue;
+        //    //int num = 0;
+        //    //foreach (var child in Children)
+        //    //{
+        //    //    TabButton button = child as TabButton;
+        //    //    if (null == button) continue;
 
-            //    button.SizeToContents();
+        //    //    button.SizeToContents();
 
-            //    Margin m = new Margin();
-            //    int notFirst = num > 0 ? -1 : 0;
+        //    //    Margin m = new Margin();
+        //    //    int notFirst = num > 0 ? -1 : 0;
 
-            //    if (Dock == Pos.Top)
-            //    {
-            //        m.Left = notFirst;
-            //        button.Dock = Pos.Left;
-            //    }
+        //    //    if (Dock == Pos.Top)
+        //    //    {
+        //    //        m.Left = notFirst;
+        //    //        button.Dock = Pos.Left;
+        //    //    }
 
-            //    if (Dock == Pos.Left)
-            //    {
-            //        m.Top = notFirst;
-            //        button.Dock = Pos.Top;
-            //    }
+        //    //    if (Dock == Pos.Left)
+        //    //    {
+        //    //        m.Top = notFirst;
+        //    //        button.Dock = Pos.Top;
+        //    //    }
 
-            //    if (Dock == Pos.Right)
-            //    {
-            //        m.Top = notFirst;
-            //        button.Dock = Pos.Top;
-            //    }
+        //    //    if (Dock == Pos.Right)
+        //    //    {
+        //    //        m.Top = notFirst;
+        //    //        button.Dock = Pos.Top;
+        //    //    }
 
-            //    if (Dock == Pos.Bottom)
-            //    {
-            //        m.Left = notFirst;
-            //        button.Dock = Pos.Left;
-            //    }
+        //    //    if (Dock == Pos.Bottom)
+        //    //    {
+        //    //        m.Left = notFirst;
+        //    //        button.Dock = Pos.Left;
+        //    //    }
 
-            //    largestTab.X = Math.Max(largestTab.X, button.Width);
-            //    largestTab.Y = Math.Max(largestTab.Y, button.Height);
+        //    //    largestTab.X = Math.Max(largestTab.X, button.Width);
+        //    //    largestTab.Y = Math.Max(largestTab.Y, button.Height);
 
-            //    button.Margin = m;
-            //    num++;
-            //}
+        //    //    button.Margin = m;
+        //    //    num++;
+        //    //}
 
-            //if (Dock == Pos.Top || Dock == Pos.Bottom)
-            //    SetSize(Width, largestTab.Y);
+        //    //if (Dock == Pos.Top || Dock == Pos.Bottom)
+        //    //    SetSize(Width, largestTab.Y);
 
-            //if (Dock == Pos.Left || Dock == Pos.Right)
-            //    SetSize(largestTab.X, Height);
+        //    //if (Dock == Pos.Left || Dock == Pos.Right)
+        //    //    SetSize(largestTab.X, Height);
 
-            //base.Layout(skin);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
+        //    //base.Layout(skin);
+        //}
 
         public override void DragAndDrop_HoverEnter(DragDrop.Package p, int x, int y)
         {

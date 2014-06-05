@@ -38,11 +38,11 @@ namespace Flood.GUIv2.Controls
             }
         }
 
-        public override void OnCanvasChanged(Canvas canvas)
-        {
-            base.OnCanvasChanged(canvas);
-            Layout(Skin);
-        }
+        //public override void OnCanvasChanged(Canvas canvas)
+        //{
+        //    base.OnCanvasChanged(canvas);
+        //    //Layout(Skin);
+        //}
         
         /// <summary>
         /// Text color.
@@ -170,7 +170,7 @@ namespace Flood.GUIv2.Controls
         {
             if(Skin == null)
                 return;
-            Layout(Skin);
+            PreLayout(Skin);
             InvalidateParent();
         }
 

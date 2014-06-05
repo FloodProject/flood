@@ -51,21 +51,21 @@ namespace Flood.GUIv2.Controls
                 Dismissed.Invoke(this);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            //base.Layout(skin);
+        //    //base.Layout(skin);
 
-            //Align.PlaceDownLeft(m_Button, m_Label, 10);
-            //Align.CenterHorizontally(m_Button);
-            //m_InnerPanel.SizeToChildren();
-            //m_InnerPanel.Height += 10;
-            //SizeToChildren();
-        }
+        //    //Align.PlaceDownLeft(m_Button, m_Label, 10);
+        //    //Align.CenterHorizontally(m_Button);
+        //    //m_InnerPanel.SizeToChildren();
+        //    //m_InnerPanel.Height += 10;
+        //    //SizeToChildren();
+        //}
     }
 }

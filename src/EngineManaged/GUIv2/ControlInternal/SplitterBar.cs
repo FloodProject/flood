@@ -27,13 +27,13 @@ namespace Flood.GUIv2.ControlInternal
                 skin.DrawButton(this, true, false, IsDisabled);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            MoveTo(X, Y);
-        }
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    MoveTo(X, Y);
+        //}
     }
 }

@@ -34,30 +34,24 @@ namespace Flood.GUIv2.Controls
             m_Label = new LabelClickable(this);
             m_Label.TextAlignment = AlignmentFlags.Bottom | AlignmentFlags.Left;
             m_Label.Text = "Radio Button";
-            //m_Label.Dock = Pos.Fill;
             m_Label.Clicked += m_RadioButton.Press;
             m_Label.IsTabable = false;
             m_Label.KeyboardInputEnabled = false;
-            m_Label.AutoSizeToContents = true;
+            m_Label.Expansion = ExpansionFlags.Fit;
         }
 
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //// ugly stuff because we don't have anchoring without docking (docking resizes children)
-            //if (m_Label.Height > m_RadioButton.Height) // usually radio is smaller than label so it gets repositioned to avoid clipping with negative Y
-            //{
-            //    m_RadioButton.Y = (m_Label.Height - m_RadioButton.Height)/2;
-            //}
-            //Align.PlaceRightBottom(m_Label, m_RadioButton);
-            //SizeToChildren();
-            //base.Layout(skin);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    //// ugly stuff because we don't have anchoring without docking (docking resizes children)
+        //    //if (m_Label.Height > m_RadioButton.Height) // usually radio is smaller than label so it gets repositioned to avoid clipping with negative Y
+        //    //{
+        //    //    m_RadioButton.Y = (m_Label.Height - m_RadioButton.Height)/2;
+        //    //}
+        //    //Align.PlaceRightBottom(m_Label, m_RadioButton);
+        //    //SizeToChildren();
+        //    //base.Layout(skin);
+        //}
 
         /// <summary>
         /// Renders the focus overlay.

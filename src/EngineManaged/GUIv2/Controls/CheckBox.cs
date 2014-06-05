@@ -29,22 +29,20 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public CheckBox(Control parent)
-            : base(parent)
         {
-            AutoSizeToContents = false;
             SetSize(15, 15);
             //m_Checked = true; // [omeg] why?!
             //Toggle();
         }
 
-        /// <summary>
-        /// Toggles the checkbox.
-        /// </summary>
-        public override void Toggle()
-        {
-            base.Toggle();
-            IsChecked = !IsChecked;
-        }
+        ///// <summary>
+        ///// Toggles the checkbox.
+        ///// </summary>
+        //public override void Toggle()
+        //{
+        //    base.Toggle();
+        //    IsChecked = !IsChecked;
+        //}
 
         /// <summary>
         /// Invoked when the checkbox has been checked.
@@ -90,13 +88,13 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            base.Render(skin);
-            skin.DrawCheckBox(this, m_Checked, IsDepressed);
-        }
+        //    base.Render(skin);
+        //    skin.DrawCheckBox(this, m_Checked, IsDepressed);
+        //}
 
         /// <summary>
         /// Internal OnPressed implementation.

@@ -37,11 +37,6 @@ namespace Flood.GUIv2.Controls.Layout
             //    child.Position(m_Pos);
             //}
         }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 
     /// <summary>

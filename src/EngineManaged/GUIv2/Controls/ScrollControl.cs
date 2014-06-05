@@ -120,12 +120,16 @@ namespace Flood.GUIv2.Controls
 
         protected virtual void VBarMoved(Control control)
         {
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //Invalidate();
         }
 
         protected virtual void HBarMoved(Control control)
         {
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //Invalidate();
         }
 
         /// <summary>
@@ -140,22 +144,17 @@ namespace Flood.GUIv2.Controls
             UpdateScrollBars();
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            UpdateScrollBars();
-            base.Layout(skin);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
+        //    UpdateScrollBars();
+        //    base.Layout(skin);
+        //}
 
         /// <summary>
         /// Handler invoked on mouse wheel event.

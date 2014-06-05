@@ -14,7 +14,7 @@ namespace Flood.GUIv2.ControlInternal
         /// Initializes a new instance of the <see cref="CategoryButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public CategoryButton(Control parent) : base(parent)
+        public CategoryButton(Control parent)
         {
             TextAlignment = AlignmentFlags.Left | AlignmentFlags.CenterVertical;
             m_Alt = false;
@@ -26,29 +26,29 @@ namespace Flood.GUIv2.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            if (m_Alt)
-            {
-                if (IsDepressed || ToggleState)
-                    Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Selected;
-                else if (IsHovered)
-                    Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Hover;
-                else
-                    Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button;
-            }
-            else
-            {
-                if (IsDepressed || ToggleState)
-                    Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Selected;
-                else if (IsHovered)
-                    Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Hover;
-                else
-                    Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button;
-            }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    if (m_Alt)
+        //    {
+        //        if (IsDepressed || ToggleState)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Selected;
+        //        else if (IsHovered)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Hover;
+        //        else
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button;
+        //    }
+        //    else
+        //    {
+        //        if (IsDepressed || ToggleState)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Selected;
+        //        else if (IsHovered)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Hover;
+        //        else
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button;
+        //    }
 
-            skin.Renderer.DrawFilledRect(RenderBounds);
-        }
+        //    skin.Renderer.DrawFilledRect(RenderBounds);
+        //}
 
         /// <summary>
         /// Updates control colors.

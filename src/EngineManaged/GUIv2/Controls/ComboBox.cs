@@ -28,7 +28,6 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public ComboBox(Control parent)
-            : base(parent)
         {
             throw new NotImplementedException();
             //AutoSizeToContents = false;
@@ -53,7 +52,7 @@ namespace Flood.GUIv2.Controls
         /// Selected item.
         /// </summary>
         /// <remarks>Not just String property, because items also have internal names.</remarks>
-        public Label SelectedItem { get { return m_SelectedItem; } }
+        //public Label SelectedItem { get { return m_SelectedItem; } }
 
         public override bool IsMenuComponent
         {
@@ -82,10 +81,10 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.DrawComboBox(this, IsDepressed, IsOpen);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.DrawComboBox(this, IsDepressed, IsOpen);
+        //}
 
         /// <summary>
         /// Internal Pressed implementation.
@@ -142,13 +141,13 @@ namespace Flood.GUIv2.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             m_Button.Alignment = AlignmentFlags.Right | AlignmentFlags.CenterVertical;
             m_Button.Margin = new Margin(m_Button.Margin.Left, m_Button.Margin.Top, 4, m_Button.Margin.Bottom);
             //todo: make sure the code above is replacing this to the same effect
             //m_Button.Position(Pos.Right|Pos.CenterV, 4);
-            base.Layout(skin);
+            base.PreLayout(skin);
         }
 
         /// <summary>

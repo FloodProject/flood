@@ -20,11 +20,6 @@ namespace Flood.GUIv2.ControlInternal
             Height = 1;
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Renders the control using specified skin.
         /// </summary>

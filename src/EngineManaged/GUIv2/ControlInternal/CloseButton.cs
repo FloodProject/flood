@@ -15,7 +15,6 @@ namespace Flood.GUIv2.ControlInternal
         /// <param name="parent">Parent control.</param>
         /// <param name="owner">Window that owns this button.</param>
         public CloseButton(Control parent, WindowControl owner)
-            : base(parent)
         {
             m_Window = owner;
         }
@@ -24,9 +23,9 @@ namespace Flood.GUIv2.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.DrawWindowCloseButton(this, IsDepressed && IsHovered, IsHovered && ShouldDrawHover, !m_Window.IsOnTop);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.DrawWindowCloseButton(this, IsDepressed && IsHovered, IsHovered && ShouldDrawHover, !m_Window.IsOnTop);
+        //}
     }
 }

@@ -158,10 +158,5 @@ namespace Flood.GUIv2.Controls
 
             return base.SetBounds(x, y, width, height);
         }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

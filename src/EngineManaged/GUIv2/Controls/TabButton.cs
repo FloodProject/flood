@@ -48,7 +48,6 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public TabButton(Control parent)
-            : base(parent)
         {
             DragAndDrop_SetPackage(true, "TabButtonMove");
             TextAlignment = AlignmentFlags.Top | AlignmentFlags.Left;
@@ -83,12 +82,12 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            skin.DrawTabButton(this, IsActive, m_Control.TabStrip.Alignment);
-        }
+        //    skin.DrawTabButton(this, IsActive, m_Control.TabStrip.Alignment);
+        //}
 
         /// <summary>
         /// Handler for Down Arrow keyboard event.

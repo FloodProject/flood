@@ -114,7 +114,6 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public MenuItem(Control parent)
-            : base(parent)
         {
             throw new NotImplementedException();
             
@@ -130,18 +129,18 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            skin.DrawMenuItem(this, IsMenuOpen, m_Checkable ? m_Checked : false);
-        }
+        //    skin.DrawMenuItem(this, IsMenuOpen, m_Checkable ? m_Checked : false);
+        //}
 
         /// <summary>
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             throw new NotImplementedException();
 
@@ -153,7 +152,7 @@ namespace Flood.GUIv2.Controls
                 //todo: make sure the code above is replacing this to the same effect
                 //m_SubmenuArrow.Position(Pos.Right | Pos.CenterV, 4, 0);
             }
-            base.Layout(skin);
+            base.PreLayout(skin);
         }
 
         /// <summary>

@@ -17,11 +17,6 @@ namespace Flood.GUIv2.ControlInternal
             MouseInputEnabled = false;
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
-        }
-
         /// <summary>
         /// Renders the control using specified skin.
         /// </summary>

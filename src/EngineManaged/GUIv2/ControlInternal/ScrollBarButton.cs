@@ -14,9 +14,7 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public ScrollBarButton(Control parent)
-            : base(parent)
         {
-            AutoSizeToContents = false;
             SetDirectionUp();
         }
 
@@ -44,9 +42,9 @@ namespace Flood.GUIv2.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.DrawScrollButton(this, m_Direction, IsDepressed, IsHovered, IsDisabled);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.DrawScrollButton(this, m_Direction, IsDepressed, IsHovered, IsDisabled);
+        //}
     }
 }

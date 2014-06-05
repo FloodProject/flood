@@ -29,11 +29,6 @@ namespace Flood.GUIv2.Controls
             m_Depressed = false;
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Renders the control using specified skin.
         /// </summary>

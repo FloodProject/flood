@@ -29,8 +29,7 @@ namespace Flood.GUIv2.ControlInternal
             set
             {
                 m_Font = value;
-                if(Skin != null)
-                    SizeToContents();
+                ShouldPreLayout = true;
             }
         }
 
@@ -43,8 +42,7 @@ namespace Flood.GUIv2.ControlInternal
             set
             {
                 m_String = value;
-                if(Skin != null)
-                    SizeToContents();
+                ShouldPreLayout = true;
             }
         }
 
@@ -53,7 +51,7 @@ namespace Flood.GUIv2.ControlInternal
             base.OnCanvasChanged(canvas);
             m_Font = Skin.DefaultFont;
             TextColor = Skin.Colors.Label.Default;
-            SizeToContents();
+            ShouldPreLayout = true;
         }
 
         /// <summary>
@@ -131,15 +129,10 @@ namespace Flood.GUIv2.ControlInternal
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             SizeToContents();
-            base.Layout(skin);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            return false;
+            base.PreLayout(skin);
         }
 
         /// <summary>
@@ -147,7 +140,7 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         public override void OnScaleChanged()
         {
-            Invalidate();
+            InvalidateParent();
         }
 
         /// <summary>
@@ -155,8 +148,13 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         public void SizeToContents()
         {
-            if (String == null || Skin == null)
+            if (String == null)
                 return;
+            if (Skin == null)
+            {
+                ShouldPreLayout = true;
+                return;
+            }
 
             if (Font == null)
             {
@@ -174,7 +172,7 @@ namespace Flood.GUIv2.ControlInternal
                 return;
 
             SetSize((int)(p.X+0.5), (int)(p.Y+0.5));
-            Invalidate();
+            Shape(new Vector2i((int)(p.X+0.5), (int)(p.Y+0.5)));
             InvalidateParent();
         }
 

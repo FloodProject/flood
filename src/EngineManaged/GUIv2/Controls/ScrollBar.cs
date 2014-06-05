@@ -40,8 +40,30 @@ namespace Flood.GUIv2.Controls
 
         public virtual float NudgeAmount { get { return m_NudgeAmount / m_ContentSize; } set { m_NudgeAmount = value; } }
         public float ScrollAmount { get { return m_ScrollAmount; } }
-        public float ContentSize { get { return m_ContentSize; } set { if (m_ContentSize != value) Invalidate(); m_ContentSize = value; } }
-        public float ViewableContentSize { get { return m_ViewableContentSize; } set { if (m_ViewableContentSize != value) Invalidate(); m_ViewableContentSize = value; } }
+        public float ContentSize
+        {
+            get { return m_ContentSize; }
+            set
+            {
+                //todo: uncomment this when this becomes a composite control
+
+                //if (m_ContentSize != value) 
+                //    Invalidate();
+                //m_ContentSize = value;
+            }
+        }
+        public float ViewableContentSize
+        {
+            get { return m_ViewableContentSize; }
+            set
+            {
+                //todo: uncomment this when this becomes a composite control
+
+                //if (m_ViewableContentSize != value) 
+                //    Invalidate();
+                //m_ViewableContentSize = value;
+            }
+        }
 
         /// <summary>
         /// Indicates whether the bar is horizontal.
@@ -78,17 +100,14 @@ namespace Flood.GUIv2.Controls
         /// <returns>True if control state changed.</returns>
         public virtual bool SetScrollAmount(float value, bool forceUpdate = false)
         {
-            if (m_ScrollAmount == value && !forceUpdate)
-                return false;
-            m_ScrollAmount = value;
-            Invalidate();
-            OnBarMoved(this);
-            return true;
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+            //todo: uncomment this when this becomes a composite control
+            //if (m_ScrollAmount == value && !forceUpdate)
+            //    return false;
+            //m_ScrollAmount = value;
+            //Invalidate();
+            //OnBarMoved(this);
+            //return true;
         }
 
         /// <summary>

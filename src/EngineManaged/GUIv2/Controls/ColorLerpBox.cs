@@ -58,18 +58,20 @@ namespace Flood.GUIv2.Controls
         /// <param name="onlyHue">Deetrmines whether to only set H value (not SV).</param>
         public void SetColor(Color value, bool onlyHue = true)
         {
-            HSV hsv = value.ToHSV();
-            m_Hue = hsv.h;
+            //todo: uncomment this when this becomes a composite control
 
-            if (!onlyHue)
-            {
-                m_CursorPos.X = (int)(hsv.s * Width);
-                m_CursorPos.Y = (int)((1 - hsv.v) * Height);
-            }
-            Invalidate();
+            //HSV hsv = value.ToHSV();
+            //m_Hue = hsv.h;
 
-            if (ColorChanged != null)
-                ColorChanged.Invoke(this);
+            //if (!onlyHue)
+            //{
+            //    m_CursorPos.X = (int)(hsv.s * Width);
+            //    m_CursorPos.Y = (int)((1 - hsv.v) * Height);
+            //}
+            //Invalidate();
+
+            //if (ColorChanged != null)
+            //    ColorChanged.Invoke(this);
         }
 
         /// <summary>
@@ -140,20 +142,16 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Invalidates the control.
         /// </summary>
-        public override void Invalidate()
-        {
-            //if (m_Texture != null)
-            //{
-            //    m_Texture.Dispose();
-            //    m_Texture = null;
-            //}
-            base.Invalidate();
-        }
+        //public override void Invalidate()
+        //{
+        //    //if (m_Texture != null)
+        //    //{
+        //    //    m_Texture.Dispose();
+        //    //    m_Texture = null;
+        //    //}
+        //    base.Invalidate();
+        //}
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Renders the control using specified skin.

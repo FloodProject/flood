@@ -47,14 +47,14 @@ namespace Flood.GUIv2.Controls
             skin.DrawMenuStrip(this);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            //TODO: We don't want to do vertical sizing the same as Menu, do nothing for now
-        }
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    //TODO: We don't want to do vertical sizing the same as Menu, do nothing for now
+        //}
 
         /// <summary>
         /// Determines whether the menu should open on mouse hover.

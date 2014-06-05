@@ -13,7 +13,6 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public LabelClickable(Control parent)
-            : base(parent)
         {
             IsToggle = false;
             TextAlignment = AlignmentFlags.Left | AlignmentFlags.CenterVertical;
@@ -23,9 +22,9 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            // no button look
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    // no button look
+        //}
     }
 }

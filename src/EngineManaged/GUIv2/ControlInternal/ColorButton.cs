@@ -19,7 +19,7 @@ namespace Flood.GUIv2.ControlInternal
         /// Initializes a new instance of the <see cref="ColorButton"/> class.
         /// </summary>
         /// <param name="parent">Parent control.</param>
-        public ColorButton(Control parent) : base(parent)
+        public ColorButton(Control parent)
         {
             m_Color = Color.Black;
             Text = String.Empty;
@@ -29,10 +29,10 @@ namespace Flood.GUIv2.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.Renderer.DrawColor = m_Color;
-            skin.Renderer.DrawFilledRect(RenderBounds);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.Renderer.DrawColor = m_Color;
+        //    skin.Renderer.DrawFilledRect(RenderBounds);
+        //}
     }
 }

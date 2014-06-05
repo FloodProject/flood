@@ -76,23 +76,23 @@ namespace Flood.GUIv2.Controls
             SetPosition(mouse.X, mouse.Y);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            //int childrenHeight = Children.Sum(child => child != null ? child.Height : 0);
+        //    //int childrenHeight = Children.Sum(child => child != null ? child.Height : 0);
 
-            //if (Y + childrenHeight > GetCanvas().Height)
-            //    childrenHeight = GetCanvas().Height - Y;
+        //    //if (Y + childrenHeight > GetCanvas().Height)
+        //    //    childrenHeight = GetCanvas().Height - Y;
 
-            //SetSize(Width, childrenHeight);
+        //    //SetSize(Width, childrenHeight);
 
-            //base.Layout(skin);
-        }
+        //    //base.Layout(skin);
+        //}
 
         /// <summary>
         /// Adds a new menu item.

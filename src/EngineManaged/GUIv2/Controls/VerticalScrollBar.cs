@@ -51,38 +51,38 @@ namespace Flood.GUIv2.Controls
             m_Bar.Dragged += OnBarMoved;
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            base.Layout(skin);
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    base.Layout(skin);
 
-            m_ScrollButton[0].Height = Width;
-            m_ScrollButton[0].Alignment = AlignmentFlags.Top;
+        //    m_ScrollButton[0].Height = Width;
+        //    m_ScrollButton[0].Alignment = AlignmentFlags.Top;
 
-            m_ScrollButton[1].Height = Width;
-            m_ScrollButton[1].Alignment = AlignmentFlags.Bottom;
+        //    m_ScrollButton[1].Height = Width;
+        //    m_ScrollButton[1].Alignment = AlignmentFlags.Bottom;
 
-            m_Bar.Width = ButtonSize;
-            m_Bar.Margin = new Margin(0, ButtonSize, 0, ButtonSize);
+        //    m_Bar.Width = ButtonSize;
+        //    m_Bar.Margin = new Margin(0, ButtonSize, 0, ButtonSize);
 
-            float barHeight = 0.0f;
-            if (m_ContentSize > 0.0f) barHeight = (m_ViewableContentSize/m_ContentSize)*(Height - (ButtonSize*2));
+        //    float barHeight = 0.0f;
+        //    if (m_ContentSize > 0.0f) barHeight = (m_ViewableContentSize/m_ContentSize)*(Height - (ButtonSize*2));
 
-            if (barHeight < ButtonSize*0.5f)
-                barHeight = (int) (ButtonSize*0.5f);
+        //    if (barHeight < ButtonSize*0.5f)
+        //        barHeight = (int) (ButtonSize*0.5f);
 
-            m_Bar.Height = (int) (barHeight);
-            m_Bar.IsHidden = Height - (ButtonSize*2) <= barHeight;
+        //    m_Bar.Height = (int) (barHeight);
+        //    m_Bar.IsHidden = Height - (ButtonSize*2) <= barHeight;
 
-            //Based on our last scroll amount, produce a position for the bar
-            if (!m_Bar.IsHeld)
-            {
-                SetScrollAmount(ScrollAmount, true);
-            }
-        }
+        //    //Based on our last scroll amount, produce a position for the bar
+        //    if (!m_Bar.IsHeld)
+        //    {
+        //        SetScrollAmount(ScrollAmount, true);
+        //    }
+        //}
 
         public virtual void NudgeUp(IControl control)
         {

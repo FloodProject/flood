@@ -184,20 +184,20 @@ namespace Flood.GUIv2.Controls
 
         private void ColorBoxChanged(Control control)
         {
-            UpdateControls(SelectedColor);
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //UpdateControls(SelectedColor);
+            //Invalidate();
         }
 
         private void ColorSliderChanged(Control control)
         {
-            if (m_LerpBox != null)
-                m_LerpBox.SetColor(m_ColorSlider.SelectedColor, true);
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //if (m_LerpBox != null)
+            //    m_LerpBox.SetColor(m_ColorSlider.SelectedColor, true);
+            //Invalidate();
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -13,7 +13,6 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public CategoryHeaderButton(Control parent)
-            : base(parent)
         { 
             ShouldDrawBackground = false;
             IsToggle = true;

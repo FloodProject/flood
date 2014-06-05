@@ -40,15 +40,15 @@ namespace Flood.GUIv2.Controls
             OnMoved(m_SliderBar);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            m_SliderBar.SetSize(Width, 15);
-            UpdateBarFromValue();
-        }
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    m_SliderBar.SetSize(Width, 15);
+        //    UpdateBarFromValue();
+        //}
 
         /// <summary>
         /// Renders the control using specified skin.

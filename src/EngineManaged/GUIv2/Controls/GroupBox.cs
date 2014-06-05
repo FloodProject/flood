@@ -36,11 +36,11 @@ namespace Flood.GUIv2.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             throw new NotImplementedException();
 
-            base.Layout(skin);
+            base.PreLayout(skin);
             if (AutoSizeToContents)
             {
                 DoSizeToContents();
@@ -51,12 +51,12 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            skin.DrawGroupBox(this, TextX, TextHeight, TextWidth);
-        }
+        //    skin.DrawGroupBox(this, TextX, TextHeight, TextWidth);
+        //}
 
         /// <summary>
         /// Sizes to contents.

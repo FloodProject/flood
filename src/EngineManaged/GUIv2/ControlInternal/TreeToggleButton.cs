@@ -12,7 +12,6 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public TreeToggleButton(Control parent)
-            : base(parent)
         {
             IsToggle = true;
             IsTabable = false;
@@ -31,9 +30,9 @@ namespace Flood.GUIv2.ControlInternal
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            skin.DrawTreeButton(this, ToggleState);
-        }
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    skin.DrawTreeButton(this, ToggleState);
+        //}
     }
 }

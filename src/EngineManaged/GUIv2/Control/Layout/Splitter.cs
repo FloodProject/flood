@@ -55,19 +55,15 @@ namespace Flood.GUIv2.Controls.Layout
             return m_Panel[panelIndex];
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            LayoutVertical(skin);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
+        //todo:  thiis is panel work
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    LayoutVertical(skin);
+        //}
 
         protected virtual void LayoutVertical(Skins.Skin skin)
         {

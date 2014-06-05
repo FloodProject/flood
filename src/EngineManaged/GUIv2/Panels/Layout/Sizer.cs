@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Flood.GUIv2.Panels.Layout
 {
@@ -52,10 +53,17 @@ namespace Flood.GUIv2.Panels.Layout
     [Flags]
     public enum ExpansionFlags
     {
-        NotSet = 1,
-        Expand = 2,
-        Shaped = 4,
-        Fit = 8
+        Shaped = 0,
+        ExpandHorizontal = 1 << 0,
+        ExpandVertical = 1 << 1,
+        FillVertical = 1 << 2,
+        FillHorizontal = 1 << 3,
+        Fit = 1 << 4,
+        Expand = ExpandHorizontal | ExpandVertical,
+        Fill = FillHorizontal | FillVertical,
+        FitExpand = Expand | Fit,
+        FitExpandHorizontal = ExpandHorizontal | Fit,
+        FitExpandVertical = ExpandVertical | Fit,
     }
 
     //todo: split alignment in vertical and horizontal enums
@@ -77,11 +85,11 @@ namespace Flood.GUIv2.Panels.Layout
 
     /// <summary>
     /// Base sizer class.
-    /// A sizer manages the layout of an associated <see cref="Panel"/>.
+    /// A sizer manages the layout of an associated 
+    /// <see cref="Panel" />.
     /// </summary>
     public abstract class Sizer
     {
-
         /// <summary>
         /// Gets or sets the size of the associated <see cref="Panel"/>.
         /// </summary>
@@ -178,18 +186,44 @@ namespace Flood.GUIv2.Panels.Layout
         /// Calculates the minimum size of the associated panel.
         /// </summary>
         /// <returns> The calculated min size.</returns>
-        public abstract Vector2i CalcMin();
-
-        /// <summary>
-        /// Informs this sizer regarding the size available in the minor direction 
-        /// of the containing panel so it can redimension the associated panel.
-        /// </summary>
-        /// <param name="direction">The minor direction.</param>
-        /// <param name="size">The size available in the minor panel direction.</param>
-        /// <param name="availableOtherDir">The available size in the major panel dir.</param>
-        /// <returns>Whether any size reduction was achieved.</returns>
-        public abstract bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir);
+        public abstract Vector2i CalcMin(); //todo: remove this when finished replacing panels architecture
 
         #endregion
+
+        public void PositionAndAlign(Vector2i boxPosition, Vector2i boxSize, IControl control)
+        {
+           var size = control.LayoutMinSize - control.MarginSizes;
+           if (boxSize.LT(size))
+               size = boxSize - control.MarginSizes;
+           else if (boxSize.GE(control.LayoutBestSize))
+               size = control.LayoutBestSize - control.MarginSizes;
+
+           if (control.IsExpandHorizontal || control.IsFillHorizontal)
+               size.X = Math.Min(boxSize.X, control.LayoutMaxSize.X) - control.HorizontalMargins;
+            if (control.IsExpandVertical || control.IsFillVertical)
+               size.Y = Math.Min(boxSize.Y, control.LayoutMaxSize.Y) - control.VerticalMargins;
+
+            if(size.X <= 0 || size.Y <= 0)
+                throw new Exception("Controls must have positive dimensions.");
+
+            var position = new Vector2i(boxPosition.X, boxPosition.Y);
+
+            if ((control.Alignment & AlignmentFlags.Right) != 0)
+                position.X += boxSize.X - size.X - control.Margin.Right;
+            if ((control.Alignment & AlignmentFlags.Left) != 0)
+                position.X += control.Margin.Left;
+            if ((control.Alignment & AlignmentFlags.Bottom) != 0)
+                position.Y += boxSize.Y - size.Y - control.Margin.Bottom;
+            if ((control.Alignment & AlignmentFlags.Top) != 0)
+                position.Y += control.Margin.Top;
+            if ((control.Alignment & (AlignmentFlags.CenterHorizontal | AlignmentFlags.Center)) != 0)
+                position.X += (boxSize.X - size.X)/2; 
+            if ((control.Alignment & (AlignmentFlags.CenterVertical | AlignmentFlags.Center)) != 0)
+                position.Y += (boxSize.Y - size.Y)/2; 
+
+            control.SetDimension(position, size);
+        }
+
+
     }
 }

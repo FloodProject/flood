@@ -23,7 +23,7 @@ namespace Flood.GUIv2.Controls
         public RadioButton(Control parent)
             : base(parent)
         {
-            AutoSizeToContents = false;
+            //AutoSizeToContents = false;
             SetSize(15, 15);
             MouseInputEnabled = true;
             IsTabable = false;
@@ -33,11 +33,11 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            skin.DrawRadioButton(this, IsChecked, IsDepressed);
-        }
+        //    skin.DrawRadioButton(this, IsChecked, IsDepressed);
+        //}
     }
 }

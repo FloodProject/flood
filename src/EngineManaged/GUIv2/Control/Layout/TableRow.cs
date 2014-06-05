@@ -210,11 +210,6 @@ namespace Flood.GUIv2.Controls.Layout
             return m_Columns[column].Text;
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Handler for Copy event.
         /// </summary>

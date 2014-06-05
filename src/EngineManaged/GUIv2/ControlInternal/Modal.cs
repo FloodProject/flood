@@ -20,19 +20,14 @@ namespace Flood.GUIv2.ControlInternal
             SetBounds(0, 0, GetCanvas().Width, GetCanvas().Height);
         }
         
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            SetBounds(0, 0, GetCanvas().Width, GetCanvas().Height);
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new System.NotImplementedException();
-        }
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    SetBounds(0, 0, GetCanvas().Width, GetCanvas().Height);
+        //}
 
         /// <summary>
         /// Renders the control using specified skin.

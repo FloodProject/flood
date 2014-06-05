@@ -35,11 +35,6 @@ namespace Flood.GUIv2.Controls.Layout
             //}
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetTileSize( int x, int y )
         {
             m_TileSize = new Vector2i( x, y );

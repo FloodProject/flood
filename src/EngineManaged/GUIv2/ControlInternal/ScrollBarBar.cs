@@ -67,17 +67,17 @@ namespace Flood.GUIv2.ControlInternal
             InvalidateParent();
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            if (null == Parent)
-                return;
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    if (null == Parent)
+        //        return;
 
-            //Move to our current position to force clamping - is this a hack?
-            MoveTo(X, Y);
-        }
+        //    //Move to our current position to force clamping - is this a hack?
+        //    MoveTo(X, Y);
+        //}
     }
 }

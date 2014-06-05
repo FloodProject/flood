@@ -182,33 +182,33 @@ namespace Flood.GUIv2.Controls
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            throw new NotImplementedException(); 
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException(); 
 
-            base.Render(skin);
+        //    base.Render(skin);
 
-            if (ShouldDrawBackground)
-                skin.DrawTextBox(this);
+        //    if (ShouldDrawBackground)
+        //        skin.DrawTextBox(this);
 
-            if (!HasFocus) return;
+        //    if (!HasFocus) return;
 
-            // Draw selection.. if selected..
-            if (m_CursorPos != m_CursorEnd)
-            {
-                skin.Renderer.DrawColor = new Color(50, 170, 255, 200);
-                skin.Renderer.DrawFilledRect(m_SelectionBounds);
-            }
+        //    // Draw selection.. if selected..
+        //    if (m_CursorPos != m_CursorEnd)
+        //    {
+        //        skin.Renderer.DrawColor = new Color(50, 170, 255, 200);
+        //        skin.Renderer.DrawFilledRect(m_SelectionBounds);
+        //    }
 
-            // Draw caret
-            float time = Platform.Neutral.GetTimeInSeconds() - m_LastInputTime;
+        //    // Draw caret
+        //    float time = Platform.Neutral.GetTimeInSeconds() - m_LastInputTime;
 
-            if ((time % 1.0f) <= 0.5f)
-            {
-                skin.Renderer.DrawColor = Color.Black;
-                skin.Renderer.DrawFilledRect(m_CaretBounds);
-            }
-        }
+        //    if ((time % 1.0f) <= 0.5f)
+        //    {
+        //        skin.Renderer.DrawColor = Color.Black;
+        //        skin.Renderer.DrawFilledRect(m_CaretBounds);
+        //    }
+        //}
 
         protected virtual void RefreshCursorBounds()
         {
@@ -618,11 +618,11 @@ namespace Flood.GUIv2.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             throw new NotImplementedException(); 
 
-            base.Layout(skin);
+            base.PreLayout(skin);
 
             RefreshCursorBounds();
         }

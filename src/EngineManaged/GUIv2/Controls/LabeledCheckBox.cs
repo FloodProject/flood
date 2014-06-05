@@ -78,11 +78,6 @@ namespace Flood.GUIv2.Controls
                 CheckChanged.Invoke(this);
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Handler for Space keyboard event.
         /// </summary>

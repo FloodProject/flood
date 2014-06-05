@@ -16,7 +16,8 @@ namespace Flood.GUIv2
     /// </summary>
     public abstract class Control : IDisposable, IControl
     {
-        public const int SizeNotSet = -1;
+        public const int MinNotSet = 0;
+        public const int MaxNotSet = int.MaxValue;
         // this REALLY needs to be replaced with control-specific events
         /// <summary>
         /// Delegate used for all control event handlers.
@@ -32,19 +33,9 @@ namespace Flood.GUIv2
         private Rectangle m_Bounds;
         private Rectangle m_RenderBounds;
         private Margin m_Margin;
-        private String m_Name;
-        private bool m_RestrictToParent;
-        private bool m_Disabled;
         private bool m_Hidden;
-        private bool m_MouseInputEnabled;
-        private bool m_KeyboardInputEnabled;
-        private bool m_DrawBackground;
         private Cursor m_Cursor;
-        private bool m_Tabable;
-        private bool m_CacheTextureDirty;
-        private bool m_CacheToTexture;
         private Package m_DragAndDrop_Package;
-        private object m_UserData;
         private bool m_DrawDebugOutlines;
 
         public event GwenEventHandler HoverEnter;
@@ -58,7 +49,10 @@ namespace Flood.GUIv2
         public virtual void OnCanvasChanged(Canvas canvas)
         {
             m_Skin = canvas.Skin;
+            InvalidateParent();
         }
+
+        public bool ShouldPreLayout { get; set; }
 
         /// <summary>
         /// Accelerator map.
@@ -67,16 +61,8 @@ namespace Flood.GUIv2
 
         public const int MaxCoord = 4096; // added here from various places in code
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this control needs layout
-        /// </summary>
-        protected bool NeedsLayout { get; set; }
 
-        protected bool CacheTextureDirty
-        {
-            get { return m_CacheTextureDirty; }
-            set { m_CacheTextureDirty = value; }
-        }
+        protected bool CacheTextureDirty { get; set; }
 
         public bool Disposed
         {
@@ -90,7 +76,9 @@ namespace Flood.GUIv2
             {
                 if(value != null && Parent != null)
                     throw new Exception("Parent should be null.");
-                
+                if(!(value is IPanel))
+                    throw new Exception("Parent should be IPanel.");
+
                 var oldCanvas = GetCanvas();
                 m_Parent = value;
                 var canvas = GetCanvas();
@@ -118,12 +106,13 @@ namespace Flood.GUIv2
             {
                 throw new NotImplementedException();
 
-                m_ToolTip = value;
-                if (m_ToolTip != null)
-                {
-                    m_ToolTip.Parent = this;
-                    m_ToolTip.IsHidden = true;
-                }
+            //    m_ToolTip = value;
+            //    if (m_ToolTip != null)
+            //    {
+            //        m_ToolTip.Parent = this;
+            //        m_ToolTip.IsHidden = true;
+            //    }
+            //
             }
         }
 
@@ -148,7 +137,9 @@ namespace Flood.GUIv2
                     return;
                 UpdateMarginFlags(value);
                 m_Margin = value;
-                Invalidate();
+                var panel = this as IPanel;
+                if(panel != null)
+                    panel.Invalidate();
                 InvalidateParent();
             }
         }
@@ -166,54 +157,79 @@ namespace Flood.GUIv2
         }
 
         public virtual bool IsOnTop { get { return Parent != null && Parent is Panel && 
-            this == ((Panel)Parent).Children.First(); } } 
+            this == ((Panel)Parent).Children.First(); } }
 
-        public object UserData { get { return m_UserData; } set { m_UserData = value; } }
+        public object UserData { get; set; }
 
         public bool IsHovered { get { return InputHandler.HoveredControl == this; } }
 
         public bool HasFocus { get { return InputHandler.KeyboardFocus == this; } }
 
-        public bool IsDisabled { get { return m_Disabled; } set { m_Disabled = value; } }
+        public bool IsDisabled { get; set; }
 
-        public virtual bool IsHidden { get { return m_Hidden; } set { if (value == m_Hidden) return; m_Hidden = value; Invalidate(); } }
+        public virtual bool IsHidden
+        {
+            get { return m_Hidden; } 
+            set
+            {
+                if (value == m_Hidden) return; 
+                m_Hidden = value;
+                var @this = this as IPanel;
+                if(@this != null)
+                    @this.Invalidate();
+                InvalidateParent();
+            }
+        }
 
-        public bool RestrictToParent { get { return m_RestrictToParent; } set { m_RestrictToParent = value; } }
+        public bool RestrictToParent { get; set; }
 
-        public bool MouseInputEnabled { get { return m_MouseInputEnabled; } set { m_MouseInputEnabled = value; } }
+        public bool MouseInputEnabled { get; set; }
 
-        public bool KeyboardInputEnabled { get { return m_KeyboardInputEnabled; } set { m_KeyboardInputEnabled = value; } }
+        public bool KeyboardInputEnabled { get; set; }
 
         public Cursor Cursor { get { return m_Cursor; } set { m_Cursor = value; } }
 
-        public bool IsTabable { get { return m_Tabable; } set { m_Tabable = value; } }
+        public bool IsTabable { get; set; }
 
-        public bool ShouldDrawBackground { get { return m_DrawBackground; } set { m_DrawBackground = value; } }
+        public bool ShouldDrawBackground { get; set; }
 
-        public bool ShouldCacheToTexture { get { return m_CacheToTexture; } set { m_CacheToTexture = value; /*Children.ForEach(x => x.ShouldCacheToTexture=value);*/ } }
+        public bool ShouldCacheToTexture { get; set; }
 
-        public String Name { get { return m_Name; } set { m_Name = value; } }
+        public string Name { get; set; }
 
-        public Rectangle Bounds { get { return m_Bounds; } private set { m_Bounds = value; } }
+        public Rectangle Bounds { get { return m_Bounds; } }
 
         public Rectangle RenderBounds { get { return m_RenderBounds; } }
 
         public Vector2i MinimumSize { get { return m_MinimumSize; } set { m_MinimumSize = value; } }
 
+        public Vector2i RenderMinimumSize { get { return MinimumSize.TryToAdd(MarginSizes); } }
+
         public Vector2i BestSize { get { return m_BestSize; } set { m_BestSize = value; } }
+
+        public Vector2i RenderBestSize { get { return BestSize.TryToAdd(MarginSizes); } }
 
         public Vector2i MaximumSize { get { return m_MaximumSize; } set { m_MaximumSize = value; } }
 
-        private Vector2i m_MinimumSize = new Vector2i(SizeNotSet, SizeNotSet);
-        private Vector2i m_MaximumSize = new Vector2i(SizeNotSet, SizeNotSet);
-        private Vector2i m_BestSize = new Vector2i(SizeNotSet, SizeNotSet);
+        public Vector2i RenderMaximumSize { get { return MaximumSize.TryToAdd(MarginSizes); } }
 
+        private Vector2i m_MinimumSize = new Vector2i(MinNotSet, MinNotSet);
+        private Vector2i m_MaximumSize = new Vector2i(MaxNotSet, MaxNotSet);
+        private Vector2i m_BestSize = new Vector2i(MinNotSet, MinNotSet);
+
+        public void Shape(Vector2i size)
+        {
+            Expansion = ExpansionFlags.Shaped;
+            BestSize = size;
+            MinimumSize = size;
+            MaximumSize = size;
+        }
         public bool ShouldDrawHover { get { return InputHandler.MouseFocus == this || InputHandler.MouseFocus == null; } }
 
         public virtual bool AccelOnlyFocus { get { return false; } }
         public virtual bool NeedsInputChars { get { return false; } }
 
-        public bool IsVisible
+        public virtual bool IsVisible
         {
             get
             {
@@ -240,12 +256,25 @@ namespace Flood.GUIv2
 
         public int RenderHeight
         {
-            get { return Height + Margin.Bottom + Margin.Top; }
+            get { return Height + VerticalMargins; }
         }
 
         public int RenderWidth
         {
-            get { return Width + Margin.Left + Margin.Right; }
+            get { return Width + HorizontalMargins; }
+        }
+        
+        public int HorizontalMargins
+        {
+            get { return Margin.Left + Margin.Right; }
+        }
+        public int VerticalMargins
+        {
+            get { return Margin.Top + Margin.Bottom; }
+        }
+        public Vector2i MarginSizes
+        {
+            get { return new Vector2i(HorizontalMargins, VerticalMargins);}
         }
 
         // todo: check if there's no loss of precision here because of resizes
@@ -274,7 +303,7 @@ namespace Flood.GUIv2
         /// </summary>
         protected Control()
         {
-            Expansion = ExpansionFlags.NotSet;
+            Expansion = ExpansionFlags.Shaped;
             Alignment = AlignmentFlags.NotSet;
             m_Accelerators = new Dictionary<string, GwenEventHandler>();
 
@@ -287,14 +316,16 @@ namespace Flood.GUIv2
             MouseInputEnabled = true;
             KeyboardInputEnabled = false;
 
-            Invalidate();
+            var @this = this as IPanel;
+            if (@this != null)
+                @this.Invalidate();
             Cursor = Cursors.Default;
             //ToolTip = null;
             IsTabable = false;
             ShouldDrawBackground = true;
-            m_Disabled = false;
+            IsDisabled = false;
             CacheTextureDirty = true;
-            m_CacheToTexture = false;
+            ShouldCacheToTexture = false;
 
             BoundsOutlineColor = Color.Red;
             MarginOutlineColor = Color.Green;
@@ -358,13 +389,17 @@ namespace Flood.GUIv2
         public override string ToString()
         {
             if (this is ControlInternal.Text)
-                return "[Text: " + (this as ControlInternal.Text).String + "]";
+            {
+                var text = this as ControlInternal.Text;
+                if (text != null)
+                    return "[Text: " + text.String + "]";
+            }
             return GetType().ToString();
         }
 
         public virtual Canvas GetCanvas()
         {
-            IControl canvas = Parent;
+            var canvas = Parent;
             if (canvas == null)
                 return null;
 
@@ -422,18 +457,18 @@ namespace Flood.GUIv2
 
         private int ClampWidth(int width)
         {
-            if (MinimumSize.X != SizeNotSet && width < MinimumSize.X)
+            if (width < MinimumSize.X)
                 return MinimumSize.X;
-            if (MaximumSize.X != SizeNotSet && width > MaximumSize.X)
+            if (width > MaximumSize.X)
                 return MaximumSize.X;
             return width;
         }
 
         private int ClampHeight(int height)
         {
-            if (MinimumSize.Y != SizeNotSet && height < MinimumSize.Y)
+            if (height < MinimumSize.Y)
                 return MinimumSize.Y;
-            if (MaximumSize.Y != SizeNotSet && height > MaximumSize.Y)
+            if (height > MaximumSize.Y)
                 return MaximumSize.Y;
             return height;
         }
@@ -448,7 +483,9 @@ namespace Flood.GUIv2
 
             if (Bounds.Width != oldBounds.Width || Bounds.Height != oldBounds.Height)
             {
-                Invalidate();
+                var @this = this as IPanel;
+                if (@this != null)
+                    @this.Invalidate();
             }
 
             Redraw();
@@ -594,22 +631,21 @@ namespace Flood.GUIv2
 
         #region Layout
 
-        public virtual void Layout(Skins.Skin skin)
+        public virtual void PreLayout(Skins.Skin skin)
         {
             if (skin.Renderer.CTT != null && ShouldCacheToTexture)
                 skin.Renderer.CTT.CreateControlCacheTexture(this);
         }
 
-        public virtual void RecurseLayout(Skins.Skin skin, int level = 0 )
+        public virtual void Layout(Skins.Skin skin)
         {
-            Console.WriteLine("{0}+ {1} W: {2} H: {3}", new string(' ', level), GetType().Name, Bounds.Width, Bounds.Height);
             if (IsHidden)
                 return;
 
-            if (NeedsLayout)
+            if (ShouldPreLayout)
             {
-                NeedsLayout = false;
-                Layout(skin);
+                PreLayout(skin);
+                ShouldPreLayout = false;
             }
 
             PostLayout(skin);
@@ -626,10 +662,30 @@ namespace Flood.GUIv2
             {
                 GetCanvas().NextTab = null;
             }
-
-            Console.WriteLine("{0}- {1} W: {2} H: {3}", new string(' ', level), GetType().Name, Bounds.Width, Bounds.Height);
-
         }
+
+        public virtual Vector2i LayoutMinSize
+        {
+            get { return MinimumSize.TryToAdd(MarginSizes); }
+        }
+        public virtual Vector2i LayoutBestSize 
+        {
+            get { return BestSize.TryToAdd(MarginSizes); } 
+        }
+        public virtual Vector2i LayoutMaxSize 
+        { 
+            get { return MaximumSize.TryToAdd(MarginSizes); }
+        }
+
+        public virtual bool IsExpandVertical { get; set; }
+
+        public virtual bool IsExpandHorizontal { get; set; }
+        
+        public virtual bool IsFillHorizontal { get; set; }
+        
+        public virtual bool IsFillVertical { get; set; }
+
+        public virtual bool IsFit { get { return false; } set {} }
 
         public virtual void PostLayout(Skins.Skin skin)
         {
@@ -639,54 +695,20 @@ namespace Flood.GUIv2
         public void InvalidateParent()
         {
             if (Parent != null)
-                Parent.Invalidate();
-        }
-        public virtual void InvalidateChildren(bool recursive = false)
-        {
-        }
-
-        public virtual void Invalidate()
-        {
-            if(NeedsLayout)
-                return;
-            //todo: check if this is not causing layout problems or infinite loops
-            if (Parent != null)
-                Parent.Invalidate();
-            NeedsLayout = true;
-            CacheTextureDirty = true;
+                ((IPanel)Parent).Invalidate();
         }
 
         public void SetDimension(Vector2i pos, Vector2i size)
         {
-            if (Expansion == ExpansionFlags.Shaped)
-            {
-                var rWidth = (int)(size.Y * AspectRatio);
-                if (rWidth > size.X)
-                {
-                    var rHeight = (int)(size.Y / AspectRatio);
-                    if (Alignment == AlignmentFlags.CenterVertical)
-                        pos.Y += (size.Y - rHeight) / 2;
-                    else if (Alignment == AlignmentFlags.Bottom)
-                        pos.Y += (size.Y - rHeight);
-                    size.Y = rHeight;
-                }
-                else if (rWidth < size.X)
-                {
-                    if (Alignment == AlignmentFlags.CenterHorizontal)
-                        pos.X += (size.X - rWidth) / 2;
-                    else if (Alignment == AlignmentFlags.Bottom)
-                        pos.X += (size.X - rWidth);
-                    size.X = rWidth;
-                }
-            }
             SetBounds(pos.X, pos.Y, size.X, size.Y);
         }
 
         public virtual Vector2i GetMinSizeWithBorder()
         {
-            SetBestSize();
-            var minW = (MinimumSize.X == SizeNotSet) ? BestSize.X : MinimumSize.X;
-            var minH = (MinimumSize.Y == SizeNotSet) ? BestSize.Y : MinimumSize.Y;
+            //todo: best size is currently not being set, if recursive layout sizes doesn't do this work befor the panel layout 
+            //calls this method this will not work
+            var minW = (MinimumSize.X == MinNotSet) ? BestSize.X : MinimumSize.X;
+            var minH = (MinimumSize.Y == MinNotSet) ? BestSize.Y : MinimumSize.Y;
             var width = minW + Margin.Left + Margin.Right;
             var height = minH + Margin.Top + Margin.Bottom;
             return new Vector2i(width, height);
@@ -701,36 +723,21 @@ namespace Flood.GUIv2
         
         public virtual void ReduceToMinSize()
         {
-            SetBestSize();
-            var minW = (MinimumSize.X == SizeNotSet) ? BestSize.X : MinimumSize.X;
-            var minH = (MinimumSize.Y == SizeNotSet) ? BestSize.Y : MinimumSize.Y;
+            var minW = (MinimumSize.X != MinNotSet) ? Width : MinimumSize.X;
+            var minH = (MinimumSize.Y == MinNotSet) ? Height : MinimumSize.Y;
             SetSize(minW, minH);
-        }
-
-        public abstract bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir);
-
-
-        protected virtual void SetBestSize()
-        {
-            //todo: figure out if there's any way to get a better best size
-            BestSize = new Vector2i(Width, Height);
         }
 
         public virtual Vector2i GetMaxSizeWithBorder()
         {
-            var width = MaximumSize.X + Margin.Left + Margin.Right;
-            var height = MaximumSize.Y + Margin.Top + Margin.Bottom;
+            var width = (MaximumSize.X == MaxNotSet) ? MaxNotSet : (MaximumSize.X + HorizontalMargins);
+            var height = (MaximumSize.Y == MaxNotSet) ? MaxNotSet : (MaximumSize.Y + VerticalMargins);
             return new Vector2i(width, height);
         }
 
         public virtual MarginFlags MarginFlags { get; private set; }
-        public virtual PaddingFlags PaddingFlags { get; private set; }
 
-        public virtual bool IsRenderable { get { return true; } }
-
-
-        //TODO : set all these properties
-        public int Proportion { get; set; }
+        public int Proportion { get; set; } //todo: remove this
         private ExpansionFlags m_Expansion;
         public ExpansionFlags Expansion
         {
@@ -743,7 +750,14 @@ namespace Flood.GUIv2
                 if (m_Expansion == value)
                     return;
                 m_Expansion = value;
-                Invalidate();
+                IsExpandHorizontal = (value & ExpansionFlags.ExpandHorizontal) != 0; 
+                IsExpandVertical = (value & ExpansionFlags.ExpandVertical) != 0;
+                IsFillHorizontal = (value & ExpansionFlags.FillHorizontal) != 0; 
+                IsFillVertical = (value & ExpansionFlags.FillVertical) != 0; 
+                IsFit = (value & ExpansionFlags.Fit) != 0;
+                var @this = this as IPanel;
+                if (@this != null)
+                    @this.Invalidate();
                 InvalidateParent();
             }
         }
@@ -755,8 +769,10 @@ namespace Flood.GUIv2
             {
                 if(m_Align == value)
                     return;
-                m_Align = value; 
-                Invalidate();
+                m_Align = value;
+                var @this = this as IPanel;
+                if(@this != null)
+                    @this.Invalidate();
                 InvalidateParent();
             }
         }

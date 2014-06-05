@@ -55,19 +55,19 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public Color BackgroundColor { get { return m_BackgroundColor; } set { m_BackgroundColor = value; } }
 
-        /// <summary>
-        /// In most situations you will be rendering the canvas every frame. 
-        /// But in some situations you will only want to render when there have been changes. 
-        /// You can do this by checking NeedsRedraw.
-        /// </summary>
-        public bool NeedsRedraw { get { return m_NeedsRedraw; } set { m_NeedsRedraw = value; } }
+        ///// <summary>
+        ///// In most situations you will be rendering the canvas every frame. 
+        ///// But in some situations you will only want to render when there have been changes. 
+        ///// You can do this by checking NeedsRedraw.
+        ///// </summary>
+        //public bool NeedsRedraw { get { return m_NeedsRedraw; } set { m_NeedsRedraw = value; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Canvas"/> class.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
         public Canvas(Skins.Skin skin, Renderers.Renderer renderer, ResourceHandle<Image> imageHandle) 
-            : base(new RelativePanel(ExpansionFlags.Shaped))
+            : base(new RelativePanel())
         {
             //SetBounds(0, 0, 10000, 10000);
             m_Skin = skin;
@@ -84,14 +84,14 @@ namespace Flood.GUIv2.Controls
             base.Dispose();
         }
 
-        /// <summary>
-        /// Re-renders the control, invalidates cached texture.
-        /// </summary>
-        public override void Redraw()
-        {
-            NeedsRedraw = true;
-            base.Redraw();
-        }
+        ///// <summary>
+        ///// Re-renders the control, invalidates cached texture.
+        ///// </summary>
+        //public override void Redraw()
+        //{
+        //    NeedsRedraw = true;
+        //    base.Redraw();
+        //}
         
         // Children call parent.GetCanvas() until they get to 
         // this top level function.
@@ -119,7 +119,7 @@ namespace Flood.GUIv2.Controls
 
             render.Begin();
 
-            RecurseLayout(Skin);
+            Layout(Skin);
 
             render.ClipRegion = Bounds;
             render.RenderOffset = new Vector2i(0,0);
@@ -142,16 +142,16 @@ namespace Flood.GUIv2.Controls
             render.End();
         }
 
-        /// <summary>
-        /// Renders the control using specified skin.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Render(Skins.Skin skin)
-        {
-            //skin.Renderer.rnd = new Random(1);
-            base.Render(skin);
-            m_NeedsRedraw = false;
-        }
+        ///// <summary>
+        ///// Renders the control using specified skin.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    //skin.Renderer.rnd = new Random(1);
+        //    base.Render(skin);
+        //    m_NeedsRedraw = false;
+        //}
 
         /// <summary>
         /// Handler invoked when control's bounds change.
@@ -180,7 +180,7 @@ namespace Flood.GUIv2.Controls
             ProcessDelayedDeletes();
 
             // Check has focus etc..
-            RecurseLayout(Skin);
+            Layout(Skin);
 
             // If we didn't have a next tab, cycle to the start.
             if (NextTab == null)
@@ -191,13 +191,15 @@ namespace Flood.GUIv2.Controls
 
         public void GetRenderBounds(out int width, out int height)
         {
-            width = 0;
-            height = 0;
-            foreach (var control in Panel.Children)
-            {
-                width = Math.Max(width, control.Right);
-                height = Math.Max(height, control.Bottom);
-            }
+            //width = 0;
+            //height = 0;
+            //foreach (var control in Panel.Children)
+            //{
+            //    width = Math.Max(width, control.Right);
+            //    height = Math.Max(height, control.Bottom);
+            //}
+            width = Panel.RenderWidth;
+            height = Panel.RenderHeight;
         }
 
         public void AddChild(Control child, int x, int y)

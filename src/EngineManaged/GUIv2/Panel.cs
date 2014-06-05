@@ -1,28 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Flood.GUIv2.Controls;
 using Flood.GUIv2.Input;
 using Flood.GUIv2.Panels.Layout;
 
 namespace Flood.GUIv2
 {
-    public class Panel : Control
+    public abstract class Panel : Control, IPanel
     {
+
+        private bool m_InheritedExpandVertical; 
+
+        public bool InheritedExpandVertical 
+        {
+            get { return m_InheritedExpandVertical;}
+            set
+            {
+                if (!base.IsExpandVertical)
+                    m_InheritedExpandVertical = value;
+            }
+        }
+        
+        private bool m_InheritedExpandHorizontal; 
+
+        public bool InheritedExpandHorizontal 
+        {
+            get { return m_InheritedExpandHorizontal;}
+            set
+            {
+                if (!base.IsExpandHorizontal)
+                    m_InheritedExpandHorizontal = value;
+            }
+        }
+
+        public override bool IsExpandVertical
+        {
+            get { return base.IsExpandVertical || InheritedExpandVertical; }
+            set { base.IsExpandVertical = value; }
+        }
+
+        public override bool IsExpandHorizontal
+        {
+            get { return base.IsExpandHorizontal || InheritedExpandHorizontal; }
+            set { base.IsExpandHorizontal = value; }
+        }
+
+        public override bool IsFit { get; set; }
+
         /// <summary>
-        /// Real list of children.
+        /// List of children.
         /// </summary>
         private readonly List<IControl> m_Children;
 
         /// <summary>
-        /// Logical list of children. If InnerPanel is not null, returns InnerPanel's children.
+        /// List of children.
         /// </summary>
         public List<IControl> Children
         {
             get { return m_Children; }
         }
+
+        protected Vector2i layoutMinSize;
+        protected Vector2i layoutBestSize;
+        protected Vector2i layoutMaxSize;
+
+        public override Vector2i LayoutMinSize
+        {
+            get
+            {
+                if (Expansion == ExpansionFlags.Shaped)
+                    return base.LayoutMinSize;
+
+                var minX = (RenderMinimumSize.X > layoutMinSize.X)
+                            ? RenderMinimumSize.X : layoutMinSize.X;
+                var minY = (RenderMinimumSize.Y > layoutMinSize.Y)
+                            ? RenderMinimumSize.Y : layoutMinSize.Y;
+
+                return new Vector2i(minX, minY);
+            }
+        }
+
+        public override Vector2i LayoutBestSize
+        {
+            get
+            {
+                if (Expansion == ExpansionFlags.Shaped)
+                    return base.LayoutBestSize;
+                
+                return layoutBestSize;
+            }
+        }
+
+
+        public override bool IsVisible
+        {
+            get
+            {
+                if (IsHidden)
+                    return false;
+
+                if (LogicParent != null)
+                    return LogicParent.IsVisible;
+
+                return true;
+            }
+        }
+        public override Vector2i LayoutMaxSize
+        {
+            get
+            {
+                if (Expansion == ExpansionFlags.Shaped)
+                    return base.LayoutMaxSize;
+
+                var maxX = (RenderMaximumSize.X < layoutMaxSize.X)
+                            ? RenderMaximumSize.X : layoutMaxSize.X;
+                var maxY = (RenderMaximumSize.Y < layoutMaxSize.Y)
+                            ? RenderMaximumSize.Y : layoutMaxSize.Y; 
+
+                return new Vector2i(maxX, maxY);
+            }
+        }
+
 
         public override bool DrawDebugOutlines
         {
@@ -40,61 +139,26 @@ namespace Flood.GUIv2
             }
         }
 
-        public sealed override void Invalidate()
+        public void Invalidate()
         {
-            if (NeedsLayout)
-                return;
-            var parent = LogicParent;
+            var parent = LogicParent as IPanel;
             //todo: check if this is not causing layout problems or infinite loops
             if (parent != null)
                 parent.Invalidate();
+            if (NeedsLayout)
+                return;
             NeedsLayout = true;
             CacheTextureDirty = true;
         }
 
-        public override sealed void InvalidateChildren(bool recursive = false)
+        public void InvalidateChildren(bool recursive = false)
         {
-            foreach (Control child in Children)
+            foreach (var child in Children.Where(child => child is IPanel).Cast<IPanel>())
             {
                 child.Invalidate();
                 if (recursive)
                     child.InvalidateChildren(true);
             }
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            if (size > 0)
-            {
-                if (direction == BoxOrientation.Horizontal)
-                {
-                    if ((MarginFlags & MarginFlags.Left) != 0)
-                        size -= Margin.Left;
-                    if ((MarginFlags & MarginFlags.Right) != 0)
-                        size -= Margin.Right;
-
-                }
-                else if (direction == BoxOrientation.Vertical)
-                {
-                    if ((MarginFlags & MarginFlags.Top) != 0)
-                        size -= Margin.Top;
-                    if ((MarginFlags & MarginFlags.Bottom) != 0)
-                        size -= Margin.Bottom;
-                }
-
-            }
-
-            bool didUse = false;
-            foreach (var ctrl in Children)
-                if (ctrl.InformFirstDirection(direction, size, availableOtherDir))
-                    didUse = true;
-
-            Debug.Assert(Sizer != null);
-            didUse = didUse || Sizer.InformFirstDirection(direction, size, availableOtherDir);
-            if (didUse)
-                BestSize = Sizer.CalcMin();
-
-            return didUse;
         }
 
         public IControl LogicParent
@@ -122,23 +186,13 @@ namespace Flood.GUIv2
         /// the root for all child panels in this canvas.
         /// </summary>
         /// <param name="expansion">The type of <see cref="ExpansionFlags"/> of this panel.</param>
-        public Panel(ExpansionFlags expansion = ExpansionFlags.Expand)
+        protected Panel(ExpansionFlags expansion = ExpansionFlags.Expand)
         {
             m_Children = new List<IControl>();
             Expansion = expansion;
         }
 
-        /// <summary>
-        /// Lays out this panel using the associated sizer.
-        /// </summary>
-        public override void Layout(Skins.Skin skin)
-        {
-            base.Layout(skin);
 
-            if (Sizer == null)
-                return;
-            Sizer.RecalcSizes();
-        }
 
         public override void OnCanvasChanged(Canvas canvas)
         {
@@ -265,11 +319,12 @@ namespace Flood.GUIv2
         public virtual void RemoveChild(IControl child, bool dispose)
         {
             Children.Remove(child);
-            child.Parent = null;
             OnChildRemoved(child);
 
             if (dispose)
                 child.DelayedDelete();
+
+            child.Parent = null;
         }
 
         /// <summary>
@@ -519,33 +574,15 @@ namespace Flood.GUIv2
             return this;
         }
 
-        public override void RecurseLayout(Skins.Skin skin, int level = 0)
+        public override void Layout(Skins.Skin skin)
         {
-            Console.WriteLine("{0}+ {1} W: {2} H: {3}", new string(' ', level), GetType().Name, Bounds.Width, Bounds.Height);
             if (IsHidden)
                 return;
 
-            if (NeedsLayout)
-            {
-                //m_NeedsLayout = false;
-                Layout(skin);
-            }
+            RecursiveLayoutSizes(skin);
+            RecursiveLayoutAssign();
 
-            foreach (var child in Children)
-            {
-                if (child.IsHidden)
-                    continue;
-
-                child.RecurseLayout(skin, level + 1);
-
-            }
-
-            if (NeedsLayout)
-            {
-                NeedsLayout = false;
-                Layout(skin);
-            }
-
+            //todo: from here on it's old code, not sure if it still serves any purpose
             PostLayout(skin);
 
             if (IsTabable)
@@ -560,8 +597,53 @@ namespace Flood.GUIv2
             {
                 GetCanvas().NextTab = null;
             }
-
-            Console.WriteLine("{0}- {1} W: {2} H: {3}", new string(' ', level), GetType().Name, Bounds.Width, Bounds.Height);
         }
+
+        public abstract void LayoutSizes();
+
+        public void RecursiveLayoutSizes(Skins.Skin skin)
+        {
+            foreach (var child in Children)
+            {
+                if(!(child is IPanel) && child.ShouldPreLayout)
+                {
+                    child.ShouldPreLayout = false;
+                    child.PreLayout(skin);
+                }
+                if(child is IPanel)
+                    ((IPanel)child).RecursiveLayoutSizes(skin);
+            }
+            if(NeedsLayout)
+            {
+                PreLayout(skin);
+                if(IsFit)
+                    LayoutSizes();
+            }
+        }
+
+        /// <summary>
+        /// Lays out this panel using the associated sizer.
+        /// </summary>
+        public void LayoutAssign()
+        {
+            if (Sizer == null)
+                return;
+            Sizer.RecalcSizes();
+        }
+
+        public void RecursiveLayoutAssign()
+        {
+            if(NeedsLayout)
+            {
+                LayoutAssign();
+                NeedsLayout = false;
+            }
+            foreach (var child in Children.Where(child => child is IPanel))
+            {
+                ((IPanel)child).RecursiveLayoutAssign();
+            }
+        }
+
+        public bool NeedsLayout { get; set; }
     }
 }

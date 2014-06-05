@@ -18,15 +18,25 @@ namespace Flood.GUIv2.Controls.Layout
 
         private readonly int[] m_ColumnWidth;
 
-        /// <summary>
-        /// Determines whether this control shold be processed by a sizer.
-        /// </summary>
-        public override bool IsRenderable { get { return false; } }
+        ///// <summary>
+        ///// Determines whether this control shold be processed by a sizer.
+        ///// </summary>
+        //public override bool IsRenderable { get { return false; } }
 
         /// <summary>
         /// Column count (default 1).
         /// </summary>
-        public int ColumnCount { get { return m_ColumnCount; } set { SetColumnCount(value); Invalidate(); } }
+        public int ColumnCount 
+        {
+            get { return m_ColumnCount; }
+            set
+            {
+                //todo: uncomment this when this becomes a composite control
+
+                //SetColumnCount(value); 
+                //Invalidate();
+            } 
+        }
 
         /// <summary>
         /// Row count.
@@ -101,10 +111,12 @@ namespace Flood.GUIv2.Controls.Layout
         /// <param name="width">Column width.</param>
         public void SetColumnWidth(int column, int width)
         {
-            if (m_ColumnWidth[column] == width) 
-                return;
-            m_ColumnWidth[column] = width;
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //if (m_ColumnWidth[column] == width) 
+            //    return;
+            //m_ColumnWidth[column] = width;
+            //Invalidate();
         }
 
         /// <summary>
@@ -195,26 +207,26 @@ namespace Flood.GUIv2.Controls.Layout
             //return Children.IndexOf(row);
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //base.Layout(skin);
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    //base.Layout(skin);
 
-            //bool even = false;
-            //foreach (TableRow row in Children)
-            //{
-            //    row.EvenRow = even;
-            //    even = !even;
-            //    for (int i = 0; i < m_ColumnCount; i++)
-            //    {
-            //        row.SetColumnWidth(i, m_ColumnWidth[i]);
-            //    }
-            //}
-        }
+        //    //bool even = false;
+        //    //foreach (TableRow row in Children)
+        //    //{
+        //    //    row.EvenRow = even;
+        //    //    even = !even;
+        //    //    for (int i = 0; i < m_ColumnCount; i++)
+        //    //    {
+        //    //        row.SetColumnWidth(i, m_ColumnWidth[i]);
+        //    //    }
+        //    //}
+        //}
 
         public override void PostLayout(Skins.Skin skin)
         {
@@ -226,19 +238,16 @@ namespace Flood.GUIv2.Controls.Layout
             }
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Sizes to fit contents.
         /// </summary>
         public void SizeToContents(int maxWidth)
         {
-            m_MaxWidth = maxWidth;
-            m_SizeToContents = true;
-            Invalidate();
+            //todo: uncomment this when this becomes a composite control
+
+            //m_MaxWidth = maxWidth;
+            //m_SizeToContents = true;
+            //Invalidate();
         }
 
         protected void DoSizeToContents()

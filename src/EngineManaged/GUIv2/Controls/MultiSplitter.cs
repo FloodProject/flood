@@ -29,20 +29,22 @@ namespace Flood.GUIv2.Controls
 
             private void UpdateRelativePosition()
             {
-                var parent = Parent as MultiSplitter;
-                if(parent == null)
-                    throw new Exception("Invalid parent");
+                //todo: uncomment this when this becomes a composite control
 
-                if(parent.IsHorizontal)
-                {
-                    RelativePosition = ((float)X)/parent.Width;
-                }
-                else
-                {
-                    RelativePosition = ((float)Y)/parent.Height;
-                }
-                Invalidate();
-                InvalidateParent();
+                //var parent = Parent as MultiSplitter;
+                //if(parent == null)
+                //    throw new Exception("Invalid parent");
+
+                //if(parent.IsHorizontal)
+                //{
+                //    RelativePosition = ((float)X)/parent.Width;
+                //}
+                //else
+                //{
+                //    RelativePosition = ((float)Y)/parent.Height;
+                //}
+                //Invalidate();
+                //InvalidateParent();
             }
 
             public override void Render(Skins.Skin skin)
@@ -51,25 +53,25 @@ namespace Flood.GUIv2.Controls
                     skin.DrawButton(this, true, false, IsDisabled);
             }
 
-            public override void Layout(Skins.Skin skin)
-            {
-                throw new NotImplementedException();
+            //public override void Layout(Skins.Skin skin)
+            //{
+            //    throw new NotImplementedException();
 
-                var parent = Parent as MultiSplitter;
-                if(parent == null)
-                    throw new Exception("Invalid parent");
+            //    var parent = Parent as MultiSplitter;
+            //    if(parent == null)
+            //        throw new Exception("Invalid parent");
 
-                if (parent.IsHorizontal)
-                {
-                    SetSize(Space,parent.Height);
-                    MoveTo(parent.Width*RelativePosition, 0);
-                }
-                else
-                {
-                    SetSize(parent.Width, Space);
-                    MoveTo(0, parent.Height*RelativePosition);
-                }
-            }
+            //    if (parent.IsHorizontal)
+            //    {
+            //        SetSize(Space,parent.Height);
+            //        MoveTo(parent.Width*RelativePosition, 0);
+            //    }
+            //    else
+            //    {
+            //        SetSize(parent.Width, Space);
+            //        MoveTo(0, parent.Height*RelativePosition);
+            //    }
+            //}
         }
 
         private readonly List<Control> panels;
@@ -188,11 +190,6 @@ namespace Flood.GUIv2.Controls
             //}
         }
 
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
-
         public void RemoveChild(Control child, bool dispose)
         {
             RemovePanel(child);
@@ -200,36 +197,36 @@ namespace Flood.GUIv2.Controls
             Invalidate();
         }
 
-        public override void Layout(Skins.Skin skin)
+        public override void PreLayout(Skins.Skin skin)
         {
             throw new NotImplementedException();
 
-            base.Layout(skin);
+            //base.PreLayout(skin);
 
-            //using variables names as if split direction is horizontal
-            //but works also for vertical
-            int size = (IsHorizontal) ? Width : Height;
-            for (var i = 0; i < panels.Count ; i++)
-            {
-                float right = size;
-                if (i < splitters.Count)
-                    right = splitters[i].RelativePosition*size;
+            ////using variables names as if split direction is horizontal
+            ////but works also for vertical
+            //int size = (IsHorizontal) ? Width : Height;
+            //for (var i = 0; i < panels.Count ; i++)
+            //{
+            //    float right = size;
+            //    if (i < splitters.Count)
+            //        right = splitters[i].RelativePosition*size;
 
-                float left = 0;
-                if (i > 0)
-                    left = splitters[i-1].RelativePosition*size + splitters[i-1].Space;
+            //    float left = 0;
+            //    if (i > 0)
+            //        left = splitters[i-1].RelativePosition*size + splitters[i-1].Space;
 
-                var panel = panels[i];
-                if (IsHorizontal)
-                {
-                    panel.SetBounds(left, 0, right - left, Height);
-                }
-                else
-                {
-                    panel.SetBounds(0, left, Width, right - left);
-                }
-                panel.Invalidate();
-            }
+            //    var panel = panels[i];
+            //    if (IsHorizontal)
+            //    {
+            //        panel.SetBounds(left, 0, right - left, Height);
+            //    }
+            //    else
+            //    {
+            //        panel.SetBounds(0, left, Width, right - left);
+            //    }
+            //    panel.Invalidate();
+            //}
         }
     }
 }

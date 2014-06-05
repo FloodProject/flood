@@ -44,13 +44,13 @@ namespace Flood.GUIv2.Controls
         /// Lays out the control's interior according to alignment, padding, dock etc.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
 
-            m_SliderBar.SetSize(15, Height);
-            UpdateBarFromValue();
-        }
+        //    m_SliderBar.SetSize(15, Height);
+        //    UpdateBarFromValue();
+        //}
 
         /// <summary>
         /// Renders the control using specified skin.

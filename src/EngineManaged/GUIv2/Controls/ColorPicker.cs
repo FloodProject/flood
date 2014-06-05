@@ -182,29 +182,24 @@ namespace Flood.GUIv2.Controls
             //SetColor( EngineManaged::GUI::Color( redSlider->GetValue(), greenSlider->GetValue(), blueSlider->GetValue(), alphaSlider->GetValue() ) );
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            throw new NotImplementedException();
-            //base.Layout(skin);
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    throw new NotImplementedException();
+        //    //base.Layout(skin);
 
-            //SizeToChildren(false, true);
-            //SetSize(Width, Height + 5);
+        //    //SizeToChildren(false, true);
+        //    //SetSize(Width, Height + 5);
 
-            //GroupBox groupBox = FindChildByName("ResultGroupBox", true) as GroupBox;
-            //if (groupBox != null)
-            //    groupBox.SetPosition(groupBox.X, Height * 0.5f - groupBox.Height * 0.5f);
+        //    //GroupBox groupBox = FindChildByName("ResultGroupBox", true) as GroupBox;
+        //    //if (groupBox != null)
+        //    //    groupBox.SetPosition(groupBox.X, Height * 0.5f - groupBox.Height * 0.5f);
 
-            ////UpdateControls(); // this spams events continuously every tick
-        }
-
-        public override bool InformFirstDirection(BoxOrientation direction, int size, int availableOtherDir)
-        {
-            throw new NotImplementedException();
-        }
+        //    ////UpdateControls(); // this spams events continuously every tick
+        //}
 
         private int GetColorByName(String colorName)
         {

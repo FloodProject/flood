@@ -13,7 +13,6 @@ namespace Flood.GUIv2.ControlInternal
         /// </summary>
         /// <param name="parent">Parent control.</param>
         public TreeNodeLabel(Control parent)
-            : base(parent)
         {
             TextAlignment = AlignmentFlags.Left | AlignmentFlags.CenterVertical;
             ShouldDrawBackground = false;

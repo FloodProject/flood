@@ -59,37 +59,37 @@ namespace Flood.GUIv2.Controls
             m_Bar.Dragged += OnBarMoved;
         }
 
-        /// <summary>
-        /// Lays out the control's interior according to alignment, padding, dock etc.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        public override void Layout(Skins.Skin skin)
-        {
-            base.Layout(skin);
+        ///// <summary>
+        ///// Lays out the control's interior according to alignment, padding, dock etc.
+        ///// </summary>
+        ///// <param name="skin">Skin to use.</param>
+        //public override void Layout(Skins.Skin skin)
+        //{
+        //    base.Layout(skin);
 
-            m_ScrollButton[0].Width = Height;
-            m_ScrollButton[0].Alignment = AlignmentFlags.Left;
+        //    m_ScrollButton[0].Width = Height;
+        //    m_ScrollButton[0].Alignment = AlignmentFlags.Left;
 
-            m_ScrollButton[1].Width = Height;
-            m_ScrollButton[1].Alignment = AlignmentFlags.Right;
+        //    m_ScrollButton[1].Width = Height;
+        //    m_ScrollButton[1].Alignment = AlignmentFlags.Right;
 
-            m_Bar.Height = ButtonSize;
-            m_Bar.Margin = new Margin(ButtonSize, 0, ButtonSize, 0);
+        //    m_Bar.Height = ButtonSize;
+        //    m_Bar.Margin = new Margin(ButtonSize, 0, ButtonSize, 0);
 
-            float barWidth = (m_ViewableContentSize / m_ContentSize) * (Width - (ButtonSize * 2));
+        //    float barWidth = (m_ViewableContentSize / m_ContentSize) * (Width - (ButtonSize * 2));
 
-            if (barWidth < ButtonSize * 0.5f)
-                barWidth = (int)(ButtonSize * 0.5f);
+        //    if (barWidth < ButtonSize * 0.5f)
+        //        barWidth = (int)(ButtonSize * 0.5f);
 
-            m_Bar.Width = (int)(barWidth);
-            m_Bar.IsHidden = Width - (ButtonSize * 2) <= barWidth;
+        //    m_Bar.Width = (int)(barWidth);
+        //    m_Bar.IsHidden = Width - (ButtonSize * 2) <= barWidth;
 
-            //Based on our last scroll amount, produce a position for the bar
-            if (!m_Bar.IsHeld)
-            {
-                SetScrollAmount(ScrollAmount, true);
-            }
-        }
+        //    //Based on our last scroll amount, produce a position for the bar
+        //    if (!m_Bar.IsHeld)
+        //    {
+        //        SetScrollAmount(ScrollAmount, true);
+        //    }
+        //}
 
         public void NudgeLeft(IControl control)
         {
