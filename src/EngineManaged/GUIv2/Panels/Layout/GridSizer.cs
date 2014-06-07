@@ -89,6 +89,8 @@ namespace Flood.GUIv2.Panels.Layout
         /// </summary>
         public override void RecalcSizes()
         {
+            if (Children.Count == 0 || Children.All(child => child.IsHidden || !Panel.ControlData[child].IsValid()))
+                return;
             var width = Panel.Width;
             var height = Panel.Height;
 
@@ -97,8 +99,8 @@ namespace Flood.GUIv2.Panels.Layout
             while(grid.Rows.Last().Y > height && grid.SortedRows.Count > 0)
             {
                 //get largest row and remove it from the sorted list
-                var tallestRow = grid.SortedRows.Last().Value;
-                grid.SortedRows.RemoveAt(grid.SortedRows.Count - 1);
+                var tallestRow = grid.SortedRows.Last();
+                grid.SortedRows.Remove(tallestRow);
                 
                 int shift;
                 //reduce tallest row's height if lower best heights available, min it if not
@@ -111,7 +113,7 @@ namespace Flood.GUIv2.Panels.Layout
                     tallestRow.Y = newY;
 
                     //reinsert modified row in rows sorted list
-                    grid.SortedRows.Add(tallestRow.Height, tallestRow);
+                    grid.SortedRows.Add(tallestRow);
                 }
                 else
                 {
@@ -129,8 +131,8 @@ namespace Flood.GUIv2.Panels.Layout
             while (grid.Columns.Last().X > width && grid.SortedColumns.Count > 0)
             {
                 //get largest column and remove it from the sorted list
-                var widestColumn = grid.SortedColumns.Last().Value;
-                grid.SortedColumns.RemoveAt(grid.SortedColumns.Count - 1);
+                var widestColumn = grid.SortedColumns.Last();
+                grid.SortedColumns.Remove(widestColumn);
 
                 int shift;
                 //reduce widest column's width if lower best widths available, min it if not
@@ -143,7 +145,7 @@ namespace Flood.GUIv2.Panels.Layout
                     widestColumn.X = newX;
 
                     //reinsert modified column in columns' sorted list
-                    grid.SortedColumns.Add(widestColumn.Width, widestColumn);
+                    grid.SortedColumns.Add(widestColumn);
                 }
                 else
                 {
@@ -181,7 +183,7 @@ namespace Flood.GUIv2.Panels.Layout
                 var allocatableHeight = remaining/count;
                 //distribute remaining space evenly allong aall controls
                 for(int i = 0; i < count; i++)
-                    grid.Rows[i].Y += i*allocatableHeight;
+                    grid.Rows[i].Y += (i+1)*allocatableHeight;
 
                 //if any left over add it to last control
                 grid.Rows[count - 1].Y += remaining - allocatableHeight*count;
@@ -211,7 +213,7 @@ namespace Flood.GUIv2.Panels.Layout
                 var allocatableWidth = remaining/count;
                 //distribute remaining space evenly along all controls
                 for(int i = 0; i < count; i++)
-                    grid.Columns[i].X += i*allocatableWidth;
+                    grid.Columns[i].X += (i+1)*allocatableWidth;
 
                 //if any left over add it to last control
                 grid.Columns[count - 1].X += remaining - allocatableWidth*count;
@@ -220,13 +222,14 @@ namespace Flood.GUIv2.Panels.Layout
             //finally get position and boxes of controls and place them
             foreach (var control in Children)
             {
-                if (control.IsHidden)
-                    continue;
                 var data = Panel.ControlData[control];
+                if (control.IsHidden || !data.IsValid())
+                    continue;
+
                 var x = data.Column == 0 ? 0 : grid.Columns[data.Column - 1].X;
                 var y = data.Row == 0 ? 0 : grid.Rows[data.Row - 1].Y;
-                var w = grid.Columns[data.ColumnSpan - 1 + data.Column].X  - x;
-                var h = grid.Rows[data.RowSpan - 1 + data.Row].Y - y;
+                var w = grid.Columns[data.EffectiveColumnSpan - 1 + data.Column].X  - x;
+                var h = grid.Rows[data.EffectiveRowSpan - 1 + data.Row].Y - y;
 
                 PositionAndAlign(new Vector2i(x, y), new Vector2i(w, h), control);
             }

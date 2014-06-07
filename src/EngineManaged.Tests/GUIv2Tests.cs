@@ -42,7 +42,7 @@ namespace Flood.Tests
             canvas.AddChild(control);
             control.Text = "Button";
 
-            GUI.Test(control, "button1");
+            GUI.Test(control, "Button", "button1");
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Flood.Tests
             canvas.AddChild(control);
             control.SetImage("moon.png", AlignmentFlags.Center);
 
-            GUI.Test(control, "buttonImage");
+            GUI.Test(control, "Button", "buttonImage");
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace Flood.Tests
             control.SetImage("moon.png", AlignmentFlags.Center);
             control.Text = "Moon";
 
-            GUI.Test(control, "buttonImageText");
+            GUI.Test(control, "Button", "buttonImageText");
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Flood.Tests
             control.Text = "Moon";
             control.ButtonOrientation = Orientation.Vertical;
 
-            GUI.Test(control, "buttonImageTextVertical");
+            GUI.Test(control, "Button", "buttonImageTextVertical");
         }
         
         [Test]
@@ -92,13 +92,13 @@ namespace Flood.Tests
             control.ButtonOrientation = Orientation.Vertical;
             control.TextFirst = true;
 
-            GUI.Test(control, "buttonImageTextVerticalSwapped");
+            GUI.Test(control, "Button", "buttonImageTextVerticalSwapped");
         }
         
         [Test]
         public void TestButton6()
         {
-            canvas.SetSize(304, 356);
+            canvas.SetSize(356, 304);
             var control = new Button();
             canvas.AddChild(control);
             control.SetImage("moon.png");
@@ -107,7 +107,7 @@ namespace Flood.Tests
             control.TextAlignment = AlignmentFlags.Bottom | AlignmentFlags.Left;
             control.TextFirst = true;
 
-            GUI.Test(control, "buttonImageTextHorizontalSwappedAlignment");
+            GUI.Test(control, "Button", "buttonImageTextHorizontalSwappedAlignment");
         }
         
         [Test]
@@ -123,230 +123,250 @@ namespace Flood.Tests
             control.TextAlignment = AlignmentFlags.Bottom | AlignmentFlags.Left;
             control.TextFirst = true;
 
-            GUI.Test(control, "buttonImageTextShapedAlignment");
+            GUI.Test(control, "Button", "buttonImageTextShapedAlignment");
         }
 
         [Test]
         public void TestButton8()
         {
-            canvas.Shape(new Vector2i(300, 200));
+            canvas.SetSize(300, 200);
             var dockPanel = new DockPanel{Expansion = ExpansionFlags.Expand};
 
             var control = new Button {Text = "Moon", Alignment = AlignmentFlags.Right | AlignmentFlags.Bottom };
             dockPanel.AddChild(control);
             canvas.AddChild(dockPanel);
 
-            GUI.Test(control, "buttonAlignmentBottomLeft");
+            GUI.Test(control, "Button", "buttonAlignmentBottomLeft");
             control.Alignment = AlignmentFlags.Center;
-            GUI.Test(control, "buttonAlignmentCenter");
+            GUI.Test(control, "Button", "buttonAlignmentCenter");
             control.Alignment = AlignmentFlags.Right | AlignmentFlags.CenterVertical;
-            GUI.Test(control, "buttonAlignmentCenterRight");
+            GUI.Test(control, "Button", "buttonAlignmentCenterRight");
             control.Alignment = AlignmentFlags.CenterHorizontal | AlignmentFlags.Bottom;
-            GUI.Test(control, "buttonAlignmentCenterBottom");
+            GUI.Test(control, "Button", "buttonAlignmentCenterBottom");
         }
 
         [Test]
         public void TestLabel()
         {
+            canvas.SetSize(45, 16);
             var control = new Label { Text = "Label" };
             canvas.AddChild(control);
 
-            GUI.Test(control, "labelSimpleFit");
+            GUI.Test(control, "Label", "labelSimpleFit");
         }
         
         [Test]
         public void TestLabel2()
         {
+            canvas.SetSize(80, 30);
             var control = new Label { Text = "Label2" };
             control.Shape(new Vector2i(80, 30));
             control.TextAlignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
             canvas.AddChild(control);
 
-            GUI.Test(control, "labelShapedAlignment");
+            GUI.Test(control, "Label", "labelShapedAlignment");
         }
         
         [Test]
         public void TestLabel3()
         {
+            canvas.SetSize(80, 30);
             var control = new Label { Text = "Label3" };
             control.Shape(new Vector2i(80, 30)); 
             control.TextAlignment = AlignmentFlags.CenterHorizontal | AlignmentFlags.CenterVertical;
             canvas.AddChild(control);
 
-            GUI.Test(control, "labelShapedAlignmentCenter");
+            GUI.Test(control, "Label", "labelShapedAlignmentCenter");
         }
         
         [Test]
         public void TestLabel4()
         {
-            canvas.Shape(new Vector2i(1000, 700)); 
-
             var control = new Label { Text = "Label4" };
             control.Expansion = ExpansionFlags.Expand;
             control.TextAlignment = AlignmentFlags.CenterHorizontal | AlignmentFlags.CenterVertical;
             canvas.AddChild(control);
 
-            GUI.Test(control, "labelExpandAlignmentCenter");
+            GUI.Test(control, "Label", "labelExpandAlignmentCenter");
         }
 
         [Test]
         public void TestDockPanel()
         {
+            canvas.SetSize(107, 32);
             var labelTop = new Label { Text = "LabelTop", Alignment = AlignmentFlags.Top};
             var labelBottom = new Label { Text = "LabelBottom", Alignment = AlignmentFlags.Bottom};
             var control = new DockPanel(); 
+            control.Shape(new Vector2i(107, 32));
             control.AddChild(labelTop);
             control.AddChild(labelBottom);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanelVertical");
+            GUI.Test(control, "DockPanel", "dockPanelVertical");
         }
         
         [Test]
         public void TestDockPanel2()
         {
+            canvas.SetSize(168, 16);
             var labelLeft = new Label { Text = "LabelLeft", Alignment = AlignmentFlags.Left};
             var labelRight = new Label { Text = "LabelRight", Alignment = AlignmentFlags.Right};
-            var control = new DockPanel(); 
+            var control = new DockPanel();
+            control.Shape(new Vector2i(168, 16)); 
             control.AddChild(labelLeft);
             control.AddChild(labelRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanelHorizontal");
+            GUI.Test(control, "DockPanel", "dockPanelHorizontal");
         }
 
         [Test]
         public void TestDockPanel3()
         {
+            canvas.SetSize(107, 32);
             var labelCenter = new Label { Text = "LabelC", Alignment = AlignmentFlags.CenterHorizontal | AlignmentFlags.Top};
             var labelBottom = new Label { Text = "LabelBottom", Alignment = AlignmentFlags.Bottom };
             var control = new DockPanel();
+            control.Shape(new Vector2i(107, 32));
             control.AddChild(labelCenter);
             control.AddChild(labelBottom);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanelCenterHorizontal");
+            GUI.Test(control, "DockPanel", "dockPanelCenterHorizontal");
         }
         
         [Test]
         public void TestDockPanel4()
         {
+            canvas.SetSize(292, 32);
             var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left | AlignmentFlags.Top};
             var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left | AlignmentFlags.Right};
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Left};
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right };
             var control = new DockPanel();
+            control.Shape(new Vector2i(292, 32));
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4corners");
+            GUI.Test(control, "DockPanel", "dockPanel4corners");
         }
 
         [Test]
         public void TestDockPanel5()
         {
+            canvas.SetSize(292, 32);
             var labelCenterTop = new Label { Text = "LabelCenterTop", Alignment = AlignmentFlags.CenterHorizontal | AlignmentFlags.Top};
             var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left | AlignmentFlags.Right};
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Left};
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right };
             var control = new DockPanel();
+            control.Shape(new Vector2i(292, 32));
             control.AddChild(labelCenterTop);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel3corners+center");
+            GUI.Test(control, "DockPanel", "dockPanel3corners+center");
         }
         
         [Test]
         public void TestDockPanel6()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left | AlignmentFlags.Top, Margin = Margin.Five};
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left | AlignmentFlags.Right, Margin = Margin.Five };
+            canvas.SetSize(312, 52);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top | AlignmentFlags.Left, Margin = Margin.Five};
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top | AlignmentFlags.Right, Margin = Margin.Five };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Left, Margin = Margin.Five };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right, Margin = Margin.Five };
             var control = new DockPanel();
+            control.Shape(new Vector2i(312, 52));
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersUniformMargins");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersUniformMargins");
         }
         
         [Test]
         public void TestDockPanel7()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left 
-                | AlignmentFlags.Top, Margin = new Margin(10, 0)};
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left 
+            canvas.SetSize(332, 32);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top
+                | AlignmentFlags.Left, Margin = new Margin(10, 0) };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top
                 | AlignmentFlags.Right, Margin = new Margin(10, 0) };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Left, Margin = new Margin(10, 0) };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Right, Margin = new Margin(10, 0) };
             var control = new DockPanel();
+            control.Shape(new Vector2i(332, 32));
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersHorizontalMargins");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersHorizontalMargins");
         }
 
         [Test]
         public void TestDockPanel8()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left 
-                | AlignmentFlags.Top, Margin = new Margin(0, 10)};
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left 
+            canvas.SetSize(292, 72);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top
+                | AlignmentFlags.Left, Margin = new Margin(0, 10) };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top
                 | AlignmentFlags.Right, Margin = new Margin(0, 10) };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Left, Margin = new Margin(0, 10) };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Right, Margin = new Margin(0, 10) };
             var control = new DockPanel();
+            control.Shape(new Vector2i(292, 72));
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersVerticalMargins");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersVerticalMargins");
         }
 
         [Test]
         public void TestDockPanel9()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left 
-                | AlignmentFlags.Top, Margin = new Margin(10, 15, 30, 45) };
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left 
+            canvas.SetSize(371, 126);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top
+                | AlignmentFlags.Left, Margin = new Margin(10, 15, 30, 45) };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top
                 | AlignmentFlags.Right, Margin = new Margin(4, 8, 3, 12) };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Left, Margin = new Margin(18, 11, 7, 23) };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Right, Margin = new Margin(11, 13, 43, 8) };
             var control = new DockPanel();
+            control.Shape(new Vector2i(371, 126));
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersAssymetricalMargins");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersAssymetricalMargins");
         }
 
         [Test]
         public void TestDockPanel10()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left | AlignmentFlags.Top };
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left | AlignmentFlags.Right };
+            canvas.SetSize(150, 100);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top | AlignmentFlags.Left };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top | AlignmentFlags.Right };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Left };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right };
             var control = new DockPanel();
@@ -357,32 +377,35 @@ namespace Flood.Tests
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersShapedOverflow");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersShapedOverflow");
         }
+
         [Test]
         public void TestDockPanel11()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left | AlignmentFlags.Top };
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left | AlignmentFlags.Right };
+            canvas.SetSize(350, 100);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top | AlignmentFlags.Left };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top | AlignmentFlags.Right };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Left };
             var labelBottomRight = new Label { Text = "LabelBottomRight", Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right };
             var control = new DockPanel();
-            control.Shape(new Vector2i(150, 100)); 
+            control.Shape(new Vector2i(350, 100)); 
             control.AddChild(labelTopLeft);
             control.AddChild(labelTopRight);
             control.AddChild(labelBottomLeft);
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanel4cornersShapedUnderflow");
+            GUI.Test(control, "DockPanel", "dockPanel4cornersShapedUnderflow");
         }
 
         [Test]
         public void TestDockPanel12()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left 
-                | AlignmentFlags.Top, Margin = Margin.Ten};
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left 
+            canvas.SetSize(150, 100);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top
+                | AlignmentFlags.Left, Margin = Margin.Ten };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top
                 | AlignmentFlags.Right, Margin = Margin.Ten };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Left, Margin = Margin.Ten };
@@ -396,15 +419,16 @@ namespace Flood.Tests
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanelShapedOverflowMargins");
+            GUI.Test(control, "DockPanel", "dockPanelShapedOverflowMargins");
         }
 
         [Test]
         public void TestDockPanel13()
         {
-            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Left 
-                | AlignmentFlags.Top, Margin = Margin.Ten};
-            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Left 
+            canvas.SetSize(350, 100);
+            var labelTopLeft = new Label { Text = "LabelTopLeft", Alignment = AlignmentFlags.Top
+                | AlignmentFlags.Left, Margin = Margin.Ten };
+            var labelTopRight = new Label { Text = "LabelTopRight", Alignment = AlignmentFlags.Top
                 | AlignmentFlags.Right, Margin = Margin.Ten };
             var labelBottomLeft = new Label { Text = "LabelBottomLeft", Alignment = AlignmentFlags.Bottom 
                 | AlignmentFlags.Left, Margin = Margin.Ten };
@@ -418,16 +442,17 @@ namespace Flood.Tests
             control.AddChild(labelBottomRight);
             canvas.AddChild(control);
 
-            GUI.Test(control, "dockPanelShapedUnderflowMargins");
+            GUI.Test(control, "DockPanel", "dockPanelShapedUnderflowMargins");
         }
 
         [Test]
         public void TestTextBox()
         {
-            //var control = new TextBox(canvas);
+            //var control = new TextBox();
             //control.Text = "TextBox";
 
-            //GUI.Test(control, "TextBox1");
+            //canvas.AddChild(control);
+            //GUI.Test(control, "TextBox","TextBox1");
         }
 
         [Test]
@@ -847,64 +872,72 @@ namespace Flood.Tests
         [Test]
         public void TestBoxSizer1()
         {
+            canvas.SetSize(130, 110);
             var boxPanel = new BoxPanel();
             for (int i = 1; i <= 5; ++i)
                 boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
             canvas.AddChild(boxPanel);
 
-            GUI.Test(boxPanel, "BoxSizer1_AfterLayout");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer1_AfterLayout");
+            canvas.SetSize(540, 22);
             boxPanel.Orientation = Orientation.Horizontal;
-            GUI.Test(boxPanel, "BoxSizer1_OrientationChanged");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer1_OrientationChanged");
         }
 
         [Test]
         public void TestBoxSizer2()
         {
+            canvas.SetSize(649, 22);
             var boxPanel = new BoxPanel();
             for (int i = 1; i <= 5; ++i)
-                boxPanel.AddChild(new Button() { Text = "Button" + Math.Pow(10, i) });
+                boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
 
             canvas.AddChild(boxPanel);
             boxPanel.Orientation = Orientation.Horizontal;
 
-            boxPanel.AddChild(new Button() { Text = "ExtraButton" });
+            boxPanel.AddChild(new Button { Text = "ExtraButton" });
 
-            GUI.Test(boxPanel, "BoxSizer2");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer2");
         }
 
         [Test]
         public void TestBoxSizer3()
         {
+            canvas.SetSize(130, 110);
             var boxPanel = new BoxPanel();
             for (int i = 1; i <= 5; ++i)
-                boxPanel.AddChild(new Button() { Text = "Button" + Math.Pow(10, i) });
+                boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
 
             canvas.AddChild(boxPanel);
 
-            GUI.Test(boxPanel, "BoxSizer3_BeforeSwap");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer3_BeforeSwap");
             boxPanel.SwapChildren(1, 4);
-            GUI.Test(boxPanel, "BoxSizer3_AfterSwap");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer3_AfterSwap");
         }
 
         [Test]
         public void TestBoxSizer4()
         {
+            canvas.SetSize(130, 110);
             var boxPanel = new BoxPanel();
             for (int i = 1; i <= 5; ++i)
-                boxPanel.AddChild(new Button() { Text = "Button" + Math.Pow(10, i) });
+                boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
 
             canvas.AddChild(boxPanel);
 
-            GUI.Test(boxPanel, "BoxSizer4_BeforeRemoval");
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer4_BeforeRemoval");
             boxPanel.RemoveChild(2, true);
-            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval1");
+            canvas.SetSize(130, 88);
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer4_AfterRemoval1");
             boxPanel.RemoveChild(2, false);
-            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval2");
+            canvas.SetSize(130, 66);
+            GUI.Test(boxPanel, "BoxPanel", "BoxSizer4_AfterRemoval2");
         }
 
         [Test]
         public void TestGridSizer1()
         {
+            canvas.SetSize(206, 154);
             var gridPanel = new GridPanel();
             gridPanel.SetRows(3);
             gridPanel.SetColumns(2);
@@ -919,13 +952,14 @@ namespace Flood.Tests
             gridPanel.AddChild(boxPanel, 2, 0);
             gridPanel.AddChild(new Button { Text = "grid_2-1" }, 2, 1);
 
-            canvas.AddChild(gridPanel); 
-            GUI.Test(gridPanel, "GridSizer1");
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer1");
         }
 
         [Test]
         public void TestGridSizer2()
         {
+            canvas.SetSize(206, 154);
             var gridPanel = new GridPanel();
             gridPanel.SetRows(3);
             gridPanel.SetColumns(2);
@@ -933,8 +967,11 @@ namespace Flood.Tests
             {
                 for (int j = 0; j < 2; j++)
                 {
-                    var button = new Button { Text = "grid_" + i + "-" + j };
-                    button.Alignment = (j % 2 == 0) ? AlignmentFlags.Center : AlignmentFlags.Right;
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j,
+                                         Alignment = (j%2 == 0) ? AlignmentFlags.Center : AlignmentFlags.Right
+                                     };
                     gridPanel.AddChild(button, i, j);
                 }
 
@@ -949,171 +986,175 @@ namespace Flood.Tests
             gridPanel.AddChild(new Button { Text = "grid_2-1", Alignment = AlignmentFlags.Center }, 2, 1);
 
             canvas.AddChild(gridPanel);
-            GUI.Test(gridPanel, "GridSizer2_Alignment");
+            GUI.Test(gridPanel, "GridPanel", "GridSizer2_Alignment");
         }
-        
-        //[Test]
-        //public void TestGridSizer3()
-        //{
-        //    var gridPanel = new GridPanel(canvas);
-        //    gridPanel.SetRows(4);
-        //    gridPanel.SetColumns(2);
-        //    gridPanel.SetColumns(1, 3);
-        //    for (int i = 0; i < 2;i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = (j % 2 == 0)? AlignmentFlags.Center : AlignmentFlags.Right;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
+
+        [Test]
+        public void TestGridSizer3()
+        {
+            canvas.SetSize(152, 176);
+            var gridPanel = new GridPanel();
+            gridPanel.SetRows(4);
+            gridPanel.SetColumns(3);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j,
+                                         Alignment = (j%2 == 0) ? AlignmentFlags.Center : AlignmentFlags.Right
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
+
+            var boxPanel = new BoxPanel();
+            for (int i = 1; i <= 5; ++i)
+                boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
             
-        //    var boxPanel = new BoxPanel(gridPanel);
-        //    for (int i = 1; i <= 5; ++i)
-        //        new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
-        //    boxPanel.Redimension();
-        //    boxPanel.Layout();
+            gridPanel.AddChild(boxPanel, 3, 0, columnSpan:2);
+            gridPanel.AddChild(new Button { Text = "grid_2-1", Alignment = AlignmentFlags.Center }, 2, 1);
 
-        //    gridPanel.SetPosition(boxPanel, 3,0);
-        //    gridPanel.SetPosition(new Button(gridPanel) { Text = "grid_2-1", Alignment = AlignmentFlags.Center }, 2, 1);
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer3_Alignment");
+        }
 
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer3_Alignment");
-        //}
-        
-        //[Test]
-        //public void TestGridSizer4()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(2);
-        //    gridPanel.SetColumns(2);
-        //    for (int i = 0; i < 2;i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = (j % 2 == 0)? AlignmentFlags.Top : AlignmentFlags.Right;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
+        [Test]
+        public void TestGridSizer4()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var alignmentHorizontal = (i % 2 == 0) ? "CtrHor" : "Right";
+                    var alignmentVertical = (j % 2 == 0) ? "CtrVert" : "Bottom";
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + alignmentVertical + "-" + alignmentHorizontal,
+                                         Alignment = (j%2 == 0) ? AlignmentFlags.CenterVertical : AlignmentFlags.Bottom
+                                     };
+                    button.Alignment |= (i % 2 == 0) ? AlignmentFlags.CenterHorizontal : AlignmentFlags.Right;
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
 
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer4_Expand");
-        //}
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer4_Expand");
+        }
 
-        //[Test]
-        //public void TestGridSizer5()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(2);
-        //    gridPanel.SetColumns(2);
-        //    for (int i = 0; i < 2;i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = AlignmentFlags.Center;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
-   
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer5_Expand_Center");
-        //}
-        
-        //[Test]
-        //public void TestGridSizer6()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(2);
-        //    gridPanel.SetColumns(10);
-        //    for (int i = 0; i < 2;i++)
-        //    {
-        //        for (int j = 0; j < 10; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = AlignmentFlags.Center;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
-   
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer6_Expand_WidthOverflow");
-        //}
+        [Test]
+        public void TestGridSizer5()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j, Alignment = AlignmentFlags.Center
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
 
-        //[Test]
-        //public void TestGridSizer7()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(30);
-        //    gridPanel.SetColumns(2);
-        //    for (int i = 0; i < 30;i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = AlignmentFlags.Center;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
-   
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer7_Expand_HeightOverflow");
-        //}
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer5_Expand_Center");
+        }
 
-        //[Test]
-        //public void TestGridSizer8()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(30);
-        //    gridPanel.SetColumns(20);
-        //    for (int i = 0; i < 30;i++)
-        //    {
-        //        for (int j = 0; j < 20; j++)
-        //        {
-        //            var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
-        //            button.Alignment = AlignmentFlags.Center;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-                
-        //    }
-   
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer8_Expand_Width&HeightOverflow");
-        //}
-        
+        [Test]
+        public void TestGridSizer6()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(10);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j, Alignment = AlignmentFlags.Center
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
+
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer6_Expand_WidthOverflow");
+        }
+
+        [Test]
+        public void TestGridSizer7()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(30);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j, Alignment = AlignmentFlags.Center
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
+
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer7_Expand_HeightOverflow");
+        }
+
+        [Test]
+        public void TestGridSizer8()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(30);
+            gridPanel.SetColumns(20);
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j, Alignment = AlignmentFlags.Center
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
+
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer8_Expand_Width&HeightOverflow");
+        }
+
         //[Test]
         //public void TestGridSizer9()
         //{
-        //    var gridPanel = new GridPanel(canvas);
+        //    var gridPanel = new GridPanel();
         //    gridPanel.SetRows(3);
         //    gridPanel.SetColumns(2);
-        //    var colorPicker = new ColorPicker(gridPanel);
-        //    gridPanel.SetPosition(colorPicker, 0, 0);
-        //    var rbg = new RadioButtonGroup(gridPanel, "RadioButtonGroup");
+        //    var colorPicker = new ColorPicker();
+        //    gridPanel.AddChild(colorPicker, 0, 0);
+        //    var rbg = new RadioButtonGroup("RadioButtonGroup");
         //    rbg.Text = "RadioButtonGroup2";
         //    rbg.AddOption("opt1");
         //    rbg.AddOption("opt2");
         //    rbg.AddOption("opt3");
-        //    gridPanel.SetPosition(rbg, 0, 1);
+        //    gridPanel.AddChild(rbg, 0, 1);
 
-        //    var collapsibleList = new CollapsibleList(gridPanel);
+        //    var collapsibleList = new CollapsibleList();
         //    var cat1 = collapsibleList.Add("Category1");
         //    var cat2 = collapsibleList.Add("Category2");
         //    cat1.Add("but1-1");
@@ -1123,218 +1164,247 @@ namespace Flood.Tests
         //    cat2.Add("but2-3");
         //    cat2.Add("but2-4");
         //    collapsibleList.SizeToContents();
-        //    gridPanel.SetPosition(collapsibleList, 1, 0);
-        //    var comboBox = new ComboBox(gridPanel);
+        //    gridPanel.AddChild(collapsibleList, 1, 0);
+            
+        //    var comboBox = new ComboBox();
         //    comboBox.AddItem("opt1");
         //    comboBox.AddItem("opt2");
         //    comboBox.AddItem("opt3");
-        //    gridPanel.SetPosition(comboBox, 1, 1);
+        //    gridPanel.AddChild(comboBox, 1, 1);
+
         //    var tabControl = new TabControl(gridPanel);
         //    tabControl.AddPage("pg1");
         //    tabControl.AddPage("pg2");
         //    tabControl.AddPage("pg3");
         //    tabControl.AddPage("pg4");
-        //    gridPanel.SetPosition(tabControl, 2, 0);
+        //    gridPanel.AddChild(tabControl, 2, 0);
 
-        //    var listBox = new ListBox(gridPanel);
+        //    var listBox = new ListBox();
         //    listBox.AddRow("row1");
         //    listBox.AddRow("row2");
         //    listBox.AddRow("row3");
-        //    gridPanel.SetPosition(listBox, 2, 1);
+        //    gridPanel.AddChild(listBox, 2, 1);
 
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer9_DifferentControls");
+        //    canvas.AddChild(gridPanel);
+        //    GUI.Test(gridPanel, "GridPanel", "GridSizer9_DifferentControls");
         //}
 
-        //[Test]
-        //public void TestGridSizer10()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(2);
-        //    gridPanel.SetColumns(2);
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) { Text = "grid_" + i + "-" + j };
-        //            button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-        //    }
+        [Test]
+        public void TestGridSizer10()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid_" + i + "-" + j,
+                                         Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right
+                                     };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
 
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer10_AlignementBottomRight");
-        //}
-        //[Test]
-        //public void TestGridSizer11()
-        //{
-        //    canvas.Width = 400;
-        //    canvas.Height = 600;
-        //    var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
-        //    gridPanel.SetRows(2);
-        //    gridPanel.SetColumns(2);
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer10_AlignementBottomRight");
+        }
+        [Test]
+        public void TestGridSizer11()
+        {
+            canvas.SetSize(400, 600);
+            var gridPanel = new GridPanel(ExpansionFlags.FitExpand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
 
-        //    for (int i = 0; i < 1; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel) { Text = "grid_" + i + "-" + j };
-        //            gridPanel.SetPosition(button, i, j);
-        //        }
-        //    }
-        //    var btn = new Button(gridPanel) { Text = "grid_1-0"};
-        //    gridPanel.SetPosition(btn, 1, 0);
+            for (int i = 0; i < 1; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button { Text = "grid_" + i + "-" + j };
+                    gridPanel.AddChild(button, i, j);
+                }
+            }
+            var btn = new Button { Text = "grid_1-0" };
+            gridPanel.AddChild(btn, 1, 0);
 
-        //    var boxPanel = new BoxPanel(gridPanel);
-        //    for (int i = 1; i <= 5; ++i)
-        //        new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
-        //    boxPanel.Redimension();
-        //    boxPanel.Layout();
+            var boxPanel = new BoxPanel();
+            for (int i = 1; i <= 5; ++i)
+                boxPanel.AddChild(new Button { Text = "Button" + Math.Pow(10, i) });
+         
+            gridPanel.AddChild(boxPanel, 1, 1);
 
-        //    gridPanel.SetPosition(boxPanel, 1, 1);
+            canvas.AddChild(gridPanel);
+            GUI.Test(gridPanel, "GridPanel", "GridSizer11_BoxPanel");
+        }
 
-        //    gridPanel.Layout();
-        //    GUI.Test(gridPanel, "GridSizer11_BoxPanel");
-        //}
+        [Test]
+        public void TestGridSizer12()
+        {
+            canvas.SetSize(356, 52);
+            var boxPanel = new BoxPanel { Orientation = Orientation.Horizontal };
 
-        //[Test]
-        //public void TestGridSizer12()
-        //{
-        //    var boxPanel = new BoxPanel(canvas){ Orientation = Orientation.Horizontal};
+            var gridPanel1 = new GridPanel();
+            gridPanel1.SetRows(2);
+            gridPanel1.SetColumns(2);
 
-        //    var gridPanel1 = new GridPanel(boxPanel);
-        //    gridPanel1.SetRows(2);
-        //    gridPanel1.SetColumns(2);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid1_" + i + "-" + j,
+                                         Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right
+                                     };
+                    gridPanel1.AddChild(button, i, j);
+                }
+            }
 
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel1) { Text = "grid_" + i + "-" + j };
-        //            button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
-        //            gridPanel1.SetPosition(button, i, j);
-        //        }
-        //    }
+            var gridPanel2 = new GridPanel();
+            gridPanel2.SetRows(2);
+            gridPanel2.SetColumns(2);
 
-        //    gridPanel1.Layout();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button
+                                     {
+                                         Text = "grid2_" + i + "-" + j,
+                                         Margin = Margin.Two,
+                                         Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right
+                                     };
+                    gridPanel2.AddChild(button, i, j);
+                }
+            }
 
-        //    var gridPanel2 = new GridPanel(boxPanel);
-        //    gridPanel2.SetRows(2);
-        //    gridPanel2.SetColumns(2);
+            boxPanel.AddChild(gridPanel1);
+            boxPanel.AddChild(gridPanel2);
+            canvas.AddChild(boxPanel);
 
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(gridPanel2) { Text = "grid_" + i + "-" + j };
-        //            button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
-        //            gridPanel2.SetPosition(button, i, j);
-        //        }
-        //    }
+            GUI.Test(gridPanel1, "GridPanel", "GridSizer12_2GridPanels");
+        }
 
-        //    gridPanel2.Layout();
+        [Test]
+        public void TestRelativePositionSizer1()
+        {
+            var relativePositionPanel = new RelativePanel();
 
-        //    boxPanel.Redimension();
-        //    boxPanel.Layout();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.AddChild(button, 106 * i, 22 * j);
+                }
+            }
 
-        //    GUI.Test(gridPanel1, "GridSizer12_2GridPanels");
-        //}
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel1");
+        }
 
-        //[Test]
-        //public void TestRelativePositionSizer1()
-        //{
-        //    var relativePositionPanel = new RelativePanel(canvas);
+        [Test]
+        public void TestRelativePositionSizer2()
+        {
+            var relativePositionPanel = new RelativePanel();
 
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
-        //            relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
-        //        }
-        //    }
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.AddChild(button, 126 * i, 32 * j);
+                }
+            }
 
-        //    relativePositionPanel.Layout();
-        //    GUI.Test(relativePositionPanel, "relativePanel1");
-        //}
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel2");
+        }
+
+        [Test]
+        public void TestRelativePositionSizer3()
+        {
+            var relativePositionPanel = new RelativePanel();
+            relativePositionPanel.Shape(new Vector2i(200, 100));
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.AddChild(button, 126 * i, 32 * j);
+                }
+            }
+
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel3_shaped");
+        }
+
+        [Test]
+        public void TestRelativePositionSizer4()
+        {
+            //canvas.SetSize(300, 50);
+            var relativePositionPanel = new RelativePanel();
+            relativePositionPanel.Shape(new Vector2i(300, 50));
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.AddChild(button, 106 * i, 22 * j);
+                }
+            }
+
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel4_shaped_overflow");
+        }
+
+        [Test]
+        public void TestRelativePositionSizer5()
+        {
+            canvas.SetSize(200, 40);
+            var relativePositionPanel = new RelativePanel(ExpansionFlags.Expand);
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.AddChild(button, 106 * i, 22 * j);
+                }
+            }
+
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel5_expand_overflow");
+        }
         
-        //[Test]
-        //public void TestRelativePositionSizer2()
-        //{
-        //    var relativePositionPanel = new RelativePanel(canvas);
+        [Test]
+        public void TestRelativePositionSizer6()
+        {
+            canvas.SetSize(200, 40);
+            var relativePositionPanel = new RelativePanel(ExpansionFlags.Expand);
 
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
-        //            relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
-        //        }
-        //    }
+            var button = new Button { Text = "Not_Visible" };
+            relativePositionPanel.AddChild(button, 316, 10);
 
-        //    relativePositionPanel.Layout();
-        //    GUI.Test(relativePositionPanel, "relativePanel2");
-        //}
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel6_outofcanvasbounds");
+        }
         
-        //[Test]
-        //public void TestRelativePositionSizer3()
-        //{
-        //    var relativePositionPanel = new RelativePanel(canvas, ExpansionFlags.Shaped);
-        //    relativePositionPanel.Width = 200;
-        //    relativePositionPanel.Height = 100;
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < 2; j++)
-        //        {
-        //            var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
-        //            relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
-        //        }
-        //    }
+        [Test]
+        public void TestRelativePositionSizer7()
+        {
+            var relativePositionPanel = new RelativePanel(ExpansionFlags.Expand);
+            relativePositionPanel.Shape(new Vector2i(300, 50));
+            var button = new Button { Text = "Not_Visible" };
+            relativePositionPanel.AddChild(button, 316, 10);
 
-        //    relativePositionPanel.Layout();
-        //    GUI.Test(relativePositionPanel, "relativePanel3_shaped");
-        //}
-        
-        //[Test]
-        //public void TestRelativePositionSizer4()
-        //{
-        //    var relativePositionPanel = new RelativePanel(canvas, ExpansionFlags.Shaped);
-        //    relativePositionPanel.Width = 300;
-        //    relativePositionPanel.Height = 50;
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        for (int j = 0; j < 3; j++)
-        //        {
-        //            var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
-        //            relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
-        //        }
-        //    }
-
-        //    relativePositionPanel.Layout();
-        //    GUI.Test(relativePositionPanel, "relativePanel4_shaped_overflow");
-        //}
-        
-        //[Test]
-        //public void TestRelativePositionSizer5()
-        //{
-        //    canvas.Width = 200;
-        //    canvas.Height = 40;
-        //    var relativePositionPanel = new RelativePanel(canvas, ExpansionFlags.Expand);
-
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        for (int j = 0; j < 3; j++)
-        //        {
-        //            var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
-        //            relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
-        //        }
-        //    }
-
-        //    relativePositionPanel.Layout();
-        //    GUI.Test(relativePositionPanel, "relativePanel5_expand_overflow");
-        //}
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel7_outofpanelbounds");
+        }
     }
 
 }

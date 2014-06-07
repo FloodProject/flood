@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Flood.GUIv2.Panels.Layout
 {
     public class RelativeSizer : Sizer
     {
-
-        //todo: check if sizers are dealing with margins correctly
         public RelativeSizer(RelativePanel panel) : base(panel)
         {
 
@@ -21,6 +18,8 @@ namespace Flood.GUIv2.Panels.Layout
                 var position = ((RelativePanel)Panel).ChildrenPositions[control];
                 var w = Panel.Width - position.X - control.Margin.Left;
                 var h = Panel.Height - position.Y - control.Margin.Top;
+                if (w <= 0 || h <= 0)
+                    w = h = 1;
                 PositionAndAlign(position, new Vector2i(w, h), control);
             }
         }

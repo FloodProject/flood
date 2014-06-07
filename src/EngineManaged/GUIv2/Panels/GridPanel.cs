@@ -10,18 +10,20 @@ namespace Flood.GUIv2.Panels
     {
         public class GridControlData
         {
-            public  GridControlData(IControl control)
+            private GridPanel Panel;
+            public GridControlData(GridPanel panel, IControl control)
             {
                 Control = control;
+                Panel = panel;
             }
 
-            public  GridControlData(IControl control, Vector2i position, Vector2i span) 
-                : this(control, position.X, position.Y, span.X, span.Y)
+            public GridControlData(GridPanel panel, IControl control, Vector2i position, Vector2i span) 
+                : this(panel, control, position.X, position.Y, span.X, span.Y)
             {
             }
 
-            public  GridControlData(IControl control, int row, int column, int rowSpan, int columnSpan)
-                : this(control)
+            public GridControlData(GridPanel panel, IControl control, int row, int column, int rowSpan, int columnSpan)
+                : this(panel, control)
             {
                 Row = row;
                 Column = column;
@@ -33,7 +35,25 @@ namespace Flood.GUIv2.Panels
             public int Row { get; set; }
             public int Column { get; set; }
             public int RowSpan { get; set; }
+            public int EffectiveRowSpan 
+            { 
+                get
+                {
+                    return  ( Row + RowSpan  > Panel.Rows  ) ? Panel.Rows  - Row  : RowSpan;
+                }
+            }
             public int ColumnSpan { get; set; }
+            public int EffectiveColumnSpan
+            {
+                get
+                {
+                    return (Column + ColumnSpan > Panel.Columns) ? Panel.Columns - Column : ColumnSpan;
+                }
+            }
+            public bool IsValid()
+            {
+                return Row >= 0 && Row < Panel.Rows && Column >= 0 && Column < Panel.Columns;
+            }
         }
 
         internal Dictionary<IControl, GridControlData> ControlData { get; private set; }
@@ -75,7 +95,7 @@ namespace Flood.GUIv2.Panels
             if (span.X < 1 || span.Y < 1)
                 throw new ArgumentException("Span must at least be size 1.");
             base.AddChild(child);
-            ControlData[child] = new GridControlData(child, position, span);
+            ControlData[child] = new GridControlData(this, child, position, span);
         }
 
         public void AddChild(IControl child, Vector2i position)
@@ -223,7 +243,7 @@ namespace Flood.GUIv2.Panels
             internal SizerRow(int index, SizerRow previous = null)
             {
                 PreviousRow = previous;
-                Index = Index;
+                Index = index;
             }
         }
 
@@ -276,12 +296,30 @@ namespace Flood.GUIv2.Panels
             }
         }
 
+
+        private class RowComparer : IComparer<SizerRow>
+        {
+            public int Compare(SizerRow x, SizerRow y)
+            {
+                // add null checking, demo purposes only
+                return x.Height.CompareTo(y.Height);
+            }
+        }
+        private class ColumnComparer : IComparer<SizerColumn>
+        {
+            public int Compare(SizerColumn x, SizerColumn y)
+            {
+                // add null checking, demo purposes only
+                return x.Width.CompareTo(y.Width);
+            }
+        }
+
         internal class SizerGrid
         {
             internal List<SizerRow> Rows = new List<SizerRow>();
             internal List<SizerColumn> Columns = new List<SizerColumn>();
-            internal SortedList<int, SizerRow> SortedRows = new SortedList<int, SizerRow>(); 
-            internal SortedList<int, SizerColumn> SortedColumns = new SortedList<int, SizerColumn>(); 
+            internal SortedSet<SizerRow> SortedRows = new SortedSet<SizerRow>(new RowComparer());
+            internal SortedSet<SizerColumn> SortedColumns = new SortedSet<SizerColumn>(new ColumnComparer());
             internal SizerRow NewRow()
             {
                 var row = new SizerRow(Rows.Count, Rows.LastOrDefault());
@@ -306,12 +344,16 @@ namespace Flood.GUIv2.Panels
             var lastColumns = new Dictionary<int, List<IControl>>();
             foreach (var control in Children)
             {
-                if (control.IsHidden) continue;
+                if (control.IsHidden || !ControlData[control].IsValid()) continue;
                 if (control.IsExpandHorizontal) InheritedExpandHorizontal = true;
                 if (control.IsExpandVertical) InheritedExpandVertical = true; 
-                var row = ControlData[control].Row + ControlData[control].RowSpan - 1;
+                var row = ControlData[control].Row + ControlData[control].EffectiveRowSpan - 1;
+                if(!lastRows.ContainsKey(row))
+                    lastRows[row] = new List<IControl>();
                 lastRows[row].Add(control);
-                var column = ControlData[control].Column + ControlData[control].ColumnSpan - 1;
+                var column = ControlData[control].Column + ControlData[control].EffectiveColumnSpan - 1;
+                if (!lastColumns.ContainsKey(column))
+                    lastColumns[column] = new List<IControl>();
                 lastColumns[column].Add(control);
             }
 
@@ -327,7 +369,7 @@ namespace Flood.GUIv2.Panels
                     row.BestY = bestRows[i] = (i == 0) ? 0 : bestRows[i - 1];
                     row.MaxY = maxRows[i] = (i == 0) ? 0 : maxRows[i - 1];
                     row.Y = row.BestY;
-                    WorkGrid.SortedRows.Add(row.Height, row);
+                    WorkGrid.SortedRows.Add(row);
                     row.PreferredYs.Add(row.BestY);
                     continue;
                 }
@@ -348,7 +390,7 @@ namespace Flood.GUIv2.Panels
                 row.BestY = bestRows[i];
                 row.MaxY = maxRows[i];
                 row.Y = row.BestY;
-                WorkGrid.SortedRows.Add(row.Height, row);
+                WorkGrid.SortedRows.Add(row);
                 Debug.Assert(row.PreferredYs.Count > 0 && row.BestY == row.PreferredYs.Last());
                 row.PreferredYs.Remove(row.PreferredYs.Last());
 
@@ -366,7 +408,7 @@ namespace Flood.GUIv2.Panels
                     column.BestX = bestColumns[i] = (i == 0) ? 0 : bestColumns[i - 1];
                     column.MaxX = maxColumns[i] = (i == 0) ? 0 : maxColumns[i - 1];
                     column.X = column.BestX;
-                    WorkGrid.SortedColumns.Add(column.Width, column);
+                    WorkGrid.SortedColumns.Add(column);
                     column.PreferredXs.Add(column.BestX);
                     continue;
                 }
@@ -387,14 +429,14 @@ namespace Flood.GUIv2.Panels
                 column.BestX = bestColumns[i];
                 column.MaxX = maxColumns[i];
                 column.X = column.BestX;
-                WorkGrid.SortedColumns.Add(column.Width, column);
+                WorkGrid.SortedColumns.Add(column);
                 Debug.Assert(column.PreferredXs.Count > 0 && column.BestX == column.PreferredXs.Last());
                 column.PreferredXs.Remove(column.PreferredXs.Last());
             }
 
-            layoutMinSize = new Vector2i(minRows[Rows-1], minColumns[Columns-1]);
-            layoutBestSize = new Vector2i(bestRows[Rows-1], bestColumns[Columns-1]);
-            layoutMaxSize = new Vector2i(maxRows[Rows-1], maxColumns[Columns-1]);
+            layoutMinSize = new Vector2i(minColumns[Columns-1], minRows[Rows-1]);
+            layoutBestSize = new Vector2i(bestColumns[Columns-1], bestRows[Rows-1]);
+            layoutMaxSize = new Vector2i(maxColumns[Columns-1], maxRows[Rows-1]);
         }
 
         private int UpdateColumnX(IControl control, int[] columnsX, Vector2i controlSize, int currentX, SortedSet<int> preferred = null)
@@ -413,6 +455,15 @@ namespace Flood.GUIv2.Panels
             return Math.Max(newY, currentY);
         }
 
+        public int EffectiveRowSpan(int row, int rowSpan)
+        {
+            return (row + rowSpan > Columns) ? Rows - row : rowSpan;
+        }
+
+        public int EffectiveColumnSpan(int column, int columnSpan)
+        {
+            return (column + columnSpan > Columns) ? Columns - column : columnSpan;
+        }
 
         public List<IControl> GetControlsAtRow(int row)
         {

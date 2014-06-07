@@ -89,7 +89,7 @@ namespace Flood.GUIv2
             {
                 if (value != null && Parent != null)
                     throw new Exception("Parent should be null.");
-                if (!(value is IPanel))
+                if (value != null &&!(value is IPanel))
                     throw new Exception("Parent should be IPanel.");
 
                 var oldCanvas = GetCanvas();

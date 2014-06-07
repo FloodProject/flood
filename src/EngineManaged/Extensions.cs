@@ -44,8 +44,13 @@ namespace Flood
         {
             return rect.Y + rect.Height;
         }
+
+        public static RectangleF ToRectangleF(this Rectangle rect)
+        {
+            return new RectangleF(rect.X, rect.Y, rect.Width, rect.Height);
+        }
     }
-    
+
     public static class VectorExtensions
     {
         public static Vector2i TryToAdd(this Vector2i v1, Vector2i v2)
@@ -99,6 +104,31 @@ namespace Flood
         public static bool GT(this Vector2i size1, Vector2i size2)
         {
             return size1.X > size2.X && size1.Y > size2.Y;
+        }
+
+        public static bool AnyEQ(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X == size2.X || size1.Y == size2.Y;
+        }
+
+        public static bool AnyLE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.AnyEQ(size2) || size1.AnyLT(size2);
+        }
+
+        public static bool AnyLT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X < size2.X || size1.Y < size2.Y;
+        }
+
+        public static bool AnyGE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.AnyEQ(size2) || size1.AnyGT(size2);
+        }
+
+        public static bool AnyGT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X > size2.X || size1.Y > size2.Y;
         }
     }
 

@@ -124,21 +124,47 @@ namespace Flood.GUIv2.Renderers
         /// <param name="v1">MaterialHandle coordinate v1.</param>
         /// <param name="u2">MaterialHandle coordinate u2.</param>
         /// <param name="v2">MaterialHandle coordinate v2.</param>
-        public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1=0, float v1=0, float u2=1, float v2=1)
-        {}
-
+        public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        {
+        }
+        
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="t">MaterialHandle to use.</param>
-        /// <param name="materialHandle">Material to use.</param>
+        /// <param name="material">Material to use.</param>
+        /// <param name="materialHandle">Rectangle bounds.</param>
         /// <param name="u1">MaterialHandle coordinate u1.</param>
         /// <param name="v1">MaterialHandle coordinate v1.</param>
         /// <param name="u2">MaterialHandle coordinate u2.</param>
         /// <param name="v2">MaterialHandle coordinate v2.</param>
-        public void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1=0, float v1=0, float u2=1, float v2=1)
+        public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
         {
-            DrawTexturedRect(imageHandle, new RectangleF(rect.X, rect.Y, rect.Width, rect.Height), u1, v1, u2, v2);
+        }
+
+        /// <summary>
+        /// Draws textured rectangle.
+        /// </summary>
+        /// <param name="material">Material to use.</param>
+        /// <param name="materialHandle">Rectangle bounds.</param>
+        /// <param name="u1">MaterialHandle coordinate u1.</param>
+        /// <param name="v1">MaterialHandle coordinate v1.</param>
+        /// <param name="u2">MaterialHandle coordinate u2.</param>
+        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        public virtual void DrawTexturedRect(ResourceHandle<Material> imageHandle, Rectangle rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        {
+        }
+
+        /// <summary>
+        /// Draws textured rectangle.
+        /// </summary>
+        /// <param name="material">Material to use.</param>
+        /// <param name="materialHandle">Rectangle bounds.</param>
+        /// <param name="u1">MaterialHandle coordinate u1.</param>
+        /// <param name="v1">MaterialHandle coordinate v1.</param>
+        /// <param name="u2">MaterialHandle coordinate u2.</param>
+        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        public virtual void DrawTexturedRect(ResourceHandle<Material> imageHandle, RectangleF rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        {
         }
 
         /// <summary>

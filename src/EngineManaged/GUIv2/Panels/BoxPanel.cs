@@ -87,6 +87,7 @@ namespace Flood.GUIv2.Panels
         public void AddChild(IControl child, int index)
         {
             InsertChild(child, index);
+            Invalidate();
         }
 
         public bool RemoveChild(int index, bool dispose)
@@ -94,6 +95,7 @@ namespace Flood.GUIv2.Panels
             try
             {
                 RemoveChild(Children[index], dispose);
+                Invalidate();
                 return true;
             }
             catch (ArgumentOutOfRangeException)
@@ -109,6 +111,7 @@ namespace Flood.GUIv2.Panels
                 var tmp = Children[second];
                 Children[second] = Children[first];
                 Children[first] = tmp;
+                Invalidate();
                 return true;
 
             }

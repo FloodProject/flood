@@ -224,7 +224,7 @@ namespace Flood.GUIv2.Controls
         public Button()
             : base(new DockPanel())
         {
-            m_Box = new BoxPanel(Orientation.Horizontal, ExpansionFlags.FitExpand);
+            m_Box = new BoxPanel(Orientation.Horizontal, ExpansionFlags.Fit | ExpansionFlags.Fill);
             m_Background = new ButtonBackground() {Expansion = ExpansionFlags.Fill};
             m_Text = new Text();
             m_Text.Hide();

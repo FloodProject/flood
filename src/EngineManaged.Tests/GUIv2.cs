@@ -46,10 +46,13 @@ namespace Flood.Tests
 
         #region Common testing logic
 
-        public void Test(IControl control, string assertId, string assertMessage = "")
+        public void Test(IControl control, string folder, string assertId, string assertMessage = "")
         {
-            var renderChanged = HasRenderChanged(control, assertId);
-            var serializationChanged = HasSerializationChanged(control, assertId);
+            if (!Directory.Exists(Path.Combine(BaseDirectory, folder)))
+                Directory.CreateDirectory(Path.Combine(BaseDirectory, folder));
+
+            var renderChanged = HasRenderChanged(control, folder + Path.DirectorySeparatorChar + assertId);
+            var serializationChanged = HasSerializationChanged(control, folder + Path.DirectorySeparatorChar + assertId);
 
             NUnit.Framework.Assert.IsFalse(renderChanged,
                 assertId + " render changed. " + assertMessage);

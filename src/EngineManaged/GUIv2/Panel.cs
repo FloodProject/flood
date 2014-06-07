@@ -71,11 +71,11 @@ namespace Flood.GUIv2
             {
                 if (Expansion == ExpansionFlags.Shaped)
                     return base.LayoutMinSize;
-
-                var minX = (RenderMinimumSize.X > layoutMinSize.X)
-                            ? RenderMinimumSize.X : layoutMinSize.X;
-                var minY = (RenderMinimumSize.Y > layoutMinSize.Y)
-                            ? RenderMinimumSize.Y : layoutMinSize.Y;
+                var renderLayoutMinSize = layoutMinSize.TryToAdd(MarginSizes);
+                var minX = (RenderMinimumSize.X > renderLayoutMinSize.X)
+                            ? RenderMinimumSize.X : renderLayoutMinSize.X;
+                var minY = (RenderMinimumSize.Y > renderLayoutMinSize.Y)
+                            ? RenderMinimumSize.Y : renderLayoutMinSize.Y;
 
                 return new Vector2i(minX, minY);
             }
@@ -87,8 +87,8 @@ namespace Flood.GUIv2
             {
                 if (Expansion == ExpansionFlags.Shaped)
                     return base.LayoutBestSize;
-                
-                return layoutBestSize;
+
+                return layoutBestSize.TryToAdd(MarginSizes);
             }
         }
 
@@ -110,13 +110,14 @@ namespace Flood.GUIv2
         {
             get
             {
-                if (Expansion == ExpansionFlags.Shaped)
+                if (Expansion == ExpansionFlags.Shaped || (Expansion & (ExpansionFlags.Fill | ExpansionFlags.Expand)) != 0)
                     return base.LayoutMaxSize;
-
-                var maxX = (RenderMaximumSize.X < layoutMaxSize.X)
-                            ? RenderMaximumSize.X : layoutMaxSize.X;
-                var maxY = (RenderMaximumSize.Y < layoutMaxSize.Y)
-                            ? RenderMaximumSize.Y : layoutMaxSize.Y; 
+               
+                var renderLayoutMaxSize = layoutMaxSize.TryToAdd(MarginSizes);
+                var maxX = (RenderMaximumSize.X < renderLayoutMaxSize.X)
+                            ? RenderMaximumSize.X : renderLayoutMaxSize.X;
+                var maxY = (RenderMaximumSize.Y < renderLayoutMaxSize.Y)
+                            ? RenderMaximumSize.Y : renderLayoutMaxSize.Y; 
 
                 return new Vector2i(maxX, maxY);
             }

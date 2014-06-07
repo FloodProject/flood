@@ -77,8 +77,11 @@ namespace Flood.GUIv2.Panels.Layout
                         , "Invalid value for BoxSizerOld orientation");
         }
 
+        //todo: deal with panel where every child is hidden or there are no children
         public override void RecalcSizes()
         {
+            if (Children.Count == 0 || Children.All(child => child.IsHidden))
+                return;
             var width = Panel.Width;
             var height = Panel.Height;
 
@@ -155,7 +158,7 @@ namespace Flood.GUIv2.Panels.Layout
 
             if (freeSpace > 0)
             {
-                var controls = Children.Where(child => child.IsHidden).ToList();
+                var controls = Children.Where(child => !child.IsHidden).ToList();
                 var controlExtraSpace = freeSpace / controls.Count;
                 //distribute remaining space evenly along all controls
                 for (int i = 0; i < controls.Count; i++)

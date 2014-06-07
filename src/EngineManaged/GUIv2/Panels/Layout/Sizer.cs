@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Flood.GUIv2.Panels.Layout
 {
@@ -192,16 +191,14 @@ namespace Flood.GUIv2.Panels.Layout
 
         public void PositionAndAlign(Vector2i boxPosition, Vector2i boxSize, IControl control)
         {
-           var size = control.LayoutMinSize - control.MarginSizes;
-           if (boxSize.LT(size))
-               size = boxSize - control.MarginSizes;
-           else if (boxSize.GE(control.LayoutBestSize))
-               size = control.LayoutBestSize - control.MarginSizes;
+            var size = control.LayoutMinSize - control.MarginSizes;
+            if (boxSize.GE(control.LayoutBestSize))
+                size = control.LayoutBestSize - control.MarginSizes;
 
-           if (control.IsExpandHorizontal || control.IsFillHorizontal)
-               size.X = Math.Min(boxSize.X, control.LayoutMaxSize.X) - control.HorizontalMargins;
+            if (control.IsExpandHorizontal || control.IsFillHorizontal)
+                size.X = Math.Min(boxSize.X, control.LayoutMaxSize.X) - control.HorizontalMargins;
             if (control.IsExpandVertical || control.IsFillVertical)
-               size.Y = Math.Min(boxSize.Y, control.LayoutMaxSize.Y) - control.VerticalMargins;
+                size.Y = Math.Min(boxSize.Y, control.LayoutMaxSize.Y) - control.VerticalMargins;
 
             if(size.X <= 0 || size.Y <= 0)
                 throw new Exception("Controls must have positive dimensions.");

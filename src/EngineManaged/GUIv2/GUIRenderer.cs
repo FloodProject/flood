@@ -97,7 +97,7 @@ namespace Flood.GUIv2
              {
                  AddQuad(new IntPtr(&v1),new IntPtr(&v2),new IntPtr(&v3),new IntPtr(&v4), (uint)sizeof(Vertex), imageHandle);
              }
-        }
+         }
 
         public void AddRectangle(RectangleF rect, 
             Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV,
@@ -227,7 +227,7 @@ namespace Flood.GUIv2
             gb.ClearIndexes();
         }
 
-        ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
+        public ResourceHandle<Material> GetCreateMaterial(ResourceHandle<Image> imageHandle)
         {
             var id = imageHandle.Id;
 
@@ -327,7 +327,7 @@ namespace Flood.GUIv2
 
         internal static void DrawText(GUIGeometryBuffer geometryBuffer, Font font, Vector2 position, String text, Color color)
         {
-            for(var i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 char c = text[i];
 
@@ -344,24 +344,62 @@ namespace Flood.GUIv2
                 if (glyphManager.TryGetGlyphImage(font, c, out subTexture, out material))
                 {
                     var renderRect = new RectangleF(
-                        position.X + glyph.XOffset, 
-                        position.Y + glyph.BaseLineOffset, 
+                        position.X + glyph.XOffset,
+                        position.Y + glyph.BaseLineOffset,
                         glyph.Width,
                         glyph.Height);
 
                     geometryBuffer.AddRectangle(renderRect,
-                        subTexture.LeftTopUV, subTexture.RightTopUV, 
+                        subTexture.LeftTopUV, subTexture.RightTopUV,
                         subTexture.RightBottomUV, subTexture.LeftBottomUV,
                         material, color);
                 }
 
-                if (i < text.Length-1){
-                    var kern = glyphManager.GetKerning(font, text[i], text[i+1]);
+                if (i < text.Length - 1)
+                {
+                    var kern = glyphManager.GetKerning(font, text[i], text[i + 1]);
                     position.X += glyph.Advance + kern.X;
                     position.Y += kern.Y;
                 }
             }
         }
+        //internal static void DrawText(Renderer renderer, Font font, Vector2 position, String text, Color color)
+        //{
+        //    for (var i = 0; i < text.Length; i++)
+        //    {
+        //        char c = text[i];
+
+        //        Glyph glyph;
+        //        if (!glyphManager.TryGetGlyphInfo(font, c, out glyph))
+        //        {
+        //            Log.Warn("Glyph not found for character " + c);
+        //            continue;
+        //        }
+
+        //        SubTexture subTexture;
+        //        ResourceHandle<Material> material;
+
+        //        if (glyphManager.TryGetGlyphImage(font, c, out subTexture, out material))
+        //        {
+        //            var renderRect = new RectangleF(
+        //                position.X + glyph.XOffset,
+        //                position.Y + glyph.BaseLineOffset,
+        //                glyph.Width,
+        //                glyph.Height);
+
+        //            renderer.DrawTexturedRect(material, renderRect,
+        //                subTexture.LeftTopUV.X, subTexture.RightBottomUV.X,
+        //                subTexture.LeftTopUV.Y, subTexture.RightBottomUV.Y);
+        //        }
+
+        //        if (i < text.Length - 1)
+        //        {
+        //            var kern = glyphManager.GetKerning(font, text[i], text[i + 1]);
+        //            position.X += glyph.Advance + kern.X;
+        //            position.Y += kern.Y;
+        //        }
+        //    }
+        //}
     };
 
     public class GwenRenderer : Renderer
@@ -389,21 +427,85 @@ namespace Flood.GUIv2
         public override void DrawFilledRect(Rectangle rect) 
         {
             rect = Translate(rect);
-            _guiBuffer.AddRectangle(new RectangleF(rect.X,rect.Y,rect.Width,rect.Height), DrawColor);
+            rect = ClampToClipRegion(rect);
+            _guiBuffer.AddRectangle(rect.ToRectangleF(), DrawColor);
         }
 
+        private Rectangle ClampToClipRegion(Rectangle rectangle)
+        {
+            var x = Math.Min(Math.Max(rectangle.X, ClipRegion.GetLeft()), ClipRegion.GetRight());
+            var y = Math.Min(Math.Max(rectangle.Y, ClipRegion.GetTop()), ClipRegion.GetBottom());
+            var width = Math.Min(rectangle.Width, ClipRegion.GetRight() - x);
+            var height = Math.Min(rectangle.Height, ClipRegion.GetBottom() - y);
+
+            return new Rectangle(x, y, width, height);
+        }
+
+        private RectangleF ClampToClipRegion(RectangleF rectangle)
+        {
+            var x = Math.Min(Math.Max(rectangle.X, ClipRegion.GetLeft()), ClipRegion.GetRight());
+            var y = Math.Min(Math.Max(rectangle.Y, ClipRegion.GetTop()), ClipRegion.GetBottom());
+            var width = Math.Min(rectangle.Width, ClipRegion.GetRight() - x);
+            var height = Math.Min(rectangle.Height, ClipRegion.GetBottom() - y);
+
+            return new RectangleF(x, y, width, height);
+        }
         public override Color DrawColor { get; set; }
+
+        //public override void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1, float v1, float u2, float v2)
+        //{
+        //    rect = Translate(rect);
+        //    var rect2 = ClampToClipRegion(rect);
+        //    var horizontalRatio = (u2 - u1) / rect.Width;
+        //    var verticalRatio = (v2 - v1) / rect.Height;
+
+        //    u1 = u1 + (rect2.GetLeft() - rect.GetLeft()) * horizontalRatio;
+        //    u2 = u1 + (rect2.GetRight() - rect.GetLeft()) * horizontalRatio;
+        //    v1 = v1 + (rect2.GetTop() - rect.GetTop()) * verticalRatio;
+        //    v2 = v1 + (rect2.GetBottom() - rect.GetTop()) * verticalRatio;
+
+        //    _guiBuffer.AddRectangle(rect2.ToRectangleF(), new Vector2(u1, v1), new Vector2(u2, v1), new Vector2(u2, v2), new Vector2(u1, v2), imageHandle, DrawColor);
+        //}
+
+        public override void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1, float v1, float u2, float v2)
+        {
+            DrawTexturedRect(imageHandle, rect.ToRectangleF(), u1, v1, u2, v2);
+        }
+
+        public override void DrawTexturedRect(ResourceHandle<Material> materialHandle, Rectangle rect, float u1, float v1, float u2, float v2)
+        {
+            DrawTexturedRect(materialHandle, rect.ToRectangleF(), u1, v1, u2, v2);
+        }
 
         public override void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1, float v1, float u2, float v2)
         {
             rect = Translate(rect);
-            _guiBuffer.AddRectangle(rect, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), imageHandle, DrawColor);
+            var rect2 = ClampToClipRegion(rect);
+            var horizontalRatio = (u2 - u1) / rect.Width;
+            var verticalRatio = (v2 - v1) / rect.Height;
+
+            u1 = u1 + (rect2.GetLeft() - rect.GetLeft()) * horizontalRatio;
+            u2 = u1 + (rect2.GetRight() - rect.GetLeft()) * horizontalRatio;
+            v1 = v1 + (rect2.GetTop() - rect.GetTop()) * verticalRatio;
+            v2 = v1 + (rect2.GetBottom() - rect.GetTop()) * verticalRatio;
+
+            _guiBuffer.AddRectangle(rect2, new Vector2(u1, v1), new Vector2(u2, v1), new Vector2(u2, v2), new Vector2(u1, v2), imageHandle, DrawColor);
+
         }
 
-        public void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, Vector2 topLeftUV, Vector2 topRightUV, Vector2 bottomRightUV, Vector2 bottomLeftUV)
+        public override void DrawTexturedRect(ResourceHandle<Material> materialHandle, RectangleF rect, float u1, float v1, float u2, float v2)
         {
             rect = Translate(rect);
-            _guiBuffer.AddRectangle(rect,topLeftUV,topRightUV,bottomRightUV,bottomLeftUV, imageHandle, DrawColor);
+            var rect2 = ClampToClipRegion(rect);
+            var horizontalRatio = (u2 - u1)/rect.Width;
+            var verticalRatio = (v2 - v1)/rect.Height;
+
+            u1 = u1 + (rect2.GetLeft() - rect.GetLeft()) * horizontalRatio;
+            u2 = u1 + (rect2.GetRight() - rect.GetLeft()) * horizontalRatio;
+            v1 = v1 + (rect2.GetTop() - rect.GetTop()) * verticalRatio;
+            v2 = v1 + (rect2.GetBottom() - rect.GetTop()) * verticalRatio;
+
+            _guiBuffer.AddRectangle(rect2, new Vector2(u1,v1), new Vector2(u2,v1), new Vector2(u2,v2), new Vector2(u1,v2), materialHandle, DrawColor);
         }
 
         public override Vector2 MeasureText(Font font, string text) 
@@ -414,7 +516,8 @@ namespace Flood.GUIv2
         public override void RenderText(Font font, Vector2i position, string text)
         {
             position = Translate(position);
-            TextRenderer.DrawText(_guiBuffer, font, new Vector2(position.X,position.Y), text, DrawColor);
+            TextRenderer.DrawText(_guiBuffer, font, new Vector2(position.X, position.Y), text, DrawColor);
+            //TextRenderer.DrawText(this, font, new Vector2(position.X,position.Y), text, DrawColor);
         }
 
         public override Color PixelColor(ResourceHandle<Image> imageHandle, uint x, uint y, Color defaultColor)
