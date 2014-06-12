@@ -45,56 +45,56 @@ namespace Flood.GUIv2.Panels.Layout
             return Orientation == Layout.Orientation.Vertical;
         }
 
-        /// <summary>
-        /// Calculates the minimum size of the associated panel.
-        /// </summary>
-        /// <returns>
-        /// The calculated min size.
-        /// </returns>
-        public override Vector2i CalcMin()
-        {
-            TotalProportion = 0;
-            MinSize = new Vector2i(0,0);
+        ///// <summary>
+        ///// Calculates the minimum size of the associated panel.
+        ///// </summary>
+        ///// <returns>
+        ///// The calculated min size.
+        ///// </returns>
+        //public override Vector2i CalcMin()
+        //{
+        //    TotalProportion = 0;
+        //    MinSize = new Vector2i(0,0);
 
-            // The minimal size for the sizer should be big enough to allocate its
-            // element at least its minimal size but also, and this is the non trivial
-            // part, to respect the children proportion. To satisfy the latter
-            // condition we must find the greatest min-size-to-proportion ratio for all
-            // elements with non-zero proportion.
-            float maxMinSizeToProp = 0;
-            Vector2i minSize = MinSize;
+        //    // The minimal size for the sizer should be big enough to allocate its
+        //    // element at least its minimal size but also, and this is the non trivial
+        //    // part, to respect the children proportion. To satisfy the latter
+        //    // condition we must find the greatest min-size-to-proportion ratio for all
+        //    // elements with non-zero proportion.
+        //    float maxMinSizeToProp = 0;
+        //    Vector2i minSize = MinSize;
 
-            foreach (var ctrl in Children)
-            {
-                if (ctrl.IsHidden)
-                    continue;
+        //    foreach (var ctrl in Children)
+        //    {
+        //        if (ctrl.IsHidden)
+        //            continue;
 
-                Vector2i sizeMinThis = ctrl.GetMinSizeWithBorder();
-                int propThis = ctrl.Proportion;
-                if (propThis > 0)
-                {
-                    float minSizeToProp = GetVectorInMajorDir(sizeMinThis);
-                    minSizeToProp /= propThis;
+        //        Vector2i sizeMinThis = ctrl.GetMinSizeWithBorder();
+        //        int propThis = ctrl.Proportion;
+        //        if (propThis > 0)
+        //        {
+        //            float minSizeToProp = GetVectorInMajorDir(sizeMinThis);
+        //            minSizeToProp /= propThis;
 
-                    if (minSizeToProp > maxMinSizeToProp)
-                        maxMinSizeToProp = minSizeToProp;
-                    TotalProportion += propThis;
-                }
-                else // fixed size item
-                    // Just account for its size directly
-                    AddVectorInMajorDir(ref minSize, GetVectorInMajorDir(sizeMinThis));
+        //            if (minSizeToProp > maxMinSizeToProp)
+        //                maxMinSizeToProp = minSizeToProp;
+        //            TotalProportion += propThis;
+        //        }
+        //        else // fixed size item
+        //            // Just account for its size directly
+        //            AddVectorInMajorDir(ref minSize, GetVectorInMajorDir(sizeMinThis));
 
-                // In the transversal direction we just need to find the maximum.
-                if (GetVectorInMinorDir(sizeMinThis) > GetVectorInMinorDir(MinSize))
-                    SetVectorInMinorDir(ref minSize, GetVectorInMinorDir(sizeMinThis));
-            }
+        //        // In the transversal direction we just need to find the maximum.
+        //        if (GetVectorInMinorDir(sizeMinThis) > GetVectorInMinorDir(MinSize))
+        //            SetVectorInMinorDir(ref minSize, GetVectorInMinorDir(sizeMinThis));
+        //    }
 
-            // Using the max ratio ensures that the min size is big enough for all
-            // items to have their min size and satisfy the proportions among them.
-            AddVectorInMajorDir(ref minSize, (int)(maxMinSizeToProp*TotalProportion));
-            MinSize = minSize;
-            return MinSize;
-        }
+        //    // Using the max ratio ensures that the min size is big enough for all
+        //    // items to have their min size and satisfy the proportions among them.
+        //    AddVectorInMajorDir(ref minSize, (int)(maxMinSizeToProp*TotalProportion));
+        //    MinSize = minSize;
+        //    return MinSize;
+        //}
 
         /// <summary>
         /// Informs this sizer regarding the size available in the minor direction 

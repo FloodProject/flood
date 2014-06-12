@@ -181,12 +181,6 @@ namespace Flood.GUIv2.Panels.Layout
         /// </summary>
         public abstract void RecalcSizes();
 
-        /// <summary>
-        /// Calculates the minimum size of the associated panel.
-        /// </summary>
-        /// <returns> The calculated min size.</returns>
-        public abstract Vector2i CalcMin(); //todo: remove this when finished replacing panels architecture
-
         #endregion
 
         public void PositionAndAlign(Vector2i boxPosition, Vector2i boxSize, IControl control)
@@ -207,11 +201,11 @@ namespace Flood.GUIv2.Panels.Layout
 
             if ((control.Alignment & AlignmentFlags.Right) != 0)
                 position.X += boxSize.X - size.X - control.Margin.Right;
-            if ((control.Alignment & AlignmentFlags.Left) != 0)
+            if ((control.Alignment & (AlignmentFlags.Left | AlignmentFlags.NotSet)) != 0)
                 position.X += control.Margin.Left;
             if ((control.Alignment & AlignmentFlags.Bottom) != 0)
                 position.Y += boxSize.Y - size.Y - control.Margin.Bottom;
-            if ((control.Alignment & AlignmentFlags.Top) != 0)
+            if ((control.Alignment & (AlignmentFlags.Top | AlignmentFlags.NotSet)) != 0)
                 position.Y += control.Margin.Top;
             if ((control.Alignment & (AlignmentFlags.CenterHorizontal | AlignmentFlags.Center)) != 0)
                 position.X += (boxSize.X - size.X)/2; 

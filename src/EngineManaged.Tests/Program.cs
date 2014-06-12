@@ -15,7 +15,7 @@ namespace Flood.Tests
             //{
                 guiTests.Setup();
                 guiTests.TestSetup();
-                guiTests.TestMenu();
+                guiTests.TestBoxSizer1();
                 guiTests.TearDown();
             //}
         }

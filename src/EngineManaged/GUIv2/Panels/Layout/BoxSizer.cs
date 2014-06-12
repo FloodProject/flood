@@ -224,12 +224,6 @@ namespace Flood.GUIv2.Panels.Layout
             }
         }
 
-
-        public override Vector2i CalcMin()
-        {
-            throw new NotImplementedException();
-        }
-
         private bool IsMajorVertical()
         {
             return BoxPanel.Orientation == Orientation.Vertical;

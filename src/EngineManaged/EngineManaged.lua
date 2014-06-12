@@ -10,7 +10,7 @@ project "EngineManaged"
 	flags { "Unsafe" }
 	location "."
 
-	SetupRemotingGen("EngineManaged", ".dll")
+	-- SetupRemotingGen("EngineManaged", ".dll")
 
 	files
 	{

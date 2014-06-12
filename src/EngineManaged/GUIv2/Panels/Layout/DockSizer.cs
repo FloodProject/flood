@@ -20,12 +20,5 @@ namespace Flood.GUIv2.Panels.Layout
             }
         }
 
-        public override Vector2i CalcMin()
-        {
-            foreach (var control in Children)
-                control.ReduceToMinSize();
-            RecalcSizes();
-            return new Vector2i(Panel.Width, Panel.Height);
-        }
     }
 }

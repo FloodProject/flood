@@ -118,12 +118,12 @@ namespace Flood.GUIv2.Renderers
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="material">Material to use.</param>
-        /// <param name="materialHandle">Rectangle bounds.</param>
-        /// <param name="u1">MaterialHandle coordinate u1.</param>
-        /// <param name="v1">MaterialHandle coordinate v1.</param>
-        /// <param name="u2">MaterialHandle coordinate u2.</param>
-        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        /// <param name="imageHandle">Image to generate texture from.</param
+        /// <param name="rect">Rectangle bounds.</param>
+        /// <param name="u1">ImageHandle coordinate u1.</param>
+        /// <param name="v1">ImageHandle coordinate v1.</param>
+        /// <param name="u2">ImageHandle coordinate u2.</param>
+        /// <param name="v2">ImageHandle coordinate v2.</param>
         public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, Rectangle rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
         {
         }
@@ -131,12 +131,12 @@ namespace Flood.GUIv2.Renderers
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="material">Material to use.</param>
-        /// <param name="materialHandle">Rectangle bounds.</param>
-        /// <param name="u1">MaterialHandle coordinate u1.</param>
-        /// <param name="v1">MaterialHandle coordinate v1.</param>
-        /// <param name="u2">MaterialHandle coordinate u2.</param>
-        /// <param name="v2">MaterialHandle coordinate v2.</param>
+        /// <param name="imageHandle">Image to generate texture from.</param
+        /// <param name="rect">Rectangle bounds.</param>
+        /// <param name="u1">ImageHandle coordinate u1.</param>
+        /// <param name="v1">ImageHandle coordinate v1.</param>
+        /// <param name="u2">ImageHandle coordinate u2.</param>
+        /// <param name="v2">ImageHandle coordinate v2.</param>
         public virtual void DrawTexturedRect(ResourceHandle<Image> imageHandle, RectangleF rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
         {
         }
@@ -144,26 +144,39 @@ namespace Flood.GUIv2.Renderers
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="material">Material to use.</param>
-        /// <param name="materialHandle">Rectangle bounds.</param>
+        /// <param name="materialHandle">Material to use.</param
+        /// <param name="rect">Rectangle bounds.</param>
         /// <param name="u1">MaterialHandle coordinate u1.</param>
         /// <param name="v1">MaterialHandle coordinate v1.</param>
         /// <param name="u2">MaterialHandle coordinate u2.</param>
         /// <param name="v2">MaterialHandle coordinate v2.</param>
-        public virtual void DrawTexturedRect(ResourceHandle<Material> imageHandle, Rectangle rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        public virtual void DrawTexturedRect(ResourceHandle<Material> materialHandle, Rectangle rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
         {
         }
 
         /// <summary>
         /// Draws textured rectangle.
         /// </summary>
-        /// <param name="material">Material to use.</param>
-        /// <param name="materialHandle">Rectangle bounds.</param>
+        /// <param name="materialHandle">Material to use.</param
+        /// <param name="rect">Rectangle bounds.</param>
         /// <param name="u1">MaterialHandle coordinate u1.</param>
         /// <param name="v1">MaterialHandle coordinate v1.</param>
         /// <param name="u2">MaterialHandle coordinate u2.</param>
         /// <param name="v2">MaterialHandle coordinate v2.</param>
-        public virtual void DrawTexturedRect(ResourceHandle<Material> imageHandle, RectangleF rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        public virtual void DrawTexturedRect(ResourceHandle<Material> materialHandle, RectangleF rect, float u1 = 0, float v1 = 0, float u2 = 1, float v2 = 1)
+        {
+        }
+
+        /// <summary>
+        /// Draws clipped text.
+        /// </summary>
+        /// <param name="materialHandle">The material handle.</param>
+        /// <param name="rect">Rectangle bounds.</param>
+        /// <param name="leftTop">The top left's corner uv coordinates.</param>
+        /// <param name="rightTop">The top right's corner uv coordinates.</param>
+        /// <param name="rightBottom">The bottom right's corner uv coordinates.</param>
+        /// <param name="leftBottom">The bottom left's corner uv coordinates.</param>
+        public virtual void DrawText(ResourceHandle<Material> materialHandle, RectangleF rect, Vector2 leftTop, Vector2 rightTop, Vector2 rightBottom, Vector2 leftBottom)
         {
         }
 
@@ -233,7 +246,7 @@ namespace Flood.GUIv2.Renderers
 
                 /*
                     This isn't important, it's just me messing around changing the
-                    shape of the rect based on the letter.. just for fun.
+                    shape of the rect based on the letter... just for fun.
                 */
                 if ( chr == 'l' || chr == 'i' || chr == '!' || chr == 't' )
                 {
@@ -259,7 +272,7 @@ namespace Flood.GUIv2.Renderers
                 }
 
                 if ( chr == 'o' || chr == 'O' || chr == '0' )
-                    DrawLinedRect( r );	
+                    DrawLinedRect( r );
                 else
                     DrawFilledRect( r );
             }

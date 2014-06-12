@@ -34,6 +34,8 @@ public:
 
     virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const OVERRIDE;
 
+    int getMaxHeight(int fontSize) const;
+
     Vector<byte> data;
 
 private:

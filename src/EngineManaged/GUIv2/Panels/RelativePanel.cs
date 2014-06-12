@@ -73,8 +73,8 @@ namespace Flood.GUIv2.Panels
 
         private Vector2i UpdateSize(Vector2i thisSize, Vector2i childSize, IControl child)
         {
-            var x = Math.Max(thisSize.X, childSize.X + ChildrenPositions[child].X - child.Margin.Left);
-            var y = Math.Max(thisSize.Y, childSize.Y + ChildrenPositions[child].Y - child.Margin.Top);
+            var x = Math.Max(thisSize.X, childSize.X + ((ChildrenPositions[child].X < child.Margin.Left) ? 0 : ChildrenPositions[child].X - child.Margin.Left));
+            var y = Math.Max(thisSize.Y, childSize.Y + ((ChildrenPositions[child].Y < child.Margin.Top) ? 0 : ChildrenPositions[child].Y - child.Margin.Top));
 
             return new Vector2i(x, y);
         }

@@ -31,21 +31,6 @@ namespace Flood.GUIv2.Panels.Layout
         {
         }
 
-        /// <summary>
-        /// Calculates the minimum size of the associated panel.
-        /// </summary>
-        /// <returns>
-        /// The calculated min size.
-        /// </returns>
-        public override Vector2i CalcMin()
-        {
-            foreach (var control in Panel.Children)
-                control.ReduceToMinSize();
-            RecalcSizes();
-            return new Vector2i(Panel.Width, Panel.Height);
-
-        }
-
         //1- get rows y
         //2 - if final row y > height
         //2.1 - get row with biggest height that has any best sized control

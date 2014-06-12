@@ -35,6 +35,17 @@ namespace Flood.Tests
         }
 
         [Test]
+        public void TestTextClipping()
+        {
+            canvas.SetSize(64, 22);
+            var control = new Button();
+            canvas.AddChild(control);
+            control.Text = "gpalyq";
+
+            GUI.Test(control, "Clipping", "textClipping1");
+        }
+
+        [Test]
         public void TestButton()
         {
             canvas.SetSize(64, 22);
@@ -1292,6 +1303,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer1()
         {
+            canvas.SetSize(212, 44);
             var relativePositionPanel = new RelativePanel();
 
             for (int i = 0; i < 2; i++)
@@ -1310,6 +1322,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer2()
         {
+            canvas.SetSize(232, 54);
             var relativePositionPanel = new RelativePanel();
 
             for (int i = 0; i < 2; i++)
@@ -1328,6 +1341,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer3()
         {
+            canvas.SetSize(217, 49);
             var relativePositionPanel = new RelativePanel();
             relativePositionPanel.Shape(new Vector2i(200, 100));
             for (int i = 0; i < 2; i++)
@@ -1335,7 +1349,7 @@ namespace Flood.Tests
                 for (int j = 0; j < 2; j++)
                 {
                     var button = new Button { Text = "relative_" + i + "-" + j };
-                    relativePositionPanel.AddChild(button, 126 * i, 32 * j);
+                    relativePositionPanel.AddChild(button, 106 * i, 22 * j);
                 }
             }
 
@@ -1346,7 +1360,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer4()
         {
-            //canvas.SetSize(300, 50);
+            canvas.SetSize(305, 55);
             var relativePositionPanel = new RelativePanel();
             relativePositionPanel.Shape(new Vector2i(300, 50));
             for (int i = 0; i < 4; i++)
@@ -1397,13 +1411,28 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer7()
         {
-            var relativePositionPanel = new RelativePanel(ExpansionFlags.Expand);
+            canvas.SetSize(305, 55);
+            var relativePositionPanel = new RelativePanel();
             relativePositionPanel.Shape(new Vector2i(300, 50));
             var button = new Button { Text = "Not_Visible" };
             relativePositionPanel.AddChild(button, 316, 10);
 
             canvas.AddChild(relativePositionPanel);
             GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel7_outofpanelbounds");
+        }
+
+        [Test]
+        public void TestRelativePositionSizer8()
+        {
+            canvas.SetSize(156, 32);
+
+            var relativePositionPanel = new RelativePanel();
+
+            var button = new Button { Text = "relative_Margins", Margin = Margin.Five};
+            relativePositionPanel.AddChild(button, 0, 0);
+
+            canvas.AddChild(relativePositionPanel);
+            GUI.Test(relativePositionPanel, "RelativePanel", "relativePanel8Margins");
         }
     }
 
