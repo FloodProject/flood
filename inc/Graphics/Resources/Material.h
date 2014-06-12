@@ -11,6 +11,7 @@
 #include "Graphics/Resources/Image.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Resources/ShaderMaterial.h"
+#include "Core/Containers/Str.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 

@@ -26,7 +26,7 @@ struct API_SCENE RayQueryResult
 	float distance;
 };
 
-typedef std::vector<RayQueryResult> RayQueryList;
+typedef Vector<RayQueryResult> RayQueryList;
 
 //-----------------------------------//
 

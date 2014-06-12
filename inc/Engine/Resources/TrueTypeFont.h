@@ -34,7 +34,7 @@ public:
 
     virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const OVERRIDE;
 
-    std::vector<byte> data;
+    Vector<byte> data;
 
 private:
 

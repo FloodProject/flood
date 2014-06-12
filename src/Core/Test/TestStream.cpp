@@ -31,7 +31,7 @@ SUITE(Core)
 		// File read
 		String text;
 		file.readString(text);
-		CHECK_EQUAL("foobar", text.c_str());
+		CHECK_EQUAL("foobar", text.CString());
 
 		// File seek
 		file.setPosition(-3, StreamSeekMode::RelativeEnd);
@@ -42,18 +42,18 @@ SUITE(Core)
 
 		// File read
 		file.readString(text);
-		CHECK_EQUAL("bar", text.c_str());
+		CHECK_EQUAL("bar", text.CString());
 
 		FileStream flines("lines.txt", StreamOpenMode::Read);
 		CHECK(flines.isValid);
 
 		// Read lines.
-		std::vector<String> lines;
+		Vector<String> lines;
 		flines.readLines(lines);
-		CHECK_EQUAL(3, lines.size());
-		CHECK_EQUAL("foo", lines[0].c_str());
-		CHECK_EQUAL("bar", lines[1].c_str());
-		CHECK_EQUAL("spam", lines[2].c_str());
+		CHECK_EQUAL(3, lines.Size());
+		CHECK_EQUAL("foo", lines[0].CString());
+		CHECK_EQUAL("bar", lines[1].CString());
+		CHECK_EQUAL("spam", lines[2].CString());
 	}
 
 #if defined(ENABLE_NETWORKING_CURL)
@@ -64,7 +64,7 @@ SUITE(Core)
 		String response;
 		ws.readString(response);
 
-		CHECK(response.size() > 0);
+		CHECK(response.Length() > 0);
 	}
 #endif
 }

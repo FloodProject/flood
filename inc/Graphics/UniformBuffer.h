@@ -11,6 +11,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Matrix4x4.h"
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_GRAPHICS_BEGIN
 
@@ -49,7 +50,7 @@ struct API_GRAPHICS UniformBufferElement
 
 //-----------------------------------//
 
-typedef std::map<String, UniformBufferElement*> UniformBufferElements;
+typedef HashMap<String, UniformBufferElement*> UniformBufferElements;
 
 /**
  * Represents a uniform buffer.
@@ -58,8 +59,8 @@ typedef std::map<String, UniformBufferElement*> UniformBufferElements;
 class API_GRAPHICS UniformBuffer : public ReferenceCounted
 {
 public:
-
-	UniformBufferElements elements;
+    // Todo: fix bindings generator so that FLD_IGNORE is not needed here
+	FLD_IGNORE UniformBufferElements elements;
 
 	// Gets the uniform if it exists or creates a new one.
 	UniformBufferElement* getElement(const char* name, size_t size);
@@ -74,10 +75,10 @@ public:
 	void setUniform( const char* slot, float value );
 
 	// Adds a named Vector3 array uniform to the program.
-	void setUniform( const char* slot, const std::vector<Vector3>& vec );
+	void setUniform( const char* slot, const Vector<Vector3>& vec );
 
 	// Adds a named color array uniform to the program.
-	void setUniform( const char* slot, const std::vector<Color>& vec );
+	void setUniform( const char* slot, const Vector<Color>& vec );
 
 	// Adds a named vector uniform to the program.
 	void setUniform( const char* slot, const Vector3& vec );
@@ -89,7 +90,7 @@ public:
 	void setUniform( const char* slot, const Matrix4x4& );
 
 	// Adds a named 4x4 matrix vector uniform to the program.
-	void setUniform( const char* slot, const std::vector<Matrix4x4>& vec );
+	void setUniform( const char* slot, const Vector<Matrix4x4>& vec );
 };
 
 //API_GRAPHICS UniformBuffer* UniformBufferCreate( Allocator* );

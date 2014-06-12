@@ -189,7 +189,7 @@ void RenderBackendGLES2::renderBatch(RenderBatch* batch)
 	}
 	else
 	{
-		numIndices = gb->indexData.size() / (gb->indexSize / 8);
+		numIndices = gb->indexData.Size() / (gb->indexSize / 8);
 
 		glDrawElements( primitiveType, numIndices, indexType, 0 );
 		CheckLastErrorGL("Error drawing index buffer");
@@ -377,15 +377,15 @@ void RenderBackendGLES2::buildVertexBuffer(VertexBuffer* vb)
 	const GeometryBuffer* gb = vb->getGeometryBuffer();
 	if( !gb ) return;
 
-	const std::vector<uint8>& data = gb->data;
-	if( data.empty() ) return;
+	const Vector<uint8>& data = gb->data;
+	if( data.Empty() ) return;
 	
 	bindVertexBuffer(vb);
 
 	GLenum usage = ConvertBufferGL(gb->usage, gb->access);
 
 	// Upload all the vertex elements.
-	glBufferData( GL_ARRAY_BUFFER, data.size(), data.data(), usage );
+	glBufferData( GL_ARRAY_BUFFER, data.Size(), data.Buffer(), usage );
 	CheckLastErrorGL("Could not allocate storage for buffer");
 
 	vb->built = true;
@@ -446,12 +446,12 @@ void RenderBackendGLES2::buildIndexBuffer(IndexBuffer* ib)
 
 	assert( gb->isIndexed() );
 
-	GLsizeiptr indexSize = gb->indexData.size();
+	GLsizeiptr indexSize = gb->indexData.Size();
 	if( indexSize == 0 ) return;
 
 	bindIndexBuffer(ib);
 
-	const GLvoid* data = &gb->indexData.front();
+	const GLvoid* data = gb->indexData.Buffer();
 
 	// Reserve space for all the buffer elements.
 	GLenum usage = ConvertBufferGL(gb->getBufferUsage(), gb->getBufferAccess());
@@ -553,8 +553,8 @@ void RenderBackendGLES2::uploadTexture(Texture* tex)
 	const ImageHandle& imageHandle = tex->getImage();
 	Image* image = imageHandle.Resolve();
 
-	bool hasData = imageHandle && !image->getBuffer().empty();
-	uint8* data = hasData ? image->getBuffer().data() : nullptr;
+	bool hasData = imageHandle && !image->getBuffer().Empty();
+    uint8* data = hasData ? image->getBuffer().Buffer() : nullptr;
 
 	bindTexture(tex);
 
@@ -607,15 +607,15 @@ void RenderBackendGLES2::configureTexture(Texture* tex)
 
 Image* RenderBackendGLES2::readTexture(Texture* tex)
 {
-	std::vector<byte> data;
-	data.resize( tex->getExpectedSize() );
+	Vector<byte> data;
+	data.Resize( tex->getExpectedSize() );
 
 	bindTexture(tex);
 
 	GLint target = ConvertTextureTargetGL(tex->target);
 	
 	glGetTexImage( target, 0 /* base mipmap level */,
-		ConvertTextureSourceFormatGL(tex->format), GL_UNSIGNED_BYTE, data.data() );
+		ConvertTextureSourceFormatGL(tex->format), GL_UNSIGNED_BYTE, data.Buffer() );
 	
 	if( CheckLastErrorGL("Could not read texture data") )
 		return nullptr;

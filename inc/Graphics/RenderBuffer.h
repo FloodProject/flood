@@ -62,7 +62,7 @@ public:
 	virtual void update() = 0;
 
 	// Reads the contents of the render buffer.
-	virtual void read(int8 attachment, std::vector<uint8>& data) = 0;
+	virtual void read(int8 attachment, Vector<uint8>& data) = 0;
 
 	// Reads the contents of the render buffer.
 	virtual Image* readImage(int8 attachment) = 0;

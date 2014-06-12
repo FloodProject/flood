@@ -29,95 +29,95 @@ template<typename T> class ConcurrentQueue
 {
 public:
 
-	void push_front(const T& value)
-	{
-		mutex.lock();
-		queue.push_front(value);
-		mutex.unlock();
-		
-		condition.wakeOne();
-	}
+    void push_front(const T& value)
+    {
+        mutex.lock();
+        queue.push_front(value);
+        mutex.unlock();
+        
+        condition.wakeOne();
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
-	void push_back(const T& value)
-	{
-		mutex.lock();
-		queue.push_back(value);
-		mutex.unlock();
-		
-		condition.wakeOne();
-	}
+    void push_back(const T& value)
+    {
+        mutex.lock();
+        queue.push_back(value);
+        mutex.unlock();
+        
+        condition.wakeOne();
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
-	bool empty() const
-	{
-		mutex.lock();
-		bool empty = queue.empty();
-		mutex.unlock();
-		
-		return empty;
-	}
+    bool empty() const
+    {
+        mutex.lock();
+        bool empty = queue.empty();
+        mutex.unlock();
+        
+        return empty;
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
-	bool try_pop_front(T& popped_value)
-	{
-		mutex.lock();
+    bool try_pop_front(T& popped_value)
+    {
+        mutex.lock();
 
-		if( queue.empty() )
-		{
-			mutex.unlock();
-			return false;
-		}
+        if( queue.empty() )
+        {
+            mutex.unlock();
+            return false;
+        }
 
-		popped_value = queue.front();
-		queue.pop_front();
-		
-		mutex.unlock();
+        popped_value = queue.front();
+        queue.pop_front();
+        
+        mutex.unlock();
 
-		return true;
-	}
+        return true;
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
-	void wait_and_pop_front(T& popped_value)
-	{
-		mutex.lock();
+    void wait_and_pop_front(T& popped_value)
+    {
+        mutex.lock();
 
-		while( queue.empty() )
-			condition.wait(mutex);
-	
-		popped_value = queue.front();
-		queue.pop_front();
+        while( queue.empty() )
+            condition.wait(mutex);
+    
+        popped_value = queue.front();
+        queue.pop_front();
 
-		mutex.unlock();
-	}
+        mutex.unlock();
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
-	bool find(const T& value)
-	{
-		mutex.lock();
+    bool find(const T& value)
+    {
+        mutex.lock();
 
-		typename std::deque<T>::const_iterator it;
-		it = std::find(queue.begin(), queue.end(), value);
-		bool found = it != queue.end();
+        typename std::deque<T>::const_iterator it;
+        it = std::find(queue.begin(), queue.end(), value);
+        bool found = it != queue.end();
 
-		mutex.unlock();
+        mutex.unlock();
 
-		return found;
-	}
+        return found;
+    }
 
-	//-----------------------------------//
+    //-----------------------------------//
 
 protected:
 
-	std::deque<T> queue;
+    std::deque<T> queue;
 
-	mutable Mutex mutex;
-	Condition condition;
+    mutable Mutex mutex;
+    Condition condition;
 };
 
 //-----------------------------------//

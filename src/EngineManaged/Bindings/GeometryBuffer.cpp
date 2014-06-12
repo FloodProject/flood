@@ -208,11 +208,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::Data::
 
 void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::uint8>();
+    auto _tmpvalue = Vector<::uint8>();
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->data = _tmpvalue;
 }
@@ -230,11 +230,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::IndexD
 
 void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::uint8>();
+    auto _tmpvalue = Vector<::uint8>();
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->indexData = _tmpvalue;
 }

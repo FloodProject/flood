@@ -62,13 +62,13 @@ void Flood::Resource::__Instance::set(System::IntPtr object)
 System::String^ Flood::Resource::Path::get()
 {
     auto &__ret = ((::Resource*)NativePtr)->getPath();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return StringMarshaller::marshalString(__ret);
 }
 
 void Flood::Resource::Path::set(System::String^ value)
 {
     auto v = value;
-    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
+    auto arg0 = StringMarshaller::marshalUTF8String(v);
     ((::Resource*)NativePtr)->setPath(arg0);
 }
 
@@ -93,12 +93,12 @@ Flood::ResourceGroup Flood::Resource::ResourceGroup::get()
 
 System::String^ Flood::Resource::Path1::get()
 {
-    return clix::marshalString<clix::E_UTF8>(((::Resource*)NativePtr)->path);
+    return StringMarshaller::marshalString(((::Resource*)NativePtr)->path);
 }
 
 void Flood::Resource::Path1::set(System::String^ value)
 {
-    ((::Resource*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
+    ((::Resource*)NativePtr)->path = StringMarshaller::marshalUTF8String(value);
 }
 
 Flood::ResourceStream^ Flood::Resource::Stream::get()

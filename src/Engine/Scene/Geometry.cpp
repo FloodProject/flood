@@ -19,104 +19,104 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Geometry::Geometry()
-	: needsBoundsRebuild(true)
+    : needsBoundsRebuild(true)
 { }
 
 //-----------------------------------//
 
 void Geometry::addRenderable(const RenderBatchPtr& rend)
 {
-	renderables.push_back( rend );
+    renderables.Push( rend );
 }
 
 //-----------------------------------//
 
 RenderablesVector Geometry::getRenderables() const
 {
-	return renderables;
+    return renderables;
 }
 
 //-----------------------------------//
  
 void Geometry::appendRenderables( RenderQueue& queue, const Transform* transform )
 {
-	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
+    const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 
-	for( size_t i = 0; i < renderables.size(); i++ )
-	{
-		RenderBatch* renderable = renderables[i].get();
-		if( !renderable ) continue;
+    for( size_t i = 0; i < renderables.Size(); i++ )
+    {
+        RenderBatch* renderable = renderables[i].get();
+        if( !renderable ) continue;
 
-		RenderState state( renderable );
-		state.modelMatrix = absoluteTransform;
+        RenderState state( renderable );
+        state.modelMatrix = absoluteTransform;
 
-		queue.push_back(state);
-	}
+        queue.Push(state);
+    }
 }
 
 //-----------------------------------//
 
 void Geometry::updateBounds()
 {
-	bounds.reset();
+    bounds.reset();
 
-	// Update the bounding box to accomodate new geometry.
-	for( size_t i = 0; i < renderables.size(); i++ )
-	{
-		Renderable* rend = renderables[i].get();
-		
-		GeometryBuffer* gb = rend->getGeometryBuffer().get();
-		if( !gb ) continue;
+    // Update the bounding box to accomodate new geometry.
+    for( size_t i = 0; i < renderables.Size(); i++ )
+    {
+        Renderable* rend = renderables[i].get();
+        
+        GeometryBuffer* gb = rend->getGeometryBuffer().get();
+        if( !gb ) continue;
 
-		uint32 numVertices = gb->getNumVertices();
-		
-		for( size_t j = 0; j < numVertices; j++ )
-		{
-			Vector3* vertex = (Vector3*) gb->getAttribute(VertexAttribute::Position, j);
-			bounds.add(*vertex);
-		}
-	}
+        uint32 numVertices = gb->getNumVertices();
+        
+        for( size_t j = 0; j < numVertices; j++ )
+        {
+            Vector3* vertex = (Vector3*) gb->getAttribute(VertexAttribute::Position, j);
+            bounds.add(*vertex);
+        }
+    }
 
-	if( bounds.isInfinite() )
-	{
-		bounds.setZero();
-	}
+    if( bounds.isInfinite() )
+    {
+        bounds.setZero();
+    }
 
-	needsBoundsRebuild = false;
+    needsBoundsRebuild = false;
 }
 
 //-----------------------------------//
 
 void Geometry::notifiesTransform()
 {
-	const TransformPtr& transform = entity->getTransform();
-	transform->markBoundingVolumeDirty();
+    const TransformPtr& transform = entity->getTransform();
+    transform->markBoundingVolumeDirty();
 }
 
 //-----------------------------------//
 
 void Geometry::update( float delta )
 {
-	if( !needsBoundsRebuild ) return;
+    if( !needsBoundsRebuild ) return;
 
-	updateBounds();
-	notifiesTransform();
+    updateBounds();
+    notifiesTransform();
 }
 
 //-----------------------------------//
 
 BoundingBox Geometry::getWorldBoundingVolume() const
 {
-	const TransformPtr& trans = getEntity()->getTransform();
-	const Matrix4x3& transform = trans->getAbsoluteTransform();
-	return bounds.transform(transform);
+    const TransformPtr& trans = getEntity()->getTransform();
+    const Matrix4x3& transform = trans->getAbsoluteTransform();
+    return bounds.transform(transform);
 }
 
 //-----------------------------------//
 
 void Geometry::rebuildBoundingBox()
 {
-	needsBoundsRebuild = true;
+    needsBoundsRebuild = true;
 }
 
 //-----------------------------------//

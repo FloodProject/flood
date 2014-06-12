@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Core/Stream.h>
+#include "StringConverter.h"
 
 namespace Flood
 {
@@ -59,9 +60,9 @@ namespace Flood
 
         Stream(::Stream* native);
         Stream(System::IntPtr native);
-        property long long Position
+        property unsigned long long Position
         {
-            long long get();
+            unsigned long long get();
         }
 
         property System::String^ Path
@@ -89,12 +90,12 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual long long Read(void* buffer, unsigned long long size);
+        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size);
 
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        virtual long long Write(void* buffer, unsigned long long size);
+        virtual unsigned long long Write(System::IntPtr buffer, unsigned long long size);
 
         /// <summary>
         /// Set stream position.
@@ -114,32 +115,47 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a byte vector.
         /// </summary>
-        long long Read(System::Collections::Generic::List<unsigned char>^ data);
+        unsigned long long Read(System::Collections::Generic::List<unsigned char>^ data);
 
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        long long ReadBuffer(void* buffer, long long size);
+        unsigned long long ReadBuffer(System::IntPtr buffer, long long size);
 
         /// <summary>
         /// Reads from the the stream into a string.
         /// </summary>
-        long long ReadString(System::String^ text);
+        unsigned long long ReadString(System::String^ text);
+
+        /// <summary>
+        /// Reads from the the stream into a string.
+        /// </summary>
+        unsigned long long ReadUTF8String(System::String^ text);
 
         /// <summary>
         /// Reads from the the stream into a list of lines.
         /// </summary>
-        long long ReadLines(System::Collections::Generic::List<System::String^>^ lines);
+        unsigned long long ReadLines(System::Collections::Generic::List<System::String^>^ lines);
+
+        /// <summary>
+        /// Reads from the the stream into a list of lines.
+        /// </summary>
+        unsigned long long ReadUTF8Lines(System::Collections::Generic::List<System::String^>^ lines);
 
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        long long Write(unsigned char* buf, unsigned long long size);
+        unsigned long long Write1(System::IntPtr buf, unsigned long long size);
 
         /// <summary>
         /// Writes from string into the the stream.
         /// </summary>
-        long long WriteString(System::String^ string);
+        unsigned long long WriteString(System::String^ string);
+
+        /// <summary>
+        /// Writes from utf8 string into the the stream.
+        /// </summary>
+        unsigned long long WriteUTF8String(System::String^ string);
 
         virtual bool Equals(System::Object^ object) override;
 
@@ -182,12 +198,12 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual long long Read(void* buffer, unsigned long long size) override;
+        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size) override;
 
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        virtual long long Write(void* buffer, unsigned long long size) override;
+        virtual unsigned long long Write(System::IntPtr buffer, unsigned long long size) override;
 
         /// <summary>
         /// Get stream size.
@@ -210,9 +226,9 @@ namespace Flood
 
         ZipStream(::ZipStream* native);
         ZipStream(System::IntPtr native);
-        property long long Position
+        property unsigned long long Position
         {
-            long long get();
+            unsigned long long get();
         }
 
         /// <summary>
@@ -228,7 +244,7 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual long long Read(void* buffer, unsigned long long size) override;
+        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size) override;
 
         /// <summary>
         /// Set stream position.

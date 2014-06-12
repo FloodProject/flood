@@ -12,6 +12,7 @@
 #include "Image.h"
 #include "Resource.h"
 #include "ResourceHandle.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

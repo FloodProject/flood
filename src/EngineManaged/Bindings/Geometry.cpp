@@ -38,7 +38,7 @@ void Flood::Geometry::AddRenderable(Flood::RenderBatch^ renderable)
 
 void Flood::Geometry::AppendRenderables(System::Collections::Generic::List<Flood::RenderState>^ queue, Flood::Transform^ transform)
 {
-    auto _tmpqueue = std::vector<::RenderState>();
+    auto _tmpqueue = Vector<::RenderState>();
     for each(Flood::RenderState _element in queue)
     {
         auto _marshal0 = ::RenderState();
@@ -62,7 +62,7 @@ void Flood::Geometry::AppendRenderables(System::Collections::Generic::List<Flood
         _marshal0.modelMatrix = _marshal1;
         _marshal0.priority = (::int32)(::int32_t)_element.Priority;
         auto _marshalElement = _marshal0;
-        _tmpqueue.push_back(_marshalElement);
+        _tmpqueue.Push(_marshalElement);
     }
     auto arg0 = _tmpqueue;
     auto arg1 = (::Transform*)transform->NativePtr;

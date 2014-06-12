@@ -18,7 +18,7 @@ NAMESPACE_GRAPHICS_BEGIN
 
 class ShaderMaterial;
 
-typedef std::map<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMap;
+typedef HashMap<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMap;
 typedef std::pair<const ShaderMaterial*, ShaderProgramPtr> ShaderProgramsMapPair;
 
 class ResourceManager;

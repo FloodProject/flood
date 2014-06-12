@@ -36,7 +36,7 @@ FileStream::FileStream(const Path& path, StreamOpenMode mode)
 FileStream::~FileStream()
 {
 	if( !close() )
-		LogDebug("Error closing file stream: %s", path.c_str());
+		LogDebug("Error closing file stream: %s", path.CString());
 }
 
 //-----------------------------------//
@@ -53,12 +53,15 @@ bool FileStream::open()
 	}
 
 #ifdef COMPILER_MSVC
-	fopen_s(&fileHandle, path.c_str(), mode);
+    errno_t err;
+    err = fopen_s(&fileHandle, path.CString(), mode);
+    isValid = err == 0;
 #else
-	fileHandle = fopen(path.c_str(), mode);
+	fileHandle = fopen(path.CString(), mode);
+    isValid = fileHandle != nullptr;
 #endif
 
-	isValid = fileHandle != nullptr;
+
 	return isValid;
 }
 
@@ -77,7 +80,7 @@ bool FileStream::close()
 
 //-----------------------------------//
 
-int64 FileStream::read(void* buffer, uint64 size) const
+uint64 FileStream::read(void* buffer, uint64 size) const
 {
 	if (!isValid)
 		return InvalidState;
@@ -90,7 +93,7 @@ int64 FileStream::read(void* buffer, uint64 size) const
 
 //-----------------------------------//
 
-int64 FileStream::write(void* buffer, uint64 size)
+uint64 FileStream::write(void* buffer, uint64 size)
 {
 	if (!isValid)
 		return InvalidState;
@@ -103,7 +106,7 @@ int64 FileStream::write(void* buffer, uint64 size)
 
 //-----------------------------------//
 
-int64 FileStream::getPosition() const
+uint64 FileStream::getPosition() const
 {
 	if (!isValid)
 		return InvalidState;

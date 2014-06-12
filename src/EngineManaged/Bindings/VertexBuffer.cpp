@@ -278,7 +278,7 @@ System::Collections::Generic::List<Flood::VertexElement>^ Flood::VertexDeclarati
 
 void Flood::VertexDeclaration::Decls::set(System::Collections::Generic::List<Flood::VertexElement>^ value)
 {
-    auto _tmpvalue = std::vector<::VertexElement>();
+    auto _tmpvalue = Vector<::VertexElement>();
     for each(Flood::VertexElement _element in value)
     {
         auto _marshal0 = ::VertexElement();
@@ -289,7 +289,7 @@ void Flood::VertexDeclaration::Decls::set(System::Collections::Generic::List<Flo
         _marshal0.offset = (::uint32)(::uint32_t)_element.Offset;
         _marshal0.size = (::uint32)(::uint32_t)_element.Size1;
         auto _marshalElement = _marshal0;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::VertexDeclaration*)NativePtr)->decls = _tmpvalue;
 }

@@ -24,7 +24,7 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.Size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 
@@ -42,7 +42,7 @@ void PluginManager::disablePlugins()
 	// We disable plugins in an explicit step so allow plugins
 	// being disabled to obtain other plugins and operate on them.
 
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.Size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 		disablePlugin(plugin);
@@ -53,7 +53,7 @@ void PluginManager::disablePlugins()
 
 Plugin* PluginManager::getPlugin(const String& name)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.Size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 		const PluginMetadata& metadata = plugin->getMetadata();
@@ -67,7 +67,7 @@ Plugin* PluginManager::getPlugin(const String& name)
 
 Plugin* PluginManager::getPluginFromClass(const Class* klass)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.Size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 		if(Class::GetType(plugin) == klass) return plugin;
@@ -78,9 +78,9 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 
 //-----------------------------------//
 
-void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
+void PluginManager::registerPlugins(const Vector<Plugin*>& plugins)
 {
-	for( size_t i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.Size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 		registerPlugin(plugin);
@@ -92,7 +92,7 @@ void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
 void PluginManager::registerPlugin( Plugin* plugin )
 {
 	if( !plugin ) return;
-	plugins.push_back(plugin);
+	plugins.Push(plugin);
 }
 
 //-----------------------------------//
@@ -102,7 +102,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 	if( !plugin ) return;
 	
 	PluginMetadata metadata = plugin->getMetadata();
-	LogInfo( "Enabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Enabling plugin: %s", metadata.name.CString() );
 
 	plugin->enabled = true;
 	plugin->onPluginEnable();
@@ -118,7 +118,7 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	if( !plugin->isEnabled() ) return;
 
 	PluginMetadata metadata = plugin->getMetadata();
-	LogInfo( "Disabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Disabling plugin: %s", metadata.name.CString() );
 
 	onPluginDisableEvent(plugin);
 

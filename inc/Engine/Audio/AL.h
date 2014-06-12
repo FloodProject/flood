@@ -10,12 +10,12 @@
 #ifdef ENABLE_AUDIO_OPENAL
 
 #ifdef ENABLE_MACOSX_NATIVE_OPENAL
-	#include <OpenAL/al.h>
-	#include <OpenAL/alc.h>
+    #include <OpenAL/al.h>
+    #include <OpenAL/alc.h>
 #else
-	#include <AL/al.h>
-	#include <AL/alc.h>
-	#include <AL/alext.h>
+    #include <AL/al.h>
+    #include <AL/alc.h>
+    #include <AL/alext.h>
 #endif
 
 #endif

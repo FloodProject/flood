@@ -10,6 +10,7 @@
 #include "Engine/API.h"
 #include "Core/Object.h"
 #include "Core/Event.h"
+#include "Engine/Scene/Component.h"
 
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Component)
@@ -22,7 +23,7 @@ NAMESPACE_ENGINE_BEGIN
 
 API_SCENE Entity* EntityCreate( Allocator* );
 
-typedef std::map<Class*, ComponentPtr> ComponentMap;
+typedef HashMap<Class*, ComponentPtr> ComponentMap;
 typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
 
 /**
@@ -110,7 +111,7 @@ public:
 	GETTER(Components, const ComponentMap&, componentsMap)
 
 	// Gets the geometries components in the entity.
-	std::vector<GeometryPtr> getGeometry() const;
+	Vector<GeometryPtr> getGeometry() const;
 
 	// Updates all the components of the entity.
 	virtual void update( float delta );
@@ -139,7 +140,7 @@ protected:
 	uint32 tags;
 
 	// Components of the entity.
-	std::vector<ComponentPtr> components;
+	Vector<ComponentPtr> components;
 
 	// Components map of the entity.
 	ComponentMap componentsMap;

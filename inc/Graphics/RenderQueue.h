@@ -66,8 +66,8 @@ struct API_GRAPHICS FLD_IGNORE LightState
  * you might want to render the GUI after everything else is rendered.
  */
 
-typedef std::vector<RenderState> RenderQueue;
-typedef std::vector<LightState> LightQueue;
+typedef Vector<RenderState> RenderQueue;
+typedef Vector<LightState> LightQueue;
 
 struct API_GRAPHICS RenderBlock
 {

@@ -19,102 +19,102 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Cube::Cube()
-	: width(1.0f), height(1.0f)
+    : width(1.0f), height(1.0f)
 {
-	create();
+    create();
 }
 
 //-----------------------------------//
 
 Cube::Cube( float width, float height )
-	: width(width), height(height)
+    : width(width), height(height)
 {
-	create();
+    create();
 }
 
 //-----------------------------------//
 
 void Cube::create()
 {
-	GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
-	
-	MaterialHandle mat = MaterialCreate(AllocatorGetHeap(), "Cube");
-	mat.Resolve()->setShader("VertexColor");
+    GeometryBufferPtr gb = AllocateThis(GeometryBuffer);
+    
+    MaterialHandle mat = MaterialCreate(AllocatorGetHeap(), "Cube");
+    mat.Resolve()->setShader("VertexColor");
 
-	RenderablePtr rend = RenderBatchCreate( AllocatorGetHeap() );
-	rend->setPrimitiveType(PrimitiveType::Quads);
-	rend->setGeometryBuffer(gb);
-	rend->setMaterial(mat);
+    RenderablePtr rend = RenderBatchCreate( AllocatorGetHeap() );
+    rend->setPrimitiveType(PrimitiveType::Quads);
+    rend->setGeometryBuffer(gb);
+    rend->setMaterial(mat);
 
-	BuildCube(gb.get(), width, height);
+    BuildCube(gb.get(), width, height);
 
-	addRenderable(rend);
+    addRenderable(rend);
 }
 
 //-----------------------------------//
 
-#define ADD_BOX_FACE( a, b, c, d )				\
-	pos.push_back( a*width );					\
-	pos.push_back( b*width );					\
-	pos.push_back( c*width );					\
-	pos.push_back( d*width );
+#define ADD_BOX_FACE( a, b, c, d )              \
+    pos.Push( a*width );                   \
+    pos.Push( b*width );                   \
+    pos.Push( c*width );                   \
+    pos.Push( d*width );
 
 #define v(a,b,c) Vector3(a,b,c)
 
 void BuildCube( GeometryBuffer* gb, float width, float height )
 {
-	// Vertex position data
-	std::vector<Vector3> pos;
-	pos.reserve(24);
+    // Vertex position data
+    Vector<Vector3> pos;
+    pos.Reserve(24);
 
-	ADD_BOX_FACE( v( 1, 1, 1), v(-1, 1, 1), v(-1,-1, 1), v( 1,-1, 1) )	// Front
-	ADD_BOX_FACE( v( 1,-1, 1), v(-1,-1, 1), v(-1,-1,-1), v( 1,-1,-1) )	// Bottom
-	ADD_BOX_FACE( v( 1,-1,-1), v(-1,-1,-1), v(-1, 1,-1), v( 1, 1,-1) )	// Back
-	ADD_BOX_FACE( v( 1, 1,-1), v(-1, 1,-1), v(-1, 1, 1), v( 1, 1, 1) )	// Top
-	ADD_BOX_FACE( v(-1, 1, 1), v(-1, 1,-1), v(-1,-1,-1), v(-1,-1, 1) )	// Left
-	ADD_BOX_FACE( v( 1, 1,-1), v( 1, 1, 1), v( 1,-1, 1), v( 1,-1,-1) )	// Right
+    ADD_BOX_FACE( v( 1, 1, 1), v(-1, 1, 1), v(-1,-1, 1), v( 1,-1, 1) )  // Front
+    ADD_BOX_FACE( v( 1,-1, 1), v(-1,-1, 1), v(-1,-1,-1), v( 1,-1,-1) )  // Bottom
+    ADD_BOX_FACE( v( 1,-1,-1), v(-1,-1,-1), v(-1, 1,-1), v( 1, 1,-1) )  // Back
+    ADD_BOX_FACE( v( 1, 1,-1), v(-1, 1,-1), v(-1, 1, 1), v( 1, 1, 1) )  // Top
+    ADD_BOX_FACE( v(-1, 1, 1), v(-1, 1,-1), v(-1,-1,-1), v(-1,-1, 1) )  // Left
+    ADD_BOX_FACE( v( 1, 1,-1), v( 1, 1, 1), v( 1,-1, 1), v( 1,-1,-1) )  // Right
 
-	// Vertex color data
-	std::vector<Vector3> colors( pos.size(), Color::White );
+    // Vertex color data
+    Vector<Vector3> colors( pos.Size(), Color::White );
 
-	// Vertex tex coords data
-	std::vector< Vector3 > coords( pos.size(), Vector3::Zero );
-	
-	// Top
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	// Bottom
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	// Front
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	// Back
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	// Left
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
-	// Right
-	coords.push_back( Vector2(0.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 0.0f) );
-	coords.push_back( Vector2(1.0f, 1.0f) );
-	coords.push_back( Vector2(0.0f, 1.0f) );
+    // Vertex tex coords data
+    Vector< Vector3 > coords( pos.Size(), Vector3::Zero );
+    
+    // Top
+    coords.Push( Vector2(0.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 1.0f) );
+    // Bottom
+    coords.Push( Vector2(1.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 0.0f) );
+    // Front
+    coords.Push( Vector2(0.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 1.0f) );
+    // Back
+    coords.Push( Vector2(1.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 0.0f) );
+    // Left
+    coords.Push( Vector2(0.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 1.0f) );
+    // Right
+    coords.Push( Vector2(0.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 0.0f) );
+    coords.Push( Vector2(1.0f, 1.0f) );
+    coords.Push( Vector2(0.0f, 1.0f) );
 
-	// Vertex buffer setup
-	gb->set( VertexAttribute::Position, pos );
-	gb->set( VertexAttribute::Color, colors );
-	gb->set( VertexAttribute::TexCoord0, coords );
+    // Vertex buffer setup
+    gb->set( VertexAttribute::Position, pos );
+    gb->set( VertexAttribute::Color, colors );
+    gb->set( VertexAttribute::TexCoord0, coords );
 }
 
 //-----------------------------------//

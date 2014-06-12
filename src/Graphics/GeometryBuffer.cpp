@@ -58,7 +58,7 @@ uint8 VertexElement::getSize() const
 
 void VertexDeclaration::add(const VertexElement& elem)
 {
-	decls.push_back(elem);
+	decls.Push(elem);
 }
 
 //-----------------------------------//
@@ -66,7 +66,7 @@ void VertexDeclaration::add(const VertexElement& elem)
 void VertexDeclaration::add(const VertexElementP& pod)
 {
 	VertexElement elem(pod.attribute, pod.type, pod.components);
-	decls.push_back(elem);
+	decls.Push(elem);
 }
 
 //-----------------------------------//
@@ -74,14 +74,14 @@ void VertexDeclaration::add(const VertexElementP& pod)
 void VertexDeclaration::add(VertexAttribute attribute, int numComponents)
 {
 	VertexElement elem(attribute, VertexDataType::Float, numComponents);
-	decls.push_back(elem);
+	decls.Push(elem);
 }
 
 //-----------------------------------//
 
 VertexElement* VertexDeclaration::find(VertexAttribute attribute) const
 {
-	for(size_t i = 0; i < decls.size(); i++)
+	for(size_t i = 0; i < decls.Size(); i++)
 	{
 		const VertexElement& elem = decls[i];
 		if(elem.attribute != attribute) continue;
@@ -96,7 +96,7 @@ VertexElement* VertexDeclaration::find(VertexAttribute attribute) const
 
 void VertexDeclaration::reset()
 {
-	decls.clear();
+	decls.Clear();
 }
 
 //-----------------------------------//
@@ -105,7 +105,7 @@ uint8 VertexDeclaration::getVertexSize() const
 {
 	uint8 totalSize = 0;
 
-	for(size_t i = 0; i < decls.size(); i++)
+	for(size_t i = 0; i < decls.Size(); i++)
 	{
 		const VertexElement& elem = decls[i];
 		totalSize += elem.getSize();
@@ -120,7 +120,7 @@ uint8 VertexDeclaration::getOffset(VertexAttribute attribute) const
 {
 	uint8 totalOffset = 0;
 
-	for(size_t i = 0; i < decls.size(); i++)
+	for(size_t i = 0; i < decls.Size(); i++)
 	{
 		const VertexElement& elem = decls[i];
 
@@ -141,7 +141,7 @@ void VertexDeclaration::calculateStrides()
 {
 	uint8 vertexSize = getVertexSize();
 
-	for(size_t i = 0; i < decls.size(); ++i)
+	for(size_t i = 0; i < decls.Size(); ++i)
 	{
 		VertexElement& elem = decls[i];
 		elem.stride = vertexSize;
@@ -176,7 +176,7 @@ GeometryBuffer::~GeometryBuffer()
 
 void GeometryBuffer::clear()
 {
-	data.clear();
+	data.Clear();
 	forceRebuild();
 }
 
@@ -208,7 +208,7 @@ void GeometryBuffer::set(uint8* buf, uint32 size)
 
 void GeometryBuffer::add(uint8* buf, uint32 size)
 {
-	data.resize(data.size() + size);
+	data.Resize(data.Size() + size);
 	std::copy(buf, buf+size, data.end() - size);
 	forceRebuild();
 }
@@ -217,7 +217,7 @@ void GeometryBuffer::add(uint8* buf, uint32 size)
 
 void GeometryBuffer::setIndex(uint8* buf, uint32 size)
 {
-	indexData.clear();
+	indexData.Clear();
 	addIndex(buf, size);
 	forceRebuild();
 }
@@ -226,7 +226,7 @@ void GeometryBuffer::setIndex(uint8* buf, uint32 size)
 
 void GeometryBuffer::addIndex(uint8* buf, uint32 size)
 {
-	indexData.resize(indexData.size() + size);
+	indexData.Resize(indexData.Size() + size);
 	std::copy(buf, buf+size, indexData.end() - size);
 	forceRebuild();
 }
@@ -242,14 +242,14 @@ void GeometryBuffer::addIndex(uint16 index)
 
 bool GeometryBuffer::isIndexed() const
 {
-	return !indexData.empty();
+	return !indexData.Empty();
 }
 
 //-----------------------------------//
 
 uint32 GeometryBuffer::getNumVertices() const
 {
-	if( declarations.decls.empty() ) return 0;
+	if( declarations.decls.Empty() ) return 0;
 
 	uint8 sizeVertex = declarations.getVertexSize();
 	
@@ -260,7 +260,7 @@ uint32 GeometryBuffer::getNumVertices() const
 		return elem.size / elem.getSize();
 	}
 
-	return data.size() / sizeVertex;
+	return data.Size() / sizeVertex;
 }
 
 //-----------------------------------//
@@ -270,13 +270,13 @@ uint32 GeometryBuffer::getNumIndices() const
 	uint8 indexSizeBytes = indexSize / 8;
 	assert( indexSizeBytes != 0 );
 
-	uint32 numIndices = indexData.size() / indexSizeBytes;
+	uint32 numIndices = indexData.Size() / indexSizeBytes;
 	return numIndices;
 }
 
 void GeometryBuffer::clearIndexes()
 {
-    indexData.clear();
+    indexData.Clear();
 }
 
 //-----------------------------------//
@@ -290,7 +290,7 @@ float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const
 	{
 		uint8 elemSize = elem->getSize();
 
-		const uint8* loc = &data.front() + elem->offset + (elemSize * i);
+        const uint8* loc = data.Buffer() + elem->offset + (elemSize * i);
 		return (float*) loc;
 	}
 
@@ -300,7 +300,7 @@ float* GeometryBuffer::getAttribute(VertexAttribute attribute, uint32 i) const
 
 	// TODO: Check the bounds and return null in that case too.
 
-	const uint8* loc = &data.front() + (totalSize * i) + localOffset;
+	const uint8* loc = data.Buffer() + (totalSize * i) + localOffset;
 	return (float*) loc;
 }
 

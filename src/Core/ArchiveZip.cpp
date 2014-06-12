@@ -21,18 +21,18 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 ZipStream::ZipStream()
-	: Stream("", StreamOpenMode::Default)
+    : Stream("", StreamOpenMode::Default)
 
 {
 }
 
 //-----------------------------------//
 
-ZipStream::ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, String path,
-	StreamOpenMode mode)
-	: Stream(path, mode)
-	, dir(dir)
-	, handle(handle)
+ZipStream::ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, Path path,
+    StreamOpenMode mode)
+    : Stream(path, mode)
+    , dir(dir)
+    , handle(handle)
 {
 }
 
@@ -40,203 +40,203 @@ ZipStream::ZipStream(ZZIP_DIR* dir, ZZIP_FILE* handle, String path,
 
 ZipStream::~ZipStream()
 {
-	if( !close() )
-		LogDebug("Error closing zip stream: %s", path.c_str());
+    if( !close() )
+        LogDebug("Error closing zip stream: %s", path.CString());
 }
 
 //-----------------------------------//
 
 bool ZipStream::open()
 {
-	handle = zzip_file_open(dir, path.c_str(), ZZIP_ONLYZIP);
-	return handle != nullptr;
+    handle = zzip_file_open(dir, path.CString(), ZZIP_ONLYZIP);
+    return handle != nullptr;
 }
 
 //-----------------------------------//
 
 bool ZipStream::close()
 {
-	return zzip_file_close(handle) == ZZIP_NO_ERROR;
+    return zzip_file_close(handle) == ZZIP_NO_ERROR;
 }
 
 //-----------------------------------//
 
-int64 ZipStream::read(void* buf, uint64 len) const
+uint64 ZipStream::read(void* buf, uint64 len) const
 {
-	return zzip_file_read(handle, buf, (zzip_size_t) len);
+    return zzip_file_read(handle, buf, (zzip_size_t) len);
 }
 
 //-----------------------------------//
 
-int64 ZipStream::getPosition() const
+uint64 ZipStream::getPosition() const
 {
-	return zzip_tell(handle);
+    return zzip_tell(handle);
 }
 
 //-----------------------------------//
 
 void ZipStream::setPosition(int64 offset, StreamSeekMode mode)
 {
-	int origin = 0;
+    int origin = 0;
 
-	switch(mode)
-	{
-	case StreamSeekMode::Absolute:
-		origin = SEEK_SET;
-		break;
-	case StreamSeekMode::Relative:
-		origin = SEEK_CUR;
-		break;
-	case StreamSeekMode::RelativeEnd:
-		origin = SEEK_END;
-		break;
-	}
+    switch(mode)
+    {
+    case StreamSeekMode::Absolute:
+        origin = SEEK_SET;
+        break;
+    case StreamSeekMode::Relative:
+        origin = SEEK_CUR;
+        break;
+    case StreamSeekMode::RelativeEnd:
+        origin = SEEK_END;
+        break;
+    }
 
-	zzip_seek(handle, (zzip_off_t) offset, origin);
+    zzip_seek(handle, (zzip_off_t) offset, origin);
 }
 
 //-----------------------------------//
 
 uint64 ZipStream::size() const
 {
-	ZZIP_STAT zs;
-	int ret = zzip_file_stat(handle, &zs);
-	assert( ret != -1 );
-	
-	return zs.st_size;
+    ZZIP_STAT zs;
+    int ret = zzip_file_stat(handle, &zs);
+    assert( ret != -1 );
+    
+    return zs.st_size;
 }
 
 //-----------------------------------//
 
 ArchiveZip::ArchiveZip(const Path& path)
-	: Archive(path)
-	, handle(nullptr)
+    : Archive(path)
+    , handle(nullptr)
 {
-	open(path);
+    open(path);
 }
 
 //-----------------------------------//
 
 ArchiveZip::~ArchiveZip()
 {
-	close();
+    close();
 }
 
 //-----------------------------------//
 
 bool ArchiveZip::open(const Path& path)
 {
-	ZZIP_DIR* zip = zzip_dir_open(path.c_str(), nullptr);
-	handle = zip;
-	isValid = zip != nullptr;
-	return isValid;
+    ZZIP_DIR* zip = zzip_dir_open(path.CString(), nullptr);
+    handle = zip;
+    isValid = zip != nullptr;
+    return isValid;
 }
 
 //-----------------------------------//
 
 bool ArchiveZip::close()
 {
-	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
-	if (!isValid)
-		return true;
+    ZZIP_DIR* zip = (ZZIP_DIR*) handle;
+    if (!isValid)
+        return true;
 
-	int ret = zzip_dir_close(zip);
-	return ret == ZZIP_NO_ERROR ;
+    int ret = zzip_dir_close(zip);
+    return ret == ZZIP_NO_ERROR ;
 }
 
 //-----------------------------------//
 
 Stream* ArchiveZip::openFile(const Path& path, Allocator* alloc)
 {
-	if (!isValid)
-		return nullptr;
+    if (!isValid)
+        return nullptr;
 
-	auto zip = Allocate(alloc, ZipStream, (ZZIP_DIR*) handle, nullptr, path, StreamOpenMode::Read);
-	
-	if (!zip->open())
-	{
-		LogWarn("Error opening zip file: %s", path.c_str());
-		Deallocate(zip);
-		return nullptr;
-	}
+    auto zip = Allocate(alloc, ZipStream, (ZZIP_DIR*) handle, nullptr, path, StreamOpenMode::Read);
+    
+    if (!zip->open())
+    {
+        LogWarn("Error opening zip file: %s", path.CString());
+        Deallocate(zip);
+        return nullptr;
+    }
 
-	return zip;
+    return zip;
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerate(std::vector<Path>& paths, bool dir)
+void ArchiveZip::enumerate(Vector<Path>& paths, bool dir)
 {
-	if (!isValid || !handle) return;
+    if (!isValid || !handle) return;
 
-	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
-	ZZIP_DIRENT entry;
+    ZZIP_DIR* zip = (ZZIP_DIR*) handle;
+    ZZIP_DIRENT entry;
 
-	zzip_rewinddir(zip);
-	
-	while( zzip_dir_read(zip, &entry) != 0 )
-	{
-		Path name = entry.d_name;
-		
-		bool isDir = !name.empty() && name[name.size()-1] == '/';
+    zzip_rewinddir(zip);
+    
+    while( zzip_dir_read(zip, &entry) != 0 )
+    {
+        Path name = entry.d_name;
+        
+        bool isDir = !name.Empty() && name[name.Length()-1] == '/';
 
-		if( (dir && isDir) || (!dir && !isDir) )
-			paths.push_back(name);
-	}
+        if( (dir && isDir) || (!dir && !isDir) )
+            paths.Push(name);
+    }
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateFiles(std::vector<Path>& paths)
+void ArchiveZip::enumerateFiles(Vector<Path>& paths)
 {
-	enumerate(paths, false);
+    enumerate(paths, false);
 }
 
 //-----------------------------------//
 
-void ArchiveZip::enumerateDirs(std::vector<Path>& paths)
+void ArchiveZip::enumerateDirs(Vector<Path>& paths)
 {
-	enumerate(paths, true);
+    enumerate(paths, true);
 }
 
 //-----------------------------------//
 
 bool ArchiveZip::existsFile(const Path& path)
 {
-	if (!isValid)
-		return false;
-	
-	ZZIP_DIR* zip = (ZZIP_DIR*) handle;
+    if (!isValid)
+        return false;
+    
+    ZZIP_DIR* zip = (ZZIP_DIR*) handle;
 
-	ZZIP_STAT zstat;
-	Path normalized = PathNormalize(path);
-	int res = zzip_dir_stat(zip, normalized.c_str(), &zstat, ZZIP_CASEINSENSITIVE | ZZIP_IGNOREPATH);
+    ZZIP_STAT zstat;
+    Path normalized = PathNormalize(path);
+    int res = zzip_dir_stat(zip, normalized.CString(), &zstat, ZZIP_CASEINSENSITIVE | ZZIP_IGNOREPATH);
 
-	return (res == ZZIP_NO_ERROR);
+    return (res == ZZIP_NO_ERROR);
 }
 
 //-----------------------------------//
 
 bool ArchiveZip::existsDir(const Path& path)
 {
-	std::vector<Path> dirs;
-	enumerateDirs(dirs);
-	Path normalized = PathNormalize(path);
+    Vector<Path> dirs;
+    enumerateDirs(dirs);
+    Path normalized = PathNormalize(path);
 
-	for(auto& i : dirs)
-	{
-		auto& dir = StringTrim(i, "/");
-		if(dir == normalized) return true;
-	}
+    for(auto& i : dirs)
+    {
+        auto& dir = StringTrim(i, "/");
+        if(dir == normalized) return true;
+    }
 
-	return false;
+    return false;
 }
 
 //-----------------------------------//
 
 bool ArchiveZip::monitor()
 {
-	return false;
+    return false;
 }
 
 //-----------------------------------//

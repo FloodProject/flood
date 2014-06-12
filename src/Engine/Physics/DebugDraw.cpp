@@ -19,27 +19,27 @@ NAMESPACE_ENGINE_BEGIN
 
 BulletDebugDrawer::BulletDebugDrawer()
 {
-	gb = AllocateThis(GeometryBuffer, BufferUsage::Dynamic, BufferAccess::Write);
-	clearBuffer();
+    gb = AllocateThis(GeometryBuffer, BufferUsage::Dynamic, BufferAccess::Write);
+    clearBuffer();
 
-	material = MaterialCreate(AllocatorGetHeap(), "PhysicsDebug");
-	material.Resolve()->setDepthCompare(DepthCompare::LessOrEqual);
+    material = MaterialCreate(AllocatorGetHeap(), "PhysicsDebug");
+    material.Resolve()->setDepthCompare(DepthCompare::LessOrEqual);
 
-	renderable = AllocateThis(Renderable);
-	renderable->setPrimitiveType(PrimitiveType::Lines);
-	renderable->setGeometryBuffer(gb);
-	renderable->setMaterial(material);
+    renderable = AllocateThis(Renderable);
+    renderable->setPrimitiveType(PrimitiveType::Lines);
+    renderable->setGeometryBuffer(gb);
+    renderable->setMaterial(material);
 }
 
 //-----------------------------------//
 
 void BulletDebugDrawer::clearBuffer()
 {
-	std::vector<Vector3> pos;
-	gb->set(VertexAttribute::Position, pos);
-	
-	std::vector<Vector3> colors;
-	gb->set( VertexAttribute::Color, colors);
+    Vector<Vector3> pos;
+    gb->set(VertexAttribute::Position, pos);
+    
+    Vector<Vector3> colors;
+    gb->set( VertexAttribute::Color, colors);
 }
 
 //-----------------------------------//
@@ -47,21 +47,21 @@ void BulletDebugDrawer::clearBuffer()
 void BulletDebugDrawer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
 {
 #ifdef GEOMETRY_BUFFER
-	std::vector<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
-	pos.push_back(Convert::fromBullet(from));
-	pos.push_back(Convert::fromBullet(to));
+    Vector<Vector3>& pos = vb->getAttribute(VertexAttribute::Position);
+    pos.Push(Convert::fromBullet(from));
+    pos.Push(Convert::fromBullet(to));
 
-	std::vector<Vector3>& colors = vb->getAttribute(VertexAttribute::Color);
-	colors.push_back(Convert::fromBullet(color));
-	colors.push_back(Convert::fromBullet(color));
+    Vector<Vector3>& colors = vb->getAttribute(VertexAttribute::Color);
+    colors.Push(Convert::fromBullet(color));
+    colors.Push(Convert::fromBullet(color));
 #endif
 }
 
 //-----------------------------------//
 
 void BulletDebugDrawer::drawContactPoint(const btVector3 &PointOnB,
-	const btVector3 &normalOnB, btScalar distance,
-	int lifeTime, const btVector3 &color)
+    const btVector3 &normalOnB, btScalar distance,
+    int lifeTime, const btVector3 &color)
 {
 
 }
@@ -70,7 +70,7 @@ void BulletDebugDrawer::drawContactPoint(const btVector3 &PointOnB,
 
 void BulletDebugDrawer::reportErrorWarning (const char *warningString)
 {
-	LogError( warningString );
+    LogError( warningString );
 }
 
 //-----------------------------------//
@@ -89,9 +89,9 @@ void BulletDebugDrawer::setDebugMode(int debugMode)
 
 //-----------------------------------//
 
-int	BulletDebugDrawer::getDebugMode() const
+int BulletDebugDrawer::getDebugMode() const
 {
-	return 1;
+    return 1;
 }
 
 //-----------------------------------//

@@ -174,9 +174,9 @@ void Transform::updateBoundingVolume()
 {
 	bounds.reset();
 
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	const Vector<GeometryPtr>& geoms = entity->getGeometry();
 	
-	for( size_t i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < geoms.Size(); i++ )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		bounds.add( geometry->getBoundingVolume() );

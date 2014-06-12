@@ -30,20 +30,20 @@ REFLECT_CLASS_END()
 
 FreeTypeFontLoader::FreeTypeFontLoader()
 {
-	extensions.push_back("ttf");
+    extensions.Push("ttf");
 }
 
 //-----------------------------------//
 
 bool FreeTypeFontLoader::decode(ResourceLoadOptions& options)
 {
-	FreeTypeFont* font = (FreeTypeFont*) options.resource;
+    FreeTypeFont* font = (FreeTypeFont*) options.resource;
 
-	if (options.stream->read(font->data) <= 0)
-		return false;
+    if (options.stream->read(font->data) <= 0)
+        return false;
 
-	font->init();
-	return true;
+    font->init();
+    return true;
 }
 
 //-----------------------------------//

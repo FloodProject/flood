@@ -10,6 +10,7 @@
 #ifdef ENABLE_AUDIO_OPENAL
 
 #include "Engine/Resources/Sound.h"
+#include "Engine/Audio/Buffer.h"
 #include "Core/Math/Vector.h"
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
@@ -35,7 +36,7 @@ API_AUDIO void AudioShutdown();
 API_AUDIO AudioDevice* GetAudioDevice();
 
 // Gets a list of available audio devices.
-API_AUDIO bool AudioGetDevices(std::vector<String>& devices);
+API_AUDIO bool AudioGetDevices(Vector<String>& devices);
 
 // Creates an internal AL device.
 API_AUDIO AudioDevice* AudioCreateDevice(const String& device);
@@ -56,56 +57,56 @@ API_AUDIO bool AudioCheckError();
  * Audio device to play sound data using OpenAL as backend.
  */
 
-typedef std::map<Sound*, AudioBufferPtr> SoundBufferMap;
+typedef HashMap<Sound*, AudioBufferPtr> SoundBufferMap;
 struct ResourceEvent;
 
 class API_AUDIO AudioDevice
 {
-	DECLARE_UNCOPYABLE(AudioDevice)
+    DECLARE_UNCOPYABLE(AudioDevice)
 
-	friend class AudioContext;
-	friend class AudioSource;
-	friend class AudioBuffer;
+    friend class AudioContext;
+    friend class AudioSource;
+    friend class AudioBuffer;
 
 public:
 
-	AudioDevice(ALCdevice* device);
-	~AudioDevice();
+    AudioDevice(ALCdevice* device);
+    ~AudioDevice();
 
-	// Gets a list of available extensions.
-	bool getExtensions(std::vector<String>& extensions);
+    // Gets a list of available extensions.
+    bool getExtensions(Vector<UTF8String>& extensions);
 
-	// Creates the main context.
-	bool createMainContext();
+    // Creates the main context.
+    bool createMainContext();
 
-	// Creates a new context.
-	AudioContext* createContext();
-	
-	// Sets the global audio volume
-	void setVolume(float volume);
+    // Creates a new context.
+    AudioContext* createContext();
+    
+    // Sets the global audio volume
+    void setVolume(float volume);
 
-	// Creates a new audio buffer.
-	AudioBufferPtr createBuffer();
+    // Creates a new audio buffer.
+    AudioBufferPtr createBuffer();
 
-	// Prepares a buffer for AL usage.
-	AudioBufferPtr prepareBuffer(Sound* sound);
+    // Prepares a buffer for AL usage.
+    AudioBufferPtr prepareBuffer(Sound* sound);
 
-	// Gets the main audio context.
-	GETTER(MainContext, AudioContext*, mainContext)
+    // Gets the main audio context.
+    GETTER(MainContext, AudioContext*, mainContext)
 
 protected:
 
-	// Callback when a resource is loaded.
-	void onResourceLoaded(const ResourceEvent&);
+    // Callback when a resource is loaded.
+    void onResourceLoaded(const ResourceEvent&);
 
-	// Audio device.
-	ALCdevice* device;
+    // Audio device.
+    ALCdevice* device;
 
-	// Maps each sound to a OpenAL sound buffer.
-	SoundBufferMap soundBuffers;
+    // Maps each sound to a OpenAL sound buffer.
+    SoundBufferMap soundBuffers;
 
-	// Main audio context.
-	AudioContext* mainContext;
+    // Main audio context.
+    AudioContext* mainContext;
 };
 
 //-----------------------------------//

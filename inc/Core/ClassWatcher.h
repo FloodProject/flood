@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <map>
-#include <vector>
+#include "Core/Containers/Vector.h"
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -26,36 +26,36 @@ class Field;
 
 struct FieldWatch
 {
-	void* userdata;
-	const void* object;
-	const Field* field;
-	uint32 hash;
+    void* userdata;
+    const void* object;
+    const Field* field;
+    uint32 hash;
 };
 
-typedef std::map<const Field*, FieldWatch> FieldWatchMap;
-typedef std::vector<FieldWatch*> FieldWatchVector;
+typedef HashMap<const Field*, FieldWatch> FieldWatchMap;
+typedef Vector<FieldWatch*> FieldWatchVector;
 
 struct ClassWatch
 {
-	FieldWatchMap fields;
+    FieldWatchMap fields;
 };
 
-// Creates a new class watch.
+/// Creates a new class watch.
 API_CORE ClassWatch* ClassWatchCreate(Allocator*);
 
-// Resets an existing class watch.
+/// Resets an existing class watch.
 API_CORE void ClassWatchReset(ClassWatch*);
 
-// Adds a field to the class watch.
+/// Adds a field to the class watch.
 API_CORE void ClassWatchAddField(ClassWatch*, const FieldWatch& fw );
 
-// Adds the class fields to the class watch.
+/// Adds the class fields to the class watch.
 API_CORE void ClassWatchAddFields(ClassWatch*, Object* object);
 
-// Updates a class field in the class watch.
+/// Updates a class field in the class watch.
 API_CORE bool ClassWatchUpdateField(ClassWatch*, const Field* field);
 
-// Updates the watches and gets the changed fields.
+/// Updates the watches and gets the changed fields.
 API_CORE void ClassWatchUpdate(ClassWatch*, FieldWatchVector& changed);
 
 //-----------------------------------//

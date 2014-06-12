@@ -9,7 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/String.h"
-#include <map>
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -102,7 +102,7 @@ public:
 
 };
 
-typedef std::map<const char*, Type*, RawStringCompare> TypeMap;
+typedef HashMap<const char*, Type*> TypeMap;
 
 //-----------------------------------//
 
@@ -147,8 +147,8 @@ typedef uint8 FieldId;
 
 typedef void* (*ClassCreateFunction)(Allocator*);
 
-typedef std::map<FieldId, Field*> ClassFieldIdMap;
-typedef std::map<ClassId, Class*> ClassIdMap;
+typedef HashMap<FieldId, Field*> ClassFieldIdMap;
+typedef HashMap<ClassId, Class*> ClassIdMap;
 
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
@@ -259,11 +259,11 @@ public:
 
 	ClassCreateFunction create_fn; //!< Factory function.
 
-	std::vector<Field*> fields; //!< Keeps track of the type fields.
+	Vector<Field*> fields; //!< Keeps track of the type fields.
 
 	ClassFieldIdMap fieldIds; //!< Keeps track of the type fields by id.
 
-	std::vector<Class*> childs; //!< Keeps track of the childs of the class.
+	Vector<Class*> childs; //!< Keeps track of the childs of the class.
 
 };
 
@@ -314,7 +314,7 @@ public:
 	Type* type; //!< field type
 	FieldId id; //!< field id
 	const char* name; //!< field name
-	std::vector<const char*> aliases; //!< field aliases
+	Vector<const char*> aliases; //!< field aliases
 	uint16 size; //!< field size
 	uint16 offset; //!< field offset
 	uint16 pointer_size; //!< field pointer size 
@@ -350,6 +350,7 @@ enum struct PrimitiveTypeKind : uint8
 	Uint64,
 	Float,
 	String,
+    UTF8String,
 	Color,
 	Vector3,
 	Quaternion,
@@ -396,6 +397,7 @@ public:
 	Primitive p_float; //!< float primitive
 	Primitive p_double; //!< double primitive
 	Primitive p_string; //!< string primitive
+	Primitive p_utf8string; //!< utf8 string primitive
 	Primitive p_Vector3; //!< vector3 primitive
 	Primitive p_Color; //!< color primitive
 	Primitive p_Quaternion; //!< quaternion primitive
@@ -404,7 +406,7 @@ public:
 
 //-----------------------------------//
 
-typedef std::map<const char*, int32, RawStringCompare> EnumValuesMap;
+typedef HashMap<const char*, int32> EnumValuesMap;
 typedef std::pair<const char*, int32> EnumValuesPair;
 
 class API_CORE Enum : public Type
@@ -473,7 +475,7 @@ void FieldSet( const Field* field, void* object, const T& value )
  * @param instances out vector with resulting children
  */
 template<typename T>
-void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& instances)
+void ClassCreateChilds(const Class* klass, Allocator* alloc, Vector<T*>& instances)
 {
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
@@ -488,7 +490,7 @@ void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& in
 		T* object = (T*) child->createInstance(alloc);
 		if(!object) continue;
 
-		instances.push_back(object);
+        instances.Push(object);
 	}
 }
 

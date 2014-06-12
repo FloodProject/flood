@@ -16,7 +16,7 @@ NAMESPACE_PIPELINE_BEGIN
 //-----------------------------------//
 
 class ResourceProcessor;
-typedef std::map<Class*, ResourceProcessor*> ResourceProcessorMap;
+typedef HashMap<Class*, ResourceProcessor*> ResourceProcessorMap;
 
 /**
  * Resource processors handle the pre-processing of resource data.
@@ -26,28 +26,28 @@ API_PIPELINE REFLECT_DECLARE_CLASS(ResourceProcessor)
 
 class API_PIPELINE NO_VTABLE ResourceProcessor : public Extension
 {
-	DECLARE_UNCOPYABLE(ResourceProcessor)
+    DECLARE_UNCOPYABLE(ResourceProcessor)
 
 public:
 
-	virtual ~ResourceProcessor();
+    virtual ~ResourceProcessor();
 
-	// Processes the given resource.
-	virtual bool Process(const ResourcePtr& resource) = 0;
+    // Processes the given resource.
+    virtual bool Process(const ResourcePtr& resource) = 0;
 
-	// Gets the processed resource type.
-	virtual Class* GetResourceType() = 0;
+    // Gets the processed resource type.
+    virtual Class* GetResourceType() = 0;
 
 protected:
-	
-	ResourceProcessor();
+    
+    ResourceProcessor();
 };
 
 // Finds a resource processor for a given resource type.
 API_PIPELINE ResourceProcessor* PipelineFindProcessor(Class* type);
 
 // Maps the resource processors to the resource types.
-extern std::vector<ResourceProcessor*> resourceProcessors;
+extern Vector<ResourceProcessor*> resourceProcessors;
 
 //-----------------------------------//
 

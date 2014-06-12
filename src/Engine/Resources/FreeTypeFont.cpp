@@ -45,8 +45,8 @@ void FreeTypeFont::init()
         LogError("Error initializing FreeType Library");
 
     error = FT_New_Memory_Face( fontInfo->library,
-                              data.data(),  /* first byte in memory */
-                              data.size(),  /* size in bytes        */
+                              data.Buffer(),  /* first byte in memory */
+                              data.Size(),  /* size in bytes        */
                               0,            /* face_index           */
                               &fontInfo->face );
   if ( error )

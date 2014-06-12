@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Engine/Scene/Entity.h>
+#include "StringConverter.h"
 
 namespace Flood
 {

@@ -151,10 +151,10 @@ typedef RenderBatch Renderable;
 API_GRAPHICS RenderBatch* RenderBatchCreate(Allocator*);
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( RenderBatch );
-typedef std::vector<RenderBatchPtr> RenderBatchsVector;
+typedef Vector<RenderBatchPtr> RenderBatchsVector;
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
-typedef std::vector<RenderablePtr> RenderablesVector;
+typedef Vector<RenderablePtr> RenderablesVector;
 
 //-----------------------------------//
 

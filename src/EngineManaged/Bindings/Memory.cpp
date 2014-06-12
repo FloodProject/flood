@@ -55,8 +55,8 @@ void Flood::Allocator::ResetMemory()
 void Flood::Allocator::SetGroup(System::String^ group)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto _arg1 = clix::marshalString<clix::E_UTF8>(group);
-    auto arg1 = _arg1.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(group);
+    auto arg1 = ____temp.c_str();
     ::AllocatorSetGroup(arg0, arg1);
 }
 
@@ -138,8 +138,18 @@ System::String^ Flood::Allocator::Group::get()
 
 void Flood::Allocator::Group::set(System::String^ value)
 {
-    auto _value = clix::marshalString<clix::E_UTF8>(value);
-    ((::Allocator*)NativePtr)->group = _value.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(value);
+    ((::Allocator*)NativePtr)->group = ____temp.c_str();
+}
+
+char Flood::Allocator::Id::get()
+{
+    return ((::Allocator*)NativePtr)->id;
+}
+
+void Flood::Allocator::Id::set(char value)
+{
+    ((::Allocator*)NativePtr)->id = (::int8)(::int8_t)value;
 }
 
 Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)

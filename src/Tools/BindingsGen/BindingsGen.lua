@@ -9,7 +9,7 @@ project "BindingsGen"
 
   location "."
 
-  files { "**.cs", "./*.lua" }
+  files { "**.cs", "*.lua" }
 
   dependson { "CppSharp.AST", "CppSharp.Generator", "CppSharp.Parser" }
 

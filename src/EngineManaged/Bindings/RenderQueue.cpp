@@ -149,7 +149,7 @@ System::Collections::Generic::List<Flood::RenderState>^ Flood::RenderBlock::Rend
 
 void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flood::RenderState>^ value)
 {
-    auto _tmpvalue = std::vector<::RenderState>();
+    auto _tmpvalue = Vector<::RenderState>();
     for each(Flood::RenderState _element in value)
     {
         auto _marshal0 = ::RenderState();
@@ -173,7 +173,7 @@ void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flo
         _marshal0.modelMatrix = _marshal1;
         _marshal0.priority = (::int32)(::int32_t)_element.Priority;
         auto _marshalElement = _marshal0;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::RenderBlock*)NativePtr)->renderables = _tmpvalue;
 }

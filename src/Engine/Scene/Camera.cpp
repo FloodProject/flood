@@ -148,11 +148,9 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 	if (clearView)
 		renderDevice->clearView();
+    for (auto it= drawer.renderables.end() -1;it >= drawer.renderables.begin();--it)
+        block.renderables.Insert(block.renderables.begin(), *it);
 
-	block.renderables.insert(
-		block.renderables.begin(),
-		drawer.renderables.begin(),
-		drawer.renderables.end() );
 
 	renderDevice->render( block );
 }
@@ -170,10 +168,10 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 	{
 		const Group* group = (Group*) entity;
 
-		const std::vector<EntityPtr>& entities = group->getEntities();
+        const Vector<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.
-		for (size_t i = 0; i < entities.size(); i++)
+        for( size_t i = 0; i < entities.Size(); i++ )
 		{
 			const Entity* child = entities[i].get();
 			cull( block, child );
@@ -200,9 +198,9 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 
 	#pragma TODO("Fix multiple geometry instancing")
 
-	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+    const Vector<GeometryPtr>& geoms = entity->getGeometry();
 
-	for( size_t i = 0; i < geoms.size(); i++ )
+    for( size_t i = 0; i < geoms.Size(); i++ )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		geometry->appendRenderables( block.renderables, transform );
@@ -217,15 +215,15 @@ void Camera::cull( RenderBlock& block, const Entity* entity )
 		ls.light = light.get();
 		ls.transform = transform.get();
 	
-		block.lights.push_back( ls );
+        block.lights.Push( ls );
 	}
 #endif
 
 #ifdef BUILD_DEBUG
 	const ComponentMap& components = entity->getComponents();
-	ComponentMap::const_iterator it;
+    ComponentMap::ConstIterator it;
 	
-	for( it = components.begin(); it != components.end(); it++ )
+    for( it = components.Begin(); it != components.End(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 		component->onPreRender(*this);

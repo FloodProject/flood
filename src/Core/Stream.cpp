@@ -15,8 +15,8 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 Stream::Stream(const Path& path, StreamOpenMode mode)
-	: path(path)
-	, mode(mode) 
+    : path(path)
+    , mode(mode) 
 {
 }
 
@@ -24,35 +24,35 @@ Stream::Stream(const Path& path, StreamOpenMode mode)
 
 bool Stream::open() 
 {
-	return false; 
+    return false; 
 }
 
 //-----------------------------------//
 
 bool Stream::close() 
 { 
-	return false; 
+    return false; 
 }
 
 //-----------------------------------//
 
-int64 Stream::read(void* buffer, uint64 size) const
+uint64 Stream::read(void* buffer, uint64 size) const
 { 
-	return InvalidState; 
-}	
-	
-//-----------------------------------//	
-	
-int64 Stream::write(void* buffer, uint64 size) 
+    return InvalidState; 
+}   
+    
+//-----------------------------------// 
+    
+uint64 Stream::write(void* buffer, uint64 size) 
 {
-	return InvalidState; 
+    return InvalidState; 
 }
 
 //-----------------------------------//
 
-int64 Stream::getPosition() const
+uint64 Stream::getPosition() const
 {
-	return InvalidState; 
+    return InvalidState; 
 }
 
 //-----------------------------------//
@@ -65,7 +65,7 @@ void Stream::setPosition(int64 pos, StreamSeekMode mode)
 
 uint64 Stream::size() const
 { 
-	return InvalidState; 
+    return InvalidState; 
 }
 
 //-----------------------------------//
@@ -76,68 +76,109 @@ void Stream::resize(int64 size)
 
 //-----------------------------------//
 
-int64 Stream::read(std::vector<uint8>& data) const
+uint64 Stream::read(Vector<uint8>& data) const
 {
-	int64 length = size();
+    int64 length = size();
 
-	if( length < 0 ) return 0;
+    if( length < 0 ) return 0;
 
-	data.resize( (size_t) length );
+    data.Resize( (size_t) length );
 
-	if( data.empty() ) return 0;
+    if( data.Empty() ) return 0;
 
-	return readBuffer(&data.front(), data.size());
+    return readBuffer(&data.Front(), data.Size());
 }
 
 //-----------------------------------//
 
-int64 Stream::readBuffer(void* buffer, int64 size) const
+uint64 Stream::readBuffer(void* buffer, int64 size) const
 {
-	return read(buffer, size);
+    return read(buffer, size);
 }
 
 //-----------------------------------//
 
-int64 Stream::readString(String& text) const
+uint64 Stream::readString(String& text) const
 {
-	std::vector<uint8> data;
-	int64 size = read(data);
-	text.assign( data.begin(), data.end() );
-	return size;
+    Vector<uint8> data;
+    int64 size = read(data);
+    text.Clear();
+    for(auto i:data)
+        text += i;
+    return size;
 }
 
 //-----------------------------------//
 
-int64 Stream::readLines(std::vector<String>& lines) const
+uint64 Stream::readUTF8String(UTF8String& text) const
 {
-	String text;
-	int64 size = readString(text);
-
-	StringSplit(text, '\n', lines);
-	
-	// Erase extra line endings.
-	for( size_t i = 0; i < lines.size(); i++ )
-	{
-		String& line = lines[i];
-		size_t last = line.size() - 1;
-		if( line[last] == '\r' ) line.erase(last);
-	}
-
-	return size;
+    Vector<uint8> data;
+    int64 size = read(data);
+    text.Clear();
+    for(byte i:data)
+        text.Append(i);
+    return size;
 }
 
 //-----------------------------------//
 
-int64 Stream::write(uint8* buf, uint64 size)
+uint64 Stream::readLines(Vector<String>& lines) const
 {
-	return write((void *)buf, size);
+    String text;
+    int64 size = readString(text);
+
+    lines = text.Split('\n');
+    
+    // Erase extra line endings.
+    for( size_t i = 0; i < lines.Size(); i++ )
+    {
+        String& line = lines[i];
+        size_t last = line.Length() - 1;
+        if( line[last] == '\r' ) line.Erase(last);
+    }
+
+    return size;
 }
 
 //-----------------------------------//
 
-int64 Stream::writeString(const String& string)
+uint64 Stream::readUTF8Lines(Vector<UTF8String>& lines) const
 {
-	return write((uint8*) string.data(), string.size());
+    UTF8String text;
+    int64 size = readUTF8String(text);
+
+    lines = text.Split('\n');
+    
+    // Erase extra line endings.
+    for( size_t i = 0; i < lines.Size(); i++ )
+    {
+        UTF8String& line = lines[i];
+        size_t last = line.Length() - 1;
+        if( line[last] == '\r' ) line.Erase(last);
+    }
+
+    return size;
+}
+
+//-----------------------------------//
+
+uint64 Stream::write(uint8* buf, uint64 size)
+{
+    return write((void *)buf, size);
+}
+
+//-----------------------------------//
+
+uint64 Stream::writeUTF8String(const UTF8String& string)
+{
+    return write((uint8*) string.CString(), string.Length());
+}
+
+//-----------------------------------//
+
+uint64 Stream::writeString(const String& string)
+{
+    return write((uint8*) string.CString(), string.Length());
 }
 
 //-----------------------------------//

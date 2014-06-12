@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <vector>
+#include "Core/Containers/Vector.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -22,7 +22,7 @@ struct API_CORE Noise
 	Noise( int seed = 329181337 );
 
 	// Generates an array of noise.
-	void generate(std::vector<float>& noise, uint width, uint height);
+	void generate(Vector<float>& noise, uint width, uint height);
 
 	// Interpolates the noise.
 	float interpolateNoise(float x, float y);

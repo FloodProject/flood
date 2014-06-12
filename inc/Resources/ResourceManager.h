@@ -53,8 +53,8 @@ API_RESOURCE void ResourcesDeinitialize();
 // Gets the resource manager instance.
 API_RESOURCE ResourceManager* GetResourceManager();
 
-typedef std::map< String, ResourceHandle > ResourceMap;
-typedef std::map< String, ResourceLoaderPtr > ResourceLoaderMap;
+typedef HashMap< String, ResourceHandle > ResourceMap;
+typedef HashMap< String, ResourceLoaderPtr > ResourceLoaderMap;
 typedef ConcurrentQueue<ResourceEvent> ResourceEventQueue;
 
 /**

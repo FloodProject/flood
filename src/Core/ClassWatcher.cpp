@@ -27,7 +27,7 @@ ClassWatch* ClassWatchCreate(Allocator* alloc)
 void ClassWatchReset(ClassWatch* watch)
 {
 	if( !watch ) return;
-	watch->fields.clear();
+    watch->fields.Clear();
 }
 
 //-----------------------------------//
@@ -68,9 +68,9 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 	if( !watch || !object ) return;
 
 	Class* klass = Class::GetType(object);
-	const std::vector<Field*>& fields = klass->fields;
+	const Vector<Field*>& fields = klass->fields;
 
-	for(size_t i = 0; i < fields.size(); i++)
+	for(size_t i = 0; i < fields.Size(); i++)
 	{
 		const Field* field = fields[i];
 
@@ -87,13 +87,13 @@ void ClassWatchAddFields(ClassWatch* watch, Object* object)
 void ClassWatchUpdate(ClassWatch* watch, FieldWatchVector& changed)
 {
 	FieldWatchMap& watches = watch->fields;
-	FieldWatchMap::iterator it = watches.begin();
+    auto it = watches.Begin();
 
-	for(; it != watches.end(); ++it)
+    for(; it != watches.End(); ++it)
 	{
 		FieldWatch& fw = it->second;
 		bool updated = ClassWatchUpdateField(watch, fw.field);
-		if( updated ) changed.push_back(&fw);
+        if( updated ) changed.Push(&fw);
 	}
 }
 

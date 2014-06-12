@@ -28,7 +28,7 @@ bool ReflectionDatabase::registerType(Type* type)
 
 	const char* name = type->name;
 
-	if (types.find(name) != types.end())
+	if (types.Find(name) != types.End())
 	{
 		LogAssert("Type '%s' already exists in the database", name);
 		return false;
@@ -97,8 +97,8 @@ ReflectionDatabase& ReflectionDatabase::GetDatabase()
 
 Type* ReflectionDatabase::findType(const char* name)
 {
-	TypeMap::iterator it = types.find(name);
-	if (it == types.end()) return nullptr;
+	TypeMap::Iterator it = types.Find(name);
+	if (it == types.End()) return nullptr;
 
 	return it->second;
 }
@@ -148,12 +148,12 @@ void Class::registerClass()
 	//LogDebug("Registering class: '%s' with id '%u'", klass->name, klass->id);
 
 	// Register as child class in the parent class.
-	if (parent) parent->childs.push_back(this);
+	if (parent) parent->childs.Push(this);
 
 	// Register the class id in the map.
 	ClassIdMap& ids = Class::GetIdMap();
 
-	if( ids.find(id) != ids.end() )
+	if( ids.Find(id) != ids.End() )
 	{
 		LogError("Class with the same id already exists: '%s'", name);
 		return;
@@ -166,7 +166,7 @@ void Class::registerClass()
 
 void Class::addField(Field* field)
 {
-	fields.push_back(field);
+	fields.Push(field);
 
 	if (getFieldById(field->id))
 	{
@@ -197,9 +197,9 @@ ClassIdMap& Class::GetIdMap()
 Class* Class::getById(ClassId id)
 {
 	ClassIdMap& classIds = GetIdMap();
-	ClassIdMap::iterator it = classIds.find(id);
+    ClassIdMap::Iterator it = classIds.Find(id);
 
-	return (it == classIds.end())? nullptr : it->second;
+	return (it == classIds.End())? nullptr : it->second;
 }
 
 //-----------------------------------//
@@ -215,6 +215,7 @@ Class* Class::GetType(const Object* object)
 Field* Class::getField(const char* name)
 {
 	for(auto& field : fields)
+
 	{
 		if(strcmp(field->name, name) == 0) return field;
 
@@ -231,9 +232,9 @@ Field* Class::getField(const char* name)
 
 Field* Class::getFieldById(FieldId id)
 {
-	ClassFieldIdMap::iterator it = fieldIds.find(id);
+    ClassFieldIdMap::Iterator it = fieldIds.Find(id);
 
-	if (it != fieldIds.end())
+    if( it != fieldIds.End() )
 		return it->second;
 
 	if (parent)
@@ -358,6 +359,7 @@ PrimitiveBuiltins::PrimitiveBuiltins()
 	, p_uint64(PrimitiveTypeKind::Uint64, "uint64", sizeof(uint64))
 	, p_float(PrimitiveTypeKind::Float, "float", sizeof(float))
 	, p_string(PrimitiveTypeKind::String, "string", sizeof(String))
+    , p_utf8string(PrimitiveTypeKind::UTF8String, "utf8string", sizeof(UTF8String))
 	, p_Vector3(PrimitiveTypeKind::Vector3, "Vector3", sizeof(Vector3))
 	, p_Color(PrimitiveTypeKind::Color, "Color", sizeof(Color))
 	, p_Quaternion(PrimitiveTypeKind::Quaternion, "Quaternion", sizeof(Quaternion))
@@ -384,6 +386,7 @@ template<> Primitive* GetPrimitiveFromType<uint64>() { return &PrimitiveBuiltins
 template<> Primitive* GetPrimitiveFromType<float>() { return &PrimitiveBuiltins::GetBuiltins().p_float; }
 template<> Primitive* GetPrimitiveFromType<const char*>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
 template<> Primitive* GetPrimitiveFromType<String>() { return &PrimitiveBuiltins::GetBuiltins().p_string; }
+template<> Primitive* GetPrimitiveFromType<UTF8String>() { return &PrimitiveBuiltins::GetBuiltins().p_utf8string; }
 template<> Primitive* GetPrimitiveFromType<Vector3>() { return &PrimitiveBuiltins::GetBuiltins().p_Vector3; }
 template<> Primitive* GetPrimitiveFromType<Color>() { return &PrimitiveBuiltins::GetBuiltins().p_Color; }
 template<> Primitive* GetPrimitiveFromType<Quaternion>() { return &PrimitiveBuiltins::GetBuiltins().p_Quaternion; }
@@ -399,8 +402,8 @@ void Enum::addValue(const char* name, int32 value)
 
 int32 Enum::getValue(const char* name)
 {
-	EnumValuesMap::iterator it = values.find(name);
-	if (it == values.end()) return -1;
+	EnumValuesMap::Iterator it = values.Find(name);
+	if (it == values.End()) return -1;
 	
 	return it->second;
 }
@@ -409,9 +412,9 @@ int32 Enum::getValue(const char* name)
 
 const char* Enum::getValueName(int32 value)
 {
-	EnumValuesMap::iterator it = values.begin();
+	EnumValuesMap::Iterator it = values.Begin();
 	
-	for(; it != values.end(); ++it)
+	for(; it != values.End(); ++it)
 	{
 		const char* name = it->first;
 		if( value == it->second ) return name;

@@ -104,7 +104,7 @@ void Image::create(uint32 _width, uint32 _height, PixelFormat _format)
 	this->height = _height;
 	this->format = _format;
 
-    buffer.resize(getSize());
+    buffer.Resize(getSize());
 }
 
 //-----------------------------------//
@@ -113,10 +113,10 @@ void Image::setBuffer(byte* data)
 {
     uint32 size = getSize();
 
-    if(buffer.size() != size)
-        buffer.resize(size);
+    if(buffer.Size() != size)
+        buffer.Resize(size);
 
-    memcpy(buffer.data(), data, size * sizeof(byte));
+    memcpy(buffer.Buffer(), data, size * sizeof(byte));
 
     timestamp++;
 }
@@ -129,11 +129,11 @@ void Image::setBuffer(byte* data, uint stride)
 
     uint32 size = getSize();
 
-    if(buffer.size() != size)
-        buffer.resize(size);
+    if(buffer.Size() != size)
+        buffer.Resize(size);
 
     for(int i=0; i<height; ++i)
-        memcpy( buffer.data() + i*width*getPixelSize(), 
+        memcpy( buffer.Buffer() + i*width*getPixelSize(), 
                 data + i*stride,
                 width*getPixelSize()*sizeof(byte));
 
@@ -149,12 +149,12 @@ void Image::setBuffer(Image* image, Vector2i offset)
     assert(image->format == this->format);
 
     uint32 expectedSize = getSize();
-    if (buffer.size() != expectedSize)
-        buffer.resize(expectedSize);
+    if (buffer.Size() != expectedSize)
+        buffer.Resize(expectedSize);
 
     uint32 pixelSize = getPixelSize();
-    auto destData = buffer.data() +  (offset.x + offset.y * width) * pixelSize;
-    auto origData = image->buffer.data();
+    auto destData = buffer.Buffer() +  (offset.x + offset.y * width) * pixelSize;
+    auto origData = image->buffer.Buffer();
     for (int i = 0; i < image->height; ++i)
     {
         memcpy(destData, origData, image->width * pixelSize * sizeof(byte));
@@ -189,7 +189,7 @@ void Image::setColor( const Color& color )
 	if( format != PixelFormat::R8G8B8A8 )
 		return;
 
-	for( size_t i = 0; i < buffer.size(); i += 4 )
+	for( size_t i = 0; i < buffer.Size(); i += 4 )
 	{
 		buffer[i+0] = byte(color.r * 255);
 		buffer[i+1] = byte(color.g * 255);
@@ -248,7 +248,7 @@ void ImageWriter::save( Image* image, const char* filePath )
 
     BYTE* data = FreeImage_GetBits(fiBitmap);
 
-	memcpy(data, image->getBuffer().data(), image->getSize());
+	memcpy(data, image->getBuffer().Buffer(), image->getSize());
 
 	auto fileFormat = FreeImage_GetFIFFromFilename(filePath);
 	if (fileFormat == FIF_UNKNOWN)

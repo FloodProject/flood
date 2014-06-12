@@ -33,8 +33,8 @@ API_CORE void SystemSleep( int64 time );
 //---------------------------------------------------------------------//
 
 API_CORE bool FileExists(const Path&);
-API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);
-API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
+API_CORE void FileEnumerateFiles(const Path&, Vector<Path>&);
+API_CORE void FileEnumerateDirectories(const Path&, Vector<Path>&);
 
 //---------------------------------------------------------------------//
 // Locales

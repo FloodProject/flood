@@ -9,6 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/References.h"
+#include "Core/Containers/Vector.h"
 
 FWD_DECL_INTRUSIVE(Peer)
 FWD_DECL_INTRUSIVE(Packet)
@@ -58,7 +59,7 @@ public:
 
 private:
 
-    std::vector<PacketProcessor*> processors;
+    Vector<PacketProcessor*> processors;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( PacketProcessors )

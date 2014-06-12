@@ -85,9 +85,9 @@ bool GLSL_Shader::compile()
 
 bool GLSL_Shader::upload()
 {
-	if( text.empty() )  return false;
+	if( text.Empty() )  return false;
 
-	const char* str = text.c_str();
+	const char* str = text.CString();
 	glShaderSource(id, 1, &str, nullptr);
 
 	if( CheckLastErrorGL("Error uploading shader text to object") )
@@ -107,10 +107,10 @@ void GLSL_Shader::getCompileLog()
 	GLsizei length;
 
 	// Store the info into the log.
-	log.resize(size);
-	glGetShaderInfoLog(id, log.size(), &length, (GLchar*) log.data());
+	log.Resize(size);
+    glGetShaderInfoLog(id, log.Length(), &length, (GLchar*) log.CString());
 
-	if( log.empty() )
+	if( log.Empty() )
 		log = "Shader source compiled with success";
 }
 

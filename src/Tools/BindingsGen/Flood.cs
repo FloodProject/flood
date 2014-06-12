@@ -73,6 +73,11 @@ namespace Flood
                     "Core/Network/SessionManager.h",
                     "Core/Network/Packet.h",
                     "Core/Network/Peer.h",
+                    "Core/Containers/HashMap.h",
+                    "Core/Containers/HashSet.h",
+                    "Core/Containers/HashBase.h",
+                    "Core/Containers/Vector.h",
+                    "Core/Containers/VectorBase.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
@@ -118,6 +123,7 @@ namespace Flood
 
             driver.AddTranslationUnitPass(new CaseRenamePass(renameTargets, RenameCasePattern.UpperCamelCase));
             driver.AddTranslationUnitPass(new CheckMacroPass("FLD"));
+            driver.AddTranslationUnitPass(new CheckIgnoredDeclsPass());
             driver.AddTranslationUnitPass(new FindEventsPass(driver.TypeDatabase));
             driver.AddTranslationUnitPass(new GetterSetterToPropertyPass());
             driver.AddTranslationUnitPass(new FieldToPropertyPass());
@@ -150,6 +156,14 @@ namespace Flood
             ctx.IgnoreHeadersWithName("ReflectionHelpers.h");
             ctx.IgnoreHeadersWithName("Task.h");
             ctx.IgnoreHeadersWithName("Timer.h");
+            ctx.IgnoreHeadersWithName("Swap.h");
+            ctx.IgnoreHeadersWithName("Containers/Vector.h");
+            ctx.IgnoreHeadersWithName("Containers/VectorBase.h");
+            ctx.IgnoreHeadersWithName("Containers/Swap.h");
+            ctx.IgnoreHeadersWithName("Containers/HashMap.h");
+            ctx.IgnoreHeadersWithName("Containers/HashBase.h");
+            ctx.IgnoreHeadersWithName("Containers/HashSet.h");
+            ctx.IgnoreHeadersWithName("Containers/Str.h");
 
             //Core
             ctx.IgnoreClassWithName("Object");
@@ -235,16 +249,17 @@ namespace Flood
             ctx.ExcludeFromPass("ResourceHandleCreate", typeof (FunctionToInstanceMethodPass));
 
             // Set generic type constraints on template methods
-            var resourceManager = ctx.FindClass("ResourceManager").First();
-            foreach (var template in resourceManager.Templates)
-            {
-                for (var i = 0; i < template.Parameters.Count; ++i)
+            var resourceManager = ctx.FindClass("ResourceManager").FirstOrDefault();
+            if (resourceManager != null)
+                foreach (var template in resourceManager.Templates)
                 {
-                    var param = template.Parameters[i];
-                    param.Constraint = "Flood::Resource";
-                    template.Parameters[i] = param;
+                    for (var i = 0; i < template.Parameters.Count; ++i)
+                    {
+                        var param = template.Parameters[i];
+                        param.Constraint = "Flood::Resource";
+                        template.Parameters[i] = param;
+                    }
                 }
-            }
 
             // Graphics
             ctx.SetClassAsValueType("RenderContextSettings");
@@ -434,7 +449,7 @@ namespace Flood
     }
 
     #endregion
-
+    
     #region Type Maps
     [TypeMap("RefPtr")]
     public class RefPtrMap : TypeMap
@@ -516,16 +531,6 @@ namespace Flood
         }
     }
 
-    [TypeMap("Path")]
-    [TypeMap("String")]
-    public class String : CppSharp.Types.Std.String
-    {
-    }
-
-    [TypeMap("StringWide")]
-    public class StringWide : CppSharp.Types.Std.WString
-    {
-    }
 
     [TypeMap("Event0")]
     [TypeMap("Event1")]
@@ -580,7 +585,7 @@ namespace Flood
             var arg = type.Arguments[0].Type.ToString();
             if (string.IsNullOrEmpty(arg))
                 arg = type.Template.Parameters[0].Name;
-            
+
             return string.Format("Flood::ResourceHandle<{0}>", arg);
         }
 
@@ -597,7 +602,7 @@ namespace Flood
         public override void CLITypeReference(CLITypeReferenceCollector collector,
             ASTRecord<Declaration> loc)
         {
-            if(!(Declaration is ClassTemplate))
+            if (!(Declaration is ClassTemplate))
                 return;
 
             var typeRef = collector.GetTypeReference(Declaration);
@@ -613,7 +618,7 @@ namespace Flood
             var typeRecord = loc.FindAncestor<TemplateSpecializationType>();
             var templateType = typeRecord.Object as TemplateSpecializationType;
             var tag = templateType.Arguments[0].Type.Type as TagType;
-            if(tag == null)
+            if (tag == null)
                 return; // TODO Fix this
 
             var argDecl = tag.Declaration;
@@ -661,7 +666,563 @@ namespace Flood
                 type.Arguments[0].Type, ctx.ReturnVarName,
                 (fullType is PointerType) ? "->" : ".");
         }
+
     }
+
+    [TypeMap("String")]
+    public class String : TypeMap
+    {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+    }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
+
+        public override void CLITypeReference(CLITypeReferenceCollector collector,
+ASTRecord<Declaration> loc)
+        {
+            var typeRef = collector.GetTypeReference(Declaration);
+            typeRef.Include = new Include()
+            {
+                File = "StringConverter.h",
+                Kind = Include.IncludeKind.Quoted,
+                InHeader = true
+            };
+        }
+    }
+
+    [TypeMap("Path")]
+    [TypeMap("UTF8String")]
+    public class UTF8String : TypeMap
+    {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalUTF8String({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
+
+        public override void CLITypeReference(CLITypeReferenceCollector collector,
+ASTRecord<Declaration> loc)
+        {
+            var typeRef = collector.GetTypeReference(Declaration);
+            typeRef.Include = new Include()
+            {
+                File = "StringConverter.h",
+                Kind = Include.IncludeKind.Quoted,
+                InHeader = true
+            };
+        }
+    }
+
+    [TypeMap("StringWide")]
+    [TypeMap("WString")]
+    public class StringWide : TypeMap
+    {
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            return "System::String^";
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalWString({0})", ctx.Parameter.Name);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write("StringMarshaller::marshalString({0})", ctx.ReturnVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            return "Std.String";
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            ctx.Return.Write("new Std.String()");
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            ctx.Return.Write(ctx.ReturnVarName);
+        }
+
+        public override void CLITypeReference(CLITypeReferenceCollector collector,
+ASTRecord<Declaration> loc)
+        {
+            var typeRef = collector.GetTypeReference(Declaration);
+            typeRef.Include = new Include()
+            {
+                File = "StringConverter.h",
+                Kind = Include.IncludeKind.Quoted,
+                InHeader = true
+            };
+        }
+    }
+
+    [TypeMap("HashMap")]
+    public class HashMap : TypeMap
+    {
+
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType1 = type.Arguments[0].Type;
+                var pointeeType2 = type.Arguments[1].Type;
+
+                var checker1 = new TypeIgnoreChecker(TypeMapDatabase);
+                var checker2 = new TypeIgnoreChecker(TypeMapDatabase);
+
+                pointeeType1.Visit(checker1);
+                pointeeType2.Visit(checker2);
+
+                return checker1.IsIgnored || checker2.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::Dictionary<{0}, {1}>^",
+                type.Arguments[0].Type, type.Arguments[1].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var type1 = templateType.Arguments[0].Type;
+            var type2 = templateType.Arguments[1].Type;
+
+            var entryString = (ctx.Parameter != null) ? ctx.Parameter.Name : ctx.ArgName;
+
+            var tmpVarName = "_tmp" + entryString;
+
+            var cppTypePrinter = new CppTypePrinter(ctx.Driver.TypeDatabase);
+            var nativeType1 = type1.Type.Visit(cppTypePrinter);
+            var nativeType2 = type2.Type.Visit(cppTypePrinter);
+
+            ctx.SupportBefore.WriteLine("auto {0} = HashMap<{1}, {2}>();",
+                tmpVarName, nativeType1, nativeType2);
+            ctx.SupportBefore.WriteLine("auto _keys = {0}->Keys->GetEnumerator();", entryString);
+            ctx.SupportBefore.WriteLine("while (_keys.MoveNext())");
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                ctx.SupportBefore.WriteLine("{0} _key = _keys.Current;", type1.ToString());
+                ctx.SupportBefore.WriteLine("{0} _val = {1}[_key];", type2.ToString(), entryString);
+                var param1 = new Parameter
+                {
+                    Name = "_key",
+                    QualifiedType = type1
+                };
+
+                var elementCtx1 = new MarshalContext(ctx.Driver)
+                {
+                    Parameter = param1,
+                    ArgName = param1.Name,
+                };
+
+                var marshal1 = new CLIMarshalManagedToNativePrinter(elementCtx1);
+                type1.Type.Visit(marshal1);
+
+                if (!string.IsNullOrWhiteSpace(marshal1.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal1.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalKey = {0};",
+                    marshal1.Context.Return);
+
+                var param2 = new Parameter
+                {
+                    Name = "_val",
+                    QualifiedType = type2
+                };
+
+                var elementCtx2 = new MarshalContext(ctx.Driver)
+                {
+                    Parameter = param2,
+                    ArgName = param2.Name,
+                };
+
+
+                var marshal2 = new CLIMarshalManagedToNativePrinter(elementCtx2);
+                type2.Type.Visit(marshal2);
+
+                if (!string.IsNullOrWhiteSpace(marshal2.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal2.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalValue = {0};",
+                    marshal2.Context.Return);
+
+
+                ctx.SupportBefore.WriteLine("{0}[_marshalKey] = _marshalValue;", tmpVarName);
+            }
+
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var keyType = templateType.Arguments[0].Type;
+            var valueType = templateType.Arguments[1].Type;
+            var tmpVarName = "_tmp" + ctx.ArgName;
+
+            ctx.SupportBefore.WriteLine("auto {0} = gcnew System::Collections::Generic::Dictionary<{1}, {2}>();",
+                tmpVarName, keyType.ToString(), valueType.ToString());
+            ctx.SupportBefore.WriteLine("for(auto _it = {0}.Begin(); _it != {0}.End(); ++_it)", ctx.ReturnVarName);
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                ctx.SupportBefore.WriteLine("auto& _key = _it->first;");
+                ctx.SupportBefore.WriteLine("auto& _val = _it->second;");
+
+                var keyCtx = new MarshalContext(ctx.Driver)
+                {
+                    ReturnVarName = "_key",
+                    ReturnType = keyType
+                };
+
+                var valueCtx = new MarshalContext(ctx.Driver)
+                {
+                    ReturnVarName = "_val",
+                    ReturnType = valueType
+                };
+
+                var marshalKey = new CLIMarshalNativeToManagedPrinter(keyCtx);
+                keyType.Type.Visit(marshalKey);
+
+                if (!string.IsNullOrWhiteSpace(marshalKey.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshalKey.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalKey = {0};", marshalKey.Context.Return);
+
+                var marshalValue = new CLIMarshalNativeToManagedPrinter(valueCtx);
+                valueType.Type.Visit(marshalValue);
+
+                if (!string.IsNullOrWhiteSpace(marshalValue.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshalValue.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalValue = {0};", marshalValue.Context.Return);
+
+                ctx.SupportBefore.WriteLine("{0}->Add(_marshalKey, _marshalValue);", tmpVarName);
+            }
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.Dictionary<{0}, {1}>",
+                type.Arguments[0].Type, type.Arguments[1].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    [TypeMap("HashSet")]
+    public class HashSet : TypeMap
+    {
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType = type.Arguments[0].Type;
+
+                var checker = new TypeIgnoreChecker(TypeMapDatabase);
+                pointeeType.Visit(checker);
+
+                return checker.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::HashSet<{0}>^",
+                type.Arguments[0].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var type = templateType.Arguments[0].Type;
+
+            var entryString = (ctx.Parameter != null) ? ctx.Parameter.Name : ctx.ArgName;
+
+            var tmpVarName = "_tmp" + entryString;
+
+            var cppTypePrinter = new CppTypePrinter(ctx.Driver.TypeDatabase);
+            var nativeType = type.Type.Visit(cppTypePrinter);
+
+            ctx.SupportBefore.WriteLine("auto {0} = HashSet<{1}>();",
+                tmpVarName, nativeType);
+            ctx.SupportBefore.WriteLine("for each({0} _element in {1})",
+                type.ToString(), entryString);
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                var param = new Parameter
+                {
+                    Name = "_element",
+                    QualifiedType = type
+                };
+
+                var elementCtx = new MarshalContext(ctx.Driver)
+                {
+                    Parameter = param,
+                    ArgName = param.Name,
+                };
+
+                var marshal = new CLIMarshalManagedToNativePrinter(elementCtx);
+                type.Type.Visit(marshal);
+
+                if (!string.IsNullOrWhiteSpace(marshal.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalElement = {0};",
+                    marshal.Context.Return);
+
+                ctx.SupportBefore.WriteLine("{0}.Insert(_marshalElement);", tmpVarName);
+            }
+
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var type = templateType.Arguments[0].Type;
+            var tmpVarName = "_tmp" + ctx.ArgName;
+
+            ctx.SupportBefore.WriteLine("auto {0} = gcnew System::Collections::Generic::HashSet<{1}>();",
+                tmpVarName, type.ToString());
+            ctx.SupportBefore.WriteLine("for(auto _element : {0})", ctx.ReturnVarName);
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                var elementCtx = new MarshalContext(ctx.Driver)
+                {
+                    ReturnVarName = "_element",
+                    ReturnType = type
+                };
+
+                var marshal = new CLIMarshalNativeToManagedPrinter(elementCtx);
+                type.Type.Visit(marshal);
+
+                if (!string.IsNullOrWhiteSpace(marshal.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalElement = {0};", marshal.Context.Return);
+
+                ctx.SupportBefore.WriteLine("{0}.Add(_marshalElement);", tmpVarName);
+            }
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.HashSet<{0}>",
+                type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    [TypeMap("Vector")]
+    public class Vector : TypeMap
+    {
+        public override bool IsIgnored
+        {
+            get
+            {
+                var type = Type as TemplateSpecializationType;
+                var pointeeType = type.Arguments[0].Type;
+
+                var checker = new TypeIgnoreChecker(TypeMapDatabase);
+                pointeeType.Visit(checker);
+
+                return checker.IsIgnored;
+            }
+        }
+
+        public override string CLISignature(CLITypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System::Collections::Generic::List<{0}>^",
+                type.Arguments[0].Type);
+        }
+
+        public override void CLIMarshalToNative(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var type = templateType.Arguments[0].Type;
+
+            var entryString = (ctx.Parameter != null) ? ctx.Parameter.Name : ctx.ArgName;
+
+            var tmpVarName = "_tmp" + entryString;
+
+            var cppTypePrinter = new CppTypePrinter(ctx.Driver.TypeDatabase);
+            var nativeType = type.Type.Visit(cppTypePrinter);
+
+            ctx.SupportBefore.WriteLine("auto {0} = Vector<{1}>();",
+                tmpVarName, nativeType);
+            ctx.SupportBefore.WriteLine("for each({0} _element in {1})",
+                type.ToString(), entryString);
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                var param = new Parameter
+                {
+                    Name = "_element",
+                    QualifiedType = type
+                };
+
+                var elementCtx = new MarshalContext(ctx.Driver)
+                {
+                    Parameter = param,
+                    ArgName = param.Name,
+                };
+
+                var marshal = new CLIMarshalManagedToNativePrinter(elementCtx);
+                type.Type.Visit(marshal);
+
+                if (!string.IsNullOrWhiteSpace(marshal.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalElement = {0};",
+                    marshal.Context.Return);
+
+                ctx.SupportBefore.WriteLine("{0}.Push(_marshalElement);", tmpVarName);
+            }
+
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override void CLIMarshalToManaged(MarshalContext ctx)
+        {
+            var templateType = Type as TemplateSpecializationType;
+            var type = templateType.Arguments[0].Type;
+            var tmpVarName = "_tmp" + ctx.ArgName;
+
+            ctx.SupportBefore.WriteLine("auto {0} = gcnew System::Collections::Generic::List<{1}>();",
+                tmpVarName, type.ToString());
+            ctx.SupportBefore.WriteLine("for(auto _element : {0})", ctx.ReturnVarName);
+            ctx.SupportBefore.WriteStartBraceIndent();
+            {
+                var elementCtx = new MarshalContext(ctx.Driver)
+                {
+                    ReturnVarName = "_element",
+                    ReturnType = type
+                };
+
+                var marshal = new CLIMarshalNativeToManagedPrinter(elementCtx);
+                type.Type.Visit(marshal);
+
+                if (!string.IsNullOrWhiteSpace(marshal.Context.SupportBefore))
+                    ctx.SupportBefore.Write(marshal.Context.SupportBefore);
+
+                ctx.SupportBefore.WriteLine("auto _marshalElement = {0};", marshal.Context.Return);
+
+                ctx.SupportBefore.WriteLine("{0}->Add(_marshalElement);", tmpVarName);
+            }
+            ctx.SupportBefore.WriteCloseBraceIndent();
+
+            ctx.Return.Write(tmpVarName);
+        }
+
+        public override string CSharpSignature(CSharpTypePrinterContext ctx)
+        {
+            var type = Type as TemplateSpecializationType;
+            return string.Format("System.Collections.Generic.List<{0}>",
+                type.Arguments[0].Type);
+        }
+
+        public override void CSharpMarshalToNative(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void CSharpMarshalToManaged(MarshalContext ctx)
+        {
+            throw new System.NotImplementedException();
+        }
+
+    }
+
     #endregion
 
     static class Program

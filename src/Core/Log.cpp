@@ -41,7 +41,7 @@ void LogSetDefault(Log* log) { gs_Log = log; }
 
 static void LogConsoleHandler(LogEntry* entry)
 {
-	puts( entry->message.c_str() );
+	puts( entry->message.CString() );
 }
 
 //-----------------------------------//
@@ -117,13 +117,13 @@ static void LogProcess(Log* log, const char* msg, va_list args, LogLevel level)
 	if(log)
 		LogWrite(log, &entry);
 	else
-		puts(entry.message.c_str());
+		puts(entry.message.CString());
 
 	switch(level)
 	{
 	case LogLevel::Debug:
 	{
-		StringFormat(g_LogBuffer, "%s\n", entry.message.c_str());
+		StringFormat(g_LogBuffer, "%s\n", entry.message.CString());
 		PrintDebug(g_LogBuffer);
 		break;
 	}

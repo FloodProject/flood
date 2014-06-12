@@ -97,7 +97,7 @@ void Packet::prepare()
 	
 	if( GetBitFlag(flags, PacketFlags::Compressed) )
 	{
-		uint8* in = ms.data.data();
+		uint8* in = ms.data.Buffer();
 		uint8* out = pms.buffer + pms.position;
 		int32 length = fastlz_compress_level(1, in, totalSize, out);
 		pms.position += length;
@@ -105,7 +105,7 @@ void Packet::prepare()
 	else
 	{
 		enet_packet_resize(packet, totalSize + pms.position);
-		pms.write(ms.data.data(), totalSize);
+		pms.write(ms.data.Buffer(), totalSize);
 	}
 
 	packet->dataLength = (size_t) pms.position;
@@ -136,7 +136,7 @@ void Packet::setPacket(ENetPacket* packet)
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
 		ms.resize(bufSize);
 
-		int32 length = fastlz_decompress(in, inSize, ms.data.data(), ms.data.size());
+		int32 length = fastlz_decompress(in, inSize, ms.data.Buffer(), ms.data.Size());
 		ms.resize(length);
 	}
 	else
@@ -186,14 +186,14 @@ void Packet::write(byte* data, int size)
 	ms.write(data,size);
 }
 
-void Packet::write(std::vector<byte>& data)
+void Packet::write(Vector<byte>& data)
 {
-	write(data.data(), data.size());
+	write(data.Buffer(), data.Size());
 }
 
-std::vector<byte> Packet::read() const
+Vector<byte> Packet::read() const
 {
-	std::vector<uint8> vec(ms.data.begin(), ms.data.begin()+size());
+	Vector<uint8> vec(ms.data.Buffer(), size());
 	return vec;
 }
 

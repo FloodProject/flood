@@ -44,8 +44,8 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
     int srcPitch  = srcWidth*bpp;
     int dstPitch  = dstImage->getWidth()*bpp;
 
-    byte* bsrc = srcImage->getBuffer().data();
-    byte* bdst = dstImage->getBuffer().data();
+    byte* bsrc = srcImage->getBuffer().Buffer();
+    byte* bdst = dstImage->getBuffer().Buffer();
 
     for(int xs = 0; xs < dstWidth; xs += RBLOCK) {    // for all image blocks of RBLOCK*RBLOCK pixels
         for(int ys = 0; ys < dstHeight; ys += RBLOCK) {
@@ -72,7 +72,7 @@ static void RotateImage(Image* srcImage, Image* dstImage, Vector2i dstOffset)
 
 bool TextureAtlas::addImage(const ImageHandle& newImageHandle) 
 {
-    if(imageSubTextures.find( newImageHandle ) != imageSubTextures.end())
+    if(imageSubTextures.Find( newImageHandle ) != imageSubTextures.End())
         return true;
 
     Image* newImage = newImageHandle.Resolve();
@@ -99,7 +99,7 @@ bool TextureAtlas::addImage(const ImageHandle& newImageHandle)
 
 bool TextureAtlas::getImageSubTexture(const ImageHandle& imageHandle, SubTexture& subTexture)
 {
-    if(imageSubTextures.find( imageHandle ) == imageSubTextures.end())
+    if(imageSubTextures.Find( imageHandle ) == imageSubTextures.End())
         return false;
 
     subTexture = imageSubTextures[imageHandle];
@@ -116,13 +116,13 @@ void TextureAtlas::resizeAtlas(uint newSize)
 {
     rectanglePacker.Init(newSize,newSize);
 
-    std::vector<Vector2i> rectSizes;
-    std::vector<Rectangle> newRects;
+    Vector<Vector2i> rectSizes;
+    Vector<Rectangle> newRects;
 
     Image* atlasImage = atlasImageHandle.Resolve();
 
-    std::map<ImageHandle, SubTexture>::iterator iter;
-    for (iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter) {
+    HashMap<ImageHandle, SubTexture>::Iterator iter;
+    for (iter = imageSubTextures.Begin(); iter != imageSubTextures.End(); ++iter) {
         Vector2i rectSize;
         int width = (iter->second.rightBottomUV.x - iter->second.leftTopUV.x)*width;
         int height = (iter->second.rightBottomUV.y - iter->second.leftTopUV.y)*height;
@@ -130,15 +130,15 @@ void TextureAtlas::resizeAtlas(uint newSize)
         rectSize.x = width+1;
         rectSize.y = height+1;
 
-        rectSizes.push_back(rectSize);
+        rectSizes.Push(rectSize);
     }
 
     rectanglePacker.Insert(rectSizes, newRects, gs_heuristic);
 
-    assert(newRects.size() == imageSubTextures.size());
+    assert(newRects.Size() == imageSubTextures.Size());
 
     int i;
-    for (i = 0, iter = imageSubTextures.begin(); iter != imageSubTextures.end(); ++iter, ++i) 
+    for (i = 0, iter = imageSubTextures.Begin(); iter != imageSubTextures.End(); ++iter, ++i) 
     {
         ImageHandle newImageHandle = iter->first;
         Rectangle newRect = newRects[i];

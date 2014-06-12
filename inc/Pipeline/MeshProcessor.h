@@ -24,23 +24,23 @@ API_PIPELINE REFLECT_DECLARE_CLASS(MeshProcessor)
 
 class API_PIPELINE MeshProcessor : public ResourceProcessor
 {
-	REFLECT_DECLARE_OBJECT(MeshProcessor)
+    REFLECT_DECLARE_OBJECT(MeshProcessor)
 
 public:
 
-	MeshProcessor();
+    MeshProcessor();
 
-	// Gets metadata about this extension.
-	ExtensionMetadata* getMetadata() OVERRIDE;
+    // Gets metadata about this extension.
+    ExtensionMetadata* getMetadata() OVERRIDE;
 
-	// Processes the given resource.
-	bool Process(const ResourcePtr& resource);
+    // Processes the given resource.
+    bool Process(const ResourcePtr& resource);
 
-	// Gets the processed resource type.
-	Class* GetResourceType() { return MeshGetType(); }
+    // Gets the processed resource type.
+    Class* GetResourceType() { return MeshGetType(); }
 
-	bool calculateBounds;
-	bool calculateTangents;
+    bool calculateBounds;
+    bool calculateTangents;
 };
 
 //-----------------------------------//

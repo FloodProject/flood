@@ -31,7 +31,7 @@ Flood::Group::Group()
 Flood::Group::Group(System::String^ name)
     : Flood::Entity((::Entity*)nullptr)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg0 = StringMarshaller::marshalString(name);
     NativePtr = new ::Group(arg0);
 }
 
@@ -50,7 +50,7 @@ bool Flood::Group::Remove(Flood::Entity^ entity)
 
 Flood::Entity^ Flood::Group::FindEntity(System::String^ name)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg0 = StringMarshaller::marshalString(name);
     auto __ret = ((::Group*)NativePtr)->findEntity(arg0);
     return gcnew Flood::Entity((::Entity*)__ret.get());
 }

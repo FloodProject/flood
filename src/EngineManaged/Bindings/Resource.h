@@ -10,6 +10,7 @@
 #include "CppSharp.h"
 #include <Resources/Resource.h>
 #include "ResourceHandle.h"
+#include "StringConverter.h"
 
 namespace Flood
 {

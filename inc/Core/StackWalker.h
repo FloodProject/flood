@@ -216,13 +216,13 @@ public:
 
 	void OnOutput(LPCSTR szText)
 	{
-		output.append(szText);
+		output.Append(szText);
 		StackWalker::OnOutput(szText);
 	}
 
 	void Log()
 	{
-		LogError( output.c_str() );
+		LogError( output.CString() );
 	}
 
 	String output;
