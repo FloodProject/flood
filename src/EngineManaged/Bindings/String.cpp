@@ -12,13 +12,13 @@ using namespace System::Runtime::InteropServices;
 
 Flood::StringHash::StringHash(::StringHash* native)
 {
-    Hash = native->hash;
+    __Hash = native->hash;
 }
 
 Flood::StringHash::StringHash(System::IntPtr native)
 {
     auto __native = (::StringHash*)native.ToPointer();
-    Hash = __native->hash;
+    __Hash = __native->hash;
 }
 
 Flood::StringHash::StringHash(System::String^ str, unsigned int size)
@@ -26,5 +26,15 @@ Flood::StringHash::StringHash(System::String^ str, unsigned int size)
     auto ____temp = clix::marshalString<clix::E_UTF8>(str);
     ::StringHash _native(____temp.c_str(), (::size_t)size);
     this->Hash = _native.hash;
+}
+
+unsigned int Flood::StringHash::Hash::get()
+{
+    return __Hash;
+}
+
+void Flood::StringHash::Hash::set(unsigned int value)
+{
+    __Hash = value;
 }
 

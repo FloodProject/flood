@@ -7,6 +7,7 @@
 
 #include "Window.h"
 #include "InputManager.h"
+#include "Menu.h"
 #include "RenderContext.h"
 #include "Vector.h"
 
@@ -15,21 +16,21 @@ using namespace System::Runtime::InteropServices;
 
 Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
-    Width = native->width;
-    Height = native->height;
-    Title = StringMarshaller::marshalString(native->title);
-    Handle = IntPtr(native->handle);
-    Styles = (Flood::WindowStyles)native->styles;
+    __Width = native->width;
+    __Height = native->height;
+    __Title = StringMarshaller::marshalString(native->title);
+    __Handle = native->handle;
+    __Styles = (Flood::WindowStyles)native->styles;
 }
 
 Flood::WindowSettings::WindowSettings(System::IntPtr native)
 {
     auto __native = (::WindowSettings*)native.ToPointer();
-    Width = __native->width;
-    Height = __native->height;
-    Title = StringMarshaller::marshalString(__native->title);
-    Handle = IntPtr(__native->handle);
-    Styles = (Flood::WindowStyles)__native->styles;
+    __Width = __native->width;
+    __Height = __native->height;
+    __Title = StringMarshaller::marshalString(__native->title);
+    __Handle = __native->handle;
+    __Styles = (Flood::WindowStyles)__native->styles;
 }
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles)
@@ -38,8 +39,75 @@ Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short heigh
     this->Width = _native.width;
     this->Height = _native.height;
     this->Title = StringMarshaller::marshalString(_native.title);
-    this->Handle = IntPtr(_native.handle);
+    this->Handle = _native.handle;
     this->Styles = (Flood::WindowStyles)_native.styles;
+}
+
+Flood::Vector2i Flood::WindowSettings::Size::get()
+{
+    auto _this0 = ::WindowSettings();
+    _this0.width = (::uint16)(::uint16_t)(*this).Width;
+    _this0.height = (::uint16)(::uint16_t)(*this).Height;
+    _this0.title = StringMarshaller::marshalString((*this).Title);
+    _this0.handle = (void*)(*this).Handle;
+    _this0.styles = (::WindowStyles)(*this).Styles;
+    auto __ret = _this0.getSize();
+    __Width = _this0.width;
+    __Height = _this0.height;
+    __Title = StringMarshaller::marshalString(_this0.title);
+    __Handle = _this0.handle;
+    __Styles = (Flood::WindowStyles)_this0.styles;
+    return Flood::Vector2i((::Vector2i*)&__ret);
+}
+
+unsigned short Flood::WindowSettings::Width::get()
+{
+    return __Width;
+}
+
+void Flood::WindowSettings::Width::set(unsigned short value)
+{
+    __Width = value;
+}
+
+unsigned short Flood::WindowSettings::Height::get()
+{
+    return __Height;
+}
+
+void Flood::WindowSettings::Height::set(unsigned short value)
+{
+    __Height = value;
+}
+
+System::String^ Flood::WindowSettings::Title::get()
+{
+    return __Title;
+}
+
+void Flood::WindowSettings::Title::set(System::String^ value)
+{
+    __Title = value;
+}
+
+void* Flood::WindowSettings::Handle::get()
+{
+    return __Handle;
+}
+
+void Flood::WindowSettings::Handle::set(void* value)
+{
+    __Handle = value;
+}
+
+Flood::WindowStyles Flood::WindowSettings::Styles::get()
+{
+    return __Styles;
+}
+
+void Flood::WindowSettings::Styles::set(Flood::WindowStyles value)
+{
+    __Styles = value;
 }
 
 Flood::Window::Window(::Window* native)
@@ -58,17 +126,17 @@ Flood::Window::Window(Flood::WindowSettings settings)
 {
 }
 
-Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _1)
+Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _33)
 {
     auto _marshal0 = ::RenderContextSettings();
-    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_1.BitsPerPixel;
-    _marshal0.depthBits = (::uint16)(::uint16_t)_1.DepthBits;
-    _marshal0.stencilBits = (::uint16)(::uint16_t)_1.StencilBits;
-    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_1.AntialiasLevel;
+    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_33.BitsPerPixel;
+    _marshal0.depthBits = (::uint16)(::uint16_t)_33.DepthBits;
+    _marshal0.stencilBits = (::uint16)(::uint16_t)_33.StencilBits;
+    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_33.AntialiasLevel;
     auto arg0 = _marshal0;
     auto __ret = ((::Window*)NativePtr)->createContext(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderContext((::RenderContext*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
 void Flood::Window::Update()
@@ -115,7 +183,7 @@ bool Flood::Window::Equals(System::Object^ object)
     auto obj = dynamic_cast<Window^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::Window::GetHashCode()
@@ -123,22 +191,19 @@ int Flood::Window::GetHashCode()
     return (int)NativePtr;
 }
 
-void Flood::Window::Title::set(System::String^ value)
+void Flood::Window::Title::set(System::String^ title)
 {
-    auto title = value;
     auto arg0 = StringMarshaller::marshalString(title);
     ((::Window*)NativePtr)->setTitle(arg0);
 }
 
-void Flood::Window::CursorVisible::set(bool value)
+void Flood::Window::CursorVisible::set(bool state)
 {
-    auto state = value;
     ((::Window*)NativePtr)->setCursorVisible(state);
 }
 
-void Flood::Window::CursorCapture::set(bool value)
+void Flood::Window::CursorCapture::set(bool state)
 {
-    auto state = value;
     ((::Window*)NativePtr)->setCursorCapture(state);
 }
 
@@ -148,17 +213,30 @@ Flood::Vector2i Flood::Window::CursorPosition::get()
     return Flood::Vector2i((::Vector2i*)&__ret);
 }
 
+Flood::MenuBar^ Flood::Window::MenuBar::get()
+{
+    auto __ret = ((::Window*)NativePtr)->getMenuBar();
+    if (__ret == nullptr) return nullptr;
+    return (__ret == nullptr) ? nullptr : gcnew Flood::MenuBar((::MenuBar*)__ret);
+}
+
+void Flood::Window::MenuBar::set(Flood::MenuBar^ menuBar)
+{
+    auto arg0 = (::MenuBar*)menuBar->NativePtr;
+    ((::Window*)NativePtr)->setMenuBar(arg0);
+}
+
 Flood::InputManager^ Flood::Window::Input::get()
 {
     auto __ret = ((::Window*)NativePtr)->getInput();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::InputManager((::InputManager*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
 Flood::Settings Flood::Window::Settings::get()
 {
     auto &__ret = ((::Window*)NativePtr)->getSettings();
-    return Flood::Settings((::Settings*)&__ret);
+    return (Flood::Settings)(Flood::Settings((::Settings*)&__ret));
 }
 
 void Flood::Window::Idle::add(System::Action^ evt)

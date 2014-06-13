@@ -104,7 +104,7 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::Geometry::Render
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::RenderBatch^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::RenderBatch((::RenderBatch*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
     return _tmp__ret;
@@ -113,7 +113,7 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::Geometry::Render
 Flood::BoundingBox Flood::Geometry::BoundingVolume::get()
 {
     auto &__ret = ((::Geometry*)NativePtr)->getBoundingVolume();
-    return Flood::BoundingBox((::BoundingBox*)&__ret);
+    return (Flood::BoundingBox)(Flood::BoundingBox((::BoundingBox*)&__ret));
 }
 
 Flood::BoundingBox Flood::Geometry::WorldBoundingVolume::get()

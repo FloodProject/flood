@@ -68,12 +68,11 @@ Flood::RenderTarget^ Flood::RenderView::RenderTarget::get()
 {
     auto __ret = ((::RenderView*)NativePtr)->getRenderTarget();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderTarget((::RenderTarget*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderTarget((::RenderTarget*)__ret);
 }
 
-void Flood::RenderView::RenderTarget::set(Flood::RenderTarget^ value)
+void Flood::RenderView::RenderTarget::set(Flood::RenderTarget^ v)
 {
-    auto v = value;
     auto arg0 = (::RenderTarget*)v->NativePtr;
     ((::RenderView*)NativePtr)->setRenderTarget(arg0);
 }
@@ -84,9 +83,8 @@ Flood::Vector2i Flood::RenderView::Origin::get()
     return Flood::Vector2i((::Vector2i*)&__ret);
 }
 
-void Flood::RenderView::Origin::set(Flood::Vector2i value)
+void Flood::RenderView::Origin::set(Flood::Vector2i v)
 {
-    auto v = value;
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (::int32)(::int32_t)v.X;
     _marshal0.y = (::int32)(::int32_t)v.Y;
@@ -100,9 +98,8 @@ Flood::Vector2i Flood::RenderView::Size::get()
     return Flood::Vector2i((::Vector2i*)&__ret);
 }
 
-void Flood::RenderView::Size::set(Flood::Vector2i value)
+void Flood::RenderView::Size::set(Flood::Vector2i v)
 {
-    auto v = value;
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (::int32)(::int32_t)v.X;
     _marshal0.y = (::int32)(::int32_t)v.Y;
@@ -116,9 +113,8 @@ int Flood::RenderView::DepthPriority::get()
     return __ret;
 }
 
-void Flood::RenderView::DepthPriority::set(int value)
+void Flood::RenderView::DepthPriority::set(int v)
 {
-    auto v = value;
     ((::RenderView*)NativePtr)->setDepthPriority(v);
 }
 
@@ -128,9 +124,35 @@ float Flood::RenderView::AspectRatio::get()
     return __ret;
 }
 
+Flood::Vector2i Flood::RenderView::Origin1::get()
+{
+    return Flood::Vector2i((::Vector2i*)&((::RenderView*)NativePtr)->origin);
+}
+
+void Flood::RenderView::Origin1::set(Flood::Vector2i value)
+{
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (::int32)(::int32_t)value.X;
+    _marshal0.y = (::int32)(::int32_t)value.Y;
+    ((::RenderView*)NativePtr)->origin = _marshal0;
+}
+
+Flood::Vector2i Flood::RenderView::Size1::get()
+{
+    return Flood::Vector2i((::Vector2i*)&((::RenderView*)NativePtr)->size);
+}
+
+void Flood::RenderView::Size1::set(Flood::Vector2i value)
+{
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (::int32)(::int32_t)value.X;
+    _marshal0.y = (::int32)(::int32_t)value.Y;
+    ((::RenderView*)NativePtr)->size = _marshal0;
+}
+
 Flood::RenderTarget^ Flood::RenderView::Target::get()
 {
-    return gcnew Flood::RenderTarget((::RenderTarget*)((::RenderView*)NativePtr)->target);
+    return (((::RenderView*)NativePtr)->target == nullptr) ? nullptr : gcnew Flood::RenderTarget((::RenderTarget*)((::RenderView*)NativePtr)->target);
 }
 
 void Flood::RenderView::Target::set(Flood::RenderTarget^ value)
@@ -151,6 +173,16 @@ void Flood::RenderView::ClearColor::set(Flood::Color value)
     _marshal0.b = (::byte)(::uint8)(::uint8_t)value.B;
     _marshal0.a = (::byte)(::uint8)(::uint8_t)value.A;
     ((::RenderView*)NativePtr)->clearColor = _marshal0;
+}
+
+int Flood::RenderView::DepthPriority1::get()
+{
+    return ((::RenderView*)NativePtr)->depthPriority;
+}
+
+void Flood::RenderView::DepthPriority1::set(int value)
+{
+    ((::RenderView*)NativePtr)->depthPriority = value;
 }
 
 Flood::Matrix4x4 Flood::RenderView::ProjectionMatrix::get()

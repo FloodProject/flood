@@ -54,7 +54,11 @@ namespace Flood
 
         static bool operator<(Flood::Vector3 __op, Flood::Vector3 rhs);
 
+        static bool operator<=(Flood::Vector3 __op, Flood::Vector3 rhs);
+
         static bool operator>(Flood::Vector3 __op, Flood::Vector3 rhs);
+
+        static bool operator>=(Flood::Vector3 __op, Flood::Vector3 rhs);
 
         static Flood::Vector3 operator+(Flood::Vector3 __op, Flood::Vector3 v);
 
@@ -161,7 +165,11 @@ namespace Flood
 
         static bool operator<(Flood::Vector4 __op, Flood::Vector4 rhs);
 
+        static bool operator<=(Flood::Vector4 __op, Flood::Vector4 rhs);
+
         static bool operator>(Flood::Vector4 __op, Flood::Vector4 rhs);
+
+        static bool operator>=(Flood::Vector4 __op, Flood::Vector4 rhs);
 
         static Flood::Vector4 operator+(Flood::Vector4 __op, Flood::Vector4 v);
 
@@ -235,7 +243,11 @@ namespace Flood
 
         static bool operator<(Flood::Vector2 __op, Flood::Vector2 rhs);
 
+        static bool operator<=(Flood::Vector2 __op, Flood::Vector2 rhs);
+
         static bool operator>(Flood::Vector2 __op, Flood::Vector2 rhs);
+
+        static bool operator>=(Flood::Vector2 __op, Flood::Vector2 rhs);
 
         static Flood::Vector2 operator+(Flood::Vector2 __op, Flood::Vector2 v);
 
@@ -297,9 +309,13 @@ namespace Flood
 
         static bool operator!=(Flood::Vector2i __op, Flood::Vector2i v);
 
-        static bool operator<(Flood::Vector2i __op, Flood::Vector2i rhs);
+        static bool operator<(Flood::Vector2i __op, Flood::Vector2 rhs);
 
-        static bool operator>(Flood::Vector2i __op, Flood::Vector2i rhs);
+        static bool operator<=(Flood::Vector2i __op, Flood::Vector2 rhs);
+
+        static bool operator>(Flood::Vector2i __op, Flood::Vector2 rhs);
+
+        static bool operator>=(Flood::Vector2i __op, Flood::Vector2 rhs);
 
         static Flood::Vector2i operator+(Flood::Vector2i __op, Flood::Vector2i v);
 

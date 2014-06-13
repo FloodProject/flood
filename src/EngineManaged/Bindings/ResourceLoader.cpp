@@ -48,28 +48,28 @@ void Flood::ResourceLoadOption::Value::set(int value)
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(::ResourceLoadOptions* native)
 {
-    Name = StringMarshaller::marshalString(native->name);
-    Stream = gcnew Flood::Stream((::Stream*)native->stream);
-    Resource = gcnew Flood::Resource((::Resource*)native->resource);
-    Group = (Flood::ResourceGroup)native->group;
-    IsHighPriority = native->isHighPriority;
-    SendLoadEvent = native->sendLoadEvent;
-    AsynchronousLoad = native->asynchronousLoad;
-    KeepStreamOpen = native->keepStreamOpen;
+    __Name = StringMarshaller::marshalString(native->name);
+    __Stream = (native->stream == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)native->stream);
+    __Resource = (native->resource == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)native->resource);
+    __Group = (Flood::ResourceGroup)native->group;
+    __IsHighPriority = native->isHighPriority;
+    __SendLoadEvent = native->sendLoadEvent;
+    __AsynchronousLoad = native->asynchronousLoad;
+    __KeepStreamOpen = native->keepStreamOpen;
     Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&native->option);
 }
 
 Flood::ResourceLoadOptions::ResourceLoadOptions(System::IntPtr native)
 {
     auto __native = (::ResourceLoadOptions*)native.ToPointer();
-    Name = StringMarshaller::marshalString(__native->name);
-    Stream = gcnew Flood::Stream((::Stream*)__native->stream);
-    Resource = gcnew Flood::Resource((::Resource*)__native->resource);
-    Group = (Flood::ResourceGroup)__native->group;
-    IsHighPriority = __native->isHighPriority;
-    SendLoadEvent = __native->sendLoadEvent;
-    AsynchronousLoad = __native->asynchronousLoad;
-    KeepStreamOpen = __native->keepStreamOpen;
+    __Name = StringMarshaller::marshalString(__native->name);
+    __Stream = (__native->stream == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)__native->stream);
+    __Resource = (__native->resource == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)__native->resource);
+    __Group = (Flood::ResourceGroup)__native->group;
+    __IsHighPriority = __native->isHighPriority;
+    __SendLoadEvent = __native->sendLoadEvent;
+    __AsynchronousLoad = __native->asynchronousLoad;
+    __KeepStreamOpen = __native->keepStreamOpen;
     Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&__native->option);
 }
 
@@ -91,14 +91,14 @@ void Flood::ResourceLoadOptions::AddOption(int key, int value)
     _this0_marshal0.value = (*this).Option.Value;
     _this0.option = _this0_marshal0;
     _this0.addOption(key, value);
-    Name = StringMarshaller::marshalString(_this0.name);
-    Stream = gcnew Flood::Stream((::Stream*)_this0.stream);
-    Resource = gcnew Flood::Resource((::Resource*)_this0.resource);
-    Group = (Flood::ResourceGroup)_this0.group;
-    IsHighPriority = _this0.isHighPriority;
-    SendLoadEvent = _this0.sendLoadEvent;
-    AsynchronousLoad = _this0.asynchronousLoad;
-    KeepStreamOpen = _this0.keepStreamOpen;
+    __Name = StringMarshaller::marshalString(_this0.name);
+    __Stream = (_this0.stream == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)_this0.stream);
+    __Resource = (_this0.resource == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)_this0.resource);
+    __Group = (Flood::ResourceGroup)_this0.group;
+    __IsHighPriority = _this0.isHighPriority;
+    __SendLoadEvent = _this0.sendLoadEvent;
+    __AsynchronousLoad = _this0.asynchronousLoad;
+    __KeepStreamOpen = _this0.keepStreamOpen;
     Option = Flood::ResourceLoadOption((::ResourceLoadOption*)&_this0.option);
 }
 
@@ -236,7 +236,7 @@ void Flood::ResourceStream::__Instance::set(System::IntPtr object)
 
 Flood::Stream^ Flood::ResourceStream::Stream::get()
 {
-    return gcnew Flood::Stream((::Stream*)((::ResourceStream*)NativePtr)->stream);
+    return (((::ResourceStream*)NativePtr)->stream == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)((::ResourceStream*)NativePtr)->stream);
 }
 
 void Flood::ResourceStream::Stream::set(Flood::Stream^ value)
@@ -246,7 +246,7 @@ void Flood::ResourceStream::Stream::set(Flood::Stream^ value)
 
 Flood::ResourceLoader^ Flood::ResourceStream::Loader::get()
 {
-    return gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
+    return (((::ResourceStream*)NativePtr)->loader == nullptr) ? nullptr : gcnew Flood::ResourceLoader((::ResourceLoader*)((::ResourceStream*)NativePtr)->loader);
 }
 
 void Flood::ResourceStream::Loader::set(Flood::ResourceLoader^ value)
@@ -273,6 +273,29 @@ Flood::ResourceLoader::ResourceLoader()
 Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
 {
     auto _marshal0 = ::ResourceLoadOptions();
+    _marshal0.name = StringMarshaller::marshalUTF8String(_0.Name);
+    if (_0.Stream != nullptr)
+        _marshal0.stream = (::Stream*)_0.Stream->NativePtr;
+    if (_0.Resource != nullptr)
+        _marshal0.resource = (::Resource*)_0.Resource->NativePtr;
+    _marshal0.group = (::ResourceGroup)_0.Group;
+    _marshal0.isHighPriority = _0.IsHighPriority;
+    _marshal0.sendLoadEvent = _0.SendLoadEvent;
+    _marshal0.asynchronousLoad = _0.AsynchronousLoad;
+    _marshal0.keepStreamOpen = _0.KeepStreamOpen;
+    auto _marshal1 = ::ResourceLoadOption();
+    _marshal1.key = _0.Option.Key;
+    _marshal1.value = _0.Option.Value;
+    _marshal0.option = _marshal1;
+    auto arg0 = _marshal0;
+    auto __ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
+    if (__ret == nullptr) return nullptr;
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)__ret);
+}
+
+bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _1)
+{
+    auto _marshal0 = ::ResourceLoadOptions();
     _marshal0.name = StringMarshaller::marshalUTF8String(_1.Name);
     if (_1.Stream != nullptr)
         _marshal0.stream = (::Stream*)_1.Stream->NativePtr;
@@ -286,29 +309,6 @@ Flood::Resource^ Flood::ResourceLoader::Prepare(Flood::ResourceLoadOptions _0)
     auto _marshal1 = ::ResourceLoadOption();
     _marshal1.key = _1.Option.Key;
     _marshal1.value = _1.Option.Value;
-    _marshal0.option = _marshal1;
-    auto arg0 = _marshal0;
-    auto __ret = ((::ResourceLoader*)NativePtr)->prepare(arg0);
-    if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Resource((::Resource*)__ret);
-}
-
-bool Flood::ResourceLoader::Decode(Flood::ResourceLoadOptions _2)
-{
-    auto _marshal0 = ::ResourceLoadOptions();
-    _marshal0.name = StringMarshaller::marshalUTF8String(_2.Name);
-    if (_2.Stream != nullptr)
-        _marshal0.stream = (::Stream*)_2.Stream->NativePtr;
-    if (_2.Resource != nullptr)
-        _marshal0.resource = (::Resource*)_2.Resource->NativePtr;
-    _marshal0.group = (::ResourceGroup)_2.Group;
-    _marshal0.isHighPriority = _2.IsHighPriority;
-    _marshal0.sendLoadEvent = _2.SendLoadEvent;
-    _marshal0.asynchronousLoad = _2.AsynchronousLoad;
-    _marshal0.keepStreamOpen = _2.KeepStreamOpen;
-    auto _marshal1 = ::ResourceLoadOption();
-    _marshal1.key = _2.Option.Key;
-    _marshal1.value = _2.Option.Value;
     _marshal0.option = _marshal1;
     auto arg0 = _marshal0;
     auto __ret = ((::ResourceLoader*)NativePtr)->decode(arg0);
@@ -356,7 +356,7 @@ System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Exte
         auto _marshalElement = StringMarshaller::marshalString(_element);
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<System::String^>^)(_tmp__ret);
 }
 
 System::Collections::Generic::List<System::String^>^ Flood::ResourceLoader::Extensions1::get()

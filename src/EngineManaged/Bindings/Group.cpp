@@ -52,7 +52,7 @@ Flood::Entity^ Flood::Group::FindEntity(System::String^ name)
 {
     auto arg0 = StringMarshaller::marshalString(name);
     auto __ret = ((::Group*)NativePtr)->findEntity(arg0);
-    return gcnew Flood::Entity((::Entity*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)__ret.get());
 }
 
 void Flood::Group::Update(float delta)
@@ -80,10 +80,10 @@ System::Collections::Generic::List<Flood::Entity^>^ Flood::Group::Entities::get(
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::Entity^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::Entity((::Entity*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<Flood::Entity^>^)(_tmp__ret);
 }
 
 void Flood::Group::EntityAdded::add(System::Action<Flood::Entity^>^ evt)
@@ -109,7 +109,7 @@ void Flood::Group::EntityAdded::raise(Flood::Entity^ _0)
 
 void Flood::Group::_EntityAddedRaise(const ::EntityPtr& _0)
 {
-    EntityAdded::raise(gcnew Flood::Entity((::Entity*)_0.get()));
+    EntityAdded::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)_0.get()));
 }
 
 void Flood::Group::EntityRemoved::add(System::Action<Flood::Entity^>^ evt)
@@ -135,7 +135,7 @@ void Flood::Group::EntityRemoved::raise(Flood::Entity^ _0)
 
 void Flood::Group::_EntityRemovedRaise(const ::EntityPtr& _0)
 {
-    EntityRemoved::raise(gcnew Flood::Entity((::Entity*)_0.get()));
+    EntityRemoved::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)_0.get()));
 }
 
 void Flood::Group::EntityComponentAdded::add(System::Action<Flood::Component^>^ evt)
@@ -161,7 +161,7 @@ void Flood::Group::EntityComponentAdded::raise(Flood::Component^ _0)
 
 void Flood::Group::_EntityComponentAddedRaise(const ::ComponentPtr& _0)
 {
-    EntityComponentAdded::raise(gcnew Flood::Component((::Component*)_0.get()));
+    EntityComponentAdded::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)_0.get()));
 }
 
 void Flood::Group::EntityComponentRemoved::add(System::Action<Flood::Component^>^ evt)
@@ -187,7 +187,7 @@ void Flood::Group::EntityComponentRemoved::raise(Flood::Component^ _0)
 
 void Flood::Group::_EntityComponentRemovedRaise(const ::ComponentPtr& _0)
 {
-    EntityComponentRemoved::raise(gcnew Flood::Component((::Component*)_0.get()));
+    EntityComponentRemoved::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)_0.get()));
 }
 
 void Flood::Group::EntityChanged::add(System::Action^ evt)

@@ -51,7 +51,7 @@ Flood::Stream^ Flood::Archive::OpenFile(System::String^ path, Flood::Allocator^ 
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::Archive*)NativePtr)->openFile(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Stream((::Stream*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::Archive::ExistsFile(System::String^ path)
@@ -200,7 +200,7 @@ Flood::Stream^ Flood::ArchiveVirtual::OpenFile(System::String^ path, Flood::Allo
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveVirtual*)NativePtr)->openFile(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Stream((::Stream*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveVirtual::ExistsFile(System::String^ path)
@@ -281,7 +281,7 @@ System::Collections::Generic::List<Flood::Archive^>^ Flood::ArchiveVirtual::Moun
     auto _tmp__Mounts = gcnew System::Collections::Generic::List<Flood::Archive^>();
     for(auto _element : ((::ArchiveVirtual*)NativePtr)->mounts)
     {
-        auto _marshalElement = gcnew Flood::Archive((::Archive*)_element);
+        auto _marshalElement = (_element == nullptr) ? nullptr : gcnew Flood::Archive((::Archive*)_element);
         _tmp__Mounts->Add(_marshalElement);
     }
     return _tmp__Mounts;
@@ -335,7 +335,7 @@ Flood::Stream^ Flood::ArchiveDirectory::OpenFile(System::String^ path, Flood::Al
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveDirectory*)NativePtr)->openFile(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Stream((::Stream*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveDirectory::ExistsFile(System::String^ path)
@@ -433,7 +433,7 @@ Flood::Stream^ Flood::ArchiveZip::OpenFile(System::String^ path, Flood::Allocato
     auto arg1 = (::Allocator*)alloc->NativePtr;
     auto __ret = ((::ArchiveZip*)NativePtr)->openFile(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Stream((::Stream*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Stream((::Stream*)__ret);
 }
 
 bool Flood::ArchiveZip::ExistsFile(System::String^ path)

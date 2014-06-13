@@ -98,6 +98,12 @@ namespace Flood
             void set(System::String^);
         }
 
+        property Flood::ResourceStatus Status1
+        {
+            Flood::ResourceStatus get();
+            void set(Flood::ResourceStatus);
+        }
+
         property Flood::ResourceStream^ Stream
         {
             Flood::ResourceStream^ get();

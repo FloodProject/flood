@@ -13,17 +13,17 @@ using namespace System::Runtime::InteropServices;
 
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
-    Time = native->time;
-    Message = StringMarshaller::marshalString(native->message);
-    Level = (Flood::LogLevel)native->level;
+    __Time = native->time;
+    __Message = StringMarshaller::marshalString(native->message);
+    __Level = (Flood::LogLevel)native->level;
 }
 
 Flood::LogEntry::LogEntry(System::IntPtr native)
 {
     auto __native = (::LogEntry*)native.ToPointer();
-    Time = __native->time;
-    Message = StringMarshaller::marshalString(__native->message);
-    Level = (Flood::LogLevel)__native->level;
+    __Time = __native->time;
+    __Message = StringMarshaller::marshalString(__native->message);
+    __Level = (Flood::LogLevel)__native->level;
 }
 
 float Flood::LogEntry::Time::get()
@@ -127,7 +127,7 @@ Flood::Log^ Flood::Log::GetDefault()
 {
     auto __ret = ::LogGetDefault();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Log((::Log*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Log((::Log*)__ret);
 }
 
 void Flood::Log::Info(System::String^ msg)

@@ -3,7 +3,7 @@ using Flood.Serialization;
 using System;
 using System.Collections.Generic;
 
-namespace Flood.Network
+namespace Flood.Networking
 {
     public class SessionRemotingPeer : RemotingPeer
     {

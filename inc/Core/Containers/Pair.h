@@ -25,6 +25,7 @@
 #include "Core/API.h"
 #include "Core/Containers/Hash.h"
 
+FLD_IGNORE_FILE
 
 NAMESPACE_CORE_BEGIN
 

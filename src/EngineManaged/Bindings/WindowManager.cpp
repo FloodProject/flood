@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "WindowManager.h"
+#include "Menu.h"
 #include "Window.h"
 
 using namespace System;
@@ -28,12 +29,26 @@ Flood::Window^ Flood::WindowManager::CreateWindow(Flood::WindowSettings settings
     _marshal0.width = (::uint16)(::uint16_t)settings.Width;
     _marshal0.height = (::uint16)(::uint16_t)settings.Height;
     _marshal0.title = StringMarshaller::marshalString(settings.Title);
-    _marshal0.handle = (void*)settings.Handle.ToPointer();
+    _marshal0.handle = (void*)settings.Handle;
     _marshal0.styles = (::WindowStyles)settings.Styles;
     auto arg0 = _marshal0;
     auto __ret = ((::WindowManager*)NativePtr)->createWindow(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Window((::Window*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Window((::Window*)__ret);
+}
+
+Flood::MenuBar^ Flood::WindowManager::CreateMenuBar()
+{
+    auto __ret = ((::WindowManager*)NativePtr)->createMenuBar();
+    if (__ret == nullptr) return nullptr;
+    return (__ret == nullptr) ? nullptr : gcnew Flood::MenuBar((::MenuBar*)__ret);
+}
+
+Flood::Menu^ Flood::WindowManager::CreateMenu()
+{
+    auto __ret = ((::WindowManager*)NativePtr)->createMenu();
+    if (__ret == nullptr) return nullptr;
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Menu((::Menu*)__ret);
 }
 
 Flood::Window^ Flood::WindowManager::OpenFileDialog(System::String^ wildcard, Flood::FileDialogFlags flags)
@@ -42,7 +57,7 @@ Flood::Window^ Flood::WindowManager::OpenFileDialog(System::String^ wildcard, Fl
     auto arg1 = (::FileDialogFlags)flags;
     auto __ret = ((::WindowManager*)NativePtr)->openFileDialog(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Window((::Window*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Window((::Window*)__ret);
 }
 
 Flood::Window^ Flood::WindowManager::OpenDirectoryDialog(System::String^ wildcard, Flood::DirectoryDialogFlags flags)
@@ -51,7 +66,7 @@ Flood::Window^ Flood::WindowManager::OpenDirectoryDialog(System::String^ wildcar
     auto arg1 = (::DirectoryDialogFlags)flags;
     auto __ret = ((::WindowManager*)NativePtr)->openDirectoryDialog(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Window((::Window*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Window((::Window*)__ret);
 }
 
 Flood::WindowManager::WindowManager()
@@ -64,7 +79,7 @@ bool Flood::WindowManager::Equals(System::Object^ object)
     auto obj = dynamic_cast<WindowManager^>(object);
 
     if (!obj) return false;
-    return Instance == obj->Instance;
+    return __Instance == obj->__Instance;
 }
 
 int Flood::WindowManager::GetHashCode()
@@ -72,12 +87,12 @@ int Flood::WindowManager::GetHashCode()
     return (int)NativePtr;
 }
 
-System::IntPtr Flood::WindowManager::Instance::get()
+System::IntPtr Flood::WindowManager::__Instance::get()
 {
     return System::IntPtr(NativePtr);
 }
 
-void Flood::WindowManager::Instance::set(System::IntPtr object)
+void Flood::WindowManager::__Instance::set(System::IntPtr object)
 {
     NativePtr = (::WindowManager*)object.ToPointer();
 }

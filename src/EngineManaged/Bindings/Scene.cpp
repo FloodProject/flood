@@ -59,7 +59,7 @@ void Flood::RayQueryResult::__Instance::set(System::IntPtr object)
 
 Flood::Entity^ Flood::RayQueryResult::Entity::get()
 {
-    return gcnew Flood::Entity((::Entity*)((::RayQueryResult*)NativePtr)->entity);
+    return (((::RayQueryResult*)NativePtr)->entity == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)((::RayQueryResult*)NativePtr)->entity);
 }
 
 void Flood::RayQueryResult::Entity::set(Flood::Entity^ value)
@@ -110,7 +110,7 @@ int Flood::RayTriangleQueryResult::GetHashCode()
 
 Flood::Geometry^ Flood::RayTriangleQueryResult::Geometry::get()
 {
-    return gcnew Flood::Geometry((::Geometry*)((::RayTriangleQueryResult*)NativePtr)->geometry);
+    return (((::RayTriangleQueryResult*)NativePtr)->geometry == nullptr) ? nullptr : gcnew Flood::Geometry((::Geometry*)((::RayTriangleQueryResult*)NativePtr)->geometry);
 }
 
 void Flood::RayTriangleQueryResult::Geometry::set(Flood::Geometry^ value)
@@ -120,7 +120,7 @@ void Flood::RayTriangleQueryResult::Geometry::set(Flood::Geometry^ value)
 
 Flood::RenderBatch^ Flood::RayTriangleQueryResult::Renderable::get()
 {
-    return gcnew Flood::RenderBatch((::RenderBatch*)((::RayTriangleQueryResult*)NativePtr)->renderable);
+    return (((::RayTriangleQueryResult*)NativePtr)->renderable == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)((::RayTriangleQueryResult*)NativePtr)->renderable);
 }
 
 void Flood::RayTriangleQueryResult::Renderable::set(Flood::RenderBatch^ value)
@@ -340,6 +340,6 @@ Flood::ResourceGroup Flood::Scene::ResourceGroup::get()
 
 Flood::Group^ Flood::Scene::Entities::get()
 {
-    return gcnew Flood::Group((::Group*)&((::Scene*)NativePtr)->entities);
+    return (&((::Scene*)NativePtr)->entities == nullptr) ? nullptr : gcnew Flood::Group((::Group*)&((::Scene*)NativePtr)->entities);
 }
 

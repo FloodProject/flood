@@ -177,7 +177,7 @@ void Flood::MouseDragEvent::Y::set(short value)
 
 Flood::MouseInfo^ Flood::MouseDragEvent::Info::get()
 {
-    return gcnew Flood::MouseInfo((::MouseInfo*)((::MouseDragEvent*)NativePtr)->info);
+    return (((::MouseDragEvent*)NativePtr)->info == nullptr) ? nullptr : gcnew Flood::MouseInfo((::MouseInfo*)((::MouseDragEvent*)NativePtr)->info);
 }
 
 void Flood::MouseDragEvent::Info::set(Flood::MouseInfo^ value)

@@ -64,9 +64,8 @@ Flood::BufferUsage Flood::Buffer::BufferUsage::get()
     return (Flood::BufferUsage)__ret;
 }
 
-void Flood::Buffer::BufferUsage::set(Flood::BufferUsage value)
+void Flood::Buffer::BufferUsage::set(Flood::BufferUsage v)
 {
-    auto v = value;
     auto arg0 = (::BufferUsage)v;
     ((::Buffer*)NativePtr)->setBufferUsage(arg0);
 }
@@ -77,9 +76,8 @@ Flood::BufferAccess Flood::Buffer::BufferAccess::get()
     return (Flood::BufferAccess)__ret;
 }
 
-void Flood::Buffer::BufferAccess::set(Flood::BufferAccess value)
+void Flood::Buffer::BufferAccess::set(Flood::BufferAccess v)
 {
-    auto v = value;
     auto arg0 = (::BufferAccess)v;
     ((::Buffer*)NativePtr)->setBufferAccess(arg0);
 }
@@ -88,12 +86,11 @@ Flood::GeometryBuffer^ Flood::Buffer::GeometryBuffer::get()
 {
     auto __ret = ((::Buffer*)NativePtr)->getGeometryBuffer();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret);
 }
 
-void Flood::Buffer::GeometryBuffer::set(Flood::GeometryBuffer^ value)
+void Flood::Buffer::GeometryBuffer::set(Flood::GeometryBuffer^ v)
 {
-    auto v = value;
     auto arg0 = (::GeometryBuffer*)v->NativePtr;
     ((::Buffer*)NativePtr)->setGeometryBuffer(arg0);
 }
@@ -130,7 +127,7 @@ void Flood::Buffer::Access::set(Flood::BufferAccess value)
 
 Flood::GeometryBuffer^ Flood::Buffer::Gb::get()
 {
-    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)((::Buffer*)NativePtr)->gb);
+    return (((::Buffer*)NativePtr)->gb == nullptr) ? nullptr : gcnew Flood::GeometryBuffer((::GeometryBuffer*)((::Buffer*)NativePtr)->gb);
 }
 
 void Flood::Buffer::Gb::set(Flood::GeometryBuffer^ value)

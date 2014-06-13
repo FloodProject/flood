@@ -75,7 +75,7 @@ Flood::RenderDevice^ Flood::RenderDevice::GetRenderDevice()
 {
     auto __ret = ::GetRenderDevice();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderDevice((::RenderDevice*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderDevice((::RenderDevice*)__ret);
 }
 
 System::IntPtr Flood::RenderDevice::__Instance::get()
@@ -94,9 +94,8 @@ Flood::RenderPipeline Flood::RenderDevice::Pipeline::get()
     return (Flood::RenderPipeline)__ret;
 }
 
-void Flood::RenderDevice::Pipeline::set(Flood::RenderPipeline value)
+void Flood::RenderDevice::Pipeline::set(Flood::RenderPipeline v)
 {
-    auto v = value;
     auto arg0 = (::RenderPipeline)v;
     ((::RenderDevice*)NativePtr)->setPipeline(arg0);
 }
@@ -105,12 +104,11 @@ Flood::RenderBackend^ Flood::RenderDevice::Backend::get()
 {
     auto __ret = ((::RenderDevice*)NativePtr)->getBackend();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderBackend((::RenderBackend*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderBackend((::RenderBackend*)__ret);
 }
 
-void Flood::RenderDevice::Backend::set(Flood::RenderBackend^ value)
+void Flood::RenderDevice::Backend::set(Flood::RenderBackend^ v)
 {
-    auto v = value;
     auto arg0 = (::RenderBackend*)v->NativePtr;
     ((::RenderDevice*)NativePtr)->setBackend(arg0);
 }
@@ -119,12 +117,11 @@ Flood::RenderTarget^ Flood::RenderDevice::RenderTarget::get()
 {
     auto __ret = ((::RenderDevice*)NativePtr)->getRenderTarget();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderTarget((::RenderTarget*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderTarget((::RenderTarget*)__ret);
 }
 
-void Flood::RenderDevice::RenderTarget::set(Flood::RenderTarget^ value)
+void Flood::RenderDevice::RenderTarget::set(Flood::RenderTarget^ target)
 {
-    auto target = value;
     auto arg0 = (::RenderTarget*)target->NativePtr;
     ((::RenderDevice*)NativePtr)->setRenderTarget(arg0);
 }
@@ -133,12 +130,11 @@ Flood::RenderContext^ Flood::RenderDevice::ActiveContext::get()
 {
     auto __ret = ((::RenderDevice*)NativePtr)->getActiveContext();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderContext((::RenderContext*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
-void Flood::RenderDevice::ActiveContext::set(Flood::RenderContext^ value)
+void Flood::RenderDevice::ActiveContext::set(Flood::RenderContext^ v)
 {
-    auto v = value;
     auto arg0 = (::RenderContext*)v->NativePtr;
     ((::RenderDevice*)NativePtr)->setActiveContext(arg0);
 }
@@ -147,12 +143,11 @@ Flood::RenderView^ Flood::RenderDevice::ActiveView::get()
 {
     auto __ret = ((::RenderDevice*)NativePtr)->getActiveView();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderView((::RenderView*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderView((::RenderView*)__ret);
 }
 
-void Flood::RenderDevice::ActiveView::set(Flood::RenderView^ value)
+void Flood::RenderDevice::ActiveView::set(Flood::RenderView^ view)
 {
-    auto view = value;
     auto arg0 = (::RenderView*)view->NativePtr;
     ((::RenderDevice*)NativePtr)->setActiveView(arg0);
 }

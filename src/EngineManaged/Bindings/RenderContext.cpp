@@ -119,7 +119,7 @@ Flood::RenderBuffer^ Flood::RenderContext::CreateRenderBuffer(Flood::Settings _0
     auto arg0 = _marshal0;
     auto __ret = ((::RenderContext*)NativePtr)->createRenderBuffer(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderBuffer((::RenderBuffer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderBuffer((::RenderBuffer*)__ret);
 }
 
 bool Flood::RenderContext::Equals(System::Object^ object)
@@ -146,9 +146,8 @@ void Flood::RenderContext::__Instance::set(System::IntPtr object)
     NativePtr = (::RenderContext*)object.ToPointer();
 }
 
-void Flood::RenderContext::Target::set(Flood::RenderTarget^ value)
+void Flood::RenderContext::Target::set(Flood::RenderTarget^ target)
 {
-    auto target = value;
     auto arg0 = (::RenderTarget*)target->NativePtr;
     ((::RenderContext*)NativePtr)->setTarget(arg0);
 }
@@ -165,7 +164,7 @@ void Flood::RenderContext::InitDone::set(bool value)
 
 Flood::RenderTarget^ Flood::RenderContext::CurrentTarget::get()
 {
-    return gcnew Flood::RenderTarget((::RenderTarget*)((::RenderContext*)NativePtr)->currentTarget);
+    return (((::RenderContext*)NativePtr)->currentTarget == nullptr) ? nullptr : gcnew Flood::RenderTarget((::RenderTarget*)((::RenderContext*)NativePtr)->currentTarget);
 }
 
 void Flood::RenderContext::CurrentTarget::set(Flood::RenderTarget^ value)
@@ -175,7 +174,7 @@ void Flood::RenderContext::CurrentTarget::set(Flood::RenderTarget^ value)
 
 Flood::RenderBackend^ Flood::RenderContext::Backend::get()
 {
-    return gcnew Flood::RenderBackend((::RenderBackend*)((::RenderContext*)NativePtr)->backend);
+    return (((::RenderContext*)NativePtr)->backend == nullptr) ? nullptr : gcnew Flood::RenderBackend((::RenderBackend*)((::RenderContext*)NativePtr)->backend);
 }
 
 void Flood::RenderContext::Backend::set(Flood::RenderBackend^ value)

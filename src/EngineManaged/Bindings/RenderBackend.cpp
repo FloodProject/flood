@@ -42,60 +42,60 @@ void Flood::RenderBackend::Cleanup()
     ((::RenderBackend*)NativePtr)->cleanup();
 }
 
-void Flood::RenderBackend::RenderBatch(Flood::RenderBatch^ _1)
+void Flood::RenderBackend::RenderBatch(Flood::RenderBatch^ _6)
 {
-    auto arg0 = (::RenderBatch*)_1->NativePtr;
+    auto arg0 = (::RenderBatch*)_6->NativePtr;
     ((::RenderBackend*)NativePtr)->renderBatch(arg0);
 }
 
-void Flood::RenderBackend::SetupRenderState(Flood::RenderState _2, bool bindUniforms)
+void Flood::RenderBackend::SetupRenderState(Flood::RenderState _7, bool bindUniforms)
 {
     auto _marshal0 = ::RenderState();
-    if (_2.Renderable != nullptr)
-        _marshal0.renderable = (::RenderBatch*)_2.Renderable->NativePtr;
-    if (_2.Material != nullptr)
-        _marshal0.material = (::Material*)_2.Material->NativePtr;
+    if (_7.Renderable != nullptr)
+        _marshal0.renderable = (::RenderBatch*)_7.Renderable->NativePtr;
+    if (_7.Material != nullptr)
+        _marshal0.material = (::Material*)_7.Material->NativePtr;
     auto _marshal1 = ::Matrix4x3();
-    _marshal1.m11 = _2.ModelMatrix.M11;
-    _marshal1.m12 = _2.ModelMatrix.M12;
-    _marshal1.m13 = _2.ModelMatrix.M13;
-    _marshal1.m21 = _2.ModelMatrix.M21;
-    _marshal1.m22 = _2.ModelMatrix.M22;
-    _marshal1.m23 = _2.ModelMatrix.M23;
-    _marshal1.m31 = _2.ModelMatrix.M31;
-    _marshal1.m32 = _2.ModelMatrix.M32;
-    _marshal1.m33 = _2.ModelMatrix.M33;
-    _marshal1.tx = _2.ModelMatrix.Tx;
-    _marshal1.ty = _2.ModelMatrix.Ty;
-    _marshal1.tz = _2.ModelMatrix.Tz;
+    _marshal1.m11 = _7.ModelMatrix.M11;
+    _marshal1.m12 = _7.ModelMatrix.M12;
+    _marshal1.m13 = _7.ModelMatrix.M13;
+    _marshal1.m21 = _7.ModelMatrix.M21;
+    _marshal1.m22 = _7.ModelMatrix.M22;
+    _marshal1.m23 = _7.ModelMatrix.M23;
+    _marshal1.m31 = _7.ModelMatrix.M31;
+    _marshal1.m32 = _7.ModelMatrix.M32;
+    _marshal1.m33 = _7.ModelMatrix.M33;
+    _marshal1.tx = _7.ModelMatrix.Tx;
+    _marshal1.ty = _7.ModelMatrix.Ty;
+    _marshal1.tz = _7.ModelMatrix.Tz;
     _marshal0.modelMatrix = _marshal1;
-    _marshal0.priority = (::int32)(::int32_t)_2.Priority;
+    _marshal0.priority = (::int32)(::int32_t)_7.Priority;
     auto arg0 = _marshal0;
     ((::RenderBackend*)NativePtr)->setupRenderState(arg0, bindUniforms);
 }
 
-void Flood::RenderBackend::UnsetupRenderState(Flood::RenderState _3)
+void Flood::RenderBackend::UnsetupRenderState(Flood::RenderState _8)
 {
     auto _marshal0 = ::RenderState();
-    if (_3.Renderable != nullptr)
-        _marshal0.renderable = (::RenderBatch*)_3.Renderable->NativePtr;
-    if (_3.Material != nullptr)
-        _marshal0.material = (::Material*)_3.Material->NativePtr;
+    if (_8.Renderable != nullptr)
+        _marshal0.renderable = (::RenderBatch*)_8.Renderable->NativePtr;
+    if (_8.Material != nullptr)
+        _marshal0.material = (::Material*)_8.Material->NativePtr;
     auto _marshal1 = ::Matrix4x3();
-    _marshal1.m11 = _3.ModelMatrix.M11;
-    _marshal1.m12 = _3.ModelMatrix.M12;
-    _marshal1.m13 = _3.ModelMatrix.M13;
-    _marshal1.m21 = _3.ModelMatrix.M21;
-    _marshal1.m22 = _3.ModelMatrix.M22;
-    _marshal1.m23 = _3.ModelMatrix.M23;
-    _marshal1.m31 = _3.ModelMatrix.M31;
-    _marshal1.m32 = _3.ModelMatrix.M32;
-    _marshal1.m33 = _3.ModelMatrix.M33;
-    _marshal1.tx = _3.ModelMatrix.Tx;
-    _marshal1.ty = _3.ModelMatrix.Ty;
-    _marshal1.tz = _3.ModelMatrix.Tz;
+    _marshal1.m11 = _8.ModelMatrix.M11;
+    _marshal1.m12 = _8.ModelMatrix.M12;
+    _marshal1.m13 = _8.ModelMatrix.M13;
+    _marshal1.m21 = _8.ModelMatrix.M21;
+    _marshal1.m22 = _8.ModelMatrix.M22;
+    _marshal1.m23 = _8.ModelMatrix.M23;
+    _marshal1.m31 = _8.ModelMatrix.M31;
+    _marshal1.m32 = _8.ModelMatrix.M32;
+    _marshal1.m33 = _8.ModelMatrix.M33;
+    _marshal1.tx = _8.ModelMatrix.Tx;
+    _marshal1.ty = _8.ModelMatrix.Ty;
+    _marshal1.tz = _8.ModelMatrix.Tz;
     _marshal0.modelMatrix = _marshal1;
-    _marshal0.priority = (::int32)(::int32_t)_3.Priority;
+    _marshal0.priority = (::int32)(::int32_t)_8.Priority;
     auto arg0 = _marshal0;
     ((::RenderBackend*)NativePtr)->unsetupRenderState(arg0);
 }
@@ -108,9 +108,9 @@ Flood::Color Flood::RenderBackend::GetPixel(unsigned short x, unsigned short y)
     return Flood::Color((::Color*)&__ret);
 }
 
-void Flood::RenderBackend::ClearRenderView(Flood::RenderView^ _5)
+void Flood::RenderBackend::ClearRenderView(Flood::RenderView^ _10)
 {
-    auto arg0 = (::RenderView*)_5->NativePtr;
+    auto arg0 = (::RenderView*)_10->NativePtr;
     ((::RenderBackend*)NativePtr)->clearRenderView(arg0);
 }
 
@@ -118,30 +118,30 @@ Flood::VertexBuffer^ Flood::RenderBackend::CreateVertexBuffer()
 {
     auto __ret = ((::RenderBackend*)NativePtr)->createVertexBuffer();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::VertexBuffer((::VertexBuffer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::VertexBuffer((::VertexBuffer*)__ret);
 }
 
-void Flood::RenderBackend::ReleaseVertexBuffer(Flood::VertexBuffer^ _6)
+void Flood::RenderBackend::ReleaseVertexBuffer(Flood::VertexBuffer^ _11)
 {
-    auto arg0 = (::VertexBuffer*)_6->NativePtr;
+    auto arg0 = (::VertexBuffer*)_11->NativePtr;
     ((::RenderBackend*)NativePtr)->releaseVertexBuffer(arg0);
 }
 
-void Flood::RenderBackend::BindVertexBuffer(Flood::VertexBuffer^ _7)
+void Flood::RenderBackend::BindVertexBuffer(Flood::VertexBuffer^ _12)
 {
-    auto arg0 = (::VertexBuffer*)_7->NativePtr;
+    auto arg0 = (::VertexBuffer*)_12->NativePtr;
     ((::RenderBackend*)NativePtr)->bindVertexBuffer(arg0);
 }
 
-void Flood::RenderBackend::UnbindVertexBuffer(Flood::VertexBuffer^ _8)
+void Flood::RenderBackend::UnbindVertexBuffer(Flood::VertexBuffer^ _13)
 {
-    auto arg0 = (::VertexBuffer*)_8->NativePtr;
+    auto arg0 = (::VertexBuffer*)_13->NativePtr;
     ((::RenderBackend*)NativePtr)->unbindVertexBuffer(arg0);
 }
 
-void Flood::RenderBackend::BuildVertexBuffer(Flood::VertexBuffer^ _9)
+void Flood::RenderBackend::BuildVertexBuffer(Flood::VertexBuffer^ _14)
 {
-    auto arg0 = (::VertexBuffer*)_9->NativePtr;
+    auto arg0 = (::VertexBuffer*)_14->NativePtr;
     ((::RenderBackend*)NativePtr)->buildVertexBuffer(arg0);
 }
 
@@ -149,87 +149,87 @@ Flood::IndexBuffer^ Flood::RenderBackend::CreateIndexBuffer()
 {
     auto __ret = ((::RenderBackend*)NativePtr)->createIndexBuffer();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::IndexBuffer((::IndexBuffer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::IndexBuffer((::IndexBuffer*)__ret);
 }
 
-void Flood::RenderBackend::ReleaseIndexBuffer(Flood::IndexBuffer^ _11)
+void Flood::RenderBackend::ReleaseIndexBuffer(Flood::IndexBuffer^ _16)
 {
-    auto arg0 = (::IndexBuffer*)_11->NativePtr;
+    auto arg0 = (::IndexBuffer*)_16->NativePtr;
     ((::RenderBackend*)NativePtr)->releaseIndexBuffer(arg0);
 }
 
-void Flood::RenderBackend::BindIndexBuffer(Flood::IndexBuffer^ _12)
+void Flood::RenderBackend::BindIndexBuffer(Flood::IndexBuffer^ _17)
 {
-    auto arg0 = (::IndexBuffer*)_12->NativePtr;
+    auto arg0 = (::IndexBuffer*)_17->NativePtr;
     ((::RenderBackend*)NativePtr)->bindIndexBuffer(arg0);
 }
 
-void Flood::RenderBackend::UnbindIndexBuffer(Flood::IndexBuffer^ _13)
+void Flood::RenderBackend::UnbindIndexBuffer(Flood::IndexBuffer^ _18)
 {
-    auto arg0 = (::IndexBuffer*)_13->NativePtr;
+    auto arg0 = (::IndexBuffer*)_18->NativePtr;
     ((::RenderBackend*)NativePtr)->unbindIndexBuffer(arg0);
 }
 
-void Flood::RenderBackend::BuildIndexBuffer(Flood::IndexBuffer^ _14)
+void Flood::RenderBackend::BuildIndexBuffer(Flood::IndexBuffer^ _19)
 {
-    auto arg0 = (::IndexBuffer*)_14->NativePtr;
+    auto arg0 = (::IndexBuffer*)_19->NativePtr;
     ((::RenderBackend*)NativePtr)->buildIndexBuffer(arg0);
 }
 
-Flood::RenderBuffer^ Flood::RenderBackend::CreateRenderBuffer(Flood::Settings _15)
+Flood::RenderBuffer^ Flood::RenderBackend::CreateRenderBuffer(Flood::Settings _20)
 {
     auto _marshal0 = ::Settings();
-    _marshal0.width = (::uint16)(::uint16_t)_15.Width;
-    _marshal0.height = (::uint16)(::uint16_t)_15.Height;
+    _marshal0.width = (::uint16)(::uint16_t)_20.Width;
+    _marshal0.height = (::uint16)(::uint16_t)_20.Height;
     auto arg0 = _marshal0;
     auto __ret = ((::RenderBackend*)NativePtr)->createRenderBuffer(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderBuffer((::RenderBuffer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderBuffer((::RenderBuffer*)__ret);
 }
 
 Flood::Texture^ Flood::RenderBackend::CreateTexture()
 {
     auto __ret = ((::RenderBackend*)NativePtr)->createTexture();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Texture((::Texture*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Texture((::Texture*)__ret);
 }
 
-void Flood::RenderBackend::ReleaseTexture(Flood::Texture^ _16)
+void Flood::RenderBackend::ReleaseTexture(Flood::Texture^ _21)
 {
-    auto arg0 = (::Texture*)_16->NativePtr;
+    auto arg0 = (::Texture*)_21->NativePtr;
     ((::RenderBackend*)NativePtr)->releaseTexture(arg0);
 }
 
-void Flood::RenderBackend::UploadTexture(Flood::Texture^ _17)
+void Flood::RenderBackend::UploadTexture(Flood::Texture^ _22)
 {
-    auto arg0 = (::Texture*)_17->NativePtr;
+    auto arg0 = (::Texture*)_22->NativePtr;
     ((::RenderBackend*)NativePtr)->uploadTexture(arg0);
 }
 
-void Flood::RenderBackend::ConfigureTexture(Flood::Texture^ _18)
+void Flood::RenderBackend::ConfigureTexture(Flood::Texture^ _23)
 {
-    auto arg0 = (::Texture*)_18->NativePtr;
+    auto arg0 = (::Texture*)_23->NativePtr;
     ((::RenderBackend*)NativePtr)->configureTexture(arg0);
 }
 
-void Flood::RenderBackend::BindTexture(Flood::Texture^ _19)
+void Flood::RenderBackend::BindTexture(Flood::Texture^ _24)
 {
-    auto arg0 = (::Texture*)_19->NativePtr;
+    auto arg0 = (::Texture*)_24->NativePtr;
     ((::RenderBackend*)NativePtr)->bindTexture(arg0);
 }
 
-void Flood::RenderBackend::UnbindTexture(Flood::Texture^ _20)
+void Flood::RenderBackend::UnbindTexture(Flood::Texture^ _25)
 {
-    auto arg0 = (::Texture*)_20->NativePtr;
+    auto arg0 = (::Texture*)_25->NativePtr;
     ((::RenderBackend*)NativePtr)->unbindTexture(arg0);
 }
 
-Flood::Image^ Flood::RenderBackend::ReadTexture(Flood::Texture^ _21)
+Flood::Image^ Flood::RenderBackend::ReadTexture(Flood::Texture^ _26)
 {
-    auto arg0 = (::Texture*)_21->NativePtr;
+    auto arg0 = (::Texture*)_26->NativePtr;
     auto __ret = ((::RenderBackend*)NativePtr)->readTexture(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Image((::Image*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Image((::Image*)__ret);
 }
 
 void Flood::RenderBackend::SetupTextureUnit(Flood::Texture^ texture, Flood::TextureUnit^ unit)
@@ -274,9 +274,8 @@ void Flood::RenderBackend::__Instance::set(System::IntPtr object)
     NativePtr = (::RenderBackend*)object.ToPointer();
 }
 
-void Flood::RenderBackend::ClearColor::set(Flood::Color value)
+void Flood::RenderBackend::ClearColor::set(Flood::Color color)
 {
-    auto color = value;
     auto _marshal0 = ::Color();
     _marshal0.r = (::byte)(::uint8)(::uint8_t)color.R;
     _marshal0.g = (::byte)(::uint8)(::uint8_t)color.G;
@@ -286,17 +285,15 @@ void Flood::RenderBackend::ClearColor::set(Flood::Color value)
     ((::RenderBackend*)NativePtr)->setClearColor(arg0);
 }
 
-void Flood::RenderBackend::upRenderView::set(Flood::RenderView^ value)
+void Flood::RenderBackend::upRenderView::set(Flood::RenderView^ _9)
 {
-    auto _4 = value;
-    auto arg0 = (::RenderView*)_4->NativePtr;
+    auto arg0 = (::RenderView*)_9->NativePtr;
     ((::RenderBackend*)NativePtr)->setupRenderView(arg0);
 }
 
-void Flood::RenderBackend::upVertexBuffer::set(Flood::VertexBuffer^ value)
+void Flood::RenderBackend::upVertexBuffer::set(Flood::VertexBuffer^ _15)
 {
-    auto _10 = value;
-    auto arg0 = (::VertexBuffer*)_10->NativePtr;
+    auto arg0 = (::VertexBuffer*)_15->NativePtr;
     ((::RenderBackend*)NativePtr)->setupVertexBuffer(arg0);
 }
 

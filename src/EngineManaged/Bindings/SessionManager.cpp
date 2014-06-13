@@ -73,7 +73,7 @@ void Flood::SessionManager::SessionAdded::raise(Flood::Session^ _0)
 
 void Flood::SessionManager::_SessionAddedRaise(const ::SessionPtr& _0)
 {
-    SessionAdded::raise(gcnew Flood::Session((::Session*)_0.get()));
+    SessionAdded::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Session((::Session*)_0.get()));
 }
 
 void Flood::SessionManager::SessionRemoved::add(System::Action<Flood::Session^>^ evt)
@@ -99,6 +99,6 @@ void Flood::SessionManager::SessionRemoved::raise(Flood::Session^ _0)
 
 void Flood::SessionManager::_SessionRemovedRaise(const ::SessionPtr& _0)
 {
-    SessionRemoved::raise(gcnew Flood::Session((::Session*)_0.get()));
+    SessionRemoved::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Session((::Session*)_0.get()));
 }
 

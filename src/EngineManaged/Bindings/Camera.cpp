@@ -98,25 +98,24 @@ int Flood::Camera::GetHashCode()
 Flood::Vector3 Flood::Camera::LookAtVector::get()
 {
     auto &__ret = ((::Camera*)NativePtr)->getLookAtVector();
-    return Flood::Vector3((::Vector3*)&__ret);
+    return (Flood::Vector3)(Flood::Vector3((::Vector3*)&__ret));
 }
 
 Flood::Matrix4x3 Flood::Camera::ViewMatrix::get()
 {
     auto &__ret = ((::Camera*)NativePtr)->getViewMatrix();
-    return Flood::Matrix4x3((::Matrix4x3*)&__ret);
+    return (Flood::Matrix4x3)(Flood::Matrix4x3((::Matrix4x3*)&__ret));
 }
 
 Flood::RenderView^ Flood::Camera::View::get()
 {
     auto __ret = ((::Camera*)NativePtr)->getView();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderView((::RenderView*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderView((::RenderView*)__ret);
 }
 
-void Flood::Camera::View::set(Flood::RenderView^ value)
+void Flood::Camera::View::set(Flood::RenderView^ view)
 {
-    auto view = value;
     auto arg0 = (::RenderView*)view->NativePtr;
     ((::Camera*)NativePtr)->setView(arg0);
 }
@@ -124,18 +123,18 @@ void Flood::Camera::View::set(Flood::RenderView^ value)
 Flood::Frustum Flood::Camera::Frustum::get()
 {
     auto &__ret = ((::Camera*)NativePtr)->getFrustum();
-    return Flood::Frustum((::Frustum*)&__ret);
+    return (Flood::Frustum)(Flood::Frustum((::Frustum*)&__ret));
 }
 
 Flood::Frustum Flood::Camera::Frustum1::get()
 {
     auto &__ret = ((::Camera*)NativePtr)->getFrustum();
-    return Flood::Frustum((::Frustum*)&__ret);
+    return (Flood::Frustum)(Flood::Frustum((::Frustum*)&__ret));
 }
 
 Flood::DebugDrawer^ Flood::Camera::Drawer::get()
 {
-    return gcnew Flood::DebugDrawer((::DebugDrawer*)&((::Camera*)NativePtr)->drawer);
+    return (&((::Camera*)NativePtr)->drawer == nullptr) ? nullptr : gcnew Flood::DebugDrawer((::DebugDrawer*)&((::Camera*)NativePtr)->drawer);
 }
 
 void Flood::Camera::Drawer::set(Flood::DebugDrawer^ value)

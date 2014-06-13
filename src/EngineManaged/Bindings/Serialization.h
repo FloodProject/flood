@@ -37,13 +37,6 @@ namespace Flood
         Binary = 1
     };
 
-    /// <summary>
-    /// Handles need to be resolved when they are walked via reflection. The client
-    /// code is responsible for setting up the mapping functions that allow the
-    /// reflection walking code to obtain handle details.
-    /// </summary>
-    public delegate unsigned int ReflectionDeserializeHandleFn(System::String^ _0);
-
     public ref class ReflectionHandleContext : ICppInstance
     {
     public:
@@ -58,12 +51,6 @@ namespace Flood
         ReflectionHandleContext(::ReflectionHandleContext* native);
         ReflectionHandleContext(System::IntPtr native);
         ReflectionHandleContext();
-
-        property Flood::ReflectionDeserializeHandleFn^ Deserialize
-        {
-            Flood::ReflectionDeserializeHandleFn^ get();
-            void set(Flood::ReflectionDeserializeHandleFn^);
-        }
 
         virtual bool Equals(System::Object^ object) override;
 

@@ -92,7 +92,7 @@ Flood::Session^ Flood::Peer::Session::get()
 {
     auto __ret = ((::Peer*)NativePtr)->getSession();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Session((::Session*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Session((::Session*)__ret);
 }
 
 void Flood::Peer::StateChanged::add(System::Action<Flood::PeerState>^ evt)

@@ -66,7 +66,7 @@ Flood::Allocator^ Flood::Allocator::CreatePool(int size)
     auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreatePool(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
@@ -75,7 +75,7 @@ Flood::Allocator^ Flood::Allocator::CreateBump(int size)
     auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreateBump(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateHeap()
@@ -83,7 +83,7 @@ Flood::Allocator^ Flood::Allocator::CreateHeap()
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateHeap(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateStack()
@@ -91,21 +91,21 @@ Flood::Allocator^ Flood::Allocator::CreateStack()
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateStack(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetHeap()
 {
     auto __ret = ::AllocatorGetHeap();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetStack()
 {
     auto __ret = ::AllocatorGetStack();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetObject(void* _0)
@@ -113,7 +113,7 @@ Flood::Allocator^ Flood::Allocator::GetObject(void* _0)
     auto arg0 = (void*)_0;
     auto __ret = ::AllocatorGetObject(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 void Flood::Allocator::DumpInfo()
@@ -185,7 +185,7 @@ int Flood::PoolAllocator::GetHashCode()
 
 unsigned char* Flood::PoolAllocator::Current::get()
 {
-    return ((::PoolAllocator*)NativePtr)->current;
+    return reinterpret_cast<unsigned char*>(((::PoolAllocator*)NativePtr)->current);
 }
 
 void Flood::PoolAllocator::Current::set(unsigned char* value)
@@ -226,7 +226,7 @@ int Flood::BumpAllocator::GetHashCode()
 
 unsigned char* Flood::BumpAllocator::Start::get()
 {
-    return ((::BumpAllocator*)NativePtr)->start;
+    return reinterpret_cast<unsigned char*>(((::BumpAllocator*)NativePtr)->start);
 }
 
 void Flood::BumpAllocator::Start::set(unsigned char* value)
@@ -236,7 +236,7 @@ void Flood::BumpAllocator::Start::set(unsigned char* value)
 
 unsigned char* Flood::BumpAllocator::Current::get()
 {
-    return ((::BumpAllocator*)NativePtr)->current;
+    return reinterpret_cast<unsigned char*>(((::BumpAllocator*)NativePtr)->current);
 }
 
 void Flood::BumpAllocator::Current::set(unsigned char* value)

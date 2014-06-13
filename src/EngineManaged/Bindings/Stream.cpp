@@ -33,7 +33,7 @@ bool Flood::Stream::Close()
     return __ret;
 }
 
-long long Flood::Stream::Read(void* buffer, unsigned long long size)
+unsigned long long Flood::Stream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -41,7 +41,7 @@ long long Flood::Stream::Read(void* buffer, unsigned long long size)
     return __ret;
 }
 
-long long Flood::Stream::Write(void* buffer, unsigned long long size)
+unsigned long long Flood::Stream::Write(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -81,7 +81,7 @@ unsigned long long Flood::Stream::Read(System::Collections::Generic::List<unsign
     return __ret;
 }
 
-long long Flood::Stream::ReadBuffer(void* buffer, long long size)
+unsigned long long Flood::Stream::ReadBuffer(void* buffer, long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::int64)size;
@@ -129,9 +129,9 @@ unsigned long long Flood::Stream::ReadUTF8Lines(System::Collections::Generic::Li
     return __ret;
 }
 
-unsigned long long Flood::Stream::Write1(System::IntPtr buf, unsigned long long size)
+unsigned long long Flood::Stream::Write(unsigned char* buf, unsigned long long size)
 {
-    auto arg0 = (::uint8*)buf.ToPointer();
+    auto arg0 = (::uint8*)buf;
     auto arg1 = (::uint64)size;
     auto __ret = ((::Stream*)NativePtr)->write(arg0, arg1);
     return __ret;
@@ -232,7 +232,7 @@ bool Flood::WebStream::Close()
     return __ret;
 }
 
-unsigned long long Flood::WebStream::Read(System::IntPtr buffer, unsigned long long size)
+unsigned long long Flood::WebStream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -240,7 +240,7 @@ unsigned long long Flood::WebStream::Read(System::IntPtr buffer, unsigned long l
     return __ret;
 }
 
-unsigned long long Flood::WebStream::Write(System::IntPtr buffer, unsigned long long size)
+unsigned long long Flood::WebStream::Write(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -317,7 +317,7 @@ bool Flood::ZipStream::Close()
     return __ret;
 }
 
-unsigned long long Flood::ZipStream::Read(System::IntPtr buffer, unsigned long long size)
+unsigned long long Flood::ZipStream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;

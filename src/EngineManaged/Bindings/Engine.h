@@ -12,12 +12,16 @@
 
 namespace Flood
 {
+    ref class AudioDevice;
     ref class Engine;
     ref class InputManager;
     ref class Log;
+    ref class PageManager;
+    ref class PhysicsManager;
     ref class PlatformManager;
     ref class RenderDevice;
     ref class ResourceManager;
+    ref class ScriptManager;
     ref class Stream;
     ref class Subsystem;
     ref class WindowManager;

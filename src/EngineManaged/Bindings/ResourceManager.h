@@ -19,6 +19,7 @@ namespace Flood
     ref class ResourceEvent;
     ref class ResourceLoader;
     ref class ResourceManager;
+    ref class ResourceTask;
     ref class Stream;
     value struct FileWatchEvent;
     value struct ResourceLoadOptions;

@@ -129,12 +129,11 @@ int Flood::Font::GetHashCode()
 System::String^ Flood::Font::Name::get()
 {
     auto &__ret = ((::Font*)NativePtr)->getName();
-    return StringMarshaller::marshalString(__ret);
+    return (System::String^)(StringMarshaller::marshalString(__ret));
 }
 
-void Flood::Font::Name::set(System::String^ value)
+void Flood::Font::Name::set(System::String^ v)
 {
-    auto v = value;
     auto arg0 = StringMarshaller::marshalString(v);
     ((::Font*)NativePtr)->setName(arg0);
 }

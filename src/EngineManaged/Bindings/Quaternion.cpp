@@ -254,9 +254,8 @@ Flood::Quaternion Flood::Quaternion::Slerp(Flood::Quaternion q, float t)
     return Flood::Quaternion((::Quaternion*)&__ret);
 }
 
-void Flood::Quaternion::ToRotateAboutX::set(float value)
+void Flood::Quaternion::ToRotateAboutX::set(float theta)
 {
-    auto theta = value;
     auto _this0 = ::Quaternion();
     _this0.x = (*this).X;
     _this0.y = (*this).Y;
@@ -269,9 +268,8 @@ void Flood::Quaternion::ToRotateAboutX::set(float value)
     __W = _this0.w;
 }
 
-void Flood::Quaternion::ToRotateAboutY::set(float value)
+void Flood::Quaternion::ToRotateAboutY::set(float theta)
 {
-    auto theta = value;
     auto _this0 = ::Quaternion();
     _this0.x = (*this).X;
     _this0.y = (*this).Y;
@@ -284,9 +282,8 @@ void Flood::Quaternion::ToRotateAboutY::set(float value)
     __W = _this0.w;
 }
 
-void Flood::Quaternion::ToRotateAboutZ::set(float value)
+void Flood::Quaternion::ToRotateAboutZ::set(float theta)
 {
-    auto theta = value;
     auto _this0 = ::Quaternion();
     _this0.x = (*this).X;
     _this0.y = (*this).Y;

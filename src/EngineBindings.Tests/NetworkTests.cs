@@ -12,7 +12,7 @@ namespace EngineBindings.Tests
         [Test]
         public void TestPeerConnection()
         {
-            FloodNetwork.NetworkInitialize();
+            Flood.Network.NetworkInitialize();
 
             var conn = new HostConnectionDetails {Address = "", Port = 13131};
 

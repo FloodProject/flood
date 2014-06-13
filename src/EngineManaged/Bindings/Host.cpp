@@ -96,22 +96,22 @@ void Flood::Host::SessionPacket::raise(Flood::Session^ _0, Flood::Packet^ _1, in
 
 void Flood::Host::_SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int _2)
 {
-    SessionPacket::raise(gcnew Flood::Session((::Session*)_0), gcnew Flood::Packet((::Packet*)_1.get()), _2);
+    SessionPacket::raise((_0 == nullptr) ? nullptr : gcnew Flood::Session((::Session*)_0), (_1.get() == nullptr) ? nullptr : gcnew Flood::Packet((::Packet*)_1.get()), _2);
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)
 {
-    Address = StringMarshaller::marshalString(native->address);
-    Port = native->port;
-    ChannelCount = native->channelCount;
+    __Address = StringMarshaller::marshalString(native->address);
+    __Port = native->port;
+    __ChannelCount = native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 {
     auto __native = (::HostConnectionDetails*)native.ToPointer();
-    Address = StringMarshaller::marshalString(__native->address);
-    Port = __native->port;
-    ChannelCount = __native->channelCount;
+    __Address = StringMarshaller::marshalString(__native->address);
+    __Port = __native->port;
+    __ChannelCount = __native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
@@ -197,14 +197,14 @@ int Flood::HostClient::GetHashCode()
 Flood::Peer^ Flood::HostClient::Peer::get()
 {
     auto __ret = ((::HostClient*)NativePtr)->getPeer();
-    return gcnew Flood::Peer((::Peer*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Peer((::Peer*)__ret.get());
 }
 
 Flood::Session^ Flood::HostClient::Session::get()
 {
     auto __ret = ((::HostClient*)NativePtr)->getSession();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Session((::Session*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Session((::Session*)__ret);
 }
 
 Flood::HostServer::HostServer(::HostServer* native)
@@ -255,15 +255,15 @@ System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::Peers::get(
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::Peer^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::Peer((::Peer*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::Peer((::Peer*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<Flood::Peer^>^)(_tmp__ret);
 }
 
 Flood::SessionManager^ Flood::HostServer::SessionManager::get()
 {
     auto &__ret = ((::HostServer*)NativePtr)->getSessionManager();
-    return gcnew Flood::SessionManager((::SessionManager*)&__ret);
+    return (Flood::SessionManager^)((&__ret == nullptr) ? nullptr : gcnew Flood::SessionManager((::SessionManager*)&__ret));
 }
 

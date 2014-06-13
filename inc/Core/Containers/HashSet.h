@@ -25,6 +25,8 @@
 #include "HashBase.h"
 #include "Sort.h"
 
+FLD_IGNORE_FILE
+
 #include <cassert>
 
 /// Hash set template class.

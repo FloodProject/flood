@@ -17,7 +17,7 @@ namespace Flood
 
 namespace Flood
 {
-    public ref class FloodNetwork
+    public ref class Network
     {
     public:
         static bool NetworkInitialize();

@@ -56,13 +56,13 @@ Flood::WindowManager^ Flood::PlatformManager::WindowManager::get()
 {
     auto __ret = ((::PlatformManager*)NativePtr)->getWindowManager();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::WindowManager((::WindowManager*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::WindowManager((::WindowManager*)__ret);
 }
 
 Flood::InputManager^ Flood::PlatformManager::InputManager::get()
 {
     auto __ret = ((::PlatformManager*)NativePtr)->getInputManager();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::InputManager((::InputManager*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::InputManager((::InputManager*)__ret);
 }
 

@@ -22,6 +22,8 @@
 
 #pragma once
 
+FLD_IGNORE_FILE
+
 #include "Core/API.h"
 #include "Core/Memory.h"
 #include "Core/Containers/Swap.h"

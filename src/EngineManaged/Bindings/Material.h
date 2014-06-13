@@ -180,10 +180,52 @@ namespace Flood
             void set(bool);
         }
 
+        property Flood::DepthCompare DepthCompare1
+        {
+            Flood::DepthCompare get();
+            void set(Flood::DepthCompare);
+        }
+
+        property bool DepthTest1
+        {
+            bool get();
+            void set(bool);
+        }
+
+        property bool DepthWrite1
+        {
+            bool get();
+            void set(bool);
+        }
+
+        property Flood::Vector2 DepthRange1
+        {
+            Flood::Vector2 get();
+            void set(Flood::Vector2);
+        }
+
+        property Flood::Vector2 DepthOffset1
+        {
+            Flood::Vector2 get();
+            void set(Flood::Vector2);
+        }
+
+        property bool AlphaTest1
+        {
+            bool get();
+            void set(bool);
+        }
+
         property bool LineSmooth
         {
             bool get();
             void set(bool);
+        }
+
+        property float LineWidth1
+        {
+            float get();
+            void set(float);
         }
 
         property Flood::BlendSource Source

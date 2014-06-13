@@ -16,8 +16,11 @@ namespace Flood
     enum struct PeerState;
     ref class Host;
     ref class Packet;
+    ref class PacketProcessor;
+    ref class PacketProcessors;
     ref class Peer;
     ref class Session;
+    ref class _ENetPeer;
 }
 
 namespace Flood

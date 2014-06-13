@@ -12,21 +12,21 @@ using namespace System::Runtime::InteropServices;
 
 Flood::FileWatchEvent::FileWatchEvent(::FileWatchEvent* native)
 {
-    Action = (Flood::FileWatchEventKind)native->action;
-    WatchId = native->watchId;
-    Dir = StringMarshaller::marshalString(native->dir);
-    Filename = StringMarshaller::marshalString(native->filename);
-    Userdata = IntPtr(native->userdata);
+    __Action = (Flood::FileWatchEventKind)native->action;
+    __WatchId = native->watchId;
+    __Dir = StringMarshaller::marshalString(native->dir);
+    __Filename = StringMarshaller::marshalString(native->filename);
+    __Userdata = native->userdata;
 }
 
 Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
 {
     auto __native = (::FileWatchEvent*)native.ToPointer();
-    Action = (Flood::FileWatchEventKind)__native->action;
-    WatchId = __native->watchId;
-    Dir = StringMarshaller::marshalString(__native->dir);
-    Filename = StringMarshaller::marshalString(__native->filename);
-    Userdata = IntPtr(__native->userdata);
+    __Action = (Flood::FileWatchEventKind)__native->action;
+    __WatchId = __native->watchId;
+    __Dir = StringMarshaller::marshalString(__native->dir);
+    __Filename = StringMarshaller::marshalString(__native->filename);
+    __Userdata = __native->userdata;
 }
 
 Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file)

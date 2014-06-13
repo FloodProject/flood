@@ -94,6 +94,12 @@ namespace Flood
             unsigned int get();
         }
 
+        property unsigned int Id1
+        {
+            unsigned int get();
+            void set(unsigned int);
+        }
+
         property Flood::TextureTarget Target
         {
             Flood::TextureTarget get();

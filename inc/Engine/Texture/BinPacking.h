@@ -7,6 +7,8 @@
 */
 #pragma once
 
+FLD_IGNORE_FILE
+
 #include <vector>
 
 #include "Core/Math/Rectangle.h"

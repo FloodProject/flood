@@ -56,7 +56,7 @@ void Flood::ResourceEvent::__Instance::set(System::IntPtr object)
 
 Flood::Resource^ Flood::ResourceEvent::Resource::get()
 {
-    return gcnew Flood::Resource((::Resource*)((::ResourceEvent*)NativePtr)->resource);
+    return (((::ResourceEvent*)NativePtr)->resource == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)((::ResourceEvent*)NativePtr)->resource);
 }
 
 void Flood::ResourceEvent::Resource::set(Flood::Resource^ value)
@@ -66,7 +66,7 @@ void Flood::ResourceEvent::Resource::set(Flood::Resource^ value)
 
 Flood::Resource^ Flood::ResourceEvent::OldResource::get()
 {
-    return gcnew Flood::Resource((::Resource*)((::ResourceEvent*)NativePtr)->oldResource);
+    return (((::ResourceEvent*)NativePtr)->oldResource == nullptr) ? nullptr : gcnew Flood::Resource((::Resource*)((::ResourceEvent*)NativePtr)->oldResource);
 }
 
 void Flood::ResourceEvent::OldResource::set(Flood::Resource^ value)
@@ -231,7 +231,7 @@ Flood::ResourceLoader^ Flood::ResourceManager::FindLoader(System::String^ extens
     auto arg0 = StringMarshaller::marshalString(extension);
     auto __ret = ((::ResourceManager*)NativePtr)->findLoader(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::ResourceLoader((::ResourceLoader*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::ResourceLoader((::ResourceLoader*)__ret);
 }
 
 bool Flood::ResourceManager::Equals(System::Object^ object)
@@ -252,7 +252,7 @@ Flood::ResourceManager^ Flood::ResourceManager::GetResourceManager()
 {
     auto __ret = ::GetResourceManager();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::ResourceManager((::ResourceManager*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::ResourceManager((::ResourceManager*)__ret);
 }
 
 System::IntPtr Flood::ResourceManager::__Instance::get()
@@ -277,7 +277,7 @@ System::Collections::Generic::Dictionary<System::String^, Flood::ResourceHandle<
         auto _marshalValue = Flood::ResourceHandle<Flood::Resource^>(_val.id);
         _tmp__ret->Add(_marshalKey, _marshalValue);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::Dictionary<System::String^, Flood::ResourceHandle<Flood::Resource^>>^)(_tmp__ret);
 }
 
 System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^>^ Flood::ResourceManager::ResourceLoaders::get()
@@ -289,10 +289,10 @@ System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^
         auto& _key = _it->first;
         auto& _val = _it->second;
         auto _marshalKey = StringMarshaller::marshalString(_key);
-        auto _marshalValue = gcnew Flood::ResourceLoader((::ResourceLoader*)_val.get());
+        auto _marshalValue = (_val.get() == nullptr) ? nullptr : gcnew Flood::ResourceLoader((::ResourceLoader*)_val.get());
         _tmp__ret->Add(_marshalKey, _marshalValue);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::Dictionary<System::String^, Flood::ResourceLoader^>^)(_tmp__ret);
 }
 
 bool Flood::ResourceManager::AsynchronousLoading::get()
@@ -301,9 +301,8 @@ bool Flood::ResourceManager::AsynchronousLoading::get()
     return __ret;
 }
 
-void Flood::ResourceManager::AsynchronousLoading::set(bool value)
+void Flood::ResourceManager::AsynchronousLoading::set(bool v)
 {
-    auto v = value;
     ((::ResourceManager*)NativePtr)->setAsynchronousLoading(v);
 }
 
@@ -311,12 +310,11 @@ Flood::Archive^ Flood::ResourceManager::Archive::get()
 {
     auto __ret = ((::ResourceManager*)NativePtr)->getArchive();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Archive((::Archive*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Archive((::Archive*)__ret);
 }
 
-void Flood::ResourceManager::Archive::set(Flood::Archive^ value)
+void Flood::ResourceManager::Archive::set(Flood::Archive^ archive)
 {
-    auto archive = value;
     auto arg0 = (::Archive*)archive->NativePtr;
     ((::ResourceManager*)NativePtr)->setArchive(arg0);
 }
@@ -344,7 +342,7 @@ void Flood::ResourceManager::ResourcePrepared::raise(Flood::ResourceEvent^ _0)
 
 void Flood::ResourceManager::_ResourcePreparedRaise(const ::ResourceEvent& _0)
 {
-    ResourcePrepared::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourcePrepared::raise((&_0 == nullptr) ? nullptr : gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceLoaded::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -370,7 +368,7 @@ void Flood::ResourceManager::ResourceLoaded::raise(Flood::ResourceEvent^ _0)
 
 void Flood::ResourceManager::_ResourceLoadedRaise(const ::ResourceEvent& _0)
 {
-    ResourceLoaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceLoaded::raise((&_0 == nullptr) ? nullptr : gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceRemoved::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -396,7 +394,7 @@ void Flood::ResourceManager::ResourceRemoved::raise(Flood::ResourceEvent^ _0)
 
 void Flood::ResourceManager::_ResourceRemovedRaise(const ::ResourceEvent& _0)
 {
-    ResourceRemoved::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceRemoved::raise((&_0 == nullptr) ? nullptr : gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceReloaded::add(System::Action<Flood::ResourceEvent^>^ evt)
@@ -422,7 +420,7 @@ void Flood::ResourceManager::ResourceReloaded::raise(Flood::ResourceEvent^ _0)
 
 void Flood::ResourceManager::_ResourceReloadedRaise(const ::ResourceEvent& _0)
 {
-    ResourceReloaded::raise(gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
+    ResourceReloaded::raise((&_0 == nullptr) ? nullptr : gcnew Flood::ResourceEvent((::ResourceEvent*)&_0));
 }
 
 void Flood::ResourceManager::ResourceLoaderRegistered::add(System::Action<Flood::ResourceLoader^>^ evt)
@@ -448,6 +446,6 @@ void Flood::ResourceManager::ResourceLoaderRegistered::raise(Flood::ResourceLoad
 
 void Flood::ResourceManager::_ResourceLoaderRegisteredRaise(const ::ResourceLoader& _0)
 {
-    ResourceLoaderRegistered::raise(gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
+    ResourceLoaderRegistered::raise((&_0 == nullptr) ? nullptr : gcnew Flood::ResourceLoader((::ResourceLoader*)&_0));
 }
 

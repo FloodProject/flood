@@ -18,6 +18,8 @@ namespace Flood
     ref class Stream;
     ref class WebStream;
     ref class ZipStream;
+    ref class Zzip_dir;
+    ref class Zzip_file;
 }
 
 namespace Flood
@@ -90,12 +92,12 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size);
+        virtual unsigned long long Read(void* buffer, unsigned long long size);
 
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        virtual unsigned long long Write(System::IntPtr buffer, unsigned long long size);
+        virtual unsigned long long Write(void* buffer, unsigned long long size);
 
         /// <summary>
         /// Set stream position.
@@ -120,7 +122,7 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        unsigned long long ReadBuffer(System::IntPtr buffer, long long size);
+        unsigned long long ReadBuffer(void* buffer, long long size);
 
         /// <summary>
         /// Reads from the the stream into a string.
@@ -145,7 +147,7 @@ namespace Flood
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        unsigned long long Write1(System::IntPtr buf, unsigned long long size);
+        unsigned long long Write(unsigned char* buf, unsigned long long size);
 
         /// <summary>
         /// Writes from string into the the stream.
@@ -198,12 +200,12 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size) override;
+        virtual unsigned long long Read(void* buffer, unsigned long long size) override;
 
         /// <summary>
         /// Writes from buffer into the the stream.
         /// </summary>
-        virtual unsigned long long Write(System::IntPtr buffer, unsigned long long size) override;
+        virtual unsigned long long Write(void* buffer, unsigned long long size) override;
 
         /// <summary>
         /// Get stream size.
@@ -244,7 +246,7 @@ namespace Flood
         /// <summary>
         /// Reads from the the stream into a buffer.
         /// </summary>
-        virtual unsigned long long Read(System::IntPtr buffer, unsigned long long size) override;
+        virtual unsigned long long Read(void* buffer, unsigned long long size) override;
 
         /// <summary>
         /// Set stream position.

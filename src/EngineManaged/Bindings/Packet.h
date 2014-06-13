@@ -14,6 +14,7 @@ namespace Flood
 {
     enum struct PacketFlags : unsigned char;
     ref class Packet;
+    ref class _ENetPacket;
 }
 
 namespace Flood

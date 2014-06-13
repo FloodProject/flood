@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using CppSharp;
 using CppSharp.AST;
+using CppSharp.AST.Extensions;
 using CppSharp.Generators;
 using CppSharp.Generators.AST;
 using CppSharp.Generators.CLI;
@@ -73,11 +74,6 @@ namespace Flood
                     "Core/Network/SessionManager.h",
                     "Core/Network/Packet.h",
                     "Core/Network/Peer.h",
-                    "Core/Containers/HashMap.h",
-                    "Core/Containers/HashSet.h",
-                    "Core/Containers/HashBase.h",
-                    "Core/Containers/Vector.h",
-                    "Core/Containers/VectorBase.h",
                     "Resources/Resource.h",
                     "Resources/ResourceLoader.h",
                     "Resources/ResourceManager.h",
@@ -157,13 +153,6 @@ namespace Flood
             ctx.IgnoreHeadersWithName("Task.h");
             ctx.IgnoreHeadersWithName("Timer.h");
             ctx.IgnoreHeadersWithName("Swap.h");
-            ctx.IgnoreHeadersWithName("Containers/Vector.h");
-            ctx.IgnoreHeadersWithName("Containers/VectorBase.h");
-            ctx.IgnoreHeadersWithName("Containers/Swap.h");
-            ctx.IgnoreHeadersWithName("Containers/HashMap.h");
-            ctx.IgnoreHeadersWithName("Containers/HashBase.h");
-            ctx.IgnoreHeadersWithName("Containers/HashSet.h");
-            ctx.IgnoreHeadersWithName("Containers/Str.h");
 
             //Core
             ctx.IgnoreClassWithName("Object");
@@ -479,7 +468,7 @@ namespace Flood
             var type = Type as TemplateSpecializationType;
 
             Class @class;
-            if (!type.Arguments[0].Type.Type.IsTagDecl(out @class))
+            if (!type.Arguments[0].Type.Type.TryGetClass(out @class))
                 return;
 
             ctx.Return.Write("(::{0}*){1}->NativePtr",
@@ -491,7 +480,7 @@ namespace Flood
             var type = Type as TemplateSpecializationType;
 
             Class @class;
-            if (!type.Arguments[0].Type.Type.Desugar().IsTagDecl(out @class))
+            if (!type.Arguments[0].Type.Type.TryGetClass(out @class))
                 throw new Exception("Cannot marshal RefPtr: unsupported type");
 
             var instance = string.Format("{0}.get()", ctx.ReturnVarName);
@@ -524,7 +513,7 @@ namespace Flood
             var type = Type as TemplateSpecializationType;
 
             Class @class;
-            type.Arguments[0].Type.Type.Desugar().IsTagDecl(out @class);
+            type.Arguments[0].Type.Type.TryGetClass(out @class);
 
             ctx.Return.Write("new {0}({1})", @class.Name, ctx.ReturnVarName);
             //ctx.Return.Write("new IntPtr(&{0})", ctx.ReturnVarName);

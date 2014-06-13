@@ -92,9 +92,8 @@ Flood::PacketFlags Flood::Packet::Flags::get()
     return (Flood::PacketFlags)__ret;
 }
 
-void Flood::Packet::Flags::set(Flood::PacketFlags value)
+void Flood::Packet::Flags::set(Flood::PacketFlags v)
 {
-    auto v = value;
     auto arg0 = (::PacketFlags)v;
     ((::Packet*)NativePtr)->setFlags(arg0);
 }
@@ -105,9 +104,8 @@ Flood::PacketFlags Flood::Packet::ProcessedFlags::get()
     return (Flood::PacketFlags)__ret;
 }
 
-void Flood::Packet::ProcessedFlags::set(Flood::PacketFlags value)
+void Flood::Packet::ProcessedFlags::set(Flood::PacketFlags v)
 {
-    auto v = value;
     auto arg0 = (::PacketFlags)v;
     ((::Packet*)NativePtr)->setProcessedFlags(arg0);
 }

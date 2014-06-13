@@ -198,7 +198,7 @@ namespace Flood
         /// <summary>
         /// Creates a new render context.
         /// </summary>
-        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
+        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _33);
 
         /// <summary>
         /// Updates the window content.

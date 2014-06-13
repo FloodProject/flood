@@ -74,7 +74,7 @@ Flood::Component^ Flood::Entity::GetComponent(System::String^ name)
     auto ____temp = clix::marshalString<clix::E_UTF8>(name);
     auto arg0 = ____temp.c_str();
     auto __ret = ((::Entity*)NativePtr)->getComponent(arg0);
-    return gcnew Flood::Component((::Component*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)__ret.get());
 }
 
 bool Flood::Entity::AddTransform()
@@ -112,7 +112,7 @@ Flood::Entity^ Flood::Entity::Create(Flood::Allocator^ _0)
     auto arg0 = (::Allocator*)_0->NativePtr;
     auto __ret = ::EntityCreate(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Entity((::Entity*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)__ret);
 }
 
 System::IntPtr Flood::Entity::__Instance::get()
@@ -128,19 +128,17 @@ void Flood::Entity::__Instance::set(System::IntPtr object)
 System::String^ Flood::Entity::Name::get()
 {
     auto &__ret = ((::Entity*)NativePtr)->getName();
-    return StringMarshaller::marshalString(__ret);
+    return (System::String^)(StringMarshaller::marshalString(__ret));
 }
 
-void Flood::Entity::Name::set(System::String^ value)
+void Flood::Entity::Name::set(System::String^ name)
 {
-    auto name = value;
     auto arg0 = StringMarshaller::marshalString(name);
     ((::Entity*)NativePtr)->setName(arg0);
 }
 
-void Flood::Entity::Visible::set(bool value)
+void Flood::Entity::Visible::set(bool v)
 {
-    auto v = value;
     ((::Entity*)NativePtr)->setVisible(v);
 }
 
@@ -148,12 +146,11 @@ Flood::Entity^ Flood::Entity::Parent::get()
 {
     auto __ret = ((::Entity*)NativePtr)->getParent();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Entity((::Entity*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)__ret);
 }
 
-void Flood::Entity::Parent::set(Flood::Entity^ value)
+void Flood::Entity::Parent::set(Flood::Entity^ v)
 {
-    auto v = value;
     auto arg0 = (::Entity*)v->NativePtr;
     ((::Entity*)NativePtr)->setParent(arg0);
 }
@@ -161,7 +158,7 @@ void Flood::Entity::Parent::set(Flood::Entity^ value)
 Flood::Transform^ Flood::Entity::Transform::get()
 {
     auto __ret = ((::Entity*)NativePtr)->getTransform();
-    return gcnew Flood::Transform((::Transform*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Transform((::Transform*)__ret.get());
 }
 
 System::Collections::Generic::List<Flood::Geometry^>^ Flood::Entity::Geometry::get()
@@ -170,7 +167,7 @@ System::Collections::Generic::List<Flood::Geometry^>^ Flood::Entity::Geometry::g
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::Geometry^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::Geometry((::Geometry*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::Geometry((::Geometry*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
     return _tmp__ret;
@@ -199,7 +196,7 @@ void Flood::Entity::ComponentAdded::raise(Flood::Component^ _0)
 
 void Flood::Entity::_ComponentAddedRaise(const ::ComponentPtr& _0)
 {
-    ComponentAdded::raise(gcnew Flood::Component((::Component*)_0.get()));
+    ComponentAdded::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)_0.get()));
 }
 
 void Flood::Entity::ComponentRemoved::add(System::Action<Flood::Component^>^ evt)
@@ -225,6 +222,6 @@ void Flood::Entity::ComponentRemoved::raise(Flood::Component^ _0)
 
 void Flood::Entity::_ComponentRemovedRaise(const ::ComponentPtr& _0)
 {
-    ComponentRemoved::raise(gcnew Flood::Component((::Component*)_0.get()));
+    ComponentRemoved::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)_0.get()));
 }
 
