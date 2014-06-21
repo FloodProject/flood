@@ -63,7 +63,7 @@ Flood::Peer^ Flood::Session::Peer::get()
 {
     auto __ret = ((::Session*)NativePtr)->getPeer();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Peer((::Peer*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Peer((::Peer*)__ret);
 }
 
 void Flood::Session::StateChange::add(System::Action<Flood::SessionState>^ evt)
@@ -115,6 +115,6 @@ void Flood::Session::Packet::raise(Flood::Packet^ _0, int _1)
 
 void Flood::Session::_PacketRaise(const ::PacketPtr& _0, int _1)
 {
-    Packet::raise(gcnew Flood::Packet((::Packet*)_0.get()), _1);
+    Packet::raise((_0.get() == nullptr) ? nullptr : gcnew Flood::Packet((::Packet*)_0.get()), _1);
 }
 

@@ -64,7 +64,7 @@ public:
 	RenderBatchPtr triangles;
 	RenderBatchPtr quads;
 
-	std::vector<RenderBatch*> renderables;
+	Vector<RenderBatch*> renderables;
 };
 
 class GeometryBuffer;

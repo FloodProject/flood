@@ -81,11 +81,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::TrueTypeFont::Data::ge
 
 void Flood::TrueTypeFont::Data::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::byte>();
+    auto _tmpvalue = Vector<::byte>();
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::TrueTypeFont*)NativePtr)->data = _tmpvalue;
 }

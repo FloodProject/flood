@@ -18,7 +18,7 @@ Flood::SubTexture::SubTexture(::SubTexture* native)
     RightTopUV = Flood::Vector2((::Vector2*)&native->rightTopUV);
     RightBottomUV = Flood::Vector2((::Vector2*)&native->rightBottomUV);
     LeftBottomUV = Flood::Vector2((::Vector2*)&native->leftBottomUV);
-    __Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)native->atlas);
+    __Atlas = (native->atlas == nullptr) ? nullptr : gcnew Flood::TextureAtlas((::TextureAtlas*)native->atlas);
 }
 
 Flood::SubTexture::SubTexture(System::IntPtr native)
@@ -28,7 +28,7 @@ Flood::SubTexture::SubTexture(System::IntPtr native)
     RightTopUV = Flood::Vector2((::Vector2*)&__native->rightTopUV);
     RightBottomUV = Flood::Vector2((::Vector2*)&__native->rightBottomUV);
     LeftBottomUV = Flood::Vector2((::Vector2*)&__native->leftBottomUV);
-    __Atlas = gcnew Flood::TextureAtlas((::TextureAtlas*)__native->atlas);
+    __Atlas = (__native->atlas == nullptr) ? nullptr : gcnew Flood::TextureAtlas((::TextureAtlas*)__native->atlas);
 }
 
 Flood::TextureAtlas^ Flood::SubTexture::Atlas::get()

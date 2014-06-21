@@ -18,7 +18,7 @@ NAMESPACE_PIPELINE_BEGIN
 REFLECT_ABSTRACT_CHILD_CLASS(ResourceProcessor, Extension)
 REFLECT_CLASS_END()
 
-std::vector<ResourceProcessor*> resourceProcessors;
+Vector<ResourceProcessor*> resourceProcessors;
 
 //-----------------------------------//
 

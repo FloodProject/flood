@@ -38,7 +38,7 @@ void Flood::Geometry::AddRenderable(Flood::RenderBatch^ renderable)
 
 void Flood::Geometry::AppendRenderables(System::Collections::Generic::List<Flood::RenderState>^ queue, Flood::Transform^ transform)
 {
-    auto _tmpqueue = std::vector<::RenderState>();
+    auto _tmpqueue = Vector<::RenderState>();
     for each(Flood::RenderState _element in queue)
     {
         auto _marshal0 = ::RenderState();
@@ -62,7 +62,7 @@ void Flood::Geometry::AppendRenderables(System::Collections::Generic::List<Flood
         _marshal0.modelMatrix = _marshal1;
         _marshal0.priority = (::int32)(::int32_t)_element.Priority;
         auto _marshalElement = _marshal0;
-        _tmpqueue.push_back(_marshalElement);
+        _tmpqueue.Push(_marshalElement);
     }
     auto arg0 = _tmpqueue;
     auto arg1 = (::Transform*)transform->NativePtr;
@@ -104,7 +104,7 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::Geometry::Render
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::RenderBatch^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::RenderBatch((::RenderBatch*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
     return _tmp__ret;
@@ -113,7 +113,7 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::Geometry::Render
 Flood::BoundingBox Flood::Geometry::BoundingVolume::get()
 {
     auto &__ret = ((::Geometry*)NativePtr)->getBoundingVolume();
-    return Flood::BoundingBox((::BoundingBox*)&__ret);
+    return (Flood::BoundingBox)(Flood::BoundingBox((::BoundingBox*)&__ret));
 }
 
 Flood::BoundingBox Flood::Geometry::WorldBoundingVolume::get()

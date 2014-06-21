@@ -15,6 +15,7 @@ namespace Flood
     ref class InputDevice;
     ref class InputEvent;
     ref class InputManager;
+    ref class Joystick;
     ref class Keyboard;
     ref class Mouse;
     ref class Window;

@@ -61,7 +61,7 @@ static wxItemKind ConvertMenuItemKindToWx(MenuItemKind kind)
 MenuItem* WxMenu::appendItem(const String& item, MenuItemKind kind)
 {
     auto itemKind = ConvertMenuItemKindToWx(kind);
-    auto menuItem = menu->Append(wxID_ANY, item, wxEmptyString, itemKind);
+    auto menuItem = menu->Append(wxID_ANY, item.CString(), wxEmptyString, itemKind);
 
     auto wxMenuItem = new WxMenuItem(menuItem);
     menuItem->SetRefData(new WxMenuItemRefData(wxMenuItem));
@@ -103,7 +103,7 @@ WxMenuBar::WxMenuBar(wxMenuBar* menuBar)
 bool WxMenuBar::append(Menu* menu, const String& title)
 {
 	auto wxMenu = (WxMenu*)menu;
-	return menuBar->Append(wxMenu->menu, title);
+	return menuBar->Append(wxMenu->menu, title.CString());
 }
 
 //-----------------------------------//

@@ -46,6 +46,7 @@ struct API_CORE Allocator
 	FLD_IGNORE MemoryFreeFunction deallocate;
 	FLD_IGNORE MemoryResetFunction reset;
 	const char* group;
+    int8 id;
 };
 
 /**

@@ -26,65 +26,65 @@ REFLECT_CLASS_END()
 
 STB_Image_Loader::STB_Image_Loader()
 {
-	extensions.push_back("png");
-	extensions.push_back("jpg");
-	extensions.push_back("bmp");
-	extensions.push_back("tga");
+    extensions.Push("png");
+    extensions.Push("jpg");
+    extensions.Push("bmp");
+    extensions.Push("tga");
 }
 
 //-----------------------------------//
 
 bool STB_Image_Loader::decode(ResourceLoadOptions& options)
 {
-	std::vector<uint8> data;
-	options.stream->read(data);
+    Vector<uint8> data;
+    options.stream->read(data);
 
-	if( data.empty() ) return false;
+    if( data.Empty() ) return false;
 
-	int width, height, comp;
-	
-	byte* pixelData = stbi_load_from_memory(
-		&data[0], data.size(), &width, &height,
-		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
+    int width, height, comp;
+    
+    byte* pixelData = stbi_load_from_memory(
+        &data[0], data.Size(), &width, &height,
+        &comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
-	if( !pixelData )
-	{
-		const char* error = stbi_failure_reason();
-		LogError("STB image error: %s", error);
-		return false;
-	}
+    if( !pixelData )
+    {
+        const char* error = stbi_failure_reason();
+        LogError("STB image error: %s", error);
+        return false;
+    }
 
-	// Build our image with the pixel data returned by stb_image.
-	PixelFormat pf = PixelFormat::Unknown;
-	
-	switch( comp )
-	{
-	case 0:
-	case 1: break;
-	case 3: pf = PixelFormat::R8G8B8; break;
-	case 4: pf = PixelFormat::R8G8B8A8; break;
-	}
+    // Build our image with the pixel data returned by stb_image.
+    PixelFormat pf = PixelFormat::Unknown;
+    
+    switch( comp )
+    {
+    case 0:
+    case 1: break;
+    case 3: pf = PixelFormat::R8G8B8; break;
+    case 4: pf = PixelFormat::R8G8B8A8; break;
+    }
 
-	if( pf == PixelFormat::Unknown )
-	{
-		LogError( "Implement support for more pixel formats" );
-		return false;
-	}
-	
-	std::vector<byte> buffer;
-	uint32 size = width*height*comp; 
-	buffer.resize(size);
-	
-	memcpy(&buffer[0], pixelData, size);
-	free(pixelData);
+    if( pf == PixelFormat::Unknown )
+    {
+        LogError( "Implement support for more pixel formats" );
+        return false;
+    }
+    
+    Vector<byte> buffer;
+    uint32 size = width*height*comp; 
+    buffer.Resize(size);
+    
+    memcpy(&buffer[0], pixelData, size);
+    free(pixelData);
 
-	Image* image = static_cast<Image*>( options.resource );
-	image->setWidth( width );
-	image->setHeight( height );
-	image->setPixelFormat( pf );
-	image->setBuffer( buffer );
+    Image* image = static_cast<Image*>( options.resource );
+    image->setWidth( width );
+    image->setHeight( height );
+    image->setPixelFormat( pf );
+    image->setBuffer( buffer );
 
-	return true;
+    return true;
 }
 
 //-----------------------------------//

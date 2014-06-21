@@ -17,12 +17,12 @@ NAMESPACE_PIPELINE_BEGIN
 
 struct API_PIPELINE MipmapFilter
 {
-	enum Enum
-	{
-		Box = nvtt::MipmapFilter_Box,
-		Triangle = nvtt::MipmapFilter_Triangle,
-		Kaizer = nvtt::MipmapFilter_Kaiser
-	};
+    enum Enum
+    {
+        Box = nvtt::MipmapFilter_Box,
+        Triangle = nvtt::MipmapFilter_Triangle,
+        Kaizer = nvtt::MipmapFilter_Kaiser
+    };
 };
 
 API_PIPELINE REFLECT_DECLARE_ENUM(MipmapFilter)
@@ -31,13 +31,13 @@ API_PIPELINE REFLECT_DECLARE_ENUM(MipmapFilter)
 
 struct API_PIPELINE CompressionQuality
 {
-	enum Enum
-	{
-		Fastest,
-		Normal,
-		Production,
-		Highest,
-	};
+    enum Enum
+    {
+        Fastest,
+        Normal,
+        Production,
+        Highest,
+    };
 };
 
 API_PIPELINE REFLECT_DECLARE_ENUM(CompressionQuality)
@@ -46,16 +46,16 @@ API_PIPELINE REFLECT_DECLARE_ENUM(CompressionQuality)
 
 struct API_PIPELINE CompressionFormat
 {
-	enum Enum
-	{
-		RGB,
-		RGBA,
-		DXT1,
-		DXT1a,
-		DXT3,
-		DXT5,
-		DXT5nm
-	};
+    enum Enum
+    {
+        RGB,
+        RGBA,
+        DXT1,
+        DXT1a,
+        DXT3,
+        DXT5,
+        DXT5nm
+    };
 };
 
 API_PIPELINE REFLECT_DECLARE_ENUM(CompressionFormat)
@@ -68,26 +68,26 @@ API_PIPELINE REFLECT_DECLARE_CLASS(ImageProcessor)
 
 class API_PIPELINE ImageProcessor : public ResourceProcessor
 {
-	REFLECT_DECLARE_OBJECT(ImageProcessor)
+    REFLECT_DECLARE_OBJECT(ImageProcessor)
 
 public:
 
-	ImageProcessor();
-	~ImageProcessor();
+    ImageProcessor();
+    ~ImageProcessor();
 
-	// Gets metadata about this extension.
-	ExtensionMetadata* getMetadata() OVERRIDE;
+    // Gets metadata about this extension.
+    ExtensionMetadata* getMetadata() OVERRIDE;
 
-	// Processes the given resource.
-	bool Process(const ResourcePtr& resource);
+    // Processes the given resource.
+    bool Process(const ResourcePtr& resource);
 
-	// Gets the processed resource type.
-	Class* GetResourceType() { return ImageGetType(); }
+    // Gets the processed resource type.
+    Class* GetResourceType() { return ImageGetType(); }
 
-	CompressionFormat::Enum format;
-	CompressionQuality::Enum quality;
-	bool generateMipmaps;
-	MipmapFilter::Enum mipmapFilter;
+    CompressionFormat::Enum format;
+    CompressionQuality::Enum quality;
+    bool generateMipmaps;
+    MipmapFilter::Enum mipmapFilter;
 };
 
 //-----------------------------------//

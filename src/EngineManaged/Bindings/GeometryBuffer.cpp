@@ -143,9 +143,8 @@ Flood::BufferUsage Flood::GeometryBuffer::BufferUsage::get()
     return (Flood::BufferUsage)__ret;
 }
 
-void Flood::GeometryBuffer::BufferUsage::set(Flood::BufferUsage value)
+void Flood::GeometryBuffer::BufferUsage::set(Flood::BufferUsage v)
 {
-    auto v = value;
     auto arg0 = (::BufferUsage)v;
     ((::GeometryBuffer*)NativePtr)->setBufferUsage(arg0);
 }
@@ -156,9 +155,8 @@ Flood::BufferAccess Flood::GeometryBuffer::BufferAccess::get()
     return (Flood::BufferAccess)__ret;
 }
 
-void Flood::GeometryBuffer::BufferAccess::set(Flood::BufferAccess value)
+void Flood::GeometryBuffer::BufferAccess::set(Flood::BufferAccess v)
 {
-    auto v = value;
     auto arg0 = (::BufferAccess)v;
     ((::GeometryBuffer*)NativePtr)->setBufferAccess(arg0);
 }
@@ -208,11 +206,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::Data::
 
 void Flood::GeometryBuffer::Data::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::uint8>();
+    auto _tmpvalue = Vector<::uint8>();
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->data = _tmpvalue;
 }
@@ -230,11 +228,11 @@ System::Collections::Generic::List<unsigned char>^ Flood::GeometryBuffer::IndexD
 
 void Flood::GeometryBuffer::IndexData::set(System::Collections::Generic::List<unsigned char>^ value)
 {
-    auto _tmpvalue = std::vector<::uint8>();
+    auto _tmpvalue = Vector<::uint8>();
     for each(unsigned char _element in value)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::GeometryBuffer*)NativePtr)->indexData = _tmpvalue;
 }
@@ -271,7 +269,7 @@ void Flood::GeometryBuffer::Hash::set(unsigned int value)
 
 Flood::VertexDeclaration^ Flood::GeometryBuffer::Declarations::get()
 {
-    return gcnew Flood::VertexDeclaration((::VertexDeclaration*)&((::GeometryBuffer*)NativePtr)->declarations);
+    return (&((::GeometryBuffer*)NativePtr)->declarations == nullptr) ? nullptr : gcnew Flood::VertexDeclaration((::VertexDeclaration*)&((::GeometryBuffer*)NativePtr)->declarations);
 }
 
 void Flood::GeometryBuffer::Declarations::set(Flood::VertexDeclaration^ value)

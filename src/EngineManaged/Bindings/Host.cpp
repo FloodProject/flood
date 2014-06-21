@@ -96,12 +96,12 @@ void Flood::Host::SessionPacket::raise(Flood::Session^ _0, Flood::Packet^ _1, in
 
 void Flood::Host::_SessionPacketRaise(::Session* _0, const ::PacketPtr& _1, int _2)
 {
-    SessionPacket::raise(gcnew Flood::Session((::Session*)_0), gcnew Flood::Packet((::Packet*)_1.get()), _2);
+    SessionPacket::raise((_0 == nullptr) ? nullptr : gcnew Flood::Session((::Session*)_0), (_1.get() == nullptr) ? nullptr : gcnew Flood::Packet((::Packet*)_1.get()), _2);
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* native)
 {
-    __Address = clix::marshalString<clix::E_UTF8>(native->address);
+    __Address = StringMarshaller::marshalString(native->address);
     __Port = native->port;
     __ChannelCount = native->channelCount;
 }
@@ -109,15 +109,15 @@ Flood::HostConnectionDetails::HostConnectionDetails(::HostConnectionDetails* nat
 Flood::HostConnectionDetails::HostConnectionDetails(System::IntPtr native)
 {
     auto __native = (::HostConnectionDetails*)native.ToPointer();
-    __Address = clix::marshalString<clix::E_UTF8>(__native->address);
+    __Address = StringMarshaller::marshalString(__native->address);
     __Port = __native->port;
     __ChannelCount = __native->channelCount;
 }
 
 Flood::HostConnectionDetails::HostConnectionDetails(System::String^ address, unsigned short port, unsigned char channelCount)
 {
-    ::HostConnectionDetails _native(clix::marshalString<clix::E_UTF8>(address), (::uint16)(::uint16_t)port, (::uint8)(::uint8_t)channelCount);
-    this->Address = clix::marshalString<clix::E_UTF8>(_native.address);
+    ::HostConnectionDetails _native(StringMarshaller::marshalString(address), (::uint16)(::uint16_t)port, (::uint8)(::uint8_t)channelCount);
+    this->Address = StringMarshaller::marshalString(_native.address);
     this->Port = _native.port;
     this->ChannelCount = _native.channelCount;
 }
@@ -172,7 +172,7 @@ Flood::HostClient::HostClient()
 bool Flood::HostClient::Connect(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
-    _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
+    _marshal0.address = StringMarshaller::marshalString(_0.Address);
     _marshal0.port = (::uint16)(::uint16_t)_0.Port;
     _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;
@@ -197,14 +197,14 @@ int Flood::HostClient::GetHashCode()
 Flood::Peer^ Flood::HostClient::Peer::get()
 {
     auto __ret = ((::HostClient*)NativePtr)->getPeer();
-    return gcnew Flood::Peer((::Peer*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Peer((::Peer*)__ret.get());
 }
 
 Flood::Session^ Flood::HostClient::Session::get()
 {
     auto __ret = ((::HostClient*)NativePtr)->getSession();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Session((::Session*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Session((::Session*)__ret);
 }
 
 Flood::HostServer::HostServer(::HostServer* native)
@@ -221,7 +221,7 @@ Flood::HostServer::HostServer(System::IntPtr native)
 bool Flood::HostServer::CreateSocket(Flood::HostConnectionDetails _0)
 {
     auto _marshal0 = ::HostConnectionDetails();
-    _marshal0.address = clix::marshalString<clix::E_UTF8>(_0.Address);
+    _marshal0.address = StringMarshaller::marshalString(_0.Address);
     _marshal0.port = (::uint16)(::uint16_t)_0.Port;
     _marshal0.channelCount = (::uint8)(::uint8_t)_0.ChannelCount;
     auto arg0 = _marshal0;
@@ -255,15 +255,15 @@ System::Collections::Generic::List<Flood::Peer^>^ Flood::HostServer::Peers::get(
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::Peer^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::Peer((::Peer*)_element.get());
+        auto _marshalElement = (_element.get() == nullptr) ? nullptr : gcnew Flood::Peer((::Peer*)_element.get());
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<Flood::Peer^>^)(_tmp__ret);
 }
 
 Flood::SessionManager^ Flood::HostServer::SessionManager::get()
 {
     auto &__ret = ((::HostServer*)NativePtr)->getSessionManager();
-    return gcnew Flood::SessionManager((::SessionManager*)&__ret);
+    return (Flood::SessionManager^)((&__ret == nullptr) ? nullptr : gcnew Flood::SessionManager((::SessionManager*)&__ret));
 }
 

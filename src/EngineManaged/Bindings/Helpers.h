@@ -16,7 +16,7 @@ namespace Flood
 
 namespace Flood
 {
-    public ref class FloodHelpers
+    public ref class Helpers
     {
     public:
         static bool MathFloatCompare(float a, float b);

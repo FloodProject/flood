@@ -140,9 +140,8 @@ void Flood::DebugDrawer::__Instance::set(System::IntPtr object)
     NativePtr = (::DebugDrawer*)object.ToPointer();
 }
 
-void Flood::DebugDrawer::Color::set(Flood::Color value)
+void Flood::DebugDrawer::Color::set(Flood::Color color)
 {
-    auto color = value;
     auto _marshal0 = ::Color();
     _marshal0.r = (::byte)(::uint8)(::uint8_t)color.R;
     _marshal0.g = (::byte)(::uint8)(::uint8_t)color.G;
@@ -169,7 +168,7 @@ void Flood::DebugDrawer::CurrentColor::set(Flood::Color value)
 
 Flood::RenderBatch^ Flood::DebugDrawer::Lines::get()
 {
-    return gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->lines.get());
+    return (((::DebugDrawer*)NativePtr)->lines.get() == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->lines.get());
 }
 
 void Flood::DebugDrawer::Lines::set(Flood::RenderBatch^ value)
@@ -179,7 +178,7 @@ void Flood::DebugDrawer::Lines::set(Flood::RenderBatch^ value)
 
 Flood::RenderBatch^ Flood::DebugDrawer::Triangles::get()
 {
-    return gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->triangles.get());
+    return (((::DebugDrawer*)NativePtr)->triangles.get() == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->triangles.get());
 }
 
 void Flood::DebugDrawer::Triangles::set(Flood::RenderBatch^ value)
@@ -189,7 +188,7 @@ void Flood::DebugDrawer::Triangles::set(Flood::RenderBatch^ value)
 
 Flood::RenderBatch^ Flood::DebugDrawer::Quads::get()
 {
-    return gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->quads.get());
+    return (((::DebugDrawer*)NativePtr)->quads.get() == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)((::DebugDrawer*)NativePtr)->quads.get());
 }
 
 void Flood::DebugDrawer::Quads::set(Flood::RenderBatch^ value)
@@ -202,7 +201,7 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::DebugDrawer::Ren
     auto _tmp__Renderables = gcnew System::Collections::Generic::List<Flood::RenderBatch^>();
     for(auto _element : ((::DebugDrawer*)NativePtr)->renderables)
     {
-        auto _marshalElement = gcnew Flood::RenderBatch((::RenderBatch*)_element);
+        auto _marshalElement = (_element == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)_element);
         _tmp__Renderables->Add(_marshalElement);
     }
     return _tmp__Renderables;
@@ -210,11 +209,11 @@ System::Collections::Generic::List<Flood::RenderBatch^>^ Flood::DebugDrawer::Ren
 
 void Flood::DebugDrawer::Renderables::set(System::Collections::Generic::List<Flood::RenderBatch^>^ value)
 {
-    auto _tmpvalue = std::vector<::RenderBatch*>();
+    auto _tmpvalue = Vector<::RenderBatch*>();
     for each(Flood::RenderBatch^ _element in value)
     {
         auto _marshalElement = (::RenderBatch*)_element->NativePtr;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::DebugDrawer*)NativePtr)->renderables = _tmpvalue;
 }

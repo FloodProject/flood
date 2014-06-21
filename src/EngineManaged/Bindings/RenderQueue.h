@@ -14,6 +14,7 @@
 
 namespace Flood
 {
+    ref class Light;
     ref class Material;
     ref class RenderBatch;
     ref class RenderBlock;

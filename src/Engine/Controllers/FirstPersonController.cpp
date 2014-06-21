@@ -128,7 +128,7 @@ void FirstPersonController::checkControls( float delta )
 
 	// Check keyboard movement.
 	Keyboard* keyboard = GetInputManager()->getKeyboard();
-	const std::vector< bool >& state = keyboard->getKeyState();
+	const Vector< bool >& state = keyboard->getKeyState();
 
 	if( keyboard->isKeyPressed(Keys::W) )
 		moveVector +=  Vector3::UnitZ;

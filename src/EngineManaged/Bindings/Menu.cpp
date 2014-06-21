@@ -114,18 +114,18 @@ Flood::Menu::Menu(System::IntPtr native)
 
 Flood::MenuItem^ Flood::Menu::AppendItem(System::String^ item, Flood::MenuItemKind kind)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(item);
+    auto arg0 = StringMarshaller::marshalString(item);
     auto arg1 = (::MenuItemKind)kind;
     auto __ret = ((::Menu*)NativePtr)->appendItem(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::MenuItem((::MenuItem*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::MenuItem((::MenuItem*)__ret);
 }
 
 Flood::MenuItem^ Flood::Menu::AppendSeparatorItem()
 {
     auto __ret = ((::Menu*)NativePtr)->appendSeparatorItem();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::MenuItem((::MenuItem*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::MenuItem((::MenuItem*)__ret);
 }
 
 bool Flood::Menu::DeleteItem(Flood::MenuItem^ item)
@@ -176,7 +176,7 @@ Flood::MenuBar::MenuBar(System::IntPtr native)
 bool Flood::MenuBar::Append(Flood::Menu^ menu, System::String^ title)
 {
     auto arg0 = (::Menu*)menu->NativePtr;
-    auto arg1 = clix::marshalString<clix::E_UTF8>(title);
+    auto arg1 = StringMarshaller::marshalString(title);
     auto __ret = ((::MenuBar*)NativePtr)->append(arg0, arg1);
     return __ret;
 }

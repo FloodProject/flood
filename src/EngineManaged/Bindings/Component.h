@@ -66,15 +66,7 @@ namespace Flood
 
         virtual bool IsDebugRenderableVisible();
 
-        virtual void OnPreRender1(Flood::Camera^ camera);
-
-        virtual bool IsDebugRenderableVisible1();
-
         virtual void OnDebugDraw(Flood::DebugDrawer^ _0, Flood::DebugDrawFlags _1);
-
-        virtual void OnPreRender2(Flood::Camera^ camera);
-
-        virtual bool IsDebugRenderableVisible2();
 
         virtual bool Equals(System::Object^ object) override;
 

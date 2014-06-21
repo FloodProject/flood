@@ -16,8 +16,8 @@ using namespace System::Runtime::InteropServices;
 
 Flood::RenderState::RenderState(::RenderState* native)
 {
-    __Renderable = gcnew Flood::RenderBatch((::RenderBatch*)native->renderable);
-    __Material = gcnew Flood::Material((::Material*)native->material);
+    __Renderable = (native->renderable == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)native->renderable);
+    __Material = (native->material == nullptr) ? nullptr : gcnew Flood::Material((::Material*)native->material);
     ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&native->modelMatrix);
     __Priority = native->priority;
 }
@@ -25,8 +25,8 @@ Flood::RenderState::RenderState(::RenderState* native)
 Flood::RenderState::RenderState(System::IntPtr native)
 {
     auto __native = (::RenderState*)native.ToPointer();
-    __Renderable = gcnew Flood::RenderBatch((::RenderBatch*)__native->renderable);
-    __Material = gcnew Flood::Material((::Material*)__native->material);
+    __Renderable = (__native->renderable == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)__native->renderable);
+    __Material = (__native->material == nullptr) ? nullptr : gcnew Flood::Material((::Material*)__native->material);
     ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&__native->modelMatrix);
     __Priority = __native->priority;
 }
@@ -34,8 +34,8 @@ Flood::RenderState::RenderState(System::IntPtr native)
 Flood::RenderState::RenderState(Flood::RenderBatch^ renderable)
 {
     ::RenderState _native((::RenderBatch*)renderable->NativePtr);
-    this->Renderable = gcnew Flood::RenderBatch((::RenderBatch*)_native.renderable);
-    this->Material = gcnew Flood::Material((::Material*)_native.material);
+    this->Renderable = (_native.renderable == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)_native.renderable);
+    this->Material = (_native.material == nullptr) ? nullptr : gcnew Flood::Material((::Material*)_native.material);
     this->ModelMatrix = Flood::Matrix4x3((::Matrix4x3*)&_native.modelMatrix);
     this->Priority = _native.priority;
 }
@@ -149,7 +149,7 @@ System::Collections::Generic::List<Flood::RenderState>^ Flood::RenderBlock::Rend
 
 void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flood::RenderState>^ value)
 {
-    auto _tmpvalue = std::vector<::RenderState>();
+    auto _tmpvalue = Vector<::RenderState>();
     for each(Flood::RenderState _element in value)
     {
         auto _marshal0 = ::RenderState();
@@ -173,7 +173,7 @@ void Flood::RenderBlock::Renderables::set(System::Collections::Generic::List<Flo
         _marshal0.modelMatrix = _marshal1;
         _marshal0.priority = (::int32)(::int32_t)_element.Priority;
         auto _marshalElement = _marshal0;
-        _tmpvalue.push_back(_marshalElement);
+        _tmpvalue.Push(_marshalElement);
     }
     ((::RenderBlock*)NativePtr)->renderables = _tmpvalue;
 }

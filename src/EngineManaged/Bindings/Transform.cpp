@@ -90,18 +90,17 @@ Flood::Transform^ Flood::Transform::Create(Flood::Allocator^ _0)
     auto arg0 = (::Allocator*)_0->NativePtr;
     auto __ret = ::TransformCreate(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Transform((::Transform*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Transform((::Transform*)__ret);
 }
 
 Flood::Vector3 Flood::Transform::Position::get()
 {
     auto &__ret = ((::Transform*)NativePtr)->getPosition();
-    return Flood::Vector3((::Vector3*)&__ret);
+    return (Flood::Vector3)(Flood::Vector3((::Vector3*)&__ret));
 }
 
-void Flood::Transform::Position::set(Flood::Vector3 value)
+void Flood::Transform::Position::set(Flood::Vector3 position)
 {
-    auto position = value;
     auto _marshal0 = ::Vector3();
     _marshal0.x = position.X;
     _marshal0.y = position.Y;
@@ -113,12 +112,11 @@ void Flood::Transform::Position::set(Flood::Vector3 value)
 Flood::Vector3 Flood::Transform::Scale::get()
 {
     auto &__ret = ((::Transform*)NativePtr)->getScale();
-    return Flood::Vector3((::Vector3*)&__ret);
+    return (Flood::Vector3)(Flood::Vector3((::Vector3*)&__ret));
 }
 
-void Flood::Transform::Scale::set(Flood::Vector3 value)
+void Flood::Transform::Scale::set(Flood::Vector3 scale)
 {
-    auto scale = value;
     auto _marshal0 = ::Vector3();
     _marshal0.x = scale.X;
     _marshal0.y = scale.Y;
@@ -130,12 +128,11 @@ void Flood::Transform::Scale::set(Flood::Vector3 value)
 Flood::Quaternion Flood::Transform::Rotation::get()
 {
     auto &__ret = ((::Transform*)NativePtr)->getRotation();
-    return Flood::Quaternion((::Quaternion*)&__ret);
+    return (Flood::Quaternion)(Flood::Quaternion((::Quaternion*)&__ret));
 }
 
-void Flood::Transform::Rotation::set(Flood::Quaternion value)
+void Flood::Transform::Rotation::set(Flood::Quaternion rotation)
 {
-    auto rotation = value;
     auto _marshal0 = ::Quaternion();
     _marshal0.x = rotation.X;
     _marshal0.y = rotation.Y;
@@ -154,12 +151,11 @@ Flood::Matrix4x3 Flood::Transform::RotationMatrix::get()
 Flood::Matrix4x3 Flood::Transform::AbsoluteTransform::get()
 {
     auto &__ret = ((::Transform*)NativePtr)->getAbsoluteTransform();
-    return Flood::Matrix4x3((::Matrix4x3*)&__ret);
+    return (Flood::Matrix4x3)(Flood::Matrix4x3((::Matrix4x3*)&__ret));
 }
 
-void Flood::Transform::AbsoluteTransform::set(Flood::Matrix4x3 value)
+void Flood::Transform::AbsoluteTransform::set(Flood::Matrix4x3 matrix)
 {
-    auto matrix = value;
     auto _marshal0 = ::Matrix4x3();
     _marshal0.m11 = matrix.M11;
     _marshal0.m12 = matrix.M12;
@@ -192,7 +188,7 @@ Flood::Vector3 Flood::Transform::WorldPosition::get()
 Flood::BoundingBox Flood::Transform::BoundingVolume::get()
 {
     auto &__ret = ((::Transform*)NativePtr)->getBoundingVolume();
-    return Flood::BoundingBox((::BoundingBox*)&__ret);
+    return (Flood::BoundingBox)(Flood::BoundingBox((::BoundingBox*)&__ret));
 }
 
 Flood::BoundingBox Flood::Transform::WorldBoundingVolume::get()

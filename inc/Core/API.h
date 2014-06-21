@@ -52,17 +52,17 @@
 #ifndef SWIG
 
 #ifdef COMPILER_MSVC
-// nonstandard extension used: 'identifier' before template explicit instantiation
+/// nonstandard extension used: 'identifier' before template explicit instantiation
 #pragma warning(disable : 4231)
 
-// nonstandard extension used: enum 'identifier' used in qualified name
+/// nonstandard extension used: enum 'identifier' used in qualified name
 #pragma warning(disable : 4482)
 #endif
 
 #define FL_INSTANTIATE_TEMPLATES() \
     template class std::basic_string<char>;
 
-//extern template class std::basic_string<char>;
+/// extern template class std::basic_string<char>;
 
 #endif
 

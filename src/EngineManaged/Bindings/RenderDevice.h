@@ -13,6 +13,7 @@
 namespace Flood
 {
     enum struct RenderPipeline;
+    ref class Light;
     ref class Material;
     ref class RenderBackend;
     ref class RenderBatch;

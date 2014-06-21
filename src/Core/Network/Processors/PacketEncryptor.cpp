@@ -20,7 +20,7 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-PacketEncryptor::PacketEncryptor(std::vector<uint8> secret)
+PacketEncryptor::PacketEncryptor(Vector<uint8> secret)
 {
     aes = Allocate(AllocatorGetNetwork(), aes_context);
     this->secret = secret;
@@ -40,10 +40,10 @@ bool PacketEncryptor::processInPacket(Peer* peer, Packet* packet, int channelId)
 
     auto stream = packet->getMemoryStream();
 	int size = stream->getPosition();
-    uint8* data = stream->data.data();
+	uint8* data = stream->data.Buffer();
 
     // Decrypt
-    aes_setkey_dec(aes, secret.data(), secret.size());
+    aes_setkey_dec(aes, secret.Buffer(), secret.Size());
     aes_crypt_cbc(aes, AES_DECRYPT, size, iv, data, data);
 
     // Remove AES padding
@@ -67,8 +67,8 @@ bool PacketEncryptor::processOutPacket(Peer* peer, Packet* packet, int channelId
 
     // Encrypt
 	int size = stream->getPosition();
-    uint8* data = stream->data.data();
-    aes_setkey_enc(aes, secret.data(), secret.size());
+    uint8* data = stream->data.Buffer();
+    aes_setkey_enc(aes, secret.Buffer(), secret.Size());
     aes_crypt_cbc(aes, AES_ENCRYPT, size, iv, data, data);
 
     return true;

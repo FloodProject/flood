@@ -37,7 +37,7 @@ static void InitCURL()
 
 //-----------------------------------//
 
-WebStream::WebStream(const String& URL, StreamOpenMode mode)
+WebStream::WebStream(const UTF8String& URL, StreamOpenMode mode)
 	: Stream(URL, mode)
 	, handle(nullptr)
 {
@@ -49,7 +49,7 @@ WebStream::WebStream(const String& URL, StreamOpenMode mode)
 WebStream::~WebStream()
 {
 	if( !close() )
-		LogDebug("Error closing web stream: %s", path.c_str());
+		LogDebug("Error closing web stream: %s", path.CString());
 }
 
 //-----------------------------------//
@@ -77,7 +77,7 @@ bool WebStream::open()
 	isPerformDone = false;
 
 	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
-	curl_easy_setopt(handle, CURLOPT_URL, path.c_str());
+	curl_easy_setopt(handle, CURLOPT_URL, path.CString());
 	curl_easy_setopt(handle, CURLOPT_NOPROGRESS, 0);
 	curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION, &HandleProgress);
 
@@ -123,7 +123,7 @@ bool WebStream::perform() const
 }
 
 //-----------------------------------//
-int64 WebStream::read(void* buffer, uint64 size) const
+uint64 WebStream::read(void* buffer, uint64 size) const
 {
 	//StreamMemorySetRawBuffer(&ws->ms, (uint8*) buffer);
 
@@ -140,7 +140,7 @@ int64 WebStream::read(void* buffer, uint64 size) const
 
 //-----------------------------------//
 
-int64 WebStream::write(void* buf, uint64 size)
+uint64 WebStream::write(void* buf, uint64 size)
 {
 	LogAssert("Not implemented yet");
 	return 0;

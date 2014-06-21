@@ -14,7 +14,7 @@ using namespace System::Runtime::InteropServices;
 Flood::LogEntry::LogEntry(::LogEntry* native)
 {
     __Time = native->time;
-    __Message = clix::marshalString<clix::E_UTF8>(native->message);
+    __Message = StringMarshaller::marshalString(native->message);
     __Level = (Flood::LogLevel)native->level;
 }
 
@@ -22,7 +22,7 @@ Flood::LogEntry::LogEntry(System::IntPtr native)
 {
     auto __native = (::LogEntry*)native.ToPointer();
     __Time = __native->time;
-    __Message = clix::marshalString<clix::E_UTF8>(__native->message);
+    __Message = StringMarshaller::marshalString(__native->message);
     __Level = (Flood::LogLevel)__native->level;
 }
 
@@ -111,7 +111,7 @@ void Flood::Log::Write(Flood::LogEntry entry)
     auto arg0 = (::Log*)NativePtr;
     auto _marshal1 = ::LogEntry();
     _marshal1.time = entry.Time;
-    _marshal1.message = clix::marshalString<clix::E_UTF8>(entry.Message);
+    _marshal1.message = StringMarshaller::marshalString(entry.Message);
     _marshal1.level = (::LogLevel)entry.Level;
     auto arg1 = _marshal1;
     ::LogWrite(arg0, &arg1);
@@ -127,41 +127,41 @@ Flood::Log^ Flood::Log::GetDefault()
 {
     auto __ret = ::LogGetDefault();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Log((::Log*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Log((::Log*)__ret);
 }
 
 void Flood::Log::Info(System::String^ msg)
 {
-    auto _arg0 = clix::marshalString<clix::E_UTF8>(msg);
-    auto arg0 = _arg0.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(msg);
+    auto arg0 = ____temp.c_str();
     ::LogInfo(arg0);
 }
 
 void Flood::Log::Warn(System::String^ msg)
 {
-    auto _arg0 = clix::marshalString<clix::E_UTF8>(msg);
-    auto arg0 = _arg0.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(msg);
+    auto arg0 = ____temp.c_str();
     ::LogWarn(arg0);
 }
 
 void Flood::Log::Error(System::String^ msg)
 {
-    auto _arg0 = clix::marshalString<clix::E_UTF8>(msg);
-    auto arg0 = _arg0.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(msg);
+    auto arg0 = ____temp.c_str();
     ::LogError(arg0);
 }
 
 void Flood::Log::Debug(System::String^ msg)
 {
-    auto _arg0 = clix::marshalString<clix::E_UTF8>(msg);
-    auto arg0 = _arg0.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(msg);
+    auto arg0 = ____temp.c_str();
     ::LogDebug(arg0);
 }
 
 void Flood::Log::Assert(System::String^ msg)
 {
-    auto _arg0 = clix::marshalString<clix::E_UTF8>(msg);
-    auto arg0 = _arg0.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(msg);
+    auto arg0 = ____temp.c_str();
     ::LogAssert(arg0);
 }
 

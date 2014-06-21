@@ -33,7 +33,7 @@ struct API_RESOURCE ResourceLoadOptions
 	// Adds a resource load option.
 	void addOption(int key, int value);
 
-	String name;
+    UTF8String name;
 	Stream* stream;
 
 	Resource* resource;
@@ -112,9 +112,9 @@ public:
 	virtual ResourceGroup getResourceGroup() const = 0;
 
 	// Gets the recognized extensions of this loader.
-	GETTER(Extensions, const std::vector<String>&, extensions);
+    GETTER(Extensions, const Vector<String>&, extensions);
 
-	std::vector<String> extensions;
+    Vector<String> extensions;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(ResourceLoader)

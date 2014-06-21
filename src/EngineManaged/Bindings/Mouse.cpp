@@ -179,7 +179,7 @@ Flood::InputDeviceType Flood::Mouse::Type::get()
 Flood::MouseInfo^ Flood::Mouse::MouseInfo::get()
 {
     auto &__ret = ((::Mouse*)NativePtr)->getMouseInfo();
-    return gcnew Flood::MouseInfo((::MouseInfo*)&__ret);
+    return (Flood::MouseInfo^)((&__ret == nullptr) ? nullptr : gcnew Flood::MouseInfo((::MouseInfo*)&__ret));
 }
 
 void Flood::Mouse::MouseMove::add(System::Action<Flood::MouseMoveEvent^>^ evt)
@@ -205,7 +205,7 @@ void Flood::Mouse::MouseMove::raise(Flood::MouseMoveEvent^ _0)
 
 void Flood::Mouse::_MouseMoveRaise(const ::MouseMoveEvent& _0)
 {
-    MouseMove::raise(gcnew Flood::MouseMoveEvent((::MouseMoveEvent*)&_0));
+    MouseMove::raise((&_0 == nullptr) ? nullptr : gcnew Flood::MouseMoveEvent((::MouseMoveEvent*)&_0));
 }
 
 void Flood::Mouse::MouseDrag::add(System::Action<Flood::MouseDragEvent^>^ evt)
@@ -231,7 +231,7 @@ void Flood::Mouse::MouseDrag::raise(Flood::MouseDragEvent^ _0)
 
 void Flood::Mouse::_MouseDragRaise(const ::MouseDragEvent& _0)
 {
-    MouseDrag::raise(gcnew Flood::MouseDragEvent((::MouseDragEvent*)&_0));
+    MouseDrag::raise((&_0 == nullptr) ? nullptr : gcnew Flood::MouseDragEvent((::MouseDragEvent*)&_0));
 }
 
 void Flood::Mouse::MouseButtonPress::add(System::Action<Flood::MouseButtonEvent^>^ evt)
@@ -257,7 +257,7 @@ void Flood::Mouse::MouseButtonPress::raise(Flood::MouseButtonEvent^ _0)
 
 void Flood::Mouse::_MouseButtonPressRaise(const ::MouseButtonEvent& _0)
 {
-    MouseButtonPress::raise(gcnew Flood::MouseButtonEvent((::MouseButtonEvent*)&_0));
+    MouseButtonPress::raise((&_0 == nullptr) ? nullptr : gcnew Flood::MouseButtonEvent((::MouseButtonEvent*)&_0));
 }
 
 void Flood::Mouse::MouseButtonRelease::add(System::Action<Flood::MouseButtonEvent^>^ evt)
@@ -283,7 +283,7 @@ void Flood::Mouse::MouseButtonRelease::raise(Flood::MouseButtonEvent^ _0)
 
 void Flood::Mouse::_MouseButtonReleaseRaise(const ::MouseButtonEvent& _0)
 {
-    MouseButtonRelease::raise(gcnew Flood::MouseButtonEvent((::MouseButtonEvent*)&_0));
+    MouseButtonRelease::raise((&_0 == nullptr) ? nullptr : gcnew Flood::MouseButtonEvent((::MouseButtonEvent*)&_0));
 }
 
 void Flood::Mouse::MouseWheelMove::add(System::Action<Flood::MouseWheelEvent^>^ evt)
@@ -309,7 +309,7 @@ void Flood::Mouse::MouseWheelMove::raise(Flood::MouseWheelEvent^ _0)
 
 void Flood::Mouse::_MouseWheelMoveRaise(const ::MouseWheelEvent& _0)
 {
-    MouseWheelMove::raise(gcnew Flood::MouseWheelEvent((::MouseWheelEvent*)&_0));
+    MouseWheelMove::raise((&_0 == nullptr) ? nullptr : gcnew Flood::MouseWheelEvent((::MouseWheelEvent*)&_0));
 }
 
 void Flood::Mouse::MouseEnter::add(System::Action^ evt)

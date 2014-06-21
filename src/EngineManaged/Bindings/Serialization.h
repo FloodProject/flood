@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Core/Serialization.h>
+#include "StringConverter.h"
 
 namespace Flood
 {

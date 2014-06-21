@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Engine/Window/Menu.h>
+#include "StringConverter.h"
 
 namespace Flood
 {

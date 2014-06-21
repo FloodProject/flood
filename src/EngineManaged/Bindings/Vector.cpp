@@ -89,6 +89,22 @@ bool Flood::Vector3::operator<(Flood::Vector3 __op, Flood::Vector3 rhs)
     return __ret;
 }
 
+bool Flood::Vector3::operator<=(Flood::Vector3 __op, Flood::Vector3 rhs)
+{
+    auto _marshal0 = ::Vector3();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    _marshal0.z = __op.Z;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector3();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    _marshal1.z = rhs.Z;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 <= arg1;
+    return __ret;
+}
+
 bool Flood::Vector3::operator>(Flood::Vector3 __op, Flood::Vector3 rhs)
 {
     auto _marshal0 = ::Vector3();
@@ -102,6 +118,22 @@ bool Flood::Vector3::operator>(Flood::Vector3 __op, Flood::Vector3 rhs)
     _marshal1.z = rhs.Z;
     auto arg1 = _marshal1;
     auto __ret = arg0 > arg1;
+    return __ret;
+}
+
+bool Flood::Vector3::operator>=(Flood::Vector3 __op, Flood::Vector3 rhs)
+{
+    auto _marshal0 = ::Vector3();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    _marshal0.z = __op.Z;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector3();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    _marshal1.z = rhs.Z;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 >= arg1;
     return __ret;
 }
 
@@ -502,6 +534,24 @@ bool Flood::Vector4::operator<(Flood::Vector4 __op, Flood::Vector4 rhs)
     return __ret;
 }
 
+bool Flood::Vector4::operator<=(Flood::Vector4 __op, Flood::Vector4 rhs)
+{
+    auto _marshal0 = ::Vector4();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    _marshal0.z = __op.Z;
+    _marshal0.w = __op.W;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector4();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    _marshal1.z = rhs.Z;
+    _marshal1.w = rhs.W;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 <= arg1;
+    return __ret;
+}
+
 bool Flood::Vector4::operator>(Flood::Vector4 __op, Flood::Vector4 rhs)
 {
     auto _marshal0 = ::Vector4();
@@ -517,6 +567,24 @@ bool Flood::Vector4::operator>(Flood::Vector4 __op, Flood::Vector4 rhs)
     _marshal1.w = rhs.W;
     auto arg1 = _marshal1;
     auto __ret = arg0 > arg1;
+    return __ret;
+}
+
+bool Flood::Vector4::operator>=(Flood::Vector4 __op, Flood::Vector4 rhs)
+{
+    auto _marshal0 = ::Vector4();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    _marshal0.z = __op.Z;
+    _marshal0.w = __op.W;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector4();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    _marshal1.z = rhs.Z;
+    _marshal1.w = rhs.W;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 >= arg1;
     return __ret;
 }
 
@@ -751,6 +819,20 @@ bool Flood::Vector2::operator<(Flood::Vector2 __op, Flood::Vector2 rhs)
     return __ret;
 }
 
+bool Flood::Vector2::operator<=(Flood::Vector2 __op, Flood::Vector2 rhs)
+{
+    auto _marshal0 = ::Vector2();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 <= arg1;
+    return __ret;
+}
+
 bool Flood::Vector2::operator>(Flood::Vector2 __op, Flood::Vector2 rhs)
 {
     auto _marshal0 = ::Vector2();
@@ -762,6 +844,20 @@ bool Flood::Vector2::operator>(Flood::Vector2 __op, Flood::Vector2 rhs)
     _marshal1.y = rhs.Y;
     auto arg1 = _marshal1;
     auto __ret = arg0 > arg1;
+    return __ret;
+}
+
+bool Flood::Vector2::operator>=(Flood::Vector2 __op, Flood::Vector2 rhs)
+{
+    auto _marshal0 = ::Vector2();
+    _marshal0.x = __op.X;
+    _marshal0.y = __op.Y;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 >= arg1;
     return __ret;
 }
 
@@ -936,31 +1032,59 @@ bool Flood::Vector2i::operator!=(Flood::Vector2i __op, Flood::Vector2i v)
     return __ret;
 }
 
-bool Flood::Vector2i::operator<(Flood::Vector2i __op, Flood::Vector2i rhs)
+bool Flood::Vector2i::operator<(Flood::Vector2i __op, Flood::Vector2 rhs)
 {
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (::int32)(::int32_t)__op.X;
     _marshal0.y = (::int32)(::int32_t)__op.Y;
     auto arg0 = _marshal0;
-    auto _marshal1 = ::Vector2i();
-    _marshal1.x = (::int32)(::int32_t)rhs.X;
-    _marshal1.y = (::int32)(::int32_t)rhs.Y;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
     auto arg1 = _marshal1;
     auto __ret = arg0 < arg1;
     return __ret;
 }
 
-bool Flood::Vector2i::operator>(Flood::Vector2i __op, Flood::Vector2i rhs)
+bool Flood::Vector2i::operator<=(Flood::Vector2i __op, Flood::Vector2 rhs)
 {
     auto _marshal0 = ::Vector2i();
     _marshal0.x = (::int32)(::int32_t)__op.X;
     _marshal0.y = (::int32)(::int32_t)__op.Y;
     auto arg0 = _marshal0;
-    auto _marshal1 = ::Vector2i();
-    _marshal1.x = (::int32)(::int32_t)rhs.X;
-    _marshal1.y = (::int32)(::int32_t)rhs.Y;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 <= arg1;
+    return __ret;
+}
+
+bool Flood::Vector2i::operator>(Flood::Vector2i __op, Flood::Vector2 rhs)
+{
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (::int32)(::int32_t)__op.X;
+    _marshal0.y = (::int32)(::int32_t)__op.Y;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
     auto arg1 = _marshal1;
     auto __ret = arg0 > arg1;
+    return __ret;
+}
+
+bool Flood::Vector2i::operator>=(Flood::Vector2i __op, Flood::Vector2 rhs)
+{
+    auto _marshal0 = ::Vector2i();
+    _marshal0.x = (::int32)(::int32_t)__op.X;
+    _marshal0.y = (::int32)(::int32_t)__op.Y;
+    auto arg0 = _marshal0;
+    auto _marshal1 = ::Vector2();
+    _marshal1.x = rhs.X;
+    _marshal1.y = rhs.Y;
+    auto arg1 = _marshal1;
+    auto __ret = arg0 >= arg1;
     return __ret;
 }
 

@@ -78,7 +78,7 @@ Material::Material( const Material& rhs )
 
 Material::~Material()
 {
-	LogDebug("Removing material '%s'", name.c_str());
+	LogDebug("Removing material '%s'", name.CString());
 }
 
 //-----------------------------------//

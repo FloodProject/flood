@@ -60,11 +60,11 @@ Entity::~Entity()
 	// Keep a reference so it is the last component destroyed.
 	TransformPtr transform = getTransform();
 	
-	components.clear();
+    components.Clear();
 
-	ComponentMap::iterator it = componentsMap.begin();
+    ComponentMap::Iterator it = componentsMap.Begin();
 	
-	for(; it != componentsMap.end(); it++ )
+    for(; it != componentsMap.End(); it++ )
 	{
 		ComponentPtr& component = it->second;
 		component.reset();
@@ -86,9 +86,9 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	Class* type = component->getType();
 
-	if( componentsMap.find(type) != componentsMap.end() )
+    if( componentsMap.Find(type) != componentsMap.End() )
 	{
-		LogWarn( "Component '%s' already exists in '%s'", type->name, name.c_str() );
+        LogWarn( "Component '%s' already exists in '%s'", type->name, name.CString() );
 		return false;
 	}
 
@@ -104,7 +104,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 		group->onEntityComponentAdded(component);
 	}
 
-	components.push_back(component);
+    components.Push(component);
 
 	return true;
 }
@@ -117,12 +117,12 @@ bool Entity::removeComponent(const ComponentPtr& component)
 	
 	Class* type = component->getType();
 
-	ComponentMap::iterator it = componentsMap.find(type);
+    ComponentMap::Iterator it = componentsMap.Find(type);
 	
-	if (it == componentsMap.end())
+    if( it == componentsMap.End() )
 		return false;
 
-	componentsMap.erase(it);
+    componentsMap.Erase(it);
 
 	onComponentRemoved(component);
 	sendEvents();
@@ -155,9 +155,9 @@ ComponentPtr Entity::getComponent(const char* name) const
 
 ComponentPtr Entity::getComponent(Class* klass) const
 {
-	ComponentMap::const_iterator it = componentsMap.find(klass);
+    ComponentMap::ConstIterator it = componentsMap.Find(klass);
 		
-	if( it == componentsMap.end() )
+    if( it == componentsMap.End() )
 		return nullptr;
 
 	return it->second;
@@ -167,9 +167,9 @@ ComponentPtr Entity::getComponent(Class* klass) const
 
 ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 {
-	ComponentMap::const_iterator it;
+    ComponentMap::ConstIterator it;
 	
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+    for( it = componentsMap.Begin(); it != componentsMap.End(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 		Class* componentClass = component->getType();
@@ -183,12 +183,12 @@ ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 
 //-----------------------------------//
 
-std::vector<GeometryPtr> Entity::getGeometry() const
+Vector<GeometryPtr> Entity::getGeometry() const
 {
-	std::vector<GeometryPtr> geoms;
+    Vector<GeometryPtr> geoms;
 
-	ComponentMap::const_iterator it;
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+    ComponentMap::ConstIterator it;
+    for( it = componentsMap.Begin(); it != componentsMap.End(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 
@@ -196,7 +196,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 			continue;
 
 		const GeometryPtr& geo = RefCast<Geometry>(component);
-		geoms.push_back(geo);
+        geoms.Push(geo);
 	}
 
 	return geoms;
@@ -207,9 +207,9 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 void Entity::update( float delta )
 {
 	// Update all geometry bounding boxes first.
-	const std::vector<GeometryPtr>& geoms = getGeometry();
+    const Vector<GeometryPtr>& geoms = getGeometry();
 
-	for( size_t i = 0; i < geoms.size(); i++ )
+    for( size_t i = 0; i < geoms.Size(); i++ )
 	{
 		Geometry* geom = geoms[i].get();
 		geom->update( delta );
@@ -220,8 +220,8 @@ void Entity::update( float delta )
 	if( transform ) transform->update( delta );
 
 	// Update the other components.
-	ComponentMap::const_iterator it;
-	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
+    ComponentMap::ConstIterator it;
+    for( it = componentsMap.Begin(); it != componentsMap.End(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 
@@ -236,7 +236,7 @@ void Entity::update( float delta )
 
 void Entity::fixUp()
 {
-	for(size_t i = 0; i < components.size(); i++ )
+    for(size_t i = 0; i < components.Size(); i++ )
 	{
 		Component* component = components[i].get();
 		if( !component ) continue;

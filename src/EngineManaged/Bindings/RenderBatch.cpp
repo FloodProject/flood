@@ -83,7 +83,7 @@ Flood::RenderBatch^ Flood::RenderBatch::RenderBatchCreate(Flood::Allocator^ _0)
     auto arg0 = (::Allocator*)_0->NativePtr;
     auto __ret = ::RenderBatchCreate(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderBatch((::RenderBatch*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderBatch((::RenderBatch*)__ret);
 }
 
 System::IntPtr Flood::RenderBatch::__Instance::get()
@@ -102,9 +102,8 @@ Flood::RenderLayer Flood::RenderBatch::RenderLayer::get()
     return (Flood::RenderLayer)__ret;
 }
 
-void Flood::RenderBatch::RenderLayer::set(Flood::RenderLayer value)
+void Flood::RenderBatch::RenderLayer::set(Flood::RenderLayer v)
 {
-    auto v = value;
     auto arg0 = (::RenderLayer)v;
     ((::RenderBatch*)NativePtr)->setRenderLayer(arg0);
 }
@@ -115,9 +114,8 @@ int Flood::RenderBatch::RenderPriority::get()
     return __ret;
 }
 
-void Flood::RenderBatch::RenderPriority::set(int value)
+void Flood::RenderBatch::RenderPriority::set(int v)
 {
-    auto v = value;
     auto arg0 = (::int32)(::int32_t)v;
     ((::RenderBatch*)NativePtr)->setRenderPriority(arg0);
 }
@@ -125,12 +123,11 @@ void Flood::RenderBatch::RenderPriority::set(int value)
 Flood::GeometryBuffer^ Flood::RenderBatch::GeometryBuffer::get()
 {
     auto &__ret = ((::RenderBatch*)NativePtr)->getGeometryBuffer();
-    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret.get());
+    return (Flood::GeometryBuffer^)((__ret.get() == nullptr) ? nullptr : gcnew Flood::GeometryBuffer((::GeometryBuffer*)__ret.get()));
 }
 
-void Flood::RenderBatch::GeometryBuffer::set(Flood::GeometryBuffer^ value)
+void Flood::RenderBatch::GeometryBuffer::set(Flood::GeometryBuffer^ v)
 {
-    auto v = value;
     auto arg0 = (::GeometryBuffer*)v->NativePtr;
     ((::RenderBatch*)NativePtr)->setGeometryBuffer(arg0);
 }
@@ -138,12 +135,11 @@ void Flood::RenderBatch::GeometryBuffer::set(Flood::GeometryBuffer^ value)
 Flood::UniformBuffer^ Flood::RenderBatch::UniformBuffer::get()
 {
     auto &__ret = ((::RenderBatch*)NativePtr)->getUniformBuffer();
-    return gcnew Flood::UniformBuffer((::UniformBuffer*)__ret.get());
+    return (Flood::UniformBuffer^)((__ret.get() == nullptr) ? nullptr : gcnew Flood::UniformBuffer((::UniformBuffer*)__ret.get()));
 }
 
-void Flood::RenderBatch::UniformBuffer::set(Flood::UniformBuffer^ value)
+void Flood::RenderBatch::UniformBuffer::set(Flood::UniformBuffer^ v)
 {
-    auto v = value;
     auto arg0 = (::UniformBuffer*)v->NativePtr;
     ((::RenderBatch*)NativePtr)->setUniformBuffer(arg0);
 }
@@ -151,12 +147,11 @@ void Flood::RenderBatch::UniformBuffer::set(Flood::UniformBuffer^ value)
 Flood::ResourceHandle<Flood::Material^> Flood::RenderBatch::Material::get()
 {
     auto &__ret = ((::RenderBatch*)NativePtr)->getMaterial();
-    return Flood::ResourceHandle<Flood::Material^>(__ret.id);
+    return (Flood::ResourceHandle<Flood::Material^>)(Flood::ResourceHandle<Flood::Material^>(__ret.id));
 }
 
-void Flood::RenderBatch::Material::set(Flood::ResourceHandle<Flood::Material^> value)
+void Flood::RenderBatch::Material::set(Flood::ResourceHandle<Flood::Material^> v)
 {
-    auto v = value;
     auto arg0 = (HandleId)v.Id;
     ((::RenderBatch*)NativePtr)->setMaterial(arg0);
 }
@@ -167,9 +162,8 @@ Flood::PrimitiveRasterMode Flood::RenderBatch::PrimitiveRasterMode::get()
     return (Flood::PrimitiveRasterMode)__ret;
 }
 
-void Flood::RenderBatch::PrimitiveRasterMode::set(Flood::PrimitiveRasterMode value)
+void Flood::RenderBatch::PrimitiveRasterMode::set(Flood::PrimitiveRasterMode v)
 {
-    auto v = value;
     auto arg0 = (::PrimitiveRasterMode)v;
     ((::RenderBatch*)NativePtr)->setPrimitiveRasterMode(arg0);
 }
@@ -180,9 +174,8 @@ Flood::PrimitiveType Flood::RenderBatch::PrimitiveType::get()
     return (Flood::PrimitiveType)__ret;
 }
 
-void Flood::RenderBatch::PrimitiveType::set(Flood::PrimitiveType value)
+void Flood::RenderBatch::PrimitiveType::set(Flood::PrimitiveType v)
 {
-    auto v = value;
     auto arg0 = (::PrimitiveType)v;
     ((::RenderBatch*)NativePtr)->setPrimitiveType(arg0);
 }
@@ -242,7 +235,7 @@ void Flood::RenderBatch::Mode::set(Flood::PrimitiveRasterMode value)
 
 Flood::GeometryBuffer^ Flood::RenderBatch::Gb::get()
 {
-    return gcnew Flood::GeometryBuffer((::GeometryBuffer*)((::RenderBatch*)NativePtr)->gb.get());
+    return (((::RenderBatch*)NativePtr)->gb.get() == nullptr) ? nullptr : gcnew Flood::GeometryBuffer((::GeometryBuffer*)((::RenderBatch*)NativePtr)->gb.get());
 }
 
 void Flood::RenderBatch::Gb::set(Flood::GeometryBuffer^ value)
@@ -252,7 +245,7 @@ void Flood::RenderBatch::Gb::set(Flood::GeometryBuffer^ value)
 
 Flood::UniformBuffer^ Flood::RenderBatch::Ub::get()
 {
-    return gcnew Flood::UniformBuffer((::UniformBuffer*)((::RenderBatch*)NativePtr)->ub.get());
+    return (((::RenderBatch*)NativePtr)->ub.get() == nullptr) ? nullptr : gcnew Flood::UniformBuffer((::UniformBuffer*)((::RenderBatch*)NativePtr)->ub.get());
 }
 
 void Flood::RenderBatch::Ub::set(Flood::UniformBuffer^ value)

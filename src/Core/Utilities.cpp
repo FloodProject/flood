@@ -91,15 +91,15 @@ void SystemSleep( int64 time )
 int StringCompareInsensitive(const String& s1, const String& s2)
 {
 #ifdef PLATFORM_WINDOWS
-	return _stricmp(s1.c_str(), s2.c_str());
+	return _stricmp(s1.CString(), s2.CString());
 #else
-	return strcasecmp(s1.c_str(), s2.c_str());
+	return strcasecmp(s1.CString(), s2.CString());
 #endif
 }
 
 //-----------------------------------//
 
-String StringFromFloat( float n, byte precision )
+UTF8String StringFromFloat( float n, byte precision )
 {
 	return StringFormat("%#.*f", precision, n );
 }
@@ -108,16 +108,9 @@ String StringFromFloat( float n, byte precision )
 
 #ifdef PLATFORM_WINDOWS
 
-String StringFromWideString(const std::wstring &wstr)
+UTF8String StringFromWideString(const WString &wstr)
 {
-	// Convert a Unicode string to an ASCII string
-	String strTo;
-	char *szTo = new char[wstr.length() + 1];
-	szTo[wstr.size()] = '\0';
-	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
-		(int)wstr.length(), nullptr, nullptr);
-	strTo = szTo;
-	delete[] szTo;
+	UTF8String strTo(wstr);
 	return strTo;
 }
 
@@ -127,29 +120,22 @@ String StringFromWideString(const std::wstring &wstr)
 
 #ifdef PLATFORM_WINDOWS
 
-std::wstring StringToWideString(const String &str)
+WString StringToWideString(const UTF8String &str)
 {
-	// Convert an ASCII string to a Unicode String
-	std::wstring wstrTo;
-	wchar_t *wszTo = new wchar_t[str.length() + 1];
-	wszTo[str.size()] = L'\0';
-	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wszTo,
-		(int)str.length());
-	wstrTo = wszTo;
-	delete[] wszTo;
-	return wstrTo;
+	WString ret(str);
+	return ret;
 }
 
 #endif
 
 //-----------------------------------//
 
-String StringFormat(const char* str, ...)
+UTF8String StringFormat(const char* str, ...)
 {
 	va_list args;
 	va_start(args, str);
 
-	String formatted = StringFormatArgs(str, args);
+	UTF8String formatted = StringFormatArgs(str, args);
 
 	va_end(args);
 
@@ -158,7 +144,7 @@ String StringFormat(const char* str, ...)
 
 //-----------------------------------//
 
-String StringFormatArgs(const char* str, va_list args)
+UTF8String StringFormatArgs(const char* str, va_list args)
 {
 	const int BUF_MAX_SIZE = 16384;
 	char buf[BUF_MAX_SIZE];
@@ -172,66 +158,26 @@ String StringFormatArgs(const char* str, va_list args)
 	assert( n >= 0 ); // check for output error
 	assert( n < BUF_MAX_SIZE ); // check for truncation
 
-	return String(buf);
+	return UTF8String(buf);
 }
 
 //-----------------------------------//
 
-void StringSplit(const String& s, char delim, std::vector<String>& elems)
+void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems)
 {
-	std::stringstream ss(s);
-	String item;
+	s.Split(delim, elems);
+}
+
+//-----------------------------------//
+
+UTF8String StringTrim(const UTF8String& s, const char* trim)
+{
+	UTF8String Trim(trim);
+	unsigned first = s.FindFirstNotOf(Trim);
+	unsigned last = s.FindLastNotOf(Trim);
+	if (first == UTF8String::NPOS) return "";
 	
-	while(std::getline(ss, item, delim)) 
-		elems.push_back(item);
-}
-
-//-----------------------------------//
-
-String StringTrim(const String& s, const char* trim)
-{
-	String::size_type first = s.find_first_not_of(trim);
-	
-	if( first == String::npos ) return "";
-
-	return s.substr(first, s.find_last_not_of(trim) - first + 1);
-}
-
-//-----------------------------------//
-
-String StringToLowerCase(const String& str)
-{
-	String data(str);
-	std::transform(data.begin(), data.end(), data.begin(), ::tolower);
-	
-	return data;
-}
-
-//-----------------------------------//
-
-String StringToUpperCase(const String& str)
-{
-	String data(str);
-	std::transform(data.begin(), data.end(), data.begin(), ::toupper);
-	
-	return data;
-}
-
-//-----------------------------------//
-
-void StringReplace(String& source, const String& from, const String& to)
-{
-	String::size_type pos = 0;
-
-	while(true)
-	{
-		pos = source.find(from, pos);
-		
-		if( pos == String::npos )
-			return;
-		
-		source.replace( pos++, from.size(), to );
-	}
+	return s.Substring(first, last - first + 1);
 }
 
 //-----------------------------------//
@@ -241,12 +187,12 @@ Path PathGetFileBase(const Path& path)
 	Path filePath = PathGetFile(path);
 
 	// Check if it has a file extension.
-	size_t ch = filePath.find_last_of(".");
+	size_t ch = filePath.FindLast(".");
 
-	if( ch == String::npos ) return "";
+	if( ch == UTF8String::NPOS ) return "";
 
 	// Return the file extension.
-	return filePath.substr( 0, ch );
+	return filePath.Substring( 0, ch );
 }
 
 //-----------------------------------//
@@ -254,45 +200,45 @@ Path PathGetFileBase(const Path& path)
 Path PathGetFileExtension(const Path& path)
 {
 	// Check if it has a file extension.
-	size_t ch = path.find_last_of(".");
+	size_t ch = path.FindLast(".");
 
-	if( ch == String::npos ) 
+	if( ch == UTF8String::NPOS ) 
 		return "";
 
 	// Return the file extension.
-	return path.substr( ++ch );
+	return path.Substring( ++ch );
 }
 
 //-----------------------------------//
 
 Path PathGetBase(const Path& path)
 {
-	size_t ch = path.find_last_of("/");
+	size_t ch = path.FindLast("/");
 
-	if( ch == String::npos )
-		ch = path.find_last_of("\\");
+	if( ch == UTF8String::NPOS )
+		ch = path.FindLast("\\");
 
-	if( ch == String::npos )
+	if( ch == UTF8String::NPOS )
 		return path;
 
 	// Return the file extension.
-	return path.substr( 0, ++ch );
+	return path.Substring( 0, ++ch );
 }
 
 //-----------------------------------//
 
 Path PathGetFile(const Path& path)
 {
-	size_t ch = path.find_last_of("/");
+	size_t ch = path.FindLast("/");
 
-	if( ch == String::npos )
-		ch = path.find_last_of("\\");
+	if( ch == UTF8String::NPOS )
+		ch = path.FindLast("\\");
 
-	if( ch == String::npos )
+	if( ch == UTF8String::NPOS )
 		return path;
 
 	// Return the file part.
-	return path.substr( ++ch );
+	return path.Substring( ++ch );
 }
 
 //-----------------------------------//
@@ -301,15 +247,15 @@ Path PathNormalize(const Path& path)
 {
 	Path norm = path;
 
-	StringReplace(norm, "\\", "/");
-	StringReplace(norm, "//", "/");
-	StringReplace(norm, "/\\", "/");
-	StringReplace(norm, "\\/", "/");
+	norm.Replace("\\", "/");
+	norm.Replace("//", "/");
+	norm.Replace("/\\", "/");
+	norm.Replace("\\/", "/");
 
 	// These transformations are unsafe.
 #if 0
-	StringReplace(norm, "../", "");
-	StringReplace(norm, "./", "");
+	norm.Replace("../", "");
+	norm.Replace("./", "");
 #endif
 
 	return norm;
@@ -325,7 +271,7 @@ Path PathGetCurrentDir()
 #else
 	getcwd(buf, FLD_ARRAY_SIZE(buf));
 #endif
-	return String(buf);
+	return UTF8String(buf);
 }
 
 //-----------------------------------//
@@ -349,15 +295,15 @@ Path PathCombine(Path base, Path extra)
 	extra = StringTrim(extra, "\\");
 	extra = StringTrim(extra, "/");
 
-	if( base.empty() ) return extra;
+	if( base.Empty() ) return extra;
 
 	const Path& sep = PathGetSeparator();
 
-	StringReplace(base, "\\", sep);
-	StringReplace(base, "/", sep);
+	base.Replace("\\", sep);
+	base.Replace("/", sep);
 
-	StringReplace(extra, "\\", sep);
-	StringReplace(extra, "/", sep);
+	extra.Replace("\\", sep);
+	extra.Replace("/", sep);
 
 	return base + PathGetSeparator() + extra;
 }
@@ -378,18 +324,18 @@ StringHash::StringHash(const char* str, size_t size)
 
 //-----------------------------------//
 
-StringHash HashString(const String& s)
+StringHash HashString(const UTF8String& s)
 {
-	return StringHash(s.data(), s.size());
+	return StringHash(s.CString(), s.ByteLength());
 }
 
 //-----------------------------------//
 
-static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
+static void DirArchiveEnumerate(Vector<UTF8String>& paths, Path dirPath,
 								Path filePath, bool dirs)
 {
 	// Open directory stream.
-	DIR* dir = opendir( dirPath.c_str() );
+	DIR* dir = opendir(dirPath.CString());
 	if( !dir ) return;
 
 	dirent* entry = nullptr;
@@ -404,20 +350,20 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 		{
 		case DT_REG:
 		{
-			Path sep = filePath.empty() ? "" : PathGetSeparator();
-			Path path = StringFormat("%s%s%s", filePath.c_str(), sep.c_str(),
-				name.c_str() );
-			if(!dirs) paths.push_back(path);
+			Path sep = filePath.Empty() ? "" : PathGetSeparator();
+			Path path = StringFormat("%s%s%s", filePath.CString(), sep.CString(),
+				name.CString() );
+			if(!dirs) paths.Push(path);
 			break;
 		}
 		case DT_DIR:
 		{
-			if(!name.empty() && name[0] == '.') continue;
+			if(!name.Empty() && name[0] == '.') continue;
 		
 			Path _dirPath = PathCombine(dirPath, name);
 			Path _filePath = PathCombine(filePath, name);
 
-			if(dirs) paths.push_back(_filePath);
+			if(dirs) paths.Push(_filePath);
 			DirArchiveEnumerate(paths, _dirPath, _filePath, dirs);
 			
 			break;
@@ -430,14 +376,14 @@ static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath,
 
 //-----------------------------------//
 
-void FileEnumerateFiles(const Path& path, std::vector<Path>& files)
+void FileEnumerateFiles(const Path& path, Vector<Path>& files)
 {
 	DirArchiveEnumerate(files, path, "", false);
 }
 
 //-----------------------------------//
 
-void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
+void FileEnumerateDirectories(const Path& path, Vector<Path>& dirs)
 {
 	DirArchiveEnumerate(dirs, path, "", true);
 }
@@ -447,9 +393,9 @@ void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
 bool FileExists(const Path& path)
 {
 #ifdef COMPILER_MSVC
-	return _access(path.c_str(), F_OK) == 0;
+	return _access(path.CString(), F_OK) == 0;
 #else
-	return access(path.c_str(), F_OK) == 0;
+	return access(path.CString(), F_OK) == 0;
 #endif
 }
 

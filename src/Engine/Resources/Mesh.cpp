@@ -24,10 +24,10 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Mesh::Mesh()
-	: animated(false)
-	, bindPose(nullptr)
-	, built(false)
-	, geometryBuffer(nullptr)
+    : animated(false)
+    , bindPose(nullptr)
+    , built(false)
+    , geometryBuffer(nullptr)
 {
 }
 
@@ -35,89 +35,89 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
-	LogDebug("Destroying mesh: %s", path.c_str());
-	//Deallocate(geometryBuffer);
+    LogDebug("Destroying mesh: %s", path.CString());
+    //Deallocate(geometryBuffer);
 }
 
 //-----------------------------------//
 
 bool Mesh::isBuilt() const
 {
-	return built;
+    return built;
 }
 
 //-----------------------------------//
 
 bool Mesh::isAnimated() const
 {
-	return animated;
+    return animated;
 }
 
 //-----------------------------------//
 
 Animation* Mesh::findAnimation( const String& name )
 {
-	for( size_t i = 0; i < animations.size(); i++ )
-	{
-		 Animation* animation = animations[i].get();
+    for( size_t i = 0; i < animations.Size(); i++ )
+    {
+         Animation* animation = animations[i].get();
 
-		if( StringCompareInsensitive(animation->getName(), name) == 0 )
-			return animation;
-	}
+         if( animation->getName().Compare(name, false) == 0)
+            return animation;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 //-----------------------------------//
 
 void Mesh::buildBounds()
 {
-	boundingVolume.reset();
+    boundingVolume.reset();
 
-	if( !geometryBuffer ) return;
+    if( !geometryBuffer ) return;
 
-	size_t numVertices = geometryBuffer->getNumVertices();
+    size_t numVertices = geometryBuffer->getNumVertices();
 
-	for( size_t i = 0; i < groups.size(); i++ )
-	{
-		MeshGroup& group = groups[i];
-		const std::vector<uint16>& indices = group.indices;
-		
-		// Update the bounding box to accomodate new geometry.
-		for( size_t j = 0; j < indices.size(); j++ )
-		{
-			const uint16& index = indices[j];
-			if( index > numVertices ) continue;
+    for( size_t i = 0; i < groups.Size(); i++ )
+    {
+        MeshGroup& group = groups[i];
+        const Vector<uint16>& indices = group.indices;
+        
+        // Update the bounding box to accomodate new geometry.
+        for( size_t j = 0; j < indices.Size(); j++ )
+        {
+            const uint16& index = indices[j];
+            if( index > numVertices ) continue;
 
-			float* v = geometryBuffer->getAttribute(VertexAttribute::Position, index);
-			Vector3& vec = *(Vector3*) v;
+            float* v = geometryBuffer->getAttribute(VertexAttribute::Position, index);
+            Vector3& vec = *(Vector3*) v;
 
-			boundingVolume.add(vec);
-		}
-	}
+            boundingVolume.add(vec);
+        }
+    }
 
-	if( boundingVolume.isInfinite() )
-		boundingVolume.setZero();
+    if( boundingVolume.isInfinite() )
+        boundingVolume.setZero();
 }
 
 //-----------------------------------//
 
 void Mesh::setupInitialVertices()
 {
-	if( !isAnimated() ) return;
+    if( !isAnimated() ) return;
 
-	const BonesVector& bones = skeleton->getBones();
-	size_t numVertices = geometryBuffer->getNumVertices();
+    const BonesVector& bones = skeleton->getBones();
+    size_t numVertices = geometryBuffer->getNumVertices();
 
-	// Calculate the new vertices.
-	for( size_t i = 0; i < numVertices; i++ )
-	{
-		int32 boneIndex = (int32) *geometryBuffer->getAttribute(VertexAttribute::BoneIndex, i);
-		if( boneIndex == -1 ) continue;
+    // Calculate the new vertices.
+    for( size_t i = 0; i < numVertices; i++ )
+    {
+        int32 boneIndex = (int32) *geometryBuffer->getAttribute(VertexAttribute::BoneIndex, i);
+        if( boneIndex == -1 ) continue;
 
-		Vector3* pos = (Vector3*) geometryBuffer->getAttribute(VertexAttribute::Position, i);
-		*pos = bones[boneIndex]->absoluteInvMatrix * (*pos);
-	}
+        Vector3* pos = (Vector3*) geometryBuffer->getAttribute(VertexAttribute::Position, i);
+        *pos = bones[boneIndex]->absoluteInvMatrix * (*pos);
+    }
 }
 
 //-----------------------------------//

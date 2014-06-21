@@ -128,7 +128,7 @@ public:
 	// Creates a new socket.
 	bool createSocket( const HostConnectionDetails& );
 
-	GETTER(Peers, const std::vector<PeerPtr>&, peers);
+	GETTER(Peers, const Vector<PeerPtr>&, peers);
 	SessionManager& getSessionManager() { return sessions; }
 
 protected:
@@ -136,7 +136,7 @@ protected:
 	void onPeerConnect(const PeerPtr&) OVERRIDE;
 	void onPeerDisconnect(const PeerPtr&) OVERRIDE;
 
-	std::vector<PeerPtr> peers;
+	Vector<PeerPtr> peers;
 	SessionManager sessions;
 };
 

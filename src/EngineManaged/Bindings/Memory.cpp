@@ -55,8 +55,8 @@ void Flood::Allocator::ResetMemory()
 void Flood::Allocator::SetGroup(System::String^ group)
 {
     auto arg0 = (::Allocator*)NativePtr;
-    auto _arg1 = clix::marshalString<clix::E_UTF8>(group);
-    auto arg1 = _arg1.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(group);
+    auto arg1 = ____temp.c_str();
     ::AllocatorSetGroup(arg0, arg1);
 }
 
@@ -66,7 +66,7 @@ Flood::Allocator^ Flood::Allocator::CreatePool(int size)
     auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreatePool(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateBump(int size)
@@ -75,7 +75,7 @@ Flood::Allocator^ Flood::Allocator::CreateBump(int size)
     auto arg1 = (::int32)(::int32_t)size;
     auto __ret = ::AllocatorCreateBump(arg0, arg1);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateHeap()
@@ -83,7 +83,7 @@ Flood::Allocator^ Flood::Allocator::CreateHeap()
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateHeap(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::CreateStack()
@@ -91,21 +91,21 @@ Flood::Allocator^ Flood::Allocator::CreateStack()
     auto arg0 = (::Allocator*)NativePtr;
     auto __ret = ::AllocatorCreateStack(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetHeap()
 {
     auto __ret = ::AllocatorGetHeap();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetStack()
 {
     auto __ret = ::AllocatorGetStack();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 Flood::Allocator^ Flood::Allocator::GetObject(void* _0)
@@ -113,7 +113,7 @@ Flood::Allocator^ Flood::Allocator::GetObject(void* _0)
     auto arg0 = (void*)_0;
     auto __ret = ::AllocatorGetObject(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 
 void Flood::Allocator::DumpInfo()
@@ -138,8 +138,18 @@ System::String^ Flood::Allocator::Group::get()
 
 void Flood::Allocator::Group::set(System::String^ value)
 {
-    auto _value = clix::marshalString<clix::E_UTF8>(value);
-    ((::Allocator*)NativePtr)->group = _value.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(value);
+    ((::Allocator*)NativePtr)->group = ____temp.c_str();
+}
+
+char Flood::Allocator::Id::get()
+{
+    return ((::Allocator*)NativePtr)->id;
+}
+
+void Flood::Allocator::Id::set(char value)
+{
+    ((::Allocator*)NativePtr)->id = (::int8)(::int8_t)value;
 }
 
 Flood::PoolAllocator::PoolAllocator(::PoolAllocator* native)
@@ -175,7 +185,7 @@ int Flood::PoolAllocator::GetHashCode()
 
 unsigned char* Flood::PoolAllocator::Current::get()
 {
-    return ((::PoolAllocator*)NativePtr)->current;
+    return reinterpret_cast<unsigned char*>(((::PoolAllocator*)NativePtr)->current);
 }
 
 void Flood::PoolAllocator::Current::set(unsigned char* value)
@@ -216,7 +226,7 @@ int Flood::BumpAllocator::GetHashCode()
 
 unsigned char* Flood::BumpAllocator::Start::get()
 {
-    return ((::BumpAllocator*)NativePtr)->start;
+    return reinterpret_cast<unsigned char*>(((::BumpAllocator*)NativePtr)->start);
 }
 
 void Flood::BumpAllocator::Start::set(unsigned char* value)
@@ -226,7 +236,7 @@ void Flood::BumpAllocator::Start::set(unsigned char* value)
 
 unsigned char* Flood::BumpAllocator::Current::get()
 {
-    return ((::BumpAllocator*)NativePtr)->current;
+    return reinterpret_cast<unsigned char*>(((::BumpAllocator*)NativePtr)->current);
 }
 
 void Flood::BumpAllocator::Current::set(unsigned char* value)

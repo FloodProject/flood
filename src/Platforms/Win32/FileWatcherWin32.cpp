@@ -98,7 +98,7 @@ void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered,
 			}
 			#endif
 
-			std::wstring str( szFile );
+			WString str(szFile);
 			pWatch->mWatcher->handleAction(pWatch, str, pNotify->Action);
 
 		} while (pNotify->NextEntryOffset != 0);
@@ -191,21 +191,21 @@ FileWatcherWin32::FileWatcherWin32()
 
 FileWatcherWin32::~FileWatcherWin32()
 {
-	FileWatchMap::iterator iter = mWatches.begin();
-	FileWatchMap::iterator end = mWatches.end();
+	FileWatchMap::Iterator iter = mWatches.Begin();
+	FileWatchMap::Iterator end = mWatches.End();
 	
 	for(; iter != end; ++iter)
 		DestroyWatch(iter->second);
 
-	mWatches.clear();
+	mWatches.Clear();
 }
 
 //-----------------------------------//
 
-FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
+FileWatchId FileWatcherWin32::addWatch(const UTF8String& directory, void* userdata)
 {
-	std::wstring wdir( directory.begin(), directory.end() );
-	FileWatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
+	WString wdir(directory);
+	FileWatchStruct* watch = CreateWatch( wdir.CString(), FILE_NOTIFY_CHANGE_LAST_WRITE
 		| FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
 	
 	if(!watch)
@@ -216,24 +216,24 @@ FileWatchId FileWatcherWin32::addWatch(const String& directory, void* userdata)
 
 	FileWatchId watchid = ++mLastWatchID;
 
-	size_t len = directory.length()+1;
+	size_t len = directory.Length()+1;
 	watch->mWatchid = watchid;
 	watch->mWatcher = this;
 	watch->mDirName = new char[len];
-	strcpy_s(watch->mDirName, len, directory.c_str());
+	strcpy_s(watch->mDirName, len, directory.CString());
 	watch->mCustomData = userdata;
 
-	mWatches.insert(std::make_pair(watchid, watch));
+	mWatches[watchid] = watch;
 
 	return watchid;
 }
 
 //-----------------------------------//
 
-void FileWatcherWin32::removeWatch(const String& directory)
+void FileWatcherWin32::removeWatch(const UTF8String& directory)
 {
-	FileWatchMap::iterator iter = mWatches.begin();
-	FileWatchMap::iterator end = mWatches.end();
+	FileWatchMap::Iterator iter = mWatches.Begin();
+	FileWatchMap::Iterator end = mWatches.End();
 	for(; iter != end; ++iter)
 	{
 		if(directory == iter->second->mDirName)
@@ -248,13 +248,13 @@ void FileWatcherWin32::removeWatch(const String& directory)
 
 void FileWatcherWin32::removeWatch(FileWatchId watchid)
 {
-	FileWatchMap::iterator iter = mWatches.find(watchid);
+	FileWatchMap::Iterator iter = mWatches.Find(watchid);
 
-	if(iter == mWatches.end())
+	if(iter == mWatches.End())
 		return;
 
 	FileWatchStruct* watch = iter->second;
-	mWatches.erase(iter);
+	mWatches.Erase(iter);
 
 	DestroyWatch(watch);
 }
@@ -269,7 +269,7 @@ void FileWatcherWin32::update()
 //-----------------------------------//
 
 void FileWatcherWin32::handleAction(FileWatchStruct* watch,
-									const std::wstring& filename, uint32 action)
+									const WString& filename, uint32 action)
 {
 	FileWatchEventKind fwAction;
 
@@ -295,7 +295,7 @@ void FileWatcherWin32::handleAction(FileWatchStruct* watch,
 
 	// Convert wide string to regular string.
 	// TODO: handle Unicode properly.
-	const String& file = StringFromWideString(filename);
+	const UTF8String& file = StringFromWideString(filename);
 
 	FileWatchEvent event( fwAction, watch->mWatchid, watch->mDirName, file);
 	event.userdata = watch->mCustomData;

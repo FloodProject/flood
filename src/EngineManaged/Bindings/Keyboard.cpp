@@ -70,7 +70,7 @@ System::Collections::Generic::List<bool>^ Flood::Keyboard::KeyState::get()
         auto _marshalElement = _element;
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<bool>^)(_tmp__ret);
 }
 
 void Flood::Keyboard::KeyPress::add(System::Action<Flood::KeyEvent^>^ evt)
@@ -96,7 +96,7 @@ void Flood::Keyboard::KeyPress::raise(Flood::KeyEvent^ _0)
 
 void Flood::Keyboard::_KeyPressRaise(const ::KeyEvent& _0)
 {
-    KeyPress::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_0));
+    KeyPress::raise((&_0 == nullptr) ? nullptr : gcnew Flood::KeyEvent((::KeyEvent*)&_0));
 }
 
 void Flood::Keyboard::KeyRelease::add(System::Action<Flood::KeyEvent^>^ evt)
@@ -122,7 +122,7 @@ void Flood::Keyboard::KeyRelease::raise(Flood::KeyEvent^ _0)
 
 void Flood::Keyboard::_KeyReleaseRaise(const ::KeyEvent& _0)
 {
-    KeyRelease::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_0));
+    KeyRelease::raise((&_0 == nullptr) ? nullptr : gcnew Flood::KeyEvent((::KeyEvent*)&_0));
 }
 
 void Flood::Keyboard::KeyText::add(System::Action<Flood::KeyEvent^>^ evt)
@@ -148,6 +148,6 @@ void Flood::Keyboard::KeyText::raise(Flood::KeyEvent^ _0)
 
 void Flood::Keyboard::_KeyTextRaise(const ::KeyEvent& _0)
 {
-    KeyText::raise(gcnew Flood::KeyEvent((::KeyEvent*)&_0));
+    KeyText::raise((&_0 == nullptr) ? nullptr : gcnew Flood::KeyEvent((::KeyEvent*)&_0));
 }
 

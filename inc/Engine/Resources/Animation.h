@@ -31,8 +31,8 @@ struct API_ENGINE KeyFrame
 	EulerAngles rotation;
 };
 
-typedef std::vector<KeyFrame> KeyFramesVector;
-typedef std::map<BonePtr, KeyFramesVector> KeyFramesMap;
+typedef Vector<KeyFrame> KeyFramesVector;
+typedef HashMap<BonePtr, KeyFramesVector> KeyFramesMap;
 typedef std::pair<const BonePtr, KeyFramesVector> KeyFramesPair;
 
 //-----------------------------------//
@@ -93,7 +93,7 @@ struct API_ENGINE AnimationState
 	float animationTime;
 
 	// Interpolated bones matrices.
-	std::vector<Matrix4x3> bonesMatrix;
+	Vector<Matrix4x3> bonesMatrix;
 };
 
 //-----------------------------------//

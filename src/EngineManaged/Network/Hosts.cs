@@ -1,7 +1,7 @@
 ﻿using Flood.Remoting;
 using System.Threading.Tasks;
 
-namespace Flood.Network
+namespace Flood.Networking
 {
     /// Represents a network endpoint as an IP address and a port number.
     public struct HostEndPoint
@@ -58,7 +58,7 @@ namespace Flood.Network
             : base(remotingManager)
         {
             // TODO: remove this from here.
-            FloodNetwork.NetworkInitialize();
+            Flood.Network.NetworkInitialize();
 
             var server = new HostServer();
             host = server;
@@ -87,7 +87,7 @@ namespace Flood.Network
         public async Task<bool> Connect(HostEndPoint endPoint, int timeout = 1000)
         {
             // TODO: remove this from here.
-            FloodNetwork.NetworkInitialize();
+            Flood.Network.NetworkInitialize();
 
             var client = new HostClient();
             host = client;

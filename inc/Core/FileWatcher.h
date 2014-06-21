@@ -57,13 +57,13 @@ struct API_CORE FileWatchEvent
 	DECLARE_UNCOPYABLE(FileWatchEvent)
 
 	FileWatchEvent( FileWatchEventKind, FileWatchId,
-		const String& dir, const String& file );
+		const UTF8String& dir, const UTF8String& file );
 
 	FileWatchEventKind action;
 	FileWatchId watchId;
 
-	String dir;
-	String filename;
+	UTF8String dir;
+	UTF8String filename;
 	void* userdata;
 };
 
@@ -84,10 +84,10 @@ public:
 	virtual ~FileWatcher() {}
 
 	// Add a directory watch
-	virtual FileWatchId addWatch(const String& directory, void* userdata = 0) = 0;
+	virtual FileWatchId addWatch(const UTF8String& directory, void* userdata = 0) = 0;
 
 	// Remove a directory watch. This is a brute force search O(nlogn).
-	virtual void removeWatch(const String& directory) = 0;
+	virtual void removeWatch(const UTF8String& directory) = 0;
 
 	// Remove a directory watch. This is a map lookup O(logn).
 	virtual void removeWatch(FileWatchId FileWatchId) = 0;

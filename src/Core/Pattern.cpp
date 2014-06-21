@@ -241,8 +241,8 @@ const char* RawStringMatch(const char* s, size_t len, const char* p)
 
 const char* StringMatch(const String& s, const String& pattern)
 {
-    MatchState ms = {s.data(), s.data() + s.size()};
-    return match(&ms, s.data(), pattern.data());
+	MatchState ms = {s.CString(), s.CString() + s.Length()};
+    return match(&ms, s.CString(), pattern.CString());
 }
 
 //-----------------------------------//

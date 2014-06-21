@@ -50,6 +50,12 @@ namespace Flood
             void set(System::String^);
         }
 
+        property char Id
+        {
+            char get();
+            void set(char);
+        }
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;

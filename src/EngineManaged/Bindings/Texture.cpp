@@ -42,7 +42,7 @@ Flood::Image^ Flood::Texture::ReadImage()
 {
     auto __ret = ((::Texture*)NativePtr)->readImage();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Image((::Image*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Image((::Image*)__ret);
 }
 
 bool Flood::Texture::IsUploaded()
@@ -95,12 +95,11 @@ Flood::PixelFormat Flood::Texture::PixelFormat::get()
 Flood::ResourceHandle<Flood::Image^> Flood::Texture::Image::get()
 {
     auto &__ret = ((::Texture*)NativePtr)->getImage();
-    return Flood::ResourceHandle<Flood::Image^>(__ret.id);
+    return (Flood::ResourceHandle<Flood::Image^>)(Flood::ResourceHandle<Flood::Image^>(__ret.id));
 }
 
-void Flood::Texture::Image::set(Flood::ResourceHandle<Flood::Image^> value)
+void Flood::Texture::Image::set(Flood::ResourceHandle<Flood::Image^> image)
 {
-    auto image = value;
     auto arg0 = (HandleId)image.Id;
     ((::Texture*)NativePtr)->setImage(arg0);
 }
@@ -109,6 +108,16 @@ unsigned int Flood::Texture::ExpectedSize::get()
 {
     auto __ret = ((::Texture*)NativePtr)->getExpectedSize();
     return __ret;
+}
+
+unsigned int Flood::Texture::Id1::get()
+{
+    return ((::Texture*)NativePtr)->id;
+}
+
+void Flood::Texture::Id1::set(unsigned int value)
+{
+    ((::Texture*)NativePtr)->id = (::uint32)(::uint32_t)value;
 }
 
 Flood::TextureTarget Flood::Texture::Target::get()
@@ -207,9 +216,8 @@ Flood::TextureFilterMode Flood::TextureUnit::FilterMode::get()
     return (Flood::TextureFilterMode)__ret;
 }
 
-void Flood::TextureUnit::FilterMode::set(Flood::TextureFilterMode value)
+void Flood::TextureUnit::FilterMode::set(Flood::TextureFilterMode _0)
 {
-    auto _0 = value;
     auto arg0 = (::TextureFilterMode)_0;
     ((::TextureUnit*)NativePtr)->setFilterMode(arg0);
 }
@@ -220,9 +228,8 @@ Flood::TextureMipMode Flood::TextureUnit::MipMode::get()
     return (Flood::TextureMipMode)__ret;
 }
 
-void Flood::TextureUnit::MipMode::set(Flood::TextureMipMode value)
+void Flood::TextureUnit::MipMode::set(Flood::TextureMipMode _0)
 {
-    auto _0 = value;
     auto arg0 = (::TextureMipMode)_0;
     ((::TextureUnit*)NativePtr)->setMipMode(arg0);
 }
@@ -233,9 +240,8 @@ Flood::TextureWrapMode Flood::TextureUnit::WrapMode::get()
     return (Flood::TextureWrapMode)__ret;
 }
 
-void Flood::TextureUnit::WrapMode::set(Flood::TextureWrapMode value)
+void Flood::TextureUnit::WrapMode::set(Flood::TextureWrapMode _0)
 {
-    auto _0 = value;
     auto arg0 = (::TextureWrapMode)_0;
     ((::TextureUnit*)NativePtr)->setWrapMode(arg0);
 }

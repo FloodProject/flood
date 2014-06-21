@@ -10,6 +10,7 @@
 #include "CppSharp.h"
 #include <Engine/Window/Window.h>
 #include "RenderTarget.h"
+#include "StringConverter.h"
 
 namespace Flood
 {
@@ -197,7 +198,7 @@ namespace Flood
         /// <summary>
         /// Creates a new render context.
         /// </summary>
-        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _0);
+        virtual Flood::RenderContext^ CreateContext(Flood::RenderContextSettings _33);
 
         /// <summary>
         /// Updates the window content.

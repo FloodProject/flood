@@ -70,6 +70,18 @@ namespace Flood
             float get();
         }
 
+        property Flood::Vector2i Origin1
+        {
+            Flood::Vector2i get();
+            void set(Flood::Vector2i);
+        }
+
+        property Flood::Vector2i Size1
+        {
+            Flood::Vector2i get();
+            void set(Flood::Vector2i);
+        }
+
         property Flood::RenderTarget^ Target
         {
             Flood::RenderTarget^ get();
@@ -80,6 +92,12 @@ namespace Flood
         {
             Flood::Color get();
             void set(Flood::Color);
+        }
+
+        property int DepthPriority1
+        {
+            int get();
+            void set(int);
         }
 
         property Flood::Matrix4x4 ProjectionMatrix

@@ -9,7 +9,7 @@ project "BindingsGen"
 
   location "."
 
-  files { "**.cs", "./*.lua" }
+  files { "**.cs", "*.lua" }
 
   dependson { "CppSharp.AST", "CppSharp.Generator", "CppSharp.Parser" }
 
@@ -18,6 +18,7 @@ project "BindingsGen"
     "System",
     path.join(depsdir, "CppSharp", "build", action, "lib", "CppSharp.AST"),
     path.join(depsdir, "CppSharp", "build", action, "lib", "CppSharp.Generator"),
+    path.join(depsdir, "CppSharp", "build", action, "lib", "CppSharp.Parser"),
   }
 
 

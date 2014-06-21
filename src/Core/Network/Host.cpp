@@ -182,10 +182,10 @@ bool HostClient::connect( const HostConnectionDetails& details )
 	addr.host = 0;
 	addr.port = details.port;
 
-	auto ret = enet_address_set_host( &addr, details.address.c_str() );
+	auto ret = enet_address_set_host( &addr, details.address.CString() );
 	if(ret < 0)
 	{
-		LogError("Cannot resolve host address ", details.address.c_str()); 
+		LogError("Cannot resolve host address ", details.address.CString()); 
 		return false;
 	}
 
@@ -232,7 +232,7 @@ bool HostServer::createSocket( const HostConnectionDetails& details )
 
 void HostServer::onPeerConnect(const PeerPtr& peer)
 {
-	peers.push_back(peer);
+	peers.Push(peer);
 
 	auto keyExchanger = Allocate(AllocatorGetNetwork(), PacketServerKeyExchanger);
 	peer->addProcessor(keyExchanger);
@@ -242,10 +242,10 @@ void HostServer::onPeerConnect(const PeerPtr& peer)
 
 void HostServer::onPeerDisconnect(const PeerPtr& peer)
 {
-	auto it = std::find(peers.begin(), peers.end(), peer);
+	auto it = peers.Find(peer);
 	assert( it != peers.end() );
 	
-	peers.erase(it);
+	peers.Erase(it);
 }
 
 //-----------------------------------//

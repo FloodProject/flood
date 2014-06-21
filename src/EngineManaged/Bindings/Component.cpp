@@ -46,35 +46,11 @@ bool Flood::Component::IsDebugRenderableVisible()
     return __ret;
 }
 
-void Flood::Component::OnPreRender1(Flood::Camera^ camera)
-{
-    auto &arg0 = *(::Camera*)camera->NativePtr;
-    ((::Component*)NativePtr)->onPreRender(arg0);
-}
-
-bool Flood::Component::IsDebugRenderableVisible1()
-{
-    auto __ret = ((::Component*)NativePtr)->isDebugRenderableVisible();
-    return __ret;
-}
-
 void Flood::Component::OnDebugDraw(Flood::DebugDrawer^ _0, Flood::DebugDrawFlags _1)
 {
     auto &arg0 = *(::DebugDrawer*)_0->NativePtr;
     auto arg1 = (::DebugDrawFlags)_1;
     ((::Component*)NativePtr)->onDebugDraw(arg0, arg1);
-}
-
-void Flood::Component::OnPreRender2(Flood::Camera^ camera)
-{
-    auto &arg0 = *(::Camera*)camera->NativePtr;
-    ((::Component*)NativePtr)->onPreRender(arg0);
-}
-
-bool Flood::Component::IsDebugRenderableVisible2()
-{
-    auto __ret = ((::Component*)NativePtr)->isDebugRenderableVisible();
-    return __ret;
 }
 
 bool Flood::Component::Equals(System::Object^ object)
@@ -105,19 +81,17 @@ Flood::Entity^ Flood::Component::Entity::get()
 {
     auto __ret = ((::Component*)NativePtr)->getEntity();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Entity((::Entity*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Entity((::Entity*)__ret);
 }
 
-void Flood::Component::Entity::set(Flood::Entity^ value)
+void Flood::Component::Entity::set(Flood::Entity^ entity)
 {
-    auto entity = value;
     auto arg0 = (::Entity*)entity->NativePtr;
     ((::Component*)NativePtr)->setEntity(arg0);
 }
 
-void Flood::Component::DebugRenderableVisible::set(bool value)
+void Flood::Component::DebugRenderableVisible::set(bool visible)
 {
-    auto visible = value;
     ((::Component*)NativePtr)->setDebugRenderableVisible(visible);
 }
 
@@ -127,9 +101,8 @@ bool Flood::Component::DebugInheritsTransform::get()
     return __ret;
 }
 
-void Flood::Component::DebugInheritsTransform::set(bool value)
+void Flood::Component::DebugInheritsTransform::set(bool v)
 {
-    auto v = value;
     ((::Component*)NativePtr)->setDebugInheritsTransform(v);
 }
 

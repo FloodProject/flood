@@ -36,7 +36,7 @@ GLSL_ShaderProgram::~GLSL_ShaderProgram()
 	//Deallocate(vertex);
 	//Deallocate(fragment);
 
-	shaders.clear();
+	shaders.Clear();
 
 	glDeleteProgram( id );
 
@@ -60,7 +60,7 @@ bool GLSL_ShaderProgram::create()
 
 void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 {
-	shaders.push_back( shader );
+	shaders.Push( shader );
 	
 	bool isAttached = attached[shader];
 	
@@ -79,7 +79,7 @@ void GLSL_ShaderProgram::addShader( GLSL_Shader* shader)
 
 void GLSL_ShaderProgram::detachShaders()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.Size(); i++ )
 	{
 		GLSL_Shader* shader = shaders[i].get();
 		bool isAttached = attached[shader];
@@ -90,7 +90,7 @@ void GLSL_ShaderProgram::detachShaders()
 		CheckLastErrorGL("Could not detach shader object");
 	}
 
-	attached.clear();
+	attached.Clear();
 }
 
 //-----------------------------------//
@@ -113,14 +113,14 @@ void GLSL_ShaderProgram::createShaders()
 
 bool GLSL_ShaderProgram::compileShaders()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.Size(); i++ )
 	{
 		Shader* shader = shaders[i].get();
 		if( shader->isCompiled() ) continue;
 		
 		if( !shader->compile() )
 		{
-			LogError( "Error compiling shader program: %s", shader->getLog().c_str() );
+			LogError( "Error compiling shader program: %s", shader->getLog().CString() );
 
 			hadLinkError = true;
 			linked = false;
@@ -138,7 +138,7 @@ bool GLSL_ShaderProgram::compileShaders()
 
 void GLSL_ShaderProgram::forceRecompile()
 {
-	for( size_t i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.Size(); i++ )
 	{
 		Shader* shader = shaders[i].get();
 		shader->forceRecompile();
@@ -158,7 +158,7 @@ bool GLSL_ShaderProgram::link()
 	if( hadLinkError ) return false;
 
 	// If there are no shader programs, no point in trying to link.
-	if( shaders.empty() ) return false;
+	if( shaders.Empty() ) return false;
 
 	// If we could not compile the shaders, no point in trying to link.
 	if( !compileShaders() ) return false;
@@ -182,7 +182,7 @@ bool GLSL_ShaderProgram::link()
 
 	if( status != GL_TRUE )
 	{
-		LogWarn( "Could not link program object '%d': %s", id, log.c_str() );
+		LogWarn( "Could not link program object '%d': %s", id, log.CString() );
 		linked = false;
 		hadLinkError = true;
 		return false;
@@ -209,7 +209,7 @@ bool GLSL_ShaderProgram::validate()
 	{
 		getLogText();
 
-		LogWarn( "Could not validate program object '%d': %s", id, log.c_str() );
+		LogWarn( "Could not validate program object '%d': %s", id, log.CString() );
 		return false;
 	}
 
@@ -245,14 +245,14 @@ void GLSL_ShaderProgram::getLogText()
 
 	if( length == 0 )
 	{
-		log.clear();
+		log.Clear();
 		return;
 	}
 
-	log.resize(length);
+	log.Resize(length);
 
 	GLsizei temp;
-	glGetProgramInfoLog( id, log.size(), &temp, &log[0] );
+    glGetProgramInfoLog( id, log.Length(), &temp, &log[0] );
 }
 
 //-----------------------------------//
@@ -272,7 +272,7 @@ void GLSL_ShaderProgram::bindDefaultAttributes()
 
 void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute attr )
 {
-	glBindAttribLocation( id, (GLuint) attr, name.c_str() );
+	glBindAttribLocation( id, (GLuint) attr, name.CString() );
 
 	if( CheckLastErrorGL("Could not bind attribute variable") )
 		return;
@@ -282,14 +282,14 @@ void GLSL_ShaderProgram::setAttribute( const String& name, VertexAttribute attr 
 
 void GLSL_ShaderProgram::setUniforms( UniformBuffer* ub )
 {
-	UniformBufferElements::iterator it;
+	UniformBufferElements::Iterator it;
 	
-	for( it = ub->elements.begin(); it != ub->elements.end(); it++ )
+	for( it = ub->elements.Begin(); it != ub->elements.End(); it++ )
 	{
 		UniformBufferElement* element = it->second;
 		if( !element || !element->name ) continue;
 
-		GLint location = glGetUniformLocation( id, /*element->name*/it->first.c_str() );
+		GLint location = glGetUniformLocation( id, /*element->name*/it->first.CString() );
 		if( location == -1 ) continue;
 
 		GLint count = element->count;

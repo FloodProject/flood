@@ -57,7 +57,7 @@ Flood::InputManager^ Flood::InputManager::GetInputManager()
 {
     auto __ret = ::GetInputManager();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::InputManager((::InputManager*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::InputManager((::InputManager*)__ret);
 }
 
 System::IntPtr Flood::InputManager::__Instance::get()
@@ -74,13 +74,13 @@ Flood::Keyboard^ Flood::InputManager::Keyboard::get()
 {
     auto __ret = ((::InputManager*)NativePtr)->getKeyboard();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Keyboard((::Keyboard*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Keyboard((::Keyboard*)__ret);
 }
 
 Flood::Mouse^ Flood::InputManager::Mouse::get()
 {
     auto __ret = ((::InputManager*)NativePtr)->getMouse();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Mouse((::Mouse*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Mouse((::Mouse*)__ret);
 }
 

@@ -34,7 +34,7 @@
 #ifdef PLATFORM_WINDOWS
 
 #include "Core/FileWatcher.h"
-#include <map>
+#include "Core/Containers/HashMap.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -43,7 +43,7 @@ NAMESPACE_CORE_BEGIN
 struct FileWatchStruct;
 
 /// type for a map from FileWatchId to FileWatchStruct pointer
-typedef std::map<FileWatchId, FileWatchStruct*> FileWatchMap;
+typedef HashMap<FileWatchId, FileWatchStruct*> FileWatchMap;
 
 /// Implementation for Win32 based on ReadDirectoryChangesW.
 /// @class FileWatcherWin32
@@ -55,10 +55,10 @@ public:
 	virtual ~FileWatcherWin32();
 
 	/// Add a directory watch
-	FileWatchId addWatch(const String& directory, void* userdata) OVERRIDE;
+	FileWatchId addWatch(const UTF8String& directory, void* userdata) OVERRIDE;
 
 	/// Remove a directory watch. This is a brute force lazy search O(nlogn).
-	void removeWatch(const String& directory) OVERRIDE;
+	void removeWatch(const UTF8String& directory) OVERRIDE;
 
 	/// Remove a directory watch. This is a map lookup O(logn).
 	void removeWatch(FileWatchId FileWatchId) OVERRIDE;
@@ -67,7 +67,7 @@ public:
 	void update() OVERRIDE;
 
 	/// Handles the action
-	void handleAction(FileWatchStruct* watch, const StringWide& filename, uint32 action);
+	void handleAction(FileWatchStruct* watch, const WString& filename, uint32 action);
 
 	/// Map of FileWatchId to FileWatchStruct pointers
 	FileWatchMap mWatches;

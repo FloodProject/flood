@@ -83,7 +83,7 @@ Flood::RenderView^ Flood::RenderTarget::CreateView()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->createView();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderView((::RenderView*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderView((::RenderView*)__ret);
 }
 
 void Flood::RenderTarget::RemoveViews()
@@ -128,19 +128,18 @@ void Flood::RenderTarget::__Instance::set(System::IntPtr object)
 Flood::Settings Flood::RenderTarget::Settings::get()
 {
     auto &__ret = ((::RenderTarget*)NativePtr)->getSettings();
-    return Flood::Settings((::Settings*)&__ret);
+    return (Flood::Settings)(Flood::Settings((::Settings*)&__ret));
 }
 
 Flood::RenderContext^ Flood::RenderTarget::Context::get()
 {
     auto __ret = ((::RenderTarget*)NativePtr)->getContext();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::RenderContext((::RenderContext*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::RenderContext((::RenderContext*)__ret);
 }
 
-void Flood::RenderTarget::Context::set(Flood::RenderContext^ value)
+void Flood::RenderTarget::Context::set(Flood::RenderContext^ context)
 {
-    auto context = value;
     auto arg0 = (::RenderContext*)context->NativePtr;
     ((::RenderTarget*)NativePtr)->setContext(arg0);
 }
@@ -151,10 +150,10 @@ System::Collections::Generic::List<Flood::RenderView^>^ Flood::RenderTarget::Vie
     auto _tmp__ret = gcnew System::Collections::Generic::List<Flood::RenderView^>();
     for(auto _element : __ret)
     {
-        auto _marshalElement = gcnew Flood::RenderView((::RenderView*)_element);
+        auto _marshalElement = (_element == nullptr) ? nullptr : gcnew Flood::RenderView((::RenderView*)_element);
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<Flood::RenderView^>^)(_tmp__ret);
 }
 
 void* Flood::RenderTarget::UserData::get()
@@ -163,9 +162,8 @@ void* Flood::RenderTarget::UserData::get()
     return __ret;
 }
 
-void Flood::RenderTarget::UserData::set(void* value)
+void Flood::RenderTarget::UserData::set(void* v)
 {
-    auto v = value;
     auto arg0 = (void*)v;
     ((::RenderTarget*)NativePtr)->setUserData(arg0);
 }

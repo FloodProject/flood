@@ -33,13 +33,13 @@ Flood::Material::Material()
 Flood::Material::Material(System::String^ name)
     : Flood::Resource((::Resource*)nullptr)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg0 = StringMarshaller::marshalString(name);
     NativePtr = new ::Material(arg0);
 }
 
 void Flood::Material::SetShader(System::String^ name)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg0 = StringMarshaller::marshalString(name);
     ((::Material*)NativePtr)->setShader(arg0);
 }
 
@@ -59,7 +59,7 @@ void Flood::Material::SetBlending(Flood::BlendSource _0, Flood::BlendDestination
 void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
 {
     auto arg0 = (::uint8)(::uint8_t)unit;
-    auto arg1 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg1 = StringMarshaller::marshalString(name);
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
@@ -81,7 +81,7 @@ Flood::TextureUnit^ Flood::Material::GetTextureUnit(unsigned char unit)
 {
     auto arg0 = (::uint8)(::uint8_t)unit;
     auto &__ret = ((::Material*)NativePtr)->getTextureUnit(arg0);
-    return gcnew Flood::TextureUnit((::TextureUnit*)&__ret);
+    return (Flood::TextureUnit^)((&__ret == nullptr) ? nullptr : gcnew Flood::TextureUnit((::TextureUnit*)&__ret));
 }
 
 void Flood::Material::Init()
@@ -106,7 +106,7 @@ int Flood::Material::GetHashCode()
 Flood::ResourceHandle<Flood::Material^> Flood::Material::Create(Flood::Allocator^ _0, System::String^ name)
 {
     auto arg0 = (::Allocator*)_0->NativePtr;
-    auto arg1 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg1 = StringMarshaller::marshalString(name);
     auto __ret = ::MaterialCreate(arg0, arg1);
     return Flood::ResourceHandle<Flood::Material^>(__ret.id);
 }
@@ -120,25 +120,23 @@ Flood::ResourceGroup Flood::Material::ResourceGroup::get()
 System::String^ Flood::Material::Name::get()
 {
     auto &__ret = ((::Material*)NativePtr)->getName();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return (System::String^)(StringMarshaller::marshalString(__ret));
 }
 
-void Flood::Material::Name::set(System::String^ value)
+void Flood::Material::Name::set(System::String^ v)
 {
-    auto v = value;
-    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
+    auto arg0 = StringMarshaller::marshalString(v);
     ((::Material*)NativePtr)->setName(arg0);
 }
 
 Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::Shader::get()
 {
     auto &__ret = ((::Material*)NativePtr)->getShader();
-    return Flood::ResourceHandle<Flood::ShaderMaterial^>(__ret.id);
+    return (Flood::ResourceHandle<Flood::ShaderMaterial^>)(Flood::ResourceHandle<Flood::ShaderMaterial^>(__ret.id));
 }
 
-void Flood::Material::Shader::set(Flood::ResourceHandle<Flood::ShaderMaterial^> value)
+void Flood::Material::Shader::set(Flood::ResourceHandle<Flood::ShaderMaterial^> v)
 {
-    auto v = value;
     auto arg0 = (HandleId)v.Id;
     ((::Material*)NativePtr)->setShader(arg0);
 }
@@ -149,9 +147,8 @@ bool Flood::Material::DepthWrite::get()
     return __ret;
 }
 
-void Flood::Material::DepthWrite::set(bool value)
+void Flood::Material::DepthWrite::set(bool v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setDepthWrite(v);
 }
 
@@ -161,9 +158,8 @@ bool Flood::Material::DepthTest::get()
     return __ret;
 }
 
-void Flood::Material::DepthTest::set(bool value)
+void Flood::Material::DepthTest::set(bool v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setDepthTest(v);
 }
 
@@ -173,9 +169,8 @@ Flood::DepthCompare Flood::Material::DepthCompare::get()
     return (Flood::DepthCompare)__ret;
 }
 
-void Flood::Material::DepthCompare::set(Flood::DepthCompare value)
+void Flood::Material::DepthCompare::set(Flood::DepthCompare v)
 {
-    auto v = value;
     auto arg0 = (::DepthCompare)v;
     ((::Material*)NativePtr)->setDepthCompare(arg0);
 }
@@ -186,9 +181,8 @@ Flood::Vector2 Flood::Material::DepthRange::get()
     return Flood::Vector2((::Vector2*)&__ret);
 }
 
-void Flood::Material::DepthRange::set(Flood::Vector2 value)
+void Flood::Material::DepthRange::set(Flood::Vector2 v)
 {
-    auto v = value;
     auto _marshal0 = ::Vector2();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
@@ -202,9 +196,8 @@ Flood::Vector2 Flood::Material::DepthOffset::get()
     return Flood::Vector2((::Vector2*)&__ret);
 }
 
-void Flood::Material::DepthOffset::set(Flood::Vector2 value)
+void Flood::Material::DepthOffset::set(Flood::Vector2 v)
 {
-    auto v = value;
     auto _marshal0 = ::Vector2();
     _marshal0.x = v.X;
     _marshal0.y = v.Y;
@@ -218,9 +211,8 @@ bool Flood::Material::AlphaTest::get()
     return __ret;
 }
 
-void Flood::Material::AlphaTest::set(bool value)
+void Flood::Material::AlphaTest::set(bool v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setAlphaTest(v);
 }
 
@@ -230,9 +222,8 @@ float Flood::Material::LineWidth::get()
     return __ret;
 }
 
-void Flood::Material::LineWidth::set(float value)
+void Flood::Material::LineWidth::set(float v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setLineWidth(v);
 }
 
@@ -242,9 +233,8 @@ bool Flood::Material::LineSmoothing::get()
     return __ret;
 }
 
-void Flood::Material::LineSmoothing::set(bool value)
+void Flood::Material::LineSmoothing::set(bool v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setLineSmoothing(v);
 }
 
@@ -254,9 +244,8 @@ bool Flood::Material::BackfaceCulling::get()
     return __ret;
 }
 
-void Flood::Material::BackfaceCulling::set(bool value)
+void Flood::Material::BackfaceCulling::set(bool v)
 {
-    auto v = value;
     ((::Material*)NativePtr)->setBackfaceCulling(v);
 }
 
@@ -272,14 +261,44 @@ Flood::BlendDestination Flood::Material::BlendDestination::get()
     return (Flood::BlendDestination)__ret;
 }
 
+System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ Flood::Material::TextureUnits::get()
+{
+    auto _tmp__TextureUnits = gcnew System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>();
+    for(auto _it = ((::Material*)NativePtr)->textureUnits.Begin(); _it != ((::Material*)NativePtr)->textureUnits.End(); ++_it)
+    {
+        auto& _key = _it->first;
+        auto& _val = _it->second;
+        auto _marshalKey = _key;
+        auto ___val = new ::TextureUnit(_val);
+        auto _marshalValue = (___val == nullptr) ? nullptr : gcnew Flood::TextureUnit((::TextureUnit*)___val);
+        _tmp__TextureUnits->Add(_marshalKey, _marshalValue);
+    }
+    return _tmp__TextureUnits;
+}
+
+void Flood::Material::TextureUnits::set(System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ value)
+{
+    auto _tmpvalue = HashMap<::uint8, ::TextureUnit>();
+    auto _keys = value->Keys->GetEnumerator();
+    while (_keys.MoveNext())
+    {
+        unsigned char _key = _keys.Current;
+        Flood::TextureUnit^ _val = value[_key];
+        auto _marshalKey = (::uint8)(::uint8_t)_key;
+        auto _marshalValue = *(::TextureUnit*)_val->NativePtr;
+        _tmpvalue[_marshalKey] = _marshalValue;
+    }
+    ((::Material*)NativePtr)->textureUnits = _tmpvalue;
+}
+
 System::String^ Flood::Material::Name1::get()
 {
-    return clix::marshalString<clix::E_UTF8>(((::Material*)NativePtr)->name);
+    return StringMarshaller::marshalString(((::Material*)NativePtr)->name);
 }
 
 void Flood::Material::Name1::set(System::String^ value)
 {
-    ((::Material*)NativePtr)->name = clix::marshalString<clix::E_UTF8>(value);
+    ((::Material*)NativePtr)->name = StringMarshaller::marshalString(value);
 }
 
 Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::Shader1::get()
@@ -302,6 +321,72 @@ void Flood::Material::CullBackfaces::set(bool value)
     ((::Material*)NativePtr)->cullBackfaces = value;
 }
 
+Flood::DepthCompare Flood::Material::DepthCompare1::get()
+{
+    return (Flood::DepthCompare)((::Material*)NativePtr)->depthCompare;
+}
+
+void Flood::Material::DepthCompare1::set(Flood::DepthCompare value)
+{
+    ((::Material*)NativePtr)->depthCompare = (::DepthCompare)value;
+}
+
+bool Flood::Material::DepthTest1::get()
+{
+    return ((::Material*)NativePtr)->depthTest;
+}
+
+void Flood::Material::DepthTest1::set(bool value)
+{
+    ((::Material*)NativePtr)->depthTest = value;
+}
+
+bool Flood::Material::DepthWrite1::get()
+{
+    return ((::Material*)NativePtr)->depthWrite;
+}
+
+void Flood::Material::DepthWrite1::set(bool value)
+{
+    ((::Material*)NativePtr)->depthWrite = value;
+}
+
+Flood::Vector2 Flood::Material::DepthRange1::get()
+{
+    return Flood::Vector2((::Vector2*)&((::Material*)NativePtr)->depthRange);
+}
+
+void Flood::Material::DepthRange1::set(Flood::Vector2 value)
+{
+    auto _marshal0 = ::Vector2();
+    _marshal0.x = value.X;
+    _marshal0.y = value.Y;
+    ((::Material*)NativePtr)->depthRange = _marshal0;
+}
+
+Flood::Vector2 Flood::Material::DepthOffset1::get()
+{
+    return Flood::Vector2((::Vector2*)&((::Material*)NativePtr)->depthOffset);
+}
+
+void Flood::Material::DepthOffset1::set(Flood::Vector2 value)
+{
+    auto _marshal0 = ::Vector2();
+    _marshal0.x = value.X;
+    _marshal0.y = value.Y;
+    ((::Material*)NativePtr)->depthOffset = _marshal0;
+}
+
+bool Flood::Material::AlphaTest1::get()
+{
+    return ((::Material*)NativePtr)->alphaTest;
+}
+
+void Flood::Material::AlphaTest1::set(bool value)
+{
+    ((::Material*)NativePtr)->alphaTest = value;
+}
+
 bool Flood::Material::LineSmooth::get()
 {
     return ((::Material*)NativePtr)->lineSmooth;
@@ -310,6 +395,16 @@ bool Flood::Material::LineSmooth::get()
 void Flood::Material::LineSmooth::set(bool value)
 {
     ((::Material*)NativePtr)->lineSmooth = value;
+}
+
+float Flood::Material::LineWidth1::get()
+{
+    return ((::Material*)NativePtr)->lineWidth;
+}
+
+void Flood::Material::LineWidth1::set(float value)
+{
+    ((::Material*)NativePtr)->lineWidth = value;
 }
 
 Flood::BlendSource Flood::Material::Source::get()

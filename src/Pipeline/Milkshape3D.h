@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Stream.h"
+#include "Core/Containers/Vector.h"
 #include "Engine/Resources/Mesh.h"
 #include "Engine/Resources/Animation.h"
 #include "Pipeline/MilkshapeFormat.h"
@@ -97,19 +98,19 @@ protected:
 	int findJoint(const char* name);
 
 	// Contents of the file.
-	std::vector<byte> filebuf;
+	Vector<byte> filebuf;
 	unsigned long index;
 
 	// Mesh data structures.
-	std::vector<ms3d_vertex_t*> vertices;
-	std::vector<ms3d_triangle_t*> triangles;
-	std::vector<ms3d_group_t> groups;
-	std::vector<ms3d_material_t*> materials;
-	std::vector<ms3d_joint_t> joints;
+	Vector<ms3d_vertex_t*> vertices;
+	Vector<ms3d_triangle_t*> triangles;
+	Vector<ms3d_group_t> groups;
+	Vector<ms3d_material_t*> materials;
+	Vector<ms3d_joint_t> joints;
 	String mainComment;
 
 	// Animation metadata.
-	std::vector<AnimationMetadata> metadata;
+	Vector<AnimationMetadata> metadata;
 
 	// Animation FPS.
 	float animationFPS;

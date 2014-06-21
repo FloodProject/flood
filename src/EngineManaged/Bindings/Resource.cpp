@@ -62,13 +62,12 @@ void Flood::Resource::__Instance::set(System::IntPtr object)
 System::String^ Flood::Resource::Path::get()
 {
     auto &__ret = ((::Resource*)NativePtr)->getPath();
-    return clix::marshalString<clix::E_UTF8>(__ret);
+    return (System::String^)(StringMarshaller::marshalString(__ret));
 }
 
-void Flood::Resource::Path::set(System::String^ value)
+void Flood::Resource::Path::set(System::String^ v)
 {
-    auto v = value;
-    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
+    auto arg0 = StringMarshaller::marshalUTF8String(v);
     ((::Resource*)NativePtr)->setPath(arg0);
 }
 
@@ -78,9 +77,8 @@ Flood::ResourceStatus Flood::Resource::Status::get()
     return (Flood::ResourceStatus)__ret;
 }
 
-void Flood::Resource::Status::set(Flood::ResourceStatus value)
+void Flood::Resource::Status::set(Flood::ResourceStatus v)
 {
-    auto v = value;
     auto arg0 = (::ResourceStatus)v;
     ((::Resource*)NativePtr)->setStatus(arg0);
 }
@@ -93,17 +91,27 @@ Flood::ResourceGroup Flood::Resource::ResourceGroup::get()
 
 System::String^ Flood::Resource::Path1::get()
 {
-    return clix::marshalString<clix::E_UTF8>(((::Resource*)NativePtr)->path);
+    return StringMarshaller::marshalString(((::Resource*)NativePtr)->path);
 }
 
 void Flood::Resource::Path1::set(System::String^ value)
 {
-    ((::Resource*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
+    ((::Resource*)NativePtr)->path = StringMarshaller::marshalUTF8String(value);
+}
+
+Flood::ResourceStatus Flood::Resource::Status1::get()
+{
+    return (Flood::ResourceStatus)((::Resource*)NativePtr)->status;
+}
+
+void Flood::Resource::Status1::set(Flood::ResourceStatus value)
+{
+    ((::Resource*)NativePtr)->status = (::ResourceStatus)value;
 }
 
 Flood::ResourceStream^ Flood::Resource::Stream::get()
 {
-    return gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);
+    return (((::Resource*)NativePtr)->stream == nullptr) ? nullptr : gcnew Flood::ResourceStream((::ResourceStream*)((::Resource*)NativePtr)->stream);
 }
 
 void Flood::Resource::Stream::set(Flood::ResourceStream^ value)

@@ -76,8 +76,8 @@ void Terrain::addCell( int x, int y )
 	int numTiles = int(settings.NumberTiles + 1.0f);
 	int numHeights = numTiles*numTiles;
 
-	std::vector<float> heights;
-	heights.resize( numHeights, 0 );
+	Vector<float> heights;
+	heights.Resize( numHeights, 0 );
 
 	createCell(x, y, heights);
 }
@@ -97,14 +97,14 @@ void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 	request.x = x;
 	request.y = y;
 
-	requestsQueue.push_back( request );
+	requestsQueue.Push( request );
 }
 
 //-----------------------------------//
 
 CellPtr Terrain::getCell( int x, int y )
 {
-	for( size_t i = 0; i < terrainCells.size(); i++ )
+	for( size_t i = 0; i < terrainCells.Size(); i++ )
 	{
 		const CellPtr& cell = terrainCells[i];
 
@@ -127,13 +127,13 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
+CellPtr Terrain::createCell( int x, int y, Vector<float>& heights )
 {
 	CellPtr cell = AllocateHeap(Cell, x, y);
 	cell->setSettings(settings);
 	cell->setHeights(heights);
 
-	terrainCells.push_back(cell);
+	terrainCells.Push(cell);
 
 	String name = StringFormat("Cell (%d,%d)", x, y);
 
@@ -162,7 +162,7 @@ CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 
 	settings.NumberTiles = heightmap->getWidth() - 1;
 
-	std::vector<float> heights;
+	Vector<float> heights;
 	convertHeightmap( heightmap, heights );
 
 	return createCell(x, y, heights);
@@ -170,15 +170,15 @@ CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights )
+void Terrain::convertHeightmap( const ImagePtr& heightmap, Vector<float>& heights )
 {
 	#pragma TODO("Can't handle any other pixel format right now...")
 
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );
 
-	const std::vector<byte> data = heightmap->getBuffer();
+	const Vector<byte> data = heightmap->getBuffer();
 
-	for( size_t i = 0; i < data.size(); i += 4 )
+	for( size_t i = 0; i < data.Size(); i += 4 )
 	{
 		byte R = data[i];
 		byte G = data[i+1];
@@ -187,7 +187,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& h
 		float S = 255*3;
 		float height = (R/S)+(G/S)+(B/S);
 		
-		heights.push_back( height );
+		heights.Push( height );
 	}
 }
 
@@ -244,7 +244,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 void Terrain::update( float delta )
 {
-	std::vector<CellRequest>::iterator it = requestsQueue.begin();
+	Vector<CellRequest>::Iterator it = requestsQueue.begin();
 
 	while( it != requestsQueue.end() )
 	{
@@ -259,7 +259,7 @@ void Terrain::update( float delta )
 		if( heightmap->isLoaded() )
 		{
 			createCellHeightmap( x, y, heightmap );
-			it = requestsQueue.erase(it);
+			it = requestsQueue.Erase(it);
 		}
 		else
 		{

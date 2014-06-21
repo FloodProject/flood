@@ -52,11 +52,11 @@ void Flood::RenderBuffer::Update()
 void Flood::RenderBuffer::Read(char attachment, System::Collections::Generic::List<unsigned char>^ data)
 {
     auto arg0 = (::int8)(::int8_t)attachment;
-    auto _tmpdata = std::vector<::uint8>();
+    auto _tmpdata = Vector<::uint8>();
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.Push(_marshalElement);
     }
     auto arg1 = _tmpdata;
     ((::RenderBuffer*)NativePtr)->read(arg0, arg1);
@@ -67,7 +67,7 @@ Flood::Image^ Flood::RenderBuffer::ReadImage(char attachment)
     auto arg0 = (::int8)(::int8_t)attachment;
     auto __ret = ((::RenderBuffer*)NativePtr)->readImage(arg0);
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Image((::Image*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Image((::Image*)__ret);
 }
 
 void Flood::RenderBuffer::CreateRenderBuffer(Flood::RenderBufferType _0)
@@ -80,7 +80,7 @@ Flood::Texture^ Flood::RenderBuffer::CreateRenderTexture(Flood::RenderBufferType
 {
     auto arg0 = (::RenderBufferType)_1;
     auto __ret = ((::RenderBuffer*)NativePtr)->createRenderTexture(arg0);
-    return gcnew Flood::Texture((::Texture*)__ret.get());
+    return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Texture((::Texture*)__ret.get());
 }
 
 void Flood::RenderBuffer::AttachRenderTexture(Flood::Texture^ tex)
@@ -106,6 +106,6 @@ int Flood::RenderBuffer::GetHashCode()
 Flood::Settings Flood::RenderBuffer::Settings::get()
 {
     auto &__ret = ((::RenderBuffer*)NativePtr)->getSettings();
-    return Flood::Settings((::Settings*)&__ret);
+    return (Flood::Settings)(Flood::Settings((::Settings*)&__ret));
 }
 

@@ -38,7 +38,7 @@ public:
 	void resetKeys();
 
 	// Returns the current state of the keys.
-	GETTER(KeyState, const std::vector<bool>&, keyState)
+	GETTER(KeyState, const Vector<bool>&, keyState)
 
 	// Event is sent when a key is pressed.
 	Event1<const KeyEvent&> onKeyPress;
@@ -58,7 +58,7 @@ private:
 	FLD_IGNORE void keyReleased( const KeyEvent& keyEvent );
 
 	// Current key state.
-	std::vector<bool> keyState;
+	Vector<bool> keyState;
 
 	// Last key pressed.
 	Keys lastKey;

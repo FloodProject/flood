@@ -33,7 +33,7 @@ static char* AllocateName(const char* name)
 
 UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 {
-	//UniformBufferElements::iterator it = elements.find( name.c_str() );
+	//UniformBufferElements::iterator it = elements.find( name.CString() );
 	//if( it != elements.end() ) return it->second;
 
 	void* p = AllocatorAllocate(GetFrameAllocator(), sizeof(UniformBufferElement)+size, 0);
@@ -63,10 +63,10 @@ UniformBufferElement* UniformBuffer::getElement(const char* name, size_t size)
 
 void UniformBuffer::removeUniform( const char* slot )
 {
-	UniformBufferElements::iterator it = elements.find(slot);
-	if( it == elements.end() ) return;
+	UniformBufferElements::Iterator it = elements.Find(slot);
+	if( it == elements.End() ) return;
 
-	elements.erase(it);
+	elements.Erase(it);
 }
 
 //-----------------------------------//
@@ -95,19 +95,19 @@ void UniformBuffer::setUniform( const char* name, float data )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Vector3>& vec )
+void UniformBuffer::setUniform( const char* name, const Vector<Vector3>& vec )
 {
-	size_t size = sizeof(Vector3)*vec.size();
+	size_t size = sizeof(Vector3)*vec.Size();
 	UniformBufferElement* element = getElement(name, size);
 	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
-	element->count = vec.size();
-	memcpy(&element->data, &vec.front(), size);
+	element->count = vec.Size();
+	memcpy(&element->data, vec.Buffer(), size);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Color>& vec )
+void UniformBuffer::setUniform( const char* name, const Vector<Color>& vec )
 {
 	assert(0 && "Not implemented yet");
 
@@ -160,14 +160,14 @@ void UniformBuffer::setUniform( const char* name, const Matrix4x4& matrix )
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const char* name, const std::vector<Matrix4x4>& vec )
+void UniformBuffer::setUniform( const char* name, const Vector<Matrix4x4>& vec )
 {
-	size_t size = sizeof(Matrix4x4)*vec.size();
+	size_t size = sizeof(Matrix4x4)*vec.Size();
 	UniformBufferElement* element = getElement(name, size);
 	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
-	element->count = vec.size();
-	memcpy(&element->data, &vec.front(), size);
+	element->count = vec.Size();
+    memcpy(&element->data, vec.Buffer(), size);
 }
 
 //-----------------------------------//

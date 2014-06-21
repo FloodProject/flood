@@ -62,7 +62,7 @@ SUITE(Core)
 		CHECK_EQUAL("E", enumE->name);
 		CHECK_EQUAL(sizeof(E), enumE->size);
 		CHECK_EQUAL((uint8)TypeKind::Enumeration, (uint8)enumE->kind);
-		CHECK_EQUAL(E::Max, enumE->values.size());
+		CHECK_EQUAL(E::Max, enumE->values.Size());
 
 		CHECK_EQUAL("F1", enumE->getValueName(E::F1));
 		CHECK_EQUAL(E::F1, enumE->getValue("F1"));
@@ -141,16 +141,16 @@ SUITE(Core)
 		FieldWatchVector watches;
 		ClassWatchUpdate(watch, watches);
 
-		CHECK_EQUAL(0, watches.size());
+		CHECK_EQUAL(0, watches.Size());
 
 		instanceB.change();
 
 		ClassWatchUpdate(watch, watches);
-		CHECK_EQUAL(4, watches.size());
+		CHECK_EQUAL(4, watches.Size());
 
-		watches.clear();
+		watches.Clear();
 		ClassWatchUpdate(watch, watches);
-		CHECK_EQUAL(0, watches.size());
+		CHECK_EQUAL(0, watches.Size());
 
 		Deallocate(watch);
 	}

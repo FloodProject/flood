@@ -9,8 +9,7 @@
 
 #include "Core/API.h"
 #include "Core/References.h"
-
-#include <array>
+#include "Core/Containers/Vector.h"
 
 FWD_DECL_INTRUSIVE(Peer)
 FWD_DECL_INTRUSIVE(Packet)
@@ -18,7 +17,7 @@ FWD_DECL_INTRUSIVE(Session)
 
 NAMESPACE_CORE_BEGIN
 
-FLD_IGNORE typedef std::array<uint8,20> SessionHash;
+FLD_IGNORE typedef Vector<uint8,20> SessionHash;
 
 //-----------------------------------//
 
@@ -28,8 +27,8 @@ FLD_IGNORE typedef std::array<uint8,20> SessionHash;
 
 enum class SessionState
 {
-	Closed,
-	Open,
+    Closed,
+    Open,
 };
 
 //-----------------------------------//
@@ -45,31 +44,31 @@ class API_CORE Session : public ReferenceCounted
 {
 public:
 
-	Session();
-	~Session();
+    Session();
+    ~Session();
 
-	GETTER(State, SessionState, state);
-	FLD_IGNORE void setState(SessionState state);
+    GETTER(State, SessionState, state);
+    FLD_IGNORE void setState(SessionState state);
 
-	GETTER(Peer, Peer*, peer);
-	FLD_IGNORE SETTER(Peer, Peer*, peer);
+    GETTER(Peer, Peer*, peer);
+    FLD_IGNORE SETTER(Peer, Peer*, peer);
 
-	SessionHash* getHash();
-	FLD_IGNORE void setHash(const SessionHash& newHash);
+    SessionHash* getHash();
+    FLD_IGNORE void setHash(const SessionHash& newHash);
 
-	Event1<SessionState> onStateChange;
-	Event2<const PacketPtr&, int> onPacket;
+    Event1<SessionState> onStateChange;
+    Event2<const PacketPtr&, int> onPacket;
 
-	FLD_HASHCODE int hashCode();
-	FLD_EQUALS bool isEquals(Session* session);
+    FLD_HASHCODE int hashCode();
+    FLD_EQUALS bool isEquals(Session* session);
 
 private:
 
-	SessionState state;
-	Peer* peer;
+    SessionState state;
+    Peer* peer;
 
-	SessionHash hash;
-	bool hasHash;
+    SessionHash hash;
+    bool hasHash;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Session);

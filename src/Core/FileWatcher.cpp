@@ -29,7 +29,7 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 FileWatchEvent::FileWatchEvent( FileWatchEventKind action, FileWatchId id,
-	const String& dir, const String& file )
+	const UTF8String& dir, const UTF8String& file )
 	: action(action)
 	, watchId(id)
 	, dir(dir)

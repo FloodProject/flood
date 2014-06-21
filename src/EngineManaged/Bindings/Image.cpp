@@ -118,9 +118,8 @@ unsigned int Flood::Image::Width::get()
     return __ret;
 }
 
-void Flood::Image::Width::set(unsigned int value)
+void Flood::Image::Width::set(unsigned int v)
 {
-    auto v = value;
     auto arg0 = (::uint32)(::uint32_t)v;
     ((::Image*)NativePtr)->setWidth(arg0);
 }
@@ -131,9 +130,8 @@ unsigned int Flood::Image::Height::get()
     return __ret;
 }
 
-void Flood::Image::Height::set(unsigned int value)
+void Flood::Image::Height::set(unsigned int v)
 {
-    auto v = value;
     auto arg0 = (::uint32)(::uint32_t)v;
     ((::Image*)NativePtr)->setHeight(arg0);
 }
@@ -144,9 +142,8 @@ Flood::PixelFormat Flood::Image::PixelFormat::get()
     return (Flood::PixelFormat)__ret;
 }
 
-void Flood::Image::PixelFormat::set(Flood::PixelFormat value)
+void Flood::Image::PixelFormat::set(Flood::PixelFormat v)
 {
-    auto v = value;
     auto arg0 = (::PixelFormat)v;
     ((::Image*)NativePtr)->setPixelFormat(arg0);
 }
@@ -160,17 +157,16 @@ System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer::get()
         auto _marshalElement = _element;
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<unsigned char>^)(_tmp__ret);
 }
 
-void Flood::Image::Buffer::set(System::Collections::Generic::List<unsigned char>^ value)
+void Flood::Image::Buffer::set(System::Collections::Generic::List<unsigned char>^ v)
 {
-    auto v = value;
-    auto _tmpv = std::vector<::byte>();
+    auto _tmpv = Vector<::byte>();
     for each(unsigned char _element in v)
     {
         auto _marshalElement = (::byte)(::uint8)(::uint8_t)_element;
-        _tmpv.push_back(_marshalElement);
+        _tmpv.Push(_marshalElement);
     }
     auto arg0 = _tmpv;
     ((::Image*)NativePtr)->setBuffer(arg0);
@@ -185,7 +181,7 @@ System::Collections::Generic::List<unsigned char>^ Flood::Image::Buffer1::get()
         auto _marshalElement = _element;
         _tmp__ret->Add(_marshalElement);
     }
-    return _tmp__ret;
+    return (System::Collections::Generic::List<unsigned char>^)(_tmp__ret);
 }
 
 unsigned int Flood::Image::PixelSize::get()
@@ -206,9 +202,8 @@ Flood::ResourceGroup Flood::Image::ResourceGroup::get()
     return (Flood::ResourceGroup)__ret;
 }
 
-void Flood::Image::Color::set(Flood::Color value)
+void Flood::Image::Color::set(Flood::Color color)
 {
-    auto color = value;
     auto _marshal0 = ::Color();
     _marshal0.r = (::byte)(::uint8)(::uint8_t)color.R;
     _marshal0.g = (::byte)(::uint8)(::uint8_t)color.G;
@@ -245,8 +240,8 @@ void Flood::ImageWriter::Save(Flood::Image^ image, Flood::Stream^ stream)
 void Flood::ImageWriter::Save(Flood::Image^ image, System::String^ filePath)
 {
     auto arg0 = (::Image*)image->NativePtr;
-    auto _arg1 = clix::marshalString<clix::E_UTF8>(filePath);
-    auto arg1 = _arg1.c_str();
+    auto ____temp = clix::marshalString<clix::E_UTF8>(filePath);
+    auto arg1 = ____temp.c_str();
     ((::ImageWriter*)NativePtr)->save(arg0, arg1);
 }
 

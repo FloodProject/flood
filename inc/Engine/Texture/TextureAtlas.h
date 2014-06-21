@@ -61,7 +61,9 @@ private:
         }
     };
 
-    std::map<ImageHandle, SubTexture, CompareHandle> imageSubTextures;
+    //TODO: CHeck if map needs to be sorted
+    //std::map<ImageHandle, SubTexture, CompareHandle> imageSubTextures;
+    HashMap<ImageHandle, SubTexture> imageSubTextures;
     ImageHandle atlasImageHandle;
 };
 

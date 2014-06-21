@@ -14,8 +14,8 @@ Flood::FileWatchEvent::FileWatchEvent(::FileWatchEvent* native)
 {
     __Action = (Flood::FileWatchEventKind)native->action;
     __WatchId = native->watchId;
-    __Dir = clix::marshalString<clix::E_UTF8>(native->dir);
-    __Filename = clix::marshalString<clix::E_UTF8>(native->filename);
+    __Dir = StringMarshaller::marshalString(native->dir);
+    __Filename = StringMarshaller::marshalString(native->filename);
     __Userdata = native->userdata;
 }
 
@@ -24,18 +24,18 @@ Flood::FileWatchEvent::FileWatchEvent(System::IntPtr native)
     auto __native = (::FileWatchEvent*)native.ToPointer();
     __Action = (Flood::FileWatchEventKind)__native->action;
     __WatchId = __native->watchId;
-    __Dir = clix::marshalString<clix::E_UTF8>(__native->dir);
-    __Filename = clix::marshalString<clix::E_UTF8>(__native->filename);
+    __Dir = StringMarshaller::marshalString(__native->dir);
+    __Filename = StringMarshaller::marshalString(__native->filename);
     __Userdata = __native->userdata;
 }
 
 Flood::FileWatchEvent::FileWatchEvent(Flood::FileWatchEventKind _0, unsigned int _1, System::String^ dir, System::String^ file)
 {
-    ::FileWatchEvent _native((::FileWatchEventKind)_0, (::FileWatchId)(::uint32)(::uint32_t)_1, clix::marshalString<clix::E_UTF8>(dir), clix::marshalString<clix::E_UTF8>(file));
+    ::FileWatchEvent _native((::FileWatchEventKind)_0, (::FileWatchId)(::uint32)(::uint32_t)_1, StringMarshaller::marshalUTF8String(dir), StringMarshaller::marshalUTF8String(file));
     this->Action = (Flood::FileWatchEventKind)_native.action;
     this->WatchId = _native.watchId;
-    this->Dir = clix::marshalString<clix::E_UTF8>(_native.dir);
-    this->Filename = clix::marshalString<clix::E_UTF8>(_native.filename);
+    this->Dir = StringMarshaller::marshalString(_native.dir);
+    this->Filename = StringMarshaller::marshalString(_native.filename);
     this->Userdata = _native.userdata;
 }
 
@@ -106,7 +106,7 @@ Flood::FileWatcher::FileWatcher()
 
 unsigned int Flood::FileWatcher::AddWatch(System::String^ directory, void* userdata)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(directory);
+    auto arg0 = StringMarshaller::marshalUTF8String(directory);
     auto arg1 = (void*)userdata;
     auto __ret = ((::FileWatcher*)NativePtr)->addWatch(arg0, arg1);
     return __ret;
@@ -114,7 +114,7 @@ unsigned int Flood::FileWatcher::AddWatch(System::String^ directory, void* userd
 
 void Flood::FileWatcher::RemoveWatch(System::String^ directory)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(directory);
+    auto arg0 = StringMarshaller::marshalUTF8String(directory);
     ((::FileWatcher*)NativePtr)->removeWatch(arg0);
 }
 

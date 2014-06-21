@@ -11,21 +11,21 @@
 using namespace System;
 using namespace System::Runtime::InteropServices;
 
-bool Flood::FloodNetwork::NetworkInitialize()
+bool Flood::Network::NetworkInitialize()
 {
     auto __ret = ::NetworkInitialize();
     return __ret;
 }
 
-void Flood::FloodNetwork::NetworkDeinitialize()
+void Flood::Network::NetworkDeinitialize()
 {
     ::NetworkDeinitialize();
 }
 
-Flood::Allocator^ Flood::FloodNetwork::AllocatorGetNetwork()
+Flood::Allocator^ Flood::Network::AllocatorGetNetwork()
 {
     auto __ret = ::AllocatorGetNetwork();
     if (__ret == nullptr) return nullptr;
-    return gcnew Flood::Allocator((::Allocator*)__ret);
+    return (__ret == nullptr) ? nullptr : gcnew Flood::Allocator((::Allocator*)__ret);
 }
 

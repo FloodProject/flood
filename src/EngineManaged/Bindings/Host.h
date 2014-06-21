@@ -9,6 +9,7 @@
 
 #include "CppSharp.h"
 #include <Core/Network/Host.h>
+#include "StringConverter.h"
 
 namespace Flood
 {
@@ -16,9 +17,12 @@ namespace Flood
     ref class HostClient;
     ref class HostServer;
     ref class Packet;
+    ref class PacketProcessors;
     ref class Peer;
     ref class Session;
     ref class SessionManager;
+    ref class _ENetEvent;
+    ref class _ENetHost;
     value struct HostConnectionDetails;
 }
 

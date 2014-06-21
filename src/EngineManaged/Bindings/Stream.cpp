@@ -33,7 +33,7 @@ bool Flood::Stream::Close()
     return __ret;
 }
 
-long long Flood::Stream::Read(void* buffer, unsigned long long size)
+unsigned long long Flood::Stream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -41,7 +41,7 @@ long long Flood::Stream::Read(void* buffer, unsigned long long size)
     return __ret;
 }
 
-long long Flood::Stream::Write(void* buffer, unsigned long long size)
+unsigned long long Flood::Stream::Write(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -68,20 +68,20 @@ void Flood::Stream::Resize(long long size)
     ((::Stream*)NativePtr)->resize(arg0);
 }
 
-long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^ data)
+unsigned long long Flood::Stream::Read(System::Collections::Generic::List<unsigned char>^ data)
 {
-    auto _tmpdata = std::vector<::uint8>();
+    auto _tmpdata = Vector<::uint8>();
     for each(unsigned char _element in data)
     {
         auto _marshalElement = (::uint8)(::uint8_t)_element;
-        _tmpdata.push_back(_marshalElement);
+        _tmpdata.Push(_marshalElement);
     }
     auto arg0 = _tmpdata;
     auto __ret = ((::Stream*)NativePtr)->read(arg0);
     return __ret;
 }
 
-long long Flood::Stream::ReadBuffer(void* buffer, long long size)
+unsigned long long Flood::Stream::ReadBuffer(void* buffer, long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::int64)size;
@@ -89,27 +89,47 @@ long long Flood::Stream::ReadBuffer(void* buffer, long long size)
     return __ret;
 }
 
-long long Flood::Stream::ReadString(System::String^ text)
+unsigned long long Flood::Stream::ReadString(System::String^ text)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(text);
+    auto arg0 = StringMarshaller::marshalString(text);
     auto __ret = ((::Stream*)NativePtr)->readString(arg0);
     return __ret;
 }
 
-long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::String^>^ lines)
+unsigned long long Flood::Stream::ReadUTF8String(System::String^ text)
 {
-    auto _tmplines = std::vector<::String>();
+    auto arg0 = StringMarshaller::marshalUTF8String(text);
+    auto __ret = ((::Stream*)NativePtr)->readUTF8String(arg0);
+    return __ret;
+}
+
+unsigned long long Flood::Stream::ReadLines(System::Collections::Generic::List<System::String^>^ lines)
+{
+    auto _tmplines = Vector<::String>();
     for each(System::String^ _element in lines)
     {
-        auto _marshalElement = clix::marshalString<clix::E_UTF8>(_element);
-        _tmplines.push_back(_marshalElement);
+        auto _marshalElement = StringMarshaller::marshalString(_element);
+        _tmplines.Push(_marshalElement);
     }
     auto arg0 = _tmplines;
     auto __ret = ((::Stream*)NativePtr)->readLines(arg0);
     return __ret;
 }
 
-long long Flood::Stream::Write(unsigned char* buf, unsigned long long size)
+unsigned long long Flood::Stream::ReadUTF8Lines(System::Collections::Generic::List<System::String^>^ lines)
+{
+    auto _tmplines = Vector<::UTF8String>();
+    for each(System::String^ _element in lines)
+    {
+        auto _marshalElement = StringMarshaller::marshalUTF8String(_element);
+        _tmplines.Push(_marshalElement);
+    }
+    auto arg0 = _tmplines;
+    auto __ret = ((::Stream*)NativePtr)->readUTF8Lines(arg0);
+    return __ret;
+}
+
+unsigned long long Flood::Stream::Write(unsigned char* buf, unsigned long long size)
 {
     auto arg0 = (::uint8*)buf;
     auto arg1 = (::uint64)size;
@@ -117,10 +137,17 @@ long long Flood::Stream::Write(unsigned char* buf, unsigned long long size)
     return __ret;
 }
 
-long long Flood::Stream::WriteString(System::String^ string)
+unsigned long long Flood::Stream::WriteString(System::String^ string)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(string);
+    auto arg0 = StringMarshaller::marshalString(string);
     auto __ret = ((::Stream*)NativePtr)->writeString(arg0);
+    return __ret;
+}
+
+unsigned long long Flood::Stream::WriteUTF8String(System::String^ string)
+{
+    auto arg0 = StringMarshaller::marshalUTF8String(string);
+    auto __ret = ((::Stream*)NativePtr)->writeUTF8String(arg0);
     return __ret;
 }
 
@@ -148,7 +175,7 @@ void Flood::Stream::__Instance::set(System::IntPtr object)
     NativePtr = (::Stream*)object.ToPointer();
 }
 
-long long Flood::Stream::Position::get()
+unsigned long long Flood::Stream::Position::get()
 {
     auto __ret = ((::Stream*)NativePtr)->getPosition();
     return __ret;
@@ -156,12 +183,12 @@ long long Flood::Stream::Position::get()
 
 System::String^ Flood::Stream::Path::get()
 {
-    return clix::marshalString<clix::E_UTF8>(((::Stream*)NativePtr)->path);
+    return StringMarshaller::marshalString(((::Stream*)NativePtr)->path);
 }
 
 void Flood::Stream::Path::set(System::String^ value)
 {
-    ((::Stream*)NativePtr)->path = clix::marshalString<clix::E_UTF8>(value);
+    ((::Stream*)NativePtr)->path = StringMarshaller::marshalUTF8String(value);
 }
 
 Flood::StreamOpenMode Flood::Stream::Mode::get()
@@ -188,7 +215,7 @@ Flood::WebStream::WebStream(System::IntPtr native)
 Flood::WebStream::WebStream(System::String^ URL, Flood::StreamOpenMode mode)
     : Flood::Stream((::Stream*)nullptr)
 {
-    auto arg0 = clix::marshalString<clix::E_UTF8>(URL);
+    auto arg0 = StringMarshaller::marshalUTF8String(URL);
     auto arg1 = (::StreamOpenMode)mode;
     NativePtr = new ::WebStream(arg0, arg1);
 }
@@ -205,7 +232,7 @@ bool Flood::WebStream::Close()
     return __ret;
 }
 
-long long Flood::WebStream::Read(void* buffer, unsigned long long size)
+unsigned long long Flood::WebStream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -213,7 +240,7 @@ long long Flood::WebStream::Read(void* buffer, unsigned long long size)
     return __ret;
 }
 
-long long Flood::WebStream::Write(void* buffer, unsigned long long size)
+unsigned long long Flood::WebStream::Write(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -290,7 +317,7 @@ bool Flood::ZipStream::Close()
     return __ret;
 }
 
-long long Flood::ZipStream::Read(void* buffer, unsigned long long size)
+unsigned long long Flood::ZipStream::Read(void* buffer, unsigned long long size)
 {
     auto arg0 = (void*)buffer;
     auto arg1 = (::uint64)size;
@@ -325,7 +352,7 @@ int Flood::ZipStream::GetHashCode()
     return (int)NativePtr;
 }
 
-long long Flood::ZipStream::Position::get()
+unsigned long long Flood::ZipStream::Position::get()
 {
     auto __ret = ((::ZipStream*)NativePtr)->getPosition();
     return __ret;

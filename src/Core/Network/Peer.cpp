@@ -49,7 +49,7 @@ void Peer::queuePacket(const PacketPtr& packet, uint8 channel)
 
 	if(status != 0)
 	{
-		LogWarn("Error sending packet to peer '%s'", getHostName().c_str());
+		LogWarn("Error sending packet to peer '%s'", getHostName().CString());
 		return;
 	}
 }

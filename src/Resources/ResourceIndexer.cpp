@@ -37,107 +37,107 @@ ResourceIndexer::~ResourceIndexer()
 
 void ResourceIndexer::update()
 {
-	// Send pending events.
-	ResourceMetadata metadata;
-	while( resourcesIndexed.try_pop_front(metadata) )
-	{
-		onResourceIndexed(metadata);
-	}
+    // Send pending events.
+    ResourceMetadata metadata;
+    while( resourcesIndexed.try_pop_front(metadata) )
+    {
+        onResourceIndexed(metadata);
+    }
 }
 
 //-----------------------------------//
 
 static Task* CreateIndexTask(ResourceIndexer* index, const Path& resPath)
 {
-	Path* path = Allocate(AllocatorGetObject(index), Path);
-	path->assign(resPath);
+    Path* path = Allocate(AllocatorGetObject(index), Path);
+    *path = resPath;
 
-	Task* task = Allocate(AllocatorGetObject(index), Task);
-	task->callback.Bind(index, &ResourceIndexer::indexResources);
-	task->userdata = path;
+    Task* task = Allocate(AllocatorGetObject(index), Task);
+    task->callback.Bind(index, &ResourceIndexer::indexResources);
+    task->userdata = path;
 
-	TaskPool* taskPool = GetResourceManager()->getTaskPool();
-	taskPool->add(task, 0);
+    TaskPool* taskPool = GetResourceManager()->getTaskPool();
+    taskPool->add(task, 0);
 
-	return task;
+    return task;
 }
 
 //-----------------------------------//
 
 void ResourceIndexer::addArchive(Archive* archive)
 {
-	std::vector<Path> res;
-	archive->enumerateFiles(res);
-	
-	for(auto& i : res)
-	{
-		Path fullPath = archive->combinePath(i);
-		CreateIndexTask(this, fullPath);
-	}
+    Vector<Path> res;
+    archive->enumerateFiles(res);
+    
+    for(auto& i : res)
+    {
+        Path fullPath = archive->combinePath(i);
+        CreateIndexTask(this, fullPath);
+    }
 }
 
 //-----------------------------------//
 
 static bool GetResourceGroupFromPath(const Path& path, ResourceGroup& group)
 {
-	String ext = PathGetFileExtension(path);
-	
-	ResourceManager* res = GetResourceManager();
-	
-	ResourceLoader* loader = res->findLoader(ext);
-	if( !loader ) return false;
+    String ext = PathGetFileExtension(path);
+    
+    ResourceManager* res = GetResourceManager();
+    
+    ResourceLoader* loader = res->findLoader(ext);
+    if( !loader ) return false;
 
-	group = loader->getResourceGroup();
+    group = loader->getResourceGroup();
 
-	return true;
+    return true;
 }
 
 //-----------------------------------//
 
 void ResourceIndexer::indexResources(Task* task)
 {
-	Path& tempPath = *((Path*) task->userdata);
-	Path path = tempPath;
-	DeallocateObject(&tempPath);
+    Path& tempPath = *((Path*) task->userdata);
+    Path path = tempPath;
+    DeallocateObject(&tempPath);
 
-	Path basePath = PathGetFile(path);
+    Path basePath = PathGetFile(path);
 
-	ResourceGroup group;
-		
-	if( !GetResourceGroupFromPath(path, group) )
-	{
-		//LogDebug("Error indexing resource '%s': no loader was found", basePath.c_str());
-		return;
-	}
+    ResourceGroup group;
+        
+    if( !GetResourceGroupFromPath(path, group) )
+    {
+        //LogDebug("Error indexing resource '%s': no loader was found", basePath.CString());
+        return;
+    }
 
-	//LogDebug("Indexing file '%s'", basePath.c_str());
+    //LogDebug("Indexing file '%s'", basePath.CString());
 
-	FileStream stream(path, StreamOpenMode::Read);
-		
-	if( !stream.isValid )
-	{
-		LogWarn("Error indexing resource '%s': cannot open stream", basePath.c_str());
-		return;
-	}
+    FileStream stream(path, StreamOpenMode::Read);
+        
+    if( !stream.isValid )
+    {
+        LogWarn("Error indexing resource '%s': cannot open stream", basePath.CString());
+        return;
+    }
 
-	std::vector<byte> data;
-	stream.read(data);
-	stream.close();
+    Vector<byte> data;
+    stream.read(data);
+    stream.close();
 
-	if( data.empty() )
-	{
-		LogWarn("Resource '%s' is empty", basePath.c_str());
-		return;
-	}
+    if( data.Empty() )
+    {
+        LogWarn("Resource '%s' is empty", basePath.CString());
+        return;
+    }
 
-	uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
-		
-	ResourceMetadata metadata;
-	metadata.hash = hash;
-	metadata.path = path;
-	metadata.group = group;
+    uint32 hash = HashMurmur2(0xBEEF, &data[0], data.Size());
+        
+    ResourceMetadata metadata;
+    metadata.hash = hash;
+    metadata.path = path;
+    metadata.group = group;
 
-	resourcesIndexed.push_back(metadata);
+    resourcesIndexed.push_back(metadata);
 }
 
 //-----------------------------------//

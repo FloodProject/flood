@@ -1,5 +1,5 @@
 using System;
-using Flood.Network;
+using Flood.Networking;
 using Flood.Remoting;
 
 namespace Flood.Editor.Server
@@ -7,7 +7,7 @@ namespace Flood.Editor.Server
     /// <summary>
     /// Represents the editor server.
     /// </summary>
-    public class EditorServer : Network.Server
+    public class EditorServer : Networking.Server
     {
         public UserManager UserManager { get; set; }
         public ProjectManager ProjectManager { get; set; }

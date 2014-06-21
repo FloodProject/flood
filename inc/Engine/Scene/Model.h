@@ -158,17 +158,17 @@ protected:
 	SkinningMode skinningMode;
 
 	// Animation states.
-	std::vector<AnimationState> animations;
+	Vector<AnimationState> animations;
 
 	// Attachments.
-	std::vector<AttachmentPtr> attachments;
+	Vector<AttachmentPtr> attachments;
 
 	// Final bones matrices.
-	std::vector<Matrix4x3> bones;
+	Vector<Matrix4x3> bones;
 
 	RenderBatchPtr debugRenderable;
 
-	typedef std::map<Mesh*, RenderablesVector> MeshRenderablesMap;
+	typedef HashMap<Mesh*, RenderablesVector> MeshRenderablesMap;
 	static MeshRenderablesMap meshRenderables;
 };
 

@@ -10,6 +10,7 @@
 #include "CppSharp.h"
 #include <Resources/Resource.h>
 #include "ResourceHandle.h"
+#include "StringConverter.h"
 
 namespace Flood
 {
@@ -95,6 +96,12 @@ namespace Flood
         {
             System::String^ get();
             void set(System::String^);
+        }
+
+        property Flood::ResourceStatus Status1
+        {
+            Flood::ResourceStatus get();
+            void set(Flood::ResourceStatus);
         }
 
         property Flood::ResourceStream^ Stream

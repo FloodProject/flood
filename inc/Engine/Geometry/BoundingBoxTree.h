@@ -36,7 +36,7 @@ public:
 
 //BoundingBoxTree* CreateBoundingBoxTreeFromMesh(const MeshPtr&);
 API_SCENE BoundingBoxTree* CreateBoundingBoxTree(
-    const std::vector<Vector3>& vertices, std::vector<uint16> indices);
+    const Vector<Vector3>& vertices, Vector<uint16> indices);
 
 #if 0
 RaycastMesh * CreateRaycastMesh(RmUint32 vcount, // The number of vertices in the source triangle mesh

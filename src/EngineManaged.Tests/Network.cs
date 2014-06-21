@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Flood.Modules;
-using Flood.Network;
+using Flood.Networking;
 using Flood.Remoting;
 using NUnit.Framework;
 using Flood.Remoting.Metadata;
@@ -67,7 +67,7 @@ namespace Flood.Tests
 
         private void Process(object peer)
         {
-            var host = (Flood.Network.Host) peer;
+            var host = (Flood.Networking.Host) peer;
 
             while (true)
             {

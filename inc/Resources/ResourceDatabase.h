@@ -31,8 +31,8 @@ struct API_RESOURCE ResourceMetadata
 	ResourceGroup group;
 };
 
-typedef std::vector<ResourceMetadata> ResourcesCache;
-typedef std::map<uint32, ResourceMetadata> ResourcesCacheMap;
+typedef Vector<ResourceMetadata> ResourcesCache;
+typedef HashMap<uint32, ResourceMetadata> ResourcesCacheMap;
 typedef std::pair<uint32, ResourceMetadata> ResourcesCacheMapPair;
 
 //-----------------------------------//
