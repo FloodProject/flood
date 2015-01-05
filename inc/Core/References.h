@@ -196,6 +196,11 @@ public:
         return hash;
     }
 
+    bool Equals(const RefPtr<T>& ptr) const
+    {
+        return ptr.px == px;
+    }
+
 public:
 
     T* px;

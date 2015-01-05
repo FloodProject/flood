@@ -1,5 +1,7 @@
-﻿using Flood.GUIv2.Input;
+﻿using Flood.GUIv2.ControlInternal;
+using Flood.GUIv2.Input;
 using System;
+using Flood.GUIv2.Panels;
 using Flood.GUIv2.Panels.Layout;
 
 namespace Flood.GUIv2.Controls
@@ -7,17 +9,114 @@ namespace Flood.GUIv2.Controls
     /// <summary>
     /// Text box (editable).
     /// </summary>
-    public class TextBox : Label
+    public class TextBox : CompositeControl
     {
-        private bool m_SelectAll;
+        private readonly Text m_Text;
+        private readonly TextBoxInternal m_TextBoxInternal;
 
-        private int m_CursorPos;
-        private int m_CursorEnd;
+        /// <summary>
+        /// Text alignment.
+        /// </summary>
+        public AlignmentFlags TextAlignment { get { return m_Text.Alignment; } set { m_Text.Alignment = value; Invalidate(); } }
 
-        private Rectangle m_SelectionBounds;
-        private Rectangle m_CaretBounds;
+        /// <summary>
+        /// Text.
+        /// </summary>
+        public String Text { get { return m_Text.String; } set { SetText(value); } }
 
-        private float m_LastInputTime;
+        /// <summary>
+        /// Font.
+        /// </summary>
+        public Font Font
+        {
+            get { return m_Text.Font; }
+            set
+            {
+                m_Text.Font = value;
+                SizeToContents();
+            }
+        }
+
+        /// <summary>
+        /// Sets the textbox text.
+        /// </summary>
+        /// <param name="str">Text to set.</param>
+        /// <param name="doEvents">Determines whether to invoke "text changed" event.</param>
+        public virtual void SetText(String str, bool doEvents = true)
+        {
+            if (Text == str)
+                return;
+
+            m_Text.String = str;
+            SizeToContents();
+
+            if (doEvents)
+                OnTextChanged();
+        }
+        /// <summary>
+        /// Text color.
+        /// </summary>
+        public Color TextColor { get { return m_Text.TextColor; } set { m_Text.TextColor = value; } }
+
+        /// <summary>
+        /// Override text color (used by tooltips).
+        /// </summary>
+        public Color TextColorOverride { get { return m_Text.TextColorOverride; } set { m_Text.TextColorOverride = value; } }
+
+        /// <summary>
+        /// Text override - used to display different string.
+        /// </summary>
+        public String TextOverride { get { return m_Text.TextOverride; } set { m_Text.TextOverride = value; } }
+
+        /// <summary>
+        /// Width of the text (in pixels).
+        /// </summary>
+        public int TextWidth { get { return m_Text.Width; } }
+
+        /// <summary>
+        /// Height of the text (in pixels).
+        /// </summary>
+        public int TextHeight { get { return m_Text.Height; } }
+
+        public int TextX { get { return m_Text.X; } }
+        public int TextY { get { return m_Text.Y; } }
+
+        /// <summary>
+        /// Text length (in characters).
+        /// </summary>
+        public int TextLength { get { return m_Text.Length; } }
+        public int TextRight { get { return m_Text.Right; } }
+        public virtual void MakeColorNormal() { TextColor = Skin.Colors.Label.Default; }
+        public virtual void MakeColorBright() { TextColor = Skin.Colors.Label.Bright; }
+        public virtual void MakeColorDark() { TextColor = Skin.Colors.Label.Dark; }
+        public virtual void MakeColorHighlight() { TextColor = Skin.Colors.Label.Highlight; }
+
+        /// <summary>
+        /// Gets the coordinates of specified character.
+        /// </summary>
+        /// <param name="index">Character index.</param>
+        /// <returns>Character coordinates (local).</returns>
+        public virtual Vector2 GetCharacterPosition(int index)
+        {
+            var p = m_Text.GetCharacterPosition(index);
+            return new Vector2(p.X + m_Text.X, p.Y + m_Text.Y);
+        }
+
+        /// <summary>
+        /// Returns index of the character closest to specified point (in canvas coordinates).
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        protected int GetClosestCharacter(int x, int y)
+        {
+            return m_Text.GetClosestCharacter(m_Text.CanvasPosToLocal(new Vector2i(x, y)));
+        }
+
+        /// <summary>
+        /// Text margin.
+        /// </summary>
+        public Margin TextMargin { get { return m_Text.Margin; } set { m_Text.Margin = value; Invalidate(); } }
 
         public override bool AccelOnlyFocus { get { return true; } }
         public override bool NeedsInputChars { get { return true; } }
@@ -25,12 +124,12 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Determines whether text should be selected when the control is focused.
         /// </summary>
-        public bool SelectAllOnFocus { get { return m_SelectAll; } set { m_SelectAll = value; if (value) OnSelectAll(this); } }
+        public bool SelectAllOnFocus { get { return m_TextBoxInternal.SelectAll; } set { m_TextBoxInternal.SelectAll = value; if (value) OnSelectAll(this); } }
 
         /// <summary>
         /// Indicates whether the text has active selection.
         /// </summary>
-        public bool HasSelection { get { return m_CursorPos != m_CursorEnd; } }
+        public bool HasSelection { get { return m_TextBoxInternal.CursorPos != m_TextBoxInternal.CursorEnd; } }
 
         /// <summary>
         /// Invoked when the text has changed.
@@ -47,26 +146,34 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public int CursorPos
         {
-            get { return m_CursorPos; }
+            get { return m_TextBoxInternal.CursorPos; }
             set
             {
-                if (m_CursorPos == value) return;
+                if (m_TextBoxInternal.CursorPos == value) return;
 
-                m_CursorPos = value;
+                m_TextBoxInternal.CursorPos = value;
                 RefreshCursorBounds();
             }
         }
 
         public int CursorEnd
         {
-            get { return m_CursorEnd; }
+            get { return m_TextBoxInternal.CursorEnd; }
             set
             {
-                if (m_CursorEnd == value) return;
+                if (m_TextBoxInternal.CursorEnd == value) return;
 
-                m_CursorEnd = value;
+                m_TextBoxInternal.CursorEnd = value;
                 RefreshCursorBounds();
             }
+        }
+
+        public virtual void SizeToContents()
+        {
+            if (Skin == null)
+                return;
+            PreLayout(Skin);
+            InvalidateParent();
         }
 
         /// <summary>
@@ -83,10 +190,13 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBox"/> class.
         /// </summary>
-        /// <param name="parent">Parent control.</param>
-        public TextBox(Control parent)
+        public TextBox() : base(new DockPanel())
         {
-            SetSize(200, 20);
+            m_Text = new Text();
+            m_TextBoxInternal = new TextBoxInternal();
+
+            Panel.AddChild(m_Text);
+            Panel.AddChild(m_TextBoxInternal);
 
             MouseInputEnabled = true;
             KeyboardInputEnabled = true;
@@ -94,9 +204,7 @@ namespace Flood.GUIv2.Controls
             TextAlignment = AlignmentFlags.Left | AlignmentFlags.CenterVertical;
             TextMargin = new Margin(4, 2);
 
-            m_CursorPos = 0;
-            m_CursorEnd = 0;
-            m_SelectAll = false;
+
 
             TextColor = new Color(50, 50, 50, 255); // TODO: From Skin
 
@@ -120,12 +228,10 @@ namespace Flood.GUIv2.Controls
         /// <summary>
         /// Handler for text changed event.
         /// </summary>
-        protected override void OnTextChanged()
+        protected void OnTextChanged()
         {
-            base.OnTextChanged();
-
-            if (m_CursorPos > TextLength) m_CursorPos = TextLength;
-            if (m_CursorEnd > TextLength) m_CursorEnd = TextLength;
+            if (m_TextBoxInternal.CursorPos > TextLength) m_TextBoxInternal.CursorPos = TextLength;
+            if (m_TextBoxInternal.CursorEnd > TextLength) m_TextBoxInternal.CursorEnd = TextLength;
 
             if (TextChanged != null)
                 TextChanged.Invoke(this);
@@ -140,7 +246,6 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnChar(char chr)
         {   
-            throw new NotImplementedException(); 
             base.OnChar(chr);
 
             if (chr == '\t') return false;
@@ -162,72 +267,45 @@ namespace Flood.GUIv2.Controls
                 EraseSelection();
             }
 
-            if (m_CursorPos > TextLength)
-                m_CursorPos = TextLength;
+            if (m_TextBoxInternal.CursorPos > TextLength)
+                m_TextBoxInternal.CursorPos = TextLength;
 
-            if (!IsTextAllowed(text, m_CursorPos))
+            if (!IsTextAllowed(text, m_TextBoxInternal.CursorPos))
                 return;
 
             String str = Text;
-            str = str.Insert(m_CursorPos, text);
+            str = str.Insert(m_TextBoxInternal.CursorPos, text);
             SetText(str);
 
-            m_CursorPos += text.Length;
-            m_CursorEnd = m_CursorPos;
+            m_TextBoxInternal.CursorPos += text.Length;
+            m_TextBoxInternal.CursorEnd = m_TextBoxInternal.CursorPos;
 
             RefreshCursorBounds();
         }
 
-        /// <summary>
-        /// Renders the control using specified skin.
-        /// </summary>
-        /// <param name="skin">Skin to use.</param>
-        //public override void Render(Skins.Skin skin)
-        //{
-        //    throw new NotImplementedException(); 
 
-        //    base.Render(skin);
-
-        //    if (ShouldDrawBackground)
-        //        skin.DrawTextBox(this);
-
-        //    if (!HasFocus) return;
-
-        //    // Draw selection.. if selected..
-        //    if (m_CursorPos != m_CursorEnd)
-        //    {
-        //        skin.Renderer.DrawColor = new Color(50, 170, 255, 200);
-        //        skin.Renderer.DrawFilledRect(m_SelectionBounds);
-        //    }
-
-        //    // Draw caret
-        //    float time = Platform.Neutral.GetTimeInSeconds() - m_LastInputTime;
-
-        //    if ((time % 1.0f) <= 0.5f)
-        //    {
-        //        skin.Renderer.DrawColor = Color.Black;
-        //        skin.Renderer.DrawFilledRect(m_CaretBounds);
-        //    }
-        //}
 
         protected virtual void RefreshCursorBounds()
         {
-            m_LastInputTime = Platform.Neutral.GetTimeInSeconds();
+            m_TextBoxInternal.LastInputTime = Platform.Neutral.GetTimeInSeconds();
 
             MakeCaretVisible();
 
-            var pA = GetCharacterPosition(m_CursorPos);
-            var pB = GetCharacterPosition(m_CursorEnd);
+            var pA = GetCharacterPosition(m_TextBoxInternal.CursorPos);
+            var pB = GetCharacterPosition(m_TextBoxInternal.CursorEnd);
 
-            m_SelectionBounds.X = (int) Math.Min(pA.X, pB.X);
-            m_SelectionBounds.Y = TextY - 1;
-            m_SelectionBounds.Width = (int) (Math.Max(pA.X, pB.X) - m_SelectionBounds.X + 0.5);
-            m_SelectionBounds.Height = TextHeight + 2;
+            var x = (int)Math.Min(pA.X, pB.X);
+            var y = TextY - 1;
+            var w = (int)(Math.Max(pA.X, pB.X) - m_TextBoxInternal.SelectionBounds.X + 0.5);
+            var h = TextHeight + 2;
+            m_TextBoxInternal.SelectionBounds = new Rectangle(x, y, w, h);
+           
+            x = (int)pA.X;
+            y = TextY - 1;
+            w = 1;
+            h = TextHeight + 2;
 
-            m_CaretBounds.X = (int) pA.X;
-            m_CaretBounds.Y = TextY - 1;
-            m_CaretBounds.Width = 1;
-            m_CaretBounds.Height = TextHeight + 2;
+            m_TextBoxInternal.CaretBounds = new Rectangle(x, y, w, h);
 
             Redraw();
         }
@@ -238,8 +316,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="from">Source control.</param>
         public override void OnPaste(IControl from)
         {
-            throw new NotImplementedException(); 
-
             base.OnPaste(from);
             InsertText(Platform.Neutral.GetClipboardText());
         }
@@ -250,8 +326,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="from">Source control.</param>
         public override void OnCopy(IControl from)
         {
-            throw new NotImplementedException(); 
-
             if (!HasSelection) return;
             base.OnCopy(from);
 
@@ -264,7 +338,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="from">Source control.</param>
         public override void OnCut(IControl from)
         {
-            throw new NotImplementedException(); 
 
             if (!HasSelection) return;
             base.OnCut(from);
@@ -279,11 +352,10 @@ namespace Flood.GUIv2.Controls
         /// <param name="from">Source control.</param>
         public override void OnSelectAll(IControl from)
         {
-            throw new NotImplementedException(); 
 
-            //base.OnSelectAll(from);
-            m_CursorEnd = 0;
-            m_CursorPos = TextLength;
+            base.OnSelectAll(from);
+            m_TextBoxInternal.CursorEnd = 0;
+            m_TextBoxInternal.CursorPos = TextLength;
 
             RefreshCursorBounds();
         }
@@ -295,9 +367,8 @@ namespace Flood.GUIv2.Controls
         /// <param name="y">Y coordinate.</param>
         public override void OnMouseDoubleClickedLeft(int x, int y)
         {
-            throw new NotImplementedException(); 
 
-            //base.OnMouseDoubleClickedLeft(x, y);
+            base.OnMouseDoubleClickedLeft(x, y);
             OnSelectAll(this);
         }
 
@@ -310,7 +381,6 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyReturn(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyReturn(down);
             if (down) return true;
@@ -338,7 +408,6 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyBackspace(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyBackspace(down);
 
@@ -349,9 +418,9 @@ namespace Flood.GUIv2.Controls
                 return true;
             }
 
-            if (m_CursorPos == 0) return true;
+            if (m_TextBoxInternal.CursorPos == 0) return true;
 
-            DeleteText(m_CursorPos - 1, 1);
+            DeleteText(m_TextBoxInternal.CursorPos - 1, 1);
 
             return true;
         }
@@ -365,7 +434,6 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyDelete(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyDelete(down);
             if (!down) return true;
@@ -375,9 +443,9 @@ namespace Flood.GUIv2.Controls
                 return true;
             }
 
-            if (m_CursorPos >= TextLength) return true;
+            if (m_TextBoxInternal.CursorPos >= TextLength) return true;
 
-            DeleteText(m_CursorPos, 1);
+            DeleteText(m_TextBoxInternal.CursorPos, 1);
 
             return true;
         }
@@ -391,17 +459,16 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyLeft(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyLeft(down);
             if (!down) return true;
 
-            if (m_CursorPos > 0)
-                m_CursorPos--;
+            if (m_TextBoxInternal.CursorPos > 0)
+                m_TextBoxInternal.CursorPos--;
 
             if (!Input.InputHandler.IsShiftDown)
             {
-                m_CursorEnd = m_CursorPos;
+                m_TextBoxInternal.CursorEnd = m_TextBoxInternal.CursorPos;
             }
 
             RefreshCursorBounds();
@@ -417,17 +484,16 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyRight(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyRight(down);
             if (!down) return true;
 
-            if (m_CursorPos < TextLength)
-                m_CursorPos++;
+            if (m_TextBoxInternal.CursorPos < TextLength)
+                m_TextBoxInternal.CursorPos++;
 
             if (!Input.InputHandler.IsShiftDown)
             {
-                m_CursorEnd = m_CursorPos;
+                m_TextBoxInternal.CursorEnd = m_TextBoxInternal.CursorPos;
             }
 
             RefreshCursorBounds();
@@ -443,15 +509,14 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyHome(bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnKeyHome(down);
             if (!down) return true;
-            m_CursorPos = 0;
+            m_TextBoxInternal.CursorPos = 0;
 
             if (!Input.InputHandler.IsShiftDown)
             {
-                m_CursorEnd = m_CursorPos;
+                m_TextBoxInternal.CursorEnd = m_TextBoxInternal.CursorPos;
             }
 
             RefreshCursorBounds();
@@ -467,14 +532,12 @@ namespace Flood.GUIv2.Controls
         /// </returns>
         public override bool OnKeyEnd(bool down)
         {
-            throw new NotImplementedException(); 
-
             base.OnKeyEnd(down);
-            m_CursorPos = TextLength;
+            m_TextBoxInternal.CursorPos = TextLength;
 
             if (!Input.InputHandler.IsShiftDown)
             {
-                m_CursorEnd = m_CursorPos;
+                m_TextBoxInternal.CursorEnd = m_TextBoxInternal.CursorPos;
             }
 
             RefreshCursorBounds();
@@ -489,8 +552,8 @@ namespace Flood.GUIv2.Controls
         {
             if (!HasSelection) return String.Empty;
 
-            int start = Math.Min(m_CursorPos, m_CursorEnd);
-            int end = Math.Max(m_CursorPos, m_CursorEnd);
+            int start = Math.Min(m_TextBoxInternal.CursorPos, m_TextBoxInternal.CursorEnd);
+            int end = Math.Max(m_TextBoxInternal.CursorPos, m_TextBoxInternal.CursorEnd);
 
             String str = Text;
             return str.Substring(start, end - start);
@@ -507,12 +570,12 @@ namespace Flood.GUIv2.Controls
             str = str.Remove(startPos, length);
             SetText(str);
 
-            if (m_CursorPos > startPos)
+            if (m_TextBoxInternal.CursorPos > startPos)
             {
-                CursorPos = m_CursorPos - length;
+                CursorPos = m_TextBoxInternal.CursorPos - length;
             }
 
-            CursorEnd = m_CursorPos;
+            CursorEnd = m_TextBoxInternal.CursorPos;
         }
 
         /// <summary>
@@ -520,15 +583,15 @@ namespace Flood.GUIv2.Controls
         /// </summary>
         public virtual void EraseSelection()
         {
-            int start = Math.Min(m_CursorPos, m_CursorEnd);
-            int end = Math.Max(m_CursorPos, m_CursorEnd);
+            int start = Math.Min(m_TextBoxInternal.CursorPos, m_TextBoxInternal.CursorEnd);
+            int end = Math.Max(m_TextBoxInternal.CursorPos, m_TextBoxInternal.CursorEnd);
 
             DeleteText(start, end - start);
 
             // Move the cursor to the start of the selection, 
             // since the end is probably outside of the string now.
-            m_CursorPos = start;
-            m_CursorEnd = start;
+            m_TextBoxInternal.CursorPos = start;
+            m_TextBoxInternal.CursorEnd = start;
         }
 
         /// <summary>
@@ -539,10 +602,9 @@ namespace Flood.GUIv2.Controls
         /// <param name="down">If set to <c>true</c> mouse button is down.</param>
         public override void OnMouseClickedLeft(int x, int y, bool down)
         {
-            throw new NotImplementedException(); 
 
             base.OnMouseClickedLeft(x, y, down);
-            if (m_SelectAll)
+            if (m_TextBoxInternal.SelectAll)
             {
                 OnSelectAll(this);
                 //m_SelectAll = false;
@@ -579,7 +641,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="dy">Y change.</param>
         public override void OnMouseMoved(int x, int y, int dx, int dy)
         {
-            throw new NotImplementedException(); 
 
             base.OnMouseMoved(x, y, dx, dy);
             if (InputHandler.MouseFocus != this) return;
@@ -591,27 +652,28 @@ namespace Flood.GUIv2.Controls
 
         protected virtual void MakeCaretVisible()
         {
-            int caretPos = (int) GetCharacterPosition(m_CursorPos).X - TextX;
+            //todo: figure out what this is supposed to do and fix it
+            //int caretPos = (int)GetCharacterPosition(m_TextBoxInternal.CursorPos).X - TextX;
 
-            // If the caret is already in a semi-good position, leave it.
-            {
-                int realCaretPos = caretPos + TextX;
-                if (realCaretPos > Width*0.1f && realCaretPos < Width*0.9f)
-                    return;
-            }
+            //// If the caret is already in a semi-good position, leave it.
+            //{
+            //    int realCaretPos = caretPos + TextX;
+            //    if (realCaretPos > Width * 0.1f && realCaretPos < Width * 0.9f)
+            //        return;
+            //}
 
-            // The ideal position is for the caret to be right in the middle
-            int idealx = (int)(-caretPos + Width * 0.5f);
+            //// The ideal position is for the caret to be right in the middle
+            //int idealx = (int)(-caretPos + Width * 0.5f);
 
-            // Don't show too much whitespace to the right
-            if (idealx + TextWidth < Width - TextMargin.Right)
-                idealx = -TextWidth + (Width - TextMargin.Right);
+            //// Don't show too much whitespace to the right
+            //if (idealx + TextWidth < Width - TextMargin.Right)
+            //    idealx = -TextWidth + (Width - TextMargin.Right);
 
-            // Or the left
-            if (idealx > TextMargin.Left)
-                idealx = TextMargin.Left;
+            //// Or the left
+            //if (idealx > TextMargin.Left)
+            //    idealx = TextMargin.Left;
 
-            SetTextPosition(idealx, TextY);
+            //SetTextPosition(idealx, TextY);
         }
 
         /// <summary>
@@ -620,7 +682,6 @@ namespace Flood.GUIv2.Controls
         /// <param name="skin">Skin to use.</param>
         public override void PreLayout(Skins.Skin skin)
         {
-            throw new NotImplementedException(); 
 
             base.PreLayout(skin);
 

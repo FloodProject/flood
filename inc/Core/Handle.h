@@ -180,6 +180,11 @@ public:
         return id;
     }
 
+    bool Equals(const Handle<T, RFn, DFn>& handle) const
+    {
+        return handle.id == id;
+    }
+
     HandleId id;
 };
 

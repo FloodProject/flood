@@ -14,7 +14,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-/**
+/**w
  * Represents a TrueType font resource. Loads a TTF font using the
  * cross-platform FreeType library. Parses all the font glyphs of a size,
  * and packs them all into a big texture (texture atlas) for rendering.
@@ -33,6 +33,8 @@ public:
     virtual ImageHandle createGlyphImage(int codepoint, int size) const OVERRIDE;
 
     virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const OVERRIDE;
+
+    virtual int getMaxHeight(int fontSize) const OVERRIDE;
 
     Vector<byte> data;
 

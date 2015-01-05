@@ -209,7 +209,7 @@ public:
      * @param value value to construct from
      */
     template <class T> 
-    explicit String(const T& valuIe) :
+    explicit String(const T& value) :
         length(0),
         capacity(0),
         buffer(&endZero)
@@ -492,6 +492,13 @@ public:
      * @return whether strings are equal
      */
     bool operator == (const char* rhs) const { return strcmp(CString(), rhs) == 0; }
+
+    /**
+     * Test for equality with a C string.
+     * @param rhs string to compare with
+     * @return whether strings are equal
+     */
+    bool Equals (const char* rhs) const { return *this == rhs; }
 
     /**
      * Test for inequality with a C string.
@@ -924,6 +931,13 @@ public:
      * @return comparison result with a C string
      */
     int Compare(const char* str, bool caseSensitive = true) const;
+
+    /**
+     * Check if this string is equal to another string.
+     * @param str string to compare to
+     * @return whether strings are equal
+     */
+    bool Equals(const String& str) const { return Compare(str) == 0; }
 
     /**
      * Check if this string contains a specific string

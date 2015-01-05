@@ -54,6 +54,12 @@ Flood::Vector2 Flood::TrueTypeFont::GetKerning(int codepoint1, int codepoint2, i
     return Flood::Vector2((::Vector2*)&__ret);
 }
 
+int Flood::TrueTypeFont::GetMaxHeight(int fontSize)
+{
+    auto __ret = ((::TrueTypeFont*)NativePtr)->getMaxHeight(fontSize);
+    return __ret;
+}
+
 bool Flood::TrueTypeFont::Equals(System::Object^ object)
 {
     if (!object) return false;

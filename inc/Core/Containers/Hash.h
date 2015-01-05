@@ -26,8 +26,35 @@ FLD_IGNORE_FILE
 #include "Core/API.h"
 #include <cstddef>
 #include <cstring>
+#include <type_traits>
+
+#include "Core/HasMember.h"
+
+#include <iostream>
 
 NAMESPACE_CORE_BEGIN
+
+struct FLD_IGNORE check_has_ToHash
+{
+    template <typename T, unsigned (T::*)() const = &T::ToHash >
+    struct get
+    { };
+};
+
+template <typename T>
+struct FLD_IGNORE has_ToHash : has_member<T, check_has_ToHash>
+{ };
+
+struct FLD_IGNORE check_has_Equals
+{
+    template <typename T, bool (T::*)(const T&) const = &T::Equals >
+    struct get
+    { };
+};
+
+template <typename T>
+struct FLD_IGNORE has_Equals : has_member<T, check_has_Equals>
+{ };
 
 class FLD_IGNORE Hash
 { 
@@ -55,17 +82,6 @@ public:
     }
 
     /**
-     * Generic hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template <class T> 
-    static unsigned MakeHash(const T& value)
-    {
-        return value.ToHash();
-    }
-
-    /**
      * Void pointer hash function.
      * @param value value to get hash of
      * @return hash
@@ -87,93 +103,93 @@ public:
         return (unsigned)(size_t)value;
     }
 
-    /**
-     * Long long hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const long long& value)
-    {
-        return (value >> 32) | (value & 0xffffffff);
-    }
+    ///**
+    // * Long long hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const long long& value)
+    //{
+    //    return (value >> 32) | (value & 0xffffffff);
+    //}
 
-    /**
-     * Unsigned long long hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const unsigned long long& value)
-    {
-        return (value >> 32) | (value & 0xffffffff);
-    }
+    ///**
+    // * Unsigned long long hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const unsigned long long& value)
+    //{
+    //    return (value >> 32) | (value & 0xffffffff);
+    //}
 
-    /**
-     * Int hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const int& value)
-    {
-        return value;
-    }
+    ///**
+    // * Int hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const int& value)
+    //{
+    //    return value;
+    //}
 
-    /**
-     * Unsigned hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const unsigned& value)
-    {
-        return value;
-    }
+    ///**
+    // * Unsigned hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const unsigned& value)
+    //{
+    //    return value;
+    //}
 
-    /**
-     * Short hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const short& value)
-    {
-        return value;
-    }
+    ///**
+    // * Short hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const short& value)
+    //{
+    //    return value;
+    //}
 
-    /**
-     * Unsigned short hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const unsigned short& value)
-    {
-        return value;
-    }
+    ///**
+    // * Unsigned short hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const unsigned short& value)
+    //{
+    //    return value;
+    //}
 
-    /**
-     * Char hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const char& value)
-    {
-        return value;
-    }
+    ///**
+    // * Char hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const char& value)
+    //{
+    //    return value;
+    //}
 
-    /**
-     * Unsigned char hash function.
-     * @param value value to get hash of
-     * @return hash
-     */
-    template<>
-    static inline unsigned MakeHash(const unsigned char& value)
-    {
-        return value;
-    }
+    ///**
+    // * Unsigned char hash function.
+    // * @param value value to get hash of
+    // * @return hash
+    // */
+    //template<>
+    //static inline unsigned MakeHash(const unsigned char& value)
+    //{
+    //    return value;
+    //}
 
     /**
      * const char * hash function.
@@ -186,6 +202,37 @@ public:
         return (*(size_t*)value)>> 2;
     }
 
+    /**
+     * Generic hash function.
+     * @param value value to get hash of
+     * @return hash
+     */
+    template <class T>
+    static typename std::enable_if<has_ToHash<T>::value, unsigned>::type
+    MakeHash(const T& value)
+    {
+        return value.ToHash();
+    }
+
+    /**
+     * Generic hash function.
+     * @param value value to get hash of
+     * @return hash
+     */
+    template <class T>
+    static typename std::enable_if<!has_ToHash<T>::value, unsigned>::type
+    MakeHash(const T& value)
+    {
+        static_assert(std::is_pod<T>::value, "T must implement unsigned ToHash() const.");
+
+        auto length = sizeof(T);
+        unsigned hash = 0;
+        byte * ptr = (byte *)(void *)&value;
+        for(unsigned i = 0; i < length; i++, ptr++)
+            hash ^= *ptr << i % 4;
+        
+        return hash;
+    }
 
     /**
      * Pointer comp function.
@@ -206,9 +253,24 @@ public:
      * @return comparison value
      */
     template <class T> 
-    static bool Equals(const T& first, const T& second )
+    static typename std::enable_if<has_Equals<T>::value, bool>::type
+    Equals(const T& first, const T& second)
     {
-        return first == second;
+        return first.Equals(second);
+    }
+
+    /**
+     * Generic comp function.
+     * @param first first value to compare
+     * @param second second value to compare
+     * @return comparison value
+     */
+    template <class T> 
+    static typename std::enable_if<!has_Equals<T>::value, bool>::type
+    Equals(const T& first, const T& second)
+    {
+        static_assert(std::is_pod<T>::value, "T must implement bool Equals(const T&) const.");
+        return memcmp(&first, &second, sizeof(T)) == 0;
     }
 
     /**

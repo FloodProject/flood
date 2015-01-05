@@ -221,7 +221,8 @@ namespace Flood.GUIv2.Renderers
         /// <returns>Width and height of the rendered text.</returns>
         public virtual Vector2 MeasureText(Font font, String text)
         {
-            var p = new Vector2(font.Size * Scale * text.Length * 0.4f, font.Size * Scale);
+            //var p = new Vector2(font.Size * Scale * text.Length * 0.4f, font.Size * Scale);
+            var p = new Vector2(font.Size * Scale * text.Length * 0.4f, font.GetMaxHeight() * Scale);
             return p;
         }
 

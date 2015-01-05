@@ -90,7 +90,7 @@ namespace Flood.GUI
             foreach (var control in Children)
                 control.InformFirstDirection(direction, size, availableOtherDir);
             var Min = CalcMin();
-            return Min < PrevMin;
+            return Min.AnyLT(PrevMin);
         }
     }
 }

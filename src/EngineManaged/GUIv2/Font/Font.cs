@@ -49,6 +49,11 @@ namespace Flood.GUIv2
             Smooth = false;
         }
 
+        public int GetMaxHeight()
+        {
+            return EngineFont.Resolve().GetMaxHeight(Size);
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

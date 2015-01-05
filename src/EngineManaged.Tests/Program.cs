@@ -10,12 +10,12 @@ namespace Flood.Tests
     {
         static void Main()
         {
-            var guiTests = new GUITests();
+            var guiTests = new GUIv2Tests();
             //while (true)
             //{
                 guiTests.Setup();
                 guiTests.TestSetup();
-                guiTests.TestBoxSizer1();
+                guiTests.TestTextClipping4();
                 guiTests.TearDown();
             //}
         }

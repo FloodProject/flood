@@ -37,18 +37,51 @@ namespace Flood.Tests
         [Test]
         public void TestTextClipping()
         {
-            canvas.SetSize(64, 22);
+            canvas.SetSize(64, 24);
             var control = new Button();
             canvas.AddChild(control);
             control.Text = "gpalyq";
 
             GUI.Test(control, "Clipping", "textClipping1");
         }
+        
+        [Test]
+        public void TestTextClipping2()
+        {
+            canvas.SetSize(52, 21);
+            var control = new Button();
+            canvas.AddChild(control);
+            control.Text = "Moon";
+
+            GUI.Test(control, "Clipping", "textClipping2");
+        }
+
+        [Test]
+        public void TestTextClipping3()
+        {
+            canvas.SetSize(15, 16);
+            var control = new Label();
+            canvas.AddChild(control);
+            control.Text = "M";
+
+            GUI.Test(control, "Clipping", "textClipping3");
+        }
+
+        [Test]
+        public void TestTextClipping4()
+        {
+            canvas.SetSize(150, 19);
+            var control = new Label();
+            canvas.AddChild(control);
+            control.Text = "relativeMargins";
+
+            GUI.Test(control, "Clipping", "textClipping4");
+        }
 
         [Test]
         public void TestButton()
         {
-            canvas.SetSize(64, 22);
+            canvas.SetSize(64, 21);
             var control = new Button();
             canvas.AddChild(control);
             control.Text = "Button";
@@ -219,11 +252,11 @@ namespace Flood.Tests
         [Test]
         public void TestDockPanel2()
         {
-            canvas.SetSize(168, 16);
+            canvas.SetSize(168, 18);
             var labelLeft = new Label { Text = "LabelLeft", Alignment = AlignmentFlags.Left};
             var labelRight = new Label { Text = "LabelRight", Alignment = AlignmentFlags.Right};
             var control = new DockPanel();
-            control.Shape(new Vector2i(168, 16)); 
+            control.Shape(new Vector2i(168, 18)); 
             control.AddChild(labelLeft);
             control.AddChild(labelRight);
             canvas.AddChild(control);
@@ -283,7 +316,7 @@ namespace Flood.Tests
 
             GUI.Test(control, "DockPanel", "dockPanel3corners+center");
         }
-        
+
         [Test]
         public void TestDockPanel6()
         {
@@ -302,7 +335,7 @@ namespace Flood.Tests
 
             GUI.Test(control, "DockPanel", "dockPanel4cornersUniformMargins");
         }
-        
+
         [Test]
         public void TestDockPanel7()
         {
@@ -948,7 +981,7 @@ namespace Flood.Tests
         [Test]
         public void TestGridSizer1()
         {
-            canvas.SetSize(206, 154);
+            canvas.SetSize(206, 160);
             var gridPanel = new GridPanel();
             gridPanel.SetRows(3);
             gridPanel.SetColumns(2);
@@ -970,7 +1003,7 @@ namespace Flood.Tests
         [Test]
         public void TestGridSizer2()
         {
-            canvas.SetSize(206, 154);
+            canvas.SetSize(206, 160);
             var gridPanel = new GridPanel();
             gridPanel.SetRows(3);
             gridPanel.SetColumns(2);
@@ -1003,7 +1036,7 @@ namespace Flood.Tests
         [Test]
         public void TestGridSizer3()
         {
-            canvas.SetSize(152, 176);
+            canvas.SetSize(152, 185);
             var gridPanel = new GridPanel();
             gridPanel.SetRows(4);
             gridPanel.SetColumns(3);
@@ -1255,7 +1288,7 @@ namespace Flood.Tests
         [Test]
         public void TestGridSizer12()
         {
-            canvas.SetSize(356, 52);
+            canvas.SetSize(356, 58);
             var boxPanel = new BoxPanel { Orientation = Orientation.Horizontal };
 
             var gridPanel1 = new GridPanel();
@@ -1303,7 +1336,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer1()
         {
-            canvas.SetSize(212, 44);
+            canvas.SetSize(212, 47);
             var relativePositionPanel = new RelativePanel();
 
             for (int i = 0; i < 2; i++)
@@ -1322,7 +1355,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer2()
         {
-            canvas.SetSize(232, 54);
+            canvas.SetSize(232, 57);
             var relativePositionPanel = new RelativePanel();
 
             for (int i = 0; i < 2; i++)
@@ -1424,7 +1457,7 @@ namespace Flood.Tests
         [Test]
         public void TestRelativePositionSizer8()
         {
-            canvas.SetSize(156, 32);
+            canvas.SetSize(156, 35);
 
             var relativePositionPanel = new RelativePanel();
 

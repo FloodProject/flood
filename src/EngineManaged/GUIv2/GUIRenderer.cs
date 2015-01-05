@@ -261,8 +261,7 @@ namespace Flood.GUIv2
         }
 
     };
-
-
+    
     public class TextRenderer
     {
         private static readonly GlyphManager glyphManager;
@@ -275,6 +274,7 @@ namespace Flood.GUIv2
         public static Vector2 MeasureText(System.String text, Font font)
         {
             float curX = 0;
+            float curY = font.Size;
             for(var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
@@ -290,9 +290,11 @@ namespace Flood.GUIv2
                 if(i < text.Length - 1) 
                     curX += glyphManager.GetKerning(font, text[i], text[i + 1]).X;
 
+                curY = Math.Max(curY, glyph.Height + glyph.BaseLineOffset);
+
             }
 
-            return new Vector2(curX,font.Size);;
+            return new Vector2(curX, curY);
         }
 
         public static bool GetPositionTextIndex(string text, Font font, float x, out int index)

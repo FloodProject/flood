@@ -112,6 +112,12 @@ Flood::Vector2 Flood::Font::GetKerning(int codepoint1, int codepoint2, int fontS
     return Flood::Vector2((::Vector2*)&__ret);
 }
 
+int Flood::Font::GetMaxHeight(int fontSize)
+{
+    auto __ret = ((::Font*)NativePtr)->getMaxHeight(fontSize);
+    return __ret;
+}
+
 bool Flood::Font::Equals(System::Object^ object)
 {
     if (!object) return false;

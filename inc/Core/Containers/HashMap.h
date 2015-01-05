@@ -602,6 +602,7 @@ public:
             return End();
         
         unsigned hashKey = Hash(key);
+
         Node* node = FindNode(key, hashKey);
         if (node)
             return Iterator(node);
