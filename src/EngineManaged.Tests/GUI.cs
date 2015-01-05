@@ -36,15 +36,23 @@ namespace Flood.Tests
             window.AddRenderable(guiRenderable);
         }
 
+        public void ResetRenderable()
+        {
+            window.RemoveRenderable(guiRenderable);
+            guiRenderable.Dispose();
+            guiRenderable = new GuiRenderable();
+            window.AddRenderable(guiRenderable);
+        }
+
         #region Common testing logic
 
         public void Test(Control control, string assertId, string assertMessage = "")
         {
             var renderChanged = HasRenderChanged(control, assertId);
+            var serializationChanged = HasSerializationChanged(control, assertId);
+
             NUnit.Framework.Assert.IsFalse(renderChanged,
                 assertId + " render changed. " + assertMessage);
-
-            var serializationChanged = HasSerializationChanged(control, assertId);
             NUnit.Framework.Assert.IsFalse(serializationChanged,
                 assertId + " serialization changed. " + assertMessage);
         }
@@ -90,10 +98,11 @@ namespace Flood.Tests
         {
             var width = 0;
             var height = 0;
-            foreach (var control in guiRenderable.Canvas.Children)
-                RenderBounds(control, ref width, ref height);
 
             app.RunStep();
+
+            foreach (var control in guiRenderable.Canvas.Children)
+                RenderBounds(control, ref width, ref height);
 
             var imageSettings = new Settings { Height = (ushort)height, Width = (ushort)width };
             var renderBuffer = app.RenderDevice.Backend.CreateRenderBuffer(imageSettings);
@@ -196,6 +205,10 @@ namespace Flood.Tests
             public int Y;
             public int Width;
             public int Height;
+            public int MinWidth;
+            public int MinHeight;
+            public int MaxWidth;
+            public int MaxHeight;
             public bool IsHidden;
             public bool Focused;
             public List<GUIDumpData> Children;
@@ -221,6 +234,10 @@ namespace Flood.Tests
                 Y = rootControl.Y,
                 Width = rootControl.Width,
                 Height = rootControl.Height,
+                MinWidth = rootControl.MinimumSize.X,
+                MinHeight = rootControl.MinimumSize.Y,
+                MaxWidth = rootControl.MaximumSize.X,
+                MaxHeight = rootControl.MaximumSize.Y,
                 IsHidden = rootControl.IsHidden,
                 Focused = rootControl.HasFocus,
             };

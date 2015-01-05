@@ -61,7 +61,7 @@ namespace Flood.GUI.Controls
         /// <param name="skin">Skin to use.</param>
         public Canvas(Skins.Skin skin) : base(null)
         {
-            SetBounds(0, 0, 10000, 10000);
+            //SetBounds(0, 0, 10000, 10000);
             SetSkin(skin);
             Scale = 1.0f;
             BackgroundColor = Color.White;
@@ -158,7 +158,7 @@ namespace Flood.GUI.Controls
         /// <summary>
         /// Processes input and layout. Also purges delayed delete queue.
         /// </summary>
-        private void Update()
+        public void Update()
         {
             if (IsHidden)
                 return;

@@ -16,6 +16,7 @@ namespace Flood.GUI.ControlInternal
         public ScrollBarButton(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetDirectionUp();
         }
 

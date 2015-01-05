@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Flood
 {
     public static class RectExtensions
@@ -41,6 +43,92 @@ namespace Flood
         public static float GetBottom(this RectangleF rect)
         {
             return rect.Y + rect.Height;
+        }
+
+        public static RectangleF ToRectangleF(this Rectangle rect)
+        {
+            return new RectangleF(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+    }
+
+    public static class VectorExtensions
+    {
+        public static Vector2i TryToAdd(this Vector2i v1, Vector2i v2)
+        {
+            var x = (v1.X == int.MaxValue) ? v1.X : v1.X + v2.X;
+            var y = (v1.Y == int.MaxValue) ? v1.Y : v1.Y + v2.Y;
+            return new Vector2i(x, y);
+        }
+
+        public static Vector2i TryToAddAssign(this Vector2i v1, Vector2i v2)
+        {
+            v1.X = (v1.X == int.MaxValue) ? v1.X : v1.X + v2.X;
+            v1.Y = (v1.Y == int.MaxValue) ? v1.Y : v1.Y + v2.Y;
+            return v1;
+        }
+        
+        public static Vector2i TryToSubtract(this Vector2i v1, Vector2i v2)
+        {
+            var x = (v1.X == int.MinValue) ? v1.X : v1.X - v2.X;
+            var y = (v1.Y == int.MinValue) ? v1.Y : v1.Y - v2.Y;
+            return new Vector2i(x, y);
+        }
+
+        public static Vector2i TryToSubtractAssign(this Vector2i v1, Vector2i v2)
+        {
+            v1.X = (v1.X == int.MinValue) ? v1.X : v1.X - v2.X;
+            v1.Y = (v1.Y == int.MinValue) ? v1.Y : v1.Y - v2.Y;
+            return v1;
+        }
+
+        public static bool EQ(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X == size2.X && size1.Y == size2.Y;
+        }
+
+        public static bool LE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.EQ(size2) || size1.LT(size2);
+        }
+
+        public static bool LT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X < size2.X && size1.Y < size2.Y;
+        }
+
+        public static bool GE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.EQ(size2) || size1.GT(size2);
+        }
+
+        public static bool GT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X > size2.X && size1.Y > size2.Y;
+        }
+
+        public static bool AnyEQ(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X == size2.X || size1.Y == size2.Y;
+        }
+
+        public static bool AnyLE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.AnyEQ(size2) || size1.AnyLT(size2);
+        }
+
+        public static bool AnyLT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X < size2.X || size1.Y < size2.Y;
+        }
+
+        public static bool AnyGE(this Vector2i size1, Vector2i size2)
+        {
+            return size1.AnyEQ(size2) || size1.AnyGT(size2);
+        }
+
+        public static bool AnyGT(this Vector2i size1, Vector2i size2)
+        {
+            return size1.X > size2.X || size1.Y > size2.Y;
         }
     }
 

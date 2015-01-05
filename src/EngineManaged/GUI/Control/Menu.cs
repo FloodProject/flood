@@ -128,7 +128,7 @@ namespace Flood.GUI.Controls
             item.TextPadding = new Padding(IconMarginDisabled ? 0 : 24, 0, 16, 0);
             item.Dock = Pos.Top;
             item.SizeToContents();
-            item.Alignment = Pos.CenterV | Pos.Left;
+            item.TextAlignment = Pos.CenterV | Pos.Left;
             item.HoverEnter += OnHoverItem;
 
             // Do this here - after Top Docking these values mean nothing in layout

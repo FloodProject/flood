@@ -58,6 +58,8 @@ public:
 
 	virtual Vector2 getKerning(int codepoint1, int codepoint2, int fontSize)  const = 0;
 
+    virtual int getMaxHeight(int fontSize) const = 0;
+
 	// Gets/sets the font name.
 	ACCESSOR(Name, const String&, name)
 

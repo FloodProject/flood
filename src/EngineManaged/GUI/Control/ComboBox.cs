@@ -29,6 +29,7 @@ namespace Flood.GUI.Controls
         public ComboBox(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetSize(100, 20);
             m_Menu = new Menu(this);
             m_Menu.IsHidden = true;
@@ -38,7 +39,7 @@ namespace Flood.GUI.Controls
             DownArrow arrow = new DownArrow(this);
             m_Button = arrow;
 
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
             Text = String.Empty;
             Margin = new Margin(3, 0, 0, 0);
 

@@ -49,12 +49,13 @@ namespace Flood.GUI.Controls
         public ProgressBar(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             MouseInputEnabled = false; // [omeg] what? was true
             SetSize(128, 32);
             TextPadding = Padding.Three;
             IsHorizontal = true;
 
-            Alignment = Pos.Center;
+            TextAlignment = Pos.Center;
             m_Progress = 0;
             m_AutoLabel = true;
         }

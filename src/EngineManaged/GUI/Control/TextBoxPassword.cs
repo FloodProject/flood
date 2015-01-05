@@ -25,6 +25,7 @@ namespace Flood.GUI.Controls
         public TextBoxPassword(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             m_MaskCharacter = '*';
         }
 

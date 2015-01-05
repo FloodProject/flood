@@ -30,7 +30,7 @@ namespace Flood.GUI.Controls
             m_Label.Text = text;
             m_Label.Margin = Margin.Five;
             m_Label.Dock = Pos.Top;
-            m_Label.Alignment = Pos.Center;
+            m_Label.TextAlignment = Pos.Center;
             m_Label.AutoSizeToContents = true;
 
             m_Button = new Button(m_InnerPanel);

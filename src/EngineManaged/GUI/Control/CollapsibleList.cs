@@ -23,8 +23,10 @@ namespace Flood.GUI.Controls
         /// <param name="parent">Parent control.</param>
         public CollapsibleList(Control parent) : base(parent)
         {
+            //SetSize(200, 200);
             EnableScroll(false, true);
             AutoHideBars = true;
+
         }
 
         // todo: iterator, make this as function? check if works
@@ -47,6 +49,25 @@ namespace Flood.GUI.Controls
             }
 
             return null;
+        }
+
+        public void SizeToContents()
+        {
+            var width = 0;
+            var height = 0;
+            foreach (var category in Children)
+            {
+                if (!(category is CollapsibleCategory))
+                    continue;
+                category.SizeToChildren();
+                var w = category.Right;
+                width = (w > width)? w : width ;
+                height += category.Bottom - category.Y;
+            }
+
+            width = (width > Width) ? width : Width;
+            height = (height > Height) ? height : Height;
+            SetSize(width, height);
         }
 
         /// <summary>

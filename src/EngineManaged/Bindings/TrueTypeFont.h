@@ -23,7 +23,7 @@ namespace Flood
 namespace Flood
 {
     /// <summary>
-    /// Represents a TrueType font resource. Loads a TTF font using the
+    /// w Represents a TrueType font resource. Loads a TTF font using the
     /// cross-platform FreeType library. Parses all the font glyphs of a size, and
     /// packs them all into a big texture (texture atlas) for rendering.
     /// </summary>
@@ -48,6 +48,8 @@ namespace Flood
         virtual Flood::ResourceHandle<Flood::Image^> CreateGlyphImage(int codepoint, int size) override;
 
         virtual Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize) override;
+
+        virtual int GetMaxHeight(int fontSize) override;
 
         virtual bool Equals(System::Object^ object) override;
 

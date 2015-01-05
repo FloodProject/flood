@@ -91,7 +91,7 @@ namespace Flood.GUI.Controls
             MouseInputEnabled = true;
             KeyboardInputEnabled = true;
 
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
             TextPadding = new Padding(4, 2, 4, 2);
 
             m_CursorPos = 0;

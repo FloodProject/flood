@@ -32,7 +32,7 @@ namespace Flood.GUI.Controls
             m_RadioButton.KeyboardInputEnabled = false;
 
             m_Label = new LabelClickable(this);
-            m_Label.Alignment = Pos.Bottom | Pos.Left;
+            m_Label.TextAlignment = Pos.Bottom | Pos.Left;
             m_Label.Text = "Radio Button";
             //m_Label.Dock = Pos.Fill;
             m_Label.Clicked += m_RadioButton.Press;

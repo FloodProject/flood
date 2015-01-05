@@ -220,6 +220,11 @@ public:
         return true;
     }
 
+    bool Equals (const Vector<T,N>& rhs) const
+    {
+        return *this == rhs;
+    }
+
     /**
      * Test for inequality with another vector.
      * @param rhs vector to compare to

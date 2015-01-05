@@ -13,11 +13,12 @@ namespace Flood.GUI.Controls
         public StatusBar(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             Height = 22;
             Dock = Pos.Bottom;
             Padding = Padding.Two;
             //Text = "Status Bar"; // [omeg] todo i18n
-            Alignment = Pos.Left | Pos.CenterV;
+            TextAlignment = Pos.Left | Pos.CenterV;
         }
 
         /// <summary>
@@ -25,11 +26,11 @@ namespace Flood.GUI.Controls
         /// </summary>
         /// <param name="control">Control to add.</param>
         /// <param name="right">Determines whether the control should be added to the right side of the bar.</param>
-        public void AddControl(Control control, bool right)
-        {
-            control.Parent = this;
-            control.Dock = right ? Pos.Right : Pos.Left;
-        }
+        //public void AddControl(Control control, bool right)
+        //{
+        //    control.Parent = this;
+        //    control.Dock = right ? Pos.Right : Pos.Left;
+        //}
 
         /// <summary>
         /// Renders the control using specified skin.

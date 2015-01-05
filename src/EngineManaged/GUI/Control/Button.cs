@@ -109,7 +109,7 @@ namespace Flood.GUI.Controls
         {
             SetSize(100, 20);
             MouseInputEnabled = true;
-            Alignment = Pos.Center;
+            TextAlignment = Pos.Center;
             TextPadding = new Padding(3, 3, 3, 3);
         }
 

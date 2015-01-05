@@ -159,4 +159,9 @@ Vector2 FreeTypeFont::getKerning(int codepoint1, int codepoint2, int fontSize) c
     return Vector2(kerning.x / 64.0, kerning.y / 64.0);
 }
 
+int FreeTypeFont::getMaxHeight(int fontsize) const
+{
+    return fontsize * (fontInfo->face->bbox.yMax + abs(fontInfo->face->bbox.yMin));
+}
+
 NAMESPACE_ENGINE_END

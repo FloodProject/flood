@@ -1,0 +1,87 @@
+﻿using Flood.GUIv2.Controls;
+using Flood.GUIv2.Panels.Layout;
+
+namespace Flood.GUIv2.ControlInternal
+{
+    /// <summary>
+    /// Item in CollapsibleCategory.
+    /// </summary>
+    public class CategoryButton : Button
+    {
+        internal bool m_Alt; // for alternate coloring
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CategoryButton"/> class.
+        /// </summary>
+        /// <param name="parent">Parent control.</param>
+        public CategoryButton(Control parent)
+        {
+            TextAlignment = AlignmentFlags.Left | AlignmentFlags.CenterVertical;
+            m_Alt = false;
+            IsToggle = true;
+            TextMargin = new Margin(3, 0);
+        }
+
+        /// <summary>
+        /// Renders the control using specified skin.
+        /// </summary>
+        /// <param name="skin">Skin to use.</param>
+        //public override void Render(Skins.Skin skin)
+        //{
+        //    if (m_Alt)
+        //    {
+        //        if (IsDepressed || ToggleState)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Selected;
+        //        else if (IsHovered)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button_Hover;
+        //        else
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.LineAlt.Button;
+        //    }
+        //    else
+        //    {
+        //        if (IsDepressed || ToggleState)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Selected;
+        //        else if (IsHovered)
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button_Hover;
+        //        else
+        //            Skin.Renderer.DrawColor = skin.Colors.Category.Line.Button;
+        //    }
+
+        //    skin.Renderer.DrawFilledRect(RenderBounds);
+        //}
+
+        /// <summary>
+        /// Updates control colors.
+        /// </summary>
+        public override void UpdateColors()
+        {
+            if (m_Alt)
+            {
+                if (IsDepressed || ToggleState)
+                {
+                    TextColor = Skin.Colors.Category.LineAlt.Text_Selected;
+                    return;
+                }
+                if (IsHovered)
+                {
+                    TextColor = Skin.Colors.Category.LineAlt.Text_Hover;
+                    return;
+                }
+                TextColor = Skin.Colors.Category.LineAlt.Text;
+                return;
+            }
+
+            if (IsDepressed || ToggleState)
+            {
+                TextColor = Skin.Colors.Category.Line.Text_Selected;
+                return;
+            }
+            if (IsHovered)
+            {
+                TextColor = Skin.Colors.Category.Line.Text_Hover;
+                return;
+            }
+            TextColor = Skin.Colors.Category.Line.Text;
+        }
+    }
+}

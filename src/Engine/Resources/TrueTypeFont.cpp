@@ -91,4 +91,9 @@ Vector2 TrueTypeFont::getKerning(int codepoint1, int codepoint2, int fontSize) c
     return Vector2(x,0);
 }
 
+int TrueTypeFont::getMaxHeight(int fontsize) const
+{
+    return fontsize;
+}
+
 NAMESPACE_ENGINE_END

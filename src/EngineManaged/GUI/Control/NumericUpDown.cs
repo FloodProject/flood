@@ -32,6 +32,7 @@ namespace Flood.GUI.Controls
         public NumericUpDown(Control parent)
             : base(parent)
         {
+            AutoSizeToContents = false;
             SetSize(100, 20);
 
             m_Splitter = new Splitter(this);

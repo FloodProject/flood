@@ -57,6 +57,7 @@ namespace Flood.GUI.Controls
         public TabControl(Control parent)
             : base(parent)
         {
+            SetSize(200, 200);
             m_Scroll = new ScrollBarButton[2];
             m_ScrollOffset = 0;
 

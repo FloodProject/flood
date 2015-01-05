@@ -1,4 +1,7 @@
-﻿using Flood.GUI.Controls;
+﻿using System;
+using Flood.GUI;
+using Flood.GUI.Controls;
+using Flood.GUI.Controls.Containers;
 using NUnit.Framework;
 
 namespace Flood.Tests
@@ -25,6 +28,7 @@ namespace Flood.Tests
         [SetUp]
         public void TestSetup()
         {
+            GUI.ResetRenderable();
             canvas = GUI.guiRenderable.Canvas;
             canvas.Children.Clear();
         }
@@ -78,6 +82,7 @@ namespace Flood.Tests
             cat2.Add("but2-2");
             cat2.Add("but2-3");
             cat2.Add("but2-4");
+            control.SizeToContents();
 
             GUI.Test(control, "CollapsibleList1");
         }
@@ -242,7 +247,6 @@ namespace Flood.Tests
             control.AddItem("item3");
             control.AddDivider();
             control.AddItem("item4");
-            control.SizeToChildren();
 
             GUI.Test(control, "Menu1");
         }
@@ -368,8 +372,6 @@ namespace Flood.Tests
         public void TestStatusBar()
         {
             var control = new StatusBar(canvas) { Text = "StatusBar" };
-            var but = new Button(canvas) { Text = "button" };
-            control.AddControl(but, true);
 
             GUI.Test(control, "StatusBar1");
         }
@@ -470,6 +472,517 @@ namespace Flood.Tests
             var control = new WindowControl(canvas, "WindowControl");
 
             GUI.Test(control, "WindowControl1");
+        }
+        
+        [Test]
+        public void TestBoxSizer1()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+
+            GUI.Test(boxPanel, "BoxSizer1_BeforeLayout");
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer1_AfterLayout");
+            boxPanel.Orientation = BoxOrientation.Horizontal;
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer1_OrientationChanged");
+        }
+
+        [Test]
+        public void TestBoxSizer2()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+
+            boxPanel.Orientation = BoxOrientation.Horizontal;
+            boxPanel.Layout();
+            
+            new Button(boxPanel) { Text = "ExtraButton" };
+
+            GUI.Test(boxPanel, "BoxSizer2_BeforeRedimension");
+            
+            boxPanel.Redimension();
+
+            GUI.Test(boxPanel, "BoxSizer2_BeforeLayout");
+            boxPanel.Layout();
+            GUI.Test(boxPanel, "BoxSizer2_AfterLayout");
+        }
+        
+        [Test]
+        public void TestBoxSizer3()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            GUI.Test(boxPanel, "BoxSizer3_BeforeSwap");
+            boxPanel.SwapChildren(1, 4);
+            GUI.Test(boxPanel, "BoxSizer3_AfterSwap");
+        }
+        
+        [Test]
+        public void TestBoxSizer4()
+        {
+            var boxPanel = new BoxPanel(canvas);
+            for(int i = 1; i <= 5; ++i)
+                 new Button(boxPanel) {Text = "Button" + Math.Pow(10, i)};
+
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+
+            GUI.Test(boxPanel, "BoxSizer4_BeforeRemoval");
+            boxPanel.RemoveChild(2, true);
+            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval1");
+            boxPanel.RemoveChild(2, false);
+            GUI.Test(boxPanel, "BoxSizer4_AfterRemoval2");
+        }
+        
+        [Test]
+        public void TestGridSizer1()
+        {
+            var gridPanel = new GridPanel(canvas);
+            gridPanel.SetRows(3);
+            gridPanel.SetColumns(2);
+            gridPanel.SetPosition(new Button(gridPanel){ Text = "grid_0-0" }, 0, 0);
+            gridPanel.SetPosition(new Button(gridPanel){ Text = "grid_0-1" }, 0, 1);
+            gridPanel.SetPosition(new Button(gridPanel){ Text = "grid_1-0" }, 1, 0);
+            gridPanel.SetPosition(new Button(gridPanel){ Text = "grid_1-1" }, 1, 1);
+            var boxPanel = new BoxPanel(gridPanel);
+            for (int i = 1; i <= 5; ++i)
+                new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            gridPanel.SetPosition(boxPanel, 2,0);
+            gridPanel.SetPosition(new Button(gridPanel) { Text = "grid_2-1" }, 2, 1);
+
+            GUI.Test(gridPanel, "GridSizer1_BeforeLayout");
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer1_AfterLayout");
+        }
+        
+        [Test]
+        public void TestGridSizer2()
+        {
+            var gridPanel = new GridPanel(canvas);
+            gridPanel.SetRows(3);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2;i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = (j % 2 == 0)? AlignmentFlags.Center : AlignmentFlags.Right;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+            
+            var boxPanel = new BoxPanel(gridPanel);
+            for (int i = 1; i <= 5; ++i)
+                new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            gridPanel.SetPosition(boxPanel, 2,0);
+            gridPanel.SetPosition(new Button(gridPanel) { Text = "grid_2-1", Alignment = AlignmentFlags.Center }, 2, 1);
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer2_Alignment");
+        }
+        
+        [Test]
+        public void TestGridSizer3()
+        {
+            var gridPanel = new GridPanel(canvas);
+            gridPanel.SetRows(4);
+            gridPanel.SetColumns(2);
+            gridPanel.SetColumns(1, 3);
+            for (int i = 0; i < 2;i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = (j % 2 == 0)? AlignmentFlags.Center : AlignmentFlags.Right;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+            
+            var boxPanel = new BoxPanel(gridPanel);
+            for (int i = 1; i <= 5; ++i)
+                new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            gridPanel.SetPosition(boxPanel, 3,0);
+            gridPanel.SetPosition(new Button(gridPanel) { Text = "grid_2-1", Alignment = AlignmentFlags.Center }, 2, 1);
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer3_Alignment");
+        }
+        
+        [Test]
+        public void TestGridSizer4()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2;i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = (j % 2 == 0)? AlignmentFlags.Top : AlignmentFlags.Right;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer4_Expand");
+        }
+
+        [Test]
+        public void TestGridSizer5()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2;i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = AlignmentFlags.Center;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+   
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer5_Expand_Center");
+        }
+        
+        [Test]
+        public void TestGridSizer6()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(10);
+            for (int i = 0; i < 2;i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = AlignmentFlags.Center;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+   
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer6_Expand_WidthOverflow");
+        }
+
+        [Test]
+        public void TestGridSizer7()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(30);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 30;i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = AlignmentFlags.Center;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+   
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer7_Expand_HeightOverflow");
+        }
+
+        [Test]
+        public void TestGridSizer8()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(30);
+            gridPanel.SetColumns(20);
+            for (int i = 0; i < 30;i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    var button = new Button(gridPanel) {Text = "grid_"+i+"-"+j};
+                    button.Alignment = AlignmentFlags.Center;
+                    gridPanel.SetPosition(button, i, j);
+                }
+                
+            }
+   
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer8_Expand_Width&HeightOverflow");
+        }
+        
+        [Test]
+        public void TestGridSizer9()
+        {
+            var gridPanel = new GridPanel(canvas);
+            gridPanel.SetRows(3);
+            gridPanel.SetColumns(2);
+            var colorPicker = new ColorPicker(gridPanel);
+            gridPanel.SetPosition(colorPicker, 0, 0);
+            var rbg = new RadioButtonGroup(gridPanel, "RadioButtonGroup");
+            rbg.Text = "RadioButtonGroup2";
+            rbg.AddOption("opt1");
+            rbg.AddOption("opt2");
+            rbg.AddOption("opt3");
+            gridPanel.SetPosition(rbg, 0, 1);
+
+            var collapsibleList = new CollapsibleList(gridPanel);
+            var cat1 = collapsibleList.Add("Category1");
+            var cat2 = collapsibleList.Add("Category2");
+            cat1.Add("but1-1");
+            cat1.Add("but1-2");
+            cat2.Add("but2-1");
+            cat2.Add("but2-2");
+            cat2.Add("but2-3");
+            cat2.Add("but2-4");
+            collapsibleList.SizeToContents();
+            gridPanel.SetPosition(collapsibleList, 1, 0);
+            var comboBox = new ComboBox(gridPanel);
+            comboBox.AddItem("opt1");
+            comboBox.AddItem("opt2");
+            comboBox.AddItem("opt3");
+            gridPanel.SetPosition(comboBox, 1, 1);
+            var tabControl = new TabControl(gridPanel);
+            tabControl.AddPage("pg1");
+            tabControl.AddPage("pg2");
+            tabControl.AddPage("pg3");
+            tabControl.AddPage("pg4");
+            gridPanel.SetPosition(tabControl, 2, 0);
+
+            var listBox = new ListBox(gridPanel);
+            listBox.AddRow("row1");
+            listBox.AddRow("row2");
+            listBox.AddRow("row3");
+            gridPanel.SetPosition(listBox, 2, 1);
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer9_DifferentControls");
+        }
+
+        [Test]
+        public void TestGridSizer10()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) { Text = "grid_" + i + "-" + j };
+                    button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
+                    gridPanel.SetPosition(button, i, j);
+                }
+            }
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer10_AlignementBottomRight");
+        }
+        [Test]
+        public void TestGridSizer11()
+        {
+            canvas.Width = 400;
+            canvas.Height = 600;
+            var gridPanel = new GridPanel(canvas, ExpansionFlags.Expand);
+            gridPanel.SetRows(2);
+            gridPanel.SetColumns(2);
+
+            for (int i = 0; i < 1; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel) { Text = "grid_" + i + "-" + j };
+                    gridPanel.SetPosition(button, i, j);
+                }
+            }
+            var btn = new Button(gridPanel) { Text = "grid_1-0"};
+            gridPanel.SetPosition(btn, 1, 0);
+
+            var boxPanel = new BoxPanel(gridPanel);
+            for (int i = 1; i <= 5; ++i)
+                new Button(boxPanel) { Text = "Button" + Math.Pow(10, i) };
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            gridPanel.SetPosition(boxPanel, 1, 1);
+
+            gridPanel.Layout();
+            GUI.Test(gridPanel, "GridSizer11_BoxPanel");
+        }
+
+        [Test]
+        public void TestGridSizer12()
+        {
+            var boxPanel = new BoxPanel(canvas){ Orientation = BoxOrientation.Horizontal};
+
+            var gridPanel1 = new GridPanel(boxPanel);
+            gridPanel1.SetRows(2);
+            gridPanel1.SetColumns(2);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel1) { Text = "grid_" + i + "-" + j };
+                    button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
+                    gridPanel1.SetPosition(button, i, j);
+                }
+            }
+
+            gridPanel1.Layout();
+
+            var gridPanel2 = new GridPanel(boxPanel);
+            gridPanel2.SetRows(2);
+            gridPanel2.SetColumns(2);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(gridPanel2) { Text = "grid_" + i + "-" + j };
+                    button.Alignment = AlignmentFlags.Bottom | AlignmentFlags.Right;
+                    gridPanel2.SetPosition(button, i, j);
+                }
+            }
+
+            gridPanel2.Layout();
+
+            boxPanel.Redimension();
+            boxPanel.Layout();
+
+            GUI.Test(gridPanel1, "GridSizer12_2GridPanels");
+        }
+
+        [Test]
+        public void TestRelativePositionSizer1()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel1");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer2()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel2");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer3()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Shaped);
+            relativePositionPanel.Width = 200;
+            relativePositionPanel.Height = 100;
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 126 * i, 32 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel3_shaped");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer4()
+        {
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Shaped);
+            relativePositionPanel.Width = 300;
+            relativePositionPanel.Height = 50;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel4_shaped_overflow");
+        }
+        
+        [Test]
+        public void TestRelativePositionSizer5()
+        {
+            canvas.Width = 200;
+            canvas.Height = 40;
+            var relativePositionPanel = new RelativePositionPanel(canvas, ExpansionFlags.Expand);
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var button = new Button(relativePositionPanel) { Text = "relative_" + i + "-" + j };
+                    relativePositionPanel.SetPosition(button, 106 * i, 22 * j);
+                }
+            }
+
+            relativePositionPanel.Layout();
+            GUI.Test(relativePositionPanel, "relativePanel5_expand_overflow");
         }
     }
 

@@ -111,6 +111,8 @@ namespace Flood
 
         virtual Flood::Vector2 GetKerning(int codepoint1, int codepoint2, int fontSize);
 
+        virtual int GetMaxHeight(int fontSize);
+
         virtual bool Equals(System::Object^ object) override;
 
         virtual int GetHashCode() override;

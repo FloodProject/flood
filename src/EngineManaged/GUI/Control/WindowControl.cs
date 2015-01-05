@@ -53,19 +53,23 @@ namespace Flood.GUI.Controls
         public WindowControl(Control parent, String caption = "", bool modal = false)
             : base(parent)
         {
+            int width = 0;
+            int height = 0;
             m_TitleBar = new Dragger(this);
             m_TitleBar.Height = 24;
             m_TitleBar.Padding = Padding.Zero;
             m_TitleBar.Margin = new Margin(0, 0, 0, 4);
             m_TitleBar.Target = this;
             m_TitleBar.Dock = Pos.Top;
+            height += m_TitleBar.Height;
 
             m_Caption = new Label(m_TitleBar);
-            m_Caption.Alignment = Pos.Left | Pos.CenterV;
+            m_Caption.TextAlignment = Pos.Left | Pos.CenterV;
             m_Caption.Text = caption;
-            m_Caption.Dock = Pos.Fill;
+            m_Caption.Dock = Pos.Left;
             m_Caption.Padding = new Padding(8, 0, 0, 0);
             m_Caption.TextColor = Skin.Colors.Window.TitleInactive;
+            width += m_Caption.Width + m_Caption.Padding.Left + m_Caption.Padding.Right;
 
             m_CloseButton = new CloseButton(m_TitleBar, this);
             //m_CloseButton.Text = String.Empty;
@@ -75,6 +79,9 @@ namespace Flood.GUI.Controls
             m_CloseButton.IsTabable = false;
             m_CloseButton.Name = "closeButton";
 
+            width += m_CloseButton.Width;
+
+            height += (m_Caption.Height > m_CloseButton.Height) ? m_Caption.Height : m_CloseButton.Height;
             //Create a blank content control, dock it to the top - Should this be a ScrollControl?
             m_InnerPanel = new Control(this);
             m_InnerPanel.Dock = Pos.Fill;
@@ -85,6 +92,8 @@ namespace Flood.GUI.Controls
             MinimumSize = new Vector2i(100, 40);
             ClampMovement = true;
             KeyboardInputEnabled = false;
+
+            SetSize(width, height);
 
             if (modal)
                 MakeModal();
