@@ -1,22 +1,21 @@
-BakefileGen = {}
-BakefileGen.name = "BakefileGen"
+workspace "BakefileGen"
 
-project "BakefileGen"
+	configurations { "Debug" }
+	platforms { "x32" }
 
-	kind "ConsoleApp"
-	language "C#"
-	
-	location "."
-	
-	files
-	{
-		"BakefileGen.lua",
-		"**.cs",
-	}
-	
-	links
-	{
-		"System",
-		"System.Xml",
-		"System.Xml.Linq"
-	}
+	project "BakefileGen"
+
+		kind "ConsoleApp"
+		
+		files
+		{
+			"BakefileGen.lua",
+			"**.cs",
+		}
+		
+		links
+		{
+			"System",
+			"System.Xml",
+			"System.Xml.Linq"
+		}

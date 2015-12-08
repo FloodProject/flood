@@ -1,10 +1,8 @@
 project "RemotingGen"
 
+    SetupManagedProject()
     kind "ConsoleApp"
-    language "C#"
     uuid "42DB45CD-6DF9-4E3A-930F-3B8A82ADB915"
-    
-    location "."
     
     files
     {
@@ -13,7 +11,8 @@ project "RemotingGen"
         path.join(srcdir, "EngineManaged/Serialization/DataType.cs")
     }
     
-    links {
+    links
+    {
         "System",
         "Weaver",
         "Mono.Cecil"

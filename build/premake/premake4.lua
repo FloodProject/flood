@@ -3,6 +3,7 @@
 -- and calls the build scripts of all the sub-projects.
 
 dofile "Helpers.lua"
+local flood = require "flood"
 
 ImportConfigs()
 
@@ -13,8 +14,8 @@ WriteConfigToFile(conf, "../Build.h")
 solution "Flood"
 	
 	configurations { "Debug", "Release" }
-	platforms { "x32", "x64", "pnacl" }
-	defaultplatform "x32"
+	platforms { "x32", "x64" }
+	--defaultplatform "x32"
 	
 	flags { common_flags }
 	language "C++"
@@ -29,13 +30,13 @@ solution "Flood"
 	startproject "Runtime"
 
 	-- Build configuration options
-
+--[[
 	configuration "pnacl"
 		system "nacl"
 		architecture "pnacl"
-	
+]]
 	configuration "Release"
-		flags { "Optimize" }
+		optimize "Full"
 
 	configuration "Debug"
 		defines { "DEBUG" }
@@ -97,7 +98,7 @@ solution "Flood"
 
 	group "Examples"
 
-        print("Searching for externals projects...")
+        print("Searching for example projects...")
         IncludePremakeProjects(path.join(examplesdir, "*"))	
 
     group "Externals"

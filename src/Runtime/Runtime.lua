@@ -1,9 +1,7 @@
 project "Runtime"
 
+	SetupManagedProject()
 	kind "ConsoleApp"
-	language "C#"
-	location "."
-
 	uuid "CA9C6CED-8FC5-4A59-AFB1-783BF1DD5A71"
 
 	files

@@ -96,11 +96,11 @@ end
 
 function SetupNativeBuildFlags()
 	-- Compiler-specific options
-
+--[[
 	configuration "pnacl"
 		system "nacl"
 		architecture "pnacl"
-	
+]]
 	configuration { "vs*", "not pnacl" }
 		buildoptions { msvc_buildflags, "/wd4251" }
 		defines { msvc_cpp_defines }
@@ -120,6 +120,14 @@ function SetupNativeProjects()
 		defines { "NDEBUG" }
 	
 	SetupNativeBuildFlags()
+	configuration(c)
+end
+
+function SetupManagedProject()
+	location (path.join(builddir, "projects"))
+	language "C#"
+	local c = configuration "vs*"
+		location "."
 	configuration(c)
 end
 

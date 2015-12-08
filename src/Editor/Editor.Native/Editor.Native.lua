@@ -20,12 +20,12 @@ end
 
 project "Editor.Native"
 
+	SetupNativeProjects()
 	uuid "69765483-81E7-471A-A252-01D16EA17413"
 	kind "SharedLib"
 	flags { editor_flags }
 	defines { "API_EDITOR_DLL", "API_EDITOR_DLL_EXPORT" }
 
-	SetupNativeProjects()
 	dependson { Engine.name }
 	
 	defines

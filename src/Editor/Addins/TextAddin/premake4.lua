@@ -1,10 +1,8 @@
 
 project "TextAddin"
 
+    SetupManagedProject()
     kind "SharedLib"
-    language "C#"
-    
-    location "."
     
     EmbedFiles {
         "**.xshd",
@@ -29,10 +27,11 @@ project "TextAddin"
         "EngineManaged",
         "Editor.Client"
     }
-    
+--[[
     linksnotcopied
     {
         "EngineBindings",
         "EngineManaged",
         "Editor.Client"
     }
+]]
