@@ -129,12 +129,12 @@ int Flood::Font::GetHashCode()
 System::String^ Flood::Font::Name::get()
 {
     auto &__ret = ((::Font*)NativePtr)->getName();
-    return (System::String^)(StringMarshaller::marshalString(__ret));
+    return (System::String^)(clix::marshalString<clix::E_UTF8>(__ret));
 }
 
 void Flood::Font::Name::set(System::String^ v)
 {
-    auto arg0 = StringMarshaller::marshalString(v);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
     ((::Font*)NativePtr)->setName(arg0);
 }
 
@@ -146,11 +146,11 @@ Flood::ResourceGroup Flood::Font::ResourceGroup::get()
 
 System::String^ Flood::Font::Name1::get()
 {
-    return StringMarshaller::marshalString(((::Font*)NativePtr)->name);
+    return clix::marshalString<clix::E_UTF8>(((::Font*)NativePtr)->name);
 }
 
 void Flood::Font::Name1::set(System::String^ value)
 {
-    ((::Font*)NativePtr)->name = StringMarshaller::marshalString(value);
+    ((::Font*)NativePtr)->name = clix::marshalString<clix::E_UTF8>(value);
 }
 

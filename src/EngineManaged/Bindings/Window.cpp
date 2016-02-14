@@ -18,7 +18,7 @@ Flood::WindowSettings::WindowSettings(::WindowSettings* native)
 {
     __Width = native->width;
     __Height = native->height;
-    __Title = StringMarshaller::marshalString(native->title);
+    __Title = clix::marshalString<clix::E_UTF8>(native->title);
     __Handle = native->handle;
     __Styles = (Flood::WindowStyles)native->styles;
 }
@@ -28,17 +28,17 @@ Flood::WindowSettings::WindowSettings(System::IntPtr native)
     auto __native = (::WindowSettings*)native.ToPointer();
     __Width = __native->width;
     __Height = __native->height;
-    __Title = StringMarshaller::marshalString(__native->title);
+    __Title = clix::marshalString<clix::E_UTF8>(__native->title);
     __Handle = __native->handle;
     __Styles = (Flood::WindowStyles)__native->styles;
 }
 
 Flood::WindowSettings::WindowSettings(unsigned short width, unsigned short height, System::String^ title, Flood::WindowStyles styles)
 {
-    ::WindowSettings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height, StringMarshaller::marshalString(title), (::WindowStyles)styles);
+    ::WindowSettings _native((::uint16)(::uint16_t)width, (::uint16)(::uint16_t)height, clix::marshalString<clix::E_UTF8>(title), (::WindowStyles)styles);
     this->Width = _native.width;
     this->Height = _native.height;
-    this->Title = StringMarshaller::marshalString(_native.title);
+    this->Title = clix::marshalString<clix::E_UTF8>(_native.title);
     this->Handle = _native.handle;
     this->Styles = (Flood::WindowStyles)_native.styles;
 }
@@ -48,13 +48,13 @@ Flood::Vector2i Flood::WindowSettings::Size::get()
     auto _this0 = ::WindowSettings();
     _this0.width = (::uint16)(::uint16_t)(*this).Width;
     _this0.height = (::uint16)(::uint16_t)(*this).Height;
-    _this0.title = StringMarshaller::marshalString((*this).Title);
+    _this0.title = clix::marshalString<clix::E_UTF8>((*this).Title);
     _this0.handle = (void*)(*this).Handle;
     _this0.styles = (::WindowStyles)(*this).Styles;
     auto __ret = _this0.getSize();
     __Width = _this0.width;
     __Height = _this0.height;
-    __Title = StringMarshaller::marshalString(_this0.title);
+    __Title = clix::marshalString<clix::E_UTF8>(_this0.title);
     __Handle = _this0.handle;
     __Styles = (Flood::WindowStyles)_this0.styles;
     return Flood::Vector2i((::Vector2i*)&__ret);
@@ -126,13 +126,13 @@ Flood::Window::Window(Flood::WindowSettings settings)
 {
 }
 
-Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _33)
+Flood::RenderContext^ Flood::Window::CreateContext(Flood::RenderContextSettings _35)
 {
     auto _marshal0 = ::RenderContextSettings();
-    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_33.BitsPerPixel;
-    _marshal0.depthBits = (::uint16)(::uint16_t)_33.DepthBits;
-    _marshal0.stencilBits = (::uint16)(::uint16_t)_33.StencilBits;
-    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_33.AntialiasLevel;
+    _marshal0.bitsPerPixel = (::uint16)(::uint16_t)_35.BitsPerPixel;
+    _marshal0.depthBits = (::uint16)(::uint16_t)_35.DepthBits;
+    _marshal0.stencilBits = (::uint16)(::uint16_t)_35.StencilBits;
+    _marshal0.antialiasLevel = (::uint16)(::uint16_t)_35.AntialiasLevel;
     auto arg0 = _marshal0;
     auto __ret = ((::Window*)NativePtr)->createContext(arg0);
     if (__ret == nullptr) return nullptr;
@@ -193,7 +193,7 @@ int Flood::Window::GetHashCode()
 
 void Flood::Window::Title::set(System::String^ title)
 {
-    auto arg0 = StringMarshaller::marshalString(title);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(title);
     ((::Window*)NativePtr)->setTitle(arg0);
 }
 

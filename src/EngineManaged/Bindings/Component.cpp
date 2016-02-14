@@ -46,10 +46,10 @@ bool Flood::Component::IsDebugRenderableVisible()
     return __ret;
 }
 
-void Flood::Component::OnDebugDraw(Flood::DebugDrawer^ _0, Flood::DebugDrawFlags _1)
+void Flood::Component::OnDebugDraw(Flood::DebugDrawer^ _29, Flood::DebugDrawFlags _30)
 {
-    auto &arg0 = *(::DebugDrawer*)_0->NativePtr;
-    auto arg1 = (::DebugDrawFlags)_1;
+    auto &arg0 = *(::DebugDrawer*)_29->NativePtr;
+    auto arg1 = (::DebugDrawFlags)_30;
     ((::Component*)NativePtr)->onDebugDraw(arg0, arg1);
 }
 

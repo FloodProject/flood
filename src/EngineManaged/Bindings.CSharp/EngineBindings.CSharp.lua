@@ -1,8 +1,8 @@
 
 project "EngineBindings.CSharp"
 
+	SetupManagedProject()
 	kind "SharedLib"
-	language "C#"
 	flags { "Managed", "Unsafe" }
 	
 	files

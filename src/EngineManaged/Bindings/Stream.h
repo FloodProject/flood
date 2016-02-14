@@ -53,6 +53,12 @@ namespace Flood
     {
     public:
 
+        enum struct _0
+        {
+            EndOfStream = 0,
+            InvalidState = -1
+        };
+
         property ::Stream* NativePtr;
         property System::IntPtr __Instance
         {

@@ -33,13 +33,13 @@ Flood::Material::Material()
 Flood::Material::Material(System::String^ name)
     : Flood::Resource((::Resource*)nullptr)
 {
-    auto arg0 = StringMarshaller::marshalString(name);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     NativePtr = new ::Material(arg0);
 }
 
 void Flood::Material::SetShader(System::String^ name)
 {
-    auto arg0 = StringMarshaller::marshalString(name);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     ((::Material*)NativePtr)->setShader(arg0);
 }
 
@@ -59,7 +59,7 @@ void Flood::Material::SetBlending(Flood::BlendSource _0, Flood::BlendDestination
 void Flood::Material::SetTexture(unsigned char unit, System::String^ name)
 {
     auto arg0 = (::uint8)(::uint8_t)unit;
-    auto arg1 = StringMarshaller::marshalString(name);
+    auto arg1 = clix::marshalString<clix::E_UTF8>(name);
     ((::Material*)NativePtr)->setTexture(arg0, arg1);
 }
 
@@ -106,7 +106,7 @@ int Flood::Material::GetHashCode()
 Flood::ResourceHandle<Flood::Material^> Flood::Material::Create(Flood::Allocator^ _0, System::String^ name)
 {
     auto arg0 = (::Allocator*)_0->NativePtr;
-    auto arg1 = StringMarshaller::marshalString(name);
+    auto arg1 = clix::marshalString<clix::E_UTF8>(name);
     auto __ret = ::MaterialCreate(arg0, arg1);
     return Flood::ResourceHandle<Flood::Material^>(__ret.id);
 }
@@ -120,12 +120,12 @@ Flood::ResourceGroup Flood::Material::ResourceGroup::get()
 System::String^ Flood::Material::Name::get()
 {
     auto &__ret = ((::Material*)NativePtr)->getName();
-    return (System::String^)(StringMarshaller::marshalString(__ret));
+    return (System::String^)(clix::marshalString<clix::E_UTF8>(__ret));
 }
 
 void Flood::Material::Name::set(System::String^ v)
 {
-    auto arg0 = StringMarshaller::marshalString(v);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(v);
     ((::Material*)NativePtr)->setName(arg0);
 }
 
@@ -261,44 +261,14 @@ Flood::BlendDestination Flood::Material::BlendDestination::get()
     return (Flood::BlendDestination)__ret;
 }
 
-System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ Flood::Material::TextureUnits::get()
-{
-    auto _tmp__TextureUnits = gcnew System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>();
-    for(auto _it = ((::Material*)NativePtr)->textureUnits.Begin(); _it != ((::Material*)NativePtr)->textureUnits.End(); ++_it)
-    {
-        auto& _key = _it->first;
-        auto& _val = _it->second;
-        auto _marshalKey = _key;
-        auto ___val = new ::TextureUnit(_val);
-        auto _marshalValue = (___val == nullptr) ? nullptr : gcnew Flood::TextureUnit((::TextureUnit*)___val);
-        _tmp__TextureUnits->Add(_marshalKey, _marshalValue);
-    }
-    return _tmp__TextureUnits;
-}
-
-void Flood::Material::TextureUnits::set(System::Collections::Generic::Dictionary<unsigned char, Flood::TextureUnit^>^ value)
-{
-    auto _tmpvalue = HashMap<::uint8, ::TextureUnit>();
-    auto _keys = value->Keys->GetEnumerator();
-    while (_keys.MoveNext())
-    {
-        unsigned char _key = _keys.Current;
-        Flood::TextureUnit^ _val = value[_key];
-        auto _marshalKey = (::uint8)(::uint8_t)_key;
-        auto _marshalValue = *(::TextureUnit*)_val->NativePtr;
-        _tmpvalue[_marshalKey] = _marshalValue;
-    }
-    ((::Material*)NativePtr)->textureUnits = _tmpvalue;
-}
-
 System::String^ Flood::Material::Name1::get()
 {
-    return StringMarshaller::marshalString(((::Material*)NativePtr)->name);
+    return clix::marshalString<clix::E_UTF8>(((::Material*)NativePtr)->name);
 }
 
 void Flood::Material::Name1::set(System::String^ value)
 {
-    ((::Material*)NativePtr)->name = StringMarshaller::marshalString(value);
+    ((::Material*)NativePtr)->name = clix::marshalString<clix::E_UTF8>(value);
 }
 
 Flood::ResourceHandle<Flood::ShaderMaterial^> Flood::Material::Shader1::get()

@@ -32,7 +32,7 @@ Flood::Entity::Entity()
 
 Flood::Entity::Entity(System::String^ name)
 {
-    auto arg0 = StringMarshaller::marshalString(name);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     NativePtr = new ::Entity(arg0);
 }
 
@@ -71,8 +71,8 @@ bool Flood::Entity::RemoveComponent(Flood::Component^ component)
 
 Flood::Component^ Flood::Entity::GetComponent(System::String^ name)
 {
-    auto ____temp = clix::marshalString<clix::E_UTF8>(name);
-    auto arg0 = ____temp.c_str();
+    auto _arg0 = clix::marshalString<clix::E_UTF8>(name);
+    auto arg0 = _arg0.c_str();
     auto __ret = ((::Entity*)NativePtr)->getComponent(arg0);
     return (__ret.get() == nullptr) ? nullptr : gcnew Flood::Component((::Component*)__ret.get());
 }
@@ -128,12 +128,12 @@ void Flood::Entity::__Instance::set(System::IntPtr object)
 System::String^ Flood::Entity::Name::get()
 {
     auto &__ret = ((::Entity*)NativePtr)->getName();
-    return (System::String^)(StringMarshaller::marshalString(__ret));
+    return (System::String^)(clix::marshalString<clix::E_UTF8>(__ret));
 }
 
 void Flood::Entity::Name::set(System::String^ name)
 {
-    auto arg0 = StringMarshaller::marshalString(name);
+    auto arg0 = clix::marshalString<clix::E_UTF8>(name);
     ((::Entity*)NativePtr)->setName(arg0);
 }
 
