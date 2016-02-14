@@ -17,6 +17,8 @@ namespace Flood.Editor.Server
         {
             UserManager = new UserManager();
             //serviceManager.AddImplementation<IUserManager>(UserManager);
+            //var serviceManager = remotingManager.ServiceManager;
+            //serviceManager.
 
             ProjectManager = new ProjectManager();
             //serviceManager.AddImplementation<IProjectManager>(ProjectManager);

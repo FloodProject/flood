@@ -6,6 +6,7 @@
 ************************************************************************/
 
 #include "WxMenu.h"
+#include <wx/event.h>
 
 NAMESPACE_EDITOR_BEGIN
 
