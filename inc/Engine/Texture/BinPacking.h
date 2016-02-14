@@ -10,7 +10,7 @@
 FLD_IGNORE_FILE
 
 #include <vector>
-
+#include "Core/Math/Vector.h"
 #include "Core/Math/Rectangle.h"
 
 /** MaxRectsBinPack implements the MAXRECTS data structure and different bin packing algorithms that 

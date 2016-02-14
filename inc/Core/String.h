@@ -12,15 +12,16 @@
 #include <sstream>
 #include <cstdarg>
 #include <cstring>
-#include "Core/Containers/Vector.h"
-#include "Core/Containers/str.h"
+#include <vector>
+
+FLD_IGNORE_FILE
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-//typedef std::string String;
-//typedef std::wstring StringWide;
+typedef std::string String;
+typedef std::wstring StringWide;
 
 struct API_CORE StringHash
 {
@@ -31,35 +32,44 @@ struct API_CORE StringHash
 };
 
 // Hashes the string and returns its hash.
-API_CORE StringHash HashString(const UTF8String&);
+API_CORE StringHash HashString(const String&);
+
+// Compares a string in a case insensitive way.
+API_CORE int StringCompareInsensitive(const String& s1, const String& s2);
 
 // Formats the string according to the 'printf' style format string.
-API_CORE UTF8String StringFormat(const char* s, ...);
-API_CORE UTF8String StringFormatArgs(const char* s, va_list args);
+API_CORE String StringFormat(const char* s, ...);
+API_CORE String StringFormatArgs(const char* s, va_list args);
 
 // Splits a string (tokenizes) into sub-string separated by given elements.
-API_CORE void StringSplit(const UTF8String& s, char delim, Vector<UTF8String>& elems);
+API_CORE void StringSplit(const String& s, char delim, std::vector<String>& elems);
 
 // Converts a wide string in UTF-16 to a UTF-8 string.
-API_CORE UTF8String StringFromWideString(const WString& ws);
+API_CORE String StringFromWideString(const StringWide& ws);
 
 // Converts an UTF-8 encoded string to a UTF-16 wide string.
-API_CORE WString StringToWideString(const UTF8String& s);
+API_CORE StringWide StringToWideString(const String& s);
 
+// Converts between caseness of the string.
+API_CORE String StringToLowerCase(const String& s);
+API_CORE String StringToUpperCase(const String& s);
+
+// Replaces a match in the string by another string.
+API_CORE void StringReplace(String& s, const String& from, const String& to);
 
 // Strips the string of the given characters.
-API_CORE UTF8String StringTrim(const UTF8String& s, const char* trim);
+API_CORE String StringTrim(const String& s, const char* trim);
 
 // Converts a float to a string.
-API_CORE UTF8String StringFromFloat( float n, uint8 precision = 2 );
+API_CORE String StringFromFloat( float n, uint8 precision = 2 );
 
 // Pattern matches a string.
-API_CORE const char* StringMatch(const UTF8String& s, const UTF8String& pattern);
+API_CORE const char* StringMatch(const String& s, const String& pattern);
 API_CORE const char* RawStringMatch(const char* s, size_t len, const char* p);
 
 // Path utilities
 
-typedef UTF8String Path;
+typedef String Path;
 
 // Gets the base part of the filename string.
 API_CORE Path PathGetFileBase(const Path& path);
@@ -89,14 +99,19 @@ API_CORE Path PathCombine(Path base, Path extra);
 
 // Converts a number to a string.
 template< typename T > FLD_IGNORE
-NAMESPACE_CORE::UTF8String StringFromNumber(const T& t)
+NAMESPACE_CORE::String StringFromNumber(const T& t)
 {
-	return new UTF8String(t);
+	std::ostringstream oss;
+	
+	oss << t;
+	assert( !oss.fail() );
+	
+	return oss.str();
 }
 
 // Converts a string to a number.
 template< typename T > FLD_IGNORE
-T StringToNumber(const NAMESPACE_CORE::UTF8String& s)
+T StringToNumber(const NAMESPACE_CORE::String& s)
 {
 	std::stringstream ss(s);
 	

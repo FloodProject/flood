@@ -27,6 +27,7 @@ API_SCENE REFLECT_DECLARE_CLASS(Geometry)
 
 class API_SCENE Geometry : public Component
 {
+    DECLARE_UNCOPYABLE(Geometry)
 	REFLECT_DECLARE_OBJECT(Geometry)
 
 public:
