@@ -29,8 +29,8 @@ namespace Flood
             options.OutputNamespace = "Flood";
             options.GeneratorKind = GeneratorKind.CLI;
             options.OutputDir = @"../../../../src/EngineManaged/Bindings";
-            options.IncludeDirs.Add(@"../../../../inc");
-            options.LibraryDirs.Add(@"../../../../build/vs2012/lib/Debug_x32");
+            options.addIncludeDirs(@"../../../../inc");
+            options.addLibraryDirs(@"../../../../build/vs2012/lib/Debug_x32");
             options.WriteOnlyWhenChanged = true;
             options.GenerateFunctionTemplates = true;
             options.IgnoreParseWarnings = true;
