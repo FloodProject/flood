@@ -57,8 +57,8 @@ namespace Flood.Networking
         public Server(RemotingManager remotingManager, HostEndPoint endPoint)
             : base(remotingManager)
         {
-            // TODO: remove this from here.
-            Flood.Network.NetworkInitialize();
+            // TODO: remove this from here
+            //Flood.Network.NetworkInitialize();
 
             var server = new HostServer();
             host = server;
@@ -87,7 +87,7 @@ namespace Flood.Networking
         public async Task<bool> Connect(HostEndPoint endPoint, int timeout = 1000)
         {
             // TODO: remove this from here.
-            Flood.Network.NetworkInitialize();
+            //Flood.Network.NetworkInitialize();
 
             var client = new HostClient();
             host = client;

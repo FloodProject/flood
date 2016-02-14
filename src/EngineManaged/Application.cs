@@ -64,6 +64,9 @@ namespace Flood
             WindowManager = new Windows.WindowManager(this);
 
             RemotingManager.ServiceManager.GetCreateImplementation<IWindowManager>(WindowManager);
+
+            // FIXME: Introduce a better system to get at global objects (dependency injection?)
+            RemotingManager.ServiceManager.Application = this;
         }
 
         private const string AssetsDirectory = "bin/Assets/";

@@ -20,6 +20,8 @@ namespace Flood.Remoting
 
         private RemotingManager remotingManager;
 
+        public Application Application; 
+
         public ServiceManager(RemotingManager remotingManager)
         {
             stubs = new Dictionary<int, ServiceStub>();
