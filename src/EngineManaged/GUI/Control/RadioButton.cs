@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Flood.GUI.Controls
 {
     /// <summary>
@@ -22,6 +24,7 @@ namespace Flood.GUI.Controls
             : base(parent)
         {
             SetSize(15, 15);
+            AutoSizeToContents = false;
             MouseInputEnabled = true;
             IsTabable = false;
         }
@@ -33,6 +36,11 @@ namespace Flood.GUI.Controls
         protected override void Render(Skins.Skin skin)
         {
             skin.DrawRadioButton(this, IsChecked, IsDepressed);
+        }
+
+        public override void SetText(string str, bool doEvents = true)
+        {
+            throw new InvalidOperationException("This control cannot have text");
         }
     }
 }

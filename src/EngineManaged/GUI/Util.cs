@@ -75,17 +75,16 @@ namespace Flood.GUI
         // from http://stackoverflow.com/questions/359612/how-to-change-rgb-color-to-hsv
         public static HSV ToHSV(this Color color)
         {
-            throw new NotImplementedException();
-
-            /*HSV hsv = new HSV();
+            HSV hsv = new HSV();
             int max = Math.Max(color.R, Math.Max(color.G, color.B));
             int min = Math.Min(color.R, Math.Min(color.G, color.B));
 
-            hsv.h = color.GetHue();
+            //hsv.h = color.GetHue();
+            hsv.h = 0;
             hsv.s = (max == 0) ? 0 : 1f - (1f * min / max);
             hsv.v = max / 255f;
 
-            return hsv;*/
+            return hsv;
         }
 
         public static Color HSVToColor(float h, float s, float v)

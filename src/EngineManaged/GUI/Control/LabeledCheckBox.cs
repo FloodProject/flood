@@ -1,4 +1,5 @@
 ﻿using System;
+using Flood.GUI.Skins;
 
 namespace Flood.GUI.Controls
 {
@@ -42,7 +43,6 @@ namespace Flood.GUI.Controls
         public LabeledCheckBox(Control parent)
             : base(parent)
         {
-            SetSize(200, 19);
             m_CheckBox = new CheckBox(this);
             m_CheckBox.Dock = Pos.Left;
             m_CheckBox.Margin = new Margin(0, 2, 2, 2);
@@ -55,6 +55,11 @@ namespace Flood.GUI.Controls
             m_Label.IsTabable = false;
 
             IsTabable = false;
+        }
+
+        protected override void Layout(Skin skin)
+        {
+            base.Layout(skin);
         }
 
         /// <summary>

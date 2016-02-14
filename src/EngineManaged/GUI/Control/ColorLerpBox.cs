@@ -1,5 +1,5 @@
 ﻿using Flood.GUI.Input;
-using System;
+using Flood.GUI.Skins;
 
 namespace Flood.GUI.Controls
 {
@@ -75,7 +75,6 @@ namespace Flood.GUI.Controls
                 m_CursorPos.X = (int)(hsv.s * Width);
                 m_CursorPos.Y = (int)((1 - hsv.v) * Height);
             }
-            Invalidate();
 
             if (ColorChanged != null)
                 ColorChanged.Invoke(this);
@@ -143,19 +142,6 @@ namespace Flood.GUI.Controls
         }
 
         /// <summary>
-        /// Invalidates the control.
-        /// </summary>
-        public override void Invalidate()
-        {
-            //if (m_Texture != null)
-            //{
-            //    m_Texture.Dispose();
-            //    m_Texture = null;
-            //}
-            base.Invalidate();
-        }
-
-        /// <summary>
         /// Renders the control using specified skin.
         /// </summary>
         /// <param name="skin">Skin to use.</param>
@@ -163,25 +149,11 @@ namespace Flood.GUI.Controls
         {
             if (imageHandle.Id == ResourceHandle<Image>.Invalid)
             {
-                throw new NotImplementedException();
-               /*var bitmap = new Bitmap(Width, Height);
-
-                for (int y = 0; y < Height; y++)
-                {
-                    for (int x = 0; x < Width; x++)
-                    {
-                        Color c = GetColorAt(x,y);
-                        bitmap.SetPixel(x,y,Color.FromArgb(c.A,c.R,c.G,c.B));
-                    }
-                }
-
-                m_Texture = new MaterialHandle(skin.Renderer);
-                m_Texture.LoadBitmap(bitmap);*/
+                CreateGradientBitmap(skin);
             }
 
             skin.Renderer.DrawColor = Color.White;
             skin.Renderer.DrawTexturedRect(imageHandle, RenderBounds);
-
 
             skin.Renderer.DrawColor = Color.Black;
             skin.Renderer.DrawLinedRect(RenderBounds);
@@ -197,6 +169,23 @@ namespace Flood.GUI.Controls
             skin.Renderer.DrawShavedCornerRect(testRect);
 
             base.Render(skin);
+        }
+
+        private void CreateGradientBitmap(Skin skin)
+        {
+            //var bitmap = new Bitmap(Width, Height);
+
+            //for (int y = 0; y < Height; y++)
+            //{
+            //    for (int x = 0; x < Width; x++)
+            //    {
+            //        Color c = GetColorAt(x, y);
+            //        bitmap.SetPixel(x, y, Color.FromArgb(c.A, c.R, c.G, c.B));
+            //    }
+            //}
+
+            //m_Texture = new MaterialHandle(skin.Renderer);
+            //m_Texture.LoadBitmap(bitmap);
         }
     }
 }

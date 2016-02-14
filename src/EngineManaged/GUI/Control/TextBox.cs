@@ -86,8 +86,6 @@ namespace Flood.GUI.Controls
         public TextBox(Control parent)
             : base(parent)
         {
-            SetSize(200, 20);
-
             MouseInputEnabled = true;
             KeyboardInputEnabled = true;
 

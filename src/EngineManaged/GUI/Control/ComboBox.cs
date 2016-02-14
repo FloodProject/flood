@@ -39,7 +39,6 @@ namespace Flood.GUI.Controls
             m_Button = arrow;
 
             Alignment = Pos.Left | Pos.CenterV;
-            Text = String.Empty;
             Margin = new Margin(3, 0, 0, 0);
 
             IsTabable = true;

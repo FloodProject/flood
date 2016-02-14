@@ -1,5 +1,6 @@
 ﻿using Flood.GUI.Input;
 using System;
+using Flood.GUI.Skins;
 
 namespace Flood.GUI.Controls
 {
@@ -47,20 +48,7 @@ namespace Flood.GUI.Controls
 
             if (imageHandle.Id == ResourceHandle<Image>.Invalid)
             {
-                throw new NotImplementedException();
-                /*var bitmap = new Bitmap(Width, Height);
-
-                for (int y = 0; y < Height; y++)
-                {
-                    Color c = GetColorAtHeight(y);
-                    for (int x = 0; x < Width; x++)
-                    {
-                        bitmap.SetPixel(x,y, new Color(c.R,c.G,c.B,c.A));
-                    }
-                }
-
-                imageHandle = new MaterialHandle(skin.Renderer);
-                imageHandle.LoadBitmap(bitmap);*/
+                CreateGradientBitmap(skin);
             }
 
             skin.Renderer.DrawColor = Color.White;
@@ -78,6 +66,23 @@ namespace Flood.GUI.Controls
             skin.Renderer.DrawFilledRect(new Rectangle(Width - 4, drawHeight + 1, 3, 3));
 
             base.Render(skin);
+        }
+
+        private void CreateGradientBitmap(Skin skin)
+        {
+            /*var bitmap = new Bitmap(Width, Height);
+
+            for (int y = 0; y < Height; y++)
+            {
+                Color c = GetColorAtHeight(y);
+                for (int x = 0; x < Width; x++)
+                {
+                    bitmap.SetPixel(x,y, new Color(c.R,c.G,c.B,c.A));
+                }
+            }
+
+            imageHandle = new MaterialHandle(skin.Renderer);
+            imageHandle.LoadBitmap(bitmap);*/
         }
 
         /// <summary>
