@@ -31,7 +31,7 @@ varying float v_Shift;
 void main()
 {
     vec4 current = texture2D(vp_Texture0, v_TexCoord);
-    vec4 previous= texture2D(vp_Texture0, v_TexCoord+vec2(-1.,0.)/textureSize2D(vp_Texture0,0));
+    vec4 previous = texture2D(vp_Texture0, v_TexCoord + vec2(-1.0, 0.0) / vec2(512, 512));//textureSize2D(vp_Texture0,0));
     
     float r = current.r;
     float g = current.g;
@@ -39,28 +39,28 @@ void main()
 
     if( v_Shift <= 0.333 )
     {
-        float z = v_Shift/0.333;
+        float z = v_Shift / 0.333;
         r = mix(current.r, previous.b, z);
         g = mix(current.g, current.r,  z);
         b = mix(current.b, current.g,  z);
     } 
     else if( v_Shift <= 0.666 )
     {
-        float z = (v_Shift-0.33)/0.333;
+        float z = (v_Shift - 0.33) / 0.333;
         r = mix(previous.b, previous.g, z);
         g = mix(current.r,  previous.b, z);
         b = mix(current.g,  current.r,  z);
     }
    else if( v_Shift < 1.0 )
     {
-        float z = (v_Shift-0.66)/0.334;
+        float z = (v_Shift - 0.66) / 0.334;
         r = mix(previous.g, previous.r, z);
         g = mix(previous.b, previous.g, z);
         b = mix(current.r,  previous.b, z);
     }
 
-   float t = max(max(r,g),b);
+   float t = max(max(r, g), b);
    vec4 color = vec4(gl_Color.rgb, (r+g+b)/3.0);
-   color = t*color + (1.0-t)*vec4(r,g,b, min(min(r,g),b));
-   gl_FragColor = vec4( color.rgb, gl_Color.a*color.a);
+   color = t * color + (1.0-t) * vec4(r, g, b, min(min(r, g), b));
+   gl_FragColor = vec4( color.rgb, gl_Color.a * color.a);
 }
